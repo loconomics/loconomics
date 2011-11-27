@@ -1,5 +1,5 @@
 @{  
-    Layout = "~/en_ES/_SiteLayout.cshtml";
+    Layout = "~/en_US/_SiteLayout.cshtml";
     Page.Title = "Make your life better!";
 
 
@@ -11,7 +11,7 @@
         var theDate = DateTime.Now.ToString("yyyy-MM-dd");
                             
         var sqluser = "exec GetUserDetails @0";
-        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 2";                    
+        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
         var sqlupdatephoto ="update users set Photo = @0 where UserID = @1";
         var sqlupdateabout ="update dbo.userprofilepositionadditional set ADD_Details = @0  where UserID = @1";
 
@@ -55,7 +55,7 @@
          
              }else{
 
-                   Response.Redirect("~/en_ES/Default");
+                   Response.Redirect("~/en_US/Default");
 
 
                  }
@@ -105,6 +105,7 @@
 						<tr><td>Lorem Ipsum:</td><td>20</td></tr>
 					</table>
 					<a href="#">Booking History</a>
+                    			<a href="ProviderEstimateProfile.cshtml?positionID=@c.PositionID">Edit Estimate Profile</a>
 					<div class="job-actions">
 						<a class="button go" href="#">Edit</a>
 						<a class="button go" href="#">Publish</a>

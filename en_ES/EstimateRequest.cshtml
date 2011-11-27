@@ -1,0 +1,171 @@
+﻿@using System.Text.RegularExpressions;
+
+@{
+ 
+    if (WebSecurity.IsAuthenticated) {
+        Layout = "~/_SiteLayout.cshtml";
+        var UserID  = WebSecurity.CurrentUserId;
+    }else{
+        Response.Redirect("~/Default");
+    }
+
+    var userID = "";
+    var providerID = "";
+    var positionID = "";
+    var pricingTypeID = "";
+    var estimateVarID = "";
+    var servicePricingTypeID = 0;
+    var listSize = "";
+    var errors = "";
+    var sysdate = DateTime.Now;
+    var EstimateResult = 0;
+    var estimateVarValue = 0;
+    
+    if(IsPost){
+        var db = Database.Open("sqlloco");
+
+        userID = Convert.ToString(WebSecurity.CurrentUserId);
+        positionID = "14";// Request["PositionID"];
+        pricingTypeID = Request["pricingtype"];
+        providerID = "34";// Request["ProviderID"]; TESTING
+        
+        //Get the service pricing type relation
+        var SQLServicePricingType = @"SELECT ServicePricingTypeID 
+                       FROM dbo.servicepricingtype 
+                       WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
+        var servicePricingType = db.QuerySingle(SQLServicePricingType, providerID, positionID, pricingTypeID);
+
+        servicePricingTypeID = Convert.ToInt32(servicePricingType.ServicePricingTypeID);
+            
+        //Read estimate profile from providerestimatevar 
+        listSize = Request["listSize"];
+        var size = listSize.AsInt();
+        var SQLSelectVar = @"SELECT EstimateVarValue as varValue FROM dbo.providerestimateprofile 
+                        WHERE ServicePricingTypeID=@0 AND EstimateVarID=@1";
+      
+        for(int i=size;i>0;i--){
+            estimateVarID = Request["EstimateVarID" + i];
+            estimateVarValue = (Request["EstimateVarValue" + i]!="" ? Convert.ToInt32(Request["EstimateVarValue" + i]):0);
+            
+           
+            var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
+         
+            EstimateResult += (estimateProfile.varValue==null?0: Convert.ToInt32(estimateProfile.varValue)) * (estimateVarValue==null?0:estimateVarValue);
+        }
+        db.Close();
+        Response.Redirect("~/EstimateRequest.cshtml?EstimateResult="+EstimateResult);
+    }
+}
+  
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function getURLParameter(name) {
+            return decodeURI(
+               (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
+        }
+
+        var isResult = (getURLParameter("EstimateResult") != "null");
+
+        //Fill the Pricing Type drop down
+        $('#pricingtype').addOption(0, "Loading....").attr('disabled', true);
+        $.getJSON('ListPricingTypes', function (data) {
+            var estimatetypes = data;
+            $.each(estimatetypes, function (index, estimatetype) {
+                var val = estimatetype.PricingTypeID;
+                var text = estimatetype.Description;
+                /*Debug
+                $("#debugval").append(val);
+                $("#debugtext").append(text);
+                End Debug*/
+                $('#pricingtype').addOption(val, text, false);
+            });
+
+            $('#pricingtype').addOption(0, "Select type").attr('disabled', false);
+           
+
+            var firstselected = true;
+            $('#pricingtype').change(function () {
+                if (firstselected) {
+                    firstselected = false;
+                    $('#pricingtype').removeOption(0);
+                };
+            });
+
+        });
+        //Paint and fill Estimate Var List
+        var positionID = 14; // getURLParameter("positionID"); //Testing
+
+        $('#pricingtype').change(function () {
+
+            var pricingTypeID = $('#pricingtype').val();
+            /*Debug
+            $("#debugpricingtype").append(pricingTypeID);
+            End Debug*/
+
+            //Reset the form
+            $(".estimatevarrow").remove();
+            $(".listSize").remove();
+
+            $.getJSON('ListServiceEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
+                var estimatevars = data;
+                var i = 0;
+                $.each(estimatevars, function (index2, estimatevar) {
+                    var val2 = estimatevar.EstimateVarID;
+                    var text2 = estimatevar.UserDescription;
+                    i++;
+                    /*Debug
+                    $("#debugval2").append(val2);
+                    $("#debugtext2").append(text2);
+                    End Debug*/
+                    $('#form tr:last').after('<tr class="estimatevarrow"><td><label for=' + text2 + '@if(!ModelState.IsValidField("estimateVarValue")){<text>class="error-label"</text>}>' + text2 + '</label></td><td><input id="EstimateVarID' + i + '" name="EstimateVarID' + i + '" value=' + val2 + ' size = 1></td>');
+                    $('#EstimateVarID' + i).hide();
+                    $('#form td:last').after('<td class="estimatevarrow"><input id="estimateVarValue' + i + '" name="estimateVarValue' + i + '" type="text" value=@Request["estimateVarValue' + i + '"]></td></tr>');
+                });
+                $("#form tr:last").after('<input class="idSize" id="listSize" name="listSize" type="text" value=' + i + '>');
+                $("#listSize").hide();
+            });
+        });
+        if (isResult) {
+            $("#result").append(getURLParameter("EstimateResult") + ' $ (USD)');
+            update = false;
+        }
+
+    });
+</script>
+
+<div id="container" class="sign-up">
+    <div id="main">
+
+        @* If at least one validation error exists, notify the user *@
+        @Html.ValidationSummary(errors)
+
+        <h1>Service Estimate Profile</h1>
+	    <form id="EstimateRequest" class="stepped" action="" method="post">
+		    <img class="inset" src="img/media-placeholder.png" alt="" />
+		    <p>Set the estimate parameters for your service</p>
+            <!-- debug statements 
+            <p id="debugval">val:</p>
+            <p id="debugtext">text:</p>
+            <p id="debugval2">val2:</p>
+            <p id="debugtext2">text2:</p>
+            <p id="debugpricingtype">pricingType:</p>
+            End debug statementes -->
+ 
+            <table id="form">
+                <tr>
+                    <td><label for="pricingTypeLabel">Pincing Type</label></td>
+                    <td>
+                        <select id="pricingtype" name="pricingtype"></select>
+                    </td>
+                </tr>
+            </table>
+            <p id="result"><b>Estimated Cost:</b> </p>
+            <fieldset class="buttons">
+				<button id="advancer" class="next fancy" type="submit">Get Estimate</button>
+                <button id="advancer" class="next fancy" type="submit" disabled=true>Continue</button>
+				<input type="submit" class="hidden" />
+			</fieldset>
+        </form>
+   </div>
+</div>
