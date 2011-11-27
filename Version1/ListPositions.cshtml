@@ -1,0 +1,7 @@
+﻿@{
+    var db = Database.Open("sqlloco");
+    var sql = @"select  b.positionid,  a.PositionSingular  as position  from positions a join servicecategoryposition  b   on a.positionid = b.positionid  join servicesubcategory c  on b.ServiceSubCategoryID = c.ServiceSubCategoryID    where a.LanguageID = 1 and a.CountryID = 1 ";
+    var data = db.Query(sql);
+    Json.Write(data, Response.Output);
+    }
+   

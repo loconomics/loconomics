@@ -1,0 +1,457 @@
+﻿ <script id="Event_tmpl" type="text/x-jQuery-tmpl">
+   <h3>${LocaleString}</h3>
+   <div class="LCSCalDayHourList">
+    <table cellpadding=0 cellspacing=0  >
+      <tbody >
+        <tr>
+        <td>
+        {{each(k, DayPart) DayParts}} 
+          {{if k%8 == 0}}
+            </td><td>
+               
+                    {{if k%2 == 1}}
+                        <div class="LCSCalHourSegment LCSCalTimeSegment"
+                             {{if DayPart.eventId !=""}}
+                                title="${Lang_Busy}"
+                                data-state="SynchedEvent"
+                             {{else}}
+                                title="${Lang_Free}"
+                                data-state="Unscheduled"                                
+                             {{/if}}
+                             data-eventId="${DayPart.eventId}"
+                             data-daypart='{ "index": "${DayPart.index}", "duration": "${DayPart.duration}", "eventId":"${DayPart.eventId}", "hour": ${DayPart.hour}, "min": ${DayPart.min} }'
+                             >${DayPart.hour}:${DayPart.min}</div> 
+                    {{else}}
+                        <div class="LCSCalHourSegmentAlternate LCSCalTimeSegment"
+                            {{if DayPart.eventId !=""}}
+                                title="${Lang_Busy}"
+                                data-state="SynchedEvent"                                
+                            {{else}}
+                                title="${Lang_Free}"
+                                data-state="Unscheduled"                                
+                            {{/if}}           
+                            data-eventId="${DayPart.eventId}"
+                            data-daypart='{"index":"${DayPart.index}","duration":"${DayPart.duration}","eventId":"${DayPart.eventId}","hour":"${DayPart.hour}","min":"${DayPart.min}"}'
+                            >${DayPart.hour}:${DayPart.min}</div> 
+                    {{/if}}
+                
+           {{else}} 
+                    {{if k%2 == 1}}
+                        <div class="LCSCalHourSegment LCSCalTimeSegment"
+                        {{if DayPart.eventId !=""}}
+                            title="${Lang_Busy}"
+                            data-state="SynchedEvent"                            
+                        {{else}}
+                            title="${Lang_Free}"
+                            data-state="Unscheduled"                            
+                        {{/if}}
+                        data-eventId="${DayPart.eventId}"
+                        data-daypart='{"index":"${DayPart.index}","duration":"${DayPart.duration}","eventId":"${DayPart.eventId}","hour":"${DayPart.hour}","min":"${DayPart.min}"}'
+                        >${DayPart.hour}:${DayPart.min}</div> 
+                    {{else}}
+                        <div class="LCSCalHourSegmentAlternate LCSCalTimeSegment"
+                        {{if DayPart.eventId !=""}}
+                            title="${Lang_Busy}"
+                            data-state="SynchedEvent"                            
+                        {{else}}
+                            title="${Lang_Free}"
+                            data-state="Unscheduled"                            
+                        {{/if}}
+                        data-eventId="${DayPart.eventId}"
+                        data-daypart='{"index":"${DayPart.index}","duration":"${DayPart.duration}","eventId":"${DayPart.eventId}","hour":"${DayPart.hour}","min":"${DayPart.min}"}'
+                        >${DayPart.hour}:${DayPart.min}</div> 
+                    {{/if}}               
+           {{/if}}
+        {{/each}}
+           
+        </td>
+        </tr>
+      </tbody>
+      </table>
+      </div>
+       <div id="LCSCAL_HourSegmentReset" class="LCSCAL_Button" data-day="${i}__${j}">${Lang_Reset}</div>&nbsp;&nbsp;
+       <div id="LCSCAL_HourSegmentUpdate" class="LCSCAL_Button">${Lang_Update}</div>
+  
+</script>
+
+<script id="SimpleWeek_tmpl" type="text/x-jQuery-tmpl">
+    <div id="LCSCalendarControl_CALENDAR">
+        <h3>${LCSCalendarControl_NumberOfWeeks}${Lang_WeeklyCalendarVeiw}</h3>
+
+        <ul class="LCSCalendar">
+            {{each(i,week) Weeks}}
+            <li class="LCSCalendar">
+               <table  class="LCSCalendar" >
+                     <tbody>        
+                        <tr>                            
+                            <td  class="LCSCalendar" >
+                                 <nobr>
+                                 {{each(j,day) Days}}
+                                    {{if Events != null}}                                        
+                                        <div class="LCSCalendar_EventDay LCSCalendar_day"                                                                                 
+                                             title="${Lang_AddEventTo} ${Value}"
+                                             id="${i}__${j}__Day"
+                                             data-dateSL='${day.SL_Date}'
+data-day='{"LocaleString":"${day.LongValue}","Events":[
+{{each(k,event) Events}}
+{"start":"${event.StartTime}","end":"${event.EndTime}","id":"${event.CalendarEventId}"},
+{{/each}}
+]}'>                                             
+                                          ${Index}
+                                        </div>
+                                        <div class="LCSCalendar_Events"
+                                            id="${i}__${j}__Event">
+                                            <p>${day.LongValue}</p>                                                                                                      
+                                            <div class="LCSCalendarEventsList">
+                                            <ul >
+                                         {{each(i,event) Events}}      
+                                            {{if i > 1}}    
+                                                 <li class="LCSCalendarEventsList EventBlock"
+data-day='{"LocaleString":"${day.LongValue}","Events":[
+{{each(k,event) Events}}
+{"start":"${event.StartTime}","end":"${event.EndTime}","id":"${event.CalendarEventId}"},
+{{/each}}
+]}'>
+                                                     ${Lang_More} ...</li>          
+                                            {{else}}                                                
+                                                 <li class="EventBlock">
+                                                    <span class="eventtime">${Lang_Start}:</span>&nbsp;${event.StartTimeLocale}
+                                                    <br>
+                                                    <span class="eventtime">${Lang_End}:</span>&nbsp;${event.EndTimeLocale}
+                                                </li>
+                                            {{/if}}
+                                         {{/each}}
+                                            </ul>
+                                            </div>
+                                            
+                                            <div class="hr_LCSCalendar_EventDay" align="center"></div>
+                                            <div class="LCSCalendarScheduled"></div>${Lang_ScheduledAndPendingEvents}
+                                            <br/>
+                                            <div class="LCSCalendarUnscheduled"></div>${Lang_Unscheduled}
+                                            <br/>
+                                        </div>                                
+                                    {{else}}
+                                        <div class="LCSCalendar_day" 
+                                             title="${Lang_AddEventTo} ${Value}"
+                                              id="${i}__${j}__Day"
+                                              data-dateSL='${day.SL_Date}'
+                                              data-day='{"LocaleString":"${day.LongValue}","Events":"null"}'
+                                             >       
+                                          ${Index}
+                                        </div>
+                                        <div class="LCSCalendar_Events"
+                                             id="${i}__${j}__Event">
+                                         <p>${day.LongValue}</p>
+                                           
+                                            <div class="LCSCalendarEventsList">
+                                            <ul>
+                                                 <li class="LCSCalendarEventsList EventBlock"
+                                                     data-day='{"LocaleString":"${day.LongValue}","Events":"null"}'
+                                                 >${Lang_Add}</li> 
+                                            </ul>
+                                            </div>
+                                            <div class="hr_LCSCalendar_EventDay" align="center"></div>
+                                            <div class="LCSCalendarScheduled"></div>${Lang_ScheduledAndPendingEvents}
+                                            <br/>
+                                            <div class="LCSCalendarUnscheduled"></div>${Lang_Unscheduled}
+                                            <br/>
+                                        </div>  
+                                    {{/if}}
+                                 {{/each}}                                
+                                 </nobr>
+                            </td>                            
+                        </tr>
+                    </tbody>
+                </table> 
+            </li>
+            {{/each}}
+            <li class="LCSCalendar">
+                <div id="LCSCalendarSync" class="LCSCAL_Button">${Lang_SynchExternal}</div>
+            </li>
+        </ul> 
+</div>
+
+</script>
+       
+<script type="text/javascript" id="SimpleWeek_tmpl_functions">
+    // $("div.LCSCalendar_day").hover - MouseOn function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_ShowSelectedDayEvent(e) {
+        //$(e).css({ "background-color": "#00989A", "color": "White", "cursor": "pointer", "width": "35px", "height": "30px" })
+
+        $(e).removeClass('LCSCalendar_day');
+        $(e).addClass('LCSCalendar_day_Hilite');  
+              
+
+        $("div.LCSCalendar_Events").css({ "display": "none" }); //hide all the day events
+        var LinkId = $(e).attr("id").replace("_Day", "_Event"); //find the id of the one you want to show
+        $("#" + LinkId).css({ "display": "block" }); //show today's events
+    }
+
+    // $("div.LCSCalendar_day").hover - MouseOff function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_UnselectDayMouseOff(e) {
+        //$(e).css({ "background-color": "white", "color": "#00989A", "cursor": "auto", "width": "35px", "height": "30px" })
+
+        $(e).removeClass('LCSCalendar_day_Hilite'); 
+        $(e).addClass('LCSCalendar_day');                      
+    }
+
+   
+    //$("div.LCSCalendar_EventDay").hover -- MouseOn function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_EventDayMouseOn(e) {
+        //$(e).css({ "background-color": "#00989A", "color": "#461864", "cursor": "pointer", "width": "35px", "height": "30px" });
+        
+        $(e).removeClass("LCSCalendar_EventDay");
+        $(e).addClass("LCSCalendar_EventDay_Hilite");  
+    }
+
+    //$("div.LCSCalendar_EventDay").hover -- MouseOff function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_EventDayMouseOff(e) {
+        //$(e).css({ "background-color": "#461864", "color": "White", "cursor": "auto", "width": "35px", "height": "30px" });
+        
+        $(e).removeClass("LCSCalendar_EventDay_Hilite");
+        $(e).addClass("LCSCalendar_EventDay");
+    }
+
+</script>
+
+<script type="text/javascript" id="Event_tmpl_functions">
+    var LCSCalendarControl_DayPartSizeMinutes = 30;
+
+
+
+    //$("div.LCSCalHourSegment").hover -- MouseOn function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_DaySegmentMouseOn(e) {
+        $(e).addClass("LCSCAL_HourSegment_hover");
+    }
+
+    //$("div.LCSCalHourSegment").hover -- MouseOff function
+    //Note: this settings are dependant on the values in "default_LCSCalendar.css"
+    function LCSCAL_DaySegmentMouseOff(e) {
+        $(e).removeClass("LCSCAL_HourSegment_hover");
+    }
+
+    //$('.LCSCalTimeSegment').mousedown(function () -- Time segment select function
+    function LCSCAL_DaySegmentSelect(e, segments) {
+        var DayPart = $(e).data("daypart");
+        
+        //addDistinct returns false if Segments already contains the item.
+        try {
+            if (segments.addDistinct(DayPart.index)) {
+                //Set background
+                var oldClass;
+                if ($(e).hasClass('LCSCalHourSegment'))
+                    oldClass = "LCSCalHourSegment";
+                else if ($(e).hasClass('LCSCalHourSegmentAlternate'))
+                    oldClass = "LCSCalHourSegmentAlternate";
+
+                $(e).data("oldClass", oldClass);
+                $(e).removeClass(oldClass);
+                $(e).addClass("LCSCAL_SetBusy");
+
+                //$(e).attr('title', Lang_Unprocessed + " : " + Lang_SynchedEvent);
+                //prevent changing preloaded events from being flagged unprocessed
+                var curState = $(e).data("state");
+                if (curState == "Unprocessed-Unscheduled") {
+                    $(e).data('state', 'SynchedEvent'); //set the state                    
+                } else {
+                    $(e).data('state', 'Unprocessed-SynchedEvent');
+                }
+
+                
+
+                //interested in the following for update to server
+                //  DayPart.index -- lets us know which time segment 0 - 48 [ 30 minute segments]
+                //  DayPart.eventId -- if this value is not blank it was present onload
+
+                //need to decide if each individual click will fire an Ajax call here, or if we want an update button
+                //which will save all changes at once
+            }
+        } catch (e) {
+            //alert(e.toString());
+        }
+        return segments;
+    }
+
+    //$('.LCSCalTimeSegment').dblclick(function () -- Time Segment de-select function
+    function LCSCAL_DaySegmentRemove(e, segments) {
+        var DayPart = $(e).data("daypart");
+        var position = segments.find(DayPart.index);
+
+        //find returns -1 if Segments is not in the Array.
+        if (position > -1) {
+            //alert("must be in the Array");
+            segments.splice(position,1); //removes Daypart from the array
+
+            //Retrieve the OldClass
+            var oldClass = $(e).data("oldClass");
+            if (oldClass != null) {
+                $(e).removeClass("LCSCAL_SetBusy");
+                $(e).css({ background: "" });
+                $(e).addClass(oldClass);
+                $(e).removeData("oldClass"); //prevent issues with it being added multiple times    
+
+                //$(e).attr("title", Lang_Unprocessed + " : " + Lang_Unscheduled);
+                //prevent changing preloaded events from being flagged unprocessed
+                var curState = $(e).data("state");
+                if (curState == "Unprocessed-SynchedEvent") {
+                    $(e).data("state", "Unscheduled");                    
+                } else {
+                    $(e).data("state", "Unprocessed-Unscheduled");
+                }
+                //$(e).attr("title", Lang_Free);
+            }
+
+            //interested in the following for update to server
+            //  DayPart.index -- lets us know which time segment 0 - 48 [ 30 minute segments]
+            //  DayPart.eventId -- if this value is not blank this event already exists in the DB and will need to be removed
+            //                     via servive call
+
+
+            //need to decide if each individual click will fire an Ajax call here, or if we want an update button
+            //which will save all changes at once
+        }
+        return segments;
+    }
+
+    function ResetDayViewGrid() {
+        $('.LCSCalTimeSegment[data-state="Unscheduled"]').dblclick();
+        //click handler didn't work for "SynchedEvent"
+        $('.LCSCalTimeSegment[data-state="SynchedEvent"]').addClass("LCSCAL_SetBusy");   
+    }
+
+    function GenerateDayView(e) {
+       var LCS_DPSM = LCSCalendarControl_DayPartSizeMinutes;
+         //the value LCSCalendarControl_DayPartSizeMinutes is set in the Template that controls the rendering
+         //of the day segment view (e.g. SimpleWeek_tmpl.htm::Event_tmpl_functions)
+
+         var HourIndexSize = 24 * (60 / (LCS_DPSM));
+         //(number of hours in a day) / ( number of minutes in an hour ) / (DayPartSizeMinutes)
+         //default DayPartSizeMinutes is 30; which should yield 48, 30 minute segments
+         //the rendering works with 30 minute and 15 minute values for this variable, other values do not render well.
+
+         var jsonData = $(e).data("day");
+         var jsonObj = jsonData;
+         var arHourIndex = new Array(HourIndexSize);
+           
+        if (!jsonObj.Events) {
+            //when Events is "null" jsonData is a valid JSON object, when events is an Array of one or more
+            //jsonData is a string. template excerpt for day with no events:  '{"LocaleString":"${day.LongValue}", "Events":"null"}'
+
+            //Note: jQuery.parseJSON(jsonData) failed, on the nested structure of the JSON utilized here
+            //      this function only seems to work on a simple flat JSON struture. 
+
+            //The text must be wrapped in parens to avoid tripping on an ambiguity in JavaScript's syntax.
+            //http://www.json.org/js.html -- last accessed 10/15/2011
+            jsonObj = eval('(' + jsonData + ')');
+                   
+            /***************************************************************************************************
+                arHourIndex:    defines the number of time segments within a 24 hour period
+                jsonObj.Events: is a collection of events passed from the server, these are time segments that 
+                                are already busy. The code below forces them into DayPartSizeMinutes chunks
+                                by default 30 minute time segments and populates the arHourIndex appropriately
+
+            ***************************************************************************************************/
+            for (var j = 0; j < jsonObj.Events.length; j++) {
+                var curEvent = jsonObj.Events[j];
+
+                var StartDateTime = JSONdateStringToDate(curEvent.start);
+                var AdjustedStartMinutes = Math.floor((StartDateTime.getMinutes()) / LCS_DPSM) * LCS_DPSM;
+                //Any start time past one DayPartSize block but before another is rounded down to show the  whole block as BusyTime
+                //ensure minutes are in DayPartSizeMinutes blocks rounded down; if DayPartSizeMinutes was 30 (default)
+                //10 minutes -->  Math.floor(10 / 30) = 0 * 30 = 0
+                //35 minutes -->  Math.floor(35 / 30) = 1 * 30 = 30
+                StartDateTime.setMinutes(AdjustedStartMinutes);
+
+                var EndDateTime = JSONdateStringToDate(curEvent.end);
+                var AdjustedEndMinutes = Math.ceil(EndDateTime.getMinutes() / LCS_DPSM) * LCS_DPSM;
+                //Any end time past one DayPartSize block but before another is rounded up to show the  whole block as BusyTime
+                //ensure minutes are in DayPartSizeMinutes blocks rounded up; if DayPartSizeMinutes was 30 (default)
+                //10 minutes -->  Math.ceil(10 / 30) = 1 * 30 = 30
+                //35 minutes -->  Math.ceil(35 / 30) = 2 * 30 = 60
+                EndDateTime.setMinutes(AdjustedEndMinutes);
+
+                var hourstart = StartDateTime.getHours();  //0-23
+                var minstart = StartDateTime.getMinutes(); //0 0r 30 because of rounding above
+                var StartSegmentIndex = ((hourstart * 60) + minstart) / LCS_DPSM;
+
+                arHourIndex.splice(StartSegmentIndex, 0, curEvent.id);
+
+                //handle events that span 1 or more 30 minute time segment
+                var DurationBlocks = Math.floor((Math.ceil(EndDateTime.getTime() - StartDateTime.getTime())) / 1000 / 60 / 30); //number of 30 minute intervals
+                //alert("EndDateTime: " + EndDateTime.getTime().toString() + "\StartDateTime: " + StartDateTime.getTime().toString() + "\nDurationBlocks: " + DurationBlocks.toString() + "\nhourIndex: " + hourIndex.toString());
+
+                for (var k = 0; k < DurationBlocks; k++) {
+                    arHourIndex.splice(StartSegmentIndex + k, 0, curEvent.id);
+                }
+
+            }
+
+        }
+
+        //This section creates a Json object collection based on the settings used for the DayPartSegments above
+        //this is used as the data for rendering 24 hr day view on which the events are overlaid.
+        jsonObj.DayParts = [];
+
+        for (var i = 0; i < HourIndexSize; i++) {
+            var curIndex = i; //'"' + i + '"';
+            var divisor = 60 / LCS_DPSM;
+            var hourstr = (Math.floor(i / divisor)).toString();
+            var minstr = ((i % divisor) * LCS_DPSM).toString();
+            if (hourstr.length == 1) hourstr = "0" + hourstr;
+            if (minstr.length == 1) minstr = "0" + minstr;
+
+            var eventId = "";
+            if (arHourIndex[i] != null) {
+                eventId = arHourIndex[i];
+            }
+            jsonObj.DayParts.push({ "index": curIndex, "duration": "30", "eventId": eventId, "hour": hourstr, "min": minstr });
+        }
+
+        return jsonObj;
+    }
+
+    //This method gets a JSON representation of a Calendar object containing a single week and single day
+    //The current day with its current events. This is intended for update and delete operations
+    function GetCurrent(data, e) {
+       
+        var dateSL = $(e).attr("data-dateSL");
+        var currentDay = null;
+        
+        var jsonstr  = '{  "Culture":"' + jsonPath(data, "$.Culture") + '"';
+            jsonstr += ', "Language":"' + jsonPath(data, "$.Language") + '"';
+            jsonstr += ', "Value":"' + jsonPath(data, "$.Value") + '"';
+            jsonstr += ', "View":"' + jsonPath(data, "$.View") + '"';
+            jsonstr += ', "Weeks":';
+            jsonstr += '    [{ "Days": null ';
+ 
+            for (var i = 0; i < data.Weeks.length; i++) {
+                var curWeek = data.Weeks[i];
+                for (var j = 0; j < 7; j++) { //number of days in a week 0 - 6
+                    var curDay = curWeek.Days[j];
+                    if (curDay.SL_Date == dateSL) {
+                        currentDay = curDay;
+                        jsonstr += '      , "Index":"' + curWeek.Index + '" ';
+                        jsonstr += '      , "StartDate":"' + curWeek.StartDate.replace(/\//g,"\\/") + '" ';
+                        jsonstr += '      , "StartDateLocale":"' + curWeek.StartDateLocale + '" ';
+                        jsonstr += '      , "StartDateUTC":"' + curWeek.StartDateUTC + '" ';
+                        jsonstr += '      , "Value":"' + curWeek.Value + '" ';        
+                    }
+                }
+            }
+            
+            //will dynamically add the actual day object later                      
+            jsonstr += '   }]';
+            jsonstr += ', "Years":"' + jsonPath(data, "$.Years") + '" }';
+
+            //convert the json string into an object
+            var jsonObj = eval('(' + jsonstr + ')');
+           
+        jsonObj.Weeks.push(currentDay); //add the current day instance
+        return jsonObj;
+    }
+</script>

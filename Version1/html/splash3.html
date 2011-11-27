@@ -1,0 +1,99 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Loconomics</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- TODO favicon -->
+
+  <style type="text/css">
+	html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,	small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+	body { padding-bottom: 50px; text-align: center; color: #aaa; font-family: "Trebuchet MS", sans-serif; line-height: 1; }
+	#container { margin: 50px auto; width: 850px; }
+	p { margin: 100px 0; font-size: 1.4em; text-transform: uppercase; font-weight: bold; color: #00989a; }
+	small { font-size: .8em; font-style: italic; }
+	#header { margin: 0 0 100px 0; height: 105px; }
+	#header img { float: left; height: 81px; width: auto; margin-bottom: 22px; }
+	#header img.logo { margin: 0 19px 0 20px; height: auto; margin-bottom: 0; }
+	form { margin-bottom: 35px; }
+	form * { vertical-align: center; }
+	form input, form button {
+		-moz-border-radius: 8px; /* FF1-3.6 */
+		-webkit-border-radius: 8px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
+	    border-radius: 8px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
+	    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
+	}
+	form input { height: 40px; padding: 0 10px; font: italic normal 20px/40px Georgia, Times, "Times New Roman", serif; border: 1px solid #00989a; color: #00989a; }
+	form input:focus { outline: none; }
+	form button { display: inline-block; cursor: pointer; padding: 0 10px; border: none; background: #00989a; color: #fff; font-size: 20px; line-height: 40px; }
+	form button:hover { background: #8B2143; }
+	*:first-child+html form button { margin-left: 10px; height: 40px; overflow: hidden; }
+	* html form button { margin-left: 10px; height: 40px; overflow: hidden; }
+  </style>
+
+</head>
+
+<body class="spash">
+	
+  <div id="container" class="clearfix">
+	
+	<div id="header">
+		<img src="img/splash-row1.gif" />
+		<img class="logo" src="img/loconomics-logo.png" alt="Loconomics, at your service." />
+		<img src="img/splash-row2.gif" />
+	</div>
+	
+	<p>Coming soon</p>
+	
+	<form>
+		<input type="text" id="email-signup" value="Email Address" />
+		<button type="submit">Get Updates</button>
+	</form>
+	
+	<div id="#footer"><small>Rest assured, we will not share your email address with anyone.</small></div>
+	
+  </div><!-- #container -->
+
+  <script src="js/libs/jquery-1.6.2.min.js"></script>
+
+  <script type="text/javascript">
+	$(document).ready(function(){
+
+		$('form input[type="text"]').focus(function() {
+				if( this.value == this.defaultValue ) {
+					this.value = "";
+				}
+			}).blur(function() {
+				if( !this.value.length ) {
+					this.value = this.defaultValue;
+				}
+		});
+		
+		centerVert();
+		
+		$(window).resize(function(){ centerVert(); });
+		
+	});
+	function centerVert(){
+		var wH = $(window).height();
+		var cH = $('#container').height();
+		
+		if ( (wH-cH)/2 < 50 ) { 
+			$('#container').animate({'marginTop':'50px'},500); 
+		}
+		else {
+			$('#container').animate({'marginTop':(wH-cH)/2},500);
+		}
+	}
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+        <script src="@Href("~/Scripts/jquery-1.4.2.min.js")" type="text/javascript"></script>
+        <script src="@Href("~/Scripts/jquery.selectboxes.pack.js")" type="text/javascript"></script>
+        <link rel="stylesheet" href="@Href("~/Styles/StyleSheet.css")" type="text/css" />
+	</head>
+	<body>
+	<h1>JSON Helper Samples</h1>
+     <script type="text/javascript">
+$(function(){
+    //Fill the customer drop down
+    $('#CustomerId').addOption('',"Loading....").attr('disabled', true);
+    $.getJSON('/ListPositions', function(data) {
+        var positions = data;
+        $.each(positions, function(index, position) {
+           for (var i = 0; i < positions.length; i++) {
+                var val = position.positionid;
+                var text = position.position;
+                $('#CustomerId').addOption(val, text, false);
+            }
+        });
+        $('#CustomerId').removeOption(0).attr('disabled', false);
+    });    
+  });
+  </script>
+<select id="CustomerId" name="CustomerId"></select>
+<div id="details"></div>
+	</body>
+</html>

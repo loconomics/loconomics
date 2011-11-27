@@ -1,0 +1,127 @@
+﻿'ServiceAttributeID'	'LanguageID'	'CountryID'	'ServiceAttributeTypeID'	'SourceID'	'Name'	'Description'	'CreateDate'	'UpdatedDate'	'ModifiedBy'	'Active'
+82	1	1	1	1	'Trigger point therapy'	'Sometimes confused with pressure point massage, this involves deactivating trigger points that may cause local pain or refer pain and other sensations, such as headaches, in other parts of the body. Manual pressure, vibration, injection, or other treatment is applied to these points to relieve myofascial pain. Trigger points were first discovered and mapped by Janet G. Travell (president Kennedy''s physician) and David Simons.  These points relate to dysfunction in the myoneural junction, also called neuromuscular junction (NMJ), in muscle, and therefore this modality is different from reflexology, acupressure and pressure point massage.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+81	1	1	1	1	'Trager approach'	'The Trager approach combines movement, massage and education.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+80	1	1	1	1	'Traditional Chinese '	'Two types of traditional Chinese massage exist - Tui na which focuses on pushing, stretching and kneading the muscle and Zhi Ya which focuses on pinching and pressing atacupressure points. Both are based on principles from Traditional Chinese Medicine. Though in the Western countries Tui Na is viewed as massage, it is not. Massage of Chinese Medicine is known as Anmo, which is the foundation of Japan''s Anma.
+Tui Na is Chinese Medicine''s Physio-Therapy. Utilized for medical purposes instead of relaxation, Tui Na works to correct the patient''s problems, from musculoskeletal conditions, to diseases, cancers and even minor and major headaches.
+Within the foundation of Tui Na, Traditional Chinese Medicine principles are followed, from Meridian Applications to Herbal Formulas, Qigong Therapy and heated herbal application (Moxa). Technique applications such as friction and vibration are used as well.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+79	1	1	1	1	'Thai '	'Known in Thailand as Nuat phaen boran, IPA, meaning "ancient/traditional massage", Thai massage originated in India and is based on ayurveda and yoga. The technique combines massage with yoga-like positions during the course of the massage; the northern style emphasizes stretching while the southern style emphasizes acupressure.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+78	1	1	1	1	'Swedish '	'Swedish massage uses five styles of long, flowing strokes to massage. The five basic strokes are effleurage (sliding or gliding), petrissage (kneading), tapotement (rhythmic tapping), friction (cross fiber) and vibration/shaking. Swedish massage has shown to be helpful in reducing pain, joint stiffness, and improving function in patients with osteoarthritis of the knee over a period of eight weeks. It has also been shown to be helpful in individuals with poor circulation.  The term "Swedish" massage is actually only recognized in English or Dutch speaking countries. Elsewhere the style is referred to as "classic massage".'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+76	1	1	1	1	'Stone '	'Shiatsu (shi meaning finger and atsu meaning pressure) is a Japanese therapy that uses pressure applied with thumbs, fingers and palms to the same energy meridians as acupressure and incorporates stretching. It also uses techniques such as rolling, brushing, vibrating, grasping and, in one particular technique developed by Suzuki Yamamoto, pressure is applied with the feet on the person''s back, legs and feet.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+77	1	1	1	1	'Structural integration'	'Structural integration''s aim is to unwind the strain patterns residing in your body''s myofascial system, restoring it to its natural balance, alignment, length, and ease. This is accomplished by deep, slow, fascial and myofascial manipulation, coupled with movement re-education. Various brands of Structural Integration are Kinesis Myofascial Integration and rolfing.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+73	1	1	1	1	'Postural integration (PI)'	'Postural Integration (PI) is a process-oriented bodywork combining deep tissue massage with breathwork, body movement and awareness as well as emotional expression.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+74	1	1	1	1	'Reflexology '	'Reflexology is based on the principle that there are reflexes in the hands and feet that relate to every organ, gland, and system of the body.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+75	1	1	1	1	'Shiatsu'	'A few various techniques that are practiced on oneself, such as stroking the temples with strong pressure from front to back, rubbing the bottoms of the feet with one''s knuckles or a wooden massage tool, and circular movement with thumb on palm of hand.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+72	1	1	1	1	'Myomassology'	'An integration of techniques including basic Swedish massage, aromatherapy, reflexology, shiatsu, energy balancing, and craniosacral therapy along with other modalities in conjunction with instruction in nutrition, meditation and yoga. The term Myomassology was coined by Irene Gauthier to describe her combined work of Swedish massage, craniosacral therapy, reflexology and body mechanics.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+71	1	1	1	1	'Myofascial release '	'Myofascial release refers to the manual massage technique for stretching the fascia and releasing bonds between fascia, integument, and muscles with the goal of eliminating pain, increasing range of motion and equilibrioception. Myofascial release usually involves applying shear compression or tension in various directions, or by skin rolling.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+70	1	1	1	1	'Mobile '	'Given some of the main benefits of massage, many people prefer to have a therapist come to them to perform the treatment as opposed to visiting the therapist. Amongst other things, this type of treatment has the benefits of allowing the recipient to remain in their own environment with which they are likely most comfortable, to avoid the pre and post stresses of travelling to the therapist to receive their massage and of course to retire directly to a place of rest immediately following their massage. Therapists can bring a dedicated table with them on which to perform the massage or perform the treatment on the floor or the client''s own bed. Mobile (or outcall) massages are particularly popular in big cities around the world where life can be more hectic than elsewhere and there are many operators of such services in places like London and New York.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+69	1	1	1	1	'Meso-American '	'In Meso-America as in other areas of the world an indigenous form of soft tissue and structural massage has developed. Today this art survives thanks to the many Sobadoras/es or Hueseros/as that have handed-down these techniques via oral tradition.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+67	1	1	1	1	'Hilot '	'Hilot is a traditional healing technique from the Philippines that also includes massage techniques. The massage techniques relax stressed muscles. Hilot also includes joint manipulations to help relax stressed muscles.
+Hilot encompasses a wide variety of techniques beyond the treatment of stressed muscles. Hilot can be used to reset sprained joints, diagnose and treat musculoligamentous and musculoskeletal ailments, and even to aid in giving birth and to induce abortion.
+Dislocated joints can also be reset by hilot after an X-ray has been done on affected body parts and medical experts advised that the same body parts are safe to be massaged.
+After giving birth, hilot can be done on the mother and the baby born of normal delivery for 10 consecutive days so that they may recover easily. Hilot should not be done on mothers who deliver via caesarian section.
+Hilot also uses banana leaves and herbs for enhanced efficacy.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+68	1	1	1	1	'Lomi Lomi'	'Lomilomi is the traditional massage of Hawaii. As an indigenous practice, it varies by island and by family. The word lomilomi also is used for massage in Samoa and East Futuna. In Samoa, it is also known as lolomi and milimili. In East Futuna, it is also called milimili, fakasolosolo, amoamo, lusilusi, kinikini, fai’ua. The Maori call it roromi and mirimiri. In Tonga massage is fotofota, tolotolo, andamoamo. In Tahiti it is rumirumi. On Nanumea in Tuvalu, massage is known as popo, pressure application is kukumi, and heat application is tutu. '	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+66	1	1	1	1	'Esalen '	'Esalen Massage was developed by Charlotte Selver and works with gentle rocking of the body, passive joint exercises and deep structural work on the muscles and joints, together with an "energetic balancing" of the body.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+63	1	1	1	1	'Breema '	'Breema bodywork is performed on the floor with the recipient fully clothed. It consists of rhythmical and gentle leans and stretches.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+64	1	1	1	1	'Champissage '	'Champissage is a massage technique focusing on the head, neck and face that is believed to balance the chakras.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+65	1	1	1	1	'Deep tissue '	'Deep tissue massage is designed to relieve severe tension in the muscle and the connective tissue or fascia. This type of massage focuses on the muscles located below the surface of the top muscles. Deep tissue massage is often recommended for individuals who experience consistent pain, are involved in heavy physical activity (such as athletes), and patients who have sustained physical injury. It is not uncommon for receivers of deep tissue massage to have their pain replaced with a new muscle ache for a day or two. Deep tissue work varies greatly.
+The term “deep tissue” is often misused to identify a massage that is performed with sustained deep pressure. Deep tissue massage is a separate category of massage therapy, used to treat particular muscular-skeletal disorders and complaints and employs a dedicated set of techniques and strokes to achieve a measure of relief. It should not be confused with “deep pressure” massage, which is one that is performed with sustained strong, occasionally intense pressure throughout an entire full-body session, and that is not performed to address a specific complaint. Deep tissue massage is applied to both the superficial and deep layers of muscles, fascia, and other structures. The sessions are often quite intense as a result of the deliberate, focused work. When a client asks for a massage and uses the term “deep tissue”, more often than not he or she is seeking to receive a full-body session with sustained deep pressure throughout. If a practitioner employs deep tissue techniques on the entire body in one session, it would be next to impossible to perform; it might lead to injury or localized muscle and nerve trauma, thereby rendering the session counterproductive.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+62	1	1	1	1	'Bowen therapy'	'Bowen technique involves a rolling movement over fascia, muscles, ligaments, tendons and joints. It is said not to involve deep or prolonged contact with muscle tissues as in most kinds of massage, but claims to relieve muscle tensions and strains and to restore normal lymphatic flow. Because this technique is so gentle, so Bowen Therapy can be suitable for newborn baby to elderly. It is based on practices developed by Australian Tom Bowen.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+60	1	1	1	1	'Anma '	'Anma is a traditional Japanese massage involving kneading and deep tissue work.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+61	1	1	1	1	'Barefoot deep tissue '	'Barefoot deep tissue, also known as barefoot compressive deep tissue, or barefoot sports massage, is a blend of Eastern barefoot techniques, such as barefoot Shiatsu massage, coupled with a Western manual medicine, encompassing deep tissue, myofascial release, trigger point therapy, transverse friction, compression, tension, shear, PNF, stretching, as well as parasympathetic response, on clothed clients using no oil. Dara Torres, 41-year-old Olympian, received barefoot compression massage on a daily basis in her training program.[20]
+This modality typically uses the heel, sesamoid, arch and/or whole plantar surface of foot, and offers large compression, tension and shear forces with less pressure than elbow or thumb, and is ideal for large muscles, such as in thigh, or for long-duration upper trapezius compressions.[21] The unclothed cousins of this modality are Keralite, Yumeiho, Barefoot Lomi Lomi, Fijian Barefoot, Chavutti Thirummal.
+Ashiatsu Oriental Bar Therapy, which is a form of barefoot effleurage, combines western science and contemporary American ingenuity, for therapists who specialize in deep tissue work using Swedish techniques performed by the massage therapist''s feet.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+59	1	1	1	1	'Ayurvedic '	'Ayurveda is a natural health care system originating in India that incorporates massage, yoga, meditation and herbal remedies. Ayurvedic massage, also known as Abhyangha is usually performed by one or two therapists using a heated blend of herbal oils based on the ayurvedic system of humors.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+57	1	1	1	1	'Acupressure '	'Acupressure (a portmanteau of "acupuncture" and "pressure") is a traditional Chinese medicine (TCM) technique derived from acupuncture. With acupressure physical pressure is applied to acupuncture points by the hand, elbow, or with various devices.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+58	1	1	1	1	'Balinese '	'Balinese massage techniques are gentle and aim to make the patient feel relaxed and calm throughout. The techniques include skin folding, kneading, stroking,and other techniques. The massage therapist applies aromatheraphy oil throughout the massage. A patient''s blood, oxygen and energy flow is said to increase as a result of the treatment.[citation needed] Balinese hot stones are an option.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+56	1	1	1	1	'GMAT'	'The Graduate Management Admission Test (GMAT) is a computer-adaptive standardized test in mathematics and the English language for measuring aptitude to succeed academically in graduate business studies.  The exam measures verbal, mathematical, and analytical writing skills that the examinee has developed over a long period of time in his or her education and work. Test takers answer questions in each of the three tested areas, and there are also two optional breaks; in general, the test takes about four hours to complete.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+55	1	1	1	1	'MCAT'	'The Medical College Admission Test, commonly known as the MCAT, is a computer-based standardized examination for prospective medical students in the United States and Canada. It is designed to assess problem solving, critical thinking, written analysis, and writing skills in addition to knowledge of scientific concepts and principles.  The Verbal Reasoning, Physical Sciences, and Biological Sciences sections are in multiple-choice format. The Writing sample consists of two short essays that are typed into the computer. The passages and questions are predetermined, and thus do not change in difficulty depending on the performance of the test taker.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+54	1	1	1	1	'LSAT'	'The Law School Admission Test (LSAT) is an examination in the United States, Canada (common law programs only), and Australia[1][2] administered by the Law School Admission Council (LSAC) for prospective law school candidates. It is designed to assess Reading Comprehension, logical, and verbal reasoning proficiencies. Administered four times a year, it is a required exam for all ABA-approved law schools. An applicant cannot take the LSAT more than three times within a two-year period.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+53	1	1	1	1	'GRE'	'The Graduate Record Examinations (GRE) is a standardized test that is an admissions requirement for many graduate schools in the United States, in other English-speaking countries and for English-taught graduate and business programs world-wide.  The exam consists of four sections. The first section is a writing section, while the other three are multiple-choice style. One of the multiple choice style exams will test verbal skills, another will test quantitative skills and a third exam will be an experimental section that is not included in the reported score. The entire test procedure takes about 4 hours.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+52	1	1	1	1	'SAT'	'The College Board states that the SAT measures literacy and writing skills that are needed for academic success in college. They state that the SAT assesses how well the test takers analyze and solve problems—skills they learned in school that they will need in college. The SAT is typically taken by high school sophomores, juniors and seniors. Specifically, the College Board states that use of the SAT in combination with high school grade point average (GPA) provides a better indicator of success in college than high school grades alone, as measured by college freshman GPA. Various studies conducted over the lifetime of the SAT show a statistically significant increase in correlation of high school grades and freshman grades when the SAT is factored in.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+42	1	1	1	1	'Hindi'					
+43	1	1	1	1	'Hmong'					
+44	1	1	1	1	'Elementary Math'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+45	1	1	1	1	'Algebra'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+46	1	1	1	1	'Geometry'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+47	1	1	1	1	'Trigonometry'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+48	1	1	1	1	'Biology'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+49	1	1	1	1	'Physics'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+50	1	1	1	1	'Learning materials'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+51	1	1	1	1	'ACT'	'ACT, Inc. says that the ACT assessment measures high school students'' general educational development and their capability to complete college-level work with the multiple choice tests covering four skill areas: English, mathematics, reading, and science. The optional Writing Test measures skill in planning and writing a short essay. Specifically, ACT states that its scores provide an indicator of "college readiness", and that scores in each of the subtests correspond to skills in entry-level college courses in English, algebra, social science, humanities, and biology.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+40	1	1	1	1	'French Creole'					
+41	1	1	1	1	'Greek'					
+28	1	1	1	1	'Chinese (Mandarin)'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+29	1	1	1	1	'French'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+30	1	1	1	1	'German'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+31	1	1	1	1	'Italian'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+32	1	1	1	1	'Tagalog'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+33	1	1	1	1	'Vietnamese'					
+34	1	1	1	1	'Korean'					
+35	1	1	1	1	'Russian'					
+36	1	1	1	1	'Polish'					
+37	1	1	1	1	'Arabic'					
+38	1	1	1	1	'Potuguese'					
+39	1	1	1	1	'Japanese'					
+21	1	1	1	1	'Spring cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+22	1	1	1	1	'Deep cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+23	1	1	1	1	'Insured'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+24	1	1	1	1	'Bonded'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+25	1	1	1	1	'English'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+26	1	1	1	1	'Spanish'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+27	1	1	1	1	'Chinese (Cantonese)'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+15	1	1	1	1	'Bathroom cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+16	1	1	1	1	'Refrigerator cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+17	1	1	1	1	'Dish cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+18	1	1	1	1	'Cleaning supplies'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+19	1	1	1	1	'Move-in cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+20	1	1	1	1	'Move-out cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+14	1	1	1	1	'Gutter cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+13	1	1	1	1	'Pressure washing'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+12	1	1	1	1	'Upholstery cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+11	1	1	1	1	'Carpet cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+10	1	1	1	1	'Window cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+9	1	1	1	1	'Floor waxing'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+8	1	1	1	1	'Wall cleaning'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+7	1	1	1	1	'Bed making'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+6	1	1	1	1	'Laundry'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+5	1	1	1	1	'Dusting'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+4	1	1	1	1	'Sweeping'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+3	1	1	1	1	'Vacuuming'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+2	1	1	1	1	'Mopping'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+1	1	1	1	1	'Ironing'		'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1
+83	1	1	1	1	'Visceral manipulation'	'One form is Mayan abdominal massage which is practiced in many countries in Latin America. This type of massage was developed by Elijio Panti of Belize and brought to the United States by Rosita Arvigo. Even though Panti was a respected and well known user of Mayan massage, he did not develop this modality. "Mayan Massage" techniques have been used since before the Spanish conquest and is still practiced today by many Sobadores or Hueseros (Bonesetters).'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+84	1	1	1	1	'Watsu'	'Watsu is the combination of hydrotherapy and shiatsu developed by Harold Dull. The work is done in skin temperature water with both the therapist and practitioner in the water, usually a pool which is between 3.5 ft to 4 ft (100–120 cm) deep. The work entails much movement in the water and practitioners believe that it incorporates the activation of the energy lines derived from shiatsu.'	'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+85	1	1	1	1	'Fine art moving'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+86	1	1	1	1	'Piano moving'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+87	1	1	1	1	'Own vehicle'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+88	1	1	1	1	'Packaging material'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+89	1	1	1	1	'Packaging service'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+90	1	1	1	1	'Cooking'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+91	1	1	1	1	'Swimming'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+92	1	1	1	1	'Basketball'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+93	1	1	1	1	'Baseball'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+94	1	1	1	1	'Soccer'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+95	1	1	1	1	'Football'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+96	1	1	1	1	'Soccer'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+97	1	1	1	1	'Running'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+98	1	1	1	1	'Golf'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+99	1	1	1	1	'Bowling'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+100	1	1	1	1	'Billiards'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+101	1	1	1	1	'Cricket'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+102	1	1	1	1	'Water Polo'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+103	1	1	1	1	'Polo'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+104	1	1	1	1	'Rugby'		'2011-07-10 00:00:00'	'2011-07-10 00:00:00'	'jd'	1
+105	1	1	1	1	'Green cleaning products'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+106	1	1	1	1	'Cleaning products'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+107	1	1	1	1	'Facebook verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+108	1	1	1	1	'Twitter verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+109	1	1	1	1	'Linked-in verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+110	1	1	1	1	'Criminal background checked'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+111	1	1	1	1	'SSN verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+112	1	1	1	1	'Name verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+113	1	1	1	1	'Address verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+114	1	1	1	1	'Phone number verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+115	1	1	1	1	'Professional license verified'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+116	1	1	1	1	'Residential'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1
+117	1	1	1	1	'Business'		'2011-08-21 00:00:00'	'2011-08-21 00:00:00'	'jd'	1

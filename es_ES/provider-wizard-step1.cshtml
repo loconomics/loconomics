@@ -1,0 +1,143 @@
+
+   @{
+
+  
+    Layout = "~/es_ES/_SiteLayout.cshtml";
+
+
+
+        var db = Database.Open("sqlloco");
+    
+          var firstName = "";
+          var secondName = "";
+          var lastName = "";
+          var postCode = "";
+          var errors = "";
+      
+
+        var LC_UserID = WebSecurity.CurrentUserId;
+        var LC_FName  = Request["firstName"];
+        var LC_FLastName  = Request["lastName"];
+        var LC_LastName  = Request["lastName"];
+        var LC_MName  = Request["secondName"];
+        var LC_PostalCode   = Request["postCode"];
+        var LC_PreferredLanguageID   = Request["langPref"];
+        var LC_PreferredCountryID   = Request["langPref"];
+        var LC_IAgreeTerms   = Request["legalAgree"];
+        Nullable<int> ExistingUserID = null;
+
+        var sql = "insert into users values(@0,@1,@2,@3,@4,@5,@6,@7,1,0,@8,getdate(),getdate(),'sys',1,'../img/eg-profile-pic.jpg')";
+        
+   if(IsPost){
+            
+        ExistingUserID = db.QueryValue("select isnull(UserID,0) as UserID from Users where UserId = @0",LC_UserID);
+
+
+                if(ExistingUserID > 0) { 
+                        
+                    Response.Redirect("~/es_ES/provider-wizard-step2.cshtml");
+
+                  }else{  
+                    
+                    
+                     if (Validation.IsValid()) { 
+                      
+                        
+                        db.Execute(sql,LC_UserID,LC_FName,LC_FLastName,LC_LastName,LC_MName,LC_PostalCode,LC_PreferredLanguageID,LC_PreferredCountryID,LC_IAgreeTerms);
+                        Response.Redirect("~/es_ES/provider-wizard-step2.cshtml");
+                     
+
+                        
+                                                }
+                        }
+                
+            }
+        
+        } 
+    
+    
+  <div id="container" class="sign-up">
+
+    @* If at least one validation error exists, notify the user *@
+    @Html.ValidationSummary(errors)
+    
+	<div id="main">
+		<form id="createLogin1" class="stepped" action="" method="post">
+			<div class="progress-bar">
+				<span class="total"><span class="percent-done"></span></span>
+				<span class="text"><span class="percent-done">0%</span> complete</span>
+			</div>
+			<h1>Step 1: Create a Profile</h1>
+			<img class="inset" src="img/media-placeholder.png" alt="" />
+			<p>Thank you for choosing to offer your services on loconomics.  We're excited to help you generate more income and build your reputation!  Please complete the six steps to create a profile.  You can track your progress using the status bar and come back to any step to update or complete later.  The videos at your right will help guide you through each step.  BUSINESS LANGUAGE.</p>
+		
+			<table class="form">
+				<tr>
+					<td><label for="firstName" @if(!ModelState.IsValidField("firstName")){<text>class="error-label"</text>}>First Name</label></td>
+					<td><input type="text" id="firstName" name="firstName" title="First Name" value="@firstName" @Validation.GetHtml("firstName") /></td>
+					<td class="status"> @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("firstName")</td>
+               </tr>
+				<tr>
+				              
+               		<td><label for="secondName" @if(!ModelState.IsValidField("secondName")){<text>class="error-label"</text>}>Middle Initial or First Last Name</label></td>
+					<td><input type="text" id="secondName" name="secondName" title="Second Name" value="@secondName" @Validation.GetHtml("secondName") /></td>
+					<td class="status"> @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("secondName")</td>
+				</tr>
+				<tr>
+					          		<td><label for="lastName" @if(!ModelState.IsValidField("lastName")){<text>class="error-label"</text>}>Last Name</label></td>
+					<td><input type="text" id="lastName" name="lastName" title="Last Name" value="@lastName" @Validation.GetHtml("lastName") /></td>
+					<td class="status"> @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("lastName")</td>
+				</tr>
+				<tr>
+					               		<td><label for="postCode" @if(!ModelState.IsValidField("postCode")){<text>class="error-label"</text>}>Zip/Postal Code</label></td>
+					<td><input type="text" id="postCode" name="postCode" title="Post Code" value="@postCode" @Validation.GetHtml("postCode") /></td>
+					<td class="status"> @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("postCode")</td>
+				</tr>
+				<tr>
+					<td><label for="langPref">Preferred Language</label></td>
+					<td>
+						<select id="langPref" name="langPref" title="Preferred Language">
+							<option value="1" selected="1">English (US)</option>
+							<option value="2">Español</option>
+						</select>
+					</td>
+					<td class="status"></td>
+				</tr>
+			</table>
+			<fieldset>
+				<input id="legalAgree" name="legalAgree" title="I agree to the Terms of Use and Privacy Policy" type="checkbox" value="1" />
+				<label for="legalAgree">I agree to the <a class="launch-modal" href="#legal">Terms of Use and Privacy Policy</a></label>
+				<span class="status"></span>
+			</fieldset>
+			
+           <fieldset class="buttons">
+				<button id="advancer" class="next fancy" type="submit">Continue</button>
+				<input type="submit" class="hidden" />
+			</fieldset>
+            
+            
+            
+            <!--
+            
+            <fieldset class="buttons">
+	             <input type="submit" value="Next" class="buttons" />
+			</fieldset>
+            
+            <fieldset class="buttons">
+                <button class="next" type="submit">Save &amp; Close</button>
+                <button id="advancer" class="next" type="submit">Continue ➔</button>
+                <a id="advance" href="provider-wizard-step3.html"> </a>
+            </fieldset>
+          -->
+            
+		</form>
+		<p><small>* <strong>A note about third-party services: </strong>Never give your password to untrusted websites or applications, especially those promising to get you followers. We also don't recommend sharing or co-owning accounts with friends. If your account has been compromised, don't re-use your old password. Find more password and safety tips on our Account Safety help page.</small></p>
+    </div><!-- #main -->
+	
+  </div> <!-- #container -->
+
+   

@@ -1,0 +1,8 @@
+﻿@{
+    var db = Database.Open("sqlloco");
+    var sql = "SELECT distinct PositionSingular as label FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID =2";
+    var term = Request["serviceType"] + "%";
+    var result = db.Query(sql, term);
+    var data = result.Select(p => new{label = p.label});
+    Json.Write(data, Response.Output);
+}

@@ -1,0 +1,199 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><!-- TODO Investigate why this throws error in W3C validator -->
+
+  <title>Loconomics</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1"><!-- Mobile viewport optimized: j.mp/bplateviewport -->
+
+  <!-- TODO favicon -->
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- All JavaScript at the bottom, except this Modernizr build incl. -->
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+
+</head>
+
+<body>
+
+  <div id="container" class="sign-up">
+
+	<div id="main">
+		<form id="createLogin3" class="stepped" action="">
+			<div class="progress-bar">
+				<span class="total"><span class="percent-done"></span></span>
+				<span class="text"><span class="percent-done">30%</span> complete</span>
+			</div>
+			<h1>Step 3: Job Title Details</h1>
+			<p>Customers in the loconomics community want to know as much as possible about each service you're offering.  Please help us by being concise, detailed, and honest.  Keep in mind it can be updated as you acquire more skills.</p>
+			<h2>Housekeeper</h2>
+			<table class="form">
+				<tr>
+					<td><label for="housekeeperDetails">Please type here a brief description of your experience as a cleaner and what makes your services unique.  Be specific and brief.</label></td>
+					<td><textarea id="housekeeperDetails" rows="5" cols="40"></textarea></td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td>Details about the service</td>
+					<td>
+						<fieldset class="checklist">
+							<fieldset><input type="checkbox" value="lorem" id="hk1" /> <label for="hk1">Lorem ipsum dolor</label></fieldset>
+							<fieldset><input type="checkbox" value="ipsum" id="hk2" /> <label for="hk2">Consectitur</label></fieldset>
+							<fieldset><input type="checkbox" value="dolor" id="hk3" /> <label for="hk3">Nullam sed ante leo</label></fieldset>
+							<fieldset><input type="checkbox" value="sit" id="hk4" /> <label for="h46">Etiam sodales est nec turpis ultricies scelerisque</label></fieldset>
+							<fieldset><input type="checkbox" value="amet" id="hk5" /> <label for="hk5">Sit amet</label></fieldset>
+						</fieldset>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td><label for="minTime">What is the minimum time you're willing to this job?</label></td>
+					<td>
+						<select id="minTime">
+							<option value="" selected="selected">15 minutes</option>
+							<option value="">30 minutes</option>
+							<option value="">1 hour</option>
+							<option value="">2 hours</option>
+						</select>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td><label for="maxTime">What is the maximum number of hours per week you can perform this job?</label> </td>
+					<td>
+						<select id="maxTime">
+							<option value="" >2 hours</option>
+							<option value="">4 hours</option>
+							<option value="">6 hours</option>
+							<option value="" selected="selected">8 hours</option>
+						</select>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td><label for="minBetween">What is the minimum time you need between clients?</label></td>
+					<td>
+						<select id="minBetween">
+							<option value="" selected="selected">15 minutes</option>
+							<option value="">30 minutes</option>
+							<option value="">1 hour</option>
+							<option value="">2 hours</option>
+						</select>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td>Education, Training, &amp; Certifications:</td>
+					<td>
+						<fieldset class="checklist">
+							<fieldset><input type="checkbox" value="lorem" id="hk1" /> <label for="hk1">Lorem ipsum dolor</label></fieldset>
+							<fieldset><input type="checkbox" value="ipsum" id="hk2" /> <label for="hk2">Consectitur</label></fieldset>
+							<fieldset><input type="checkbox" value="dolor" id="hk3" /> <label for="hk3">Nullam sed ante leo</label></fieldset>
+							<fieldset><input type="checkbox" value="sit" id="hk4" /> <label for="hk4">Etiam sodales est nec turpis ultricies scelerisque</label></fieldset>
+							<fieldset><input type="checkbox" value="amet" id="hk5" /> <label for="hk5">Sit amet</label></fieldset>
+						</fieldset>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td><label for="experience">Experience Level:</label></td>
+					<td>
+						<select id="experience">
+							<option value="" selected="selected">Less than one year</option>
+							<option value="">One year</option>
+							<option value="">Two years</option>
+							<option value="">Ten years</option>
+						</select>
+					</td>
+					<td class="status"></td>
+				</tr>
+				<tr>
+					<td>Where are you willing to work?</td>
+					<td>
+						<select id="travelRadius">
+							<option value="" selected="selected">Service radius</option>
+							<option value="">5 miles</option>
+							<option value="">10 miles</option>
+							<option value="">50 miles</option>
+							<option value="">100 miles</option>
+						</select>
+						<fieldset><input type="checkbox" value="lorem" id="tr1" /> <label for="tr1">I have my own vehicle</label></fieldset>
+						<fieldset><input type="checkbox" value="ipsum" id="tr2" /> <label for="tr2">I use public transportation</label></fieldset>
+					</td>
+					<td class="status"></td>
+				</tr>
+			</table>
+			<fieldset class="buttons">
+				<button class="next fancy" type="submit">Save &amp; Close</button>
+				<button id="advancer" class="next fancy" type="submit">Carpenter Details ➔</button>
+				<input type="submit" class="hidden" />
+			</fieldset>
+		</form>
+    </div><!-- #main -->
+	
+  </div> <!-- #container -->
+
+    <header>
+		<div class="wrap">
+			<a id="logo" class="replace" href="index.html">Loconomics, at your service.</a>
+			<ul>
+				<li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
+				<li><a class="launch-modal" href="#sign-in">Sign in</a> | <a href="#">Sign up</a> | <a href="#">How it works</a></li>
+				<li>
+					<form id="langSelect" action="/">
+						<select>
+							<option value="" selected>Select a language</option>
+							<option value="eng-us">English (US)</option>
+							<option value="spanish">Español</option>
+						</select>
+						<button class="accessible fanciful" type="submit">Go</button>
+					</form>
+				</li>
+				<li><a class="button go fanciful" href="#">Become a provider</a></li>
+				<li><a class="replace icon cart" href="#">Cart</a></li>
+			</ul>
+		</div>
+    </header>
+
+    <footer><a href="#">About</a> | <a href="#">Terms &amp; Privacy</a> | <a href="#">Help</a> | <a href="#">Blog</a></footer>
+
+  <!-- JavaScript at the bottom for fast page loading -->
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+
+
+  <!-- scripts concatenated and minified via build script -->
+  <script defer src="js/libs/date.js"></script>
+  <script defer src="js/libs/jquery.autocomplete.js"></script>
+  <script defer src="js/libs/jquery.datePicker.js"></script>
+  <script defer src="js/script.js"></script>
+  <!-- end scripts -->
+
+
+  <!-- TODO Change UA-XXXXX-X to be your site's ID -->
+  <script>
+    // window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+    // Modernizr.load({
+    //   load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+    // });
+  </script>
+
+
+  <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+       chromium.org/developers/how-tos/chrome-frame-getting-started -->
+  <!--[if lt IE 7 ]>
+    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+
+</body>
+</html>

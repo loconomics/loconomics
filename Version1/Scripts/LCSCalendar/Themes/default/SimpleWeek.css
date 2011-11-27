@@ -1,0 +1,27 @@
+﻿td.LCSCalendar_SimpleWeekActive
+{
+    width:40px;
+    height:30px;
+    text-align:center;
+    background-color:#00989A;
+    
+    border:1pt solid #00989A;
+}
+
+
+td.LCSCalendar_SimpleWeekLeft
+{
+     border-right:1pt solid #00989A;    
+     padding-right:10px;
+}
+
+#LSCCalendarShowFormContainer
+{
+     width: 200px;
+     padding-top: 10px;
+}
+
+
+
+
+

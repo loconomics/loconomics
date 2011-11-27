@@ -1,0 +1,24 @@
+﻿
+@{
+    WebSecurity.InitializeDatabaseConnection("sqlloco", "userprofile", "UserId", "Email", false);
+
+    // To let users of this site log in using their accounts from other sites such as Facebook, Twitter, 
+    // and Windows Live, you must update this site. For more information visit 
+    // http://go.microsoft.com/fwlink/?LinkID=226949
+    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
+    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
+
+    WebMail.SmtpServer = "smtp.gmail.com";
+    WebMail.SmtpPort = 587;
+    WebMail.EnableSsl = true;
+    WebMail.UserName = "loconomics.devteam@gmail.com";
+    WebMail.Password = "Loconomics";
+    WebMail.From = "loconomics.devteam@gmail.com";
+    
+    //WebMail.SmtpServer = "localhost";
+    //WebMail.EnableSsl = true;
+    //WebMail.SmtpPort = 25;
+    //WebMail.UserName = "loconomics.devteam@gmail.com";
+    //WebMail.Password = "Loconomics";
+    //WebMail.From = "loconomics.devteam@gmail.com";
+}

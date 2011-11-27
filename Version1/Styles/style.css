@@ -1,0 +1,556 @@
+/*
+ * HTML5 ✰ Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ *
+ * Detailed information about this CSS: h5bp.com/css
+ *
+ * ==|== normalize ==========================================================
+ */
+
+
+/* =============================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+audio:not([controls]) { display: none; }
+[hidden] { display: none; }
+
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body { margin: 0; font-size: 13px; line-height: 1.231; }
+
+body, button, input, select, textarea { font-family: sans-serif; color: #222; }
+
+::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }
+
+
+/* =============================================================================
+   Links
+   ========================================================================== */
+
+a { color: #00989a; }
+a:visited { color: #b2e1e1; }
+a:hover { color: #8B2143; }
+a:focus { color: #99C027; }
+
+a:hover, a:active { outline: 0; }
+
+
+/* =============================================================================
+   Typography
+   ========================================================================== */
+
+abbr[title] { border-bottom: 1px dotted; }
+
+b, strong { font-weight: bold; }
+
+blockquote { margin: 1em 40px; }
+
+dfn { font-style: italic; }
+
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+/* Redeclare monospace font family: h5bp.com/j */
+pre, code, kbd, samp { font-family: monospace, serif; _font-family: 'courier new', monospace; font-size: 1em; }
+
+/* Improve readability of pre-formatted text in all browsers */
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+q { quotes: none; }
+q:before, q:after { content: ""; content: none; }
+
+small { font-size: 75%; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* =============================================================================
+   Lists
+   ========================================================================== */
+
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+dd { margin: 0 0 0 40px; }
+nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
+
+
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+svg:not(:root) { overflow: hidden; }
+
+
+/* =============================================================================
+   Figures
+   ========================================================================== */
+
+figure { margin: 0; }
+
+
+/* =============================================================================
+   Forms
+   ========================================================================== */
+
+form { margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; }
+
+label { cursor: pointer; }
+
+legend { border: 0; *margin-left: -7px; padding: 0; }
+
+button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+
+button, input { line-height: normal; *overflow: visible; }
+
+table button, table input { *overflow: auto; }
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; }
+
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+textarea { overflow: auto; vertical-align: top; resize: vertical; }
+
+input:valid, textarea:valid {  }
+input:invalid, textarea:invalid { background-color: #f0dddd; }
+
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+
+/* ==|== primary styles =====================================================
+   Author: Jordyn Bonds for Loconomics, Inc.
+   ========================================================================== */
+
+/* Color Guide
+Teal	#00989A
+Lt Teal #b5e1e2
+Green	#99C027
+Red 	#8B2143
+Purple 	#461864
+Blue 	#006A8D
+Orange 	#E95D0F
+Yellow 	#F0B600
+*/
+
+body { color: #666; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; line-height: 150%; text-align: center; }
+
+a { color: #00989a; }
+a:visited { color: #999999; }
+a:hover { color: #99C027; }
+a:focus { color: #99C027; }
+
+h1, h2, h3, h4, h5, h6 { margin: 1em 0; font-weight: 600; color: #00989A; }
+h1 { color: #b5e1e2; font-size: 3.4em; line-height: 100%; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.8em; }
+.profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
+h4 { font-size: 1.6em; }
+h5 { font-size: 1.4em; }
+h6 { font-size: 1.2em; }
+
+.greeting { color: #461864; font-weight: bold; font-size: 1.8em; margin: .5em 0 1.5em 0;  }
+
+ul, ol { padding: 0 0 0 20px; }
+
+dd { margin: 0; }
+
+form fieldset, table.form td { padding: .5em .5em .5em 0; }
+
+form.stepped input[type="text"], form.stepped input[type="password"] { 
+	display: inline-block; padding: 0 1.4em; width: 200px; 
+	border: none; background: #b5e1e2; color: #00989a; font-size: .9em; line-height: 185%;
+}
+form.stepped input[type="text"]:focus, form.stepped input[type="password"]:focus { background: #99C027; color: #fff; border: none; outline: none; } 
+form.stepped input[type="text"].error, form.stepped input[type="password"].error { background: #8B2143; color: #fff; }
+
+form.stepped input[type="submit"] {
+	background : url("../img/button-next.gif") no-repeat 0 0;
+	width : 133px;
+	height :48px;
+	border : none;
+	color : transparent;
+	font-size: 0;
+}
+form.stepped input[type="submit"]:hover { background-position: 0 -48px; }
+
+form select:focus, form input[type="checkbox"]:focus { outline: #99C027 solid 2px; }
+
+form input.time { width: 40px; }
+form input.date-pick { width: 90px; }
+
+.replace { display: inline-block; height: 0; overflow: hidden; background-repeat: no-repeat; background-position: 0 0; }
+a.icon { width: 27px; padding-top: 27px; }
+a.icon:hover { background-position: 0 -27px; }
+a.facebook { background-image: url('../img/icon-facebook.png'); }
+a.twitter { background-image: url('../img/icon-twitter.png'); }
+a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
+a.cart:hover { background-position: 10px -25px; }
+
+button, a.button { 
+	display: inline-block; padding: 0 1.8em; 
+	background: #00989a; color: #fff; border: none; /* undo button styling */
+	font-size: .8em; line-height: 180%; text-decoration: none;
+}
+button:hover, a.button:hover, button:focus, a.button:focus { background-color: #99C027; border: none; outline: none; }
+
+button.next { display: inline-block; padding: 0 1em; border: none; background: #b5e1e2; color: #00989a; font-size: 1.6em; line-height: 185%; }
+button.next:hover, button.next:focus { background: #00989a; color: #fff; }
+
+a.message { background: #F0B600; color: #fff; }
+a.message:hover, a.message:focus { background: #E95D0F; }
+
+a.profile, a.profile.current:hover, a.profile.current:focus,
+button.search-again:hover { background: #A190AF; color: #fff; } 
+a.profile.current, a.profile:hover, a.profile:focus,
+button.search-again { background: #461864; color: #fff; }
+
+
+.inset { float: right; margin: 1em 0 1em 1em; }
+
+form.stepped { position: relative; min-height: 500px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #ccc; }
+form.stepped fieldset.buttons { display: block; margin-top: 20px; text-align: right; }
+form.stepped fieldset.add { text-align: left; }
+form.stepped table.form tr td:first-child { width: 40%; }
+form.stepped fieldset.checklist { float: left; width: 40%; padding: 5px 5% 5px 0; }
+form.stepped .checklist fieldset { margin: 0; padding: 0; }
+form.stepped .checklist label, form.stepped .radiolist label { font-size: .9em; }
+form.stepped #theCalendar { float: right; width: 300px; margin-left: 1em; }
+
+form.stepped #theCalendar dl dt { position: relative; }
+form.stepped #theCalendar dl dt a { position: absolute; right: 0; }
+
+form.stepped table td { padding: 5px 0; }
+form.stepped table td h4 { margin-bottom: 0; }
+
+ul.collection { margin: 0; padding: 0; }
+ul.collection.empty { border: 1px dashed #ccc; }
+ul.collection li { list-style-type: none; margin: 0 .5em .5em 0; padding: .1em 1em; display: inline-block; background: #efefef; }
+ul.collection li:before { content: "• "; }
+ul.collection li:hover { color: #efefef; background: #8B2143; cursor: pointer; }
+ul.collection li:hover:before { content: "✖ "; }
+
+div.progress-bar { float: right; vertical-align: middle; } 
+div.progress-bar span { display: inline-block; vertical-align: middle; }
+div.progress-bar .total { width: 150px; height: 35px; background: #eee; }
+div.progress-bar .total .percent-done { width: 0; height: 35px; background: #b5e1e2; }
+
+ul.profile-list li { position: relative; list-style-type: none; padding: 0 0 20px 0; margin: 0 0 20px 0; border-bottom: 1px dashed #ccc; }
+ul.profile-list li h3 { margin: 0; line-height: 25px; }
+ul.profile-list li h3 .job-status { display: inline-block; margin-left: 1em; font-size: 12px; font-weight: normal; }
+ul.profile-list li .job-actions { position: absolute; bottom: 20px; right: 10px; }
+ul.profile-list table { margin: 12px 0; }
+ul.profile-list table td { padding-right: 16px; }
+ul.profile-list .profile-stats { float: right; }
+ul.profile-list .progress-bar { font-size: 12px; padding-right: 16px; }
+ul.profile-list .progress-bar .total { width: 130px; height: 25px; }
+ul.profile-list .progress-bar .percent-done { height: 25px; }
+
+ul.search-results li { position: relative; list-style-type: none; padding: 0 0 20px 0; margin: 0 0 20px 0; border-bottom: 1px dashed #ccc; }
+ul.search-results li .col { float: left; padding-right: 20px; }
+ul.search-results li h3 { margin: .2em 0 0 0; line-height: 25px; }
+ul.search-results li h3 a { text-decoration: none; }
+ul.search-results li .id img { width: 100px; height: auto; }
+ul.search-results li .id img[src=""] { margin: 0; width: auto; }
+ul.search-results li .book { text-align: center; }
+ul.search-results li p.rate { margin-top: .1em; font-size: 38px; font-weight: bold; border: none; color: #461864; }
+ul.search-results li .review { width: 190px; padding: 0; }
+ul.search-results li .review img { float: left; margin: 0 10px 0 0; width: 40px; height: auto; }
+ul.search-results li .review blockquote { margin: 0 0 0 50px; line-height: 135%; }
+/*ul.search-results table { margin: 12px 0; }
+ul.search-results table td { padding-right: 16px; }*/
+
+.profile-progress .progress-bar { float: none; }
+
+ul.reviews { padding: 0; margin: 0; font-size: .8em; }
+ul.reviews li { position: relative; list-style-type: none; padding: 10px 0; margin: 0 0 10px 0; border-bottom: 1px dashed #ccc; }
+ul.reviews li div.author { float: left; }
+ul.reviews li div.author img { display: block; width: 75px; height: auto; }
+ul.reviews li div.wrap { margin-left: 100px; }
+ul.reviews li div.wrap p { margin-top: 0; }
+
+.folders > ul.tabs { position: relative; z-index: 2; margin: 0; padding: 0 0 0 10px; }
+.folders > ul.tabs li { float: left; list-style-type: none; }
+.folders > ul.tabs li a { 
+	display: block; width: 118px; height: 22px; 
+	background: url('../img/tab-off.png') no-repeat top left; 
+	line-height: 19px; font-size: 12px; text-decoration: none; color: #461864; 
+	padding-top: 3px; text-align: center; }
+.folders > ul.tabs li a:hover { background-image: url('../img/tab-hover.png'); }
+.folders > ul.tabs li a.current, .folders > ul.tabs li a.current:hover { padding-top: 4px; background-image: url('../img/tab-on.png'); }
+
+.folders > .tab-body { 
+	display:none; position: relative; z-index: 1; top: 20px; padding: 20px; min-height: 400px;
+	border: 2px solid #461864; background: #F5F5F5;
+}
+.folders > .tab-body.current { display: block; }
+
+.buttons ul.tabs { height: 40px; padding: 0; }
+.buttons ul.tabs li { display: inline-block; list-style-type: none; }
+
+.buttons .tab-body { display:none; padding: 0; min-height: 400px; }
+.buttons .tab-body.current { display: block; }
+
+.mini-form { margin-bottom: 24px; }
+.mini-form label { display: block; }
+.mini-form textarea { margin: 12px 0; width: 400px; height: 170px; padding: 8px; display: block; font-size: 12px; }
+.mini-form img { display: block; margin: 12px 0; }
+.mini-form button { margin: 0; }
+
+#profile div { padding-bottom: 2em; border-bottom: 1px dashed #ccc; }
+#profile h3 { color: #461864; }
+#profile button { margin-top: 12px; }
+
+#aboutMe { float: right; }
+
+table.ratings { table-layout: fixed; }
+table.ratings tr { margin-bottom: 12px; }
+table.ratings td { padding: 0; background: url('../img/star-off.gif') repeat-x center left; vertical-align: middle; line-height: 16px; }
+table.ratings td img { float: left; }
+table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
+
+/* Page Structure */
+
+#container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
+#container { position: relative; padding: 200px 0 100px 0; }
+
+#main { float: left; width: 670px; }
+#secondary { margin-left: 712px; }
+
+.sign-up #main { float: none; width: auto; }
+
+.dashboard #main { float: right; width: 732px; }
+.dashboard #secondary { margin: 0 774px 0 0; }
+
+.profile #main, .search #main { float: right; width: 730px; }
+.profile #secondary, .search #secondary { margin: 0 765px 0 0; }
+.profile #container, #container.search { font-size: .8em; }
+
+header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
+header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
+header a, header a:link, header a:visited { color: #00989a; text-decoration: none; }
+header a.button { color: #fff; }
+header .new-user a { margin: 0 .5em; }
+header .new-user a:hover { color: #99C027; }
+header #logo.replace { position: absolute; top: 0; left: 0; width: 269px; padding-top: 103px; background-image: url('../img/loconomics-logo.png'); }
+header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
+header ul li { display: inline-block; margin: 0 0 0 1em; color: #00989a; }
+header form button { display: none; }
+
+footer { margin: 75px auto; font-size: .9em; color: #a1a1a1; text-align: center; }
+footer a { text-decoration: none; color: #a1a1a1; }
+footer a:hover { text-decoration: underline; color: #a1a1a1; }
+
+/* Super-Specific */
+
+#createLogin2 fieldset, #createLogin2 label { display: block; margin-bottom: 1em; }
+
+#selectedTitles { width: 450px; min-height: 5em; }
+
+#profileHeader { margin-bottom: 40px; position: relative; }
+#profileHeader .profile-pic { float: left; margin: 0 20px 0 0; width: 148px; height: auto; }
+#profileHeader .wrap { margin-left: 145px; }
+#profileHeader p { color: #999; line-height: 140%; }
+#profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
+#profileHeader .buttons a { margin-right: 5px; }
+h1.profile-name { font-size: 18px; color: #461864; margin: 0; width: 417px; }
+h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color: #461864; margin: 0; }
+
+.profile #main div.rate { float: right; width: 180px; padding: 14px 0 14px 14px; border-left: 1px solid #ccc; text-align: center; }
+.profile #main div.rate p.rate { padding: 1em 0; margin: 0 0 16px 0; 
+	font-size: 38px; font-weight: bold; border: 5px solid #461864; color: #461864; 	
+}
+.profile #main div.rate table { width: 50%; }
+
+.profile #main div.work { margin-right: 209px; }
+
+.profile #main div.feature { float: right; width: 200px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
+.profile #main div.feature img { float: left; width: 45px; height: auto; }
+.profile #main div.feature blockquote { margin: 0 0 14px 54px; }
+
+#searchAgain { padding: 14px; margin: 25px 0; background: #F5F5F5; color: #3B3B3B; }
+#searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
+#searchAgain > fieldset { padding: 14px 6px; border-top: 1px solid #C1C1C1; font-size: .9em; line-height: 120%; }
+#searchAgain fieldset.search-params { padding-bottom: 0; }
+#searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
+#searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
+
+.home #main { float: none; width: auto; text-align: center; }
+/*.home #main { float: left; width: 615px; text-align: left; }*/
+.home #main h1 { margin-bottom: 20px; padding-right: 15px; }
+.home form fieldset { margin: .5em 0; }
+.categories ul { margin: 100px 0 0 0; padding: 0; }
+.categories ul li { display: inline; list-style-type: none; margin: 0; padding: 0; }
+.home #secondary { margin: 40px 0 0 625px; text-align: left; }
+
+.faq dt { font-weight: bold; }
+.faq dd { margin: 1em 0; }
+
+#howItWorks { margin: 60px 0 0 0; padding: 0; width: 400px; text-align: left; }
+#howItWorks li { margin: 0 0 30px 0; padding: 0 0 30px 0; height: 66px; list-style-type: none; border-bottom: 2px dashed #b5e1e2; }
+#howItWorks li img.num { float: left; }
+#howItWorks li img.icon { float: right; }
+#howItWorks li h3 { margin: 0 95px 0 65px; font-size: 26px; font-weight: normal; line-height: 125%; }
+#howItWorks li.performed h3 { margin-top: .8em; }
+#howItWorks li h3 a { text-decoration: none; color: #00989A; }
+
+/**
+ * Auto Complete 5.1
+ * April 13, 2010
+ * Corey Hart @ http://www.codenothing.com
+ */ 
+
+ul.auto-complete-list{list-style-type:none;margin:0;padding:0;position:absolute;z-index:100;max-height:250px;overflow:auto;width:75%;}
+ul.auto-complete-list li{list-style-type:none;margin:0 1em;padding:1px 5px;background-color:white;border:1px solid #ccc;border-top:none;cursor:pointer;background:#fff;color:#00989a;font-size:.9em;line-height:185%;text-align:left;}
+ul.auto-complete-list li.auto-complete-list-rollover{background-color:#efefef;}
+ul.auto-complete-list .auto-complete-striped{background-color:#D7EEF9;}
+
+
+/*	Date Picker
+	I compressed these - JB
+*/
+
+table.jCalendar{border:1px solid #999;background:#fff;border-collapse:separate;border-spacing:2px;}
+table.jCalendar th{background:#B5E1E2;color:#fff;font-weight:bold;padding:3px 5px;}
+table.jCalendar td{background:#eee;color:#000;padding:3px 5px;text-align:center;}
+table.jCalendar td.other-month{background:#ddd;color:#aaa;}
+table.jCalendar td.today{background:#666;color:#fff;}
+table.jCalendar td.selected{background:#f66;color:#fff;}
+table.jCalendar td.selected.dp-hover{background:#f33;color:#fff;}
+table.jCalendar td.dp-hover,
+table.jCalendar tr.activeWeekHover td{background:#fff;color:#000;}
+table.jCalendar tr.selectedWeek td{background:#f66;color:#fff;}
+table.jCalendar td.disabled,table.jCalendar td.disabled.dp-hover{background:#efefef;color:#888;}
+table.jCalendar td.unselectable,
+table.jCalendar td.unselectable:hover,
+table.jCalendar td.unselectable.dp-hover{background:#bbb;color:#888;}
+
+/* For the date-picker popup */
+
+a.dp-choose-date{display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;}
+div.dp-popup{position:relative;background:#efefef;font-size:10px;font-family:arial,sans-serif;padding:2px;width:171px;line-height:1.2em;}
+div#dp-popup{position:absolute;z-index:199;}
+div.dp-popup h2{font-size:12px;text-align:center;margin:2px 0;padding:0;}
+a#dp-close{font-size:11px;padding:4px 0;text-align:center;display:block;}
+a#dp-close:hover{text-decoration:underline;}
+div.dp-popup a{color:#000;text-decoration:none;padding:3px 2px 0;}
+div.dp-popup div.dp-nav-prev{position:absolute;top:2px;left:4px;width:100px;}
+div.dp-popup div.dp-nav-prev a{float:left;}
+/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
+div.dp-popup div.dp-nav-prev a,div.dp-popup div.dp-nav-next a{cursor:pointer;}
+div.dp-popup div.dp-nav-prev a.disabled,div.dp-popup div.dp-nav-next a.disabled{cursor:default;}
+div.dp-popup div.dp-nav-next{position:absolute;top:2px;right:4px;width:100px;}
+div.dp-popup div.dp-nav-next a{float:right;}
+div.dp-popup a.disabled{cursor:default;color:#aaa;}
+div.dp-popup td{cursor:pointer;}
+div.dp-popup td.disabled{cursor:default;}
+
+
+/* My own personal "non-semantic helper classes" */
+
+.fancy {
+	-moz-border-radius: 12px; /* FF1-3.6 */
+	-webkit-border-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
+    border-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
+    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;	
+}
+
+.fanciful { 
+	-moz-border-radius: 22px; /* FF1-3.6 */
+	-webkit-border-radius: 22px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
+    border-radius: 22px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
+    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;	
+}
+
+
+/* ==|== non-semantic helper classes ========================================
+   Please define your styles before this section.
+   ========================================================================== */
+
+/* For image replacement */
+.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }
+.ir br { display: none; }
+
+/* Hide from both screenreaders and browsers: h5bp.com/u */
+.hidden { display: none !important; visibility: hidden; }
+
+/* Hide only visually, but have it available for screenreaders: h5bp.com/v */
+.visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* Contain floats: h5bp.com/q */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+
+
+/* ==|== media queries ======================================================
+   PLACEHOLDER Media Queries for Responsive Design.
+   These override the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 480px) {
+  /* Style adjustments for viewports 480px and over go here */
+
+}
+
+@media only screen and (min-width: 768px) {
+  /* Style adjustments for viewports 768px and over go here */
+
+}
+
+
+
+/* ==|== print styles =======================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+  * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* h5bp.com/t */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}

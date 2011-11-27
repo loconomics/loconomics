@@ -1,0 +1,7 @@
+﻿@{
+    var db = Database.Open("sqlloco");
+    var sql = @"exec ListPositions";
+    var data = db.Query(sql,1,1);
+    Json.Write(data, Response.Output);
+    }
+   

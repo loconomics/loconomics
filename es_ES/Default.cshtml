@@ -1,0 +1,44 @@
+﻿@{  
+    Layout = "~/es_ES/_SiteLayout.cshtml";
+    Page.Title = "Haz tu vida más fácil.";
+
+}
+
+
+
+
+  <div id="container" class="home clearfix"> 
+    <div id="main" class="">
+		<h1>@Page.Title</h1>
+		<form id="homeSearch" action="@Href("~/es_ES/Search")" method="post">
+			<fieldset>
+				<label for="serviceType">&iquest;qu&eacute; servicio buscas? </label>
+            <input type="text" name="serviceType" id="serviceType" value="e.g. Transportista, Profesor/a..." />
+            <!-- <input class="go" type="submit" value="Find Services"/> -->
+				<button class="fancy" type="submit">Encuentra profesionales</button>
+			</fieldset>
+			<fieldset>
+				<select id="serviceLocation" name="serviceLocation">
+					<option value="" selected>Selecciona una ubicaci&oacute;n</option>
+					<option value="madrid">Madrid</option>
+					<option value="minneapolis">Minneapolis</option>
+					<option value="new-york">NYC</option>
+				</select>
+				<label for="serviceDate">Fecha preferida:</label> <input type="text" id="serviceDate" name="serviceDate" class="date-pick" value="today" />
+			</fieldset>
+		</form>
+     <div class="categories">
+			<ul>
+			    <li><a href="@Href("~/es_ES/Search?Service=Home")"><img src="@Href("~/img/splash-icon-home.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Child")"><img src="@Href("~/img/splash-icon-child.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Pet")"><img src="@Href("~/img/splash-icon-pets.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Personal")"><img src="@Href("~/img/splash-icon-people.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Transport")"><img src="@Href("~/img/splash-icon-transport.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Elder")"><img src="@Href("~/img/splash-icon-elderly.gif")" alt="" /></a></li>
+				<li><a href="@Href("~/es_ES/Search?Service=Celebration")"><img src="@Href("~/img/splash-icon-celebrations.gif")" alt="" /></a></li>
+			</ul>
+		</div>
+    </div><!-- #main -->
+
+   </div><!-- #container -->
+

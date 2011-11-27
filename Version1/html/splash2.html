@@ -1,0 +1,74 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Loconomics</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- TODO favicon -->
+
+  <style type="text/css">
+	body { text-align: center; color: #bbb; }
+	#container { width: 700px; padding: 150px 0 0 0; margin: 0 auto; }
+	.replace { display: inline-block; height: 0; overflow: hidden; background-repeat: no-repeat; background-position: 0 0; }
+	#logo.replace { margin: 0 0 70px 0; width: 267px; padding-top: 80px; background-image: url('img/loconomics-logo-splash.png'); }
+	form { margin-bottom: 35px; }
+	form input, form button {
+		-moz-border-radius: 8px; /* FF1-3.6 */
+		-webkit-border-radius: 8px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
+	    border-radius: 8px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
+	    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;
+	}
+	form input { height: 40px; padding: 0 10px; font: italic normal 20px/40px Georgia, Times, "Times New Roman", serif; border: 1px solid #ddd; color: #ccc; }
+	form input:focus { outline: none; }
+	form button { display: inline-block; padding: 0 10px; border: none; background: #b5e1e2; color: #fff; font-size: 20px; line-height: 40px; }
+	form button:hover { background: #00989a; }
+	p { margin-bottom: 70px; }
+	p img:first-child { margin-right: 9px; }
+  </style>
+
+</head>
+
+<body class="spash">
+	
+  <div id="container" class="clearfix">
+	
+	<a id="logo" class="replace" href="index.html">Loconomics, at your service.</a>
+
+	<p><img src="img/splash-row1.gif" /> <img src="img/splash-row2.gif" /></p>
+
+	<form>
+		<input type="text" id="email-signup" value="Email Address" />
+		<button type="submit">Get Updates</button>
+	</form>
+	
+	<p><small><em>Rest assured, we will not share your email address with anyone.</em></small></p>
+	
+  </div><!-- #container -->
+
+  <script src="js/libs/jquery-1.6.2.min.js"></script>
+
+  <script type="text/javascript">
+	$(document).ready(function(){
+
+		$('form input[type="text"]').focus(function() {
+				if( this.value == this.defaultValue ) {
+					this.value = "";
+				}
+			}).blur(function() {
+				if( !this.value.length ) {
+					this.value = this.defaultValue;
+				}
+		});
+	});
+  </script>
+
+</body>
+</html>
