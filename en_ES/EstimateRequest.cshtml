@@ -53,7 +53,7 @@
             EstimateResult += (estimateProfile.varValue==null?0: Convert.ToInt32(estimateProfile.varValue)) * (estimateVarValue==null?0:estimateVarValue);
         }
         db.Close();
-        Response.Redirect("~/EstimateRequest.cshtml?EstimateResult="+EstimateResult);
+        Response.Redirect("~/en_ES/EstimateRequest.cshtml?EstimateResult="+EstimateResult);
     }
 }
   
@@ -140,10 +140,10 @@
         @* If at least one validation error exists, notify the user *@
         @Html.ValidationSummary(errors)
 
-        <h1>Service Estimate Profile</h1>
+        <h1>Request free quote</h1>
 	    <form id="EstimateRequest" class="stepped" action="" method="post">
 		    <img class="inset" src="img/media-placeholder.png" alt="" />
-		    <p>Set the estimate parameters for your service</p>
+		    <p>Tell us what you need</p>
             <!-- debug statements 
             <p id="debugval">val:</p>
             <p id="debugtext">text:</p>
