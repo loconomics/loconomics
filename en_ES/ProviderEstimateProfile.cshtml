@@ -1,10 +1,10 @@
 ﻿@using System.Text.RegularExpressions;
 @{
     if (WebSecurity.IsAuthenticated) {
-        Layout = "~/_SiteLayout.cshtml";
+        Layout = "~/en_ES/_SiteLayout.cshtml";
         var UserID  = WebSecurity.CurrentUserId;
     }else{
-        Response.Redirect("~/Default");
+        Response.Redirect("~/en_ES/Default");
     }
 
     var providerID = "";
@@ -87,7 +87,6 @@
   //              if(!match.Success){
   //                  ModelState.AddError("estimateVarValue","The value must be a number");
   //              }else{ 
-                if(
                     if(isNewRegister==null){
                         db.Execute(SQLINSERT2, servicePricingTypeID, estimateVarID, estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
                     }else{
@@ -188,7 +187,7 @@ $(document).ready(function () {
 
         <h1>Service Estimate Profile</h1>
 	    <form id="createEstimateProfile" class="stepped" action="" method="post">
-		    <img class="inset" src="img/media-placeholder.png" alt="" />
+		    <img class="inset" src="../img/media-placeholder.png" alt="" />
 		    <p>Set the estimate parameters for your service</p>
             <!-- debug statements 
             <p id="debugval">val:</p>
