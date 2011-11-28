@@ -1,69 +1,46 @@
 @{  
-    Layout = "~/en_US/_SiteLayout.cshtml";
+    Layout = "~/en_ES/_SiteLayout.cshtml";
     Page.Title = "Make your life better!";
-
-
         var aboutMe = "";
         var stringPosted = "Nothing";
         var UserID = WebSecurity.CurrentUserId;
         var db = Database.Open("sqlloco");
-            
+
         var theDate = DateTime.Now.ToString("yyyy-MM-dd");
-                            
+
         var sqluser = "exec GetUserDetails @0";
-        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
+        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";
         var sqlupdatephoto ="update users set Photo = @0 where UserID = @1";
         var sqlupdateabout ="update dbo.userprofilepositionadditional set ADD_Details = @0  where UserID = @1";
+        var userrow = db.QuerySingle(sqluser,UserID);
+        var posrow = db.Query(sqlpositions,UserID);
 
-                        
-         var userrow = db.QuerySingle(sqluser,UserID);
-         var posrow = db.Query(sqlpositions,UserID);
-
-         WebImage photo = null;
-         var newFileName = "";
-         var imagePath = "";
-         var imageThumbPath  = "";
+        WebImage photo = null;
+        var newFileName = "";
+        var imagePath = "";
+        var imageThumbPath  = "";
 
         if (WebSecurity.IsAuthenticated) {     
-   
-                    if(IsPost){
-
-                        aboutMe = Request.Form["aboutMeText"];
-                        photo = WebImage.GetImageFromRequest();
-                        
-                        
-                        db.Query(sqlupdateabout,aboutMe,UserID);
-
-
-                        if(photo != null){
-                             newFileName = Guid.NewGuid().ToString() + "_" +
-                                 Path.GetFileName(photo.FileName);
-                             imagePath = @"img\" + newFileName;
-                             photo.Save(@"~\" + imagePath);
-
-                            imageThumbPath = @"img\thumbs\" + newFileName;
-                            photo.Resize(width: 180, height: 180, preserveAspectRatio: true,
-                               preventEnlarge: true);
-                            photo.Save(@"~\" + imageThumbPath); 
-                            db.Query(sqlupdatephoto,imageThumbPath,UserID);
-                            }
-
-
-                          
-
-                            }
-         
-             }else{
-
-                   Response.Redirect("~/en_US/Default");
-
-
-                 }
-
-
-
+            if(IsPost){
+                aboutMe = Request.Form["aboutMeText"];
+                photo = WebImage.GetImageFromRequest();
+                db.Query(sqlupdateabout,aboutMe,UserID);
+                if(photo != null){
+                    newFileName = Guid.NewGuid().ToString() + "_" +
+                    Path.GetFileName(photo.FileName);
+                    imagePath = @"img\" + newFileName;
+                    photo.Save(@"~\" + imagePath);
+                    imageThumbPath = @"img\thumbs\" + newFileName;
+                    photo.Resize(width: 180, height: 180, preserveAspectRatio: true,
+                    preventEnlarge: true);
+                    photo.Save(@"~\" + imageThumbPath);
+                    db.Query(sqlupdatephoto,imageThumbPath,UserID);
+                }
+            }
+        }else{
+            Response.Redirect("~/en_ES/Default");
+        }
 }
-
 
 <div class="provider dashboard">
 
@@ -83,37 +60,36 @@
 		</ul>
 
 		<div id="calendar" class="tab-body fancy">
-		
+
 		</div><!-- #calendar -->
-		
+
 		<div id="jobTitles" class="current tab-body fancy">
-			<ul class="profile-list">
-                   @foreach(var c in posrow){    
-				<li>
-					<div class="progress-bar">
-						<span class="total"><span class="percent-done"></span></span>
-						<span class="text"><span class="percent-done">50%</span> complete</span>
-					</div>
-                    
-					<h3 class="job-title">@c.PositionSingular <a class="job-status inactive" href="#">@c.active</a></h3>
-					<table class="profile-stats">
-						<tr><td>Profile Views:</td><td>0</td></tr>
-						<tr><td>Last Updated:</td><td>@c.UpdatedDate.ToString("dd MMM yyyy")</td></tr>
-					</table>
-					<table class="job-stats">
-						<tr><td>Hours booked:</td><td>0</td></tr>
-						<tr><td>Lorem Ipsum:</td><td>20</td></tr>
-					</table>
-					<a href="#">Booking History</a>
-                    			<a href="ProviderEstimateProfile.cshtml?positionID=@c.PositionID">Edit Estimate Profile</a>
-					<div class="job-actions">
-						<a class="button go" href="#">Edit</a>
-						<a class="button go" href="#">Publish</a>
-					</div>
-				</li>
-				};
-				
-			</ul>			
+            <ul class="profile-list">
+            @foreach(var c in posrow){
+                <li>
+                    <div class="progress-bar">
+                        <span class="total"><span class="percent-done"></span></span>
+                        <span class="text"><span class="percent-done">50%</span> complete</span>
+                    </div>
+
+                    <h3 class="job-title">@c.PositionSingular <a class="job-status inactive" href="#">@c.active</a></h3>
+                    <table class="profile-stats">
+                        <tr><td>Profile Views:</td><td>0</td></tr>
+                        <tr><td>Last Updated:</td><td>@c.UpdatedDate.ToString("dd MMM yyyy")</td></tr>
+                        </table>
+                        <table class="job-stats">
+                        <tr><td>Hours booked:</td><td>0</td></tr>
+                        <tr><td>Lorem Ipsum:</td><td>20</td></tr>
+                    </table>
+                    <a href="#">Booking History</a>
+                            <a href="ProviderEstimateProfile.cshtml?positionID=@c.PositionID">Edit Estimate Profile</a>
+                    <div class="job-actions">
+                        <a class="button go" href="#">Edit</a>
+                        <a class="button go" href="#">Publish</a>
+                    </div>
+                </li>
+            };
+            </ul>
 		</div><!-- #jobTitles -->
 		
 		<div id="clients" class="tab-body fancy">

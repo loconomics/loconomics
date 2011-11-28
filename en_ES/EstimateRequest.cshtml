@@ -3,7 +3,7 @@
 @{
  
     if (WebSecurity.IsAuthenticated) {
-        Layout = "~/_SiteLayout.cshtml";
+        Layout = "~/en_ES/_SiteLayout.cshtml";
         var UserID  = WebSecurity.CurrentUserId;
     }else{
         Response.Redirect("~/Default");

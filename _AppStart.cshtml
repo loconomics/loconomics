@@ -8,9 +8,10 @@
     OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
     OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
 
-    // WebMail.SmtpServer = "mailserver.example.com";
-    // WebMail.EnableSsl = true;
-    // WebMail.UserName = "username@example.com";
-    // WebMail.Password = "your-password";
-    // WebMail.From = "your-name-here@example.com";
+    WebMail.SmtpServer = "mail.loconomics.com";
+    WebMail.SmtpPort = 25;
+    WebMail.EnableSsl = false;
+    WebMail.UserName = "automated@loconomics.com";
+    WebMail.Password = "Loconomic$2011";
+    WebMail.From = "automated@loconomics.com";
 }

@@ -1,0 +1,14 @@
+﻿@{
+    var positionID = Request["PositionID"];
+    var pricingTypeID = Request["PricingTypeID"];
+
+    var db = Database.Open("sqlloco");
+    var sql = @"SELECT sev.EstimateVarID, ev.UserDescription, ev.ProviderDescription, ev.ParentID, fdt.Type
+                FROM dbo.serviceestimatevars sev
+                JOIN dbo.estimatevar ev ON (ev.EstimateVarID=sev.EstimateVarID)
+                JOIN dbo.formdatatypes fdt ON (ev.ProviderTypeID = fdt.FormDataTypeID)
+                WHERE sev.PositionID = @0 and sev.PricingTypeID = @1
+                ORDER BY ev.ParentID";
+    var data = db.Query(sql, positionID,pricingTypeID);
+    Json.Write(data, Response.Output);
+}
