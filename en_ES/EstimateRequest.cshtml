@@ -1,5 +1,4 @@
 ﻿@using System.Text.RegularExpressions;
-
 @{
  
     if (WebSecurity.IsAuthenticated) {
@@ -15,7 +14,6 @@
     var pricingTypeID = "";
     var estimateVarID = "";
     var servicePricingTypeID = 0;
-    var listSize = "";
     var errors = "";
     var sysdate = DateTime.Now;
     var EstimateResult = 0;
@@ -25,9 +23,11 @@
         var db = Database.Open("sqlloco");
 
         userID = Convert.ToString(WebSecurity.CurrentUserId);
-        positionID = "14";// Request["PositionID"];
+        positionID =  Request["PositionID"];
         pricingTypeID = Request["pricingtype"];
-        providerID = "34";// Request["ProviderID"]; TESTING
+        providerID =  Request["ProviderID"];
+        string[] varValues = Context.Request.Form.GetValues("varValue");
+        string[] varIDs = Context.Request.Form.GetValues("varID");
         
         //Get the service pricing type relation
         var SQLServicePricingType = @"SELECT ServicePricingTypeID 
@@ -38,32 +38,38 @@
         servicePricingTypeID = Convert.ToInt32(servicePricingType.ServicePricingTypeID);
             
         //Read estimate profile from providerestimatevar 
-        listSize = Request["listSize"];
-        var size = listSize.AsInt();
-        var SQLSelectVar = @"SELECT EstimateVarValue as varValue FROM dbo.providerestimateprofile 
-                        WHERE ServicePricingTypeID=@0 AND EstimateVarID=@1";
-      
-        for(int i=size;i>0;i--){
-            estimateVarID = Request["EstimateVarID" + i];
-            estimateVarValue = (Request["EstimateVarValue" + i]!="" ? Convert.ToInt32(Request["EstimateVarValue" + i]):0);
-            
-           
-            var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
-         
-            EstimateResult += (estimateProfile.varValue==null?0: Convert.ToInt32(estimateProfile.varValue)) * (estimateVarValue==null?0:estimateVarValue);
+        var SQLSelectVar = @"SELECT pep.EstimateVarValue as varValue, ev.UserDescription FROM dbo.providerestimateprofile pep
+                        JOIN dbo.estimatevar ev  ON ev.EstimateVarID = pep.EstimateVarID
+                        WHERE pep.ServicePricingTypeID=@0 AND pep.EstimateVarID=@1";
+        if(ModelState.IsValid) {
+            for(int i=0;i<varIDs.Length;i++){
+                estimateVarID = varIDs[i];
+                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
+                
+                //Validate is a Number
+                var match = Regex.Match(varValues[i], @"^([0-9]*\.?[0-9]{1,2}?)+");
+                if(!match.Success && varValues[i]!=""){
+                    ModelState.AddError("varValue", estimateProfile.UserDescription+" must be a number");
+                }else{ 
+                    estimateVarValue = (varValues[i]!="" ? Convert.ToInt32(varValues[i]):0);
+                }            
+                
+
+                //FORMULA
+                EstimateResult += (estimateProfile.varValue==null?0: Convert.ToInt32(estimateProfile.varValue)) * (estimateVarValue==null?0:estimateVarValue);
+            }
+        }
+        if(ModelState.IsValid){
+            Response.Redirect("~/en_ES/EstimateRequest.cshtml?EstimateResult=" + EstimateResult + "&PositionID=" + positionID + "&ProviderID=" + providerID);
         }
         db.Close();
-        Response.Redirect("~/en_ES/EstimateRequest.cshtml?EstimateResult="+EstimateResult);
     }
 }
-  
+
 <script type="text/javascript">
     $(document).ready(function () {
 
-        function getURLParameter(name) {
-            return decodeURI(
-               (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
-        }
+      
 
         var isResult = (getURLParameter("EstimateResult") != "null");
 
@@ -82,7 +88,6 @@
             });
 
             $('#pricingtype').addOption(0, "Select type").attr('disabled', false);
-           
 
             var firstselected = true;
             $('#pricingtype').change(function () {
@@ -94,7 +99,12 @@
 
         });
         //Paint and fill Estimate Var List
-        var positionID = 14; // getURLParameter("positionID"); //Testing
+        function getURLParameter(name) {
+            return decodeURI(
+               (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
+        }
+
+        var positionID = getURLParameter("PositionID"); //Testing
 
         $('#pricingtype').change(function () {
 
@@ -105,25 +115,20 @@
 
             //Reset the form
             $(".estimatevarrow").remove();
-            $(".listSize").remove();
-
+         
             $.getJSON('ListServiceEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
                 var estimatevars = data;
-                var i = 0;
                 $.each(estimatevars, function (index2, estimatevar) {
-                    var val2 = estimatevar.EstimateVarID;
-                    var text2 = estimatevar.UserDescription;
-                    i++;
+                    var varID = estimatevar.EstimateVarID;
+                    var varName = estimatevar.UserDescription;
                     /*Debug
                     $("#debugval2").append(val2);
                     $("#debugtext2").append(text2);
                     End Debug*/
-                    $('#form tr:last').after('<tr class="estimatevarrow"><td><label for=' + text2 + '@if(!ModelState.IsValidField("estimateVarValue")){<text>class="error-label"</text>}>' + text2 + '</label></td><td><input id="EstimateVarID' + i + '" name="EstimateVarID' + i + '" value=' + val2 + ' size = 1></td>');
-                    $('#EstimateVarID' + i).hide();
-                    $('#form td:last').after('<td class="estimatevarrow"><input id="estimateVarValue' + i + '" name="estimateVarValue' + i + '" type="text" value=@Request["estimateVarValue' + i + '"]></td></tr>');
+                    $('#form tr:last').after('<tr class="estimatevarrow"><td><label for=' + varName + '>' + varName + '</label></td><td><input id="' + varID + '" name="varID" value=' + varID + ' class="varID" size = 1></td>');
+                    $('#form td:last').after('<td class="estimatevarrow"><input id="' + varName + '" name="varValue" type="text"></td></tr>');
                 });
-                $("#form tr:last").after('<input class="idSize" id="listSize" name="listSize" type="text" value=' + i + '>');
-                $("#listSize").hide();
+                $('.varID').hide();
             });
         });
         if (isResult) {

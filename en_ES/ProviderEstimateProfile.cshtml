@@ -13,7 +13,6 @@
     var estimateVarID = "";
     var servicePricingTypeID = 0;
     var estimateVarValue = "";
-    var listSize = "";
     var errors = "";
     var sysdate = DateTime.Now;
     
@@ -24,7 +23,9 @@
         providerID = Convert.ToString(WebSecurity.CurrentUserId);
         positionID = Request["positionID"];
         pricingTypeID = Request["pricingtype"];
-
+        String[] varValues = Context.Request.Form.GetValues("varValue");
+        String[] varIDs = Context.Request.Form.GetValues("varID");
+      
         // Read product providerID.
         if (providerID.IsEmpty())
         {
@@ -40,59 +41,64 @@
         {
             ModelState.AddError("pricingTypeID", "Pricing Type ID is required.");
         }
-        
-        var SQLISNEW = @"SELECT ServicePricingTypeID 
-                        FROM dbo.servicepricingtype 
-                        WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
-        var SQLINSERT = @"INSERT INTO dbo.servicepricingtype 
-                            (ProviderID,PositionID,PricingTypeID,CreatedDate,UpdatedDate,ModifiedBy) 
-                            VALUES (@0,@1,@2,@3,@4,@5)";
  
         if(ModelState.IsValid) {
-        
-            var isNewRegister = db.QuerySingle(SQLISNEW,providerID,positionID,pricingTypeID);
-            if(isNewRegister==null){            
-                    db.Execute(SQLINSERT, providerID, positionID, pricingTypeID,sysdate,sysdate,"UserID:"+providerID);
-                    servicePricingTypeID=Convert.ToInt32(db.GetLastInsertId());
-            }else{
-                servicePricingTypeID = Convert.ToInt32(isNewRegister.ServicePricingTypeID);
-            }           
-            //Insert estimate profile into providerestimatevar 
-            listSize = Request["listSize"];
-            var size = listSize.AsInt();
+
+            var SQLISNEW = @"SELECT ServicePricingTypeID 
+                        FROM dbo.servicepricingtype 
+                        WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
+            var SQLISNEWVAR = @"SELECT ProviderEstimateProfileID 
+                        FROM dbo.providerestimateprofile 
+                        WHERE EstimateVarID=@0 and ServicePricingTypeID=@1";
+            var SQLGETVARTYPE = @"SELECT ft.Type 
+                                FROM dbo.formdatatypes ft
+                                JOIN dbo.estimatevar ev ON (ev.ProviderTypeID = ft.FormDataTypeID)
+                                WHERE ev.EstimateVarID=@0";
+            var SQLINSERT = @"INSERT INTO dbo.servicepricingtype 
+                            (ProviderID,PositionID,PricingTypeID,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5)";
             var SQLINSERT2 = @"INSERT INTO dbo.providerestimateprofile 
                             (ServicePricingTypeID,EstimateVarID,EstimateVarValue,CreatedDate,UpdatedDate,ModifiedBy) 
                             VALUES (@0,@1,@2,@3,@4,@5)";
             var SQLUPDATE = @"UPDATE dbo.providerestimateprofile 
                             Set EstimateVarValue=@2 , UpdatedDate=@3 , ModifiedBy=@4                         
                             WHERE ServicePricingTypeID=@0 and EstimateVarID=@1";
-            var SQLVARLIST = @"SELECT sev.EstimateVarID, ev.ProviderDescription, fdt.Type 
-                FROM dbo.serviceestimatevars sev
-                JOIN dbo.estimatevar ev ON (ev.EstimateVarID=sev.EstimateVarID)
-                JOIN dbo.formdatatypes fdt ON (ev.ProviderTypeID = fdt.FormDataTypeID)
-                WHERE sev.PositionID = @0 and sev.PricingTypeID = @1
-                ORDER BY ev.ParentID";
-            var varList = db.Query(SQLVARLIST, positionID, pricingTypeID);
-            foreach(var estimateVar in varList){
-                estimateVarID = Request[estimateVar.EstimateVarID];
-                estimateVarValue = Request[estimateVar.ProviderDescription];
             
-                if(estimateVarValue!="lable" && estimateVarValue.IsEmpty()){
+            //Insert a service pricint type mapping into serviceprincingtype table
+            var newServicePricingType = db.QuerySingle(SQLISNEW,providerID,positionID,pricingTypeID);
+            if (newServicePricingType == null)
+            {            
+                    db.Execute(SQLINSERT, providerID, positionID, pricingTypeID,sysdate,sysdate,"UserID:"+providerID);
+                    servicePricingTypeID=Convert.ToInt32(db.GetLastInsertId());
+            }else{
+                servicePricingTypeID = Convert.ToInt32(newServicePricingType.ServicePricingTypeID);
+            }
+
+            //Insert estimate profile into providerestimatevar 
+            for(int i=0; i< varIDs.Length;i++){
+
+                var newEstimateVar = db.QuerySingle(SQLISNEWVAR, varIDs[i], servicePricingTypeID);
+                estimateVarID = varIDs[i];
+                var varType = db.QuerySingle(SQLGETVARTYPE, estimateVarID);
+                
+                estimateVarValue = varValues[i];
+               
+                if(estimateVarValue.IsEmpty() && varType.Type!="radio"){
                     ModelState.AddError("estimateVarValue", "estimate Variable Value is required.");
                 }
-                //validate data
-                //TODO update validation logic to admit radio button variables
-                //Validate is a Number
-  //              var match = Regex.Match(estimateVarValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
-  //              if(!match.Success){
-  //                  ModelState.AddError("estimateVarValue","The value must be a number");
-  //              }else{ 
-                    if(isNewRegister==null){
-                        db.Execute(SQLINSERT2, servicePricingTypeID, estimateVarID, estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
-                    }else{
-                        db.Execute(SQLUPDATE, servicePricingTypeID, estimateVarID, estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
-                    }
-   //             }
+                    //validate data
+                    //TODO update validation logic to admit radio button variables
+                    //Validate is a Number
+                      var match = Regex.Match(estimateVarValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
+                      if(!match.Success){
+                          ModelState.AddError("estimateVarValue","The value must be a number");
+                      }else{ 
+                        if(newEstimateVar==null){
+                            db.Execute(SQLINSERT2, servicePricingTypeID, estimateVarID, estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
+                        }else{
+                            db.Execute(SQLUPDATE, servicePricingTypeID, estimateVarID, estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
+                        }
+                     }
             }
         }
         db.Close();
@@ -144,8 +150,7 @@ $(document).ready(function () {
 
         //Reset the form
         $(".estimatevarrow").remove();
-        $(".listSize").remove();
-
+     
         $.getJSON('ListServiceEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
             var estimatevars = data;
             $.each(estimatevars, function (index, estimatevar) {
@@ -157,23 +162,21 @@ $(document).ready(function () {
                 $("#debugval2").append(val2);
                 $("#debugtext2").append(text2);
                 End Debug*/
-                if (parentID == null) {
-                    $('#form tr:last').after('<tr class="estimatevarrow" name="row' + varID + '" id="row' + varID + '"><td><label for="' + varName + '"><b>' + varName + '</b></label></td><td><input class="estimateVarID" id="' + varID + '" name="' + varID + '" value=' + varID + ' size = 1></td>');
-                    if (type != "label") {
-                        $('#form td:last').after('<td class="estimatevarrow"><input type = ' + type + ' id="' + varName + '" name="' + varName + '" ></td></tr>');
-                    } else {
-                        $('#form td:last').after('</tr>');
-                    }
-                } else {
-                    $("#row" + parentID).after('<tr class="estimatevarrow" name="row' + varID + '" id="row' + varID + '"><td><label for="' + varName + '">' + varName + '</label></td><td><input class="estimateVarID" id="' + varID + '" name="' + varID + '" value=' + varID + ' size = 1></td>');
-                    if (type != "null") {
-                        $("#" + varID).after('<td class="estimatevarrow"><input type = ' + type + ' id="' + varName + '" name="' + parentID + '" ></td></tr>');
-                    } else {
-                        $("#" + varID).after('</tr>');
-                    }
+                if (type == "text") {
+                    $('#form tr:last').after('<tr class="estimatevarrow" name="row' + varID + '" id="row' + varID + '"><td><label for="' + varName + '"><b>' + varName + '</b></label></td><td><input class="varID" id="' + varID + '" name="varID" value=' + varID + ' size = 1 "></td>');
+                    $('#form td:last').after('<td class="estimatevarrow"><input type = ' + type + ' id="' + varID + '" name="varValue" ></td></tr>');
+                }
+                if (type == "select") {
+                    $('#form tr:last').after('<tr class="estimatevarrow" name="row' + varID + '" id="row' + varID + '"><td><label for="' + varName + '"><b>' + varName + '</b></label></td><td><input class="varID" id="' + varID + '" name="dropDown" value=' + varID + ' size = 1 "></td>');
+                    $('#form td:last').after('<td class="estimatevarrow"><select id="' + varID + '" class="selValue" ></td></tr>');
+                    //TODO: add options 
+                    $(".selValue").addOption(0, "1000-2999 square feet"); //Testing                   
+                    $(".selValue").addOption(1, "2999-4999 square feet")
+                    $(".selValue").addOption(2, "+5000 square feet")
+                    
                 }
             });
-            $(".estimateVarID").hide();
+            $(".varID").hide();
         });
     });
 });
