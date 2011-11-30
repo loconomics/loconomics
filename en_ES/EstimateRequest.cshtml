@@ -54,7 +54,6 @@
                     estimateVarValue = (varValues[i]!="" ? Convert.ToInt32(varValues[i]):0);
                 }            
                 
-
                 //FORMULA
                 EstimateResult += (estimateProfile.varValue==null?0: Convert.ToInt32(estimateProfile.varValue)) * (estimateVarValue==null?0:estimateVarValue);
             }
@@ -116,7 +115,7 @@
             //Reset the form
             $(".estimatevarrow").remove();
          
-            $.getJSON('ListServiceEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
+            $.getJSON('ListUserEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
                 var estimatevars = data;
                 $.each(estimatevars, function (index2, estimatevar) {
                     var varID = estimatevar.EstimateVarID;
