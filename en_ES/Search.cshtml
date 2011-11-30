@@ -1,18 +1,14 @@
 ﻿@{
-    
-
-
     Layout = "~/en_ES/_SiteLayout.cshtml";
     Page.Title = "Search Results...";
-    
-     var db = Database.Open("sqlloco");
-     var LC_Term  = Request["serviceType"] + "%";
-     var LC_Cat = Request["Service"];
-     var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
-     var posrow = db.Query(searchsql,1,2,LC_Term,LC_Cat);
 
+    var db = Database.Open("sqlloco");
+    var serviceType = Request["serviceType"];
+    var LC_Term  = serviceType + "%";
+    var LC_Cat = Request["Service"];
+    var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
+    var posrow = db.Query(searchsql,1,2,LC_Term,LC_Cat);
 }
-
 
 <div id="container" class="search clearfix">
  <div id="main" class="">
@@ -23,7 +19,7 @@
 				<li class="clearfix">
 					<div class="id col">
 	               <img src="../@c.Photo" alt="" />
-						<h3><a href="../en_ES/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular">@c.FirstName @c.LastName</a></h3>
+						<h3><a href="../en_ES/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">@c.FirstName @c.LastName</a></h3>
 					</div>
 				   <div class="lang col">
 						<table>
@@ -62,7 +58,7 @@
 					</div>
 					<div class="book col">
 						<p class="rate fancy">25 €/hr</p>
-						<a class="button fanciful" href="../en_ES/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular">View full profile and book</a>
+						<a class="button fanciful" href="../en_ES/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">View full profile and book</a>
 					</div>
 					<div class="review col">
 						<img src="../img/eg-profile-pic.jpg" alt="" />
