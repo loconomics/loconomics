@@ -1,0 +1,45 @@
+﻿@{
+    var UserID = 0;
+    if (WebSecurity.IsAuthenticated) {
+        Layout = "~/en_ES/_SiteLayout.cshtml";
+        UserID  = WebSecurity.CurrentUserId;
+    }else{
+        Response.Redirect("~/Default");
+    }
+    var customerName = Request["customerName"];
+    var customerRequest = Request["customerRequest"];
+
+    var PositionSingular = Request["PositionSingular"];
+    var ProviderID = Request["ProviderID"];
+    var PositionID = Request["PositionID"];
+    
+    var db = Database.Open("sqlloco");
+    var providersql = "select Email from userprofile up where up.userid = @0";
+    var sqluser = "exec GetUserDetails @0";
+    var provider = db.QuerySingle(providersql, ProviderID);
+    var userrow = db.QuerySingle(sqluser, UserID);
+    var message = "An email with your message has been succesfully sent.";
+    try {
+        // Send email
+        WebMail.Send(provider.Email,
+            "Help request from - " + customerName,
+            customerRequest
+        );
+    }
+    catch (Exception ex ) {
+        message="The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.";
+    }
+}
+<div id="container">
+    <form method="post" action="ProviderProfile.cshtml?ProviderID=@ProviderID&PositionId=@PositionID&Position=@PositionSingular">
+        <p>Dear, <b>@userrow.FirstName</b>.</p>
+
+        <p><b>@customerRequest</b></p>
+
+       <p>@message</p>
+      
+        <div>
+            <input type="submit" value="Finish" />
+        </div>
+    </form>
+</div>  
