@@ -96,8 +96,8 @@
 			<ul>
 				<li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
 @if (WebSecurity.IsAuthenticated) {
-            <li>Welcome 
-						<a class="launch-modal" href="@Href("~/en_US/Account/ChangePassword")" title="Change password">@WebSecurity.CurrentUserName</a> |
+            <li>Hi,  
+						<a href="@Href("~/en_US/provider-dashboard-profile")" title="Change password">@WebSecurity.CurrentUserName</a> |
                   <a href="@Href("~/en_US/Account/Logout")">Logout</a>
 				</li> 
             <li><a class="button fancy" href="@Href("~/en_US/provider-wizard-step1")">Become a provider</a></li>

@@ -287,6 +287,10 @@ ul.search-results li .review blockquote { margin: 0 0 0 50px; line-height: 135%;
 /*ul.search-results table { margin: 12px 0; }
 ul.search-results table td { padding-right: 16px; }*/
 
+.tab-body ul.search-results li div.clearfix { line-height:70px; }
+.tab-body ul.search-results li h2 { float:left; margin:0 10px 0 0; font-size:38px; color:#461864; }
+.tab-body ul.search-results li .review { width: 150px; }
+
 .profile-progress .progress-bar { float: none; }
 
 ul.reviews { padding: 0; margin: 0; font-size: .8em; }
@@ -309,9 +313,6 @@ ul.reviews li div.wrap p { margin-top: 0; }
 .folders > .tab-body { 
 	display:none; position: relative; z-index: 1; top: 20px; padding: 20px; min-height: 400px;
 	border: 2px solid #461864; background: #F5F5F5;
-}
-.folders > .tab-body-map { 
-    width:630px; background-color: #E0E0E0; height: 500px; border: 1px solid black;
 }
 .folders > .tab-body.current { display: block; }
 
@@ -383,7 +384,7 @@ header dl:hover dd { display: block; }
 header dl dd a { display: block; }
 header dl dd a:hover { text-decoration: underline; }
 
-footer { margin: 75px auto; font-size: .9em; color: #a1a1a1; text-align: center; }
+footer { margin: 25px auto; font-size: .9em; color: #a1a1a1; text-align: center; }
 footer a { text-decoration: none; color: #a1a1a1; }
 footer a:hover { text-decoration: underline; color: #a1a1a1; }
 
@@ -425,9 +426,18 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 /*.home #main { float: left; width: 615px; text-align: left; }*/
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; }
 .home form fieldset { margin: .5em 0; }
-.categories ul { margin: 100px 0 0 0; padding: 0; }
-.categories ul li { display: inline; list-style-type: none; margin: 0; padding: 0; }
 .home #secondary { margin: 40px 0 0 625px; text-align: left; }
+
+.categories { margin: 0 auto; width: 616px; height: 250px; }
+.categories ul { margin: 0; padding: 0; }
+.categories > ul { margin: 100px 0 0 0; }
+.categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
+.categories ul:first-child > li { float: left; margin-right: 3px; }
+.categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
+.categories ul ul li { padding: .6em 0 0 0; }
+.categories ul ul a { text-decoration: none; }
+.categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; }
+.categories ul:first-child > li:hover div.menu { display: block; } 
 
 .faq dt { font-weight: bold; }
 .faq dd { margin: 1em 0; }
