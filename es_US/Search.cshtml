@@ -10,7 +10,6 @@
     var posrow = db.Query(searchsql,2,1,LC_Term,LC_Cat);
 }
 
-
 <div id="container" class="search clearfix">
  <div id="main" class="">
 		<h1>@Page.Title</h1>
@@ -59,7 +58,7 @@
 					</div>
 					<div class="book col">
 						<p class="rate fancy">25 €/hr</p>
-						<a class="button fanciful" href="../es_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular">View full profile and book</a>
+						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">View full profile and book</a>
 					</div>
 					<div class="review col">
 						<img src="../img/eg-profile-pic.jpg" alt="" />
