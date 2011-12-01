@@ -429,13 +429,15 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #secondary { margin: 40px 0 0 625px; text-align: left; }
 
 .categories { margin: 0 auto; width: 616px; height: 250px; }
-.categories ul { margin: 100px 0 0 0; padding: 0; }
+.categories ul { margin: 0; padding: 0; }
+.categories > ul { margin: 100px 0 0 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
 .categories ul:first-child > li { float: left; margin-right: 3px; }
-.categories ul ul { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
+.categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }
-.categories ul:first-child > li:hover ul { display: block; } 
+.categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; }
+.categories ul:first-child > li:hover div.menu { display: block; } 
 
 .faq dt { font-weight: bold; }
 .faq dd { margin: 1em 0; }
