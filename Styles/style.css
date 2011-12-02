@@ -422,8 +422,8 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 #searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
 #searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
 
-.home #main { float: none; width: auto; text-align: center; }
-/*.home #main { float: left; width: 615px; text-align: left; }*/
+/*.home #main { float: none; width: auto; text-align: center; }*/
+.home #main { float: left; width: 615px; text-align: left; }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; }
 .home form fieldset { margin: .5em 0; }
 .home #secondary { margin: 40px 0 0 625px; text-align: left; }

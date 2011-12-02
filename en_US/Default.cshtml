@@ -114,6 +114,53 @@
 		</div>
     </div><!-- #main -->
 
+	 <div id="secondary">
+		<div class="spotlight">
+			<div class="id col">
+            <img src="../img/eg-profile-pic.jpg" alt="" />
+				<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">View full profile and book</a>
+			</div><!-- .id.col -->
+		   <div class="lang col">
+				<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">Cleaner, Massage Therapist</a></h3>
+				<table>
+					<tr>
+						<td>
+						    <input name=@c.ProfileID+@c.PositionID+1 type="radio" class="star" disabled="disabled"/>
+                              <input name=@c.ProfileID+@c.PositionID+1 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+1 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+1 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+1 type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Professionalism</th>
+					</tr>
+					<tr>
+						<td>
+							<input name=@c.ProfileID+@c.PositionID+2 type="radio" class="star" disabled="disabled"/>
+                              <input name=@c.ProfileID+@c.PositionID+2 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+2 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+2 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+2 type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Attention to detail</th>
+					</tr>
+					<tr>
+						<td>
+						    <input name=@c.ProfileID+@c.PositionID+3 type="radio" class="star" disabled="disabled"/>
+                              <input name=@c.ProfileID+@c.PositionID+3 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+3 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+3 type="radio" class="star"/>
+                              <input name=@c.ProfileID+@c.PositionID+3 type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Trustworthiness</th>
+					</tr>
+				</table>
+			</div><!-- .lang.col -->
+		</div><!-- .spotlight -->
+		<div class="video">
+			<img src="../img/home-video-placeholder.jpg" alt="" />
+		</div><!-- .video -->
+	 </div><!-- #secondary -->
+
    </div><!-- #container -->
 
 
