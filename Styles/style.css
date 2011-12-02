@@ -342,7 +342,7 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 /* Page Structure */
 
-#container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
+#container, footer, header .wrap { width: 1000px; margin: 0 auto; text-align: left; }
 #container { position: relative; padding: 200px 0 100px 0; }
 
 #main { float: left; width: 670px; }
@@ -426,7 +426,18 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #main { float: left; width: 615px; text-align: left; }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; }
 .home form fieldset { margin: .5em 0; }
-.home #secondary { margin: 40px 0 0 625px; text-align: left; }
+.home #secondary { margin: 40px 0 0 625px; padding-left: 20px; text-align: left; border-left: 3px solid #ededed; }
+.home #secondary .spotlight { background: url('../img/feature-border.gif') no-repeat top right; }
+.home #secondary .spotlight .col { padding-top: 40px;  }
+.home #secondary .spotlight .id { float: left; margin-right: 12px; }
+.home #secondary .spotlight .id img { width: 113px; }
+.home #secondary .spotlight .lang h3 { font-size: 16px; }
+.home #secondary .spotlight .lang h3 a { text-decoration: none; color: #99C027; }
+.home #secondary .spotlight .lang th { font-size: 12px; font-weight: normal; color: #00989A; }
+.home #secondary .spotlight a.fanciful { font-size: 10px; }
+.home #secondary .video { margin-top: 40px; padding-top: 0; background: url('../img/feature-border.gif') no-repeat top right; }
+.home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
+.home #secondary .video img { width: 352px; }
 
 .categories { margin: 0 auto; width: 616px; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
