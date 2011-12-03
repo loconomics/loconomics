@@ -23,21 +23,21 @@ $(document).ready(function(){
         });
     }); 
 
-    $('#yes').click(function() { 
+    $('#loginModal form input[type=submit]').click(function() { 
         // update the block message 
-        $.blockUI({ message: "<h1>Remote call in progress...</h1>" }); 
-
-        $.ajax({ 
-            url: 'wait.php', 
-            cache: false, 
-            complete: function() { 
-                // unblock when remote call returns 
-                $.unblockUI(); 
-            } 
-        }); 
+        $.blockUI({ message: "<h1>Logging you in...</h1>" }); 
+        // Ajax call should happen here
+        // $.ajax({ 
+        //     url: 'wait.php', 
+        //     cache: false, 
+        //     complete: function() { 
+        //         // unblock when remote call returns 
+        //         $.unblockUI(); 
+        //     } 
+        // }); 
     }); 
 
-    $('#no').click(function() { 
+    $('#loginModal form input[type=cancel]').click(function() { 
         $.unblockUI(); 
         return false; 
     }); 
