@@ -43,6 +43,7 @@
         <script src="@Href("~/Scripts/date.js")" type="text/javascript"></script>
         <script src="@Href("~/Scripts/jquery.datePicker.js")" type="text/javascript"></script>
         <script src="@Href("~/Scripts/jquery.autocomplete.js")" type="text/javascript"></script>
+		  <script src="@Href("~/Scripts/jQuery.blockuUI.js")" type="text/javascript"></script>
         <script src="@Href("~/Scripts/script.js")" type="text/javascript"></script>
         <!--
         <script src="js/libs/jquery-1.6.2.min.js"></script>
@@ -97,7 +98,7 @@
 } else {
             <li class="new-user">
                 <a class="launch-modal" href="@Href("~/en_US/Account/Register")">Sign Up</a> | 
-                <a class="launch-modal" href="@Href("~/en_US/Account/Login")">Login</a> | 
+                <a id="loginButton" href="@Href("~/en_US/Account/Login")">Login</a> | 
                 <a href="@Href("~/en_US/HowItWorks")">How it works</a>
             </li>
 }
@@ -119,6 +120,8 @@
     </header>
 
     <footer><a href="@Href("~/en_US/About")">About</a> | <a href="#">Terms &amp; Privacy</a> | <a href="@Href("~/en_US/Help")">Help</a> | <a href="#">Blog</a></footer>
+
+	<div id="loginModal"></div>
 
          @Scripts.GetScriptTags()
     </body>

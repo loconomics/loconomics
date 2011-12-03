@@ -17,6 +17,31 @@ $(document).ready(function(){
 			}
 	});
 	
+    $('#loginButton').click(function() { 
+        $('#loginModal').load('../en_US/Account/Login #container',function(){
+           $.blockUI({ message: $('#loginModal'), css: { width: '375px' } }); 
+        });
+    }); 
+
+    $('#yes').click(function() { 
+        // update the block message 
+        $.blockUI({ message: "<h1>Remote call in progress...</h1>" }); 
+
+        $.ajax({ 
+            url: 'wait.php', 
+            cache: false, 
+            complete: function() { 
+                // unblock when remote call returns 
+                $.unblockUI(); 
+            } 
+        }); 
+    }); 
+
+    $('#no').click(function() { 
+        $.unblockUI(); 
+        return false; 
+    }); 
+	
 	// $('form input.password').focus(function() {
 	// 	$(this).hide();
 	// 	$(this).next('input').show().focus();
