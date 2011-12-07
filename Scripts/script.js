@@ -17,11 +17,12 @@ $(document).ready(function(){
 			}
 	});
 	
-    $('#loginButton').click(function() { 
-        $('#loginModal').load('../en_US/Account/Login #container',function(){
-           $.blockUI({ message: $('#loginModal'), css: { width: '375px' } }); 
-        });
-    }); 
+    // $('#loginButton').click(function() { 
+    //     $('#loginModal').load('../en_US/Account/Login #container',function(){
+    //        $.blockUI({ message: $('#loginModal'), css: { width: '375px' } }); 
+    //     });
+    //     return false;
+    // }); 
 
     $('#loginModal form input[type=submit]').click(function() { 
         // update the block message 

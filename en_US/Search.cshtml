@@ -20,7 +20,10 @@
 				<li class="clearfix">
 					<div class="id col">
 	               <img src="../@c.Photo" alt="" />
+					</div>
+					<div class="name col">
 						<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">@c.FirstName @c.LastName</a></h3>
+						<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">more</a></blockquote>
 					</div>
 				   <div class="lang col">
 						<table>
@@ -54,16 +57,20 @@
 								</td>
 								<th>Trustworthiness</th>
 							</tr>
+							<tr>
+								<td>
+								    <input name=@c.ProfileID+@c.PositionID+4 type="radio" class="star" disabled="disabled"/>
+                                    <input name=@c.ProfileID+@c.PositionID+4 type="radio" class="star"/>
+                                    <input name=@c.ProfileID+@c.PositionID+4 type="radio" class="star"/>
+                                    <input name=@c.ProfileID+@c.PositionID+4 type="radio" class="star"/>
+                                    <input name=@c.ProfileID+@c.PositionID+4 type="radio" class="star" checked="checked"/>
+								</td>
+								<th>Quality of Work</th>
+							</tr>
 						</table>
-						<p>Speaks French, Spanish, English</p>
 					</div>
-					<div class="book col">
-						<p class="rate fancy">25 €/hr</p>
-						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">View full profile and book</a>
-					</div>
-					<div class="review col">
-						<img src="../img/eg-profile-pic.jpg" alt="" />
-						<blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...<a href="#">more</a></blockquote>
+					<div class="buttons">
+						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular&ServiceType=@serviceType">View full profile</a>  <a class="button fanciful" href="#">Book for $35/hour</a>
 					</div>
 					<!-- <h3 class="job-title"><a class="job-status inactive" href="ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.PositionSingular">@c.PositionSingular </a></h3>
 					<table class="profile-stats">
@@ -78,7 +85,11 @@
   </div><!-- #main -->
 	<div id="secondary">
 		<form id="searchAgain" name="searchAgain" class="fancy">
-			<legend>Search Again</legend>
+			<legend>Refine results</legend>
+			<fieldset>
+				<label for="serviceType">Keywords </label>
+            <input type="text" name="serviceType" id="serviceType" value="[current search terms]" />
+			</fieldset>
 			<fieldset class="search-params">
 				<fieldset>
 					<label for="location">You're searching for services near:</label>

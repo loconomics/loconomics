@@ -279,17 +279,18 @@ ul.search-results li h3 { margin: .2em 0 0 0; line-height: 25px; }
 ul.search-results li h3 a { text-decoration: none; }
 ul.search-results li .id img { width: 100px; height: auto; }
 ul.search-results li .id img[src=""] { margin: 0; width: auto; }
-ul.search-results li .book { text-align: center; }
-ul.search-results li p.rate { margin-top: .1em; font-size: 38px; font-weight: bold; border: none; color: #461864; }
-ul.search-results li .review { width: 190px; padding: 0; }
-ul.search-results li .review img { float: left; margin: 0 10px 0 0; width: 40px; height: auto; }
-ul.search-results li .review blockquote { margin: 0 0 0 50px; line-height: 135%; }
+ul.search-results li .name { width: 300px; }
+ul.search-results li blockquote { line-height: 135%; text-align: left; margin: 1em 0; font-size: 12px; color: #461864; font-style: italic; }
+/*ul.search-results li p.rate { margin-top: .1em; font-size: 38px; font-weight: bold; border: none; color: #461864; }*/
+ul.search-results li .buttons { clear:both; padding: .6em 0 .3em 0; }
+ul.search-results li .buttons a { margin-left: 1em; }
+ul.search-results li .buttons a:first-child { margin: 0; }
 /*ul.search-results table { margin: 12px 0; }
 ul.search-results table td { padding-right: 16px; }*/
 
 .tab-body ul.search-results li div.clearfix { line-height:70px; }
 .tab-body ul.search-results li h2 { float:left; margin:0 10px 0 0; font-size:38px; color:#461864; }
-.tab-body ul.search-results li .review { width: 150px; }
+.tab-body ul.search-results li div.clearfix a { display: inline-block; margin-top: .6em; }
 
 .profile-progress .progress-bar { float: none; }
 
@@ -415,12 +416,16 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.feature img { float: left; width: 45px; height: auto; }
 .profile #main div.feature blockquote { margin: 0 0 14px 54px; }
 
-#searchAgain { padding: 14px; margin: 25px 0; background: #F5F5F5; color: #3B3B3B; }
+#searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
 #searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
 #searchAgain > fieldset { padding: 14px 6px; border-top: 1px solid #C1C1C1; font-size: .9em; line-height: 120%; }
 #searchAgain fieldset.search-params { padding-bottom: 0; }
 #searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
 #searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
+
+.search h1 { font-size: 2em; margin: .1em 0 .4em 0; }
+.search .cat-icon { float: left; margin-right: 1em; }
+.search ul.tabs { margin-top: 40px; }
 
 /*.home #main { float: none; width: auto; text-align: center; }*/
 .home #main { float: left; width: 615px; text-align: left; }
