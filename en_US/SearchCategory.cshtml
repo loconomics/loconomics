@@ -4,8 +4,15 @@
 
     Layout = "~/en_US/_SiteLayout.cshtml";
     Page.Title = "home services ready to be booked nearby";
-     
+    var LC_Cat = Request["Service"];
+    var LC_SubCat = 1;
 
+    var db = Database.Open("sqlloco");
+    var searchsql = "exec [dbo].[SearchCategories] @0,@1,1";
+    var posrow = db.Query(searchsql,1,1,LC_Cat);
+
+    var searchsqlpos ="exec [dbo].[SearchCategoriesPositions] @0,@1,1,1"; 
+    
 
 }
 
@@ -15,136 +22,88 @@
 		<img class="cat-icon" src="../img/splash-icon-home.gif" alt="Home" />
 		<h1>@Page.Title</h1>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet luctus urna sit amet aliquet. Vivamus pellentesque neque in est egestas pellentesque.</p>
-		<ul class="tabs">
-			<li><a href="#help">Help</a></li>
-			<li><a href="#garden">Garden</a></li>
-			<li><a class="current" href="#maintenance">Maintenance</a></li>
-			<li><a href="#repair">Repair</a></li>
-			<li><a href="#remodel">Remodel</a></li>
-			<li><a href="#design">Design</a></li>
-		</ul>
-     <div id="maintenance" class="current tab-body">
-			<ul class="search-results"> 
-				<li class="clearfix">
-					<div class="clearfix">
-						<h2>Cleaners</h2>
-						<!-- <a class="previous">&lptr;</a> <a class="next">&rptr;</a>  -->
-						<a href="#">view more</a>
-					</div>
-					<div class="id col">
-	               <img src="../img/eg-profile-pic.jpg" alt="" />
-					</div>
-					<div class="name col">
-						<h3><a href="#">John D.</a></h3>
-						<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">read more reviews</a></blockquote>
-						<!-- <p class="rate fancy">25 €/hr</p> -->
-					</div>
-				   <div class="lang col">
-						<table class="ratings">
-							<tr>
-								<td>
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-								</td>
-								<th>Professionalism</th>
-							</tr>
-							<tr>
-								<td>
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-								</td>
-								<th>Attention to detail</th>
-							</tr>
-							<tr>
-								<td>
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-								</td>
-								<th>Trustworthiness</th>
-							</tr>
-							<tr>
-								<td>
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-									<img src="../img/star-on.gif" alt="star" />
-								</td>
-								<th>Quality of work</th>
-							</tr>
-						</table>
-					</div>
-					<div class="buttons">
-						<a class="button fanciful" href="#">View full profile</a> <a class="button fanciful" href="#">Book for $35/hour</a>
-					</div>
-				</li>
-				<li class="clearfix">
-					<div class="clearfix">
-						<h2>Gardeners</h2>
-						<!-- <a class="previous">&lptr;</a> <a class="next">&rptr;</a>  -->
-						<a href="#">view more</a>
-					</div>
-						<div class="id col">
-		               <img src="../img/eg-profile-pic.jpg" alt="" />
-						</div>
-						<div class="name col">
-							<h3><a href="#">Stephanie T.</a></h3>
-							<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">read more reviews</a></blockquote>
-							<!-- <p class="rate fancy">25 €/hr</p> -->
-						</div>
-					   <div class="lang col">
-							<table class="ratings">
-								<tr>
-									<td>
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-									</td>
-									<th>Professionalism</th>
-								</tr>
-								<tr>
-									<td>
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-									</td>
-									<th>Attention to detail</th>
-								</tr>
-								<tr>
-									<td>
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-									</td>
-									<th>Trustworthiness</th>
-								</tr>
-								<tr>
-									<td>
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-										<img src="../img/star-on.gif" alt="star" />
-									</td>
-									<th>Quality of work</th>
-								</tr>
-							</table>
-						</div>
-						<div class="buttons">
-						<a class="button fanciful" href="#">View full profile</a> <a class="button fanciful" href="#">Book for $35/hour</a>
-						</div>
-</li>
-			</ul>	
-    </div><!-- #maintenance -->
+		
+      
+     
+           <ul class="tabs">
+          @foreach(var c in posrow){ 
+               if(c.ServiceRank == 1){
+                    <li><a class="current" href="#@c.name">@c.name</a></li>
+                }else{
+                 <li><a href="#@c.name">@c.name</a></li>
+                }
+           }
+		    </ul>
+               
+        @foreach(var s in db.Query(searchsqlpos,1,1,1,LC_SubCat)){    
+     
+                    <div id="@s.position" class="current tab-body">
+			            <ul class="search-results"> 
+				            <li class="clearfix">
+					            <div class="clearfix">
+						            <h2>@s.position</h2>
+						            <!-- <a class="previous">&lptr;</a> <a class="next">&rptr;</a>  -->
+						            <a href="#">view more</a>
+					            </div>
+					            <div class="id col">
+	                           <img src="../img/eg-profile-pic.jpg" alt="" />
+					            </div>
+					            <div class="name col">
+						            <h3><a href="#">John D.</a></h3>
+						            <blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">read more reviews</a></blockquote>
+						            <!-- <p class="rate fancy">25 €/hr</p> -->
+					            </div>
+				               <div class="lang col">
+						            <table class="ratings">
+							            <tr>
+								            <td>
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+								            </td>
+								            <th>Professionalism</th>
+							            </tr>
+							            <tr>
+								            <td>
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+								            </td>
+								            <th>Attention to detail</th>
+							            </tr>
+							            <tr>
+								            <td>
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+								            </td>
+								            <th>Trustworthiness</th>
+							            </tr>
+							            <tr>
+								            <td>
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+									            <img src="../img/star-on.gif" alt="star" />
+								            </td>
+								            <th>Quality of work</th>
+							            </tr>
+						            </table>
+					            </div>
+					            <div class="buttons">
+						            <a class="button fanciful" href="#">View full profile</a> <a class="button fanciful" href="#">Book for $35/hour</a>
+					            </div>
+				            </li>
+				                           
+			            </ul>	
+         
+                </div>
+     }
+                  <!-- #maintenance -->
   </div><!-- #main -->
 	<div id="secondary">
 		<form id="searchAgain" name="searchAgain" class="fancy">
