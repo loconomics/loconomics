@@ -1,0 +1,83 @@
+
+   @{
+
+    Layout = "~/en_US/_SiteLayout.cshtml";
+        
+    } 
+    
+    
+	<div id="container" class="sign-up">
+
+		<div id="main">
+			<form id="bookservice1" class="stepped book" action="" method="post">
+				<div class="progress-bar">
+					<span class="total"><span class="percent-done"></span></span>
+					<span class="text"><span class="percent-done">0%</span> complete</span>
+				</div>
+				<h1>Step 1: Tell us about your needs.</h1>
+				<p><em>If you'd like to book more than one provider or service, we'll get to that!</em></p>
+				<fieldset class="number-values">
+					<legend>Please enter the number of each of the following spaces you'd like cleaned:</legend>
+					<table class="form">
+						<tr>
+							<td><label for="bedrooms">Bedrooms</label></td>
+							<td><input type="text" id="bedrooms" name="bedrooms" title="Bedrooms" value="" /></td>
+							<td class="status"></td>
+	             </tr>
+						<tr>
+							<td><label for="bathrooms">Bathrooms</label></td>
+							<td><input type="text" id="bathrooms" name="bathrooms" title="Bathrooms" value="" /></td>
+							<td class="status"></td>
+	             </tr>
+						<tr>
+							<td><label for="kitchens">Kitchens</label></td>
+							<td><input type="text" id="kitchens" name="kitchens" title="kitchens" value="" /></td>
+							<td class="status"></td>
+	             </tr>
+						<tr>
+							<td><label for="living">Living areas</label></td>
+							<td><input type="text" id="living" name="living" title="Living Areas" value="" /></td>
+							<td class="status"></td>
+	             </tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend>Services included:</legend>
+					<ul>
+						<li>dusting</li>
+						<li>mopping</li>
+						<li>sweeping</li>
+						<li>vacuuming</li>
+					</ul>
+				</fieldset>
+				<fieldset class="checkboxes">
+					<legend>Please choose additional services you'd like included:</legend>
+					<table class="form">
+						<tr>
+							<td><input id="windows" name="additional" title="Window cleaning" type="checkbox" value="windows" /></td>
+							<td><label for="windows">Window cleaning</label></td>
+							<td class="status"></td>
+	             </tr>
+						<tr>
+							<td><input id="linens" name="additional" title="Linens changed" type="checkbox" value="linens" /></td>
+							<td><label for="linens">Linens changed</label></td>
+							<td class="status"></td>
+	             </tr>
+						<tr>
+							<td><input id="oven" name="additional" title="Oven cleaned" type="checkbox" value="oven" /></td>
+							<td><label for="oven">Oven cleaned</label></td>
+							<td class="status"></td>
+	             </tr>
+					</table>
+				</fieldset>
+				<fieldset>
+				<label for="moreInfo">Please enter any additional information or requests that your service provider will find ehlpful in doing a great job:</label>
+				<textarea id="moreInfo" cols="100" rows="5"></textarea>
+				<fieldset class="buttons">
+					<button id="advancer" class="next fancy" type="submit">Continue</button>
+				</fieldset>
+			</form>
+	  </div><!-- #main -->
+
+	</div> <!-- #container -->
+

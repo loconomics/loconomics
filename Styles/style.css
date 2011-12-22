@@ -168,7 +168,7 @@ a:hover { color: #99C027; }
 a:focus { color: #99C027; }
 
 h1, h2, h3, h4, h5, h6 { margin: 1em 0; font-weight: 600; color: #00989A; }
-h1 { color: #b5e1e2; font-size: 3.4em; line-height: 100%; }
+h1 { color: #b5e1e2; font-size: 3em; line-height: 100%; }
 h2 { font-size: 2em; }
 h3 { font-size: 1.8em; }
 .profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
@@ -206,6 +206,8 @@ form select:focus, form input[type="checkbox"]:focus { outline: #99C027 solid 2p
 form input.time { width: 40px; }
 form input.date-pick { width: 90px; }
 
+form.stepped fieldset.number-values input { width: 20px; padding: 0 6px; }
+
 .replace { display: inline-block; height: 0; overflow: hidden; background-repeat: no-repeat; background-position: 0 0; }
 a.icon { width: 27px; padding-top: 27px; }
 a.icon:hover { background-position: 0 -27px; }
@@ -235,7 +237,10 @@ button.search-again { background: #461864; color: #fff; }
 
 .inset { float: right; margin: 1em 0 1em 1em; }
 
-form.stepped { position: relative; min-height: 500px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #ccc; }
+form.stepped { position: relative; min-height: 500px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #ccc; color: #999; }
+form.stepped h1 { margin-bottom: .4em; }
+form.stepped legend { font-weight: bold; }
+form.stepped fieldset { margin-bottom: 1em; }
 form.stepped fieldset.buttons { display: block; margin-top: 20px; text-align: right; }
 form.stepped fieldset.add { text-align: left; }
 form.stepped table.form tr td:first-child { width: 40%; }
@@ -243,12 +248,18 @@ form.stepped fieldset.checklist { float: left; width: 40%; padding: 5px 5% 5px 0
 form.stepped .checklist fieldset { margin: 0; padding: 0; }
 form.stepped .checklist label, form.stepped .radiolist label { font-size: .9em; }
 form.stepped #theCalendar { float: right; width: 300px; margin-left: 1em; }
-
 form.stepped #theCalendar dl dt { position: relative; }
 form.stepped #theCalendar dl dt a { position: absolute; right: 0; }
-
 form.stepped table td { padding: 5px 0; }
 form.stepped table td h4 { margin-bottom: 0; }
+
+form.book { border-bottom: none; }
+form.book ul { margin: 0; }
+form.book table.form { width: 450px; }
+form.book table.form td { width: 30%; padding: .3em 3% .3em 0; }
+form.book fieldset.checkboxes table.form tr td { width: 43%; }
+form.book fieldset.checkboxes table.form tr td:first-child { width: 4%; }
+form.book fieldset.checkboxes table.form tr td:first-child input { width: auto; }
 
 ul.collection { margin: 0; padding: 0; }
 ul.collection.empty { border: 1px dashed #ccc; }
@@ -257,7 +268,7 @@ ul.collection li:before { content: "• "; }
 ul.collection li:hover { color: #efefef; background: #8B2143; cursor: pointer; }
 ul.collection li:hover:before { content: "✖ "; }
 
-div.progress-bar { float: right; vertical-align: middle; } 
+div.progress-bar { float: right; vertical-align: middle; margin-left: 1em; } 
 div.progress-bar span { display: inline-block; vertical-align: middle; }
 div.progress-bar .total { width: 150px; height: 35px; background: #eee; }
 div.progress-bar .total .percent-done { width: 0; height: 35px; background: #b5e1e2; }
@@ -340,6 +351,8 @@ table.ratings tr { margin-bottom: 12px; }
 table.ratings td { padding: 0; background: url('../img/star-off.gif') repeat-x center left; vertical-align: middle; line-height: 16px; }
 table.ratings td img { float: left; }
 table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
+
+
 
 /* Page Structure */
 
