@@ -1,15 +1,15 @@
-﻿
-        @{
-          Layout = "~/en_US/_SiteLayout.cshtml";
-    var serviceType = Request["ServiceType"];          var ProviderID= "0";
-          ProviderID =  Request.QueryString["ProviderID"];
-          var PositionID= "0";
-          PositionID =  Request.QueryString["PositionID"];
-          var Position= " ";
-          Position =  Request.QueryString["Position"];
+﻿@{
+    Layout = "~/en_US/_SiteLayout.cshtml";
+    var serviceType = Request["ServiceType"];
+    var service = Request["Service"];          
+    var ProviderID= "0";
+    ProviderID =  Request.QueryString["ProviderID"];
+    var PositionID= "0";
+    PositionID =  Request.QueryString["PositionID"];
+    var Position= " ";
+    Position =  Request.QueryString["Position"];
     var UserID = Convert.ToString(WebSecurity.CurrentUserId);
-
-
+    
     var db = Database.Open("sqlloco");
     var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email 
                     FROM users a 
@@ -23,6 +23,7 @@
 
     var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1"; 
 } 
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#customerName").hide();
@@ -290,7 +291,7 @@
 
 	<div id="secondary">
 		
-		<a href="Search?serviceType=@serviceType">&laquo; back to search results</a>
+		<a href="Search?serviceType=@serviceType&Service=@service">&laquo; back to search results</a>
 		
 		<form id="searchAgain" name="searchAgain" class="fancy">
 			<legend>Search Again</legend>

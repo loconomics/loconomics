@@ -1,10 +1,10 @@
 ﻿@using System.Text.RegularExpressions;
 @{
     if (WebSecurity.IsAuthenticated) {
-        Layout = "~/en_ES/_SiteLayout.cshtml";
+        Layout = "~/en_US/_SiteLayout.cshtml";
         var UserID  = WebSecurity.CurrentUserId;
     }else{
-        Response.Redirect("~/en_ES/Default");
+        Response.Redirect("~/en_US/Account/Login");
     }
 
     var providerID = "";

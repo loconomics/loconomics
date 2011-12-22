@@ -1,11 +1,15 @@
 ﻿@{
     var UserID = 0;
-    if (WebSecurity.IsAuthenticated) {
-        Layout = "~/en_ES/_SiteLayout.cshtml";
-        UserID  = WebSecurity.CurrentUserId;
-    }else{
-        Response.Redirect("~/Default");
+    if (WebSecurity.IsAuthenticated)
+    {
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        UserID = WebSecurity.CurrentUserId;
     }
+    else
+    {
+        Response.Redirect("~/en_US/Account/Login");
+    }
+    
     var customerName = Request["customerName"];
     var customerRequest = Request["customerRequest"];
 
@@ -13,20 +17,52 @@
     var ProviderID = Request["ProviderID"];
     var PositionID = Request["PositionID"];
     
+    //TODO create a thread for the conversation.
+    //1- Create a Messaging Thread or select the existing one
+    int threadID = 0;
+    int messageID = 0;
+    
+    //TODO: add template and response link to message body
+    var responseLink = "http://localhost:1575/LoconomicsJB/en_US/EmailRequest?from="+UserID;
+    
     var db = Database.Open("sqlloco");
     var providersql = "select Email from userprofile up where up.userid = @0";
     var sqluser = "exec GetUserDetails @0";
     var provider = db.QuerySingle(providersql, ProviderID);
     var userrow = db.QuerySingle(sqluser, UserID);
     var message = "An email with your message has been succesfully sent.";
+    var sysdate = DateTime.Now;
+    
+    var SQLINSERTTHREAD=@"INSERT INTO dbo.MessagingThreads
+                        (CreatedDate,UpdatedDate,ModifiedBy,providerID,userID)
+                        VALUES(@0,@1,@2,@3,@4)";
+    var SQLINSERTMESSAGE=@"INSERT INTO dbo.Messages
+                        (body,CreatedDate,UpdatedDate,ModifiedBy)
+                        VALUES(@0,@1,@2,@3)";
+    var SQLINSERTTHREADMESSAGE=@"INSERT INTO dbo.ThreadMessage
+                        (messageID,threadID,CreatedDate,UpdatedDate,ModifiedBy)
+                        VALUES(@0,@1,@2,@3,@4)";
+    
     try {
+        //store the thread in the DDBB(dbo.MessagingThreads)
+        db.Execute(SQLINSERTTHREAD, sysdate, sysdate, UserID, ProviderID, UserID);
+        threadID = Convert.ToInt32(db.GetLastInsertId());
+        //store the message in the DDBB(dbo.Messages)
+        db.Execute(SQLINSERTMESSAGE, customerRequest, sysdate, sysdate, UserID);
+        messageID = Convert.ToInt32(db.GetLastInsertId());
+        //store the message-thread relation in the DDBB(dbo.ThreadMessage)
+        db.Execute(SQLINSERTTHREADMESSAGE, messageID, threadID, sysdate, sysdate, UserID);
+        //add the thread id to the url querystring
+        responseLink += "?threadID=" + threadID;
+        
         // Send email
         WebMail.Send(provider.Email,
-            "Help request from - " + customerName,
-            customerRequest
+            subject: "Help request from - " + customerName,
+            body: customerRequest + " " +responseLink
         );
     }
     catch (Exception ex ) {
+        //TODO: if try block fails revert the transaction
         message="The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.";
     }
 }
