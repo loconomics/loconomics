@@ -27,7 +27,57 @@
 				<label for="serviceDate">Preferred date:</label> <input type="text" id="serviceDate" name="serviceDate" class="date-pick" value="today" />
 			</fieldset>
 		</form>
-     <div class="categories">
+    </div><!-- #main -->
+
+	 <div id="secondary">
+		<div class="spotlight">
+			<div class="id col">
+            <img src="../img/eg-profile-pic.jpg" alt="" />
+			</div><!-- .id.col -->
+		   <div class="lang col">
+				<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">Cleaner, Massage Therapist</a></h3>
+				<table>
+					<tr>
+						<td>
+						    <input name="Professionalism" type="radio" class="star" disabled="disabled"/>
+                            <input name="Professionalism" type="radio" class="star"/>
+                            <input name="Professionalism" type="radio" class="star"/>
+                            <input name="Professionalism" type="radio" class="star"/>
+                            <input name="Professionalism" type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Professionalism</th>
+					</tr>
+					<tr>
+						<td>
+							<input name="Attention" type="radio" class="star" disabled="disabled"/>
+                            <input name="Attention" type="radio" class="star"/>
+                            <input name="Attention" type="radio" class="star"/>
+                            <input name="Attention" type="radio" class="star"/>
+                            <input name="Attention" type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Attention to detail</th>
+					</tr>
+					<tr>
+						<td>
+						    <input name="Trustworthiness" type="radio" class="star" disabled="disabled"/>
+                            <input name="Trustworthiness" type="radio" class="star"/>
+                            <input name="Trustworthiness" type="radio" class="star"/>
+                            <input name="Trustworthiness" type="radio" class="star"/>
+                            <input name="Trustworthiness" type="radio" class="star" checked="checked"/>
+						</td>
+						<th>Trustworthiness</th>
+					</tr>
+				</table>
+			</div><!-- .lang.col -->
+			<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">View availability &amp; book</a>
+		</div><!-- .spotlight -->
+		<!-- <div class="video">
+			<h3>How it works</h3>
+			<img src="../img/home-video-placeholder.jpg" alt="" />
+		</div>.video -->
+	 </div> #secondary -->
+
+    <div class="categories">
 			<ul>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Home")"><img src="@Href("~/img/splash-icon-home.gif")" alt="" /></a>
@@ -112,56 +162,6 @@
 				</li>
 			</ul>
 		</div>
-    </div><!-- #main -->
-
-	 <div id="secondary">
-		<div class="spotlight">
-			<div class="id col">
-            <img src="../img/eg-profile-pic.jpg" alt="" />
-			</div><!-- .id.col -->
-		   <div class="lang col">
-				<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">Cleaner, Massage Therapist</a></h3>
-				<table>
-					<tr>
-						<td>
-						    <input name="Professionalism" type="radio" class="star" disabled="disabled"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Professionalism</th>
-					</tr>
-					<tr>
-						<td>
-							<input name="Attention" type="radio" class="star" disabled="disabled"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Attention to detail</th>
-					</tr>
-					<tr>
-						<td>
-						    <input name="Trustworthiness" type="radio" class="star" disabled="disabled"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Trustworthiness</th>
-					</tr>
-				</table>
-			</div><!-- .lang.col -->
-			<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">View availability &amp; book</a>
-		</div><!-- .spotlight -->
-		<div class="video">
-			<h3>How it works</h3>
-			<img src="../img/home-video-placeholder.jpg" alt="" />
-		</div><!-- .video -->
-	 </div><!-- #secondary -->
-
    </div><!-- #container -->
 
 
