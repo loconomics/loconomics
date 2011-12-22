@@ -234,7 +234,7 @@ button.search-again:hover { background: #A190AF; color: #fff; }
 a.profile.current, a.profile:hover, a.profile:focus,
 button.search-again { background: #461864; color: #fff; }
 
-
+#modals { display: none; }
 .inset { float: right; margin: 1em 0 1em 1em; }
 
 form.stepped { position: relative; min-height: 500px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #ccc; color: #999; }
@@ -457,7 +457,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
 .home #secondary .video img { width: 352px; }
 
-.categories { margin: 0 auto; width: 616px; height: 250px; }
+.categories { margin: 0 auto; width: 700px; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
 .categories > ul { margin: 100px 0 0 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
@@ -470,6 +470,16 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 
 .faq dt { font-weight: bold; }
 .faq dd { margin: 1em 0; }
+
+/** Modals **/
+
+#howItWorks { margin: 60px 0 0 0; padding: 0; width: 400px; text-align: left; }
+#howItWorks li { margin: 0 0 30px 0; padding: 0 0 30px 0; height: 66px; list-style-type: none; border-bottom: 2px dashed #b5e1e2; }
+#howItWorks li img.num { float: left; }
+#howItWorks li img.icon { float: right; }
+#howItWorks li h3 { margin: 0 95px 0 65px; font-size: 26px; font-weight: normal; line-height: 125%; }
+#howItWorks li.performed h3 { margin-top: .8em; }
+#howItWorks li h3 a { text-decoration: none; color: #00989A; }
 
 /**
  * Auto Complete 5.1

@@ -99,20 +99,20 @@
             <li class="new-user">
                 <a class="launch-modal" href="@Href("~/en_US/Account/Register")">Sign Up</a> | 
                 <a id="loginButton" href="@Href("~/en_US/Account/Login")">Login</a> | 
-                <a href="@Href("~/en_US/HowItWorks")">How it works</a>
+                <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks")">How it works</a>
             </li>
 }
-<li>
-	<dl>
-		<dt class="fancy"><img src="@Href("~/Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
-		<dd>
-			<a class="us" href="@Href("~/en_US/")"><img src="@Href("~/Styles/images/us.png")" alt="US" />English</a>
-			<a class="es" href="@Href("~/es_ES/")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />Español</a>
-			<a class="es" href="@Href("~/en_ES")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />English</a>
-			<a class="us" href="@Href("~/es_US")"><img src="@Href("~/Styles/images/us.png")" alt="US" />Español</a>
-		</dd>
-	</dl>
-</li>
+				<li>
+					<dl>
+						<dt class="fancy"><img src="@Href("~/Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
+						<dd>
+							<a class="us" href="@Href("~/en_US/")"><img src="@Href("~/Styles/images/us.png")" alt="US" />English</a>
+							<a class="es" href="@Href("~/es_ES/")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />Español</a>
+							<a class="es" href="@Href("~/en_ES")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />English</a>
+							<a class="us" href="@Href("~/es_US")"><img src="@Href("~/Styles/images/us.png")" alt="US" />Español</a>
+						</dd>
+					</dl>
+				</li>
 				
 				<li><a class="replace icon cart" href="#">Cart</a></li>
 			</ul>
@@ -121,7 +121,33 @@
 
     <footer><a href="@Href("~/en_US/About")">About</a> | <a href="#">Terms &amp; Privacy</a> | <a href="@Href("~/en_US/Help")">Help</a> | <a href="#">Blog</a></footer>
 
-	<div id="loginModal"></div>
+		<div id="modals">
+
+			 <div id="loginModal"></div>
+
+			<div id="howItWorksModal" class="modal">
+				<h2 class="cushycms">How It Works</h2>
+				<ol id="howItWorks">
+					<li class="find clearfix">
+						<img class="num" src="@Href("~/img/icon-01.png")" alt="1" />
+						<img class="icon" src="@Href("~/img/icon-cart-new.png")" alt="" />
+						<h3 class="cushycms"><a href="/">Find, book, &amp; pay for a service.</a></h3>
+					</li>
+					<li class="performed clearfix">
+						<img class="num" src="@Href("~/img/icon-02.png")" alt="1" />
+						<img class="icon" src="@Href("~/img/icon-home-new.png")" alt="" />
+						<h3 class="cushycms"><a href="/">Service performed.</a></h3>
+					</li>
+					<li class="share clearfix">
+						<img class="num" src="@Href("~/img/icon-03.png")" alt="1" />
+						<img class="icon" src="@Href("~/img/icon-share.png")" alt="" />
+						<h3 class="cushycms"><a href="/">Write a review &amp; tell your friends.</a></h3>
+					</li>
+				</ol>
+			</div>
+			
+		</div><!-- #modals -->
+
 
          @Scripts.GetScriptTags()
     </body>

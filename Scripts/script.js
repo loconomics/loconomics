@@ -1,7 +1,7 @@
 /* Author: Loconomics */
 
 $(document).ready(function(){
-	
+
    // $('button[type=submit]').click(function(){
    //    $(this).closest('form').submit();
    //    return false;
@@ -23,6 +23,32 @@ $(document).ready(function(){
     //     });
     //     return false;
     // }); 
+    
+    $('a#launchHowItWorks').click(function(event) { 
+        event.preventDefault();
+        $('div.blockUI.blockMsg.blockPage').addClass('fancy');
+        $.blockUI({ 
+           message: $('#howItWorksModal'),
+           centerY: true, 
+           css: { 
+               top:  ($(window).height() - 550) /2 + 'px', 
+               left: ($(window).width() - 400) /2 + 'px',
+               width: '400px',
+               padding: '25px',
+               border: '5px solid #b5e1e2',
+            	'-moz-border-radius': '12px',
+            	'-webkit-border-radius': '12px',
+               'border-radius': '12px',
+               '-moz-background-clip': 'padding',
+               '-webkit-background-clip': 'padding-box',
+               'background-clip': 'padding-box'
+           },
+           overlayCSS: { cursor: 'default' }
+        }); 
+        
+        $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
+    });
+    	   
 
     $('#loginModal form input[type=submit]').click(function() { 
         // update the block message 
