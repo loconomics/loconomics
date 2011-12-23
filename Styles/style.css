@@ -226,13 +226,14 @@ button:hover, a.button:hover, button:focus, a.button:focus { background-color: #
 button.next { display: inline-block; padding: 0 1em; border: none; background: #b5e1e2; color: #00989a; font-size: 1.6em; line-height: 185%; }
 button.next:hover, button.next:focus { background: #00989a; color: #fff; }
 
-a.message { background: #F0B600; color: #fff; }
-a.message:hover, a.message:focus { background: #E95D0F; }
+a.message { background: #E95D0F; color: #fff; }
+a.message:hover, a.message:focus { background: #F0B600; }
 
 a.profile, a.profile.current:hover, a.profile.current:focus,
-button.search-again:hover { background: #A190AF; color: #fff; } 
+button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; } 
+
 a.profile.current, a.profile:hover, a.profile:focus,
-button.search-again { background: #461864; color: #fff; }
+button.search-again, a.view { background: #461864; color: #fff; }
 
 #modals { display: none; }
 .inset { float: right; margin: 1em 0 1em 1em; }
@@ -444,24 +445,31 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #main { float: left; width: 615px; text-align: left; }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; }
 .home form fieldset { margin: .5em 0; }
-.home #secondary { margin: 40px 0 0 625px; padding-left: 20px; text-align: left; border-left: 3px solid #ededed; }
-.home #secondary .spotlight { background: url('../img/feature-border.gif') no-repeat top right; }
-.home #secondary .spotlight .col { padding-top: 40px;  }
-.home #secondary .spotlight .id { float: left; margin-right: 12px; }
+.home #secondary { position: relative; padding-top: 20px; margin: 50px 0 0 625px; text-align: left; }
+.home #secondary h2 { z-index: 2; position: absolute; top: 0; left: 15px; margin: 0; padding: 2px 18px; width: 114px; font-size: 13px; font-weight: normal; color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left; }
+.home #secondary .spotlight { z-index: 1; position: relative; padding: 20px; border: 2px solid #461864; background: #F5F5F5; }
+.home #secondary .spotlight .rating { position: absolute; top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
+.home #secondary .spotlight .id { float: left; }
 .home #secondary .spotlight .id img { width: 113px; }
-.home #secondary .spotlight .lang h3 { font-size: 16px; }
-.home #secondary .spotlight .lang h3 a { text-decoration: none; color: #99C027; }
+.home #secondary .spotlight .lang { margin-left: 124px; }
+.home #secondary .spotlight .lang h3 { font: 22px normal "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive; margin: 0; }
+.home #secondary .spotlight .lang h3 a { text-decoration: none; color: #461864; }
+.home #secondary .spotlight .lang p { margin: 0; color: #00989A; }
 .home #secondary .spotlight .lang th { font-size: 12px; font-weight: normal; color: #00989A; }
+.home #secondary .spotlight p.creds { margin: 5px 0; font-size: 12px; vertical-align: bottom; }
 .home #secondary .spotlight a.fanciful { font-size: 10px; }
+
 .home #secondary .video { margin-top: 40px; padding-top: 0; background: url('../img/feature-border.gif') no-repeat top right; }
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
 .home #secondary .video img { width: 352px; }
 
-.categories { margin: 0 auto; width: 700px; height: 250px; }
+.categories { margin: 0 auto; width: 900px; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
 .categories > ul { margin: 100px 0 0 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
 .categories ul:first-child > li { float: left; margin-right: 3px; }
+.categories ul:first-child > li:first-child { width: 150px; text-align: right; }
+.categories ul:first-child > li:first-child h3 { margin: 14px; font-size: 24px; }
 .categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }

@@ -30,55 +30,33 @@
     </div><!-- #main -->
 
 	 <div id="secondary">
-		<div class="spotlight">
+		<h2>Featured Provider</h2>
+		<div class="spotlight fancy">
 			<div class="id col">
-            <img src="../img/eg-profile-pic.jpg" alt="" />
+            <img src="@Href("~/img/eg-profile-pic.jpg")" alt="" />
 			</div><!-- .id.col -->
 		   <div class="lang col">
-				<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">Cleaner, Massage Therapist</a></h3>
-				<table>
-					<tr>
-						<td>
-						    <input name="Professionalism" type="radio" class="star" disabled="disabled"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star"/>
-                            <input name="Professionalism" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Professionalism</th>
-					</tr>
-					<tr>
-						<td>
-							<input name="Attention" type="radio" class="star" disabled="disabled"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star"/>
-                            <input name="Attention" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Attention to detail</th>
-					</tr>
-					<tr>
-						<td>
-						    <input name="Trustworthiness" type="radio" class="star" disabled="disabled"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star"/>
-                            <input name="Trustworthiness" type="radio" class="star" checked="checked"/>
-						</td>
-						<th>Trustworthiness</th>
-					</tr>
-				</table>
+				<div class="rating">
+	            <img src="@Href("~/img/star-on.png")" alt="star" />
+	            <img src="@Href("~/img/star-on.png")" alt="star" />
+	            <img src="@Href("~/img/star-on.png")" alt="star" />
+				</div>
+				<h3><a href="#">Stephanie W.</a></h3>
+				<p>Cleaner, Massage Therapist</p>
+				<p class="creds"><img src="@Href("~/img/icon-verifications.png")" /> 4 Verifications &nbsp; <img src="@Href("~/img/icon-licenses.png")" /> 2 Licenses</p>
+				<a class="view button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">view profile</a> <a class="message button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">book for $35/hr</a>
 			</div><!-- .lang.col -->
-			<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">View availability &amp; book</a>
+			
 		</div><!-- .spotlight -->
-		<!-- <div class="video">
+		<!--<div class="video">
 			<h3>How it works</h3>
 			<img src="../img/home-video-placeholder.jpg" alt="" />
-		</div>.video -->
-	 </div> #secondary -->
+		</div> .video -->
+	 </div><!-- #secondary -->
 
     <div class="categories">
 			<ul>
+				<li><h3>Browse by category</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Home")"><img src="@Href("~/img/splash-icon-home.gif")" alt="" /></a>
 					<div class="menu">
@@ -122,6 +100,17 @@
 							<li><a href="#">Body</a></li>
 							<li><a href="#">Mind</a></li>
 							<li><a href="#">Care</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="@Href("~/en_US/Search?Service=Transport")"><img src="@Href("~/img/splash-icon-transport.gif")" alt="" /></a>
+					<div class="menu">
+						<strong>Transport</strong>
+						<ul>
+							<li><a href="#">Car Service</a></li>
+							<li><a href="#">Airport Shuttle</a></li>
+							<li><a href="#">Ride Share</a></li>
 						</ul>
 					</div>
 				</li>
