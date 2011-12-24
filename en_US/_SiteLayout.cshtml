@@ -90,11 +90,20 @@
 			<ul>
 				<li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
 @if (WebSecurity.IsAuthenticated) {
-            <li>Hi,  
-						<a href="@Href("~/en_US/provider-dashboard-profile")" title="Change password">@WebSecurity.CurrentUserName</a> |
-                  <a href="@Href("~/en_US/Account/Logout")">Logout</a>
+			   <li>  
+					<dl class="user-nav">
+						<dt class="fancy">Hi, @WebSecurity.CurrentUserName! &#x25BC;</dt>
+						<dd>
+							<a href="@Href("~/en_US/provider-dashboard-profile")" title="Change password">Dashboard</a>
+							<a href="#">Your services</a>
+							<a href="#">Your positions</a>
+							<a href="#">Profile</a>
+							<a href="#">Account</a>
+							<a href="@Href("~/en_US/Account/Logout")">Logout</a>
+						</dd>
+					</dl>	                  
 				</li> 
-            <li><a class="button fancy" href="@Href("~/en_US/provider-wizard-step1")">Become a provider</a></li>
+			   <li><a class="button fancy" href="@Href("~/en_US/provider-wizard-step1")">Become a provider</a></li>
 } else {
             <li class="new-user">
                 <a class="launch-modal" href="@Href("~/en_US/Account/Register")">Sign Up</a> | 
@@ -103,7 +112,7 @@
             </li>
 }
 				<li>
-					<dl>
+					<dl class="lang-country">
 						<dt class="fancy"><img src="@Href("~/Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
 						<dd>
 							<a class="us" href="@Href("~/en_US/")"><img src="@Href("~/Styles/images/us.png")" alt="US" />English</a>

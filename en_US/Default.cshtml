@@ -12,25 +12,25 @@
 		<h1>@Page.Title</h1>
 		<form id="homeSearch" action="@Href("~/en_US/Search")" method="post">
 			<fieldset>
-				<label for="serviceType">Enter Service </label>
-            <input type="text" name="serviceType" id="serviceType" value="e.g. Cleaner, Tutor..." />
+				<!-- <label for="serviceType">Enter Service </label> -->
+            <input class="fanciful" type="text" name="serviceType" id="serviceType" value="e.g. Cleaner, Tutor..." /> in 
+            <input class="fanciful" type="text" name="serviceLocation" id="serviceLocation" value="San Francisco, CA" />
             <!-- <input class="go" type="submit" value="Find Services"/> -->
-				<button class="fancy" type="submit">Find Services</button>
-			</fieldset>
-			<fieldset>
-				<select id="serviceLocation" name="serviceLocation">
+				<!-- <select id="serviceLocation" name="serviceLocation">
 					<option value="" selected>Select a location</option>
 					<option value="madrid">Madrid</option>
 					<option value="minneapolis">Minneapolis</option>
 					<option value="new-york">NYC</option>
-				</select>
-				<label for="serviceDate">Preferred date:</label> <input type="text" id="serviceDate" name="serviceDate" class="date-pick" value="today" />
+				</select> -->
+			</fieldset>
+			<fieldset>
+				<label for="serviceDate">Preferred date:</label> <input class="fanciful" type="text" id="serviceDate" name="serviceDate" class="date-pick" value="today" /> <button class="fancy" type="submit">Find Services</button>
 			</fieldset>
 		</form>
     </div><!-- #main -->
 
 	 <div id="secondary">
-		<h2>Featured Provider</h2>
+		<h2 class="tabby">Featured Provider</h2>
 		<div class="spotlight fancy">
 			<div class="id col">
             <img src="@Href("~/img/eg-profile-pic.jpg")" alt="" />
@@ -44,9 +44,14 @@
 				<h3><a href="#">Stephanie W.</a></h3>
 				<p>Cleaner, Massage Therapist</p>
 				<p class="creds"><img src="@Href("~/img/icon-verifications.png")" /> 4 Verifications &nbsp; <img src="@Href("~/img/icon-licenses.png")" /> 2 Licenses</p>
-				<a class="view button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">view profile</a> <a class="message button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">book for $35/hr</a>
 			</div><!-- .lang.col -->
-			
+			<div class="review">
+				<img src="@Href("~/img/generic-avatar.png")" alt="" />
+				<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">read more reviews</a></blockquote>
+			</div><!-- .review -->
+			<div class="buttons">
+				<a class="view button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">view profile</a> <a class="message button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=2&PositionId=14&Position=Cleaner&ServiceType=cleaner">book for $35/hr</a>
+			</div>
 		</div><!-- .spotlight -->
 		<!--<div class="video">
 			<h3>How it works</h3>
@@ -61,7 +66,7 @@
 					<a href="@Href("~/en_US/Search?Service=Home")"><img src="@Href("~/img/splash-icon-home.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Home</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Help</a></li>
 							<li><a href="#">Garden</a></li>
 							<li><a href="#">Maintenance</a></li>
@@ -69,84 +74,84 @@
 							<li><a href="#">Remodel</a></li>
 							<li><a href="#">Design</a></li>
 							<li><a href="#">Office</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Child")"><img src="@Href("~/img/splash-icon-child.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Child</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Body</a></li>
 							<li><a href="#">Mind</a></li>
 							<li><a href="#">Care</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Pet")"><img src="@Href("~/img/splash-icon-pets.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Pets</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Care</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Personal")"><img src="@Href("~/img/splash-icon-people.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Personal</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Body</a></li>
 							<li><a href="#">Mind</a></li>
 							<li><a href="#">Care</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Transport")"><img src="@Href("~/img/splash-icon-transport.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Transport</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Car Service</a></li>
 							<li><a href="#">Airport Shuttle</a></li>
 							<li><a href="#">Ride Share</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Transport")"><img src="@Href("~/img/splash-icon-business.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Business</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Cleaning &amp; Maintenance</a></li>
 							<li><a href="#">Employee Wellness</a></li>
 							<li><a href="#">Celebration</a></li>
 							<li><a href="#">Administrative</a></li>
-						</ul>					
+						</ul>	 -->				
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Elder")"><img src="@Href("~/img/splash-icon-elderly.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Elderly</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Body</a></li>
 							<li><a href="#">Mind</a></li>
 							<li><a href="#">Care</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 				<li>
 					<a href="@Href("~/en_US/Search?Service=Celebration")"><img src="@Href("~/img/splash-icon-celebrations.gif")" alt="" /></a>
 					<div class="menu">
 						<strong>Celebrations</strong>
-						<ul>
+						<!-- <ul>
 							<li><a href="#">Party</a></li>
 							<li><a href="#">Wedding</a></li>
 							<li><a href="#">Children</a></li>
 							<li><a href="#">Religious</a></li>
-						</ul>
+						</ul> -->
 					</div>
 				</li>
 			</ul>
