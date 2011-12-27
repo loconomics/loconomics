@@ -53,7 +53,7 @@
         //store the message-thread relation in the DDBB(dbo.ThreadMessage)
         db.Execute(SQLINSERTTHREADMESSAGE, messageID, threadID, sysdate, sysdate, UserID);
         //add the thread id to the url querystring
-        responseLink += "?threadID=" + threadID;
+        responseLink += "&threadID=" + threadID;
         
         // Send email
         WebMail.Send(provider.Email,

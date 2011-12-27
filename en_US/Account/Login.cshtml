@@ -54,8 +54,11 @@
 
                 var returnUrl = Request.QueryString["ReturnUrl"];
                 if (returnUrl.IsEmpty()) {
-                    Response.Redirect("~/en_US/");
-                }
+                    if(Request["Redirect"]==null){
+                        Response.Redirect("~/en_US/");
+                    }else{
+                        Response.Redirect(Request["Redirect"]);
+                    }                }
                 else {
                     Context.RedirectLocal(returnUrl);
                 }
