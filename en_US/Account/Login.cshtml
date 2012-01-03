@@ -57,6 +57,7 @@
                     if(Request["Redirect"]==null){
                         Response.Redirect("~/en_US/");
                     }else{
+                        var redirect = Request.QueryString;
                         Response.Redirect(Request["Redirect"]);
                     }                }
                 else {

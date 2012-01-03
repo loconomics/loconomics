@@ -10,33 +10,25 @@
         Response.Redirect("~/en_US/Account/Login");
     }
     
-    var customerName = Request["customerName"];
-    var customerRequest = Request["customerRequest"];
+    var emailResponse = Request["emailResponse"];
 
-    var PositionSingular = Request["PositionSingular"];
-    var ProviderID = Request["ProviderID"];
-    var PositionID = Request["PositionID"];
-    
-    //create a thread for the conversation.
-    //1- Create a Messaging Thread or select the existing one
-    int threadID = 0;
+    var receiverID = Request["receiverID"];
+
+    var threadID = Request["threadID"];
     int messageID = 0;
-    int tmid = 0;
     
     //add template and response link to message body
     var responseLink = "http://localhost:1575/LoconomicsJB/en_US/EmailResponse?tmid=";
     
     var db = Database.Open("sqlloco");
-    var providersql = "select Email from userprofile up where up.userid = @0";
+    var receiversql = "select Email from userprofile up where up.userid = @0";
     var sqluser = "exec GetUserDetails @0";
-    var provider = db.QuerySingle(providersql, ProviderID);
+    var receiver = db.QuerySingle(receiversql, receiverID);
     var userrow = db.QuerySingle(sqluser, UserID);
     var message = "has been succesfully sent.";
     var sysdate = DateTime.Now;
+
     
-    var SQLINSERTTHREAD=@"INSERT INTO dbo.MessagingThreads
-                        (CreatedDate,UpdatedDate,ModifiedBy,providerID,userID)
-                        VALUES(@0,@1,@2,@3,@4)";
     var SQLINSERTMESSAGE=@"INSERT INTO dbo.Messages
                         (body,CreatedDate,UpdatedDate,ModifiedBy)
                         VALUES(@0,@1,@2,@3)";
@@ -45,22 +37,19 @@
                         VALUES(@0,@1,@2,@3,@4)";
     
     try {
-        //store the thread in the DDBB(dbo.MessagingThreads)
-        db.Execute(SQLINSERTTHREAD, sysdate, sysdate, UserID, ProviderID, UserID);
-        threadID = Convert.ToInt32(db.GetLastInsertId());
         //store the message in the DDBB(dbo.Messages)
-        db.Execute(SQLINSERTMESSAGE, customerRequest, sysdate, sysdate, UserID);
+        db.Execute(SQLINSERTMESSAGE, emailResponse, sysdate, sysdate, UserID);
         messageID = Convert.ToInt32(db.GetLastInsertId());
         //store the message-thread relation in the DDBB(dbo.ThreadMessage)
         db.Execute(SQLINSERTTHREADMESSAGE, messageID, threadID, sysdate, sysdate, UserID);
-        tmid = Convert.ToInt32(db.GetLastInsertId()); 
+        int tmid = Convert.ToInt32(db.GetLastInsertId()); 
         //add the thread id to the url querystring
         responseLink += tmid;
         
         // Send email
-        WebMail.Send(provider.Email,
-            subject: "Help request from - " + customerName,
-            body: customerRequest + " " +responseLink
+        WebMail.Send(receiver.Email,
+            subject: "Loconomics message" ,
+            body: emailResponse + " " +responseLink
         );
     }
     catch (Exception ex ) {
@@ -69,10 +58,10 @@
     }
 }
 <div id="container">
-    <form method="post" action="ProviderProfile.cshtml?ProviderID=@ProviderID&PositionId=@PositionID&Position=@PositionSingular">
+    <form method="post" action="Default.cshtml">
         <p>Dear, <b>@userrow.FirstName</b>. your message:</p>
 
-        <p><b>@customerRequest</b></p>
+        <p><b>@emailResponse</b></p>
 
        <p>@message</p>
       
