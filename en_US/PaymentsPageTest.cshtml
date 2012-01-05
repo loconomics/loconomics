@@ -1,0 +1,77 @@
+﻿@using Braintree
+@{
+    //if (WebSecurity.IsAuthenticated)
+    //{
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        var UserID = WebSecurity.CurrentUserId;
+    /*}
+    else
+    {
+        Response.Redirect("~/en_US/Account/Login");
+    }*/
+
+    BraintreeGateway gateway = new BraintreeGateway
+    {
+        Environment = Braintree.Environment.SANDBOX,
+        MerchantId = "k74g8bpwwfmmfrcr",
+        PublicKey = "m5qwzh34yxqk9n3f",
+        PrivateKey = "hs7y2pgfkb697jqb"
+    };
+    var errors = "";
+    var TrData = "";    
+    var Amount = 100.00M;//This amount should come in the request from the pricing wizzard.
+    var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
+    if(IsPost){
+        TrData = gateway.TrData(new TransactionRequest { Amount = Amount, Type = TransactionType.SALE }, // key information about the transaction
+                                                "~/en_US/Default");  // the redirect destination, in this case, the Confirm action below
+    }
+}
+<div id="container" class="sign-up">
+      <h1>Payment: @Amount </h1>
+
+    @* If at least one validation error exists, notify the user *@
+    @Html.ValidationSummary(errors)
+    <form id="NewPaymentForm" action="@TransparentRedirectURLForCreate" method="post" autocomplete="off">
+    <div>
+        <fieldset>
+            <legend><b>Customer</b></legend>
+            <div><label for="transaction[customer][first_name]">First Name</label></div>
+            <div>
+                @Html.TextBox("transaction[customer][first_name]")
+                @Html.ValidationMessage("transaction[customer][first_name]")
+            </div>
+            <div><label for="transaction[customer][last_name]">Last Name</label></div>
+            <div>
+                @Html.TextBox("transaction[customer][last_name]")
+                @Html.ValidationMessage("transaction[customer][last_name]")
+            </div>
+            <div><label for="transaction[customer][email]">Email</label></div>
+            <div>
+              @Html.TextBox("transaction[customer][email]")
+              @Html.ValidationMessage("transaction[customer][email]")
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><b>Credit Card</b></legend>
+            <div><label for="transaction[credit_card][number]">Number</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][number]")
+              @Html.ValidationMessage("transaction[credit_card][number]")
+            </div>
+            <div><label for="transaction[credit_card][expiration_date]">Expiration Date (MM/YY)</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][expiration_date]")
+              @Html.ValidationMessage("transaction[credit_card][expiration_date]")
+            </div>
+            <div><label for="transaction[credit_card][cvv]">CVV</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][cvv]")
+              @Html.ValidationMessage("transaction[credit_card][cvv]")
+            </div>
+        </fieldset>
+        <input id="tr_data" name="tr_data" type="hidden" value="@TrData" />
+        <input id="transaction_submit" name="commit" type="submit" value="Submit" />
+    </div>
+    </form>
+</div> <!-- #container -->
+
