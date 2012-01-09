@@ -1,0 +1,66 @@
+﻿@{
+    var UserID = 0 ;
+    var tmid = Request["tmid"];
+    
+    if (WebSecurity.IsAuthenticated) {
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        UserID  = WebSecurity.CurrentUserId;
+    }else{
+        Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/EmailResponse?tmid=" + tmid);
+    }
+   
+    var db = Database.Open("sqlloco");
+    
+    var SQLGetMessageInfo = @"SELECT m.body ,mt.userID ,mt.providerID, mt.threadID 
+                            FROM dbo.Messages m 
+                            JOIN dbo.ThreadMessage tm ON (m.messageID = tm.messageID)
+                            JOIN dbo.MessagingThreads mt ON (mt.threadID = tm.threadID)
+                            WHERE tm.threadMessageID = @0";
+     var message = db.QuerySingle(SQLGetMessageInfo, tmid);
+
+    var senderID = (UserID == message.userID)? message.providerID : message.userID; 
+    
+    var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email 
+                    FROM users a 
+                    JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
+                    JOIN dbo.userprofile e ON  (a.userid = e.userid) 
+                    WHERE a.userid = @0";
+    var posrow = db.QuerySingle(profilesql, senderID);
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tmid").hide();
+        $("#threadID").hide();
+        $("#receiverID").hide();
+    });
+</script>
+   
+<div id="container">
+
+    <h2>Submit Email Response</h2>
+
+    <div>
+        @posrow.Name said: <br />
+        <textarea name="emailReceived" cols="45" rows="4" readonly="readonly">@message.body</textarea>
+    </div>
+
+
+    <form method="post" action="ProcessEmailResponse.cshtml">
+
+        <div>
+             <input id="tmid" name="tmid" value="@tmid" />
+             <input id="threadID" name="threadID" value="@message.threadID" />
+             <input id="receiverID" name="receiverID" value="@senderID" />
+        </div>
+
+        <div>
+            Respose: <br />
+            <textarea name="emailResponse" cols="45" rows="4"></textarea>
+        </div>
+
+        <div>
+            <input type="submit" value="Submit" />
+        </div>
+
+    </form>
+</div>
