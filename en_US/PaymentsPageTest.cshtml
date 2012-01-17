@@ -10,24 +10,24 @@
         Response.Redirect("~/en_US/Account/Login");
     }*/
 
-    BraintreeGateway gateway = new BraintreeGateway
+    var gateway = new BraintreeGateway
     {
         Environment = Braintree.Environment.SANDBOX,
-        MerchantId = "k74g8bpwwfmmfrcr",
-        PublicKey = "m5qwzh34yxqk9n3f",
-        PrivateKey = "hs7y2pgfkb697jqb"
+        MerchantId = "fn9phnknypvkgcfx",
+        PublicKey = "yhqvg4cz74jwxtw5",
+        PrivateKey = "q7vdftc9npxgkxpy"
     };
     var errors = "";
-    var TrData = "";    
-    var Amount = 100.00M;//This amount should come in the request from the pricing wizzard.
+    var firstName = "";
+  
+    var Amount = 1;//This amount should come in the request from the pricing wizzard.
     var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
-    if(IsPost){
-        TrData = gateway.TrData(new TransactionRequest { Amount = Amount, Type = TransactionType.SALE }, // key information about the transaction
-                                                "~/en_US/Default");  // the redirect destination, in this case, the Confirm action below
-    }
+    var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Amount}, // key information about the transaction
+                                                "http://localhost:1575/LoconomicsJB/en_US/PaymentsConfirmationTest");  // the redirect destination, in this case, the Confirm action below
 }
 <div id="container" class="sign-up">
-      <h1>Payment: @Amount </h1>
+    
+     <h1>Payment: @Amount $</h1>
 
     @* If at least one validation error exists, notify the user *@
     @Html.ValidationSummary(errors)
@@ -37,18 +37,13 @@
             <legend><b>Customer</b></legend>
             <div><label for="transaction[customer][first_name]">First Name</label></div>
             <div>
-                @Html.TextBox("transaction[customer][first_name]")
+                @Html.TextBox("transaction[customer][first_name]",@firstName)
                 @Html.ValidationMessage("transaction[customer][first_name]")
             </div>
             <div><label for="transaction[customer][last_name]">Last Name</label></div>
             <div>
                 @Html.TextBox("transaction[customer][last_name]")
                 @Html.ValidationMessage("transaction[customer][last_name]")
-            </div>
-            <div><label for="transaction[customer][email]">Email</label></div>
-            <div>
-              @Html.TextBox("transaction[customer][email]")
-              @Html.ValidationMessage("transaction[customer][email]")
             </div>
         </fieldset>
         <fieldset>
@@ -62,11 +57,6 @@
             <div>
               @Html.TextBox("transaction[credit_card][expiration_date]")
               @Html.ValidationMessage("transaction[credit_card][expiration_date]")
-            </div>
-            <div><label for="transaction[credit_card][cvv]">CVV</label></div>
-            <div>
-              @Html.TextBox("transaction[credit_card][cvv]")
-              @Html.ValidationMessage("transaction[credit_card][cvv]")
             </div>
         </fieldset>
         <input id="tr_data" name="tr_data" type="hidden" value="@TrData" />
