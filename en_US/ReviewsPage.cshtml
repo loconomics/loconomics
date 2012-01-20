@@ -1,0 +1,80 @@
+﻿@{  
+    Layout = "~/en_US/_SiteLayout.cshtml";
+    Page.Title = "Customer Reviews.";
+
+}
+
+
+
+
+  <div id="container" class="home clearfix"> 
+    <div id="main" class="">
+		<h1>@Page.Title</h1>
+		<form id="" action="@Href("~/en_US/ReviewConfirmation")" method="post">
+			
+            @Html.Label("Question1")
+            <br />
+            @Html.Label("yes")
+            @Html.RadioButton("Question1",true)
+            @Html.Label("no")
+            @Html.RadioButton("Question1",false)
+            <br />
+            @Html.Label("Question2")
+            <br />
+            @Html.Label("yes")
+            @Html.RadioButton("Question2",true)
+            @Html.Label("no")
+            @Html.RadioButton("Question2",false)
+            <br />
+            @Html.Label("rating1 ")
+            <br /> 
+            <input name="rating1" type="radio" class="star" />
+            <input name="rating1" type="radio" class="star" />
+            <input name="rating1" type="radio" class="star" />
+            <input name="rating1" type="radio" class="star" />
+            <input name="rating1" type="radio" class="star" />
+            <br /> 
+            @Html.Label("rating2 ")
+            <br /> 
+            <input name="rating2" type="radio" class="star" />
+            <input name="rating2" type="radio" class="star" />
+            <input name="rating2" type="radio" class="star" />
+            <input name="rating2" type="radio" class="star" />
+            <input name="rating2" type="radio" class="star" />
+            <br />
+            @Html.Label("rating3 ")
+            <br /> 
+            <input name="rating3" type="radio" class="star" />
+            <input name="rating3" type="radio" class="star" />
+            <input name="rating3" type="radio" class="star" />
+            <input name="rating3" type="radio" class="star" />
+            <input name="rating3" type="radio" class="star" />
+            <br />
+             @Html.Label("rating4 ")
+             <br /> 
+            <input name="rating4" type="radio" class="star" />
+            <input name="rating4" type="radio" class="star" />
+            <input name="rating4" type="radio" class="star" />
+            <input name="rating4" type="radio" class="star" />
+            <input name="rating4" type="radio" class="star" />
+            <br />
+            @Html.Label("Public Review")
+            <br />
+            @Html.TextArea("Public Review")
+            <br />
+            @Html.Label("Private Review")
+            <br />
+            @Html.TextArea("Private Review")
+
+		</form>
+    </div><!-- #main -->
+
+  </div><!-- #container -->
+
+
+
+
+
+
+
+
