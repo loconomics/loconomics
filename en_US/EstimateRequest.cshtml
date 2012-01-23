@@ -2,10 +2,10 @@
 @{
  
     if (WebSecurity.IsAuthenticated) {
-        Layout = "~/en_ES/_SiteLayout.cshtml";
+        Layout = "~/en_US/_SiteLayout.cshtml";
         var UserID  = WebSecurity.CurrentUserId;
     }else{
-        Response.Redirect("~/en_ES/Default");
+        Response.Redirect("~/en_US/Account/Login");
     }
 
     var userID = "";
@@ -41,10 +41,11 @@
         var SQLSelectVar = @"SELECT pep.EstimateVarValue as varValue, ev.UserDescription FROM dbo.providerestimateprofile pep
                         JOIN dbo.estimatevar ev  ON ev.EstimateVarID = pep.EstimateVarID
                         WHERE pep.ServicePricingTypeID=@0 AND pep.EstimateVarID=@1";
+        var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
         if(ModelState.IsValid) {
             for(int i=0;i<varIDs.Length;i++){
                 estimateVarID = varIDs[i];
-                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
+               
                 
                 //Validate is a Number
                 var match = Regex.Match(varValues[i], @"^([0-9]*\.?[0-9]{1,2}?)+");
@@ -68,11 +69,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-      
-
         var isResult = (getURLParameter("EstimateResult") != "null");
 
-        //Fill the Pricing Type drop down
+        //Load the Pricing Type drop down
         $('#pricingtype').addOption(0, "Loading....").attr('disabled', true);
         $.getJSON('ListPricingTypes', function (data) {
             var estimatetypes = data;
@@ -97,39 +96,67 @@
             });
 
         });
-        //Paint and fill Estimate Var List
+
+        //Paint and load Estimate Var List
+
+        //aux function to get data from the url string
         function getURLParameter(name) {
             return decodeURI(
                (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
         }
 
-        var positionID = getURLParameter("PositionID"); //Testing
+        //Get the position ID
+        var positionID = getURLParameter("PositionID");
 
-        $('#pricingtype').change(function () {
+        //Check pricing type changes
+        $('#pricingtype').change(
+            function () {
+                var pricingTypeID = $('#pricingtype').val();
 
-            var pricingTypeID = $('#pricingtype').val();
-            /*Debug
-            $("#debugpricingtype").append(pricingTypeID);
-            End Debug*/
+                //Reset the form
+                $(".inputrow").remove();
+                //Get estimation variables for the Position and pricing type.
+                $.getJSON('ListUserEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID },
+                     function (data) {
+                         var estimatevars = data;
 
-            //Reset the form
-            $(".estimatevarrow").remove();
-         
-            $.getJSON('ListUserEstimateVars', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
-                var estimatevars = data;
-                $.each(estimatevars, function (index2, estimatevar) {
-                    var varID = estimatevar.EstimateVarID;
-                    var varName = estimatevar.UserDescription;
-                    /*Debug
-                    $("#debugval2").append(val2);
-                    $("#debugtext2").append(text2);
-                    End Debug*/
-                    $('#form tr:last').after('<tr class="estimatevarrow"><td><label for=' + varName + '>' + varName + '</label></td><td><input id="' + varID + '" name="varID" value=' + varID + ' class="varID" size = 1></td>');
-                    $('#form td:last').after('<td class="estimatevarrow"><input id="' + varName + '" name="varValue" type="text"></td></tr>');
-                });
-                $('.varID').hide();
-            });
-        });
+                         //paint var tags(input/select)
+                         var count = 0;
+                         $.each(estimatevars, function (index3, estimatevar) {
+                             var varID = estimatevar.EstimateVarID;//indentifies a variable value
+                             var groupID = estimatevar.GroupID;//identifies a variable group for radio lists and dropdowns
+                             var name = estimatevar.UserDescription;//description showed to the user
+                             var tag = estimatevar.UserTag;//Tells wich Html representation should be painted(simple input, radio list, dropdown)
+                             var value = estimatevar.Value;//Default value for the variable.
+                             //Paint simple input
+                             if (tag == "input") {
+                                 if (!$('#label' + groupID).length) {
+                                     $('.inputfields').after('<br/><label class="inputrow" id=label' + groupID + ' for=' + groupID + '><b>' + name + '<b/></label>');
+                                 };
+                                 $('#label' + groupID).append('<br/><input class="inputrow" id="varValue" name="varValue" type="text">');
+                             };
+                             //Paint radio list input
+                             if (tag == "radiolist") {
+                                 if (!$('#label' + groupID).length) {
+                                     $('.inputfields').after('<label class="inputrow" id=label' + groupID + ' for=' + groupID + '><b>' + name + '<b/></label><br/>');
+                                 };
+                                 $('#label' + groupID).append('<br/><label>' + value + '<label/><input class="inputrow" type="radio" id=' + groupID + ' name=' + groupID + '>');
+                             };
+                             //Paint dropdown input
+                             if (tag == "dropdown") {
+                                 if (!$('#label' + groupID).length) {
+                                     $('.inputfields').after('<label class="inputrow" id=label' + groupID + ' for=select' + groupID + '><b>' + name + '<b/></label>');
+                                     $('#label' + groupID).append('<br/><select class="inputrow" id=select' + groupID + '/>');
+                                 };
+                                 $('#select'+groupID).append('<option value='+count+'>'+value+'<option/>');
+                             };
+                         });
+
+                     }
+                );
+            }
+        );
+        //Paint the result retrived by the server
         if (isResult) {
             $("#result").append(getURLParameter("EstimateResult") + ' $ (USD)');
             update = false;
@@ -145,30 +172,18 @@
         @Html.ValidationSummary(errors)
 
         <h1>Request free quote</h1>
-	    <form id="EstimateRequest" class="stepped" action="" method="post">
-		    <img class="inset" src="img/media-placeholder.png" alt="" />
+	    <form id="EstimateRequest" show action="" method="post">
+		    <img class="inset" src="~/img/media-placeholder.png" alt="" />
 		    <p>Tell us what you need</p>
-            <!-- debug statements 
-            <p id="debugval">val:</p>
-            <p id="debugtext">text:</p>
-            <p id="debugval2">val2:</p>
-            <p id="debugtext2">text2:</p>
-            <p id="debugpricingtype">pricingType:</p>
-            End debug statementes -->
- 
-            <table id="form">
-                <tr>
-                    <td><label for="pricingTypeLabel">Pincing Type</label></td>
-                    <td>
-                        <select id="pricingtype" name="pricingtype"></select>
-                    </td>
-                </tr>
-            </table>
+      
+            <label for="pricingTypeLabel"><b>Pincing Type</b></label>
+            <select id="pricingtype" name="pricingtype"></select><br />
+            <p class="inputfields" hidden="hidden"></p>
             <p id="result"><b>Estimated Cost:</b> </p>
             <fieldset class="buttons">
-				<button id="advancer" class="next fancy" type="submit">Get Estimate</button>
-                <button id="advancer" class="next fancy" type="submit" disabled=true>Continue</button>
-				<input type="submit" class="hidden" />
+                <button id="advancer1" class="next fancy" type="submit">Get Estimate</button>
+                <button id="advancer2" class="next fancy" type="submit" disabled="disabled">Continue</button>
+				<input type="submit" class="hidden" hidden='hidden' />
 			</fieldset>
         </form>
    </div>

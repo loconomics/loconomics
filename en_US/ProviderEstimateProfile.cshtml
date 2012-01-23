@@ -16,16 +16,16 @@
     var errors = "";
     var sysdate = DateTime.Now;
     
-    if(IsPost){
+    
         //Insert relation into servicepricingtype
         var db = Database.Open("sqlloco");
-
+if(IsPost){ 
         providerID = Convert.ToString(WebSecurity.CurrentUserId);
-        positionID = Request["positionID"];
+        positionID = Request["PositionID"];
         pricingTypeID = Request["pricingtype"];
         String[] varValues = Context.Request.Form.GetValues("varValue");
         String[] varIDs = Context.Request.Form.GetValues("varID");
-      
+     
         // Read product providerID.
         if (providerID.IsEmpty())
         {
@@ -64,7 +64,7 @@
                             Set EstimateVarValue=@2 , UpdatedDate=@3 , ModifiedBy=@4                         
                             WHERE ServicePricingTypeID=@0 and EstimateVarID=@1";
             
-            //Insert a service pricint type mapping into serviceprincingtype table
+            //Insert a service pricing type mapping into serviceprincingtype table
             var newServicePricingType = db.QuerySingle(SQLISNEW,providerID,positionID,pricingTypeID);
             if (newServicePricingType == null)
             {            
@@ -102,7 +102,7 @@
             }
         }
         db.Close();
-    }
+}
 }
   
 <script type="text/javascript">
@@ -144,9 +144,6 @@ $(document).ready(function () {
     $('#pricingtype').change(function () {
 
         var pricingTypeID = $('#pricingtype').val();
-        /*Debug
-        $("#debugpricingtype").append(pricingTypeID);
-        End Debug*/
 
         //Reset the form
         $(".estimatevarrow").remove();

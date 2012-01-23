@@ -1,0 +1,178 @@
+﻿
+@using Braintree
+@{
+    if (WebSecurity.IsAuthenticated)
+    {
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        var UserID = WebSecurity.CurrentUserId;
+    }
+    else
+    {
+        Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/PaymentsPage");
+    }
+    //TODO: check for existing user id or credit card
+    /*BraintreeGateway gateway = new BraintreeGateway
+    {
+        Environment = Braintree.Environment.PRODUCTION,
+        MerchantId = "k74g8bpwwfmmfrcr",
+        PublicKey = "m5qwzh34yxqk9n3f",
+        PrivateKey = "hs7y2pgfkb697jqb"
+    };*/
+    //SandBox API keys for testing
+    var gateway = new BraintreeGateway
+    {
+        Environment = Braintree.Environment.SANDBOX,
+        MerchantId = "fn9phnknypvkgcfx",
+        PublicKey = "yhqvg4cz74jwxtw5",
+        PrivateKey = "q7vdftc9npxgkxpy"
+    };
+    var errors = "";
+    var Amount = 1;//This amount should come in the request from the pricing wizzard.
+    var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
+    var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Amount }, // key information about the transaction
+                                                "http://poorrichardsworkshop.com/loconomicsjb/en_US/PaymentsConfirmation");  // the redirect destination, in this case, the Confirm action below
+}
+<div id="container" class="sign-up">
+      <h1>Payment: @Amount $</h1>
+
+    @* If at least one validation error exists, notify the user *@
+    @Html.ValidationSummary(errors)
+    <form id="NewPaymentForm" action="@TransparentRedirectURLForCreate" method="post" autocomplete="off">
+    <div>
+        <fieldset>
+            <legend><b>Customer</b></legend>
+            <div><label for="transaction[customer][first_name]">First Name</label></div>
+            <div>
+                @Html.TextBox("transaction[customer][first_name]")
+                @Html.ValidationMessage("transaction[customer][first_name]")
+            </div>
+            <div><label for="transaction[customer][last_name]">Last Name</label></div>
+            <div>
+                @Html.TextBox("transaction[customer][last_name]")
+                @Html.ValidationMessage("transaction[customer][last_name]")
+            </div>
+            <div><label for="transaction[customer][email]">Email</label></div>
+            <div>
+              @Html.TextBox("transaction[customer][email]")
+              @Html.ValidationMessage("transaction[customer][email]")
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><b>Credit Card</b></legend>
+            <div><label for="transaction[credit_card][number]">Number</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][number]")
+              @Html.ValidationMessage("transaction[credit_card][number]")
+            </div>
+            <div><label for="transaction[credit_card][expiration_date]">Expiration Date (MM/YY)</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][expiration_date]")
+              @Html.ValidationMessage("transaction[credit_card][expiration_date]")
+            </div>
+            <div><label for="transaction[credit_card][cvv]">CVV</label></div>
+            <div>
+              @Html.TextBox("transaction[credit_card][cvv]")
+              @Html.ValidationMessage("transaction[credit_card][cvv]")
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><b>Billing Address</b></legend>
+            <div><label for="transaction[billing][first_name]">Name</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][first_name]")
+              @Html.ValidationMessage("transaction[billing][first_name]")
+            </div>
+            <div><label for="transaction[billing][last_name]">Last Name</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][last_name]")
+              @Html.ValidationMessage("transaction[billing][last_name]")
+            </div>
+            <div><label for="transaction[billing][company]">Company</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][company]")
+              @Html.ValidationMessage("transaction[billing][company]")
+            </div>
+            <div><label for="transaction[billing][street_address]">Stree Address</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][street_address]")
+              @Html.ValidationMessage("transaction[billing][street_address]")
+            </div>
+            <div><label for="transaction[billing][extended_address]">Extended Address</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][extended_address]")
+              @Html.ValidationMessage("transaction[billing][extended_address]")
+            </div>
+            <div><label for="transaction[billing][locality]">Locality</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][locality]")
+              @Html.ValidationMessage("transaction[billing][locality]")
+            </div>
+            <div><label for="transaction[billing][region]">Region</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][region]")
+              @Html.ValidationMessage("transaction[billing][region]")
+            </div>
+            <div><label for="transaction[billing][postal_code]">Postal Code</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][postal_code]")
+              @Html.ValidationMessage("transaction[billing][postal_code]")
+            </div>
+            <div><label for="transaction[billing][country_name]">Country</label></div>
+            <div>
+              @Html.TextBox("transaction[billing][country_name]")
+              @Html.ValidationMessage("transaction[billing][country_name]")
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><b>Shipping Address</b></legend>
+            <div><label for="transaction[shipping][first_name]">Name</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][first_name]")
+              @Html.ValidationMessage("transaction[shipping][first_name]")
+            </div>
+            <div><label for="transaction[shipping][last_name]">Last Name</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][last_name]")
+              @Html.ValidationMessage("transaction[shipping][last_name]")
+            </div>
+            <div><label for="transaction[shipping][company]">Company</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][company]")
+              @Html.ValidationMessage("transaction[shipping][company]")
+            </div>
+            <div><label for="transaction[shipping][street_address]">Stree Address</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][street_address]")
+              @Html.ValidationMessage("transaction[shipping][street_address]")
+            </div>
+            <div><label for="transaction[shipping][extended_address]">Extended Address</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][extended_address]")
+              @Html.ValidationMessage("transaction[shipping][extended_address]")
+            </div>
+            <div><label for="transaction[shipping][locality]">Locality</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][locality]")
+              @Html.ValidationMessage("transaction[shipping][locality]")
+            </div>
+            <div><label for="transaction[shipping][region]">Region</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][region]")
+              @Html.ValidationMessage("transaction[shipping][region]")
+            </div>
+            <div><label for="transaction[shipping][postal_code]">Postal Code</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][postal_code]")
+              @Html.ValidationMessage("transaction[shipping][postal_code]")
+            </div>
+            <div><label for="transaction[shipping][country_name]">Country</label></div>
+            <div>
+              @Html.TextBox("transaction[shipping][country_name]")
+              @Html.ValidationMessage("transaction[shipping][country_name]")
+            </div>
+        </fieldset>
+        <input id="tr_data" name="tr_data" type="hidden" value="@TrData" />
+        <input id="transaction_submit" name="commit" type="submit" value="Submit" />
+    </div>
+    </form>
+</div> <!-- #container -->

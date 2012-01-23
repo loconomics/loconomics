@@ -1,62 +1,91 @@
 ﻿@{  
-    Layout = "~/en_US/_SiteLayout.cshtml";
-    Page.Title = "Customer Reviews.";
+    var UserID = 0;
+    
+    if (WebSecurity.IsAuthenticated){
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        UserID = WebSecurity.CurrentUserId;
+        Page.Title = "Customer Reviews.";
+    }else{
+        Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/ReviewsPage");
+    }
+    if(IsPost){
+        var answer1 = Request["Question1"];
+        var answer2 = Request["Question2"];
+        var rating1 = Request["rating1"] == null ? "0" : Request["rating1"];
+        var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
+        var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
+        var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
+        var publicreview = Request["Public Review"];
+        var privatereview = Request["Private Review"];
+        
+        //TODO CHECK FOR DUPLICATED REVIEWS
+        
+        //STORE DATA IN THE DATA BASE
+        var db = Database.Open("sqlloco");
+        var SQLINSERT = @"INSERT INTO dbo.UserReviews 
+                            (PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
+        try{
+            db.Execute(SQLINSERT, publicreview, privatereview, rating1, rating2, rating3, rating4, answer1, answer2, System.DateTime.Now, System.DateTime.Now, UserID);
+              
+        }catch{
+            Response.Redirect("~/en_US/ReviewsConfirmationPage?status=error");
+        }
+        Response.Redirect("~/en_US/ReviewsConfirmationPage?status=success");   
+    }
 
 }
-
-
-
 
   <div id="container" class="home clearfix"> 
     <div id="main" class="">
 		<h1>@Page.Title</h1>
-		<form id="" action="@Href("~/en_US/ReviewConfirmation")" method="post">
+		<form id="userreview " action="@Href("~/en_US/ReviewsPage")" method="post">
 			
             @Html.Label("Question1")
             <br />
             @Html.Label("yes")
-            @Html.RadioButton("Question1",true)
+            @Html.RadioButton("Question1",true,true)
             @Html.Label("no")
             @Html.RadioButton("Question1",false)
             <br />
             @Html.Label("Question2")
             <br />
             @Html.Label("yes")
-            @Html.RadioButton("Question2",true)
+            @Html.RadioButton("Question2",true,true)
             @Html.Label("no")
             @Html.RadioButton("Question2",false)
             <br />
             @Html.Label("rating1 ")
             <br /> 
-            <input name="rating1" type="radio" class="star" />
-            <input name="rating1" type="radio" class="star" />
-            <input name="rating1" type="radio" class="star" />
-            <input name="rating1" type="radio" class="star" />
-            <input name="rating1" type="radio" class="star" />
+            <input name="rating1" type="radio" class="star" value="1"/>
+            <input name="rating1" type="radio" class="star" value="2"/>
+            <input name="rating1" type="radio" class="star" value="3"/>
+            <input name="rating1" type="radio" class="star" value="4"/>
+            <input name="rating1" type="radio" class="star" value="5"/>
             <br /> 
             @Html.Label("rating2 ")
             <br /> 
-            <input name="rating2" type="radio" class="star" />
-            <input name="rating2" type="radio" class="star" />
-            <input name="rating2" type="radio" class="star" />
-            <input name="rating2" type="radio" class="star" />
-            <input name="rating2" type="radio" class="star" />
+            <input name="rating2" type="radio" class="star" value="1"/>
+            <input name="rating2" type="radio" class="star" value="2"/>
+            <input name="rating2" type="radio" class="star" value="3"/>
+            <input name="rating2" type="radio" class="star" value="4"/>
+            <input name="rating2" type="radio" class="star" value="5"/>
             <br />
             @Html.Label("rating3 ")
             <br /> 
-            <input name="rating3" type="radio" class="star" />
-            <input name="rating3" type="radio" class="star" />
-            <input name="rating3" type="radio" class="star" />
-            <input name="rating3" type="radio" class="star" />
-            <input name="rating3" type="radio" class="star" />
+            <input name="rating3" type="radio" class="star" value="1"/>
+            <input name="rating3" type="radio" class="star" value="2"/>
+            <input name="rating3" type="radio" class="star" value="3"/>
+            <input name="rating3" type="radio" class="star" value="4"/>
+            <input name="rating3" type="radio" class="star" value="5"/>
             <br />
              @Html.Label("rating4 ")
              <br /> 
-            <input name="rating4" type="radio" class="star" />
-            <input name="rating4" type="radio" class="star" />
-            <input name="rating4" type="radio" class="star" />
-            <input name="rating4" type="radio" class="star" />
-            <input name="rating4" type="radio" class="star" />
+            <input name="rating4" type="radio" class="star" value="1"/>
+            <input name="rating4" type="radio" class="star" value="2"/>
+            <input name="rating4" type="radio" class="star" value="3"/>
+            <input name="rating4" type="radio" class="star" value="4"/>
+            <input name="rating4" type="radio" class="star" value="5"/>
             <br />
             @Html.Label("Public Review")
             <br />
@@ -65,7 +94,8 @@
             @Html.Label("Private Review")
             <br />
             @Html.TextArea("Private Review")
-
+            <br />
+            <input type="submit" value="Post Review" />
 		</form>
     </div><!-- #main -->
 

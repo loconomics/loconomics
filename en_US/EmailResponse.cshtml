@@ -1,12 +1,13 @@
 ﻿@{
     var UserID = 0 ;
-    var tmid = Request["tmid"];
+    var tmid = Server.UrlDecode(Request["tmid"]);
     
     if (WebSecurity.IsAuthenticated) {
         Layout = "~/en_US/_SiteLayout.cshtml";
         UserID  = WebSecurity.CurrentUserId;
     }else{
-        Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/EmailResponse?tmid=" + tmid);
+        var responseLink = "~/en_US/Account/Login?Redirect=~/en_US/EmailResponse?tmid="+tmid;
+        Response.Redirect(responseLink);
     }
    
     var db = Database.Open("sqlloco");
