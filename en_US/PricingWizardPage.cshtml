@@ -1,0 +1,151 @@
+﻿@using System.Text.RegularExpressions;
+@{
+ 
+    if (WebSecurity.IsAuthenticated) {
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        var UserID  = WebSecurity.CurrentUserId;
+    }else{
+        Response.Redirect("~/en_US/Account/Login");
+    }
+
+    var userID = Convert.ToString(WebSecurity.CurrentUserId); ;
+    var providerID = "";
+    var positionID = "";
+    var pricingTypeID = "";
+    var estimateVarID = "";
+    var servicePricingTypeID = 0;
+    var errors = "";
+    var sysdate = DateTime.Now;
+    var estimateVarValue = 0;
+    var A = 0;
+    var M = 1;
+    var E = 0;
+    
+    if(IsPost){
+        var db = Database.Open("sqlloco");
+
+        positionID =  Request["PositionID"];
+        pricingTypeID = Request["pricingtype"];
+        providerID =  Request["ProviderID"];
+        string[] varValues = Context.Request.Form.GetValues("varValue");
+        string[] varIDs = Context.Request.Form.GetValues("varID");
+        string[] listValues = Context.Request.Form.GetValues("listValue");
+        string[] groupIDs = Context.Request.Form.GetValues("groupID");
+        
+        //TODO validate data
+        
+        //Get the service pricing type relation
+        var SQLServicePricingType = @"SELECT ServicePricingTypeID 
+                       FROM dbo.servicepricingtype 
+                       WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
+        var servicePricingType = db.QuerySingle(SQLServicePricingType, providerID, positionID, pricingTypeID);
+
+        servicePricingTypeID = Convert.ToInt32(servicePricingType.ServicePricingTypeID);
+            
+        //Read estimate profile from providerestimatevar 
+        var SQLSelectVar = @"SELECT pep.EstimateVarValue as varValue, ev.UserDescription, ev.Type  FROM dbo.providerestimateprofile pep
+                        JOIN dbo.estimatevar ev  ON ev.EstimateVarID = pep.EstimateVarID
+                        WHERE pep.ServicePricingTypeID=@0 AND pep.EstimateVarID=@1";
+              
+        if(ModelState.IsValid) {
+            //Process simple inputs
+            for (int i = 0; i < varIDs.Length; i++)
+            {
+                estimateVarID = varIDs[i];
+               
+                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
+                
+                //Validate is a Number
+                var match = Regex.Match(varValues[i], @"^([0-9]*\.?[0-9]{1,2}?)+");
+                if(!match.Success && varValues[i]!=""){
+                    ModelState.AddError("varValue", estimateProfile.UserDescription+" must be a number");
+                }else{ 
+                    estimateVarValue = (varValues[i]!="" ? Convert.ToInt32(varValues[i]):0);
+                } 
+                
+                //TODO get provider data for the varID           
+                if(estimateProfile.Type == "A"){
+                    A += estimateVarValue * Convert.ToInt32(estimateProfile.varValue);
+                }
+                else if(estimateProfile.Type == "M"){
+                    M *= estimateVarValue;
+                }
+                else if (estimateProfile.Type == "E")
+                {
+                    E += estimateVarValue;
+                }
+                
+                //TODO update A M or E
+            }
+            //Process radioList and dropdowns
+            for (int i = 0; i < groupIDs.Length; i++)
+            {
+               
+                //For list variables the var ID is retrived in the value field -> listValue
+                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, listValues[i]);
+
+                //Validate is a Number
+                var match = Regex.Match(estimateProfile.varValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
+                if (!match.Success && listValues[i] != "")
+                {
+                    ModelState.AddError("varValue", estimateProfile.UserDescription + " must be a number");
+                }
+                else
+                {
+                    estimateVarValue = (estimateProfile.varValue != "" ? Convert.ToInt32(estimateProfile.varValue) : 0);
+                } 
+                
+                //Update A M or E
+                if (estimateProfile.Type == "A")
+                {
+                    A += estimateVarValue * Convert.ToInt32(estimateProfile.varValue);
+                }
+                else if (estimateProfile.Type == "M")
+                {
+                    M *= estimateVarValue;
+                }
+                else if (estimateProfile.Type == "E")
+                {
+                    E += estimateVarValue;
+                }         
+            }
+        }
+        //Caculate result and retrieve it
+        if(ModelState.IsValid){
+            var result = (A*M)+E; 
+            Response.Redirect("~/en_US/PricingWizardPage.cshtml?EstimateResult=" + result + "&PositionID=" + positionID + "&ProviderID=" + providerID);
+        }
+        db.Close();
+    }
+}
+<!--This script paints the pricing variables for the selected pricing type-->
+<script type="text/javascript" src='@Href("~/Scripts/PricingWizard.js")'></script>
+
+<div id="container" class="sign-up">
+    <div id="main">
+
+        @* If at least one validation error exists, notify the user *@
+        @Html.ValidationSummary(errors)
+
+        <h1>Request free quote</h1>
+	    <form id="PricingWizard" action="" method="post">
+		    <img class="inset" src="~/img/media-placeholder.png" alt="" />
+		    <p>Tell us what you need</p>
+      
+            <div class="pricingtype">
+                <label for="pricingtype"><b>Pincing Type</b></label>
+                <select id="pricingtype" name="pricingtype"></select>
+            </div>
+           
+            <p class="inputfields" hidden="hidden"></p>
+           
+            <p id="result"><b>Estimated Cost:</b> </p>
+           
+            <div class="buttons">
+                <button id="advancer1" class="next fancy" type="submit" >Get Estimate</button>
+                <button id="advancer2" class="next fancy" type="submit">Continue</button>
+				<input type="submit" class="hidden" hidden='hidden' />
+			</div>
+        </form>
+   </div>
+</div>

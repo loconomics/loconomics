@@ -1,0 +1,129 @@
+﻿@using System.Text.RegularExpressions;
+@{
+    if (WebSecurity.IsAuthenticated) {
+        Layout = "~/en_US/_SiteLayout.cshtml";
+        var UserID  = WebSecurity.CurrentUserId;
+    }else{
+        Response.Redirect("~/en_US/Account/Login");
+    }
+
+    var providerID = Convert.ToString(WebSecurity.CurrentUserId);
+    var positionID = Request["PositionID"];
+    var pricingTypeID = "";
+    var servicePricingTypeID = 0;
+    var estimateVarValue = "";
+    var errors = "";
+    var sysdate = DateTime.Now;
+    
+    
+
+    if(IsPost){
+        
+        var db = Database.Open("sqlloco");
+        pricingTypeID = Request["pricingtype"];
+        string[] varValues = Context.Request.Form.GetValues("varValue");
+        string[] varIDs = Context.Request.Form.GetValues("varID");
+        string[] listValues = Context.Request.Form.GetValues("listValue");
+        string[] groupIDs = Context.Request.Form.GetValues("groupID");
+     
+        // Read product providerID.
+        if (providerID.IsEmpty())
+        {
+            ModelState.AddError("providerID", "Provider ID is required.");
+        }
+        // Read product positionID.
+        if (positionID.IsEmpty())
+        {
+            ModelState.AddError("positionID", "Position ID is required.");
+        }
+        // Read product providerID.
+        if (pricingTypeID.IsEmpty())
+        {
+            ModelState.AddError("pricingTypeID", "Pricing Type ID is required.");
+        }
+        
+        if(ModelState.IsValid) {
+
+            var SQLISNEW = @"SELECT ServicePricingTypeID 
+                            FROM dbo.servicepricingtype 
+                            WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
+            var SQLISNEWVAR = @"SELECT ProviderEstimateProfileID 
+                                FROM dbo.providerestimateprofile 
+                                WHERE EstimateVarID=@0 and ServicePricingTypeID=@1";
+            var SQLINSERT = @"INSERT INTO dbo.servicepricingtype 
+                            (ProviderID,PositionID,PricingTypeID,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5)";
+            var SQLINSERT2 = @"INSERT INTO dbo.providerestimateprofile 
+                            (ServicePricingTypeID,EstimateVarID,EstimateVarValue,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5)";
+            var SQLUPDATE = @"UPDATE dbo.providerestimateprofile 
+                            Set EstimateVarValue=@2 , UpdatedDate=@3 , ModifiedBy=@4                         
+                            WHERE ServicePricingTypeID=@0 and EstimateVarID=@1";
+            
+            //Insert a service pricing type mapping into serviceprincingtype table
+            var newServicePricingType = db.QuerySingle(SQLISNEW,providerID,positionID,pricingTypeID);
+            if (newServicePricingType == null)
+            {            
+                    db.Execute(SQLINSERT, providerID, positionID, pricingTypeID,sysdate,sysdate,"UserID:"+providerID);
+                    servicePricingTypeID=Convert.ToInt32(db.GetLastInsertId());
+            }else{
+                servicePricingTypeID = Convert.ToInt32(newServicePricingType.ServicePricingTypeID);
+                //TODO load stored data
+            }
+
+            //Insert estimate profile into providerestimatevar 
+            for(int i=0; i< varIDs.Length;i++){
+
+                var newEstimateVar = db.QuerySingle(SQLISNEWVAR, varIDs[i], servicePricingTypeID);
+                
+                estimateVarValue = varValues[i];
+               
+                if(estimateVarValue.IsEmpty()){
+                    ModelState.AddError("estimateVarValue", "estimate Variable Value is required.");
+                }
+                    //validate data
+                    //Validate is a Number
+                      var match = Regex.Match(estimateVarValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
+                      if(!match.Success){
+                          ModelState.AddError("estimateVarValue","The value must be a number");
+                      }else{ 
+                        if(newEstimateVar==null){
+                            db.Execute(SQLINSERT2, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
+                        }else{
+                            db.Execute(SQLUPDATE, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
+                        }
+                     }
+            }
+        }
+        db.Close();
+    }
+}
+
+<!--This script paints the pricing variables for the selected pricing type-->  
+<script type="text/javascript" src="@Href("~/Scripts/PricingProfileWizard.js")"></script>
+
+<div id="container" class="sign-up">
+    <div id="main">
+
+        @* If at least one validation error exists, notify the user *@
+        @Html.ValidationSummary(errors)
+
+        <h1>Service Pricing Profile</h1>
+	    <form id="PricingProfileWizard" name="PricingProfileWizard" action="" method="post">
+		    <img class="inset" src="../img/media-placeholder.png" alt="" />
+		    <p>Set the estimate parameters for your service</p>
+            
+            <div class="pricingtype">
+                <label for="pricingtype">Pincing Type</label>
+                <select id="pricingtype" name="pricingtype"></select>
+            </div>
+            
+            <p class="inputfields" hidden="hidden"></p>
+            
+            <div class="buttons">
+			    <button id="advancer" class="next fancy" type="submit">Save</button>
+                <input type="submit" class="hidden" />
+            </div>
+        </form>
+   </div>
+</div>

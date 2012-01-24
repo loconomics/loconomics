@@ -3,10 +3,10 @@
     var pricingTypeID = Request["PricingTypeID"];
 
     var db = Database.Open("sqlloco");
-    var sql = @"SELECT sev.EstimateVarID, ev.UserDescription, ev.ProviderDescription, ev.GroupID, ev.Value, ev.UserTag, ev.ProviderTag
+    var sql = @"SELECT sev.EstimateVarID, ev.UserDescription, ev.GroupID, ev.Value, ev.UserTag
                 FROM dbo.serviceestimatevars sev
                 JOIN dbo.estimatevar ev ON (ev.EstimateVarID=sev.EstimateVarID)
                 WHERE sev.PositionID = @0 and sev.PricingTypeID = @1";
-   var data = db.Query(sql, positionID,pricingTypeID);
+    var data = db.Query(sql, positionID,pricingTypeID);
     Json.Write(data, Response.Output);
 }
