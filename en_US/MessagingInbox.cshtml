@@ -1,6 +1,7 @@
 ﻿@{
     var UserID = WebSecurity.CurrentUserId;
     var db = Database.Open("sqlloco");
+    //TODO:UPDATE THE QUERY GET THE REQUIRED DATA
     var query = @"SELECT m.body, tm.fromID, u.FirstName, u.LastName
                 FROM Messages m
                 JOIN ThreadMessage tm ON (m.messageID = tm.messageID)
@@ -9,6 +10,7 @@
     var messages = db.Query(query,UserID);
     var grid = new WebGrid(messages, ajaxUpdateContainerId: "inbox_grid");                    
 }
+//TODO: ADD REQUIRED COLUMNS (Ex: PHOTO...)
 @grid.GetHtml(columns: grid.Columns(    
                                     grid.Column("FirstName", header:"From"),
                                     grid.Column("body", header:"Message Body")
