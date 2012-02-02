@@ -113,7 +113,8 @@
 					<li><a class="button profile fanciful" href="#gardener-reviews">Reviews</a></li>
 					<li><a class="button profile fanciful" href="#gardener-calendar">Calendar</a></li>
 					<li><a class="button profile fanciful" href="#gardener-map" onclick="initialize()">Map</a></li>
-                    			<li><a class="button profile fanciful" href="#gardener-message">Send me a message</a></li> 
+           			<li><a class="button profile fanciful" href="#gardener-message">Send me a message</a></li> 
+                    <li><a class="button profile fanciful" href="#inbox_grid" onclick="initialize()">Inbox</a></li>
 				</ul>
 				<div id="gardener-overview" class="current tab-body">
 					<div class="rate">
@@ -248,8 +249,16 @@
                         <div>
                             <input type="submit" value="Submit" />
                         </div>
-                    </form>    
+                    </form>
+                      
                 </div><!-- #gardener-message -->
+                 <div id="inbox_grid" class="tab-body">
+                 <h1>
+                     <title>Inbox</title>
+                 </h1>
+                    @RenderPage("~/en_US/MessagingInbox.cshtml")
+                </div> 
+                
 			</div>
           
             <!--social links-->
