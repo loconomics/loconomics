@@ -1,5 +1,8 @@
 ﻿@{  
     var UserID = 0;
+    //TODO: SET THE REQUEST TO PASS POSITION AND PAYMENT INFO
+    var positionID = 14;// Request["PositionID"];//14(cleaner) for testing
+    var paymentID = 1;// Request["PaymentID"];//1,2,3,4,5 for testing
     
     if (WebSecurity.IsAuthenticated){
         Layout = "~/en_US/_SiteLayout.cshtml";
@@ -8,6 +11,7 @@
     }else{
         Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/ReviewsPage");
     }
+
     if(IsPost){
         var answer1 = Request["Question1"];
         var answer2 = Request["Question2"];
@@ -15,19 +19,78 @@
         var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
         var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
         var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
+        //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
+        var rating1ID = 1;
+        var rating2ID = 2;
+        var rating3ID = 3;
+        var rating4ID = 4;
+        
         var publicreview = Request["Public Review"];
         var privatereview = Request["Private Review"];
         
-        //TODO CHECK FOR DUPLICATED REVIEWS
         
         //STORE DATA IN THE DATA BASE
         var db = Database.Open("sqlloco");
-        var SQLINSERT = @"INSERT INTO dbo.UserReviews 
+        var SQLCHECK = @"SELECT rp.ReviewID
+                        FROM dbo.UserReviews r
+                        WHERE r.PaymentID=@0";
+        var SQLSELECT = @"SELECT rs.ratingID, rs.score , rs.totalRatings
+                        FROM dbo.ReviewScores rs
+                        WHERE rs.positionID=@0 AND rs.userID=@1";
+        var SQLINSERTSCORE = @"INSERT INTO dbo.ReviewScores
+                            (ratingID,positionID,userID,score,totalRatings)
+                            VALUES (@0,@1,@2,@3,@4)";
+        var SQLINSERTREVIEW = @"INSERT INTO dbo.UserReviews 
                             (PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
                             VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
-        try{
-            db.Execute(SQLINSERT, publicreview, privatereview, rating1, rating2, rating3, rating4, answer1, answer2, System.DateTime.Now, System.DateTime.Now, UserID);
-              
+        try
+        {
+            var reviewID = db.Query(SQLCHECK,paymentID);
+            //New review
+            if(reviewID==null){
+               
+                //Look for existing scores
+                var scores = db.Query(SQLSELECT,positionID,UserID);
+                if(scores!=null){
+                    //Update Scores
+                    var newscore = 0;
+                    foreach(var value in scores){
+                        //update score
+                        newscore = 0;
+                        var score = Convert.ToInt32(value.score);
+                        var totalRatings = Convert.ToInt32(value.totalRatings);
+                        //TODO change if senteces for a key/value selection
+                        if(value.ratingID=rating1ID){
+                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating1))) / (totalRatings + 1);
+                        };
+                        if (value.ratingID = rating2ID)
+                        {
+                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating2))) / (totalRatings + 1);
+                        };
+                        if (value.ratingID = rating3ID)
+                        {
+                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating3))) / (totalRatings + 1);
+                        };
+                        if (value.ratingID = rating4ID)
+                        {
+                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating4))) / (totalRatings + 1);
+                        };
+                        //Save the updated scores
+                        db.Execute(SQLINSERTSCORE,value.ratingID,positionID,UserID,newscore,totalRatings+1);
+                    }
+                }else{
+                    //First scores for the positionID
+                    db.Execute(SQLINSERTSCORE, rating1ID, positionID, UserID, rating1, 1);
+                    db.Execute(SQLINSERTSCORE, rating2ID, positionID, UserID, rating2, 1);
+                    db.Execute(SQLINSERTSCORE, rating3ID, positionID, UserID, rating3, 1);
+                    db.Execute(SQLINSERTSCORE, rating4ID, positionID, UserID, rating4, 1);
+                };
+                //Store Data
+                db.Execute(SQLINSERTREVIEW, publicreview, privatereview, rating1, rating2, rating3, rating4, answer1, answer2, System.DateTime.Now, System.DateTime.Now, UserID);
+                    
+            }else{
+                //TODO: SEND ERROR MESSAGE TO THE USER: THE REVIEW FOR THIS SERVICE ALREADY EXIST
+            };              
         }catch{
             Response.Redirect("~/en_US/ReviewsConfirmationPage?status=error");
         }
