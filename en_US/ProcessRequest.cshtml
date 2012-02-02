@@ -41,8 +41,8 @@
                         (body,CreatedDate,UpdatedDate,ModifiedBy)
                         VALUES(@0,@1,@2,@3)";
     var SQLINSERTTHREADMESSAGE=@"INSERT INTO dbo.ThreadMessage
-                        (messageID,threadID,CreatedDate,UpdatedDate,ModifiedBy)
-                        VALUES(@0,@1,@2,@3,@4)";
+                        (messageID,threadID,fromID,toID,CreatedDate,UpdatedDate,ModifiedBy)
+                        VALUES(@0,@1,@2,@3,@4,@5,@6)";
     
     try {
         //store the thread in the DDBB(dbo.MessagingThreads)
@@ -52,7 +52,7 @@
         db.Execute(SQLINSERTMESSAGE, customerRequest, sysdate, sysdate, UserID);
         messageID = Convert.ToInt32(db.GetLastInsertId());
         //store the message-thread relation in the DDBB(dbo.ThreadMessage)
-        db.Execute(SQLINSERTTHREADMESSAGE, messageID, threadID, sysdate, sysdate, UserID);
+        db.Execute(SQLINSERTTHREADMESSAGE, messageID, threadID, UserID, ProviderID, sysdate, sysdate, UserID);
         tmid = Convert.ToInt32(db.GetLastInsertId()); 
         //add the thread id to the url querystring
         responseLink += Server.UrlEncode(tmid+"");

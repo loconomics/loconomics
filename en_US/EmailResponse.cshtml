@@ -12,21 +12,26 @@
    
     var db = Database.Open("sqlloco");
     
-    var SQLGetMessageInfo = @"SELECT m.body ,mt.userID ,mt.providerID, mt.threadID 
+    var SQLGetMessageInfo = @"SELECT m.body ,mt.userID ,tm.fromID, tm.toID, mt.threadID 
                             FROM dbo.Messages m 
                             JOIN dbo.ThreadMessage tm ON (m.messageID = tm.messageID)
                             JOIN dbo.MessagingThreads mt ON (mt.threadID = tm.threadID)
                             WHERE tm.threadMessageID = @0";
      var message = db.QuerySingle(SQLGetMessageInfo, tmid);
 
-    var senderID = (UserID == message.userID)? message.providerID : message.userID; 
+    if (UserID != message.toID){
+        //TODO HANDLE auth error when user does not match the recieverID
+        Response.Redirect("~/en_US/Default");
+    }
+    
+    var toID = message.fromID; 
     
     var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email 
                     FROM users a 
                     JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
                     JOIN dbo.userprofile e ON  (a.userid = e.userid) 
                     WHERE a.userid = @0";
-    var posrow = db.QuerySingle(profilesql, senderID);
+    var posrow = db.QuerySingle(profilesql, toID);
 }
 <script type="text/javascript">
     $(document).ready(function () {
@@ -51,7 +56,7 @@
         <div>
              <input id="tmid" name="tmid" value="@tmid" />
              <input id="threadID" name="threadID" value="@message.threadID" />
-             <input id="receiverID" name="receiverID" value="@senderID" />
+             <input id="receiverID" name="receiverID" value="@toID" />
         </div>
 
         <div>
