@@ -38,7 +38,7 @@
                 }
             }
         }else{
-            Response.Redirect("~/en_ES/Default");
+            Response.Redirect("~/en_US/Account/Login?Redirect=~/en_US/provider-dashboard-profile");
         }
 }
 
@@ -82,7 +82,7 @@
                         <tr><td>Lorem Ipsum:</td><td>20</td></tr>
                     </table>
                     <a href="#">Booking History</a>
-                            <a href="ProviderEstimateProfile.cshtml?positionID=@c.PositionID">Edit Estimate Profile</a>
+                    <a href="PricingProfileWizardPage.cshtml?PositionID=@c.PositionID">Edit Estimate Profile</a>
                     <div class="job-actions">
                         <a class="button go" href="#">Edit</a>
                         <a class="button go" href="#">Publish</a>
@@ -103,39 +103,7 @@
 		<div id="payments" class="tab-body fancy">
 		
 			<div class="payments">
-				
-				<h3>Payment Information</h3>
-				
-				<table class="form">
-					<tr>
-						<td><label for="accountName">Name on Account</label></td>
-						<td><input id="accountName" name="accountName" type="text" value="Marie Rodriguez Hernandez" /></td>
-						<td class="status"></td>
-					</tr>
-					<tr>
-						<td><label for="accountType">Account Type</label></td>
-						<td>
-							<select id="accountType" name="accountType">
-								<option value="checking" selected="selected">Checking</option>
-								<option value="savings">Savings</option>
-							</select>
-						</td>
-						<td class="status"></td>
-					</tr>
-					<tr>
-						<td><label for="accountNumber">Account Number</label></td>
-						<td><input id="accountNumber" name="accountNumber" type="text" value="********1234" /></td>
-						<td class="status"></td>
-					</tr>
-					<tr>
-						<td><label for="routingNumber">Routing Number</label></td>
-						<td><input id="routingNumber" name="routingNumber" type="text" value="011000138" /></td>
-						<td class="status"></td>
-					</tr>
-				</table>
-				
-				<button type="submit">Save</button>
-				
+				@RenderPage("~/en_US/PaymentsPageTest.cshtml")
 			</div><!-- .payments -->
 		
 		</div><!-- #payments -->
