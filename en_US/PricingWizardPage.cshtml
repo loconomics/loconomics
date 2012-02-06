@@ -16,10 +16,10 @@
     var servicePricingTypeID = 0;
     var errors = "";
     var sysdate = DateTime.Now;
-    var estimateVarValue = 0;
-    var A = 0;
-    var M = 1;
-    var E = 0;
+    var estimateVarValue = 0m;
+    var A = 0m;
+    var M = 1m;
+    var E = 0m;
     
     if(IsPost){
         var db = Database.Open("sqlloco");
@@ -60,12 +60,12 @@
                 if(!match.Success && varValues[i]!=""){
                     ModelState.AddError("varValue", estimateProfile.UserDescription+" must be a number");
                 }else{ 
-                    estimateVarValue = (varValues[i]!="" ? Convert.ToInt32(varValues[i]):0);
+                    estimateVarValue = (varValues[i]!="" ? Convert.ToDecimal(varValues[i]):0);
                 } 
                 
                 //TODO get provider data for the varID           
                 if(estimateProfile.Type == "A"){
-                    A += estimateVarValue * Convert.ToInt32(estimateProfile.varValue);
+                    A += estimateVarValue * Convert.ToDecimal(estimateProfile.varValue);
                 }
                 else if(estimateProfile.Type == "M"){
                     M *= estimateVarValue;
@@ -92,13 +92,13 @@
                 }
                 else
                 {
-                    estimateVarValue = (estimateProfile.varValue != "" ? Convert.ToInt32(estimateProfile.varValue) : 0);
+                    estimateVarValue = (estimateProfile.varValue != "" ? Convert.ToDecimal(estimateProfile.varValue) : 0);
                 } 
                 
                 //Update A M or E
                 if (estimateProfile.Type == "A")
                 {
-                    A += estimateVarValue * Convert.ToInt32(estimateProfile.varValue);
+                    A += estimateVarValue * Convert.ToDecimal(estimateProfile.varValue);
                 }
                 else if (estimateProfile.Type == "M")
                 {
