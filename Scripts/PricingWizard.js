@@ -65,6 +65,7 @@ $(document).ready(function () {
                              };
                              //Paint radio list input
                              if (tag == "radiolist") {
+                                 //If is the first element of the radio list add the label for the group
                                  if (!$('.label' + groupID).length) {
                                      $('.inputfields').after('<div class="row"><label class="label' + groupID + '" for="listValue"><b>' + name + '<b/></label><div/>');
                                      $('.label' + groupID).after('<input type="hidden" id="groupID" name="groupID" value=' + groupID + '>');
@@ -73,6 +74,7 @@ $(document).ready(function () {
                              };
                              //Paint dropdown input
                              if (tag == "dropdown") {
+                                 //If is the first element of the dropdown add the label and the select tag for the group
                                  if (!$('.label' + groupID).length) {
                                      $('.inputfields').after('<div class="row"><label class="label' + groupID + '" for="varValue"><b>' + name + '<b/></label><div/>');
                                      $('.label' + groupID).after('<input type="hidden" id="groupID" name="groupID" value=' + groupID + '>');
