@@ -1,8 +1,9 @@
 ﻿@{  
     var UserID = 0;
     //TODO: SET THE REQUEST TO PASS POSITION AND PAYMENT INFO
-    var positionID = 14;// Request["PositionID"];//14(cleaner) for testing
-    var paymentID = 1;// Request["PaymentID"];//1,2,3,4,5 for testing
+    var positionID = Request["PositionID"];//14(cleaner) for testing
+    var providerID = Request["ProviderID"];//34(dev team user)
+    var paymentID = Request["PaymentID"];
     
     if (WebSecurity.IsAuthenticated){
         Layout = "~/en_US/_SiteLayout.cshtml";
@@ -20,10 +21,6 @@
         var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
         var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
         //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
-        var rating1ID = 1;
-        var rating2ID = 2;
-        var rating3ID = 3;
-        var rating4ID = 4;
         
         var publicreview = Request["Public Review"];
         var privatereview = Request["Private Review"];
@@ -31,63 +28,54 @@
         
         //STORE DATA IN THE DATA BASE
         var db = Database.Open("sqlloco");
-        var SQLCHECK = @"SELECT rp.ReviewID
+        var SQLCHECK = @"SELECT r.ReviewID
                         FROM dbo.UserReviews r
                         WHERE r.PaymentID=@0";
-        var SQLSELECT = @"SELECT rs.ratingID, rs.score , rs.totalRatings
+        var SQLSELECT = @"SELECT Rating1, Rating2 ,Rating3 ,Rating4 ,TotalRatings
                         FROM dbo.ReviewScores rs
-                        WHERE rs.positionID=@0 AND rs.userID=@1";
-        var SQLINSERTSCORE = @"INSERT INTO dbo.ReviewScores
-                            (ratingID,positionID,userID,score,totalRatings)
-                            VALUES (@0,@1,@2,@3,@4)";
+                        WHERE rs.PositionID=@0 AND rs.ProviderID=@1";
+        var SQLUPDATESCORES = @"UPDATE dbo.ReviewScores
+                            SET Rating1 = @0, Rating2 = @1, Rating3 = @2, Rating4 = @3, TotalRatings = @4, UpdatedDate = @5, ModifiedBy = @6
+                            WHERE ProviderID = @7 AND PositionID = @8";
+        var SQLINSERTSCORES = @"INSERT INTO dbo.ReviewScores
+                                (Rating1,Rating2,Rating3,Rating4,TotalRatings,ProviderID,PositionID,CreatedDate,UpdatedDate,ModifiedBy)
+                               VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9)";
         var SQLINSERTREVIEW = @"INSERT INTO dbo.UserReviews 
-                            (PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
-                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
+                            (PaymentID,PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11)";
         try
         {
-            var reviewID = db.Query(SQLCHECK,paymentID);
+            var reviewID = db.Query(SQLCHECK, paymentID);
             //New review
-            if(reviewID==null){
-               
+            if(reviewID.Count()==0){               
                 //Look for existing scores
-                var scores = db.Query(SQLSELECT,positionID,UserID);
-                if(scores!=null){
-                    //Update Scores
-                    var newscore = 0;
-                    foreach(var value in scores){
-                        //update score
-                        newscore = 0;
-                        var score = Convert.ToInt32(value.score);
-                        var totalRatings = Convert.ToInt32(value.totalRatings);
-                        //TODO change if senteces for a key/value selection
-                        if(value.ratingID=rating1ID){
-                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating1))) / (totalRatings + 1);
-                        };
-                        if (value.ratingID = rating2ID)
-                        {
-                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating2))) / (totalRatings + 1);
-                        };
-                        if (value.ratingID = rating3ID)
-                        {
-                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating3))) / (totalRatings + 1);
-                        };
-                        if (value.ratingID = rating4ID)
-                        {
-                            newscore = ((score*totalRatings) + (Convert.ToInt32(rating4))) / (totalRatings + 1);
-                        };
-                        //Save the updated scores
-                        db.Execute(SQLINSERTSCORE,value.ratingID,positionID,UserID,newscore,totalRatings+1);
-                    }
-                }else{
+                var scores = db.Query(SQLSELECT,positionID,providerID);
+                if (scores.Count() == 0)
+                {
                     //First scores for the positionID
-                    db.Execute(SQLINSERTSCORE, rating1ID, positionID, UserID, rating1, 1);
-                    db.Execute(SQLINSERTSCORE, rating2ID, positionID, UserID, rating2, 1);
-                    db.Execute(SQLINSERTSCORE, rating3ID, positionID, UserID, rating3, 1);
-                    db.Execute(SQLINSERTSCORE, rating4ID, positionID, UserID, rating4, 1);
+                    db.Execute(SQLINSERTSCORES, rating1 + "", rating2 + "", rating3 + "", rating4 + "", 1 + "", providerID, positionID, System.DateTime.Now, System.DateTime.Now, "UserID: " + UserID);  
+                }
+                else {
+                    foreach(var value in scores){
+                        //Update Scores
+                        var score1 = value.Rating1;
+                        var score2 = value.Rating2;
+                        var score3 = value.Rating3;
+                        var score4 = value.Rating4;
+                        var totalRatings = Convert.ToDecimal(value.TotalRatings);
+                        //TODO change if senteces for a key/value selection
+                        var newscore1 = ((score1 * totalRatings) + (Convert.ToDecimal(rating1))) / (totalRatings + 1);
+                        var newscore2 = ((score2 * totalRatings) + (Convert.ToDecimal(rating2))) / (totalRatings + 1);
+                        var newscore3 = ((score3 * totalRatings) + (Convert.ToDecimal(rating3))) / (totalRatings + 1);
+                        var newscore4 = ((score4 * totalRatings) + (Convert.ToDecimal(rating4))) / (totalRatings + 1);
+        
+                        //Save the updated scores
+                        db.Execute(SQLUPDATESCORES, newscore1, newscore2, newscore3, newscore4, (totalRatings + 1), System.DateTime.Now, "UserID: " + UserID, providerID, positionID);
+                    }
                 };
-                //Store Data
-                db.Execute(SQLINSERTREVIEW, publicreview, privatereview, rating1, rating2, rating3, rating4, answer1, answer2, System.DateTime.Now, System.DateTime.Now, UserID);
-                    
+                //Store Review
+                db.Execute(SQLINSERTREVIEW, paymentID, publicreview, privatereview, Convert.ToInt32(rating1), Convert.ToInt32(rating2), Convert.ToInt32(rating3), Convert.ToInt32(rating4), answer1, answer2, System.DateTime.Now, System.DateTime.Now, "UserID: "+UserID);
+                                    
             }else{
                 //TODO: SEND ERROR MESSAGE TO THE USER: THE REVIEW FOR THIS SERVICE ALREADY EXIST
             };              
@@ -158,6 +146,9 @@
             <br />
             @Html.TextArea("Private Review")
             <br />
+            <input type="hidden" name="PositionID" id="PositionID" value="@positionID" />
+            <input type="hidden" name="PaymentID" id="PaymentID" value="@paymentID" />
+            <input type="hidden" name="ProviderID" id="ProviderID" value="@providerID" />
             <input type="submit" value="Post Review" />
 		</form>
     </div><!-- #main -->
