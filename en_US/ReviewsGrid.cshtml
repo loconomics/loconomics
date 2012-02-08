@@ -1,0 +1,20 @@
+﻿@{
+    var UserID = WebSecurity.CurrentUserId;
+    var db = Database.Open("sqlloco");
+    var query = @"SELECT r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, u.Photo, u.FirstName 
+                FROM UserReviews r
+                JOIN Users u ON (u.UserID = rs.userID)
+                WHERE r.userID = @0 AND r.positionID = @1";
+    var messages = db.Query(query,UserID);
+    var grid = new WebGrid(messages, ajaxUpdateContainerId: "reviews_grid");                    
+}
+@grid.GetHtml(columns: grid.Columns(    
+                                    grid.Column("FirstName"),
+                                    grid.Column("Photo"),
+                                    grid.Column("Rating1"),
+                                    grid.Column("Rating2"),
+                                    grid.Column("Rating3"),
+                                    grid.Column("Rating4"),
+                                    grid.Column("PublicReview")
+                                    )
+            )
