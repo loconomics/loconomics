@@ -1,0 +1,24 @@
+﻿@using Twilio;
+@{
+    // set our AccountSid and AuthToken
+    //TODO: set AccountSid and AuthToken with the Production Account values
+        string AccountSid = "AC661c2c3b32110659c2d8a74d9f99c87d";
+        string AuthToken = "4790dd4aea1fbfff4f36a034b67f5d61";
+    // instantiate a new Twilio Rest Client
+    var client = new TwilioRestClient(AccountSid, AuthToken);
+    // make an associative array of people we know, indexed by phone number
+    var people = new Dictionary<string,string>() {
+    {"+14158675309","Josh Danielson"}
+    };
+    // iterate over all our friends
+    foreach (var person in people) {
+    // Send a new outgoing SMS by POSTing to the SMS resource */
+    client.SendSmsMessage(
+    "+14155992671", // From number, must be an SMS-enabled Twilio number
+    person.Key, // To number, if using Sandbox see note above
+    // message content
+    string.Format("Hey {0}, This is a Loconomics dev team SMS! Send an sms starting with 92968653 to test response messages please", person.Value)
+    );
+    Response.Write(string.Format("Sent message to {0}", person.Value));
+    }
+}
