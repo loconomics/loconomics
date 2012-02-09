@@ -3,29 +3,10 @@
     var positionID = PageData[1];
     var userID = PageData[2];
 
-    var r1checked1 = "";
-    var r1checked2 = "";
-    var r1checked3 = "";
-    var r1checked4 = "";
-    var r1checked5 = "";
-
-    var r2checked1 = "";
-    var r2checked2 = "";
-    var r2checked3 = "";
-    var r2checked4 = "";
-    var r2checked5 = "";
-
-    var r3checked1 = "";
-    var r3checked2 = "";
-    var r3checked3 = "";
-    var r3checked4 = "";
-    var r3checked5 = "";
-
-    var r4checked1 = "";
-    var r4checked2 = "";
-    var r4checked3 = "";
-    var r4checked4 = "";
-    var r4checked5 = "";    
+    String[] rating1data = {"name","rating_value","disabled"};
+    String[] rating2data = { "name", "rating_value", "disabled" };
+    String[] rating3data = { "name", "rating_value", "disabled" };
+    String[] rating4data = { "name", "rating_value", "disabled" };
     
     var db = Database.Open("sqlloco");
     var query = @"SELECT u.FirstName, u.LastName, u.Photo, r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID
@@ -38,68 +19,41 @@
 <h3>Reviews</h3>
 @foreach (var review in reviews)
 {
-    r1checked1 = review.Rating1 != 1 ? "" : "checked='checked'";
-    r1checked2 = review.Rating1 != 2 ? "" : "checked='checked'";
-    r1checked3 = review.Rating1 != 3 ? "" : "checked='checked'";
-    r1checked4 = review.Rating1 != 4 ? "" : "checked='checked'";
-    r1checked5 = review.Rating1 != 5 ? "" : "checked='checked'";
+    rating1data.SetValue("rating1 "+review.PaymentID,0);//Rating Name
+    rating1data.SetValue(Convert.ToString(review.Rating1),1);//Rating value
+    rating1data.SetValue("true",2);//Rating: enable or disable
 
-    r2checked1 = review.Rating2 != 1 ? "" : "checked='checked'";
-    r2checked2 = review.Rating2 != 2 ? "" : "checked='checked'";
-    r2checked3 = review.Rating2 != 3 ? "" : "checked='checked'";
-    r2checked4 = review.Rating2 != 4 ? "" : "checked='checked'";
-    r2checked5 = review.Rating2 != 5 ? "" : "checked='checked'";
+    rating2data.SetValue("rating2 " + review.PaymentID, 0);//Rating Name
+    rating2data.SetValue(Convert.ToString(review.Rating2), 1);//Rating value
+    rating2data.SetValue("true", 2);//Rating: enable or disable
+
+    rating3data.SetValue("rating3 " + review.PaymentID, 0);//Rating Name
+    rating3data.SetValue(Convert.ToString(review.Rating3), 1);//Rating value
+    rating3data.SetValue("true", 2);//Rating: enable or disable
     
-    r3checked1 = review.Rating3 != 1 ? "" : "checked='checked'";
-    r3checked2 = review.Rating3 != 2 ? "" : "checked='checked'";
-    r3checked3 = review.Rating3 != 3 ? "" : "checked='checked'";
-    r3checked4 = review.Rating3 != 4 ? "" : "checked='checked'";
-    r3checked5 = review.Rating3 != 5 ? "" : "checked='checked'";
-    
-    r4checked1 = review.Rating4 != 1 ? "" : "checked='checked'";
-    r4checked2 = review.Rating4 != 2 ? "" : "checked='checked'";
-    r4checked3 = review.Rating4 != 3 ? "" : "checked='checked'";
-    r4checked4 = review.Rating4 != 4 ? "" : "checked='checked'";
-    r4checked5 = review.Rating4 != 5 ? "" : "checked='checked'";
+    rating4data.SetValue("rating4 " + review.PaymentID, 0);//Rating Name
+    rating4data.SetValue(Convert.ToString(review.Rating4), 1);//Rating value
+    rating4data.SetValue("true", 2);//Rating: enable or disable 
 
 <ul class="reviews">
 	<li>
 		<div class="author">
-			<img alt="user photo" class="thumb" src="~/@review.Photo" />
+			<img alt="user photo" class="thumb" src="../@review.Photo" />
 			<a href="#">@review.FirstName @review.LastName</a>
 		</div>
-		<div class="wrap">
+    	<div class="wrap">
             <p>@review.PublicReview</p>
 		</div>
-        <br />
+        <div id="review-tag-ratings">
         @Html.Label("rating1 ")
-        <input name="rating1 @review.PaymentID" type="radio" class="star" value="1" @r1checked1 disabled="disabled"/>
-        <input name="rating1 @review.PaymentID" type="radio" class="star" value="2" @r1checked2/>
-        <input name="rating1 @review.PaymentID" type="radio" class="star" value="3" @r1checked3/>
-        <input name="rating1 @review.PaymentID" type="radio" class="star" value="4" @r1checked4/>
-        <input name="rating1 @review.PaymentID" type="radio" class="star" value="5" @r1checked5/>
-        <br /> 
+        @RenderPage("~/en_US/StarRating.cshtml", rating1data)
         @Html.Label("rating2 ")
-        <input name="rating2 @review.PaymentID" type="radio" class="star" value="1" @r2checked1 disabled="disabled"/>
-        <input name="rating2 @review.PaymentID" type="radio" class="star" value="2" @r2checked2/>
-        <input name="rating2 @review.PaymentID" type="radio" class="star" value="3" @r2checked3/>
-        <input name="rating2 @review.PaymentID" type="radio" class="star" value="4" @r2checked4/>
-        <input name="rating2 @review.PaymentID" type="radio" class="star" value="5" @r2checked5/>
-        <br />
+        @RenderPage("~/en_US/StarRating.cshtml", rating2data)
         @Html.Label("rating3 ")
-        <input name="rating3 @review.PaymentID" type="radio" class="star" value="1" @r3checked1 disabled="disabled"/>
-        <input name="rating3 @review.PaymentID" type="radio" class="star" value="2" @r3checked2/>
-        <input name="rating3 @review.PaymentID" type="radio" class="star" value="3" @r3checked3/>
-        <input name="rating3 @review.PaymentID" type="radio" class="star" value="4" @r3checked4/>
-        <input name="rating3 @review.PaymentID" type="radio" class="star" value="5" @r3checked5/>
-        <br />
+        @RenderPage("~/en_US/StarRating.cshtml", rating3data)
         @Html.Label("rating4 ")
-        <input name="rating4 @review.PaymentID" type="radio" class="star" value="1" @r4checked1 disabled="disabled"/>
-        <input name="rating4 @review.PaymentID" type="radio" class="star" value="2" @r4checked2/>
-        <input name="rating4 @review.PaymentID" type="radio" class="star" value="3" @r4checked3/>
-        <input name="rating4 @review.PaymentID" type="radio" class="star" value="4" @r4checked4/>
-        <input name="rating4 @review.PaymentID" type="radio" class="star" value="5" @r4checked5/>
-        
+        @RenderPage("~/en_US/StarRating.cshtml", rating4data)
+        </div>
 	</li>
 </ul>
 }

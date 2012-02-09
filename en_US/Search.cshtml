@@ -20,7 +20,6 @@
 				<li class="clearfix">
 					<div class="id col">
 	               <img src="../@c.Photo" alt="" />
-                   <p>"../@c.Photo"</p>
 					</div>
 					<div class="name col">
 						<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">@c.FirstName @c.LastName</a></h3>
@@ -30,48 +29,49 @@
 						<table>
 							<tr>
 								<td>
-								    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+1 type="radio" class="star" disabled="disabled"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+1 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+1 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+1 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+1 type="radio" class="star" checked="checked"/>
+								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star" disabled="disabled"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
 								</td>
 								<th>Professionalism</th>
 							</tr>
 							<tr>
 								<td>
-									<input name=@c.ProfileID+@c.PositionID+@c.ServiceName+2 type="radio" class="star" disabled="disabled"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+2 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+2 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+2 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+2 type="radio" class="star" checked="checked"/>
+									<input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star" disabled="disabled"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
 								</td>
 								<th>Attention to detail</th>
 							</tr>
 							<tr>
 								<td>
-								    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+3 type="radio" class="star" disabled="disabled"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+3 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+3 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+3 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+3 type="radio" class="star" checked="checked"/>
+								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star" disabled="disabled"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
 								</td>
 								<th>Trustworthiness</th>
 							</tr>
 							<tr>
 								<td>
-								    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+4 type="radio" class="star" disabled="disabled"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+4 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+4 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+4 type="radio" class="star"/>
-                                    <input name=@c.ProfileID+@c.PositionID+@c.ServiceName+4 type="radio" class="star" checked="checked"/>
+								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star" disabled="disabled"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
+                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4"type="radio" class="star"/>
 								</td>
 								<th>Quality of Work</th>
 							</tr>
 						</table>
 					</div>
 					<div class="buttons">
-						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">View full profile</a>  <a class="button fanciful" href="#">Book for $35/hour</a>
+						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">View full profile</a>  
+                        <a class="button fanciful" href="#">Book for $35/hour</a>
 					</div>
 					<!-- <h3 class="job-title"><a class="job-status inactive" href="ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName">@c.ServiceName </a></h3>
 					<table class="profile-stats">
