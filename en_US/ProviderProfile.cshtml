@@ -23,7 +23,9 @@
     var positionsql ="select distinct  d.ServiceAttributeCategoryID,d.ServiceAttributeCategory from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID where a.UserID = @0 and b.PositionID = @1 ";
     var positionrow =db.Query(positionsql,ProviderID,PositionID);
 
-    var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1"; 
+    var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1";
+
+    db.Close();
 } 
 
 <script type="text/javascript">
@@ -82,7 +84,7 @@
 	
 		<div id="profileHeader" class="clearfix">
 
-			<img class="profile-pic" src="../@posrow.Photo"/>
+			<img alt="provider photo" class="profile-pic" src="../@posrow.Photo"/>
 			<div class="wrap">
 	
 				<h1 class="profile-name">@posrow.Name</h1>
