@@ -4,7 +4,47 @@
     var positionID = Request["PositionID"];//14(cleaner) for testing
     var providerID = Request["ProviderID"];//34(dev team user)
     var paymentID = Request["PaymentID"];
+    var answer1 = Request["Question1"];
+    var answer2 = Request["Question2"];
+    var rating1 = Request["rating1"] == null ? "0" : Request["rating1"];
+    var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
+    var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
+    var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
+    //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
+
+    var a1true = Request["Question1"] != "True" ? false:true;
+    var a1false = Request["Question1"] != "False" ? false : true;
+
+    var a2true = Request["Question2"] != "True" ? false : true;
+    var a2false = Request["Question2"] != "False" ? false : true;
+        
+    var r1checked1 = Request["rating1"] != "1" ? "" : "checked='checked'";
+    var r1checked2 = Request["rating1"] != "2" ? "" : "checked='checked'";
+    var r1checked3 = Request["rating1"] != "3" ? "" : "checked='checked'";
+    var r1checked4 = Request["rating1"] != "4" ? "" : "checked='checked'";
+    var r1checked5 = Request["rating1"] != "5" ? "" : "checked='checked'";
     
+    var r2checked1 = Request["rating2"] != "1" ? "" : "checked='checked'";
+    var r2checked2 = Request["rating2"] != "2" ? "" : "checked='checked'";
+    var r2checked3 = Request["rating2"] != "3" ? "" : "checked='checked'";
+    var r2checked4 = Request["rating2"] != "4" ? "" : "checked='checked'";
+    var r2checked5 = Request["rating2"] != "5" ? "" : "checked='checked'";
+    
+    var r3checked1 = Request["rating3"] != "1" ? "" : "checked='checked'";
+    var r3checked2 = Request["rating3"] != "2" ? "" : "checked='checked'";
+    var r3checked3 = Request["rating3"] != "3" ? "" : "checked='checked'";
+    var r3checked4 = Request["rating3"] != "4" ? "" : "checked='checked'";
+    var r3checked5 = Request["rating3"] != "5" ? "" : "checked='checked'";
+    
+    var r4checked1 = Request["rating4"] != "1" ? "" : "checked='checked'";
+    var r4checked2 = Request["rating4"] != "2" ? "" : "checked='checked'";
+    var r4checked3 = Request["rating4"] != "3" ? "" : "checked='checked'";
+    var r4checked4 = Request["rating4"] != "4" ? "" : "checked='checked'";
+    var r4checked5 = Request["rating4"] != "5" ? "" : "checked='checked'";
+        
+
+    var publicreview = Request["Public Review"];
+    var privatereview = Request["Private Review"];
     if (WebSecurity.IsAuthenticated){
         Layout = "~/en_US/_SiteLayout.cshtml";
         UserID = WebSecurity.CurrentUserId;
@@ -14,18 +54,15 @@
     }
 
     if(IsPost){
-        var answer1 = Request["Question1"];
-        var answer2 = Request["Question2"];
-        var rating1 = Request["rating1"] == null ? "0" : Request["rating1"];
-        var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
-        var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
-        var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
-        //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
-        
-        var publicreview = Request["Public Review"];
-        var privatereview = Request["Private Review"];
-        
-        
+
+        if (answer1 == null)
+        {
+            ModelState.AddError("Answer Unchecked", "Please reponse to answer 1");
+        }
+        if (answer2 == null)
+        {
+            ModelState.AddError("Answer Unchecked", "Please reponse to answer 2");
+        }    
         //STORE DATA IN THE DATA BASE
         var db = Database.Open("sqlloco");
         var SQLCHECK = @"SELECT r.ReviewID
@@ -41,110 +78,116 @@
                                 (Rating1,Rating2,Rating3,Rating4,TotalRatings,ProviderID,PositionID,CreatedDate,UpdatedDate,ModifiedBy)
                                VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9)";
         var SQLINSERTREVIEW = @"INSERT INTO dbo.UserReviews 
-                            (PaymentID,PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
-                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11)";
-        try
-        {
-            var reviewID = db.Query(SQLCHECK, paymentID);
-            //New review
-            if(reviewID.Count()==0){               
-                //Look for existing scores
-                var scores = db.Query(SQLSELECT,positionID,providerID);
-                if (scores.Count() == 0)
-                {
-                    //First scores for the positionID
-                    db.Execute(SQLINSERTSCORES, rating1 + "", rating2 + "", rating3 + "", rating4 + "", 1 + "", providerID, positionID, System.DateTime.Now, System.DateTime.Now, "UserID: " + UserID);  
-                }
-                else {
-                    foreach(var value in scores){
-                        //Update Scores
-                        var score1 = value.Rating1;
-                        var score2 = value.Rating2;
-                        var score3 = value.Rating3;
-                        var score4 = value.Rating4;
-                        var totalRatings = Convert.ToDecimal(value.TotalRatings);
-                        //TODO change if senteces for a key/value selection
-                        var newscore1 = ((score1 * totalRatings) + (Convert.ToDecimal(rating1))) / (totalRatings + 1);
-                        var newscore2 = ((score2 * totalRatings) + (Convert.ToDecimal(rating2))) / (totalRatings + 1);
-                        var newscore3 = ((score3 * totalRatings) + (Convert.ToDecimal(rating3))) / (totalRatings + 1);
-                        var newscore4 = ((score4 * totalRatings) + (Convert.ToDecimal(rating4))) / (totalRatings + 1);
-        
-                        //Save the updated scores
-                        db.Execute(SQLUPDATESCORES, newscore1, newscore2, newscore3, newscore4, (totalRatings + 1), System.DateTime.Now, "UserID: " + UserID, providerID, positionID);
-                    }
+                            (UserID,ProviderID,PositionID,PaymentID,PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)";
+        if(ModelState.IsValid){
+            try{
+                var reviewID = db.Query(SQLCHECK, paymentID);
+                //New review
+                if(reviewID.Count()!=0){  
+                        ModelState.AddError("Duplicated Review", "The review for this service already exist");
                 };
-                //Store Review
-                db.Execute(SQLINSERTREVIEW, paymentID, publicreview, privatereview, Convert.ToInt32(rating1), Convert.ToInt32(rating2), Convert.ToInt32(rating3), Convert.ToInt32(rating4), answer1, answer2, System.DateTime.Now, System.DateTime.Now, "UserID: "+UserID);
-                                    
-            }else{
-                //TODO: SEND ERROR MESSAGE TO THE USER: THE REVIEW FOR THIS SERVICE ALREADY EXIST
-            };              
-        }catch{
-            Response.Redirect("~/en_US/ReviewsConfirmationPage?status=error");
+                if(ModelState.IsValid){
+                    //Look for existing scores
+                    var scores = db.Query(SQLSELECT,positionID,providerID);
+                    if (scores.Count() == 0)
+                    {
+                        //First scores for the positionID
+                        db.Execute(SQLINSERTSCORES, rating1 + "", rating2 + "", rating3 + "", rating4 + "", 1 + "", providerID, positionID, System.DateTime.Now, System.DateTime.Now, "UserID: " + UserID);  
+                    }
+                    else {
+                        foreach(var value in scores){
+                            //Update Scores
+                            var score1 = value.Rating1;
+                            var score2 = value.Rating2;
+                            var score3 = value.Rating3;
+                            var score4 = value.Rating4;
+                            var totalRatings = Convert.ToDecimal(value.TotalRatings);
+                            //TODO change if senteces for a key/value selection
+                            var newscore1 = ((score1 * totalRatings) + (Convert.ToDecimal(rating1))) / (totalRatings + 1);
+                            var newscore2 = ((score2 * totalRatings) + (Convert.ToDecimal(rating2))) / (totalRatings + 1);
+                            var newscore3 = ((score3 * totalRatings) + (Convert.ToDecimal(rating3))) / (totalRatings + 1);
+                            var newscore4 = ((score4 * totalRatings) + (Convert.ToDecimal(rating4))) / (totalRatings + 1);
+
+                            //Save the updated scores
+                            db.Execute(SQLUPDATESCORES, newscore1, newscore2, newscore3, newscore4, (totalRatings + 1), System.DateTime.Now, "UserID: " + UserID, providerID, positionID);
+                        }
+                    };
+                    //Store Review
+                    db.Execute(SQLINSERTREVIEW, UserID, providerID, positionID, paymentID, publicreview, privatereview, Convert.ToInt32(rating1), Convert.ToInt32(rating2), Convert.ToInt32(rating3), Convert.ToInt32(rating4), answer1, answer2, System.DateTime.Now, System.DateTime.Now, "UserID: "+UserID);
+                }              
+            }catch(Exception ex){
+                ModelState.AddError("Error:", ex.Message);
+            }
+            if(ModelState.IsValid){
+                Response.Redirect("~/en_US/ReviewsConfirmationPage?status=success");
+            }
         }
-        Response.Redirect("~/en_US/ReviewsConfirmationPage?status=success");   
+        db.Close();   
     }
-
 }
-
+  
   <div id="container" class="home clearfix"> 
     <div id="main" class="">
 		<h1>@Page.Title</h1>
+        @Html.ValidationSummary()
 		<form id="userreview " action="@Href("~/en_US/ReviewsPage")" method="post">
 			
             @Html.Label("Question1")
             <br />
             @Html.Label("yes")
-            @Html.RadioButton("Question1",true,true)
+            @Html.RadioButton("Question1", true, @a1true)
             @Html.Label("no")
-            @Html.RadioButton("Question1",false)
+            @Html.RadioButton("Question1", false, @a1false)
+
             <br />
             @Html.Label("Question2")
             <br />
             @Html.Label("yes")
-            @Html.RadioButton("Question2",true,true)
+            @Html.RadioButton("Question2", true, @a2true)
             @Html.Label("no")
-            @Html.RadioButton("Question2",false)
+            @Html.RadioButton("Question2", false, @a2false)
+
             <br />
             @Html.Label("rating1 ")
             <br /> 
-            <input name="rating1" type="radio" class="star" value="1"/>
-            <input name="rating1" type="radio" class="star" value="2"/>
-            <input name="rating1" type="radio" class="star" value="3"/>
-            <input name="rating1" type="radio" class="star" value="4"/>
-            <input name="rating1" type="radio" class="star" value="5"/>
+            <input name="rating1" type="radio" class="star" value="1" @r1checked1/>
+            <input name="rating1" type="radio" class="star" value="2" @r1checked2/>
+            <input name="rating1" type="radio" class="star" value="3" @r1checked3/>
+            <input name="rating1" type="radio" class="star" value="4" @r1checked4/>
+            <input name="rating1" type="radio" class="star" value="5" @r1checked5/>
             <br /> 
             @Html.Label("rating2 ")
             <br /> 
-            <input name="rating2" type="radio" class="star" value="1"/>
-            <input name="rating2" type="radio" class="star" value="2"/>
-            <input name="rating2" type="radio" class="star" value="3"/>
-            <input name="rating2" type="radio" class="star" value="4"/>
-            <input name="rating2" type="radio" class="star" value="5"/>
+            <input name="rating2" type="radio" class="star" value="1" @r2checked1/>
+            <input name="rating2" type="radio" class="star" value="2" @r2checked2/>
+            <input name="rating2" type="radio" class="star" value="3" @r2checked3/>
+            <input name="rating2" type="radio" class="star" value="4" @r2checked4/>
+            <input name="rating2" type="radio" class="star" value="5" @r2checked5/>
             <br />
             @Html.Label("rating3 ")
             <br /> 
-            <input name="rating3" type="radio" class="star" value="1"/>
-            <input name="rating3" type="radio" class="star" value="2"/>
-            <input name="rating3" type="radio" class="star" value="3"/>
-            <input name="rating3" type="radio" class="star" value="4"/>
-            <input name="rating3" type="radio" class="star" value="5"/>
+            <input name="rating3" type="radio" class="star" value="1" @r3checked1/>
+            <input name="rating3" type="radio" class="star" value="2" @r3checked2/>
+            <input name="rating3" type="radio" class="star" value="3" @r3checked3/>
+            <input name="rating3" type="radio" class="star" value="4" @r3checked4/>
+            <input name="rating3" type="radio" class="star" value="5" @r3checked5/>
             <br />
              @Html.Label("rating4 ")
              <br /> 
-            <input name="rating4" type="radio" class="star" value="1"/>
-            <input name="rating4" type="radio" class="star" value="2"/>
-            <input name="rating4" type="radio" class="star" value="3"/>
-            <input name="rating4" type="radio" class="star" value="4"/>
-            <input name="rating4" type="radio" class="star" value="5"/>
+            <input name="rating4" type="radio" class="star" value="1" @r4checked1/>
+            <input name="rating4" type="radio" class="star" value="2" @r4checked2/>
+            <input name="rating4" type="radio" class="star" value="3" @r4checked3/>
+            <input name="rating4" type="radio" class="star" value="4" @r4checked4/>
+            <input name="rating4" type="radio" class="star" value="5" @r4checked5/>
             <br />
             @Html.Label("Public Review")
             <br />
-            @Html.TextArea("Public Review")
+            @Html.TextArea("Public Review", value: @publicreview)
             <br />
             @Html.Label("Private Review")
             <br />
-            @Html.TextArea("Private Review")
+            @Html.TextArea("Private Review", value: @privatereview)
             <br />
             <input type="hidden" name="PositionID" id="PositionID" value="@positionID" />
             <input type="hidden" name="PaymentID" id="PaymentID" value="@paymentID" />
