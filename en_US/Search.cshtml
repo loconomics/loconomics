@@ -8,6 +8,16 @@
     var LC_Cat = Request["Service"];
     var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
     var posrow = db.Query(searchsql,1,1,LC_Term,LC_Cat);
+
+    var rating1 = "0";
+    var rating2 = "0";
+    var rating3 = "0";
+    var rating4 = "0";
+
+    String[] rating1data = { "name", "rating_value", "true" };
+    String[] rating2data = { "name", "rating_value", "true" };
+    String[] rating3data = { "name", "rating_value", "true" };
+    String[] rating4data = { "name", "rating_value", "true" };
 }
 
 
@@ -16,7 +26,37 @@
 		<h1>@Page.Title</h1>
      <div id="jobTitles" class="current tab-body">
 			<ul class="search-results">
-            @foreach(var c in posrow){    
+            @foreach(var c in posrow){
+                try
+                {
+                    rating1 = Convert.ToString(c.Rating1);
+                    rating2 = Convert.ToString(c.Rating2);
+                    rating3 = Convert.ToString(c.Rating3);
+                    rating4 = Convert.ToString(c.Rating4);
+                }
+                catch
+                {
+                    rating1 = "0";
+                    rating2 = "0";
+                    rating3 = "0";
+                    rating4 = "0";
+                }
+                rating1data.SetValue(c.ProfileID+c.PositionID+c.ServiceName+"1", 0);//Rating Name
+                rating1data.SetValue(rating1, 1);//Rating value
+                rating1data.SetValue("true", 2);//Rating: enable or disable
+
+                rating2data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "2", 0);//Rating Name
+                rating2data.SetValue(rating2, 1);//Rating value
+                rating2data.SetValue("true", 2);//Rating: enable or disable
+
+                rating3data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "3", 0);//Rating Name
+                rating3data.SetValue(rating3, 1);//Rating value
+                rating3data.SetValue("true", 2);//Rating: enable or disable
+
+                rating4data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "4", 0);//Rating Name
+                rating4data.SetValue(rating4, 1);//Rating value
+                rating4data.SetValue("true", 2);//Rating: enable or disable 
+
 				<li class="clearfix">
 					<div class="id col">
 	               <img src="../@c.Photo" alt="" />
@@ -26,48 +66,14 @@
 						<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">more</a></blockquote>
 					</div>
 				   <div class="lang col">
-						<table>
-							<tr>
-								<td>
-								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star" disabled="disabled"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 1" type="radio" class="star"/>
-								</td>
-								<th>Professionalism</th>
-							</tr>
-							<tr>
-								<td>
-									<input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star" disabled="disabled"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 2" type="radio" class="star"/>
-								</td>
-								<th>Attention to detail</th>
-							</tr>
-							<tr>
-								<td>
-								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star" disabled="disabled"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 3" type="radio" class="star"/>
-								</td>
-								<th>Trustworthiness</th>
-							</tr>
-							<tr>
-								<td>
-								    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star" disabled="disabled"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4" type="radio" class="star"/>
-                                    <input name="@c.ProfileID @c.PositionID @c.ServiceName 4"type="radio" class="star"/>
-								</td>
-								<th>Quality of Work</th>
-							</tr>
-						</table>
+                        @Html.Label("rating1 ")
+                        @RenderPage("~/en_US/StarRating.cshtml", rating1data)
+                        @Html.Label("rating2 ")
+                        @RenderPage("~/en_US/StarRating.cshtml", rating2data)
+                        @Html.Label("rating3 ")
+                        @RenderPage("~/en_US/StarRating.cshtml", rating3data)
+                        @Html.Label("rating4 ")
+                        @RenderPage("~/en_US/StarRating.cshtml", rating4data)
 					</div>
 					<div class="buttons">
 						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">View full profile</a>  
