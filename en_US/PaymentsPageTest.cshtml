@@ -2,6 +2,7 @@
 @{
     //if (WebSecurity.IsAuthenticated)
     //{
+        Layout = "~/en_US/_SiteLayout.cshtml";
         var UserID = WebSecurity.CurrentUserId;
     /*}
     else
@@ -24,8 +25,9 @@
     var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Amount}, // key information about the transaction
                                                 "http://poorrichardsworkshop.com/loconomicsjb/en_US/PaymentsConfirmationTest");  // the redirect destination, in this case, the Confirm action below
 }
+<div id="container" class="sign-up">
     
-     <h3>Payment: @Amount $</h3>
+     <h1>Payment: @Amount $</h1>
 
     @* If at least one validation error exists, notify the user *@
     @Html.ValidationSummary(errors)
@@ -61,4 +63,5 @@
         <input id="transaction_submit" name="commit" type="submit" value="Submit" />
     </div>
     </form>
+</div> <!-- #container -->
 
