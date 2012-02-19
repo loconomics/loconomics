@@ -1,4 +1,4 @@
-﻿@{
+@{
     var userCulture = "";
     if(IsPost){
            userCulture = Request.Form["LangSelection"];
@@ -101,7 +101,7 @@
 							<a href="@Href("~/en_US/provider-dashboard-profile")" title="Change password">Dashboard</a>
 							<a href="#">Your services</a>
 							<a href="#">Your positions</a>
-							<a href="#">Profile</a>
+							<a href="@Href("~/en_US/provider-dashboard-profile")">Profile</a>
 							<a href="#">Account</a>
 							<a href="@Href("~/en_US/Account/Logout")">Logout</a>
 						</dd>

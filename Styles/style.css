@@ -368,8 +368,10 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 .dashboard #main { float: right; width: 732px; }
 .dashboard #secondary { margin: 0 774px 0 0; }
 
-.profile #main, .search #main { float: right; width: 730px; }
-.profile #secondary, .search #secondary { margin: 0 765px 0 0; }
+.profile #main { width: 100%; }
+
+.search #main { float: right; width: 730px; }
+.search #secondary { margin: 0 765px 0 0; }
 .profile #container, #container.search { font-size: .8em; }
 
 header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
@@ -416,7 +418,7 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 #profileHeader p { color: #999; line-height: 140%; }
 #profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
 #profileHeader .buttons a { margin-right: 5px; }
-h1.profile-name { font-size: 18px; color: #461864; margin: 0; width: 417px; }
+h1.profile-name { color: #461864; margin: 0; width: 417px; font: 24px normal "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive; }
 h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color: #461864; margin: 0; }
 
 .profile #main div.rate { float: right; width: 180px; padding: 14px 0 14px 14px; border-left: 1px solid #ccc; text-align: center; }
@@ -427,9 +429,15 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 
 .profile #main div.work { margin-right: 209px; }
 
-.profile #main div.feature { float: right; width: 200px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
+.profile #main div.feature { float: right; width: 400px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
 .profile #main div.feature img { float: left; width: 45px; height: auto; }
 .profile #main div.feature blockquote { margin: 0 0 14px 54px; }
+
+.profile #main div.work ul.services { margin: 0; padding: 0; list-style-type: none; background: url('../img/notebookp.jpg') no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
+.profile #main div.work ul.services ul { list-style-image: url('../img/bullet.png'); }
+.profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
+.profile #main div.work ul.services dl ul { margin: 0; }
+
 
 #searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
 #searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }

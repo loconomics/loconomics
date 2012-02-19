@@ -1,12 +1,9 @@
-﻿@{
+@{
     var providerID = PageData[0];
     var positionID = PageData[1];
     var userID = PageData[2];
 
-    String[] rating1data = {"name","rating_value","disabled"};
-    String[] rating2data = { "name", "rating_value", "disabled" };
-    String[] rating3data = { "name", "rating_value", "disabled" };
-    String[] rating4data = { "name", "rating_value", "disabled" };
+    String[] rating1data = { "name", "rating_value", "true" };    String[] rating2data = { "name", "rating_value", "true" };    String[] rating3data = { "name", "rating_value", "true" };    String[] rating4data = { "name", "rating_value", "true" };
     
     var db = Database.Open("sqlloco");
     var query = @"SELECT u.FirstName, u.LastName, u.Photo, r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID
@@ -44,6 +41,7 @@
     	<div class="wrap">
             <p>@review.PublicReview</p>
 		</div>
+        <br />
         <div id="review-tag-ratings">
         @Html.Label("rating1 ")
         @RenderPage("~/en_US/StarRating.cshtml", rating1data)
