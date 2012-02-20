@@ -19,9 +19,10 @@
     var errors = "";
     var firstName = "";
   
-    var Amount = 1;//This amount should come in the request from the pricing wizzard.
+    var Amount = Request["Amount"];//This amount should come in the request from the pricing wizzard.
+    //TODO: VALIDATE AMOUNT
     var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
-    var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Amount}, // key information about the transaction
+    var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Decimal.Parse(Amount)}, // key information about the transaction
                                                 "http://poorrichardsworkshop.com/loconomicsjb/en_US/PaymentsConfirmationTest");  // the redirect destination, in this case, the Confirm action below
 }
     

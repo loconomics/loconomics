@@ -1,4 +1,23 @@
-﻿@using System.Text.RegularExpressions;
+﻿@*
+View:
+        this page containg a dropdown with the Pricing types,
+        after selecting the pricing type, the script PricingWizard.js
+        loads the estimation vars for the specified position and pricing type.
+Data:
+    Input
+        positionID : the position ID 
+        pricingTypeID : the pricing type ID
+        providerID : the provider ID
+        string[] varValues :an array containing the estimation vars values. 
+        string[] varIDs :an array containing the ID of the vars used for the estimation
+        string[] listValues : this array contains the var values for vars of radio list and dropdown types
+        string[] groupIDs : an array containing the Ids of the radio list and dropdown list
+    Output
+        result : the estimated cost for the service
+        time : the estimated time for the service
+*@
+@using System.Text.RegularExpressions;
+@using WebMatrix.WebData;
 @{
  
     if (WebSecurity.IsAuthenticated) {
@@ -7,115 +26,172 @@
     }else{
         Response.Redirect("~/en_US/Account/Login");
     }
-
     var userID = Convert.ToString(WebSecurity.CurrentUserId); ;
-    var providerID = "";
-    var positionID = "";
+    var positionID = Request["PositionID"];
+    var providerID = Request["ProviderID"];
     var pricingTypeID = "";
     var estimateVarID = "";
+    var value = 0m;
     var servicePricingTypeID = 0;
     var errors = "";
     var sysdate = DateTime.Now;
-    var estimateVarValue = 0m;
-    var A = 0m;
-    var M = 1m;
-    var E = 0m;
-    
-    if(IsPost){
-        var db = Database.Open("sqlloco");
+    var hourlyWage = 10m;  //Testing default value //TODO: GET THE VALUE FROM DDBB
+    var A = 0m;//hours(Customer), $/hour(Provider)
+    var T = 0m;//amount(Customer) hours(Provider)
+    var M = 1m;//multiplier -> a factor that multiplies the estimation result(Thoroughtness high:2 medium:1.5 low:1)
+    var E = 0m;//adder -> an add on value (Ex. supplies, taxes)
 
-        positionID =  Request["PositionID"];
+    
+    if (positionID == null || positionID == "")
+    {
+        ModelState.AddError("posiotionID","The position ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)");
+        //TODO: ADD LOG MESSAGE
+    };
+    if (providerID == null || providerID == "")
+    {
+        ModelState.AddError("providerID", "The provider ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)");
+        //TODO: ADD LOG MESSAGE
+    };
+    
+    if(IsPost && ModelState.IsValid ){
+       
         pricingTypeID = Request["pricingtype"];
-        providerID =  Request["ProviderID"];
+
+        var result = 0m;
         string[] varValues = Context.Request.Form.GetValues("varValue");
         string[] varIDs = Context.Request.Form.GetValues("varID");
         string[] listValues = Context.Request.Form.GetValues("listValue");
         string[] groupIDs = Context.Request.Form.GetValues("groupID");
-        
-        //TODO validate data
-        
-        //Get the service pricing type relation
-        var SQLServicePricingType = @"SELECT ServicePricingTypeID 
-                       FROM dbo.servicepricingtype 
-                       WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
-        var servicePricingType = db.QuerySingle(SQLServicePricingType, providerID, positionID, pricingTypeID);
 
-        servicePricingTypeID = Convert.ToInt32(servicePricingType.ServicePricingTypeID);
+        if ((pricingTypeID == null || pricingTypeID == "") && (Request["advancer"] == "getestimate"))
+        {
+            ModelState.AddError("pricingTypeID", "The pricing type ID is required to make an estimation, please select one pricing type from the list(Testing error message)");
+            //TODO: add a log message
+        };
+
+        if (ModelState.IsValid && (Request["advancer"] == "getestimate"))
+        {
+            var db = Database.Open("sqlloco");
+ 
+            //Get the service pricing type relation
+            var SQLServicePricingType = @"SELECT ServicePricingTypeID 
+                           FROM dbo.servicepricingtype 
+                           WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
+            var servicePricingType = db.QuerySingle(SQLServicePricingType, providerID, positionID, pricingTypeID);
+
+            servicePricingTypeID = Convert.ToInt32(servicePricingType.ServicePricingTypeID);
+        
+            //TODO: SELECT HOURLY WAGE-> whrere is it stored?
             
-        //Read estimate profile from providerestimatevar 
-        var SQLSelectVar = @"SELECT pep.EstimateVarValue as varValue, ev.UserDescription, ev.Type  FROM dbo.providerestimateprofile pep
-                        JOIN dbo.estimatevar ev  ON ev.EstimateVarID = pep.EstimateVarID
-                        WHERE pep.ServicePricingTypeID=@0 AND pep.EstimateVarID=@1";
+            //Read estimate profile from providerestimatevar 
+            var SQLSelectVar = @"SELECT pep.EstimateVarValue as varValue, ev.UserDescription, ev.Type  FROM dbo.providerestimateprofile pep
+                            JOIN dbo.estimatevar ev  ON ev.EstimateVarID = pep.EstimateVarID
+                            WHERE pep.ServicePricingTypeID=@0 AND pep.EstimateVarID=@1";
               
-        if(ModelState.IsValid) {
             //Process simple inputs
             for (int i = 0; i < varIDs.Length; i++)
             {
                 estimateVarID = varIDs[i];
-               
-                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
-                
-                //Validate is a Number
-                var match = Regex.Match(varValues[i], @"^([0-9]*\.?[0-9]{1,2}?)+");
-                if(!match.Success && varValues[i]!=""){
-                    ModelState.AddError("varValue", estimateProfile.UserDescription+" must be a number");
-                }else{ 
-                    estimateVarValue = (varValues[i]!="" ? Convert.ToDecimal(varValues[i]):0);
-                } 
-                
-                //TODO get provider data for the varID           
-                if(estimateProfile.Type == "A"){
-                    A += estimateVarValue * Convert.ToDecimal(estimateProfile.varValue);
+
+                value = 0m;
+                dynamic estimateProfile;
+                try{ 
+                    estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, estimateVarID);
+                    //Validate is a Number
+                    try
+                    {
+                        value = Decimal.Parse(varValues[i]);
+                    }
+                    catch
+                    {
+                        ModelState.AddError("listValue", estimateProfile.UserDescription + " must be a number(Testing Error Message)");
+                        //TODO: add a log message
+                    }
+                    if (ModelState.IsValid)
+                    {
+
+                        //TODO get provider data for the varID           
+                        if (estimateProfile.Type == "A")
+                        {
+                            A += value * estimateProfile.varValue;
+                        }
+                        else if (estimateProfile.Type == "T")
+                        {
+                            T += value * estimateProfile.varValue;
+                        }
+                        else if (estimateProfile.Type == "M")
+                        {
+                            M *= estimateProfile.varValue;
+                        }
+                        else if (estimateProfile.Type == "E")
+                        {
+                            E += estimateProfile.varValue;
+                        }
+                    }
+                    //TODO update A M or E
+
+                }catch{
+                    ModelState.AddError("sql", "SQL error reading the provider pricing profile (Testing Error Message)");   
+                    //TODO: add a log message
                 }
-                else if(estimateProfile.Type == "M"){
-                    M *= estimateVarValue;
-                }
-                else if (estimateProfile.Type == "E")
-                {
-                    E += estimateVarValue;
-                }
-                
-                //TODO update A M or E
             }
             //Process radioList and dropdowns
             for (int i = 0; i < groupIDs.Length; i++)
             {
-               
+                value = 0m;
+                dynamic estimateProfile;
                 //For list variables the var ID is retrived in the value field -> listValue
-                var estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, listValues[i]);
+                try{
+                    estimateProfile = db.QuerySingle(SQLSelectVar, servicePricingTypeID, listValues[i]);
+                    //Validate is a Number
+                    try
+                    {
+                        value = Decimal.Parse(listValues[i]);
+                    }
+                    catch
+                    {
+                        ModelState.AddError("varValue", estimateProfile.UserDescription + " must be a number");
+                        //TODO: add a log message
+                    }
+                    if(ModelState.IsValid){
+                        //Update A M or E
+                        if (estimateProfile.Type == "A")
+                        {
+                            A += value * Decimal.Parse(estimateProfile.varValue);
+                        }
+                        else if (estimateProfile.Type == "T")
+                        {
+                            T += value * Decimal.Parse(estimateProfile.varValue);
+                        }
 
-                //Validate is a Number
-                var match = Regex.Match(estimateProfile.varValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
-                if (!match.Success && listValues[i] != "")
-                {
-                    ModelState.AddError("varValue", estimateProfile.UserDescription + " must be a number");
+                        else if (estimateProfile.Type == "M")
+                        {
+                            M *= estimateProfile.varValue;
+                        }
+                        else if (estimateProfile.Type == "E")
+                        {
+                            E += estimateProfile.varValue;
+                        }         
+                    }
+                }catch{
+                    ModelState.AddError("sql","SQL error reading the provider pricing profile (Testing Error Message)" );
+                    //TODO: add a log message
                 }
-                else
-                {
-                    estimateVarValue = (estimateProfile.varValue != "" ? Convert.ToDecimal(estimateProfile.varValue) : 0);
-                } 
-                
-                //Update A M or E
-                if (estimateProfile.Type == "A")
-                {
-                    A += estimateVarValue * Convert.ToDecimal(estimateProfile.varValue);
-                }
-                else if (estimateProfile.Type == "M")
-                {
-                    M *= estimateVarValue;
-                }
-                else if (estimateProfile.Type == "E")
-                {
-                    E += estimateVarValue;
-                }         
             }
+            result = ((A + (T * hourlyWage)) * M) + E;
+            db.Close();
         }
         //Caculate result and retrieve it
         if(ModelState.IsValid){
-            var result = (A*M)+E; 
-            Response.Redirect("~/en_US/PricingWizardPage.cshtml?EstimateResult=" + result + "&PositionID=" + positionID + "&ProviderID=" + providerID);
+            var ad = Request["advancer"];         
+         
+            if(Request["advancer"]=="getestimate"){
+                Response.Redirect("~/en_US/PricingWizardPage.cshtml?EstimateResult=" + result.ToString("N2") + "&PositionID=" + positionID + "&ProviderID=" + providerID);
+            }
+            if(Request["advancer"]=="continue"){
+                   Response.Redirect("~/en_US/PaymentsPageTest.cshtml?Amount="+Request["EstimateResult"]);
+            }
         }
-        db.Close();
     }
 }
 <!--This script paints the pricing variables for the selected pricing type-->
@@ -130,10 +206,10 @@
         <h1>Request free quote</h1>
 	    <form id="PricingWizard" action="" method="post">
 		    <img class="inset" src="~/img/media-placeholder.png" alt="" />
-		    <p>Tell us what you need</p>
+		    <p id="message1">Tell us what you need</p>
       
             <div class="pricingtype">
-                <label for="pricingtype"><b>Pincing Type</b></label>
+                <label id="pricingtypelabel"for="pricingtype"><b>Pincing Type</b></label>
                 <select id="pricingtype" name="pricingtype"></select>
             </div>
            
@@ -142,9 +218,10 @@
             <p id="result"><b>Estimated Cost:</b> </p>
            
             <div class="buttons">
-                <button id="advancer1" class="next fancy" type="submit" >Get Estimate</button>
-                <button id="advancer2" class="next fancy" type="submit">Continue</button>
-				<input type="submit" class="hidden" hidden='hidden' />
+                <button id="advancer1" name="advancer" value="getestimate"class="next fancy" type="submit" >Get Estimate</button>
+                <button id="advancer2" name="advancer" value ="continue" class="next fancy" type="submit">Continue</button>
+				<input type="submit" name="action" value="getestimate" class="hidden" hidden='hidden' />
+                <input type="submit" name="action" value="continue" class="hidden" hidden='hidden' />
 			</div>
         </form>
    </div>

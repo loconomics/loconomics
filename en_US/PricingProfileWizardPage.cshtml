@@ -14,10 +14,20 @@
     var estimateVarValue = "";
     var errors = "";
     var sysdate = DateTime.Now;
-    
-    
 
-    if(IsPost){
+
+    // Read product providerID.
+    if (providerID.IsEmpty())
+    {
+        ModelState.AddError("providerID", "Provider ID is required.");
+    }
+    // Read product positionID.
+    if (positionID.IsEmpty())
+    {
+        ModelState.AddError("positionID", "Position ID is required.");
+    }
+    
+    if(IsPost && ModelState.IsValid){
         
         var db = Database.Open("sqlloco");
         pricingTypeID = Request["pricingtype"];
@@ -26,16 +36,6 @@
         string[] listValues = Context.Request.Form.GetValues("listValue");
         string[] groupIDs = Context.Request.Form.GetValues("groupID");
      
-        // Read product providerID.
-        if (providerID.IsEmpty())
-        {
-            ModelState.AddError("providerID", "Provider ID is required.");
-        }
-        // Read product positionID.
-        if (positionID.IsEmpty())
-        {
-            ModelState.AddError("positionID", "Position ID is required.");
-        }
         // Read product providerID.
         if (pricingTypeID.IsEmpty())
         {
@@ -79,20 +79,30 @@
                 estimateVarValue = varValues[i];
                
                 if(estimateVarValue.IsEmpty()){
-                    ModelState.AddError("estimateVarValue", "estimate Variable Value is required.");
+                    ModelState.AddError("estimateVarValue", "estimate Variable Value is required.(Testing Error Message)");
                 }
                     //validate data
                     //Validate is a Number
-                      var match = Regex.Match(estimateVarValue, @"^([0-9]*\.?[0-9]{1,2}?)+");
-                      if(!match.Success){
-                          ModelState.AddError("estimateVarValue","The value must be a number");
-                      }else{ 
-                        if(newEstimateVar==null){
-                            db.Execute(SQLINSERT2, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
-                        }else{
-                            db.Execute(SQLUPDATE, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
-                        }
-                     }
+                try{
+                    if(!estimateVarValue.IsEmpty()){
+                        Decimal.Parse(estimateVarValue);
+                    }
+                }catch{
+                    ModelState.AddError("estimateVarValue","The value must be a number (Testing errors message)");
+                }
+                try{
+                    if (newEstimateVar == null)
+                    {
+                        db.Execute(SQLINSERT2, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, sysdate, "UserID:" + providerID);
+                    }
+                    else
+                    {
+                        db.Execute(SQLUPDATE, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
+                    }
+                }catch{
+                    ModelState.AddError("estimateVarValue","SQL error saving the estimation var value (Testing errors message)");
+                }
+
             }
         }
         db.Close();
