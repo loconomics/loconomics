@@ -1,7 +1,8 @@
-﻿@using Braintree
+@using Braintree
 @{
     //if (WebSecurity.IsAuthenticated)
     //{
+        Layout = "~/en_US/_SiteLayout.cshtml";
         var UserID = WebSecurity.CurrentUserId;
     /*}
     else
@@ -25,8 +26,8 @@
     var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Decimal.Parse(Amount)}, // key information about the transaction
                                                 "http://poorrichardsworkshop.com/loconomicsjb/en_US/PaymentsConfirmationTest");  // the redirect destination, in this case, the Confirm action below
 }
-    
-     <h3>Payment: @Amount $</h3>
+<div id="container" class="sign-up">    
+     <h1>Payment: @Amount $</h1>
 
     @* If at least one validation error exists, notify the user *@
     @Html.ValidationSummary(errors)
@@ -62,4 +63,4 @@
         <input id="transaction_submit" name="commit" type="submit" value="Submit" />
     </div>
     </form>
-
+</div> <!-- #container -->
