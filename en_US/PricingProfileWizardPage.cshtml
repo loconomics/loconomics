@@ -37,13 +37,21 @@
         string[] groupIDs = Context.Request.Form.GetValues("groupID");
      
         // Read product providerID.
+
         if (pricingTypeID.IsEmpty())
         {
             ModelState.AddError("pricingTypeID", "Pricing Type ID is required.");
         }
-        
+
         if(ModelState.IsValid) {
 
+            var db = Database.Open("sqlloco");
+            pricingTypeID = Request["pricingtype"];
+            string[] varValues = Context.Request.Form.GetValues("varValue");
+            string[] varIDs = Context.Request.Form.GetValues("varID");
+            string[] listValues = Context.Request.Form.GetValues("listValue");
+            string[] groupIDs = Context.Request.Form.GetValues("groupID");
+             
             var SQLISNEW = @"SELECT ServicePricingTypeID 
                             FROM dbo.servicepricingtype 
                             WHERE ProviderID=@0 and PositionID=@1 and PricingTypeID=@2";
@@ -104,8 +112,8 @@
                 }
 
             }
+            db.Close();
         }
-        db.Close();
     }
 }
 

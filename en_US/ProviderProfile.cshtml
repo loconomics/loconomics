@@ -9,19 +9,40 @@
     var Position= " ";
     Position =  Request.QueryString["Position"];
     var UserID = Convert.ToString(WebSecurity.CurrentUserId);
+    String[] reviewsdata={ProviderID,PositionID};
+
+    var rating1 = "0";
+    var rating2 = "0";
+    var rating3 = "0";
+    var rating4 = "0";
     
     var db = Database.Open("sqlloco");
-    var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email 
+    var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
                     FROM users a 
                     JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
-                    JOIN dbo.userprofile e ON  (a.userid = e.userid) 
+                    JOIN dbo.userprofile e ON  (a.userid = e.userid)
+                    LEFT JOIN dbo.ReviewScores rs ON (a.userid = rs.ProviderID)                     
                     WHERE a.userid = @0";
     var posrow = db.QuerySingle(profilesql,ProviderID);
-
+    try{
+        rating1 = Convert.ToString(posrow.Rating1);
+        rating2 = Convert.ToString(posrow.Rating2);
+        rating3 = Convert.ToString(posrow.Rating3);
+        rating4 = Convert.ToString(posrow.Rating4);
+    }catch{
+        //TODO
+    }
+    String[] rating1data = { "ProviderProfileRating1", rating1, "true" };
+    String[] rating2data = { "ProviderProfileRating2", rating2, "true" };
+    String[] rating3data = { "ProviderProfileRating3", rating3, "true" };
+    String[] rating4data = { "ProviderProfileRating4", rating4, "true" };    
+    
     var positionsql ="select distinct  d.ServiceAttributeCategoryID,d.ServiceAttributeCategory from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID where a.UserID = @0 and b.PositionID = @1 ";
     var positionrow =db.Query(positionsql,ProviderID,PositionID);
 
-    var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1"; 
+    var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1";
+
+    db.Close();
 } 
 
 <script type="text/javascript">
@@ -80,7 +101,7 @@
 	
 		<div id="profileHeader" class="clearfix">
 
-			<img class="profile-pic" src="../@posrow.Photo"/>
+			<img alt="provider photo" class="profile-pic" src="../@posrow.Photo"/>
 			<div class="wrap">
 	
 				<h1 class="profile-name">@posrow.Name</h1>
@@ -107,14 +128,14 @@
 		</div><!-- #cleaner -->
 		
 		<div id="gardener" class="current tab-body fancy">
-			<div class="tabbed buttons">
-				<ul class="tabs">
+			<div class="tabbed buttons" id="tabs">
+				<ul class="tabs" >
 					<li><a class="button profile fanciful current" href="#gardener-overview">Overview</a></li>
 					<li><a class="button profile fanciful" href="#gardener-reviews">Reviews</a></li>
 					<li><a class="button profile fanciful" href="#gardener-calendar">Calendar</a></li>
 					<li><a class="button profile fanciful" href="#gardener-map" onclick="initialize()">Map</a></li>
            			<li><a class="button profile fanciful" href="#gardener-message">Send me a message</a></li> 
-                    <li><a class="button profile fanciful" href="#inbox_grid" onclick="initialize()">Inbox</a></li>
+                    <li><a class="button profile fanciful" href="#inbox_grid">Inbox</a></li>
 				</ul>
 				<div id="gardener-overview" class="current tab-body">
 					<div class="rate">
@@ -131,51 +152,18 @@
 						<div class="feature review fancy">
 							<img src="../img/eg-profile-pic.jpg" alt="" />
 							<blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...<a href="#">more</a></blockquote>
-							<a class="button fanciful" href="#">see more reviews &raquo;</a>
+							<a class="button fanciful" id="reviews-link" href="">see more reviews &raquo;</a>
 						</div><!-- .feature -->
-					
-                        <table>
-							<tr>
-                                <td>
-                                    <input name="rating1" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating1" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating1" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating1" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating1" type="radio" class="star" disabled="disabled" checked="checked"/>
-                                </td>
-								<th>Professionalism</th>
-							</tr>
-							<tr>
-                                <td>
-				                    <input name="rating2" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating2" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating2" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating2" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating2" type="radio" class="star" disabled="disabled" checked="checked"/>
-							    </td>
-                           	    <th>Attention to detail</th>
-							</tr>
-							<tr>
-                                <td>
-				                    <input name="rating3" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating3" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating3" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating3" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating3" type="radio" class="star" disabled="disabled" checked="checked"/>
-                                </td>
-								<th>Trustworthiness</th>
-							</tr>
-							<tr>
-                                <td>
-				                    <input name="rating4" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating4" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating4" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating4" type="radio" class="star" disabled="disabled"/>
-                                    <input name="rating4" type="radio" class="star" disabled="disabled" checked="checked"/>
-                                </td>
-								<th>Quality of work</th>
-							</tr>
-						</table>
+
+                        @Html.Label("rating1")
+                        @RenderPage("~/en_US/StarRating.cshtml",@rating1data)
+                        @Html.Label("rating2")
+                        @RenderPage("~/en_US/StarRating.cshtml",@rating2data)
+                        @Html.Label("rating3")
+                        @RenderPage("~/en_US/StarRating.cshtml",@rating3data)
+                        @Html.Label("rating4")
+                        @RenderPage("~/en_US/StarRating.cshtml",@rating4data)
+
                   	<ul class="services"> 
                             @foreach(var c in positionrow){       
 							<li>
@@ -195,31 +183,10 @@
 						</ul>
 					</div><!-- .work -->
 				</div><!-- #gardener-services-->
+
 				<div id="gardener-reviews" class="tab-body">
-					<h3>Reviews</h3>
-					<ul class="reviews">
-						<li>
-							<div class="author">
-								<img class="thumb" src="../img/eg-profile-pic.jpg" />
-								<a href="#">Lauren L.</a>
-							</div>
-							<div class="wrap">
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-								<p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-							</div>
-						</li>
-						<li>
-							<div class="author">
-								<img class="thumb" src="../img/eg-profile-pic.jpg" />
-								<a href="#">Lauren L.</a>
-							</div>
-							<div class="wrap">
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-								<p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-							</div>
-						</li>
-					</ul>
-				</div><!-- #gardener-reviews -->
+                    @RenderPage("~/en_US/ReviewsGrid.cshtml", reviewsdata)
+                </div><!-- #gardener-reviews -->
 				
                 <div id="gardener-calendar" class="tab-body"> </div><!-- #gardener-calendar -->
 				
@@ -230,9 +197,6 @@
                 </div><!-- #gardener-map -->
    				
                 <div id="gardener-message" class="tab-body"> 
-                    <h1>
-                       <title>Request for Assistance</title>
-                    </h1>
                     <h2>Submit Email Request for Assistance</h2>
                     <form method="post" action="ProcessRequest.cshtml">
                         <div>
