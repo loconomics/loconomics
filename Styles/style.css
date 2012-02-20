@@ -306,10 +306,10 @@ ul.search-results table td { padding-right: 16px; }*/
 
 .profile-progress .progress-bar { float: none; }
 
-ul.reviews { padding: 0; margin: 0; font-size: .8em; }
+ul.reviews { width: 650px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
 ul.reviews li { position: relative; list-style-type: none; padding: 10px 0; margin: 0 0 10px 0; border-bottom: 1px dashed #ccc; }
 ul.reviews li div.author { float: left; }
-ul.reviews li div.author img { display: block; width: 75px; height: auto; }
+ul.reviews li div.author img { float: left; width: 45px; height: auto; }
 ul.reviews li div.wrap { margin-left: 100px; }
 ul.reviews li div.wrap p { margin-top: 0; }
 
@@ -433,10 +433,27 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.feature img { float: left; width: 45px; height: auto; }
 .profile #main div.feature blockquote { margin: 0 0 14px 54px; }
 
-.profile #main div.work ul.services { margin: 0; padding: 0; list-style-type: none; background: url('../img/notebookp.jpg') no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
+.profile #main div.work ul.services { margin-top: 24px; padding: 0; list-style-type: none; no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
 .profile #main div.work ul.services ul { list-style-image: url('../img/bullet.png'); }
-.profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
+.profile #main div.work ul.services dl { padding: 29px 10px; line-height: 182%; }
 .profile #main div.work ul.services dl ul { margin: 0; }
+
+.profile #main div.work ul.services-two {
+    color: #461864;
+    font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;
+    font-size: 16px;
+    list-style-type: none;
+    margin-top: -510px;
+    padding: 0;
+    position: absolute;
+    z-index: 5;
+}
+.profile #main div.work ul.services-two ul { list-style-image: url('../img/bullet.png'); }
+.profile #main div.work ul.services-two dl {
+    line-height: 182%;
+    padding: 29px 260px;
+}
+.profile #main div.work ul.services-two dl ul { margin: 0; }
 
 
 #searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
@@ -609,6 +626,43 @@ div.dp-popup td.disabled{cursor:default;}
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
+div.rating-cancel, div.star-rating {
+    background: none repeat scroll 0 0 transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 15px;
+    overflow: hidden;
+    text-indent: -999em;
+    width: 17px;
+}
+div.rating-cancel, div.rating-cancel a {
+    background: url("../img/googlestar-delete.gif") no-repeat scroll 0 -16px transparent;
+}
+div.star-rating, div.star-rating a {
+    background: url("../img/google-star.gif") no-repeat scroll 0 0 transparent;
+}
+div.rating-cancel a, div.star-rating a {
+    background-position: 0 0;
+    border: 0 none;
+    display: block;
+    height: 100%;
+    width: 16px;
+}
+div.star-rating-on a {
+    background-position: 0 -16px !important;
+}
+div.star-rating-hover a {
+    background-position: 0 -32px;
+}
+div.star-rating-readonly a {
+    cursor: default !important;
+}
+
+div.star-rating {
+    background: none repeat scroll 0 0 transparent !important;
+    overflow: hidden !important;
+}
 
 
 /* ==|== media queries ======================================================
