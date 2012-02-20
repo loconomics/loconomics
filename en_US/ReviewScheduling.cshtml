@@ -1,0 +1,50 @@
+﻿@using System.Web.Caching
+@using System.Net.Mail;
+@using System.Diagnostics;
+
+@functions { 
+
+    void RegisterCacheEntry(string DummyCacheItemKey, double time)
+    {  
+        HttpContext.Current.Cache.Insert( DummyCacheItemKey, "Test", null, 
+            DateTime.MaxValue, TimeSpan.FromMinutes(time), 
+            CacheItemPriority.Normal,
+            new CacheItemRemovedCallback( CacheItemRemovedCallback ) );
+    }    
+
+    void CacheItemRemovedCallback(string key, object value, CacheItemRemovedReason reason)
+    {
+     
+        SmtpClient client = new SmtpClient("mail.loconomics.com", 25);
+        client.EnableSsl = false;
+        client.Credentials = new NetworkCredential("automated@loconomics.com", "Loconomic$2011");
+        
+        MailAddress from = new MailAddress("automated@loconomics.com");
+        MailAddress to = new MailAddress("manuel.fontan.garcia@gmail.com");
+        MailMessage message = new MailMessage(from, to);
+
+        message.Body = "This is a test e-mail message sent using loconomics as a relay server ";
+        message.Subject = "Loconomics test email";
+
+        try
+        {
+            client.SendAsync(message,"testing");
+        }catch (Exception ex) {
+            Console.WriteLine("Exception is:" + ex.ToString());
+        }
+    }
+
+}
+@{
+    RegisterCacheEntry("dummyEntry", 180);
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing Caching and Helpers</title>
+    </head>
+    <body>
+    <h1>Testing automated tasks using Cache</h1>
+    </body>
+</html>
