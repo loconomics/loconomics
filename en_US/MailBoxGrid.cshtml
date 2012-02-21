@@ -10,7 +10,7 @@
     var messages = db.Query(query,UserID);
     var grid = new WebGrid(messages, ajaxUpdateContainerId: "inbox_grid");                    
 }
-//TODO: ADD REQUIRED COLUMNS (Ex: PHOTO...)
+@*TODO: ADD REQUIRED COLUMNS (Ex: PHOTO...)*@
 @grid.GetHtml(columns: grid.Columns(    
                                     grid.Column("FirstName", header:"From"),
                                     grid.Column("body", header:"Message Body")

@@ -149,8 +149,7 @@
 						    </table>
 					    </div><!-- .rate -->
 					    <div class="work">
-						    <div class="
-						    review fancy">
+						    <div class="review fancy">
 							    <img src="../img/eg-profile-pic.jpg" alt="" />
 							    <blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...<a href="#">more</a></blockquote>
 							    <a class="button fanciful" id="reviews-link" href="">see more reviews &raquo;</a>
@@ -162,28 +161,25 @@
                             @RenderPage("~/en_US/StarRating.cshtml",@rating2data)
                             @Html.Label("rating3")
                             @RenderPage("~/en_US/StarRating.cshtml",@rating3data)
-                          <!--JOSH EDIT: 18Feb. "Taking out 4th star rating"  @Html.Label("rating4")
-                            @RenderPage("~/en_US/StarRating.cshtml",@rating4data) -->
+                            @Html.Label("rating4")
+                            @RenderPage("~/en_US/StarRating.cshtml",@rating4data)
                         
-                            </div>
-					
                   	    <ul class="services"> 
-                                @foreach(var c in positionrow){       
+                            @foreach(var c in positionrow){       
 							    <li>
 								    <dl>
 									    <dt>@c.ServiceAttributeCategory:</dt>
 									    <dd>
 										    <ul>
-                                                  @foreach(var s in db.Query(positionattributesql,ProviderID,PositionID,c.ServiceAttributeCategoryID)){     
+                                                    @foreach(var s in db.Query(positionattributesql,ProviderID,PositionID,c.ServiceAttributeCategoryID)){     
 											    <li>@s.Name</li>
 										        }
 										    </ul>
 									    </dd>
 								    </dl>
 							    </li>
-                                }
-							
-						    </ul>
+                            }
+						 </ul>
                         <!--JOSH: 18Feb.  Adding 2nd column for Attribute Category -->
                         <ul class="services-two"> 
                                 @foreach(var c in positionrow){       
@@ -200,10 +196,9 @@
 								    </dl>
 							    </li>
                                 }
-							
-						    </ul>    
+						</ul>    
 					    </div><!-- .work -->
-				    </div><!-- #gardener-services-->
+				    </div><!-- #gardener-overview-->
 
 				    <div id="gardener-reviews" class="tab-body">
                         @RenderPage("~/en_US/ReviewsGrid.cshtml", reviewsdata)
