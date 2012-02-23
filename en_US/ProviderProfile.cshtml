@@ -1,4 +1,4 @@
-@{
+﻿@{
     Layout = "~/en_US/_SiteLayout.cshtml";
     var serviceType = Request["ServiceType"];
     var service = Request["Service"];          
@@ -161,8 +161,8 @@
                             @RenderPage("~/en_US/StarRating.cshtml",@rating2data)
                             @Html.Label("rating3")
                             @RenderPage("~/en_US/StarRating.cshtml",@rating3data)
-                            @Html.Label("rating4")
-                            @RenderPage("~/en_US/StarRating.cshtml",@rating4data)
+                            @*@Html.Label("rating4")
+                            @RenderPage("~/en_US/StarRating.cshtml",@rating4data)*@
                         
                   	    <ul class="services"> 
                             @foreach(var c in positionrow){       

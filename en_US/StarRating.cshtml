@@ -1,4 +1,4 @@
-@{
+﻿@{
     var name = PageData[0];
     var value = 0m;
     var errorMsg = "";
@@ -12,7 +12,8 @@
     {
         errorMsg = Exception.Message;
         userErrorMsg = "The rating value entered is not in valid format (Decimal expected)";
-        //TODO Error handling
+        ModelState.AddError("star rating", userErrorMsg);
+        //TODO ADD LOG MESSAGE
     }
     var checked025 = (Decimal.Compare(value, 0m) > 0 && (Decimal.Compare(value, 0.25m) <= 0)) ? "checked='checked'" : "";
     var checked05 = (Decimal.Compare(value, 0.25m) > 0 && (Decimal.Compare(value, 0.5m) <= 0)) ? "checked='checked'" : "";
