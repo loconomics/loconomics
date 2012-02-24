@@ -969,14 +969,18 @@ div.dp-popup td.disabled{cursor:default;}
     background-color: #def2f2;
 }
 .editable .folders > ul.tabs li {
-    background-image: url("../img/tab-editable-off-right.png");
+    background: url("../img/tab-editable-right.png") no-repeat top right;
+    background-position: 0 right;
+    padding-right: 22px;
+    padding-top: 0;
 }
 .editable .folders > ul.tabs li a{
     background-color: #def2f2;
 }
 .editable .folders > ul.tabs li.current,
 .editable .folders > ul.tabs li.current:hover {
-    background-image: url("../img/tab-editable-on-right.png");
+    background-image: url("../img/tab-editable-right.png");
+    background-position: right -22px !important;
 }
 .editable .folders > ul.tabs li.current a,
 .editable .folders > ul.tabs li.current:hover a {
@@ -985,7 +989,8 @@ div.dp-popup td.disabled{cursor:default;}
     border-bottom-color: #f5f5f5;
 }
 .editable .folders > ul.tabs li:hover {
-    background-image: url("../img/tab-editable-hover-right.png");
+    background-image: url("../img/tab-editable-right.png");
+    background-position: right -44px !important;
 }
 .editable .folders > ul.tabs li:hover a{
     background-color: #eff8f9;
