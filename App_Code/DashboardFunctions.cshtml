@@ -1,0 +1,64 @@
+﻿@functions {
+
+    /* General: some functions spliting some code from old 'provider-dashboard-profile.cshtml' file
+    */
+
+    /* Get a data row with the User information from the database
+    */
+    public static object GetUserRow() {
+
+        // Commented unused vars:
+        //var stringPosted = "Nothing";
+        //var theDate = DateTime.Now.ToString("yyyy-MM-dd");
+        
+        var db = Database.Open("sqlloco");
+        var sqluser = "exec GetUserDetails @0";
+        return db.QuerySingle(sqluser, WebSecurity.CurrentUserId);
+    }
+    /* Get a data object with the Positions rows of the user from the database
+    */
+    public static object GetUserPos(){
+        var db = Database.Open("sqlloco");
+        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
+        return db.Query(sqlpositions, WebSecurity.CurrentUserId);
+    }
+    /* Ensure that only register users enter here, redirecting to login page when appropiated.
+    */
+    public static void SecurePage() {
+        if (!WebSecurity.IsAuthenticated)
+            Response.Redirect("~/en_US/Account/Login?Redirect=" + System.Web.HttpContext.Current.Request.Url.AbsolutePath);
+    }
+    /* Function create with copying the code from the old 'provider-dashboard-profile.cshtml' file,
+        must be used in the appropiated Dashboard page by back-end code.
+    */
+    public static void ProcessProfileForm(){
+        if(IsPost){
+            var UserID = WebSecurity.CurrentUserId;
+            var db = Database.Open("sqlloco");
+            
+            var sqlupdatephoto ="update users set Photo = @0 where UserID = @1";
+            var sqlupdateabout ="update dbo.userprofilepositionadditional set ADD_Details = @0  where UserID = @1";
+            WebImage photo = null;
+            var newFileName = "";
+            var imagePath = "";
+            var imageThumbPath  = "";
+            var aboutMe = Request.Form["aboutMeText"];
+            photo = WebImage.GetImageFromRequest();
+            db.Query(sqlupdateabout,aboutMe,UserID);
+            if(photo != null){
+                newFileName = Guid.NewGuid().ToString() + "_" +
+                Path.GetFileName(photo.FileName);
+                imagePath = @"img\" + newFileName;
+                photo.Save(@"~\" + imagePath);
+                imageThumbPath = @"img\thumbs\" + newFileName;
+                photo.Resize(width: 180, height: 180, preserveAspectRatio: true,
+                preventEnlarge: true);
+                photo.Save(@"~\" + imageThumbPath);
+                db.Query(sqlupdatephoto,imageThumbPath,UserID);
+            }
+        }
+    }
+    public static string CssCurrent(string a, string b){
+        return (a == b ? "current" : "");
+    }
+}

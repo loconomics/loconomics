@@ -143,15 +143,94 @@ $(document).ready(function(){
 		$parent.children('.tabs').find('a').click(function(){
 			if ( $(this).hasClass('current') ) { return false; }
 			else {
-				$parent.children('.tabs').find('a').removeClass('current');
+				$parent.children('.tabs').find('li, a').removeClass('current');
 				$parent.children('.tab-body').removeClass('current');
 				var target = $(this).attr('href');
-				$(this).addClass('current');
+				$(this).addClass('current').parent().addClass('current');
 				$(target).addClass('current');
 				return false;
 			}
 		});
-	})
+	});
+    
+    /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
+    $('.autofill-submenu .current').each(function(){
+        var parentmenu = $(this);
+        // getting the submenu elementos from the tabs marked with class 'autofill-submenu-items'
+        var items = $('.autofill-submenu-items li');
+        // if there is items, create the submenu cloning it!
+        if (items.length > 0){
+            var submenu = document.createElement("ul");
+            parentmenu.append(submenu);
+            // Cloning without events:
+            var newitems = items.clone(false, false);
+            $(submenu).append(newitems);
+            
+            // We need attach events to maintain the tabbed interface working
+            // New Items (cloned) must change tabs:
+            newitems.find("a").click(function(){
+                // Trigger event in the original item
+                $("a[href='"+this.getAttribute("href")+"']", items).click();
+                // Change menu:
+                $(this).parent().parent().find("a").removeClass('current');
+                $(this).addClass('current');
+                // Stop event:
+                return false;
+            });
+            // Original items must change menu:
+            items.find("a").click(function(){
+                newitems.parent().find("a").removeClass('current').
+                filter("*[href='"+this.getAttribute("href")+"']").addClass('current');
+            });
+        }
+        
+        /** Dashboard Alerts carousel **/
+        $('#dashboard-alerts').each(function(){
+            var da = $(this);
+            
+            // We add the native array reverse function to jquery:
+            $.fn.reverse = [].reverse;
+            
+            function routeAlerts(event){
+                // Each row are 2 elements only
+                var set = da.find('ul > li');
+                
+                // If needed, we reverse the collection to go previous instead next
+                var anopts = {};
+                if (event.data.reverse){
+                    set.reverse();
+                    anopts = {direction: 'left'};
+                    anopth = {direction: 'right'};
+                } else {
+                    anopts = {direction: 'right'};
+                    anopth = {direction: 'left'};
+                }
+                
+                var v = 0;
+                for(var i = 0; i < set.length; i++){
+                    var seti = $(set[i]);               
+                    
+                    if(v < 2){
+                        // Must be visible elements, and not last elements
+                        if(seti.is(':visible') &&
+                           i < set.length-2){
+                            v++;
+                            seti.hide();
+                        }
+                    } else if(v < 4){
+                        v++;
+                        seti.show();
+                    } else if (v >= 4)
+                        break;
+                }
+                return false;
+            }
+            
+            da.find('.more.next').click({reverse: false}, routeAlerts);
+            da.find('.more.previous').click({reverse: true}, routeAlerts);
+        });
+        $('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
+    });
 
 });
 

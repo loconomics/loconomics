@@ -1,0 +1,134 @@
+﻿@{
+    DashboardFunctions.SecurePage();
+    
+    Layout = "_Layout.cshtml";
+    Page.Title = "Make your life better!";
+    
+    PageData["userow"] = DashboardFunctions.GetUserRow();
+    PageData["menu-item"] = "account";
+}
+
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a class="current" href="#account-personal">Personal</a></li>
+			<li><a href="#account-verification">Trust &amp; Verification</a></li>
+            <li><a href="#account-payments">Payments</a></li>
+            <li><a href="#account-taxes">Taxes</a></li>
+        </ul>
+
+		<div id="account-personal" class="tab-body current fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#account-personal-data">Name, Address, Phone</a></li>
+                <li><a class="button profile fanciful" href="#account-personal-bio">Bio</a></li>
+                <li><a class="button profile fanciful" href="#account-personal-photos">Photos</a></li>
+            </ul>
+            
+            <div id="account-personal-data" class="tab-body current">
+                Personal Data (Name, Address, Phone) <!-- TODO here must be the back-end content -->
+                <form>
+                    <ul>
+                        <li>
+                            <label>Name <input type="text" name="name" placeholder="Your name"/></label>
+                        </li>
+                        <li>
+                            <label for="sel">Options</label>
+                            <select name="sel" id="sel">
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label for="multi">Multi options</label>
+                            <select id="multi" name="multi" multiple="multiple">
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label>Description <textarea name="description"></textarea></label>
+                        </li>
+                        <li>
+                            <input type="radio" name="choice" id="radio1"/><label for="radio1">Radio 1</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="choice" id="radio2"/><label for="radio2">Radio 2</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="choice" id="radio3"/><label for="radio3">Radio 3</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="agree" id="agree"/><label for="agree">I agree</label>
+                        </li>
+                        <li>
+                            <input class="button" type="submit" value="Save"/>
+                            <input class="button" type="reset" value="Reset"/>
+                        </li>
+                    </ul>
+                </form>
+            </div><!-- #account-personal-data -->
+            <div id="account-personal-bio" class="tab-body">
+                Bio <!-- TODO here must be the back-end content -->
+            </div><!-- #account-personal-bio -->
+            <div id="account-personal-photos" class="tab-body">
+                Photos <!-- TODO here must be the back-end content -->
+            </div><!-- #account-personal-photos -->
+		</div><!-- #account-personal -->
+        
+		<div id="account-verification" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#account-verification-phone">Phone</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-address">Address</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-ssn">SSN</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-background">Background</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-facebook">Facebook</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-twitter">Twitter</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-linkedin">Linked-In</a></li>
+            </ul>
+            
+            <div id="account-verification-phone" class="tab-body current">
+                Phone <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-phone -->
+            <div id="account-verification-address" class="tab-body">
+                Address <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-address -->
+            <div id="account-verification-ssn" class="tab-body">
+                SSN <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-ssn -->
+            <div id="account-verification-background" class="tab-body">
+                Background <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-background -->
+            <div id="account-verification-facebook" class="tab-body">
+                Facebook <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-facebook -->
+            <div id="account-verification-twitter" class="tab-body">
+                Twitter <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-twitter -->
+            <div id="account-verification-linkedin" class="tab-body">
+                Linked-In <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-linkedin -->
+		</div><!-- #account-verification -->
+        
+		<div id="account-payments" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#account-payments-bankaccount">Bank Account</a></li>
+                <li><a class="button profile fanciful" href="#account-payments-transactionhistory">Transaction History</a></li>
+            </ul>
+            
+            <div id="account-payments-bankaccount" class="tab-body current">
+                Bank Account <!-- TODO here must be the back-end content -->
+            </div><!-- #account-payments-bankaccount -->
+            <div id="account-payments-transactionhistory" class="tab-body">
+                Transaction History <!-- TODO here must be the back-end content -->
+            </div><!-- #account-payments-transactionhistory -->
+		</div><!-- #account-payments -->
+        
+		<div id="account-taxes" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#account-taxes-w2docs">W-2/Autonomo documents</a></li>
+            </ul>
+            
+            <div id="account-taxes-w2docs" class="tab-body current">
+                W-2/Autonomo documents <!-- TODO here must be the back-end content -->
+            </div><!-- #account-taxes-w2docs -->
+		</div><!-- #account-taxes -->

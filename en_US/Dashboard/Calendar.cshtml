@@ -1,0 +1,34 @@
+﻿@{
+    DashboardFunctions.SecurePage();
+    
+    Layout = "_Layout.cshtml";
+    Page.Title = "Make your life better!";
+    
+    PageData["userow"] = DashboardFunctions.GetUserRow();
+    PageData["menu-item"] = "calendar";
+}
+
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a class="current" href="#calendar">Calendar</a></li>
+        </ul>
+
+		<div id="calendar" class="tab-body current fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#calendar-pending">Pending</a></li>
+                <li><a class="button profile fanciful" href="#calendar-confirmed">Confirmed</a></li>
+                <li><a class="button profile fanciful" href="#calendar-past">Past</a></li>
+            </ul>
+            
+            <div id="calendar-pending" class="tab-body current">
+                Pending <!-- TODO here must be the back-end content -->
+			    <iframe src="http://www.poorrichardsworkshop.com/LoconomicsSvcs/htmlpage3.html" width="670" height="450" borderwidth="0" style="border:none;"></iframe>
+            </div><!-- #calendar-pending -->
+            <div id="calendar-confirmed" class="tab-body">
+                Confirmed <!-- TODO here must be the back-end content -->
+            </div><!-- #calendar-confirmed -->
+            
+            <div id="calendar-past" class="tab-body">
+                Past <!-- TODO here must be the back-end content -->
+            </div><!-- #calendar-past -->
+		</div><!-- #calendar -->
+        

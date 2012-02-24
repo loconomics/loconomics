@@ -1,0 +1,72 @@
+﻿@{
+    DashboardFunctions.SecurePage();
+    
+    Layout = "_Layout.cshtml";
+    Page.Title = "Make your life better!";
+    
+    PageData["userow"] = DashboardFunctions.GetUserRow();
+    PageData["menu-item"] = "tools";
+}
+
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a class="current" href="#tools-marketing">Marketing</a></li>
+			<li><a href="#tools-promotions">Promotions</a></li>
+            <li><a href="#tools-reporting">Reporting</a></li>
+            <li><a href="#tools-taxes">Taxes</a></li>
+        </ul>
+
+		<div id="tools-marketing" class="tab-body fancy tabbed buttons current">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#tools-marketing-referrals">Referrals</a></li>
+                <li><a class="button profile fanciful" href="#tools-marketing-socialmedia">Social Media</a></li>
+            </ul>
+            
+            <div id="tools-marketing-referrals" class="tab-body current">
+                Referrals <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-marketing-referrals -->
+            <div id="tools-marketing-socialmedia" class="tab-body">
+                Social Media <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-marketing-socialmedia -->
+		</div><!-- #tools-marketing -->
+        
+		<div id="tools-promotions" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#tools-promotions-option1">Button Name 1</a></li>
+                <li><a class="button profile fanciful" href="#tools-promotions-option2">Button Name 2</a></li>
+            </ul>
+            
+            <div id="tools-promotions-option1" class="tab-body current">
+                Button Name 1 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-promotions-option1 -->
+            <div id="tools-promotions-option2" class="tab-body">
+                Button Name 2 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-promotions-option2 -->
+		</div><!-- #tools-promotions -->
+        
+		<div id="tools-reporting" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#tools-reporting-option1">Button Name 1</a></li>
+                <li><a class="button profile fanciful" href="#tools-reporting-option2">Button Name 2</a></li>
+            </ul>
+            
+            <div id="tools-reporting-option1" class="tab-body current">
+                Button Name 1 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-reporting-option1 -->
+            <div id="tools-reporting-option2" class="tab-body">
+                Button Name 2 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-reporting-option2 -->
+		</div><!-- #tools-reporting -->
+        
+		<div id="tools-taxes" class="tab-body fancy tabbed buttons">
+            <ul class="tabs">
+                <li><a class="button profile fanciful current" href="#tools-taxes-option1">Button Name 1</a></li>
+                <li><a class="button profile fanciful" href="#tools-taxes-option2">Button Name 2</a></li>
+            </ul>
+            
+            <div id="tools-taxes-option1" class="tab-body current">
+                Button Name 1 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-taxes-option1 -->
+            <div id="tools-taxes-option2" class="tab-body">
+                Button Name 2 <!-- TODO here must be the back-end content -->
+            </div><!-- #tools-taxes-option2 -->
+		</div><!-- #tools-taxes -->

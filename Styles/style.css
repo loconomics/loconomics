@@ -131,7 +131,7 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
 
 button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
 
-textarea { overflow: auto; vertical-align: top; resize: vertical; }
+textarea { overflow: auto; vertical-align: top; resize: vertical; width: 500px; }
 
 input:valid, textarea:valid {  }
 input:invalid, textarea:invalid { background-color: #f0dddd; }
@@ -208,6 +208,16 @@ form input.date-pick { width: 90px; }
 
 form.stepped fieldset.number-values input { width: 20px; padding: 0 6px; }
 
+form ul{
+    list-style: none;
+}
+form ul li{
+    padding: 10px 0;
+}
+form label{
+    padding: 0 10px;
+}
+
 .replace { display: inline-block; height: 0; overflow: hidden; background-repeat: no-repeat; background-position: 0 0; }
 a.icon { width: 27px; padding-top: 27px; }
 a.icon:hover { background-position: 0 -27px; }
@@ -216,15 +226,35 @@ a.twitter { background-image: url('../img/icon-twitter.png'); }
 a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
 a.cart:hover { background-position: 10px -25px; }
 
-button, a.button { 
+input.button, button, a.button { 
 	display: inline-block; padding: 0 1.8em; 
-	background: #00989a; color: #fff; border: none; /* undo button styling */
+	background: #00989a; color: #fff; border: none;
 	font-size: .8em; line-height: 180%; text-decoration: none;
 }
-button:hover, a.button:hover, button:focus, a.button:focus { background-color: #99C027; border: none; outline: none; }
+input.button:hover, button:hover, a.button:hover,
+input.button:focus, button:focus, a.button:focus { background-color: #99C027; border: none; outline: none; }
 
-button.next { display: inline-block; padding: 0 1em; border: none; background: #b5e1e2; color: #00989a; font-size: 1.6em; line-height: 185%; }
-button.next:hover, button.next:focus { background: #00989a; color: #fff; }
+input.button.next, button.next { display: inline-block; padding: 0 1em; border: none; background: #b5e1e2; color: #00989a; font-size: 1.6em; line-height: 185%; }
+input.button.next:hover, button.next:hover,
+input.button:focus, button.next:focus { background: #00989a; color: #fff; }
+
+input.button{ padding-top: 2px; padding-bottom: 2px;}
+
+/*input[type="button"], button {
+    background: #b5e1e2;
+    border: 1px solid #00989A;
+    border-radius: 22px;
+    -moz-border-radius: 22px;
+    -webkit-border-radius: 22px;
+    -o-border-radius: 22px;
+    padding: 2px 23px;
+    color: #00989A;
+    font-size: 0.8em;
+}
+input[type="button"]:hover, button:hover {
+    background-color: #00989A;
+    color: White;
+}*/
 
 a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
@@ -306,10 +336,10 @@ ul.search-results table td { padding-right: 16px; }*/
 
 .profile-progress .progress-bar { float: none; }
 
-ul.reviews { width: 650px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
+ul.reviews { padding: 0; margin: 0; font-size: .8em; }
 ul.reviews li { position: relative; list-style-type: none; padding: 10px 0; margin: 0 0 10px 0; border-bottom: 1px dashed #ccc; }
 ul.reviews li div.author { float: left; }
-ul.reviews li div.author img { float: left; width: 45px; height: auto; }
+ul.reviews li div.author img { display: block; width: 75px; height: auto; }
 ul.reviews li div.wrap { margin-left: 100px; }
 ul.reviews li div.wrap p { margin-top: 0; }
 
@@ -357,18 +387,17 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 /* Page Structure */
 
-#container, footer, header .wrap { width: 1000px; margin: 0 auto; text-align: left; }
-#container { position: relative; padding: 200px 0 100px 0; }
+#container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
+#container { position: relative; padding: 155px 0 100px 0; }
 
 #main { float: left; width: 670px; }
 #secondary { margin-left: 712px; }
 
 .sign-up #main { float: none; width: auto; }
 
-.dashboard #main { float: right; width: 732px; }
-.dashboard #secondary { margin: 0 774px 0 0; }
+/*-- Dashboard structure at bottom --*/
 
-.profile #main { width: 100%; }
+.profile #main { /* IagoSRL: I consider this a mistake, if not, descomment-me::  width: 100%; */ }
 
 .search #main { float: right; width: 730px; }
 .search #secondary { margin: 0 765px 0 0; }
@@ -397,7 +426,12 @@ header dl dd {
    -webkit-border-bottom-left-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
    border-bottom-left-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */ 
    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; }
-header dl.user-nav dt, header dl.user-nav dd { width: 170px; }
+header dl.user-nav dt, header dl.user-nav dd {
+    width: 170px; 
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 header dl:hover dd { display: block; }
 header dl dd a { display: block; }
 header dl dd a:hover { text-decoration: underline; }
@@ -433,28 +467,10 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.feature img { float: left; width: 45px; height: auto; }
 .profile #main div.feature blockquote { margin: 0 0 14px 54px; }
 
-.profile #main div.work ul.services { margin-top: 24px; padding: 0; list-style-type: none; no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
+.profile #main div.work ul.services { margin: 0; padding: 0; list-style-type: none; background: url('../img/notebookp.jpg') no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
 .profile #main div.work ul.services ul { list-style-image: url('../img/bullet.png'); }
-.profile #main div.work ul.services dl { padding: 29px 10px; line-height: 182%; }
+.profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
 .profile #main div.work ul.services dl ul { margin: 0; }
-
-.profile #main div.work ul.services-two {
-    color: #461864;
-    font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;
-    font-size: 16px;
-    list-style-type: none;
-    margin-top: -510px;
-    padding: 0;
-    position: absolute;
-    z-index: 5;
-}
-.profile #main div.work ul.services-two ul { list-style-image: url('../img/bullet.png'); }
-.profile #main div.work ul.services-two dl {
-    line-height: 182%;
-    padding: 29px 260px;
-}
-.profile #main div.work ul.services-two dl ul { margin: 0; }
-
 
 #searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
 #searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
@@ -626,43 +642,6 @@ div.dp-popup td.disabled{cursor:default;}
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
-div.rating-cancel, div.star-rating {
-    background: none repeat scroll 0 0 transparent;
-    cursor: pointer;
-    display: block;
-    float: left;
-    height: 15px;
-    overflow: hidden;
-    text-indent: -999em;
-    width: 17px;
-}
-div.rating-cancel, div.rating-cancel a {
-    background: url("../img/googlestar-delete.gif") no-repeat scroll 0 -16px transparent;
-}
-div.star-rating, div.star-rating a {
-    background: url("../img/google-star.gif") no-repeat scroll 0 0 transparent;
-}
-div.rating-cancel a, div.star-rating a {
-    background-position: 0 0;
-    border: 0 none;
-    display: block;
-    height: 100%;
-    width: 16px;
-}
-div.star-rating-on a {
-    background-position: 0 -16px !important;
-}
-div.star-rating-hover a {
-    background-position: 0 -32px;
-}
-div.star-rating-readonly a {
-    cursor: default !important;
-}
-
-div.star-rating {
-    background: none repeat scroll 0 0 transparent !important;
-    overflow: hidden !important;
-}
 
 
 /* ==|== media queries ======================================================
@@ -701,4 +680,358 @@ div.star-rating {
   @page { margin: 0.5cm; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
+}
+
+/* ====== Dashboard and editable pages ===========
+   ====== IagoSRL for Loconomics S.L. ============
+   == (some changes were made throughout the =====
+   ==  file to match organization) ===============
+   =============================================== */
+
+/*** Dashboard specific ***/
+/* Extra padding when there is non tabbed content inside tab */
+.dashboard .folders > .tab-body {
+    padding-top: 25px;
+}
+/* Enforce padding top for tabbed content inside tab */
+.dashboard .folders > .tab-body.tabbed {
+    padding-top: 20px;
+}
+.dashboard #highlights,
+.dashboard #dashboard-help,
+.dashboard #main{
+    margin: 0 0 0 215px;
+    width: 745px;
+}
+.dashboard #main { 
+    margin-top: 12px;
+    /* next padding-bottom can be' not needed', but
+       remember us that there is an extra space because
+       the relatives tab-page inside #main and help us
+       when we set space between main and container without
+       overlap the content */
+    padding-bottom: 20px;
+}
+.dashboard #container {
+    padding-bottom: 60px;
+}
+.dashboard #highlights{
+    min-height: 26px;
+}
+.dashboard #highlights h1.greeting{
+    font-size: 1.4em;
+    color: #4cb7b8;
+    float: left;
+    margin: 0;
+}
+.dashboard .profile-progress {
+    float: right;
+}
+.dashboard .profile-progress{
+    font-size: 1.1em;
+    color: #4cb7b8;
+}
+.dashboard .profile-progress .percent-done{
+    color: #ae637b;
+}
+.dashboard .profile-progress .progress-bar{
+    display: inline-block;
+}
+.dashboard div.progress-bar .total,
+.dashboard div.progress-bar .total .percent-done{
+    height: 24px;
+}
+.dashboard .progress-bar .total,
+.dashboard .progress-bar .total .percent-done{
+    border-radius: 20px 20px 20px 20px;
+    -moz-border-radius: 20px 20px 20px 20px;
+    -o-border-radius: 20px 20px 20px 20px;
+    -webkit-border-radius: 20px 20px 20px 20px;
+}
+.dashboard #avatar{
+    width: 186px;
+    height: 186px;
+    overflow: hidden;
+    
+    position: absolute;
+    top: 155px;
+    left: 0;
+}
+.dashboard #changephoto{
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 25px 25px 25px 25px;
+    color: black;
+    display: block;
+    font-size: 0.8em;
+    left: 60px;
+    padding: 0 15px;
+    position: absolute;
+    text-decoration: none;
+    top: 305px;
+}
+.dashboard #changephoto:hover{
+    background-color: White;
+}
+#dashboard-help .skip {
+    display: none;
+}
+#dashboard-help p{
+    margin: 2px 0;
+    font-size: .9em;
+}
+#dashboard-alerts {
+    text-align: center;
+    height: 140px;
+    overflow: hidden;
+}
+#dashboard-alerts ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+    text-align: left;
+    width: 637px;
+    height: 140px;
+    overflow: hidden;
+}
+#dashboard-alerts li{
+    display: inline-block;
+    width: 286px;
+    height: 120px;
+    border: 5px solid #daf0f1;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -o-border-radius: 12px;
+    padding: 5px 10px;
+}
+#dashboard-alerts h5{
+    font-size: .9em;
+    color: #ae637b;
+    margin: 0;
+}
+#dashboard-alerts p{
+    font-size: .8em;
+    line-height: 1.4em;
+    padding: 0 0 0 75px;
+    background: url('../img/Dashboard-alert.png') no-repeat left center;
+    display: block;
+    height: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#dashboard-alerts li a.more,
+#dashboard-alerts li a.more:link,
+#dashboard-alerts li a.more:visited{
+    color: #00989a;
+    text-decoration: none;
+    font-style: italic;
+    font-weight: bold;
+    text-align: right;
+    display: block;
+}
+#dashboard-alerts li a.more:hover{
+    color: #b5e1e2;
+}
+#dashboard-alerts > .more {
+    text-indent: -9999px;
+    color: White;
+    display: inline-block;
+    height: 140px;
+    width: 46px;
+    vertical-align: top;
+    text-decoration: none;
+    background: no-repeat center center;
+}
+#dashboard-alerts > .more.previous {
+    background-image: url('../img/dashboard-previous-alerts-off.png');
+}
+#dashboard-alerts > .more.next {
+    background-image: url('../img/dashboard-next-alerts-off.png');
+}
+#dashboard-alerts > .more.previous:hover {
+    background-image: url('../img/dashboard-previous-alerts-on.png');
+}
+#dashboard-alerts > .more.next:hover {
+    background-image: url('../img/dashboard-next-alerts-on.png');
+}
+.dashboard #nav {
+    left: 0;
+    position: absolute;
+    top: 341px;
+    width: 186px;
+    overflow: hidden;
+}
+.dashboard #profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #e8e8e8;
+}
+.dashboard #profile-menu > li {
+    border: 1px solid #c9c9c9;    
+}
+.dashboard #profile-menu li a{
+    display: block;
+    padding: 8px 15px;
+    font-size: .95em;
+}
+.dashboard #profile-menu li a,
+.dashboard #profile-menu li a:link,
+.dashboard #profile-menu li a:visited{
+    color: #00989a;
+    text-decoration: none;
+}
+.dashboard #profile-menu > li.current{
+    background-color: #b5e1e2;
+}
+.dashboard #profile-menu > li.current > a{
+    font-weight: bold;
+}
+.dashboard #profile-menu li a:hover{
+    background-color: #ccfeff;
+}
+
+.dashboard #profile-menu ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.dashboard #profile-menu ul li a{
+    border: none;
+    padding: 0 15px 0 30px;
+    margin: 0;
+    height: auto;
+}
+.dashboard #profile-menu ul a.current{
+    font-weight: bold;
+}
+
+.dashboard #secondary {
+}
+
+/*** Pages with editable content -like personal dashboard- have differents
+   colors.
+    Replace colors: 
+    #A190AF -> #b5e1e2
+    #461864 -> #00989a
+    #DBD5E0 -> #daf0f1
+ ***/
+   
+/** tabs **/
+.editable .folders > .tab-body {
+    border-color: #00989a;
+}
+
+.editable .folders > ul.tabs li {
+    background: url('../img/tab-editable-off.png') no-repeat top right; 
+    padding-right: 22px;
+    padding-top: 0;
+}
+.editable .folders > ul.tabs li a {
+	display: block;
+/*    width: 118px;*/
+    width: auto;
+    height: auto; 
+	background-image: none !important;
+	line-height: 15px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #461864;
+	padding-top: 3px;
+    padding-left: 10px;
+    text-align: center;
+    
+    border-color: #00989A;
+    border-style: solid;
+    border-width: 2px 0 2px 2px;
+    border-radius: 10px 0 0 0;
+    background-color: #def2f2;
+}
+.editable .folders > ul.tabs li {
+    background-image: url("../img/tab-editable-off-right.png");
+}
+.editable .folders > ul.tabs li a{
+    background-color: #def2f2;
+}
+.editable .folders > ul.tabs li.current,
+.editable .folders > ul.tabs li.current:hover {
+    background-image: url("../img/tab-editable-on-right.png");
+}
+.editable .folders > ul.tabs li.current a,
+.editable .folders > ul.tabs li.current:hover a {
+    background-color: #f5f5f5;
+    padding-top: 3px;
+    border-bottom-color: #f5f5f5;
+}
+.editable .folders > ul.tabs li:hover {
+    background-image: url("../img/tab-editable-hover-right.png");
+}
+.editable .folders > ul.tabs li:hover a{
+    background-color: #eff8f9;
+}
+
+/** buttons **/
+.editable a.profile,
+.editable a.profile.current:hover,
+.editable a.profile.current:focus,
+.editable button.search-again:hover,
+.editable a.view:hover {
+    background-color: #b5e1e2;
+    color: #00989A;
+}
+.editable a.profile.current,
+.editable a.profile:hover,
+.editable a.profile:focus,
+.editable button.search-again,
+.editable a.view {
+    background: #00989a;
+    color: White;
+}
+
+/** decoration **/
+.editable .profile #main div.rate p.rate {
+    border-color: #00989a;
+    color: #00989a;
+}
+.editable .profile #main div.feature {
+    border-color: #daf0f1;
+}
+
+/** texts **/
+.editable .profile #main div.work ul.services {
+    color: #00989a;
+}
+.editable .profile #main div.work ul.services ul {
+    list-style-image: url("../img/bullet-editable.png");
+}
+.editable h1.profile-name {
+    color: #00989a;
+}
+
+/** Some classes for tables of data in view (normal) and edit (with class grid) mode **/
+.editable table.view{
+    border-collapse: collapse;
+    width: 100%;
+    font-size: .9em;
+}
+.editable table.view caption{
+    font-size: 1.2em;
+}
+.editable table.view td{
+    padding: 2px 4px;
+    border: 1px solid #00989a;
+}
+.editable table.view th{
+    padding: 3px 6px;
+    text-align: center;
+    border: 1px solid #00989a;
+}
+.editable table.view td.actions{
+    text-align: center;
+    white-space: nowrap;
+    width: 1%;
+}
+.editable table.grid{
+    
 }
