@@ -16,63 +16,43 @@
         </ul>
 
 		<div id="account-personal" class="tab-body current fancy tabbed buttons">
-            <ul class="tabs">
-                <li><a class="button profile fanciful current" href="#account-personal-data">Name, Address, Phone</a></li>
-                <li><a class="button profile fanciful" href="#account-personal-bio">Bio</a></li>
-                <li><a class="button profile fanciful" href="#account-personal-photos">Photos</a></li>
-            </ul>
-            
-            <div id="account-personal-data" class="tab-body current">
-                Personal Data (Name, Address, Phone) <!-- TODO here must be the back-end content -->
-                <form>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+            <form action="" method="post" id="personal">
+                <fieldset id="personal-fs-contactinformation">
+                    <legend>Contact Information:</legend>
                     <ul>
-                        <li>
-                            <label>Name <input type="text" name="name" placeholder="Your name"/></label>
-                        </li>
-                        <li>
-                            <label for="sel">Options</label>
-                            <select name="sel" id="sel">
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
-                            </select>
-                        </li>
-                        <li>
-                            <label for="multi">Multi options</label>
-                            <select id="multi" name="multi" multiple="multiple">
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
-                            </select>
-                        </li>
-                        <li>
-                            <label>Description <textarea name="description"></textarea></label>
-                        </li>
-                        <li>
-                            <input type="radio" name="choice" id="radio1"/><label for="radio1">Radio 1</label>
-                        </li>
-                        <li>
-                            <input type="radio" name="choice" id="radio2"/><label for="radio2">Radio 2</label>
-                        </li>
-                        <li>
-                            <input type="radio" name="choice" id="radio3"/><label for="radio3">Radio 3</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="agree" id="agree"/><label for="agree">I agree</label>
-                        </li>
-                        <li>
-                            <input class="button" type="submit" value="Save"/>
-                            <input class="button" type="reset" value="Reset"/>
-                        </li>
+                        <li><label for="personal-firstname">First Name:</label><input id="personal-firstname" type="text" name="firstname" placeholder="Your name"/></li>
+                        <li><label for="personal-middleinitial">Middle Initial:</label><input id="personal-middleinitial" type="text" name="middleinitial"/></li>
+                        <li><label for="personal-lastname">Last Name:</label><input id="personal-lastname" type="text" name="lastname"/></li>
+                        <li><label for="personal-mobilephone">Mobile Phone:</label><input id="personal-mobilephone" type="text" name="mobilephone"/></li>
+                        <li><label for="personal-alternatephone">Alternate Phone:</label><input id="personal-alternatephone" type="text" name="alternatephone"/></li>
                     </ul>
-                </form>
-            </div><!-- #account-personal-data -->
-            <div id="account-personal-bio" class="tab-body">
-                Bio <!-- TODO here must be the back-end content -->
-            </div><!-- #account-personal-bio -->
-            <div id="account-personal-photos" class="tab-body">
-                Photos <!-- TODO here must be the back-end content -->
-            </div><!-- #account-personal-photos -->
+                </fieldset>
+                <fieldset id="personal-fs-homeaddress">
+                    <legend>Home Address:</legend>
+                    <ul>
+                        <li><label for="personal-streetaddress1">Street Address 1:</label><input id="personal-streetaddress1" type="text" name="streetaddress1"/></li>
+                        <li><label for="personal-streetaddress2">Street Address 2:</label><input id="personal-streetaddress2" type="text" name="streetaddress2"/></li>
+                        <li><label for="personal-city">City:</label><input id="personal-city" type="text" name="city"/></li>
+                        <li><label for="personal-state">State:</label>
+                            <select id="personal-state" name="state">
+                                <option value="ca">California</option>
+                            </select>
+                        </li>
+                        <li><label for="personal-zipcode">Zip Code:</label><input id="personal-zipcode" type="text" name="zipcode"/></li>
+                    </ul>
+                </fieldset>
+                <fieldset id="personal-fs-publicbio">
+                    <legend>Public Bio:</legend>
+                    <ul>
+                        <li><label for="personal-publicbio">Public Bio:</label><textarea id="personal-publicbio" name="publicbio"></textarea></li>
+                    </ul>
+                </fieldset>
+                <fieldset id="personal-actions">
+                        <input class="button" type="submit" value="Save"/>
+                        <input class="button" type="reset" value="Reset"/>
+                </fieldset>
+            </form>
 		</div><!-- #account-personal -->
         
 		<div id="account-verification" class="tab-body fancy tabbed buttons">

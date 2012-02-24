@@ -160,7 +160,7 @@ Orange 	#E95D0F
 Yellow 	#F0B600
 */
 
-body { color: #666; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; line-height: 150%; text-align: center; }
+body { color: #666; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
 
 a { color: #00989a; }
 a:visited { color: #999999; }
@@ -198,6 +198,9 @@ form input[type="text"], form input[type="password"], form textarea {
     line-height: 185%;
     padding: 0 1.4em;
     width: 200px;
+}
+textarea{
+    line-height: 1.5em;
 }
 form input[type="text"]:focus, form input[type="password"]:focus, form textarea:focus { 
     background: #b5e1e2;
@@ -831,7 +834,7 @@ div.dp-popup td.disabled{cursor:default;}
 }
 #dashboard-alerts p{
     font-size: .8em;
-    line-height: 1.4em;
+    line-height: 1.5em;
     padding: 0 0 0 75px;
     background: url('../img/Dashboard-alert.png') no-repeat left center;
     display: block;
@@ -927,6 +930,50 @@ div.dp-popup td.disabled{cursor:default;}
 }
 
 .dashboard #secondary {
+}
+
+/*** Dashboard forms ***/
+.dashboard form fieldset{
+    margin: 30px 0 10px 0;
+    padding: 0;
+}
+.dashboard form legend{
+    font-weight: bold;
+}
+.dashboard form ul{
+    padding: 0;
+    margin: 0;
+}
+.dashboard form li{
+    padding: 0;
+    margin: 6px 0;
+}
+.dashboard form li label{
+    min-width: 120px;
+    display: inline-block;
+}
+.dashboard form li input, .dashboard form li select, .dashboard form li textarea{
+    width: 120px;
+}
+.dashboard form li select{
+    /*margin: 0 1.4em;*/
+    width: 150px;
+}
+
+/** Form: personal **/
+#personal-fs-contactinformation,
+#personal-fs-homeaddress{
+    display: inline-block;
+    vertical-align: top;
+    width: 345px;
+}
+#personal-fs-publicbio label{
+    display: none;
+}
+#personal-publicbio{
+    width: 600px;
+    height: 8em;
+    margin: 0 10px;
 }
 
 /*** Pages with editable content -like personal dashboard- have differents
