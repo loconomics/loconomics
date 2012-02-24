@@ -184,12 +184,30 @@ dd { margin: 0; }
 
 form fieldset, table.form td { padding: .5em .5em .5em 0; }
 
-form input[type="text"], form input[type="password"] { 
-	display: inline-block; padding: 0 1.4em; width: 200px; 
-	border: none; background: #b5e1e2; color: #00989a; font-size: .9em; line-height: 185%;
+input, select, textarea{
+    font-size: 0.9em;
+    color: black;
 }
-form input[type="text"]:focus, form input[type="password"]:focus { background: #99C027; color: #fff; border: none; outline: none; } 
-form input[type="text"].error, form input[type="password"].error { background: #8B2143; color: #fff; }
+
+form input[type="text"], form input[type="password"], form textarea { 
+    background-color: White;
+    border: 1px solid #62bdbe;
+    border-bottom-width: 2px;
+    border-radius: 20px;
+    display: inline-block;
+    line-height: 185%;
+    padding: 0 1.4em;
+    width: 200px;
+}
+form input[type="text"]:focus, form input[type="password"]:focus, form textarea:focus { 
+    background: #b5e1e2;
+    outline: none;
+    border-color: #b5e1e2;
+} 
+form input[type="text"].error, form input[type="password"].error { 
+    background: #8B2143;
+    color: #fff;
+}
 
 form.stepped input[type="submit"] {
 	background : url("../img/button-next.gif") no-repeat 0 0;
@@ -201,7 +219,8 @@ form.stepped input[type="submit"] {
 }
 form.stepped input[type="submit"]:hover { background-position: 0 -48px; }
 
-form select:focus, form input[type="checkbox"]:focus { outline: #99C027 solid 2px; }
+/* #99c027 */
+form select:focus, form input[type="checkbox"]:focus, form input[type="radio"]:focus { outline: #b5e1e2 solid 2px; }
 
 form input.time { width: 40px; }
 form input.date-pick { width: 90px; }
@@ -937,7 +956,8 @@ div.dp-popup td.disabled{cursor:default;}
 	line-height: 15px;
     font-size: 12px;
     text-decoration: none;
-    color: #461864;
+    color: #00989a;
+    font-weight: bold;
 	padding-top: 3px;
     padding-left: 10px;
     text-align: center;
