@@ -1,6 +1,15 @@
-﻿Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
 
-<form action="#" method="post" class="positionservices">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+
+<form action="#" method="post" class="positionservices" id="position#@(n)-services">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="position-id" value="@p.PositionID"/>
     <fieldset class="positionservices-attributes positionservices-category-1">
         <legend>Service Attribute Category #1:</legend>
         @for(int i=0; i < 16; i++){

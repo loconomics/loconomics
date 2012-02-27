@@ -24,9 +24,11 @@
         
         @{
             n = 0;
-            foreach(var c in PageData["posrows"]){
+            foreach(var position in PageData["posrows"]){
                 n++;
                 var cls = (n==1 ? "current" : "");
+                PageData["position"] = position;
+                PageData["npos"] = n;
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls">
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="@("#position"+n)-services">Services</a></li>
@@ -54,6 +56,7 @@
             </div><!-- #@("position"+n)-licenses -->
             <div id="@("position"+n)-reviews" class="tab-body">
                 Reviews <!-- TODO here must be the back-end content -->
+                @RenderPage("_PositionsOldCode.cshtml")
             </div><!-- #@("position"+n)-reviews -->
             
         </div><!-- #position@n -->
