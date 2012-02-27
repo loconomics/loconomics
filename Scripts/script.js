@@ -24,7 +24,7 @@ $(document).ready(function(){
     //     return false;
     // }); 
     
-    $('a#launchHowItWorks').click(function(event) { 
+    $('a#launchHowItWorks').click(function(event) {
         event.preventDefault();
         $('div.blockUI.blockMsg.blockPage').addClass('fancy');
         $.blockUI({ 
@@ -187,49 +187,46 @@ $(document).ready(function(){
         /** Dashboard Alerts carousel **/
         $('#dashboard-alerts').each(function(){
             var da = $(this);
-            
-            // We add the native array reverse function to jquery:
-            $.fn.reverse = [].reverse;
-            
+
+            var ul = da.find('ul');
+            var set = ul.find('li');
+            var cont = $('<div></div>');
+            cont.css('position', 'relative');
+            cont.css('width', ul.width());
+            cont.css('height', ul.height());
+            cont.css('margin', 'auto');
+            cont.css('overflow', 'hidden');
+            cont.css('display', 'inline-block');
+            ul.css('position', 'relative');
+            ul.css('overflow', 'visible');
+            ul.css('width', 'auto');
+            ul.wrap(cont);
+            var w = cont.width();
+
             function routeAlerts(event){
-                // Each row are 2 elements only
-                var set = da.find('ul > li');
+                var p = ul.data('page') || 0;
+                if(event.data.reverse)
+                    p--;
+                else
+                    p++;
                 
-                // If needed, we reverse the collection to go previous instead next
-                var anopts = {};
-                if (event.data.reverse){
-                    set.reverse();
-                    anopts = {direction: 'left'};
-                    anopth = {direction: 'right'};
-                } else {
-                    anopts = {direction: 'right'};
-                    anopth = {direction: 'left'};
-                }
+                if (p <= 0)
+                    p = 0;
+                else if (p+1 >= ul.width() / w)
+                    p = Math.round(ul.width() / w, 0) - 1;
                 
-                var v = 0;
-                for(var i = 0; i < set.length; i++){
-                    var seti = $(set[i]);               
-                    
-                    if(v < 2){
-                        // Must be visible elements, and not last elements
-                        if(seti.is(':visible') &&
-                           i < set.length-2){
-                            v++;
-                            seti.hide();
-                        }
-                    } else if(v < 4){
-                        v++;
-                        seti.show();
-                    } else if (v >= 4)
-                        break;
-                }
+                offl = (w+3) * (0-p);
+
+                ul.data('page', p);
+
+                ul.stop().animate({left: offl}, { duration: 'fast' });
                 return false;
             }
             
             da.find('.more.next').click({reverse: false}, routeAlerts);
             da.find('.more.previous').click({reverse: true}, routeAlerts);
         });
-        $('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
+        //$('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
     });
 
 });

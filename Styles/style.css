@@ -856,6 +856,7 @@ div.dp-popup td.disabled{cursor:default;}
     display: inline-block;
     text-align: left;
     width: 637px;
+    overflow: hidden;
     white-space: nowrap;
 }
 #dashboard-alerts li{
@@ -925,6 +926,7 @@ div.dp-popup td.disabled{cursor:default;}
 }
 .no-js #dashboard-alerts ul{
     white-space: normal;
+    overflow: visible;
 }
 .no-js #dashboard-alerts > .more {
     display: none;
