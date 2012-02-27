@@ -32,6 +32,7 @@
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls">
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="@("#position"+n)-services">Services</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+n)-availability">Availability</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+n)-pricing">Pricing</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+n)-photos">Photos</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+n)-locations">Locations</a></li>
@@ -42,6 +43,9 @@
             <div id="@("position"+n)-services" class="tab-body current">
                 @RenderPage("_PositionsServices.cshtml")                
             </div><!-- #@("position"+n)-services -->
+            <div id="@("position"+n)-availability" class="tab-body current">
+                @RenderPage("_PositionsAvailability.cshtml")                
+            </div><!-- #@("position"+n)-availability -->
             <div id="@("position"+n)-pricing" class="tab-body">
                 Pricing <!-- TODO here must be the back-end content -->
             </div><!-- #@("position"+n)-pricing -->
