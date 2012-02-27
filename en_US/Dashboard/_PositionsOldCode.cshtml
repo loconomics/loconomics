@@ -1,0 +1,23 @@
+﻿            <!-- OLD:: -->
+            <hr/>
+            <div class="progress-bar">
+                <span class="total"><span class="percent-done"></span></span>
+                <span class="text"><span class="percent-done">50%</span> complete</span>
+            </div>
+
+            <h3 class="job-title">@PageData["position"].PositionSingular <a class="job-status inactive" href="#">@PageData["position"].active</a></h3>
+            <table class="profile-stats">
+                <tr><td>Profile Views:</td><td>0</td></tr>
+                <tr><td>Last Updated:</td><td>@PageData["position"].UpdatedDate.ToString("dd MMM yyyy")</td></tr>
+                </table>
+                <table class="job-stats">
+                <tr><td>Hours booked:</td><td>0</td></tr>
+                <tr><td>Lorem Ipsum:</td><td>20</td></tr>
+            </table>
+            <a href="#">Booking History</a>
+            <a href="../PricingProfileWizardPage.cshtml?PositionID=@PageData["position"].PositionID">Edit Estimate Profile</a>
+            <div class="job-actions">
+                <a class="button go" href="#">Edit</a>
+                <a class="button go" href="#">Publish</a>
+            </div>
+            <!-- ::OLD -->

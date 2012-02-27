@@ -184,29 +184,69 @@ dd { margin: 0; }
 
 form fieldset, table.form td { padding: .5em .5em .5em 0; }
 
-input, select, textarea{
+/** IagoSRL: psd like form styles **/
+form.psd input,
+form.psd select,
+form.psd textarea{
     font-size: 0.9em;
     color: black;
 }
-
-form input[type="text"], form input[type="password"], form textarea { 
+form.psd input[type="text"],
+form.psd input[type="password"],
+form.psd textarea { 
     background-color: White;
     border: 1px solid #62bdbe;
     border-bottom-width: 2px;
     border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
     display: inline-block;
     line-height: 185%;
     padding: 0 1.4em;
     width: 200px;
 }
-textarea{
-    line-height: 1.5em;
-}
-form input[type="text"]:focus, form input[type="password"]:focus, form textarea:focus { 
+form.psd input[type="text"]:focus,
+form.psd input[type="password"]:focus,
+form.psd textarea:focus { 
     background: #b5e1e2;
     outline: none;
     border-color: #b5e1e2;
-} 
+}
+form.psd select:focus,
+form.psd input[type="checkbox"]:focus,
+form.psd input[type="radio"]:focus {
+    outline: #b5e1e2 solid 2px;
+}
+/**Z psd like **/
+
+form input[type="text"],
+form input[type="password"],
+form textarea {
+    border: none;
+    background: #b5e1e2;
+    color: #00989a;
+    font-size: .9em;
+    line-height: 185%;
+    display: inline-block;
+    padding: 0 1.4em;
+    width: 200px;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+textarea{
+    line-height: 1.5em;
+}
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form textarea:focus{
+    background: #99C027;
+    color: #fff;
+    border: none;
+    outline: none;
+}
 form input[type="text"].error, form input[type="password"].error { 
     background: #8B2143;
     color: #fff;
@@ -222,8 +262,11 @@ form.stepped input[type="submit"] {
 }
 form.stepped input[type="submit"]:hover { background-position: 0 -48px; }
 
-/* #99c027 */
-form select:focus, form input[type="checkbox"]:focus, form input[type="radio"]:focus { outline: #b5e1e2 solid 2px; }
+form select:focus,
+form input[type="checkbox"]:focus,
+form input[type="radio"]:focus {
+    outline: #99c027 solid 2px;
+}
 
 form input.time { width: 40px; }
 form input.date-pick { width: 90px; }
@@ -512,9 +555,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home form fieldset #serviceDate { width: 80px; }
 
 .home #secondary { position: relative; margin: 0 25px 0 600px; text-align: left; }
-.home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; width: 114px; font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
+.home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; /*width: 114px;*/ font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
 .home #secondary .spotlight { z-index: 1; position: relative; padding: 20px; border: 3px solid #46aeba; background: #FFF; }
-.home #secondary .spotlight .rating { position: absolute; top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
+.home #secondary .spotlight .rating { /*position: absolute;*/ top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
 .home #secondary .spotlight .id { float: left; }
 .home #secondary .spotlight .id img { width: 113px; }
 .home #secondary .spotlight .lang { margin-left: 124px; min-height: 113px; }
@@ -813,8 +856,8 @@ div.dp-popup td.disabled{cursor:default;}
     display: inline-block;
     text-align: left;
     width: 637px;
-    height: 140px;
     overflow: hidden;
+    white-space: nowrap;
 }
 #dashboard-alerts li{
     display: inline-block;
@@ -877,6 +920,18 @@ div.dp-popup td.disabled{cursor:default;}
 #dashboard-alerts > .more.next:hover {
     background-image: url('../img/dashboard-next-alerts-on.png');
 }
+/* Dashboard Alerts no javascript (usable) version */
+.no-js #dashboard-alerts {
+    overflow: auto;
+}
+.no-js #dashboard-alerts ul{
+    white-space: normal;
+    overflow: visible;
+}
+.no-js #dashboard-alerts > .more {
+    display: none;
+}
+
 .dashboard #nav {
     left: 0;
     position: absolute;
@@ -952,7 +1007,10 @@ div.dp-popup td.disabled{cursor:default;}
     min-width: 120px;
     display: inline-block;
 }
-.dashboard form li input, .dashboard form li select, .dashboard form li textarea{
+.dashboard form li input[type="text"],
+.dashboard form li input[type="password"],
+.dashboard form li select,
+.dashboard form li textarea{
     width: 120px;
 }
 .dashboard form li select{
@@ -974,6 +1032,44 @@ div.dp-popup td.disabled{cursor:default;}
     width: 600px;
     height: 8em;
     margin: 0 10px;
+}
+
+/** Form: Positions - Services **/
+fieldset.positionservices-attributes{
+    display: inline-block;
+    width: 210px;
+    border-right: solid 1px #dadada;
+    margin: 30px 10px 10px 0 !important;
+    padding: 0 10px 0 0 !important;
+    vertical-align: top;
+}
+form.positionservices label{
+    display: block;
+}
+form.positionservices input{
+    margin-right: .4em;
+}
+.positionservices-sidebar{
+    display: inline-block;
+    width: 230px;
+    vertical-align: top;
+    margin-top: 30px;
+}
+.positionservices-sidebar fieldset{
+    margin: 0 0 15px !important;
+}
+.positionservices-languagesspoken ul li label{
+    display: inline-block !important;
+    width: 90px;
+    min-width: 90px;
+    white-space: nowrap;
+}
+.positionservices-languagesspoken ul li select{
+    width: 110px !important;
+}
+.positionservices-clientstypes label{
+    display: inline-block !important;
+    width: 90px;
 }
 
 /*** Pages with editable content -like personal dashboard- have differents
