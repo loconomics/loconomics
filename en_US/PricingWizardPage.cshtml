@@ -19,7 +19,14 @@ Data:
 @using System.Text.RegularExpressions;
 @using WebMatrix.WebData;
 @{
- 
+    //Validation messages
+    var vm1 = "The position ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)";
+    var vm2 = "The provider ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)";
+    var vm3 = "The pricing type ID is required to make an estimation, please select one pricing type from the list(Testing error message)";
+    
+    //Error messages
+    var em1 = "SQL error reading the provider pricing profile (Testing Error Message)";
+         
     if (WebSecurity.IsAuthenticated) {
         Layout = "~/en_US/_SiteLayout.cshtml";
         var UserID  = WebSecurity.CurrentUserId;
@@ -44,12 +51,12 @@ Data:
     
     if (positionID == null || positionID == "")
     {
-        ModelState.AddError("posiotionID","The position ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)");
+        ModelState.AddError("posiotionID",vm1);
         //TODO: ADD LOG MESSAGE
     };
     if (providerID == null || providerID == "")
     {
-        ModelState.AddError("providerID", "The provider ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)");
+        ModelState.AddError("providerID", vm2);
         //TODO: ADD LOG MESSAGE
     };
     
@@ -65,7 +72,7 @@ Data:
 
         if ((pricingTypeID == null || pricingTypeID == "") && (Request["advancer"] == "getestimate"))
         {
-            ModelState.AddError("pricingTypeID", "The pricing type ID is required to make an estimation, please select one pricing type from the list(Testing error message)");
+            ModelState.AddError("pricingTypeID", vm3);
             //TODO: add a log message
         };
 
@@ -131,7 +138,7 @@ Data:
                     //TODO update A M or E
 
                 }catch{
-                    ModelState.AddError("sql", "SQL error reading the provider pricing profile (Testing Error Message)");   
+                    ModelState.AddError("sql", em1);   
                     //TODO: add a log message
                 }
             }
@@ -174,7 +181,7 @@ Data:
                         }         
                     }
                 }catch{
-                    ModelState.AddError("sql","SQL error reading the provider pricing profile (Testing Error Message)" );
+                    ModelState.AddError("sql",em1 );
                     //TODO: add a log message
                 }
             }

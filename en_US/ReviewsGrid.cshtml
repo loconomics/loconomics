@@ -1,3 +1,19 @@
+@*
+ This page paints a list of reviews for a given provider,user and position IDs.
+
+ INPUT:
+    provider ID
+    position ID
+
+ REFERENCES:
+    This page is rendered by the Provider Profile page.
+
+ Use Ex:
+ 
+ String[] reviewsdata={ProviderID,PositionID};
+
+ @RenderPage("~/en_US/ReviewsGrid.cshtml", reviewsdata)
+*@
 @{
     var providerID = PageData[0];
     var positionID = PageData[1];

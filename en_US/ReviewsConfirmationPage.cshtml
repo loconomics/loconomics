@@ -1,4 +1,8 @@
-﻿@{  
+﻿@*
+    Dummy page to confirm review submit
+*@
+
+@{  
     Layout = "~/en_US/_SiteLayout.cshtml";
     var UserID = WebSecurity.CurrentUserId;
     Page.Title = "Review Confirmation Page.";
@@ -10,12 +14,7 @@
     var success = "here goes the confirmation message";
         
     var message = status == "error"? error:success;
-    
-
 }
-
-
-
 
   <div id="container" class="home clearfix"> 
     <div id="main" class="">

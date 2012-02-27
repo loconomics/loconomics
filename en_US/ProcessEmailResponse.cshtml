@@ -1,4 +1,15 @@
-﻿@{
+﻿@*
+    This page recives a message body, reciver ID and a thread ID and delivers and email to the 
+    corresponding destination. The message is also stored in the DDBB as part of the conversation(thread)
+
+    INPUT:
+    emailResponse: Body of the response email sended to the receiver.
+    reciver ID: The receiver ID used to search for the email.
+    thread ID: ID of the conversation between provider and user.
+*@
+@{
+    var successMessage = "has been succesfully sent.(Testing Message)";
+    var errorMessage = "The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.(Testing Message)";
     var UserID = 0;
     if (WebSecurity.IsAuthenticated)
     {
@@ -9,6 +20,8 @@
     {
         Response.Redirect("~/en_US/Account/Login");
     }
+
+    var response = "";
     
     var emailResponse = Request["emailResponse"];
 
@@ -21,11 +34,13 @@
     var responseLink = "http://localhost:1575/LoconomicsJB/en_US/EmailResponse?tmid=";
     
     var db = Database.Open("sqlloco");
+    
     var receiversql = "select Email from userprofile up where up.userid = @0";
     var sqluser = "exec GetUserDetails @0";
+    
     var receiver = db.QuerySingle(receiversql, receiverID);
     var userrow = db.QuerySingle(sqluser, UserID);
-    var message = "has been succesfully sent.";
+  
     var sysdate = DateTime.Now;
 
     
@@ -51,10 +66,11 @@
             subject: "Loconomics message" ,
             body: emailResponse + " " +responseLink
         );
+        response=successMessage;
     }
-    catch (Exception ex ) {
+    catch {
         //TODO: if try block fails revert the transaction
-        message="The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.";
+        response=errorMessage;
     }
 }
 <div id="container">
@@ -63,7 +79,7 @@
 
         <p><b>@emailResponse</b></p>
 
-       <p>@message</p>
+       <p>@response</p>
       
         <div>
             <input type="submit" value="Finish" />
