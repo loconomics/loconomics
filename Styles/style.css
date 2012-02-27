@@ -856,8 +856,7 @@ div.dp-popup td.disabled{cursor:default;}
     display: inline-block;
     text-align: left;
     width: 637px;
-    height: 140px;
-    overflow: hidden;
+    white-space: nowrap;
 }
 #dashboard-alerts li{
     display: inline-block;
@@ -920,6 +919,17 @@ div.dp-popup td.disabled{cursor:default;}
 #dashboard-alerts > .more.next:hover {
     background-image: url('../img/dashboard-next-alerts-on.png');
 }
+/* Dashboard Alerts no javascript (usable) version */
+.no-js #dashboard-alerts {
+    overflow: auto;
+}
+.no-js #dashboard-alerts ul{
+    white-space: normal;
+}
+.no-js #dashboard-alerts > .more {
+    display: none;
+}
+
 .dashboard #nav {
     left: 0;
     position: absolute;
