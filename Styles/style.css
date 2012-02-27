@@ -184,12 +184,16 @@ dd { margin: 0; }
 
 form fieldset, table.form td { padding: .5em .5em .5em 0; }
 
-input, select, textarea{
+/** IagoSRL: psd like form styles **/
+form.psd input,
+form.psd select,
+form.psd textarea{
     font-size: 0.9em;
     color: black;
 }
-
-form input[type="text"], form input[type="password"], form textarea { 
+form.psd input[type="text"],
+form.psd input[type="password"],
+form.psd textarea { 
     background-color: White;
     border: 1px solid #62bdbe;
     border-bottom-width: 2px;
@@ -199,14 +203,43 @@ form input[type="text"], form input[type="password"], form textarea {
     padding: 0 1.4em;
     width: 200px;
 }
-textarea{
-    line-height: 1.5em;
-}
-form input[type="text"]:focus, form input[type="password"]:focus, form textarea:focus { 
+form.psd input[type="text"]:focus,
+form.psd input[type="password"]:focus,
+form.psd textarea:focus { 
     background: #b5e1e2;
     outline: none;
     border-color: #b5e1e2;
-} 
+}
+form.psd select:focus,
+form.psd input[type="checkbox"]:focus,
+form.psd input[type="radio"]:focus {
+    outline: #b5e1e2 solid 2px;
+}
+/**Z psd like **/
+
+form input[type="text"],
+form input[type="password"],
+form textarea {
+    border: none;
+    background: #b5e1e2;
+    color: #00989a;
+    font-size: .9em;
+    line-height: 185%;
+    display: inline-block;
+    padding: 0 1.4em;
+    width: 200px; 
+}
+textarea{
+    line-height: 1.5em;
+}
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form textarea:focus{
+    background: #99C027;
+    color: #fff;
+    border: none;
+    outline: none;
+}
 form input[type="text"].error, form input[type="password"].error { 
     background: #8B2143;
     color: #fff;
@@ -222,8 +255,11 @@ form.stepped input[type="submit"] {
 }
 form.stepped input[type="submit"]:hover { background-position: 0 -48px; }
 
-/* #99c027 */
-form select:focus, form input[type="checkbox"]:focus, form input[type="radio"]:focus { outline: #b5e1e2 solid 2px; }
+form select:focus,
+form input[type="checkbox"]:focus,
+form input[type="radio"]:focus {
+    outline: #99c027 solid 2px;
+}
 
 form input.time { width: 40px; }
 form input.date-pick { width: 90px; }
