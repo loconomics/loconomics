@@ -2,8 +2,23 @@
 @using System.Net.Mail;
 @using System.Diagnostics;
 
-@functions { 
+@*
+    This page is ment to create a Cache event that expires after 3h sending an email
+    to the user with a link to the review page.
 
+    TODO: at the moment there is no fallback security, if the server stops or crashs for some reason
+    the info might be lost, the event should be also stored in DDBB for manual/automated recovery
+    in case of system failure.
+
+    INPUT:
+        mail: customer email to submit the review request.
+        body: mail body.
+        subject: mail subject.
+        delay: wait time before submit the email in minutes.
+*@
+
+@functions { 
+    
     void RegisterCacheEntry(string DummyCacheItemKey, double time)
     {  
         HttpContext.Current.Cache.Insert( DummyCacheItemKey, "Test", null, 
@@ -14,17 +29,20 @@
 
     void CacheItemRemovedCallback(string key, object value, CacheItemRemovedReason reason)
     {
+        string mail = PageData[0];
+        string body = PageData[1];//"This is a test e-mail message sent using loconomics as a relay server ";
+        string subject = PageData[2];//"Loconomics test email";
      
         SmtpClient client = new SmtpClient("mail.loconomics.com", 25);
         client.EnableSsl = false;
         client.Credentials = new NetworkCredential("automated@loconomics.com", "Loconomic$2011");
         
         MailAddress from = new MailAddress("automated@loconomics.com");
-        MailAddress to = new MailAddress("manuel.fontan.garcia@gmail.com");
+        MailAddress to = new MailAddress(mail);
         MailMessage message = new MailMessage(from, to);
-
-        message.Body = "This is a test e-mail message sent using loconomics as a relay server ";
-        message.Subject = "Loconomics test email";
+      
+        message.Body = body;
+        message.Subject = subject;
 
         try
         {
@@ -36,7 +54,11 @@
 
 }
 @{
-    RegisterCacheEntry("dummyEntry", 180);
+    double delay = Double.Parse(PageData[3]); //The time elapsed before the Cache Item expires
+    
+    //TODO: STORE THE mail, subject, and body in the DDBB.
+
+    RegisterCacheEntry("dummyEntry", @delay);
 }
 
 <!DOCTYPE html>

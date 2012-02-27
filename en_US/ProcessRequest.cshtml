@@ -1,4 +1,17 @@
-﻿@{
+﻿@*
+    This page process email request, sending and email with the provided body to the destination address.
+    The message is also stored in the DDBB for further operations.
+
+    INPUT:
+        position singular:
+        position ID:
+        provider ID:
+        customer name:
+        customer request:
+    
+    TODO: add a template to the email with the Loconomics layout and logo...
+*@
+@{
     var UserID = 0;
     if (WebSecurity.IsAuthenticated)
     {
@@ -9,6 +22,9 @@
     {
         Response.Redirect("~/en_US/Account/Login");
     }
+
+    //ERROR MESSAGES
+    var confirmationMessage = "(Testing Message)The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.";
     
     var customerName = Request["customerName"];
     var customerRequest = Request["customerRequest"];
@@ -19,9 +35,9 @@
     
     //create a thread for the conversation.
     //1- Create a Messaging Thread or select the existing one
-    int threadID = 0;
+    int threadID = 0;//The id of the conversation between user and provider
     int messageID = 0;
-    int tmid = 0;
+    int tmid = 0;//Thread Message ID, id passed to the custumer via email, used to look for conversation info by the server.
     
     //add template and response link to message body
     var responseLink = "http://localhost:1575/LoconomicsJB/en_US/EmailResponse?tmid=";
@@ -65,7 +81,7 @@
     }
     catch (Exception ex ) {
         //TODO: if try block fails revert the transaction
-        message="The email was not sent. The code in the ProcessRequest page must provide an SMTP server name, a user name, a password, and a from address.";
+        message=confirmationMessage;
     }
 }
 <div id="container">

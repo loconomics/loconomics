@@ -123,54 +123,6 @@
               @Html.ValidationMessage("transaction[billing][country_name]")
             </div>
         </fieldset>
-        <fieldset>
-            <legend><b>Shipping Address</b></legend>
-            <div><label for="transaction[shipping][first_name]">Name</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][first_name]")
-              @Html.ValidationMessage("transaction[shipping][first_name]")
-            </div>
-            <div><label for="transaction[shipping][last_name]">Last Name</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][last_name]")
-              @Html.ValidationMessage("transaction[shipping][last_name]")
-            </div>
-            <div><label for="transaction[shipping][company]">Company</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][company]")
-              @Html.ValidationMessage("transaction[shipping][company]")
-            </div>
-            <div><label for="transaction[shipping][street_address]">Stree Address</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][street_address]")
-              @Html.ValidationMessage("transaction[shipping][street_address]")
-            </div>
-            <div><label for="transaction[shipping][extended_address]">Extended Address</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][extended_address]")
-              @Html.ValidationMessage("transaction[shipping][extended_address]")
-            </div>
-            <div><label for="transaction[shipping][locality]">Locality</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][locality]")
-              @Html.ValidationMessage("transaction[shipping][locality]")
-            </div>
-            <div><label for="transaction[shipping][region]">Region</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][region]")
-              @Html.ValidationMessage("transaction[shipping][region]")
-            </div>
-            <div><label for="transaction[shipping][postal_code]">Postal Code</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][postal_code]")
-              @Html.ValidationMessage("transaction[shipping][postal_code]")
-            </div>
-            <div><label for="transaction[shipping][country_name]">Country</label></div>
-            <div>
-              @Html.TextBox("transaction[shipping][country_name]")
-              @Html.ValidationMessage("transaction[shipping][country_name]")
-            </div>
-        </fieldset>
         <input id="tr_data" name="tr_data" type="hidden" value="@TrData" />
         <input id="transaction_submit" name="commit" type="submit" value="Submit" />
     </div>

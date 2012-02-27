@@ -1,7 +1,26 @@
-﻿@{
+﻿@*
+This page receives a rating value and paints a 5 star rating radio list with that value
+
+INPUT:
+    PageData[0] name : this is the name of the star rating list, note that every star rating in a page should have different names.
+    PageData[1] value : the rating value, a decimal value between 0 and 5. 
+    PageData[2] mode : this is a boolean value, telling if the star rating should be enable(for input ratings) or disabled(for just read ratings)
+
+Use Example:
+     //Define Parameter array
+     String[] rating1data = { "name", "value", "true" };
+     //Set values
+     rating1data.SetValue(name, 0);//Rating Name
+     rating1data.SetValue(value, 1);//Rating value
+     rating1data.SetValue("true", 2);//Rating: enable or disable
+     //Render the rating
+     @Html.Label("rating1 ")
+     @RenderPage("~/en_US/StarRating.cshtml", rating1data) 
+*@
+@{
     var name = PageData[0];
     var value = 0m;
-    var errorMsg = "";
+    var errorMsg = "The rating value entered is not in valid format (Decimal expected)";
     var userErrorMsg = "";
 
     try
@@ -11,7 +30,6 @@
     catch (Exception Exception)
     {
         errorMsg = Exception.Message;
-        userErrorMsg = "The rating value entered is not in valid format (Decimal expected)";
         ModelState.AddError("star rating", userErrorMsg);
         //TODO ADD LOG MESSAGE
     }

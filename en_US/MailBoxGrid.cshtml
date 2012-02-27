@@ -1,4 +1,13 @@
-﻿@{
+﻿@*
+    This page paints a grid containing the messages received by the current user
+    from a given provider and position
+
+    INPUT
+        providerID
+        positionID
+*@
+@{
+    //TODO add filters to get only the messages for a given provider and position
     var UserID = WebSecurity.CurrentUserId;
     var db = Database.Open("sqlloco");
     //TODO:UPDATE THE QUERY GET THE REQUIRED DATA

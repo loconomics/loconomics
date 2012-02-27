@@ -1,4 +1,7 @@
-﻿@{
+﻿@*
+    This page is called to populate a JSON object with the Pricing Types available in the system
+*@
+@{
     var db = Database.Open("sqlloco");
     var sql = @"SELECT p.PricingTypeID, p.Description
                 FROM dbo.pricingtype p";

@@ -1,4 +1,28 @@
-﻿@{  
+﻿@*
+    This is a template page for customer reviews, the template
+    contains 4 star ratings, 2 yes/no questions, a public review
+    and a private review. After sumbiting data is stored in the
+    DDBB(dbo.UserReviews) and scores are updated for the provider
+    (dbo.ReviewScores)
+
+    INPUT:
+        Position ID: position ID used to search for ratings scores
+        Provider ID: provider ID used to search for rating scores
+        Payment ID: payment ID used to verify no reviews are already submitted for the service.
+    FORM DATA:
+        rating 1: star rating 
+        rating 2: star rating
+        rating 3: star rating
+        rating 4: star rating
+        answer 1: yes/no question answer
+        answer 2: yes/no question answer
+        publicreview: user public review
+        privatereview: user private review
+
+    TODO: this page should be access via an html link emailed to the customer 3h(see ReviewScheduling.cshtml) after the service has been delivered.
+    Alternatively user will have acces to pending reviews in his dashboard.
+*@
+@{  
     var UserID = 0;
     //TODO: SET THE REQUEST TO PASS POSITION AND PAYMENT INFO
     var positionID = Request["PositionID"];//14(cleaner) for testing
@@ -10,6 +34,8 @@
     var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
     var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
     var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
+    var publicreview = Request["Public Review"];
+    var privatereview = Request["Private Review"];
     //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
 
     var a1true = Request["Question1"] != "True" ? false:true;
@@ -24,8 +50,7 @@
     String[] rating4data = { "rating4", @Request["rating4"], "false" };    
         
 
-    var publicreview = Request["Public Review"];
-    var privatereview = Request["Private Review"];
+   
     if (WebSecurity.IsAuthenticated){
         Layout = "~/en_US/_SiteLayout.cshtml";
         UserID = WebSecurity.CurrentUserId;

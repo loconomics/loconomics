@@ -26,7 +26,8 @@
     var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Decimal.Parse(Amount)}, // key information about the transaction
                                                 "http://poorrichardsworkshop.com/loconomicsjb/en_US/PaymentsConfirmationTest");  // the redirect destination, in this case, the Confirm action below
 }
-<div id="container" class="sign-up">    
+<div id="container" class="sign-up">
+    
      <h1>Payment: @Amount $</h1>
 
     @* If at least one validation error exists, notify the user *@
@@ -63,4 +64,5 @@
         <input id="transaction_submit" name="commit" type="submit" value="Submit" />
     </div>
     </form>
-</div> <!-- #container -->
+</div> <!-- #container -->
+

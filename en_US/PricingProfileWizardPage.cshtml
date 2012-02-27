@@ -1,4 +1,16 @@
-﻿@using System.Text.RegularExpressions;
+﻿@*
+    This page loads the estimation variables for a given position and provider, depending on
+    the pricing type selected by the provider. The input is stored in the DDBB and used 
+    during the pricing wizzard.
+
+    INPUT:
+        provider ID: the service provider.
+        postion ID: the position that we are getting the estimate for.
+        pricing type: the pricing type selected by the provider in the drop down
+
+*@
+@using System.Text.RegularExpressions;
+
 @{
     if (WebSecurity.IsAuthenticated) {
         Layout = "~/en_US/_SiteLayout.cshtml";
@@ -6,7 +18,16 @@
     }else{
         Response.Redirect("~/en_US/Account/Login");
     }
-
+    //Validation messages
+    var vm1 = "Provider ID is required(Testing message)";
+    var vm2 = "Position ID is requered(Testing message)";
+    var vm3 = "Pricing Type ID is required.(Testing message)";
+    var vm4 = "The value must be a number (Testing errors message)";
+    
+    //Error messages
+    var em1 = "estimate Variable Value is required.(Testing Error Message)";
+    var em2 = "SQL error saving the estimation var value (Testing errors message)";
+    
     var providerID = Convert.ToString(WebSecurity.CurrentUserId);
     var positionID = Request["PositionID"];
     var pricingTypeID = "";
@@ -16,20 +37,20 @@
     var sysdate = DateTime.Now;
 
 
+    //INPUT validations
     // Read product providerID.
     if (providerID.IsEmpty())
     {
-        ModelState.AddError("providerID", "Provider ID is required.");
+        ModelState.AddError("providerID", vm1);
     }
     // Read product positionID.
     if (positionID.IsEmpty())
     {
-        ModelState.AddError("positionID", "Position ID is required.");
+        ModelState.AddError("positionID", vm2);
     }
     
     if(IsPost && ModelState.IsValid){
         
-        var db = Database.Open("sqlloco");
         pricingTypeID = Request["pricingtype"];
         string[] varValues = Context.Request.Form.GetValues("varValue");
         string[] varIDs = Context.Request.Form.GetValues("varID");
@@ -40,17 +61,17 @@
 
         if (pricingTypeID.IsEmpty())
         {
-            ModelState.AddError("pricingTypeID", "Pricing Type ID is required.");
+            ModelState.AddError("pricingTypeID", vm3);
         }
 
         if(ModelState.IsValid) {
 
             var db = Database.Open("sqlloco");
             pricingTypeID = Request["pricingtype"];
-            string[] varValues = Context.Request.Form.GetValues("varValue");
-            string[] varIDs = Context.Request.Form.GetValues("varID");
-            string[] listValues = Context.Request.Form.GetValues("listValue");
-            string[] groupIDs = Context.Request.Form.GetValues("groupID");
+            varValues = Context.Request.Form.GetValues("varValue");
+            varIDs = Context.Request.Form.GetValues("varID");
+            listValues = Context.Request.Form.GetValues("listValue");
+            groupIDs = Context.Request.Form.GetValues("groupID");
              
             var SQLISNEW = @"SELECT ServicePricingTypeID 
                             FROM dbo.servicepricingtype 
@@ -87,7 +108,7 @@
                 estimateVarValue = varValues[i];
                
                 if(estimateVarValue.IsEmpty()){
-                    ModelState.AddError("estimateVarValue", "estimate Variable Value is required.(Testing Error Message)");
+                    ModelState.AddError("estimateVarValue", em1);
                 }
                     //validate data
                     //Validate is a Number
@@ -96,7 +117,7 @@
                         Decimal.Parse(estimateVarValue);
                     }
                 }catch{
-                    ModelState.AddError("estimateVarValue","The value must be a number (Testing errors message)");
+                    ModelState.AddError("estimateVarValue",vm4);
                 }
                 try{
                     if (newEstimateVar == null)
@@ -108,7 +129,7 @@
                         db.Execute(SQLUPDATE, servicePricingTypeID, varIDs[i], estimateVarValue.IsEmpty() ? null : estimateVarValue, sysdate, "UserID:" + providerID);
                     }
                 }catch{
-                    ModelState.AddError("estimateVarValue","SQL error saving the estimation var value (Testing errors message)");
+                    ModelState.AddError("estimateVarValue",em2);
                 }
 
             }
