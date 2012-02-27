@@ -988,7 +988,10 @@ div.dp-popup td.disabled{cursor:default;}
     min-width: 120px;
     display: inline-block;
 }
-.dashboard form li input, .dashboard form li select, .dashboard form li textarea{
+.dashboard form li input[type="text"],
+.dashboard form li input[type="password"],
+.dashboard form li select,
+.dashboard form li textarea{
     width: 120px;
 }
 .dashboard form li select{
@@ -1010,6 +1013,42 @@ div.dp-popup td.disabled{cursor:default;}
     width: 600px;
     height: 8em;
     margin: 0 10px;
+}
+
+/** Form: Positions - Services **/
+fieldset.positionservices-attributes{
+    display: inline-block;
+    width: 220px;
+    border-right: solid 1px #dadada;
+    vertical-align: top;
+}
+form.positionservices label{
+    display: block;
+}
+form.positionservices input{
+    margin-right: .4em;
+}
+.positionservices-sidebar{
+    display: inline-block;
+    width: 250px;
+    vertical-align: top;
+    margin-top: 30px;
+}
+.positionservices-sidebar fieldset{
+    margin: 0 0 15px !important;
+}
+.positionservices-languagesspoken ul li label{
+    display: inline-block !important;
+    width: 90px;
+    min-width: 90px;
+    white-space: nowrap;
+}
+.positionservices-languagesspoken ul li select{
+    width: 120px !important;
+}
+.positionservices-clientstypes label{
+    display: inline-block !important;
+    width: 100px;
 }
 
 /*** Pages with editable content -like personal dashboard- have differents

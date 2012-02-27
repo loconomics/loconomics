@@ -1,0 +1,74 @@
+﻿Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+
+<form action="#" method="post" class="positionservices">
+    <fieldset class="positionservices-attributes positionservices-category-1">
+        <legend>Service Attribute Category #1:</legend>
+        @for(int i=0; i < 16; i++){
+        <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
+        }
+    </fieldset>
+    <fieldset class="positionservices-attributes positionservices-category-2">
+        <legend>Service Attribute Category #2:</legend>
+        @for(int i=0; i < 16; i++){
+        <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
+        }
+    </fieldset>
+    <div class="positionservices-sidebar">
+        <fieldset class="positionservices-experiencelevel">
+            <legend>Experience Level</legend>
+            <select name="positionservices-experiencelevel">
+                <option>Expert</option>
+                <option>Intermediate</option>
+                <option>Novice</option>
+            </select>
+        </fieldset>
+        <fieldset class="positionservices-yearsexperience">
+            <legend>Years Experience</legend>
+            <select name="positionservices-yearsexperience">
+                <option>+10 years</option>
+                <option>5 years</option>
+                <option>1.5 years</option>
+                <option>1 year</option>
+                <option>-1 year</option>
+            </select>
+        </fieldset>
+        <fieldset class="positionservices-languagesspoken">
+            <legend>Languages Spoken</legend>
+            <ul>
+                <li><label><input name="positionservices-languagespoken-english" type="checkbox"/>English</label>
+                    <select name="positionservices-languagesspoken-englishlevel">
+                        <option>Fluent</option>
+                        <option>Begginer</option>
+                        <option>N/A</option>
+                    </select>
+                </li>
+                <li><label><input name="positionservices-languagespoken-spanish" type="checkbox"/>Spanish</label>
+                    <select name="positionservices-languagesspoken-spanishlevel">
+                        <option>Fluent</option>
+                        <option>Begginer</option>
+                        <option>N/A</option>
+                    </select>
+                </li>
+                <li><label><input name="positionservices-languagespoken-catalan" type="checkbox"/>Catalan</label>
+                    <select name="positionservices-languagesspoken-catalanlevel">
+                        <option>Fluent</option>
+                        <option>Begginer</option>
+                        <option>N/A</option>
+                    </select>
+                </li>
+                <li><label><input name="positionservices-languagespoken-galician" type="checkbox"/>Galician</label>
+                    <select name="positionservices-languagesspoken-galicianlevel">
+                        <option>Fluent</option>
+                        <option>Begginer</option>
+                        <option>N/A</option>
+                    </select>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="positionservices-clientstypes">
+            <legend>Clients Types</legend>
+            <label><input type="checkbox" name="positionservices-clientstypes-residential"/>Residential</label>
+            <label><input type="checkbox" name="positionservices-clientstypes-business"/>Business</label>
+        </fieldset>
+   </div>
+</form>
