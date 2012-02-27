@@ -19,6 +19,7 @@
     <li>
         <span class="day">@day</span>
         <select name="positionavailability-hours-@day.ToLower()-since">@printOptionsHours()</select>
+        and
         <select name="positionavailability-hours-@day.ToLower()-to">@printOptionsHours()</select>
     </li>
     }
@@ -63,14 +64,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     </fieldset>
     <fieldset class="positionavailability-program">
         <legend>I already use a calendar program:</legend>
-        <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
-        <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
-        <label>Which type?<select name="positionavailability-program">
-            <option value="gmail">Gmail</option>
-        </select></label>
-        <label>Public URL:<input type="text" name="positionavailability-program-url"/></label>
+        <ul>
+            <li class="positionavailability-use-program">
+                <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
+                <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
+            </li>
+            <li class="positionavailability-program-type">
+                <label for="position#@(n)-availability-program-type">Which type?</label>
+                <select name="positionavailability-program-type" id="position#@(n)-availability-program-type">
+                    <option value="gmail">Gmail</option>
+                </select>
+            </li>
+            <li class="positionavailability-program-url">
+                <label for="position#@(n)-availability-program-url">Public URL:</label>
+                <input type="text" name="positionavailability-program-url" id="position#@(n)-availability-program-url"/>
+            </li>
+        </ul>
     </fieldset>
-    <fieldset>
+    <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
         <label>Time in advance of bookings:@printHoursBooking("advance")</label>
         <label>Minimun booking time:@printHoursBooking("min")</label>

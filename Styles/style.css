@@ -1072,6 +1072,84 @@ form.positionservices input{
     width: 90px;
 }
 
+/** Form: Positions - Availability **/
+form.positionavailability {
+    position: relative;
+    font-size: .9em;
+}
+form.positionavailability input{
+    font-size: 1.1em;
+}
+.positionavailability fieldset{
+    display: inline-block;
+    vertical-align: top;
+}
+.positionavailability-days {
+    width: 200px;
+}
+.positionavailability-days span.day{
+    display: inline-block;
+    width: 100px;
+    height: 23px;
+}
+.positionavailability-days label{
+    width: auto !important;
+    min-width: 10px !important;
+    padding: 0 !important;
+}
+.positionavailability-days label input{
+    margin: 0 3px;
+}
+.positionavailability-hours {
+    width: 230px;
+}
+.positionavailability-hours select{
+    width: 80px !important;
+}
+.positionavailability-hours span.day{
+    display: none;
+}
+.positionavailability-program {
+    width: 430px !important;
+}
+.positionavailability-program legend{
+    float: left;
+    display: block;
+}
+.positionavailability-program .positionavailability-use-program {
+    left: 10px;
+    position: relative;
+    top: -7px;
+}
+.positionavailability-program .positionavailability-use-program label {
+    padding: 0 !important;
+    min-width: 10px !important;
+    width: auto !important;
+}
+.positionavailability-program .positionavailability-use-program label input{
+    margin: 0 3px;
+}
+.positionavailability-program-url input{
+    width: 220px !important;
+}
+.positionavailability-booking {
+    border-left: 1px solid #DADADA;
+    height: 90%;
+    padding-left: 10px !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 270px;
+}
+.positionavailability-booking label{
+    display: block;
+    margin-bottom: 16px !important;
+}
+.positionavailability-booking select{
+    position: absolute;
+    right: 0;
+}
+
 /*** Pages with editable content -like personal dashboard- have differents
    colors.
     Replace colors: 
