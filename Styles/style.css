@@ -1124,13 +1124,13 @@ form.positionavailability input{
     display: block;
 }
 .positionavailability-program .positionavailability-use-program {
-    left: 10px;
+    margin: 0 !important;
     position: relative;
-    top: -7px;
+    left: 10px;
+    white-space: nowrap;
 }
 .positionavailability-program .positionavailability-use-program label {
     padding: 0 !important;
-    width: auto !important;
 }
 .positionavailability-program .positionavailability-use-program label input{
     margin: 0 3px;
@@ -1250,6 +1250,96 @@ form.positionavailability input{
     padding: 0;
 }
 
+/** Form Positions - Locations **/
+.positionlocations{
+    position: relative;
+    font-size: .9em;
+    margin: 30px 0 10px;
+}
+.positionlocations fieldset{
+    vertical-align: top;
+    margin: 0 0 10px !important;
+}
+.positionlocations-itravel,
+.positionlocations-itravelfrom,
+.positionlocations-itravelusing{
+    width: 340px;
+}
+.positionlocations-servicelocations{
+    border-left: 1px solid #DADADA;
+    margin-left: 5px !important;
+    margin-top: 0 !important;
+    padding-left: 20px !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 340px;
+}
+/* yes/no buttons in the same line that fieldset>legend */
+.positionlocations-itravel legend,
+.positionlocations-servicelocations legend {
+    display: block;
+    float: left;
+}
+.positionlocations-itravel-confirm,
+.positionlocations-servicelocations-confirm {
+    display: inline-block;
+    left: 10px;
+    position: relative;
+    white-space: nowrap;
+}
+.positionlocations-itravel-confirm label,
+.positionlocations-servicelocations-confirm label{
+    padding: 0 !important;
+}
+.positionlocations-itravel-confirm label input,
+.positionlocations-servicelocations-confirm label input{
+    margin: 0 3px;
+}
+.positionlocations-itravel .addlocation{
+    margin-left: 40px;
+}
+.positionlocations-itravelfrom .address,
+.positionlocations-itravelfrom label{
+    margin: 0 25px 5px;
+    font-weight: bold;
+    padding: 0 !important;
+}
+.positionlocations-servicelocations ul{
+    margin: 0 25px 5px !important;
+}
+.positionlocations-servicelocations a.addlocation{
+    display: block;
+    margin: 10px 25px;
+}
+.positionlocations-itravelusing label{
+    display: block;
+    width: 150px;
+    margin-left: 15px !important;
+}
+.positionlocations-itravelusing input{
+    margin-right: 10px;
+}
+/* semi-generic address class */
+.address{
+    font-weight: bold;
+    position: relative;
+}
+.address .address-name,
+.address .address-location{
+    display: block;
+}
+.address .address-city:after{
+    content: ', ';
+}
+.address .tools{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: normal;
+}
+
+/**************** EDITABLE CONTENT **************************************/
 /*** Pages with editable content -like personal dashboard- have differents
    colors.
     Replace colors: 
