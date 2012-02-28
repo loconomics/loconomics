@@ -1005,7 +1005,6 @@ div.dp-popup td.disabled{cursor:default;}
     margin: 6px 0;
 }
 .dashboard form li label{
-    min-width: 120px;
     display: inline-block;
 }
 .dashboard form li input[type="text"],
@@ -1025,6 +1024,9 @@ div.dp-popup td.disabled{cursor:default;}
 }
 
 /** Form: personal **/
+form#personal li label{
+    min-width: 120px;
+}
 #personal-fs-contactinformation,
 #personal-fs-homeaddress{
     display: inline-block;
@@ -1100,7 +1102,6 @@ form.positionavailability input{
 }
 .positionavailability-days label{
     width: auto !important;
-    min-width: 10px !important;
     padding: 0 !important;
 }
 .positionavailability-days label input{
@@ -1129,7 +1130,6 @@ form.positionavailability input{
 }
 .positionavailability-program .positionavailability-use-program label {
     padding: 0 !important;
-    min-width: 10px !important;
     width: auto !important;
 }
 .positionavailability-program .positionavailability-use-program label input{
@@ -1229,7 +1229,6 @@ form.positionavailability input{
 }
 .positionphotos-edit-caption label {
     padding: 5px 0;
-    min-width: 30px !important;
     width: auto !important;
     margin-right: 15px;
 }
@@ -1248,7 +1247,6 @@ form.positionavailability input{
     
 }
 .positionphotos-edit-primary label{
-    min-width: 10px !important;
     padding: 0;
 }
 
