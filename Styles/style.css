@@ -884,6 +884,7 @@ div.dp-popup td.disabled{cursor:default;}
     height: 70px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: normal;
 }
 #dashboard-alerts li a.more,
 #dashboard-alerts li a.more:link,
