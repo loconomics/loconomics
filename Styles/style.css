@@ -1388,6 +1388,69 @@ form.positionavailability input{
     font-weight: bold;
     margin: 0;
 }
+.booking form {
+    margin: 30px 0 0;
+    font-size: .9em;
+}
+.booking fieldset legend{
+    font-weight: bold;
+}
+.booking fieldset {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0;
+}
+.booking ul,
+.booking ol{
+    padding: 0;
+    margin: 0;
+}
+.booking li{
+    padding: 0;
+    margin: 0;
+}
+.booking label input{
+    margin: 0 5px;
+}
+
+/** Form: Services **/
+#booking-services{
+    position: relative;
+}
+#booking-services .attribute-category{
+    width: 176px;
+}
+#booking-services .special-instructions{
+    width: 356px;
+    margin: 10px 0 0;
+}
+#booking-services .special-instructions textarea{
+    width: 300px;
+    height: 8em;
+}
+#booking-services .pricing-wizard{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 310px;
+    height: 100%;
+    padding-left: 10px;
+    border-left: 1px solid #dadada;
+    margin-left: 10px;
+}
+#booking-services .pricing-wizard li{
+    margin: 10px 0;
+    position: relative;
+}
+#booking-services .pricing-wizard li label{
+    display: inline-block;
+    width: 205px;
+}
+#booking-services .pricing-wizard select{
+    position: absolute;
+    right: 0;
+    width: 80px;
+}
 
 /** FAQs **/
 #faqs{
@@ -1412,6 +1475,8 @@ form.positionavailability input{
 }
 #faqs ol{
     margin: 0;
+    padding: 0;
+    list-style-position: inside;
 }
 #faqs section a.more{
     display: block;
