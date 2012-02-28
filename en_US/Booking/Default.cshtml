@@ -17,9 +17,9 @@
     }
 }
 
-  <div id="container" class="clearfix"> 
+  <div id="container" class="clearfix booking editable"> 
     <div id="main" class="tabbed folders">
-		<h1>@Page.Title</h1>
+		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We'll make it easy for you and @PageData["providerrow"].FirstName</p>
         
 		<ul class="tabs autofill-submenu-items">
@@ -41,5 +41,6 @@
 		</div><!-- #payment -->
         
     </div><!-- #main -->
+    @RenderPage("_FAQs.cshtml")
     
   </div><!-- #container -->

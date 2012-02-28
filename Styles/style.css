@@ -177,6 +177,16 @@ h5 { font-size: 1.4em; }
 h6 { font-size: 1.2em; }
 
 .greeting { color: #461864; font-weight: bold; font-size: 1.8em; margin: .5em 0 1.5em 0;  }
+.subh1 {
+    color: #B5E1E2;
+    font-size: 1.6em;
+    font-weight: 600;
+    line-height: 100%;
+    margin: 0 0 20px;
+}
+h1.withsub {
+    margin-bottom: 5px;
+}
 
 ul, ol { padding: 0 0 0 20px; }
 
@@ -747,11 +757,10 @@ div.dp-popup td.disabled{cursor:default;}
   h2, h3 { page-break-after: avoid; }
 }
 
-/* ====== Dashboard and editable pages ===========
+
+/* ============== Dashboard pages ================
    ====== IagoSRL for Loconomics S.L. ============
-   == (some changes were made throughout the =====
-   ==  file to match organization) ===============
-   =============================================== */
+ */
 
 /*** Dashboard specific ***/
 /* Extra padding when there is non tabbed content inside tab */
@@ -1353,10 +1362,69 @@ form.positionavailability input{
     color: #00989A;
 }
 
-/**************** EDITABLE CONTENT **************************************/
-/*** Pages with editable content -like personal dashboard- have differents
-   colors.
-    Replace colors: 
+
+/* ============== Booking pages ==================
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+.booking #main{
+    width: 730px;
+}
+.booking #faqs{
+    width: 185px;
+    padding: 15px;
+    float: right;
+    
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border: 1px solid #849a9a;
+}
+.booking #main h1{
+    margin-top: 0;
+}
+.booking p.info{
+    font-weight: bold;
+    margin: 0;
+}
+
+/** FAQs **/
+#faqs{
+    font-size: .9em;
+}
+#faqs h2,
+#faqs h3 {
+    color: #999999
+}
+#faqs h2{
+    font-size: 1.3em;
+    margin: 10px 0 20px;
+    padding: 0 0 20px;
+    border-bottom: 1px solid #999;
+}
+#faqs h3{
+    font-size: 1.2em;
+    margin: 10px 0 5px;
+}
+#faqs h3:after{
+    content: ':';
+}
+#faqs ol{
+    margin: 0;
+}
+#faqs section a.more{
+    display: block;
+    text-align: right;
+}
+
+
+/* ============== Editable content ===============
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+/*** Pages with editable content -like personal dashboard, booking,...-
+    have differents colors.
+    Replaced colors: (read-only -> editable)
     #A190AF -> #b5e1e2
     #461864 -> #00989a
     #DBD5E0 -> #daf0f1
