@@ -53,7 +53,7 @@
                 @RenderPage("_PositionsPhotos.cshtml")
             </div><!-- #@("position"+n)-photos -->
             <div id="@("position"+n)-locations" class="tab-body">
-                Locations <!-- TODO here must be the back-end content -->
+                @RenderPage("_PositionsLocations.cshtml")
             </div><!-- #@("position"+n)-locations -->
             <div id="@("position"+n)-licenses" class="tab-body">
                 Licenses <!-- TODO here must be the back-end content -->

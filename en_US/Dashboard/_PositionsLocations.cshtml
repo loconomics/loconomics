@@ -1,0 +1,73 @@
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
+@helper printDistanceSelect(){
+    <select name="positionlocations-maxdistance">
+        <option value="1">1 mile</option>
+        <option value="5">5 miles</option>
+        <option value="10">10 miles</option>
+        <option value="25">25 miles</option>
+    </select>
+}
+@helper printAddress(IDictionary<string, object> addressDetails){
+        <div class="address">
+            <span class="address-name">@addressDetails["name"]</span>
+            <span class="address-location">@addressDetails["location"]</span>
+            <span class="address-city">@addressDetails["city"]</span>
+            <span class="address-state">@addressDetails["state"]</span>
+            <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            <div class="tools">
+                <a href="#" class="edit">Edit</a>
+                <a href="#" class="map">Map</a>
+                <a href="#" class="remove">Remove</a>
+            </div>
+        </div>
+}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+
+<form action="#" method="post" class="positionlocations" id="position#@(n)-locations">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <fieldset class="positionlocations-itravel">
+        <legend>I travel to clients:</legend>
+        <div class="positionlocations-itravel-confirm">
+            <label>Yes<input type="radio" name="positionlocations-itravel" value="yes"/></label>
+            <label>No<input type="radio" name="positionlocations-itravel" value="no"/></label>
+        </div>
+    </fieldset>
+    <fieldset class="positionlocations-itravelfrom">
+        <legend>I travel from this location (one only):</legend>
+        <div class="address">
+            @printAddress(new Dictionary<string, object>() {{"name", "My home"}, {"location", "187 Bocana St"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94110"} })
+        </div>
+        <label>I will travel up to @printDistanceSelect() from this location.</label>
+    </fieldset>
+    <fieldset class="positionlocations-itravelusing">
+        <legend>I travel to jobs using primarily:</legend>
+        <label>Public transport<input type="radio" name="positionlocations-itravelusing" value="public"/></label>
+        <label>Walk<input type="radio" name="positionlocations-itravelusing" value="walk"/></label>
+        <label>Automobile<input type="radio" name="positionlocations-itravelusing" value="automobile"/></label>
+    </fieldset>
+    <fieldset class="positionlocations-servicelocations">
+        <legend>I perform services at specific locations:</legend>
+        <div class="positionlocations-servicelocations-confirm">
+            <label>Yes<input type="radio" name="positionlocations-itravel" value="yes"/></label>
+            <label>No<input type="radio" name="positionlocations-itravel" value="no"/></label>
+        </div>
+        <ul>
+            <li>
+                @printAddress(new Dictionary<string, object>() {{"name", "Equinox Fitness"}, {"location", "301 Pine Street"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94012"} })
+            </li>
+            <li>
+                @printAddress(new Dictionary<string, object>() {{"name", "My home"}, {"location", "187 Bocana St"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94110"} })
+            </li>
+            <li>
+                @printAddress(new Dictionary<string, object>() {{"name", "Equinox Fitness"}, {"location", "301 Pine Street"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94012"} })
+            </li>
+        </ul>
+    </fieldset>
+</form>
