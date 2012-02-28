@@ -1195,7 +1195,8 @@ form.positionavailability input{
     list-style: none;
     padding: 0;
     margin: 0;
-    height: 100%;
+    /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting to static 349px */
+    height: 349px;
     overflow: auto;
 }
 .positionphotos-gallery li {
