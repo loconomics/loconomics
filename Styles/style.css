@@ -765,8 +765,8 @@ div.dp-popup td.disabled{cursor:default;}
 .dashboard #highlights,
 .dashboard #dashboard-help,
 .dashboard #main{
-    margin: 0 0 0 215px;
-    width: 745px;
+    margin: 0 0 0 200px;
+    width: 760px;
 }
 .dashboard #main { 
     margin-top: 12px;
@@ -1024,6 +1024,12 @@ div.dp-popup td.disabled{cursor:default;}
 }
 
 /** Form: personal **/
+#personal li input[type="text"]{
+    width: 160px;
+}
+#personal li select{
+    width: 187px;
+}
 form#personal li label{
     min-width: 120px;
 }
@@ -1037,7 +1043,7 @@ form#personal li label{
     display: none;
 }
 #personal-publicbio{
-    width: 600px;
+    width: 648px;
     height: 8em;
     margin: 0 10px;
 }
@@ -1108,7 +1114,7 @@ form.positionavailability input{
     margin: 0 3px;
 }
 .positionavailability-hours {
-    width: 230px;
+    width: 220px;
 }
 .positionavailability-hours select{
     width: 80px !important;
@@ -1117,7 +1123,7 @@ form.positionavailability input{
     display: none;
 }
 .positionavailability-program {
-    width: 430px !important;
+    width: 424px !important;
 }
 .positionavailability-program legend{
     float: left;
@@ -1141,11 +1147,11 @@ form.positionavailability input{
 .positionavailability-booking {
     border-left: 1px solid #DADADA;
     height: 90%;
-    padding-left: 10px !important;
+    padding-left: 13px !important;
     position: absolute;
     right: 0;
     top: 0;
-    width: 270px;
+    width: 280px;
 }
 .positionavailability-booking label{
     display: block;
@@ -1162,7 +1168,7 @@ form.positionavailability input{
     vertical-align: top;
 }
 .positionphotos-edit {
-    width: 380px;
+    width: 390px;
 }
 .positionphotos-gallery {
     width: 160px;
@@ -1172,9 +1178,9 @@ form.positionavailability input{
 }
 .positionphotos-gallery,
 .positionphotos-edit{
-    padding-right: 6px !important;
-    border-right: solid 4px #dadada;
-    margin-right: 5px !important;
+    border-right: 4px solid #DADADA;
+    margin-right: 8px !important;
+    padding-right: 4px !important;
 }
 .positionphotos-edit,
 .positionphotos-gallery,
@@ -1264,17 +1270,17 @@ form.positionavailability input{
 .positionlocations-itravel,
 .positionlocations-itravelfrom,
 .positionlocations-itravelusing{
-    width: 340px;
+    width: 344px;
 }
 .positionlocations-servicelocations{
     border-left: 1px solid #DADADA;
     margin-left: 5px !important;
     margin-top: 0 !important;
-    padding-left: 20px !important;
+    padding-left: 10px !important;
     position: absolute;
     right: 0;
     top: 0;
-    width: 340px;
+    width: 350px;
 }
 /* yes/no buttons in the same line that fieldset>legend */
 .positionlocations-itravel legend,
@@ -1309,6 +1315,9 @@ form.positionavailability input{
 .positionlocations-servicelocations ul{
     margin: 0 25px 5px !important;
 }
+.positionlocations-servicelocations ul li{
+    margin: 16px 0;
+}
 .positionlocations-servicelocations a.addlocation{
     display: block;
     margin: 10px 25px;
@@ -1325,6 +1334,7 @@ form.positionavailability input{
 .address{
     font-weight: bold;
     position: relative;
+    line-height: 1.3em;
 }
 .address .address-name,
 .address .address-location{
@@ -1338,6 +1348,9 @@ form.positionavailability input{
     top: 0;
     right: 0;
     font-weight: normal;
+}
+.address:hover .tools a {
+    color: #00989A;
 }
 
 /**************** EDITABLE CONTENT **************************************/
