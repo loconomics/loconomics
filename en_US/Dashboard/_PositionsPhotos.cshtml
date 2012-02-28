@@ -1,0 +1,45 @@
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+
+<form action="#" method="post" class="positionphotos" id="position#@(n)-photos">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <fieldset class="positionphotos-edit">
+        <legend>Edit this photo:</legend>
+        <ul>
+            <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@Href("~/img/thumbs/stevejobs.jpeg")" /></li>
+            <li class="positionphotos-edit-caption">
+                <label for="position#@(n)-photos-edit-caption">Caption</label>
+                <input type="text" id="position#@(n)-photos-edit-caption" name="positionphotos-edit-caption"/>
+            </li>
+            <li class="positionphotos-edit-primary">
+                <h6>Make primary photo?</h6>
+                <label>Yes<input type="radio" name="positionphotos-edit-primary" value="yes"/></label>
+                <label>No<input type="radio" name="positionphotos-edit-primary" value="no"/></label>
+            </li>
+            <li class="positionphotos-edit-delete">
+                <a href="#">Delete this photo</a>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="positionphotos-gallery">
+        <legend>Stored photos:</legend>
+        <ol>
+            <li><img src="@Href("~/img/thumbs/billgates.jpeg")"/><a href="#">Edit</a></li>
+            <li><img src="@Href("~/img/thumbs/stevejobs.jpeg")"/><a href="#">Edit</a></li>
+            <li><img src="@Href("~/img/thumbs/billgates.jpeg")"/><a href="#">Edit</a></li>
+        </ol>
+    </fieldset>
+    <fieldset class="positionphotos-tools">
+        <ul>
+            <li class="positionphotos-tools-upload"><a href="#">Upload photos</a></li>
+            <li class="positionphotos-tools-arrange"><a href="#">Arrange photos</a></li>
+        </ul>
+    </fieldset>
+</form>
