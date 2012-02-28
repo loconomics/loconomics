@@ -15,7 +15,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <ul>
             <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@Href("~/img/thumbs/stevejobs.jpeg")" /></li>
             <li class="positionphotos-edit-caption">
-                <label for="position#@(n)-photos-edit-caption">Caption</label>
+                <label for="position#@(n)-photos-edit-caption">Caption:</label>
                 <input type="text" id="position#@(n)-photos-edit-caption" name="positionphotos-edit-caption"/>
             </li>
             <li class="positionphotos-edit-primary">
@@ -31,9 +31,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-gallery">
         <legend>Stored photos:</legend>
         <ol>
-            <li><img src="@Href("~/img/thumbs/billgates.jpeg")"/><a href="#">Edit</a></li>
-            <li><img src="@Href("~/img/thumbs/stevejobs.jpeg")"/><a href="#">Edit</a></li>
-            <li><img src="@Href("~/img/thumbs/billgates.jpeg")"/><a href="#">Edit</a></li>
+            <li><a href="#"><img src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li class="selected"><a href="#"><img src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img src="@Href("~/img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img src="@Href("~/img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
         </ol>
     </fieldset>
     <fieldset class="positionphotos-tools">

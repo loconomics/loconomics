@@ -1018,6 +1018,11 @@ div.dp-popup td.disabled{cursor:default;}
     /*margin: 0 1.4em;*/
     width: 150px;
 }
+.dashboard form a,
+.dashboard form a:link,
+.dashboard form a:visited{
+    color: #3baeb0;
+}
 
 /** Form: personal **/
 #personal-fs-contactinformation,
@@ -1149,6 +1154,102 @@ form.positionavailability input{
 .positionavailability-booking select{
     position: absolute;
     right: 0;
+}
+
+/** Form Positions - Photos **/
+.positionphotos fieldset{
+    display: inline-block;
+    vertical-align: top;
+}
+.positionphotos-edit {
+    width: 380px;
+}
+.positionphotos-gallery {
+    width: 160px;
+}
+.positionphotos-tools{
+    width: 116px;
+}
+.positionphotos-gallery,
+.positionphotos-edit{
+    padding-right: 6px !important;
+    border-right: solid 4px #dadada;
+    margin-right: 5px !important;
+}
+.positionphotos-edit,
+.positionphotos-gallery,
+.positionsphotos.tools{
+    height: 370px;
+    overflow: hidden;
+}
+.positionphotos-edit-photo {
+    width: 380px;
+    height: 240px;
+    overflow: hidden;
+}
+.positionphotos-edit-photo img{
+    min-width: 380px;
+    min-height: 240px;
+}
+.positionphotos-gallery ol{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow: auto;
+}
+.positionphotos-gallery li {
+    width: 134px;
+    overflow: hidden;
+}
+.positionphotos-gallery li a{
+    display: block;
+    width: 128px;
+    height: 80px;
+    margin: 3px auto;
+    overflow: hidden;
+    text-align: center;
+}
+.positionphotos-gallery li a img{
+    max-width: 128px;
+    min-height: 80px;
+}
+.positionphotos-gallery li.selected a{
+    outline: 3px solid #00989a;
+}
+.positionphotos-gallery li.selected a.edit{
+    outline: none;
+}
+.positionphotos-gallery li a.edit{
+    display: block;
+    text-align: right;
+    text-transform: lowercase;
+    width: auto;
+    height: auto;
+}
+.positionphotos-edit-caption label {
+    padding: 5px 0;
+    min-width: 30px !important;
+    width: auto !important;
+    margin-right: 15px;
+}
+.positionphotos-edit-caption input{
+    width: 270px !important;
+}
+.positionphotos-edit-primary h6{
+    font-size: 1em;
+    color: #666666;
+    margin: 0 15px 0 0;
+    font-weight: normal;
+    display: inline-block;
+}
+.positionphotos-edit-primary input {
+    margin: 0 3px;
+    
+}
+.positionphotos-edit-primary label{
+    min-width: 10px !important;
+    padding: 0;
 }
 
 /*** Pages with editable content -like personal dashboard- have differents
