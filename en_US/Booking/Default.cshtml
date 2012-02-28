@@ -1,0 +1,45 @@
+﻿@{  
+    DashboardFunctions.SecurePage();
+    
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Let's get this booked";
+    
+    PageData["customerrow"] = DashboardFunctions.GetUserRow();
+
+    if (!String.IsNullOrEmpty(Request["ProviderId"])){
+        int providerid = 0;
+        if (!int.TryParse(Request["ProviderId"], out providerid)){
+            Response.Redirect("~");
+        }
+        PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
+    } else {
+        Response.Redirect("~");
+    }
+}
+
+  <div id="container" class="clearfix"> 
+    <div id="main" class="tabbed folders">
+		<h1>@Page.Title</h1>
+        <p class="subh1">We'll make it easy for you and @PageData["providerrow"].FirstName</p>
+        
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a class="current" href="#services">Services</a></li>
+			<li><a href="#schedule">Schedule</a></li>
+            <li><a href="#payment">Payment</a></li>
+        </ul>
+        
+		<div id="services" class="tab-body fancy current">
+            @RenderPage("_Services.cshtml")
+		</div><!-- #services -->
+
+		<div id="schedule" class="tab-body fancy">
+            @RenderPage("_Schedule.cshtml")
+		</div><!-- #schedule -->
+
+		<div id="payment" class="tab-body fancy">
+            @RenderPage("_Payment.cshtml")
+		</div><!-- #payment -->
+        
+    </div><!-- #main -->
+    
+  </div><!-- #container -->

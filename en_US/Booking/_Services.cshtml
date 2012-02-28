@@ -1,0 +1,88 @@
+﻿@{
+    var p = PageData["providerrow"];
+    var c = PageData["customerrow"];
+    
+    // Attributes from category 1
+    var attc1 = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
+        {6, "Dishes"}, {7, "Trash emptyting"}, {8, "Toilets"}};
+    // Attributes from category 2
+    var attc2 = new Dictionary<int, string>(){{302, "Ironing"}, {155, "Laundry"}, {85, "Window-cleaning"}, {128, "Floor-waxing"}};
+}
+@helper selectNumber(string idname){
+                <select id="@idname" name="@idname">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+}
+
+Please review the items below and be as accurate as possible to help your provider do a great job.  The price and time require are estimates only and may change depending on actual work performed.   
+
+<form action="#" method="post" class="services" id="booking-services">
+    <input type="hidden" name="customerid" value="@c.UserID"/>
+    <input type="hidden" name="providerid" value="@p.UserID"/>
+    <fieldset class="select-services">
+        <legend>Select the services you'd like performed:</legend>
+        <fieldset class="attribute-category-1">
+            <legend>Services regulary included:</legend>
+            <ul>
+                @foreach(var att in attc1){
+                    <li><label><input type="checkbox" name="booking-services-attribute-cat1-@att.Key"/>@att.Value</label></li>
+                }
+            </ul>
+        </fieldset>
+        <fieldset class="attribute-category-2">
+            <legend>Services upon request:</legend>
+            <ul>
+                @foreach(var att in attc2){
+                    <li><label><input type="checkbox" name="booking-services-attribute-cat2-@att.Key"/>@att.Value</label></li>
+                }
+            </ul>
+        </fieldset>
+    </fieldset>
+    <fieldset class="special-instructions">
+        <legend>Please include any special instructions to help your provider do a great job:</legend>
+        <textarea name="booking-services-special-instructions">I would like mints on my pillows, thanks!</textarea>
+    </fieldset>
+    <fieldset class="pricing-wizard">
+        <legend>Pricing estimate:</legend>
+        <ul>
+            <li class="home-type">
+                <label for="booking-services-hometype">Type of home:</label>
+                <select id="booking-services-hometype" name="booking-services-hometype">
+                    <option>House</option>
+                </select>
+            </li>
+            <li class="number-of-bedrooms">
+                <label for="booking-services-bedroomsnumber">Number of bedrooms:</label>
+                @selectNumber("booking-services-bedroomsnumber")
+            </li>
+            <li class="number-of-bathrooms"
+                <label for="booking-services-bathroomsnumber">Number of bathrooms:</label>
+                @selectNumber("booking-services-bedroomsnumber")
+            </li>
+            <li class="number-of-common-rooms"
+                <label for="booking-services-commonroomsnumber">Number of common rooms:</label>
+                @selectNumber("booking-services-commonroomsnumber")
+            </li>
+            <li class="cleanliness-level">
+                <label for="booking-services-cleanliness-level">What level of cleaning is required?</label>
+                <select id="booking-services-cleanliness-level" name="booking-services-cleanliness-level">
+                    <option>light</option>
+                </select>
+            </li>
+            <li class="pets">
+                <label for="booking-services-pets">Do you have any indoor pets?</label>
+                <select id="booking-services-pets" name="booking-services-pets">
+                    <option>Cats</option>
+                    <option>Dogs</option>
+                </select>
+            </li>
+            <li class="calculate-price-button">
+                <input type="button" class="calculate-price-button" value="Calculate"/>
+            </li>
+        </ul>
+    </fieldset>
+    
+</form>
