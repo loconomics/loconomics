@@ -5,15 +5,36 @@
 
     /* Get a data row with the User information from the database
     */
-    public static object GetUserRow() {
+    public static object GetUserRow(int userId) {
 
         // Commented unused vars:
         //var stringPosted = "Nothing";
         //var theDate = DateTime.Now.ToString("yyyy-MM-dd");
         
         var db = Database.Open("sqlloco");
-        var sqluser = "exec GetUserDetails @0";
-        return db.QuerySingle(sqluser, WebSecurity.CurrentUserId);
+        var sqluser = 
+            //"exec GetUserDetails @0";
+            // NOTE: UserID is needed!
+            @"
+                SELECT
+                    a.UserID,
+                    FirstName, 
+                    LastName,
+                    SecondLastName,
+                    MiddleIn,
+                    PostalCode,
+                    Photo,
+                    PreferredLanguageID,
+                    PreferredCountryID,
+                    ADD_Details 
+                from users a 
+                join dbo.userprofilepositionadditional b 
+                on a.userid = b.userid  where a.UserID = @0
+            ";
+        return db.QuerySingle(sqluser, userId);
+    }
+    public static object GetUserRow() {
+        return GetUserRow(WebSecurity.CurrentUserId);
     }
     /* Get a data object with the Positions rows of the user from the database
     */
