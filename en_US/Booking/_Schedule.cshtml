@@ -3,12 +3,11 @@
     var c = PageData["customerrow"];
     //var customerid = c.UserID;
     
-    // Attributes from category 1
-    var attc1 = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
-        {6, "Dishes"}, {7, "Trash emptyting"}, {8, "Toilets"}};
-    // Attributes from category 2
-    var attc2 = new Dictionary<int, string>(){{302, "Ironing"}, {155, "Laundry"}, {85, "Window-cleaning"}, {128, "Floor-waxing"}};
+    // Classes for differents calendar availability states
+    var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
+    Random r = new Random();
 }
+
 
 <p class="info">
     Please review your provider’s availability calendar and choose a location, preferred time for services to be peformed and up to two alternate times.  Being flexible helps the two of you get an accurate time booked quickly.  
@@ -18,28 +17,22 @@
     <fieldset class="availability">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">
-        <table class="calendar">
-            <thead><tr>
-                <th class="hh"></th><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
-            </tr></thead>
-            <tbody>
+            <ol class="days">
+                <li>S</li><li>M</li><li>T</li><li>W</li><li>T</li><li>F</li><li>S</li>
+            </ol>
+            <ol class="hours">
                 @for(var h = 7; h < 23; h++){
-                <!-- Zero -->
-                <tr>
-                    <th rowspan="2">@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</th>
-                    @for(var d = 0; d < 7; d++){
-                    <td></td>
-                    }
-                </tr>
-                <!-- Half Hours -->
-                <tr class="half">
-                    @for(var d = 0; d < 7; d++){
-                    <td></td>
-                    }
-                </tr>
+                <li>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</li>
                 }
-            </tbody>
-        </table>
+            </ol>
+            <ol class="datetimes">
+                @for(var h = 7; h < 23; h++){
+                 for(var b = 0; b < 2; b++){
+                    var half = b == 0 ? "" : "half ";
+                for(var d = 0; d < 7; d++)
+                {<li class="@half@stateClasses[r.Next(0, 4)]"></li>}
+                }}
+            </ol>
         </div>
         <ul class="calendar-legend">
             <li class="free"><span class="color">Green</span>Free</li>
