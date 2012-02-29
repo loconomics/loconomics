@@ -1489,7 +1489,10 @@ form.positionavailability input{
     width: 80px;
 }
 
-/** Form: Availability **/
+/** Form: Schedule **/
+#booking-schedule{
+    position: relative;
+}
 #booking-schedule .availability div.calendar,
 #booking-schedule .availability .calendar-legend {
     display: inline-block;
@@ -1497,7 +1500,7 @@ form.positionavailability input{
 }
 #booking-schedule .availability div.calendar{
     clear: both;
-    height: 310px;
+    height: 234px;
     overflow: hidden;
     position: relative;
     width: 290px;
@@ -1601,6 +1604,68 @@ form.positionavailability input{
 }
 #booking-schedule .availability .calendar-legend li.unavailable .color{
     background-color: white;
+}
+/* Schedule.location */
+#booking-schedule .location{
+    margin-top: 15px;
+    width: 400px;
+    overflow: hidden;
+}
+#booking-schedule .location .street-address-line-1 input,
+#booking-schedule .location .street-address-line-2 input{
+    width: 210px;
+}
+#booking-schedule .location .state,
+#booking-schedule .location .zip {
+    display: inline-block;
+}
+#booking-schedule .location .city input{
+    width: 307px;
+}
+#booking-schedule .location .state select{
+    width: 160px;
+}
+#booking-schedule .location .zip input {
+    width: 60px;
+}
+#booking-schedule .location .save-to-my-locations{
+    margin-top: 6px;
+}
+#booking-schedule .location .save-to-my-locations label{
+    padding: 0;
+    margin: 0;
+}
+#booking-schedule .location .save-to-my-locations label.save{
+    padding-left: 5px;
+}
+#booking-schedule .location .save-to-my-locations input[type="text"]{
+    width: 174px;
+}
+#booking-schedule .select-schedule{
+    border-left: 1px solid #dadada;
+    margin-left: 10px;
+    padding-left: 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 266px;
+}
+#booking-schedule .select-schedule fieldset{
+    display: block;
+    margin-bottom: 30px;
+}
+#booking-schedule .select-schedule fieldset.select-date-time input{
+    width: 80px;
+}
+#booking-schedule .select-schedule fieldset.select-date-time label{
+    display: block;
+    position: relative;
+}
+#booking-schedule .select-schedule fieldset.select-date-time input,
+#booking-schedule .select-schedule fieldset.select-date-time select {
+    position: absolute;
+    right: 0;
+    margin-right: 0;
 }
 
 /** FAQs **/

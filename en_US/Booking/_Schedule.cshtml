@@ -7,7 +7,15 @@
     var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
 }
-
+@helper printOptionsHours(){
+    var firstHour = new TimeSpan(9, 0, 0);
+    var lastHour = new TimeSpan(18, 30, 0);
+    var interval = new TimeSpan(0, 30, 0);
+    for (var hour = firstHour; hour <= lastHour; hour += interval)
+    {
+        <option value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+    }
+}
 
 <p class="info">
     Please review your provider’s availability calendar and choose a location, preferred time for services to be peformed and up to two alternate times.  Being flexible helps the two of you get an accurate time booked quickly.  
@@ -41,4 +49,79 @@
             <li class="unavailable"><span class="color">White</span>Unavailable</li>
         </ul>
     </fieldset>
+    <fieldset class="location">
+        <legend>Location where services are to be performed:</legend>
+        <ul>
+            <li class="street-address-line-1">
+                <label>Street address line 1:<input type="text" name="street-address-line-1"/></label>
+            </li>
+            <li class="street-address-line-2">
+                <label>Street address line 2:<input type="text" name="street-address-line-2"/></label>
+            </li>
+            <li class="city">
+                <label>City:<input type="text" name="city"/></label>
+            </li>
+            <li class="state">
+                <label>State:<select name="state">
+                        <option value="ca">California</option>
+                    </select>
+                </label>
+            </li>
+            <li class="zip">
+                <label>Zip Code:<input type="text" name="zip"/></label>
+            </li>
+            <li class="save-to-my-locations">
+                <label class="save"><input type="checkbox" name="save"/>Save</label>
+                <label>to my locations as:<input type="text" name="save-location-as"/></label>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="select-schedule">
+        <fieldset class="preferred-option select-date-time">
+            <legend>My preferred option:</legend>
+            <ul>
+                <li class="date">
+                    <label>Date:<input class="date" type="text" name="preferred-date"/></label>
+                </li>
+                <li class="start-time">
+                    <label>Start time:<select name="preferred-start-time">@printOptionsHours()</select></label>
+                </li>
+                <li class="end-time">
+                    <label>End time:<select name="preferred-end-time">@printOptionsHours()</select></label>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="alternative-option-1 select-date-time">
+            <legend>Second best option:</legend>
+            <ul>
+                <li class="date">
+                    <label>Date:<input class="date" type="text" name="alternative-1-date"/></label>
+                </li>
+                <li class="start-time">
+                    <label>Start time:<select name="alternative-1-start-time">@printOptionsHours()</select></label>
+                </li>
+                <li class="end-time">
+                    <label>End time:<select name="alternative-1-end-time">@printOptionsHours()</select></label>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="alternative-option-2 select-date-time">
+            <legend>Third best option:</legend>
+            <ul>
+                <li class="date">
+                    <label>Date:<input class="date" type="text" name="alternative-21-date"/></label>
+                </li>
+                <li class="start-time">
+                    <label>Start time:<select name="alternative-2-start-time">@printOptionsHours()</select></label>
+                </li>
+                <li class="end-time">
+                    <label>End time:<select name="alternative-2-end-time">@printOptionsHours()</select></label>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="recurring">
+            <label><input type="checkbox" name="recurring"/>Make this appointment recurring</label>
+        </fieldset>
+    </fieldset>
+    <button class="proceed-to-payment next">Proceed to payment</button>
 </form>
