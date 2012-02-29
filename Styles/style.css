@@ -566,7 +566,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: auto;
     font-size: 1.2em;
 }
-.home #main h1 { margin-bottom: 20px; padding-right: 15px;}
+.home #main h1 { margin-bottom: 20px; padding-right: 15px; margin-top: 100px; }
 .home form fieldset { margin: .5em 0; }
 .home form fieldset #serviceDate { width: 120px; }
 .home button { font-weight: bold; }
