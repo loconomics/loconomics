@@ -559,10 +559,17 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .search ul.tabs { margin-top: 40px; }
 
 /*.home #main { float: none; width: auto; text-align: center; }*/
-.home #main { float: left; width: 615px; text-align: left; }
-.home #main h1 { margin-bottom: 20px; padding-right: 15px; }
+.home #main {
+    float: none;
+    text-align: center;
+    width: auto;
+    margin: auto;
+    font-size: 1.2em;
+}
+.home #main h1 { margin-bottom: 20px; padding-right: 15px;}
 .home form fieldset { margin: .5em 0; }
-.home form fieldset #serviceDate { width: 80px; }
+.home form fieldset #serviceDate { width: 120px; }
+.home button { font-weight: bold; }
 
 .home #secondary { position: relative; margin: 0 25px 0 600px; text-align: left; }
 .home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; /*width: 114px;*/ font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
@@ -587,6 +594,16 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
 .home #secondary .video img { width: 352px; }
 
+.home footer {
+    font-size: 1.4em;
+}
+.home #container {
+    padding-bottom: 0;
+}
+.home .categories { height: 120px; }
+.home .categories ul { overflow: hidden; }
+.home .categories h3 { text-align: center; }
+
 .categories { margin: 0 auto; width: 900px; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
 .categories > ul { margin: 100px 0 0 0; }
@@ -597,7 +614,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }
-.categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; }
+.categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
 .categories ul:first-child > li:hover div.menu { display: block; } 
 
 .faq dt { font-weight: bold; }
