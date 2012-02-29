@@ -607,6 +607,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     top: 5px;
     margin-top: -5px;
 }
+.home .serviceDate {
+    color: #5ebebf;
+}
 .home .categories { height: 120px; }
 .home .categories ul { overflow: hidden; }
 .home .categories h3 { text-align: center; }
