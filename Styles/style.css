@@ -600,6 +600,13 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home #container {
     padding-bottom: 0;
 }
+.home .dp-choose-date {
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    top: 5px;
+    margin-top: -5px;
+}
 .home .categories { height: 120px; }
 .home .categories ul { overflow: hidden; }
 .home .categories h3 { text-align: center; }
