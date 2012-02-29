@@ -1489,6 +1489,73 @@ form.positionavailability input{
     width: 80px;
 }
 
+/** Form: Availability **/
+#booking-schedule .availability div.calendar,
+#booking-schedule .availability .calendar-legend {
+    display: inline-block;
+    vertical-align: top;
+}
+#booking-schedule .availability table.calendar{
+    border-collapse: separate;
+    border-spacing: 6px;
+    font-size: .8em;
+}
+#booking-schedule .availability table.calendar td,
+#booking-schedule .availability table.calendar th{
+}
+#booking-schedule .availability table.calendar td{
+    border: 1px solid #461864;
+}
+#booking-schedule .availability table.calendar tr.half{
+    border-spacing: 0;
+}
+#booking-schedule .availability table.calendar thead th{
+    color: White;
+    background-color: #a99fb7;
+    width: 30px;
+    text-align: center;
+}
+#booking-schedule .availability table.calendar tbody th{
+    color: #461864;
+    text-align: right;
+}
+#booking-schedule .availability table.calendar th.hh{
+    color: transparent;
+    background-color: transparent;
+}
+
+#booking-schedule .availability ul.calendar-legend{
+    list-style: none;
+    color: #461864;
+    text-transform: lowercase;
+}
+#booking-schedule .availability .calendar-legend li{
+    margin: 6px;
+}
+#booking-schedule .availability .calendar-legend li .color{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid #461864;
+    display: inline-block;
+    margin: 0 10px;
+    text-indent: -9999px;
+    vertical-align: middle;
+}
+#booking-schedule .availability .calendar-legend li.free .color{
+    background-color: #ddeab8;
+}
+#booking-schedule .availability .calendar-legend li.busy .color{
+    background-color: #d8abbd;
+}
+#booking-schedule .availability .calendar-legend li.tentative .color{
+    background-color: #fae8ad;
+}
+#booking-schedule .availability .calendar-legend li.unavailable .color{
+    background-color: white;
+}
+
+
 /** FAQs **/
 #faqs{
     font-size: .9em;
