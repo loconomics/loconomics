@@ -1412,6 +1412,43 @@ form.positionavailability input{
 .booking label input{
     margin: 0 5px;
 }
+.booking button{
+    /* One-line, aligned to right */
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+    
+    text-transform: lowercase;
+    font-size: 1.0em;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+.booking button.next{
+    background: #99C027;
+    color: White;
+    font-size: 1.2em;
+    line-height: 150%;
+}
+.booking button.next:hover{
+    -moz-box-shadow: 0 0 5px 2px #99C027;
+}
+.booking li.calculation{
+    overflow: hidden;
+}
+.booking table.calculation{
+    border-collapse: collapse;
+    float: right;
+}
+.booking table.calculation th,
+.booking table.calculation td{
+    font-weight: normal;
+    text-align: right;
+    height: auto;
+    margin: 0;
+    padding: 0 0 0 20px;
+}
 
 /** Form: Services **/
 #booking-services{
