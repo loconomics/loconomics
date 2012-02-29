@@ -1,6 +1,7 @@
 ﻿@{
     var p = PageData["providerrow"];
     var c = PageData["customerrow"];
+    //var customerid = c.UserID;
     
     // Attributes from category 1
     var attc1 = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
@@ -22,7 +23,6 @@
     The price and time require are estimates only and may change depending on actual work performed.   
 </p>
 <form action="#" method="post" class="services" id="booking-services">
-    <input type="hidden" name="customerid" value="@c.UserID"/>
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <fieldset class="select-services">
         <legend>Select the services you'd like performed:</legend>
