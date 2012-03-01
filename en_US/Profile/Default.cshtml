@@ -77,7 +77,7 @@
             n = 0;
             foreach(var position in PageData["posrows"]){
                 n++;
-                var cls = (n==1 ? "current" : "");
+               var cls = (position.PositionID == positionid ? "current" : "");
                 PageData["position"] = position;
                 PageData["npos"] = n;
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls">
