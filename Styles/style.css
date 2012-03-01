@@ -1593,6 +1593,9 @@ html.ie #booking-services .special-instructions legend{
     height: 4px;
     border-width: 1px;
 }
+#booking-schedule .availability .calendar ol.datetimes li:hover{
+    -moz-box-shadow: 0 0 2px 2px #00989A;
+}
 #booking-schedule .availability .calendar ol.datetimes li.half{
     margin-top: 0;
     border-width: 0 1px 1px 1px;
