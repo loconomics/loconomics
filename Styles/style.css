@@ -237,7 +237,11 @@ form textarea {
     background: #b5e1e2;
     color: #00989a;
     font-size: .9em;
-    line-height: 185%;
+    
+    /* line-height is bad in form elements to set the full height (only webkit do it), height is cross-browser */
+    /*line-height: 185%;*/
+    height: 1.6em;
+    
     display: inline-block;
     padding: 0 1.4em;
     width: 200px;
@@ -570,6 +574,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .home form fieldset { margin: .5em 0; }
 .home form fieldset #serviceDate { width: 120px; }
 .home button { font-weight: bold; }
+.home input {
+    height: 1.9em;
+}
 
 .home #secondary { position: relative; margin: 0 25px 0 600px; text-align: left; }
 .home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; /*width: 114px;*/ font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
