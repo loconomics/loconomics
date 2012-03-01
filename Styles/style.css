@@ -608,11 +608,14 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     padding-bottom: 0;
 }
 .home .dp-choose-date {
+    /* Moving image inside the textbox -ever in his left- */
     left: -30px;
-    margin-right: -24px;
     position: relative;
-    top: 5px;
-    margin-top: -5px;
+    /* vertical centering the image: 'middle' don't work well cross-browser, we use 'bottom' and an bottom offset */
+    vertical-align: bottom;
+    bottom: 4px;
+    /* we substract the image width to empty the horizontal reserved space */
+    margin-right: -24px;
 }
 .home .serviceDate {
     color: #5ebebf;
