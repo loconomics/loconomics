@@ -1,0 +1,110 @@
+/* ============== Profile pages ==================
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+
+.profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
+
+.profile #container, #container.search { font-size: .8em; }
+
+#profileHeader { margin-bottom: 40px; position: relative; }
+#profileHeader .wrap { margin-left: 145px; }
+#profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
+#profileHeader .buttons a { margin-right: 5px; }
+h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color: #461864; margin: 0; }
+
+.profile #main div.rate { float: right; width: 180px; padding: 14px 0 14px 14px; border-left: 1px solid #ccc; text-align: center; }
+.profile #main div.rate p.rate { padding: 1em 0; margin: 0 0 16px 0; 
+	font-size: 38px; font-weight: bold; border: 5px solid #461864; color: #461864; 	
+}
+.profile #main div.rate table { width: 50%; }
+
+.profile #main div.work { margin-right: 209px; }
+
+.profile #main div.feature { float: right; width: 400px; padding: 14px; border: 5px solid #DBD5E0; background: #fff; line-height: normal; }
+.profile #main div.feature img { float: left; width: 45px; height: auto; }
+.profile #main div.feature blockquote { margin: 0 0 14px 54px; }
+
+.profile #main div.work ul.services { margin: 0; padding: 0; list-style-type: none; background: url('../img/notebookp.jpg') no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
+.profile #main div.work ul.services ul { list-style-image: url('../img/bullet.png'); }
+.profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
+.profile #main div.work ul.services dl ul { margin: 0; }
+
+/*****************/
+/*** Structure ***/
+
+.profile #main {
+    float: none;
+    width: auto;
+}
+#profileHeader {
+    padding: 40px;
+    position: relative;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+#profileHeader p.profile-desc,
+#profileHeader h1.profile-name{
+    width: 600px;
+    margin: auto 20px;
+}
+#profileHeader p.profile-desc{
+    margin-top: 20px;
+    min-height: 155px;
+}
+#verifications {
+    position: absolute;
+    top: 40px;
+    right: 80px;
+    border-left: 3px solid #dadada;
+    padding: 0 0 0 10px;
+    margin: 0;
+    list-style: none;
+}
+#verifications li{
+    padding: 0 0 0 30px;
+    margin: 3px 0;
+    height: 25px;
+}
+.social-networking{
+    list-style: none;
+    margin: 5px 0;
+}
+.social-networking li{
+    display: inline-block;
+    margin: 0 40px;
+}
+
+/******************/
+/** Colors, texts */
+
+#profileHeader{
+    background: url('../img/profile-background.png') repeat-x top left;
+}
+#profileHeader h1.profile-name {
+    color: #461864;
+    margin: 0;
+    font-size: 1.4em;
+    /*font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS";*/
+}
+#profileHeader p{
+    color: #999;
+}
+#profileHeader .profile-pic {
+    float: left;
+    margin: 0 20px 0 0;
+    width: 186px;
+}
+#verifications {
+    font-weight: bold;
+}
+#verifications li{
+    background: no-repeat center left;
+}
+#verifications li.license{
+    background-image: url('../img/icon-licenses.png');
+}
+#verifications li.verification{
+    background-image: url('../img/icon-verifications.png');
+}
