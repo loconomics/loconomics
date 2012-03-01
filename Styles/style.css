@@ -116,6 +116,8 @@ fieldset { border: 0; margin: 0; padding: 0; }
 label { cursor: pointer; }
 
 legend { border: 0; *margin-left: -7px; padding: 0; }
+/* IE (5-9) an attempt of bugfix with legend element, work with side-effects, disabled */
+/*html.ie legend { display: inline; display: inline-block; width: 100%; }*/
 
 button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
 
@@ -1497,6 +1499,10 @@ form.positionavailability input{
 #booking-services .special-instructions{
     width: 356px;
     margin: 10px 0 0;
+}
+/* Fix a bug in IE */
+html.ie #booking-services .special-instructions legend{
+    display: inline-block;
 }
 #booking-services .special-instructions textarea{
     width: 300px;
