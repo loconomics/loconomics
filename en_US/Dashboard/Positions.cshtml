@@ -17,7 +17,7 @@
                 foreach(var c in PageData["posrows"]){
                     n++;
                     var cls = (n==1 ? "current" : "");
-                    <li class="@cls"><a class="@cls" href="@("#position"+n)">Position @n</a></li>
+                    <li class="@cls"><a class="@cls" href="@("#position"+n)">@c.PositionSingular</a></li>
                 }
             }
 		</ul>
