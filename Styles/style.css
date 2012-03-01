@@ -1452,11 +1452,6 @@ form.positionavailability input{
     margin: 0 5px;
 }
 .booking button{
-    /* One-line, aligned to right */
-    display: block;
-    margin-left: auto;
-    margin-right: 0;
-    
     text-transform: lowercase;
     font-size: 1.0em;
     border-radius: 20px;
@@ -1471,7 +1466,15 @@ form.positionavailability input{
     line-height: 150%;
 }
 .booking button.next:hover{
+    box-shadow: 0 0 5px 2px #99C027;
     -moz-box-shadow: 0 0 5px 2px #99C027;
+    -o-box-shadow: 0 0 5px 2px #99C027;
+    -webkit-box-shadow: 0 0 5px 2px #99C027;
+}
+/* .actions: container for buttons */
+.booking .actions {
+    text-align: right;
+    display: block;
 }
 .booking li.calculation{
     overflow: hidden;
