@@ -1,9 +1,9 @@
 ﻿@functions {
 
-    /* General: some functions spliting some code from old 'provider-dashboard-profile.cshtml' file
+    /* General: some functions created with code from old 'provider-dashboard-profile.cshtml' file
     */
 
-    /* Get a data row with the User information from the database
+    /* Get a data row with the User information identified with 'userId' from the database
     */
     public static object GetUserRow(int userId) {
 
@@ -33,15 +33,22 @@
             ";
         return db.QuerySingle(sqluser, userId);
     }
+    /* Get a data row with the current user information from the database
+    */
     public static object GetUserRow() {
         return GetUserRow(WebSecurity.CurrentUserId);
     }
-    /* Get a data object with the Positions rows of the user from the database
+    /* Get a data object with the Positions rows of the user identified with 'userId' from the database
     */
-    public static object GetUserPos(){
+    public static object GetUserPos(int userId){
         var db = Database.Open("sqlloco");
         var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
-        return db.Query(sqlpositions, WebSecurity.CurrentUserId);
+        return db.Query(sqlpositions, userId);
+    }
+    /* Get a data object with the Positions rows of the current user from the database
+    */
+    public static object GetUserPos(){
+        return GetUserPos(WebSecurity.CurrentUserId);
     }
     /* Ensure that only register users enter here, redirecting to login page when appropiated.
     */
@@ -51,6 +58,7 @@
     }
     /* Function create with copying the code from the old 'provider-dashboard-profile.cshtml' file,
         must be used in the appropiated Dashboard page by back-end code.
+      TODO: Un-used function
     */
     public static void ProcessProfileForm(){
         if(IsPost){
