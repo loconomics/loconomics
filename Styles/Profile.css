@@ -29,6 +29,10 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.work ul.services dl ul { margin: 0; }
 
 /**********************************/
+/****** COMMON ********************/
+/**********************************/
+
+/**********************************/
 /*** Structure: position, sizes ***/
 
 .profile #main {
@@ -102,6 +106,22 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     vertical-align: middle;
     width: 130px;
 }
+.position-tab {
+    position: relative;
+}
+.position-tab .tab-body {
+    width: 680px;
+}
+.position-summary {
+    width: 200px;
+    padding: 0 0 0 10px;
+    border-left: 1px solid #dadada;
+    margin: 0 0 0 20px;
+    position: absolute;
+    /* container padding: 20, top sibling margin: 14 */
+    top: 34px;
+    right: 20px;
+}
 
 /*****************************************/
 /** Colors, images, text properties, ... */
@@ -135,4 +155,76 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 #verifications li.verification{
     background-image: url('../img/icon-verifications.png');
+}
+.profile h5 {
+    color: #3b3b3b;
+    font-size: 1em;
+    margin: 5px 0;
+    display: inline-block;
+}
+.profile a.button.more{
+    text-indent: -9999px;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    background: url('../img/plus.png') no-repeat;
+    margin: 2px 5px;
+    vertical-align: middle;
+}
+.profile a.button.book{
+    background-color: #99c027;
+    color: White;
+    border-radius: 20px;
+    display: inline-block;
+    text-align: right;
+    font-weight: bold;
+    font-size: .9em;
+}
+.profile .actions.book{
+    margin: 0 0 20px;    
+}
+.position-summary ul {
+    padding: 0;
+    margin: 0;
+    list-style-position: inside;
+    list-style-image: url('../img/bullet.png');
+}
+.position-summary li{
+    margin: 0;
+}
+.position-summary .hour-price {
+    border: 6px solid #461864;
+    border-radius: 10px;
+    padding: 20px 10px;
+    margin: 5px 0;
+    display: block;
+    font-size: 2.5em;
+    line-height: normal;
+    color: #461864;
+    text-align: center;
+}
+.position-summary .hour-price .price {
+    font-weight: bold;
+}
+.position-summary a.calculate-price,
+.position-summary a.calculate-price:link,
+.position-summary a.calculate-price:visited{
+    color: #461864;
+    text-decoration: underline;
+    text-align: center;
+    margin-bottom: 20px;
+    display: block;
+}
+
+/**********************************/
+/****** SPECIFIC PAGES/SECTIONS ***/
+/**********************************/
+
+/**********************************/
+/****** Overview ******************/
+
+/*** Structure: position, sizes ***/
+.profile p.profile-intro{
+    margin: 0;
 }

@@ -767,6 +767,16 @@ div.dp-popup td.disabled{cursor:default;}
 }
 
 
+/* ============ Some general classes =============
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+/* .actions: container for buttons -actions, tasks, calculations, etc- */
+.actions {
+    text-align: right !important;
+    display: block !important;
+}
+
+
 /* ============== Dashboard pages ================
    ====== IagoSRL for Loconomics S.L. ============
  */
@@ -1440,11 +1450,6 @@ form.positionavailability input{
     -moz-box-shadow: 0 0 5px 2px #99C027;
     -o-box-shadow: 0 0 5px 2px #99C027;
     -webkit-box-shadow: 0 0 5px 2px #99C027;
-}
-/* .actions: container for buttons */
-.booking .actions {
-    text-align: right;
-    display: block;
 }
 .booking li.calculation{
     overflow: hidden;
