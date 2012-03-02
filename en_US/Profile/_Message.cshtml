@@ -1,1 +1,31 @@
-﻿
+﻿@{
+    // Provider
+    var provider = PageData["providerrow"];
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+    
+    var fromText = "Stephanie L.";
+}
+<p class="message-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+</p>
+
+<form action="#" method="post" class="message" id="position#@(n)-message">
+    <div class="from-line">
+        <label>From:</label>
+        <img class="user-pic" alt="User photo" src="@Href("~/img/eg-profile-pic.jpg")"/>
+        <span class="from">@fromText</span>
+    </div>
+    <div class="subject">
+        <label>Subject: <input type="text" name="subject" value="Message from @fromText about @p.PositionSingular services"/></label>
+    </div>
+    <div class="message-body">
+        <textarea name="message-body">
+            Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!  Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!
+            
+            Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!
+        </textarea>
+    </div>
+</form>
