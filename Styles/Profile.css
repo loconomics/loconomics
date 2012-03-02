@@ -110,13 +110,13 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     position: relative;
 }
 .position-tab .tab-body {
-    width: 680px;
+    width: 695px;
 }
 .position-summary {
     width: 200px;
     padding: 0 0 0 10px;
     border-left: 1px solid #dadada;
-    margin: 16px 0 0 20px;
+    margin: 16px 0 0 5px;
     float: right;
 }
 .profile .position-tab .tab-body > p{
@@ -286,6 +286,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     width: 300px;
     display: inline-block;
     padding-bottom: 25px;
+    vertical-align: top;
 }
 .featured-review p {
     height: 55px;
