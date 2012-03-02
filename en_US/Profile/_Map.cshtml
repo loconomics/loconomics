@@ -1,1 +1,23 @@
-﻿
+﻿@{
+    // Provider
+    var provider = PageData["providerrow"];
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
+<p class="map-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+</p>
+
+<div class="highlighted-map gallery-highlighted">
+    <img class="large-map" alt="Highlighted map" src="@Href("~/img/map.png")" />
+    <h5 class="map-desc">According to your IP address, you are within Fernando’s service radius.</h5>
+</div>
+
+<ol class="maps gallery-content">
+    <li class="selected"><a href="#"><img alt="Map photo" src="@Href("~/img/map.png")"/></a></li>
+    <li><a href="#"><img alt="Map photo" src="@Href("~/img/map.png")"/></a></li>
+    <li><a href="#"><img alt="Map photo" src="@Href("~/img/map.png")"/></a></li>
+    <li><a href="#"><img alt="Map photo" src="@Href("~/img/map.png")"/></a></li>
+</ol>

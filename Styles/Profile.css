@@ -383,23 +383,24 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 
 
 /**********************************/
-/****** My Work *******************/
-.profile .mywork .highlighted-photo-large,
-.profile .mywork .photo-library{
+/****** Gallery *******************/
+.gallery-highlighted,
+.gallery-content{
     display: inline-block;
     vertical-align: top;
 }
-.profile .mywork .highlighted-photo-large {
+.gallery-highlighted {
     margin-left: 5px;
 }
-.profile .mywork .highlighted-photo-large h5{
+.gallery-highlighted h5{
     display: block;
+    width: 436px;
 }
-.profile .mywork .highlighted-photo-large img{
+.gallery-highlighted img{
     width: 442px;
     height: 283px;
 }
-.profile .mywork ol.photo-library{
+.gallery-content{
     list-style: none;
     padding: 0 0 0 15px;
     margin: 0 0 0 15px;
@@ -408,11 +409,11 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     overflow: auto;
     border-left: 2px solid #dadada;
 }
-.profile .mywork .photo-library li {
+.gallery-content li {
     width: 170px;
     margin: 0 0 10px;
 }
-.profile .mywork .photo-library li a{
+.gallery-content li a{
     display: block;
     width: 164px;
     height: 111px;
@@ -420,10 +421,10 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     overflow: hidden;
     text-align: center;
 }
-.profile .mywork .photo-library li a img{
+.gallery-content li a img{
     max-width: 164px;
     min-height: 111px;
 }
-.profile .mywork .photo-library li.selected a{
+.gallery-content li.selected a{
     outline: 3px solid #461864 ;
 }
