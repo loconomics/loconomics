@@ -6,7 +6,6 @@
 
 .profile #container, #container.search { font-size: .8em; }
 
-#profileHeader { margin-bottom: 40px; position: relative; }
 #profileHeader .wrap { margin-left: 145px; }
 #profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
 #profileHeader .buttons a { margin-right: 5px; }
@@ -29,15 +28,15 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
 .profile #main div.work ul.services dl ul { margin: 0; }
 
-/*****************/
-/*** Structure ***/
+/**********************************/
+/*** Structure: position, sizes ***/
 
 .profile #main {
     float: none;
     width: auto;
 }
 #profileHeader {
-    padding: 40px;
+    padding: 40px 40px 5px;
     position: relative;
     border-radius: 20px;
     -moz-border-radius: 20px;
@@ -67,17 +66,45 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: 3px 0;
     height: 25px;
 }
+/* This fixed size for social-networking is a try to fix an uggly flickering effect
+    of the google+ widget */
 .social-networking{
+    height: 26px;
+}
+.social-networking,
+.social-connections ul{
     list-style: none;
     margin: 5px 0;
+    padding: 0;
 }
 .social-networking li{
     display: inline-block;
-    margin: 0 40px;
+    margin: 0 80px 0 0;
+}
+.social-connections ul{
+    display: inline-block;
+    vertical-align: middle;
+}
+.social-connections li{
+    display: inline;
+    float: left;
+}
+.social-connections li a{
+    margin: 0 2px;
+}
+.social-connections .friends{
+    display: inline-block;
+    font-size: 0.6em;
+    height: 20px;
+    margin: 5px 0;
+    line-height: 1.2em;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 130px;
 }
 
-/******************/
-/** Colors, texts */
+/*****************************************/
+/** Colors, images, text properties, ... */
 
 #profileHeader{
     background: url('../img/profile-background.png') repeat-x top left;
@@ -95,6 +122,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     float: left;
     margin: 0 20px 0 0;
     width: 186px;
+    outline: 1px solid #461864;
 }
 #verifications {
     font-weight: bold;

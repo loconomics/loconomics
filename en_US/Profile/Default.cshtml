@@ -24,6 +24,11 @@
         printStartRating(s.ToString(), rate.ToString());
     }
 }
+@helper printFriend(string name, string photo){
+    if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
+    /* Between LI and A elements must not have white spaces */
+    <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+}
 
 <div id="container" class="profile clearfix">
     <div id="main" class="tabbed folders">
@@ -61,6 +66,16 @@
                     <iframe scrolling="no" frameborder="0" allowtransparency="true" src="http://platform0.twitter.com/widgets/tweet_button.html" class="twitter-share-button twitter-count-horizontal" style="width: 110px; height: 20px;" title="Twitter For Websites: Tweet Button"></iframe>
                 </li><!-- twitter -->
             </ul>
+            <div class="social-connections">
+                <ul>
+                    @printFriend("Fernando", null)
+                    @printFriend("Joshua", null)
+                    @printFriend("Fernando", null)
+                    @printFriend("Joshua", null)
+                    @printFriend("Fernando", null)
+                </ul>
+                <span class="friends"><span class="quantity">14</span> of your friends have used this provider's services</span>
+            </div>
 	    </div><!-- #profileHeader -->
         
 		<ul class="tabs">
