@@ -22,15 +22,15 @@
 </p>
 <form action="#" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
-    <fieldset class="availability">
+    <fieldset class="availability availability-calendar">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">
             <ol class="days">
-                <li>S</li><li>M</li><li>T</li><li>W</li><li>T</li><li>F</li><li>S</li>
+                <li><h5>S</h5></li><li><h5>M</h5></li><li><h5>T</h5></li><li><h5>W</h5></li><li><h5>T</h5></li><li><h5>F</h5></li><li><h5>S</h5></li>
             </ol>
             <ol class="hours">
                 @for(var h = 7; h < 23; h++){
-                <li>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</li>
+                <li><h5>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</h5></li>
                 }
             </ol>
             <ol class="datetimes">

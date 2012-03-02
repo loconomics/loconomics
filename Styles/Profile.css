@@ -384,6 +384,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 
 /**********************************/
 /****** Gallery *******************/
+/*** MyWork & Maps ****************/
 .gallery-highlighted,
 .gallery-content{
     display: inline-block;
@@ -427,4 +428,22 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 .gallery-content li.selected a{
     outline: 3px solid #461864 ;
+}
+
+/**********************************/
+/****** Availability **************/
+.profile .availability-calendar .calendar{
+    /* availaibility-calendar is sized full-relative from 1px by default.
+        To change de global size (like a zoom) we apply a different 
+        font-size ONLY in the container .calendar.
+        NOTE: legend is not relative sized. */
+    font-size: 1.8px;
+}
+/* Only a bad-effect with full-relative: vertical size of hours need retouch their size :(*/
+.profile .availability-calendar .calendar ol.hours li {
+    height: 12em;
+}
+/* Text size are excesive with base 1.8, resize to: */
+.profile .availability-calendar .calendar h5{
+    font-size: 11pt;
 }
