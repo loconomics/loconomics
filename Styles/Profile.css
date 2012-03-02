@@ -120,7 +120,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     float: right;
 }
 .profile .position-tab .tab-body > p{
-    margin: 0;
+    margin: 0 0 10px;
 }
 
 /*****************************************/
@@ -326,7 +326,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 /**********************************/
 /****** Overview ******************/
 .profile .overview .star-ratings {
-    margin: 14px 120px 14px 0;
+    margin: 0 120px 14px 0;
 }
 .profile .overview .service-attribute-category div{
     display: inline-block;
@@ -379,4 +379,51 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     right: 10px;
     width: 210px;
     height: 95px;
+}
+
+
+/**********************************/
+/****** My Work *******************/
+.profile .mywork .highlighted-photo-large,
+.profile .mywork .photo-library{
+    display: inline-block;
+    vertical-align: top;
+}
+.profile .mywork .highlighted-photo-large {
+    margin-left: 5px;
+}
+.profile .mywork .highlighted-photo-large h5{
+    display: block;
+}
+.profile .mywork .highlighted-photo-large img{
+    width: 442px;
+    height: 283px;
+}
+.profile .mywork ol.photo-library{
+    list-style: none;
+    padding: 0 0 0 15px;
+    margin: 0 0 0 15px;
+    width: 195px;
+    height: 350px;
+    overflow: auto;
+    border-left: 2px solid #dadada;
+}
+.profile .mywork .photo-library li {
+    width: 170px;
+    margin: 0 0 10px;
+}
+.profile .mywork .photo-library li a{
+    display: block;
+    width: 164px;
+    height: 111px;
+    margin: 3px auto;
+    overflow: hidden;
+    text-align: center;
+}
+.profile .mywork .photo-library li a img{
+    max-width: 164px;
+    min-height: 111px;
+}
+.profile .mywork .photo-library li.selected a{
+    outline: 3px solid #461864 ;
 }
