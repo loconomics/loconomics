@@ -116,7 +116,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     width: 200px;
     padding: 0 0 0 10px;
     border-left: 1px solid #dadada;
-    margin: 0 0 0 20px;
+    margin: 16px 0 0 20px;
     float: right;
 }
 .profile .position-tab .tab-body > p{
@@ -201,8 +201,11 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     font-weight: bold;
     font-size: .9em;
 }
+.profile a.button.book:hover{
+    box-shadow: 0 0 5px 2px #99C027;
+}
 .profile .actions.book{
-    margin: 0 0 20px;    
+    margin: 0 0 20px;
 }
 .position-summary ul {
     padding: 0;
