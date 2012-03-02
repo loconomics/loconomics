@@ -1,0 +1,50 @@
+﻿@{
+    int providerid = PageData["providerid"];
+}
+            <div class="position-summary">
+                <div class="actions book">
+                    <a class="button book" href="@Href("~/en_US/Booking?providerid=" + providerid)">Book now</a>
+                </div>
+                <span class="hour-price"><span class="price">$25.00</span>/h</span>
+                <a class="calculate-price" href="#">Calculate for your needs</a>
+                
+                <div class="experience-level">
+                    <h5>Experience level:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    <ul><li>Expert</li></ul>
+                </div>
+                <div class="years-experience">
+                    <h5>Years experience:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    <ul><li>
+                        0.5 years
+                        </li></ul>
+                </div>
+                <div class="min-booing-time">
+                    <h5>Minimum booking time:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    <ul><li>
+                        2 hours
+                        </li></ul>
+                </div>
+                <div class="client-types">
+                    <h5>Client types:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    <ul><li>
+                        Residential
+                    </li><li>
+                        Business
+                    </li></ul>
+                </div>
+                <div class="languages-spoken">
+                    <h5>Language spoken:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    <ul><li>
+                        English
+                    </li><li>
+                        Spanish
+                    </li><li>
+                        French
+                    </li></ul>
+                </div>
+            </div>

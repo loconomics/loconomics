@@ -117,10 +117,10 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     padding: 0 0 0 10px;
     border-left: 1px solid #dadada;
     margin: 0 0 0 20px;
-    position: absolute;
-    /* container padding: 20, top sibling margin: 14 */
-    top: 34px;
-    right: 20px;
+    float: right;
+}
+.profile p.profile-intro{
+    margin: 0;
 }
 
 /*****************************************/
@@ -162,7 +162,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: 5px 0;
     display: inline-block;
 }
-.profile a.button.more{
+.profile a.button.view-more{
     text-indent: -9999px;
     display: inline-block;
     width: 14px;
@@ -171,6 +171,23 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     background: url('../img/plus.png') no-repeat;
     margin: 2px 5px;
     vertical-align: middle;
+    
+    position: static;
+}
+.profile a.view-more{
+    font-style: italic;
+    text-decoration: underline;
+    color: #66487d;
+    
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.profile a.view-more:after{
+    content: '>>';
+}
+.profile .have-view-more{
+    position: relative;
 }
 .profile a.button.book{
     background-color: #99c027;
@@ -221,10 +238,79 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 /****** SPECIFIC PAGES/SECTIONS ***/
 /**********************************/
 
+/****** featured-review **********/
+.featured-review {
+    border: 6px solid #ded7e3;
+    border-radius: 10px;
+    padding: 5px 10px 25px;
+    width: 300px;
+    display: inline-block;
+    font-size: .9em;
+}
+.featured-review h6 {
+    font-style: italic;
+    color: #461864;
+    font-size: .9em;
+    line-height: normal;
+    margin: 0;
+}
+.featured-review img,
+.featured-review p{
+    margin: 5px 0;
+}
+.featured-review img{
+    float: left;
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+.featured-review p {
+    color: #a1a1a1;
+    height: 55px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1em;
+}
+.featured-review a.view-more{
+    right: 10px;
+    bottom: 5px;
+}
+
 /**********************************/
 /****** Overview ******************/
 
-/*** Structure: position, sizes ***/
-.profile p.profile-intro{
+.profile .overview .star-ratings {
+    margin: 14px 120px 14px 0 ;
+    display: inline-block;
+}
+.profile .overview .star-ratings ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
+    color: #461864;
+}
+.profile .overview .star-ratings .rate{
+    background: url('../img/star-on.gif') repeat-x center left;
+    /* 17*quantity: 17*5=85 */
+    width: 85px;
+    margin: 0 20px 0 0;
+    display: inline-block;
+    height: 16px;
+}
+.profile .overview .star-ratings .note{
+    color: #a797b4;
+    font-size: .9em;
+    font-style: italic;
+}
+.profile .overview .service-attribute-category div{
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 6px;
+}
+.profile .overview .service-attribute-category ul{
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+    list-style-image: url('../img/bullet.png');
 }

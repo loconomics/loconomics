@@ -1,1 +1,77 @@
-﻿
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
+@helper printTestAttributes(string cat){
+    string[] atts = new string[]{ "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping" };
+    for(int i=0; i < 10; i++){
+        <li class="attribute-@cat-@i">@atts[i]</li>
+    }
+}
+@{/* TODO Need review */}
+@helper printStartRating(string index, string rate){
+    var n = "rating" + index;
+    Html.Label(n);
+    RenderPage("~/en_US/StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
+}
+@{/* TODO Need review */}
+@helper printRating(WebMatrix.Data.DynamicRecord posrow){
+    for(var s=1; s < 5; s++){
+        var rate = posrow["Rating" + s.ToString()] ?? 0;
+        printStartRating(s.ToString(), rate.ToString());
+    }
+}
+<p class="profile-intro">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+</p>
+
+<div class="star-ratings">
+    <!-- Temporary static code -->
+    <ul>
+        <li class="professionalism">
+            <span class="rate"></span>Professionalism
+        </li>
+        <li class="quality">
+            <span class="rate"></span>Quality-of-work
+        </li>
+        <li class="efficiency">
+            <span class="rate"></span>Efficiency
+        </li>
+    </ul>
+    <span class="note">*based on 156 hours of work</span>
+</div>
+<div class="featured-review have-view-more">
+    <h6>Review from <span class="reviewer-name">Joshua D.</span> (<span class="reviewer-date">27-jul-2011</span>):</h6>
+    <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" url="@Href("~/img/eg-profile-pic.jpg")"/>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc.</p>
+    <a href="#" class="view-more">More reviews</a>
+</div>
+
+<div class="service-attribute-category">
+    <div class="service-attribute-category1 have-view-more">
+        <h5>Service regularly included:</h5>
+        <a class="button view-more" href="#">More</a>
+        <ul>
+            @printTestAttributes("1")
+        </ul>
+        <a class="view-more" href="#">View more</a>
+    </div>
+    <div class="service-attribute-category2 have-view-more">
+        <h5>Service regularly included:</h5>
+        <a class="button view-more" href="#">More</a>
+        <ul>
+            @printTestAttributes("2")
+        </ul>
+        <a class="view-more" href="#">View more</a>
+    </div>
+    <div class="service-attribute-category3 have-view-more">
+        <h5>Service regularly included:</h5>
+        <a class="button view-more" href="#">More</a>
+        <ul>
+            @printTestAttributes("3")
+        </ul>
+        <a class="view-more" href="#">View more</a>
+    </div>
+</div>

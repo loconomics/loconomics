@@ -1,8 +1,8 @@
 ﻿@{     
     Layout = "../_SiteLayout.cshtml";
 
-    int providerid = (int)ProfileFunctions.GetRequiredParam<int>("ProviderId");
-    int positionid = (int)ProfileFunctions.GetRequiredParam<int>("PositionID");
+    int providerid = PageData["providerid"] = (int)ProfileFunctions.GetRequiredParam<int>("ProviderId");
+    int positionid = PageData["positionid"] = (int)ProfileFunctions.GetRequiredParam<int>("PositionID");
     // var Service, string ServiceType, string position
     
     var providerrow = PageData["providerrow"] = ProfileFunctions.GetProfileRow(providerid);
@@ -11,18 +11,6 @@
     
     Page.Title = PageData["providerrow"].Name;
     Scripts.Add("~/Scripts/Profile.js");
-}
-
-@helper printStartRating(string index, string rate){
-    var n = "rating" + index;
-    Html.Label(n);
-    RenderPage("~/en_US/StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
-}
-@helper printRating(WebMatrix.Data.DynamicRecord posrow){
-    for(var s=1; s < 5; s++){
-        var rate = posrow["Rating" + s.ToString()] ?? 0;
-        printStartRating(s.ToString(), rate.ToString());
-    }
 }
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
@@ -97,6 +85,9 @@
                 PageData["position"] = position;
                 PageData["npos"] = n;
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls position-tab">
+            
+            @RenderPage("_PositionSummary.cshtml")
+            
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="@("#position"+n)-overview">Overview</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+n)-reviews">Reviews</a></li>
@@ -107,75 +98,30 @@
                 <li><a class="button profile fanciful" href="@("#position"+n)-message">Message</a></li>
             </ul>
             
-            <div id="@("position"+n)-overview" class="tab-body current">
+            <div id="@("position"+n)-overview" class="tab-body current overview">
                 @RenderPage("_Overview.cshtml")
             </div><!-- #@("position"+n)-overview -->
-            <div id="@("position"+n)-reviews" class="tab-body">
+            <div id="@("position"+n)-reviews" class="tab-body reviews">
                 @RenderPage("_Reviews.cshtml")
             </div><!-- #@("position"+n)-reviews -->
-            <div id="@("position"+n)-mywork" class="tab-body">
+            <div id="@("position"+n)-mywork" class="tab-body mywork">
                 @RenderPage("_MyWork.cshtml")
             </div><!-- #@("position"+n)-mywork -->
-            <div id="@("position"+n)-map" class="tab-body">
+            <div id="@("position"+n)-map" class="tab-body map">
                 @RenderPage("_Map.cshtml")
             </div><!-- #@("position"+n)-map -->
-            <div id="@("position"+n)-availability" class="tab-body">
+            <div id="@("position"+n)-availability" class="tab-body availability">
                 @RenderPage("_Availability.cshtml")
             </div><!-- #@("position"+n)-availability -->
-            <div id="@("position"+n)-verifications" class="tab-body">
+            <div id="@("position"+n)-verifications" class="tab-body verifications">
                 @RenderPage("_Verifications.cshtml")
             </div><!-- #@("position"+n)-verifications -->
-            <div id="@("position"+n)-message" class="tab-body">
+            <div id="@("position"+n)-message" class="tab-body message">
                 @RenderPage("_Message.cshtml")
             </div><!-- #@("position"+n)-message -->
             
-            <div class="position-summary">
-                <div class="actions book">
-                    <a class="button book" href="@Href("~/en_US/Booking?providerid=" + providerid)">Book now</a>
-                </div>
-                <span class="hour-price"><span class="price">$25.00</span>/h</span>
-                <a class="calculate-price" href="#">Calculate for your needs</a>
-                
-                <div class="experience-level">
-                    <h5>Experience level:</h5>
-                    <a class="button more" href="#">More</a>
-                    <ul><li>Expert</li></ul>
-                </div>
-                <div class="years-experience">
-                    <h5>Years experience:</h5>
-                    <a class="button more" href="#">More</a>
-                    <ul><li>
-                        0.5 years
-                        </li></ul>
-                </div>
-                <div class="min-booing-time">
-                    <h5>Minimum booking time:</h5>
-                    <a class="button more" href="#">More</a>
-                    <ul><li>
-                        2 hours
-                        </li></ul>
-                </div>
-                <div class="client-types">
-                    <h5>Client types:</h5>
-                    <a class="button more" href="#">More</a>
-                    <ul><li>
-                        Residential
-                    </li><li>
-                        Business
-                    </li></ul>
-                </div>
-                <div class="languages-spoken">
-                    <h5>Language spoken:</h5>
-                    <a class="button more" href="#">More</a>
-                    <ul><li>
-                        English
-                    </li><li>
-                        Spanish
-                    </li><li>
-                        French
-                    </li></ul>
-                </div>
-            </div>
+            <!-- TODO Remove this element, without break the position-summary -->
+            <div class="clearfix"></div>
             
         </div><!-- #position@n -->
             }
