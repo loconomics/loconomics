@@ -119,7 +119,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: 0 0 0 20px;
     float: right;
 }
-.profile p.profile-intro{
+.profile .position-tab .tab-body > p{
     margin: 0;
 }
 
@@ -193,6 +193,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     background-color: #99c027;
     color: White;
     border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
     display: inline-block;
     text-align: right;
     font-weight: bold;
@@ -213,6 +216,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .position-summary .hour-price {
     border: 6px solid #461864;
     border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-border-radius: 10px;
     padding: 20px 10px;
     margin: 5px 0;
     display: block;
@@ -238,59 +244,69 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 /****** SPECIFIC PAGES/SECTIONS ***/
 /**********************************/
 
-/****** featured-review **********/
-.featured-review {
+/********* review ****************/
+.review {
     border: 6px solid #ded7e3;
     border-radius: 10px;
-    padding: 5px 10px 25px;
-    width: 300px;
-    display: inline-block;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding: 5px 10px;
     font-size: .9em;
 }
-.featured-review h6 {
+.review h6 {
     font-style: italic;
     color: #461864;
     font-size: .9em;
     line-height: normal;
     margin: 0;
 }
-.featured-review img,
-.featured-review p{
+.review img,
+.review p{
     margin: 5px 0;
 }
-.featured-review img{
+.review img{
     float: left;
     display: block;
     width: 50px;
     height: 50px;
     margin-right: 15px;
 }
-.featured-review p {
+.review p {
     color: #a1a1a1;
-    height: 55px;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1em;
+}
+/****** featured-review **********/
+.featured-review {
+    width: 300px;
+    display: inline-block;
+    padding-bottom: 25px;
+}
+.featured-review p {
+    height: 55px;
 }
 .featured-review a.view-more{
     right: 10px;
     bottom: 5px;
 }
 
-/**********************************/
-/****** Overview ******************/
-
-.profile .overview .star-ratings {
-    margin: 14px 120px 14px 0 ;
+/*********************************/
+/****** star-ratings *************/
+.star-ratings {
     display: inline-block;
 }
-.profile .overview .star-ratings ul {
+.star-ratings ul {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: 0 !important;
+    margin: 0 !important;
     color: #461864;
 }
-.profile .overview .star-ratings .rate{
+.star-ratings li{
+    margin: 0 !important;
+}
+.star-ratings .rate{
     background: url('../img/star-on.gif') repeat-x center left;
     /* 17*quantity: 17*5=85 */
     width: 85px;
@@ -298,10 +314,16 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     display: inline-block;
     height: 16px;
 }
-.profile .overview .star-ratings .note{
-    color: #a797b4;
+.star-ratings .note{
+    color: #836b96;
     font-size: .9em;
     font-style: italic;
+}
+
+/**********************************/
+/****** Overview ******************/
+.profile .overview .star-ratings {
+    margin: 14px 120px 14px 0;
 }
 .profile .overview .service-attribute-category div{
     display: inline-block;
@@ -313,4 +335,45 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     padding: 0;
     list-style-position: inside;
     list-style-image: url('../img/bullet.png');
+}
+
+/**********************************/
+/****** Reviews ******************/
+.profile .reviews ul{
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+.profile .reviews li.review{
+    margin: 0 0 15px 0;
+    position: relative;
+    min-height: 70px;
+}
+.profile .reviews li.review h6 {
+    float: left;
+    font-weight: normal;
+    clear: left;
+}
+.profile .reviews li.review p,
+.profile .reviews li.review .helpful{
+    width: 350px;
+    margin-right: 10px;
+}
+.profile .reviews li.review .helpful{
+    clear: left;
+    margin-left: 65px;
+}
+.profile .reviews li.review .helpful,
+.profile .reviews li.review .helpful a,
+.profile .reviews li.review .helpful a:link,
+.profile .reviews li.review .helpful a:visited{
+    color: #836b96;
+    font-style: italic;
+}
+.profile .reviews li.review .star-ratings{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 210px;
+    height: 95px;
 }

@@ -1,1 +1,41 @@
-﻿
+﻿@{
+    // Provider
+    var provider = PageData["providerrow"];
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+}
+<p class="reviews-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+</p>
+
+<ul>
+   @for(var r=0; r < 3; r++){
+    <li class="review">
+        <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href("~/img/eg-profile-pic.jpg")"/>
+        <h6 class="reviewer-name">Joshua D.</h6>
+        <p>
+            @provider.Name was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, @provider.Name!!
+        </p>
+        <div class="helpful">
+            41 people found this review helpful <a href="#">rate as helpful</a>
+        </div>
+        <div class="star-ratings">
+            <!-- Temporary static code -->
+            <ul>
+                <li class="professionalism">
+                    <span class="rate"></span>Professionalism
+                </li>
+                <li class="quality">
+                    <span class="rate"></span>Quality-of-work
+                </li>
+                <li class="efficiency">
+                    <span class="rate"></span>Efficiency
+                </li>
+            </ul>
+            <span class="note">*based on 4 hours hired 27 Jul 2011</span>
+        </div>
+    </li>
+   }
+</ul>
