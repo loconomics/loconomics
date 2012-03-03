@@ -31,13 +31,21 @@
         
         <div class="search-results">
             @if(categorizedResults){
+                // hacking the results to emulate a search
+                var n = 0;
             <ol class="search-results-categories">
                 @foreach(var scat in searchedCategories){
+                    // hacking the results to emulate a search
+                    n++;
+                    var i = 0;
                 <li>
                     <h3>@scat</h3>
                     <a class="view-more" href="?Service=@scat">View all @scat</a>
                     <ol class="search-results-items">
                         @foreach(var item in posrow){
+                            // hacking the results to emulate a search
+                            i++;
+                            if(n!=i){continue;}
                             PageData["item"] = item;
                         <li>
                             @RenderPage("_Item.cshtml")
