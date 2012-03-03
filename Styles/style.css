@@ -1747,6 +1747,12 @@ html.ie #booking-services .special-instructions legend{
     right: 0;
     margin-right: 0;
 }
+#booking-schedule a.dp-choose-date{
+    bottom: 2px;
+    position: absolute;
+    right: 4px;
+    vertical-align: bottom;
+}
 
 /** Form: Payment **/
 #booking-payment .box{
@@ -1830,8 +1836,14 @@ html.ie #booking-services .special-instructions legend{
 #booking-payment .billing-info .city input{
     width: 294px;
 }
+.ie #booking-payment .billing-info .city input{
+    width: 288px;
+}
 #booking-payment .billing-info .state select{
     width: 150px;
+}
+.ie #booking-payment .billing-info .state select{
+    width: 147px;
 }
 #booking-payment .billing-info .zip input{
     width: 60px;
@@ -1853,6 +1865,9 @@ html.ie #booking-services .special-instructions legend{
 #booking-payment .billing-info .card-number,
 #booking-payment .billing-info .card-exp{
     display: inline-block;
+}
+#booking-payment .billing-info .card-exp label{
+    padding: 0 0 0 7px;
 }
 
 /** Generic: container .provider-features-lists (used at profile/summary, booking/payment..) **/
