@@ -17,7 +17,9 @@
     var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
     var posrow = db.Query(searchsql, 1, 1, LC_Term, LC_Cat);
     
-    /* Simulating search */
+    bool categorizedResults = (String.IsNullOrEmpty(serviceCat) ? false : true);
+    
+    /* Simulating categorized search */
     var searchedCategories = new string[]{ "Housekeepers", "Handymen", "Gardeners", "Electricians", "Plumbers", "Painters" };
 }
 
@@ -28,6 +30,7 @@
         @RenderPage("_Pager.cshtml")
         
         <div class="search-results">
+            @if(categorizedResults){
             <ol class="search-results-categories">
                 @foreach(var scat in searchedCategories){
                 <li>
@@ -44,6 +47,17 @@
                 </li>
                 }
             </ol>
+            }else{
+            <ol class="search-results-items">
+                @foreach(var item in posrow){
+                    PageData["item"] = item;
+                <li>
+                    @RenderPage("_Item.cshtml")
+                </li>
+                }
+            </ol>
+            }
+
         </div>
         
         @RenderPage("_Pager.cshtml")

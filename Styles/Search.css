@@ -57,7 +57,7 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /* Colors, fonts, etc. */
 .search {
-    color: #999999;
+    color: #6c6c6c;
     font-size: 1em;
 }
 
@@ -169,7 +169,7 @@ ul.search-results table td { padding-right: 16px; }*/
 /* categorized results */
 .search-results-categories li{
     position: relative;
-    margin: 1em;
+    margin: 1em 0;
 }
 .search-results-categories h3{
     display: inline-block;
@@ -221,8 +221,9 @@ ul.search-results table td { padding-right: 16px; }*/
     -o-border-radius: 10px;
     -webkit-border-radius: 10px;
     border: 1px solid #849a9a;
-    margin: 3px 0;
+    margin: 5px 0;
     padding: 4px 10px;
+    background-color: #f5f5f5;
 }
 .search-results-items > li h6{
     color: #52276e;
@@ -239,7 +240,7 @@ ul.search-results table td { padding-right: 16px; }*/
 .search-results-items > li .star-ratings,
 .search-results-items > li .verifications-summary{
     vertical-align: top;
-    height: 70px;
+    height: 60px;
 }
 .search-results-items > li .overview,
 .search-results-items > li .star-ratings,
@@ -249,22 +250,34 @@ ul.search-results table td { padding-right: 16px; }*/
 .search-results-items > li .overview{
     display: inline-block;
     line-height: normal;
-    width: 286px;
+    width: 310px;
 }
 .search-results-items > li .overview .view-more{
     display: inline;
     float: none;
 }
+.search-results-items > li .star-ratings ul {
+    color: #6c6c6c;
+}
+.search-results-items > li .star-ratings ul li{
+    line-height: normal;
+    font-size: .9em;
+}
 .search-results-items > li .star-ratings .rate{
     margin: 0 4px 0 0;
+    background: url("../img/star-e-on.png") repeat-x scroll left center transparent;
+    width: 70px;
 }
-.search-results-items > li .verifications-summary{
+.search-results-items > li .verifications-summary,
+.search-results-items > li .star-ratings{
     margin: 0 0 0 10px;
 }
 .search-results-items > li .verifications-summary > li{
     background: no-repeat center left;
     margin: 0;
     padding: 0 0 0 15px;
+    font-size: 0.9em;
+    line-height: 1.7em;
 }
 .search-results-items > li .verifications-summary {
     display: inline-block;
@@ -294,7 +307,7 @@ ul.search-results table td { padding-right: 16px; }*/
     font-size: .7em;
     line-height: 1.2;
     margin: 0;
-    width: 200px;
+    width: 225px;
     vertical-align: middle;
 }
 .search-results-items > li .hightlighted-review p .view-more{
@@ -305,6 +318,13 @@ ul.search-results table td { padding-right: 16px; }*/
     width: 16px;
     height: 16px;
     vertical-align: middle;
+}
+
+.search-results-items > li .button.book {
+    background-color: #461864;
+}
+.search-results-items > li .button.book:hover {
+    background-color: #99C027;
 }
 
 /***********************/
