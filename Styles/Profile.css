@@ -142,6 +142,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     float: left;
     margin: 0 20px 0 0;
     width: 186px;
+    height: 186px;
     outline: 1px solid #461864;
 }
 #verifications {

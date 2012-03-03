@@ -17,6 +17,17 @@
     /* Between LI and A elements must not have white spaces */
     <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
 }
+@helper oldPrintMailbox(){
+    // TODO Review old code: (is a section removed from the current design)
+    /*
+         <div id="inbox_grid" class="tab-body">
+         <h1>
+             <title>Inbox</title>
+         </h1>
+            @RenderPage("~/en_US/MailBoxGrid.cshtml")
+        </div>
+    */
+}
 
 <div id="container" class="profile clearfix">
     <div id="main" class="tabbed folders">

@@ -1,4 +1,4 @@
-@{
+﻿@{
     Layout = "~/en_US/_SiteLayout.cshtml";
     Page.Title = "Search Results...";
 
@@ -41,19 +41,19 @@
                     rating3 = "0";
                     rating4 = "0";
                 }
-                rating1data.SetValue(c.ProfileID+c.PositionID+"1", 0);//Rating Name
+                rating1data.SetValue(c.ProfileID+c.PositionID+c.ServiceName+"1", 0);//Rating Name
                 rating1data.SetValue(rating1, 1);//Rating value
                 rating1data.SetValue("true", 2);//Rating: enable or disable
 
-                rating2data.SetValue(c.ProfileID + c.PositionID + "2", 0);//Rating Name
+                rating2data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "2", 0);//Rating Name
                 rating2data.SetValue(rating2, 1);//Rating value
                 rating2data.SetValue("true", 2);//Rating: enable or disable
 
-                rating3data.SetValue(c.ProfileID + c.PositionID + "3", 0);//Rating Name
+                rating3data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "3", 0);//Rating Name
                 rating3data.SetValue(rating3, 1);//Rating value
                 rating3data.SetValue("true", 2);//Rating: enable or disable
 
-                rating4data.SetValue(c.ProfileID + c.PositionID + "4", 0);//Rating Name
+                rating4data.SetValue(c.ProfileID + c.PositionID + c.ServiceName + "4", 0);//Rating Name
                 rating4data.SetValue(rating4, 1);//Rating value
                 rating4data.SetValue("true", 2);//Rating: enable or disable 
 
@@ -62,7 +62,7 @@
 	               <img src="../@c.Photo" alt="" />
 					</div>
 					<div class="name col">
-						<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=&ServiceType=@serviceType&Service=@LC_Cat">@c.FirstName @c.LastName</a></h3>
+						<h3><a href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">@c.FirstName @c.LastName</a></h3>
 						<blockquote>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."  <a href="#">more</a></blockquote>
 					</div>
 				   <div class="lang col">
@@ -76,16 +76,17 @@
                         @RenderPage("~/en_US/StarRating.cshtml", rating4data)
 					</div>
 					<div class="buttons">
-						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=&ServiceType=@serviceType&Service=@LC_Cat">View full profile</a>  
+						<a class="button fanciful" href="../en_US/ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName&ServiceType=@serviceType&Service=@LC_Cat">View full profile</a>  
                         <a class="button fanciful" href="#">Book for $35/hour</a>
 					</div>
-					<!-- <h3 class="job-title"><a class="job-status inactive" href="ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position="> </a></h3>
+					<!-- <h3 class="job-title"><a class="job-status inactive" href="ProviderProfile.cshtml?ProviderID=@c.ProfileID&PositionId=@c.PositionID&Position=@c.ServiceName">@c.ServiceName </a></h3>
 					<table class="profile-stats">
 						<tr><td>Profile Views:</td><td>0</td></tr>
 						<tr><td>Last Updated:</td><td>@c.UpdatedDate.ToString("dd MMM yyyy")</td></tr>
 					</table>-->
 				</li>
-			}
+				}
+				
 			</ul>	
     </div><!-- #jobTitles -->
   </div><!-- #main -->

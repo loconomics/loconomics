@@ -23,6 +23,27 @@
         printStartRating(s.ToString(), rate.ToString());
     }
 }
+@helper oldPrintAttributes(){
+    // TODO Review next old code:
+    /*
+    <ul class="services"> 
+        @foreach(var c in positionrow){       
+		    <li>
+			    <dl>
+				    <dt>@c.ServiceAttributeCategory:</dt>
+				    <dd>
+					    <ul>
+                                @foreach(var s in db.Query(positionattributesql,ProviderID,PositionID,c.ServiceAttributeCategoryID)){     
+						    <li>@s.Name</li>
+					        }
+					    </ul>
+				    </dd>
+			    </dl>
+		    </li>
+        }
+	 </ul>
+    */
+}
 <p class="profile-intro">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>

@@ -17,7 +17,7 @@
     public static object GetPositionRow(int userId, int positionId){
         var db = Database.Open("sqlloco");
         var positionsql ="select distinct  d.ServiceAttributeCategoryID,d.ServiceAttributeCategory from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID where a.UserID = @0 and b.PositionID = @1 ";
-        // TODO: un-used SQL sentence (come from the old ProviderProfile.cshtml file):
+        // TODO: (un-)used SQL sentence on body of "Profile/_Overview.cshtml" (come from the old ProviderProfile.cshtml file):
         var positionattributesql ="select distinct d.ServiceAttributeCategoryID,d.ServiceAttributeCategory,e.ServiceAttributeID,e.Name from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID join dbo.serviceattribute e on c.ServiceAttributeID = e.ServiceAttributeID where a.UserID = @0 and b.PositionID = @1 and d.ServiceAttributeCategoryID = @2 and d.LanguageID = 1 and d.CountryID = 1";
         
         return db.Query(positionsql, userId, positionId);
