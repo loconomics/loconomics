@@ -1785,7 +1785,10 @@ html.ie #booking-services .special-instructions legend{
     float: right;
 }
 #booking-payment .services-summary ul li{
-    margin: 5px 0;
+    margin: 15px 0;
+}
+#booking-payment .billing-info li{
+    margin: 2px 0;
 }
 #booking-payment .billing-info .name-on-card input{
     width: 230px;
@@ -1813,6 +1816,13 @@ html.ie #booking-services .special-instructions legend{
 }
 #booking-payment .billing-info .save-to-my-payments .save-as input{
     width: 177px;
+}
+#booking-payment .billing-info .card-number input{
+    width: 100px;
+}
+#booking-payment .billing-info .card-number,
+#booking-payment .billing-info .card-exp{
+    display: inline-block;
 }
 
 /** Generic: container .provider-features-lists (used at profile/summary, booking/payment..) **/
