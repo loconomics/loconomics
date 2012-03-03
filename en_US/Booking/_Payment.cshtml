@@ -1,1 +1,126 @@
-﻿
+﻿@{
+    var p = PageData["providerrow"];
+    var c = PageData["customerrow"];
+
+}
+<p class="info">
+    Please review the summary and provide your payment details below.  You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
+</p>
+<form action="#" method="post" class="payment" id="booking-payment">
+    <input type="hidden" name="providerid" value="@p.UserID"/>
+    <fieldset class="billing-info">
+        <legend>Billing information:</legend>
+        <ul>
+            <li class="name-on-card">
+                <label>Name as on card:<input type="text" name="name-on-card"/></label>
+            </li>
+            <li class="street-address-line-1">
+                <label>Street address line 1:<input type="text" name="street-address-line-1"/></label>
+            </li>
+            <li class="street-address-line-2">
+                <label>Street address line 2:<input type="text" name="street-address-line-2"/></label>
+            </li>
+            <li class="city">
+                <label>City:<input type="text" name="city"/></label>
+            </li>
+            <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
+            <li class="state"><label>State:<select name="state">
+                        <option value="ca">California</option>
+                    </select></label></li>
+            <li class="zip">
+                <label>Zip Code:<input type="text" name="zip"/></label>
+            </li>
+            <li class="save-to-my-payments">
+                <label class="save"><input type="checkbox" name="save"/>Save</label>
+                <label class="save-as">payment details as:<input type="text" name="save-payment-as"/></label>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="your-provider">
+        <legend>Your provider:</legend>
+        <h6 class="provider-and-position"><span class="provider-name">@PageData["providerrow"].FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
+        <img class="avatar provider-avatar" alt="Provider photo" src="@Href("~/img/generic-avatar.png")"/>
+        <div class="star-ratings">
+            <!-- Temporary static code -->
+            <ul>
+                <li class="professionalism">
+                    <span class="rate"></span>Professionalism
+                </li>
+                <li class="quality">
+                    <span class="rate"></span>Quality-of-work
+                </li>
+                <li class="efficiency">
+                    <span class="rate"></span>Efficiency
+                </li>
+            </ul>
+            <span class="note">*based on 156 hours</span>
+        </div>
+        <div class="provider-features-lists">
+            <div class="years-experience">
+                <h5>Years experience:</h5>
+                <ul><li>0.5 years</li></ul>
+            </div>
+            <div class="licenses">
+                <h5>Licenses:</h5>
+                <ul><li>CA License</li><li>HSA certified</li></ul>
+            </div>
+            <div class="experience-level">
+                <h5>Experience level:</h5>
+                <ul><li>Expert</li></ul>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="services-summary">
+        <legend>Summary of services to be performed:</legend>
+        <ul>
+            <li class="services-list">
+                <strong>Services:</strong>
+                Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets
+            </li>
+            <li class="special-instructions">
+                <strong>Special instructions:</strong>
+                Please leave mints on my pillows!
+            </li>
+            <li class="location">
+                <strong>Location:</strong>
+                187 Bocana St., San Francisco, CA 94110
+            </li>
+            <li class="details">
+                <strong>Details:</strong>
+                Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.
+            </li>
+        </ul>
+        <div class="actions">
+            <button class="button edit">Edit</button>
+        </div>
+    </fieldset>
+    <fieldset class="appt-time-price">
+        <legend>Appointment time and price:</legend>
+        <div class="schedule">
+            <h6>Ranked in order of preference:</h6>
+            <ol>
+                <li class="preferred-option">Monday, April 15th, 2012, 11:00am to 2:00pm</li>
+                <li class="alternative-option-1">Monday, April 15th, 2012, 3:00pm to 6:00pm</li>
+                <li class="alternative-option-2">Tuesday, April 16th, 2012, 11:00am to 2:00pm</li>
+            </ol>
+        </div>
+        <table class="calculation">
+            <tr><th>Estimated time required:</th><td class="time-required">3 hours</td></tr>
+            <tr>
+                <th><span class="time-required">3 hours</span> @('@') <span class="hour-price">$22.00</span></th>
+                <td class="subtotal-price">$66.00</td>
+            </tr>
+            <tr>
+                <th>Loconomics service fee:</th>
+                <td class="fee-pricee">$6.00</td>
+            </tr>
+            <tr>
+                <th>Total estimated price:</th>
+                <td class="total-price">$72.00</td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="complete-booking next finish">Complete booking</button>
+    </fieldset>
+</form>

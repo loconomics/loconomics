@@ -774,6 +774,7 @@ div.dp-popup td.disabled{cursor:default;}
 .actions {
     text-align: right !important;
     display: block !important;
+    clear: both;
 }
 
 
@@ -1413,11 +1414,13 @@ form.positionavailability input{
 }
 .booking fieldset legend{
     font-weight: bold;
+    font-size: 1.1em;
 }
 .booking fieldset {
     display: inline-block;
     vertical-align: top;
     padding: 0;
+    margin: 0;
 }
 .booking ul,
 .booking ol{
@@ -1473,6 +1476,10 @@ form.positionavailability input{
 }
 #booking-services .attribute-category{
     width: 176px;
+}
+#booking-services .attribute-category legend,
+#booking-services .special-instructions legend{
+    font-size: 1em;
 }
 #booking-services .special-instructions{
     width: 356px;
@@ -1711,6 +1718,120 @@ html.ie #booking-services .special-instructions legend{
     right: 0;
     margin-right: 0;
 }
+
+/** Form: Payment **/
+#booking-payment{
+    font-size: .8em;
+}
+#booking-payment fieldset{
+    margin-bottom: 20px;
+}
+#booking-payment fieldset.actions{
+    margin-bottom: 0;
+}
+#booking-payment table.calculation th,
+#booking-payment table.calculation td{
+    font-weight: bold !important;
+}
+#booking-payment h6 {
+    color: #3B3B3B;
+    font-size: 1em;
+    margin: 5px 0;
+}
+#booking-payment .billing-info,
+#booking-payment .services-summary{
+    width: 390px;
+    float: left;
+}
+#booking-payment .your-provider,
+#booking-payment .appt-time-price{
+    border-left: 1px solid #DADADA;
+    float: right;
+    margin-left: 10px;
+    padding-left: 10px;
+    width: 270px;
+}
+#booking-payment .your-provider .avatar{
+    width: 70px;
+    height: 70px;
+    float: left;
+    vertical-align: middle;
+    margin: 3px 4px 0 0;
+}
+#booking-payment .appt-time-price .schedule{
+    margin-bottom: 5px;
+}
+#booking-payment .appt-time-price .schedule h6{
+    margin-bottom: 0;
+}
+#booking-payment .appt-time-price .schedule ol{
+    list-style-position:  inside;
+}
+#booking-payment .star-ratings li{
+    line-height: normal;
+}
+#booking-payment .star-ratings .rate{
+    margin-right: 4px;
+}
+#booking-payment .star-ratings .note{
+    font-size: 1em;
+}
+#booking-payment .provider-features-lists div{
+    display: inline-block;
+    width: 130px;
+    vertical-align: top;
+}
+#booking-payment .provider-features-lists div.licenses{
+    float: right;
+}
+#booking-payment .services-summary ul li{
+    margin: 5px 0;
+}
+#booking-payment .billing-info .name-on-card input{
+    width: 230px;
+}
+#booking-payment .billing-info .street-address-line-1 input,
+#booking-payment .billing-info .street-address-line-2 input{
+    width: 210px;
+}
+#booking-payment .billing-info .city input{
+    width: 304px;
+}
+#booking-payment .billing-info .state select{
+    width: 160px;
+}
+#booking-payment .billing-info .zip input{
+    width: 60px;
+}
+#booking-payment .billing-info .state,
+#booking-payment .billing-info .zip{
+    display: inline-block;
+}
+#booking-payment .billing-info .save-to-my-payments label{
+    display: inline-block;
+    padding: 0;
+}
+#booking-payment .billing-info .save-to-my-payments .save-as input{
+    width: 177px;
+}
+
+/** Generic: container .provider-features-lists (used at profile/summary, booking/payment..) **/
+.provider-features-lists ul {
+    padding: 0;
+    margin: 0;
+    list-style-position: inside;
+    list-style-image: url('../img/bullet.png');
+}
+.provider-features-lists li{
+    margin: 0;
+}
+.provider-features-lists h5{
+    color: #3B3B3B;
+    display: inline-block;
+    font-size: 1em;
+    margin: 5px 0;
+}
+
 
 /** FAQs **/
 #faqs{

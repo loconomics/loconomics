@@ -207,15 +207,6 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile .actions.book{
     margin: 0 0 20px;
 }
-.position-summary ul {
-    padding: 0;
-    margin: 0;
-    list-style-position: inside;
-    list-style-image: url('../img/bullet.png');
-}
-.position-summary li{
-    margin: 0;
-}
 .position-summary .hour-price {
     border: 6px solid #461864;
     border-radius: 10px;
