@@ -1,0 +1,15 @@
+﻿<div class="pager">
+    <span class="pager-summary">Showing positions 
+        <span class="pager-first-index">1</span>-<span class="pager-last-index">8</span>
+        of <span class="pager-total">32</span>:
+    </span>
+    <div class="pager-pageslist">
+        Page
+        <ol>
+            @for(var n = 1; n < 9; n++){
+            <li><a href="@(Request.Url.PathAndQuery)&amp;page=@n">@n</a></li>
+            }
+            <li><a href="@(Request.Url.PathAndQuery)&amp;page=9">Last</a></li>
+        </ol>
+    </div>
+</div>

@@ -1,0 +1,218 @@
+/* ============== Search page ==================
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+
+ul.search-results li { position: relative; list-style-type: none; padding: 0 0 20px 0; margin: 0 0 20px 0; border-bottom: 1px dashed #ccc; }
+ul.search-results li .col { float: left; padding-right: 20px; }
+ul.search-results li h3 { margin: .2em 0 0 0; line-height: 25px; }
+ul.search-results li h3 a { text-decoration: none; }
+ul.search-results li .id img { width: 100px; height: auto; }
+ul.search-results li .id img[src=""] { margin: 0; width: auto; }
+ul.search-results li .name { width: 300px; }
+ul.search-results li blockquote { line-height: 135%; text-align: left; margin: 1em 0; font-size: 12px; color: #461864; font-style: italic; }
+/*ul.search-results li p.rate { margin-top: .1em; font-size: 38px; font-weight: bold; border: none; color: #461864; }*/
+ul.search-results li .buttons { clear:both; padding: .6em 0 .3em 0; }
+ul.search-results li .buttons a { margin-left: 1em; }
+ul.search-results li .buttons a:first-child { margin: 0; }
+/*ul.search-results table { margin: 12px 0; }
+ul.search-results table td { padding-right: 16px; }*/
+
+.tab-body ul.search-results li div.clearfix { line-height:70px; }
+.tab-body ul.search-results li h2 { float:left; margin:0 10px 0 0; font-size:38px; color:#461864; }
+.tab-body ul.search-results li div.clearfix a { display: inline-block; margin-top: .6em; }
+
+.search h1 { font-size: 2em; margin: .1em 0 .4em 0; }
+.search .cat-icon { float: left; margin-right: 1em; }
+.search ul.tabs { margin-top: 40px; }
+
+
+
+/** Generics **/
+.search ul,
+.search ol,
+.search li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Page Structure */
+.search #main {
+    display: inline-block;
+    vertical-align: top;
+    width: 700px;
+    margin: 0 10px;
+}
+.search #secondary {
+    display: inline-block;
+    vertical-align: top;
+    width: 217px;
+    margin: 0 10px;
+}
+/* #main Structure */
+.search .categories {
+    height: auto;
+    width: auto;
+}
+
+/* Colors, fonts, etc. */
+.search {
+    color: #999999;
+    font-size: 1em;
+}
+
+/***********************/
+/*** search categories */
+.search-categories{
+    margin-bottom: 10px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #999;
+}
+.search-categories h1 {
+    color: #bde1e1;
+    font-size: 2.4em;
+    text-transform: lowercase;
+}
+.search-categories h1 strong{
+    color: #28aaa6;
+    font-weight: normal;
+}
+.search-categories p,
+.search-categories div{
+    font-size: 1.1em;
+}
+.search-categories p{
+    margin: 10px 0;
+}
+
+.search-categories ul{
+    overflow: hidden;
+}
+.search-categories ul li{
+    text-indent: -9999px;
+    background: transparent no-repeat center;
+    width: 84px;
+    height: 84px;
+    float: left;
+    margin: 0 1px;
+}
+.search-categories ul li a{
+    width: 84px;
+    height: 84px;
+    display: block;
+}
+.search-categories li.cat-home{             background-image: url('../img/splash-icon-home.gif');}
+.search-categories li.cat-child{            background-image: url('../img/splash-icon-child.gif');}
+.search-categories li.cat-pets{             background-image: url('../img/splash-icon-pets.gif');}
+.search-categories li.cat-people{           background-image: url('../img/splash-icon-people.gif');}
+.search-categories li.cat-transport{        background-image: url('../img/splash-icon-transport.gif');}
+.search-categories li.cat-business{         background-image: url('../img/splash-icon-business.gif');}
+.search-categories li.cat-elderly{          background-image: url('../img/splash-icon-elderly.gif');}
+.search-categories li.cat-celebrations{     background-image: url('../img/splash-icon-celebrations.gif'); }
+/* Selected image */
+.search-categories li.selected.cat-home{             background-image: url('../img/splash-icon-home-on.gif');}
+.search-categories li.selected.cat-child{            background-image: url('../img/splash-icon-child-on.gif');}
+.search-categories li.selected.cat-pets{             background-image: url('../img/splash-icon-pets-on.gif');}
+.search-categories li.selected.cat-people{           background-image: url('../img/splash-icon-people-on.gif');}
+.search-categories li.selected.cat-transport{        background-image: url('../img/splash-icon-transport-on.gif');}
+.search-categories li.selected.cat-business{         background-image: url('../img/splash-icon-business-on.gif');}
+.search-categories li.selected.cat-elderly{          background-image: url('../img/splash-icon-elderly-on.gif');}
+.search-categories li.selected.cat-celebrations{     background-image: url('../img/splash-icon-celebrations-on.gif'); }
+
+/********************************************/
+/*** generic buttons-list class *************/
+.buttons-list ol{
+    display: inline;
+}
+.buttons-list li{
+    display: inline-block;
+}
+.buttons-list .button{
+    color: #00989A;
+    background-color: #b5e1e1;
+    padding: 0 12px;
+}
+.buttons-list .button.selected{
+    color: White;
+    background-color: #00989A;
+}
+.buttons-list .button:hover{
+    border-shadow: 0 0 2px 2px #00989A;
+}
+
+/***********************/
+/*** pager *************/
+.pager{
+    margin: 0 10px;
+}
+.pager .pager-pageslist{
+    display: block;
+    float: right;
+}
+.pager .pager-pageslist ol{
+    display: inline;
+}
+.pager .pager-pageslist li{
+    display: inline-block;
+    text-transform: lowercase;
+}
+.pager .pager-pageslist li a{
+    display: block;
+    padding: 0 3px;
+}
+
+/***********************/
+/* categorized results */
+.search-results-categories li{
+    position: relative;
+    margin: 1em;
+}
+.search-results-categories h3{
+    display: inline-block;
+    margin: 0;
+}
+.search-results-categories a.view-more {
+    display: block;
+    float: right;
+    text-transform: lowercase;
+}
+
+/***********************/
+/*** refine results ****/
+#refine-results form input,
+#refine-results form select{
+    width: 140px !important;
+}
+#refine-results .actions{
+    margin: 15px 0 0 0;
+}
+#refine-results .actions .button{
+    font-size: .9em;
+}
+#refine-results .dp-choose-date{
+    bottom: 0;
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    vertical-align: bottom;
+}
+
+/************************/
+/*** category positions */
+#category-positions.buttons-list li{
+    font-size: 1.2em;
+}
+#category-positions.buttons-list .button{
+     margin: 2px;
+}
+
+
+/***********************/
+/**** search again *****/
+
+#searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
+#searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
+#searchAgain > fieldset { padding: 14px 6px; border-top: 1px solid #C1C1C1; font-size: .9em; line-height: 120%; }
+#searchAgain fieldset.search-params { padding-bottom: 0; }
+#searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
+#searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }

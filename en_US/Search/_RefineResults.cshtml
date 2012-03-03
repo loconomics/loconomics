@@ -1,0 +1,31 @@
+﻿@{
+    var serviceType = PageData["serviceType"];
+}
+<article id="refine-results" class="widget">
+    <h2>Refine results</h2>
+    <form action="" method="get">
+        <section class="key-word">
+            <h3>Key word</h3>
+            <input name="serviceType" type="text" value="@serviceType"/>
+        </section>
+        <section class="price-range">
+            <h3>Price range ($/hr.)</h3>
+            <img alt="Slider" src="@Href("~/img/price-range-slider.png")"/>
+        </section>
+        <section class="star-rating">
+            <h3>Star rating</h3>
+            <img alt="Slider" src="@Href("~/img/star-rating-slider.png")"/>
+        </section>
+        <section class="preferred-date">
+            <h3>Preferred date</h3>
+            <input name="preferred-date" type="text" class="date date-pick"/>
+        </section>
+        <section class="services-near">
+            <h3>Services near</h3>
+            <select name="serviceLocation"><option value="my home">My home</option></select>
+        </section>
+        <section class="actions">
+            <button type="submit" class="button fanciful">Apply</button>
+        </section>
+    </form>
+</article>

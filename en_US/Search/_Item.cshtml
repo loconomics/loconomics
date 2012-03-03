@@ -1,0 +1,55 @@
+﻿@{
+    var p = PageData["item"];
+}
+@helper printFriend(string name, string photo){
+    if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
+    /* Between LI and A elements must not have white spaces */
+    <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+}
+
+        <h6 class="provider-name">@p.FirstName @p.LastName</h6>
+        <img alt="Provider photo" class="provider-photo" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
+        
+        <div class="star-ratings">
+            <!-- Temporary static code -->
+            <ul>
+                <li class="professionalism">
+                    <span class="rate"></span>Professionalism
+                </li>
+                <li class="quality">
+                    <span class="rate"></span>Quality of work
+                </li>
+                <li class="efficiency">
+                    <span class="rate"></span>Efficiency
+                </li>
+            </ul>
+        </div>
+        
+        <ul id="verifications-summary">
+            <li class="license">2 licenses</li>
+            <li class="verification">4 verifications</li>
+            <li class="review">22 reviews</li>
+        </ul>
+
+        <div class="social-connections">
+            <ul>
+                @printFriend("Fernando", null)
+                @printFriend("Joshua", null)
+                @printFriend("Fernando", null)
+                @printFriend("Joshua", null)
+                @printFriend("Fernando", null)
+            </ul>
+            <span class="friends"><span class="quantity">14</span> of your friends have used this provider's services</span>
+        </div>
+        
+        <div class="hightlighted-review review">
+            <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href("~/img/generic-friend-avatar.png")"/>
+            <p>
+                @p.FirstName is really great at what he does. He was pleasant, communicated well, and...
+                <a class="view-more">view more</a>
+            </p>
+        </div>
+
+       <a class="button fanciful book" href="@Href("~/en_US/Profile?providerid=" + p.ProfileID + "&positionid=" + p.PositionID)">
+        view and book for <span class="hour-price">$17/hr.</span>
+       </a>

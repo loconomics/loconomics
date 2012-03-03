@@ -228,7 +228,9 @@ $(document).ready(function(){
         });
         //$('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
     });
-
+    
+    /* Active/Desactive search filters */
+    $(".buttons-list .button").click(function(){ $(this).toggleClass('selected'); return false; });
 });
 
 

@@ -1,4 +1,5 @@
 @import url('Profile.css');
+@import url('Search.css');
 
 /*
  * HTML5 ✰ Boilerplate
@@ -397,25 +398,6 @@ ul.profile-list .progress-bar { font-size: 12px; padding-right: 16px; }
 ul.profile-list .progress-bar .total { width: 130px; height: 25px; }
 ul.profile-list .progress-bar .percent-done { height: 25px; }
 
-ul.search-results li { position: relative; list-style-type: none; padding: 0 0 20px 0; margin: 0 0 20px 0; border-bottom: 1px dashed #ccc; }
-ul.search-results li .col { float: left; padding-right: 20px; }
-ul.search-results li h3 { margin: .2em 0 0 0; line-height: 25px; }
-ul.search-results li h3 a { text-decoration: none; }
-ul.search-results li .id img { width: 100px; height: auto; }
-ul.search-results li .id img[src=""] { margin: 0; width: auto; }
-ul.search-results li .name { width: 300px; }
-ul.search-results li blockquote { line-height: 135%; text-align: left; margin: 1em 0; font-size: 12px; color: #461864; font-style: italic; }
-/*ul.search-results li p.rate { margin-top: .1em; font-size: 38px; font-weight: bold; border: none; color: #461864; }*/
-ul.search-results li .buttons { clear:both; padding: .6em 0 .3em 0; }
-ul.search-results li .buttons a { margin-left: 1em; }
-ul.search-results li .buttons a:first-child { margin: 0; }
-/*ul.search-results table { margin: 12px 0; }
-ul.search-results table td { padding-right: 16px; }*/
-
-.tab-body ul.search-results li div.clearfix { line-height:70px; }
-.tab-body ul.search-results li h2 { float:left; margin:0 10px 0 0; font-size:38px; color:#461864; }
-.tab-body ul.search-results li div.clearfix a { display: inline-block; margin-top: .6em; }
-
 .profile-progress .progress-bar { float: none; }
 
 ul.reviews { padding: 0; margin: 0; font-size: .8em; }
@@ -477,9 +459,6 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 .sign-up #main { float: none; width: auto; }
 
-.search #main { float: right; width: 730px; }
-.search #secondary { margin: 0 765px 0 0; }
-
 header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
 header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
 header a, header a:link, header a:visited { color: #00989a; text-decoration: none; }
@@ -522,17 +501,6 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 #createLogin2 fieldset, #createLogin2 label { display: block; margin-bottom: 1em; }
 
 #selectedTitles { width: 450px; min-height: 5em; }
-
-#searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
-#searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
-#searchAgain > fieldset { padding: 14px 6px; border-top: 1px solid #C1C1C1; font-size: .9em; line-height: 120%; }
-#searchAgain fieldset.search-params { padding-bottom: 0; }
-#searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
-#searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
-
-.search h1 { font-size: 2em; margin: .1em 0 .4em 0; }
-.search .cat-icon { float: left; margin-right: 1em; }
-.search ul.tabs { margin-top: 40px; }
 
 /*.home #main { float: none; width: auto; text-align: center; }*/
 .home #main {
@@ -1415,18 +1383,6 @@ fieldset.box legend{
 .booking #main{
     width: 730px;
 }
-.booking #faqs{
-    width: 185px;
-    padding: 15px;
-    float: right;
-    
-    background-color: #f5f5f5;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border: 1px solid #849a9a;
-}
 .booking #main h1{
     margin-top: 0;
 }
@@ -1888,33 +1844,44 @@ html.ie #booking-services .special-instructions legend{
 }
 
 
-/** FAQs **/
-#faqs{
+/** Widget class (used in FAQ's, refine search,... **/
+.widget{
     font-size: .9em;
+    width: 185px;
+    padding: 15px;
+    float: right;
+    margin: 0 0 20px 0;
+    
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border: 1px solid #849a9a;
 }
-#faqs h2,
-#faqs h3 {
+.widget h2,
+.widget h3 {
     color: #999999
 }
-#faqs h2{
+.widget h2{
     font-size: 1.3em;
     margin: 10px 0 20px;
     padding: 0 0 20px;
     border-bottom: 1px solid #999;
 }
-#faqs h3{
+.widget h3{
     font-size: 1.2em;
     margin: 10px 0 5px;
 }
-#faqs h3:after{
+.widget h3:after{
     content: ':';
 }
-#faqs ol{
+.widget ol{
     margin: 0;
     padding: 0;
     list-style-position: inside;
 }
-#faqs section a.more{
+.widget section a.more{
     display: block;
     text-align: right;
 }

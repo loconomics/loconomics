@@ -4,8 +4,6 @@
 
 .profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
 
-.profile #container, #container.search { font-size: .8em; }
-
 #profileHeader .wrap { margin-left: 145px; }
 #profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
 #profileHeader .buttons a { margin-right: 5px; }
@@ -125,6 +123,8 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 
 /*****************************************/
 /** Colors, images, text properties, ... */
+
+.profile #container { font-size: .8em; }
 
 #profileHeader{
     background: url('../img/profile-background.png') repeat-x top left;
