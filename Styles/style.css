@@ -1382,6 +1382,32 @@ form.positionavailability input{
     color: #00989A;
 }
 
+/****************************************/
+/**** Box fieldset styles ***************/
+fieldset.box{
+    background: none repeat scroll 0 0 #F5F5F5;
+    border: 1px solid #ACBABA;
+    border-radius: 15px 15px 15px 15px;
+    margin-bottom: 10px;
+    padding: 5px;
+    margin-top: 30px;
+}
+fieldset.box legend{
+    margin-top: -30px;
+    padding: 0 10px;
+    float: left;
+}
+.have-boxes .folders > .tab-body {
+    background: white;
+}
+.have-boxes > .tabbed.folders > .tabs > li{
+    background-image: url('../img/tab-editable-right-white.png') !important;
+}
+.have-boxes.editable .folders > ul.tabs li.current a,
+.have-boxes.editable .folders > ul.tabs li.current:hover a{
+    background-color: white;
+    border-bottom-color: white;
+}
 
 /* ============== Booking pages ==================
    ====== IagoSRL for Loconomics S.L. ============
@@ -1407,9 +1433,10 @@ form.positionavailability input{
 .booking p.info{
     font-weight: bold;
     margin: 0;
+    font-size: .9em;
 }
 .booking form {
-    margin: 30px 0 0;
+    margin: 20px 0 0;
     font-size: .9em;
 }
 .booking fieldset legend{
@@ -1419,8 +1446,6 @@ form.positionavailability input{
 .booking fieldset {
     display: inline-block;
     vertical-align: top;
-    padding: 0;
-    margin: 0;
 }
 .booking ul,
 .booking ol{
@@ -1657,10 +1682,14 @@ html.ie #booking-services .special-instructions legend{
 }
 
 /* Schedule.location */
+#booking-schedule .availability,
 #booking-schedule .location{
+    margin-bottom: 20px;
     margin-top: 15px;
     width: 400px;
-    overflow: hidden;
+}
+#booking-schedule .location li {
+    margin: 2px 0;
 }
 #booking-schedule .location .street-address-line-1 input,
 #booking-schedule .location .street-address-line-2 input{
@@ -1694,12 +1723,12 @@ html.ie #booking-services .special-instructions legend{
 }
 #booking-schedule .select-schedule{
     border-left: 1px solid #dadada;
-    margin-left: 10px;
-    padding-left: 10px;
+    margin-left: 7px;
+    padding-left: 7px;
     position: absolute;
     top: 0;
     right: 0;
-    width: 266px;
+    width: 250px;
 }
 #booking-schedule .select-schedule fieldset{
     display: block;
@@ -1720,11 +1749,8 @@ html.ie #booking-services .special-instructions legend{
 }
 
 /** Form: Payment **/
-#booking-payment{
-    font-size: .8em;
-}
-#booking-payment fieldset{
-    margin-bottom: 20px;
+#booking-payment .box{
+    font-size: .9em;
 }
 #booking-payment fieldset.actions{
     margin-bottom: 0;
@@ -1740,15 +1766,13 @@ html.ie #booking-services .special-instructions legend{
 }
 #booking-payment .billing-info,
 #booking-payment .services-summary{
-    width: 390px;
+    width: 377px;
     float: left;
 }
 #booking-payment .your-provider,
 #booking-payment .appt-time-price{
-    border-left: 1px solid #DADADA;
     float: right;
-    margin-left: 10px;
-    padding-left: 10px;
+    margin-left: 5px;
     width: 270px;
 }
 #booking-payment .your-provider .avatar{
@@ -1756,7 +1780,7 @@ html.ie #booking-services .special-instructions legend{
     height: 70px;
     float: left;
     vertical-align: middle;
-    margin: 3px 4px 0 0;
+    margin: 3px 4px 0 4px;
 }
 #booking-payment .appt-time-price .schedule{
     margin-bottom: 5px;
@@ -1776,6 +1800,9 @@ html.ie #booking-services .special-instructions legend{
 #booking-payment .star-ratings .note{
     font-size: 1em;
 }
+#booking-payment .provider-features-lists{
+    padding: 0 5px;
+}
 #booking-payment .provider-features-lists div{
     display: inline-block;
     width: 130px;
@@ -1784,24 +1811,27 @@ html.ie #booking-services .special-instructions legend{
 #booking-payment .provider-features-lists div.licenses{
     float: right;
 }
+#booking-payment .provider-features-lists h5{
+    margin: 0;
+}
 #booking-payment .services-summary ul li{
-    margin: 15px 0;
+    margin: 10px 0;
 }
 #booking-payment .billing-info li{
     margin: 2px 0;
 }
 #booking-payment .billing-info .name-on-card input{
-    width: 230px;
+    width: 219px;
 }
 #booking-payment .billing-info .street-address-line-1 input,
 #booking-payment .billing-info .street-address-line-2 input{
-    width: 210px;
+    width: 200px;
 }
 #booking-payment .billing-info .city input{
-    width: 304px;
+    width: 294px;
 }
 #booking-payment .billing-info .state select{
-    width: 160px;
+    width: 150px;
 }
 #booking-payment .billing-info .zip input{
     width: 60px;
@@ -1815,10 +1845,10 @@ html.ie #booking-services .special-instructions legend{
     padding: 0;
 }
 #booking-payment .billing-info .save-to-my-payments .save-as input{
-    width: 177px;
+    width: 167px;
 }
 #booking-payment .billing-info .card-number input{
-    width: 100px;
+    width: 90px;
 }
 #booking-payment .billing-info .card-number,
 #booking-payment .billing-info .card-exp{

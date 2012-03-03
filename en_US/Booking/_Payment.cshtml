@@ -8,7 +8,7 @@
 </p>
 <form action="#" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
-    <fieldset class="billing-info">
+    <fieldset class="billing-info box">
         <legend>Billing information:</legend>
         <ul>
             <li class="name-on-card">
@@ -45,7 +45,7 @@
             </li>
         </ul>
     </fieldset>
-    <fieldset class="your-provider">
+    <fieldset class="your-provider box">
         <legend>Your provider:</legend>
         <h6 class="provider-and-position"><span class="provider-name">@PageData["providerrow"].FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
         <img class="avatar provider-avatar" alt="Provider photo" src="@Href("~/img/generic-avatar.png")"/>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </fieldset>
-    <fieldset class="services-summary">
+    <fieldset class="services-summary box">
         <legend>Summary of services to be performed:</legend>
         <ul>
             <li class="services-list">
@@ -103,7 +103,7 @@
             <button class="button edit">Edit</button>
         </div>
     </fieldset>
-    <fieldset class="appt-time-price">
+    <fieldset class="appt-time-price box">
         <legend>Appointment time and price:</legend>
         <div class="schedule">
             <h6>Ranked in order of preference:</h6>

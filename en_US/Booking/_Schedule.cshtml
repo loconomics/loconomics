@@ -22,7 +22,7 @@
 </p>
 <form action="#" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
-    <fieldset class="availability availability-calendar">
+    <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">
             <ol class="days">
@@ -49,7 +49,7 @@
             <li class="unavailable"><span class="color">White</span>Unavailable</li>
         </ul>
     </fieldset>
-    <fieldset class="location">
+    <fieldset class="location box">
         <legend>Location where services are to be performed:</legend>
         <ul>
             <li class="street-address-line-1">
@@ -75,7 +75,7 @@
         </ul>
     </fieldset>
     <fieldset class="select-schedule">
-        <fieldset class="preferred-option select-date-time">
+        <fieldset class="preferred-option select-date-time box">
             <legend>My preferred option:</legend>
             <ul>
                 <li class="date">
@@ -89,7 +89,7 @@
                 </li>
             </ul>
         </fieldset>
-        <fieldset class="alternative-option-1 select-date-time">
+        <fieldset class="alternative-option-1 select-date-time box">
             <legend>Second best option:</legend>
             <ul>
                 <li class="date">
@@ -103,7 +103,7 @@
                 </li>
             </ul>
         </fieldset>
-        <fieldset class="alternative-option-2 select-date-time">
+        <fieldset class="alternative-option-2 select-date-time box">
             <legend>Third best option:</legend>
             <ul>
                 <li class="date">
