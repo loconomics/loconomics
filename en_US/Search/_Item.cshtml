@@ -8,7 +8,13 @@
 }
 
         <h6 class="provider-name">@p.FirstName @p.LastName</h6>
-        <img alt="Provider photo" class="provider-photo" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
+        <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
+        
+        <div class="overview">
+            <div class="positions">Positions:  Housekeeper, Gardener, and <a href="#" class="view-more">2 more</a></div>
+            <div class="services">Services offered:  ironing, mopping, dusting, bed-
+                making, sweeping, vacuuming, and <a href="#" class="view-more">14 more</a></div>
+        </div>
         
         <div class="star-ratings">
             <!-- Temporary static code -->
@@ -25,10 +31,10 @@
             </ul>
         </div>
         
-        <ul id="verifications-summary">
+        <ul class="verifications-summary">
             <li class="license">2 licenses</li>
             <li class="verification">4 verifications</li>
-            <li class="review">22 reviews</li>
+            <li class="total-reviews">22 reviews</li>
         </ul>
 
         <div class="social-connections">
@@ -42,11 +48,11 @@
             <span class="friends"><span class="quantity">14</span> of your friends have used this provider's services</span>
         </div>
         
-        <div class="hightlighted-review review">
-            <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href("~/img/generic-friend-avatar.png")"/>
+        <div class="hightlighted-review">
+            <img alt="Reviewer photo" class="reviewer-photo" src="@Href("~/img/generic-friend-avatar.png")"/>
             <p>
-                @p.FirstName is really great at what he does. He was pleasant, communicated well, and...
-                <a class="view-more">view more</a>
+                @p.FirstName is really great at what he does. He was pleasant, communica...
+                <a href="#" class="view-more">view more</a>
             </p>
         </div>
 

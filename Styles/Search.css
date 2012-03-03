@@ -160,6 +160,10 @@ ul.search-results table td { padding-right: 16px; }*/
     display: block;
     padding: 0 3px;
 }
+.pager .pager-pageslist li.current a{
+    text-decoration: none;
+    color: #999;
+}
 
 /***********************/
 /* categorized results */
@@ -206,6 +210,102 @@ ul.search-results table td { padding-right: 16px; }*/
      margin: 2px;
 }
 
+/*************************/
+/**** results items ******/
+.search-results-items{
+    margin: 8px 0;
+}
+.search-results-items > li{
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border: 1px solid #849a9a;
+    margin: 3px 0;
+    padding: 4px 10px;
+}
+.search-results-items > li h6{
+    color: #52276e;
+    margin: 0;
+}
+.search-results-items > li img.avatar{
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    margin: 0 5px 0 0;
+    vertical-align: top;
+}
+.search-results-items > li .overview,
+.search-results-items > li .star-ratings,
+.search-results-items > li .verifications-summary{
+    vertical-align: top;
+    height: 70px;
+}
+.search-results-items > li .overview,
+.search-results-items > li .star-ratings,
+.search-results-items > li .verifications-summary{
+    font-size: 0.9em;
+}
+.search-results-items > li .overview{
+    display: inline-block;
+    line-height: normal;
+    width: 286px;
+}
+.search-results-items > li .overview .view-more{
+    display: inline;
+    float: none;
+}
+.search-results-items > li .star-ratings .rate{
+    margin: 0 4px 0 0;
+}
+.search-results-items > li .verifications-summary{
+    margin: 0 0 0 10px;
+}
+.search-results-items > li .verifications-summary > li{
+    background: no-repeat center left;
+    margin: 0;
+    padding: 0 0 0 15px;
+}
+.search-results-items > li .verifications-summary {
+    display: inline-block;
+}
+.search-results-items > li .verifications-summary > li.license{
+    background-image: url('../img/icon-licenses-mini.png');
+}
+.search-results-items > li .verifications-summary > li.verification{
+    background-image: url('../img/icon-verifications-mini.png');
+}
+.search-results-items > li .verifications-summary > li.total-reviews{
+    background-image: url('../img/icon-share-mini.png');
+}
+
+.search-results-items > li .social-connections{
+    width: 240px;
+}
+.search-results-items > li .social-connections,
+.search-results-items > li .hightlighted-review,
+.search-results-items > li .hightlighted-review p{
+    display: inline-block;
+}
+.search-results-items > li .social-connections li{
+    margin: 0;
+}
+.search-results-items > li .hightlighted-review p{
+    font-size: .7em;
+    line-height: 1.2;
+    margin: 0;
+    width: 200px;
+    vertical-align: middle;
+}
+.search-results-items > li .hightlighted-review p .view-more{
+    display: inline;
+    float: none;
+}
+.search-results-items > li .reviewer-photo {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
 
 /***********************/
 /**** search again *****/
