@@ -1,0 +1,84 @@
+﻿<p class="info">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
+</p>
+<form action="#" method="post" id="provider-sign-up-create-a-login">
+    <fieldset class="login-data">
+        <legend>Contact Information:</legend>
+        <ul>
+            <li class="first-name">
+                <label>First Name:<input type="text" name="first-name"/></label>
+            </li>
+            <li class="last-name">
+                <label>Last Name:<input type="text" name="first-name"/></label>
+            </li>
+            <li class="zip-code">
+                <label>Zip code:<input type="text" name="zip-code"/></label>
+            </li>
+            <li class="email">
+                <label>Email address:<input type="text" name="email"/></label>
+            </li>
+            <li class="password">
+                <label>Password:<input type="password" name="password"/></label>
+            </li>
+            <li class="re-password">
+                <label>Re-enter:<input type="password" name="re-password"/></label>
+            </li>
+            <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
+            <li class="lang"><label>Preferred language:<select name="lang">
+                        <option value="en_US">English (US)</option>
+                        <option value="es_ES">Spanish (ES)</option>
+                    </select></label></li>
+        </ul>
+        <div class="facebook-connect">
+            <span class="or">or</span>
+            <a href="#"><img src="@Href("~/img/fb-login-placeholder.png")" alt="Facebook Connect"/></a>
+        </div>
+    </fieldset>
+    <fieldset class="legal-agreement">
+        <legend>We’re all in this together--please read these carefully!</legend>
+        <ul>
+            <li>
+                <label class="stronger">Terms of use--this is how we will work together (view in separate window)
+                <textarea disabled="disabled">Terms of use</textarea>
+                </label>
+            </li>
+            <li>
+                <label><input type="checkbox" name="terms-of-use"/>I have read and understand the <a href="#">terms of use</a></label>
+            </li>
+            <li>
+                <strong>Specifically, I understand and agree to the following:</strong>
+                <ul>
+                    <li>
+                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 1</label>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 2</label>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 3</label>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 4</label>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 5</label>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <label class="stronger">Privacy policy--we want you to feel comfortable with how we use your data (view in separate window)
+                <textarea disabled="disabled">Privacy policy</textarea>
+                </label>
+            </li>
+            <li>
+                <label><input type="checkbox" name="terms-of-use"/>I have read and understand the <a href="#">privacy policy</a></label>
+            </li>
+            <li>
+                <label><input type="checkbox" name="terms-of-use"/>I don’t mind being e-mailed with Loconomics news</label>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="actions">
+        <button data-next-step="#your-work" class="next">Continue</button>
+    </fieldset>
+</form>
