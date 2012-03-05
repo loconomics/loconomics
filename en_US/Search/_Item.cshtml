@@ -6,8 +6,12 @@
     /* Between LI and A elements must not have white spaces */
     <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
 }
+@helper hrefProfile(){
+    var p = PageData["item"];
+    @Href("~/en_US/Profile?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
+}
 
-        <h6 class="provider-name">@p.FirstName @p.LastName</h6>
+        <h6 class="provider-name"><a href="@hrefProfile()">@p.FirstName @p.LastName</a></h6>
         <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
         
         <div class="overview">
@@ -56,6 +60,6 @@
             </p>
         </div>
 
-       <a class="button fanciful book" href="@Href("~/en_US/Profile?providerid=" + p.ProfileID + "&positionid=" + p.PositionID)">
+       <a class="button fanciful book" href="@hrefProfile()">
         view and book for <span class="hour-price">$17/hr.</span>
        </a>
