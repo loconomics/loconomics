@@ -30,13 +30,18 @@
         </div>
     */
 }
+@helper printName(WebMatrix.Data.DynamicRecord p){
+    string l = (string)p["LastName"];
+    if (l.Length > 1) { l = l.Substring(0, 1); }
+    @(p["FirstName"] + " " + @l + ".")
+}
 
 <div id="container" class="profile clearfix">
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
             <img alt="Photo" class="profile-pic" src="@Href("~/" + providerrow.Photo)"/>
-            <h1 class="profile-name">@providerrow.Name</h1>
+            <h1 class="profile-name">@printName(providerrow)</h1>
 		    
 		    <p class="profile-desc">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis mattis. Praesent vehicula justo quis justo laoreet et fringilla nibh iaculis. 

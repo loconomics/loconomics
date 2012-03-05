@@ -10,8 +10,13 @@
     var p = PageData["item"];
     @Href("~/en_US/Profile?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
 }
+@helper printName(WebMatrix.Data.DynamicRecord p){
+    string l = (string)p["LastName"];
+    if (l.Length > 1) { l = l.Substring(0, 1); }
+    @(p["FirstName"] + " " + @l + ".")
+}
 
-        <h6 class="provider-name"><a href="@hrefProfile()">@p.FirstName @p.LastName</a></h6>
+        <h6 class="provider-name"><a href="@hrefProfile()">@printName(p)</a></h6>
         <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
         
         <div class="overview">
