@@ -146,10 +146,8 @@ $(document).ready(function(){
 				$parent.children('.tabs').find('li, a').removeClass('current');
 				$parent.children('.tab-body').removeClass('current');
 				var target = $(this).attr('href');
-                // Iago: 'setTimeout work-around' for the strange bug visible at Firefox and IE: button-tabs 'doesn't get'
-                //  updated after apply them the 'current' class and seems like the button was not actived.
-				setTimeout(function(){$(this).addClass('current').parent().addClass('current')}, 10);
-				$(target).addClass('current');
+                $(this).addClass('current').parent().addClass('current');
+                $(target).addClass('current');
 				return false;
 			}
 		});
