@@ -1,1 +1,88 @@
-﻿
+﻿<p class="info">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
+</p>
+<form action="#" method="post" id="provider-sign-up-your-work" class="your-work">
+    <fieldset class="select-position">
+        <legend>Select position:</legend>
+        <select name="select-position">
+            <option>Cleaner</option>
+        </select>
+    </fieldset>
+    <fieldset class="select-attributes">
+        
+        <fieldset class="service-attribute-category service-attribute-category-1">
+            <legend>Service Attribute Category #1:</legend>
+            @for(int i=0; i < 16; i++){
+            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
+            }        
+        </fieldset>
+        <fieldset class="service-attribute-category service-attribute-category-2">
+            <legend>Service Attribute Category #2:</legend>
+            @for(int i=0; i < 16; i++){
+            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
+            }
+        </fieldset>
+
+        <div class="your-work-sidebar">
+            <fieldset class="experience-level-dropdown">
+                <legend>Experience Level</legend>
+                <select name="experience-level">
+                    <option>Expert</option>
+                    <option>Intermediate</option>
+                    <option>Novice</option>
+                </select>
+            </fieldset>
+            <fieldset class="year-sexperience">
+                <legend>Years Experience</legend>
+                <select name="year-sexperience">
+                    <option>+10 years</option>
+                    <option>5 years</option>
+                    <option>1.5 years</option>
+                    <option>1 year</option>
+                    <option>-1 year</option>
+                </select>
+            </fieldset>
+            <fieldset class="languages-spoken">
+                <legend>Languages Spoken</legend>
+                <ul>
+                    <li><label><input name="language-spoken-english" type="checkbox"/>English</label>
+                        <select name="languages-spoken-englishlevel">
+                            <option>Fluent</option>
+                            <option>Begginer</option>
+                            <option>N/A</option>
+                        </select>
+                    </li>
+                    <li><label><input name="language-spoken-spanish" type="checkbox"/>Spanish</label>
+                        <select name="languages-spoken-spanishlevel">
+                            <option>Fluent</option>
+                            <option>Begginer</option>
+                            <option>N/A</option>
+                        </select>
+                    </li>
+                    <li><label><input name="languages-spoken-catalan" type="checkbox"/>Catalan</label>
+                        <select name="languages-spoken-catalanlevel">
+                            <option>Fluent</option>
+                            <option>Begginer</option>
+                            <option>N/A</option>
+                        </select>
+                    </li>
+                    <li><label><input name="languagespoken-galician" type="checkbox"/>Galician</label>
+                        <select name="languagesspoken-galicianlevel">
+                            <option>Fluent</option>
+                            <option>Begginer</option>
+                            <option>N/A</option>
+                        </select>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset class="clients-types">
+                <legend>Clients Types</legend>
+                <label><input type="checkbox" name="clients-types-residential"/>Residential</label>
+                <label><input type="checkbox" name="clients-types-business"/>Business</label>
+            </fieldset>
+        </div>
+    </fieldset>
+    <fieldset class="actions">
+        <button data-next-step="#next-steps" class="next">Continue</button>
+    </fieldset>
+</form>

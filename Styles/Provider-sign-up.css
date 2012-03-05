@@ -90,3 +90,44 @@
     height: 5em;
     width: 380px;
 }
+
+/** Form: Provider sign up - Your work **/
+.sign-up-wizard fieldset.select-attributes fieldset {
+    display: inline-block;
+}
+.sign-up-wizard fieldset.service-attribute-category{
+    display: inline-block;
+    width: 280px;
+    border-right: solid 1px #dadada;
+    margin: 20px 10px 10px 0 !important;
+    padding: 0 10px 0 0 !important;
+    vertical-align: top;
+}
+.sign-up-wizard form.your-work label{
+    display: block;
+}
+.sign-up-wizard form.your-work input{
+    margin-right: .4em;
+}
+.sign-up-wizard .your-work-sidebar{
+    display: inline-block;
+    width: 260px;
+    vertical-align: top;
+    margin-top: 20px;
+}
+.sign-up-wizard .your-work-sidebar fieldset{
+    margin: 0 0 15px !important;
+}
+.sign-up-wizard .your-work .languages-spoken ul li label{
+    display: inline-block !important;
+    width: 90px;
+    min-width: 90px;
+    white-space: nowrap;
+}
+.sign-up-wizard .your-work .languages-spoken ul li select{
+    width: 110px !important;
+}
+.sign-up-wizard .your-work .clients-types label{
+    display: inline-block !important;
+    width: 90px;
+}
