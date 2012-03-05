@@ -146,7 +146,9 @@ $(document).ready(function(){
 				$parent.children('.tabs').find('li, a').removeClass('current');
 				$parent.children('.tab-body').removeClass('current');
 				var target = $(this).attr('href');
-				$(this).addClass('current').parent().addClass('current');
+                // Iago: 'setTimeout work-around' for the strange bug visible at Firefox and IE: button-tabs 'doesn't get'
+                //  updated after apply them the 'current' class and seems like the button was not actived.
+				setTimeout(function(){$(this).addClass('current').parent().addClass('current')}, 10);
 				$(target).addClass('current');
 				return false;
 			}
@@ -249,12 +251,9 @@ $(document).ready(function(){
                 // desactivating previous selected tab (both, li and a elements)
                 ti.parent().parent().find('li, a').removeClass('current');
                 // activating selected tab index:
-                ti.addClass('current').parent().addClass('current');                
+                ti.addClass('current').parent().addClass('current');
                 return false;
             }
         }
     });
 });
-
-
-

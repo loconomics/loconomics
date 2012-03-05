@@ -342,7 +342,7 @@ input[type="button"]:hover, button:hover {
 a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
 
-a.profile, a.profile.current:hover, a.profile.current:focus,
+a.profile, a.profile.current:focus,
 button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; } 
 
 a.profile.current, a.profile:hover, a.profile:focus,
@@ -1991,7 +1991,6 @@ html.ie #booking-services .special-instructions legend{
 
 /** buttons **/
 .editable a.profile,
-.editable a.profile.current:hover,
 .editable a.profile.current:focus,
 .editable button.search-again:hover,
 .editable a.view:hover {
