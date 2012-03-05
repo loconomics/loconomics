@@ -409,19 +409,59 @@ ul.reviews li div.wrap p { margin-top: 0; }
 
 .folders > ul.tabs { position: relative; z-index: 2; margin: 0; padding: 0 0 0 10px; }
 .folders > ul.tabs li { float: left; list-style-type: none; }
-.folders > ul.tabs li a { 
-	display: block; width: 118px; height: 22px; 
-	background: url('../img/tab-off.png') no-repeat top left; 
-	line-height: 19px; font-size: 12px; text-decoration: none; color: #461864; 
-	padding-top: 3px; text-align: center; }
-.folders > ul.tabs li a:hover { background-image: url('../img/tab-hover.png'); }
-.folders > ul.tabs li a.current, .folders > ul.tabs li a.current:hover { padding-top: 4px; background-image: url('../img/tab-on.png'); }
-
 .folders > .tab-body { 
 	display:none; position: relative; z-index: 1; top: 20px; padding: 20px; min-height: 400px;
 	border: 2px solid #461864; background: #F5F5F5;
 }
 .folders > .tab-body.current { display: block; }
+
+/* Normal ('not editable') folders tabs */
+.folders > ul.tabs li {
+    background: url('../img/tab-right.png') no-repeat top right; 
+    padding-right: 22px;
+    padding-top: 0;
+    background-position: 0 right;
+}
+.folders > ul.tabs li a {
+	display: block;
+    width: auto;
+    height: auto;
+	background-image: none !important;
+	line-height: 15px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #461864;
+    font-weight: bold;
+	padding-top: 3px;
+    padding-left: 10px;
+    text-align: center;
+
+    border-color: #461864;
+    border-style: solid;
+    border-width: 2px 0 2px 2px;
+    border-radius: 10px 0 0 0;
+    background-color: #e9e0f0;
+}
+.folders > ul.tabs li a{
+    background-color: #e9e0f0;
+}
+.folders > ul.tabs li.current,
+.folders > ul.tabs li.current:hover {
+    background-position: right -22px !important;
+}
+.folders > ul.tabs li.current a,
+.folders > ul.tabs li.current:hover a {
+    background-color: #f5f5f5;
+    padding-top: 3px;
+    border-bottom-color: #f5f5f5;
+}
+.folders > ul.tabs li:hover {
+    background-position: right -44px !important;
+}
+.folders > ul.tabs li:hover a{
+    background-color: #f5f0f8;
+}
+
 
 .buttons ul.tabs { height: 40px; padding: 0; }
 .buttons ul.tabs li { display: inline-block; list-style-type: none; }
@@ -1903,9 +1943,10 @@ html.ie #booking-services .special-instructions legend{
 }
 
 .editable .folders > ul.tabs li {
-    background: url('../img/tab-editable-off.png') no-repeat top right; 
+    background: url('../img/tab-editable-right.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
+    background-position: 0 right;
 }
 .editable .folders > ul.tabs li a {
 	display: block;
@@ -1928,18 +1969,11 @@ html.ie #booking-services .special-instructions legend{
     border-radius: 10px 0 0 0;
     background-color: #def2f2;
 }
-.editable .folders > ul.tabs li {
-    background: url("../img/tab-editable-right.png") no-repeat top right;
-    background-position: 0 right;
-    padding-right: 22px;
-    padding-top: 0;
-}
 .editable .folders > ul.tabs li a{
     background-color: #def2f2;
 }
 .editable .folders > ul.tabs li.current,
 .editable .folders > ul.tabs li.current:hover {
-    background-image: url("../img/tab-editable-right.png");
     background-position: right -22px !important;
 }
 .editable .folders > ul.tabs li.current a,
@@ -1949,7 +1983,6 @@ html.ie #booking-services .special-instructions legend{
     border-bottom-color: #f5f5f5;
 }
 .editable .folders > ul.tabs li:hover {
-    background-image: url("../img/tab-editable-right.png");
     background-position: right -44px !important;
 }
 .editable .folders > ul.tabs li:hover a{
