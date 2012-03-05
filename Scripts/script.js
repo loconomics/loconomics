@@ -231,6 +231,29 @@ $(document).ready(function(){
     
     /* Active/Desactive search filters */
     $(".buttons-list .button").click(function(){ $(this).toggleClass('selected'); return false; });
+    
+    
+    /* Activating Generic Wizard buttons */
+    /* A link/button with next class and data-next-step attribute will contain an internal link of a tab that will
+     * be activated where clicked. */
+    $(".next").click(function(){
+        var step = $(this).data('next-step');
+        if(step){
+            if (/^#/.test(step)){
+                // Selecting the tab-body:
+                var tb = $(step + '.tab-body');
+                // Showing tab content, and hidden previous activated tab content:
+                tb.addClass('current').siblings('.tab-body').removeClass('current');
+                // Looking for the index of this step
+                var ti = $('.tabbed > .tabs > li > a[href='+step+']')
+                // desactivating previous selected tab (both, li and a elements)
+                ti.parent().parent().find('li, a').removeClass('current');
+                // activating selected tab index:
+                ti.addClass('current').parent().addClass('current');                
+                return false;
+            }
+        }
+    });
 });
 
 
