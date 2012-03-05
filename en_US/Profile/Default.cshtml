@@ -8,6 +8,8 @@
     var providerrow = PageData["providerrow"] = ProfileFunctions.GetProfileRow(providerid);
     //var posrows = PageData["posrows"] = ProfileFunctions.GetPositionRow(providerid, positionid);
     var posrows = PageData["posrows"] = DashboardFunctions.GetUserPos(providerid);
+    // Number of maximum positions displayed:
+    var maxPositions = 5;
     
     Page.Title = PageData["providerrow"].Name;
     Scripts.Add("~/Scripts/Profile.js");
@@ -82,6 +84,7 @@
                 var n = 0;
                 foreach(var c in PageData["posrows"]){
                     n++;
+                    if (n > maxPositions) { break; }
                     var cls = (c.PositionID == positionid ? "current" : "");
                     <li class="@cls"><a class="@cls" href="@("#position"+n)">@c.PositionSingular</a></li>
                 }
@@ -92,7 +95,8 @@
             n = 0;
             foreach(var position in PageData["posrows"]){
                 n++;
-               var cls = (position.PositionID == positionid ? "current" : "");
+                if (n > maxPositions) { break; }
+                var cls = (position.PositionID == positionid ? "current" : "");
                 PageData["position"] = position;
                 PageData["npos"] = n;
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls position-tab">

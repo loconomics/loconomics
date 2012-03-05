@@ -7,6 +7,9 @@
     PageData["userow"] = DashboardFunctions.GetUserRow();
     PageData["posrows"] = DashboardFunctions.GetUserPos();
     PageData["menu-item"] = "positions";
+    
+    // Number of maximum positions displayed:
+    var maxPositions = 5;
 }
 
         @{
@@ -16,6 +19,7 @@
             @{
                 foreach(var c in PageData["posrows"]){
                     n++;
+                    if (n > maxPositions) { break; }
                     var cls = (n==1 ? "current" : "");
                     <li class="@cls"><a class="@cls" href="@("#position"+n)">@c.PositionSingular</a></li>
                 }
@@ -26,6 +30,7 @@
             n = 0;
             foreach(var position in PageData["posrows"]){
                 n++;
+                if (n > maxPositions) { break; }
                 var cls = (n==1 ? "current" : "");
                 PageData["position"] = position;
                 PageData["npos"] = n;
