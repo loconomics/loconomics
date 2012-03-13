@@ -31,7 +31,7 @@ $(document).ready(function(){
             // TODO: use data to show attributes
             // Iterate categories?
             $.each(data, function(iCat, cat){
-                // I suppose will be something like this, no??
+                // I suppose will be something like this, not??
                 var catName = cat.CategoryName;
                 // Iterate category attributes?
                 $.each(cat.attributes, function(iAtt, att){
@@ -43,8 +43,6 @@ $(document).ready(function(){
                     // Add new attribute html to fieldset
                     fieldsets[iCat].prepend(hAtt);
                 });
-            });
-            
         });
     });
 
