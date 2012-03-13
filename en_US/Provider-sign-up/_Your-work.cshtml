@@ -5,7 +5,8 @@
     <fieldset class="select-position">
         <legend>Select position:</legend>
         <select name="select-position">
-            <option>Cleaner</option>
+            <option value="">__Select a Position__</option>
+            <option value="1">Cleaner</option>
         </select>
     </fieldset>
     <fieldset class="select-attributes">
@@ -13,13 +14,13 @@
         <fieldset class="service-attribute-category service-attribute-category-1">
             <legend>Service Attribute Category #1:</legend>
             @for(int i=0; i < 16; i++){
-            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
-            }        
+            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/><span>Attribute</span></label>
+            }
         </fieldset>
         <fieldset class="service-attribute-category service-attribute-category-2">
             <legend>Service Attribute Category #2:</legend>
             @for(int i=0; i < 16; i++){
-            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
+            <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/><span>Attribute</span></label>
             }
         </fieldset>
 
