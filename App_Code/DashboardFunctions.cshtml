@@ -5,7 +5,7 @@
 
     /* Get a data row with the User information identified with 'userId' from the database
     */
-    public static object GetUserRow(int userId) {
+    public static WebMatrix.Data.DynamicRecord GetUserRow(int userId) {
 
         // Commented unused vars:
         //var stringPosted = "Nothing";
@@ -35,7 +35,7 @@
     }
     /* Get a data row with the current user information from the database
     */
-    public static object GetUserRow() {
+    public static WebMatrix.Data.DynamicRecord GetUserRow() {
         return GetUserRow(WebSecurity.CurrentUserId);
     }
     /* Get a data object with the Positions rows of the user identified with 'userId' from the database

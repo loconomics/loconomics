@@ -1,0 +1,16 @@
+﻿@{
+    // Get databse user information
+    var ur = DashboardFunctions.GetUserRow();
+
+    // Retrieving image path
+    string path = HttpContext.Current.Request.MapPath("../../" + (string)ur["Photo"]);
+    
+    // Transform image to Grayscale
+    var img = ImageUtility.ConvertGrayscale(path);
+    
+    // Telling to the browser that this is a JPG image
+    Response.ContentType = "image/jpg";
+    
+    // Send the transformed image to the browser
+    img.Save(Response.OutputStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+}
