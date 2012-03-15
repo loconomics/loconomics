@@ -251,6 +251,9 @@ $(document).ready(function(){
                 // activating selected tab index:
                 ti.addClass('current').parent().addClass('current');
                 return false;
+            } else {
+                // If there is a next-step URI that is not internal link, we load it by default
+                window.location = step;
             }
         }
     });

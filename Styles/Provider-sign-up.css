@@ -131,3 +131,37 @@
     display: inline-block !important;
     width: 90px;
 }
+
+/** Page: next-steps **/
+.next-steps-info{
+    padding: 25px 30px;
+    margin: 0;
+}
+.next-steps-info .next-steps-list{
+    list-style: decimal outside;
+    color: #b5e1e2;
+    font-size: 1.6em;
+    padding: 0 30px;
+    margin: 0;
+}
+.next-steps-info .next-steps-list > li{
+    margin: 0 0 15px;
+}
+.next-steps-info .next-steps-list p{
+    margin: 5px 0 0;
+}
+.next-steps-info .next-steps-list .step-info{
+    color: #6c6c6c;
+    font-size: .5em;
+}
+.next-steps-info .next-steps-list .step-info ul{
+    list-style: disc inside;
+    margin: 0 5px;
+}
+.next-steps-info .last-info{
+    font-size: .8em;
+    margin: 20px 0;
+}
+.next-steps-info .last-info p{
+    margin: 0;
+}
