@@ -1,2 +1,0 @@
-﻿'SCPID'	'PositionID'	'ServiceSubCategoryID'	'LanguageID'	'CountryID'	'Rank'	'CreateDate'	'UpdateDate'	'ModifiedBy'	'Active'
-1	14	1	1	1	1	'2011-07-07 00:00:00'	'2011-07-07 00:00:00'	'dj'	1

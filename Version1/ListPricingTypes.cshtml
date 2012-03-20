@@ -1,7 +1,0 @@
-﻿@{
-    var db = Database.Open("sqlloco");
-    var sql = @"SELECT p.PricingTypeID, p.Description 
-                FROM dbo.pricingtype p";
-    var data = db.Query(sql);
-    Json.Write(data, Response.Output);
-}
