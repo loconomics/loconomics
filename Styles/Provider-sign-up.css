@@ -95,13 +95,19 @@
 .sign-up-wizard fieldset.select-attributes fieldset {
     display: inline-block;
 }
-.sign-up-wizard fieldset.service-attribute-category{
+.sign-up-wizard div.service-attribute-categories{
     display: inline-block;
-    width: 280px;
+    width: 610px;
+    min-height: 350px;
     border-right: solid 1px #dadada;
     margin: 20px 10px 10px 0 !important;
     padding: 0 10px 0 0 !important;
+}
+.sign-up-wizard div.service-attribute-categories fieldset{
+    display: inline-block;
+    width: 280px;
     vertical-align: top;
+    margin-bottom: 20px;
 }
 .sign-up-wizard form.your-work label{
     display: block;

@@ -3,56 +3,85 @@ $(document).ready(function(){
     // Auto post back when select a position:
     $('select[name=select-position]').change(function(){
     
-        // TODO DAVE: Submit the form normally, meaning a full reload of the page (just when in a normal page the submit button is pressed, without ajax)
-        //   Dave, If this is what you want, uncomment next line, and remove the code after next line because will be not needed, 
-        //   categories and attributes must be 'printed' at server.
-        //$('#provider-sign-up-your-work').submit();
-
         var selectedPosition = $(this).val();
-        //console.info(selectedPosition);
         
         // No position:
-        if (!selectedPosition || selectedPosition.length == 0){
-            $('.service-attribute-category label, .service-attribute-category legend').hide();
+        if (!selectedPosition){
+            $('.select-attributes').hide();
             return;
         }
-        selectedPosition = selectedPosition[0];
         
-        // Clean previous attributes:
-        var fieldsets = $('.service-attribute-category');
-        fieldsets.find('label').remove();
-        fieldsets.find('legend').text('');
+        // Get dynamic fieldsets container:
+        var fscontainer = $('.service-attribute-categories');
 
+        /* Template to create a fieldset for attribute-category 
+            {0} CategoryId
+            {1} CategoryName
+         */
+        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-{0}"><legend>{1}:</legend></fieldset>';
         /* Template to create a label with checkbox, markers:
             {0} CategoryId
             {1} AttributeId
             {3} AttributeName
          */
-        var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox"/><span>{3}</span></label>';
+        var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox"/><span>{2}</span></label>';
                 
         // Do the ajax to load attributes
         $.ajax({
             type: 'POST',
-            url: 'GetAttributesForPosition?_PleaseChangeThis',
-            data: { PositionID: selectedPosition },
-            dataType: 'json', /* Dave, change this to the result type you use */
+            url: 'GetServiceAttributes',
+            data: { positionId: selectedPosition },
+            dataType: 'json',
             success: function(data, textStatus, jqXHR){
-                // TODO: use data to show attributes
-                // Iterate categories?
-                $.each(data, function(iCat, cat){
-                    // I suppose will be something like this, not??
-                    var catName = cat.CategoryName;
-                    // Iterate category attributes?
-                    $.each(cat.attributes, function(iAtt, att){
-                        var hAtt = tplAttribute
-                            .replace('{0}', cat.CategoryId)
-                            .replace('{1}', att.AttributeId)
-                            .replace('{2}', att.AttributeName);
+
+                // Check result
+                if (data.Result == -1) {
+                    // TODO An error happen!
+                    return;
+                }
+
+                // Iterate categories
+                $.each(data.ServiceAttributeCategories, function(iCat, cat){
+                    // Locate the category fieldset
+                    var fs = $('#service-attribute-category-' + cat.ServiceAttributeCategoryID);
+                    // Fieldset exists, update:
+                    if (fs.length > 0){
+                        return;
+                        fs.find('legend').text(cat.ServiceAttributeCategoryName);
+                        
+                        // Iterate category attributes
+                        $.each(cat.ServiceAttributes, function(iAtt, att){
+                            var hAtt = tplAttribute
+                                .replace('{0}', cat.ServiceAttributeCategoryID)
+                                .replace('{1}', att.ServiceAttributeID)
+                                .replace('{2}', att.ServiceAttribute);
     
-                        // Add new attribute html to fieldset
-                        fieldsets[iCat].prepend(hAtt);
-                    });
+                            // Add new attribute html to fieldset
+                            fieldsets.eq(iCat).append(hAtt);
+                        });
+                    } else {
+                        // Fieldset doesn't exist, create:
+                        var jCat = $(tplCategory
+                            .replace('{0}', cat.ServiceAttributeCategoryID)
+                            .replace('{1}', cat.ServiceAttributeCategoryName));
+                        
+                        fscontainer.append(jCat);
+                        
+                        // Create Category Attributes checboxes:
+                        // Iterate category attributes
+                        $.each(cat.ServiceAttributes, function(iAtt, att){
+                            var hAtt = tplAttribute
+                                .replace('{0}', cat.ServiceAttributeCategoryID)
+                                .replace('{1}', att.ServiceAttributeID)
+                                .replace('{2}', att.ServiceAttribute);
+    
+                            // Add new attribute html to fieldset
+                            jCat.append(hAtt);
+                        });
+                    }
                 });
+                
+                $('.select-attributes').show();
             }
         });
     });

@@ -1,0 +1,58 @@
+﻿@{
+    /* TODO, not working still! */
+    
+    var sqlinsertPosition = “EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7”;
+    
+    var Results = db.QuerySingle(sqlinsertPosition,UserID,PositionID,LanguageID,CountryID,theDate,theDate,”sys”,1);
+
+    if(Results.Result != “Success”){
+    
+        ErrorMessage = Results.Result;
+    
+    }else{
+    
+        for(int i = 0; i < Request.Form.Count; i++){
+            var temp = Request.Form.GetKey(i);
+            if(temp.IndexOf(“ADD”) != 0){
+        
+                db.Execute(sqlInsertAttribute,UserID,PositionID,Request.Form.Get(i),LanguageID,CountryID,theDate,theDate);
+            }
+        }
+    
+        db.Execute(sqlInsertAdditional,UserID,PositionID,LanguageID,CountryID,ADD_minTime,ADD_maxTime,ADD_minBetween,ADD_experience,ADD_travelRadius,ADD_Details,ADD_Personal,ADD_Public,”0000000”,”000000000000000000000000”,”AM”,”PST”,theDate,theDate);
+    
+    }
+    
+}
+
+<h2>@ErrorMessage</h2>
+<p>Customers in the loconomics community want to know as much
+as possible about each service you’re offering. Please help us by being
+concise, detailed, and honest. Keep in mind it can be updated as you
+acquire more skills.</p>
+<h2>@posrow.PositionSingular</h2>
+<table class=”form”>
+<tr>
+<td><label for=”ADD_Details”>Please type here a brief description of your
+experience as a cleaner and what makes your services unique. Be specific
+and brief.</label></td>
+<td><textarea id=”ADD_Details” rows=”5” cols=”40”
+name=”ADD_Details”></textarea></td>
+<td class=”status”></td>
+</tr>
+@foreach(var c in catrow){
+<tr><td><h4>@c.ServiceCat</h4></td></tr>
+
+<tr> <td>
+@foreach(var s in
+db.Query(sqlattribute,PositionID,c.ServiceAttributeCategoryID)){
+
+<fieldset class=”checklist”>
+<fieldset><input type=”checkbox” name=”@s.SCAMID”
+value=”@s.SCAMID” id=”@s.SCAMID” /> <label
+for=”@s.SCAMID”>@s.ServiceAttribute</label></fieldset>
+</fieldset>
+
+}
+</td></tr>
+}
