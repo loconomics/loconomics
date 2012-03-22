@@ -2,7 +2,6 @@
    ====== IagoSRL for Loconomics S.L. ============
  */
 
-/*** Dashboard specific ***/
 /* Extra padding when there is non tabbed content inside tab */
 .dashboard .folders > .tab-body {
     padding-top: 25px;
@@ -17,7 +16,7 @@
     margin: 0 0 0 200px;
     width: 760px;
 }
-.dashboard #main { 
+.dashboard #main {
     margin-top: 12px;
     /* next padding-bottom can be' not needed', but
        remember us that there is an extra space because
@@ -234,7 +233,8 @@
     font-weight: bold;
 }
 
-.dashboard #secondary {
+.dashboard .tab-body > p{
+    margin: 0 0 15px 0;
 }
 
 /*** Dashboard forms ***/
@@ -250,11 +250,13 @@
     margin: 0;
 }
 .dashboard form li{
-    padding: 0;
+    padding: 0 10px;
     margin: 6px 0;
 }
 .dashboard form li label{
     display: inline-block;
+    padding: 0;
+    width: 120px;
 }
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
@@ -265,6 +267,14 @@
 .dashboard form li select{
     /*margin: 0 1.4em;*/
     width: 150px;
+}
+.dashboard form li input[type="radio"],
+.dashboard form li input[type="checkbox"]{
+    margin: 0 10px;
+}
+.dashboard form li input[type="radio"]:first-child,
+.dashboard form li input[type="checkbox"]:first-child{
+    margin: 0 10px 0 0;
 }
 .dashboard form a,
 .dashboard form a:link,
@@ -343,6 +353,16 @@ form.positionavailability {
 form.positionavailability input{
     font-size: 1.1em;
 }
+.dashboard form.positionavailability li{
+    padding: 0;
+}
+.dashboard form.positionavailability li input[type="radio"],
+.dashboard form.positionavailability li input[type="checkbox"]{
+    margin: 0 3px;
+}
+.dashboard form.positionavailability li label{
+    width: auto;
+}
 .positionavailability fieldset{
     display: inline-block;
     vertical-align: top;
@@ -377,6 +397,9 @@ form.positionavailability input{
 .positionavailability-program legend{
     float: left;
     display: block;
+}
+.dashboard .positionavailability-program li label{
+    margin: 0 10px;
 }
 .positionavailability-program .positionavailability-use-program {
     margin: 0 !important;
@@ -415,6 +438,10 @@ form.positionavailability input{
 .positionphotos fieldset{
     display: inline-block;
     vertical-align: top;
+}
+.dashboard form.positionphotos fieldset li{
+    margin: 6px 0;
+    padding: 0;
 }
 .positionphotos-edit {
     width: 390px;
@@ -483,7 +510,8 @@ form.positionavailability input{
     width: auto;
     height: auto;
 }
-.positionphotos-edit-caption label {
+.positionphotos-edit-caption label,
+.positionphotos-edit-primary label{
     padding: 5px 0;
     width: auto !important;
     margin-right: 15px;
@@ -600,4 +628,31 @@ form.positionavailability input{
 }
 .address:hover .tools a {
     color: #00989A;
+}
+
+/**** Form: Account Payments ****/
+
+
+/** ======================== 
+  * Generic column classes
+  * for Dahsboard main 
+  * container (width: 716px)
+  * ======================*/
+.dashboard #main .col{
+    float: left;
+}
+.dashboard #main .col-2{
+    width: 340px;
+}
+.dashboard #main .col-2-1{
+    border-right: 1px solid #DADADA;
+    margin-right: 20px;
+    padding-right: 10px;
+}
+/* forms inside columns specific */
+.dashboard #main .col fieldset{
+    margin: 0 0 20px 0;
+}
+.dashboard #main .col li input[type="text"]{
+    width: 150px;
 }

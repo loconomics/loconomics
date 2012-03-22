@@ -466,7 +466,10 @@ ul.reviews li div.wrap p { margin-top: 0; }
 }
 
 
-.buttons ul.tabs { height: 40px; padding: 0; }
+.buttons ul.tabs { 
+    /*height: 40px;*/
+    padding: 0;
+}
 .buttons ul.tabs li { display: inline-block; list-style-type: none; }
 
 .buttons .tab-body { display:none; padding: 0; min-height: 400px; }
@@ -996,10 +999,12 @@ fieldset.box legend{
     text-align: center;
     border: 1px solid #00989a;
 }
-.editable table.view td.actions{
-    text-align: center;
+.editable table.view td.actions,
+.editable table.view th.actions{
+    text-align: center !important;
     white-space: nowrap;
     width: 1%;
+    display: table-cell !important;
 }
 .editable table.grid{
 }
