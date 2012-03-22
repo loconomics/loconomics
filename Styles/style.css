@@ -794,6 +794,24 @@ div.dp-popup td.disabled{cursor:default;}
     display: block !important;
     clear: both;
 }
+/* .main-button, inside .actions container: bigger, more important button */
+.actions .main-button{
+    text-transform: lowercase;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    background: #99C027 !important;
+    color: White;
+    font-size: 1.1em;
+    line-height: 150%;
+}
+.actions .main-button:hover{
+    box-shadow: 0 0 5px 2px #99C027;
+    -moz-box-shadow: 0 0 5px 2px #99C027;
+    -o-box-shadow: 0 0 5px 2px #99C027;
+    -webkit-box-shadow: 0 0 5px 2px #99C027;
+}
 
 /****************************************/
 /**** Box fieldset styles ***************/
