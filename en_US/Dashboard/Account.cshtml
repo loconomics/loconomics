@@ -27,7 +27,7 @@
             
             <div id="account-payments-bankinfo" class="tab-body current">
                 @RenderPage("$AccountPaymentsBankInfo.cshtml")
-            </div><!-- #account-payments-bankaccount -->
+            </div><!-- #account-payments-bankinfo -->
             <div id="account-payments-transactionhistory" class="tab-body">
                 Transaction History <!-- TODO here must be the back-end content -->
             </div><!-- #account-payments-transactionhistory -->
@@ -35,36 +35,16 @@
         
 		<div id="account-verification" class="tab-body fancy tabbed buttons">
             <ul class="tabs">
-                <li><a class="button profile fanciful current" href="#account-verification-phone">Phone</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-address">Address</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-ssn">SSN</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-background">Background</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-facebook">Facebook</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-twitter">Twitter</a></li>
-                <li><a class="button profile fanciful" href="#account-verification-linkedin">Linked-In</a></li>
+                <li><a class="button profile fanciful current" href="#account-verification-basicinfo">Basic info</a></li>
+                <li><a class="button profile fanciful" href="#account-verification-backcheck">Background check</a></li>
             </ul>
             
-            <div id="account-verification-phone" class="tab-body current">
-                Phone <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-phone -->
-            <div id="account-verification-address" class="tab-body">
-                Address <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-address -->
-            <div id="account-verification-ssn" class="tab-body">
-                SSN <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-ssn -->
-            <div id="account-verification-background" class="tab-body">
-                Background <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-background -->
-            <div id="account-verification-facebook" class="tab-body">
-                Facebook <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-facebook -->
-            <div id="account-verification-twitter" class="tab-body">
-                Twitter <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-twitter -->
-            <div id="account-verification-linkedin" class="tab-body">
-                Linked-In <!-- TODO here must be the back-end content -->
-            </div><!-- #account-verification-linkedin -->
+            <div id="account-verification-basicinfo" class="tab-body current">
+                @RenderPage("$AccountVerificationBasicInfo.cshtml")
+            </div><!-- #account-verification-basicinfo -->
+            <div id="account-verification-backcheck" class="tab-body">
+                Background check <!-- TODO here must be the back-end content -->
+            </div><!-- #account-verification-backcheck -->
 		</div><!-- #account-verification -->
         
 		<div id="account-taxes" class="tab-body fancy tabbed buttons">

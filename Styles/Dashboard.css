@@ -630,8 +630,22 @@ form.positionavailability input{
     color: #00989A;
 }
 
-/**** Form: Account Payments ****/
-
+/**** Form: Account Verifications ****/
+#account-verification-basicinfo .legal{
+    color: #6c6c6c;
+    margin-top: 10px;
+}
+#account-verification-basicinfo .legal label{
+    width: 370px !important;
+    font-size: .9em;
+    vertical-align: middle;
+}
+#account-verification-basicinfo .col-2-1{
+    width: 420px !important;
+}
+#account-verification-basicinfo .col-2-2{
+    width: 250px !important;
+}
 
 /** ======================== 
   * Generic column classes
@@ -655,4 +669,7 @@ form.positionavailability input{
 }
 .dashboard #main .col li input[type="text"]{
     width: 150px;
+}
+.dashboard #main .col li select{
+    width: 175px;
 }

@@ -18,7 +18,7 @@
             <li><label for="personal-city">City:</label><input id="personal-city" type="text" name="city"/></li>
             <li><label for="personal-state">State:</label>
                 <select id="personal-state" name="state">
-                    <option value="ca">California</option>
+                    @CommonHelpers.CountryOptions()
                 </select>
             </li>
             <li><label for="personal-zipcode">Zip Code:</label><input id="personal-zipcode" type="text" name="zipcode"/></li>

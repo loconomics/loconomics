@@ -1,54 +1,51 @@
 ﻿@{
     var idprefix = "account-payments-bankinfo";
 }
-@helper printCountryOptions(){
-    <option value="ca">California</option>
-}
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
 <form action="#" method="post" id="@idprefix-form">
     <div class="col col-2 col-2-1">
-    <fieldset id="@idprefix-fs-contactinfo" class="contact-info">
-        <legend>Name on account:</legend>
-        <ul>
-            <li><label for="@idprefix-contactinfo-firstname">First Name:</label><input id="@idprefix-contactinfo-firstname" type="text" name="firstname"/></li>
-            <li><label for="@idprefix-contactinfo-middleinitial">Middle Initial:</label><input id="@idprefix-contactinfo-middleinitial" type="text" name="middleinitial"/></li>
-            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-contactinfo-lastname" type="text" name="lastname"/></li>
-        </ul>
-    </fieldset>
-    <fieldset id="@idprefix-fs-bankinfo">
-        <legend>Bank Name and Address:</legend>
-        <ul>
-            <li><label for="@idprefix-bankname">Bank Name:</label><input id="@idprefix-bankname" type="text" name="bankname"/></li>
-            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1"/></li>
-            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
-            <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="state">
-                    @printCountryOptions()
-                </select>
-            </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
-            <li><label for="@idprefix-phone">Phone:</label><input id="@idprefix-phone" type="text" name="phone"/></li>
-        </ul>
-    </fieldset>
+        <fieldset id="@idprefix-fs-contactinfo" class="contact-info">
+            <legend>Name on account:</legend>
+            <ul>
+                <li><label for="@idprefix-contactinfo-firstname">First Name:</label><input id="@idprefix-contactinfo-firstname" type="text" name="firstname"/></li>
+                <li><label for="@idprefix-contactinfo-middleinitial">Middle Initial:</label><input id="@idprefix-contactinfo-middleinitial" type="text" name="middleinitial"/></li>
+                <li><label for="@idprefix-contactinfo-lastname">Last Name:</label><input id="@idprefix-contactinfo-lastname" type="text" name="lastname"/></li>
+            </ul>
+        </fieldset>
+        <fieldset id="@idprefix-fs-bankinfo">
+            <legend>Bank Name and Address:</legend>
+            <ul>
+                <li><label for="@idprefix-bankname">Bank Name:</label><input id="@idprefix-bankname" type="text" name="bankname"/></li>
+                <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1"/></li>
+                <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2"/></li>
+                <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
+                <li><label for="@idprefix-state">State:</label>
+                    <select id="@idprefix-state" name="state">
+                        @CommonHelpers.CountryOptions()
+                    </select>
+                </li>
+                <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
+                <li><label for="@idprefix-phone">Phone:</label><input id="@idprefix-phone" type="text" name="phone"/></li>
+            </ul>
+        </fieldset>
     </div>
     <div class="col col-2 col-2-2">
-    <fieldset id="@idprefix-fs-accountnumber">
-        <legend>Bank Account Number:</legend>
-        <ul>
-            <li><label for="@idprefix-accountnumber-aba">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-accountnumber-aba" name="aba"/></li>
-            <li><label for="@idprefix-accountnumber-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber-accountnumber" name="accountnumber"/></li>
-        </ul>
-    </fieldset>
-    <fieldset id="@idprefix-fs-accounttype">
-        <legend>Bank Account Type:</legend>
-        <ul>
-            <li><input type="radio" id="@idprefix-accounttype-checking" name="accounttype"/><label for="@idprefix-accounttype-checking">Checking</label></li>
-            <li><input type="radio" id="@idprefix-accounttype-savings" name="accounttype"/><label for="@idprefix-accounttype-savings">Savings</label></li>
-        </ul>
-    </fieldset>
+        <fieldset id="@idprefix-fs-accountnumber">
+            <legend>Bank Account Number:</legend>
+            <ul>
+                <li><label for="@idprefix-accountnumber-aba">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-accountnumber-aba" name="aba"/></li>
+                <li><label for="@idprefix-accountnumber-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber-accountnumber" name="accountnumber"/></li>
+            </ul>
+        </fieldset>
+        <fieldset id="@idprefix-fs-accounttype">
+            <legend>Bank Account Type:</legend>
+            <ul>
+                <li><input type="radio" id="@idprefix-accounttype-checking" name="accounttype"/><label for="@idprefix-accounttype-checking">Checking</label></li>
+                <li><input type="radio" id="@idprefix-accounttype-savings" name="accounttype"/><label for="@idprefix-accounttype-savings">Savings</label></li>
+            </ul>
+        </fieldset>
     </div>
     <fieldset class="actions">
         <button class="save main-button" type="submit">Save</button>
