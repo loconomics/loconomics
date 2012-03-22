@@ -223,7 +223,7 @@ ul.search-results table td { padding-right: 16px; }*/
     border: 1px solid #849a9a;
     margin: 5px 0;
     padding: 4px 10px;
-    background-color: #f5f5f5;
+    background-color: white;
 }
 .search-results-items > li h6,
 .search-results-items > li h6 a,
