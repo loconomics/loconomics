@@ -1,0 +1,37 @@
+﻿Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+<form action="#" method="post" id="personal">
+    <fieldset id="personal-fs-contactinformation">
+        <legend>Contact Information:</legend>
+        <ul>
+            <li><label for="personal-firstname">First Name:</label><input id="personal-firstname" type="text" name="firstname" placeholder="Your name"/></li>
+            <li><label for="personal-middleinitial">Middle Initial:</label><input id="personal-middleinitial" type="text" name="middleinitial"/></li>
+            <li><label for="personal-lastname">Last Name:</label><input id="personal-lastname" type="text" name="lastname"/></li>
+            <li><label for="personal-mobilephone">Mobile Phone:</label><input id="personal-mobilephone" type="text" name="mobilephone"/></li>
+            <li><label for="personal-alternatephone">Alternate Phone:</label><input id="personal-alternatephone" type="text" name="alternatephone"/></li>
+        </ul>
+    </fieldset>
+    <fieldset id="personal-fs-homeaddress">
+        <legend>Home Address:</legend>
+        <ul>
+            <li><label for="personal-streetaddress1">Street Address 1:</label><input id="personal-streetaddress1" type="text" name="streetaddress1"/></li>
+            <li><label for="personal-streetaddress2">Street Address 2:</label><input id="personal-streetaddress2" type="text" name="streetaddress2"/></li>
+            <li><label for="personal-city">City:</label><input id="personal-city" type="text" name="city"/></li>
+            <li><label for="personal-state">State:</label>
+                <select id="personal-state" name="state">
+                    <option value="ca">California</option>
+                </select>
+            </li>
+            <li><label for="personal-zipcode">Zip Code:</label><input id="personal-zipcode" type="text" name="zipcode"/></li>
+        </ul>
+    </fieldset>
+    <fieldset id="personal-fs-publicbio">
+        <legend>Public Bio:</legend>
+        <ul>
+            <li><label for="personal-publicbio">Public Bio:</label><textarea id="personal-publicbio" name="publicbio"></textarea></li>
+        </ul>
+    </fieldset>
+    <fieldset id="personal-actions">
+            <input class="button" type="submit" value="Save"/>
+            <input class="button" type="reset" value="Reset"/>
+    </fieldset>
+</form>
