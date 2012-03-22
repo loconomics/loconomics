@@ -549,7 +549,7 @@ form.positionavailability input{
 .positionlocations-itravelusing{
     width: 344px;
 }
-.positionlocations-servicelocations{
+/*.positionlocations-servicelocations{
     border-left: 1px solid #DADADA;
     margin-left: 5px !important;
     margin-top: 0 !important;
@@ -558,7 +558,7 @@ form.positionavailability input{
     right: 0;
     top: 0;
     width: 350px;
-}
+}*/
 /* yes/no buttons in the same line that fieldset>legend */
 .positionlocations-itravel legend,
 .positionlocations-servicelocations legend {
@@ -628,6 +628,11 @@ form.positionavailability input{
 }
 .address:hover .tools a {
     color: #00989A;
+}
+/**** Form: Positions Licenses ****/
+.positionlicenses .license-info li label{
+    font-weight: bold;
+    width: 150px;
 }
 
 /**** Form: Account Verifications ****/
@@ -715,4 +720,43 @@ form.positionavailability input{
 }
 .dashboard #main .col li select{
     width: 175px;
+}
+
+/** ==========================
+  * Generic confirm class for
+  * fieldsets that require
+  * a confirmation to enable
+  * the rest of fields.
+  */
+fieldset.have-confirm > legend{
+    display: block;
+    float: left;
+}
+fieldset.have-confirm > .confirm{
+    display: inline-block;
+    left: 10px;
+    position: relative;
+    white-space: nowrap;
+}
+fieldset.have-confirm > .confirm > label{
+    padding: 0 !important;
+}
+fieldset.have-confirm > .confirm > label > input{
+    margin: 0 3px;
+}
+fieldset.have-confirm.confirmed-no > *{
+    display: none;
+}
+fieldset.have-confirm.confirmed-no > .confirm,
+fieldset.have-confirm.confirmed-no > legend{
+    display: inherit;
+}
+
+/** Dashboard date picker **/
+.dashboard a.dp-choose-date{
+    bottom: 1px;
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    vertical-align: bottom;
 }

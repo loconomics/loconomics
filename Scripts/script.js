@@ -257,4 +257,18 @@ $(document).ready(function(){
             }
         }
     });
+    
+    /* Generic script for fieldsets with class .have-confirm, allowing show
+        the content only if the main confirm fields have 'yes' selected */
+    $("fieldset.have-confirm").each(function(){
+        var fs = $(this);
+        fs.find("> .confirm input").change(function(){
+            var t = $(this);
+            if (t.is(':checked'))
+                if (t.val() == 'yes')
+                    fs.removeClass('confirmed-no').addClass('confirmed-yes');
+                else
+                    fs.removeClass('confirmed-yes').addClass('confirmed-no');
+        });
+    });
 });

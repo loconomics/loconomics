@@ -1,0 +1,48 @@
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+    
+    var idprefix = "position#" + n + "-licenses";
+}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+
+<form action="#" method="post" class="positionlicenses" id="@idprefix-licenses">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <fieldset class="license-info have-confirm">
+        <legend>I possess a license to perform this work:</legend>
+        <div class="confirm">
+            <label>Yes<input type="radio" name="positionlicenses-havelicense" value="yes"/></label>
+            <label>No<input type="radio" name="positionlicenses-havelicense" value="no"/></label>
+        </div>
+        <ul>
+            <li>
+                <label for="@idprefix-license-state">State licensed in:</label>
+                <select id="@idprefix-license-state" name="state">
+                    @CommonHelpers.CountryOptions()
+                </select>
+            </li>
+            <li>
+                <label for="@idprefix-license-type">License type:</label>
+                <input type="text" id="@idprefix-license-type" name="license-type"/>
+            </li>
+            <li>
+                <label for="@idprefix-license-number">License number:</label>
+                <input type="text" id="@idprefix-license-number" name="license-number"/>
+            </li>
+            <li>
+                <label for="@idprefix-license-valid-date">Valid through:</label>
+                <input type="text" id="@idprefix-license-valid-date" name="license-valid-date" class="date-pick date"/>
+            </li>
+            <li>
+                <label for="@idprefix-license-link">Link to license:</label>
+                <input type="text" id="@idprefix-license-link" name="license-link"/>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="save main-button" type="submit">Save</button>
+    </fieldset>
+</form>
