@@ -1,0 +1,79 @@
+﻿@{
+    var idprefix = "account-taxes";
+}
+@helper printEntityType(string name){
+    <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
+}
+<form method="post" id="@idprefix-form">
+    <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
+        <legend>Please complete the IRS Form W-9 below:</legend>
+        <ul>
+            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="fullname"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="businessname"/><span class="info">(only if different from above)</span></li>
+            <li>Mailing Address:</li>
+            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="streetaddress"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
+            <li><label for="@idprefix-state">State:</label>
+                <select id="@idprefix-state" name="state">
+                    @CommonHelpers.CountryOptions()
+                </select>
+            </li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
+            <li class="tax-entity-type">
+                <span for="@idprefix-taxentitytype">Tax Entity Type:</span>
+                <ul>
+                    @printEntityType("Individual/Sole propietary")
+                    @printEntityType("Partnership")
+                    @printEntityType("Corporation")
+                    @printEntityType("Trust/Estate")
+                    @printEntityType("C Corporation")
+                    @printEntityType("S Corporation")
+                    @printEntityType("Limited liability company")
+                    @printEntityType("Other")
+                </ul>
+            </li>
+            <li><select name="tax-classification">
+                <option value="">Choose the tax clasification</option>
+                <option value="C">C Corporation</option>
+                <option value="S">S Corporation</option>
+                <option value="P">Partnership</option>
+            </select></li>
+            <li><label>Exempt payee: <input type="checkbox" name="exempt-payee"/></label></li>
+        </ul>
+    </fieldset>
+    <fieldset id="@idprefix-fs-part1">
+        <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
+        <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
+        <input type="text" name="tin"/>
+        <label><input type="radio" name="tin-type" value="SSN"/>SSN</label>
+        <label><input type="radio" name="tin-type" value="EIN"/>EIN</label>
+    </fieldset>
+    <fieldset id="@idprefix-fs-part2">
+        <legend>Part 2: Certification</legend>
+        <div class="info">
+        <p>
+            Under penalties of perjury, I certify that:
+        </p>
+        <p>
+            The number shown on this form is my correct taxpayer identification number ( or I am waiting for a number to be issued to me ), and
+        </p>
+        <p>
+            I am not subject to backup withholding because: (a) I am exempt from backup withholding, or (b) I have not been notified by 
+            the Internal Revenue Service (IRS) that I am subject to backup withholding as a result of a failure to report all interest or dividends, or 
+            (c) the IRS has notified me that I am no longer subject to backup withholding, and
+        </p>
+        <p>
+            I am a U.S. person (including a U.S. resident alien).            
+        </p>
+        </div>
+        <fieldset class="signature">
+            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="signature"/><span class="info">(typing in your name acts as your signature)</span>
+        </fieldset>
+        <p class="info">
+            The date and time of submission and your computer's IP address will be recorded when you click Submit.
+        </p>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="save main-button" type="submit">Submit</button>
+    </fieldset>
+</form>

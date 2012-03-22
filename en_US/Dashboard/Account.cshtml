@@ -47,12 +47,6 @@
             </div><!-- #account-verification-backcheck -->
 		</div><!-- #account-verification -->
         
-		<div id="account-taxes" class="tab-body fancy tabbed buttons">
-            <ul class="tabs">
-                <li><a class="button profile fanciful current" href="#account-taxes-w2docs">W-2/Autonomo documents</a></li>
-            </ul>
-            
-            <div id="account-taxes-w2docs" class="tab-body current">
-                W-2/Autonomo documents <!-- TODO here must be the back-end content -->
-            </div><!-- #account-taxes-w2docs -->
+		<div id="account-taxes" class="tab-body fancy buttons">
+            @RenderPage("$AccountTaxes.cshtml")
 		</div><!-- #account-taxes -->

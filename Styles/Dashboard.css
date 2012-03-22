@@ -270,11 +270,11 @@
 }
 .dashboard form li input[type="radio"],
 .dashboard form li input[type="checkbox"]{
-    margin: 0 10px;
+    margin: 0 6px;
 }
 .dashboard form li input[type="radio"]:first-child,
 .dashboard form li input[type="checkbox"]:first-child{
-    margin: 0 10px 0 0;
+    margin: 0 6px 0 0;
 }
 .dashboard form a,
 .dashboard form a:link,
@@ -645,6 +645,49 @@ form.positionavailability input{
 }
 #account-verification-basicinfo .col-2-2{
     width: 250px !important;
+}
+
+/**** Form: Account Taxes ****/
+#account-taxes fieldset{
+    margin-top: 0;
+}
+#account-taxes fieldset span.info{
+    margin-left: 10px;
+    font-size: .9em;
+}
+#account-taxes .tax-entity-type{
+    margin: 15px 0;
+}
+#account-taxes .tax-entity-type span{
+    display: inline-block;
+    vertical-align: middle;
+}
+#account-taxes .tax-entity-type ul{
+    display: inline-block;
+    width: 570px;
+    vertical-align: middle;
+}
+#account-taxes .tax-entity-type ul li,
+#account-taxes .tax-entity-type ul li label{
+    display: inline;
+    width: auto !important;
+}
+#account-taxes select[name="tax-classification"]{
+    width: auto;
+}
+#account-taxes #account-taxes-fs-part1 span.info{
+    display: block;
+}
+#account-taxes-fs-part2 div.info p{
+    margin: 0;
+}
+#account-taxes-fs-part2 .signature{
+    margin-top: 10px;
+}
+#account-taxes-fs-part2 .signature label{
+    padding: 0;
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 /** ======================== 
