@@ -2,6 +2,7 @@
 @import url('Search.css');
 @import url('Provider-sign-up.css');
 @import url('Dashboard.css');
+@import url('Booking.css');
 
 /*
  * HTML5 ✰ Boilerplate
@@ -818,455 +819,6 @@ fieldset.box legend{
     border-bottom-color: white;
 }
 
-/* ============== Booking pages ==================
-   ====== IagoSRL for Loconomics S.L. ============
- */
-.booking #main{
-    width: 730px;
-}
-.booking #main h1{
-    margin-top: 0;
-}
-.booking p.info{
-    font-weight: bold;
-    margin: 0;
-    font-size: .9em;
-}
-.booking form {
-    margin: 20px 0 0;
-    font-size: .9em;
-}
-.booking fieldset legend{
-    font-weight: bold;
-    font-size: 1.1em;
-}
-.booking fieldset {
-    display: inline-block;
-    vertical-align: top;
-}
-.booking ul,
-.booking ol{
-    padding: 0;
-    margin: 0;
-}
-.booking li{
-    padding: 0;
-    margin: 0;
-}
-.booking label input{
-    margin: 0 5px;
-}
-.booking button{
-    text-transform: lowercase;
-    font-size: 1.0em;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
-}
-.booking button.next{
-    background: #99C027;
-    color: White;
-    font-size: 1.2em;
-    line-height: 150%;
-}
-.booking button.next:hover{
-    box-shadow: 0 0 5px 2px #99C027;
-    -moz-box-shadow: 0 0 5px 2px #99C027;
-    -o-box-shadow: 0 0 5px 2px #99C027;
-    -webkit-box-shadow: 0 0 5px 2px #99C027;
-}
-.booking li.calculation{
-    overflow: hidden;
-}
-.booking table.calculation{
-    border-collapse: collapse;
-    float: right;
-}
-.booking table.calculation th,
-.booking table.calculation td{
-    font-weight: normal;
-    text-align: right;
-    height: auto;
-    margin: 0;
-    padding: 0 0 0 20px;
-}
-
-/** Form: Services **/
-#booking-services{
-    position: relative;
-}
-#booking-services .attribute-category{
-    width: 176px;
-}
-#booking-services .attribute-category legend,
-#booking-services .special-instructions legend{
-    font-size: 1em;
-}
-#booking-services .special-instructions{
-    width: 356px;
-    margin: 10px 0 0;
-}
-/* Fix a bug in IE */
-html.ie #booking-services .special-instructions legend{
-    display: inline-block;
-}
-#booking-services .special-instructions textarea{
-    width: 300px;
-    height: 8em;
-}
-#booking-services .pricing-wizard{
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 310px;
-    padding-left: 10px;
-    border-left: 1px solid #dadada;
-    margin-left: 10px;
-}
-#booking-services .pricing-wizard li{
-    margin: 10px 0;
-    position: relative;
-}
-#booking-services .pricing-wizard li label{
-    display: inline-block;
-    width: 205px;
-}
-#booking-services .pricing-wizard select{
-    position: absolute;
-    right: 0;
-    width: 80px;
-}
-
-/** Shared Component: availability-calendar **/
-.availability-calendar ol,
-.availability-calendar ul{
-    padding: 0;
-    margin: 0;
-}
-.availability-calendar div.calendar,
-.availability-calendar .calendar-legend {
-    display: inline-block;
-    vertical-align: top;
-}
-.availability-calendar .calendar ol h5{
-    font-size: 11em;
-    line-height: 1em;
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-    color: Black;
-}
-.availability-calendar div.calendar{
-    font-size: 1px;
-    clear: both;
-    height: 234em;
-    overflow: hidden;
-    position: relative;
-    width: 290em;
-}
-.availability-calendar .calendar ol{
-    list-style: none;
-    float: left;
-    position: absolute;
-}
-.availability-calendar .calendar ol.days,
-.availability-calendar .calendar ol.datetimes{
-    display: block;
-    width: 256em;
-    overflow: hidden;
-}
-.availability-calendar .calendar ol.hours{
-    left: 0;
-    top: 20em;
-}
-.availability-calendar .calendar ol.days{
-    top: 0;
-    left: 34em;
-}
-.availability-calendar .calendar ol.datetimes{
-    top: 20em;
-    left: 34em;
-    height: 208em;
-}
-.availability-calendar .calendar ol.days li,
-.availability-calendar .calendar ol.datetimes li{
-    border: 1px solid #a99fb8;
-    display: inline-block;
-    float: left;
-    margin: 2em 2em 0;
-    width: 30em;
-}
-.availability-calendar .calendar ol.days li{
-    text-align: center;
-    background: #a99fb8;
-    height: 13em;
-}
-.availability-calendar .calendar ol.days li h5{
-    color: White;
-    vertical-align: middle;
-}
-.availability-calendar .calendar ol.datetimes li{
-    height: 4em;
-    border-width: 1px;
-}
-.availability-calendar .calendar ol.datetimes li:hover{
-    box-shadow: 0 0 2em 2em #00989A;
-    -moz-box-shadow: 0 0 2em 2em #00989A;
-    -o-box-shadow: 0 0 2em 2em #00989A;
-    -webkit-box-shadow: 0 0 2em 2em #00989A;
-}
-.availability-calendar .calendar ol.datetimes li.half{
-    margin-top: 0;
-    border-width: 0 1px 1px 1px;
-}
-.availability-calendar .calendar ol.hours{
-    display: inline-block;
-}
-.availability-calendar .calendar ol.hours li{
-    margin: 0 5em 0 0;
-    text-align: right;
-    width: 30em;
-    height: 13em;
-}
-.availability-calendar .calendar li.free{
-    background-color: #ddeab8;
-}
-.availability-calendar .calendar li.busy{
-    background-color: #d8abbd;
-}
-.availability-calendar .calendar li.tentative{
-    background-color: #fae8ad;
-}
-.availability-calendar .calendar li.unavailable{
-    background-color: white;
-}
-
-.availability-calendar ul.calendar-legend{
-    list-style: none;
-    color: #461864;
-    text-transform: lowercase;
-}
-.availability-calendar .calendar-legend li{
-    margin: 6px 0;
-}
-.availability-calendar .calendar-legend li .color{
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
-    border: 2px solid #461864;
-    display: inline-block;
-    margin: 0 4px 0 0;
-    text-indent: -9999px;
-    vertical-align: middle;
-}
-.availability-calendar .calendar-legend li.free .color{
-    background-color: #ddeab8;
-}
-.availability-calendar .calendar-legend li.busy .color{
-    background-color: #d8abbd;
-}
-.availability-calendar .calendar-legend li.tentative .color{
-    background-color: #fae8ad;
-}
-.availability-calendar .calendar-legend li.unavailable .color{
-    background-color: white;
-}
-
-/** Form: Schedule **/
-#booking-schedule{
-    position: relative;
-}
-
-/* Schedule.location */
-#booking-schedule .availability,
-#booking-schedule .location{
-    margin-bottom: 20px;
-    margin-top: 15px;
-    width: 400px;
-}
-#booking-schedule .location li {
-    margin: 2px 0;
-}
-#booking-schedule .location .street-address-line-1 input,
-#booking-schedule .location .street-address-line-2 input{
-    width: 210px;
-}
-#booking-schedule .location .state,
-#booking-schedule .location .zip {
-    display: inline-block;
-}
-#booking-schedule .location .city input{
-    width: 307px;
-}
-#booking-schedule .location .state select{
-    width: 160px;
-}
-#booking-schedule .location .zip input {
-    width: 60px;
-}
-#booking-schedule .location .save-to-my-locations{
-    margin-top: 6px;
-}
-#booking-schedule .location .save-to-my-locations label{
-    padding: 0;
-    margin: 0;
-}
-#booking-schedule .location .save-to-my-locations label.save{
-    padding-left: 5px;
-}
-#booking-schedule .location .save-to-my-locations input[type="text"]{
-    width: 174px;
-}
-#booking-schedule .select-schedule{
-    border-left: 1px solid #dadada;
-    margin-left: 7px;
-    padding-left: 7px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 250px;
-}
-#booking-schedule .select-schedule fieldset{
-    display: block;
-    margin-bottom: 30px;
-}
-#booking-schedule .select-schedule fieldset.select-date-time input{
-    width: 80px;
-}
-#booking-schedule .select-schedule fieldset.select-date-time label{
-    display: block;
-    position: relative;
-}
-#booking-schedule .select-schedule fieldset.select-date-time input,
-#booking-schedule .select-schedule fieldset.select-date-time select {
-    position: absolute;
-    right: 0;
-    margin-right: 0;
-}
-#booking-schedule a.dp-choose-date{
-    bottom: 2px;
-    position: absolute;
-    right: 4px;
-    vertical-align: bottom;
-}
-
-/** Form: Payment **/
-#booking-payment .box{
-    font-size: .9em;
-}
-#booking-payment fieldset.actions{
-    margin-bottom: 0;
-}
-#booking-payment table.calculation th,
-#booking-payment table.calculation td{
-    font-weight: bold !important;
-}
-#booking-payment h6 {
-    color: #3B3B3B;
-    font-size: 1em;
-    margin: 5px 0;
-}
-#booking-payment .billing-info,
-#booking-payment .services-summary{
-    width: 377px;
-    float: left;
-}
-#booking-payment .your-provider,
-#booking-payment .appt-time-price{
-    float: right;
-    margin-left: 5px;
-    width: 270px;
-}
-#booking-payment .your-provider .avatar{
-    width: 70px;
-    height: 70px;
-    float: left;
-    vertical-align: middle;
-    margin: 3px 4px 0 4px;
-}
-#booking-payment .appt-time-price .schedule{
-    margin-bottom: 5px;
-}
-#booking-payment .appt-time-price .schedule h6{
-    margin-bottom: 0;
-}
-#booking-payment .appt-time-price .schedule ol{
-    list-style-position:  inside;
-}
-#booking-payment .star-ratings li{
-    line-height: normal;
-}
-#booking-payment .star-ratings .rate{
-    margin-right: 4px;
-}
-#booking-payment .star-ratings .note{
-    font-size: 1em;
-}
-#booking-payment .provider-features-lists{
-    padding: 0 5px;
-}
-#booking-payment .provider-features-lists div{
-    display: inline-block;
-    width: 130px;
-    vertical-align: top;
-}
-#booking-payment .provider-features-lists div.licenses{
-    float: right;
-}
-#booking-payment .provider-features-lists h5{
-    margin: 0;
-}
-#booking-payment .services-summary ul li{
-    margin: 10px 0;
-}
-#booking-payment .billing-info li{
-    margin: 2px 0;
-}
-#booking-payment .billing-info .name-on-card input{
-    width: 219px;
-}
-#booking-payment .billing-info .street-address-line-1 input,
-#booking-payment .billing-info .street-address-line-2 input{
-    width: 200px;
-}
-#booking-payment .billing-info .city input{
-    width: 294px;
-}
-.ie #booking-payment .billing-info .city input{
-    width: 288px;
-}
-#booking-payment .billing-info .state select{
-    width: 150px;
-}
-.ie #booking-payment .billing-info .state select{
-    width: 147px;
-}
-#booking-payment .billing-info .zip input{
-    width: 60px;
-}
-#booking-payment .billing-info .state,
-#booking-payment .billing-info .zip{
-    display: inline-block;
-}
-#booking-payment .billing-info .save-to-my-payments label{
-    display: inline-block;
-    padding: 0;
-}
-#booking-payment .billing-info .save-to-my-payments .save-as input{
-    width: 167px;
-}
-#booking-payment .billing-info .card-number input{
-    width: 90px;
-}
-#booking-payment .billing-info .card-number,
-#booking-payment .billing-info .card-exp{
-    display: inline-block;
-}
-#booking-payment .billing-info .card-exp label{
-    padding: 0 0 0 7px;
-}
-
 /** Generic: container .provider-features-lists (used at profile/summary, booking/payment..) **/
 .provider-features-lists ul {
     padding: 0;
@@ -1283,7 +835,6 @@ html.ie #booking-services .special-instructions legend{
     font-size: 1em;
     margin: 5px 0;
 }
-
 
 /** Widget class (used in FAQ's, refine search,... **/
 .widget{
@@ -1451,5 +1002,143 @@ html.ie #booking-services .special-instructions legend{
     width: 1%;
 }
 .editable table.grid{
-    
+}
+
+/* ======= Shared compoments styles ==============
+   ====== IagoSRL for Loconomics S.L. ============
+ */
+
+/** Shared Component: availability-calendar **/
+.availability-calendar ol,
+.availability-calendar ul{
+    padding: 0;
+    margin: 0;
+}
+.availability-calendar div.calendar,
+.availability-calendar .calendar-legend {
+    display: inline-block;
+    vertical-align: top;
+}
+.availability-calendar .calendar ol h5{
+    font-size: 11em;
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    color: Black;
+}
+.availability-calendar div.calendar{
+    font-size: 1px;
+    clear: both;
+    height: 234em;
+    overflow: hidden;
+    position: relative;
+    width: 290em;
+}
+.availability-calendar .calendar ol{
+    list-style: none;
+    float: left;
+    position: absolute;
+}
+.availability-calendar .calendar ol.days,
+.availability-calendar .calendar ol.datetimes{
+    display: block;
+    width: 256em;
+    overflow: hidden;
+}
+.availability-calendar .calendar ol.hours{
+    left: 0;
+    top: 20em;
+}
+.availability-calendar .calendar ol.days{
+    top: 0;
+    left: 34em;
+}
+.availability-calendar .calendar ol.datetimes{
+    top: 20em;
+    left: 34em;
+    height: 208em;
+}
+.availability-calendar .calendar ol.days li,
+.availability-calendar .calendar ol.datetimes li{
+    border: 1px solid #a99fb8;
+    display: inline-block;
+    float: left;
+    margin: 2em 2em 0;
+    width: 30em;
+}
+.availability-calendar .calendar ol.days li{
+    text-align: center;
+    background: #a99fb8;
+    height: 13em;
+}
+.availability-calendar .calendar ol.days li h5{
+    color: White;
+    vertical-align: middle;
+}
+.availability-calendar .calendar ol.datetimes li{
+    height: 4em;
+    border-width: 1px;
+}
+.availability-calendar .calendar ol.datetimes li:hover{
+    box-shadow: 0 0 2em 2em #00989A;
+    -moz-box-shadow: 0 0 2em 2em #00989A;
+    -o-box-shadow: 0 0 2em 2em #00989A;
+    -webkit-box-shadow: 0 0 2em 2em #00989A;
+}
+.availability-calendar .calendar ol.datetimes li.half{
+    margin-top: 0;
+    border-width: 0 1px 1px 1px;
+}
+.availability-calendar .calendar ol.hours{
+    display: inline-block;
+}
+.availability-calendar .calendar ol.hours li{
+    margin: 0 5em 0 0;
+    text-align: right;
+    width: 30em;
+    height: 13em;
+}
+.availability-calendar .calendar li.free{
+    background-color: #ddeab8;
+}
+.availability-calendar .calendar li.busy{
+    background-color: #d8abbd;
+}
+.availability-calendar .calendar li.tentative{
+    background-color: #fae8ad;
+}
+.availability-calendar .calendar li.unavailable{
+    background-color: white;
+}
+
+.availability-calendar ul.calendar-legend{
+    list-style: none;
+    color: #461864;
+    text-transform: lowercase;
+}
+.availability-calendar .calendar-legend li{
+    margin: 6px 0;
+}
+.availability-calendar .calendar-legend li .color{
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid #461864;
+    display: inline-block;
+    margin: 0 4px 0 0;
+    text-indent: -9999px;
+    vertical-align: middle;
+}
+.availability-calendar .calendar-legend li.free .color{
+    background-color: #ddeab8;
+}
+.availability-calendar .calendar-legend li.busy .color{
+    background-color: #d8abbd;
+}
+.availability-calendar .calendar-legend li.tentative .color{
+    background-color: #fae8ad;
+}
+.availability-calendar .calendar-legend li.unavailable .color{
+    background-color: white;
 }
