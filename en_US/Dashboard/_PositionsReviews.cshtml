@@ -1,0 +1,37 @@
+﻿@{
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+    
+    var idprefix = "position#" + n + "-reviews";
+}
+To let customers know you’ve done some great work in the past, we’ll start by allowing you to invite your past clients
+to write you a reference. Invite as many as you’d like, and we’ll post the first five to your profile.
+
+<form action="#" method="post" class="positionreviews" id="position#@(n)-reviews">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <fieldset class="references">
+        <ul>
+            <li>
+                <label for="@idprefix-clientsemails">Please enter the e-mail addresses of past clients (don’t worry, we will not spam them):</label>
+                <textarea id="@idprefix-clientsemails" name="clientsemails" placeholder="type e-mail addresses separated by commas"></textarea>
+            </li>
+            <li>
+                <label for="@idprefix-note">Write a short note explaining how it would help you out:</label>
+                <textarea id="@idprefix-note" name="note">
+Hello!
+
+Please help me build my reputation on www.loconomics.com by reviewing the work I’ve done for you in the past.  You’ll even get a $5 credit on the site for helping me out.  
+
+Thanks so much,
+
+Jonathan P.</textarea>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="save main-button" type="submit">Save</button>
+    </fieldset>
+</form>

@@ -634,6 +634,18 @@ form.positionavailability input{
     font-weight: bold;
     width: 150px;
 }
+/** Form: Positions Reviews **/
+.positionreviews .references li label {
+    width: auto;
+    padding: 10px;
+}
+.positionreviews .references li textarea{
+    width: 500px;
+    height: 14em;
+}
+.positionreviews .references li textarea[name="clientsemails"]{
+    height: 7em;
+}
 
 /**** Form: Account Verifications ****/
 #account-verification-basicinfo .legal{
