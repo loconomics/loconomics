@@ -1,5 +1,12 @@
 /* Author: Loconomics */
 
+/** global vars (uppercase convention) 
+ **/
+// Base url to use in links, popups, etc. must be setted
+// by the page or be empty:
+if (!BASE_URL) var BASE_URL = '';
+
+/* Init code */
 $(document).ready(function(){
 
    // $('button[type=submit]').click(function(){
@@ -271,4 +278,36 @@ $(document).ready(function(){
                     fs.removeClass('confirmed-yes').addClass('confirmed-no');
         });
     });
+    
+    /* Generic script for help-point button, that will open the help-center at
+       index or at specific page depending on the context
+        ('.current' classes asigned and data-help-point="section" attribute or
+         element id)
+     */
+    $(".help-point > a").click(function(){
+        // We get the last 'current' element, that will be the deepest child with
+        // .current setted.
+        var c = $(".current:visible:last");
+        // We save the path like an array
+        var path = [];
+        path.push(c.data('help-point'));
+        // We look for parents with 'current' assigned, to get the full path
+        c.parents('.current').each(function(){
+            path.push($(this).data('help-point'));
+        });
+        // Building the relative url for help-center
+        var rurl = path.reverse().join('');
+        // If there is not 'data-help-point' values, we use the current element id to search,
+        // or nothing (that means help center main page)
+        if (!rurl) rurl = (c.attr('id') ? '?s=' + encodeURIComponent(c.attr('id')) : '');
+        // Opening the help center
+        popup(BASE_URL + '/help-center/' + rurl);
+        // Do not allow browser to open the link url:
+        return false;
+    });
 });
+
+/* Popup function */
+function popup(url){
+    window.open(url);
+}

@@ -19,13 +19,13 @@
             @RenderPage("$AccountPersonal.cshtml")
 		</div><!-- #account-personal -->
         
-		<div id="account-payments" class="tab-body fancy tabbed buttons">
+		<div id="account-payments" class="tab-body fancy tabbed buttons" data-help-point="dashboard-account">
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="#account-payments-bankinfo">Bank Account</a></li>
                 <li><a class="button profile fanciful" href="#account-payments-transactionhistory">Transaction History</a></li>
             </ul>
             
-            <div id="account-payments-bankinfo" class="tab-body current">
+            <div id="account-payments-bankinfo" class="tab-body current" data-help-point="#payments-bankinfo">
                 @RenderPage("$AccountPaymentsBankInfo.cshtml")
             </div><!-- #account-payments-bankinfo -->
             <div id="account-payments-transactionhistory" class="tab-body">
