@@ -32,13 +32,15 @@
                     @printEntityType("Other")
                 </ul>
             </li>
-            <li><select name="tax-classification">
-                <option value="">Choose the tax clasification</option>
-                <option value="C">C Corporation</option>
-                <option value="S">S Corporation</option>
-                <option value="P">Partnership</option>
-            </select></li>
-            <li><label>Exempt payee: <input type="checkbox" name="exempt-payee"/></label></li>
+            <li class="tax-clasification">
+                <label for="@idprefix-tax-clasification">Choose the tax clasification:</label>
+                <select id="@idprefix-tax-clasification" name="tax-classification">
+                    <option value="C">C Corporation</option>
+                    <option value="S">S Corporation</option>
+                    <option value="P">Partnership</option>
+                </select>
+            </li>
+            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" name="exempt-payee"/></label></li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-part1">

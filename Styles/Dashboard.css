@@ -646,12 +646,17 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 #account-taxes .tax-entity-type ul{
     display: inline-block;
-    width: 570px;
+    width: 585px;
     vertical-align: middle;
 }
 #account-taxes .tax-entity-type ul li,
-#account-taxes .tax-entity-type ul li label{
+#account-taxes .tax-entity-type ul li label,
+#account-taxes .tax-exempt-payee label{
     display: inline;
+    width: auto !important;
+    white-space: nowrap;
+}
+#account-taxes .tax-clasification label{
     width: auto !important;
 }
 #account-taxes select[name="tax-classification"]{
