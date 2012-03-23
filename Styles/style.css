@@ -523,6 +523,10 @@ header ul li { display: inline-block; margin: 0 0 0 1em; color: #00989a; }
 header dl { position: relative; font-size: .9em; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
 header dl dt { position: relative; z-index: 2; display: block; background: #def2f2; padding: 0 15px; width: 120px; text-align: left; }
+header dl.lang-country dt,
+header dl.lang-country dd{
+    width: 80px;
+}
 header dl dd { 
    display: block; padding: 10px 15px 0 15px; display: none; text-align: left; background: #def2f2; 
    position: absolute; top: 15px; z-index: 1; width: 120px;
