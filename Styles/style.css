@@ -907,6 +907,54 @@ fieldset.box legend{
     text-align: right;
 }
 
+/** help-point>a class for link button to open the help-center **/
+.help-point a,
+.help-point a:link,
+.help-point a:visited{
+    background: none repeat scroll 0 0 #8B2143;
+    border-radius: 10px 10px 10px 10px;
+    color: White;
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 2px 10px;
+    text-decoration: none;
+}
+.help-point a:hover{
+    color: White;
+    box-shadow: 0 0 5px 2px #8B2143;
+}
+
+/** 
+  * Generic confirm class for
+  * fieldsets that require
+  * a confirmation to enable
+  * the rest of fields.
+  */
+fieldset.has-confirm > legend{
+    display: block;
+    float: left;
+}
+fieldset.has-confirm > .confirm{
+    display: inline-block;
+    left: 10px;
+    position: relative;
+    white-space: nowrap;
+}
+fieldset.has-confirm > .confirm > label{
+    padding: 0 !important;
+}
+fieldset.has-confirm > .confirm > label > input{
+    margin: 0 3px;
+}
+fieldset.has-confirm.confirmed-no > *{
+    display: none;
+}
+fieldset.has-confirm.confirmed-no > .confirm,
+fieldset.has-confirm.confirmed-no > legend{
+    display: inherit;
+}
+
 /* ============== Editable content ===============
    ====== IagoSRL for Loconomics S.L. ============
  */
