@@ -27,19 +27,23 @@
             <fieldset class="experience-level-dropdown">
                 <legend>Experience Level</legend>
                 <select name="experience-level">
-                    <option>Expert</option>
-                    <option>Intermediate</option>
-                    <option>Novice</option>
+                    <option value="1">I'm new to this!</option>
+                    <option value="2">Beginner</option>
+                    <option value="3">Intermediate</option>
+                    <option value="4">Professional</option>
+                    <option value="5">Expert</option>
                 </select>
             </fieldset>
-            <fieldset class="year-sexperience">
+            <fieldset class="year-experience">
                 <legend>Years Experience</legend>
                 <select name="year-sexperience">
-                    <option>+10 years</option>
-                    <option>5 years</option>
-                    <option>1.5 years</option>
-                    <option>1 year</option>
-                    <option>-1 year</option>
+                    <option value="0">&lt;0.5 years</option>
+                    <option value="0.5">0.5 years</option>
+                    <option value="1">1 year</option>
+                    <option value="1.5">1.5 years</option>
+                    @for(int y = 2; y < 41; y++){
+                    <option value="@y">@y years</option>
+                    }
                 </select>
             </fieldset>
             <fieldset class="languages-spoken" id="service-attribute-category-5">
