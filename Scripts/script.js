@@ -317,7 +317,7 @@ function popup(url, size){
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
-       message: '<img scr="' + BASE_URL + '../img/loading.gif"/>',
+       message: '<img src="' + BASE_URL + '/../img/loading.gif"/>',
        centerY: false,
        css: {
            cursor: 'default',
@@ -326,7 +326,7 @@ function popup(url, size){
            height: Math.round($(window).height() * s) + 'px',
            top: Math.round($(window).height() * (1-s)/2) - 30 + 'px',
            padding: '25px',
-           overflow: 'scroll',
+           overflow: 'auto',
            border: '5px solid #b5e1e2',
            '-moz-border-radius': '12px',
            '-webkit-border-radius': '12px',
