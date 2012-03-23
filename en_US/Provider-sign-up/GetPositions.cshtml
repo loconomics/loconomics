@@ -1,0 +1,43 @@
+﻿@*  (This file is based on /en_US/GetPositions.cshtml, modified)
+    This page is called to populate a JSON object with the Position Singular values available for a given Language and Country
+
+    INPUT:
+        languageID
+        countryID
+*@
+
+@{
+    // Correct datatype
+    Response.ContentType = "application/json";
+    
+    // Prepare result struct
+    var result = new Dictionary<string, object>();
+    result["Result"] = -1;
+ 
+    try{
+        // Input data
+        var term = Request["serviceType"] + "%";
+    
+        // Process data
+        var db = Database.Open("sqlloco");
+        var sql = "SELECT distinct PositionSingular, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1";
+        var data = db.Query(sql, term);
+        
+        result["Positions"] = data;
+        
+        //throw new Exception("Inside Test error");
+        
+        // Success
+        result["Result"] = 0;
+
+    } catch(Exception ex){
+        result["ErrorMessage"] = ex.Message;
+    }
+    
+    // Testing loading block:
+    //System.Threading.Thread.Sleep(2000);
+    //throw new Exception("Test error");
+    
+    // Output data
+    Json.Write(result, Response.Output);
+}

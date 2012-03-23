@@ -1,13 +1,63 @@
+// public functions:
+var public = {
+    loadPositions: function(){}
+};
+
 $(document).ready(function(){
+
+    var loadingBlock = {message: '<img src="' + BASE_URL + '/../img/loading.gif"/>'};
+    var errorBlock = function(error, reload){ return {
+        css: { cursor: 'default' },
+        message: 'There was an error'
+            + (error ? ': ' + error : '')
+            + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
+    }};
 
     var jSelectPosition = $('select[name=select-position]');
     var jAttributes = $('.select-attributes');
     var jActions = $('fieldset.actions');
     $.blockUI.defaults.message = null;
-    $.proxy(loadAttributes, jSelectPosition.get(0))();
+    
+    var loadPositions = public.loadPositions = function loadPositions(){
+        // Lock element:
+        jSelectPosition.parent().block(loadingBlock);
+        
+        // Reset positions, except first/value empty
+        if (jSelectPosition.get(0).options.length > 1)
+            jSelectPosition.find("option:not([value=''])").remove();
+            
+        /* Template to create a select option
+            {0}: positionId
+            {1}: position singular name
+         */
+        var tplOption = '<option value="{0}">{1}</option>';
 
-    // Auto post back when select a position:
-    jSelectPosition.change(loadAttributes);
+        // Call ajax
+        $.ajax({
+            url: 'GetPositions',
+            dataType: 'json',
+            success: function(data, textStatus, jqXHR){
+                // Check result
+                if (data.Result == -1) {
+                    jSelectPosition.parent().unblock().block(errorBlock(data.ErrorMessage, 'public.loadPositions()'));
+                    return;
+                }
+
+                // Iterate categories
+                $.each(data.Positions, function(iPos, pos){
+                    // Create and add the new option
+                    jSelectPosition.append(tplOption
+                        .replace('{0}', pos.PositionID)
+                        .replace('{1}', pos.PositionSingular));
+                });
+                
+                jSelectPosition.parent().unblock();
+            },
+            error: function(jqXHR, errorText){
+                jSelectPosition.parent().unblock().block(errorBlock(null, 'public.loadPositions()'));
+            }
+        });
+    }
 
     function loadAttributes(){
     
@@ -36,12 +86,11 @@ $(document).ready(function(){
         var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox"/><span>{2}</span></label>';
 
         // Locking elements and showing loading message
-        jAttributes.block({message: '<img src="' + BASE_URL + '/../img/loading.gif"/>'});
+        jAttributes.block(loadingBlock);
         jActions.block();
         
         // Do the ajax to load attributes
         $.ajax({
-            type: 'POST',
             url: 'GetServiceAttributes',
             data: { positionId: selectedPosition },
             dataType: 'json',
@@ -49,7 +98,7 @@ $(document).ready(function(){
 
                 // Check result
                 if (data.Result == -1) {
-                    // TODO An error happen!
+                    jAttributes.unblock().block(errorBlock(data.ErrorMessage));
                     return;
                 }
 
@@ -96,7 +145,19 @@ $(document).ready(function(){
                 
                 jAttributes.unblock();
                 jActions.unblock();
+            },
+            error: function(jqXHR, errorText){
+                jAttributes.parent().unblock().block(errorBlock());
             }
         });
     }
+    
+    // Positions Load:
+    loadPositions();
+    
+    // First Attributes Load:
+    $.proxy(loadAttributes, jSelectPosition.get(0))();
+
+    // Auto post back when select a position:
+    jSelectPosition.change(loadAttributes);
 });
