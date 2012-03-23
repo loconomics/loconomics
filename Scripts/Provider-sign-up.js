@@ -101,6 +101,9 @@ $(document).ready(function(){
                     jAttributes.unblock().block(errorBlock(data.ErrorMessage));
                     return;
                 }
+                
+                // First, hide all fieldset (not all will be needed)
+                fscontainer.find('fieldset').hide();
 
                 // Iterate categories
                 $.each(data.ServiceAttributeCategories, function(iCat, cat){
@@ -108,9 +111,15 @@ $(document).ready(function(){
                     var fs = $('#service-attribute-category-' + cat.ServiceAttributeCategoryID);
                     // Fieldset exists, update:
                     if (fs.length > 0){
-                        return;
+                        if (cat.ServiceAttributeCategoryID == 5)
+                            // TODO: language attributes need special template
+                            return;
+
                         fs.find('legend').text(cat.ServiceAttributeCategoryName);
                         
+                        // Remove existing attributes
+                        fs.find('>*:not(legend)').remove();
+
                         // Iterate category attributes
                         $.each(cat.ServiceAttributes, function(iAtt, att){
                             var hAtt = tplAttribute
@@ -119,8 +128,11 @@ $(document).ready(function(){
                                 .replace('{2}', att.ServiceAttribute);
     
                             // Add new attribute html to fieldset
-                            fieldsets.eq(iCat).append(hAtt);
+                            fs.append(hAtt);
                         });
+                        
+                        // Show it again
+                        fs.show();
                     } else {
                         // Fieldset doesn't exist, create:
                         var jCat = $(tplCategory
