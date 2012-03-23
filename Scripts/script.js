@@ -43,15 +43,15 @@ $(document).ready(function(){
                width: '400px',
                padding: '25px',
                border: '5px solid #b5e1e2',
-            	'-moz-border-radius': '12px',
-            	'-webkit-border-radius': '12px',
+               '-moz-border-radius': '12px',
+               '-webkit-border-radius': '12px',
                'border-radius': '12px',
                '-moz-background-clip': 'padding',
                '-webkit-background-clip': 'padding-box',
                'background-clip': 'padding-box'
            },
            overlayCSS: { cursor: 'default' }
-        }); 
+        });
         
         $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
     });
@@ -301,13 +301,48 @@ $(document).ready(function(){
         // or nothing (that means help center main page)
         if (!rurl) rurl = (c.attr('id') ? '?s=' + encodeURIComponent(c.attr('id')) : '');
         // Opening the help center
-        popup(BASE_URL + '/help-center/' + rurl);
+        popup(BASE_URL + '/HelpCenter/' + rurl, 'large');
         // Do not allow browser to open the link url:
         return false;
     });
 });
 
 /* Popup function */
-function popup(url){
-    window.open(url);
+function popup(url, size){
+    // Native popup
+    //window.open(url);
+    
+    // Smart popup
+    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5 )));
+    
+    $('div.blockUI.blockMsg.blockPage').addClass('fancy');
+    $.blockUI({ 
+       message: '<img scr="' + BASE_URL + '../img/loading.gif"/>',
+       centerY: false,
+       css: {
+           cursor: 'default',
+           width: Math.round($(window).width() * s) + 'px',
+           left: Math.round($(window).width() * (1-s)/2) - 30 + 'px',
+           height: Math.round($(window).height() * s) + 'px',
+           top: Math.round($(window).height() * (1-s)/2) - 30 + 'px',
+           padding: '25px',
+           overflow: 'scroll',
+           border: '5px solid #b5e1e2',
+           '-moz-border-radius': '12px',
+           '-webkit-border-radius': '12px',
+           'border-radius': '12px',
+           '-moz-background-clip': 'padding',
+           '-webkit-background-clip': 'padding-box',
+           'background-clip': 'padding-box'
+       },
+       overlayCSS: { cursor: 'default' }
+    });
+    // Loading Url with Ajax and place content inside the blocked-box
+    $.ajax({url: url, success: function(data){
+        $('div.blockMsg').html(data);
+    }, error: function(j, textStatus){
+        $('div.blockMsg').text('Page not found');
+    }});
+    
+    $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
 }
