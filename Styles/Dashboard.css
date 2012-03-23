@@ -402,7 +402,7 @@ form.positionavailability input{
 }
 .positionavailability-booking {
     border-left: 1px solid #DADADA;
-    height: 90%;
+    height: 365px;
     padding-left: 13px !important;
     position: absolute;
     right: 0;
@@ -679,6 +679,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
   * ======================*/
 .dashboard #main .col{
     float: left;
+    margin-bottom: 10px;
 }
 .dashboard #main .col-2{
     width: 340px;

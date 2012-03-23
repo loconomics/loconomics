@@ -799,6 +799,9 @@ div.dp-popup td.disabled{cursor:default;}
     display: block !important;
     clear: both;
 }
+form fieldset.actions{
+    margin: 10px 0 !important;
+}
 /* .main-button, inside .actions container: bigger, more important button */
 .actions .main-button{
     text-transform: lowercase;
