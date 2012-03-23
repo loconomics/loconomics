@@ -1,13 +1,22 @@
 $(document).ready(function(){
 
+    var jSelectPosition = $('select[name=select-position]');
+    var jAttributes = $('.select-attributes');
+    var jActions = $('fieldset.actions');
+    $.blockUI.defaults.message = null;
+    $.proxy(loadAttributes, jSelectPosition.get(0))();
+
     // Auto post back when select a position:
-    $('select[name=select-position]').change(function(){
+    jSelectPosition.change(loadAttributes);
+
+    function loadAttributes(){
     
         var selectedPosition = $(this).val();
         
         // No position:
         if (!selectedPosition){
-            $('.select-attributes').hide();
+            jAttributes.block({overlayCSS:{cursor: 'default'}});
+            jActions.block({overlayCSS:{cursor: 'default'}});
             return;
         }
         
@@ -25,7 +34,11 @@ $(document).ready(function(){
             {3} AttributeName
          */
         var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox"/><span>{2}</span></label>';
-                
+
+        // Locking elements and showing loading message
+        jAttributes.block({message: '<img src="' + BASE_URL + '/../img/loading.gif"/>'});
+        jActions.block();
+        
         // Do the ajax to load attributes
         $.ajax({
             type: 'POST',
@@ -81,8 +94,9 @@ $(document).ready(function(){
                     }
                 });
                 
-                $('.select-attributes').show();
+                jAttributes.unblock();
+                jActions.unblock();
             }
         });
-    });
+    }
 });
