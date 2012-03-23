@@ -33,30 +33,30 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
     <div class="col col-2 col-2-1">
-        <fieldset class="positionlocations-itravel">
+        <fieldset class="positionlocations-itravel has-confirm">
             <legend>I travel to clients:</legend>
-            <div class="positionlocations-itravel-confirm">
+            <div class="confirm positionlocations-itravel-confirm">
                 <label>Yes<input type="radio" name="positionlocations-itravel" value="yes"/></label>
                 <label>No<input type="radio" name="positionlocations-itravel" value="no"/></label>
             </div>
             <a href="#" class="addlocation">Add location</a>
-        </fieldset>
-        <fieldset class="positionlocations-itravelfrom">
-            <legend>I travel from this location (one only):</legend>
-            @printAddress(new Dictionary<string, object>() {{"name", "My home"}, {"location", "187 Bocana St"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94110"} })
-            <label>I will travel up to @printDistanceSelect() from this location.</label>
-        </fieldset>
-        <fieldset class="positionlocations-itravelusing">
-            <legend>I travel to jobs using primarily:</legend>
-            <label><input type="radio" name="positionlocations-itravelusing" value="public"/>Public transport</label>
-            <label><input type="radio" name="positionlocations-itravelusing" value="walk"/>Walk</label>
-            <label><input type="radio" name="positionlocations-itravelusing" value="automobile"/>Automobile</label>
+            <fieldset class="positionlocations-itravelfrom">
+                <legend>I travel from this location (one only):</legend>
+                @printAddress(new Dictionary<string, object>() {{"name", "My home"}, {"location", "187 Bocana St"}, {"city", "San Francisco"}, {"state", "CA"}, {"zipcode", "94110"} })
+                <label>I will travel up to @printDistanceSelect() from this location.</label>
+            </fieldset>
+            <fieldset class="positionlocations-itravelusing">
+                <legend>I travel to jobs using primarily:</legend>
+                <label><input type="radio" name="positionlocations-itravelusing" value="public"/>Public transport</label>
+                <label><input type="radio" name="positionlocations-itravelusing" value="walk"/>Walk</label>
+                <label><input type="radio" name="positionlocations-itravelusing" value="automobile"/>Automobile</label>
+            </fieldset>
         </fieldset>
     </div>
     <div class="col col-2 col-2-2">
-        <fieldset class="positionlocations-servicelocations">
+        <fieldset class="positionlocations-servicelocations has-confirm">
             <legend>I perform services at specific locations:</legend>
-            <div class="positionlocations-servicelocations-confirm">
+            <div class="positionlocations-servicelocations-confirm confirm">
                 <label>Yes<input type="radio" name="positionlocations-itravel" value="yes"/></label>
                 <label>No<input type="radio" name="positionlocations-itravel" value="no"/></label>
             </div>

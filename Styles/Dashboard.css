@@ -272,8 +272,8 @@
 .dashboard form li input[type="checkbox"]{
     margin: 0 6px;
 }
-.dashboard form li input[type="radio"]:first-child,
-.dashboard form li input[type="checkbox"]:first-child{
+.dashboard form li > input[type="radio"]:first-child,
+.dashboard form li > input[type="checkbox"]:first-child{
     margin: 0 6px 0 0;
 }
 .dashboard form a,
@@ -394,24 +394,8 @@ form.positionavailability input{
 .positionavailability-program {
     width: 424px !important;
 }
-.positionavailability-program legend{
-    float: left;
-    display: block;
-}
 .dashboard .positionavailability-program li label{
     margin: 0 10px;
-}
-.positionavailability-program .positionavailability-use-program {
-    margin: 0 !important;
-    position: relative;
-    left: 10px;
-    white-space: nowrap;
-}
-.positionavailability-program .positionavailability-use-program label {
-    padding: 0 !important;
-}
-.positionavailability-program .positionavailability-use-program label input{
-    margin: 0 3px;
 }
 .positionavailability-program-url input{
     width: 220px !important;
@@ -536,7 +520,6 @@ form.positionavailability input{
 
 /** Form Positions - Locations **/
 .positionlocations{
-    position: relative;
     font-size: .9em;
     margin: 30px 0 10px;
 }
@@ -559,26 +542,8 @@ form.positionavailability input{
     top: 0;
     width: 350px;
 }*/
-/* yes/no buttons in the same line that fieldset>legend */
-.positionlocations-itravel legend,
-.positionlocations-servicelocations legend {
-    display: block;
-    float: left;
-}
-.positionlocations-itravel-confirm,
-.positionlocations-servicelocations-confirm {
-    display: inline-block;
-    left: 10px;
-    position: relative;
-    white-space: nowrap;
-}
-.positionlocations-itravel-confirm label,
-.positionlocations-servicelocations-confirm label{
-    padding: 0 !important;
-}
-.positionlocations-itravel-confirm label input,
-.positionlocations-servicelocations-confirm label input{
-    margin: 0 3px;
+fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
+    margin-top: 10px !important;
 }
 .positionlocations-itravel .addlocation{
     margin-left: 40px;
@@ -720,8 +685,13 @@ form.positionavailability input{
 }
 .dashboard #main .col-2-1{
     border-right: 1px solid #DADADA;
-    margin-right: 20px;
+    margin-right: 0;
     padding-right: 10px;
+}
+.dashboard #main .col-2-2{
+    border-left: 1px solid #DADADA;
+    margin-left: -1px;
+    padding-left: 10px;
 }
 /* forms inside columns specific */
 .dashboard #main .col fieldset{
@@ -740,27 +710,27 @@ form.positionavailability input{
   * a confirmation to enable
   * the rest of fields.
   */
-fieldset.have-confirm > legend{
+fieldset.has-confirm > legend{
     display: block;
     float: left;
 }
-fieldset.have-confirm > .confirm{
+fieldset.has-confirm > .confirm{
     display: inline-block;
     left: 10px;
     position: relative;
     white-space: nowrap;
 }
-fieldset.have-confirm > .confirm > label{
+fieldset.has-confirm > .confirm > label{
     padding: 0 !important;
 }
-fieldset.have-confirm > .confirm > label > input{
+fieldset.has-confirm > .confirm > label > input{
     margin: 0 3px;
 }
-fieldset.have-confirm.confirmed-no > *{
+fieldset.has-confirm.confirmed-no > *{
     display: none;
 }
-fieldset.have-confirm.confirmed-no > .confirm,
-fieldset.have-confirm.confirmed-no > legend{
+fieldset.has-confirm.confirmed-no > .confirm,
+fieldset.has-confirm.confirmed-no > legend{
     display: inherit;
 }
 

@@ -62,13 +62,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             @printHourPerDayElements()
         </ul>
     </fieldset>
-    <fieldset class="positionavailability-program">
+    <fieldset class="positionavailability-program has-confirm">
         <legend>I already use a calendar program:</legend>
+        <div class="confirm positionavailability-use-program">
+            <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
+            <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
+        </div>
         <ul>
-            <li class="positionavailability-use-program">
-                <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
-                <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
-            </li>
             <li class="positionavailability-program-type">
                 <label for="position#@(n)-availability-program-type">Which type?</label>
                 <select name="positionavailability-program-type" id="position#@(n)-availability-program-type">
