@@ -2,14 +2,19 @@
    ====== IagoSRL for Loconomics S.L. ============
  */
 
-/* Extra padding when there is non tabbed content inside tab */
+/* Extra padding to avoid collision with .help-point */
 .dashboard .folders > .tab-body {
-    padding-top: 25px;
+    padding-top: 35px;
 }
-/* Enforce padding top for tabbed content inside tab */
-.dashboard .folders > .tab-body.tabbed {
-    padding-top: 20px;
+.dashboard .folders > .tab-body > .tabs {
+    margin-top: 0;
 }
+/* Extra right magin to avoid collision with .help-point */
+.dashboard .folders > .tab-body > .tabs,
+.dashboard .folders > .tab-body > p:first-child{
+    margin-right: 30px;
+}
+
 .dashboard #highlights,
 .dashboard #dashboard-help,
 .dashboard #main{
@@ -239,7 +244,7 @@
 
 /*** Dashboard forms ***/
 .dashboard form fieldset{
-    margin: 30px 0 10px 0;
+    margin: 0 0 10px 0;
     padding: 0;
 }
 .dashboard form legend{
@@ -312,7 +317,7 @@ fieldset.positionservices-attributes{
     display: inline-block;
     width: 210px;
     border-right: solid 1px #dadada;
-    margin: 30px 10px 10px 0 !important;
+    margin: 0 10px 10px 0 !important;
     padding: 0 10px 0 0 !important;
     vertical-align: top;
 }
@@ -326,7 +331,6 @@ form.positionservices input{
     display: inline-block;
     width: 230px;
     vertical-align: top;
-    margin-top: 30px;
 }
 .positionservices-sidebar fieldset{
     margin: 0 0 15px !important;
@@ -521,7 +525,6 @@ form.positionavailability input{
 /** Form Positions - Locations **/
 .positionlocations{
     font-size: .9em;
-    margin: 30px 0 10px;
 }
 .positionlocations fieldset{
     vertical-align: top;
@@ -630,9 +633,6 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 
 /**** Form: Account Taxes ****/
-#account-taxes fieldset{
-    margin-top: 0;
-}
 #account-taxes fieldset span.info{
     margin-left: 10px;
     font-size: .9em;
@@ -747,4 +747,32 @@ fieldset.has-confirm.confirmed-no > legend{
     margin-right: -24px;
     position: relative;
     vertical-align: bottom;
+}
+
+/** =========================
+  * Semi-generic .help-point class
+  * positioned for dashboard pages
+  */
+.help-point a,
+.help-point a:link,
+.help-point a:visited{
+    background: none repeat scroll 0 0 #8B2143;
+    border-radius: 10px 10px 10px 10px;
+    color: White;
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 2px 10px;
+    text-decoration: none;
+}
+.help-point a:hover{
+    color: White;
+    box-shadow: 0 0 5px 2px #8B2143;
+}
+.dashboard .help-point{
+    display: inline-block;
+    left: 715px;
+    position: relative;
+    top: 70px;
+    z-index: 1000;
 }
