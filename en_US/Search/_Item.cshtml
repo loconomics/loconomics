@@ -4,11 +4,11 @@
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+    <li><a href="@Href("~/en_US/profile/?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
 }
 @helper hrefProfile(){
     var p = PageData["item"];
-    @Href("~/en_US/Profile?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
+    @Href("~/en_US/Profile/?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
 }
 @helper printName(WebMatrix.Data.DynamicRecord p){
     string l = (string)p["LastName"];
