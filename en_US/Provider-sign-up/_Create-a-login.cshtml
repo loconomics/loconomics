@@ -73,7 +73,7 @@
                     var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                     if (requireEmailConfirmation) {
                         var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                        var confirmationUrl = hostUrl + VirtualPathUtility.ToAbsolute("~/en_US/Account/Confirm?confirmationCode=" + HttpUtility.UrlEncode(token));
+                        var confirmationUrl = hostUrl + VirtualPathUtility.ToAbsolute("~/en_US/Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token));
 
                         WebMail.Send(
                             to: email,	
@@ -84,7 +84,7 @@
 
                     if (requireEmailConfirmation) {
                         // Thank the user for registering and let them know an email is on its way
-                        Response.Redirect("~/en_US/Account/Thanks");
+                        Response.Redirect("~/en_US/Account/Thanks/");
                     } else {
                         // Navigate back to the homepage and exit
                         WebSecurity.Login(email, password);

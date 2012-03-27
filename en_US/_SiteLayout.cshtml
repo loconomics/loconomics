@@ -7,7 +7,7 @@
            request.Cookies.Set(myHttpCookie);
 
            if(userCulture == "es-es"){
-               Response.Redirect("~/en_US/Default.cshtml");
+               Response.Redirect("~/en_US/");
            }
     }
 }
@@ -82,7 +82,7 @@
         <header>
    
 		    <div class="wrap">
-			    <a id="logo" class="replace" href="@Href("~/en_US/Default")">Loconomics, at your service.</a>
+			    <a id="logo" class="replace" href="@Href("~/en_US/")">Loconomics, at your service.</a>
 			    <ul>
 				    <li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
                     @if (WebSecurity.IsAuthenticated) {
@@ -91,20 +91,20 @@
 						        <dt class="fancy">Hi, @WebSecurity.CurrentUserName! &#x25BC;</dt>
 						        <dd>
                                     <a href="@Href("~/en_US/dashboard/")" title="Dashboard">Dashboard</a>
-                                    <a href="@Href("~/en_US/dashboard/positions")">Your services</a>
-                                    <a href="@Href("~/en_US/dashboard/positions")">Your positions</a>
-                                    <a href="@Href("~/en_US/dashboard/preferences")">Profile</a>
-                                    <a href="@Href("~/en_US/dashboard/account")">Account</a>
-                                    <a href="@Href("~/en_US/Account/Logout")">Logout</a>
+                                    <a href="@Href("~/en_US/dashboard/positions/")">Your services</a>
+                                    <a href="@Href("~/en_US/dashboard/positions/")">Your positions</a>
+                                    <a href="@Href("~/en_US/dashboard/preferences/")">Profile</a>
+                                    <a href="@Href("~/en_US/dashboard/account/")">Account</a>
+                                    <a href="@Href("~/en_US/Account/Logout/")">Logout</a>
 						        </dd>
-					        </dl>	                  
-				        </li> 
+					        </dl>
+				        </li>
 			            <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
                     } else {
                         <li class="new-user">
-                            <a class="launch-modal" href="@Href("~/en_US/Account/Register")">Sign Up</a> | 
-                            <a id="loginButton" href="@Href("~/en_US/Account/Login")">Login</a> | 
-                            <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks")">How it works</a>
+                            <a class="launch-modal" href="@Href("~/en_US/Account/Register/")">Sign Up</a> | 
+                            <a id="loginButton" href="@Href("~/en_US/Account/Login/")">Login</a> | 
+                            <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks/")">How it works</a>
                         </li>
                     }
 				    <li>
@@ -113,8 +113,8 @@
 						    <dd>
 							    <a class="us" href="@Href("~/en_US/")"><img src="@Href("~/Styles/images/us.png")" alt="US" />English</a>
 							    <a class="es" href="@Href("~/es_ES/")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />Español</a>
-							    <a class="es" href="@Href("~/en_ES")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />English</a>
-							    <a class="us" href="@Href("~/es_US")"><img src="@Href("~/Styles/images/us.png")" alt="US" />Español</a>
+							    <a class="es" href="@Href("~/en_ES/")"><img src="@Href("~/Styles/images/es.png")" alt="Spain" />English</a>
+							    <a class="us" href="@Href("~/es_US/")"><img src="@Href("~/Styles/images/us.png")" alt="US" />Español</a>
 						    </dd>
 					    </dl>
 				    </li>
@@ -124,7 +124,7 @@
 		    </div>
         </header>
 
-        <footer><a href="@Href("~/en_US/About")">About</a> | <a href="#">Terms &amp; Privacy</a> | <a href="@Href("~/en_US/Help")">Help</a> | <a href="#">Blog</a></footer>
+        <footer><a href="@Href("~/en_US/About/")">About</a> | <a href="#">Terms &amp; Privacy</a> | <a href="@Href("~/en_US/Help/")">Help</a> | <a href="#">Blog</a></footer>
 
 		<div id="modals">
 

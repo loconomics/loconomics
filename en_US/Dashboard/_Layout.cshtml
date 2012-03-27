@@ -76,7 +76,7 @@
                 
                 <div id="highlights">
                     <h1 class="greeting">Hello, <span id="username">@PageData["userow"].FirstName</span>!</h1>
-                    <img id="avatar" src="@Href("~/en_US/Dashboard/Photo")" alt="Photo" />
+                    <img id="avatar" src="@Href("~/en_US/Dashboard/Photo/")" alt="Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
                     
                     <div class="profile-progress progress-bar">
@@ -131,13 +131,13 @@
                 
                 <div id="nav">
                     <ul id="profile-menu" class="autofill-submenu">
-                        <li class="@menu("mailbox")"><a href="Mailbox">Mailbox</a></li>
-                        <li class="@menu("calendar")"><a href="Calendar">Calendar</a></li>
-                        <li class="@menu("positions")"><a href="Positions">Positions</a></li>
-                        <li class="@menu("myclients")"><a href="MyClients">My Clients</a></li>
-                        <li class="@menu("tools")"><a href="Tools">Tools</a></li>
-                        <li class="@menu("preferences")"><a href="Preferences">Preferences</a></li>
-                        <li class="@menu("account")"><a href="Account">Account</a></li>
+                        <li class="@menu("mailbox")"><a href="Mailbox/">Mailbox</a></li>
+                        <li class="@menu("calendar")"><a href="Calendar/">Calendar</a></li>
+                        <li class="@menu("positions")"><a href="Positions/">Positions</a></li>
+                        <li class="@menu("myclients")"><a href="MyClients/">My Clients</a></li>
+                        <li class="@menu("tools")"><a href="Tools/">Tools</a></li>
+                        <li class="@menu("preferences")"><a href="Preferences/">Preferences</a></li>
+                        <li class="@menu("account")"><a href="Account/">Account</a></li>
                     </ul>
                 </div><!-- nav -->
             
@@ -153,7 +153,7 @@
     <header>
    
 		<div class="wrap">
-			<a id="logo" class="replace" href="@Href("~/en_US/Default")">Loconomics, at your service.</a>
+			<a id="logo" class="replace" href="@Href("~/en_US/")">Loconomics, at your service.</a>
 			<ul>
 				<li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
 @if (WebSecurity.IsAuthenticated) {
@@ -162,20 +162,20 @@
 						<dt class="fancy">Hi, @WebSecurity.CurrentUserName! &#x25BC;</dt>
 						<dd>
 							<a href="@Href("~/en_US/dashboard/")" title="Dashboard">Dashboard</a>
-							<a href="@Href("~/en_US/dashboard/positions")">Your services</a>
-							<a href="@Href("~/en_US/dashboard/positions")">Your positions</a>
-							<a href="@Href("~/en_US/dashboard/preferences")">Profile</a>
-							<a href="@Href("~/en_US/dashboard/account")">Account</a>
-							<a href="@Href("~/en_US/Account/Logout")">Logout</a>
+							<a href="@Href("~/en_US/dashboard/positions/")">Your services</a>
+							<a href="@Href("~/en_US/dashboard/positions/")">Your positions</a>
+							<a href="@Href("~/en_US/dashboard/preferences/")">Profile</a>
+							<a href="@Href("~/en_US/dashboard/account/")">Account</a>
+							<a href="@Href("~/en_US/Account/Logout/")">Logout</a>
 						</dd>
 					</dl>
 				</li> 
 			   <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
 } else {
             <li class="new-user">
-                <a class="launch-modal" href="@Href("~/en_US/Account/Register")">Sign Up</a> | 
-                <a id="loginButton" href="@Href("~/en_US/Account/Login")">Login</a> | 
-                <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks")">How it works</a>
+                <a class="launch-modal" href="@Href("~/en_US/Account/Register/")">Sign Up</a> | 
+                <a id="loginButton" href="@Href("~/en_US/Account/Login/")">Login</a> | 
+                <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks/")">How it works</a>
             </li>
 }
 				<li>
