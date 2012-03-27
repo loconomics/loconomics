@@ -5,7 +5,7 @@
     var ur = DashboardFunctions.GetUserRow();
 
     // Retrieving image path
-    string path = HttpContext.Current.Request.MapPath("../../" + (string)ur["Photo"]);
+    string path = HttpContext.Current.Request.MapPath("~/" + (string)ur["Photo"]);
     
     // Transform image to Grayscale
     var img = ImageUtility.ConvertGrayscale(path);
