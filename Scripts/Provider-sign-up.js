@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     var jSelectPosition = $('select[name=select-position]');
     var jAttributes = $('.select-attributes');
-    var jActions = $('fieldset.actions');
+    var jActions = $('.your-work fieldset.actions');
     $.blockUI.defaults.message = null;
     
     var loadPositions = public.loadPositions = function loadPositions(){
