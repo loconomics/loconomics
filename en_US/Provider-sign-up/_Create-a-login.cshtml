@@ -1,33 +1,178 @@
-﻿<p class="info">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
-</p>
-<form action="#" method="post" id="provider-sign-up-create-a-login">
+﻿
+   @{ 
+    // Initialize general page variables
+    var userid = 99999;
+    var email = "";
+    var password = "";
+    var confirmPassword = "";
+    var firstname  ="";
+    var lastname  = "";
+    var zipcode   = "";
+    var lang   = "1";
+    var termsofuse = "0";
+    var termsofuse1 = "0";
+    var termsofuse2 = "0";
+    var termsofuse3 = "0";
+    var termsofuse4 = "0";
+    var termsofuse5 = "0";
+    var ppolicy = "0";
+    var emailcontact = "0";
+   
+	// Validate the user's email address
+    Validation.RequireField("email", "You must specify an email address.");
+    // Validate the user's password and password confirmation
+    Validation.Add("email",
+        Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
+
+	Validation.RequireField("password", "The password cannot be blank.");
+    Validation.Add("confirmPassword", 
+        Validator.EqualsTo("password", "The new password and confirmation password do not match."));
+    
+    // var captchaMessage = "";
+
+    // If this is a POST request, validate and process data
+    if (IsPost) {
+        email = Request.Form["email"];
+        password = Request.Form["password"];
+        confirmPassword = Request.Form["confirmPassword"];
+        firstname = Request.Form["firstname"];
+        lastname =   Request.Form["lastname"];
+        zipcode =  Request.Form["zipcode"];
+        lang =  Request.Form["lang"];
+        termsofuse = Request.Form["termsofuse"];
+        termsofuse1 = Request.Form["termsofuse1"];
+        termsofuse2 = Request.Form["termsofuse2"];
+        termsofuse3 = Request.Form["termsofuse3"];
+        termsofuse4 = Request.Form["termsofuse4"];
+        termsofuse5 = Request.Form["termsofuse5"];
+        ppolicy = Request.Form["ppolicy"];
+        emailcontact = Request.Form["emailcontact"];
+
+        
+        // Validate the user's captcha answer
+        // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
+        //     ModelState.AddError("recaptcha", "Captcha response was not correct");
+        // }
+
+        // If all information is valid, create a new account
+        if (Validation.IsValid()) { 
+            // Insert a new user into the database
+            var db = Database.Open("sqlloco");
+
+            // Check if user already exists
+            //var user = db.QuerySingle("SELECT Email FROM UserProfile WHERE LOWER(Email) = LOWER(@0)", email);
+            var user = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
+
+            if (user == null) {
+                // Insert email into the profile table
+                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+                // Create and associate a new entry in the membership database.
+                // If successful, continue processing the request
+                try {
+                    bool requireEmailConfirmation = false ;//!WebMail.SmtpServer.IsEmpty();
+                    var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+                    if (requireEmailConfirmation) {
+                        var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                        var confirmationUrl = hostUrl + VirtualPathUtility.ToAbsolute("~/en_US/Account/Confirm?confirmationCode=" + HttpUtility.UrlEncode(token));
+
+                        WebMail.Send(
+                            to: email,	
+                            subject: "Please confirm your account", 
+                            body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
+                        ); 
+                    }
+
+                    if (requireEmailConfirmation) {
+                        // Thank the user for registering and let them know an email is on its way
+                        Response.Redirect("~/en_US/Account/Thanks");
+                    } else {
+                        // Navigate back to the homepage and exit
+                        WebSecurity.Login(email, password);
+                                                
+                        userid = WebSecurity.GetUserId(email);
+                        
+                        // insert additional user details
+
+                                               
+                        // mark the user as logged in via a normal account,
+                        // as opposed to via an OAuth or OpenID provider.
+                        Session["OAuthLoggedIn"] = false;
+                    
+                        db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",userid,firstname,lastname,zipcode, lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
+                        
+                        //Response.Redirect("~/en_US/");
+                    }
+                } catch (System.Web.Security.MembershipCreateUserException e) {
+                    ModelState.AddFormError(e.Message);
+                }
+            } else {
+                // User already exists
+                ModelState.AddFormError("Email address is already in use.");
+            }
+        }    
+    }
+}
+<p class="info">
+     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
+ </p>
+ <form method="post" id="provider-sign-up-create-a-login">
+     @* If at least one validation error exists, notify the user *@
+   @Html.ValidationSummary("Please correct the errors and try again.")
+    
     <fieldset class="login-data">
-        <legend>Contact Information:</legend>
-        <ul>
-            <li class="first-name">
-                <label>First Name:<input type="text" name="first-name"/></label>
-            </li>
+         <legend>Contact Information:</legend>
+         <ul>
+             <li class="first-name">
+                <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name:</label>
+                <input type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
+                @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("firstname")
+
+                @* need to have the error label class show up  *@   
+             </li>
+           
             <li class="last-name">
-                <label>Last Name:<input type="text" name="first-name"/></label>
-            </li>
+              <label for="lastname" @if(!ModelState.IsValidField("lastname")){<text>class="error-label"</text>}>Last Name:</label>
+                <input type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
+                @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("lastname")
+
+                @* need to have the error label class show up  *@   
+             </li>
+            
             <li class="zip-code">
-                <label>Zip code:<input type="text" name="zip-code"/></label>
+                <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
+                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@lastname" @Validation.GetHtml("zipcode") />
+                @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("zipcode")
+
+                @* need to have the error label class show up  *@   
             </li>
+           
             <li class="email">
-                <label>Email address:<input type="text" name="email"/></label>
+                <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email:</label>
+                <input type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
+                @* Write any email validation errors to the page *@
+                @Html.ValidationMessage("email")
+
+                @* need to have the error label class show up  *@   
             </li>
             <li class="password">
-                <label>Password:<input type="password" name="password"/></label>
-            </li>
-            <li class="re-password">
-                <label>Re-enter:<input type="password" name="re-password"/></label>
-            </li>
-            <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
-            <li class="lang"><label>Preferred language:<select name="lang">
-                        <option value="en_US">English (US)</option>
-                        <option value="es_ES">Spanish (ES)</option>
-                    </select></label></li>
+                <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password:</label>
+                <input type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
+                @* Write any password validation errors to the page *@
+                @Html.ValidationMessage("password")
+             </li>
+            <li class="confirm-password">
+                <label for="confirmPassword" @if(!ModelState.IsValidField("confirmPassword")) {<text>class="error-label"</text>} >Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
+                @* Write any password validation errors to the page *@
+                @Html.ValidationMessage("confirmPassword")
+             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
+            <li class="lang"><label>Preferred language:<select name="lang" id="lang">
+                        <option value="1">English (US)</option>
+                        <option value="2">Spanish (ES)</option>
+            </select></label></li>
         </ul>
         <div class="facebook-connect">
             <span class="or">or</span>
@@ -39,46 +184,47 @@
         <ul>
             <li>
                 <label class="stronger">Terms of use--this is how we will work together (view in separate window)
-                <textarea disabled="disabled">Terms of use</textarea>
-                </label>
-            </li>
-            <li>
-                <label><input type="checkbox" name="terms-of-use"/>I have read and understand the <a href="#">terms of use</a></label>
-            </li>
-            <li>
-                <strong>Specifically, I understand and agree to the following:</strong>
-                <ul>
-                    <li>
-                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 1</label>
-                    </li>
-                    <li>
-                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 2</label>
-                    </li>
-                    <li>
-                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 3</label>
-                    </li>
-                    <li>
-                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 4</label>
-                    </li>
-                    <li>
-                        <label><input type="checkbox" name="terms-of-use"/>Term of use most important item 5</label>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <label class="stronger">Privacy policy--we want you to feel comfortable with how we use your data (view in separate window)
-                <textarea disabled="disabled">Privacy policy</textarea>
-                </label>
-            </li>
-            <li>
-                <label><input type="checkbox" name="terms-of-use"/>I have read and understand the <a href="#">privacy policy</a></label>
-            </li>
-            <li>
-                <label><input type="checkbox" name="terms-of-use"/>I don’t mind being e-mailed with Loconomics news</label>
-            </li>
-        </ul>
-    </fieldset>
-    <fieldset class="actions">
-        <button data-next-step="#your-work" class="next">Continue</button>
-    </fieldset>
+                 <textarea disabled="disabled">Terms of use</textarea>
+                 </label>
+             </li>
+             <li>
+                <label><input type="checkbox" name="terms-of-use" id="termsofuse" value="1"/>I have read and understand the <a href="#">terms of use</a></label>
+             
+             </li>
+             <li>
+                 <strong>Specifically, I understand and agree to the following:</strong>
+                 <ul>
+                     <li>
+                        <label><input type="checkbox" name="termsofuse1" id="termsofuse1" value="1"/>Term of use most important item 1</label>
+                     </li>
+                     <li>
+                        <label><input type="checkbox" name="termsofuse2" id="termsofuse2" value="1"/>Term of use most important item 2</label>
+                     </li>
+                     <li>
+                        <label><input type="checkbox" name="termsofuse3" id="termsofuse3" value="1"/>Term of use most important item 3</label>
+                     </li>
+                     <li>
+                        <label><input type="checkbox" name="termsofuse4" id="termsofuse4" value="1"/>Term of use most important item 4</label>
+                     </li>
+                     <li>
+                        <label><input type="checkbox" name="termsofuse5" id="termsofuse5" value="1"/>Term of use most important item 5</label>
+                     </li>
+                 </ul>
+             </li>
+             <li>
+                 <label class="stronger">Privacy policy--we want you to feel comfortable with how we use your data (view in separate window)
+                 <textarea disabled="disabled">Privacy policy</textarea>
+                 </label>
+             </li>
+             <li>
+                <label><input type="checkbox" name="ppolicy" id="ppolicy" value="1"/>I have read and understand the <a href="#">privacy policy</a></label>
+             </li>
+             <li>
+                <label><input type="checkbox" name="emailcontact" id="emailcontact" value="1"/>I don't mind being e-mailed with Loconomics news</label>
+             </li>
+         </ul>
+     </fieldset>
+     <fieldset class="actions">
+        <button type="submit" class="next">Continue</button>
+     </fieldset>
 </form>
