@@ -49,4 +49,24 @@ public static class UrlUtil
             return SiteUrl + AppPath;
         }
     }
+    /// <summary>
+	/// Get the current virtual app path plus the language path
+	/// </summary>
+	/// <returns></returns>
+    public static string LangPath{
+        get
+        {
+            return AppPath + "en_US/";
+        }
+    }
+    /// <summary>
+	/// Get the current virtual app url plus the language path
+	/// </summary>
+	/// <returns></returns>
+    public static string LangUrl{
+        get
+        {
+            return AppUrl + "en_US/";
+        }
+    }
 }
