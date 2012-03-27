@@ -66,6 +66,13 @@
     margin: 0 20px;
     width: 210px;
 }
+.sign-up-wizard #create-a-login .login-data li > span{
+    display: block;
+    padding: 0 10px 0 20px;
+}
+.sign-up-wizard #create-a-login .login-data li > span.field-validation-valid{
+    color: Red;
+}
 .sign-up-wizard #create-a-login .login-data .facebook-connect{
     text-align: center;
 }
