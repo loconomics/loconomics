@@ -1,0 +1,42 @@
+﻿        <div id="secondary">
+		    <a href="Search?serviceType=@serviceType&Service=@service">&laquo; back to search results</a>
+		
+		    <form id="searchAgain" name="searchAgain" class="fancy">
+			    <legend>Search Again</legend>
+			    <fieldset class="search-params">
+				    <fieldset>
+					    <label for="location">You're searching for services near:</label>
+					    <select id="location">
+						    <option>Home</option>
+						    <option>Office</option>
+					    </select>
+				    </fieldset>
+				    <fieldset>
+					    <label for="date">Preferred Date</label>
+					    <input type="text" id="date" class="date-pick" value="06/07/2011" />
+				    </fieldset>
+			    </fieldset>
+			    <fieldset>
+				    <label for="serviceDetails">Service Details:</label>
+				    <fieldset class="checklist" id="serviceDetails">
+					    <fieldset><input type="checkbox" value="lorem" id="hk1" /> <label for="hk1">Lorem ipsum dolor</label></fieldset>
+					    <fieldset><input type="checkbox" value="ipsum" id="hk2" /> <label for="hk2">Consectitur</label></fieldset>
+					    <fieldset><input type="checkbox" value="dolor" id="hk3" /> <label for="hk3">Nullam sed ante leo</label></fieldset>
+					    <fieldset><input type="checkbox" value="sit" id="hk4" /> <label for="hk4">Etiam sodales </label></fieldset>
+					    <fieldset><input type="checkbox" value="amet" id="hk5" /> <label for="hk5">Sit amet</label></fieldset>
+				    </fieldset>
+			    </fieldset>
+			    <fieldset>
+				    <label for="education">Education:</label>
+				    <fieldset class="checklist" id="serviceDetails">
+					    <fieldset><input type="checkbox" value="lorem" id="hk1" /> <label for="hk1">Lorem ipsum dolor</label></fieldset>
+					    <fieldset><input type="checkbox" value="ipsum" id="hk2" /> <label for="hk2">Consectitur</label></fieldset>
+					    <fieldset><input type="checkbox" value="dolor" id="hk3" /> <label for="hk3">Nullam sed ante leo</label></fieldset>
+					    <fieldset><input type="checkbox" value="sit" id="hk4" /> <label for="hk4">Etiam sodales </label></fieldset>
+					    <fieldset><input type="checkbox" value="amet" id="hk5" /> <label for="hk5">Sit amet</label></fieldset>
+				    </fieldset>
+			    </fieldset>
+			    <button class="search-again fanciful" type="submit">Search</button>
+		    </form>
+		
+	    </div><!-- #secondary -->
