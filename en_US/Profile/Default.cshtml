@@ -17,7 +17,7 @@
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href("~/en_US/profile?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+    <li><a href="@Href("~/en_US/profile/?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
 }
 @helper oldPrintMailbox(){
     // TODO Review old code: (is a section removed from the current design)

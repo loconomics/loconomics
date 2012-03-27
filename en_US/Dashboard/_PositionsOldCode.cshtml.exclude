@@ -15,7 +15,7 @@
                 <tr><td>Lorem Ipsum:</td><td>20</td></tr>
             </table>
             <a href="#">Booking History</a>
-            <a href="../PricingProfileWizardPage.cshtml?PositionID=@PageData["position"].PositionID">Edit Estimate Profile</a>
+            <a href="../PricingProfileWizardPage?PositionID=@PageData["position"].PositionID">Edit Estimate Profile</a>
             <div class="job-actions">
                 <a class="button go" href="#">Edit</a>
                 <a class="button go" href="#">Publish</a>

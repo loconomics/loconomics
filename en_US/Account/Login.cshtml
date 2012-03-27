@@ -40,7 +40,7 @@
             rememberMe = Request.Form["rememberMe"].AsBool();
         
             if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
-                Response.Redirect("~/en_US/account/AccountLockedOut");
+                Response.Redirect("~/en_US/account/AccountLockedOut/");
                 return;
             }
 
@@ -106,8 +106,8 @@
         </fieldset>
     </form>
     <p>
-        <a href="@Href("~/en_US/Account/Register")">Don't have a Account?</a>
-        <a href="@Href("~/en_US/Account/ForgotPassword")">Did you forget your password?</a>
+        <a href="@Href("~/en_US/Account/Register/")">Don't have a Account?</a>
+        <a href="@Href("~/en_US/Account/ForgotPassword/")">Did you forget your password?</a>
     </p>
 </section>
 
