@@ -567,7 +567,8 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; margin-top: 100px; }
 .home form fieldset { margin: .5em 0; }
-.home form fieldset #serviceDate { width: 120px; }
+.home form fieldset #serviceDate { width: 100px; }
+.home form fieldset label.serviceDate { padding-left: 0; }
 .home button { font-weight: bold; }
 .home input {
     height: 1.9em;
