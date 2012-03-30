@@ -15,6 +15,12 @@
 @helper menu(string item){
     @(DashboardFunctions.CssCurrent(item, PageData["menu-item"]))
 }
+@functions{
+    bool IsCurrentUserAProvider(){
+        var db = Database.Open("sqlloco");
+        return ((int)db.QueryValue("EXEC IsUserAProvider @0", WebSecurity.CurrentUserId) == 1);
+    }
+}
 <!doctype html>
     <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="en"> <![endif]-->
     <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="en"> <![endif]-->
@@ -169,14 +175,17 @@
 							<a href="@Href("~/en_US/Account/Logout/")">Logout</a>
 						</dd>
 					</dl>
-				</li> 
+				</li>
+               if (!IsCurrentUserAProvider()){
 			   <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
+               }
 } else {
             <li class="new-user">
                 <a class="launch-modal" href="@Href("~/en_US/Account/Register/")">Sign Up</a> | 
                 <a id="loginButton" href="@Href("~/en_US/Account/Login/")">Login</a> | 
                 <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks/")">How it works</a>
             </li>
+			<li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
 }
 				<li>
 					<dl class="lang-country">

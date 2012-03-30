@@ -11,6 +11,12 @@
            }
     }
 }
+@functions{
+    bool IsCurrentUserAProvider(){
+        var db = Database.Open("sqlloco");
+        return ((int)db.QueryValue("EXEC IsUserAProvider @0", WebSecurity.CurrentUserId) == 1);
+    }
+}
 <!doctype html>
     <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="en"> <![endif]-->
     <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="en"> <![endif]-->
@@ -86,7 +92,7 @@
 			    <ul>
 				    <li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
                     @if (WebSecurity.IsAuthenticated) {
-			            <li>  
+			            <li>
 					        <dl class="user-nav">
 						        <dt class="fancy">Hi, @WebSecurity.CurrentUserName! &#x25BC;</dt>
 						        <dd>
@@ -99,13 +105,16 @@
 						        </dd>
 					        </dl>
 				        </li>
+                        if (!IsCurrentUserAProvider()){
 			            <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
+                        }
                     } else {
                         <li class="new-user">
                             <a class="launch-modal" href="@Href("~/en_US/Account/Register/")">Sign Up</a> | 
                             <a id="loginButton" href="@Href("~/en_US/Account/Login/")">Login</a> | 
                             <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks/")">How it works</a>
                         </li>
+                        <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
                     }
 				    <li>
 					    <dl class="lang-country">
