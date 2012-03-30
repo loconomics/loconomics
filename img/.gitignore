@@ -2,3 +2,4 @@
 *.jpg
 *.png
 *.gif
+!search-categories/*.*
