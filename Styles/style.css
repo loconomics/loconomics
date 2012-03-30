@@ -547,8 +547,13 @@ header dl:hover dd { display: block; }
 header dl dd a { display: block; }
 header dl dd a:hover { text-decoration: underline; }
 
-footer { margin: 25px auto; font-size: .9em; color: #a1a1a1; text-align: center; }
-footer a { text-decoration: none; color: #a1a1a1; }
+footer { margin: 25px auto; font-size: 1.3em; color: #a1a1a1; text-align: center; }
+footer a{
+    color: #A1A1A1;
+    font-weight: bold;
+    margin: 0 10px;
+    text-decoration: none;    
+}
 footer a:hover { text-decoration: underline; color: #a1a1a1; }
 
 /* Super-Specific */
@@ -597,9 +602,9 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
 .home #secondary .video img { width: 352px; }
 
-.home footer {
+/*.home footer {
     font-size: 1.4em;
-}
+}*/
 .home #container {
     padding-bottom: 0;
 }
