@@ -138,9 +138,9 @@ $(document).ready(function () {
     });
 
     // Date Picker
-    //$('.date-pick').datePicker().val(new Date().asString()).trigger('change');
+    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
     $(".date-pick")
-        .val(new Date().asString())
+        .val(new Date().asString($.datepicker._defaults.dateFormat))
         .datepicker({
             showOn: "button",
             buttonImage: "",
