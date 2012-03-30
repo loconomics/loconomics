@@ -276,13 +276,13 @@ html.ie #booking-services .special-instructions legend{
     width: 200px;
 }
 #booking-payment .billing-info .city input{
-    width: 294px;
+    width: 287px;
 }
 .ie #booking-payment .billing-info .city input{
     width: 288px;
 }
 #booking-payment .billing-info .state select{
-    width: 150px;
+    width: 145px;
 }
 .ie #booking-payment .billing-info .state select{
     width: 147px;
