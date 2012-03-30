@@ -189,11 +189,11 @@ html.ie #booking-services .special-instructions legend{
     right: 0;
     margin-right: 0;
 }
-#booking-schedule a.dp-choose-date{
+#booking-schedule img.ui-datepicker-trigger{
     bottom: 2px;
     position: absolute;
-    right: 4px;
-    vertical-align: bottom;
+    right: 29px;
+    left: auto;
 }
 
 /** Form: Payment **/

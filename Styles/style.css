@@ -603,7 +603,7 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home #container {
     padding-bottom: 0;
 }
-.home .dp-choose-date {
+.home img.ui-datepicker-trigger {
     /* Moving image inside the textbox -ever in his left- */
     left: -30px;
     position: relative;
@@ -679,7 +679,22 @@ table.jCalendar td.unselectable.dp-hover{background:#bbb;color:#888;}
 
 /* For the date-picker popup */
 
-a.dp-choose-date{display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;}
+img.ui-datepicker-trigger
+{
+    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;
+}
+img.ui-datepicker-trigger{
+    bottom: 0;
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    vertical-align: bottom;
+}
+#ui-datepicker-div
+{
+    font-size: .9em;
+}
+
 div.dp-popup{position:relative;background:#efefef;font-size:10px;font-family:arial,sans-serif;padding:2px;width:171px;line-height:1.2em;}
 div#dp-popup{position:absolute;z-index:199;}
 div.dp-popup h2{font-size:12px;text-align:center;margin:2px 0;padding:0;}
@@ -696,7 +711,6 @@ div.dp-popup div.dp-nav-next a{float:right;}
 div.dp-popup a.disabled{cursor:default;color:#aaa;}
 div.dp-popup td{cursor:pointer;}
 div.dp-popup td.disabled{cursor:default;}
-
 
 /* My own personal "non-semantic helper classes" */
 

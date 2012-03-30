@@ -193,12 +193,7 @@ ul.search-results table td { padding-right: 16px; }*/
 #refine-results .actions .button{
     font-size: .9em;
 }
-#refine-results .dp-choose-date{
-    bottom: 0;
-    left: -30px;
-    margin-right: -24px;
-    position: relative;
-    vertical-align: bottom;
+#refine-results img.ui-datepicker-trigger{
 }
 
 /************************/
