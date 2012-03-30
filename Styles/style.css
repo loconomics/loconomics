@@ -621,17 +621,17 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home .serviceDate {
     color: #5ebebf;
 }
-.home .categories { height: 120px; }
-.home .categories ul { overflow: hidden; }
+.home .categories { height: 184px; text-align: center; margin-bottom: 40px; }
+.home .categories ul { overflow: hidden; display: inline-block; }
 .home .categories h3 { text-align: center; }
 
-.categories { margin: 0 auto; width: 900px; height: 250px; }
+.categories { margin: 0 auto; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
 .categories > ul { margin: 100px 0 0 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
 .categories ul:first-child > li { float: left; margin-right: 3px; }
-.categories ul:first-child > li:first-child { width: 150px; text-align: right; }
-.categories ul:first-child > li:first-child h3 { margin: 14px; font-size: 24px; }
+.categories ul:first-child > li:first-child { width: 140px; text-align: right; }
+.categories ul:first-child > li:first-child h3 { margin: 14px 14px 14px 0; font-size: 24px; }
 .categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }
