@@ -512,7 +512,7 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
 header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
-header a, header a:link, header a:visited { color: #00989a; text-decoration: none; }
+header a, header a:link, header a:visited { color: #00989a; text-decoration: none; font-weight: bold; }
 header a.button { color: #fff; }
 header .new-user a { margin: 0 .5em; }
 header .new-user a:hover { color: #99C027; }
@@ -566,7 +566,7 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
     font-size: 1.2em;
 }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; margin-top: 100px; }
-.home form fieldset { margin: .5em 0; }
+.home form fieldset { margin: .5em 0; color: #00989A; }
 .home form fieldset #serviceDate { width: 90px; }
 .home form fieldset label.serviceDate { padding-left: 0; }
 .home button { font-weight: bold; }
