@@ -6,3 +6,13 @@
 @helper CountryOptions(){
     <option value="ca">California</option>
 }
+@functions{
+    public static void ReturnJsonResult(int code, string errorMessage)
+    {
+        Response.ContentType = "application/json";
+        Json.Write(new Dictionary<string, object>(){
+            { "Result", code }, { "ErrorMessage", errorMessage } 
+        }, Response.Output);
+        Response.End();
+    }
+}

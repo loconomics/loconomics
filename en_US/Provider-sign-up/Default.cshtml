@@ -9,18 +9,18 @@
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We’re glad you’re here</p>
         
-		<ul class="tabs autofill-submenu-items">
+		<ul class="tabs">
 			<li class="current"><a class="current" href="#create-a-login">Create a Login</a></li>
-			<li><a href="#your-work">Your Work</a></li>
-            <li><a href="#next-steps">Next Steps</a></li>
+			<li><a class="disabled" href="#your-work">Your Work</a></li>
+            <li><a class="disabled" href="#next-steps">Next Steps</a></li>
         </ul>
         
 		<div id="create-a-login" class="tab-body fancy current">
-            @RenderPage("_Create-a-login.cshtml")
+            @RenderPage("$Create-a-login.cshtml")
 		</div><!-- #create-a-login -->
 
 		<div id="your-work" class="tab-body fancy">
-            @RenderPage("_Your-work.cshtml")
+            @RenderPage("$Your-work.cshtml")
 		</div><!-- #your-work -->
 
 		<div id="next-steps" class="tab-body fancy">

@@ -1280,3 +1280,10 @@ fieldset.has-confirm.confirmed-no > legend{
 .availability-calendar .calendar-legend li.unavailable .color{
     background-color: white;
 }
+
+/*******************
+ *** validation ****/
+.validation-summary-errors
+{
+    color: Red;
+}

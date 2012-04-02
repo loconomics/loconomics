@@ -156,7 +156,9 @@ $(document).ready(function () {
 
         // Switch body when tab clicked
         $parent.children('.tabs').find('a').click(function () {
-            if ($(this).hasClass('current')) { return false; }
+            if ($(this).hasClass('current') ||
+                $(this).hasClass('disabled'))
+                return false;
             else {
                 $parent.children('.tabs').find('li, a').removeClass('current');
                 $parent.children('.tab-body').removeClass('current');

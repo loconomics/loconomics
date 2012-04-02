@@ -100,7 +100,8 @@
                     
                         db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",userid,firstname,lastname,zipcode, lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
                         
-                        //Response.Redirect("~/en_US/");
+                        // We return a json with result OK (=0), and response end just after this:
+                        CommonHelpers.ReturnJsonResult(0, "");
                     }
                 } catch (System.Web.Security.MembershipCreateUserException e) {
                     ModelState.AddFormError(e.Message);
@@ -117,8 +118,9 @@
  </p>
  <form method="post" id="provider-sign-up-create-a-login">
      @* If at least one validation error exists, notify the user *@
-   @Html.ValidationSummary("Please correct the errors and try again.")
-    
+    @if(IsPost && !Validation.IsValid()){ 
+        <text>@Html.ValidationSummary("Please correct the errors and try again.") </text>
+    }
     <fieldset class="login-data">
          <legend>Contact Information:</legend>
          <ul>
@@ -225,6 +227,6 @@
          </ul>
      </fieldset>
      <fieldset class="actions">
-        <button type="submit" class="next">Continue</button>
+        <button type="submit" data-submit-step="#your-work" class="next">Continue</button>
      </fieldset>
 </form>
