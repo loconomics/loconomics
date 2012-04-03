@@ -71,7 +71,7 @@
 <p class="info">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
 </p>
-<form action="#" method="post" id="provider-sign-up-your-work" class="your-work">
+<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work">
     <fieldset class="select-position">
         <legend>Select position:</legend>
         <select name="select-position">
@@ -148,6 +148,6 @@
         </div>
     </fieldset>
     <fieldset class="actions">
-        <button data-next-step="#next-steps" class="next">Continue</button>
+        <button data-wizard-next-step="#next-steps" class="next">Continue</button>
     </fieldset>
 </form>
