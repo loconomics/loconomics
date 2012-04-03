@@ -299,6 +299,8 @@ $(document).ready(function () {
             currentStep.block(loadingBlock);
         }, 600);
 
+        var ok = false;
+
         // Do the Ajax post
         $.ajax({
             url: (form.attr('action') || ''),
@@ -310,20 +312,23 @@ $(document).ready(function () {
                     if (data.Result == 0) {
                         // If there is next-step
                         if (nextStep) {
-                            $(nextStep).trigger('beginLoadWizardStep');
                             // If next step is internal url (a next wizard tab)
                             if (/^#/.test(nextStep)) {
+                                $(nextStep).trigger('beginLoadWizardStep');
+
                                 // Disabling the current step:
                                 $('.tabs > li.current', wizard).addClass('disabled');
                                 // Enabling the next step tab and showing it:
                                 var a = $('.tabs > li > a[href=' + nextStep + ']', wizard);
                                 a.parent().removeClass('disabled');
                                 a.click();
+
+                                ok = true;
+                                $(nextStep).trigger('endLoadWizardStep');
                             } else {
                                 // If there is a next-step URI that is not internal link, we load it
                                 window.location = nextStep;
                             }
-                            $(nextStep).trigger('endLoadWizardStep');
                         }
                     } else {
                         alert(data.ErrorMessage);
@@ -344,11 +349,13 @@ $(document).ready(function () {
                 } else
                     m = m + "; " + ex;
 
-                currentStep.block(errorBlock(m, null, popupStyle(size)))
-                    .click(function () { $(this).unblock() });
+                // Block all window, not only currentStep
+                $.blockUI(errorBlock(m, null, popupStyle(size)));
+                $('.blockUI').click(function () { $.unblockUI() });
+                currentStep.unblock();
             },
-            complete: function(){
-                currentStep.trigger('endSubmitWizardStep');
+            complete: function () {
+                currentStep.trigger('endSubmitWizardStep', ok);
             }
         });
         return false;

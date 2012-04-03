@@ -1,17 +1,20 @@
 ﻿@{
-
-    var db = Database.Open("sqlloco");
-
-    var UserID = WebSecurity.CurrentUserId;
-    var PositionID = Request.QueryString["positionid"]; 
-    var LanguageID = 1;
-    var CountryID = 1;
-    var ErrorMessage = "start";
-    var theDate = DateTime.Now.ToString("yyyy-MM-dd");
-
+    PageData["PositionID"] = 0;
+    
     if (IsPost)
     {
+        var db = Database.Open("sqlloco");
+        var UserID = WebSecurity.CurrentUserId;
+        var LanguageID = 1;
+        var CountryID = 1;
+        var ErrorMessage = "start";
+        var theDate = DateTime.Now.ToString("yyyy-MM-dd");
 
+        var PositionID = Request.Form["select-position"];
+        try{
+            PageData["PositionID"] = int.Parse(PositionID);
+        }catch{}
+        
         var ADD_Details = Request.Form["ADD_Details"];
         var ADD_minTime = Request.Form["ADD_minTime"];
         var ADD_maxTime = Request.Form["ADD_maxTime"];
@@ -29,7 +32,7 @@
         if (WebSecurity.IsAuthenticated)
         {
 
-            var Results = db.QuerySingle(sqlinsertPosition, UserID, 14, LanguageID, CountryID, theDate, theDate, "sys", 1);
+            var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 1);
 
             if (Results.Result != "Success")
             {
@@ -72,8 +75,9 @@
     var db = Database.Open("sqlloco");
     var sql = "SELECT distinct PositionSingular, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1 ORDER BY PositionSingular";
     var data = db.Query(sql, "%");
+    int PositionID = PageData["PositionID"];
     foreach (var row in data){
-        <option value="@row.PositionID">@row.PositionSingular</option>
+        <option value="@row.PositionID" @(row.PositionID == PositionID ? "selected" : "" )>@row.PositionSingular</option>
     }
 }
 <p class="info">
