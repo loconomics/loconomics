@@ -63,7 +63,7 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /***********************/
 /*** search categories */
-.search-categories{
+.search .search-categories{
     margin-bottom: 10px;
     padding-bottom: 15px;
     border-bottom: 2px solid #999;
@@ -96,28 +96,39 @@ ul.search-results table td { padding-right: 16px; }*/
     float: left;
     margin: 0 1px;
 }
+.search-categories ul li h3{
+    text-indent: 0;
+}
 .search-categories ul li a{
     width: 84px;
     height: 84px;
     display: block;
 }
-.search-categories li.cat-home{             background-image: url('../img/splash-icon-home.gif');}
-.search-categories li.cat-child{            background-image: url('../img/splash-icon-child.gif');}
-.search-categories li.cat-pets{             background-image: url('../img/splash-icon-pets.gif');}
-.search-categories li.cat-people{           background-image: url('../img/splash-icon-people.gif');}
-.search-categories li.cat-transport{        background-image: url('../img/splash-icon-transport.gif');}
-.search-categories li.cat-business{         background-image: url('../img/splash-icon-business.gif');}
-.search-categories li.cat-elderly{          background-image: url('../img/splash-icon-elderly.gif');}
-.search-categories li.cat-celebrations{     background-image: url('../img/splash-icon-celebrations.gif'); }
+.search-categories li.cat-home{             background-image: url('../img/search-categories/icon-home.gif');}
+.search-categories li.cat-child{            background-image: url('../img/search-categories/icon-child.gif');}
+.search-categories li.cat-pets{             background-image: url('../img/search-categories/icon-pets.gif');}
+.search-categories li.cat-people{           background-image: url('../img/search-categories/icon-people.gif');}
+.search-categories li.cat-transport{        background-image: url('../img/search-categories/icon-transport.gif');}
+.search-categories li.cat-business{         background-image: url('../img/search-categories/icon-business.gif');}
+.search-categories li.cat-elderly{          background-image: url('../img/search-categories/icon-elderly.gif');}
+.search-categories li.cat-celebrations{     background-image: url('../img/search-categories/icon-celebrations.gif'); }
 /* Selected image */
-.search-categories li.selected.cat-home{             background-image: url('../img/splash-icon-home-on.gif');}
-.search-categories li.selected.cat-child{            background-image: url('../img/splash-icon-child-on.gif');}
-.search-categories li.selected.cat-pets{             background-image: url('../img/splash-icon-pets-on.gif');}
-.search-categories li.selected.cat-people{           background-image: url('../img/splash-icon-people-on.gif');}
-.search-categories li.selected.cat-transport{        background-image: url('../img/splash-icon-transport-on.gif');}
-.search-categories li.selected.cat-business{         background-image: url('../img/splash-icon-business-on.gif');}
-.search-categories li.selected.cat-elderly{          background-image: url('../img/splash-icon-elderly-on.gif');}
-.search-categories li.selected.cat-celebrations{     background-image: url('../img/splash-icon-celebrations-on.gif'); }
+.search-categories li.selected.cat-home,
+.search-categories li.cat-home:hover{             background-image: url('../img/search-categories/icon-home-on.gif');}
+.search-categories li.selected.cat-child,
+.search-categories li.cat-child:hover{            background-image: url('../img/search-categories/icon-child-on.gif');}
+.search-categories li.selected.cat-pets,
+.search-categories li.cat-pets:hover{             background-image: url('../img/search-categories/icon-pets-on.gif');}
+.search-categories li.selected.cat-people,
+.search-categories li.cat-people:hover{           background-image: url('../img/search-categories/icon-people-on.gif');}
+.search-categories li.selected.cat-transport,
+.search-categories li.cat-transport:hover{        background-image: url('../img/search-categories/icon-transport-on.gif');}
+.search-categories li.selected.cat-business,
+.search-categories li.cat-business:hover{         background-image: url('../img/search-categories/icon-business-on.gif');}
+.search-categories li.selected.cat-elderly,
+.search-categories li.cat-elderly:hover{          background-image: url('../img/search-categories/icon-elderly-on.gif');}
+.search-categories li.selected.cat-celebrations,
+.search-categories li.cat-celebrations:hover{     background-image: url('../img/search-categories/icon-celebrations-on.gif'); }
 
 /********************************************/
 /*** generic buttons-list class *************/
@@ -193,12 +204,7 @@ ul.search-results table td { padding-right: 16px; }*/
 #refine-results .actions .button{
     font-size: .9em;
 }
-#refine-results .dp-choose-date{
-    bottom: 0;
-    left: -30px;
-    margin-right: -24px;
-    position: relative;
-    vertical-align: bottom;
+#refine-results img.ui-datepicker-trigger{
 }
 
 /************************/

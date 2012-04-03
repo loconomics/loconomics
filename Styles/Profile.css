@@ -133,7 +133,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     color: #461864;
     margin: 0;
     font-size: 1.4em;
-    /*font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS";*/
+    font-family: Hand Of Sean, Arial, sans-serif;
 }
 #profileHeader p{
     color: #999;

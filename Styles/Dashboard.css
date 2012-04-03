@@ -711,12 +711,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 
 /** Dashboard date picker **/
-.dashboard a.dp-choose-date{
-    bottom: 1px;
-    left: -30px;
-    margin-right: -24px;
-    position: relative;
-    vertical-align: bottom;
+.dashboard img.ui-datepicker-trigger{
 }
 
 /** Generic help-point class with specific

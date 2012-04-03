@@ -4,6 +4,41 @@
 @import url('Dashboard.css');
 @import url('Booking.css');
 
+@font-face {
+    font-family: 'Hand Of Sean';
+    src: url('fonts/handsean.otf');
+    src: url('fonts/handsean.eot');
+    src: url('fonts/handsean.eot?#iefix') format('embedded-opentype'),
+         url('fonts/handsean.woff') format('woff'),
+         url('fonts/handsean.ttf') format('truetype'),
+         url('fonts/handsean.svgz#HandOfSeanRegular') format('svg'),
+         url('fonts/handsean.svg#HandOfSeanRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Alte Haas Grotesk';
+    src: url('fonts/altehaasgroteskregular.eot');
+    src: url('fonts/altehaasgroteskregular.eot?#iefix') format('embedded-opentype'),
+         url('fonts/altehaasgroteskregular.woff') format('woff'),
+         url('fonts/altehaasgroteskregular.ttf') format('truetype'),
+         url('fonts/altehaasgroteskregular.svgz#AlteHaasGroteskRegular') format('svg'),
+         url('fonts/altehaasgroteskregular.svg#AlteHaasGroteskRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Alte Haas Grotesk';
+    src: url('fonts/altehaasgroteskbold.eot');
+    src: url('fonts/altehaasgroteskbold.eot?#iefix') format('embedded-opentype'),
+         url('fonts/altehaasgroteskbold.woff') format('woff'),
+         url('fonts/altehaasgroteskbold.ttf') format('truetype'),
+         url('fonts/altehaasgroteskbold.svgz#AlteHaasGroteskBold') format('svg'),
+         url('fonts/altehaasgroteskbold.svg#AlteHaasGroteskBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
 /*
  * HTML5 ✰ Boilerplate
  *
@@ -168,7 +203,7 @@ Orange 	#E95D0F
 Yellow 	#F0B600
 */
 
-body { color: #666; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
+body { color: #666; font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
 
 a { color: #00989a; }
 a:visited { color: #999999; }
@@ -512,7 +547,7 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
 header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
-header a, header a:link, header a:visited { color: #00989a; text-decoration: none; }
+header a, header a:link, header a:visited { color: #00989a; text-decoration: none; font-weight: bold; }
 header a.button { color: #fff; }
 header .new-user a { margin: 0 .5em; }
 header .new-user a:hover { color: #99C027; }
@@ -547,8 +582,13 @@ header dl:hover dd { display: block; }
 header dl dd a { display: block; }
 header dl dd a:hover { text-decoration: underline; }
 
-footer { margin: 25px auto; font-size: .9em; color: #a1a1a1; text-align: center; }
-footer a { text-decoration: none; color: #a1a1a1; }
+footer { margin: 25px auto; font-size: 1.3em; color: #a1a1a1; text-align: center; }
+footer a{
+    color: #A1A1A1;
+    font-weight: bold;
+    margin: 0 10px;
+    text-decoration: none;    
+}
 footer a:hover { text-decoration: underline; color: #a1a1a1; }
 
 /* Super-Specific */
@@ -566,8 +606,9 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
     font-size: 1.2em;
 }
 .home #main h1 { margin-bottom: 20px; padding-right: 15px; margin-top: 100px; }
-.home form fieldset { margin: .5em 0; }
-.home form fieldset #serviceDate { width: 120px; }
+.home form fieldset { margin: .5em 0; color: #00989A; }
+.home form fieldset #serviceDate { width: 90px; }
+.home form fieldset label.serviceDate { padding-left: 0; }
 .home button { font-weight: bold; }
 .home input {
     height: 1.9em;
@@ -596,13 +637,13 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
 .home #secondary .video img { width: 352px; }
 
-.home footer {
+/*.home footer {
     font-size: 1.4em;
-}
+}*/
 .home #container {
     padding-bottom: 0;
 }
-.home .dp-choose-date {
+.home img.ui-datepicker-trigger {
     /* Moving image inside the textbox -ever in his left- */
     left: -30px;
     position: relative;
@@ -615,17 +656,17 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home .serviceDate {
     color: #5ebebf;
 }
-.home .categories { height: 120px; }
-.home .categories ul { overflow: hidden; }
+.home .categories { height: 184px; text-align: center; margin-bottom: 40px; }
+.home .categories ul { overflow: hidden; display: inline-block; }
 .home .categories h3 { text-align: center; }
 
-.categories { margin: 0 auto; width: 900px; height: 250px; }
+.categories { margin: 0 auto; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
 .categories > ul { margin: 100px 0 0 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
 .categories ul:first-child > li { float: left; margin-right: 3px; }
-.categories ul:first-child > li:first-child { width: 150px; text-align: right; }
-.categories ul:first-child > li:first-child h3 { margin: 14px; font-size: 24px; }
+.categories ul:first-child > li:first-child { width: 140px; text-align: right; }
+.categories ul:first-child > li:first-child h3 { margin: 14px 14px 14px 0; font-size: 24px; }
 .categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }
@@ -678,7 +719,22 @@ table.jCalendar td.unselectable.dp-hover{background:#bbb;color:#888;}
 
 /* For the date-picker popup */
 
-a.dp-choose-date{display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;}
+img.ui-datepicker-trigger
+{
+    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;
+}
+img.ui-datepicker-trigger{
+    bottom: 0;
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    vertical-align: bottom;
+}
+#ui-datepicker-div
+{
+    font-size: .9em;
+}
+
 div.dp-popup{position:relative;background:#efefef;font-size:10px;font-family:arial,sans-serif;padding:2px;width:171px;line-height:1.2em;}
 div#dp-popup{position:absolute;z-index:199;}
 div.dp-popup h2{font-size:12px;text-align:center;margin:2px 0;padding:0;}
@@ -695,7 +751,6 @@ div.dp-popup div.dp-nav-next a{float:right;}
 div.dp-popup a.disabled{cursor:default;color:#aaa;}
 div.dp-popup td{cursor:pointer;}
 div.dp-popup td.disabled{cursor:default;}
-
 
 /* My own personal "non-semantic helper classes" */
 
