@@ -101,4 +101,8 @@ public static class UrlUtil
         };
         return System.Web.Helpers.Json.Encode(d);
     }
+    public static string ToJsVar()
+    {
+        return "var UrlUtil = " + ToJson() + ";";
+    }
 }
