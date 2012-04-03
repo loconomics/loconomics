@@ -68,6 +68,14 @@
                 }
             </fieldset>
 }
+@helper printPositions(){
+    var db = Database.Open("sqlloco");
+    var sql = "SELECT distinct PositionSingular, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1 ORDER BY PositionSingular";
+    var data = db.Query(sql, "%");
+    foreach (var row in data){
+        <option value="@row.PositionID">@row.PositionSingular</option>
+    }
+}
 <p class="info">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
 </p>
@@ -76,6 +84,7 @@
         <legend>Select position:</legend>
         <select name="select-position">
             <option value="">__Select a Position__</option>
+            @printPositions()
         </select>
     </fieldset>
     <fieldset class="select-attributes">

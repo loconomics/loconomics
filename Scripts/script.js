@@ -2,9 +2,9 @@
 
 /* Generic blockUI options sets */
 var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
-var errorBlock = function (error, reload) {
+var errorBlock = function (error, reload, style) {
     return {
-        css: { cursor: 'default' },
+        css: $.extend({ cursor: 'default' }, style || {}),
         message: 'There was an error'
             + (error ? ': ' + error : '')
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
@@ -291,22 +291,26 @@ $(document).ready(function () {
         // getting the wizard-next-step
         var nextStep = $(this).data('wizard-next-step');
 
+        // Raise event
+        currentStep.trigger('beginSubmitWizardStep');
+
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
             currentStep.block(loadingBlock);
         }, 600);
 
         // Do the Ajax post
-        $.post(
-            (form.attr('action') || ''),
-            form.serialize(),
-        // On success:
-            function (data, text, jx) {
+        $.ajax({
+            url: (form.attr('action') || ''),
+            type: 'POST',
+            data: form.serialize(),
+            success: function (data, text, jx) {
                 // If is a JSON result:
                 if (typeof (data) === 'object') {
                     if (data.Result == 0) {
                         // If there is next-step
                         if (nextStep) {
+                            $(nextStep).trigger('beginLoadWizardStep');
                             // If next step is internal url (a next wizard tab)
                             if (/^#/.test(nextStep)) {
                                 // Disabling the current step:
@@ -319,6 +323,7 @@ $(document).ready(function () {
                                 // If there is a next-step URI that is not internal link, we load it
                                 window.location = nextStep;
                             }
+                            $(nextStep).trigger('endLoadWizardStep');
                         }
                     } else {
                         alert(data.ErrorMessage);
@@ -330,8 +335,22 @@ $(document).ready(function () {
                 // Disable loading
                 clearTimeout(loadingtimer);
                 currentStep.unblock();
+            },
+            error: function (jx, message, ex) {
+                var m = message;
+                if (m == 'error') {
+                    size = popupSize('large');
+                    m = '<iframe src="data:text/html,' + encodeURI(jx.responseText) + '" width="' + size.width + '" height="' + size.height + '"></iframe>';
+                } else
+                    m = m + "; " + ex;
+
+                currentStep.block(errorBlock(m, null, popupStyle(size)))
+                    .click(function () { $(this).unblock() });
+            },
+            complete: function(){
+                currentStep.trigger('endSubmitWizardStep');
             }
-        );
+        });
         return false;
     });
 
@@ -378,35 +397,44 @@ $(document).ready(function () {
 });
 
 /* Popup function */
+function popupSize(size) {
+    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
+    return {
+        width: Math.round($(window).width() * s),
+        height: Math.round($(window).height() * s),
+        sizeFactor: s
+    }
+}
+function popupStyle(size) {
+    return {
+        cursor: 'default',
+        width: size.width + 'px',
+        left: Math.round($(window).width() * (1 - size.sizeFactor) / 2) - 30 + 'px',
+        height: size.height + 'px',
+        top: Math.round($(window).height() * (1 - size.sizeFactor) / 2) - 30 + 'px',
+        padding: '25px',
+        overflow: 'auto',
+        border: '5px solid #b5e1e2',
+        '-moz-border-radius': '12px',
+        '-webkit-border-radius': '12px',
+        'border-radius': '12px',
+        '-moz-background-clip': 'padding',
+        '-webkit-background-clip': 'padding-box',
+        'background-clip': 'padding-box'
+    };
+}
 function popup(url, size){
     // Native popup
     //window.open(url);
     
     // Smart popup
-    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5 )));
-    var width = Math.round($(window).width() * s);
-    var height = Math.round($(window).height() * s);
+    swh = popupSize(size);
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
        message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>',
        centerY: false,
-       css: {
-           cursor: 'default',
-           width: width + 'px',
-           left: Math.round($(window).width() * (1-s)/2) - 30 + 'px',
-           height: height + 'px',
-           top: Math.round($(window).height() * (1-s)/2) - 30 + 'px',
-           padding: '25px',
-           overflow: 'auto',
-           border: '5px solid #b5e1e2',
-           '-moz-border-radius': '12px',
-           '-webkit-border-radius': '12px',
-           'border-radius': '12px',
-           '-moz-background-clip': 'padding',
-           '-webkit-background-clip': 'padding-box',
-           'background-clip': 'padding-box'
-       },
+       css: popupStyle(size),
        overlayCSS: { cursor: 'default' }
     });
 
@@ -422,7 +450,7 @@ function popup(url, size){
         });
     } else {
         // If is full html url, is loaded inside an iframe
-        var iframe = $('<iframe width="' + width + '" height="' + height + '" style="border:none;"></iframe>');
+        var iframe = $('<iframe width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>');
         // When the iframe is loaded, the loading image is removed and iframe showed
         iframe.bind('load', function () {
             $('div.blockMsg').children('img').remove();

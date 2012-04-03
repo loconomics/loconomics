@@ -3,8 +3,7 @@ var public = {
     loadPositions: function(){}
 };
 
-$(document).ready(function () {
-
+function initYourWork(){
     /* ============
     *  Your Work
     */
@@ -160,11 +159,14 @@ $(document).ready(function () {
     }
 
     // Positions Load:
-    loadPositions();
+    //loadPositions();
 
     // First Attributes Load:
     $.proxy(loadAttributes, jSelectPosition.get(0))();
 
     // Auto post back when select a position:
     jSelectPosition.change(loadAttributes);
-});
+};
+
+//$(document).ready(initYourWork);
+$("#your-work").bind('endLoadWizardStep', initYourWork);
