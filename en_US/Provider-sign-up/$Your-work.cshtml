@@ -8,25 +8,25 @@
     var CountryID = 1;
     var ErrorMessage = "start";
     var theDate = DateTime.Now.ToString("yyyy-MM-dd");
-    
-    var ADD_Details = Request.Form["ADD_Details"];
-    var ADD_minTime = Request.Form["ADD_minTime"];
-    var ADD_maxTime = Request.Form["ADD_maxTime"];
-    var ADD_minBetween = Request.Form["ADD_minBetween"];
-    var ADD_experience = Request.Form["ADD_experience"];
-    var ADD_travelRadius = Request.Form["ADD_travelRadius"];
-    var ADD_Personal = Request.Form["ADD_Personal"];
-    var ADD_Public = Request.Form["ADD_Public"];
-    
-    var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
-    var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
-    var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
 
-
-    if (WebSecurity.IsAuthenticated)
+    if (IsPost)
     {
 
-        if (IsPost)
+        var ADD_Details = Request.Form["ADD_Details"];
+        var ADD_minTime = Request.Form["ADD_minTime"];
+        var ADD_maxTime = Request.Form["ADD_maxTime"];
+        var ADD_minBetween = Request.Form["ADD_minBetween"];
+        var ADD_experience = Request.Form["ADD_experience"];
+        var ADD_travelRadius = Request.Form["ADD_travelRadius"];
+        var ADD_Personal = Request.Form["ADD_Personal"];
+        var ADD_Public = Request.Form["ADD_Public"];
+
+        var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+        var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
+        var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
+
+
+        if (WebSecurity.IsAuthenticated)
         {
 
             var Results = db.QuerySingle(sqlinsertPosition, UserID, 14, LanguageID, CountryID, theDate, theDate, "sys", 1);
@@ -53,10 +53,10 @@
                 CommonHelpers.ReturnJsonResult(0, "");
             }
         }
-    }
-    else
-    {
-        CommonHelpers.ReturnJsonResult(-1, "Un-authenticated");
+        else
+        {
+            CommonHelpers.ReturnJsonResult(-1, "Un-authenticated");
+        }
     }
 }
 @{/* Example c# function of result html code to be produced in javascript */}

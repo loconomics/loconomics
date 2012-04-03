@@ -1,11 +1,5 @@
 /* Author: Loconomics */
 
-/** global vars (uppercase convention) 
- **/
-// Base url to use in links, popups, etc. must be setted
-// by the page or be empty:
-if (!BASE_URL) var BASE_URL = '';
-
 /* Init code */
 $(document).ready(function () {
 
@@ -311,7 +305,7 @@ $(document).ready(function () {
         // or nothing (that means help center main page)
         if (!rurl) rurl = (c.attr('id') ? '?s=' + encodeURIComponent(c.attr('id')) : '');
         // Opening the help center
-        popup(BASE_URL + '/HelpCenter/' + rurl, 'large');
+        popup(UrlUtil.LangPath + 'HelpCenter/' + rurl, 'large');
         // Do not allow browser to open the link url:
         return false;
     });
@@ -327,7 +321,7 @@ function popup(url, size){
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
-       message: '<img src="' + BASE_URL + '/../img/loading.gif"/>',
+       message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>',
        centerY: false,
        css: {
            cursor: 'default',

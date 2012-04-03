@@ -76,6 +76,9 @@
             <!-- #Google Maps-->
 
             @* Our scripts *@
+            <script type="text/javascript">
+                @Html.Raw(UrlUtil.ToJsVar())
+            </script>
             <script src="@Href("~/Scripts/script.js?v=20120330")" type="text/javascript"></script>
 
     <!-- end scripts -->

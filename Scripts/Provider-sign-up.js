@@ -5,7 +5,7 @@ var public = {
 
 $(document).ready(function () {
 
-    var loadingBlock = { message: '<img src="' + BASE_URL + '/../img/loading.gif"/>' };
+    var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
     var errorBlock = function (error, reload) {
         return {
             css: { cursor: 'default' },
@@ -26,7 +26,7 @@ $(document).ready(function () {
         }, 600);
 
         $.post(
-            BASE_URL + '/Provider-sign-up/$Create-a-login/',
+            UrlUtil.LangPath + 'Provider-sign-up/$Create-a-login/',
             $('#provider-sign-up-create-a-login').serialize(),
             function (data, text, jx) {
                 if (typeof (data) === 'object') {
