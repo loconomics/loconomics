@@ -318,6 +318,8 @@ function popup(url, size){
     
     // Smart popup
     var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5 )));
+    var width = Math.round($(window).width() * s);
+    var height = Math.round($(window).height() * s);
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
@@ -325,9 +327,9 @@ function popup(url, size){
        centerY: false,
        css: {
            cursor: 'default',
-           width: Math.round($(window).width() * s) + 'px',
+           width: width + 'px',
            left: Math.round($(window).width() * (1-s)/2) - 30 + 'px',
-           height: Math.round($(window).height() * s) + 'px',
+           height: height + 'px',
            top: Math.round($(window).height() * (1-s)/2) - 30 + 'px',
            padding: '25px',
            overflow: 'auto',
@@ -341,12 +343,29 @@ function popup(url, size){
        },
        overlayCSS: { cursor: 'default' }
     });
-    // Loading Url with Ajax and place content inside the blocked-box
-    $.ajax({url: url, success: function(data){
-        $('div.blockMsg').html(data);
-    }, error: function(j, textStatus){
-        $('div.blockMsg').text('Page not found');
-    }});
+
+    // If url returns partial html (starts with $), is loaded with ajax and embedded in current document
+    if (/((^\$)|(\/\$))/.test(url)) {
+        // Loading Url with Ajax and place content inside the blocked-box
+        $.ajax({ url: url, 
+            success: function (data) {
+                $('div.blockMsg').html(data);
+            }, error: function (j, textStatus) {
+                $('div.blockMsg').text('Page not found');
+            }
+        });
+    } else {
+        // If is full html url, is loaded inside an iframe
+        var iframe = $('<iframe width="' + width + '" height="' + height + '" style="border:none;"></iframe>');
+        // When the iframe is loaded, the loading image is removed and iframe showed
+        iframe.bind('load', function () {
+            $('div.blockMsg').children('img').remove();
+            iframe.show();
+        });
+        // Hide iframe and load the url inside it:
+        iframe.attr('src', url).hide();
+        $('div.blockMsg').append(iframe);
+    }
     
     $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
 }
