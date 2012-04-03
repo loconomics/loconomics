@@ -1,5 +1,16 @@
 /* Author: Loconomics */
 
+/* Generic blockUI options sets */
+var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
+var errorBlock = function (error, reload) {
+    return {
+        css: { cursor: 'default' },
+        message: 'There was an error'
+            + (error ? ': ' + error : '')
+            + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
+    }
+};
+
 /* Init code */
 $(document).ready(function () {
 
@@ -151,7 +162,7 @@ $(document).ready(function () {
         // Switch body when tab clicked
         $parent.children('.tabs').find('a').click(function () {
             if ($(this).hasClass('current') ||
-                $(this).hasClass('disabled'))
+                $(this).parent().hasClass('disabled'))
                 return false;
             else {
                 $parent.children('.tabs').find('li, a').removeClass('current');
@@ -267,6 +278,61 @@ $(document).ready(function () {
                 window.location = step;
             }
         }
+    });
+
+    /* Wizard Tabbed Forms: ajax submit and next-step loading  */
+    $("body").delegate(".tabbed.wizard .next", "click", function () {
+        // getting the form
+        var form = $(this).parents('form').eq(0);
+        // getting the current wizard step-tab
+        var currentStep = form.parents('.tab-body').eq(0);
+        // getting the wizard container
+        var wizard = form.parents('.tabbed.wizard').eq(0);
+        // getting the wizard-next-step
+        var nextStep = $(this).data('wizard-next-step');
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            currentStep.block(loadingBlock);
+        }, 600);
+
+        // Do the Ajax post
+        $.post(
+            (form.attr('action') || ''),
+            form.serialize(),
+        // On success:
+            function (data, text, jx) {
+                // If is a JSON result:
+                if (typeof (data) === 'object') {
+                    if (data.Result == 0) {
+                        // If there is next-step
+                        if (nextStep) {
+                            // If next step is internal url (a next wizard tab)
+                            if (/^#/.test(nextStep)) {
+                                // Disabling the current step:
+                                $('.tabs > li.current', wizard).addClass('disabled');
+                                // Enabling the next step tab and showing it:
+                                var a = $('.tabs > li > a[href=' + nextStep + ']', wizard);
+                                a.parent().removeClass('disabled');
+                                a.click();
+                            } else {
+                                // If there is a next-step URI that is not internal link, we load it
+                                window.location = nextStep;
+                            }
+                        }
+                    } else {
+                        alert(data.ErrorMessage);
+                    }
+                } else {
+                    // Post was wrong, html was returned to replace current form:
+                    currentStep.html(data);
+                }
+                // Disable loading
+                clearTimeout(loadingtimer);
+                currentStep.unblock();
+            }
+        );
+        return false;
     });
 
     /* Generic script for fieldsets with class .has-confirm, allowing show

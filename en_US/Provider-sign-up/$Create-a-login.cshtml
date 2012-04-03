@@ -116,7 +116,7 @@
 <p class="info">
      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
  </p>
- <form method="post" id="provider-sign-up-create-a-login">
+ <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)Provider-sign-up/$Create-a-login/">
      @* If at least one validation error exists, notify the user *@
     @if(IsPost && !Validation.IsValid()){ 
         <text>@Html.ValidationSummary("Please correct the errors and try again.") </text>
@@ -227,6 +227,6 @@
          </ul>
      </fieldset>
      <fieldset class="actions">
-        <button type="submit" data-submit-step="#your-work" class="next">Continue</button>
+        <button data-wizard-next-step="#your-work" class="next">Continue</button>
      </fieldset>
 </form>

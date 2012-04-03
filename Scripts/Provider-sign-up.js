@@ -5,50 +5,6 @@ var public = {
 
 $(document).ready(function () {
 
-    var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
-    var errorBlock = function (error, reload) {
-        return {
-            css: { cursor: 'default' },
-            message: 'There was an error'
-            + (error ? ': ' + error : '')
-            + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
-        }
-    };
-
-    /* ============
-    *  Create a login
-    */
-    $("#create-a-login").delegate("#provider-sign-up-create-a-login", "submit", function () {
-        var tab = $("#create-a-login");
-        // Loading, with retard
-        var loadingtimer = setTimeout(function () {
-            tab.block(loadingBlock);
-        }, 600);
-
-        $.post(
-            UrlUtil.LangPath + 'Provider-sign-up/$Create-a-login/',
-            $('#provider-sign-up-create-a-login').serialize(),
-            function (data, text, jx) {
-                if (typeof (data) === 'object') {
-                    if (data.Result == 0) {
-                        $('.tabbed > .tabs > li > a[href=#your-work]')
-                            .removeClass('disabled').click();
-                        $('.tabbed > .tabs > li > a[href=#create-a-login]')
-                            .addClass('disabled');
-                    } else {
-                        alert('Error: ' + data.ErrorMessage);
-                    }
-                } else {
-                    $('#create-a-login').html(data);
-                }
-                // Disable loading
-                clearTimeout(loadingtimer);
-                tab.unblock();
-            }
-        );
-        return false;
-    });
-
     /* ============
     *  Your Work
     */
