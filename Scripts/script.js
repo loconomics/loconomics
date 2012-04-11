@@ -441,7 +441,7 @@ function popup(url, size){
     $.blockUI({ 
        message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>',
        centerY: false,
-       css: popupStyle(size),
+       css: popupStyle(swh),
        overlayCSS: { cursor: 'default' }
     });
 
