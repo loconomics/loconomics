@@ -5,7 +5,7 @@
     // Redirect back to the homepage or return URL
     var returnUrl = Request.QueryString["ReturnUrl"];
     if (returnUrl.IsEmpty()) {
-        Response.Redirect("~/en_US/");
+        Response.Redirect(UrlUtil.LangPath);
     } else {
         Context.RedirectLocal(returnUrl);
     }
