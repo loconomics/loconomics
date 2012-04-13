@@ -24,8 +24,7 @@
             rememberMe = Request.Form["rememberMe"].AsBool();
         
             if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
-                Response.Redirect("~/en_US/account/AccountLockedOut/");
-                return;
+                CommonHelpers.ReturnJsonResult(0, UrlUtil.LangPath + "account/AccountLockedOut/");
             }
 
             // Attempt to login to the Security object using provided creds
@@ -54,7 +53,7 @@
     UrlUtil.AppPath + "Scripts/jquery.validate.min.js",
     UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js"]);
 
-    $(document).delegate('#loginForm', 'submit', function () {
+    $(document).delegate('#loginForm>form', 'submit', function () {
         var form = $(this);
         var box = $("#loginBox");
 
@@ -88,7 +87,7 @@
                 } else
                     m = m + "; " + ex;
 
-                // Block all window, not only currentStep
+                // Block all window, not only current element
                 $.blockUI(errorBlock(m, null, popupStyle(size)));
                 $('.blockUI').click(function () { $.unblockUI() });
             },

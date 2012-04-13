@@ -1299,7 +1299,7 @@ fieldset.has-confirm.confirmed-no > legend{
     clear: both;
 }
 .choice-or{
-    margin: 20px 0;
+    margin: 16px 0;
     text-align: center;
     color: #6c6c6c;
     font-size: 1.5em;
@@ -1324,6 +1324,15 @@ fieldset.has-confirm.confirmed-no > legend{
     padding: 0;
 }
 
+
+/****************************
+ * Validation, errors styles
+ */
+.field-validation-error{
+    color: Red;
+    display: block;
+}
+
 /*********************/
 /*** LoginBox ********/
 #loginBox{
@@ -1335,6 +1344,7 @@ fieldset.has-confirm.confirmed-no > legend{
 #loginBox fieldset ul{
     padding: 0;
     margin: 0;
+    overflow: hidden;
 }
 #loginBox fieldset ul li{
     margin: 10px 0;
@@ -1346,6 +1356,7 @@ fieldset.has-confirm.confirmed-no > legend{
 }
 #loginBox .remember-me{
     float: left;
+    margin-bottom: 0;
 }
 #loginBox .remember-me label{
     font-size: 1em;
@@ -1356,6 +1367,7 @@ fieldset.has-confirm.confirmed-no > legend{
 #loginBox .actions{
     float: right;
     clear: none;
+    margin-bottom: 0;
 }
 #loginBox .main-button{
     font-size: 1em;
