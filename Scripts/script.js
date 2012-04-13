@@ -29,12 +29,13 @@ $(document).ready(function () {
         }
     });
 
-    // $('#loginButton').click(function() { 
-    //     $('#loginModal').load('../en_US/Account/Login #container',function(){
-    //        $.blockUI({ message: $('#loginModal'), css: { width: '375px' } }); 
-    //     });
-    //     return false;
-    // }); 
+    $('#loginButton').click(function () {
+        /*$('#loginModal').load(UrlUtil.LangPath + 'Account/$Login', function () {
+            $.blockUI({ message: $('#loginModal'), css: { width: '375px'} });
+        });*/
+        popup(UrlUtil.LangPath + 'Account/$Login/', 'medium');
+        return false;
+    });
 
     $('a#launchHowItWorks').click(function (event) {
         event.preventDefault();

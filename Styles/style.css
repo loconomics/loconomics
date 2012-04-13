@@ -1287,3 +1287,95 @@ fieldset.has-confirm.confirmed-no > legend{
 {
     color: Red;
 }
+
+/*************************************
+ * Clases: choice, 
+ * choice-option,
+ * choice-or
+ * For pages with alternative sections
+ */
+.choice{}
+.choice-option{
+    clear: both;
+}
+.choice-or{
+    margin: 20px 0;
+    text-align: center;
+    color: #6c6c6c;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/***********************/
+/** General rules for
+  * content inside the
+  * blockUI popup
+  */
+.blockUI h1{
+    font-size: 2em;
+    color: #6c6c6c;
+    margin: 10px;
+    text-align: center;
+}
+.blockUI form label{
+    color: #6c6c6c;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 0;
+}
+
+/*********************/
+/*** LoginBox ********/
+#loginBox{
+    width: 400px;
+    margin: auto;
+    text-align: left;
+}
+#loginBox fieldset,
+#loginBox fieldset ul{
+    padding: 0;
+    margin: 0;
+}
+#loginBox fieldset ul li{
+    margin: 10px 0;
+    padding: 0;
+}
+#loginBox .username input,
+#loginBox .password input{
+    float: right;
+}
+#loginBox .remember-me{
+    float: left;
+}
+#loginBox .remember-me label{
+    font-size: 1em;
+}
+#loginBox .remember-me input{
+    vertical-align: middle;
+}
+#loginBox .actions{
+    float: right;
+    clear: none;
+}
+#loginBox .main-button{
+    font-size: 1em;
+}
+#loginBox legend{
+    display: none;
+}
+#loginBox .login-tools{
+    font-size: 1.3em;
+    font-weight: bold;
+    clear: both;
+    overflow: hidden;
+    margin: 30px 0 0;
+}
+#loginBox .forgot-password{
+    float: left;
+}
+#loginBox .need-account{
+    float: right;
+}
+#loginBox .social{
+    text-align: center;
+}

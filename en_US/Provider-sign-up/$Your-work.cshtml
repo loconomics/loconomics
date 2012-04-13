@@ -53,12 +53,12 @@
                 db.Execute(sqlInsertAdditional, UserID, PositionID, LanguageID, CountryID, ADD_minTime, ADD_maxTime, ADD_minBetween, ADD_experience, ADD_travelRadius, ADD_Details, ADD_Personal, ADD_Public, "0000000", "000000000000000000000000", "AM", "PST", theDate, theDate);
 
                 // We return a json with result OK (=0), and response end just after this:
-                CommonHelpers.ReturnJsonResult(0, "");
+                CommonHelpers.ReturnJsonError(0, "");
             }
         }
         else
         {
-            CommonHelpers.ReturnJsonResult(-1, "Un-authenticated");
+            CommonHelpers.ReturnJsonError(-1, "Un-authenticated");
         }
     }
 }

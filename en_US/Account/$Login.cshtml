@@ -1,0 +1,151 @@
+﻿@{
+    // Initialize general page variables
+    var username = "";
+    var password = "";
+    var rememberMe = false;
+    
+    if (IsPost){
+        
+        // is this a OAuth sign in request?
+        string provider = Request.Form["provider"];
+        if (!provider.IsEmpty()) {
+            OAuthWebSecurity.RequestAuthentication(provider, UrlUtil.LangPath + "Account/RegisterService/");
+            return;
+        }
+        
+        // Validate the user's username
+        Validation.RequireField("username", "You must specify a user name.");
+        // Validate the user's password
+	    Validation.RequireField("password", "You must specify a password.");
+        
+        if (Validation.IsValid()) {
+            username = Request.Form["username"];
+            password = Request.Form["password"];
+            rememberMe = Request.Form["rememberMe"].AsBool();
+        
+            if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
+                Response.Redirect("~/en_US/account/AccountLockedOut/");
+                return;
+            }
+
+            // Attempt to login to the Security object using provided creds
+            if (WebSecurity.Login(username, password, rememberMe)) {
+                
+                // mark the user as logged in via a normal account,
+                // as opposed to via an OAuth or OpenID provider.
+                Session["OAuthLoggedIn"] = false;
+
+                string redirect = N.W(Request.QueryString["ReturnUrl"])
+                    ?? Request["Redirect"]
+                    ?? UrlUtil.LangPath;
+
+                // We return a json with result OK (=0), redirect link,
+                // and response end just after this:
+                CommonHelpers.ReturnJsonResult(0, redirect);
+            }
+            else {
+                ModelState.AddFormError("Incorrect Username or password.");
+            }
+        }
+    }
+}
+<script type="text/javascript">
+    Modernizr.load([
+    UrlUtil.AppPath + "Scripts/jquery.validate.min.js",
+    UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js"]);
+
+    $(document).delegate('#loginForm', 'submit', function () {
+        var form = $(this);
+        var box = $("#loginBox");
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            box.block(loadingBlock);
+        }, 600);
+
+        // Do the Ajax post
+        $.ajax({
+            url: (form.attr('action') || ''),
+            type: 'POST',
+            data: form.serialize(),
+            success: function (data, text, jx) {
+                // If is a JSON result:
+                if (typeof (data) === 'object') {
+                    if (data.Code == 0)
+                        window.location = data.Result;
+                    else
+                        alert('Error: ' + data.Code + ', ' + data.Result);
+                } else {
+                    // Post was wrong, html was returned to replace current form:
+                    box.html(data);
+                }
+            },
+            error: function (jx, message, ex) {
+                var m = message;
+                if (m == 'error') {
+                    size = popupSize('large');
+                    m = '<iframe src="data:text/html,' + encodeURI(jx.responseText) + '" width="' + size.width + '" height="' + size.height + '"></iframe>';
+                } else
+                    m = m + "; " + ex;
+
+                // Block all window, not only currentStep
+                $.blockUI(errorBlock(m, null, popupStyle(size)));
+                $('.blockUI').click(function () { $.unblockUI() });
+            },
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                box.unblock();
+            }
+        });
+
+        // Stop normal POST:
+        return false;
+    });
+</script>
+<article id="loginBox">
+    <hgroup class="title">
+        <h1>Log in to Loconomics</h1>
+    </hgroup>
+    <section id="loginForm">
+        <form class="choice-option" method="post" action="@(UrlUtil.LangPath)Account/$Login/">
+            @* If one or more validation errors exist, show an error *@
+            @if(IsPost && !Validation.IsValid()){ 
+                Html.ValidationSummary("There was a problem with your login and/or errors exist in your form.");
+            }
+            <fieldset>
+                <legend>Log in to Your Account</legend>
+                <ul>
+                    <li class="username">
+                        <label for="username" @if(!ModelState.IsValidField("username")){<text>class="error-label"</text>}>E-mail address:</label>
+                        <input type="text" id="username" name="username" value="@username" title="Username" @Validation.GetHtml("username")/>
+                        @* Write any username validation errors to the page *@
+                        @Html.ValidationMessage("username")
+                    </li>
+                    <li class="password">
+                        <label for="password" @if(!ModelState.IsValidField("password")){<text>class="error-label"</text>}>Password:</label>
+                        <input type="password" id="password" name="password" title="Password" @Validation.GetHtml("password")/>
+                        @* Write any password validation errors to the page *@
+                        @Html.ValidationMessage("password")
+                    </li>
+                    <li class="remember-me">
+                        <input type="checkbox" id="rememberMe" name="rememberMe" value="true" title="Remember Me" @if (rememberMe) {<text>checked="checked"</text>} />
+                        <label class="checkbox" for="rememberMe">Remember me next time</label>
+                    </li>
+                    <li class="actions">
+                        <button type="submit" class="main-button">Login</button>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+        <p class="choice-or">or</p>
+        <div class="social choice-option">
+            <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+        </div>
+        <div class="login-tools">
+            <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
+            <a class="need-account" href="@(UrlUtil.LangPath)Account/Register/">Need an account?</a>
+        </div>
+    </section>
+</article>
