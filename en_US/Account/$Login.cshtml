@@ -4,6 +4,12 @@
     var password = "";
     var rememberMe = false;
     
+    // Setup Validation
+    // Validate the user's username
+    Validation.RequireField("username", "You must specify a user name.");
+    // Validate the user's password
+	Validation.RequireField("password", "You must specify a password.");
+    
     if (IsPost){
         
         // is this a OAuth sign in request?
@@ -12,11 +18,6 @@
             OAuthWebSecurity.RequestAuthentication(provider, UrlUtil.LangPath + "Account/RegisterService/");
             return;
         }
-        
-        // Validate the user's username
-        Validation.RequireField("username", "You must specify a user name.");
-        // Validate the user's password
-	    Validation.RequireField("password", "You must specify a password.");
         
         if (Validation.IsValid()) {
             username = Request.Form["username"];

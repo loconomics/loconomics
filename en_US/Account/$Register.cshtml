@@ -6,25 +6,26 @@
     var iAgree = false;
     //var captchaMessage = "";
     
+    // Setup Validation
+	// Validate the user's email address
+    Validation.RequireField("email", "You must specify an email address.");
+    // Validate the user's password and password confirmation
+    Validation.Add("email",
+        Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
+
+	Validation.RequireField("password", "The password cannot be blank.");
+    Validation.Add("confirmPassword", 
+        Validator.EqualsTo("password", "The new password and confirmation password do not match."));
+        
+	Validation.RequireField("iagree", "You must agree the Terms of Use.");
+
+    // Validate the user's captcha answer
+    // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
+    //     ModelState.AddError("recaptcha", "Captcha response was not correct");
+    // }
+    
     // If this is a POST request, validate and process data
     if (IsPost) {
-        
-	    // Validate the user's email address
-        Validation.RequireField("email", "You must specify an email address.");
-        // Validate the user's password and password confirmation
-        Validation.Add("email",
-            Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
-
-	    Validation.RequireField("password", "The password cannot be blank.");
-        Validation.Add("confirmPassword", 
-            Validator.EqualsTo("password", "The new password and confirmation password do not match."));
-        
-	    Validation.RequireField("iagree", "You must agree the Terms of Use.");
-
-        // Validate the user's captcha answer
-        // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
-        //     ModelState.AddError("recaptcha", "Captcha response was not correct");
-        // }        
         
         // If all information is valid, create a new account
         if (Validation.IsValid()) {
