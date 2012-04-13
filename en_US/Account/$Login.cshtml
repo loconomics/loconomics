@@ -4,6 +4,9 @@
     var password = "";
     var rememberMe = false;
     
+    // workaround:
+    var loginvalid = false;
+    
     // Setup Validation
     // Validate the user's username
     Validation.RequireField("username", "You must specify a user name.");
@@ -61,10 +64,15 @@
         <h1>Log in to Loconomics</h1>
     </hgroup>
     <section>
-        <form class="choice-option ajax" data-success-post-message="Login successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/">
+        <form class="choice-option ajax" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/">
             @* If one or more validation errors exist, show an error *@
-            @if(IsPost && !Validation.IsValid()){
+            @*  && (!Validation.IsValid() || !ModelState.IsValid) *@
+            @if(IsPost){
                 Html.ValidationSummary("There was a problem with your login and/or errors exist in your form.");
+                if (!loginvalid)
+                {
+                    <div class="field-validation-error">Incorrect Username or password</div>
+                }
             }
             <fieldset>
                 <legend>Log in to Your Account</legend>
