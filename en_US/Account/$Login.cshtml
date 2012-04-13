@@ -24,6 +24,8 @@
             rememberMe = Request.Form["rememberMe"].AsBool();
         
             if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
+                // We return a json with result OK and redirect link (Code=1),
+                // and response end just after this:
                 CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "account/AccountLockedOut/");
             }
 
@@ -38,7 +40,7 @@
                     ?? Request["Redirect"]
                     ?? UrlUtil.LangPath;
 
-                // We return a json with result OK (=0), redirect link,
+                // We return a json with result OK and redirect link (Code=1),
                 // and response end just after this:
                 CommonHelpers.ReturnJsonResult(1, redirect);
             }
@@ -53,7 +55,7 @@
     UrlUtil.AppPath + "Scripts/jquery.validate.min.js",
     UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js"]);
 </script>
-<article id="loginBox" class="ajax-box">
+<article id="loginBox" class="ajax-box account-popup">
     <hgroup class="title">
         <h1>Log in to Loconomics</h1>
     </hgroup>
@@ -92,9 +94,9 @@
         <div class="social choice-option">
             <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
         </div>
-        <div class="login-tools">
+        <div class="account-tools">
             <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
-            <a class="need-account" href="@(UrlUtil.LangPath)Account/Register/">Need an account?</a>
+            <a class="register" href="@(UrlUtil.LangPath)Account/Register/">Need an account?</a>
         </div>
     </section>
 </article>

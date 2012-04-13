@@ -1317,6 +1317,11 @@ fieldset.has-confirm.confirmed-no > legend{
     margin: 10px;
     text-align: center;
 }
+.blockUI p.subh1{
+    color: #6c6c6c;
+    font-size: 1.4em;
+    text-align: center;
+}
 .blockUI form label{
     color: #6c6c6c;
     font-size: 1.3em;
@@ -1333,62 +1338,75 @@ fieldset.has-confirm.confirmed-no > legend{
     display: block;
 }
 
-/*********************/
-/*** LoginBox ********/
-#loginBox{
+/***********************
+ * Account Popups:
+ * LoginBox
+ * RegisterBox
+ */
+.account-popup{
     text-align: left;
-}
-#loginBox > hgroup,
-#loginBox > section{
-    width: 400px;
     margin: auto;
 }
-#loginBox fieldset,
-#loginBox fieldset ul{
+.account-popup fieldset,
+.account-popup fieldset ul{
     padding: 0;
     margin: 0;
     overflow: hidden;
 }
-#loginBox fieldset ul li{
+.account-popup fieldset ul li{
     margin: 10px;
     padding: 0;
 }
-#loginBox .username input,
-#loginBox .password input{
+.account-popup .username input,
+.account-popup .password input{
     float: right;
 }
-#loginBox .remember-me{
+.account-popup .remember-me{
     float: left;
 }
-#loginBox .remember-me label{
+.account-popup .remember-me label{
     font-size: 1em;
-}
-#loginBox .remember-me input{
     vertical-align: middle;
 }
-#loginBox .actions{
+.account-popup .remember-me input{
+    vertical-align: middle;
+}
+.account-popup .actions{
     float: right;
     clear: none;
 }
-#loginBox .main-button{
+.account-popup .main-button{
     font-size: 1em;
 }
-#loginBox legend{
+.account-popup legend{
     display: none;
 }
-#loginBox .login-tools{
+.account-popup .account-tools{
     font-size: 1.3em;
     font-weight: bold;
     clear: both;
     overflow: hidden;
     margin: 30px 0 0;
 }
-#loginBox .forgot-password{
+.account-popup a.forgot-password{
     float: left;
 }
-#loginBox .need-account{
+.account-popup a.register{
     float: right;
 }
-#loginBox .social{
+.account-popup .social{
     text-align: center;
+    color: #6c6c6c;
+    font-weight: bold;
+}
+.account-popup .footnote{
+    font-size: .9em;
+    margin: 0;
+}
+
+#loginBox{
+    width: 410px;
+}
+#registerBox{
+    width: 450px;
 }
