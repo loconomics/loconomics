@@ -305,6 +305,7 @@ $(document).ready(function () {
         var loadingtimer = setTimeout(function () {
             currentStep.block(loadingBlock);
         }, 600);
+        var autoUnblockLoading = true;
 
         var ok = false;
 
@@ -340,21 +341,39 @@ $(document).ready(function () {
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
                         window.location = data.Result;
-                    } else {
-                        alert(data.Result.ErrorMessage);
+                    } else { // data.Code < 0
+                        // There is an error code.
+
+                        // Unblock loading:
+                        currentStep.unblock();
+                        // Block with message:
+                        var message = (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+                        currentStep.block({
+                            message: 'Error: ' + message,
+                            css: popupStyle(popupSize('small')),
+                            timeout: 20000
+                        })
+                        .click(function () { currentStep.unblock(); });
+
+                        // Do not unblock in complete function!
+                        autoUnblockLoading = false;
                     }
                 } else {
                     // Post was wrong, html was returned to replace current form:
                     currentStep.html(data);
                 }
-                // Disable loading
-                clearTimeout(loadingtimer);
                 currentStep.unblock();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
                 currentStep.trigger('endSubmitWizardStep', ok);
-                currentStep.unblock();
+
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                if (autoUnblockLoading) {
+                    currentStep.unblock();
+                }
             }
         });
         return false;
@@ -411,7 +430,7 @@ $(document).ready(function () {
                     // User Code: trigger custom event to manage results:
                         form.trigger('ajaxSuccessPost', [data, text, jx]);
                     else { // data.Code < 0
-                        // Error Code:
+                        // There is an error code.
 
                         // Unblock loading:
                         box.unblock();
