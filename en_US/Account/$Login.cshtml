@@ -27,7 +27,7 @@
             if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
                 // We return a json with result OK and redirect link (Code=1),
                 // and response end just after this:
-                CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "account/AccountLockedOut/");
+                CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
             }
 
             // Attempt to login to the Security object using provided creds

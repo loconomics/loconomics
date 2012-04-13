@@ -316,7 +316,7 @@ $(document).ready(function () {
             success: function (data, text, jx) {
                 // If is a JSON result:
                 if (typeof (data) === 'object') {
-                    if (data.Result == 0) {
+                    if (data.Code == 0) {
                         // If there is next-step
                         if (nextStep) {
                             // If next step is internal url (a next wizard tab)
@@ -337,8 +337,11 @@ $(document).ready(function () {
                                 window.location = nextStep;
                             }
                         }
+                    } else if (data.Code == 1) {
+                        // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
+                        window.location = data.Result;
                     } else {
-                        alert(data.ErrorMessage);
+                        alert(data.Result.ErrorMessage);
                     }
                 } else {
                     // Post was wrong, html was returned to replace current form:

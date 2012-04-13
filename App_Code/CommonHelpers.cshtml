@@ -9,11 +9,10 @@
 @functions{
     public static void ReturnJsonError(int code, string errorMessage)
     {
-        Response.ContentType = "application/json";
-        Json.Write(new Dictionary<string, object>(){
-            { "Result", code }, { "ErrorMessage", errorMessage } 
-        }, Response.Output);
-        Response.End();
+        if (code >= 0)
+            ReturnJsonResult(code, errorMessage);
+        else
+            ReturnJsonResult(code, new Dictionary<string, string>(){ { "ErrorMessage", errorMessage } });
     }
     public static void ReturnJsonResult(int code, object result)
     {

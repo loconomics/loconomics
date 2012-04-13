@@ -37,6 +37,7 @@
             if (Results.Result != "Success")
             {
                 ErrorMessage = Results.Result;
+                CommonHelpers.ReturnJsonError(-1, ErrorMessage);
             }
             else
             {

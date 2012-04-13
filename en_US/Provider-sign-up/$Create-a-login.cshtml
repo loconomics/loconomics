@@ -84,7 +84,7 @@
 
                     if (requireEmailConfirmation) {
                         // Thank the user for registering and let them know an email is on its way
-                        Response.Redirect("~/en_US/Account/Thanks/");
+                        CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
                     } else {
                         // Navigate back to the homepage and exit
                         WebSecurity.Login(email, password);
@@ -93,7 +93,6 @@
                         
                         // insert additional user details
 
-                                               
                         // mark the user as logged in via a normal account,
                         // as opposed to via an OAuth or OpenID provider.
                         Session["OAuthLoggedIn"] = false;
@@ -101,7 +100,7 @@
                         db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",userid,firstname,lastname,zipcode, lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
                         
                         // We return a json with result OK (=0), and response end just after this:
-                        CommonHelpers.ReturnJsonError(0, "");
+                        CommonHelpers.ReturnJsonResult(0, null);
                     }
                 } catch (System.Web.Security.MembershipCreateUserException e) {
                     ModelState.AddFormError(e.Message);
