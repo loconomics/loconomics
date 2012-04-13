@@ -1336,9 +1336,12 @@ fieldset.has-confirm.confirmed-no > legend{
 /*********************/
 /*** LoginBox ********/
 #loginBox{
+    text-align: left;
+}
+#loginBox > hgroup,
+#loginBox > section{
     width: 400px;
     margin: auto;
-    text-align: left;
 }
 #loginBox fieldset,
 #loginBox fieldset ul{
@@ -1347,7 +1350,7 @@ fieldset.has-confirm.confirmed-no > legend{
     overflow: hidden;
 }
 #loginBox fieldset ul li{
-    margin: 10px 0;
+    margin: 10px;
     padding: 0;
 }
 #loginBox .username input,
@@ -1356,7 +1359,6 @@ fieldset.has-confirm.confirmed-no > legend{
 }
 #loginBox .remember-me{
     float: left;
-    margin-bottom: 0;
 }
 #loginBox .remember-me label{
     font-size: 1em;
@@ -1367,7 +1369,6 @@ fieldset.has-confirm.confirmed-no > legend{
 #loginBox .actions{
     float: right;
     clear: none;
-    margin-bottom: 0;
 }
 #loginBox .main-button{
     font-size: 1em;

@@ -57,7 +57,7 @@
     <hgroup class="title">
         <h1>Log in to Loconomics</h1>
     </hgroup>
-    <section id="loginForm">
+    <section>
         <form class="choice-option ajax" data-success-post-message="Login successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/">
             @* If one or more validation errors exist, show an error *@
             @if(IsPost && !Validation.IsValid()){
