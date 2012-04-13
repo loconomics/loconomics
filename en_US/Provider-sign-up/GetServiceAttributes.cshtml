@@ -1,9 +1,8 @@
 ﻿@{
     /* Setup */
-    Response.ContentType = "application/json";
     var result = new Dictionary<string, object>();
     // Error result by default
-    result["Result"] = -1;
+    int resultCode = -1;
     
     try{
         /* Input data */
@@ -36,7 +35,7 @@
         }
         
         // No error
-        result["Result"] = 0;
+        resultCode = 0;
     }
     catch (Exception ex){
         /* Output error */
@@ -44,5 +43,5 @@
     }
     
     /* Output data */
-    Json.Write(result, Response.Output);
+    CommonHelpers.ReturnJsonResult(resultCode, result);
 }

@@ -32,13 +32,13 @@ function initYourWork(){
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
                 // Check result
-                if (data.Result == -1) {
-                    jSelectPosition.parent().unblock().block(errorBlock(data.ErrorMessage, 'public.loadPositions()'));
+                if (data.Code == -1) {
+                    jSelectPosition.parent().unblock().block(errorBlock(data.Result.ErrorMessage, 'public.loadPositions()'));
                     return;
                 }
 
                 // Iterate categories
-                $.each(data.Positions, function (iPos, pos) {
+                $.each(data.Result.Positions, function (iPos, pos) {
                     // Create and add the new option
                     jSelectPosition.append(tplOption
                         .replace('{0}', pos.PositionID)
@@ -91,8 +91,8 @@ function initYourWork(){
             success: function (data, textStatus, jqXHR) {
 
                 // Check result
-                if (data.Result == -1) {
-                    jAttributes.unblock().block(errorBlock(data.ErrorMessage));
+                if (data.Code == -1) {
+                    jAttributes.unblock().block(errorBlock(data.Result.ErrorMessage));
                     return;
                 }
 
@@ -100,7 +100,7 @@ function initYourWork(){
                 fscontainer.find('fieldset').hide();
 
                 // Iterate categories
-                $.each(data.ServiceAttributeCategories, function (iCat, cat) {
+                $.each(data.Result.ServiceAttributeCategories, function (iCat, cat) {
                     // Locate the category fieldset
                     var fs = $('#service-attribute-category-' + cat.ServiceAttributeCategoryID);
                     // Fieldset exists, update:

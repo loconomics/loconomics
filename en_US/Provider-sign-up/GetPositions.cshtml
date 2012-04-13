@@ -7,12 +7,9 @@
 *@
 
 @{
-    // Correct datatype
-    Response.ContentType = "application/json";
-    
     // Prepare result struct
     var result = new Dictionary<string, object>();
-    result["Result"] = -1;
+    int resultCode = -1;
  
     try{
         // Input data
@@ -28,7 +25,7 @@
         //throw new Exception("Inside Test error");
         
         // Success
-        result["Result"] = 0;
+        resultCode = 0;
 
     } catch(Exception ex){
         result["ErrorMessage"] = ex.Message;
@@ -39,5 +36,5 @@
     //throw new Exception("Test error");
     
     // Output data
-    Json.Write(result, Response.Output);
+    CommonHelpers.ReturnJsonResult(resultCode, result);
 }
