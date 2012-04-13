@@ -208,12 +208,12 @@
 			   <li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
                }
 } else {
-            <li class="new-user">
-                <a class="launch-modal" href="@Href("~/en_US/Account/Register/")">Sign Up</a> | 
-                <a id="loginButton" href="@Href("~/en_US/Account/Login/")">Login</a> | 
-                <a id="launchHowItWorks" href="@Href("~/en_US/HowItWorks/")">How it works</a>
-            </li>
-			<li><a class="button fancy" href="@Href("~/en_US/provider-sign-up/")">Become a provider</a></li>
+                <li class="new-user">
+                    <a class="register" href="@(UrlUtil.LangPath)Account/Register/">Sign Up</a> | 
+                    <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> | 
+                    <a id="launchHowItWorks" href="@(UrlUtil.LangPath)HowItWorks/">How it works</a>
+                </li>
+                <li><a class="button fancy" href="@(UrlUtil.LangPath)provider-sign-up/">Become a provider</a></li>
 }
 				<li>
 					<dl class="lang-country">
