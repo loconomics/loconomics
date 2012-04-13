@@ -29,12 +29,17 @@ $(document).ready(function () {
         }
     });
 
+    /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
         popup(UrlUtil.LangPath + 'Account/$Login/', 'medium');
         return false;
     });
     $(document).delegate('a.register', 'click', function () {
         popup(UrlUtil.LangPath + 'Account/$Register/', 'medium');
+        return false;
+    });
+    $(document).delegate('a.forgot-password', 'click', function () {
+        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', 'medium');
         return false;
     });
 

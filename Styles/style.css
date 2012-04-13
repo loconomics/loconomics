@@ -1410,3 +1410,6 @@ fieldset.has-confirm.confirmed-no > legend{
 #registerBox{
     width: 450px;
 }
+#forgotPasswordBox{
+    width: 400px;
+}
