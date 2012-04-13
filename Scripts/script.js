@@ -31,7 +31,7 @@ $(document).ready(function () {
 
     $('#loginButton').click(function () {
         /*$('#loginModal').load(UrlUtil.LangPath + 'Account/$Login', function () {
-            $.blockUI({ message: $('#loginModal'), css: { width: '375px'} });
+        $.blockUI({ message: $('#loginModal'), css: { width: '375px'} });
         });*/
         popup(UrlUtil.LangPath + 'Account/$Login/', 'medium');
         return false;
@@ -342,23 +342,106 @@ $(document).ready(function () {
                 clearTimeout(loadingtimer);
                 currentStep.unblock();
             },
-            error: function (jx, message, ex) {
-                var m = message;
-                if (m == 'error') {
-                    size = popupSize('large');
-                    m = '<iframe src="data:text/html,' + encodeURI(jx.responseText) + '" width="' + size.width + '" height="' + size.height + '"></iframe>';
-                } else
-                    m = m + "; " + ex;
-
-                // Block all window, not only currentStep
-                $.blockUI(errorBlock(m, null, popupStyle(size)));
-                $('.blockUI').click(function () { $.unblockUI() });
-                currentStep.unblock();
-            },
+            error: ajaxErrorPopupHandler,
             complete: function () {
                 currentStep.trigger('endSubmitWizardStep', ok);
+                currentStep.unblock();
             }
         });
+        return false;
+    });
+
+    /*******************************
+    * Ajax Forms generic function.
+    * Result expected is:
+    * - html, for validation errors from server, replacing current .ajax-box content
+    * - json, with structure: { Code: integer-number, Result: string-or-object }
+    *   Code numbers:
+    *    - Negative: errors, with a Result object { ErrorMessage: string }
+    *    - Zero: success result, it shows a message with content: Result string, else form data attribute 'success-post-message', else a generic message
+    *    - 1: success result, Result contains a URL, the page will be redirected to that.
+    *    - Major 1: success result, with custom handler throught the form event 'success-post-message'.
+    */
+    $(document).delegate('form.ajax', 'submit', function () {
+        var form = $(this);
+        var box = form.closest(".ajax-box");
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            box.block(loadingBlock);
+        }, 600);
+        var autoUnblockLoading = true;
+
+        // Do the Ajax post
+        $.ajax({
+            url: (form.attr('action') || ''),
+            type: 'POST',
+            data: form.serialize(),
+            success: function (data, text, jx) {
+                // If is a JSON result:
+                if (typeof (data) === 'object') {
+                    // Special Code 1: do a redirect
+                    if (data.Code == 1)
+                        window.location = data.Result;
+                    else if (data.Code == 0) {
+                        // Special Code 0: general success code, show message saying that 'all was fine'
+
+                        // Unblock loading:
+                        box.unblock();
+                        // Block with message:
+                        var message = data.Result || form.data('success-post-message') || 'Saved';
+                        box.block({
+                            message: message,
+                            css: popupStyle(popupSize('small')),
+                            timeout: 5000
+                        })
+                        .click(function () { box.unblock(); });
+                        // Do not unblock in complete function!
+                        autoUnblockLoading = false;
+                    } else if (data.Code > 1)
+                    // User Code: trigger custom event to manage results:
+                        form.trigger('ajaxSuccessPost', [data, text, jx]);
+                    else { // data.Code < 0
+                        // Error Code:
+
+                        // Unblock loading:
+                        box.unblock();
+                        // Block with message:
+                        var message = (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+                        box.block({
+                            message: 'Error: ' + message,
+                            css: popupStyle(popupSize('small')),
+                            timeout: 20000
+                        })
+                        .click(function () { box.unblock(); });
+
+                        // Do not unblock in complete function!
+                        autoUnblockLoading = false;
+                    }
+                } else {
+                    // Post was wrong, html was returned to replace current 
+                    // form container: the ajax-box.
+                    var newhtml = $(data);
+                    // Check if the returned element is the ajax-box, if not, find
+                    // the element in the newhtml:
+                    if (!newhtml.is('.ajax-box'))
+                        newhtml = newhtml.find('.ajax-box');
+                    // Replace the box with the new html:
+                    box.replaceWith(newhtml);
+                }
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                if (autoUnblockLoading) {
+                    box.unblock();
+                }
+            }
+        });
+
+        // Stop normal POST:
         return false;
     });
 
@@ -404,7 +487,10 @@ $(document).ready(function () {
     });
 });
 
-/* Popup function */
+/*******************
+ * Popup related 
+ * functions
+ */
 function popupSize(size) {
     var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
     return {
@@ -470,4 +556,16 @@ function popup(url, size){
     }
     
     $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
+}
+function ajaxErrorPopupHandler(jx, message, ex) {
+    var m = message;
+    size = popupSize('large');
+    if (m == 'error')
+        m = '<iframe src="data:text/html,' + encodeURI(jx.responseText) + '" width="' + size.width + '" height="' + size.height + '"></iframe>';
+    else
+        m = m + "; " + ex;
+
+    // Block all window, not only current element
+    $.blockUI(errorBlock(m, null, popupStyle(size)));
+    $('.blockUI').click(function () { $.unblockUI() });
 }
