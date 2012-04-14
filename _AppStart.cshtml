@@ -12,6 +12,13 @@
         BuiltInOAuthClient.Facebook, 
         consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
         consumerSecret: "b");*/
+    
+    // Facebook connection options to the Developer version ('Loconomics Iago Dev', SiteUrl: http://loconomics.dev:52397
+    /* Ensure to configure the file C:\Windows\System32\Drivers\etc\hosts with:
+     * 127.0.0.1    dev
+     * 127.0.0.1    loconomics.dev
+     */
+    Facebook.Initialize("384138354954139", "2311db761a3605691d7c99ed35466132", "sqlloco");
 
     WebMail.SmtpServer = "mail.loconomics.com";
     WebMail.SmtpPort = 25;
@@ -19,5 +26,4 @@
     WebMail.UserName = "automated@loconomics.com";
     WebMail.Password = "Loconomic$2011";
     WebMail.From = "automated@loconomics.com";
-        
 }

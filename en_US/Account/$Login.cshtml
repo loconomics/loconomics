@@ -4,9 +4,11 @@
     var password = "";
     var rememberMe = false;
     
-    var facebookAppId = "APPID";
+    var facebookAppId = Facebook.AppId;
     var facebookRedirectUri = UrlUtil.LangPath + "Account/Facebook/";
     var facebookPermissions = "user_birthday,email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
+    // "SOME_ARBITRARY_BUT_UNIQUE_STRING";
+    var facebookState = Session["facebookState"] = Guid.NewGuid().ToString();
 
     // workaround:
     var loginvalid = false;
@@ -105,11 +107,11 @@
         </form>
         <p class="choice-or">or</p>
         <div class="social choice-option">
-            <a href="https://www.facebook.com/dialog/oauth?client_id=@(facebookAppId)&redirect_uri=@(facebookRedirectUri)&scope=@(facebookPermissions)&response_type=token"
+            <a href="https://www.facebook.com/dialog/oauth?client_id=@(facebookAppId)&redirect_uri=@(facebookRedirectUri)&scope=@(facebookPermissions)&state=@(facebookState)"
                 target="_blank">
                 <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
             </a>
-<!--
+@*
       <div id="fb-root"></div>
       <script>
         window.fbAsyncInit = function() {
@@ -129,7 +131,7 @@
          }(document));
       </script>
       <div class="fb-login-button">Login with Facebook</div>
--->
+*@
         </div>
         <div class="account-tools">
             <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
