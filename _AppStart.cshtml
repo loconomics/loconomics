@@ -1,11 +1,17 @@
-﻿@{
+﻿@using WebMatrix.WebData;
+@using WebMatrix.Security;
+@{
     WebSecurity.InitializeDatabaseConnection("sqlloco", "userprofile", "UserId", "Email", false);
 
     // To let users of this site log in using their accounts from other sites such as Facebook, Twitter, 
     // and Windows Live, you must update this site. For more information visit 
     // http://go.microsoft.com/fwlink/?LinkID=226949
-    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
-    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
+    //OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
+    //OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
+    /*OAuthWebSecurity.RegisterOAuthClient( 
+        BuiltInOAuthClient.Facebook, 
+        consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
+        consumerSecret: "b");*/
 
     WebMail.SmtpServer = "mail.loconomics.com";
     WebMail.SmtpPort = 25;

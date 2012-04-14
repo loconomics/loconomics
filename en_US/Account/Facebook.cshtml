@@ -1,0 +1,28 @@
+﻿@{
+    /* Page to be redirected from Facebook Login, with next syntax:
+     * YOUR_REDIRECT_URI#
+        access_token=USER_ACCESS_TOKEN
+        &expires_in=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
+     */
+    // Reading the parameters from the URI Fragment
+    var pars = new Dictionary<string, string>();
+    foreach (var strpar in Request.Url.Fragment.Split('&')){
+        var par = strpar.Split('=');
+        if (par.Length == 2){
+            pars.Add(par[0], par[1]);
+        }
+    }
+    string access_token = "", expires_in = "";
+    if (pars.ContainsKey("access_token")){
+        access_token = pars["access_token"];
+    }
+    if (pars.ContainsKey("expires_in")){
+        expires_in = pars["expires_in"];
+    }
+    
+    //TODO Use token an expires to login the user
+    
+    
+    // Redirect to the index page:
+    Response.Redirect(UrlUtil.LangPath);
+}
