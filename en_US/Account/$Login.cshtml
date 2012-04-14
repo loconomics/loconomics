@@ -12,7 +12,7 @@
     Validation.RequireField("username", "You must specify a user name.");
     // Validate the user's password
 	Validation.RequireField("password", "You must specify a password.");
-    
+
     if (IsPost){
         
         // is this a OAuth sign in request?
@@ -41,7 +41,7 @@
                 Session["OAuthLoggedIn"] = false;
 
                 string redirect = N.W(Request.QueryString["ReturnUrl"])
-                    ?? Request["Redirect"]
+                    ?? N.W(Request["Redirect"])
                     ?? UrlUtil.LangPath;
 
                 // We return a json with result OK and redirect link (Code=1),
@@ -64,7 +64,7 @@
         <h1>Log in to Loconomics</h1>
     </hgroup>
     <section>
-        <form class="choice-option ajax" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/">
+        <form class="choice-option ajax" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
             @*  && (!Validation.IsValid() || !ModelState.IsValid) *@
             @if(IsPost){
