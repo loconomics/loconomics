@@ -1281,13 +1281,6 @@ fieldset.has-confirm.confirmed-no > legend{
     background-color: white;
 }
 
-/*******************
- *** validation ****/
-.validation-summary-errors
-{
-    color: Red;
-}
-
 /*************************************
  * Clases: choice, 
  * choice-option,
@@ -1333,8 +1326,13 @@ fieldset.has-confirm.confirmed-no > legend{
 /****************************
  * Validation, errors styles
  */
+.error,
+.validation-error,
+.validation-summary-errors,
 .field-validation-error{
     color: Red;
+}
+.field-validation-error{
     display: block;
 }
 

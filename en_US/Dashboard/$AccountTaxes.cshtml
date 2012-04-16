@@ -1,11 +1,8 @@
 ﻿@{
     var idprefix = "account-taxes";
-}@{
-    var idprefix = "account-taxes";
     var errormessage = "";
-       if (IsPost)
-           
-    {
+    
+    if (IsPost){
      
         var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,"k74g8bpwwfmmfrcr","bdzrhws4qnq4bdcy","vks5753b2pfr8mnz");
 
@@ -13,121 +10,33 @@
             //need to pass in the userid from the cookie
             Id = "75",
             FirstName = "Josh",
-
-            
             CustomFields = new Dictionary<string, string>
-                {
-                    { "loco_tin", "555555555" }, // replace 55555555 with request form value
-                   
-                }
-            
+            {
+                { "loco_tin", "555555555" }, // replace 55555555 with request form value
+            }
         };
 
-       var result = gateway.Customer.Create(request);
-       if (result.IsSuccess()){
-
-           errormessage = "Success";
-            
-        }else{
-
-
-        foreach(var row in result.Errors.DeepAll() )
-        {
-            errormessage += row.Code +" _  " + row.Message;
+        var result = gateway.Customer.Create(request);
+        if (result.IsSuccess()){
+            errormessage = "Success";
         }
-        
-       } 
-            
-    }    
-    
-    
-    
+        else{
+            foreach (var row in result.Errors.DeepAll())
+            {
+                errormessage += row.Code + " _  " + row.Message;
+            }
+        }
+    }
 }
-@helper printEntityType(string name)
-    {
-    <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
-}
-<h1>@errormessage </h1>
-<form method="post" id="@idprefix-form" action="$AccountTaxes.cshtml" >
-    <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
-        <legend>Please complete the IRS Form W-9 below:</legend>
-        <ul>
-            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="fullname"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="businessname"/><span class="info">(only if different from above)</span></li>
-            <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="streetaddress"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
-            <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="state">
-                    @CommonHelpers.CountryOptions()
-                </select>
-            </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
-            <li class="tax-entity-type">
-                <span>Tax Entity Type:</span>
-                <ul>
-                    @printEntityType("Individual/Sole propietary")
-                    @printEntityType("Partnership")
-                    @printEntityType("Corporation")
-                    @printEntityType("Trust/Estate")
-                    @printEntityType("C Corporation")
-                    @printEntityType("S Corporation")
-                    @printEntityType("Limited liability company")
-                    @printEntityType("Other")
-                </ul>
-            </li>
-            <li class="tax-clasification">
-                <label for="@idprefix-tax-clasification">Choose the tax clasification:</label>
-                <select id="@idprefix-tax-clasification" name="tax-classification">
-                    <option value="C">C Corporation</option>
-                    <option value="S">S Corporation</option>
-                    <option value="P">Partnership</option>
-                </select>
-            </li>
-            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" name="exempt-payee"/></label></li>
-        </ul>
-    </fieldset>
-    <fieldset id="@idprefix-fs-part1">
-        <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
-        <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin"/>
-        <label><input type="radio" name="tin-type" value="SSN"/>SSN</label>
-        <label><input type="radio" name="tin-type" value="EIN"/>EIN</label>
-    </fieldset>
-    <fieldset id="@idprefix-fs-part2">
-        <legend>Part 2: Certification</legend>
-        <div class="info">
-        <p>
-            Under penalties of perjury, I certify that:
-        </p>
-        <p>
-            The number shown on this form is my correct taxpayer identification number ( or I am waiting for a number to be issued to me ), and
-        </p>
-        <p>
-            I am not subject to backup withholding because: (a) I am exempt from backup withholding, or (b) I have not been notified by 
-            the Internal Revenue Service (IRS) that I am subject to backup withholding as a result of a failure to report all interest or dividends, or 
-            (c) the IRS has notified me that I am no longer subject to backup withholding, and
-        </p>
-        <p>
-            I am a U.S. person (including a U.S. resident alien).            
-        </p>
-        </div>
-        <fieldset class="signature">
-            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="signature"/><span class="info">(typing in your name acts as your signature)</span>
-        </fieldset>
-        <p class="info">
-            The date and time of submission and your computer's IP address will be recorded when you click Submit.
-        </p>
-    </fieldset>
-    <fieldset class="actions">
-        <button class="save main-button" type="submit">Submit</button>
-    </fieldset>
-    
-</form>
 @helper printEntityType(string name){
     <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
 }
-<form method="post" id="@idprefix-form">
+@* 
+<p class="setting-instructions">
+</p>
+*@
+<div class="error validation-error">@errormessage</div>
+<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountTaxes/">
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>Please complete the IRS Form W-9 below:</legend>
         <ul>
@@ -188,7 +97,7 @@
             (c) the IRS has notified me that I am no longer subject to backup withholding, and
         </p>
         <p>
-            I am a U.S. person (including a U.S. resident alien).            
+            I am a U.S. person (including a U.S. resident alien).
         </p>
         </div>
         <fieldset class="signature">
