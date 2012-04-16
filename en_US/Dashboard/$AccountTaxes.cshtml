@@ -1,20 +1,36 @@
 ﻿@{
     var idprefix = "account-taxes";
     var errormessage = "";
+    var debug = true;
+    var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
     
     if (IsPost){
      
         var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,"k74g8bpwwfmmfrcr","bdzrhws4qnq4bdcy","vks5753b2pfr8mnz");
 
-        var request = new Braintree.CustomerRequest{
-            //need to pass in the userid from the cookie
-            Id = "75",
-            FirstName = "Josh",
-            CustomFields = new Dictionary<string, string>
-            {
-                { "loco_tin", "555555555" }, // replace 55555555 with request form value
-            }
-        };
+        Braintree.CustomerRequest request;
+        
+        if (debug){
+            request = new Braintree.CustomerRequest{
+                //need to pass in the userid from the cookie
+                Id = "75",
+                FirstName = "Josh",
+                CustomFields = new Dictionary<string, string>
+                {
+                    { "loco_tin", "555555555" }, // replace 55555555 with request form value
+                }
+            };
+        } else {
+            request = new Braintree.CustomerRequest{
+                //need to pass in the userid from the cookie
+                Id = user["UserID"],
+                FirstName = user["FirstName"],
+                CustomFields = new Dictionary<string, string>
+                {
+                    { "loco_tin", Request["tin"] },
+                }
+            };
+        }
 
         var result = gateway.Customer.Create(request);
         if (result.IsSuccess()){
@@ -35,7 +51,7 @@
 <p class="setting-instructions">
 </p>
 *@
-<div class="error validation-error">@errormessage</div>
+<div class="error">@errormessage</div>
 <form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountTaxes/">
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>Please complete the IRS Form W-9 below:</legend>
