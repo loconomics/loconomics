@@ -5,8 +5,8 @@
     var rememberMe = false;
     
     var facebookAppId = Facebook.AppId;
-    var facebookRedirectUri = UrlUtil.LangPath + "Account/Facebook/";
-    var facebookPermissions = "user_birthday,email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
+    var facebookRedirectUri = UrlUtil.LangUrl + "Account/Facebook/";
+    var facebookPermissions = "email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
     // "SOME_ARBITRARY_BUT_UNIQUE_STRING";
     var facebookState = Session["facebookState"] = Guid.NewGuid().ToString();
 
@@ -107,10 +107,18 @@
         </form>
         <p class="choice-or">or</p>
         <div class="social choice-option">
-            <a href="https://www.facebook.com/dialog/oauth?client_id=@(facebookAppId)&redirect_uri=@(facebookRedirectUri)&scope=@(facebookPermissions)&state=@(facebookState)"
-                target="_blank">
+            @*<a href="https://www.facebook.com/dialog/oauth?client_id=@Server.UrlEncode(facebookAppId)&redirect_uri=@Server.UrlEncode(facebookRedirectUri)&scope=@Server.UrlEncode(facebookPermissions)&state=@Server.UrlEncode((string)facebookState)">
                 <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
-            </a>
+            </a>*@
+
+            @Facebook.GetInitializationScripts()
+            @Facebook.LoginButton(
+                registerUrl: UrlUtil.LangPath + "Account/Facebook/Register/",
+                returnUrl: UrlUtil.LangPath, 
+                callbackUrl: UrlUtil.LangPath + "Account/Facebook/Callback/",
+                buttonText: "Connect with Facebook",
+                extendedPermissions: facebookPermissions)
+
 @*
       <div id="fb-root"></div>
       <script>

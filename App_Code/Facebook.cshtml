@@ -231,7 +231,7 @@
 
     private static string GetFacebookCookieInfo(string key) {
         var request = HttpContext.Current.Request;
-        var name = string.Format("fbs_{0}", AppId);
+        var name = string.Format("fbsr_{0}", AppId);
 
         if (request.Cookies[name] != null) {
             var value = request.Cookies[name].Value;

@@ -28,7 +28,7 @@
                     PreferredCountryID,
                     ADD_Details 
                 from users a 
-                join dbo.userprofilepositionadditional b 
+                left join dbo.userprofilepositionadditional b 
                 on a.userid = b.userid  where a.UserID = @0
             ";
         return db.QuerySingle(sqluser, userId);
