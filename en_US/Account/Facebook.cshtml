@@ -23,7 +23,7 @@
         if (Request["error"] == null)
         {
             string userAccessToken = getUserAccessToken();
-            Response.Write(userAccessToken);
+            //Response.Write(userAccessToken);
             var user = getUserFromAccessToken(userAccessToken);
             
             // If we have user info
@@ -32,16 +32,16 @@
                 //string autopassword = userAccessToken.Substring(0, 128);
                 string autopassword = Membership.GeneratePassword(14, 5);
                 string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
-                
+
                 //Response.Write(userAccessToken);
-                Response.Write("\n" + user["username"] + "\n");
+                /*Response.Write("\n" + user["username"] + "\n");
                 Response.Write(Json.Encode(user));
                 Response.Write("\n" + autopassword + "\n");
-                Response.Write("\n" + facebookemail + "\n");
+                Response.Write("\n" + facebookemail + "\n");*/
 
                 // If user don't exists, create it
                 if (!WebSecurity.UserExists(facebookemail)){
-                    Response.Write("\nEl usuario no existe, se crea\n");
+                    //Response.Write("\nEl usuario no existe, se crea\n");
                     using (var db = WebMatrix.Data.Database.Open("sqlloco")){
  
                         // TOREVIEW: Asp.net DataBase Helper doesn't support transactions, but are needed
@@ -70,19 +70,16 @@
                         }
                     }
                 }
-                Response.Write("\nAutoLogin\n");
-                // Login into the account:
-                if (WebSecurity.Login(facebookemail, autopassword)){
-                    Response.Write("\nAutoLogin OK\n");
-                }else{
-                    Response.Write("\nAutoLogin ERROR\n");}
+                //Response.Write("\nAutoLogin\n");
+                // Login into the Loconomics account:
+                FormsAuthentication.SetAuthCookie(facebookemail, false);
             }
         }
     }
    // catch{}
     
     // Redirect to the home page:
-    //Response.Redirect(UrlUtil.LangPath);
+    Response.Redirect(UrlUtil.LangPath);
 
     // FACEBOOK LOGIN using the Microsoft Helper: EVER RETURN FALSE, doesn't work!
     /*if (!Facebook.IsFacebookUserAuthenticated) {
