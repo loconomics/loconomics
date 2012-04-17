@@ -2,13 +2,14 @@
     //aux function to get data from the url string
     function getURLParameter(name) {
         return decodeURI(
-                   (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
+                   (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
     }
 
     var isResult = (getURLParameter("EstimateResult") != "null") ? true : false;
     $("#advancer1").hide();
     $("#advancer2").hide();
-    $('#pricingtype').hide();
+    var pricingtype = $('.pricingwizard > .pricingtype > select');
+    pricingtype.hide();
     $('#pricingtypelabel').hide();
     $('#result').hide();
 
@@ -21,19 +22,20 @@
         $('#pricingtype').addOption(0, "Loading....").attr('disabled', true);
         $.getJSON(UrlUtil.LangPath + 'PricingWizard/ListPricingTypes/', function (data) {
             var estimatetypes = data;
+
             $.each(estimatetypes, function (index, estimatetype) {
                 var val = estimatetype.PricingTypeID;
                 var text = estimatetype.Description;
-                $('#pricingtype').addOption(val, text, false);
+                pricingtype.addOption(val, text, false);
             });
 
-            $('#pricingtype').addOption(0, "Select type").attr('disabled', false);
+            pricingtype.addOption(0, "Select type").attr('disabled', false);
 
             var firstselected = true;
-            $('#pricingtype').change(function () {
+            pricingtype.change(function () {
                 if (firstselected) {
                     firstselected = false;
-                    $('#pricingtype').removeOption(0);
+                    pricingtype.removeOption(0);
                 };
             });
 
@@ -41,9 +43,9 @@
 
         //Paint and load Estimate Var List
         //Check pricing type changes
-        $('#pricingtype').change(
+        pricingtype.change(
                 function () {
-                    var pricingTypeID = $('#pricingtype').val();
+                    var pricingTypeID = pricingtype.val();
 
                     //Reset the form
                     $(".row").remove();
