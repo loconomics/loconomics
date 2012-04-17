@@ -3,7 +3,6 @@
     var email = "";
     var password = "";
     var confirmPassword = "";
-    var iAgree = false;
     //var captchaMessage = "";
     
     // Setup Validation
@@ -47,6 +46,13 @@
                 try {
                     bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
                     var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+                    
+                    // Create Loconomics Customer user
+                    int userid = WebSecurity.GetUserId(email);
+                    string firstname = email.Substring(0, email.IndexOf('@'));
+                    db.Execute("exec CreateCustomer @0,@1,@2,1,1",
+                        userid, firstname, "");
+
                     if (requireEmailConfirmation) {
                         var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
                         var confirmationUrl = hostUrl + UrlUtil.LangPath + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
@@ -93,7 +99,7 @@
 <article id="registerBox" class="ajax-box account-popup">
     <hgroup class="title">
         <h1>Create a free account</h1>
-        <p class="subh1">Do you want to provide services? <a href="@(UrlUtil.LangPath)Provider-sign-up/">Click here</a></p>
+        <div class="subh1">Do you want to provide services? <a href="@(UrlUtil.LangPath)Provider-sign-up/">Click here</a></div>
     </hgroup>
     <section>
         <form method="post" action="@(UrlUtil.LangPath)Account/$Register/@(Request.Url.Query)" class="choice-option ajax" data-success-post-message="Register successfully!">

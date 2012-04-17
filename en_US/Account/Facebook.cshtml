@@ -1,0 +1,195 @@
+﻿@{
+    //try
+    {
+        /* Page to be redirected from Facebook Login, with next syntax if OK:
+            YOUR_REDIRECT_URI?
+                state=YOUR_STATE_VALUE
+               &code=CODE_GENERATED_BY_FACEBOOK
+         * or next if FAILS (user don't grant the application)
+            YOUR_REDIRECT_URI?
+                error_reason=user_denied
+               &error=access_denied
+               &error_description=The+user+denied+your+request.
+               &state=YOUR_STATE_VALUE
+         */
+        // First at all, validate the state value to verify the authenticity of the request.
+        if (UrlData.Count == 0 && Request["state"] != (string)Session["facebookState"])
+        {
+            // BAD request, return to home silently and stop request:
+            Response.Redirect(UrlUtil.LangPath, true);
+        }
+
+        // If there is not an error (error means that user don't grant our application, or cancel login or facebook login fails)
+        if (Request["error"] == null)
+        {
+            string userAccessToken = getUserAccessToken();
+            //Response.Write(userAccessToken);
+            var user = getUserFromAccessToken(userAccessToken);
+            
+            // If we have user info
+            if (user != null && user["username"] != null)
+            {
+                //string autopassword = userAccessToken.Substring(0, 128);
+                string autopassword = Membership.GeneratePassword(14, 5);
+                string facebookemail = N.W(user.email) ?? user.username + "@facebook.com";
+
+                //Response.Write(userAccessToken);
+                /*Response.Write("\n" + user["username"] + "\n");
+                Response.Write(Json.Encode(user));
+                Response.Write("\n" + autopassword + "\n");
+                Response.Write("\n" + facebookemail + "\n");*/
+
+                // If user don't exists, create it
+                if (!WebSecurity.UserExists(facebookemail)){
+                    //Response.Write("\nEl usuario no existe, se crea\n");
+                    using (var db = WebMatrix.Data.Database.Open("sqlloco")){
+ 
+                        // TOREVIEW: Asp.net DataBase Helper doesn't support transactions, but are needed
+                        // to avoid problems creating the account letting bad records in some tables.
+                        //db.Connection.Open();
+                        //var transaction = db.Connection.BeginTransaction();
+                        try{
+                            // Create user profile with email
+                            db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", facebookemail);
+
+                            // Create user security account
+                            WebSecurity.CreateAccount(facebookemail, autopassword, false);
+                            int userid = WebSecurity.GetUserId(facebookemail);
+
+                            // Create Loconomics Customer user
+                            db.Execute("EXEC dbo.CreateCustomer @0,@1,@2,1,1",
+                                userid, user.first_name, user.last_name);
+                                
+                            // Create asociation between locouser and facebookuser
+                            db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
+                            
+                            //transaction.Commit();
+                        } catch (Exception ex) {
+                            //transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+                //Response.Write("\nAutoLogin\n");
+                // Login into the Loconomics account:
+                FormsAuthentication.SetAuthCookie(facebookemail, false);
+            }
+        }
+    }
+   // catch{}
+    
+    // Redirect to the home page:
+    Response.Redirect(UrlUtil.LangPath);
+
+    // FACEBOOK LOGIN using the Microsoft Helper: EVER RETURN FALSE, doesn't work!
+    /*if (!Facebook.IsFacebookUserAuthenticated) {
+        //Response.Redirect(UrlUtil.LangPath);
+        Response.Write("NO isfacebook user authen");
+    } else if (Facebook.MembershipLogin()) {
+        //Context.RedirectLocal(Request["returnUrl"]);
+        Response.Write("YES membershiplogin: " + Request["returnUrl"]);
+    } else {
+        //Context.RedirectLocal(Request["registerUrl"]);
+        //Facebook.AssociateMembershipAccount(Facebook.GetFacebookUserProfile().Email);
+        Response.Write("NO membershiplogin: associating: " + Request["registerUrl"]);
+    }*/
+}
+@functions{
+    dynamic parseSignedRequest(string cookieSignedRequest){
+        // cookieSignedRequest: encoded_sig + "." + payload
+        var list = cookieSignedRequest.Split('.');
+        
+        var data = Json.Decode(base64UrlDecode(list[1]));
+        
+        // There is no the recommended validation checking ensuring that encoded_sig (list[0]) match
+        // the data object after apply a sha256 hash.
+        // (see: https://github.com/facebook/php-sdk/blob/master/src/base_facebook.php)
+
+        return data;
+    }
+    string base64UrlDecode(string input){
+        try{
+            string decodedJson = input.Replace("=", string.Empty).Replace('-', '+').Replace('_', '/');
+            return System.Text.UTF8Encoding.UTF8.GetString(
+                Convert.FromBase64String(
+                    decodedJson.PadRight(decodedJson.Length + (4 - decodedJson.Length % 4) % 4, '=')
+                ));
+        }catch{}
+        return "";
+    }
+    dynamic getSignedRequest(){
+        
+        dynamic sr = Session["facebookUserSignedRequest"];
+        
+        if (sr == null){
+            string strSR = Request["signed_request"];
+            if (strSR == null){
+                // We need to read the user Facebook Cookie to get the user access_token
+                var cookie_name = "fbsr_" + Facebook.AppId;
+
+                if (Request.Cookies.AllKeys.Contains<string>(cookie_name))
+                    strSR = Request.Cookies[cookie_name].Value;
+            }
+
+            if (N.W(strSR) != null)
+                // cookie_value is the Facebook Signed Request (fbsr), we must parse it
+                sr = parseSignedRequest(strSR);
+            
+            if (sr != null){
+                Session["facebookUserId"] = N.W(sr.user_id) ?? "me";
+            }
+            
+            Session["facebookUserSignedRequest"] = sr;
+            //Response.Write(Json.Encode(sr));
+        }
+        return sr;
+    }
+    string getUserAccessToken(){
+        var signed_request = getSignedRequest();
+        
+        if (signed_request != null){
+            if (signed_request.oauth_token != null)
+                return signed_request.oauth_token;
+            else{
+                return getAccessTokenFromCode(N.W(signed_request.code) ?? Request["code"] ?? "");
+            }
+        }
+        return null;
+    }
+    string getAccessTokenFromCode(string code){
+        // Do a server request to Facebook to interchange the CODE for a valid acces_token (to get the user information later)
+        WebClient browser = new WebClient();
+        // bugfix: 'type=client_cred' query parameter is required but not documented at facebook!*^!:-S||
+        var url =
+            String.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&redirect_uri={1}&client_secret={2}&code={3}",
+                (Facebook.AppId),     // YOUR_APP_ID
+                HttpUtility.UrlEncode(UrlUtil.LangUrl),   // YOUR_REDIRECT_URI
+                (Facebook.AppSecret), // YOUR_APP_SECRET
+                HttpUtility.UrlEncode(code));  // CODE_GENERATED_BY_FACEBOOK
+
+            try{
+                var response = browser.DownloadString(url);
+                // Response is OK (throw exception if not)
+                // The result is a string in queryString format as the template:
+                //  access_token=USER_ACESS_TOKEN&expires=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
+                var query = HttpUtility.ParseQueryString(response, System.Text.Encoding.UTF8);
+                return query["access_token"];
+            }catch{}
+        return null;
+    }
+    dynamic getUserFromAccessToken(string userAccessToken){
+        try{
+            var browser = new WebClient();
+            // Do a server request to Facebook to get the user information
+            var url = String.Format("https://graph.facebook.com/{0}?access_token={1}",
+                Session["facebookUserId"] ?? "me",
+                (userAccessToken)); // YOUR_USER_ACCESS_TOKEN
+
+            var response = browser.DownloadString(url);
+
+            // Response is OK (throw exception if not)
+            return Json.Decode(response);
+        }catch{}
+        return null;
+    }
+}

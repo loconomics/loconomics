@@ -1,11 +1,21 @@
-﻿@{
+﻿@using WebMatrix.WebData;
+@using WebMatrix.Security;
+@{
     WebSecurity.InitializeDatabaseConnection("sqlloco", "userprofile", "UserId", "Email", false);
 
     // To let users of this site log in using their accounts from other sites such as Facebook, Twitter, 
     // and Windows Live, you must update this site. For more information visit 
     // http://go.microsoft.com/fwlink/?LinkID=226949
-    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
-    OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
+    //OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Google);
+    //OAuthWebSecurity.RegisterOpenIDClient(BuiltInOpenIDClient.Yahoo);
+    /*OAuthWebSecurity.RegisterOAuthClient( 
+        BuiltInOAuthClient.Facebook, 
+        consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
+        consumerSecret: "b");*/
+    
+    // Facebook connection options to the Developer App Version 'Loconomics Beta', SiteUrl: http://loconomics.com/beta/
+    // Facebook App Link: https://developers.facebook.com/apps/384138354954139
+    Facebook.Initialize("384138354954139", "2311db761a3605691d7c99ed35466132", "sqlloco");
 
     WebMail.SmtpServer = "mail.loconomics.com";
     WebMail.SmtpPort = 25;
@@ -13,5 +23,4 @@
     WebMail.UserName = "automated@loconomics.com";
     WebMail.Password = "Loconomic$2011";
     WebMail.From = "automated@loconomics.com";
-        
 }
