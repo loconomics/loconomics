@@ -50,12 +50,6 @@
     public static object GetUserPos(){
         return GetUserPos(WebSecurity.CurrentUserId);
     }
-    /* Ensure that only register users enter here, redirecting to login page when appropiated.
-    */
-    public static void SecurePage() {
-        if (!WebSecurity.IsAuthenticated)
-            Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + System.Web.HttpContext.Current.Request.Url.PathAndQuery);
-    }
     /* Function create with copying the code from the old 'provider-dashboard-profile.cshtml' file,
         must be used in the appropiated Dashboard page by back-end code.
       TODO: Un-used function

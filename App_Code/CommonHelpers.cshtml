@@ -7,6 +7,8 @@
     <option value="ca">California</option>
 }
 @functions{
+    /*========= JSON =============*/
+    
     public static void ReturnJson(object jsondata){
         Response.ContentType = "application/json";
         Json.Write(jsondata, Response.Output);
@@ -24,5 +26,13 @@
         ReturnJson(new Dictionary<string, object>(){
             { "Code", code }, { "Result", result } 
         });
+    }
+    
+    /*========= SECURITY ==========*/
+    /* Ensure that only register users enter here, redirecting to login page when appropiated.
+    */
+    public static void SecurePage() {
+        if (!WebSecurity.IsAuthenticated)
+            Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + System.Web.HttpContext.Current.Request.Url.PathAndQuery);
     }
 }
