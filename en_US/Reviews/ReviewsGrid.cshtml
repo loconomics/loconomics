@@ -1,0 +1,76 @@
+@*
+ This page paints a list of reviews for a given provider,user and position IDs.
+
+ INPUT:
+    provider ID
+    position ID
+
+ REFERENCES:
+    This page is rendered by the Provider Profile page.
+
+ Use Ex:
+ 
+ String[] reviewsdata={ProviderID,PositionID};
+
+ @RenderPage("~/en_US/ReviewsGrid.cshtml", reviewsdata)
+*@
+@{
+    var providerID = PageData[0];
+    var positionID = PageData[1];
+    var userID = PageData[2];
+
+    String[] rating1data = { "name", "rating_value", "true" };
+    String[] rating2data = { "name", "rating_value", "true" };
+    String[] rating3data = { "name", "rating_value", "true" };
+    String[] rating4data = { "name", "rating_value", "true" };
+    
+    var db = Database.Open("sqlloco");
+    var query = @"SELECT u.FirstName, u.LastName, u.Photo, r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID
+                FROM dbo.UserReviews r
+                JOIN dbo.users u ON (u.UserID = r.UserID)
+                WHERE r.ProviderID = @0 AND r.PositionID = @1";
+    var reviews = db.Query(query,providerID,positionID);
+            
+}
+<h3>Reviews</h3>
+@foreach (var review in reviews)
+{
+    rating1data.SetValue("rating1 "+review.PaymentID,0);//Rating Name
+    rating1data.SetValue(Convert.ToString(review.Rating1),1);//Rating value
+    rating1data.SetValue("true",2);//Rating: enable or disable
+
+    rating2data.SetValue("rating2 " + review.PaymentID, 0);//Rating Name
+    rating2data.SetValue(Convert.ToString(review.Rating2), 1);//Rating value
+    rating2data.SetValue("true", 2);//Rating: enable or disable
+
+    rating3data.SetValue("rating3 " + review.PaymentID, 0);//Rating Name
+    rating3data.SetValue(Convert.ToString(review.Rating3), 1);//Rating value
+    rating3data.SetValue("true", 2);//Rating: enable or disable
+    
+    rating4data.SetValue("rating4 " + review.PaymentID, 0);//Rating Name
+    rating4data.SetValue(Convert.ToString(review.Rating4), 1);//Rating value
+    rating4data.SetValue("true", 2);//Rating: enable or disable 
+
+<ul class="reviews">
+	<li>
+		<div class="author">
+			<img alt="user photo" class="thumb" src="../@review.Photo" />
+			<a href="#">@review.FirstName @review.LastName</a>
+		</div>
+    	<div class="wrap">
+            <p>@review.PublicReview</p>
+		</div>
+        <br />
+        <div id="review-tag-ratings">
+        @Html.Label("rating1 ")
+        @RenderPage("~/en_US/StarRating.cshtml", rating1data)
+        @Html.Label("rating2 ")
+        @RenderPage("~/en_US/StarRating.cshtml", rating2data)
+        @Html.Label("rating3 ")
+        @RenderPage("~/en_US/StarRating.cshtml", rating3data)
+        @Html.Label("rating4 ")
+        @RenderPage("~/en_US/StarRating.cshtml", rating4data)
+        </div>
+	</li>
+</ul>
+}
