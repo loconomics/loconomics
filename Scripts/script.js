@@ -597,3 +597,8 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     $.blockUI(errorBlock(m, null, popupStyle(size)));
     $('.blockUI').click(function () { $.unblockUI() });
 }
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
+}
