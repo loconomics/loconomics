@@ -25,11 +25,10 @@
 @{  
     CommonHelpers.SecurePage();
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-    UserID = WebSecurity.CurrentUserId;
+    var UserID = WebSecurity.CurrentUserId;
     Page.Title = "Customer Reviews.";
 
-    
-    var UserID = 0;
+
     //TODO: SET THE REQUEST TO PASS POSITION AND PAYMENT INFO
     var positionID = Request["PositionID"];//14(cleaner) for testing
     var providerID = Request["ProviderID"];//34(dev team user)
@@ -133,7 +132,7 @@
     <div id="main" class="">
 		<h1>@Page.Title</h1>
         @Html.ValidationSummary()
-		<form id="userreview " action="@Href(UrlUtil.LangPath + "Reviews/")" method="post">
+		<form id="userreview " method="post">
 			
             @Html.Label("Question1")
             <br />

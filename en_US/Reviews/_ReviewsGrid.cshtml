@@ -10,14 +10,11 @@
 
  Use Ex:
  
- String[] reviewsdata={ProviderID,PositionID};
-
- @RenderPage("~/en_US/ReviewsGrid.cshtml", reviewsdata)
+ @RenderPage("ReviewsGrid.cshtml", ProviderID, PositionID)
 *@
 @{
     var providerID = PageData[0];
     var positionID = PageData[1];
-    var userID = PageData[2];
 
     String[] rating1data = { "name", "rating_value", "true" };
     String[] rating2data = { "name", "rating_value", "true" };
@@ -63,13 +60,13 @@
         <br />
         <div id="review-tag-ratings">
         @Html.Label("rating1 ")
-        @RenderPage("~/en_US/StarRating.cshtml", rating1data)
+        @RenderPage("_StarRating.cshtml", rating1data)
         @Html.Label("rating2 ")
-        @RenderPage("~/en_US/StarRating.cshtml", rating2data)
+        @RenderPage("_StarRating.cshtml", rating2data)
         @Html.Label("rating3 ")
-        @RenderPage("~/en_US/StarRating.cshtml", rating3data)
+        @RenderPage("_StarRating.cshtml", rating3data)
         @Html.Label("rating4 ")
-        @RenderPage("~/en_US/StarRating.cshtml", rating4data)
+        @RenderPage("_StarRating.cshtml", rating4data)
         </div>
 	</li>
 </ul>
