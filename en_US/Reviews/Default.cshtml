@@ -1,0 +1,185 @@
+﻿@*
+    This is a template page for customer reviews, the template
+    contains 4 star ratings, 2 yes/no questions, a public review
+    and a private review. After sumbiting data is stored in the
+    DDBB(dbo.UserReviews) and scores are updated for the provider
+    (dbo.ReviewScores)
+
+    INPUT:
+        Position ID: position ID used to search for ratings scores
+        Provider ID: provider ID used to search for rating scores
+        Payment ID: payment ID used to verify no reviews are already submitted for the service.
+    FORM DATA:
+        rating 1: star rating 
+        rating 2: star rating
+        rating 3: star rating
+        rating 4: star rating
+        answer 1: yes/no question answer
+        answer 2: yes/no question answer
+        publicreview: user public review
+        privatereview: user private review
+
+    TODO: this page should be access via an html link emailed to the customer 3h(see ReviewScheduling.cshtml) after the service has been delivered.
+    Alternatively user will have access to pending reviews in his dashboard.
+*@
+@{  
+    CommonHelpers.SecurePage();
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    var UserID = WebSecurity.CurrentUserId;
+    Page.Title = "Customer Reviews.";
+
+
+    //TODO: SET THE REQUEST TO PASS POSITION AND PAYMENT INFO
+    var positionID = Request["PositionID"];//14(cleaner) for testing
+    var providerID = Request["ProviderID"];//34(dev team user)
+    var paymentID = Request["PaymentID"];
+    var answer1 = Request["Question1"];
+    var answer2 = Request["Question2"];
+    var rating1 = Request["rating1"] == null ? "0" : Request["rating1"];
+    var rating2 = Request["rating2"] == null ? "0" : Request["rating2"];
+    var rating3 = Request["rating3"] == null ? "0" : Request["rating3"];
+    var rating4 = Request["rating4"] == null ? "0" : Request["rating4"];
+    var publicreview = Request["Public Review"];
+    var privatereview = Request["Private Review"];
+    //Hardcoded Rating ID (this should be changed)->create a key/value array with ratings and ratingID
+
+    var a1true = Request["Question1"] != "True" ? false:true;
+    var a1false = Request["Question1"] != "False" ? false : true;
+
+    var a2true = Request["Question2"] != "True" ? false : true;
+    var a2false = Request["Question2"] != "False" ? false : true;
+
+    String[] rating1data = { "rating1", @Request["rating1"], "false" };
+    String[] rating2data = { "rating2", @Request["rating2"], "false" };
+    String[] rating3data = { "rating3", @Request["rating3"], "false" };
+    String[] rating4data = { "rating4", @Request["rating4"], "false" };    
+
+    if(IsPost){
+
+        if (answer1 == null)
+        {
+            ModelState.AddError("Answer Unchecked", "Please reponse to answer 1");
+        }
+        if (answer2 == null)
+        {
+            ModelState.AddError("Answer Unchecked", "Please reponse to answer 2");
+        }    
+        //STORE DATA IN THE DATA BASE
+        var db = Database.Open("sqlloco");
+        var SQLCHECK = @"SELECT r.ReviewID
+                        FROM dbo.UserReviews r
+                        WHERE r.PaymentID=@0";
+        var SQLSELECT = @"SELECT Rating1, Rating2 ,Rating3 ,Rating4 ,TotalRatings
+                        FROM dbo.ReviewScores rs
+                        WHERE rs.PositionID=@0 AND rs.ProviderID=@1";
+        var SQLUPDATESCORES = @"UPDATE dbo.ReviewScores
+                            SET Rating1 = @0, Rating2 = @1, Rating3 = @2, Rating4 = @3, TotalRatings = @4, UpdatedDate = @5, ModifiedBy = @6
+                            WHERE ProviderID = @7 AND PositionID = @8";
+        var SQLINSERTSCORES = @"INSERT INTO dbo.ReviewScores
+                                (Rating1,Rating2,Rating3,Rating4,TotalRatings,ProviderID,PositionID,CreatedDate,UpdatedDate,ModifiedBy)
+                               VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9)";
+        var SQLINSERTREVIEW = @"INSERT INTO dbo.UserReviews 
+                            (UserID,ProviderID,PositionID,PaymentID,PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
+                            VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)";
+        if(ModelState.IsValid){
+            try{
+                var reviewID = db.Query(SQLCHECK, paymentID);
+                //New review
+                if(reviewID.Count()!=0){  
+                        ModelState.AddError("Duplicated Review", "The review for this service already exist");
+                };
+                if(ModelState.IsValid){
+                    //Look for existing scores
+                    var scores = db.Query(SQLSELECT,positionID,providerID);
+                    if (scores.Count() == 0)
+                    {
+                        //First scores for the positionID
+                        db.Execute(SQLINSERTSCORES, rating1 + "", rating2 + "", rating3 + "", rating4 + "", 1 + "", providerID, positionID, System.DateTime.Now, System.DateTime.Now, "UserID: " + UserID);  
+                    }
+                    else {
+                        foreach(var value in scores){
+                            //Update Scores
+                            var score1 = value.Rating1;
+                            var score2 = value.Rating2;
+                            var score3 = value.Rating3;
+                            var score4 = value.Rating4;
+                            var totalRatings = Convert.ToDecimal(value.TotalRatings);
+                            //TODO change if senteces for a key/value selection
+                            var newscore1 = ((score1 * totalRatings) + (Convert.ToDecimal(rating1))) / (totalRatings + 1);
+                            var newscore2 = ((score2 * totalRatings) + (Convert.ToDecimal(rating2))) / (totalRatings + 1);
+                            var newscore3 = ((score3 * totalRatings) + (Convert.ToDecimal(rating3))) / (totalRatings + 1);
+                            var newscore4 = ((score4 * totalRatings) + (Convert.ToDecimal(rating4))) / (totalRatings + 1);
+
+                            //Save the updated scores
+                            db.Execute(SQLUPDATESCORES, newscore1, newscore2, newscore3, newscore4, (totalRatings + 1), System.DateTime.Now, "UserID: " + UserID, providerID, positionID);
+                        }
+                    };
+                    //Store Review
+                    db.Execute(SQLINSERTREVIEW, UserID, providerID, positionID, paymentID, publicreview, privatereview, Convert.ToInt32(rating1), Convert.ToInt32(rating2), Convert.ToInt32(rating3), Convert.ToInt32(rating4), answer1, answer2, System.DateTime.Now, System.DateTime.Now, "UserID: "+UserID);
+                }              
+            }catch(Exception ex){
+                ModelState.AddError("Error:", ex.Message);
+            }
+            if(ModelState.IsValid){
+                Response.Redirect(UrlUtil.LangPath + "Reviews/Confirmation/?status=success");
+            }
+        }
+        db.Close();
+    }
+}
+  
+  <div id="container" class="home clearfix"> 
+    <div id="main" class="">
+		<h1>@Page.Title</h1>
+        @Html.ValidationSummary()
+		<form id="userreview " method="post">
+			
+            @Html.Label("Question1")
+            <br />
+            @Html.Label("yes")
+            @Html.RadioButton("Question1", true, @a1true)
+            @Html.Label("no")
+            @Html.RadioButton("Question1", false, @a1false)
+
+            <br />
+            @Html.Label("Question2")
+            <br />
+            @Html.Label("yes")
+            @Html.RadioButton("Question2", true, @a2true)
+            @Html.Label("no")
+            @Html.RadioButton("Question2", false, @a2false)
+            
+            @Html.Label("rating1 ")
+            @RenderPage("_StarRating.cshtml",@rating1data)
+            @Html.Label("rating2 ")
+            @RenderPage("_StarRating.cshtml",@rating2data)
+            @Html.Label("rating3 ")
+            @RenderPage("_StarRating.cshtml",@rating3data)
+            @Html.Label("rating4 ")
+            @RenderPage("_StarRating.cshtml",@rating4data)
+
+            <br />
+            @Html.Label("Public Review")
+            <br />
+            @Html.TextArea("Public Review", value: @publicreview)
+            <br />
+            @Html.Label("Private Review")
+            <br />
+            @Html.TextArea("Private Review", value: @privatereview)
+            <br />
+            <input type="hidden" name="PositionID" id="PositionID" value="@positionID" />
+            <input type="hidden" name="PaymentID" id="PaymentID" value="@paymentID" />
+            <input type="hidden" name="ProviderID" id="ProviderID" value="@providerID" />
+            <input type="submit" value="Post Review" />
+		</form>
+    </div><!-- #main -->
+
+  </div><!-- #container -->
+
+
+
+
+
+
+
+

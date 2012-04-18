@@ -4,11 +4,11 @@
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href("~/en_US/profile/?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+    <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/" + photo)"/></a></li>
 }
 @helper hrefProfile(){
     var p = PageData["item"];
-    @Href("~/en_US/Profile/?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
+    @Href(UrlUtil.LangPath + "Profile/?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
 }
 @helper printName(WebMatrix.Data.DynamicRecord p){
     string l = (string)p["LastName"];
@@ -17,7 +17,7 @@
 }
 
         <h6 class="provider-name"><a href="@hrefProfile()">@printName(p)</a></h6>
-        <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href("~/" + p.Photo)"/>
+        <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href(UrlUtil.AppPath + p.Photo)"/>
         
         <div class="overview">
             <div class="positions">Positions:  Housekeeper, Gardener, and <a href="#" class="view-more">2 more</a></div>
@@ -58,7 +58,7 @@
         </div>
         
         <div class="hightlighted-review">
-            <img alt="Reviewer photo" class="reviewer-photo" src="@Href("~/img/generic-friend-avatar.png")"/>
+            <img alt="Reviewer photo" class="reviewer-photo" src="@Href(UrlUtil.AppPath + "img/generic-friend-avatar.png")"/>
             <p>
                 @p.FirstName is really great at what he does. He was pleasant, communica...
                 <a href="#" class="view-more">view more</a>

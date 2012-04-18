@@ -1,19 +1,19 @@
 ﻿@{
     Page.Title = "Register an account";
-    Layout = "~/en_US/_SiteLayout.cshtml";
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
 
     string email = "";
 
     // Add Validation scripts
-    Scripts.Add("~/Scripts/jquery.validate.min.js");
-    Scripts.Add("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/jquery.validate.min.js");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js");
 
     Validation.RequireField("email", "Username cannot be empty."); 
 
     if (IsPost) {
         var result = (AuthenticationResult)Session["OAuthResult"];
         if (result == null) {
-            Response.Redirect("~/");
+            Response.Redirect(UrlUtil.LangPath);
         }
 
         email = Request.Form["email"];
@@ -35,7 +35,7 @@
                 // as opposed to via a normal account.
                 Session["OAuthLoggedIn"] = true;
                 
-                Response.Redirect("~/");
+                Response.Redirect(UrlUtil.LangPath);
             }
             else {
                 ModelState.AddError("email", "This username is already taken.");
@@ -59,7 +59,7 @@
                 
                 var returnUrl = Request.QueryString["ReturnUrl"];
                 if (returnUrl.IsEmpty()) {
-                    Response.Redirect("~/en_US/");
+                    Response.Redirect(UrlUtil.LangPath);
                 }
                 else {
                     Context.RedirectLocal(returnUrl);

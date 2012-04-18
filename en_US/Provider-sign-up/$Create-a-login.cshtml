@@ -72,8 +72,7 @@
                     bool requireEmailConfirmation = false ;//!WebMail.SmtpServer.IsEmpty();
                     var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                     if (requireEmailConfirmation) {
-                        var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                        var confirmationUrl = hostUrl + VirtualPathUtility.ToAbsolute("~/en_US/Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token));
+                        var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
                         WebMail.Send(
                             to: email,	
@@ -177,7 +176,7 @@
         </ul>
         <div class="facebook-connect">
             <span class="or">or</span>
-            <a href="#"><img src="@Href("~/img/fb-login-placeholder.png")" alt="Facebook Connect"/></a>
+            <a href="#"><img src="@Href(UrlUtil.AppPath + "img/fb-login-placeholder.png")" alt="Facebook Connect"/></a>
         </div>
     </fieldset>
     <fieldset class="legal-agreement">

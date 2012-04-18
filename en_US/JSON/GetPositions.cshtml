@@ -1,7 +1,8 @@
-﻿@*  (This file is based on /en_US/GetPositions.cshtml, modified)
+﻿@*
     This page is called to populate a JSON object with the Position Singular values available for a given Language and Country
 
     INPUT:
+        serviceType
         languageID
         countryID
 *@
@@ -13,12 +14,19 @@
  
     try{
         // Input data
-        var term = Request["serviceType"] + "%";
+        var term = "%" + Request["serviceType"] + "%";
     
         // Process data
         var db = Database.Open("sqlloco");
-        var sql = "SELECT distinct PositionSingular, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1 ORDER BY PositionSingular";
+        var sql = "EXEC GetPositions @0,1,1";
         var data = db.Query(sql, term);
+
+        // Result format is different to feed the Autocomplete jQueryUI feature:
+        if (UrlData.Count > 0 && UrlData[0].ToLower() == "autocomplete") {
+            CommonHelpers.ReturnJson(
+                data.Select(p => new{label = p.PositionSingular, value = p.PositionID})
+            );
+        }
         
         result["Positions"] = data;
         

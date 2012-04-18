@@ -1,0 +1,74 @@
+﻿@helper GetFacebookInitializationScripts() {
+    <div id="fb-root" style="display: none"></div>
+    <script type="text/javascript">
+        var facebookInitialized;
+        var facebookConnect;
+
+        if (!facebookInitialized) {
+            Modernizr.load({ load: document.location.protocol +
+                '//connect.facebook.net/@(Facebook.Language)/all.js',
+                callback: function () {
+                    FB.init({ appId: '@Facebook.AppId', status: true, cookie: true, xfbml: true });
+                }
+            });
+
+            if (!facebookConnect)
+                facebookConnect = function () {
+                    FB.login(function (response) {
+                        if (response.authResponse) {
+                            //console.log('FacebookConnect: Welcome!');
+                            $.blockUI(loadingBlock);
+                            window.location = UrlUtil.LangPath + "Account/Facebook/Callback/";
+                            /*FB.api('/me', function (response) {
+                            console.log('FacebookConnect: Good to see you, ' + response.name + '.');
+                            });*/
+                        } else {
+                            //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
+                        }
+                    });
+                }
+
+            facebookInitialized = true;
+        }
+    </script>
+}
+
+    @*<a href="https://www.facebook.com/dialog/oauth?client_id=@Server.UrlEncode(facebookAppId)&redirect_uri=@Server.UrlEncode(facebookRedirectUri)&scope=@Server.UrlEncode(facebookPermissions)&state=@Server.UrlEncode((string)facebookState)">
+        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+    </a>*@
+
+    <a href="javascript: facebookConnect();">
+        @GetFacebookInitializationScripts()
+        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+    </a>
+
+    @*
+    @GetFacebookInitializationScripts()
+    @Facebook.LoginButton(
+        registerUrl: UrlUtil.LangPath + "Account/Facebook/Register/",
+        returnUrl: UrlUtil.LangPath, 
+        callbackUrl: UrlUtil.LangPath + "Account/Facebook/Callback/",
+        buttonText: "Connect with Facebook",
+        extendedPermissions: facebookPermissions)
+        *@
+    @*
+          <div id="fb-root"></div>
+          <script>
+            window.fbAsyncInit = function() {
+              FB.init({
+                appId      : 'YOUR_APP_ID',
+                status     : true, 
+                cookie     : true,
+                xfbml      : true,
+                oauth      : true,
+              });
+            };
+            (function(d){
+               var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+               js = d.createElement('script'); js.id = id; js.async = true;
+               js.src = "//connect.facebook.net/en_US/all.js";
+               d.getElementsByTagName('head')[0].appendChild(js);
+             }(document));
+          </script>
+          <div class="fb-login-button">Login with Facebook</div>
+    *@

@@ -1,19 +1,21 @@
 ﻿@{  
-    DashboardFunctions.SecurePage();
+    CommonHelpers.SecurePage();
     
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Let's get this booked";
     
     PageData["customerrow"] = DashboardFunctions.GetUserRow();
 
-    if (!String.IsNullOrEmpty(Request["ProviderId"])){
-        int providerid = 0;
-        if (!int.TryParse(Request["ProviderId"], out providerid)){
-            Response.Redirect("~");
-        }
-        PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
-    } else {
-        Response.Redirect("~");
+    int providerid = Request["ProviderID"].AsInt();
+    
+    if (providerid == 0) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+        
+    PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
+    
+    if (PageData["providerrow"] == null) {
+        Response.Redirect(UrlUtil.LangPath);
     }
 }
 

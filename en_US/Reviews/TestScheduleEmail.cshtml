@@ -1,0 +1,29 @@
+﻿@*
+    Testing ReviewScheduling.ScheduleEmail class.method
+*@
+
+@{
+    float delay = Request["delayMinutes"].AsFloat();
+    
+    bool scheduled = ReviewScheduling.ScheduleEmail(TimeSpan.FromMinutes((double)delay),
+        "iagosrl@gmail.com",
+        "Testing Loconomics",
+        "Testing ReviewScheduling.ScheduleEmail");
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing Review Scheduling Email (throught WebCache)</title>
+    </head>
+    <body>
+    <h1>Testing automated tasks using Cache</h1>
+        <p>
+            @if(scheduled){
+               <text>Email was scheduled</text>
+            }else{
+               <text>Email was not scheduled. Unexpected error happen.</text>
+            }
+        </p>
+    </body>
+</html>

@@ -28,7 +28,7 @@ function initYourWork(){
 
         // Call ajax
         $.ajax({
-            url: 'GetPositions',
+            url: UrlUtil.JsonPath + "GetPositions/",
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
                 // Check result
@@ -85,7 +85,7 @@ function initYourWork(){
 
         // Do the ajax to load attributes
         $.ajax({
-            url: 'GetServiceAttributes',
+            url: UrlUtil.JsonPath + 'GetServiceAttributes/',
             data: { positionId: selectedPosition },
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {

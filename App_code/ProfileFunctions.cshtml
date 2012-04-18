@@ -22,18 +22,4 @@
         
         return db.Query(positionsql, userId, positionId);
     }
-
-    public static object GetRequiredParam<T>(string paramname){
-        if (!String.IsNullOrEmpty(Request[paramname])){
-            if (typeof(T) == typeof(Int32)){
-                int v = 0;
-                if (Int32.TryParse(Request[paramname], out v))
-                    return v;
-            } else
-                return Request[paramname];
-        }
-        // There is not a valid value:
-        Response.Redirect("~");
-        return null;
-    }
 }

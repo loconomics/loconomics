@@ -3,6 +3,8 @@
     var p = PageData["position"];
     // Current position number/index
     var n = PageData["npos"];
+    // Current user data record:
+    var u = PageData["userow"];
     
     var idprefix = "position#" + n + "-reviews";
 }
@@ -31,6 +33,10 @@ Thanks so much,
 Jonathan P.</textarea>
             </li>
         </ul>
+    </fieldset>
+    <fieldset>
+        <legend>Testing the Reviews/ReviewsGrid</legend>
+        @RenderPage(UrlUtil.LangPath + "Reviews/_ReviewsGrid.cshtml", u.UserID, p.PositionID)
     </fieldset>
     <fieldset class="actions">
         <button class="save main-button" type="submit">Save</button>

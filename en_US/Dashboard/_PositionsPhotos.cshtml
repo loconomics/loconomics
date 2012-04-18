@@ -13,7 +13,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-edit">
         <legend>Edit this photo:</legend>
         <ul>
-            <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@Href("~/img/thumbs/stevejobs.jpeg")" /></li>
+            <li class="positionphotos-edit-photo"><img alt="Photo to edit" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")" /></li>
             <li class="positionphotos-edit-caption">
                 <label for="position#@(n)-photos-edit-caption">Caption:</label>
                 <input type="text" id="position#@(n)-photos-edit-caption" name="positionphotos-edit-caption"/>
@@ -31,11 +31,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-gallery">
         <legend>Stored photos:</legend>
         <ol>
-            <li><a href="#"><img alt="Stored photo" src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li class="selected"><a href="#"><img alt="Stored photo" src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href("~/img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href("~/img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href("~/img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li class="selected"><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
         </ol>
     </fieldset>
     <fieldset class="positionphotos-tools">

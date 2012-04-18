@@ -1310,7 +1310,7 @@ fieldset.has-confirm.confirmed-no > legend{
     margin: 10px;
     text-align: center;
 }
-.blockUI p.subh1{
+.blockUI .subh1{
     color: #6c6c6c;
     font-size: 1.4em;
     text-align: center;

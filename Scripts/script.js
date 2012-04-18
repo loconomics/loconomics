@@ -68,26 +68,6 @@ $(document).ready(function () {
         $('.blockOverlay').attr('title', 'Click to unblock').click($.unblockUI);
     });
 
-
-    $('#loginModal form input[type=submit]').click(function () {
-        // update the block message 
-        $.blockUI({ message: "<h1>Logging you in...</h1>" });
-        // Ajax call should happen here
-        // $.ajax({ 
-        //     url: 'wait.php', 
-        //     cache: false, 
-        //     complete: function() { 
-        //         // unblock when remote call returns 
-        //         $.unblockUI(); 
-        //     } 
-        // }); 
-    });
-
-    $('#loginModal form input[type=cancel]').click(function () {
-        $.unblockUI();
-        return false;
-    });
-
     // $('form input.password').focus(function() {
     // 	$(this).hide();
     // 	$(this).next('input').show().focus();
@@ -114,7 +94,7 @@ $(document).ready(function () {
 
 
     // Autocomplete on User Supplied data
-    $('#titleSearch').autocomplete({ source: 'GetPositions.cshtml',
+    $('#titleSearch').autocomplete({ source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
         // dataSupply: [
         // 	{value: 'housekeeper', display: 'housekeeper'}, 
         // 	{value: 'plumber', display: 'plumber'}, 

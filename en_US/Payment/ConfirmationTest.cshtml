@@ -1,0 +1,85 @@
+﻿
+@using Braintree
+@{  
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+
+    var gateway = new BraintreeGateway
+    {
+        Environment = Braintree.Environment.SANDBOX,
+        MerchantId = "fn9phnknypvkgcfx",
+        PublicKey = "yhqvg4cz74jwxtw5",
+        PrivateKey = "q7vdftc9npxgkxpy"
+    };
+
+    var Amount="";
+    var TransactionId="";
+    var FirstName="";
+    var LastName="";
+    var Email="";
+    var MaskedNumber="";
+    var CardType="";
+    
+     // after the form is posted to the gateway, we're redirected back here, per the redirect URL component of TrData 
+           
+    // confirm the transaction we just posted via transparent redirect and receive the results of the transaction request
+    Result<Transaction> result = gateway.TransparentRedirect.ConfirmTransaction(Request.Url.Query);
+
+    if (result.IsSuccess())
+    {
+        // success indicates that the input parameters were valid and a transaction was successfully created
+        // however, the transaction may be declined or rejected
+        Transaction t = result.Target;
+        Amount = t.Amount.ToString();
+        TransactionId = t.Id;
+        FirstName = t.Customer.FirstName;
+        LastName = t.Customer.LastName;
+        Email = t.Customer.Email;
+        MaskedNumber = t.CreditCard.MaskedNumber;
+        CardType = t.CreditCard.CardType.ToString();
+    }
+    else
+    {
+        // we're going to redisplay the form to the user, but we'll need to repopulate the fields with the values they posted to the gateway.
+    //TODO:RepopulateForm(result);
+        foreach (KeyValuePair<String, String> pair in result.Parameters)
+        {
+            //ModelState[pair.Key] =  new ModelState { Value = new ValueProviderResult(pair.Value, pair.Value, System.Globalization.CultureInfo.CurrentCulture) };
+        }
+        // sensitive fields won't be returned with the result, and with ASP.NET MVC, we have to set blank values on these fields so we can associate errors with them
+        //ModelState["transaction[credit_card][number]"] = new ModelState { Value = new ValueProviderResult("", "", System.Globalization.CultureInfo.CurrentCulture) };
+        //ModelState["transaction[credit_card][cvv]"] = new ModelState { Value = new ValueProviderResult("", "", System.Globalization.CultureInfo.CurrentCulture) };
+
+
+   
+        // the gateway result also provides errors messages which we'll use to help the user fix errors in their submission
+        foreach (var pair in result.Errors.ByFormField())
+        {
+            foreach (var errorMessage in pair.Value)
+            {
+                ModelState.AddError(pair.Key, errorMessage);
+            }
+        }
+
+        Response.Redirect(UrlUtil.LangPath + "Payment/Test/");
+
+    //TODO: Check that the form is populated correctly
+    };
+    
+}
+<div id="container" class="sign-up">
+ <h1>Payment Result</h1>
+
+    <div>Thank you for your payment.</div>
+
+    <h2>Transaction Details</h2>
+
+    <table>
+        <tr><td>Amount</td><td>@Amount</td></tr>
+        <tr><td>Transaction ID:</td><td>@TransactionId</td></tr>
+        <tr><td>First Name:</td><td>@FirstName</td></tr>
+        <tr><td>Last Name:</td><td>@LastName</td></tr>
+        <tr><td>Email:</td><td>@Email</td></tr>
+        <tr><td>Credit Card:</td><td>@MaskedNumber</td></tr>
+        <tr><td>Card Type:</td><td>@CardType</td></tr>
+    </table>
+</div>
