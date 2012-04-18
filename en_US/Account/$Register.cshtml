@@ -147,7 +147,7 @@
         </form>
         <p class="choice-or">or</p>
         <div class="social choice-option">
-            <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+             @RenderPage("_FacebookConnectButton.cshtml")
             <p class="footnote">*we don't post anything without your permission</p>
             <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a href="@(UrlUtil.LangPath)Account/TermsOfUse/">Terms of Use</a></p>
         </div>
