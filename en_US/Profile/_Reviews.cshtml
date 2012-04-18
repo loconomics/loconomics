@@ -7,7 +7,7 @@
     var n = PageData["npos"];
     
     // TODO Review old code:
-    /* @RenderPage("~/en_US/ReviewsGrid.cshtml", {ProviderID,PositionID}) */
+    /* @RenderPage(UrlUtil.LangPath + "ReviewsGrid.cshtml", {ProviderID,PositionID}) */
 }
 <p class="reviews-description">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
@@ -16,7 +16,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 <ul>
    @for(var r=0; r < 3; r++){
     <li class="review">
-        <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href("~/img/eg-profile-pic.jpg")"/>
+        <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>
         <h6 class="reviewer-name">Joshua D.</h6>
         <p>
             @provider.Name was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, @provider.Name!!

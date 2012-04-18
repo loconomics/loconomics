@@ -14,7 +14,7 @@
 @helper printStartRating(string index, string rate){
     var n = "rating" + index;
     Html.Label(n);
-    RenderPage("~/en_US/StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
+    RenderPage(UrlUtil.LangPath + "StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
 }
 @{/* TODO Need review */}
 @helper printRating(WebMatrix.Data.DynamicRecord posrow){
@@ -65,7 +65,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 </div>
 <div class="featured-review review have-view-more">
     <h6>Review from <span class="reviewer-name">Joshua D.</span> (<span class="reviewer-date">27-jul-2011</span>):</h6>
-    <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href("~/img/eg-profile-pic.jpg")"/>
+    <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc.</p>
     <a href="#" class="view-more">More reviews</a>
 </div>

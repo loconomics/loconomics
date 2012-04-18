@@ -12,12 +12,12 @@
     var maxPositions = 5;
     
     Page.Title = PageData["providerrow"].Name;
-    Scripts.Add("~/Scripts/Profile.js");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/Profile.js");
 }
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href("~/en_US/profile/?user=" + name)"><img alt="@name" src="@Href("~/img/" + photo)"/></a></li>
+    <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/" + photo)"/></a></li>
 }
 @helper oldPrintMailbox(){
     // TODO Review old code: (is a section removed from the current design)
@@ -26,7 +26,7 @@
          <h1>
              <title>Inbox</title>
          </h1>
-            @RenderPage("~/en_US/MailBoxGrid.cshtml")
+            @RenderPage(UrlUtil.LangPath + "MailBoxGrid/")
         </div>
     */
 }
@@ -40,7 +40,7 @@
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
-            <img alt="Photo" class="profile-pic" src="@Href("~/" + providerrow.Photo)"/>
+            <img alt="Photo" class="profile-pic" src="@Href(UrlUtil.AppPath + providerrow.Photo)"/>
             <h1 class="profile-name">@printName(providerrow)</h1>
 		    
 		    <p class="profile-desc">
