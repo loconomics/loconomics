@@ -7,6 +7,11 @@
     <option value="ca">California</option>
 }
 @functions{
+    public static void ReturnJson(object jsondata){
+        Response.ContentType = "application/json";
+        Json.Write(jsondata, Response.Output);
+        Response.End();
+    }
     public static void ReturnJsonError(int code, string errorMessage)
     {
         if (code >= 0)
@@ -16,10 +21,8 @@
     }
     public static void ReturnJsonResult(int code, object result)
     {
-        Response.ContentType = "application/json";
-        Json.Write(new Dictionary<string, object>(){
+        ReturnJson(new Dictionary<string, object>(){
             { "Code", code }, { "Result", result } 
-        }, Response.Output);
-        Response.End();
+        });
     }
 }
