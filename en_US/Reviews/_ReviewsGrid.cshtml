@@ -51,7 +51,7 @@
 <ul class="reviews">
 	<li>
 		<div class="author">
-			<img alt="user photo" class="thumb" src="../@review.Photo" />
+			<img alt="user photo" class="thumb" src="@(UrlUtil.AppPath + review.Photo.Replace("\\", "/"))" />
 			<a href="#">@review.FirstName @review.LastName</a>
 		</div>
     	<div class="wrap">
