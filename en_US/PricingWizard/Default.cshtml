@@ -19,6 +19,8 @@ Data:
 @using System.Text.RegularExpressions;
 @using WebMatrix.WebData;
 @{
+    CommonHelpers.SecurePage();
+    
     //Validation messages
     var vm1 = "The position ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)";
     var vm2 = "The provider ID is required to make an estimation, you have to access this wizard from a provider profile(Testing error message)";
@@ -26,13 +28,10 @@ Data:
     
     //Error messages
     var em1 = "SQL error reading the provider pricing profile (Testing Error Message)";
-         
-    if (WebSecurity.IsAuthenticated) {
-        Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-        var UserID  = WebSecurity.CurrentUserId;
-    }else{
-        Response.Redirect(UrlUtil.LangPath + "Account/Login/");
-    }
+    
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    var UserID  = WebSecurity.CurrentUserId;
+    
     var userID = Convert.ToString(WebSecurity.CurrentUserId);
     var positionID = Request["PositionID"];
     var providerID = Request["ProviderID"];
@@ -202,7 +201,7 @@ Data:
     }
 }
 <!--This script paints the pricing variables for the selected pricing type-->
-<script type="text/javascript" src='@(UrlUtil.AppPath)Scripts/PricingWizard.js'></script>
+<script type="text/javascript" src='@(UrlUtil.AppPath)Scripts/PricingWizard.Customer.js'></script>
 
 <div id="container" class="sign-up">
     <div id="main">
@@ -227,8 +226,8 @@ Data:
             <div class="buttons">
                 <button id="advancer1" name="advancer" value="getestimate"class="next fancy" type="submit" >Get Estimate</button>
                 <button id="advancer2" name="advancer" value ="continue" class="next fancy" type="submit">Continue</button>
-				<input type="submit" name="action" value="getestimate" class="hidden" hidden='hidden' />
-                <input type="submit" name="action" value="continue" class="hidden" hidden='hidden' />
+				<input type="submit" name="action" value="getestimate" class="hidden" />
+                <input type="submit" name="action" value="continue" class="hidden" />
 			</div>
         </form>
    </div>

@@ -127,7 +127,7 @@
         db.Close();
     }
 }
-  
+  @CommonHelpers.SetupStarRatingPlugin()
   <div id="container" class="home clearfix"> 
     <div id="main" class="">
 		<h1>@Page.Title</h1>
@@ -149,14 +149,22 @@
             @Html.Label("no")
             @Html.RadioButton("Question2", false, @a2false)
             
-            @Html.Label("rating1 ")
-            @RenderPage("_StarRating.cshtml",@rating1data)
-            @Html.Label("rating2 ")
-            @RenderPage("_StarRating.cshtml",@rating2data)
-            @Html.Label("rating3 ")
-            @RenderPage("_StarRating.cshtml",@rating3data)
-            @Html.Label("rating4 ")
-            @RenderPage("_StarRating.cshtml",@rating4data)
+            <ul class="review-ratings" style="clear:both">
+                <li style="display: inline-block">
+                    <label>Proffessionalism</label>
+                    @RenderPage("_StarRating.cshtml",@rating1data)
+                </li>
+                <li style="display: inline-block">
+                    <label>Quality of work</label>
+                    @RenderPage("_StarRating.cshtml",@rating2data)
+                </li>
+                <li style="display: inline-block">
+                    <label>Efficiency</label>
+                    @RenderPage("_StarRating.cshtml",@rating3data)
+                </li>
+            </ul>
+                    @*Html.Label("rating4")
+                    @RenderPage("_StarRating.cshtml",@rating4data)*@
 
             <br />
             @Html.Label("Public Review")

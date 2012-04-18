@@ -6,8 +6,8 @@
         pricingTypeID
 *@
 @{
-    var positionID = Request["PositionID"] ?? "0";
-    var pricingTypeID = Request["PricingTypeID"] ?? "0";
+    var positionID = Request["PositionID"].AsInt();
+    var pricingTypeID = Request["PricingTypeID"].AsInt();
 
     var db = Database.Open("sqlloco");
     var sql = @"SELECT sev.EstimateVarID, ev.ProviderDescription, ev.GroupID, ev.Value, ev.ProviderTag, ev.UserTag
@@ -15,5 +15,6 @@
                 JOIN dbo.estimatevar ev ON (ev.EstimateVarID=sev.EstimateVarID)
                 WHERE sev.PositionID = @0 and sev.PricingTypeID = @1";
     var data = db.Query(sql, positionID, pricingTypeID);
-    Json.Write(data, Response.Output);
+
+    CommonHelpers.ReturnJsonResult(0, data);
 }

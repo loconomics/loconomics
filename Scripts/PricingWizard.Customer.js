@@ -21,7 +21,7 @@
         //Load the Pricing Type drop down
         $('#pricingtype').addOption(0, "Loading....").attr('disabled', true);
         $.getJSON(UrlUtil.LangPath + 'PricingWizard/ListPricingTypes/', function (data) {
-            var estimatetypes = data;
+            var estimatetypes = data.Result;
 
             $.each(estimatetypes, function (index, estimatetype) {
                 var val = estimatetype.PricingTypeID;
@@ -52,7 +52,7 @@
                     //Get estimation variables for the Position and pricing type.
                     $.getJSON(UrlUtil.LangPath + 'PricingWizard/GetUserPricingVars/', { PositionID: positionID, PricingTypeID: pricingTypeID },
                          function (data) {
-                             var estimatevars = data;
+                             var estimatevars = data.Results;
 
                              //paint var tags(input/select)
                              $.each(estimatevars, function (index3, estimatevar) {

@@ -8,7 +8,7 @@ $(document).ready(function () {
     //Fill the Pricing Type drop down
     $('#pricingtype').addOption('', "Loading....").attr('disabled', true);
     $.getJSON(UrlUtil.LangPath + 'PricingWizard/ListPricingTypes/', function (data) {
-        var estimatetypes = data;
+        var estimatetypes = data.Result;
         $.each(estimatetypes, function (index, estimatetype) {
             var val = estimatetype.PricingTypeID;
             var text = estimatetype.Description;
@@ -43,7 +43,7 @@ $(document).ready(function () {
         $(".row").remove();
 
         $.getJSON(UrlUtil.LangPath + 'PricingWizard/GetProviderPricingVars/', { PositionID: positionID, PricingTypeID: pricingTypeID }, function (data) {
-            var estimatevars = data;
+            var estimatevars = data.Result;
             $.each(estimatevars, function (index, estimatevar) {
                 var varID = estimatevar.EstimateVarID; //indentifies a variable value
                 var groupID = estimatevar.GroupID; //identifies a variable group for radio lists and dropdowns
