@@ -1,13 +1,34 @@
 ﻿@{     
     Layout = "../_SiteLayout.cshtml";
-
-    int providerid = PageData["providerid"] = (int)ProfileFunctions.GetRequiredParam<int>("ProviderId");
-    int positionid = PageData["positionid"] = (int)ProfileFunctions.GetRequiredParam<int>("PositionID");
+   
+    int providerid = PageData["providerid"] = Request["ProviderID"].AsInt();
+    int positionid = PageData["positionid"] = Request["PositionID"].AsInt();
+    
+    if (providerid == 0 || positionid == 0) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
     // var Service, string ServiceType, string position
     
     var providerrow = PageData["providerrow"] = ProfileFunctions.GetProfileRow(providerid);
     //var posrows = PageData["posrows"] = ProfileFunctions.GetPositionRow(providerid, positionid);
     var posrows = PageData["posrows"] = DashboardFunctions.GetUserPos(providerid);
+    
+    if (providerrow == null || posrows == null || posrows.Count == 0) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
+    // Check if the positionid requested exists for current user:
+    var posexists = false;
+    foreach(var c in posrows){
+        if (c.PositionID == positionid) {
+            posexists = true;
+        }
+    }
+    if (!posexists) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
     // Number of maximum positions displayed:
     var maxPositions = 5;
     
