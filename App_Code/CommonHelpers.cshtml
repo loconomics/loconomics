@@ -6,6 +6,15 @@
 @helper CountryOptions(){
     <option value="ca">California</option>
 }
+@helper SetupStarRatingPlugin(){
+    <script type="text/javascript">
+        Modernizr.load([
+            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.MetaData.js",
+            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.js",
+            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.css"
+        ]);
+    </script>
+}
 @functions{
     /*========= JSON =============*/
     

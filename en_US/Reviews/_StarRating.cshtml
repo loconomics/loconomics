@@ -15,7 +15,7 @@ Use Example:
      rating1data.SetValue("true", 2);//Rating: enable or disable
      //Render the rating
      @Html.Label("rating1 ")
-     @RenderPage(UrlUtil.LangPath + "Reviews/StarRating.cshtml", rating1data) 
+     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", rating1data) 
 *@
 @{
     var name = PageData[0];
@@ -62,40 +62,39 @@ Use Example:
     var disabled = Convert.ToBoolean(PageData[2]);
  }
 
+
  @if (!disabled)
  {
-    <input name="@name" type="radio" class="star" value="1" @checked1/>
-    <input name="@name" type="radio" class="star" value="2" @checked2/>
-    <input name="@name" type="radio" class="star" value="3" @checked3/>
-    <input name="@name" type="radio" class="star" value="4" @checked4/>
-    <input name="@name" type="radio" class="star" value="5" @checked5/>
-    <br />
+    <input name="@name" type="radio" class="star" value="1" @Html.Raw(checked1)/>
+    <input name="@name" type="radio" class="star" value="2" @Html.Raw(checked2)/>
+    <input name="@name" type="radio" class="star" value="3" @Html.Raw(checked3)/>
+    <input name="@name" type="radio" class="star" value="4" @Html.Raw(checked4)/>
+    <input name="@name" type="radio" class="star" value="5" @Html.Raw(checked5)/>
  }
  else
  {
-    <input name="@name" type="radio" class="star {split:4}" @checked025 disabled="disabled"/>
-    <input name="@name" type="radio" class="star {split:4}" @checked05/>
-    <input name="@name" type="radio" class="star {split:4}" @checked075/>
-    <input name="@name" type="radio" class="star {split:4}" @checked1/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked025) disabled="disabled"/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked05)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked075)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked1)/>
 
-    <input name="@name" type="radio" class="star {split:4}" @checked125/>
-    <input name="@name" type="radio" class="star {split:4}" @checked15/>
-    <input name="@name" type="radio" class="star {split:4}" @checked175/>
-    <input name="@name" type="radio" class="star {split:4}" @checked2/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked125)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked15)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked175)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked2)/>
     
-    <input name="@name" type="radio" class="star {split:4}" @checked225/>
-    <input name="@name" type="radio" class="star {split:4}" @checked25/>
-    <input name="@name" type="radio" class="star {split:4}" @checked275/>
-    <input name="@name" type="radio" class="star {split:4}" @checked3/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked225)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked25)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked275)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked3)/>
 
-    <input name="@name" type="radio" class="star {split:4}" @checked325/>
-    <input name="@name" type="radio" class="star {split:4}" @checked35/>
-    <input name="@name" type="radio" class="star {split:4}" @checked375/>
-    <input name="@name" type="radio" class="star {split:4}" @checked4/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked325)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked35)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked375)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked4)/>
 
-    <input name="@name" type="radio" class="star {split:4}" @checked425/>
-    <input name="@name" type="radio" class="star {split:4}" @checked45/>
-    <input name="@name" type="radio" class="star {split:4}" @checked475/>
-    <input name="@name" type="radio" class="star {split:4}" @checked5/>
-    <br />
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked425)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked45)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked475)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked5)/>
  }
