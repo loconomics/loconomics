@@ -1,13 +1,27 @@
 ﻿@{
     var p = PageData["providerrow"];
     var c = PageData["customerrow"];
+    var pos = PageData["positionrow"];
     //var customerid = c.UserID;
+  
+    var sqlattribute = "exec GetServiceAttributes @0,@1,1,1";
     
+    dynamic services, serviceswithfees;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Getting the 'Services routinely included' (cat=2)
+        services = db.Query(sqlattribute, pos.PositionID, 2);
+        
+        // Getting the 'Services upon request' (cat=3)
+        serviceswithfees = db.Query(sqlattribute, pos.PositionID, 3);
+    }
+    
+    /*
     // Attributes from category 1
-    var attc1 = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
+    var services = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
         {6, "Dishes"}, {7, "Trash emptyting"}, {8, "Toilets"}};
     // Attributes from category 2
-    var attc2 = new Dictionary<int, string>(){{302, "Ironing"}, {155, "Laundry"}, {85, "Window-cleaning"}, {128, "Floor-waxing"}};
+    var serviceswithfees = new Dictionary<int, string>(){{302, "Ironing"}, {155, "Laundry"}, {85, "Window-cleaning"}, {128, "Floor-waxing"}};*/
 }
 
 <p class="info">
@@ -21,16 +35,16 @@
         <fieldset class="attribute-category attribute-category-1">
             <legend>Services regulary included:</legend>
             <ul>
-                @foreach(var att in attc1){
-                    <li><label><input type="checkbox" name="booking-services-attribute-cat1-@att.Key"/>@att.Value</label></li>
+                @foreach(var att in services){
+                    <li><label><input type="checkbox" name="booking-services-attribute-cat1-@att.ServiceAttributeID"/>@att.ServiceAttribute</label></li>
                 }
             </ul>
         </fieldset>
         <fieldset class="attribute-category attribute-category-2">
             <legend>Services upon request:</legend>
             <ul>
-                @foreach(var att in attc2){
-                    <li><label><input type="checkbox" name="booking-services-attribute-cat2-@att.Key"/>@att.Value</label></li>
+                @foreach(var att in serviceswithfees){
+                    <li><label><input type="checkbox" name="booking-services-attribute-cat2-@att.ServiceAttributeID"/>@att.ServiceAttribute</label></li>
                 }
             </ul>
         </fieldset>
