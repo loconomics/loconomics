@@ -84,25 +84,18 @@
     font-size: 1em;
 }
 #booking-services .special-instructions{
-    width: 356px;
-    margin: 10px 0 0;
+    width: 295px;
 }
 /* Fix a bug in IE */
 html.ie #booking-services .special-instructions legend{
     display: inline-block;
 }
 #booking-services .special-instructions textarea{
-    width: 300px;
+    width: 265px;
     height: 8em;
 }
 #booking-services .pricing-wizard{
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 310px;
-    padding-left: 10px;
-    border-left: 1px solid #dadada;
-    margin-left: 10px;
+    width: 670px;
 }
 #booking-services .pricing-wizard li{
     margin: 10px 0;
