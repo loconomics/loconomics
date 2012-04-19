@@ -5,7 +5,7 @@
 
     /* Get a data row with the User information identified with 'userId' from the database
     */
-    public static WebMatrix.Data.DynamicRecord GetUserRow(int userId) {
+    public static dynamic GetUserRow(int userId) {
 
         // Commented unused vars:
         //var stringPosted = "Nothing";
@@ -35,19 +35,19 @@
     }
     /* Get a data row with the current user information from the database
     */
-    public static WebMatrix.Data.DynamicRecord GetUserRow() {
+    public static dynamic GetUserRow() {
         return GetUserRow(WebSecurity.CurrentUserId);
     }
     /* Get a data object with the Positions rows of the user identified with 'userId' from the database
     */
-    public static object GetUserPos(int userId){
+    public static dynamic GetUserPos(int userId){
         var db = Database.Open("sqlloco");
         var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
         return db.Query(sqlpositions, userId);
     }
     /* Get a data object with the Positions rows of the current user from the database
     */
-    public static object GetUserPos(){
+    public static dynamic GetUserPos(){
         return GetUserPos(WebSecurity.CurrentUserId);
     }
     /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database

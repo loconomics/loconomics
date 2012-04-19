@@ -17,7 +17,7 @@
     RenderPage(UrlUtil.LangPath + "StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
 }
 @{/* TODO Need review */}
-@helper printRating(WebMatrix.Data.DynamicRecord posrow){
+@helper printRating(dynamic posrow){
     for(var s=1; s < 5; s++){
         var rate = posrow["Rating" + s.ToString()] ?? 0;
         printStartRating(s.ToString(), rate.ToString());

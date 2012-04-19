@@ -10,7 +10,7 @@
     var p = PageData["item"];
     @Href(UrlUtil.LangPath + "Profile/?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
 }
-@helper printName(WebMatrix.Data.DynamicRecord p){
+@helper printName(dynamic p){
     string l = (string)p["LastName"];
     if (l.Length > 1) { l = l.Substring(0, 1); }
     @(p["FirstName"] + " " + @l + ".")
