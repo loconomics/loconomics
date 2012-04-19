@@ -98,7 +98,7 @@ html.ie #booking-services .special-instructions legend{
     width: 670px;
 }
 #booking-services .pricing-wizard li{
-    margin: 10px 0;
+    margin: 2px 0;
     position: relative;
 }
 #booking-services .pricing-wizard li label{
@@ -108,7 +108,10 @@ html.ie #booking-services .special-instructions legend{
 #booking-services .pricing-wizard select{
     position: absolute;
     right: 0;
-    width: 80px;
+    width: 100px;
+}
+#booking-services div.calculate-price-button{
+    margin: 7px 0;
 }
 
 /** Form: Schedule **/
