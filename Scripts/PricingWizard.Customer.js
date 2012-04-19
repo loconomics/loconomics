@@ -1,14 +1,9 @@
 ﻿$(document).ready(function () {
-    //aux function to get data from the url string
-    function getURLParameter(name) {
-        return decodeURI(
-                   (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
-    }
 
     var isResult = (getURLParameter("EstimateResult") != "null") ? true : false;
     $("#advancer1").hide();
     $("#advancer2").hide();
-    var pricingtype = $('.pricingwizard > .pricingtype > select');
+    var pricingtype = $('.pricing-type-selector');
     pricingtype.hide();
     $('#pricingtypelabel').hide();
     $('#result').hide();
@@ -52,7 +47,7 @@
                     //Get estimation variables for the Position and pricing type.
                     $.getJSON(UrlUtil.LangPath + 'PricingWizard/GetUserPricingVars/', { PositionID: positionID, PricingTypeID: pricingTypeID },
                          function (data) {
-                             var estimatevars = data.Results;
+                             var estimatevars = data.Result;
 
                              //paint var tags(input/select)
                              $.each(estimatevars, function (index3, estimatevar) {

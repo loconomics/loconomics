@@ -1,9 +1,4 @@
-﻿function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
-}
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
 
     //Fill the Pricing Type drop down
     $('#pricingtype').addOption('', "Loading....").attr('disabled', true);
