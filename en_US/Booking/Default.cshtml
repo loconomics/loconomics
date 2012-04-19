@@ -7,14 +7,16 @@
     PageData["customerrow"] = DashboardFunctions.GetUserRow();
 
     int providerid = Request["ProviderID"].AsInt();
+    int positionid = Request["PositionID"].AsInt();
     
-    if (providerid == 0) {
+    if (providerid == 0 || positionid == 0) {
         Response.Redirect(UrlUtil.LangPath);
     }
         
     PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
+    PageData["positionrow"] = DashboardFunctions.GetUserPos(providerid, positionid);
     
-    if (PageData["providerrow"] == null) {
+    if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
 }

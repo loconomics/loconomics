@@ -50,6 +50,13 @@
     public static object GetUserPos(){
         return GetUserPos(WebSecurity.CurrentUserId);
     }
+    /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database
+     */
+    public static dynamic GetUserPos(int userId, int posId) {
+        var db = Database.Open("sqlloco");
+        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and a.PositionID = @1 and c.LanguageID = 1 and c.CountryID = 1";                    
+        return db.QuerySingle(sqlpositions, userId, posId);
+    }
     /* Function create with copying the code from the old 'provider-dashboard-profile.cshtml' file,
         must be used in the appropiated Dashboard page by back-end code.
       TODO: Un-used function

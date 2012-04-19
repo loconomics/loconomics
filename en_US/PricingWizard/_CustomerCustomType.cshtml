@@ -1,0 +1,83 @@
+﻿@* 
+    Pricing Wizard, Customer View, PricingType 2:Custom
+ *@
+@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"];
+    var c = PageData["customerrow"];
+    var p = PageData["positionrow"];
+    dynamic pvars;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Get the Variables
+        pvars = db.Query(@"
+            SELECT *
+            FROM    pricingvariable
+            WHERE   CountryID=@0 AND LanguageID=@1 AND ClientTypeID=@2 AND PositionID=@3
+        ", 1, 1, clienttypeid, p.PositionID);
+    }
+}
+@helper selectNumber(string idname){
+                <select id="@idname" name="@idname">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+}
+    @foreach (var pvar in pvars){
+        @pvar.PricingVariableName <br />
+    }
+        <ul>
+            <li class="home-type">
+                <label for="booking-services-hometype">Type of home:</label>
+                <select id="booking-services-hometype" name="booking-services-hometype">
+                    <option>House</option>
+                </select>
+            </li>
+            <li class="number-of-bedrooms">
+                <label for="booking-services-bedroomsnumber">Number of bedrooms:</label>
+                @selectNumber("booking-services-bedroomsnumber")
+            </li>
+            <li class="number-of-bathrooms">
+                <label for="booking-services-bathroomsnumber">Number of bathrooms:</label>
+                @selectNumber("booking-services-bathroomsnumber")
+            </li>
+            <li class="number-of-common-rooms">
+                <label for="booking-services-commonroomsnumber">Number of common rooms:</label>
+                @selectNumber("booking-services-commonroomsnumber")
+            </li>
+            <li class="cleanliness-level">
+                <label for="booking-services-cleanliness-level">What level of cleaning is required?</label>
+                <select id="booking-services-cleanliness-level" name="booking-services-cleanliness-level">
+                    <option>light</option>
+                </select>
+            </li>
+            <li class="pets">
+                <label for="booking-services-pets">Do you have any indoor pets?</label>
+                <select id="booking-services-pets" name="booking-services-pets">
+                    <option>Cats</option>
+                    <option>Dogs</option>
+                </select>
+            </li>
+            <li class="calculate-price-button actions">
+                <button class="calculate-price-button">Calculate</button>
+            </li>
+            <li class="calculation">
+                <table class="calculation">
+                    <tr><th>Time required:</th><td class="time-required">3 hours</td></tr>
+                    <tr>
+                        <th><span class="time-required">3 hours</span> @@ <span class="hour-price">$22.00</span></th>
+                        <td class="subtotal-price">$66.00</td>
+                    </tr>
+                    <tr>
+                        <th>Loconomics service fee:</th>
+                        <td class="fee-pricee">$6.00</td>
+                    </tr>
+                    <tr>
+                        <th>Total price:</th>
+                        <td class="total-price">$72.00</td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
