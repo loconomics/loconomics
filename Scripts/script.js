@@ -31,15 +31,15 @@ $(document).ready(function () {
 
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Login/', 'medium');
+        popup(UrlUtil.LangPath + 'Account/$Login/', { width: 410, height: 300 });
         return false;
     });
     $(document).delegate('a.register', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Register/', 'medium');
+        popup(UrlUtil.LangPath + 'Account/$Register/', { width: 450, height: 420 });
         return false;
     });
     $(document).delegate('a.forgot-password', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', 'medium');
+        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', { width: 400, height: 200 });
         return false;
     });
 
@@ -527,9 +527,9 @@ function popupStyle(size) {
     return {
         cursor: 'default',
         width: size.width + 'px',
-        left: Math.round($(window).width() * (1 - size.sizeFactor) / 2) - 30 + 'px',
+        left: Math.round(($(window).width() - size.width) / 2) - 30 + 'px',
         height: size.height + 'px',
-        top: Math.round($(window).height() * (1 - size.sizeFactor) / 2) - 30 + 'px',
+        top: Math.round(($(window).height() - size.height) / 2) - 30 + 'px',
         padding: '25px',
         overflow: 'auto',
         border: '5px solid #b5e1e2',
@@ -544,9 +544,13 @@ function popupStyle(size) {
 function popup(url, size){
     // Native popup
     //window.open(url);
-    
+
     // Smart popup
-    swh = popupSize(size);
+    var swh;
+    if (size && size.width)
+        swh = size;
+    else
+        swh = popupSize(size);        
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
