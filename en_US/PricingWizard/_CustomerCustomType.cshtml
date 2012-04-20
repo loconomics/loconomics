@@ -5,9 +5,9 @@
 @{
     var clienttypeid = PageData["ClientTypeID"];
     var c = PageData["customerrow"];
-    var p = PageData["positionrow"];
+    var pos = PageData["positionrow"];
     dynamic pvars;
-    
+
     using (var db = Database.Open("sqlloco")){
         // Get the Variables
         pvars = db.Query(@"
@@ -15,7 +15,7 @@
             FROM    pricingvariable
             WHERE   CountryID=@0 AND LanguageID=@1 AND ClientTypeID=@2 AND PositionID=@3
                      AND Active = 1 AND PricingTypeID = 2
-        ", 1, 1, clienttypeid, p.PositionID);
+        ", 1, 1, clienttypeid, pos.PositionID);
     }
     
     var idprefix = "pricingwizard";
@@ -53,7 +53,7 @@
 
     </ul>
     <div class="calculate-price-button actions">
-        <button class="calculate-price-button">Calculate</button>
+        <button class="calculate-price-button ajax-fieldset-submit">Calculate</button>
     </div>
     <div class="calculation">
         <table class="calculation">

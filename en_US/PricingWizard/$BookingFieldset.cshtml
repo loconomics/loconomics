@@ -1,9 +1,20 @@
 ﻿@using WebMatrix.Data;
 @{
-
-    var c = PageData["customerrow"];
-    var p = PageData["providerrow"];
-    var pos = PageData["positionrow"];
+    var p = PageData["providerrow"] ?? (PageData["providerrow"] = DashboardFunctions.GetUserRow(Request["providerid"].AsInt()));
+    var c = PageData["customerrow"] ?? (PageData["customerrow"] = DashboardFunctions.GetUserRow());
+    var pos = PageData["positionrow"] ?? (PageData["positionrow"] = DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt()));
+    //var customerid = c.UserID;
+    
+    if (p == null || c == null || pos == null){
+        var inputdataerrormessage = "No enought input data to show results";
+        if (IsPost){
+            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
+    
     string pageToLoad = "";
     
     using (var db = Database.Open("sqlloco")){
@@ -34,7 +45,7 @@
         }
     }
 }
-    <fieldset class="pricing-wizard">
+    <fieldset class="pricing-wizard ajax ajax-box" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$BookingFieldset/?providerid=@(p.UserID)&positionid=@(pos.PositionID)">
         <legend>Pricing estimate:</legend>
         @RenderPage(pageToLoad)
     </fieldset>

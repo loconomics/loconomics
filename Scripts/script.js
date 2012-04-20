@@ -370,9 +370,11 @@ $(document).ready(function () {
     *    - 1: success result, Result contains a URL, the page will be redirected to that.
     *    - Major 1: success result, with custom handler throught the form event 'success-post-message'.
     */
-    $(document).delegate('form.ajax', 'submit', function () {
-        var form = $(this);
-        var box = form.closest(".ajax-box");
+    function ajaxFormsSubmitHandler(event) {
+        // Default data for required params:
+        var form = (event.data ? event.data.form : null) || $(this);
+        var box = (event.data ? event.data.box : null) || form.closest(".ajax-box");
+        var action = (event.data ? event.data.action : null) || form.attr('action') || '';
 
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
@@ -382,7 +384,7 @@ $(document).ready(function () {
 
         // Do the Ajax post
         $.ajax({
-            url: (form.attr('action') || ''),
+            url: (action),
             type: 'POST',
             data: form.serialize(),
             success: function (data, text, jx) {
@@ -451,7 +453,21 @@ $(document).ready(function () {
 
         // Stop normal POST:
         return false;
-    });
+    }
+    /* Attach a delegated handler to manage ajax forms */
+    $(document).delegate('form.ajax', 'submit', ajaxFormsSubmitHandler);
+    /* Attach a delegated handler for a special ajax form case: subforms, using fieldsets. */
+    $(document).delegate('fieldset.ajax .ajax-fieldset-submit', 'click',
+        function (event) {
+            var form = $(this).closest('fieldset.ajax');
+            event.data = {
+                form: form,
+                box: form.closest('.ajax-box'),
+                action: form.data('ajax-fieldset-action')
+            };
+            return ajaxFormsSubmitHandler(event);
+        }
+    );
 
     /* Generic script for fieldsets with class .has-confirm, allowing show
     the content only if the main confirm fields have 'yes' selected */
