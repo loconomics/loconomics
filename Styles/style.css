@@ -861,8 +861,8 @@ div.dp-popup td.disabled{cursor:default;}
 form fieldset.actions{
     margin: 10px 0 !important;
 }
-/* .main-button, inside .actions container: bigger, more important button */
-.actions .main-button{
+/* .main-action, inside .actions container: bigger, more important button */
+.actions .main-action{
     text-transform: lowercase;
     border-radius: 20px;
     -moz-border-radius: 20px;
@@ -873,7 +873,7 @@ form fieldset.actions{
     font-size: 1.1em;
     line-height: 150%;
 }
-.actions .main-button:hover{
+.actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
     -moz-box-shadow: 0 0 5px 2px #99C027;
     -o-box-shadow: 0 0 5px 2px #99C027;
@@ -1373,7 +1373,7 @@ fieldset.has-confirm.confirmed-no > legend{
     float: right;
     clear: none;
 }
-.account-popup .main-button{
+.account-popup .main-action{
     font-size: 1em;
 }
 .account-popup legend{
