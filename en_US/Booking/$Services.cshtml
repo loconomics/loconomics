@@ -1,9 +1,19 @@
 ﻿@using WebMatrix.Data;
 @{
-    var p = PageData["providerrow"];
-    var c = PageData["customerrow"];
-    var pos = PageData["positionrow"];
+    var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
+    var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt());
     //var customerid = c.UserID;
+    
+    if (p == null || c == null || pos == null){
+        var inputdataerrormessage = "No enought input data to show results";
+        if (IsPost){
+            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
   
     var sqlattribute = "exec GetServiceAttributes @0,@1,1,1";
     
@@ -16,14 +26,26 @@
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, 3);
     }
+    
+    // TODO Add validation rules or do manual validation (we have dynamic fields)
+    
+    if (IsPost){
+        if (ModelState.IsValid){
+            // TODO Process form data and insert into database
+            
+            // Return OK result
+            CommonHelpers.ReturnJsonResult(0, null);
+        }
+    }
 }
 
 <p class="info">
     Please review the items below and be as accurate as possible to help your provider do a great job.
     The price and time require are estimates only and may change depending on actual work performed.   
 </p>
-<form action="#" method="post" class="services" id="booking-services">
+<form action="@(UrlUtil.LangPath)Booking/$Services/" method="post" class="services" id="booking-services">
     <input type="hidden" name="providerid" value="@p.UserID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
     <fieldset class="select-services">
         <legend>Select the services you'd like performed:</legend>
         <fieldset class="attribute-category attribute-category-1">
@@ -50,6 +72,6 @@
     @*RenderPage("_ExamplePricingWizard.cshtml")*@
     @RenderPage(UrlUtil.LangPath + "PricingWizard/_BookingFieldset.cshtml")
     <fieldset class="actions">
-        <button data-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
+        <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
     </fieldset>
 </form>

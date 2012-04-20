@@ -1,13 +1,36 @@
 ﻿@{
-    var p = PageData["providerrow"];
-    var c = PageData["customerrow"];
+    var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
+    var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt());
+    //var customerid = c.UserID;
+    
+    if (p == null || c == null || pos == null){
+        var inputdataerrormessage = "No enought input data to show results";
+        if (IsPost){
+            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
 
+    // TODO Add validation rules or do manual validation
+    
+    if (IsPost){       
+        if (ModelState.IsValid){
+            // TODO Process form data and insert into database
+            
+            // Return OK result
+            CommonHelpers.ReturnJsonResult(0, null);
+        }
+    }
 }
 <p class="info">
     Please review the summary and provide your payment details below.  You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
 </p>
-<form action="#" method="post" class="payment" id="booking-payment">
+<form action="@(UrlUtil.LangPath)Booking/$Payment/" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
     <fieldset class="billing-info box">
         <legend>Billing information:</legend>
         <ul>
@@ -130,6 +153,6 @@
         </table>
     </fieldset>
     <fieldset class="actions">
-        <button class="complete-booking next finish main-action">Complete booking</button>
+        <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Dashboard/My-Providers/")" class="complete-booking next finish main-action">Complete booking</button>
     </fieldset>
 </form>

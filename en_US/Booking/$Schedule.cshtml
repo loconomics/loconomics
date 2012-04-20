@@ -1,11 +1,34 @@
 ﻿@{
-    var p = PageData["providerrow"];
-    var c = PageData["customerrow"];
+    var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
+    var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt());
     //var customerid = c.UserID;
     
+    if (p == null || c == null || pos == null){
+        var inputdataerrormessage = "No enought input data to show results";
+        if (IsPost){
+            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
+    
+    // TODO Load from database real data
     // Classes for differents calendar availability states
     var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
+    
+    // TODO Add validation rules or do manual validation
+    
+    if (IsPost){       
+        if (ModelState.IsValid){
+            // TODO Process form data and insert into database
+            
+            // Return OK result
+            CommonHelpers.ReturnJsonResult(0, null);
+        }
+    }
 }
 @helper printOptionsHours(){
     var firstHour = new TimeSpan(9, 0, 0);
@@ -20,8 +43,9 @@
 <p class="info">
     Please review your provider’s availability calendar and choose a location, preferred time for services to be peformed and up to two alternate times.  Being flexible helps the two of you get an accurate time booked quickly.  
 </p>
-<form action="#" method="post" class="schedule" id="booking-schedule">
+<form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">
@@ -122,6 +146,6 @@
         </fieldset>
     </fieldset>
     <fieldset class="actions">
-        <button data-next-step="#payment" class="proceed-to-payment next main-action">Provide payment</button>
+        <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">Provide payment</button>
     </fieldset>
 </form>

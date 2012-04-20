@@ -22,26 +22,26 @@
 }
 
   <div id="container" class="clearfix booking editable have-boxes">
-    <div id="main" class="tabbed folders">
+    <div id="main" class="tabbed folders wizard">
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We'll make it easy for you and @PageData["providerrow"].FirstName</p>
         
 		<ul class="tabs autofill-submenu-items">
 			<li class="current"><a class="current" href="#services">Services</a></li>
-			<li><a href="#schedule">Schedule</a></li>
-            <li><a href="#payment">Payment</a></li>
+			<li class="disabled"><a href="#schedule">Schedule</a></li>
+            <li class="disabled"><a href="#payment">Payment</a></li>
         </ul>
         
 		<div id="services" class="tab-body fancy current">
-            @RenderPage("_Services.cshtml")
+            @RenderPage("$Services.cshtml")
 		</div><!-- #services -->
 
 		<div id="schedule" class="tab-body fancy">
-            @RenderPage("_Schedule.cshtml")
+            @RenderPage("$Schedule.cshtml")
 		</div><!-- #schedule -->
 
 		<div id="payment" class="tab-body fancy">
-            @RenderPage("_Payment.cshtml")
+            @RenderPage("$Payment.cshtml")
 		</div><!-- #payment -->
         
     </div><!-- #main -->
