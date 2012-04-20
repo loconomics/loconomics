@@ -583,14 +583,22 @@ function popup(url, size){
 }
 function ajaxErrorPopupHandler(jx, message, ex) {
     var m = message;
+    var iframe = null;
     size = popupSize('large');
-    if (m == 'error')
-        m = '<iframe src="data:text/html,' + encodeURI(jx.responseText) + '" width="' + size.width + '" height="' + size.height + '"></iframe>';
-    else
+    if (m == 'error') {
+        m = '<iframe width="' + size.width + '" height="' + (size.height-10) + '"></iframe>';
+        iframe = $(m).get(0);
+        iframe.onload = function () {
+            $(iframe.contentDocument.documentElement).html(jx.responseText); 
+        };
+        m = null;
+    }  else
         m = m + "; " + ex;
 
     // Block all window, not only current element
     $.blockUI(errorBlock(m, null, popupStyle(size)));
+    if (iframe)
+        $('.blockMsg').html(iframe);
     $('.blockUI').click(function () { $.unblockUI() });
 }
 
