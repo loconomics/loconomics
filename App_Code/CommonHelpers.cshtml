@@ -42,6 +42,6 @@
     */
     public static void SecurePage() {
         if (!WebSecurity.IsAuthenticated)
-            Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + System.Web.HttpContext.Current.Request.Url.PathAndQuery);
+            Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Context.Server.UrlEncode(System.Web.HttpContext.Current.Request.Url.PathAndQuery));
     }
 }

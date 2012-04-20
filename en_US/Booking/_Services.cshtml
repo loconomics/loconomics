@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     var p = PageData["providerrow"];
     var c = PageData["customerrow"];
     var pos = PageData["positionrow"];
@@ -15,13 +16,6 @@
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, 3);
     }
-    
-    /*
-    // Attributes from category 1
-    var services = new Dictionary<int, string>(){{1, "Sweeping"}, {2, "Mopping"}, {3, "Vacuuming"}, {4, "Dusting"}, {5, "Bed-making"}, 
-        {6, "Dishes"}, {7, "Trash emptyting"}, {8, "Toilets"}};
-    // Attributes from category 2
-    var serviceswithfees = new Dictionary<int, string>(){{302, "Ironing"}, {155, "Laundry"}, {85, "Window-cleaning"}, {128, "Floor-waxing"}};*/
 }
 
 <p class="info">
