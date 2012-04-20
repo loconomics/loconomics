@@ -5,45 +5,92 @@
 @{
     var clienttypeid = PageData["ClientTypeID"];
     var c = PageData["customerrow"];
+    var p = PageData["providerrow"];
     var pos = PageData["positionrow"];
+    var idprefix = "pricingwizard";
     dynamic pvars;
+    var pvalues = new Dictionary<int, string>();
+    decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0;
 
     using (var db = Database.Open("sqlloco")){
         // Get the Variables
         pvars = db.Query(@"
-            SELECT *
+            SELECT  PricingVariableID, 
+                    PricingVariableName, CustomerInputDataRequired, CustomerDataInputType,
+                    CustomerDataValues, CustomerPricingVariableDisplayText,
+                    ProviderDataInputUnit, CustomerDataInputUnit
             FROM    pricingvariable
             WHERE   CountryID=@0 AND LanguageID=@1 AND ClientTypeID=@2 AND PositionID=@3
                      AND Active = 1 AND PricingTypeID = 2
         ", 1, 1, clienttypeid, pos.PositionID);
-    }
+
+        // Get specific Provider values for this pricing variables        
+        var providerInputs = db.Query(@"
+                SELECT  PricingVariableID, PricingDataInput
+                FROM    providerpricingvariableinputs
+                WHERE   UserID = @0
+                ORDER BY    PricingVariableID
+            ", p.UserID);
+        // Transform providerInputs data into a dictionary searchable by PricingVariableID
+        foreach (var pinput in providerInputs){
+            pvalues.Add(pinput.PricingVariableID, pinput.PricingDataInput);
+        }
         
-    var idprefix = "pricingwizard";
-    float timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0;
+        // Get provider hour price
+        hourPrice = db.QueryValue(@"
+            SELECT  TOP 1 HourlyRate
+            FROM    providerhourlyrate
+            WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
+        ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
+    }
     
     if (IsPost){
         if (UrlData[0].ToLower() == "calculate"){
             // Do the calculation and return the result
-            
-            // TODO Get hour price from database:
-            hourPrice = 20F;
 
-                        
             // Calculate time required
             timeRequired = 0;
             
             foreach (var pvar in pvars){
                 string customerValue = Request[pvar.PricingVariableName];
                 
-                // TODO Get provider value
-                string providervalue;
+                // Get provider value for this pricing variable
+                string providerValue = "";
+                if (pvalues.ContainsKey(pvar.PricingVariableID)){
+                    providerValue = pvalues[pvar.PricingVariableID];
+                }
+                // TODO We must have default values for when a provider have not defined their values.
                 
-                // Testing
-                timeRequired++;
+                // Analizing the provider value depending on the data-type (unit just now)
+                switch ((string)pvar.ProviderDataInputUnit){
+                    case "minutes":
+                        decimal provParsedValue = 0;
+                        decimal.TryParse(providerValue, out provParsedValue);
+                        
+                        switch ((string)pvar.CustomerDataInputUnit){
+                            case "number":
+                            case "quantity":
+                                decimal custParsedValue = 0;
+                                decimal.TryParse(customerValue, out custParsedValue);
+                                
+                                // Calculation Formula:
+                                //  (Provider.CostPerHour * (ProviderInputValue / 60) * CustomerInputValue)
+                                //subtotalPrice += hourPrice * (provParsedValue / 60) * custParsedValue;
+                                timeRequired += (provParsedValue / 60) * custParsedValue;
+                                
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                        break;
+                    default:
+                        break;
+                }
             }
             
             subtotalPrice = timeRequired * hourPrice;
-            feePrice = .1F * subtotalPrice;            
+            feePrice = .1M * subtotalPrice;
             totalPrice = subtotalPrice + feePrice;
             
         }else{
@@ -95,18 +142,18 @@
     </div>
     <div class="calculation">
         <table class="calculation">
-            <tr><th>Time required:</th><td class="time-required">@timeRequired hour(s)</td></tr>
+            <tr><th>Time required:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>
             <tr>
-                <th><span class="time-required">@timeRequired hour(s)</span> @@ <span class="hour-price">$@hourPrice</span></th>
-                <td class="subtotal-price">$@subtotalPrice</td>
+                <th><span class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</span> @@ <span class="hour-price">$@hourPrice.ToString("#,##0.00")</span></th>
+                <td class="subtotal-price">$@subtotalPrice.ToString("#,##0.00")</td>
             </tr>
             <tr>
                 <th>Loconomics service fee:</th>
-                <td class="fee-price">$@feePrice</td>
+                <td class="fee-price">$@feePrice.ToString("#,##0.00")</td>
             </tr>
             <tr>
                 <th>Total price:</th>
-                <td class="total-price">$@totalPrice</td>
+                <td class="total-price">$@totalPrice.ToString("#,##0.00")</td>
             </tr>
         </table>
     </div>
