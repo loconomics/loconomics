@@ -25,6 +25,9 @@
         return line.Split(',');
     }
 }
+@helper getChecked(string name, string value){
+    @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+}
     <ul>
     @foreach (var pvar in pvars){
         <li class="@pvar.PricingVariableName">
@@ -35,14 +38,15 @@
                         @{
                             var optvalues = getValuesFromCSV(pvar.CustomerDataValues);
                             foreach(string optv in optvalues){
-                                <option value="@optv">@optv</option>
+                                var v = optv.Trim();
+                                <option value="@v" @getChecked(pvar.PricingVariableName, v)>@v</option>
                             }
                         }
                     </select>
                     break;
                 case "number":
                 case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" class="data-type-@pvar.CustomerDataInputType" />
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]" class="data-type-@pvar.CustomerDataInputType" />
                     break;
                 default:
                     <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
