@@ -32,9 +32,15 @@
     if (IsPost){
         if (ModelState.IsValid){
             // TODO Process form data and insert into database
+            // Insert the data or update the existent
             
-            // Return OK result
-            CommonHelpers.ReturnJsonResult(0, null);
+            
+            // OK: All was successfull saved and next wizard step require to be loaded, but
+            //  instead return a JSON success code, we must continue processing the page
+            //  to load the Wizard Component and to let him save their data too, or return
+            //  html with errors.
+            //  If Wizard save sucessfull the data, it will call something like:
+            //CommonHelpers.ReturnJsonResult(0, null);
         }
     }
 }
@@ -72,6 +78,6 @@
     @*RenderPage("_ExamplePricingWizard.cshtml")*@
     @RenderPage(UrlUtil.LangPath + "PricingWizard/$BookingFieldset.cshtml")
     <fieldset class="actions">
-        <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
+        <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
     </fieldset>
 </form>

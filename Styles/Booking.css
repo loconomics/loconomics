@@ -36,7 +36,7 @@
 .booking label input{
     margin: 0 5px;
 }
-.booking button{
+.booking .button{
     text-transform: lowercase;
     font-size: 1.0em;
     border-radius: 20px;
@@ -44,13 +44,13 @@
     -o-border-radius: 20px;
     -webkit-border-radius: 20px;
 }
-.booking button.next{
+.booking .button.next{
     background: #99C027;
     color: White;
     font-size: 1.2em;
     line-height: 150%;
 }
-.booking button.next:hover{
+.booking .button.next:hover{
     box-shadow: 0 0 5px 2px #99C027;
     -moz-box-shadow: 0 0 5px 2px #99C027;
     -o-box-shadow: 0 0 5px 2px #99C027;
