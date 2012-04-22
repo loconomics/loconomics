@@ -1,21 +1,24 @@
 ﻿@{
+  
     var idprefix = "account-taxes";
     var errormessage = "";
-    var testthis = "";
     var debug = true;
+ 
     var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
-    
+    var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,System.Web.Configuration.WebConfigurationManager.AppSettings["BTMerchantID"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPublicKey"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPrivateKey"]);
+    var customer = gateway.Customer.Find(user["UserID"]);
+
+    var mycustomfieldvalue = customer....
+        
     if (IsPost){
      
-        var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,"k74g8bpwwfmmfrcr","bdzrhws4qnq4bdcy","vks5753b2pfr8mnz");
-
+        
         Braintree.CustomerRequest request;
         
         if (debug){
             request = new Braintree.CustomerRequest{
                 //need to pass in the userid from the cookie
-                Id = "75",
-                FirstName = "Josh",
+                Id = "95",
                 CustomFields = new Dictionary<string, string>
                 {
                     { "loco_tin", "555555555" }, // replace 55555555 with request form value
@@ -25,7 +28,6 @@
             request = new Braintree.CustomerRequest{
                 //need to pass in the userid from the cookie
                 Id = user["UserID"],
-                FirstName = user["FirstName"],
                 CustomFields = new Dictionary<string, string>
                 {
                     { "loco_tin", Request["tin"] },
@@ -43,7 +45,7 @@
                 errormessage += row.Code + " _  " + row.Message;
             }
         }
-    }
+  
 }
 @helper printEntityType(string name){
     <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
@@ -95,7 +97,7 @@
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin"/>
+        <input type="text" name="tin" value=@customer/>
         <label><input type="radio" name="tin-type" value="SSN"/>SSN</label>
         <label><input type="radio" name="tin-type" value="EIN"/>EIN</label>
     </fieldset>
