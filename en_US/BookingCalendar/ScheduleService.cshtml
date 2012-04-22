@@ -1,0 +1,327 @@
+﻿@{
+    Layout = "~/en_US/_SiteLayout.cshtml";
+    Page.Title = "Schedule Service";
+    
+   
+
+    /*Incoming Querystring: ScheduleService.cshtml?
+     *  ProviderID=@c.ProfileID&
+     *  PositionId=@c.PositionID&
+     *  Position=@c.ServiceName&
+     *  ServiceType=@serviceType&
+     *  Service=@LC_Cat    
+     */
+    bool debug = LcCommonLib.Utility.ensureBool(Request["debug"]);
+
+    string ProviderID = Request["ProviderID"];
+    string PositionId = Request["PositionId"];
+    string ServiceName = Request["Position"];
+    string ServiceType = Request["ServiceType"];
+    string ServiceCat = Request["Service"];
+    
+    //This will contain a concatenation of all check boxes from the previouspage that are checked + a newwline
+    //followed by special instructions
+    string ServiceSummary = Request["ServiceSummary"];
+    //for testing
+    ServiceSummary = "Repair Outdoor GFI Outlet on porch.";
+    
+    
+    ProviderID = "14"; //74 75
+    PositionId = "14";
+    ServiceType = "Cleaner";
+    ServiceName = "Home";
+    ServiceCat = "1";
+    
+    string TestStartDate = "2012-03-22T08:00:00";
+    string TestDateAlt1 = "2012-03-22T12:00:00";
+    string TestDateAlt2 = "2012-03-24T12:00:00";
+     
+    
+
+    
+
+
+    string Duration = "3 hrs"; //Request["Duration"];
+    int DurationMin = 180; 
+
+    
+}
+
+
+<div id="container" class="search clearfix">
+ <div id="main" class="">
+		<h1>@Page.Title</h1>
+<form action="ScheduleManager.cshtml" method="post" onsubmit="validate()">
+@{
+    if (debug)
+    {
+        <table>
+            <tr>
+                <td>ProviderID</td><td><input type="text" id="ProviderID" name="ProviderID" value="@ProviderID" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>PositionId</td><td><input type="text" id="PositionId" name="PositionId" value="@PositionId" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>ServiceName</td><td><input type="text" id="ServiceName" name="ServiceName" value="@ServiceName" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>ServiceType</td><td><input type="text" id="ServiceType" name="ServiceType" value="@ServiceType" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>ServiceCat</td><td><input type="text" id="ServiceCat" name="ServiceCat" value="@ServiceCat" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>ServiceSummary</td><td><input type="text" id="ServiceSummary" name="ServiceSummary" value="@ServiceSummary" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>Duration</td><td><input type="text" id="Duration" name="Duration" value="@DurationMin" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>DurationAlt1</td><td><input type="text" id="DurationAlt1" name="DurationAlt1" value="@DurationMin" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>DurationAlt2</td><td><input type="text" id="DurationAlt2" name="ProviderID" value="@DurationMin" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>StartDate</td><td><input type="text" id="StartDate" name="StartDate" value="@TestStartDate" runat="server"/></td>
+            </tr>
+            <tr>
+                <td>DateAlt1</td><td><input type="text" id="DateAlt1" name="DateAlt1" value="@TestDateAlt1" runat="server"/></td>
+            </tr>
+             <tr>
+                <td>DateAlt2</td><td><input type="text" id="DateAlt2" name="DateAlt2" value="@TestDateAlt2" runat="server"/></td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <input type="hidden" id="ProviderID" name="ProviderID" value="@ProviderID" runat="server"/>
+        <input type="hidden" id="PositionId" name="PositionId" value="@PositionId" runat="server"/>
+        <input type="hidden" id="ServiceName" name="ServiceName" value="@ServiceName" runat="server"/>
+        <input type="hidden" id="ServiceType" name="ServiceType" value="@ServiceType" runat="server"/>
+        <input type="hidden" id="ServiceCat" name="ServiceCat" value="@ServiceCat" />
+        <input type="hidden" id="ServiceSummary" name="ServiceSummary" value="@ServiceSummary" runat="server"/>
+        <input type="hidden" id="Duration" name="Duration" value="@DurationMin" runat="server"/>
+        <input type="hidden" id="DurationAlt1" name="DurationAlt1" value="@DurationMin" runat="server"/>
+        <input type="hidden" id="DurationAlt2" name="DurationAlt2" value="@DurationMin" runat="server"/>
+        <input type="hidden" id="StartDate" name="StartDate" />
+        <input type="hidden" id="DateAlt1" name="DateAlt1" />
+        <input type="hidden" id="DateAlt2" name="DateAlt2" />
+    }
+}
+
+
+
+    
+    pick three days and times and submit
+
+    <table>
+        <tr>
+            <td>First Choice</td>
+            <td><div>
+                <select name="SelStartDate" id="SelStartDate">
+                     <option value="0"></option>
+                    <option value="0">Sunday</option>
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>            
+                </select>
+            </div></td>
+            <td>
+                <div title="Start Time: 24 hr clock">&nbsp;Start&nbsp;Time <select name="timePrimary"  id="timePrimary"></select></div>
+            </td>
+            <td>
+                <div>&nbsp;Duration: @Duration</div>
+            </td>
+        </tr>
+          <tr>
+            <td>Alternate</td>
+            <td><div>
+                <select name="SelDateAlt1" id="SelDateAlt1" >  
+                    <option value="0"></option>
+                      <option value="0">Sunday</option>
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>        
+                </select></div></td>
+            <td>
+                <div title="Start Time: 24 hr clock">&nbsp;Start&nbsp;Time <select name="timeAlt1"  id="timeAlt1"></select></div>
+            </td>
+              <td>
+                <div>&nbsp;Duration: @Duration</div>
+            </td>
+        </tr>
+          <tr>
+            <td>Second Alternate</td>
+            <td><div>
+                <select name="SelDateAlt2" id="SelDateAlt2">   
+                    <option value="0"></option>
+                    <option value="0">Sunday</option>
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>            
+                </select></div></td>
+            <td>
+                 <div title="Start Time: 24 hr clock">&nbsp;Start&nbsp;Time <select name="timeAlt2"  id="timeAlt2"></select></div>
+            </td>
+             <td>
+                <div>&nbsp;Duration: @Duration</div>
+            </td>
+        </tr>
+    </table>
+          
+       
+    <input type="submit" value="submit" />
+    </form>
+  
+   </div>
+</div>
+
+
+<script type="text/jscript">
+ 
+   
+
+    var a = new Array();
+    var minutes = 15;
+    var segments = 60 / minutes * 24;
+
+    for (var i = 0; i < segments; i++) {
+        var TotalMin = i * minutes;
+
+        var TimeHrs = Math.floor(TotalMin / 60);
+        var TimeMin = TotalMin - (TimeHrs * 60);
+        var meridian = "AM"
+        if (parseInt(TimeHrs) == 0)
+        {
+            TimeHrs = "12"
+        }
+        else if (parseInt(TimeHrs) < 12) {            
+            TimeHrs = " " + TimeHrs;
+        }
+        else {
+            meridian = "PM"
+            var hours = parseInt(TimeHrs);
+            if (parseInt(TimeHrs) != 12)
+                hours = parseInt(TimeHrs) - 12
+            TimeHrs =  hours.toString();
+        }
+
+        if (parseInt(TimeMin) < 10) {
+            TimeMin = "0" + TimeMin.toString();
+        }
+        var time = TimeHrs + ":" + TimeMin + " " + meridian;
+        a[i] = time;       
+    }
+
+    //the array contains times in 15 minute increments on a 24 hr clock
+
+    //This populates the dropdowns
+    $.each(a, function (index, item) {
+        for (var i = 0; i < item.length; i++) {            
+            $('#timePrimary').addOption(index, item, false);
+            $('#timeAlt1').addOption(index, item, false);
+            $('#timeAlt2').addOption(index, item, false);
+        }
+    });
+
+
+
+    //$("select#timePrimary option[value='8:0']").attr("selected","selected");
+
+    function addDays(myDate, days) {
+        return new Date(myDate.getTime() + days * 24 * 60 * 60 * 1000);
+    }
+
+    function SetTime(min, date) {
+        var NewDate = new Date(date.getFullYear, date.getMonth, date.getHours, min);
+        return NewDate
+    }
+
+    function GetNewDate(e) {
+        alert(
+        StartDayIndex = StartDayIndex + 1; // days is a zero based index array
+        var Today = new Date();
+        var currentDay = Today.getDay() + 1; // days is a zero based index array
+        var TotalPossible = 7;
+        var DaysToAdd = 0;
+
+        
+        if (currentDay > StartDayIndex)
+            DaysToAdd = TotalPossible - currentDay + StartDayIndex; //day is in the past, make it next week
+        else
+            DaysToAdd = StartDayIndex - currentDay;
+
+        alert("currentDay: " + currentDay + "\nStartDayIndex: " + StartDayIndex + "\ndaysToAdd: " + DaysToAdd);
+        return addDays(Today, DaysToAdd);
+    }
+
+    
+
+    $(function() {
+        $('#SelStartDate').change(function () {
+            $('#StartDate').val(GetNewDate($(this)).toLocaleDateString());
+        });
+    });
+
+    $(function () {
+        $('#SelDateAlt1').change(function () {
+            var x = $(this).val();
+            $('#DateAlt1').val(GetNewDate($(this)).toLocaleDateString());
+        });
+    });
+
+    $(function () {
+        $('#SelDateAlt2').change(function () {
+            var x = $(this).val();
+            $('#DateAlt2').val(GetNewDate($(this)).toLocaleDateString());
+        });
+    });
+
+    $(function () {
+        $('#timePrimary').change(function () {
+            var y = $('#SelStartDate').val();
+            var newStartDate = GetNewDate($(this));
+            var minutes = $(this).text();
+            $('#StartDate').val(SetTime(minutes, newStartDate));
+        });
+    });
+
+    $(function () {
+        $('#timeAlt1').change(function () {
+            var y = $('#SelDateAlt1').val();
+            var newAlt1Date = GetNewDate($(this));
+            var minutes = $(this).text();
+            $('#DateAlt1').val(SetTime(minutes, newAlt1Date));
+        });
+    });
+
+    $(function () {
+        $('#timeAlt2').change(function () {
+            var y = $('#SelDateAlt2').val();
+            var newAlt1Date = GetNewDate($(this));
+            var minutes = $(this).text();
+            $('#DateAlt2').val(SetTime(minutes, newAlt1Date));
+        });
+    });
+    
+ 
+
+    function validate() {
+        alert($('#DateAlt2').val());
+    }
+
+    
+
+</script>
+        
