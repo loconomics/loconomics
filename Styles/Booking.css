@@ -110,6 +110,9 @@ html.ie #booking-services .special-instructions legend{
     right: 0;
     width: 100px;
 }
+#booking-services .pricing-wizard table.pricing-options{
+    width: 100%;
+}
 #booking-services div.calculate-price-button{
     margin: 7px 0;
 }
