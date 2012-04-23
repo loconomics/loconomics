@@ -1,0 +1,170 @@
+﻿@{
+    Layout = "~/en_US/_SiteLayout.cshtml";
+    Page.Title = "Schedule Manager";
+    List<string> AckLinks = null;
+    //for Testing
+    int UserId = 2;
+        
+    //if( WebSecurity.CurrentUserId == null)
+    //{    
+    //    // redirect to login
+    //    // and come back
+    //}
+
+    //int UserId = WebSecurity.CurrentUserId;
+          
+    //Two sources: ScheduleService or ProviderResponse
+    // this class can be found in app_data
+    LcCommonLib.ServiceRequestMgr SRmgr = new LcCommonLib.ServiceRequestMgr();
+    string Message = string.Empty;
+    
+    // =========================================================================================================
+    //(1) ProviderResponse
+    // =========================================================================================================
+    string AckId = Request["ack"];
+   
+    if((AckId != null)&&(AckId != string.Empty))
+    {
+            string pt = Request["pt"];
+            LcCommonLib.ACKProcessTypeId ProcessType = LcCommonLib.ServiceRequestMgr.Validate(pt);
+                      
+            switch(ProcessType)
+            {
+                case  LcCommonLib.ACKProcessTypeId.Accepted:
+                    {
+                        if ((LcCommonLib.Utility.ensureGuid(Request["wfid"]) != new Guid().ToString()) ||
+                            (LcCommonLib.Utility.ensureInt( Request["sr"]) == 0))
+                        {
+                            LcCommonLib.AckDTO data = new LcCommonLib.AckDTO();
+                            data.SrId = Request["sr"];
+                            data.Status = LcCommonLib.ACKProcessTypeId.Accepted;
+                            data.UserId = UserId;   // -- Logged in Provider
+                            data.WfId =  Request["wfid"];
+                            data.Cancelled = false;
+                            Message = SRmgr.Execute(data);
+                        }
+                        else
+                        {
+                            ///TODO - Handle: validation failure, invalid workflowID   
+                            ///TODO - Handle: validation failure, invalid sr   
+                        }
+                    }break;
+                case LcCommonLib.ACKProcessTypeId.Canceled:
+                    {
+                        if (LcCommonLib.Utility.ensureGuid(Request["wfid"]) != new Guid().ToString()) 
+                        {
+                            LcCommonLib.AckDTO data = new LcCommonLib.AckDTO();
+                            data.UserId = UserId;  // -- Logged in Provider
+                            data.Status = LcCommonLib.ACKProcessTypeId.Canceled;
+                            data.WfId = Request["wfid"];
+                            data.Cancelled = true;
+                            Message = SRmgr.Execute(data);
+                        }
+                        else
+                        {
+                            ///TODO - Handle: validation failure, invalid workflowID   
+                        }
+                    } break;
+                case LcCommonLib.ACKProcessTypeId.Expired:
+                    {
+                        ///TODO -- This Path [ExpireParentSR] -- to be implemented
+                        Message = SRmgr.Execute();
+                    } break;
+               
+                default:
+                    {  
+                        //invalid there is no action to perform write an error message to the screen                        
+                    }break;
+            }     
+        
+    }    
+    else
+    {
+// =========================================================================================================
+//(2) Customer Scheduling Service
+// =========================================================================================================    
+        //(2)ScheduleService.cshtml may be the caller
+        //   check for form variables
+        //   create the call
+
+
+        //object to be created that leverages LcCommonLib.Utility.ensure*
+        //RequestValidator Validator = new RequestValidator(Request);
+        //Validator.Add("PositionID", validateType.IntNotZero);
+        //Validator.Add("Duration", validateType.IntNotZero);
+        //Validator.Add("DurationAlt1", validateType.IntNotZero);
+        //Validator.Add("DurationAlt2", validateType.IntNotZero);
+        //Validator.Add("ProviderId", validateType.IntNotZero);        
+        //Validator.Add("StartDate", validateType.DateTime);
+        //Validator.Add("DateAlt1", validateType.DateTime);
+        //Validator.Add("DateAlt2", validateType.DateTime);
+        //Validator.Add("DateAlt2", validateType.DateTime);
+      
+        //if(Validator.Valid())
+        //{    
+            //LcCommonLib.ServiceDTO data = new LcCommonLib.ServiceDTO();
+            //data.PositionID = LcCommonLib.Utility.ensureInt(Request["PositionID"]);
+            //data.ServiceStartDate = LcCommonLib.Utility.ensureDateTime(Request["StartDate"]);
+            //data.ServiceDuration = LcCommonLib.Utility.ensureInt(Request["Duration"]);
+            //data.ServiceStartDateAlt1 = LcCommonLib.Utility.ensureDateTime(Request["DateAlt1"]);
+            //data.ServiceDurationAlt1 = LcCommonLib.Utility.ensureInt(Request["DurationAlt1"]);
+            //data.ServiceStartDateAlt2 = LcCommonLib.Utility.ensureDateTime(Request["DateAlt2"]);
+            //data.ServiceDurationAlt2 = LcCommonLib.Utility.ensureInt(Request["DurationAlt2"]);      
+            //data.JobDetails = Request["JobDetails"];
+            //data.CustomerUserID = UserId;    // -- Logged in customer
+            //data.UserID = LcCommonLib.Utility.ensureInt(Request["ProviderId"]);   
+            //data.WorkflowID = Guid.NewGuid().ToString();
+                    
+            //Message = SRmgr.Execute(data);
+
+        LcCommonLib.ServiceDTO svcDTO = new LcCommonLib.ServiceDTO();
+        //EXEC 	dbo.CreateService 14,'2012-03-22T08:00:00',20,'2012-03-22T12:00:00',20,'2012-03-24T12:00:00',20,'test','asdfasd',2,2
+        svcDTO.UserID = 74;
+        svcDTO.ServiceStartDate = DateTime.Parse("2012-03-22T08:00:00");
+        svcDTO.ServiceDuration = 180;
+        svcDTO.ServiceStartDateAlt1 = DateTime.Parse("2012-03-22T12:00:00");
+        svcDTO.ServiceDurationAlt1 = 180;
+        svcDTO.ServiceStartDateAlt2 = DateTime.Parse("2012-03-24T12:00:00");
+        svcDTO.ServiceDurationAlt2 = 180;
+        svcDTO.JobDetails = "this is the job details.";
+        svcDTO.WorkflowID = Guid.NewGuid().ToString();
+        svcDTO.PositionID = 14;
+        svcDTO.CustomerUserID = 75;
+
+        //SeviceRequestMgr svcMgr = new SeviceRequestMgr();
+        LcCommonLib.ServiceRequestMgr sm = new LcCommonLib.ServiceRequestMgr();
+        AckLinks = sm.Execute(svcDTO);
+        
+        if(AckLinks  !=  null)
+        {
+            Message = "Request Sent!";
+            foreach(string link in AckLinks)
+            {
+                 
+            }
+        }
+        else
+        {
+            Message = "Message send failure occurred.";
+        }
+    
+        //}
+        //else
+        //{
+        //     ///TODO - handle invalid input
+        //}
+    }
+    
+}
+
+<div id="container" class="sign-up" runat="server">
+@Message
+            <ul>
+            @foreach(string link in AckLinks)
+            {
+                <li><a href="@link">@link</a></li> 
+            }
+            </ul>
+
+    
+</div>
