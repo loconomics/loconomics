@@ -220,7 +220,7 @@
                     <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true") value="true" />
                     <label for="@idprefix-@popt.PricingOptionName">@popt.CustomerPricingOptionDisplayText</label>
                 </td>
-                <td class="pricing-option-quantity">
+                <td class="pricing-option-quantity number">
                 @switch ((string)@popt.CustomerDataInputType)
                 {
                     case "dropdown":
@@ -246,7 +246,7 @@
                         break;
                 }
                 </td>
-                <td class="pricing-option-price calculated">
+                <td class="pricing-option-price calculated number">
                     $@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))
                 </td>
             </tr>

@@ -1141,6 +1141,10 @@ fieldset.has-confirm.confirmed-no > legend{
 }
 .editable table.grid{
 }
+/* tables general */
+table .number{
+    text-align: right;
+}
 
 /* ======= Shared compoments styles ==============
    ====== IagoSRL for Loconomics S.L. ============
