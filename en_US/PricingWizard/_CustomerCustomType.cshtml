@@ -21,16 +21,27 @@
                     pv.ProviderDataInputUnit, pv.CustomerDataInputUnit,
                     pi.PricingDataInput As ProviderDataInputValue
             FROM    pricingvariable As pv
-                     INNER JOIN
+                     LEFT JOIN
                     providerpricingvariableinputs as pi
                       ON pv.PricingVariableID = pi.PricingVariableID
             WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
                      AND 
                     pv.ClientTypeID=@2 AND pv.PositionID=@3
                      AND 
-                    pv.Active = 1 AND pi.Active = 1
+                    pv.Active = 1 AND pv.PricingTypeID = @4
                      AND
-                    pv.PricingTypeID = @4 AND pi.UserID = @5
+                    (
+                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
+                     --  no needs relationed record at providerpricingvariableinputs (pi) table
+                     pv.ProviderInputDataRequired = 0
+                      OR
+                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
+                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
+                     --  relationship at providerpricingvariableinputs (pi) and proper conditional values
+                     pi.PricingDataInput is not null
+                      AND
+                     pi.Active = 1 AND pi.UserID = @5
+                    )
         ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
         
         // Get provider hour price
