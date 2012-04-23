@@ -8,7 +8,7 @@
     var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,System.Web.Configuration.WebConfigurationManager.AppSettings["BTMerchantID"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPublicKey"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPrivateKey"]);
     var customer = gateway.Customer.Find(user["UserID"]);
 
-    var mycustomfieldvalue = customer....
+    var mycustomfieldvalue = "customer....";
         
     if (IsPost){
      
@@ -45,7 +45,7 @@
                 errormessage += row.Code + " _  " + row.Message;
             }
         }
-  
+    }
 }
 @helper printEntityType(string name){
     <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
