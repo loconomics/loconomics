@@ -8,7 +8,7 @@
     var p = PageData["providerrow"];
     var pos = PageData["positionrow"];
     var idprefix = "pricingwizard";
-    dynamic pvars;
+    dynamic pvars, poptions;
     decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0;
 
     using (var db = Database.Open("sqlloco")){
@@ -50,6 +50,37 @@
             FROM    providerhourlyrate
             WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
         ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
+        
+        // The the PRicing Options
+        poptions = db.Query(@"
+            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
+                    pr.CustomerInputDataRequired, pr.CustomerDataInputType,
+                    pr.CustomerDataValues, pr.CustomerPricingOptionDisplayText,
+                    pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue
+            FROM    pricingoption As pr
+                     LEFT JOIN
+                    providerpricingoptioninputs as pi
+                      ON pr.PricingOptionID = pi.PricingOptionID
+            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
+                     AND 
+                    pr.ClientTypeID=@2 AND pr.PositionID=@3
+                     AND 
+                    pr.Active = 1 AND pr.PricingTypeID = @4
+                     AND
+                    (
+                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
+                     --  no needs relationed record at providerpricingvariableinputs (pi) table
+                     pr.ProviderInputDataRequired = 0
+                      OR
+                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
+                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
+                     --  relationship at providerpricingvariableinputs (pi) and proper conditional values
+                     pi.PricingDataInput is not null
+                      AND
+                     pi.Active = 1 AND pi.UserID = @5
+                    )
+        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
     }
     
     if (IsPost){
@@ -111,41 +142,117 @@
     }
 }
 @helper getChecked(string name, string value){
+    @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+}
+@helper getSelected(string name, string value){
     @Html.Raw(Request[name] == value ? "selected='selected'" : "")
 }
 @if (pvars.Count > 0)
 {
-    <ul>
+    <ul class="pricing-vars">
     @foreach (var pvar in pvars)
     {
-        <li class="@pvar.PricingVariableName">
+        <li class="@pvar.PricingVariableName data-type-@pvar.CustomerDataInputType">
             <label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label>
             @switch ((string)@pvar.CustomerDataInputType)
             {
                 case "dropdown":
-                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" class="data-type-dropdown">
+                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
                         @{
-                                                                      var optvalues = getValuesFromCSV(pvar.CustomerDataValues);
-                                                                      foreach (string optv in optvalues)
-                                                                      {
-                                                                          var v = optv.Trim();
-                                <option value="@v" @getChecked(pvar.PricingVariableName, v)>@v</option>
-                                                                      }
+                            var optvalues = getValuesFromCSV(pvar.CustomerDataValues);
+                            foreach (string optv in optvalues)
+                            {
+                                var v = optv.Trim();
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v)>@v</option>
+                            }
                         }
                     </select>
-                                                                      break;
+                    break;
                 case "number":
                 case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]" class="data-type-@pvar.CustomerDataInputType" />
-                                                                                                                                                                        break;
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]"/>
+                    break;
+                case "":
+                    break;
                 default:
                     <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
-                                                     break;
+                    break;
             }
         </li>
     }
-
     </ul>
+    <table class="pricing-options">
+        <thead>
+            <tr>
+                <th>Services upon request</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var popt in poptions)
+        {
+            <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
+                <td class="pricing-option-check">
+                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true") value="true" />
+                    <label for="@idprefix-@popt.PricingOptionName">@popt.CustomerPricingOptionDisplayText</label>
+                </td>
+                <td class="pricing-option-quantity">
+                @switch ((string)@popt.CustomerDataInputType)
+                {
+                    case "dropdown":
+                        <select id="@idprefix-@(popt.PricingOptionName)-quantity" name="@(popt.PricingOptionName)-quantity">
+                            @{
+                                var optvalues = getValuesFromCSV(popt.CustomerDataValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName + "-quantity", v)>@v</option>
+                                }
+                             }
+                        </select>
+                        break;
+                    case "number":
+                    case "text":
+                        <input type="text" id="@idprefix-@(popt.PricingOptionName)-quantity" name="@(popt.PricingOptionName)-quantity" value="@Request[popt.PricingOptionName + "-quantity"]"/>
+                        break;
+                    case "":
+                        break;
+                    default:
+                        <text>Unknowed CustomerDataInputType: @popt.CustomerDataInputType</text>
+                                                         break;
+                }
+                </td>
+                <td class="pricing-option-price calculated">
+                    $@{
+                        if (Request[(string)popt.PricingOptionName + "-check"] == "true")
+                        {
+                            string strprice = popt.ProviderDataInputValue.Replace("$", "");
+                            decimal unitprice = 0;
+                            decimal.TryParse(strprice, out unitprice);
+                            decimal quantity = 0;
+                            switch ((string)popt.CustomerDataInputUnit) {
+                                case "number":
+                                case "quantity":
+                                    quantity = Request[(string)popt.PricingOptionName + "-quantity"].AsDecimal();
+                                    break;
+                                case "":
+                                default:
+                                    quantity = 1;
+                                    break;
+                            }
+                            @((quantity * unitprice).ToString("#,##0.00"))
+                        }
+                        else
+                        {
+                            @("0")
+                        }
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
     <div class="calculate-price-button actions">
         <button class="button calculate-price-button ajax-fieldset-submit">Calculate</button>
     </div>

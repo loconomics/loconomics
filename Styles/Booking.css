@@ -105,7 +105,7 @@ html.ie #booking-services .special-instructions legend{
     display: inline-block;
     width: 205px;
 }
-#booking-services .pricing-wizard select{
+#booking-services .pricing-wizard .pricing-vars select{
     position: absolute;
     right: 0;
     width: 100px;
