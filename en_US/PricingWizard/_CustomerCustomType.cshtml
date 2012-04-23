@@ -9,7 +9,8 @@
     var pos = PageData["positionrow"];
     var idprefix = "pricingwizard";
     dynamic pvars, poptions;
-    decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0;
+    decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0;
+    Dictionary<int, decimal> optionalServicesPrices = new Dictionary<int,decimal>();
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
@@ -87,9 +88,7 @@
         if (UrlData[0].ToLower() == "calculate"){
             // Do the calculation and return the result
 
-            // Calculate time required
-            timeRequired = 0;
-            
+            // Calculate time required per Pricing Variables
             foreach (var pvar in pvars){
                 string customerValue = Request[pvar.PricingVariableName];
                 
@@ -123,8 +122,32 @@
                         break;
                 }
             }
+            // Calculating the price for Pricing Options
+            foreach (var popt in poptions){               
+                decimal optPrice = 0;
+                
+                if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
+                    string strprice = popt.ProviderDataInputValue.Replace("$", "");
+                    decimal unitprice = 0;
+                    decimal.TryParse(strprice, out unitprice);
+                    decimal quantity = 0;
+                    switch ((string)popt.CustomerDataInputUnit) {
+                        case "number":
+                        case "quantity":
+                            quantity = Request[(string)popt.PricingOptionName + "-quantity"].AsDecimal();
+                            break;
+                        case "":
+                        default:
+                            quantity = 1;
+                            break;
+                    }
+                    optPrice = quantity * unitprice;
+                }
+                optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
+                optionalServicesTotalPrice += optPrice;
+            }
             
-            subtotalPrice = timeRequired * hourPrice;
+            subtotalPrice = timeRequired * hourPrice + optionalServicesTotalPrice;
             feePrice = .1M * subtotalPrice;
             totalPrice = subtotalPrice + feePrice;
             
@@ -220,34 +243,11 @@
                         break;
                     default:
                         <text>Unknowed CustomerDataInputType: @popt.CustomerDataInputType</text>
-                                                         break;
+                        break;
                 }
                 </td>
                 <td class="pricing-option-price calculated">
-                    $@{
-                        if (Request[(string)popt.PricingOptionName + "-check"] == "true")
-                        {
-                            string strprice = popt.ProviderDataInputValue.Replace("$", "");
-                            decimal unitprice = 0;
-                            decimal.TryParse(strprice, out unitprice);
-                            decimal quantity = 0;
-                            switch ((string)popt.CustomerDataInputUnit) {
-                                case "number":
-                                case "quantity":
-                                    quantity = Request[(string)popt.PricingOptionName + "-quantity"].AsDecimal();
-                                    break;
-                                case "":
-                                default:
-                                    quantity = 1;
-                                    break;
-                            }
-                            @((quantity * unitprice).ToString("#,##0.00"))
-                        }
-                        else
-                        {
-                            @("0")
-                        }
-                    }
+                    $@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))
                 </td>
             </tr>
         }
@@ -262,6 +262,10 @@
             <tr>
                 <th><span class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</span> @@ <span class="hour-price">$@hourPrice.ToString("#,##0.00")</span></th>
                 <td class="subtotal-price">$@subtotalPrice.ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <th>Optional Services</th>
+                <td class="optional-services">$@optionalServicesTotalPrice.ToString("#,##0.00")</td>
             </tr>
             <tr>
                 <th>Loconomics service fee:</th>
