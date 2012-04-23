@@ -9,32 +9,29 @@
     var pos = PageData["positionrow"];
     var idprefix = "pricingwizard";
     dynamic pvars;
-    var pvalues = new Dictionary<int, string>();
     decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0;
 
     using (var db = Database.Open("sqlloco")){
-        // Get the Variables
+        // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
+        // previously values for a variable, that variable will not be returned.
         pvars = db.Query(@"
-            SELECT  PricingVariableID, 
-                    PricingVariableName, CustomerInputDataRequired, CustomerDataInputType,
-                    CustomerDataValues, CustomerPricingVariableDisplayText,
-                    ProviderDataInputUnit, CustomerDataInputUnit
-            FROM    pricingvariable
-            WHERE   CountryID=@0 AND LanguageID=@1 AND ClientTypeID=@2 AND PositionID=@3
-                     AND Active = 1 AND PricingTypeID = 2
-        ", 1, 1, clienttypeid, pos.PositionID);
-
-        // Get specific Provider values for this pricing variables        
-        var providerInputs = db.Query(@"
-                SELECT  PricingVariableID, PricingDataInput
-                FROM    providerpricingvariableinputs
-                WHERE   UserID = @0
-                ORDER BY    PricingVariableID
-            ", p.UserID);
-        // Transform providerInputs data into a dictionary searchable by PricingVariableID
-        foreach (var pinput in providerInputs){
-            pvalues.Add(pinput.PricingVariableID, pinput.PricingDataInput);
-        }
+            SELECT  pv.PricingVariableID, pv.PricingVariableName, 
+                    pv.CustomerInputDataRequired, pv.CustomerDataInputType,
+                    pv.CustomerDataValues, pv.CustomerPricingVariableDisplayText,
+                    pv.ProviderDataInputUnit, pv.CustomerDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue
+            FROM    pricingvariable As pv
+                     INNER JOIN
+                    providerpricingvariableinputs as pi
+                      ON pv.PricingVariableID = pi.PricingVariableID
+            WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
+                     AND 
+                    pv.ClientTypeID=@2 AND pv.PositionID=@3
+                     AND 
+                    pv.Active = 1 AND pi.Active = 1
+                     AND
+                    pv.PricingTypeID = @4 AND pi.UserID = @5
+        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
         
         // Get provider hour price
         hourPrice = db.QueryValue(@"
@@ -55,11 +52,7 @@
                 string customerValue = Request[pvar.PricingVariableName];
                 
                 // Get provider value for this pricing variable
-                string providerValue = "";
-                if (pvalues.ContainsKey(pvar.PricingVariableID)){
-                    providerValue = pvalues[pvar.PricingVariableID];
-                }
-                // TODO We must have default values for when a provider have not defined their values.
+                string providerValue = pvar.ProviderDataInputValue;
                 
                 // Analizing the provider value depending on the data-type (unit just now)
                 switch ((string)pvar.ProviderDataInputUnit){
@@ -109,29 +102,34 @@
 @helper getChecked(string name, string value){
     @Html.Raw(Request[name] == value ? "selected='selected'" : "")
 }
+@if (pvars.Count > 0)
+{
     <ul>
-    @foreach (var pvar in pvars){
+    @foreach (var pvar in pvars)
+    {
         <li class="@pvar.PricingVariableName">
             <label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label>
-            @switch((string)@pvar.CustomerDataInputType){
+            @switch ((string)@pvar.CustomerDataInputType)
+            {
                 case "dropdown":
                     <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" class="data-type-dropdown">
                         @{
-                            var optvalues = getValuesFromCSV(pvar.CustomerDataValues);
-                            foreach(string optv in optvalues){
-                                var v = optv.Trim();
+                                                                      var optvalues = getValuesFromCSV(pvar.CustomerDataValues);
+                                                                      foreach (string optv in optvalues)
+                                                                      {
+                                                                          var v = optv.Trim();
                                 <option value="@v" @getChecked(pvar.PricingVariableName, v)>@v</option>
-                            }
+                                                                      }
                         }
                     </select>
-                    break;
+                                                                      break;
                 case "number":
                 case "text":
                     <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]" class="data-type-@pvar.CustomerDataInputType" />
-                    break;
+                                                                                                                                                                        break;
                 default:
                     <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
-                    break;
+                                                     break;
             }
         </li>
     }
@@ -157,3 +155,9 @@
             </tr>
         </table>
     </div>
+} else {
+    <div class="no-pricing-wizard">
+        It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting
+        for a provider response with the price.
+    </div>
+}
