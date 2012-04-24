@@ -26,13 +26,14 @@
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, 3);
     }
+
+    // TODO Add validation rules
     
-    // TODO Add validation rules or do manual validation (we have dynamic fields)
-    
-    if (IsPost){
+    if (IsPost && Validation.IsValid()){
+        // TODO Add manual validation checks and prepare data (we have dynamic fields)
+        
         if (ModelState.IsValid){
-            // TODO Process form data and insert into database
-            // Insert the data or update the existent
+            // TODO Insert data into the database or update the existent
             
             
             // OK: All was successfull saved and next wizard step require to be loaded, but
@@ -52,6 +53,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Services/" method="post" class="services" id="booking-services">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @Html.ValidationSummary("Please fix next errors:")
     <fieldset class="select-services">
         <legend>Select the services you'd like performed:</legend>
         <fieldset class="attribute-category attribute-category-1">

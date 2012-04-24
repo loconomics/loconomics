@@ -24,70 +24,66 @@
     // }
     
     // If this is a POST request, validate and process data
-    if (IsPost) {
-        
-        // If all information is valid, create a new account
-        if (Validation.IsValid()) {
-            email = Request.Form["email"];
-            password = Request.Form["password"];
-            confirmPassword = Request.Form["confirmPassword"];
+    if (IsPost && Validation.IsValid()) {
+        email = Request.Form["email"];
+        password = Request.Form["password"];
+        confirmPassword = Request.Form["confirmPassword"];
             
-            // Insert a new user into the database
-            var db = Database.Open("sqlloco");
+        // Insert a new user into the database
+        var db = Database.Open("sqlloco");
             
-            // Check if user already exists
-            var user = db.QuerySingle("SELECT Email FROM UserProfile WHERE LOWER(Email) = LOWER(@0)", email);
-            if (user == null) {
-                // Insert email into the profile table
-                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+        // Check if user already exists
+        var user = db.QuerySingle("SELECT Email FROM UserProfile WHERE LOWER(Email) = LOWER(@0)", email);
+        if (user == null) {
+            // Insert email into the profile table
+            db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
 
-                // Create and associate a new entry in the membership database.
-                // If successful, continue processing the request
-                try {
-                    bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
-                    var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+            // Create and associate a new entry in the membership database.
+            // If successful, continue processing the request
+            try {
+                bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
+                var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                     
-                    // Create Loconomics Customer user
-                    int userid = WebSecurity.GetUserId(email);
-                    string firstname = email.Substring(0, email.IndexOf('@'));
-                    db.Execute("exec CreateCustomer @0,@1,@2,1,1",
-                        userid, firstname, "");
+                // Create Loconomics Customer user
+                int userid = WebSecurity.GetUserId(email);
+                string firstname = email.Substring(0, email.IndexOf('@'));
+                db.Execute("exec CreateCustomer @0,@1,@2,1,1",
+                    userid, firstname, "");
 
-                    if (requireEmailConfirmation) {
-                        var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                        var confirmationUrl = hostUrl + UrlUtil.LangPath + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+                if (requireEmailConfirmation) {
+                    var hostUrl = Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                    var confirmationUrl = hostUrl + UrlUtil.LangPath + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
-                        WebMail.Send(
-                            to: email,	
-                            subject: "Please confirm your account", 
-                            body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
-                        );
-                    }
-
-                    if (requireEmailConfirmation) {
-                        // Thank the user for registering and let them know an email is on its way
-                        // We return a json with result OK and redirect link (Code=1),
-                        // and response end just after this:
-                        CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
-                    } else {
-                        // Navigate back to the homepage and exit
-                        WebSecurity.Login(email, password);
-
-                        // mark the user as logged in via a normal account,
-                        // as opposed to via an OAuth or OpenID provider.
-                        Session["OAuthLoggedIn"] = false;
-
-                        // We return a json with result OK and redirect link (Code=1),
-                        // and response end just after this:
-                        CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath);
-                    }
-                } catch (System.Web.Security.MembershipCreateUserException e) {
-                    ModelState.AddFormError(e.Message);
+                    WebMail.Send(
+                        to: email,	
+                        subject: "Please confirm your account", 
+                        body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
+                    );
                 }
-            } else {
-                // User already exists
-                ModelState.AddFormError("Email address is already in use.");
+
+                if (requireEmailConfirmation) {
+                    // Thank the user for registering and let them know an email is on its way
+                    // We return a json with result OK and redirect link (Code=1),
+                    // and response end just after this:
+                    CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                } else {
+                    // Navigate back to the homepage and exit
+                    WebSecurity.Login(email, password);
+
+                    // mark the user as logged in via a normal account,
+                    // as opposed to via an OAuth or OpenID provider.
+                    Session["OAuthLoggedIn"] = false;
+
+                    // We return a json with result OK and redirect link (Code=1),
+                    // and response end just after this:
+                    CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath);
+                }
+            } catch (System.Web.Security.MembershipCreateUserException e) {
+                ModelState.AddFormError(e.Message);
             }
+        } else {
+            // User already exists
+            ModelState.AddFormError("Email address is already in use.");
         }
     }
 }
@@ -100,9 +96,7 @@
     <section>
         <form method="post" action="@(UrlUtil.LangPath)Account/$Register/@(Request.Url.Query)" class="choice-option ajax" data-success-post-message="Register successfully!">
             @* If at least one validation error exists, notify the user *@
-            @if (IsPost && !Validation.IsValid()){
-                Html.ValidationSummary("Please correct the errors and try again.");
-            }
+            @Html.ValidationSummary("Please correct the errors and try again.")
 
             <fieldset>
                 <legend>Registration Form</legend>

@@ -19,11 +19,13 @@
     var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
     
-    // TODO Add validation rules or do manual validation
+    // TODO Add validation rules
     
-    if (IsPost){       
+    if (IsPost && Validation.IsValid()){
+        // TODO Add manual validation checks and prepare data
+        
         if (ModelState.IsValid){
-            // TODO Process form data and insert into database
+            // TODO Insert data into the database
             
             // Return OK result
             CommonHelpers.ReturnJsonResult(0, null);
@@ -46,6 +48,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @Html.ValidationSummary("Please fix next errors:")
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">
@@ -77,24 +80,24 @@
         <legend>Location where services are to be performed:</legend>
         <ul>
             <li class="street-address-line-1">
-                <label>Street address line 1:<input type="text" name="street-address-line-1"/></label>
+                <label>Street address line 1:<input type="text" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
             </li>
             <li class="street-address-line-2">
-                <label>Street address line 2:<input type="text" name="street-address-line-2"/></label>
+                <label>Street address line 2:<input type="text" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
             </li>
             <li class="city">
-                <label>City:<input type="text" name="city"/></label>
+                <label>City:<input type="text" name="city" @Validation.GetHtml("city")/></label>
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
-            <li class="state"><label>State:<select name="state">
+            <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
                         <option value="ca">California</option>
                     </select></label></li>
             <li class="zip">
-                <label>Zip Code:<input type="text" name="zip"/></label>
+                <label>Zip Code:<input type="text" name="zip" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="save-to-my-locations">
-                <label class="save"><input type="checkbox" name="save"/>Save</label>
-                <label>to my locations as:<input type="text" name="save-location-as"/></label>
+                <label class="save"><input type="checkbox" name="save-location"/>Save</label>
+                <label>to my locations as:<input type="text" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
             </li>
         </ul>
     </fieldset>
@@ -103,13 +106,13 @@
             <legend>My preferred option:</legend>
             <ul>
                 <li class="date">
-                    <label>Date:<input class="date date-pick" type="text" name="preferred-date"/></label>
+                    <label>Date:<input class="date date-pick" type="text" name="preferred-date" @Validation.GetHtml("preferred-date")/></label>
                 </li>
                 <li class="start-time">
-                    <label>Start time:<select name="preferred-start-time">@printOptionsHours()</select></label>
+                    <label>Start time:<select name="preferred-start-time" @Validation.GetHtml("preferred-start-time")>@printOptionsHours()</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select name="preferred-end-time">@printOptionsHours()</select></label>
+                    <label>End time:<select name="preferred-end-time" @Validation.GetHtml("preferred-end-time")>@printOptionsHours()</select></label>
                 </li>
             </ul>
         </fieldset>
@@ -117,13 +120,13 @@
             <legend>Second best option:</legend>
             <ul>
                 <li class="date">
-                    <label>Date:<input class="date date-pick" type="text" name="alternative-1-date"/></label>
+                    <label>Date:<input class="date date-pick" type="text" name="alternative-1-date" @Validation.GetHtml("alternative-1-date")/></label>
                 </li>
                 <li class="start-time">
-                    <label>Start time:<select name="alternative-1-start-time">@printOptionsHours()</select></label>
+                    <label>Start time:<select name="alternative-1-start-time" @Validation.GetHtml("alternative-1-start-time")>@printOptionsHours()</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select name="alternative-1-end-time">@printOptionsHours()</select></label>
+                    <label>End time:<select name="alternative-1-end-time" @Validation.GetHtml("alternative-1-end-time")>@printOptionsHours()</select></label>
                 </li>
             </ul>
         </fieldset>
@@ -131,13 +134,13 @@
             <legend>Third best option:</legend>
             <ul>
                 <li class="date">
-                    <label>Date:<input class="date date-pick" type="text" name="alternative-21-date"/></label>
+                    <label>Date:<input class="date date-pick" type="text" name="alternative-2-date" @Validation.GetHtml("alternative-2-date")/></label>
                 </li>
                 <li class="start-time">
-                    <label>Start time:<select name="alternative-2-start-time">@printOptionsHours()</select></label>
+                    <label>Start time:<select name="alternative-2-start-time" @Validation.GetHtml("alternative-2-start-time")>@printOptionsHours()</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select name="alternative-2-end-time">@printOptionsHours()</select></label>
+                    <label>End time:<select name="alternative-2-end-time" @Validation.GetHtml("alternative-2-end-time")>@printOptionsHours()</select></label>
                 </li>
             </ul>
         </fieldset>
