@@ -15,6 +15,7 @@ to write you a reference. Invite as many as you’d like, and we’ll post the f
 <form action="#" method="post" class="positionreviews" id="position#@(n)-reviews">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="references">
         <ul>
             <li>

@@ -10,6 +10,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <form action="#" method="post" class="positionphotos" id="position#@(n)-photos">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="positionphotos-edit">
         <legend>Edit this photo:</legend>
         <ul>

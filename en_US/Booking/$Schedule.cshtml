@@ -48,7 +48,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    @Html.ValidationSummary("Please fix next errors:")
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
         <div class="calendar">

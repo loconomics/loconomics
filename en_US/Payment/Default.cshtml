@@ -22,7 +22,7 @@
         PublicKey = "yhqvg4cz74jwxtw5",
         PrivateKey = "q7vdftc9npxgkxpy"
     };
-    var errors = "";
+
     var Amount = 1;//This amount should come in the request from the pricing wizzard.
     var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
     var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Amount }, // key information about the transaction
@@ -32,9 +32,7 @@
       <h1>Payment: @Amount $</h1>
 
     @* If at least one validation error exists, notify the user *@
-    @if (IsPost && !ModelState.IsValid){
-        Html.ValidationSummary(errors);
-    }
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <form id="NewPaymentForm" action="@TransparentRedirectURLForCreate" method="post" autocomplete="off">
     <div>
         <fieldset>

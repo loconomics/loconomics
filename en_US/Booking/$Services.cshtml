@@ -53,7 +53,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Services/" method="post" class="services" id="booking-services">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    @Html.ValidationSummary("Please fix next errors:")
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="select-services">
         <legend>Select the services you'd like performed:</legend>
         <fieldset class="attribute-category attribute-category-1">

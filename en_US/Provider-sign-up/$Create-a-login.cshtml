@@ -31,7 +31,7 @@
     // var captchaMessage = "";
 
     // If this is a POST request, validate and process data
-    if (IsPost) {
+    if (IsPost && Validation.IsValid()) {
         email = Request.Form["email"];
         password = Request.Form["password"];
         confirmPassword = Request.Form["confirmPassword"];
@@ -55,7 +55,7 @@
         // }
 
         // If all information is valid, create a new account
-        if (Validation.IsValid()) { 
+        if (ModelState.IsValid) { 
             // Insert a new user into the database
             var db = Database.Open("sqlloco");
 
@@ -116,9 +116,7 @@
  </p>
  <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)Provider-sign-up/$Create-a-login/">
      @* If at least one validation error exists, notify the user *@
-    @if(IsPost && !Validation.IsValid()){ 
-        <text>@Html.ValidationSummary("Please correct the errors and try again.") </text>
-    }
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="login-data">
          <legend>Contact Information:</legend>
          <ul>

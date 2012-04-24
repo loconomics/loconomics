@@ -12,6 +12,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <form action="#" method="post" class="positionlicenses" id="@idprefix-licenses">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
+    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="license-info has-confirm">
         <legend>I possess a license to perform this work:</legend>
         <div class="confirm">
