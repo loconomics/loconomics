@@ -77,7 +77,7 @@ function initYourWork(){
         {1} AttributeId
         {3} AttributeName
         */
-        var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox"/><span>{2}</span></label>';
+        var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox" value="{3}"/><span>{2}</span></label>';
 
         // Locking elements and showing loading message
         jAttributes.block(loadingBlock);
@@ -119,7 +119,8 @@ function initYourWork(){
                             var hAtt = tplAttribute
                                 .replace('{0}', cat.ServiceAttributeCategoryID)
                                 .replace('{1}', att.ServiceAttributeID)
-                                .replace('{2}', att.ServiceAttribute);
+                                .replace('{2}', att.ServiceAttribute)
+                                .replace("{3}", att.SCAMID);
 
                             // Add new attribute html to fieldset
                             fs.append(hAtt);

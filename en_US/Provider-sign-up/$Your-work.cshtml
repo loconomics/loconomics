@@ -1,61 +1,60 @@
 ﻿@{
     PageData["PositionID"] = 0;
     
-    if (IsPost)
-    {
-        var db = Database.Open("sqlloco");
-        var UserID = WebSecurity.CurrentUserId;
-        var LanguageID = 1;
-        var CountryID = 1;
-        var ErrorMessage = "start";
-        var theDate = DateTime.Now.ToString("yyyy-MM-dd");
+    if (IsPost) {
+        if (WebSecurity.IsAuthenticated) {
+            var db = Database.Open("sqlloco");
+            var UserID = WebSecurity.CurrentUserId;
+            var LanguageID = 1;
+            var CountryID = 1;
+            var theDate = DateTime.Now.ToString("yyyy-MM-dd");
 
-        var PositionID = PageData["PositionID"] = Request.Form["select-position"].AsInt();
+            var PositionID = PageData["PositionID"] = Request.Form["select-position"].AsInt();
         
-        var ADD_Details = Request.Form["ADD_Details"];
-        var ADD_minTime = Request.Form["ADD_minTime"];
-        var ADD_maxTime = Request.Form["ADD_maxTime"];
-        var ADD_minBetween = Request.Form["ADD_minBetween"];
-        var ADD_experience = Request.Form["ADD_experience"];
-        var ADD_travelRadius = Request.Form["ADD_travelRadius"];
-        var ADD_Personal = Request.Form["ADD_Personal"];
-        var ADD_Public = Request.Form["ADD_Public"];
-
-        var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
-        var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
-        var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
-
-
-        if (WebSecurity.IsAuthenticated)
-        {
-
+            /*
+            var ADD_Details = Request.Form["ADD_Details"];
+            var ADD_minTime = Request.Form["ADD_minTime"];
+            var ADD_maxTime = Request.Form["ADD_maxTime"];
+            var ADD_minBetween = Request.Form["ADD_minBetween"];
+            var ADD_experience = Request.Form["ADD_experience"];
+            var ADD_travelRadius = Request.Form["ADD_travelRadius"];
+            var ADD_Personal = Request.Form["ADD_Personal"];
+            var ADD_Public = Request.Form["ADD_Public"];
+            */
+            //var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
+        
+            var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
+            
+            // Link the user with the selected position:
             var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 1);
 
-            if (Results.Result != "Success")
-            {
-                ErrorMessage = Results.Result;
-                CommonHelpers.ReturnJsonError(-1, ErrorMessage);
-            }
-            else
-            {
-
-                for (int i = 0; i < Request.Form.Count; i++)
-                {
-                    var temp = Request.Form.GetKey(i);
-                    if (temp.IndexOf("ADD") != 0)
-                    {
-                        db.Execute(sqlInsertAttribute, UserID, PositionID, Request.Form.Get(i), LanguageID, CountryID, theDate, theDate);
+            if (Results.Result != "Success") {
+                CommonHelpers.ReturnJsonError(-1, Results.Result);
+            } else {
+                foreach (string fname in Request.Form.Keys){
+                    
+                    // In the form, the 'name' of each input-checkbox element per service-attribute have
+                    // the format: positionservices-category[{0}]-attribute[{1}]
+                    // where {0} is replaced by the ServiceAttributeCategoryID
+                    // and {1} is replaced by the ServiceAttributeID
+                    // BUT, the important is that the value associated with the checkboxes is the SCAMID
+                    // just wast we need save into the database.
+                    // And remember: web forms only send to the server in the POST (just here!)
+                    // the pair  name-value  of checked checkboxes 
+                    // (it means that unchecked values are not in the Request.Form collection)
+                    if (fname.StartsWith("positionservices-category")){
+                        // Is an attribute SCAMID value
+                        db.Execute(sqlInsertAttribute, UserID, PositionID, Request.Form[fname], LanguageID, CountryID, theDate, theDate);
                     }
                 }
 
-                db.Execute(sqlInsertAdditional, UserID, PositionID, LanguageID, CountryID, ADD_minTime, ADD_maxTime, ADD_minBetween, ADD_experience, ADD_travelRadius, ADD_Details, ADD_Personal, ADD_Public, "0000000", "000000000000000000000000", "AM", "PST", theDate, theDate);
+                //db.Execute(sqlInsertAdditional, UserID, PositionID, LanguageID, CountryID, ADD_minTime, ADD_maxTime, ADD_minBetween, ADD_experience, ADD_travelRadius, ADD_Details, ADD_Personal, ADD_Public, "0000000", "000000000000000000000000", "AM", "PST", theDate, theDate);
 
                 // We return a json with result OK (=0), and response end just after this:
                 CommonHelpers.ReturnJsonError(0, "");
             }
-        }
-        else
-        {
+        } else {
             CommonHelpers.ReturnJsonError(-1, "Un-authenticated");
         }
     }
