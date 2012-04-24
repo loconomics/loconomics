@@ -5,8 +5,16 @@
     var debug = true;
  
     var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
-    var gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,System.Web.Configuration.WebConfigurationManager.AppSettings["BTMerchantID"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPublicKey"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPrivateKey"]);
-    var customer = gateway.Customer.Find(user["UserID"]);
+    
+    Braintree.BraintreeGateway gateway = null;
+    Braintree.CustomerGateway customer = null;
+    
+    try{
+        gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,System.Web.Configuration.WebConfigurationManager.AppSettings["BTMerchantID"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPublicKey"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPrivateKey"]);
+        customer = gateway.Customer.Find(user["UserID"].ToString());
+    } catch (Braintree.Exceptions.NotFoundException ex){
+    } catch (Exception ex){
+    }
 
     var mycustomfieldvalue = "customer....";
         
