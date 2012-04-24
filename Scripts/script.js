@@ -375,6 +375,7 @@ $(document).ready(function () {
         var form = (event.data ? event.data.form : null) || $(this);
         var box = (event.data ? event.data.box : null) || form.closest(".ajax-box");
         var action = (event.data ? event.data.action : null) || form.attr('action') || '';
+        var data = form.find(':input').serialize();
 
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
@@ -386,7 +387,7 @@ $(document).ready(function () {
         $.ajax({
             url: (action),
             type: 'POST',
-            data: form.serialize(),
+            data: data,
             success: function (data, text, jx) {
                 // If is a JSON result:
                 if (typeof (data) === 'object') {
