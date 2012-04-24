@@ -4,10 +4,6 @@
 
     string email = "";
 
-    // Add Validation scripts
-    Scripts.Add(UrlUtil.AppPath + "Scripts/jquery.validate.min.js");
-    Scripts.Add(UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js");
-
     Validation.RequireField("email", "Username cannot be empty."); 
 
     if (IsPost) {
@@ -76,6 +72,8 @@
         }
     }
 }
+
+@CommonHelpers.GetValidationScripts()
 
   <div id="container" class="clearfix">
 

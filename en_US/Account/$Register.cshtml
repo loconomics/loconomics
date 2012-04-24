@@ -91,11 +91,7 @@
         }
     }
 }
-<script type="text/javascript">
-    Modernizr.load([
-    UrlUtil.AppPath + "Scripts/jquery.validate.min.js",
-    UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js"]);
-</script>
+@CommonHelpers.GetValidationScripts()
 <article id="registerBox" class="ajax-box account-popup">
     <hgroup class="title">
         <h1>Create a free account</h1>
