@@ -1,0 +1,151 @@
+﻿<html>
+<head>
+    @* Required javascript for client-side validation *@
+    <script src="/vs/Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="/vs/Scripts/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="/vs/Scripts/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+    
+    @* Basic styles to properly work of validation *@
+    <style>
+    .input-validation-error
+    {
+        border-color: Red;
+    }
+    .field-validation-error
+    {
+        color: Red;
+    }
+    form div.validation-summary-valid
+    {
+        display: none;
+    }
+    </style>
+</head>
+<body>
+
+<h1>Testing asp.net with jQuery Validation</h1>
+<p>You can disable javascript at browser (or un-link the scripts tags) to test the behavior
+    without client-side validation.</p>
+
+@{
+    // Automatic validation: errors are added to the ModelState errors collection 
+    //  (changing the ModelState.IsValid value).
+    //  It allows client-side validation with javascript and jquery.validate.unobtrusive library
+    Validation.RequireField("a", "A is required");
+    Validation.Add("a", Validator.StringLength(20, 4, "It must have between 4 and 20 characters"));
+    Validation.Add("b", Validator.Integer("It must be an integer number"));
+    Validation.Add("b", Validator.Range(-10, 10, "It must be a number between -10 and 10"));
+    Validation.Add("c", Validator.Decimal("It must be a decimal number"));
+    Validation.Add("d", Validator.DateTime("It must be a datetime"));
+    /* NOTE about validation of types (Integer, Decimal, Datetime,...) and jQuery:
+     * jQuery.validate.unobtrusive don't validate data types, because of this client-side 
+     * validation will not work for 'c' and 'd' fields, but will work on server-side;
+     * field 'b' will have client-side validation because have a Range Validator assigned,
+     * because of this, if automatic client-side types validation is wanted
+     * only a Range Validator must be added, but only works with numbers (decimal and integer).
+     * For DateTime only server-side works (and TimeSpan type doesn't exist), you can
+     * try using the Validator.Regex or creating your own custom Validators at 
+     * server-side (create a class inheriting from System.Web.WebPages.IValidator)
+     * and client-side (http://docs.jquery.com/Plugins/Validation/Validator/addMethod).
+     */
+    
+    // We process the form only on Post (IsPost=true) and if there is no Validation errors
+    // IMPORTANT NOTE about Validation.IsValid(): this call the Validation.Validate() method 
+    //  internally, and then return if validation was success or not.
+    //  When errors are found in Validation process, ModelState.AddError is called to fill per field
+    //  errors on the Page State, and ModelState.IsValid will return false after that.
+    //  Is required call Validation.Validate() OR Validation.IsValid almost one time to get
+    //  the expected results about if the page (ModelState) is valid or not.
+    //  To avoid validation error messages when no needed (for example, at first page load -GET-),
+    //  we must not call Validation.Validate or Validation.IsValid when IsPost=false; because of
+    //  this, the best is add the next line exactly in this order 
+    //  (first IsPost, then Validation.IsValid, ever).
+    if (IsPost && Validation.IsValid()){
+        
+        /* Custom validation examples, using directly ModelState.
+         * This only works on server-side -almost you want to code it manually
+         * in javascript for client-side. */
+        
+        // Manual required field validation, with an special check 
+        //  (only required when another field have some specific values, it's an example!):
+        if (Request["b"].IsEmpty() && 
+            Request["c"].AsInt() < 0){
+            ModelState.AddError("b", "B is required when C is lower than 0!");
+        }
+        
+        if (Request["key"].IsEmpty() ||
+            Request["key"] != "secret"){
+            ModelState.AddError("key", "Key is incorrect");
+            ModelState.AddFormError("The form cannot be processed without the secret key. ups!");
+        }
+        
+        // Checking ModelState for erros (Validation.IsValid MUST NOT be used, it exist only for
+        //  very specific validation cases -don't check ModelState, only register erros on IsPost,...)
+        if (ModelState.IsValid){
+            var a = Request["a"];
+            var b = Request["b"].AsInt();
+            var c = Request["c"].AsDecimal();
+            var d = Request["d"].AsDateTime();
+            
+            @: <p>Successfully data!: @ObjectInfo.Print(Request.Form)</p>
+        }else{
+            // Really, next message is not needed, only testing:
+            @: <p>There are errors in the data provided.</p>
+        }
+    }
+}
+
+<form action="" method="post">
+@* ValidationSummary ever generate html result, if is not wanted when all ok (and in the initial load),
+    we must check ModelState.IsValid; but if we have enabled jQuery.validate.unobtrusive, he used it
+    (but is not required) to put errors on client-side validation, we must add ever ValidationSummary.
+    But a note, ValidationSummary will show the summary message including when there are no errors,
+    using a bit of css to hide the validationsummary box when this have 
+    the class 'validation-summary-valid' we solve the cosmetic problem.
+    ValidationSummary must be inside the form element to work with jQuery
+ *@
+@*if (!ModelState.IsValid){ *@
+    @Html.ValidationSummary("Validation and page errors:")
+@*}*@
+
+@* If you want show only general messages (added to ModelState.AddFormError), avoiding all
+    field specific errors, you must use next ValidationSummary call
+ *@
+    @Html.ValidationSummary("General page/form errors:", true, null)
+
+<fieldset>
+    <legend>Test</legend>
+    <ul>
+        <li>
+            @* Validation.GetHtml generates the html attributes for the html element 
+                with the data for use validation at client side with jQuery.Validation.Unobtrusive *@
+            <label>A: <input type="text" name="a" @Validation.GetHtml("a") /></label>
+            @* Html Element in that jQuery validation and server-side validation
+               will place the error message about this specific field:
+               (simply remove next line if message is not wanted)
+             *@
+            @Html.ValidationMessage("a")
+        </li>
+        <li>
+            <label>B: <input type="text" name="b" @Validation.GetHtml("b")  /></label>
+            @Html.ValidationMessage("b")
+        </li>
+        <li>
+            <label>C: <input type="text" name="c" @Validation.GetHtml("c")  /></label>
+            @Html.ValidationMessage("c")
+        </li>
+        <li>
+            <label>D: <input type="text" name="d" @Validation.GetHtml("d")  /></label>
+            @Html.ValidationMessage("d")
+        </li>
+        <li>
+            <label>What is the key?: <input type="text" name="key" /></label>
+        </li>
+        <li class="actions">
+            <input class="main-action" type="submit" value="Save" />
+        </li>
+    </ul>
+</fieldset>
+</form>
+</body>
+</html>

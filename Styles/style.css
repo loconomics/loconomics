@@ -1336,8 +1336,15 @@ table .number{
 .field-validation-error{
     color: Red;
 }
+.input-validation-error{
+    border-color: Red;
+}
 .field-validation-error{
     display: block;
+}
+/* Hide validation summary when all is fine */
+form div.validation-summary-valid{
+    display: none;
 }
 
 /***********************
