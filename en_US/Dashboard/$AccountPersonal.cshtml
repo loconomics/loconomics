@@ -1,36 +1,39 @@
-﻿<p class="setting-instructions">
+﻿@{
+    var idprefix = "account-personal";
+}
+<p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
 <form method="post" id="personal">
     @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
-    <fieldset id="personal-fs-contactinformation">
+    <fieldset id="@idprefix-fs-contactinformation">
         <legend>Contact Information:</legend>
         <ul>
-            <li><label for="personal-firstname">First Name:</label><input id="personal-firstname" type="text" name="firstname" placeholder="Your name"/></li>
-            <li><label for="personal-middleinitial">Middle Initial:</label><input id="personal-middleinitial" type="text" name="middleinitial"/></li>
-            <li><label for="personal-lastname">Last Name:</label><input id="personal-lastname" type="text" name="lastname"/></li>
-            <li><label for="personal-mobilephone">Mobile Phone:</label><input id="personal-mobilephone" type="text" name="mobilephone"/></li>
-            <li><label for="personal-alternatephone">Alternate Phone:</label><input id="personal-alternatephone" type="text" name="alternatephone"/></li>
+            <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name"/></li>
+            <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial"/></li>
+            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname"/></li>
+            <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone"/></li>
+            <li><label for="@idprefix-alternatephone">Alternate Phone:</label><input id="@idprefix-alternatephone" type="text" name="alternatephone"/></li>
         </ul>
     </fieldset>
-    <fieldset id="personal-fs-homeaddress">
+    <fieldset id="@idprefix-fs-homeaddress">
         <legend>Home Address:</legend>
         <ul>
-            <li><label for="personal-streetaddress1">Street Address 1:</label><input id="personal-streetaddress1" type="text" name="streetaddress1"/></li>
-            <li><label for="personal-streetaddress2">Street Address 2:</label><input id="personal-streetaddress2" type="text" name="streetaddress2"/></li>
-            <li><label for="personal-city">City:</label><input id="personal-city" type="text" name="city"/></li>
-            <li><label for="personal-state">State:</label>
-                <select id="personal-state" name="state">
+            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1"/></li>
+            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
+            <li><label for="@idprefix-state">State:</label>
+                <select id="@idprefix-state" name="state">
                     @CommonHelpers.CountryOptions()
                 </select>
             </li>
-            <li><label for="personal-zipcode">Zip Code:</label><input id="personal-zipcode" type="text" name="zipcode"/></li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
         </ul>
     </fieldset>
-    <fieldset id="personal-fs-publicbio">
+    <fieldset id="@idprefix-fs-publicbio">
         <legend>Public Bio:</legend>
         <ul>
-            <li><label for="personal-publicbio">Public Bio:</label><textarea id="personal-publicbio" name="publicbio"></textarea></li>
+            <li><label for="@idprefix-publicbio">Public Bio:</label><textarea id="@idprefix-publicbio" name="publicbio"></textarea></li>
         </ul>
     </fieldset>
     <fieldset class="actions">
