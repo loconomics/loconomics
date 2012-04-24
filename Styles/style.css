@@ -1336,8 +1336,14 @@ table .number{
 .field-validation-error{
     color: Red;
 }
-.input-validation-error{
+html.no-boxshadow .input-validation-error{
     border-color: Red;
+}
+html.boxshadow .input-validation-error{
+    box-shadow: 0 0 3px 1px red;
+    -moz-box-shadow: 0 0 3px 1px red;
+    -o-box-shadow: 0 0 3px 1px red;
+    -webkit-box-shadow: 0 0 3px 1px red;
 }
 .field-validation-error{
     display: block;
@@ -1421,6 +1427,12 @@ form div.validation-summary-valid{
 }
 #forgotPasswordBox{
     width: 400px;
+}
+#forgotPasswordBox .field-validation-error{
+    float: left;
+}
+html.boxshadow #loginBox .field-validation-error{
+    display: none;
 }
 
 

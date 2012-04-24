@@ -9,61 +9,71 @@
     var facebookPermissions = "email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
     // "SOME_ARBITRARY_BUT_UNIQUE_STRING";
     var facebookState = Session["facebookState"] = Guid.NewGuid().ToString();
-
-    // workaround:
-    var loginvalid = false;
     
     // Setup Validation
     // Validate the user's username
     Validation.RequireField("username", "You must specify a user name.");
     // Validate the user's password
 	Validation.RequireField("password", "You must specify a password.");
+    
 
+    /* OAuth provider login disabled currently -need review when enable-
     if (IsPost){
-        
         // is this a OAuth sign in request?
         string provider = Request.Form["provider"];
         if (!provider.IsEmpty()) {
             OAuthWebSecurity.RequestAuthentication(provider, UrlUtil.LangPath + "Account/RegisterService/");
             return;
         }
-        
-        if (Validation.IsValid()) {
-            username = Request.Form["username"];
-            password = Request.Form["password"];
-            rememberMe = Request.Form["rememberMe"].AsBool();
-        
-            if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
-                // We return a json with result OK and redirect link (Code=1),
-                // and response end just after this:
-                CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
-            }
+    }*/
 
-            // Attempt to login to the Security object using provided creds
-            if (WebSecurity.Login(username, password, rememberMe)) {
+    
+    if (IsPost && Validation.IsValid()){
+
+        username = Request.Form["username"];
+        password = Request.Form["password"];
+        rememberMe = Request.Form["rememberMe"].AsBool();
+        
+        if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
+            // We return a json with result OK and redirect link (Code=1),
+            // and response end just after this:
+            CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
+        }
+
+        // Attempt to login to the Security object using provided creds
+        if (WebSecurity.Login(username, password, rememberMe)) {
                 
-                // mark the user as logged in via a normal account,
-                // as opposed to via an OAuth or OpenID provider.
-                Session["OAuthLoggedIn"] = false;
+            // mark the user as logged in via a normal account,
+            // as opposed to via an OAuth or OpenID provider.
+            Session["OAuthLoggedIn"] = false;
 
-                string redirect = N.W(Request.QueryString["ReturnUrl"])
-                    ?? N.W(Request["Redirect"])
-                    ?? UrlUtil.LangPath;
+            string redirect = N.W(Request.QueryString["ReturnUrl"])
+                ?? N.W(Request["Redirect"])
+                ?? UrlUtil.LangPath;
 
-                // We return a json with result OK and redirect link (Code=1),
-                // and response end just after this:
-                CommonHelpers.ReturnJsonResult(1, redirect);
-            }
-            else {
-                ModelState.AddFormError("Incorrect Username or password.");
-            }
+            // We return a json with result OK and redirect link (Code=1),
+            // and response end just after this:
+            CommonHelpers.ReturnJsonResult(1, redirect);
+        }
+        else {
+            ModelState.AddFormError("Incorrect Username or password.");
         }
     }
 }
 <script type="text/javascript">
-    Modernizr.load([
-    UrlUtil.AppPath + "Scripts/jquery.validate.min.js",
-    UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js"]);
+    if (!jqueryValidateUnobtrusiveLoaded) var jqueryValidateUnobtrusiveLoaded = false;
+    if (!jqueryValidateUnobtrusiveLoaded) {
+        jqueryValidateUnobtrusiveLoaded = true;
+        Modernizr.load([
+        { load: UrlUtil.AppPath + "Scripts/jquery.validate.min.js" },
+        { load: UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js" }
+        ]);
+    } else {
+        // Apply the validation rules to the new elements
+        $(document).removeData('validator');
+        $(document).removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse(document);
+    }
 </script>
 <article id="loginBox" class="ajax-box account-popup">
     <hgroup class="title">
@@ -72,26 +82,20 @@
     <section>
         <form class="choice-option ajax" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
-            @*  && (!Validation.IsValid() || !ModelState.IsValid) *@
-            @if(IsPost){
-                Html.ValidationSummary("There was a problem with your login and/or errors exist in your form.");
-                if (!loginvalid)
-                {
-                    <div class="field-validation-error">Incorrect Username or password</div>
-                }
-            }
+            @Html.ValidationSummary(null, true, null)
+
             <fieldset>
                 <legend>Log in to Your Account</legend>
                 <ul>
                     <li class="username">
                         <label for="username" @if(!ModelState.IsValidField("username")){<text>class="error-label"</text>}>E-mail address:</label>
-                        <input type="text" id="username" name="username" value="@username" title="Username" @Validation.GetHtml("username")/>
+                        <input type="text" id="username" class="@(ModelState.IsValidField("Ausername") ? "" : "input-validation-error")" name="username" value="@username" title="Username" @Validation.GetHtml("username")/>
                         @* Write any username validation errors to the page *@
                         @Html.ValidationMessage("username")
                     </li>
                     <li class="password">
                         <label for="password" @if(!ModelState.IsValidField("password")){<text>class="error-label"</text>}>Password:</label>
-                        <input type="password" id="password" name="password" title="Password" @Validation.GetHtml("password")/>
+                        <input type="password" id="password" class="@(ModelState.IsValidField("Apassword") ? "" : "input-validation-error")" name="password" title="Password" @Validation.GetHtml("password")/>
                         @* Write any password validation errors to the page *@
                         @Html.ValidationMessage("password")
                     </li>
