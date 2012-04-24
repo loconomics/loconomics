@@ -31,15 +31,15 @@ $(document).ready(function () {
 
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Login/', { width: 410, height: 300 });
+        popup(UrlUtil.LangPath + 'Account/$Login/', { width: 410, height: 320 });
         return false;
     });
     $(document).delegate('a.register', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Register/', { width: 450, height: 420 });
+        popup(UrlUtil.LangPath + 'Account/$Register/', { width: 450, height: 430 });
         return false;
     });
     $(document).delegate('a.forgot-password', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', { width: 400, height: 200 });
+        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', { width: 400, height: 220 });
         return false;
     });
 
