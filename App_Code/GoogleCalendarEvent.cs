@@ -66,6 +66,7 @@ namespace LcCommonLib
 
             string bodyHTML = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">\r\n<HTML>\r\n<HEAD>\r\n<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\r\n<META NAME=\"Generator\" CONTENT=\"MS Exchange Server version 6.5.7652.24\">\r\n<TITLE>{0}</TITLE>\r\n</HEAD>\r\n<BODY>\r\n<!-- Converted from text/plain format -->\r\n<P><FONT SIZE=2>Type:Single Meeting<BR>\r\nOrganizer:{1}<BR>\r\nStart Time:{2}<BR>\r\nEnd Time:{3}<BR>\r\nTime Zone:{4}<BR>\r\nLocation:{5}<BR>\r\n<BR>\r\n*~*~*~*~*~*~*~*~*~*<BR>\r\n<BR>\r\n<BR>\r\n</FONT>\r\n</P>\r\n\r\n</BODY>\r\n</HTML>";
             this.bodyHTML = string.Format(bodyHTML
+                                        , string.Format("Add Loconomics EventID {0} to Calendar", EventDetail.SrId) //Title
                                         , EventDetail.organizerName
                                         , string.Format("{0} {1}", startdate, starttime)
                                         , string.Format("{0} {1}", enddate, endtime)
@@ -123,9 +124,9 @@ namespace LcCommonLib
             cw.WriteLine("CALSCALE:GREGORIAN");
             cw.WriteLine("METHOD:REQUEST");
             cw.WriteLine("BEGIN:VEVENT");
-            cw.WriteLine(string.Format("DTSTART:", EventDetail.ServiceStartDate.ToUniversalTime().ToString(calDateFormat)));
-            cw.WriteLine(string.Format("DTEND:", EndTime.ToUniversalTime().ToString(calDateFormat)));
-            cw.WriteLine(string.Format("DTSTAMP:", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
+            cw.WriteLine(string.Format("DTSTART:{0}", EventDetail.ServiceStartDate.ToUniversalTime().ToString(calDateFormat)));
+            cw.WriteLine(string.Format("DTEND:{0}", EndTime.ToUniversalTime().ToString(calDateFormat)));
+            cw.WriteLine(string.Format("DTSTAMP:{0}", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
             cw.WriteLine(string.Format("UID:{0}@google.com", Guid.NewGuid().ToString("N")));
            
             cw.BufferedWrite("ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;");
@@ -133,9 +134,9 @@ namespace LcCommonLib
             cw.BufferedWrite(string.Format("X-NUM-GUESTS=0:mailto:{0};", EventDetail.ProviderEmail));
             cw.BufferedWriteEnd(); //write the current buffer to the underlying stringwriter/builder
            
-            cw.WriteLine(string.Format("CREATED:", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
+            cw.WriteLine(string.Format("CREATED:{0}", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
             cw.WriteLine(string.Format("DESCRIPTION:{0}", EventDetail.Subject));
-            cw.WriteLine(string.Format("LAST-MODIFIED:", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
+            cw.WriteLine(string.Format("LAST-MODIFIED:{0}", DateTime.Now.ToUniversalTime().ToString("yyyyMMddTHHmmssZ")));
             cw.WriteLine(string.Format("LOCATION:{0}", EventDetail.Location));
             cw.WriteLine("SEQUENCE:0");
             cw.WriteLine("STATUS:CONFIRMED");
@@ -143,8 +144,8 @@ namespace LcCommonLib
             cw.WriteLine("TRANSP:OPAQUE");
             cw.WriteLine("END:VEVENT");
             cw.WriteLine("END:VCALENDAR");
-         
-            string CalendarEventBody = cw.ToString();
+
+            this.bodyCalendar = cw.ToString();
                                        
          }
 

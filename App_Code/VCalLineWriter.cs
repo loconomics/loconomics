@@ -6,7 +6,7 @@ using System.IO;
 
 namespace LcCommonLib
 {   
-    /// <summary>
+   /// <summary>
     ///Calendar lines cannot exceed 76 characters, when they do they
     ///must be wrapped an indented with a space character
     ///the purpose of this class is to provide a string writer that will ensure
@@ -41,7 +41,7 @@ namespace LcCommonLib
         ///the stringwriter class and restrict it
         /// </summary>
         StringWriter _sw = null;
-        private const int MAX_LINE_LENGTH = 76;
+        private const int MAX_LINE_POSITION = 75;
         private const string SPACE = " ";
         private StringWriter buffer;
         private Int32 bufferLineLength = 0;
@@ -63,10 +63,10 @@ namespace LcCommonLib
         /// <param name="content">string</param>
         public void BufferedWrite(string content)
         {
-            while(bufferLineLength + content.Length > MAX_LINE_LENGTH)
+            while(bufferLineLength + content.Length > MAX_LINE_POSITION)
             {
                 //Calculate the number of characters that can be added to the current line
-                int carryoverCount = -1 * ( MAX_LINE_LENGTH - (bufferLineLength + content.Length)); //need to flip the number to positive
+                int carryoverCount = -1 * ( MAX_LINE_POSITION - (bufferLineLength + content.Length)); //need to flip the number to positive
                 int usableCount = content.Length - carryoverCount;
 
                 //Write that number of characters to the current line
@@ -85,8 +85,6 @@ namespace LcCommonLib
             if(content.Length > 0 )
             {
                 bufferLineLength += content.Length;
-                if(!IsLineOne)
-                    buffer.Write(SPACE);
                 buffer.Write(content);
             }
         }
@@ -113,7 +111,7 @@ namespace LcCommonLib
         /// <param name="content">string</param>
         public void WriteLine(string Line)
         {
-            if (Line.Length > MAX_LINE_LENGTH)
+            if (Line.Length > MAX_LINE_POSITION)
             {
                 BufferedWrite(Line);
                 BufferedWriteEnd();

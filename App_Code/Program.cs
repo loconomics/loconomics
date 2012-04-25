@@ -12,9 +12,7 @@ namespace LcCommonLib
         static int POSITION_ID = 14;
 
         static void Main(string[] args)
-        {
-           
-
+        {       
             try
             {
                 List<string> AckPaths = SeviceRequestMgr_Test();
@@ -30,7 +28,6 @@ namespace LcCommonLib
                 QueryString = QueryString.Substring(1); //removes "?"
                 
                 Console.WriteLine(Ack_Test(QueryString));
-
 
             }
             catch(System.Exception ex)
