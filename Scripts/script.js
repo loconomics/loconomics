@@ -278,6 +278,12 @@ $(document).ready(function () {
         // getting the wizard-next-step
         var nextStep = $(this).data('wizard-next-step');
 
+        // First at all, if unobtrusive validation is enabled, validate
+        var valobject = form.data('unobtrusiveValidation');
+        if (valobject && valobject.validate() == false)
+        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+            return;
+
         // Raise event
         currentStep.trigger('beginSubmitWizardStep');
 
@@ -376,6 +382,12 @@ $(document).ready(function () {
         var box = (event.data ? event.data.box : null) || form.closest(".ajax-box");
         var action = (event.data ? event.data.action : null) || form.attr('action') || '';
         var data = form.find(':input').serialize();
+
+        // First at all, if unobtrusive validation is enabled, validate
+        var valobject = form.data('unobtrusiveValidation');
+        if (valobject && valobject.validate() == false)
+            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+            return;
 
         // Loading, with retard
         var loadingtimer = setTimeout(function () {

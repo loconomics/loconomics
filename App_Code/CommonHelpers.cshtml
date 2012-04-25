@@ -25,10 +25,16 @@
             { load: UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js" }
             ]);
         } else {
-            // Apply the validation rules to the new elements
-            $(document).removeData('validator');
-            $(document).removeData('unobtrusiveValidation');
-            $.validator.unobtrusive.parse(document);
+            // Check first if validation is enabled (can happen that twice includes of
+            // this code happen at same page, being executed this code after first appearance
+            // with the switch jqueryValidateUnobtrusiveLoaded changed
+            // but without validation being already loaded and enabled)
+            if ($ && $.validator && $.validator.unobtrusive) {
+                // Apply the validation rules to the new elements
+                $(document).removeData('validator');
+                $(document).removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(document);
+            }
         }
     </script>
 }

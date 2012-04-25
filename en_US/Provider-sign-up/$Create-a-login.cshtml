@@ -29,25 +29,25 @@
         Validator.EqualsTo("password", "The new password and confirmation password do not match."));
     
     // var captchaMessage = "";
+    
+    email = Request.Form["email"];
+    password = Request.Form["password"];
+    confirmPassword = Request.Form["confirmPassword"];
+    firstname = Request.Form["firstname"];
+    lastname =   Request.Form["lastname"];
+    zipcode =  Request.Form["zipcode"];
+    lang =  Request.Form["lang"];
+    termsofuse = Request.Form["termsofuse"];
+    termsofuse1 = Request.Form["termsofuse1"];
+    termsofuse2 = Request.Form["termsofuse2"];
+    termsofuse3 = Request.Form["termsofuse3"];
+    termsofuse4 = Request.Form["termsofuse4"];
+    termsofuse5 = Request.Form["termsofuse5"];
+    ppolicy = Request.Form["ppolicy"];
+    emailcontact = Request.Form["emailcontact"];
 
     // If this is a POST request, validate and process data
     if (IsPost && Validation.IsValid()) {
-        email = Request.Form["email"];
-        password = Request.Form["password"];
-        confirmPassword = Request.Form["confirmPassword"];
-        firstname = Request.Form["firstname"];
-        lastname =   Request.Form["lastname"];
-        zipcode =  Request.Form["zipcode"];
-        lang =  Request.Form["lang"];
-        termsofuse = Request.Form["termsofuse"];
-        termsofuse1 = Request.Form["termsofuse1"];
-        termsofuse2 = Request.Form["termsofuse2"];
-        termsofuse3 = Request.Form["termsofuse3"];
-        termsofuse4 = Request.Form["termsofuse4"];
-        termsofuse5 = Request.Form["termsofuse5"];
-        ppolicy = Request.Form["ppolicy"];
-        emailcontact = Request.Form["emailcontact"];
-
         
         // Validate the user's captcha answer
         // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
@@ -114,6 +114,7 @@
 <p class="info">
      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
  </p>
+@CommonHelpers.GetValidationScripts()
  <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)Provider-sign-up/$Create-a-login/">
      @* If at least one validation error exists, notify the user *@
     @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
