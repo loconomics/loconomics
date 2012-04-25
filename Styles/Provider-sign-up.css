@@ -76,8 +76,7 @@
 .sign-up-wizard #create-a-login .login-data .facebook-connect{
     text-align: center;
 }
-.sign-up-wizard #create-a-login .login-data .facebook-connect .or{
-    display: block;
+.sign-up-wizard #create-a-login .login-data .choice-or{
     margin: 30px;
 }
 

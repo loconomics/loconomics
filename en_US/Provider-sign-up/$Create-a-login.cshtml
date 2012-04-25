@@ -119,7 +119,7 @@
     @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
     <fieldset class="login-data">
          <legend>Contact Information:</legend>
-         <ul>
+         <ul class="choice-option">
              <li class="first-name">
                 <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name:</label>
                 <input type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
@@ -172,9 +172,9 @@
                         <option value="2">Spanish (ES)</option>
             </select></label></li>
         </ul>
-        <div class="facebook-connect">
-            <span class="or">or</span>
-            <a href="#"><img src="@Href(UrlUtil.AppPath + "img/fb-login-placeholder.png")" alt="Facebook Connect"/></a>
+        <p class="choice-or">or</p>
+        <div class="facebook-connect social choice-option">
+            @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml")
         </div>
     </fieldset>
     <fieldset class="legal-agreement">
