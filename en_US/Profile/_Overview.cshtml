@@ -1,8 +1,24 @@
 ﻿@{
+    // Current provider data record:
+    var p = PageData["providerrow"];
     // Current position data record:
-    var p = PageData["position"];
+    var pos = PageData["position"];
     // Current position number/index
     var n = PageData["npos"];
+    
+    var db = Database.Open("sqlloco");
+    
+    var posRatings = db.QuerySingle(@"
+        SELECT	@0 As ProviderID, @1 As PositionID,
+                avg(Rating1) As Rating1,
+		        avg(Rating2) As Rating2,
+		        avg(Rating3) As Rating3,
+                123 As Hours
+        FROM	UserReviews
+        WHERE	ProviderID = @0
+		         AND
+		        PositionID = @1
+    ", p["UserID"], pos["PositionID"]);
 }
 @helper printTestAttributes(string cat){
     string[] atts = new string[]{ "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping" };
@@ -10,18 +26,37 @@
         <li class="attribute-@cat-@i">@atts[i]</li>
     }
 }
-@{/* TODO Need review */}
-@helper printStartRating(string index, string rate){
+@helper printStartRating(dynamic posrow, string index, string rate){
+    var id = "ProviderProfileRating" + index + ":" + posrow["PositionID"];
     var n = "rating" + index;
-    Html.Label(n);
-    RenderPage(UrlUtil.LangPath + "StarRating.cshtml", new String[] { "ProviderProfileRating" + index, rate, "true" });
-}
-@{/* TODO Need review */}
-@helper printRating(dynamic posrow){
-    for(var s=1; s < 5; s++){
-        var rate = posrow["Rating" + s.ToString()] ?? 0;
-        printStartRating(s.ToString(), rate.ToString());
+    switch(index){
+        default:
+            <label>@n</label>
+            break;
+        case "1":
+            <label>Proffesionalism</label>
+            break;
+        case "2":
+            <label>Quality-of-work</label>
+            break;
+        case "3":
+            <label>Efficiency</label>
+            break;
     }
+    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
+}
+@helper printRating(dynamic posrow){
+    <ul class="review-ratings" style="clear:both">
+        @{
+            for(var s=1; s < 4; s++){
+                var rate = posrow["Rating" + s.ToString()] ?? 0;
+                <li>
+                    @printStartRating(posrow, s.ToString(), rate.ToString())
+                </li>
+            }
+        }
+    </ul>
+    <span class="note">*based on @posrow["Hours"] hours of work</span>
 }
 @helper oldPrintAttributes(){
     // TODO Review next old code:
@@ -47,7 +82,7 @@
 <p class="profile-intro">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
-
+@CommonHelpers.SetupStarRatingPlugin()
 <div class="star-ratings">
     <!-- Temporary static code -->
     <ul>
@@ -62,6 +97,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
         </li>
     </ul>
     <span class="note">*based on 156 hours of work</span>
+    @*printRating(posRatings)*@
 </div>
 <div class="featured-review review have-view-more">
     <h6>Review from <span class="reviewer-name">Joshua D.</span> (<span class="reviewer-date">27-jul-2011</span>):</h6>

@@ -301,6 +301,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 .star-ratings li{
     margin: 0 !important;
+    width: 215px;
+    height: 22px;
+    overflow: hidden;
 }
 .star-ratings .rate{
     background: url('../img/star-on.gif') repeat-x center left;

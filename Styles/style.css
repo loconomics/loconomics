@@ -573,7 +573,7 @@ header dl dd {
    border-bottom-left-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */ 
    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; }
 header dl.user-nav dt, header dl.user-nav dd {
-    width: 170px; 
+    width: 170px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -4,13 +4,13 @@
     */
     public static object GetProfileRow(int userId){
         var db = Database.Open("sqlloco");
-        var profilesql = @"SELECT FirstName + ' ' + LastName AS Name,FirstName,LastName,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
+        var profilesql = @"SELECT a.UserID, FirstName + ' ' + LastName AS Name,FirstName,LastName,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
                         FROM users a 
                         JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
                         JOIN dbo.userprofile e ON  (a.userid = e.userid)
                         LEFT JOIN dbo.ReviewScores rs ON (a.userid = rs.ProviderID)                     
                         WHERE a.userid = @0";
-        
+
         return db.QuerySingle(profilesql, userId);
     }
     
