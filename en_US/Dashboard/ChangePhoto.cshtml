@@ -1,0 +1,145 @@
+﻿@using WebMatrix.Data;
+@functions{
+    void SaveUserPhotoName(string fileName, int userId){
+        using (var db = Database.Open("sqlloco")){
+            // First, get current photo name at databse
+            var photo = db.QueryValue(@"
+                SELECT  TOP 1 photo
+                FROM    users
+                WHERE   UserID=@0
+            ", userId);
+            
+            // If current photo is different than new photo filename,
+            if (photo != fileName){
+                // we remove current photo file
+                string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + photo;
+                try{
+                    //TODO TOREVIEW: sometimes an error saying that file is locked by IIS process happens and
+                    // delete fails (the problem is just after upload that file, is a problem at upload)
+                    File.Delete(Server.MapPath(virtualPath));
+                }catch{}
+                
+                // we update the new photo name
+                db.Execute(@"
+                    UPDATE  users
+                    SET     photo=@0
+                    WHERE   UserID=@1
+                ", fileName, userId);
+            }
+        }
+    }
+}
+@{
+    CommonHelpers.SecurePage();
+    var u = DashboardFunctions.GetUserRow();
+    var userId = u["UserID"];
+    
+    // qq File uploader support, XHR Upload
+    if (!String.IsNullOrEmpty(Request["qqfile"])){
+        string fileName = (string)Request["qqfile"];
+        string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + (string)Request["qqfile"];
+        
+        try{
+            using(FileStream file = System.IO.File.OpenWrite(Server.MapPath(virtualPath))){
+        
+                // Read input stream with the file content (only one file)
+                byte[] content = new byte[Request.InputStream.Length];
+                Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
+                file.Write(content, 0, content.Length);
+                file.Close();
+            }
+        } catch(Exception ex) {
+            CommonHelpers.ReturnJson(
+                new Dictionary<string, object>(){
+                    { "error", "There was an error: " + ex.Message }
+                }
+            );
+        }
+        
+        // File saved, change the user preference at the database:
+        SaveUserPhotoName(fileName, userId);
+        
+        CommonHelpers.ReturnJson(
+            new Dictionary<string, object>(){
+                { "success", "File was saved" }
+            }
+        );
+    } else {
+        if (IsPost){
+            
+            var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
+            
+            System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
+            
+            string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + fileinfo.Name;
+            
+            try{
+                fileuploaded.SaveAs(Server.MapPath(virtualPath));
+            } catch(Exception ex) {
+                // NOTE: IE problems with contentype=json, use JsonHelper directly:
+                //CommonHelpers.ReturnJson(
+                Json.Write(
+                    new Dictionary<string, object>(){
+                        { "error", "There was an error: " + ex.Message }
+                    },
+                Response.Output);
+                Response.End();
+            }
+            
+            // File saved, change the user preference at the database:
+            SaveUserPhotoName(fileinfo.Name, userId);
+            
+            // NOTE: There is some issues with IE managing this result with contenttype=json
+            // because of this, here we use directly the Json helper instead our helper
+            //CommonHelpers.ReturnJson(
+            Json.Write(
+                new Dictionary<string, object>(){
+                    { "success", "File was saved" }
+                },
+            Response.Output);
+            Response.End();
+        } else {
+            // Manage normal GET
+        }
+    }
+}
+<html>
+    <head>
+        <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+        <script src="@Href(UrlUtil.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
+        <link rel="stylesheet" href="@Href(UrlUtil.AppPath + "Scripts/fileuploader/fileuploader.css")"/>
+
+        <script type="text/javascript">
+            @Html.Raw(UrlUtil.ToJsVar())
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var uploader = new qq.FileUploader({
+                    element: document.getElementById('change-photo-file-uploader'),
+                    // path to server-side upload script
+                    action: UrlUtil.LangPath + 'Dashboard/ChangePhoto/',
+                    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                    onComplete: function (id, fileName, responseJSON) {
+                        // Force image reload, in the parent document! (this is an iframe)
+                        var src = window.parent.document.getElementById('avatar').getAttribute('src');
+                        // avoid cache this time
+                        src = src + "?v" + new Date();
+                        window.parent.document.getElementById('avatar').setAttribute('src', src);
+                    }
+                });
+            });        
+        </script>
+    </head>
+    <body>
+        <div class="change-photo">
+            <div id="change-photo-file-uploader">
+                <noscript>          
+                    <form action="@(UrlUtil.LangPath)" method="post">
+                        <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
+                    </form>
+                </noscript>
+            </div>
+        </div>
+    </body>
+</html>
