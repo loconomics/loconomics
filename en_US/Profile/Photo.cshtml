@@ -26,17 +26,22 @@
     string path = HttpContext.Current.Request.MapPath(UrlUtil.AppPath + userFolder + userPhoto);
 
     if (!System.IO.File.Exists(path)){
+        userId = 0;
         path = Server.MapPath(UrlUtil.AppPath + "img/userphotos/u0/avatar.png");
     }
     
-    // Telling to the browser that this is a JPG image
-    Response.ContentType = "image/jpg";
     try{
-        // Transform image to Grayscale
-        // Is inside a using block because ensure close the image ressources and the file
-        using (var img = ImageUtility.ConvertGrayscale(path)){  
-            // Send the transformed image to the browser
-            img.Save(Response.OutputStream, ImageFormat.Jpeg);
+        if (userId == 0){
+            new WebImage(path).Write();
+        } else {
+            // Transform image to Grayscale
+            // Is inside a using block because ensure close the image ressources and the file
+            using (var img = ImageUtility.ConvertGrayscale(path)){ 
+                // Telling to the browser that this is a JPG image
+                Response.ContentType = "image/jpg";
+                // Send the transformed image to the browser
+                img.Save(Response.OutputStream, ImageFormat.Jpeg);
+            }
         }
     }catch{}
 }
