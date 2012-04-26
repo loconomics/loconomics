@@ -1,18 +1,41 @@
 ﻿@{
-    CommonHelpers.SecurePage();
+    var userId = Request["UserID"].AsInt();
+    var userPhoto = "avatar.jpg";
+    dynamic ur = null;
     
-    // Get databse user information
-    var ur = DashboardFunctions.GetUserRow();
+    if (userId == 0){
+        // Get databse user information
+        ur = DashboardFunctions.GetUserRow();
+    } else {
+        // Get databse user information
+        ur = DashboardFunctions.GetUserRow(userId);
+    }
+    
+    if (ur != null){
+        userId = ur["UserID"];
+        // Getting user avatar photo
+        userPhoto = ur["Photo"];
+    } else {
+        userId = 0;
+    }
+    
+    string userFolder = "img/userphotos/u" + userId.ToString() + "/";
 
     // Retrieving image path
-    string path = HttpContext.Current.Request.MapPath(UrlUtil.AppPath + (string)ur["Photo"]);
+    string path = HttpContext.Current.Request.MapPath(UrlUtil.AppPath + userFolder + userPhoto);
+
+    if (!System.IO.File.Exists(path)){
+        path = Server.MapPath(UrlUtil.AppPath + "img/userphotos/u0/avatar.jpg");
+    }
     
-    // Transform image to Grayscale
-    var img = ImageUtility.ConvertGrayscale(path);
+    try{
+        // Transform image to Grayscale
+        var img = ImageUtility.ConvertGrayscale(path);
     
-    // Telling to the browser that this is a JPG image
-    Response.ContentType = "image/jpg";
+        // Telling to the browser that this is a JPG image
+        Response.ContentType = "image/jpg";
     
-    // Send the transformed image to the browser
-    img.Save(Response.OutputStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+        // Send the transformed image to the browser
+        img.Save(Response.OutputStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+    }catch{}
 }
