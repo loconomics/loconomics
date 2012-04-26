@@ -4,7 +4,7 @@
     Layout = "_Layout.cshtml";
     Page.Title = "Make your life better!";
     
-    PageData["userow"] = DashboardFunctions.GetUserRow();
+    var user = PageData["userow"] = DashboardFunctions.GetUserRow();
     PageData["menu-item"] = "mailbox";
 }
 
@@ -16,15 +16,27 @@
 		<div id="inbox" class="tab-body fancy tabbed buttons current">
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="#inbox-new">New</a></li>
+                @if (user.IsProvider){
                 <li><a class="button profile fanciful" href="#inbox-myclients">My Clients</a></li>
+                }
+                @if (user.IsCustomer){
+                <li><a class="button profile fanciful" href="#inbox-myproviders">My Providers</a></li>
+                }
             </ul>
             
             <div id="inbox-new" class="tab-body current">
                 New <!-- TODO here must be the back-end content -->
             </div><!-- #inbox-new -->
+            @if (user.IsProvider){
             <div id="inbox-myclients" class="tab-body">
                 My Clients <!-- TODO here must be the back-end content -->
             </div><!-- #inbox-myclients -->
+            }
+            @if (user.IsCustomer){
+            <div id="inbox-myproviders" class="tab-body">
+                My Providers <!-- TODO here must be the back-end content -->
+            </div><!-- #inbox-myproviders -->
+            }
 		</div><!-- #mailbox -->
         
 		<div id="sent" class="tab-body fancy">
