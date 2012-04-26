@@ -61,7 +61,7 @@
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
-            <img alt="Photo" class="profile-pic" src="@Href(UrlUtil.AppPath + providerrow.Photo)"/>
+            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + providerrow["UserID"])" alt="User Photo" />
             <h1 class="profile-name">@printName(providerrow)</h1>
 		    
 		    <p class="profile-desc">

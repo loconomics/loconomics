@@ -301,6 +301,8 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 .star-ratings li{
     margin: 0 !important;
+}
+.profile .star-ratings li{
     width: 215px;
     height: 22px;
     overflow: hidden;
