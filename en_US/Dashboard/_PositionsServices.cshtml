@@ -10,7 +10,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <form action="#" method="post" class="positionservices" id="position#@(n)-services">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
-    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionservices-attributes positionservices-category-1">
         <legend>Service Attribute Category #1:</legend>
         @for(int i=0; i < 16; i++){

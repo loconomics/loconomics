@@ -117,7 +117,7 @@
 @CommonHelpers.GetValidationScripts()
  <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)Provider-sign-up/$Create-a-login/">
      @* If at least one validation error exists, notify the user *@
-    @Html.ValidationSummary(LocoRessources.ValidationSummaryTitle)
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="login-data">
          <legend>Contact Information:</legend>
          <ul class="choice-option">

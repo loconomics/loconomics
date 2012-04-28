@@ -71,5 +71,5 @@
                 ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(Request.UrlReferrer.PathAndQuery));
             else
                 Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(Request.Url.PathAndQuery));
-    }    
+    }
 }
