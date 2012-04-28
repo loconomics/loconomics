@@ -554,7 +554,7 @@ function popupStyle(size) {
         'background-clip': 'padding-box'
     };
 }
-function popup(url, size){
+function popup(url, size, complete){
     // Native popup
     //window.open(url);
 
@@ -573,28 +573,37 @@ function popup(url, size){
        overlayCSS: { cursor: 'default' }
     });
 
-    // If url returns partial html (starts with $), is loaded with ajax and embedded in current document
-    if (/((^\$)|(\/\$))/.test(url)) {
-        // Loading Url with Ajax and place content inside the blocked-box
-        $.ajax({ url: url, 
-            success: function (data) {
-                $('div.blockMsg').html(data);
-            }, error: function (j, textStatus) {
-                $('div.blockMsg').text('Page not found');
+    // Loading Url with Ajax and place content inside the blocked-box
+    $.ajax({ url: url,
+        success: function (data) {
+            if (typeof (data) === 'object') {
+                if (data.Code && data.Code == 2) {
+                    $.unblockUI();
+                    popup(data.Result, { width: 410, height: 320 });
+                } else {
+                    // Unexpected code, show result
+                    $('.blockMsg').html(data.Result);
+                }
+            } else {
+                // Page content got, paste into the popup if is partial html (url starts with$)
+                if (/((^\$)|(\/\$))/.test(url)) {
+                    $('.blockMsg').html(data);
+                } else {
+                    // Else, if url is a full html page (normal page), put content into an iframe
+                    var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
+                    // When the iframe is ready
+                    iframe.onload = function () {
+                        injectIframeHtml(iframe, data);
+                    };
+                    // replace blocking element content (the loading) with the iframe:
+                    $('.blockMsg').html(iframe);
+                }
             }
-        });
-    } else {
-        // If is full html url, is loaded inside an iframe
-        var iframe = $('<iframe width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>');
-        // When the iframe is loaded, the loading image is removed and iframe showed
-        iframe.bind('load', function () {
-            $('div.blockMsg').children('img').remove();
-            iframe.show();
-        });
-        // Hide iframe and load the url inside it:
-        iframe.attr('src', url).hide();
-        $('div.blockMsg').append(iframe);
-    }
+        }, error: function (j, textStatus) {
+            $('div.blockMsg').text('Page not found');
+        }, complete: complete
+    });
+
     
     $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
 }
@@ -603,10 +612,9 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     var iframe = null;
     size = popupSize('large');
     if (m == 'error') {
-        m = '<iframe width="' + size.width + '" height="' + (size.height-10) + '"></iframe>';
-        iframe = $(m).get(0);
+        iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 10) + '"></iframe>').get(0);
         iframe.onload = function () {
-            $(iframe.contentDocument.documentElement).html(jx.responseText); 
+            injectIframeHtml(iframe, jx.responseText);
         };
         m = null;
     }  else
@@ -618,7 +626,21 @@ function ajaxErrorPopupHandler(jx, message, ex) {
         $('.blockMsg').html(iframe);
     $('.blockUI').click(function () { $.unblockUI() });
 }
-
+/* Puts full html inside the iframe element passed in a secure and compliant mode */
+function injectIframeHtml(iframe, html) {
+    // put ajax data inside iframe replacing all their html in secure 
+    // compliant mode ($.html don't works to inject <html><head> content)
+    var iframeDoc =
+        // W3C compliant: ns, firefox-gecko, chrome/safari-webkit, opera, ie9
+        iframe.contentDocument ||
+        // old IE (5.5+)
+        (iframe.contentWindow ? iframe.contentWindow.document : null) ||
+        // fallback (very old IE?)
+        document.frames[iframe.id].document;
+    iframeDoc.open();
+    iframeDoc.write(html);
+    iframeDoc.close();
+}
 function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);

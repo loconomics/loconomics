@@ -114,7 +114,8 @@
         </script>
 
         <script type="text/javascript">
-            $(document).ready(function () {
+            var a = jQuery.noConflict();
+            a(document).ready(function () {
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('change-photo-file-uploader'),
                     // path to server-side upload script

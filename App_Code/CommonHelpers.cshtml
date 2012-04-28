@@ -62,14 +62,14 @@
     
     /*========= SECURITY ==========*/
     /* Ensure that only register users enter here, redirecting to login page when appropiated.
+     * If request is an ajax request, a json object will be return in the response with code=2
+     * that means un-authenticated and a Result string with the ajax login url.
     */
     public static void SecurePage() {
         if (!WebSecurity.IsAuthenticated)
-            Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Context.Server.UrlEncode(System.Web.HttpContext.Current.Request.Url.PathAndQuery));
-    }
-    
-    
-    
-    
-    
+            if (Request.IsAjaxRequest())
+                ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(Request.UrlReferrer.PathAndQuery));
+            else
+                Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(Request.Url.PathAndQuery));
+    }    
 }
