@@ -18,16 +18,15 @@ $(document).ready(function () {
     //    $(this).closest('form').submit();
     //    return false;
     // })
-
-    $('form input[type="text"]').focus(function () {
-        if (this.value == this.defaultValue) {
-            this.value = "";
-        }
-    }).blur(function () {
-        if (!this.value.length) {
-            this.value = this.defaultValue;
-        }
-    });
+    if (!hasPlaceholderSupport) {
+        $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
+            if (this.value == this.getAttribute('placeholder'))
+                this.value = "";
+        }).blur(function () {
+            if (!this.value.length)
+                this.value = this.getAttribute('placeholder');
+        });
+    }
 
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
@@ -386,7 +385,7 @@ $(document).ready(function () {
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = form.data('unobtrusiveValidation');
         if (valobject && valobject.validate() == false)
-            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return;
 
         // Loading, with retard
@@ -657,4 +656,8 @@ function injectIframeHtml(iframe, html) {
 function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
+}
+function hasPlaceholderSupport() {
+    var input = document.createElement('input');
+    return ('placeholder' in input);
 }
