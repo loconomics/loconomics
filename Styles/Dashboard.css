@@ -291,6 +291,9 @@
 #personal li input[type="text"]{
     width: 160px;
 }
+#personal li textarea{
+    width: 300px;
+}
 #personal li select{
     width: 187px;
 }

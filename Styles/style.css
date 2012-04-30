@@ -292,8 +292,9 @@ form textarea {
     -webkit-border-radius: 20px;
     -o-border-radius: 20px;
 }
-textarea{
+form textarea{
     line-height: 1.5em;
+    height: inherit;
 }
 form input[type="text"]:focus,
 form input[type="password"]:focus,

@@ -4,8 +4,27 @@
   */
 }
 @using WebMatrix.WebData;
+@using WebMatrix.Data;
 @helper CountryOptions(){
     <option value="ca">California</option>
+}
+@helper StateProvinceOptions(int selectedStateID){
+    var sql = @"
+        SELECT StateProvinceID, StateProvinceName
+        FROM    StateProvince
+        WHERE   CountryID=@0
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var state in db.Query(sql, 1)){
+            <option value="@state.StateProvinceID" @IsSelected(selectedStateID.ToString(), state.StateProvinceID.ToString())>@state.StateProvinceName</option>
+        }
+    }
+}
+@helper IsChecked(string value1, string value2){
+    @Html.Raw(value1 == value2 ? "checked='checked'" : "")
+}
+@helper IsSelected(string value1, string value2){
+    @Html.Raw(value1 == value2 ? "selected='selected'" : "")
 }
 @helper SetupStarRatingPlugin(){
     <script type="text/javascript">

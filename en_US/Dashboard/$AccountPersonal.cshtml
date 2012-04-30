@@ -1,39 +1,95 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     var idprefix = "account-personal";
+    
+    var u = DashboardFunctions.GetUserRow();
+    
+    // Initializing local data:
+    var FirstName = Request["firstname"] ?? u.FirstName;
+    var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
+    var LastName = Request["lastname"] ?? u.LastName;
+    var MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
+    var AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
+    var Street1 = Request["streetaddress1"] ?? u.AddressLine1;
+    var Street2 = Request["streetaddress2"] ?? u.AddressLine2;
+    var City = Request["city"] ?? u.City;
+    var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
+    var Zip = Request["zipcode"] ?? u.PostalCode;
+    var Bio = Request["publicbio"] ?? ""; // u.PublicBio;
+    
+    // Initializing Validation rules
+    Validation.RequireField("firstname", "First Name is required");
+    Validation.RequireField("lastname", "Last Name is required");
+    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
+    
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco")){
+            db.Execute(@"
+                UPDATE users
+                SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
+                        AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, UpdatedDate=getdate(), ModifiedBy='sys'
+                WHERE   UserId = @0
+            ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
+             State, Zip, Bio);
+        }
+        CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
+    }
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form method="post" id="personal">
+@CommonHelpers.GetValidationScripts()
+<form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset id="@idprefix-fs-contactinformation">
         <legend>Contact Information:</legend>
         <ul>
-            <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name"/></li>
-            <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial"/></li>
-            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname"/></li>
-            <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone"/></li>
-            <li><label for="@idprefix-alternatephone">Alternate Phone:</label><input id="@idprefix-alternatephone" type="text" name="alternatephone"/></li>
+            <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name" value="@FirstName" @Validation.GetHtml("firstname")/>
+                @Html.ValidationMessage("firtname")
+            </li>
+            <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial" value="@MiddleInitial" @Validation.GetHtml("middleinitial")/>
+                @Html.ValidationMessage("middleinitial")
+            </li>
+            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
+                @Html.ValidationMessage("lastname")
+            </li>
+            <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
+                @Html.ValidationMessage("mobilephone")
+            </li>
+            <li><label for="@idprefix-alternatephone">Alternate Phone:</label><input id="@idprefix-alternatephone" type="text" name="alternatephone" value="@AlternatePhone" @Validation.GetHtml("alternatephone")/>
+                @Html.ValidationMessage("alternatephone")
+            </li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-homeaddress">
         <legend>Home Address:</legend>
         <ul>
-            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1"/></li>
-            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
-            <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="state">
-                    @CommonHelpers.CountryOptions()
-                </select>
+            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" @Validation.GetHtml("streetaddress1")/>
+                @Html.ValidationMessage("streetaddress1")
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
+            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2" value="@Street2" @Validation.GetHtml("streetaddress2")/>
+                @Html.ValidationMessage("streetaddress2")
+            </li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+                @Html.ValidationMessage("city")
+            </li>
+            <li><label for="@idprefix-state">State:</label>
+                <select id="@idprefix-state" name="state" @Validation.GetHtml("state")>
+                    @CommonHelpers.StateProvinceOptions(State)
+                </select>
+                @Html.ValidationMessage("state")
+            </li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode" value="@Zip" @Validation.GetHtml("zipcode")/>
+                @Html.ValidationMessage("zipcode")
+            </li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-publicbio">
         <legend>Public Bio:</legend>
         <ul>
-            <li><label for="@idprefix-publicbio">Public Bio:</label><textarea id="@idprefix-publicbio" name="publicbio"></textarea></li>
+            <li><label for="@idprefix-publicbio">Public Bio:</label><textarea id="@idprefix-publicbio" name="publicbio" rows="7" @Validation.GetHtml("publicbio")>@Bio</textarea>
+                @Html.ValidationMessage("publicbio")
+            </li>
         </ul>
     </fieldset>
     <fieldset class="actions">
