@@ -50,10 +50,7 @@
     /*========= JSON =============*/
     
     public static void ReturnJson(object jsondata){
-        if (!Request.Browser.IsBrowser("ie")){
-            // Use the correct mimetype for output, but IE have some problems with this and we avoid it:
-            Response.ContentType = "application/json";
-        }
+        Response.ContentType = "application/json";
         Json.Write(jsondata, Response.Output);
         Response.End();
     }

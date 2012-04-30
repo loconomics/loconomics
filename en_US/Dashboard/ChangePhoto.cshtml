@@ -76,18 +76,28 @@
             try{
                 fileuploaded.SaveAs(Server.MapPath(virtualPath));
             } catch(Exception ex) {
-                CommonHelpers.ReturnJson(
+                // NOTE: IE problems with contentype=json, use JsonHelper directly:
+                //CommonHelpers.ReturnJson(
+                Json.Write(
                     new Dictionary<string, object>(){
                         { "error", "There was an error: " + ex.Message }
-                    });
+                    },
+                Response.Output);
+                Response.End();
             }
             
             // File saved, change the user preference at the database:
             SaveUserPhotoName(fileinfo.Name, userId);
-            CommonHelpers.ReturnJson(
+            
+            // NOTE: There is some issues with IE managing this result with contenttype=json
+            // because of this, here we use directly the Json helper instead our helper
+            //CommonHelpers.ReturnJson(
+            Json.Write(
                 new Dictionary<string, object>(){
                     { "success", "File was saved" }
-                });
+                },
+            Response.Output);
+            Response.End();
         } else {
             // Manage normal GET
         }
@@ -119,13 +129,13 @@
                         window.parent.document.getElementById('avatar').setAttribute('src', src);
                     }
                 });
-            });        
+            });
         </script>
     </head>
     <body>
         <div class="change-photo">
             <div id="change-photo-file-uploader">
-                <noscript>          
+                <noscript>
                     <form action="@(UrlUtil.LangPath)" method="post">
                         <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
                     </form>

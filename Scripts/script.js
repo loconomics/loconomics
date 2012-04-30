@@ -592,8 +592,13 @@ function popup(url, size, complete){
                     // Else, if url is a full html page (normal page), put content into an iframe
                     var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
                     // When the iframe is ready
+                    var iframeloaded = false;
                     iframe.onload = function () {
-                        injectIframeHtml(iframe, data);
+                        // Using iframeloaded to avoid infinite loops in IE
+                        if (!iframeloaded) {
+                            iframeloaded = true;
+                            injectIframeHtml(iframe, data);
+                        }
                     };
                     // replace blocking element content (the loading) with the iframe:
                     $('.blockMsg').html(iframe);
@@ -630,7 +635,9 @@ function ajaxErrorPopupHandler(jx, message, ex) {
 function injectIframeHtml(iframe, html) {
     // put ajax data inside iframe replacing all their html in secure 
     // compliant mode ($.html don't works to inject <html><head> content)
-    var iframeDoc =
+
+    /* document API version (problems with IE, don't execute iframe-html scripts) */
+    /*var iframeDoc =
         // W3C compliant: ns, firefox-gecko, chrome/safari-webkit, opera, ie9
         iframe.contentDocument ||
         // old IE (5.5+)
@@ -639,7 +646,13 @@ function injectIframeHtml(iframe, html) {
         document.frames[iframe.id].document;
     iframeDoc.open();
     iframeDoc.write(html);
-    iframeDoc.close();
+    iframeDoc.close();*/
+
+    /* javascript URI version (works fine everywhere!) */
+    iframe.contentWindow.contents = html;
+    iframe.src = 'javascript:window["contents"]';
+
+    // About this technique, this http://sparecycles.wordpress.com/2012/03/08/inject-content-into-a-new-iframe/
 }
 function getURLParameter(name) {
     return decodeURI(
