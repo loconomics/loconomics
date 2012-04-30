@@ -4,21 +4,24 @@
     Layout = "_Layout.cshtml";
     Page.Title = "Make your life better!";
     
-    PageData["userow"] = DashboardFunctions.GetUserRow();
+    var u = DashboardFunctions.GetUserRow();
     PageData["menu-item"] = "account";
 }
 
 		<ul class="tabs autofill-submenu-items">
 			<li class="current"><a class="current" href="#account-personal">Personal</a></li>
+            @if (u.IsProvider){
 			<li><a href="#account-payments">Payments</a></li>
             <li><a href="#account-verification">Trust &amp; Verification</a></li>
             <li><a href="#account-taxes">Taxes</a></li>
+            }
         </ul>
 
 		<div id="account-personal" class="tab-body current fancy tabbed buttons">
             @RenderPage("$AccountPersonal.cshtml")
 		</div><!-- #account-personal -->
         
+    @if (u.IsProvider){
 		<div id="account-payments" class="tab-body fancy tabbed buttons" data-help-point="$FAQS">
             <ul class="tabs">
                 <li><a class="button profile fanciful current" href="#account-payments-bankinfo">Bank Account</a></li>
@@ -50,3 +53,4 @@
 		<div id="account-taxes" class="tab-body fancy buttons">
             @RenderPage("$AccountTaxes.cshtml")
 		</div><!-- #account-taxes -->
+    }

@@ -1,4 +1,6 @@
-﻿@functions {
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@functions {
 
     /* General: some functions created with code from old 'provider-dashboard-profile.cshtml' file
     */
@@ -11,34 +13,47 @@
         //var stringPosted = "Nothing";
         //var theDate = DateTime.Now.ToString("yyyy-MM-dd");
         
-        var db = Database.Open("sqlloco");
-        var sqluser = 
-            //"exec GetUserDetails @0";
-            // NOTE: UserID is needed!
-            @"
-                SELECT
-                    a.UserID,
-                    FirstName, 
-                    LastName,
-                    SecondLastName,
-                    MiddleIn,
-                    PostalCode,
-                    Photo,
-                    PreferredLanguageID,
-                    PreferredCountryID,
-                    IsCustomer,
-                    IsProvider,
-                    ADD_Details 
-                from users a 
-                left join dbo.userprofilepositionadditional b 
-                on a.userid = b.userid  where a.UserID = @0
-            ";
-        return db.QuerySingle(sqluser, userId);
+        // Implemented a basic, per-page, cache, faster and simplified for each page
+        var u = PageData["userow:" + userId.ToString()];
+        if (u == null){
+            using (var db = Database.Open("sqlloco")){
+                var sqluser = 
+                    //"exec GetUserDetails @0";
+                    // NOTE: UserID is needed!
+                    @"
+                        SELECT
+                            a.UserID,
+                            FirstName, 
+                            LastName,
+                            SecondLastName,
+                            MiddleIn,
+                            PostalCode,
+                            Photo,
+                            PreferredLanguageID,
+                            PreferredCountryID,
+                            IsCustomer,
+                            IsProvider,
+                            ADD_Details 
+                        from users a 
+                        left join dbo.userprofilepositionadditional b 
+                        on a.userid = b.userid  where a.UserID = @0
+                    ";
+                u = db.QuerySingle(sqluser, userId);
+            }
+        }
+        PageData["userow:" + userId.ToString()] = u;
+        return u;
     }
     /* Get a data row with the current user information from the database
     */
     public static dynamic GetUserRow() {
-        return GetUserRow(WebSecurity.CurrentUserId);
+        // Implemented a basic, per-page, cache, faster and simplified for each page
+        var u = PageData["userow"];
+        if (u == null){
+            u = GetUserRow(WebSecurity.CurrentUserId);
+        }
+        PageData["userow"] = u;
+        return u;
     }
     /* Get a data object with the Positions rows of the user identified with 'userId' from the database
     */

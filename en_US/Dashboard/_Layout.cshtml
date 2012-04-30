@@ -12,15 +12,10 @@
            }
     }
 
+    var u = DashboardFunctions.GetUserRow();
 }
 @helper menu(string item){
     @(DashboardFunctions.CssCurrent(item, PageData["menu-item"]))
-}
-@functions{
-    bool IsCurrentUserAProvider(){
-        var db = Database.Open("sqlloco");
-        return ((int)db.QueryValue("EXEC IsUserAProvider @0", WebSecurity.CurrentUserId) == 1);
-    }
 }
 <!doctype html>
     <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="en"> <![endif]-->
@@ -156,10 +151,15 @@
                 <div id="nav">
                     <ul id="profile-menu" class="autofill-submenu">
                         <li class="@menu("mailbox")"><a href="@(UrlUtil.LangPath)Dashboard/Mailbox/">Mailbox</a></li>
+                        @if (u.IsProvider){
                         <li class="@menu("calendar")"><a href="@(UrlUtil.LangPath)Dashboard/Calendar/">Calendar</a></li>
                         <li class="@menu("positions")"><a href="@(UrlUtil.LangPath)Dashboard/Positions/">Positions</a></li>
                         <li class="@menu("myclients")"><a href="@(UrlUtil.LangPath)Dashboard/MyClients/">My Clients</a></li>
                         <li class="@menu("tools")"><a href="@(UrlUtil.LangPath)Dashboard/Tools/">Tools</a></li>
+                        }
+                        @if (u.IsCustomer){
+                        <li class="@menu("myproviders")"><a href="@(UrlUtil.LangPath)Dashboard/MyProviders/">My Providers</a></li>
+                        }
                         <li class="@menu("preferences")"><a href="@(UrlUtil.LangPath)Dashboard/Preferences/">Preferences</a></li>
                         <li class="@menu("account")"><a href="@(UrlUtil.LangPath)Dashboard/Account/">Account</a></li>
                     </ul>
@@ -194,7 +194,7 @@
 						</dd>
 					</dl>
 				</li>
-               if (!IsCurrentUserAProvider()){
+               if (!u.IsProvider){
 			   <li><a class="button fancy" href="@Href(UrlUtil.LangPath + "Provider-sign-up/")">Become a provider</a></li>
                }
 } else {
