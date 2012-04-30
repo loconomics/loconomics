@@ -192,51 +192,51 @@ $(document).ready(function () {
                 filter("*[href='" + this.getAttribute("href") + "']").addClass('current');
             });
         }
-
-        /** Dashboard Alerts carousel **/
-        $('#dashboard-alerts').each(function () {
-            var da = $(this);
-
-            var ul = da.find('ul');
-            var set = ul.find('li');
-            var cont = $('<div></div>');
-            cont.css('position', 'relative');
-            cont.css('width', ul.width());
-            cont.css('height', ul.height());
-            cont.css('margin', 'auto');
-            cont.css('overflow', 'hidden');
-            cont.css('display', 'inline-block');
-            ul.css('position', 'relative');
-            ul.css('overflow', 'visible');
-            ul.css('width', 'auto');
-            ul.wrap(cont);
-            var w = cont.width();
-
-            function routeAlerts(event) {
-                var p = ul.data('page') || 0;
-                if (event.data.reverse)
-                    p--;
-                else
-                    p++;
-
-                if (p <= 0)
-                    p = 0;
-                else if (p + 1 >= ul.width() / w)
-                    p = Math.round(ul.width() / w, 0) - 1;
-
-                offl = (w + 3) * (0 - p);
-
-                ul.data('page', p);
-
-                ul.stop().animate({ left: offl }, { duration: 'fast' });
-                return false;
-            }
-
-            da.find('.more.next').click({ reverse: false }, routeAlerts);
-            da.find('.more.previous').click({ reverse: true }, routeAlerts);
-        });
-        //$('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
     });
+
+    /** Dashboard Alerts carousel **/
+    $('#dashboard-alerts').each(function () {
+        var da = $(this);
+
+        var ul = da.find('ul');
+        var set = ul.find('li');
+        var cont = $('<div></div>');
+        cont.css('position', 'relative');
+        cont.css('width', ul.width());
+        cont.css('height', ul.height());
+        cont.css('margin', 'auto');
+        cont.css('overflow', 'hidden');
+        cont.css('display', 'inline-block');
+        ul.css('position', 'relative');
+        ul.css('overflow', 'visible');
+        ul.css('width', 'auto');
+        ul.wrap(cont);
+        var w = cont.width();
+
+        function routeAlerts(event) {
+            var p = ul.data('page') || 0;
+            if (event.data.reverse)
+                p--;
+            else
+                p++;
+
+            if (p <= 0)
+                p = 0;
+            else if (p + 1 >= ul.width() / w)
+                p = Math.round(ul.width() / w, 0) - 1;
+
+            offl = (w + 3) * (0 - p);
+
+            ul.data('page', p);
+
+            ul.stop().animate({ left: offl }, { duration: 'fast' });
+            return false;
+        }
+
+        da.find('.more.next').click({ reverse: false }, routeAlerts);
+        da.find('.more.previous').click({ reverse: true }, routeAlerts);
+    });
+    //$('#dashboard-alerts > ul > li').hide().slice(0, 2).show();
 
     /* Active/Desactive search filters */
     $(".buttons-list .button").click(function () { $(this).toggleClass('selected'); return false; });
