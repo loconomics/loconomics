@@ -76,28 +76,18 @@
             try{
                 fileuploaded.SaveAs(Server.MapPath(virtualPath));
             } catch(Exception ex) {
-                // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                //CommonHelpers.ReturnJson(
-                Json.Write(
+                CommonHelpers.ReturnJson(
                     new Dictionary<string, object>(){
                         { "error", "There was an error: " + ex.Message }
-                    },
-                Response.Output);
-                Response.End();
+                    });
             }
             
             // File saved, change the user preference at the database:
             SaveUserPhotoName(fileinfo.Name, userId);
-            
-            // NOTE: There is some issues with IE managing this result with contenttype=json
-            // because of this, here we use directly the Json helper instead our helper
-            //CommonHelpers.ReturnJson(
-            Json.Write(
+            CommonHelpers.ReturnJson(
                 new Dictionary<string, object>(){
                     { "success", "File was saved" }
-                },
-            Response.Output);
-            Response.End();
+                });
         } else {
             // Manage normal GET
         }
