@@ -3,16 +3,24 @@
   * used around all the site
   */
 }
+@using WebMatrix.WebData;
 @helper CountryOptions(){
     <option value="ca">California</option>
 }
 @helper SetupStarRatingPlugin(){
     <script type="text/javascript">
-        Modernizr.load([
-            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.MetaData.js",
-            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.js",
-            "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.css"
-        ]);
+        if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
+        if (!jqueryStarRatingPluginLoaded) {
+            jqueryStarRatingPluginLoaded = true;
+            Modernizr.load([
+                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.MetaData.js",
+                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.js",
+                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.css"
+            ]);
+        } else {
+            // Re-apply plugin (to new added elements without the plugin loaded):
+            $('input[type=radio].star').rating();
+        }
     </script>
 }
 @helper GetValidationScripts(){
