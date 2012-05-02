@@ -1465,3 +1465,16 @@ html.boxshadow #loginBox .field-validation-error{
     vertical-align: top;
     width: 50px;
 }
+
+/*******************************
+ * have-sidebar class
+ * for pages with things like 
+ * FAQ's sidebar,
+ * dashboard menu sidebar.
+ */
+/* class assigned to #container most times,
+    or in a parent of #main */
+.have-sidebar #main {
+    width: 730px;
+    display: inline-block;
+}
