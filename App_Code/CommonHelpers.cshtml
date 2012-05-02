@@ -37,8 +37,9 @@
                 "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.css"
             ]);
         } else {
-            // Re-apply plugin (to new added elements without the plugin loaded):
-            $('input[type=radio].star').rating();
+            if ($ && $().rating)
+                // Re-apply plugin (to new added elements without the plugin loaded):
+                $('input[type=radio].star').rating();
         }
     </script>
 }
