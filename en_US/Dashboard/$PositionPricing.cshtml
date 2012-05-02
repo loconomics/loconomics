@@ -1,0 +1,76 @@
+﻿@{
+    // Current position number/index
+    var n = PageData["npos"];
+    // Current provider data record:
+    var p = DashboardFunctions.GetUserRow();
+    // Current position data record:
+    var pos = DashboardFunctions.GetUserCurrentPos();
+    
+    if (p == null || pos == null){
+        var inputdataerrormessage = "No enought input data to show results";
+        if (IsPost){
+            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
+    
+    string pageToLoad = "";
+
+    using (var db = Database.Open("sqlloco")){
+        
+        // TODO: Get Customer Type Id   
+        var clienttypeid = PageData["ClientTypeID"] = 1;     
+        
+        // Get our Pricing Type ID:
+        int pricingtypeid = (int)db.QueryValue(@"
+            SELECT  pricingtypeid
+            FROM    positionpricingtype
+            WHERE   countryid=@0 AND clienttypeid=@1 AND positionid=@2
+        ", 1, clienttypeid, pos.PositionID);
+        
+        switch (pricingtypeid) {
+            case 1: // Hours
+                pageToLoad = "_ProviderHoursType.cshtml";
+                break;
+            case 2: // Custom
+                pageToLoad = "_ProviderCustomType.cshtml";
+                break;
+            case 3: // Packages
+                pageToLoad = "_ProviderPackagesType.cshtml";
+                break;
+            case 4: // Invoice
+                pageToLoad = "_ProviderInvoiceType.cshtml";
+                break;
+        }
+    }
+    
+    var idprefix = PageData["idprefix"] = "position#" + n + "-pricing";
+}
+<p class="setting-instructions">
+Set the estimate parameters for your service.
+</p>
+
+<!--This script paints the pricing variables for the selected pricing type-->  
+<script type="text/javascript">
+    if (!pricingWizardProviderSetupLoaded) var pricingWizardProviderSetupLoaded;
+    if (!pricingWizardProviderSetupLoaded)
+        Modernizr.load(UrlUtil.AppPath + 'Scripts/PricingWizard.ProviderSetup.js');
+    else
+        if (InitPricingWizardProviderSetup)
+            InitPricingWizardProviderSetup();
+</script>
+
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionPricing/" method="post" class="positionpricing pricingwizard ajax ajax-box" id="@idprefix">
+    <input type="hidden" name="position-number" value="@n"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    <fieldset class="pricing-wizard">
+        @RenderPage(UrlUtil.LangPath + "PricingWizard/" + pageToLoad)
+    </fieldset>
+
+    <fieldset class="actions">
+		<button class="next main-action" type="submit">Save</button>
+    </fieldset>
+</form>

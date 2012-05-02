@@ -617,6 +617,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .positionreviews .references li textarea[name="clientsemails"]{
     height: 7em;
 }
+/**** Form: Positions Pricing ****/
+.dashboard form.positionpricing li label {
+    width: auto;
+}
 
 /**** Form: Account Verifications ****/
 #account-verification-basicinfo .legal{

@@ -29,6 +29,8 @@
                      AND 
                     pv.ClientTypeID=@2 AND pv.PositionID=@3
                      AND 
+                    pv.CustomerInputDataRequired = 1
+                     AND
                     pv.Active = 1 AND pv.PricingTypeID = @4
                      AND
                     (
@@ -67,6 +69,8 @@
                      AND 
                     pr.ClientTypeID=@2 AND pr.PositionID=@3
                      AND 
+                    pr.CustomerInputDataRequired = 1
+                     AND
                     pr.Active = 1 AND pr.PricingTypeID = @4
                      AND
                     (
@@ -204,6 +208,9 @@
         </li>
     }
     </ul>
+}
+
+@if (poptions.Count > 0) {
     <table class="pricing-options">
         <thead>
             <tr>
@@ -282,7 +289,9 @@
             </tr>
         </table>
     </div>
-} else {
+}
+
+@if (poptions.Count == 0 && pvars.Count == 0) {
     <div class="no-pricing-wizard">
         It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting
         for a provider response with the price.

@@ -1,0 +1,165 @@
+﻿@* 
+    Pricing Wizard, Provider Setup View, PricingType 2:Custom
+ *@
+@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"];
+    var p = DashboardFunctions.GetUserRow();
+    var pos = DashboardFunctions.GetUserCurrentPos();
+    var idprefix = PageData["idprefix"] ?? "pricingwizard";
+    dynamic pvars, poptions;
+    Dictionary<int, decimal> optionalServicesPrices = new Dictionary<int,decimal>();
+
+    using (var db = Database.Open("sqlloco")){
+        // Get the Pricing Variables with the selected Provider Value
+        pvars = db.Query(@"
+            SELECT  pv.PricingVariableID, pv.PricingVariableName, 
+                    pv.ProviderInputDataRequired, pv.ProviderDataInputType,
+                    pv.ProviderDataValues, pv.ProviderPricingVariableDisplayText,
+                    pv.ProviderDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue
+            FROM    pricingvariable As pv
+                     LEFT JOIN
+                    providerpricingvariableinputs as pi
+                      ON pv.PricingVariableID = pi.PricingVariableID
+                       AND pi.Active = 1 AND pi.UserID = @5
+            WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
+                     AND 
+                    pv.ClientTypeID=@2 AND pv.PositionID=@3
+                     AND 
+                    pv.ProviderInputDataRequired = 1
+                     AND
+                    pv.Active = 1 AND pv.PricingTypeID = @4
+        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+        
+        // Get the Pricing Options
+        poptions = db.Query(@"
+            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
+                    pr.ProviderInputDataRequired, pr.ProviderDataInputType,
+                    pr.ProviderDataValues, pr.ProviderPricingOptionDisplayText,
+                    pr.ProviderDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue
+            FROM    pricingoption As pr
+                     LEFT JOIN
+                    providerpricingoptioninputs as pi
+                      ON pr.PricingOptionID = pi.PricingOptionID
+                       AND pi.Active = 1 AND pi.UserID = @5
+            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
+                     AND 
+                    pr.ClientTypeID=@2 AND pr.PositionID=@3
+                     AND 
+                    pr.ProviderInputDataRequired = 1
+                     AND
+                    pr.Active = 1 AND pr.PricingTypeID = @4
+        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+    }
+    
+    if (IsPost){
+            // TODO Save the data into the database
+            
+            // All OK:
+            CommonHelpers.ReturnJsonResult(0, null);
+    }
+}
+@functions{
+    string[] getValuesFromCSV(string line){
+        return line.Split(',');
+    }
+}
+@helper getChecked(string name, string value){
+    @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+}
+@helper getSelected(string name, string value){
+    @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+}
+@if (pvars.Count > 0)
+{
+    <ul class="pricing-vars">
+    @foreach (var pvar in pvars)
+    {
+        <li class="@pvar.PricingVariableName data-type-@pvar.ProviderDataInputType">
+            <label for="@idprefix-@pvar.PricingVariableName">@pvar.ProviderPricingVariableDisplayText</label>
+            @switch ((string)@pvar.ProviderDataInputType)
+            {
+                case "dropdown":
+                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
+                        @{
+                            var optvalues = getValuesFromCSV(pvar.ProviderDataValues);
+                            foreach (string optv in optvalues)
+                            {
+                                var v = optv.Trim();
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v)>@v</option>
+                            }
+                        }
+                    </select>
+                    break;
+                case "number":
+                case "text":
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]"/>
+                    break;
+                case "":
+                    break;
+                default:
+                    <text>Unknowed ProviderDataInputType: @pvar.ProviderDataInputType</text>
+                    break;
+            }
+        </li>
+    }
+    </ul>
+} else {
+    <div class="no-pricing-wizard">
+        There is not variables to customize the pricing wizard for your position.
+    </div>
+}
+@if (poptions.Count > 0) {
+    <table class="pricing-options">
+        <thead>
+            <tr>
+                <th>Services upon request</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var popt in poptions)
+        {
+            <tr class="@popt.PricingOptionName data-type-@popt.ProviderDataInputType">
+                <td class="pricing-option-check">
+                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true") value="true" />
+                    <label for="@idprefix-@popt.PricingOptionName">@popt.ProviderPricingOptionDisplayText</label>
+                </td>
+                <td class="pricing-option-value">
+                @switch ((string)@popt.ProviderDataInputType)
+                {
+                    case "dropdown":
+                        <select id="@idprefix-@(popt.PricingOptionName)-value" name="@(popt.PricingOptionName)-value">
+                            @{
+                                var optvalues = getValuesFromCSV(popt.ProviderDataValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName + "-value", v)>@v</option>
+                                }
+                             }
+                        </select>
+                        break;
+                    case "number":
+                    case "text":
+                        <input type="text" id="@idprefix-@(popt.PricingOptionName)-value" name="@(popt.PricingOptionName)-value" value="@Request[popt.PricingOptionName + "-value"]"/>
+                        break;
+                    case "":
+                        <text>N/A</text>
+                        break;
+                    default:
+                        <text>Unknowed ProviderDataInputType: @popt.ProviderDataInputType</text>
+                        break;
+                }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+} else {
+    <div class="no-pricing-wizard">
+        There is not options to customize the pricing wizard for your position.
+    </div>
+}
