@@ -8,7 +8,6 @@
     var pos = DashboardFunctions.GetUserCurrentPos();
     var idprefix = PageData["idprefix"] ?? "pricingwizard";
     dynamic pvars, poptions;
-    Dictionary<int, decimal> optionalServicesPrices = new Dictionary<int,decimal>();
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables with the selected Provider Value
@@ -55,7 +54,6 @@
     }
     
     if (IsPost){
-        // TODO Save the data into the database
         // Iterate all variables and save into providerpricingvariableinputs
         var sqlSetVar = @"
             BEGIN TRAN

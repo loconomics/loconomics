@@ -1,0 +1,29 @@
+﻿@* 
+    Pricing Wizard, Provider Setup View, PricingType 3:Packages
+ *@
+@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"];
+    var p = DashboardFunctions.GetUserRow();
+    var pos = DashboardFunctions.GetUserCurrentPos();
+    var idprefix = PageData["idprefix"] ?? "pricingwizard";
+    dynamic pvars, poptions;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Get the Variables
+        /*
+        var pvars = db.Query(@"
+            SELECT *
+            FROM    pricingvariable
+            WHERE   CountryID=@0 AND LanguageID=@1 AND ClientTypeID=@2 AND PositionID=@3
+        ", 1, 1, clienttypeid, p.PositionID);
+        */
+    }
+    
+    if (IsPost){
+        // TODO Save the data into the database
+    }
+}
+    <ul>
+        <li>Packages Pricing Type</li>
+    </ul>
