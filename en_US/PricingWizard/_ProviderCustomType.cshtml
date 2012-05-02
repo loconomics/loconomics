@@ -55,10 +55,67 @@
     }
     
     if (IsPost){
-            // TODO Save the data into the database
+        // TODO Save the data into the database
+        // Iterate all variables and save into providerpricingvariableinputs
+        var sqlSetVar = @"
+            BEGIN TRAN
+                UPDATE  providerpricingvariableinputs WITH (serializable)
+                SET     PricingDataInput = @0,
+                        UpdatedDate = getdate(),  
+                        ModifiedBy = 'sys',
+                        Active = 1
+                WHERE   UserId = @1 AND PricingVariableID = @2
+
+               IF @@rowcount = 0
+               BEGIN
+                    INSERT INTO providerpricingvariableinputs (PricingDataInput,
+                        UserID, PricingVariableID, CreatedDate, UpdatedDate, 
+                        ModifiedBy, Active)
+                    VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+               END
+            COMMIT TRAN
+        ";
+        var sqlDelVar = @"
+            DELETE FROM providerpricingvariableinputs
+            WHERE       UserId = @0 AND PricingVariableID = @1
+        ";
+        var sqlSetOpt = @"
+            BEGIN TRAN
+                UPDATE  providerpricingoptioninputs WITH (serializable)
+                SET     PricingDataInput = @0,
+                        UpdatedDate = getdate(),  
+                        ModifiedBy = 'sys',
+                        Active = 1
+                WHERE   UserId = @1 AND PricingOptionID = @2
+
+               IF @@rowcount = 0
+               BEGIN
+                    INSERT INTO providerpricingoptioninputs (PricingDataInput,
+                        UserID, PricingOptionID, CreatedDate, UpdatedDate, 
+                        ModifiedBy, Active)
+                    VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+               END
+            COMMIT TRAN
+        ";
+        var sqlDelOpt = @"
+            DELETE FROM providerpricingoptioninputs
+            WHERE       UserId = @0 AND PricingOptionID = @1
+        ";
+        using (var db = Database.Open("sqlloco")){
+            foreach (var pvar in pvars) {
+                db.Execute(sqlSetVar, Request[pvar.PricingVariableName], p.UserID, pvar.PricingVariableID);
+            }
+            foreach (var popt in poptions) {
+                if (Request[popt.PricingOptionName + "-check"] == "true") {
+                    db.Execute(sqlSetOpt, Request[popt.PricingOptionName], p.UserID, popt.PricingOptionID);
+                } else {
+                    db.Execute(sqlDelOpt, p.UserID, popt.PricingOptionID);
+                }
+            }
+        }
             
-            // All OK:
-            CommonHelpers.ReturnJsonResult(0, null);
+        // All OK:
+        CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
     }
 }
 @functions{
@@ -66,11 +123,12 @@
         return line.Split(',');
     }
 }
-@helper getChecked(string name, string value){
-    @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+@helper getChecked(string name, string value, dynamic popt){
+    // Get checked if was setted by form of is was previously setted at database
+    @Html.Raw((Request[name] == value || popt.ProviderDataInputValue != null) ? "checked='checked'" : "")
 }
-@helper getSelected(string name, string value){
-    @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+@helper getSelected(string name, string value, dynamic popt){
+    @Html.Raw((Request[name] == value || popt.ProviderDataInputValue == value) ? "selected='selected'" : "")
 }
 @if (pvars.Count > 0)
 {
@@ -88,14 +146,14 @@
                             foreach (string optv in optvalues)
                             {
                                 var v = optv.Trim();
-                                <option value="@v" @getSelected(pvar.PricingVariableName, v)>@v</option>
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
                             }
                         }
                     </select>
                     break;
                 case "number":
                 case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]"/>
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.ProviderDataInputValue)"/>
                     break;
                 case "":
                     break;
@@ -124,27 +182,27 @@
         {
             <tr class="@popt.PricingOptionName data-type-@popt.ProviderDataInputType">
                 <td class="pricing-option-check">
-                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true") value="true" />
+                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
                     <label for="@idprefix-@popt.PricingOptionName">@popt.ProviderPricingOptionDisplayText</label>
                 </td>
                 <td class="pricing-option-value">
                 @switch ((string)@popt.ProviderDataInputType)
                 {
                     case "dropdown":
-                        <select id="@idprefix-@(popt.PricingOptionName)-value" name="@(popt.PricingOptionName)-value">
+                        <select id="@idprefix-@(popt.PricingOptionName)" name="@(popt.PricingOptionName)">
                             @{
                                 var optvalues = getValuesFromCSV(popt.ProviderDataValues);
                                 foreach (string optv in optvalues)
                                 {
                                     var v = optv.Trim();
-                                    <option value="@v" @getSelected(popt.PricingOptionName + "-value", v)>@v</option>
+                                    <option value="@v" @getSelected(popt.PricingOptionName, v, popt)>@v</option>
                                 }
                              }
                         </select>
                         break;
                     case "number":
                     case "text":
-                        <input type="text" id="@idprefix-@(popt.PricingOptionName)-value" name="@(popt.PricingOptionName)-value" value="@Request[popt.PricingOptionName + "-value"]"/>
+                        <input type="text" id="@idprefix-@(popt.PricingOptionName)" name="@(popt.PricingOptionName)-value" value="@(Request[popt.PricingOptionName] ?? popt.ProviderDataInputValue)"/>
                         break;
                     case "":
                         <text>N/A</text>

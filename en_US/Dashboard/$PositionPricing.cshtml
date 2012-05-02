@@ -51,7 +51,7 @@
 Set the estimate parameters for your service.
 </p>
 
-<!--This script paints the pricing variables for the selected pricing type-->  
+@*
 <script type="text/javascript">
     if (!pricingWizardProviderSetupLoaded) var pricingWizardProviderSetupLoaded;
     if (!pricingWizardProviderSetupLoaded)
@@ -59,7 +59,7 @@ Set the estimate parameters for your service.
     else
         if (InitPricingWizardProviderSetup)
             InitPricingWizardProviderSetup();
-</script>
+</script>*@
 
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionPricing/" method="post" class="positionpricing pricingwizard ajax ajax-box" id="@idprefix">
     <input type="hidden" name="position-number" value="@n"/>
