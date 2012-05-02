@@ -452,7 +452,8 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 	display:none; position: relative; z-index: 1; top: 20px; padding: 20px; 
     /*min-height: 400px;*/
     min-height: 150px;
-	border: 2px solid #461864; background: #F5F5F5;
+	border: 2px solid #461864;
+	background: #F5F5F5;
 }
 .folders > .tab-body.current { display: block; }
 
@@ -1029,10 +1030,10 @@ fieldset.has-confirm.confirmed-no > legend{
 /** tabs **/
 .editable .folders > .tab-body {
     border-color: #00989a;
+    background: white;
 }
-
 .editable .folders > ul.tabs li {
-    background: url('../img/tab-editable-right.png') no-repeat top right; 
+    background: url('../img/tab-editable-right-white.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
     background-position: 0 right;
@@ -1067,15 +1068,32 @@ fieldset.has-confirm.confirmed-no > legend{
 }
 .editable .folders > ul.tabs li.current a,
 .editable .folders > ul.tabs li.current:hover a {
-    background-color: #f5f5f5;
+    background-color: white;
     padding-top: 3px;
-    border-bottom-color: #f5f5f5;
+    border-bottom-color: white;
 }
 .editable .folders > ul.tabs li:hover {
     background-position: right -44px !important;
 }
 .editable .folders > ul.tabs li:hover a{
     background-color: #eff8f9;
+}
+
+/* Different colors for dashboard and profile tabs */
+.dashboard.editable .folders > .tab-body,
+.profile.editable .folders > .tab-body {
+    background: #F5F5F5;
+}
+.dashboard.editable .folders > ul.tabs li,
+.profile.editable .folders > ul.tabs li {
+    background-image: url('../img/tab-editable-right-gray.png');
+}
+.dashboard.editable .folders > ul.tabs li.current a,
+.dashboard.editable .folders > ul.tabs li.current:hover a,
+.profile.editable .folders > ul.tabs li.current a,
+.profile.editable .folders > ul.tabs li.current:hover a{
+    background-color: #f5f5f5;
+    border-bottom-color: #f5f5f5;
 }
 
 /** buttons **/
