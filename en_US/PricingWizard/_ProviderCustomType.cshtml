@@ -54,7 +54,6 @@
     }
     
     if (IsPost){
-        // Iterate all variables and save into providerpricingvariableinputs
         var sqlSetVar = @"
             BEGIN TRAN
                 UPDATE  providerpricingvariableinputs WITH (serializable)
@@ -99,10 +98,13 @@
             DELETE FROM providerpricingoptioninputs
             WHERE       UserId = @0 AND PricingOptionID = @1
         ";
+        
         using (var db = Database.Open("sqlloco")){
+            // Iterate all variables and save into providerpricingvariableinputs
             foreach (var pvar in pvars) {
                 db.Execute(sqlSetVar, Request[pvar.PricingVariableName], p.UserID, pvar.PricingVariableID);
             }
+            // Iterate all options and save into providerpricingoptioninputs
             foreach (var popt in poptions) {
                 if (Request[popt.PricingOptionName + "-check"] == "true") {
                     db.Execute(sqlSetOpt, Request[popt.PricingOptionName], p.UserID, popt.PricingOptionID);

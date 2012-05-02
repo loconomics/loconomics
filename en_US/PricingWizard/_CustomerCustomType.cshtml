@@ -89,74 +89,146 @@
     }
     
     if (IsPost){
-        if (UrlData[0].ToLower() == "calculate"){
-            // Do the calculation and return the result
-
-            // Calculate time required per Pricing Variables
-            foreach (var pvar in pvars){
-                string customerValue = Request[pvar.PricingVariableName];
+        /* DO CALCULATION: (not only on /calculate url, is neede to save data too)
+         */
+        // Calculate time required per Pricing Variables
+        foreach (var pvar in pvars){
+            string customerValue = Request[pvar.PricingVariableName];
                 
-                // Get provider value for this pricing variable
-                string providerValue = pvar.ProviderDataInputValue;
+            // Get provider value for this pricing variable
+            string providerValue = pvar.ProviderDataInputValue;
                 
-                // Analizing the provider value depending on the data-type (unit just now)
-                switch ((string)pvar.ProviderDataInputUnit){
-                    case "minutes":
-                        decimal provParsedValue = 0;
-                        decimal.TryParse(providerValue, out provParsedValue);
+            // Analizing the provider value depending on the data-type (unit just now)
+            switch ((string)pvar.ProviderDataInputUnit){
+                case "minutes":
+                    decimal provParsedValue = 0;
+                    decimal.TryParse(providerValue, out provParsedValue);
                         
-                        switch ((string)pvar.CustomerDataInputUnit){
-                            case "number":
-                            case "quantity":
-                                decimal custParsedValue = 0;
-                                decimal.TryParse(customerValue, out custParsedValue);
-                                
-                                // Calculation Formula:
-                                //  (Provider.CostPerHour * (ProviderInputValue / 60) * CustomerInputValue)
-                                //subtotalPrice += hourPrice * (provParsedValue / 60) * custParsedValue;
-                                timeRequired += (provParsedValue / 60) * custParsedValue;
-                                
-                                break;
-                            default:
-                                break;
-                        }
-                        
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // Calculating the price for Pricing Options
-            foreach (var popt in poptions){               
-                decimal optPrice = 0;
-                
-                if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
-                    string strprice = popt.ProviderDataInputValue.Replace("$", "");
-                    decimal unitprice = 0;
-                    decimal.TryParse(strprice, out unitprice);
-                    decimal quantity = 0;
-                    switch ((string)popt.CustomerDataInputUnit) {
+                    switch ((string)pvar.CustomerDataInputUnit){
                         case "number":
                         case "quantity":
-                            quantity = Request[(string)popt.PricingOptionName + "-quantity"].AsDecimal();
+                            decimal custParsedValue = 0;
+                            decimal.TryParse(customerValue, out custParsedValue);
+                                
+                            // Calculation Formula:
+                            //  (Provider.CostPerHour * (ProviderInputValue / 60) * CustomerInputValue)
+                            //subtotalPrice += hourPrice * (provParsedValue / 60) * custParsedValue;
+                            timeRequired += (provParsedValue / 60) * custParsedValue;
+                                
                             break;
-                        case "":
                         default:
-                            quantity = 1;
                             break;
                     }
-                    optPrice = quantity * unitprice;
+                        
+                    break;
+                default:
+                    break;
+            }
+        }
+        // Calculating the price for Pricing Options
+        foreach (var popt in poptions){               
+            decimal optPrice = 0;
+                
+            if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
+                string strprice = popt.ProviderDataInputValue.Replace("$", "");
+                decimal unitprice = 0;
+                decimal.TryParse(strprice, out unitprice);
+                decimal quantity = 0;
+                switch ((string)popt.CustomerDataInputUnit) {
+                    case "number":
+                    case "quantity":
+                        quantity = Request[(string)popt.PricingOptionName].AsDecimal();
+                        break;
+                    case "":
+                    default:
+                        quantity = 1;
+                        break;
                 }
-                optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
-                optionalServicesTotalPrice += optPrice;
+                optPrice = quantity * unitprice;
+            }
+            optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
+            optionalServicesTotalPrice += optPrice;
+        }
+            
+        subtotalPrice = timeRequired * hourPrice + optionalServicesTotalPrice;
+        feePrice = .1M * subtotalPrice;
+        totalPrice = subtotalPrice + feePrice;
+
+        /* SAVE DATA 
+         */
+        // If request post is not for only calculate, we save the data
+        if (UrlData[0].ToLower() != "calculates"){
+            /* Save data into pricingwizard tables to remember customer preferences
+             */
+            var sqlSetVar = @"
+                BEGIN TRAN
+                    UPDATE  customerpricingvariableinputs WITH (serializable)
+                    SET     PricingDataInput = @0,
+                            UpdatedDate = getdate(),  
+                            ModifiedBy = 'sys',
+                            Active = 1
+                    WHERE   UserId = @1 AND PricingVariableID = @2
+
+                   IF @@rowcount = 0
+                   BEGIN
+                        INSERT INTO customerpricingvariableinputs (PricingDataInput,
+                            UserID, PricingVariableID, CreatedDate, UpdatedDate, 
+                            ModifiedBy, Active)
+                        VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+                   END
+                COMMIT TRAN
+            ";
+            var sqlDelVar = @"
+                DELETE FROM customerpricingvariableinputs
+                WHERE       UserId = @0 AND PricingVariableID = @1
+            ";
+            var sqlSetOpt = @"
+                BEGIN TRAN
+                    UPDATE  customerpricingoptioninputs WITH (serializable)
+                    SET     PricingDataInput = @0,
+                            UpdatedDate = getdate(),  
+                            ModifiedBy = 'sys',
+                            Active = 1
+                    WHERE   UserId = @1 AND PricingOptionID = @2
+
+                   IF @@rowcount = 0
+                   BEGIN
+                        INSERT INTO customerpricingoptioninputs (PricingDataInput,
+                            UserID, PricingOptionID, CreatedDate, UpdatedDate, 
+                            ModifiedBy, Active)
+                        VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+                   END
+                COMMIT TRAN
+            ";
+            var sqlDelOpt = @"
+                DELETE FROM customerpricingoptioninputs
+                WHERE       UserId = @0 AND PricingOptionID = @1
+            ";
+        
+            using (var db = Database.Open("sqlloco")){
+                // Iterate all variables and save into customerpricingvariableinputs
+                foreach (var pvar in pvars) {
+                    db.Execute(sqlSetVar, Request[pvar.PricingVariableName], c.UserID, pvar.PricingVariableID);
+                }
+                // Iterate all options and save into customerpricingoptioninputs
+                foreach (var popt in poptions) {
+                    if (Request[popt.PricingOptionName + "-check"] == "true") {
+                        // Value to set can be null for options without quantity/value (only check), that cases
+                        // we set value '1'
+                        db.Execute(sqlSetOpt, Request[popt.PricingOptionName] ?? 1, c.UserID, popt.PricingOptionID);
+                    } else {
+                        db.Execute(sqlDelOpt, c.UserID, popt.PricingOptionID);
+                    }
+                }
             }
             
-            subtotalPrice = timeRequired * hourPrice + optionalServicesTotalPrice;
-            feePrice = .1M * subtotalPrice;
-            totalPrice = subtotalPrice + feePrice;
-            
-        }else{
-            // TODO Save the data into the database
+            /* Save data into the pricingestimate tables because we are in booking
+             * process (we have a BookingRequestID).
+             */
+            var bookingrequestid = PageData["BookingRequestID"];
+            if (bookingrequestid != null && bookingrequestid is int){
+                
+            }
             
             // All OK:
             CommonHelpers.ReturnJsonResult(0, null);
@@ -235,20 +307,20 @@
                 @switch ((string)@popt.CustomerDataInputType)
                 {
                     case "dropdown":
-                        <select id="@idprefix-@(popt.PricingOptionName)-quantity" name="@(popt.PricingOptionName)-quantity">
+                        <select id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName">
                             @{
                                 var optvalues = getValuesFromCSV(popt.CustomerDataValues);
                                 foreach (string optv in optvalues)
                                 {
                                     var v = optv.Trim();
-                                    <option value="@v" @getSelected(popt.PricingOptionName + "-quantity", v)>@v</option>
+                                    <option value="@v" @getSelected(popt.PricingOptionName, v)>@v</option>
                                 }
                              }
                         </select>
                         break;
                     case "number":
                     case "text":
-                        <input type="text" id="@idprefix-@(popt.PricingOptionName)-quantity" name="@(popt.PricingOptionName)-quantity" value="@Request[popt.PricingOptionName + "-quantity"]"/>
+                        <input type="text" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@Request[popt.PricingOptionName]"/>
                         break;
                     case "":
                         <text>N/A</text>
