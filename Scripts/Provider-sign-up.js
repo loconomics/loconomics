@@ -169,6 +169,6 @@ function initYourWork(){
     jSelectPosition.change(loadAttributes);
 };
 
-//$(document).ready(initYourWork);
+$(document).ready(initYourWork);
 $("#your-work").bind('endLoadWizardStep', initYourWork)
     .bind('endSubmitWizardStep', function (event, ok) { if (!ok) initYourWork(); });
