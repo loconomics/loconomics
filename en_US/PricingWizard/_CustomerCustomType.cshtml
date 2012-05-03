@@ -3,6 +3,7 @@
  *@
 @using WebMatrix.Data;
 @{
+    var pricingtypeid = 2;
     var clienttypeid = PageData["ClientTypeID"];
     var c = PageData["customerrow"];
     var p = PageData["providerrow"];
@@ -11,6 +12,10 @@
     dynamic pvars, poptions;
     decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0;
     Dictionary<int, decimal> optionalServicesPrices = new Dictionary<int,decimal>();
+    // Collection to save time and price for each pricing item (pricing variable, pricing options)
+    // Key will be "1.VarID" or "2.OptID", first decimal is time required for the item
+    // and second is calculated price for this item
+    Dictionary<string, decimal[]> pricingItemsNumbers = new Dictionary<string,decimal[]>();
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
@@ -45,7 +50,7 @@
                       AND
                      pi.Active = 1 AND pi.UserID = @5
                     )
-        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID);
         
         // Get provider hour price
         hourPrice = db.QueryValue(@"
@@ -54,13 +59,15 @@
             WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
         ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
         
-        // The the PRicing Options
+        // The the Pricing Options
         poptions = db.Query(@"
             SELECT  pr.PricingOptionID, pr.PricingOptionName, 
                     pr.CustomerInputDataRequired, pr.CustomerDataInputType,
                     pr.CustomerDataValues, pr.CustomerPricingOptionDisplayText,
                     pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
-                    pi.PricingDataInput As ProviderDataInputValue
+                    pr.ServiceAttributeID,
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pi.ProviderTimeRequired
             FROM    pricingoption As pr
                      LEFT JOIN
                     providerpricingoptioninputs as pi
@@ -85,7 +92,7 @@
                       AND
                      pi.Active = 1 AND pi.UserID = @5
                     )
-        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID);
     }
     
     if (IsPost){
@@ -97,33 +104,42 @@
                 
             // Get provider value for this pricing variable
             string providerValue = pvar.ProviderDataInputValue;
+            decimal timeInHours = 0;
                 
-            // Analizing the provider value depending on the data-type (unit just now)
+            // Analizing the provider value depending on the data-type ('unit' field in the database)
+            decimal provValueAsDecimal = 0;
             switch ((string)pvar.ProviderDataInputUnit){
                 case "minutes":
-                    decimal provParsedValue = 0;
-                    decimal.TryParse(providerValue, out provParsedValue);
-                        
-                    switch ((string)pvar.CustomerDataInputUnit){
-                        case "number":
-                        case "quantity":
-                            decimal custParsedValue = 0;
-                            decimal.TryParse(customerValue, out custParsedValue);
-                                
-                            // Calculation Formula:
-                            //  (Provider.CostPerHour * (ProviderInputValue / 60) * CustomerInputValue)
-                            //subtotalPrice += hourPrice * (provParsedValue / 60) * custParsedValue;
-                            timeRequired += (provParsedValue / 60) * custParsedValue;
-                                
-                            break;
-                        default:
-                            break;
-                    }
-                        
+                    decimal.TryParse(providerValue, out provValueAsDecimal);
+                    // Getting the provider Item Time in Hours
+                    timeInHours = provValueAsDecimal / 60;
+                    break;
+                case "hours":
+                    decimal.TryParse(providerValue, out provValueAsDecimal);
+                    // Provider value are just in hours:
+                    timeInHours = provValueAsDecimal;
                     break;
                 default:
                     break;
             }
+            // Analizing the customer value depending on the data-type ('unit' field in the database)
+            decimal custValueAsDecimal = 0;
+            switch ((string)pvar.CustomerDataInputUnit){
+                case "number":
+                case "times":
+                case "quantity":
+                    decimal.TryParse(customerValue, out custValueAsDecimal);
+                    // Customer value is the quantity of items or times item value is repeated.
+                    // To get the final time value, multiply by item time in hours
+                    // (no on timeInHours, reusing this local var to save total time after this:)
+                    timeInHours = timeInHours * custValueAsDecimal;
+                    break;
+                default:
+                    break;
+            }
+            
+            timeRequired += timeInHours;
+            pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()] = new decimal[]{timeInHours, hourPrice * timeInHours};
         }
         // Calculating the price for Pricing Options
         foreach (var popt in poptions){               
@@ -136,6 +152,7 @@
                 decimal quantity = 0;
                 switch ((string)popt.CustomerDataInputUnit) {
                     case "number":
+                    case "times":
                     case "quantity":
                         quantity = Request[(string)popt.PricingOptionName].AsDecimal();
                         break;
@@ -145,6 +162,12 @@
                         break;
                 }
                 optPrice = quantity * unitprice;
+                // Get the equivalent time required from table
+                decimal timeVar = 0;
+                if (popt.ProviderTimeRequired is decimal) {
+                    timeVar = (decimal)popt.ProviderTimeRequired;
+                }
+                pricingItemsNumbers["2." + popt.PricingOptionID.ToString()] = new decimal[]{timeVar, optPrice};
             }
             optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
             optionalServicesTotalPrice += optPrice;
@@ -158,8 +181,6 @@
          */
         // If request post is not for only calculate, we save the data
         if (UrlData[0].ToLower() != "calculates"){
-            /* Save data into pricingwizard tables to remember customer preferences
-             */
             var sqlSetVar = @"
                 BEGIN TRAN
                     UPDATE  customerpricingvariableinputs WITH (serializable)
@@ -204,8 +225,54 @@
                 DELETE FROM customerpricingoptioninputs
                 WHERE       UserId = @0 AND PricingOptionID = @1
             ";
+            
+            /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
+                BEGIN TRAN
+                    SELECT @id = MAX(id) + 1 FROM Table1 WITH (UPDLOCK, HOLDLOCK)
+                    INSERT INTO Table1(id, data_field)
+                    VALUES (@id ,'[blob of data]')
+                COMMIT TRAN
+             */
+            var sqlInsEstimate = @"
+                INSERT INTO [pricingestimate]
+                           ([PricingEstimateID]
+                           ,[PricingEstimateRevision]
+                           ,[PricingTypeID]
+                           ,[ServiceDuration]
+                           ,[TotalPriceEstimate]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy]
+                           ,[Active])
+                     VALUES
+                           (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+            ";
+            var sqlInsEstimateDetails = @"
+                INSERT INTO [pricingestimatedetail]
+                           ([PricingEstimateID]
+                           ,[PricingEstimateRevision]
+                           ,[PricingVariableID]
+                           ,[PricingSurchargeID]
+                           ,[PricingOptionID]
+                           ,[ServiceAttributeID]
+                           ,[ProviderPackageID]
+                           ,[ProviderPricingDataInput]
+                           ,[CustomerPricingDataInput]
+                           ,[SystemPricingDataInput]
+                           ,[ProviderHourlyRate]
+                           ,[TimeEstimate]
+                           ,[PriceEstimate]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy])
+                     VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
+            ";
         
             using (var db = Database.Open("sqlloco")){
+                
+                /* Save data into pricingwizard tables to remember customer preferences
+                */
+                
                 // Iterate all variables and save into customerpricingvariableinputs
                 foreach (var pvar in pvars) {
                     db.Execute(sqlSetVar, Request[pvar.PricingVariableName], c.UserID, pvar.PricingVariableID);
@@ -220,18 +287,53 @@
                         db.Execute(sqlDelOpt, c.UserID, popt.PricingOptionID);
                     }
                 }
-            }
-            
-            /* Save data into the pricingestimate tables because we are in booking
-             * process (we have a BookingRequestID).
-             */
-            var bookingrequestid = PageData["BookingRequestID"];
-            if (bookingrequestid != null && bookingrequestid is int){
                 
-            }
+                /* Save data into the pricingestimate tables because we are in booking
+                 * process (we have a BookingRequestID).
+                 */
+                PageData["BookingRequestID"] = 2;
+                var revisionID = PageData["PricingEstimateRevisionID"] ?? 1;
+                var bookingrequestid = PageData["BookingRequestID"];
+                if (bookingrequestid is int){
+                    // Inserting Estimate with calculated details
+                    db.Execute(sqlInsEstimate, bookingrequestid, revisionID,
+                        pricingtypeid, timeRequired, totalPrice);
+                    // Inserting details: every variable, option
+                    foreach (var pvar in pvars) {
+                        // Get pair time and price
+                        decimal[] timeprice = pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()];
+                        // Insert data:
+                        db.Execute(sqlInsEstimateDetails, bookingrequestid, revisionID,
+                            pvar.PricingVariableID,
+                            0, 0, 0, 0,
+                            pvar.ProviderDataInputValue,
+                            Request[pvar.PricingVariableName],
+                            0, // systemPricingDataInput
+                            hourPrice,
+                            timeprice[0], timeprice[1]);
+                    }
+                    foreach (var popt in poptions) {
+                        if (Request[popt.PricingOptionName + "-check"] == "true") {
+                            // Get pair time and price
+                            decimal[] timeprice = pricingItemsNumbers["2." + popt.PricingOptionID.ToString()];
+                            // Insert data:
+                            db.Execute(sqlInsEstimateDetails, bookingrequestid, revisionID,
+                                0, 0,
+                                popt.PricingOptionID,
+                                popt.ServiceAttributeID,
+                                0,
+                                popt.ProviderDataInputValue,
+                                Request[popt.PricingOptionName] ?? 1,
+                                0, // systemPricingDataInput
+                                hourPrice,
+                                timeprice[0], timeprice[1]);
+                        } 
+                    }
+                }
+            }          
             
             // All OK:
-            CommonHelpers.ReturnJsonResult(0, null);
+            //CommonHelpers.ReturnJsonResult(0, null);
         }
     }
 }
