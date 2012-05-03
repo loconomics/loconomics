@@ -189,7 +189,7 @@
 
         /* SAVE DATA 
          */
-        // If request post is not for only calculate, we save the data
+        // If request post is not only for calculate, save data
         if (UrlData[0].ToLower() != "calculate"){
             var sqlSetVar = @"
                 BEGIN TRAN
@@ -244,18 +244,33 @@
                 COMMIT TRAN
              */
             var sqlInsEstimate = @"
-                INSERT INTO [pricingestimate]
-                           ([PricingEstimateID]
-                           ,[PricingEstimateRevision]
-                           ,[PricingTypeID]
-                           ,[ServiceDuration]
-                           ,[TotalPriceEstimate]
-                           ,[CreatedDate]
-                           ,[UpdatedDate]
-                           ,[ModifiedBy]
-                           ,[Active])
-                     VALUES
-                           (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                BEGIN TRAN
+
+                    -- Getting a new ID if was not provided one
+                    DECLARE @id int, @revision int
+                    SET @id = @0
+                    SET @revision = @1
+
+                    If @id <= 0 BEGIN
+                        SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
+                        SET @revision = 1
+                    END
+
+                    INSERT INTO [pricingestimate]
+                               ([PricingEstimateID]
+                               ,[PricingEstimateRevision]
+                               ,[PricingTypeID]
+                               ,[ServiceDuration]
+                               ,[TotalPriceEstimate]
+                               ,[CreatedDate]
+                               ,[UpdatedDate]
+                               ,[ModifiedBy]
+                               ,[Active])
+                         VALUES
+                               (@id, @revision, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+
+                    SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
+                COMMIT TRAN
             ";
             var sqlInsEstimateDetails = @"
                 INSERT INTO [pricingestimatedetail]
@@ -298,52 +313,71 @@
                     }
                 }
                 
-                /* Save data into the pricingestimate tables because we are in booking
-                 * process (we have a BookingRequestID).
+                /* Save data into the pricingestimate tables
                  */
-                PageData["BookingRequestID"] = 2;
-                var revisionID = PageData["PricingEstimateRevisionID"] ?? 1;
-                var bookingrequestid = PageData["BookingRequestID"];
-                if (bookingrequestid is int){
-                    // Inserting Estimate with calculated details
-                    db.Execute(sqlInsEstimate, bookingrequestid, revisionID,
-                        pricingtypeid, timeRequired, totalPrice);
-                    // Inserting details: every variable, option
-                    foreach (var pvar in pvars) {
+                var revisionID = 1;
+                var estimateID = 0;
+                
+                if (PageData["PricingEstimateData"] != null){
+                    try{
+                        estimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
+                        revisionID = (int)PageData["PricingEstimateData"]["PricingEstimateRevision"];
+                    }catch{}
+                }
+
+                // Inserting Estimate with calculated details
+                var insreturned = db.QuerySingle(sqlInsEstimate, estimateID, revisionID,
+                    pricingtypeid, timeRequired, totalPrice);
+                estimateID = insreturned.PricingEstimateID;
+                revisionID = insreturned.PricingEstimateRevision;
+
+                // Inserting details: every variable, option
+                foreach (var pvar in pvars) {
+                    // Get pair time and price
+                    decimal[] timeprice = pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()];
+                    // Insert data:
+                    db.Execute(sqlInsEstimateDetails, estimateID, revisionID,
+                        pvar.PricingVariableID,
+                        0, 0, 0, 0,
+                        pvar.ProviderDataInputValue,
+                        Request[pvar.PricingVariableName],
+                        0, // systemPricingDataInput
+                        hourPrice,
+                        timeprice[0], timeprice[1]);
+                }
+                foreach (var popt in poptions) {
+                    if (Request[popt.PricingOptionName + "-check"] == "true") {
                         // Get pair time and price
-                        decimal[] timeprice = pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()];
+                        decimal[] timeprice = pricingItemsNumbers["2." + popt.PricingOptionID.ToString()];
                         // Insert data:
-                        db.Execute(sqlInsEstimateDetails, bookingrequestid, revisionID,
-                            pvar.PricingVariableID,
-                            0, 0, 0, 0,
-                            pvar.ProviderDataInputValue,
-                            Request[pvar.PricingVariableName],
+                        db.Execute(sqlInsEstimateDetails, estimateID, revisionID,
+                            0, 0,
+                            popt.PricingOptionID,
+                            popt.ServiceAttributeID,
+                            0,
+                            popt.ProviderDataInputValue,
+                            Request[popt.PricingOptionName] ?? 1,
                             0, // systemPricingDataInput
                             hourPrice,
                             timeprice[0], timeprice[1]);
                     }
-                    foreach (var popt in poptions) {
-                        if (Request[popt.PricingOptionName + "-check"] == "true") {
-                            // Get pair time and price
-                            decimal[] timeprice = pricingItemsNumbers["2." + popt.PricingOptionID.ToString()];
-                            // Insert data:
-                            db.Execute(sqlInsEstimateDetails, bookingrequestid, revisionID,
-                                0, 0,
-                                popt.PricingOptionID,
-                                popt.ServiceAttributeID,
-                                0,
-                                popt.ProviderDataInputValue,
-                                Request[popt.PricingOptionName] ?? 1,
-                                0, // systemPricingDataInput
-                                hourPrice,
-                                timeprice[0], timeprice[1]);
-                        }
-                    }
                 }
+                
+                // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
+                /*PageData["PricingEstimateID"] = estimateID;
+                PageData["PricingEstimateRevisionID"] = revisionID;*/
+                if (PageData["PricingEstimateData"] == null){
+                    PageData["PricingEstimateData"] = new Dictionary<string, object> { 
+                        { "PricingEstimateID", estimateID }, 
+                        { "PricingEstimateRevision", revisionID },
+                        { "PricingEstimateErrorMessage", "" } };
+                } else {
+                    PageData["PricingEstimateData"]["PricingEstimateID"] = estimateID;
+                    PageData["PricingEstimateData"]["PricingEstimateRevision"] = revisionID;
+                }
+                // We can return a negative data in PageData["PricingEstimateData"]["PricingEstimateID"] to set error code and add
+                // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
             }
-            
-            // All OK:
-            CommonHelpers.ReturnJsonResult(0, null);
         }
     }
 }

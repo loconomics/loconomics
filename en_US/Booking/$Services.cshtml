@@ -4,7 +4,6 @@
     var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
     var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    //var customerid = c.UserID;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -24,24 +23,16 @@
         // Getting the 'Services routinely included' (cat=2)
         services = db.Query(sqlattribute, pos.PositionID, servicesId);
     }
-
-    // TODO Add validation rules
-    
-    if (IsPost && Validation.IsValid()){
-        // TODO Add manual validation checks and prepare data (we have dynamic fields)
-        
-        if (ModelState.IsValid){
-            // TODO Insert data into the database or update the existent
-            
-            
-            // OK: All was successfull saved and next wizard step require to be loaded, but
-            //  instead return a JSON success code, we must continue processing the page
-            //  to load the Wizard Component and to let him save their data too, or return
-            //  html with errors.
-            //  If Wizard save sucessfull the data, it will call something like:
-            //CommonHelpers.ReturnJsonResult(0, null);
-        }
-    }
+   
+    /*
+     * DATA PROCESSING IS DID AT THE END OF FILE, TO ALLOW WORK PRICING WIZARD PAGES
+     */
+    // Data object to be populated by PricingWizard partial page, initialized here to have a reference
+    // that we can use later (without this, PricingEstimateData will return empty ever):
+    PageData["PricingEstimateData"] = new Dictionary<string, object> { 
+        { "PricingEstimateID", 0 }, 
+        { "PricingEstimateRevision", 0 },
+        { "PricingEstimateErrorMessage", "" } };
 }
 
 <p class="info">
@@ -73,3 +64,104 @@
         <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
     </fieldset>
 </form>
+
+@{
+    if (IsPost && Validation.IsValid()){
+
+        var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
+        
+        // Iterate categories and attributes, save what are checked and remove what not
+        var cats = new Dictionary<int, dynamic>();
+        cats.Add(servicesId, services);
+        //cats.Add(serviceswithfeesId, serviceswithfees);
+        
+        var sqlInsEstimateDetails = @"
+            INSERT INTO [pricingestimatedetail]
+                        ([PricingEstimateID]
+                        ,[PricingEstimateRevision]
+                        ,[PricingVariableID]
+                        ,[PricingSurchargeID]
+                        ,[PricingOptionID]
+                        ,[ServiceAttributeID]
+                        ,[ProviderPackageID]
+                        ,[ProviderPricingDataInput]
+                        ,[CustomerPricingDataInput]
+                        ,[SystemPricingDataInput]
+                        ,[ProviderHourlyRate]
+                        ,[TimeEstimate]
+                        ,[PriceEstimate]
+                        ,[CreatedDate]
+                        ,[UpdatedDate]
+                        ,[ModifiedBy])
+                    VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
+        ";
+        var sqlInsBookingRequest = @"
+            INSERT INTO BookingRequest
+                       ([BookingTypeID]
+                       ,[CustomerUserID]
+                       ,[ProviderUserID]
+                       ,[PositionID]
+                       ,[PricingEstimateID]
+                       ,[BookingRequestStatusID]
+                       ,[SpecialRequests]
+                       ,[CreatedDate]
+                       ,[UpdatedDate]
+                       ,[ModifiedBy])
+                VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+            SELECT @@Identity As BookingRequestID
+        ";
+        
+        // Only if we have a PricingEstimateID all is fine
+        // and we can create the Booking Request.
+        // ID is returned by the Pricing Wizard, that already save his data.
+        // If PricingEstimateID is less than 0, is an error Code
+        var pricingEstimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
+        int errorCode = (pricingEstimateID == 0 ? -1 : pricingEstimateID);
+        if (errorCode < 0) {
+            CommonHelpers.ReturnJsonError(errorCode, PageData["PricingEstimateData"]["PricingEstimateErrorMessage"]);
+        } else {
+            using (var db = Database.Open("sqlloco")) {
+                try {
+                    /*
+                    * Create Booking Request
+                    */
+                    var bookingRequestID = db.QueryValue(sqlInsBookingRequest,
+                        c.UserID, p.UserID, pos.PositionID,
+                        pricingEstimateID,
+                        Request["booking-services-special-instructions"]
+                    );
+                
+                    /*
+                    * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
+                    */
+                    foreach (var cat in cats) {
+                        foreach (var att in cat.Value) {
+                            // Check if selection changes
+                            bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                            if (wasChecked) {
+                                // Set record (insert or update)
+                                db.Execute(sqlInsEstimateDetails, pricingEstimateID, 
+                                    1, // Revision: Must be 1 ever at Booking Request
+                                    0, 0, 0,
+                                    att.ServiceAttributeID,
+                                    0, null, null, // There is no input data
+                                    0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
+                            }
+                        }
+                    }
+                    
+                    /*
+                     * Create, save and send Message
+                     */
+                    
+                    
+                } catch (Exception ex) {
+                    CommonHelpers.ReturnJsonError(-1, ex.Message);
+                }
+            }
+                
+            // All fine, continue wizard next step:
+            CommonHelpers.ReturnJsonResult(0, null);
+        }
+    }
+}

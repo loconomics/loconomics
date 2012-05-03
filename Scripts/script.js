@@ -403,9 +403,9 @@ $(document).ready(function () {
                 // If is a JSON result:
                 if (typeof (data) === 'object') {
                     // Special Code 1: do a redirect
-                    if (data.Code == 1)
+                    if (data.Code == 1) {
                         window.location = data.Result;
-                    else if (data.Code == 0) {
+                    } else if (data.Code == 0) {
                         // Special Code 0: general success code, show message saying that 'all was fine'
 
                         // Unblock loading:
@@ -414,26 +414,24 @@ $(document).ready(function () {
                         var message = data.Result || form.data('success-post-message') || 'Saved';
                         box.block({
                             message: message,
-                            css: popupStyle(popupSize('small')),
-                            timeout: 5000
+                            css: popupStyle(popupSize('small'))
                         })
                         .click(function () { box.unblock(); });
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
-                    } else if (data.Code > 1)
-                    // User Code: trigger custom event to manage results:
+                    } else if (data.Code > 1) {
+                        // User Code: trigger custom event to manage results:
                         form.trigger('ajaxSuccessPost', [data, text, jx]);
-                    else { // data.Code < 0
+                    } else { // data.Code < 0
                         // There is an error code.
 
                         // Unblock loading:
                         box.unblock();
                         // Block with message:
-                        var message = (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+                        var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
                         box.block({
                             message: 'Error: ' + message,
-                            css: popupStyle(popupSize('small')),
-                            timeout: 20000
+                            css: popupStyle(popupSize('small'))
                         })
                         .click(function () { box.unblock(); });
 
