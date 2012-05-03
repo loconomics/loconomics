@@ -66,14 +66,26 @@
     /* Get a data object with the Positions rows of the user identified with 'userId' from the database
     */
     public static dynamic GetUserPos(int userId){
-        var db = Database.Open("sqlloco");
-        var sqlpositions = "select a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";                    
-        return db.Query(sqlpositions, userId);
+        
+        var poss = PageData["userposrows:" + userId.ToString()];
+        if (poss == null) {
+            using (var db = Database.Open("sqlloco")) {
+                var sqlpositions = "select a.UserID, a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";
+                poss = db.Query(sqlpositions, userId);
+            }
+            PageData["userposrows:" + userId.ToString()] = poss;
+        }
+        return poss;
     }
     /* Get a data object with the Positions rows of the current user from the database
     */
     public static dynamic GetUserPos(){
-        return GetUserPos(WebSecurity.CurrentUserId);
+        var poss = PageData["posrows"];
+        if (poss == null) {
+            poss = GetUserPos(WebSecurity.CurrentUserId);
+            PageData["posrows"] = poss;
+        }
+        return poss;
     }
     /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database
      */
@@ -84,7 +96,7 @@
         if (u == null){
             using (var db = Database.Open("sqlloco")){
                 var sqlpositions = @"
-                    SELECT  a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, 
+                    SELECT  a.UserID, a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, 
                             PositionSingular, a.UpdatedDate
                     FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
                     WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = 1 and c.CountryID = 1";

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Current provider data record:
     var p = PageData["providerrow"];
     // Current position data record:
@@ -6,25 +7,43 @@
     // Current position number/index
     var n = PageData["npos"];
     
-    var db = Database.Open("sqlloco");
+    dynamic services, serviceswithfees, posRatings;
+    int servicesId = 2, serviceswithfeesId = 3;    
     
-    var posRatings = db.QuerySingle(@"
-        SELECT	@0 As ProviderID, @1 As PositionID,
-                avg(Rating1) As Rating1,
-		        avg(Rating2) As Rating2,
-		        avg(Rating3) As Rating3,
-                123 As Hours
-        FROM	UserReviews
-        WHERE	ProviderID = @0
-		         AND
-		        PositionID = @1
-    ", p["UserID"], pos["PositionID"]);
+    using (var db = Database.Open("sqlloco")) {
+        posRatings = db.QuerySingle(@"
+            SELECT	@0 As ProviderID, @1 As PositionID,
+                    avg(Rating1) As Rating1,
+		            avg(Rating2) As Rating2,
+		            avg(Rating3) As Rating3,
+                    123 As Hours
+            FROM	UserReviews
+            WHERE	ProviderID = @0
+		             AND
+		            PositionID = @1
+        ", p["UserID"], pos["PositionID"]);
+     
+        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
+        // Getting the 'Services routinely included' (cat=2)
+        services = db.Query(sqlattribute, pos.PositionID, servicesId, p.UserID);
+        // Getting the 'Services upon request' (cat=3)
+        serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, p.UserID);
+    }
 }
 @helper printTestAttributes(string cat){
     string[] atts = new string[]{ "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping" };
     for(int i=0; i < 10; i++){
         <li class="attribute-@cat-@i">@atts[i]</li>
     }
+}
+@helper printAttributes(int catId, dynamic atts){
+    <ul>
+        @foreach(var att in atts){
+            if (att.UserChecked) {
+                <li class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
+            }
+        }
+    </ul>    
 }
 @helper printStartRating(dynamic posrow, string index, string rate){
     var id = "ProviderProfileRating" + index + ":" + posrow["PositionID"];
@@ -58,27 +77,6 @@
     </ul>
     <span class="note">*based on @posrow["Hours"] hours of work</span>
 }
-@helper oldPrintAttributes(){
-    // TODO Review next old code:
-    /*
-    <ul class="services"> 
-        @foreach(var c in positionrow){       
-		    <li>
-			    <dl>
-				    <dt>@c.ServiceAttributeCategory:</dt>
-				    <dd>
-					    <ul>
-                                @foreach(var s in db.Query(positionattributesql,ProviderID,PositionID,c.ServiceAttributeCategoryID)){     
-						    <li>@s.Name</li>
-					        }
-					    </ul>
-				    </dd>
-			    </dl>
-		    </li>
-        }
-	 </ul>
-    */
-}
 <p class="profile-intro">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
@@ -106,29 +104,31 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
     <a href="#" class="view-more">More reviews</a>
 </div>
 
-<div class="service-attribute-category">
-    <div class="service-attribute-category1 have-view-more">
+<div class="service-attribute-category two-columns">
+    <div class="have-view-more">
         <h5>Service regularly included:</h5>
         <a class="button view-more" href="#">More</a>
-        <ul>
+        @*<ul>
             @printTestAttributes("1")
-        </ul>
+        </ul>*@
+        @printAttributes(servicesId, services)
         <a class="view-more" href="#">View more</a>
     </div>
     <div class="service-attribute-category2 have-view-more">
-        <h5>Service regularly included:</h5>
+        <h5>Services upon request:</h5>
         <a class="button view-more" href="#">More</a>
-        <ul>
+        @*<ul>
             @printTestAttributes("2")
-        </ul>
+        </ul>*@
+        @printAttributes(serviceswithfeesId, serviceswithfees)
         <a class="view-more" href="#">View more</a>
     </div>
-    <div class="service-attribute-category3 have-view-more">
+    @*<div class="service-attribute-category3 have-view-more">
         <h5>Service regularly included:</h5>
         <a class="button view-more" href="#">More</a>
         <ul>
             @printTestAttributes("3")
         </ul>
         <a class="view-more" href="#">View more</a>
-    </div>
+    </div>*@
 </div>

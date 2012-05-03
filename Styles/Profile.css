@@ -331,9 +331,12 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     vertical-align: top;
     margin-right: 6px;
 }
+.profile .overview .two-columns.service-attribute-category div{
+    width: 320px;
+}
 .profile .overview .service-attribute-category ul{
     margin: 0;
-    padding: 0;
+    padding: 0 0 24px 0;
     list-style-position: inside;
     list-style-image: url('../img/bullet.png');
 }

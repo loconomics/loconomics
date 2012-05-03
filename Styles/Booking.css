@@ -73,6 +73,9 @@
 #booking-services{
     position: relative;
 }
+#booking-services fieldset.select-services{
+    width: 358px;
+}
 #booking-services .attribute-category{
     width: 176px;
 }

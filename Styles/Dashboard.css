@@ -327,6 +327,9 @@ fieldset.positionservices-attributes{
 form.positionservices label{
     display: block;
 }
+.dashboard form.positionservices li label{
+    width: auto;
+}
 form.positionservices input{
     margin-right: .4em;
 }

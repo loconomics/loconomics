@@ -1,27 +1,50 @@
 ﻿@{
     // Current position data record:
-    var p = PageData["position"];
+    var pos = DashboardFunctions.GetUserCurrentPos();
     // Current position number/index
     var n = PageData["npos"];
+    
+    var idprefix = "position#" + n + "-services";
+    
+    var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
+    
+    dynamic services, serviceswithfees;
+    int servicesId = 2, serviceswithfeesId = 3;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Getting the 'Services routinely included' (cat=2)
+        services = db.Query(sqlattribute, pos.PositionID, servicesId, pos.UserID);
+        
+        // Getting the 'Services upon request' (cat=3)
+        serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, pos.UserID);
+    }
+}
+@helper getChecked(dynamic att){
+    if (att.UserChecked) {
+        @Html.Raw("checked='checked'")
+    }
+}
+@helper printAttributes(int catId, dynamic atts){
+    <ul>
+        @foreach(var att in atts){
+            <li><label><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]"/>@att.ServiceAttribute</label></li>
+        }
+    </ul>
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form action="#" method="post" class="positionservices" id="position#@(n)-services">
+<form action="#" method="post" class="positionservices" id="@idprefix">
     <input type="hidden" name="position-number" value="@n"/>
-    <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <fieldset class="positionservices-attributes positionservices-category-1">
-        <legend>Service Attribute Category #1:</legend>
-        @for(int i=0; i < 16; i++){
-        <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
-        }
+    <fieldset class="positionservices-attributes">
+        <legend>Services regularly included:</legend>
+        @printAttributes(servicesId, services)
     </fieldset>
-    <fieldset class="positionservices-attributes positionservices-category-2">
-        <legend>Service Attribute Category #2:</legend>
-        @for(int i=0; i < 16; i++){
-        <label><input name="positionservices-category[1]-attribute[@i]" type="checkbox"/>Attribute</label>
-        }
+    <fieldset class="positionservices-attributes">
+        <legend>Services upon request:</legend>
+        @printAttributes(serviceswithfeesId, serviceswithfees)
     </fieldset>
     <div class="positionservices-sidebar">
         <fieldset class="positionservices-experiencelevel">
