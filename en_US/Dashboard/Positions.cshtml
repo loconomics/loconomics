@@ -47,14 +47,14 @@
             </ul>
             
             <div id="@("position"+n)-services" class="tab-body current">
-                @RenderPage("_PositionsServices.cshtml")                
+                @RenderPage("$PositionsServices.cshtml")                
             </div><!-- #@("position"+n)-services -->
             <div id="@("position"+n)-availability" class="tab-body">
                 @RenderPage("_PositionsAvailability.cshtml")                
             </div><!-- #@("position"+n)-availability -->
             <div id="@("position"+n)-pricing" class="tab-body">
                 @*@RenderPage("_PricingWizard.cshtml")*@
-                @RenderPage("$PositionPricing.cshtml")
+                @RenderPage("$PositionsPricing.cshtml")
             </div><!-- #@("position"+n)-pricing -->
             <div id="@("position"+n)-photos" class="tab-body">
                 @RenderPage("_PositionsPhotos.cshtml")

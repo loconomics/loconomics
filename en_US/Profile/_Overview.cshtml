@@ -28,7 +28,7 @@
         services = db.Query(sqlattribute, pos.PositionID, servicesId, p.UserID);
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, p.UserID);
-    }
+    }    
 }
 @helper printTestAttributes(string cat){
     string[] atts = new string[]{ "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping" };

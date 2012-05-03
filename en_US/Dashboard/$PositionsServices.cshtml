@@ -6,6 +6,8 @@
     
     var idprefix = "position#" + n + "-services";
     
+    var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
+    
     var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
     
     dynamic services, serviceswithfees;
@@ -17,6 +19,58 @@
         
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, pos.UserID);
+    }
+    
+    if (IsPost) {
+        // Iterate categories and attributes, save what are checked and remove what not
+        var cats = new Dictionary<int, dynamic>();
+        cats.Add(servicesId, services);
+        cats.Add(serviceswithfeesId, serviceswithfees);
+        
+        var sqlSetAttribute = @"
+            BEGIN TRAN
+                UPDATE  userprofileserviceattributes WITH (serializable)
+                SET     Active = 1,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1 AND SCAMID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO userprofileserviceattributes (UserID,
+                        PositionID, SCAMID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                        ModifiedBy, Active)
+                    VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelAttribute = @"
+            DELETE FROM userprofileserviceattributes
+            WHERE       UserID = @0 AND PositionID = @1 AND SCAMID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+        ";
+        
+        using (var db = Database.Open("sqlloco")) {
+            foreach (var cat in cats) {
+                foreach (var att in cat.Value) {
+                    // Check if selection changes
+                    bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                    if (att.UserChecked != wasChecked) {
+                        // Value changed, update database
+                        if (wasChecked) {
+                            // Set record (insert or update)
+                            db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                        } else {
+                            // Delete record
+                            db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                        }
+                    }
+                }
+            }
+        }
+        
+        CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
     }
 }
 @helper getChecked(dynamic att){
@@ -34,7 +88,7 @@
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form action="#" method="post" class="positionservices" id="@idprefix">
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

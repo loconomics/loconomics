@@ -9,5 +9,5 @@ using System.Web;
 public static class LcRessources
 {
     public const string ValidationSummaryTitle = "Please correct the errors and try again:";
-    public const string DataSaved = "Data was sucessfull saved";
+    public const string DataSaved = "Data was successfully saved";
 }
