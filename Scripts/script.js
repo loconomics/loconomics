@@ -593,7 +593,7 @@ function popup(url, size, complete){
                     // When the iframe is ready
                     var iframeloaded = false;
                     iframe.onload = function () {
-                        // Using iframeloaded to avoid infinite loops in IE
+                        // Using iframeloaded to avoid infinite loops
                         if (!iframeloaded) {
                             iframeloaded = true;
                             injectIframeHtml(iframe, data);
@@ -617,8 +617,13 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     size = popupSize('large');
     if (m == 'error') {
         iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 10) + '"></iframe>').get(0);
+        var iframeloaded = false;
         iframe.onload = function () {
-            injectIframeHtml(iframe, jx.responseText);
+            // Using iframeloaded to avoid infinite loops
+            if (!iframeloaded) {
+                iframeloaded = true;
+                injectIframeHtml(iframe, jx.responseText);
+            }
         };
         m = null;
     }  else
