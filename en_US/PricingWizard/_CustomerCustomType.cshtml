@@ -25,11 +25,16 @@
                     pv.CustomerInputDataRequired, pv.CustomerDataInputType,
                     pv.CustomerDataValues, pv.CustomerPricingVariableDisplayText,
                     pv.ProviderDataInputUnit, pv.CustomerDataInputUnit,
-                    pi.PricingDataInput As ProviderDataInputValue
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pc.PricingDataInput As CustomerDataInputValue
             FROM    pricingvariable As pv
                      LEFT JOIN
                     providerpricingvariableinputs as pi
                       ON pv.PricingVariableID = pi.PricingVariableID
+                     LEFT JOIN
+                    customerpricingvariableinputs as pc
+                      ON pv.PricingVariableID = pc.PricingVariableID
+                        AND pc.Active = 1 AND pc.UserID = @6
             WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
                      AND 
                     pv.ClientTypeID=@2 AND pv.PositionID=@3
@@ -50,7 +55,7 @@
                       AND
                      pi.Active = 1 AND pi.UserID = @5
                     )
-        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID);
+        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
         
         // Get provider hour price
         hourPrice = db.QueryValue(@"
@@ -67,11 +72,16 @@
                     pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
                     pr.ServiceAttributeID,
                     pi.PricingDataInput As ProviderDataInputValue,
-                    pi.ProviderTimeRequired
+                    pi.ProviderTimeRequired,
+                    pc.PricingDataInput As CustomerDataInputValue
             FROM    pricingoption As pr
                      LEFT JOIN
                     providerpricingoptioninputs as pi
                       ON pr.PricingOptionID = pi.PricingOptionID
+                     LEFT JOIN
+                    customerpricingoptioninputs as pc
+                      ON pr.PricingOptionID = pc.PricingOptionID
+                        AND pc.Active = 1 AND pc.UserID = @6
             WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
                      AND 
                     pr.ClientTypeID=@2 AND pr.PositionID=@3
@@ -92,7 +102,7 @@
                       AND
                      pi.Active = 1 AND pi.UserID = @5
                     )
-        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID);
+        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
     }
     
     if (IsPost){
@@ -327,10 +337,10 @@
                                 0, // systemPricingDataInput
                                 hourPrice,
                                 timeprice[0], timeprice[1]);
-                        } 
+                        }
                     }
                 }
-            }          
+            }
             
             // All OK:
             //CommonHelpers.ReturnJsonResult(0, null);
@@ -342,11 +352,12 @@
         return line.Split(',');
     }
 }
-@helper getChecked(string name, string value){
-    @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+@helper getChecked(string name, string value, dynamic poptvar){
+    // Get checked if was setted by form of is was previously setted at database
+    @Html.Raw((Request[name] == value || poptvar.CustomerDataInputValue != null) ? "checked='checked'" : "")
 }
-@helper getSelected(string name, string value){
-    @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+@helper getSelected(string name, string value, dynamic poptvar){
+    @Html.Raw((Request[name] == value || poptvar.CustomerDataInputValue == value) ? "selected='selected'" : "")
 }
 @if (pvars.Count > 0)
 {
@@ -364,14 +375,14 @@
                             foreach (string optv in optvalues)
                             {
                                 var v = optv.Trim();
-                                <option value="@v" @getSelected(pvar.PricingVariableName, v)>@v</option>
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
                             }
                         }
                     </select>
                     break;
                 case "number":
                 case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@Request[pvar.PricingVariableName]"/>
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.CustomerDataInputValue)"/>
                     break;
                 case "":
                     break;
@@ -399,7 +410,7 @@
         {
             <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
                 <td class="pricing-option-check">
-                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true") value="true" />
+                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
                     <label for="@idprefix-@popt.PricingOptionName">@popt.CustomerPricingOptionDisplayText</label>
                 </td>
                 <td class="pricing-option-item-price number money">
@@ -415,14 +426,14 @@
                                 foreach (string optv in optvalues)
                                 {
                                     var v = optv.Trim();
-                                    <option value="@v" @getSelected(popt.PricingOptionName, v)>@v</option>
+                                    <option value="@v" @getSelected(popt.PricingOptionName, v, popt)>@v</option>
                                 }
                              }
                         </select>
                         break;
                     case "number":
                     case "text":
-                        <input type="text" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@Request[popt.PricingOptionName]"/>
+                        <input type="text" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
                         break;
                     case "":
                         <text>N/A</text>

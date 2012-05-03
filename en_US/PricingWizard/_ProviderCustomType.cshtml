@@ -123,12 +123,12 @@
         return line.Split(',');
     }
 }
-@helper getChecked(string name, string value, dynamic popt){
+@helper getChecked(string name, string value, dynamic poptvar){
     // Get checked if was setted by form of is was previously setted at database
-    @Html.Raw((Request[name] == value || popt.ProviderDataInputValue != null) ? "checked='checked'" : "")
+    @Html.Raw((Request[name] == value || poptvar.ProviderDataInputValue != null) ? "checked='checked'" : "")
 }
-@helper getSelected(string name, string value, dynamic popt){
-    @Html.Raw((Request[name] == value || popt.ProviderDataInputValue == value) ? "selected='selected'" : "")
+@helper getSelected(string name, string value, dynamic poptvar){
+    @Html.Raw((Request[name] == value || poptvar.ProviderDataInputValue == value) ? "selected='selected'" : "")
 }
 @if (pvars.Count > 0)
 {
