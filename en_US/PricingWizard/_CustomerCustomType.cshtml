@@ -190,7 +190,7 @@
         /* SAVE DATA 
          */
         // If request post is not for only calculate, we save the data
-        if (UrlData[0].ToLower() != "calculates"){
+        if (UrlData[0].ToLower() != "calculate"){
             var sqlSetVar = @"
                 BEGIN TRAN
                     UPDATE  customerpricingvariableinputs WITH (serializable)
@@ -343,7 +343,7 @@
             }
             
             // All OK:
-            //CommonHelpers.ReturnJsonResult(0, null);
+            CommonHelpers.ReturnJsonResult(0, null);
         }
     }
 }
