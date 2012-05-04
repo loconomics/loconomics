@@ -19,16 +19,13 @@
     var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
     
-    Validation.RequireField("street-address-line-1", "The street address is required");
-    Validation.RequireField("city", "The city is required");
-    Validation.RequireField("state", "The state is required");
-    Validation.RequireField("zip", "The Zip Code is required");
     Validation.RequireFields("preferred-date", "preferred-start-time", "preferred-end-time",
         "alternative-1-date", "alternative-1-start-time", "alternative-1-end-time",
         "alternative-2-date", "alternative-2-start-time", "alternative-2-end-time");
     Validation.Add("preferred-date", Validator.DateTime());
     Validation.Add("alternative-1-date", Validator.DateTime());
     Validation.Add("alternative-2-date", Validator.DateTime());
+    Validation.Add("select-location", Validator.Integer());
     // TODO: create validators for only dates and only time and add for start-time, end-time and dates
     
     if (IsPost && Validation.IsValid()){
@@ -47,6 +44,25 @@
             CommonHelpers.ReturnJsonResult(1, 
                 UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
                 "&PositionID=" + pos.PositionID.ToString());
+        }
+        
+        // Check if a location was selected or new location must be validated:
+        int locationID = Request["select-location"].AsInt();
+        if (Request["select-location"].IsEmpty()) {
+            ModelState.AddFormError("You must specify a location");
+        } else if (locationID == 0) {
+            if (Request["street-address-line-1"].IsEmpty()) {
+                ModelState.AddError("street-address-line-1", "The street address is required");
+            }
+            if (Request["city"].IsEmpty()) {
+                ModelState.AddError("city", "The city is required");
+            }
+            if (Request["state"].IsEmpty()) {
+                ModelState.AddError("state", "The state is required");
+            }
+            if (Request["zip"].IsEmpty()) {
+                ModelState.AddError("zip", "The Zip Code is required");
+            }
         }
         
         if (Request["save-location"] == "true" && Request["save-location-as"].IsEmpty()){
@@ -104,7 +120,7 @@
                            ,[UpdatedDate]
                            ,[ModifiedBy]
                            ,[Active])
-                     VALUES (@0, 0, 12, null, @1, @2, @3, @4, @5, @6, 
+                     VALUES (@0, 0, 12, @7, @1, @2, @3, @4, @5, @6, 
                              null, null, null, 0, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
                 SELECT Cast(@@Identity As int) As ServiceAddressID
             ";
@@ -135,14 +151,25 @@
             
             // Inserting data into the database
             using (var db = Database.Open("sqlloco")) {
-                // Save location as service location
-                var locationID = db.QueryValue(sqlInsServiceLocation, c.UserID,
-                    Request["street-address-line-1"],
-                    Request["street-address-line-2"],
-                    Request["city"],
-                    Request["state"],
-                    Request["zip"],
-                    1);
+                // If we have not a location (is 0), means user specify one
+                // that must be saved:
+                if (locationID == 0) {
+                    // User wants to save as 'my location'?
+                    string locationNickName = null;
+                    if (Request["save-location"] == "true" &&
+                        !String.IsNullOrWhiteSpace(Request["save-location-as"])) {
+                        locationNickName = Request["save-location-as"];
+                    }
+                    // Save location as service location
+                    locationID = db.QueryValue(sqlInsServiceLocation, c.UserID,
+                        Request["street-address-line-1"],
+                        Request["street-address-line-2"],
+                        Request["city"],
+                        Request["state"],
+                        Request["zip"],
+                        1, // countryID = 1
+                        locationNickName);
+                }
                 
                 // Save date-times as 'tentative' provider Events
                 var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
@@ -163,6 +190,28 @@
             // Return OK result
             CommonHelpers.ReturnJsonResult(0, null);
         }
+    }
+    
+    /*
+     * Loading some data:
+     */
+    dynamic providerLocations, customerLocations;
+    using (var db = Database.Open("sqlloco")) {
+        // Provider locations
+        providerLocations = db.Query(@"
+            SELECT  ServiceAddressID, NickName
+            FROM    serviceaddress
+            WHERE   UserId = @0 AND PositionID = @1
+                     AND NickName IS NOT NULL
+                     AND ServicesPerformedAtLocation = 1
+        ", p.UserID, pos.PositionID);
+        // Customer locations
+        customerLocations = db.Query(@"
+            SELECT  ServiceAddressID, NickName
+            FROM    serviceaddress
+            WHERE   UserId = @0 AND PositionID = 0
+                     AND NickName IS NOT NULL
+        ", c.UserID);
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -213,7 +262,25 @@
     </fieldset>
     <fieldset class="location box">
         <legend>Location where services are to be performed:</legend>
-        <ul>
+        <select name="select-location" class="select-location">
+            <option value="" @CommonHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
+            <option value="0" @CommonHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
+            @if (providerLocations != null && providerLocations.Count > 0) {
+                <optgroup label="Provider perform services at following locations">
+                    @foreach (var ploc in providerLocations) {
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID.ToString()) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                    }
+                </optgroup>
+            }
+            @if (customerLocations != null && customerLocations.Count > 0) {
+                <optgroup label="Your locations">
+                    @foreach (var ploc in customerLocations) {
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID.ToString()) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                    }
+                </optgroup>
+            }
+        </select>
+        <ul class="enter-new-location" style="display: none">
             <li class="street-address-line-1">
                 <label>Street address line 1:<input type="text" value="@Request["street-address-line-1"]" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
             </li>

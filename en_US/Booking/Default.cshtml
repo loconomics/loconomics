@@ -19,6 +19,7 @@
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
+    Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
 }
 
   <div id="container" class="clearfix booking editable have-boxes have-sidebar">

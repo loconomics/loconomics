@@ -346,6 +346,7 @@ $(document).ready(function () {
                 } else {
                     // Post was wrong, html was returned to replace current form:
                     currentStep.html(data);
+                    currentStep.trigger('reloadedHtmlWizardStep');
                 }
                 currentStep.unblock();
             },

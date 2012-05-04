@@ -123,6 +123,18 @@ html.ie #booking-services .special-instructions legend{
 }
 
 /* Schedule.location */
+#booking-schedule .validation-summary-errors {
+    margin-bottom: 20px;
+}
+#booking-schedule select.select-location {
+    display: block;
+    margin: 15px auto;
+    text-align: center;
+}
+#booking-schedule select.select-location option,
+#booking-schedule select.select-location optgroup {
+    text-align: left;
+}
 #booking-schedule .availability,
 #booking-schedule .location{
     margin-bottom: 20px;
