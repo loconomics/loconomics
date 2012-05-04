@@ -249,13 +249,13 @@ ul.search-results table td { padding-right: 16px; }*/
     vertical-align: top;
 }
 .search-results-items > li .overview,
-.search-results-items > li .star-ratings,
+.search-results-items > li .user-rating-summary-widget,
 .search-results-items > li .verifications-summary{
     vertical-align: top;
     height: 60px;
 }
 .search-results-items > li .overview,
-.search-results-items > li .star-ratings,
+.search-results-items > li .user-rating-summary-widget,
 .search-results-items > li .verifications-summary{
     font-size: 0.9em;
 }
@@ -268,20 +268,20 @@ ul.search-results table td { padding-right: 16px; }*/
     display: inline;
     float: none;
 }
-.search-results-items > li .star-ratings ul {
+.search-results-items > li .user-rating-summary-widget ul {
     color: #6c6c6c;
 }
-.search-results-items > li .star-ratings ul li{
+.search-results-items > li .user-rating-summary-widget ul li{
     line-height: normal;
     font-size: .9em;
 }
-.search-results-items > li .star-ratings .rate{
+.search-results-items > li .user-rating-summary-widget .rate{
     margin: 0 4px 0 0;
     background: url("../img/star-e-on.png") repeat-x scroll left center transparent;
     width: 70px;
 }
 .search-results-items > li .verifications-summary,
-.search-results-items > li .star-ratings{
+.search-results-items > li .user-rating-summary-widget{
     margin: 0 0 0 10px;
 }
 .search-results-items > li .verifications-summary > li{

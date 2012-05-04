@@ -239,7 +239,7 @@ html.ie #booking-services .special-instructions legend{
     height: 70px;
     float: left;
     vertical-align: middle;
-    margin: 3px 4px 0 4px;
+    margin: 0 4px;
 }
 #booking-payment .appt-time-price .schedule{
     margin-bottom: 5px;
@@ -250,13 +250,13 @@ html.ie #booking-services .special-instructions legend{
 #booking-payment .appt-time-price .schedule ol{
     list-style-position:  inside;
 }
-#booking-payment .star-ratings li{
+#booking-payment .user-rating-summary-widget > ul > li{
     line-height: normal;
 }
-#booking-payment .star-ratings .rate{
+#booking-payment .user-rating-summary-widget.static .rate{
     margin-right: 4px;
 }
-#booking-payment .star-ratings .note{
+#booking-payment .user-rating-summary-widget .note{
     font-size: 1em;
 }
 #booking-payment .provider-features-lists{

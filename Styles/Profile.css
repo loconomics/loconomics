@@ -288,43 +288,18 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     bottom: 5px;
 }
 
-/*********************************/
-/****** star-ratings *************/
-.star-ratings {
-    display: inline-block;
+/**********************************/
+/****** Overview ******************/
+.profile .user-rating-summary-widget {
+    margin: 0 120px 14px 0;
 }
-.star-ratings ul {
-    list-style: none;
-    padding: 0 !important;
-    margin: 0 !important;
-    color: #461864;
-}
-.star-ratings li{
-    margin: 0 !important;
-}
-.profile .star-ratings li{
+.profile .user-rating-summary-widget > ul > li{
     width: 215px;
     height: 22px;
     overflow: hidden;
 }
-.star-ratings .rate{
-    background: url('../img/star-on.gif') repeat-x center left;
-    /* 17*quantity: 17*5=85 */
-    width: 85px;
-    margin: 0 20px 0 0;
-    display: inline-block;
-    height: 16px;
-}
-.star-ratings .note{
-    color: #836b96;
-    font-size: .9em;
-    font-style: italic;
-}
-
-/**********************************/
-/****** Overview ******************/
-.profile .overview .star-ratings {
-    margin: 0 120px 14px 0;
+.profile .user-rating-summary-widget > ul > li > label {
+    margin-left: 20px;
 }
 .profile .overview .service-attribute-category div{
     display: inline-block;
@@ -374,7 +349,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     color: #836b96;
     font-style: italic;
 }
-.profile .reviews li.review .star-ratings{
+.profile .reviews li.review .user-rating-summary-widget{
     position: absolute;
     top: 10px;
     right: 10px;

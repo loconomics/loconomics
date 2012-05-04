@@ -1,0 +1,95 @@
+﻿@{
+    //PageData["UserRatingSummaryWidget"];
+    dynamic reviewRecord = PageData["ReviewRecord"];
+    bool withNote = PageData["RatingWithNote"] ?? true;
+    int reviewedID = 0, positionID = 0, reviewerID = 0;
+    if (reviewRecord == null) {
+        reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
+        positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+        reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
+    
+        var getPositionRatings = @"
+                SELECT	0 As ReviewID,
+                        @0 As ProviderID, @1 As PositionID, @2 As CustomerID,
+                        avg(Rating1) As Rating1,
+		                avg(Rating2) As Rating2,
+		                avg(Rating3) As Rating3,
+                        123 As Hours,
+                        max(UpdatedDate) As LastRatingDate
+                FROM	UserReviews
+                WHERE	ProviderID = @0
+		                 AND
+		                PositionID = @1
+                         AND
+                        (@2 = 0 OR UserID = @2)
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            reviewRecord = db.QuerySingle(getPositionRatings, reviewedID, positionID, reviewerID);
+        }
+    }
+    
+    var note = "";
+    if (reviewerID > 0) {
+        note = "*based on " + reviewRecord.Hours + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
+    } else {
+        note = "*based on " + reviewRecord.Hours + " hours of work";
+    }
+}
+@helper printStartRating(dynamic posrow, string index, string rate){
+    var id = "UserRatingSummaryWidget:" + index;
+    if (posrow["ReviewID"] > 0) {
+        id += ":" + posrow["ReviewID"];
+    } else {
+        id += 
+        ":" + posrow["PositionID"] +
+        ":" + posrow["ProviderID"] +
+        ":" + posrow["CustomerID"];
+    }
+    var n = "rating" + index;
+    switch(index){
+        default:
+            <label>@n</label>
+            break;
+        case "1":
+            <label>Proffesionalism</label>
+            break;
+        case "2":
+            <label>Quality-of-work</label>
+            break;
+        case "3":
+            <label>Efficiency</label>
+            break;
+    }
+    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
+}
+@*
+<!-- Temporary static code -->
+<div class="user-rating-summary-widget static">
+    <ul>
+        <li class="professionalism">
+            <span class="rate"></span>Professionalism
+        </li>
+        <li class="quality">
+            <span class="rate"></span>Quality-of-work
+        </li>
+        <li class="efficiency">
+            <span class="rate"></span>Efficiency
+        </li>
+    </ul>
+    <span class="note">*based on 156 hours</span>
+</div>*@
+<div class="user-rating-summary-widget">
+    <ul>
+        @{
+            for(var s=1; s < 4; s++){
+                var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
+                <li>
+                    @printStartRating(reviewRecord, s.ToString(), rate.ToString())
+                </li>
+            }
+        }
+    </ul>
+    @if (withNote){
+        <span class="note">@note</span>
+    }
+</div>

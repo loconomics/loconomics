@@ -447,8 +447,8 @@
         {
             <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
                 <td class="pricing-option-check">
-                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
-                    <label for="@idprefix-@popt.PricingOptionName">@popt.CustomerPricingOptionDisplayText</label>
+                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
+                    <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                 </td>
                 <td class="pricing-option-item-price number money">
                     @popt.ProviderDataInputValue

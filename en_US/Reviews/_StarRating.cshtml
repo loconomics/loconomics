@@ -20,21 +20,22 @@ Use Example:
 @{
     var name = PageData[0];
     var value = 0m;
-    var errorMsg = "The rating value entered is not in valid format (Decimal expected)";
-    var userErrorMsg = "";
+    var disabled = true;
+    bool active4split = PageData["StarRating.ReadOnly.Active4Split"] ?? false;
 
-    try
-    {
-        value = Decimal.Parse(PageData[1]);
+    if (PageData[1] is decimal) {
+        value = (decimal)PageData[1];
+    } else {
+        Decimal.TryParse(PageData[1], out value);
     }
-    catch (Exception Exception)
-    {
-        errorMsg = Exception.Message;
-        ModelState.AddError("star rating", userErrorMsg);
-        //TODO ADD LOG MESSAGE
+    if (PageData[2] is bool) {
+        disabled = (bool) PageData[2];
+    } else {
+        Boolean.TryParse(PageData[2], out disabled);
     }
-    var checked025 = (Decimal.Compare(value, 0m) > 0 && (Decimal.Compare(value, 0.25m) <= 0)) ? "checked='checked'" : "";
-    var checked05 = (Decimal.Compare(value, 0.25m) > 0 && (Decimal.Compare(value, 0.5m) <= 0)) ? "checked='checked'" : "";
+
+    var checked025  = (value >= 0m && value <= 0.25m) ? "checked='checked'" : "";
+    var checked05   = (value > 0.25m && value <= 0.5m) ? "checked='checked'" : "";
     var checked075 = (Decimal.Compare(value, 0.5m) > 0 && (Decimal.Compare(value, 0.75m) <= 0)) ? "checked='checked'" : "";
     var checked1 = (Decimal.Compare(value, 0.75m) > 0 && (Decimal.Compare(value, 1m) <= 0)) ? "checked='checked'" : "";
     
@@ -57,22 +58,22 @@ Use Example:
     var checked45 = (Decimal.Compare(value, 4.25m) > 0 && (Decimal.Compare(value, 4.5m) <= 0)) ? "checked='checked'" : "";
     var checked475 = (Decimal.Compare(value, 4.5m) > 0 && (Decimal.Compare(value, 4.75m) <= 0)) ? "checked='checked'" : "";
     var checked5 = (Decimal.Compare(value, 4.75m) > 0 && (Decimal.Compare(value, 5m) <= 0)) ? "checked='checked'" : "";
-
-
-    var disabled = Convert.ToBoolean(PageData[2]);
  }
 
 
- @if (!disabled)
- {
+ @if (!disabled) {
     <input name="@name" type="radio" class="star" value="1" @Html.Raw(checked1)/>
     <input name="@name" type="radio" class="star" value="2" @Html.Raw(checked2)/>
     <input name="@name" type="radio" class="star" value="3" @Html.Raw(checked3)/>
     <input name="@name" type="radio" class="star" value="4" @Html.Raw(checked4)/>
     <input name="@name" type="radio" class="star" value="5" @Html.Raw(checked5)/>
- }
- else
- {
+ } else if (!active4split) {
+    <input name="@name" type="radio" class="star" @Html.Raw(checked1) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checked2) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checked3) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checked4) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checked5) disabled="disabled"/>
+ } else {
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked025) disabled="disabled"/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked05)/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked075)/>

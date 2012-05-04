@@ -45,58 +45,11 @@
         }
     </ul>    
 }
-@helper printStartRating(dynamic posrow, string index, string rate){
-    var id = "ProviderProfileRating" + index + ":" + posrow["PositionID"];
-    var n = "rating" + index;
-    switch(index){
-        default:
-            <label>@n</label>
-            break;
-        case "1":
-            <label>Proffesionalism</label>
-            break;
-        case "2":
-            <label>Quality-of-work</label>
-            break;
-        case "3":
-            <label>Efficiency</label>
-            break;
-    }
-    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
-}
-@helper printRating(dynamic posrow){
-    <ul class="review-ratings" style="clear:both">
-        @{
-            for(var s=1; s < 4; s++){
-                var rate = posrow["Rating" + s.ToString()] ?? 0;
-                <li>
-                    @printStartRating(posrow, s.ToString(), rate.ToString())
-                </li>
-            }
-        }
-    </ul>
-    <span class="note">*based on @posrow["Hours"] hours of work</span>
-}
 <p class="profile-intro">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 @CommonHelpers.SetupStarRatingPlugin()
-<div class="star-ratings">
-    <!-- Temporary static code -->
-    <ul>
-        <li class="professionalism">
-            <span class="rate"></span>Professionalism
-        </li>
-        <li class="quality">
-            <span class="rate"></span>Quality-of-work
-        </li>
-        <li class="efficiency">
-            <span class="rate"></span>Efficiency
-        </li>
-    </ul>
-    <span class="note">*based on 156 hours of work</span>
-    @*printRating(posRatings)*@
-</div>
+@RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 <div class="featured-review review have-view-more">
     <h6>Review from <span class="reviewer-name">Joshua D.</span> (<span class="reviewer-date">27-jul-2011</span>):</h6>
     <img alt="Reviewer photo" class="reviewer-photo" width="50px" height="50px" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>

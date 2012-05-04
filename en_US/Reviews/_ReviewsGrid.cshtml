@@ -22,17 +22,21 @@
     String[] rating4data = { "name", "rating_value", "true" };
     
     var db = Database.Open("sqlloco");
-    var query = @"SELECT u.UserID, u.FirstName, u.LastName, u.Photo, r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID
+    var query = @"
+        SELECT  r.ReviewID, u.UserID As CustomerID, u.FirstName, u.LastName, u.Photo, r.PositionID, r.ProviderID,
+                r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID,
+                r.UpdatedDate As LastRatingDate,
+                321 As Hours
                 FROM dbo.UserReviews r
                 JOIN dbo.users u ON (u.UserID = r.UserID)
                 WHERE r.ProviderID = @0 AND r.PositionID = @1";
-    var reviews = db.Query(query,providerID,positionID);
-            
+    var reviews = db.Query(query, providerID, positionID);
 }
 <h3>Reviews</h3>
 @CommonHelpers.SetupStarRatingPlugin()
 @foreach (var review in reviews)
 {
+    /*
     rating1data.SetValue("rating1-" + review.PaymentID,0);//Rating Name
     rating1data.SetValue(Convert.ToString(review.Rating1),1);//Rating value
     rating1data.SetValue("true",2);//Rating: enable or disable
@@ -45,7 +49,6 @@
     rating3data.SetValue(Convert.ToString(review.Rating3), 1);//Rating value
     rating3data.SetValue("true", 2);//Rating: enable or disable
     
-    /*
     rating4data.SetValue("rating4." + review.PaymentID, 0);//Rating Name
     rating4data.SetValue(Convert.ToString(review.Rating4), 1);//Rating value
     rating4data.SetValue("true", 2);//Rating: enable or disable */
@@ -54,12 +57,13 @@
 	    <li>
 		    <div class="author">
 			    <img alt="user photo" class="mini-avatar" src="@(UrlUtil.AppPath + review.Photo.Replace("\\", "/"))" />
-			    <a href="@(UrlUtil.LangPath)Profile/?UserId=@(review.UserID)">@review.FirstName @review.LastName</a>
+			    <a href="@(UrlUtil.LangPath)Profile/?UserId=@(review.CustomerID)">@review.FirstName @review.LastName</a>
 		    </div>
     	    <div class="wrap">
                 <p>@review.PublicReview</p>
 		    </div>
-            <ul class="review-ratings" style="clear:both">
+            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewRecord = review })
+            @*<ul class="review-ratings" style="clear:both">
                 <li>
                 <label>Proffessionalism</label>
                 @RenderPage("_StarRating.cshtml", rating1data)
@@ -72,7 +76,7 @@
                 <label>Efficiency</label>
                 @RenderPage("_StarRating.cshtml", rating3data)
                 </li>
-            </ul>
+            </ul>*@
 	    </li>
     </ul>
 }

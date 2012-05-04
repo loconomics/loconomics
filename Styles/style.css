@@ -1478,3 +1478,37 @@ html.boxshadow #loginBox .field-validation-error{
     width: 730px;
     display: inline-block;
 }
+
+/*
+ * user-rating-summary-widget
+ */
+.user-rating-summary-widget {
+    display: inline-block;
+    height: 70px;
+}
+.user-rating-summary-widget > ul {
+    list-style: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #461864;
+    clear: both;
+}
+.user-rating-summary-widget > ul > li{
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 18px;
+    line-height: normal;
+}
+.user-rating-summary-widget.static .rate{
+    background: url('../img/star-on.gif') repeat-x center left;
+    /* 17*quantity: 17*5=85 */
+    width: 85px;
+    margin: 0 20px 0 0;
+    display: inline-block;
+    height: 16px;
+}
+.user-rating-summary-widget .note{
+    color: #836b96;
+    font-size: .9em;
+    font-style: italic;
+}

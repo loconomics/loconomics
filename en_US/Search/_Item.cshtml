@@ -25,20 +25,7 @@
                 making, sweeping, vacuuming, and <a href="#" class="view-more">14 more</a></div>
         </div>
         
-        <div class="star-ratings">
-            <!-- Temporary static code -->
-            <ul>
-                <li class="professionalism">
-                    <span class="rate"></span>Professionalism
-                </li>
-                <li class="quality">
-                    <span class="rate"></span>Quality of work
-                </li>
-                <li class="efficiency">
-                    <span class="rate"></span>Efficiency
-                </li>
-            </ul>
-        </div>
+        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.ProfileID, PositionID = p.PositionID, RatingWithNote = false })
         
         <ul class="verifications-summary">
             <li class="license">2 licenses</li>
