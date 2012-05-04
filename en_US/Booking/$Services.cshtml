@@ -155,12 +155,7 @@
                      */
                     // Saving it at user Session
                     Session["BookingRequestID"] = (int)bookingRequestID;
-                    
-                    /*
-                     * Create, save and send Message
-                     */
-                    
-                    
+                                        
                 } catch (Exception ex) {
                     CommonHelpers.ReturnJsonError(-1, ex.Message);
                 }

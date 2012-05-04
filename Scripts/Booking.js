@@ -20,4 +20,9 @@ $(document).ready(function () {
         // Execute after reloading html of this step
         $.proxy(bookingChangeLocation, $('.select-location'))();
     });
+
+    // Load payment content on step change:
+    $('#payment').bind('endLoadWizardStep', function () {
+        
+    });
 });

@@ -228,7 +228,7 @@
 <p class="info">
     Please review your provider’s availability calendar and choose a location, preferred time for services to be peformed and up to two alternate times.  Being flexible helps the two of you get an accurate time booked quickly.  
 </p>
-<form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule ajax ajax-box" id="booking-schedule">
+<form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @CommonHelpers.GetValidationScripts()
