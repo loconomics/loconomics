@@ -122,16 +122,61 @@
         WHERE   P.PricingEstimateID = @0
                  AND V.CountryId = @1 AND V.LanguageID = @2
     ";
-    dynamic summary, services, pvars, poptions;
+     var getPositionRatings = @"
+            SELECT	@0 As ProviderID, @1 As PositionID,
+                    avg(Rating1) As Rating1,
+		            avg(Rating2) As Rating2,
+		            avg(Rating3) As Rating3,
+                    123 As Hours
+            FROM	UserReviews
+            WHERE	ProviderID = @0
+		             AND
+		            PositionID = @1
+    ";
+    dynamic summary, services, pvars, poptions, posRatings;
     using (var db = Database.Open("sqlloco")) {
         summary     = db.QuerySingle(getBookingRequest, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
         services    = db.Query(getServicesIncluded, summary.PricingEstimateID, 1, 1);
         pvars       = db.Query(getPricingVars, summary.PricingEstimateID, 1, 1);
         poptions    = db.Query(getPricingOptions, summary.PricingEstimateID, 1, 1);
+        posRatings  = db.QuerySingle(getPositionRatings, p.UserID, pos.PositionID);
     }
     // auxiliar vars in view generation
     int i = 0;
     string iprint = "";
+}
+@helper printRating(dynamic posrow){
+    /* Helper copied from Profile/_Overview.cshtml */
+    <ul class="review-ratings" style="clear:both">
+        @{
+            for(var s=1; s < 4; s++){
+                var rate = posrow["Rating" + s.ToString()] ?? 0;
+                <li>
+                    @printStartRating(posrow, s.ToString(), rate.ToString())
+                </li>
+            }
+        }
+    </ul>
+    <span class="note">*based on @posrow["Hours"] hours of work</span>
+}
+@helper printStartRating(dynamic posrow, string index, string rate){
+    var id = "ProviderProfileRating" + index + ":" + posrow["PositionID"];
+    var n = "rating" + index;
+    switch(index){
+        default:
+            <label>@n</label>
+            break;
+        case "1":
+            <label>Proffesionalism</label>
+            break;
+        case "2":
+            <label>Quality-of-work</label>
+            break;
+        case "3":
+            <label>Efficiency</label>
+            break;
+    }
+    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
 }
 <p class="info">
     Please review the summary and provide your payment details below. You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
@@ -182,7 +227,9 @@
         <legend>Your provider:</legend>
         <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
         <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
+        @CommonHelpers.SetupStarRatingPlugin()
         <div class="star-ratings">
+            @*
             <!-- Temporary static code -->
             <ul>
                 <li class="professionalism">
@@ -195,7 +242,24 @@
                     <span class="rate"></span>Efficiency
                 </li>
             </ul>
-            <span class="note">*based on 156 hours</span>
+            <span class="note">*based on 156 hours</span>*@
+            @printRating(posRatings)
+
+            @*<ul class="review-ratings" style="clear:both">
+                <li>
+                <label>Proffessionalism</label>
+                @RenderPage("_StarRating.cshtml", rating1data)
+                </li>
+                <li>
+                <label>Quality of work</label>
+                @RenderPage("_StarRating.cshtml", rating2data)
+                </li>
+                <li>
+                <label>Efficiency</label>
+                @RenderPage("_StarRating.cshtml", rating3data)
+                </li>
+            </ul>*@
+
         </div>
         <div class="provider-features-lists">
             <div class="years-experience">

@@ -32,9 +32,9 @@
         if (!jqueryStarRatingPluginLoaded) {
             jqueryStarRatingPluginLoaded = true;
             Modernizr.load([
-                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.MetaData.js",
-                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.js",
-                "http://jquery-star-rating-plugin.googlecode.com/svn/trunk/jquery.rating.css"
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.css"
             ]);
         } else {
             if ($ && $().rating)
