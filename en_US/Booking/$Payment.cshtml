@@ -13,6 +13,22 @@
             throw new Exception(inputdataerrormessage);
         }
     }
+    
+    // Check if is a valid booking process (session not expired or erro at first step)
+    var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
+    if (bookingRequestID <= 0) {
+        /* Several options to do here
+            * - Show error (strange message for user, need restart again introducing first his login)
+            * X Silently redirect to start booking again
+            * - Request login via ajax, re-send form data, looking in the database for a 'timeouted'
+            *   bookingrequest for this customer at this provider and position, recover it to continue
+            *   processing the form (if there is no bookingrequestid again, do second option).
+            */
+        //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
+        CommonHelpers.ReturnJsonResult(1, 
+            UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+            "&PositionID=" + pos.PositionID.ToString());
+    }
 
     // TODO Add validation rules
     
@@ -49,8 +65,9 @@
      */
     var getBookingRequest = @"
         SELECT  B.PricingEstimateID,
-                B.SpecialRequest, B.PricingEstimateID,
-                L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID
+                B.SpecialRequests, B.PricingEstimateID,
+                L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
+                SP.StateProvinceName, SP.StateProvinceCode,
                 E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
                 E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
                 E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
@@ -60,21 +77,30 @@
                 ServiceAddress As L
                   ON B.ServiceAddressID = L.ServiceAddressID
                  INNER JOIN
-                CalendarEvent As E1
+                CalendarEvents As E1
                   ON E1.ID = B.PreferredDateID
                  INNER JOIN
-                CalendarEvent As E2
+                CalendarEvents As E2
                   ON E2.ID = B.AlternativeDate1ID
                  INNER JOIN
-                CalendarEvent As E3
+                CalendarEvents As E3
                   ON E3.ID = B.AlternativeDate2ID
                  INNER JOIN
                 PricingEstimate As P
                   ON P.PricingEstimateID = B.PricingEstimateID
+                 INNER JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
+        WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
+                 AND B.PositionID = @2 AND B.BookingRequestID = @3
     ";
+    dynamic summary;
+    using (var db = Database.Open("sqlloco")) {
+        summary = db.QuerySingle(getBookingRequest, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+    }
 }
 <p class="info">
-    Please review the summary and provide your payment details below.  You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
+    Please review the summary and provide your payment details below. You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
 </p>
 <form action="@(UrlUtil.LangPath)Booking/$Payment/" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
@@ -120,8 +146,8 @@
     </fieldset>
     <fieldset class="your-provider box">
         <legend>Your provider:</legend>
-        <h6 class="provider-and-position"><span class="provider-name">@PageData["providerrow"].FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
-        <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.AppPath + "img/generic-avatar.png")"/>
+        <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
+        <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
         <div class="star-ratings">
             <!-- Temporary static code -->
             <ul>
@@ -161,44 +187,57 @@
             </li>
             <li class="special-instructions">
                 <strong>Special instructions:</strong>
-                Please leave mints on my pillows!
+                @summary.SpecialRequests
             </li>
             <li class="location">
                 <strong>Location:</strong>
-                187 Bocana St., San Francisco, CA 94110
+                @*187 Bocana St., San Francisco, CA 94110*@
+                @summary.AddressLine1 @(summary.AddressLine2), @(summary.City), @summary.StateProvinceCode @summary.PostalCodeID
             </li>
             <li class="details">
                 <strong>Details:</strong>
                 Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.
             </li>
         </ul>
-        <div class="actions">
+        @*<div class="actions">
             <button class="button edit">Edit</button>
-        </div>
+        </div>*@
     </fieldset>
     <fieldset class="appt-time-price box">
         <legend>Appointment time and price:</legend>
         <div class="schedule">
             <h6>Ranked in order of preference:</h6>
             <ol>
-                <li class="preferred-option">Monday, April 15th, 2012, 11:00am to 2:00pm</li>
-                <li class="alternative-option-1">Monday, April 15th, 2012, 3:00pm to 6:00pm</li>
-                <li class="alternative-option-2">Tuesday, April 16th, 2012, 11:00am to 2:00pm</li>
+                <li class="preferred-option">@*Monday, April 15th, 2012, 11:00am to 2:00pm*@
+                    @(summary.PreferredDateStart.ToLongDateString()),
+                    @summary.PreferredDateStart.ToShortTimeString() to
+                    @summary.PreferredDateEnd.ToShortTimeString()
+                </li>
+                <li class="alternative-option-1">
+                    @(summary.AlternativeDate1Start.ToLongDateString()),
+                    @summary.AlternativeDate1Start.ToShortTimeString() to
+                    @summary.AlternativeDate1End.ToShortTimeString()
+                </li>
+                <li class="alternative-option-2">
+                    @(summary.AlternativeDate2Start.ToLongDateString()),
+                    @summary.AlternativeDate2Start.ToShortTimeString() to
+                    @summary.AlternativeDate2End.ToShortTimeString()
+                </li>
             </ol>
         </div>
         <table class="calculation">
-            <tr><th>Estimated time required:</th><td class="time-required">3 hours</td></tr>
+            <tr><th>Estimated time required:</th><td class="time-required">@summary.ServiceDuration hours</td></tr>
             <tr>
-                <th><span class="time-required">3 hours</span> @('@') <span class="hour-price">$22.00</span></th>
-                <td class="subtotal-price">$66.00</td>
+                <th><span class="time-required">@summary.ServiceDuration hours</span> @('@') <span class="hour-price">$@summary.HourlyPrice</span></th>
+                <td class="subtotal-price">$@summary.SubtotalPrice</td>
             </tr>
             <tr>
                 <th>Loconomics service fee:</th>
-                <td class="fee-pricee">$6.00</td>
+                <td class="fee-pricee">$@summary.FeePrice</td>
             </tr>
             <tr>
                 <th>Total estimated price:</th>
-                <td class="total-price">$72.00</td>
+                <td class="total-price">$@summary.TotalPrice</td>
             </tr>
         </table>
     </fieldset>

@@ -35,7 +35,8 @@ $(document).ready(function () {
         $.ajax({
             url: UrlUtil.LangPath + "Booking/$Payment/",
             type: 'GET',
-            data: form.serialize(),
+            data: { 'ProviderID': getURLParameter('ProviderID'),
+                    'PositionID': getURLParameter('PositionID') },
             success: function (data, text, jx) {
                 // load tab content
                 $('#payment').html(data);

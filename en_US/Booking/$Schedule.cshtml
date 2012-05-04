@@ -98,6 +98,8 @@
             ModelState.AddFormError("Third best Date and End Time are not correct");
         }
         
+        // TODO: Add validation for: End Time cannot be lower than Start Time
+        
         if (ModelState.IsValid){
             var sqlInsServiceLocation = @"
                 INSERT INTO [serviceaddress]
