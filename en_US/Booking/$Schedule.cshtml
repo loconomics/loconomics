@@ -62,6 +62,9 @@
             }
             if (Request["zip"].IsEmpty()) {
                 ModelState.AddError("zip", "The Zip Code is required");
+            } else if (!Request["zip"].IsInt()) {
+                ModelState.AddError("zip", "The Zip Code must be a number");
+                // TODO: add database check that zip is valid (table PostalCodes).
             }
         }
         

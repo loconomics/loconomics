@@ -261,13 +261,16 @@
                                ,[PricingEstimateRevision]
                                ,[PricingTypeID]
                                ,[ServiceDuration]
-                               ,[TotalPriceEstimate]
+                               ,[HourlyPrice]
+                               ,[SubtotalPrice]
+                               ,[FeePrice]
+                               ,[TotalPrice]
                                ,[CreatedDate]
                                ,[UpdatedDate]
                                ,[ModifiedBy]
                                ,[Active])
                          VALUES
-                               (@id, @revision, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                               (@id, @revision, @2, @3, @4, @5, @6, @7 getdate(), getdate(), 'sys', 1)
 
                     SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
                 COMMIT TRAN
@@ -327,7 +330,7 @@
 
                 // Inserting Estimate with calculated details
                 var insreturned = db.QuerySingle(sqlInsEstimate, estimateID, revisionID,
-                    pricingtypeid, timeRequired, totalPrice);
+                    pricingtypeid, timeRequired, hourPrice, subtotalPrice, feePrice, totalPrice);
                 estimateID = insreturned.PricingEstimateID;
                 revisionID = insreturned.PricingEstimateRevision;
 

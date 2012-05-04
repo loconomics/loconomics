@@ -23,6 +23,30 @@ $(document).ready(function () {
 
     // Load payment content on step change:
     $('#payment').bind('endLoadWizardStep', function () {
-        
+        // Getting the tab content for payment that is not loaded at the start
+        // like previous steps.
+        var paymentTab = $('#payment');
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            paymentTab.block(loadingBlock);
+        }, 600);
+
+        $.ajax({
+            url: UrlUtil.LangPath + "Booking/$Payment/",
+            type: 'GET',
+            data: form.serialize(),
+            success: function (data, text, jx) {
+                // load tab content
+                $('#payment').html(data);
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                paymentTab.unblock();
+            }
+        });
     });
 });
