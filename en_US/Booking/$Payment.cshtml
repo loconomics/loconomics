@@ -181,7 +181,7 @@
     </fieldset>
     <fieldset class="your-provider box">
         <legend>Your provider:</legend>
-        <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">Housekeeper</span></h6>
+        <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">@pos.PositionSingular</span></h6>
         <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>      
         @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
         <div class="provider-features-lists">
