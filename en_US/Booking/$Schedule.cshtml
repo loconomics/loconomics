@@ -32,12 +32,133 @@
     // TODO: create validators for only dates and only time and add for start-time, end-time and dates
     
     if (IsPost && Validation.IsValid()){
+        
+        // Check if is a valid booking process (session not expired or erro at first step)
+        var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
+        if (bookingRequestID <= 0) {
+            /* Several options to do here
+             * - Show error (strange message for user, need restart again introducing first his login)
+             * X Silently redirect to start booking again
+             * - Request login via ajax, re-send form data, looking in the database for a 'timeouted'
+             *   bookingrequest for this customer at this provider and position, recover it to continue
+             *   processing the form (if there is no bookingrequestid again, do second option).
+             */
+            //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
+            CommonHelpers.ReturnJsonResult(1, 
+                UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+                "&PositionID=" + pos.PositionID.ToString());
+        }
+        
         if (Request["save-location"] == "true" && Request["save-location-as"].IsEmpty()){
             ModelState.AddError("save-location-as", "To save the location is required a name");
         }
         
+        DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+        if (!DateTime.TryParse(
+                Request["preferred-date"] + " " + Request["preferred-start-time"], out dt1Start)) {
+            ModelState.AddFormError("Preferred Date and Start Time are not correct");
+        }
+        if (!DateTime.TryParse(
+                Request["preferred-date"] + " " + Request["preferred-end-time"], out dt1End)) {
+            ModelState.AddFormError("Preferred Date and End Time are not correct");
+        }
+        if (!DateTime.TryParse(
+                Request["alternative-1-date"] + " " + Request["alternative-1-start-time"], out dt2Start)) {
+            ModelState.AddFormError("Second best Date and Start Time are not correct");
+        }
+        if (!DateTime.TryParse(
+                Request["alternative-1-date"] + " " + Request["alternative-1-end-time"], out dt2End)) {
+            ModelState.AddFormError("Second best Date and End Time are not correct");
+        }
+        if (!DateTime.TryParse(
+                Request["alternative-2-date"] + " " + Request["alternative-2-start-time"], out dt3Start)) {
+            ModelState.AddFormError("Third best Date and Start Time are not correct");
+        }
+        if (!DateTime.TryParse(
+                Request["alternative-2-date"] + " " + Request["alternative-2-end-time"], out dt3End)) {
+            ModelState.AddFormError("Third best Date and End Time are not correct");
+        }
+        
         if (ModelState.IsValid){
-            // TODO Insert data into the database
+            var sqlInsServiceLocation = @"
+                INSERT INTO [serviceaddress]
+                           [UserID]
+                           ,[PositionID]
+                           ,[AddressTypeID]
+                           ,[NickName]
+                           ,[AddressLine1]
+                           ,[AddressLine2]
+                           ,[City]
+                           ,[StateProvinceID]
+                           ,[PostalCodeID]
+                           ,[CountryID]
+                           ,[Latitude]
+                           ,[Longitude]
+                           ,[GoogleMapsURL]
+                           ,[ServicesPerformedAtLocation]
+                           ,[TravelFromLocation]
+                           ,[ServiceRadiusFromLocation]
+                           ,[TransportType]
+                           ,[PreferredAddress]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy]
+                           ,[Active])
+                     VALUES (@0, 0, 12, null, @1, @2, @3, @4, @5, @6, 
+                             null, null, null, 0, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
+                SELECT @@Identity As ServiceAddressID
+            ";
+            var sqlInsCalendarEvent = @"
+                INSERT INTO [CalendarEvents]
+                           ([UserId]
+                           ,[CalendarAvailabilityTypeID]
+                           ,[CalendarEventLocationId]
+                           ,[StartTime]
+                           ,[IcsSrcName]
+                           ,[UID]
+                           ,[TimeZone]
+                           ,[EndTime]
+                           ,[RecurringRules]
+                           ,[JobCategoryId]
+                           ,[JobDescription])
+                     VALUES (@0, @1 null, @2, null, null, null, @3, null, null, null)
+                SELECT @@Identity As CalendarEventID
+            ";
+            var sqlUpdBookingRequest = @"
+                UPDATE  BookingRequest SET
+                        ServiceAddressID = @1,
+                        PreferredDateID = @2,
+                        AlternativeDate1ID = @3,
+                        AlternativeDate2ID = @4
+                WHERE   BookingRequestID = @0
+            ";
+            
+            // Inserting data into the database
+            using (var db = Database.Open("sqlloco")) {
+                // Save location as service location
+                var locationID = db.QueryValue(sqlInsServiceLocation, c.UserID,
+                    Request["street-address-line-1"],
+                    Request["street-address-line-2"],
+                    Request["city"],
+                    Request["state"],
+                    Request["zip"],
+                    1);
+                
+                // Save date-times as 'tentative' provider Events
+                var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    dt1Start, dt1End);
+                var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    dt2Start, dt2End);
+                var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    dt3Start, dt3End);
+                
+                // Updating BookingRequest with location and date-times
+                db.Execute(sqlUpdBookingRequest, bookingRequestID,
+                    locationID, dt1ID, dt2ID, dt3ID);
+            }
             
             // Return OK result
             CommonHelpers.ReturnJsonResult(0, null);
@@ -157,9 +278,11 @@
                 </li>
             </ul>
         </fieldset>
+        @*
         <fieldset class="recurring">
             <label><input type="checkbox" @CommonHelpers.IsChecked(Request["recurring"], "true") value="true" name="recurring"/>Make this appointment recurring</label>
         </fieldset>
+        *@
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#payment" class="button proceed-to-payment next main-action">Provide payment</button>
