@@ -1,4 +1,6 @@
 ﻿@using Braintree;
+@using System.Configuration;
+@using WebMatrix.Data;
 @{
     var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
@@ -34,15 +36,23 @@
     /*
      * Validation
      */
-    Validation.RequireFields("name-on-card", "street-address-line-1", "city", "state", "zip",
-        "card-number", "card-exp-month", "card-exp-year");
+    Validation.RequireField("name-on-card", "'Name as on card' is required");
+    Validation.RequireField("street-address-line-1", "Street address is required");
+    Validation.RequireField("city", "City is required");
+    Validation.RequireField("state", "State is required");
+    Validation.RequireField("zip", "Zip Postal Code is required");
+    Validation.RequireField("card-number", "Card number is required");
+    Validation.RequireField("card-exp-month", "Card expiration month is required");
+    Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
     
     if (IsPost && Validation.IsValid()){
         /*
          * Complext validations
          */
-        // TODO Add validation and database/braintree code to 'save-payment' and 'save-payment-as'
+        if (Request["save-payment"] == "true" && Request["save-payment-as"].IsEmpty()){
+            ModelState.AddError("save-payment-as", "To save the payment is required a name");
+        }
         
         if (ModelState.IsValid){
             // TODO Insert data into the database
@@ -66,41 +76,104 @@
                     ";
                     var TotalPrice = db.QueryValue(getBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     
+                    // User wants to save as 'my location'?
+                    string paymentNickName = null;
+                    if (Request["save-payment"] == "true" &&
+                        !String.IsNullOrWhiteSpace(Request["save-payment-as"])) {
+                        paymentNickName = Request["save-payment-as"];
+                    }
+                    
                     //TODO: check for existing user id or credit card
-                    /*BraintreeGateway gateway = new BraintreeGateway
+                    BraintreeGateway gateway;
+                    if (ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()) {
+                        //SandBox API keys for testing
+                        gateway = new BraintreeGateway 
+                        {
+                            Environment = Braintree.Environment.SANDBOX,
+                            MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
+                            PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
+                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"]
+                        };
+                    } else {
+                        gateway = new BraintreeGateway
+                        {
+                            Environment = Braintree.Environment.PRODUCTION,
+                            MerchantId = ConfigurationManager.AppSettings["Braintree.Production.MerchantId"],
+                            PublicKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"],
+                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"]
+                        };
+                    }
+                    TransactionRequest request = new TransactionRequest
                     {
-                        Environment = Braintree.Environment.PRODUCTION,
-                        MerchantId = "k74g8bpwwfmmfrcr",
-                        PublicKey = "m5qwzh34yxqk9n3f",
-                        PrivateKey = "hs7y2pgfkb697jqb"
-                    };*/
-                    //SandBox API keys for testing
-                    var gateway = new BraintreeGateway
-                    {
-                        Environment = Braintree.Environment.SANDBOX,
-                        MerchantId = "fn9phnknypvkgcfx",
-                        PublicKey = "yhqvg4cz74jwxtw5",
-                        PrivateKey = "q7vdftc9npxgkxpy"
+                        Amount = TotalPrice,
+                        CreditCard = new TransactionCreditCardRequest
+                        {
+                            Token = paymentNickName,
+                            CardholderName = Request["name-on-card"],
+                            Number = Request["card-number"],
+                            ExpirationDate = Request["card-exp-month"] + Request["card-exp-year"],
+                        },
+                        Customer = new CustomerRequest
+                        {
+                            Id = c.UserID.ToString()
+                        },
+                        BillingAddress = new AddressRequest
+                        {
+                            StreetAddress = Request["street-address-line-1"],
+                            ExtendedAddress = Request["street-address-line-2"],
+                            Locality = Request["city"],
+                            Region = Request["state"],
+                            PostalCode = Request["zip"],
+                            CountryCodeAlpha2 = "US"
+                        },
+                        Options = new TransactionOptionsRequest
+                        {
+                            StoreInVaultOnSuccess = true,
+                            AddBillingAddressToPaymentMethod = true
+                        }
                     };
-
-                    var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
-                    var TrData = gateway.Transaction.SaleTrData(
-                        // key information about the transaction
-                        new TransactionRequest { Amount = TotalPrice },
-                        // the redirect destination, in this case, the Confirm action below
-                        UrlUtil.LangPath + "Payment/Confirmation/");  
                     
-                    /*
-                     * Create, save and send Message
-                     */
+                    Result<Transaction> result = null;
+                    try{
+                        result = gateway.Transaction.Sale(request);
+                    } catch{}
                     
+                    // Checking results:
+                    if (result == null) {
+                        ModelState.AddFormError("Unexpected error during credit card verification");
+                    } else if (!result.IsSuccess()) {
+                        ModelState.AddFormError(result.Message);
+                        foreach (var error in result.Errors.All()) {
+                            ModelState.AddFormError(error.Message);
+                        }
+                    }
+                    
+                    if (ModelState.IsValid) {
+                        /*
+                         * Save Braintree Transaction ID in the Booking Request
+                         */
+                        db.Execute(@"
+                            UPDATE  BookingRequest
+                            SET     PaymentTransactionID = @1
+                            WHERE   BookingRequestID = @0
+                        ", bookingRequestID, result.Transaction.Id);
+                        
+                        /*
+                         * Create, save and send Message
+                         */
+                    }
                     
                 } catch (Exception ex) {
                     CommonHelpers.ReturnJsonError(-1, ex.Message);
+                    if (Context.IsDebuggingEnabled) {
+                        throw ex;
+                    }
                 }
             }
-            // Return OK result
-            CommonHelpers.ReturnJsonResult(0, null);
+            if (ModelState.IsValid) {
+                // Return OK result
+                CommonHelpers.ReturnJsonResult(0, null);
+            }
         }
     }
     
@@ -202,7 +275,7 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
-                        <option value="ca">California</option>
+                        @CommonHelpers.StateProvinceOptions(0)
                     </select></label></li>
             <li class="zip">
                 <label>Zip Code:<input type="text" name="zip" @Validation.GetHtml("zip")/></label>
@@ -212,13 +285,13 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="card-exp"><label>Exp:<select name="card-exp-month" @Validation.GetHtml("card-exp-month")>
-                        <option value="4">Apr</option>
+                        @CommonHelpers.MonthOptions()
                     </select></label><select name="card-exp-year">
-                        <option value="2014">2014</option>
+                        @CommonHelpers.CardYearOptions()
                     </select></li>
             <li class="save-to-my-payments">
-                <label class="save-payment"><input type="checkbox" name="save-payment"/>Save</label>
-                <label class="save-payment-as">payment details as:<input type="text" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
+                <label class="save"><input type="checkbox" name="save-payment"/>Save</label>
+                <label class="save-as">payment details as:<input type="text" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
             </li>
         </ul>
     </fieldset>

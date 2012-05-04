@@ -1485,6 +1485,7 @@ html.boxshadow #loginBox .field-validation-error{
 .user-rating-summary-widget {
     display: inline-block;
     height: 70px;
+    overflow: hidden;
 }
 .user-rating-summary-widget > ul {
     list-style: none;

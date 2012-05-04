@@ -20,6 +20,17 @@
         }
     }
 }
+@helper MonthOptions(){
+    for (var i = 1; i < 13; i++) {
+        <option value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
+    }
+}
+@helper CardYearOptions(){
+    var year = DateTime.Today.Year;
+    for (var i = 0; i < 10; i++) {
+        <option value="@(year + i)">@(year + 1)</option>
+    }
+}
 @helper IsChecked(string value1, string value2){
     @Html.Raw(value1 == value2 ? "checked='checked'" : "")
 }
