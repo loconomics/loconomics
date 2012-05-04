@@ -182,6 +182,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule ajax ajax-box" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>

@@ -33,6 +33,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Payment/" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="billing-info box">
         <legend>Billing information:</legend>
