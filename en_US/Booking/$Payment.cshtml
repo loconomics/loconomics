@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Braintree;
+@{
     var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
     var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
@@ -30,21 +31,64 @@
             "&PositionID=" + pos.PositionID.ToString());
     }
 
-    // TODO Add validation rules
+    /*
+     * Validation
+     */
+    Validation.RequireFields("name-on-card", "street-address-line-1", "city", "state", "zip",
+        "card-number", "card-exp-month", "card-exp-year");
+    Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
     
     if (IsPost && Validation.IsValid()){
-        // TODO Add manual validation checks and prepare data
+        /*
+         * Complext validations
+         */
+        // TODO Add validation and database/braintree code to 'save-payment' and 'save-payment-as'
         
         if (ModelState.IsValid){
             // TODO Insert data into the database
             
             using (var db = Database.Open("sqlloco")) {
                 try {
-                    
                     /*
                      * Send customer payment data to Braintree, 
                      * using our UserID as identifier.
                      */
+                    // Get data from the BookingRequest
+                    var getBookingPrice = @"
+                        SELECT  TOP 1
+                                P.TotalPrice
+                        FROM    BookingRequest As B
+                                 INNER JOIN
+                                PricingEstimate As P
+                                  ON P.PricingEstimateID = B.PricingEstimateID
+                        WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
+                                 AND B.PositionID = @2 AND B.BookingRequestID = @3
+                    ";
+                    var TotalPrice = db.QueryValue(getBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                    
+                    //TODO: check for existing user id or credit card
+                    /*BraintreeGateway gateway = new BraintreeGateway
+                    {
+                        Environment = Braintree.Environment.PRODUCTION,
+                        MerchantId = "k74g8bpwwfmmfrcr",
+                        PublicKey = "m5qwzh34yxqk9n3f",
+                        PrivateKey = "hs7y2pgfkb697jqb"
+                    };*/
+                    //SandBox API keys for testing
+                    var gateway = new BraintreeGateway
+                    {
+                        Environment = Braintree.Environment.SANDBOX,
+                        MerchantId = "fn9phnknypvkgcfx",
+                        PublicKey = "yhqvg4cz74jwxtw5",
+                        PrivateKey = "q7vdftc9npxgkxpy"
+                    };
+
+                    var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
+                    var TrData = gateway.Transaction.SaleTrData(
+                        // key information about the transaction
+                        new TransactionRequest { Amount = TotalPrice },
+                        // the redirect destination, in this case, the Confirm action below
+                        UrlUtil.LangPath + "Payment/Confirmation/");  
                     
                     /*
                      * Create, save and send Message
@@ -65,7 +109,6 @@
      */
     var getBookingRequest = @"
         SELECT  TOP 1
-                B.PricingEstimateID,
                 B.SpecialRequests, B.PricingEstimateID,
                 L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
                 SP.StateProvinceName, SP.StateProvinceCode,
@@ -174,8 +217,8 @@
                         <option value="2014">2014</option>
                     </select></li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" name="save-payment"/>Save</label>
-                <label class="save-as">payment details as:<input type="text" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
+                <label class="save-payment"><input type="checkbox" name="save-payment"/>Save</label>
+                <label class="save-payment-as">payment details as:<input type="text" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
             </li>
         </ul>
     </fieldset>
