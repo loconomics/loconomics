@@ -82,7 +82,7 @@
         if (ModelState.IsValid){
             var sqlInsServiceLocation = @"
                 INSERT INTO [serviceaddress]
-                           [UserID]
+                           ([UserID]
                            ,[PositionID]
                            ,[AddressTypeID]
                            ,[NickName]
@@ -106,7 +106,7 @@
                            ,[Active])
                      VALUES (@0, 0, 12, null, @1, @2, @3, @4, @5, @6, 
                              null, null, null, 0, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
-                SELECT @@Identity As ServiceAddressID
+                SELECT Cast(@@Identity As int) As ServiceAddressID
             ";
             var sqlInsCalendarEvent = @"
                 INSERT INTO [CalendarEvents]
@@ -121,8 +121,8 @@
                            ,[RecurringRules]
                            ,[JobCategoryId]
                            ,[JobDescription])
-                     VALUES (@0, @1 null, @2, null, null, null, @3, null, null, null)
-                SELECT @@Identity As CalendarEventID
+                     VALUES (@0, @1, null, @2, null, null, null, @3, null, null, null)
+                SELECT Cast(@@Identity As int) As CalendarEventID
             ";
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET

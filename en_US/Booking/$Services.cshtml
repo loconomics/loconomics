@@ -108,7 +108,7 @@
                        ,[UpdatedDate]
                        ,[ModifiedBy])
                 VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
-            SELECT @@Identity As BookingRequestID
+            SELECT Cast(@@Identity As int) As BookingRequestID
         ";
         
         // Only if we have a PricingEstimateID all is fine
@@ -154,7 +154,7 @@
                      * Do BookingRequestID available for next wizard steps
                      */
                     // Saving it at user Session
-                    Session["BookingRequestID"] = bookingRequestID;
+                    Session["BookingRequestID"] = (int)bookingRequestID;
                     
                     /*
                      * Create, save and send Message
