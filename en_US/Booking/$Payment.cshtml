@@ -64,7 +64,8 @@
      * Get Data
      */
     var getBookingRequest = @"
-        SELECT  B.PricingEstimateID,
+        SELECT  TOP 1
+                B.PricingEstimateID,
                 B.SpecialRequests, B.PricingEstimateID,
                 L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
                 SP.StateProvinceName, SP.StateProvinceCode,
@@ -94,10 +95,43 @@
         WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
                  AND B.PositionID = @2 AND B.BookingRequestID = @3
     ";
-    dynamic summary;
+     var getServicesIncluded = @"
+        SELECT  S.Name
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ServiceAttribute As S
+                  ON S.ServiceAttributeID = P.ServiceAttributeID
+        WHERE   P.PricingEstimateID = @0
+                 AND S.CountryId = @1 AND S.LanguageID = @2
+    ";
+    var getPricingVars = @"
+        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingVariable As V
+                  ON V.PricingVariableID = P.PricingVariableID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    var getPricingOptions = @"
+        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingOption As V
+                  ON V.PricingOptionID = P.PricingOptionID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    dynamic summary, services, pvars, poptions;
     using (var db = Database.Open("sqlloco")) {
-        summary = db.QuerySingle(getBookingRequest, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+        summary     = db.QuerySingle(getBookingRequest, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+        services    = db.Query(getServicesIncluded, summary.PricingEstimateID, 1, 1);
+        pvars       = db.Query(getPricingVars, summary.PricingEstimateID, 1, 1);
+        poptions    = db.Query(getPricingOptions, summary.PricingEstimateID, 1, 1);
     }
+    // auxiliar vars in view generation
+    int i = 0;
+    string iprint = "";
 }
 <p class="info">
     Please review the summary and provide your payment details below. You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
@@ -179,11 +213,23 @@
         </div>
     </fieldset>
     <fieldset class="services-summary box">
-        <legend>Summary of services to be performed:</legend>
+        <le
+                }gend>Summary of services to be performed:</legend>
         <ul>
             <li class="services-list">
                 <strong>Services:</strong>
-                Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets
+                @*Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets*@
+                @{
+                    i = 0;
+                    iprint = "";
+                    foreach (var service in services) {
+                        if (i > 0) {
+                            iprint = ", ";
+                        }
+                        i++;
+                        @(iprint + service.Name)
+                    }
+                }
             </li>
             <li class="special-instructions">
                 <strong>Special instructions:</strong>
@@ -196,10 +242,34 @@
             </li>
             <li class="details">
                 <strong>Details:</strong>
-                Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.
+                @*Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.*@
+                @{
+                    i = 0;
+                    iprint = "";
+                    foreach (var pitem in pvars) {
+                        if (i > 0) {
+                            iprint = "; ";
+                        }
+                        i++;
+                        @(iprint + pitem.Name + " " + @pitem.Quantity)
+                    }
+                    iprint = "";
+                    if (pvars.Count > 0) {
+                        iprint = "; ";
+                    }
+                    i = 0;
+                    foreach (var pitem in poptions) {
+                        if (i > 0) {
+                            iprint = "; ";
+                        }
+                        i++;
+                        @(iprint + pitem.Name + "" + @pitem.Quantity)
+                    }
+                 }
             </li>
         </ul>
-        @*<div class="actions">
+        @*<div class="acti
+                }ons">
             <button class="button edit">Edit</button>
         </div>*@
     </fieldset>
