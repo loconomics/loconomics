@@ -92,7 +92,7 @@
                             Environment = Braintree.Environment.SANDBOX,
                             MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
                             PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
-                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"]
+                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PrivateKey"]
                         };
                     } else {
                         gateway = new BraintreeGateway
@@ -100,7 +100,7 @@
                             Environment = Braintree.Environment.PRODUCTION,
                             MerchantId = ConfigurationManager.AppSettings["Braintree.Production.MerchantId"],
                             PublicKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"],
-                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"]
+                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PrivateKey"]
                         };
                     }
                     TransactionRequest request = new TransactionRequest
