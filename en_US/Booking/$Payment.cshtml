@@ -2,6 +2,9 @@
 @using System.Configuration;
 @using WebMatrix.Data;
 @{
+    // true to testing, false to production/use braintree
+    var TESTING_EMULATEBRAINTREE = true;
+    
     var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
     var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
@@ -123,80 +126,93 @@
                         paymentNickName = Request["save-payment-as"];
                     }
                     
-                    //TODO: check for existing user id or credit card
-                    BraintreeGateway gateway;
-                    if (ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()) {
-                        //SandBox API keys for testing
-                        gateway = new BraintreeGateway 
-                        {
-                            Environment = Braintree.Environment.SANDBOX,
-                            MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
-                            PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
-                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PrivateKey"]
-                        };
+                    var transactionID = "";
+                    
+                    if (TESTING_EMULATEBRAINTREE) {
+                        // TESTING, emulate Braintree generating false transactionID,
+                        // avoiding comunicate with them.
+                        transactionID = "TEST:" + Guid.NewGuid().ToString();
                     } else {
-                        gateway = new BraintreeGateway
-                        {
-                            Environment = Braintree.Environment.PRODUCTION,
-                            MerchantId = ConfigurationManager.AppSettings["Braintree.Production.MerchantId"],
-                            PublicKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"],
-                            PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PrivateKey"]
-                        };
-                    }
-                    TransactionRequest request = new TransactionRequest
-                    {
-                        Amount = TotalPrice,
-                        CreditCard = new TransactionCreditCardRequest
-                        {
-                            Token = paymentNickName,
-                            CardholderName = Request["name-on-card"],
-                            Number = Request["card-number"],
-                            ExpirationDate = Request["card-exp-month"] + Request["card-exp-year"],
-                        },
-                        Customer = new CustomerRequest
-                        {
-                            Id = c.UserID.ToString()
-                        },
-                        BillingAddress = new AddressRequest
-                        {
-                            StreetAddress = Request["street-address-line-1"],
-                            ExtendedAddress = Request["street-address-line-2"],
-                            Locality = Request["city"],
-                            Region = Request["state"],
-                            PostalCode = Request["zip"],
-                            CountryCodeAlpha2 = "US"
-                        },
-                        Options = new TransactionOptionsRequest
-                        {
-                            StoreInVaultOnSuccess = true,
-                            AddBillingAddressToPaymentMethod = true
+                        // REAL Braintree Code
+                        //TODO: check for existing user id or credit card
+                        BraintreeGateway gateway;
+                        if (ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()) {
+                            //SandBox API keys for testing
+                            gateway = new BraintreeGateway 
+                            {
+                                Environment = Braintree.Environment.SANDBOX,
+                                MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
+                                PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
+                                PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PrivateKey"]
+                            };
+                        } else {
+                            gateway = new BraintreeGateway
+                            {
+                                Environment = Braintree.Environment.PRODUCTION,
+                                MerchantId = ConfigurationManager.AppSettings["Braintree.Production.MerchantId"],
+                                PublicKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"],
+                                PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PrivateKey"]
+                            };
                         }
-                    };
+                        TransactionRequest request = new TransactionRequest
+                        {
+                            Amount = TotalPrice,
+                            CreditCard = new TransactionCreditCardRequest
+                            {
+                                Token = paymentNickName,
+                                CardholderName = Request["name-on-card"],
+                                Number = Request["card-number"],
+                                ExpirationDate = Request["card-exp-month"] + Request["card-exp-year"],
+                            },
+                            Customer = new CustomerRequest
+                            {
+                                Id = c.UserID.ToString()
+                            },
+                            BillingAddress = new AddressRequest
+                            {
+                                StreetAddress = Request["street-address-line-1"],
+                                ExtendedAddress = Request["street-address-line-2"],
+                                Locality = Request["city"],
+                                Region = Request["state"],
+                                PostalCode = Request["zip"],
+                                CountryCodeAlpha2 = "US"
+                            },
+                            Options = new TransactionOptionsRequest
+                            {
+                                StoreInVaultOnSuccess = true,
+                                AddBillingAddressToPaymentMethod = true
+                            }
+                        };
                     
-                    Result<Transaction> result = null;
-                    try{
-                        result = gateway.Transaction.Sale(request);
-                    } catch{}
+                        Result<Transaction> result = null;
+                        try{
+                            result = gateway.Transaction.Sale(request);
+                        } catch{}
                     
-                    // Checking results:
-                    if (result == null) {
-                        ModelState.AddFormError("Unexpected error during credit card verification");
-                    } else if (!result.IsSuccess()) {
-                        ModelState.AddFormError(result.Message);
-                        foreach (var error in result.Errors.All()) {
-                            ModelState.AddFormError(error.Message);
+                        // Checking results:
+                        if (result == null) {
+                            ModelState.AddFormError("Unexpected error during credit card verification");
+                        } else if (!result.IsSuccess()) {
+                            ModelState.AddFormError(result.Message);
+                            foreach (var error in result.Errors.All()) {
+                                ModelState.AddFormError(error.Message);
+                            }
+                        } else {
+                            transactionID = result.Transaction.Id;
                         }
                     }
                     
                     if (ModelState.IsValid) {
                         /*
-                         * Save Braintree Transaction ID in the Booking Request
+                         * Save Braintree Transaction ID in the Booking Request,
+                         * and updating State to 'Booking Request Completed'
                          */
                         db.Execute(@"
                             UPDATE  BookingRequest
-                            SET     PaymentTransactionID = @1
+                            SET     PaymentTransactionID = @1,
+                                    BookingRequestStatusID = 2 -- Completed
                             WHERE   BookingRequestID = @0
-                        ", bookingRequestID, result.Transaction.Id);
+                        ", bookingRequestID, transactionID);
                         
                         /*
                          * Create, save and send Message
@@ -454,6 +470,6 @@
         </table>
     </fieldset>
     <fieldset class="actions">
-        <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Dashboard/MyProviders/")" class="button complete-booking next finish main-action">Complete booking</button>
+        <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Dashboard/Mailbox/")" class="button complete-booking next finish main-action">Complete booking</button>
     </fieldset>
 </form>
