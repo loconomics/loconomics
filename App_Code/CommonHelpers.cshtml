@@ -9,6 +9,9 @@
     <option value="ca">California</option>
 }
 @helper StateProvinceOptions(int selectedStateID){
+    @StateProvinceOptions(selectedStateID.ToString())
+}
+@helper StateProvinceOptions(string selectedStateID){
     var sql = @"
         SELECT StateProvinceID, StateProvinceName
         FROM    StateProvince
@@ -16,20 +19,20 @@
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var state in db.Query(sql, 1)){
-            <option value="@state.StateProvinceID" @IsSelected(selectedStateID.ToString(), state.StateProvinceID.ToString())>@state.StateProvinceName</option>
+            <option value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID.ToString())>@state.StateProvinceName</option>
         }
     }
 }
-@helper MonthOptions(){
+@helper MonthOptions(string selectedMonth){
     for (var i = 1; i < 13; i++) {
-        <option value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
+        <option @IsSelected(selectedMonth, i.ToString()) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
     }
 }
-@helper CardYearOptions(){
+@helper CardYearOptions(string selectedYear){
     var year = DateTime.Today.Year;
     var limitYear = year + 10;
     for (; year < limitYear; year++) {
-        <option value="@(year)">@(year)</option>
+        <option @IsSelected(selectedYear, year.ToString()) value="@(year)">@(year)</option>
     }
 }
 @helper IsChecked(string value1, string value2){
