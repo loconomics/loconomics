@@ -33,10 +33,9 @@ $(document).ready(function () {
         }, 600);
 
         $.ajax({
-            url: UrlUtil.LangPath + "Booking/$Payment/",
+            // Request $Payment partial page, with all the original url parameters
+            url: UrlUtil.LangPath + "Booking/$Payment/" + location.search,
             type: 'GET',
-            data: { 'ProviderID': getURLParameter('ProviderID'),
-                    'PositionID': getURLParameter('PositionID') },
             success: function (data, text, jx) {
                 // load tab content
                 $('#payment').html(data);
