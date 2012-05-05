@@ -53,7 +53,7 @@
                      --  relationship at providerpricingvariableinputs (pi) and proper conditional values
                      pi.PricingDataInput is not null
                       AND
-                     pi.Active = 1 AND pi.UserID = @5
+                     pi.Active = 1 AND pi.ProviderUserID = @5
                     )
         ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
         
@@ -92,15 +92,15 @@
                      AND
                     (
                      -- If Provider Input is not Required, it means is an informational variable -without calculation-,
-                     --  no needs relationed record at providerpricingvariableinputs (pi) table
+                     --  no needs relationed record at providerpricingoptioninputs (pi) table
                      pr.ProviderInputDataRequired = 0
                       OR
                      -- Else, it means a Provider Input is Required in order to do calculations: because of this
                      --  the variable record is only showed/returned if there is a Provider Input Value, with the
-                     --  relationship at providerpricingvariableinputs (pi) and proper conditional values
+                     --  relationship at providerpricingoptioninputs (pi) and proper conditional values
                      pi.PricingDataInput is not null
                       AND
-                     pi.Active = 1 AND pi.UserID = @5
+                     pi.Active = 1 AND pi.ProviderUserID = @5
                     )
         ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
     }

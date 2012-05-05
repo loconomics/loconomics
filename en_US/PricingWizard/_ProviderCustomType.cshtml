@@ -21,7 +21,7 @@
                      LEFT JOIN
                     providerpricingvariableinputs as pi
                       ON pv.PricingVariableID = pi.PricingVariableID
-                       AND pi.Active = 1 AND pi.UserID = @5
+                       AND pi.Active = 1 AND pi.ProviderUserID = @5
             WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
                      AND 
                     pv.ClientTypeID=@2 AND pv.PositionID=@3
@@ -42,7 +42,7 @@
                      LEFT JOIN
                     providerpricingoptioninputs as pi
                       ON pr.PricingOptionID = pi.PricingOptionID
-                       AND pi.Active = 1 AND pi.UserID = @5
+                       AND pi.Active = 1 AND pi.ProviderUserID = @5
             WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
                      AND 
                     pr.ClientTypeID=@2 AND pr.PositionID=@3
@@ -61,12 +61,12 @@
                         UpdatedDate = getdate(),  
                         ModifiedBy = 'sys',
                         Active = 1
-                WHERE   UserId = @1 AND PricingVariableID = @2
+                WHERE   ProviderUserId = @1 AND PricingVariableID = @2
 
                IF @@rowcount = 0
                BEGIN
                     INSERT INTO providerpricingvariableinputs (PricingDataInput,
-                        UserID, PricingVariableID, CreatedDate, UpdatedDate, 
+                        ProviderUserID, PricingVariableID, CreatedDate, UpdatedDate, 
                         ModifiedBy, Active)
                     VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
                END
@@ -74,7 +74,7 @@
         ";
         var sqlDelVar = @"
             DELETE FROM providerpricingvariableinputs
-            WHERE       UserId = @0 AND PricingVariableID = @1
+            WHERE       ProviderUserId = @0 AND PricingVariableID = @1
         ";
         var sqlSetOpt = @"
             BEGIN TRAN
@@ -83,12 +83,12 @@
                         UpdatedDate = getdate(),  
                         ModifiedBy = 'sys',
                         Active = 1
-                WHERE   UserId = @1 AND PricingOptionID = @2
+                WHERE   ProviderUserId = @1 AND PricingOptionID = @2
 
                IF @@rowcount = 0
                BEGIN
                     INSERT INTO providerpricingoptioninputs (PricingDataInput,
-                        UserID, PricingOptionID, CreatedDate, UpdatedDate, 
+                        ProviderUserID, PricingOptionID, CreatedDate, UpdatedDate, 
                         ModifiedBy, Active)
                     VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
                END
@@ -96,7 +96,7 @@
         ";
         var sqlDelOpt = @"
             DELETE FROM providerpricingoptioninputs
-            WHERE       UserId = @0 AND PricingOptionID = @1
+            WHERE       ProviderUserId = @0 AND PricingOptionID = @1
         ";
         
         using (var db = Database.Open("sqlloco")){
