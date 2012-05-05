@@ -21,11 +21,6 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile #main div.feature img { float: left; width: 45px; height: auto; }
 .profile #main div.feature blockquote { margin: 0 0 14px 54px; }
 
-.profile #main div.work ul.services { margin: 0; padding: 0; list-style-type: none; background: url('../img/notebookp.jpg') no-repeat top left; font-family: "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive;  color: #461864; font-size: 16px; }
-.profile #main div.work ul.services ul { list-style-image: url('../img/bullet.png'); }
-.profile #main div.work ul.services dl { padding: 29px 55px; line-height: 182%; }
-.profile #main div.work ul.services dl ul { margin: 0; }
-
 /**********************************/
 /****** COMMON ********************/
 /**********************************/

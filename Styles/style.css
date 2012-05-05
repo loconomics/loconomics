@@ -618,12 +618,15 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 
 .home #secondary { position: relative; margin: 0 25px 0 600px; text-align: left; }
 .home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; /*width: 114px;*/ font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
+
+/* Unused spotligh class, TODO: review */
+/*
 .home #secondary .spotlight { z-index: 1; position: relative; padding: 20px; border: 3px solid #46aeba; background: #FFF; }
-.home #secondary .spotlight .rating { /*position: absolute;*/ top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
+.home #secondary .spotlight .rating { top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
 .home #secondary .spotlight .id { float: left; }
 .home #secondary .spotlight .id img { width: 113px; }
 .home #secondary .spotlight .lang { margin-left: 124px; min-height: 113px; }
-.home #secondary .spotlight .lang h3 { margin: 4px 0; font: 22px normal "Architects Daughter","Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive; }
+.home #secondary .spotlight .lang h3 { margin: 4px 0; font: 22px normal "Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive; }
 .home #secondary .spotlight .lang h3 a { text-decoration: none; color: #461864; }
 .home #secondary .spotlight .lang p { margin: 0; color: #00989A; }
 .home #secondary .spotlight .lang th { font-size: 12px; font-weight: normal; color: #00989A; }
@@ -634,6 +637,7 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .home #secondary .spotlight .buttons { text-align: right; }
 .home #secondary .spotlight p.creds { margin: 8px 0; font-size: 12px; vertical-align: bottom; }
 .home #secondary .spotlight a.fanciful { font-size: 10px; }
+*/
 
 .home #secondary .video { margin-top: 40px; padding-top: 0; background: url('../img/feature-border.gif') no-repeat top right; }
 .home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
