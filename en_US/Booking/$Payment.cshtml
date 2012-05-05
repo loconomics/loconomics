@@ -10,7 +10,7 @@
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
-        if (IsPost){
+        if (Request.IsAjaxRequest()){
             CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
             throw new Exception(inputdataerrormessage);
@@ -53,20 +53,36 @@
         if (Request["save-payment"] == "true" && Request["save-payment-as"].IsEmpty()){
             ModelState.AddError("save-payment-as", "To save the payment is required a name");
         }
+        using (var db = Database.Open("sqlloco")) {
+
+            // Validate that Zip Postal Code is valid, and get the matching ID to be used later
+            var sqlGetPostalCodeID = @"
+                SELECT  PostalCodeID
+                FROM    PostalCode As PC
+                WHERE   PC.PostalCode = @0
+                         AND
+                        CountryID = @1
+                         AND
+                        StateProvinceID = @2
+            ";
+            var postalCodeID = db.QueryValue(sqlGetPostalCodeID, Request["zip"], 1, Request["state"]);
+            if (postalCodeID == null) {
+                ModelState.AddError("zip", "Zip Postal Code is not valid");
+            }
         
-        if (ModelState.IsValid){
-            // TODO Insert data into the database
-            
-            using (var db = Database.Open("sqlloco")) {
+            if (ModelState.IsValid){
                 try {
                     /*
-                     * Send customer payment data to Braintree, 
-                     * using our UserID as identifier.
+                     * Get data from our database about BookingRequest in order to
+                     * do further operations -braintree, timezones-
                      */
                     // Get data from the BookingRequest
-                    var getBookingPrice = @"
+                    var sqlGetBookingPrice = @"
                         SELECT  TOP 1
-                                P.TotalPrice
+                                P.TotalPrice,
+                                B.PreferredDateID,
+                                B.AlternateDate1ID,
+                                B.AlternateDate2ID
                         FROM    BookingRequest As B
                                  INNER JOIN
                                 PricingEstimate As P
@@ -74,8 +90,32 @@
                         WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
                                  AND B.PositionID = @2 AND B.BookingRequestID = @3
                     ";
-                    var TotalPrice = db.QueryValue(getBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                    var BookingRequest = db.QuerySingle(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                    var TotalPrice = BookingRequest.TotalPrice;
                     
+                    /*
+                     * Updating events created by the user for this Booking setting the Time Zone we found 
+                     * looking in our Postal Codes table.
+                     */
+                    var sqlGetTimeZone = @"
+                        SELECT  TimeZone
+                        FROM    PostalCode
+                        WHERE   PostalCodeID = @0
+                    ";
+                    var sqlUpdCalendarEvent = @"
+                        UPDATE  CalendarEvents
+                        SET     TimeZone = @1
+                        WHERE   Id = @0
+                    ";
+                    var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+                    db.Execute(sqlUpdCalendarEvent, BookingRequest.PreferredDateID, timeZone.ToString());
+                    db.Execute(sqlUpdCalendarEvent, BookingRequest.AlternateDate1ID, timeZone.ToString());
+                    db.Execute(sqlUpdCalendarEvent, BookingRequest.AlternateDate2ID, timeZone.ToString());
+                    
+                    /*
+                     * Send customer payment data to Braintree, 
+                     * using our UserID as identifier.
+                     */
                     // User wants to save as 'my location'?
                     string paymentNickName = null;
                     if (Request["save-payment"] == "true" &&
