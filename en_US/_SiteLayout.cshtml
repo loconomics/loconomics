@@ -6,8 +6,9 @@
            HttpRequest request = HttpContext.Current.Request;
            request.Cookies.Set(myHttpCookie);
 
+           // TODO: TOREVIEW
            if(userCulture == "es-es"){
-               Response.Redirect(UrlUtil.LangPath);
+               Response.Redirect(UrlUtil.AppPath + "en_US/");
            }
     }
 }

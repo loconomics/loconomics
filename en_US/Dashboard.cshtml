@@ -1,0 +1,121 @@
+﻿@{
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Page.Title = "Make your life better!";
+    
+    var u = DashboardFunctions.GetUserRow();
+    
+    /*
+     * Selecting page to render dynamically
+     */
+    var page = UrlData[0].ToLower();
+    var fileToRender = "";
+    
+    if (String.IsNullOrEmpty(page)) {
+        Response.Redirect(UrlUtil.LangPath + "Dashboard/Mailbox/");
+    }
+
+    var pages = new List<string> {
+        "account", "calendar", "mailbox", "myclients", "myproviders", "positions", "preferences",
+        "ressources", "tools", "bookings"
+    };
+    if (pages.Contains(page)) {
+        fileToRender = "_DashboardContent/$" + page + ".cshtml";
+        // Set menu option selected
+        PageData["menu-item"] = page;
+    } else {
+        string file = "_DashboardContent/" + string.Join("/", UrlData.ToArray<string>()) + ".cshtml";
+        if (File.Exists(file)) {
+            fileToRender = file;
+        } else {
+            throw new HttpException(404, "Page not found");
+        }
+    }
+}
+@helper menu(string item){
+    @(DashboardFunctions.CssCurrent(item, PageData["menu-item"]))
+}
+        <!-- Dashboard -->
+        <div class="provider dashboard editable">
+            <div id="container" class="clearfix">
+                
+                <div id="highlights">
+                    <h1 class="greeting">Hello, <span id="username">@PageData["userow"].FirstName</span>!</h1>
+                    <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
+                    <a id="changephoto" href="#">Change Photo</a>
+                    
+                    <div class="profile-progress progress-bar">
+                        <span>Your profile is</span>
+                        <span class="text"><span class="percent-done">40%</span> complete</span>
+                        <span class="total"><span class="percent-done"></span></span>
+                    </div>
+                </div><!-- highlights -->
+                
+                <div id="dashboard-help">
+                    <a class="skip" href="#main">Skip the help.</a>
+                    <p>Welcome to your dashboard! Here you'll find everything you need to make your profile great, attract customers,
+                        and manage your business. Please ensure you review all alerts ferquently, and let us know if you need any help.</p>
+                    <div id="dashboard-alerts">
+                        <a class="more previous" href="#previous">Previous alerts</a>
+                        <ul>
+                            <li>
+                                <h5>Alert 1: Complete your calendar</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                            <li>
+                                <h5>Alert 2: Fill out your pricing wizard</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                            <li>
+                                <h5>Alert 3: Fill out your pricing wizard</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                            <li>
+                                <h5>Alert 4: Fill out your pricing wizard</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                            <li>
+                                <h5>Alert 5: Fill out your pricing wizard</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                            <li>
+                                <h5>Alert 6: Fill out your pricing wizard</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
+                                <a class="more" href="#">Complete &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <a class="more next" href="#next">Next alerts</a>
+                    </div><!-- dashboard-alerts -->
+                    <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
+                </div><!-- dashboard-help -->
+                
+                <div id="nav">
+                    <ul id="profile-menu" class="autofill-submenu">
+                        <li class="@menu("mailbox")"><a href="@(UrlUtil.LangPath)Dashboard/Mailbox/">Inbox</a></li>
+                        @if (u.IsProvider){
+                        <li class="@menu("bookings")"><a href="@(UrlUtil.LangPath)Dashboard/Bookings/">Bookings</a></li>
+                        @*<li class="@menu("calendar")"><a href="@(UrlUtil.LangPath)Dashboard/Calendar/">Calendar</a></li>*@
+                        <li class="@menu("positions")"><a href="@(UrlUtil.LangPath)Dashboard/Positions/">Positions</a></li>
+                        <li class="@menu("myclients")"><a href="@(UrlUtil.LangPath)Dashboard/MyClients/">My Clients</a></li>
+                        <li class="@menu("tools")"><a href="@(UrlUtil.LangPath)Dashboard/Tools/">Tools</a></li>
+                        }
+                        @if (u.IsCustomer){
+                        <li class="@menu("myproviders")"><a href="@(UrlUtil.LangPath)Dashboard/MyProviders/">My Providers</a></li>
+                        }
+                        <li class="@menu("preferences")"><a href="@(UrlUtil.LangPath)Dashboard/Preferences/">Preferences</a></li>
+                        <li class="@menu("account")"><a href="@(UrlUtil.LangPath)Dashboard/Account/">Account</a></li>
+                    </ul>
+                </div><!-- nav -->
+            
+                <div id="main" class="tabbed folders">
+    
+                    @RenderPage(fileToRender)
+        
+                </div><!-- #main -->
+            
+            </div><!-- container -->
+        </div><!-- Dashboard -->

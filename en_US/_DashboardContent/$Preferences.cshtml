@@ -1,9 +1,6 @@
 ﻿@{
     CommonHelpers.SecurePage();
     
-    Layout = "_Layout.cshtml";
-    Page.Title = "Make your life better!";
-    
     PageData["userow"] = DashboardFunctions.GetUserRow();
     PageData["menu-item"] = "preferences";
 }
@@ -21,7 +18,7 @@
             
             <div id="preferences-communication-mobile" class="tab-body current">
                 Mobile <!-- TODO here must be the back-end content -->
-                @RenderPage("_PreferencesCommunication.cshtml")
+                @RenderPage("$PreferencesCommunication.cshtml")
             </div><!-- #preferences-communication-mobile -->
             <div id="preferences-communication-email" class="tab-body">
                 Email <!-- TODO here must be the back-end content -->

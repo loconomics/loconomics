@@ -1,9 +1,6 @@
 ﻿@{
     CommonHelpers.SecurePage();
     
-    Layout = "_Layout.cshtml";
-    Page.Title = "Make your life better!";
-    
     var u = DashboardFunctions.GetUserRow();
     var poss = DashboardFunctions.GetUserPos();
     PageData["menu-item"] = "positions";
@@ -50,23 +47,23 @@
                 @RenderPage("$PositionsServices.cshtml")                
             </div><!-- #@("position"+n)-services -->
             <div id="@("position"+n)-availability" class="tab-body">
-                @RenderPage("_PositionsAvailability.cshtml")                
+                @RenderPage("$PositionsAvailability.cshtml")                
             </div><!-- #@("position"+n)-availability -->
             <div id="@("position"+n)-pricing" class="tab-body">
                 @*@RenderPage("_PricingWizard.cshtml")*@
                 @RenderPage("$PositionsPricing.cshtml")
             </div><!-- #@("position"+n)-pricing -->
             <div id="@("position"+n)-photos" class="tab-body">
-                @RenderPage("_PositionsPhotos.cshtml")
+                @RenderPage("$PositionsPhotos.cshtml")
             </div><!-- #@("position"+n)-photos -->
             <div id="@("position"+n)-locations" class="tab-body">
-                @RenderPage("_PositionsLocations.cshtml")
+                @RenderPage("$PositionsLocations.cshtml")
             </div><!-- #@("position"+n)-locations -->
             <div id="@("position"+n)-licenses" class="tab-body">
-                @RenderPage("_PositionsLicenses.cshtml")
+                @RenderPage("$PositionsLicenses.cshtml")
             </div><!-- #@("position"+n)-licenses -->
             <div id="@("position"+n)-reviews" class="tab-body">
-                @RenderPage("_PositionsReviews.cshtml")
+                @RenderPage("$PositionsReviews.cshtml")
             </div><!-- #@("position"+n)-reviews -->
             
         </div><!-- #position@n -->

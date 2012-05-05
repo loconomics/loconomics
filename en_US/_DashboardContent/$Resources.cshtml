@@ -1,9 +1,6 @@
 ﻿@{
     CommonHelpers.SecurePage();
-    
-    Layout = "_Layout.cshtml";
-    Page.Title = "Make your life better!";
-    
+
     PageData["userow"] = DashboardFunctions.GetUserRow();
     PageData["menu-item"] = "resources";
 }
