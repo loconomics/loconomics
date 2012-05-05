@@ -1,6 +1,9 @@
 ﻿@using System.Drawing.Imaging;
 @{
     var userId = Request["UserID"].AsInt();
+    if (userId == 0) {
+        userId = UrlData[0].AsInt();
+    }
     var userPhoto = "avatar.jpg";
     dynamic ur = null;
     
