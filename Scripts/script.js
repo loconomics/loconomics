@@ -26,10 +26,9 @@ var TabbedUX = {
     },
     getTabContextByArgs: function (args) {
         if (args.length == 1 && typeof (args[0]) == 'string')
-            if (args.tab)
-                return args;
-            else
-                return this.getTabContext(args[0], null, null);
+            return this.getTabContext(args[0], null, null);
+        if (args.length == 1 && args[0].tab)
+            return args[0];
         else
             return this.getTabContext(
                 args.length > 0 ? args[0] : null,
@@ -113,6 +112,7 @@ var TabbedUX = {
         ctx.tab.hide(this.showhideDuration);
         ctx.menuitem.hide(this.showhideEasing);
     }
+    // TODO: createTab, removeTab; control tabs overflow (ul.tabs).
 };
 
 /* Init code */
