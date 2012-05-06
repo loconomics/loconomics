@@ -78,10 +78,10 @@ var TabbedUX = {
 
         // Hide current tab-body and trigger event
         ctx.tab.siblings('.current').removeClass('current')
-            .trigger('tabUnfocused');
+            .triggerHandler('tabUnfocused');
         // Show current tab-body and trigger event
         ctx.tab.addClass('current')
-            .trigger('tabFocused');
+            .triggerHandler('tabFocused');
     },
     /* Enable a tab, disabling all others tabs -usefull in wizard style pages- */
     enableTab: function () {
@@ -118,10 +118,6 @@ var TabbedUX = {
 /* Init code */
 $(document).ready(function () {
 
-    // $('button[type=submit]').click(function(){
-    //    $(this).closest('form').submit();
-    //    return false;
-    // })
     if (!hasPlaceholderSupport) {
         $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
             if (this.value == this.getAttribute('placeholder'))
@@ -171,30 +167,10 @@ $(document).ready(function () {
         $('.blockOverlay').attr('title', 'Click to unblock').click($.unblockUI);
     });
 
-    // $('form input.password').focus(function() {
-    // 	$(this).hide();
-    // 	$(this).next('input').show().focus();
-    // });
-    // 
-    // $('form input[type="password"]').blur(function(){
-    // 	if ( this.value == "" ){
-    // 		$(this).hide();
-    // 		$(this).prev('input').show();
-    // 	}
-    // });
-
     $('div.progress-bar').each(function () {
         var pd = $(this).find('.text .percent-done').text();
         $(this).find('.total .percent-done').css('width', pd);
     });
-
-    // TODO dynamic stars 
-    // $('table.ratings tr').each(function(){
-    // 	var rating = $(this).find('span.stars').text();
-    // 	var image = '<img src="img/star-on.gif" />';
-    // 	$('this').find('td').append(image);
-    // });
-
 
     // Autocomplete on User Supplied data
     $('#titleSearch').autocomplete({ source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
@@ -245,26 +221,6 @@ $(document).ready(function () {
 
     // Tabbed interface
     TabbedUX.init();
-    /*$('.tabbed').each(function () {
-
-    // Establish which set of tabs we're dealing with
-    var $parent = $(this);
-
-    // Switch body when tab clicked
-    $parent.children('.tabs').find('a').click(function () {
-    if ($(this).hasClass('current') ||
-    $(this).parent().hasClass('disabled'))
-    return false;
-    else {
-    $parent.children('.tabs').find('li, a').removeClass('current');
-    $parent.children('.tab-body').removeClass('current');
-    var target = $(this).attr('href');
-    $(this).addClass('current').parent().addClass('current');
-    $(target).addClass('current');
-    return false;
-    }
-    });
-    });*/
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
     $('.autofill-submenu .current').each(function () {
@@ -345,32 +301,6 @@ $(document).ready(function () {
     /* Active/Desactive search filters */
     $(".buttons-list .button").click(function () { $(this).toggleClass('selected'); return false; });
 
-
-    /* Activating Generic Wizard buttons */
-    /* A link/button with next class and data-next-step attribute will contain an internal link of a tab that will
-    * be activated where clicked. */
-    $(".next").click(function () {
-        var step = $(this).data('next-step');
-        if (step) {
-            if (/^#/.test(step)) {
-                // Selecting the tab-body:
-                var tb = $(step + '.tab-body');
-                // Showing tab content, and hidden previous activated tab content:
-                tb.addClass('current').siblings('.tab-body').removeClass('current');
-                // Looking for the index of this step
-                var ti = $('.tabbed > .tabs > li > a[href=' + step + ']')
-                // desactivating previous selected tab (both, li and a elements)
-                ti.parent().parent().find('li, a').removeClass('current');
-                // activating selected tab index:
-                ti.addClass('current').parent().addClass('current');
-                return false;
-            } else {
-                // If there is a next-step URI that is not internal link, we load it by default
-                window.location = step;
-            }
-        }
-    });
-
     /* Wizard Tabbed Forms: ajax submit and next-step loading  */
     $("body").delegate(".tabbed.wizard .next", "click", function () {
         // getting the form
@@ -415,14 +345,7 @@ $(document).ready(function () {
                                 $(nextStep).trigger('beginLoadWizardStep');
 
                                 TabbedUX.enableTab(nextStep);
-                                /*
-                                // Disabling the current step:
-                                $('.tabs > li.current', wizard).addClass('disabled');
-                                // Enabling the next step tab and showing it:
-                                var a = $('.tabs > li > a[href=' + nextStep + ']', wizard);
-                                a.parent().removeClass('disabled');
-                                a.click();
-                                */
+
                                 ok = true;
                                 $(nextStep).trigger('endLoadWizardStep');
                             } else {
