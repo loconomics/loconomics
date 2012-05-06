@@ -11,6 +11,110 @@ var errorBlock = function (error, reload, style) {
     }
 };
 
+/*
+ * Tabbed interface logic
+ */
+var TabbedUX = {
+    init: function () {
+        $('body').delegate('.tabbed > .tabs > li > a', 'click', function () {
+            var $t = $(this);
+            if (!$t.hasClass('current') &&
+                !$t.parent().hasClass('disabled'))
+                TabbedUX.focusTab($t.attr('href'));
+            return false;
+        });
+    },
+    getTabContextByArgs: function (args) {
+        if (args.length == 1 && typeof (args[0]) == 'string')
+            if (args.tab)
+                return args;
+            else
+                return this.getTabContext(args[0], null, null);
+        else
+            return this.getTabContext(
+                args.length > 0 ? args[0] : null,
+                args.length > 1 ? args[1] : null,
+                args.length > 2 ? args[2] : null
+            );
+    },
+    getTabContext: function (tabId, tabOrSelector, menuitemOrSelector) {
+        var mi, ma, tab, tabContainer;
+        if (tabId) {
+            if (!(/^#/).test(tabId))
+                tabId = '#' + tabId;
+            tab = $(tabId);
+            tabContainer = tab.parent();
+            ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
+            mi = ma.parent();
+        } else if (menuitemOrSelector) {
+            ma = $(menuitemOrSelector);
+            mi = ma.parent();
+            tabContainer = tab.parent();
+            tab = tabContainer.find('>.tab-body#' + mi.attr('href'));
+        } else if (tabOrSelector) {
+            tab = $(tabOrSelector);
+            tabContainer = tab.parent();
+            ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
+            mi = ma.parent();
+        }
+        return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
+    },
+    checkTabContext: function (ctx, functionname) {
+        if (!ctx.tab || !ctx.menuitem || !ctx.tabContainer || !ctx.menuanchor) {
+            if (console && console.error)
+                console.error('TabbedUX.' + functionname + ', bad arguments: ' + arguments.join(', '));
+            return false;
+        }
+        return true;
+    },
+    focusTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'focusTab')) return;
+        // Unset current menu element
+        ctx.menuitem.siblings('.current').removeClass('current')
+            .find('>a').removeClass('current');
+        // Set current menu element
+        ctx.menuitem.addClass('current');
+        ctx.menuanchor.addClass('current');
+
+        // Hide current tab-body and trigger event
+        ctx.tab.siblings('.current').removeClass('current')
+            .trigger('tabUnfocused');
+        // Show current tab-body and trigger event
+        ctx.tab.addClass('current')
+            .trigger('tabFocused');
+    },
+    /* Enable a tab, disabling all others tabs -usefull in wizard style pages- */
+    enableTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'enableTab')) return;
+        // First, focus tab:
+        this.focusTab(ctx);
+        // Disabled tabs and menu items:
+        ctx.tabContainer.find('>.tab-body, >.tabs > li')
+            .addClass('disabled');
+        // Remove disabled class from focused tab and menu item
+        ctx.tab.removeClass('disabled');
+        ctx.menuitem.removeClass('disabled');
+    },
+    showhideDuration: 0,
+    showhideEasing: null,
+    showTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'showTab')) return;
+        // Show tab and menu item
+        ctx.tab.show(this.showhideDuration);
+        ctx.menuitem.show(this.showhideEasing);
+    },
+    hideTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'hideTab')) return;
+        // Show tab and menu item
+        ctx.tab.hide(this.showhideDuration);
+        ctx.menuitem.hide(this.showhideEasing);
+    }
+};
+
 /* Init code */
 $(document).ready(function () {
 
@@ -140,26 +244,27 @@ $(document).ready(function () {
         });
 
     // Tabbed interface
-    $('.tabbed').each(function () {
+    TabbedUX.init();
+    /*$('.tabbed').each(function () {
 
-        // Establish which set of tabs we're dealing with
-        var $parent = $(this);
+    // Establish which set of tabs we're dealing with
+    var $parent = $(this);
 
-        // Switch body when tab clicked
-        $parent.children('.tabs').find('a').click(function () {
-            if ($(this).hasClass('current') ||
-                $(this).parent().hasClass('disabled'))
-                return false;
-            else {
-                $parent.children('.tabs').find('li, a').removeClass('current');
-                $parent.children('.tab-body').removeClass('current');
-                var target = $(this).attr('href');
-                $(this).addClass('current').parent().addClass('current');
-                $(target).addClass('current');
-                return false;
-            }
-        });
+    // Switch body when tab clicked
+    $parent.children('.tabs').find('a').click(function () {
+    if ($(this).hasClass('current') ||
+    $(this).parent().hasClass('disabled'))
+    return false;
+    else {
+    $parent.children('.tabs').find('li, a').removeClass('current');
+    $parent.children('.tab-body').removeClass('current');
+    var target = $(this).attr('href');
+    $(this).addClass('current').parent().addClass('current');
+    $(target).addClass('current');
+    return false;
+    }
     });
+    });*/
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
     $('.autofill-submenu .current').each(function () {
@@ -309,13 +414,15 @@ $(document).ready(function () {
                             if (/^#/.test(nextStep)) {
                                 $(nextStep).trigger('beginLoadWizardStep');
 
+                                TabbedUX.enableTab(nextStep);
+                                /*
                                 // Disabling the current step:
                                 $('.tabs > li.current', wizard).addClass('disabled');
                                 // Enabling the next step tab and showing it:
                                 var a = $('.tabs > li > a[href=' + nextStep + ']', wizard);
                                 a.parent().removeClass('disabled');
                                 a.click();
-
+                                */
                                 ok = true;
                                 $(nextStep).trigger('endLoadWizardStep');
                             } else {

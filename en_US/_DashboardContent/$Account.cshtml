@@ -6,7 +6,7 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-			<li class="current"><a class="current" href="#account-personal">Personal</a></li>
+			<li class="current"><a href="#account-personal">Personal</a></li>
             @if (u.IsProvider){
 			<li><a href="#account-payments">Payments</a></li>
             <li><a href="#account-verification">Trust &amp; Verification</a></li>
@@ -21,7 +21,7 @@
     @if (u.IsProvider){
 		<div id="account-payments" class="tab-body fancy tabbed buttons" data-help-point="$FAQS">
             <ul class="tabs">
-                <li><a class="button profile fanciful current" href="#account-payments-bankinfo">Bank Account</a></li>
+                <li class="current"><a class="button profile fanciful" href="#account-payments-bankinfo">Bank Account</a></li>
                 <li><a class="button profile fanciful" href="#account-payments-transactionhistory">Transaction History</a></li>
             </ul>
             
@@ -35,7 +35,7 @@
         
 		<div id="account-verification" class="tab-body fancy tabbed buttons">
             <ul class="tabs">
-                <li><a class="button profile fanciful current" href="#account-verification-basicinfo">Basic info</a></li>
+                <li class="current"><a class="button profile fanciful" href="#account-verification-basicinfo">Basic info</a></li>
                 <li><a class="button profile fanciful" href="#account-verification-backcheck">Background check</a></li>
             </ul>
             

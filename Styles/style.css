@@ -384,7 +384,7 @@ a.message:hover, a.message:focus { background: #F0B600; }
 a.profile, a.profile.current:focus,
 button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; } 
 
-a.profile.current, a.profile:hover, a.profile:focus,
+li.current > a.profile, a.profile:hover, a.profile:focus,
 button.search-again, a.view { background: #461864; color: #fff; }
 
 #modals { display: none; }
@@ -1102,13 +1102,13 @@ fieldset.has-confirm.confirmed-no > legend{
 
 /** buttons **/
 .editable a.profile,
-.editable a.profile.current:focus,
+.editable li.current > a.profile:focus,
 .editable button.search-again:hover,
 .editable a.view:hover {
     background-color: #b5e1e2;
     color: #00989A;
 }
-.editable a.profile.current,
+.editable li.current > a.profile,
 .editable a.profile:hover,
 .editable a.profile:focus,
 .editable button.search-again,
