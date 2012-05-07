@@ -18,9 +18,7 @@ var TabbedUX = {
     init: function () {
         $('body').delegate('.tabbed > .tabs > li > a', 'click', function () {
             var $t = $(this);
-            if (!$t.hasClass('current') &&
-                !$t.parent().hasClass('disabled'))
-                TabbedUX.focusTab($t.attr('href'));
+            TabbedUX.focusTab($t.attr('href'));
             return false;
         });
     },
@@ -42,9 +40,11 @@ var TabbedUX = {
             if (!(/^#/).test(tabId))
                 tabId = '#' + tabId;
             tab = $(tabId);
-            tabContainer = tab.parent();
-            ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
-            mi = ma.parent();
+            if (tab.length == 1) {
+                tabContainer = tab.parent();
+                ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
+                mi = ma.parent();
+            }
         } else if (menuitemOrSelector) {
             ma = $(menuitemOrSelector);
             mi = ma.parent();
@@ -58,17 +58,23 @@ var TabbedUX = {
         }
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
-    checkTabContext: function (ctx, functionname) {
-        if (!ctx.tab || !ctx.menuitem || !ctx.tabContainer || !ctx.menuanchor) {
+    checkTabContext: function (ctx, functionname, args) {
+        if (!ctx.tab || ctx.tab.length != 1 || !ctx.menuitem || ctx.menuitem.length != 1
+            || !ctx.tabContainer || ctx.tabContainer.length != 1 || !ctx.menuanchor || ctx.menuanchor.length != 1) {
             if (console && console.error)
-                console.error('TabbedUX.' + functionname + ', bad arguments: ' + arguments.join(', '));
+                console.error('TabbedUX.' + functionname + ', bad arguments: ' + Array.join(args, ', '));
             return false;
         }
         return true;
     },
     focusTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
-        if (!this.checkTabContext(ctx, 'focusTab')) return;
+        if (!this.checkTabContext(ctx, 'focusTab', arguments)) return;
+
+        if (ctx.menuitem.hasClass('current') ||
+            ctx.menuitem.hasClass('disabled'))
+            return false;
+
         // Unset current menu element
         ctx.menuitem.siblings('.current').removeClass('current')
             .find('>a').removeClass('current');
@@ -82,32 +88,42 @@ var TabbedUX = {
         // Show current tab-body and trigger event
         ctx.tab.addClass('current')
             .triggerHandler('tabFocused');
+        return true;
     },
     /* Enable a tab, disabling all others tabs -usefull in wizard style pages- */
     enableTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
-        if (!this.checkTabContext(ctx, 'enableTab')) return;
-        // First, focus tab:
+        if (!this.checkTabContext(ctx, 'enableTab', arguments)) return;
+        var rtn = false;
+        if (ctx.menuitem.is('.disabled')) {
+            // Remove disabled class from focused tab and menu item
+            ctx.tab.removeClass('disabled')
+            .triggerHandler('tabEnabled');
+            ctx.menuitem.removeClass('disabled');
+            rtn = true;
+        }
+        // Focus tab:
         this.focusTab(ctx);
         // Disabled tabs and menu items:
-        ctx.tabContainer.find('>.tab-body, >.tabs > li')
+        ctx.tab.siblings(':not(.disabled)')
+            .addClass('disabled')
+            .triggerHandler('tabDisabled');
+        ctx.menuitem.siblings(':not(.disabled)')
             .addClass('disabled');
-        // Remove disabled class from focused tab and menu item
-        ctx.tab.removeClass('disabled');
-        ctx.menuitem.removeClass('disabled');
+        return rtn;
     },
     showhideDuration: 0,
     showhideEasing: null,
     showTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
-        if (!this.checkTabContext(ctx, 'showTab')) return;
+        if (!this.checkTabContext(ctx, 'showTab', arguments)) return;
         // Show tab and menu item
         ctx.tab.show(this.showhideDuration);
         ctx.menuitem.show(this.showhideEasing);
     },
     hideTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
-        if (!this.checkTabContext(ctx, 'hideTab')) return;
+        if (!this.checkTabContext(ctx, 'hideTab', arguments)) return;
         // Show tab and menu item
         ctx.tab.hide(this.showhideDuration);
         ctx.menuitem.hide(this.showhideEasing);
