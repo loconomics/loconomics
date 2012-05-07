@@ -34,7 +34,17 @@ var TabbedUX = {
         })
         .delegate('.tabbed > .tabs-slider > a', 'click', TabbedUX.moveTabsSlider);
 
-        $('.tabbed').each(function () { TabbedUX.setupSlider($(this)); });
+        // Init page loaded tabbed containers:
+        $('.tabbed').each(function () {
+            // Init slider
+            TabbedUX.setupSlider($(this));
+            // Clean white spaces (they create excesive separation between some tabs)
+            $('.tabs', this).contents().each(function () {
+                // if this is a text node, remove it:
+                if (this.nodeType == 3)
+                    $(this).remove();
+            });
+        });
     },
     moveTabsSlider: function () {
         $t = $(this);
