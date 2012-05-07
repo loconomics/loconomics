@@ -446,10 +446,19 @@ ul.reviews > li div.author { float: left; }
 ul.reviews > li div.wrap { margin-left: 100px; }
 ul.reviews > li div.wrap p { margin-top: 0; }
 
-.folders > ul.tabs { position: relative; z-index: 2; margin: 0; padding: 0 0 0 10px; }
+.folders > ul.tabs  {
+    position: relative; 
+    z-index: 2; 
+    margin: 0; 
+    padding: 0 0 0 10px;
+    height: 22px;
+    overflow: hidden;
+}
 .folders > ul.tabs li { float: left; list-style-type: none; }
 .folders > .tab-body { 
-	display:none; position: relative; z-index: 1; top: 20px; padding: 20px; 
+	display:none; position: relative; z-index: 1; 
+	top: -2px; 
+	padding: 20px; 
     /*min-height: 400px;*/
     min-height: 150px;
 	border: 2px solid #461864;
