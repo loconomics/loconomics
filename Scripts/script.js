@@ -11,16 +11,70 @@ var errorBlock = function (error, reload, style) {
     }
 };
 
+$.fn.HasScrollBar = function () {
+    //note: clientHeight= height of holder
+    //scrollHeight= we have content till this height
+    var _elm = $(this)[0];
+    var _hasScrollBar = false;
+    if ((_elm.clientHeight < _elm.scrollHeight) || (_elm.clientWidth < _elm.scrollWidth)) {
+        _hasScrollBar = true;
+    }
+    return _hasScrollBar;
+}
+
 /*
  * Tabbed interface logic
  */
 var TabbedUX = {
     init: function () {
-        $('body').delegate('.tabbed > .tabs > li > a', 'click', function () {
+        $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
             var $t = $(this);
             TabbedUX.focusTab($t.attr('href'));
             return false;
-        });
+        })
+        .delegate('.tabbed > .tabs-slider > a', 'click', TabbedUX.moveTabsSlider);
+
+        $('.tabbed').each(function () { TabbedUX.setupSlider($(this)); });
+    },
+    moveTabsSlider: function () {
+        $t = $(this);
+        var dir = $t.hasClass('tabs-slider-right') ? 1 : -1;
+        var tabsSlider = $t.parent();
+        var tabs = tabsSlider.siblings('.tabs:eq(0)');
+        tabs[0].scrollLeft += 20 * dir;
+        TabbedUX.checkTabSliderLimits(tabsSlider.parent(), tabs);
+        return false;
+    },
+    checkTabSliderLimits: function (tabContainer, tabs) {
+        tabs = tabs || tabContainer.children('.tabs:eq(0)');
+        tabContainer.children('.tabs-slider-limit-left').toggle(tabs[0].scrollLeft > 0);
+        tabContainer.children('.tabs-slider-limit-right').toggle(
+            (tabs[0].scrollLeft + tabs.width()) < tabs[0].scrollWidth);
+    },
+    setupSlider: function (tabContainer) {
+        var ts = tabContainer.children('.tabs-slider');
+        if (tabContainer.children('.tabs').HasScrollBar()) {
+            tabContainer.addClass('has-tabs-slider');
+            if (ts.length == 0) {
+                ts = document.createElement('div');
+                ts.className = 'tabs-slider';
+                $(ts)
+                // Arrows:
+                    .append('<a class="tabs-slider-left" href="#">&lt;&lt;</a>')
+                    .append('<a class="tabs-slider-right" href="#">&gt;&gt;</a>');
+                tabContainer.append(ts);
+                tabContainer
+                // Desing details:
+                    .append('<div class="tabs-slider-limit tabs-slider-limit-left" href="#"></div>')
+                    .append('<div class="tabs-slider-limit tabs-slider-limit-right" href="#"></div>');
+            } else {
+                ts.show();
+            }
+            TabbedUX.checkTabSliderLimits(tabContainer);
+        } else {
+            tabContainer.removeClass('has-tabs-slider');
+            ts.hide();
+        }
     },
     getTabContextByArgs: function (args) {
         if (args.length == 1 && typeof (args[0]) == 'string')
@@ -133,7 +187,7 @@ var TabbedUX = {
         ctx.tab.hide(this.showhideDuration);
         ctx.menuitem.hide(this.showhideEasing);
     },
-    tabBodyClassExceptions: ['tab-body', 'tabbed', 'current', 'disabled'],
+    tabBodyClassExceptions: { 'tab-body': 0, 'tabbed': 0, 'current': 0, 'disabled': 0 },
     createTab: function (tabContainer, idName, label) {
         tabContainer = $(tabContainer);
         // tabContainer must be only one and valid container
@@ -166,6 +220,8 @@ var TabbedUX = {
             // Trigger event, on tabContainer, with the new tab as data
             tabContainer.triggerHandler('tabCreated', [tab]);
 
+            this.setupSlider(tabContainer);
+
             return tab;
         }
         return false;
@@ -180,6 +236,8 @@ var TabbedUX = {
         ctx.menuitem.remove();
         var tabid = ctx.tab.get(0).id;
         ctx.tab.remove();
+
+        this.setupSlider(ctx.tabContainer);
 
         // Trigger event, on tabContainer, with the removed tab id as data
         ctx.tabContainer.triggerHandler('tabRemoved', [tabid]);

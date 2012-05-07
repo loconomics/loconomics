@@ -4,3 +4,5 @@
 *.gif
 !search-categories/*.*
 !userphotos/u0/*.*
+!theme/*.*
+theme/edit/*.*

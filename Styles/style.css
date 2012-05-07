@@ -449,8 +449,8 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 .folders > ul.tabs  {
     position: relative; 
     z-index: 2; 
-    margin: 0; 
-    padding: 0 0 0 10px;
+    padding: 0; 
+    margin: 0 0 0 10px;
     height: 22px;
     overflow: hidden;
 }
@@ -1525,4 +1525,73 @@ html.boxshadow #loginBox .field-validation-error{
     color: #836b96;
     font-size: .9em;
     font-style: italic;
+}
+
+/*
+ * TabbedUX
+ */
+.tabbed 
+{
+    position: relative;
+}
+.tabbed.has-tabs-slider > .tabs
+{
+    margin-right: 60px;
+}
+.tabbed > .tabs-slider
+{
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    height: 22px;
+}
+.tabbed > .tabs-slider > a {
+    background: url('../img/theme/tabs-sliders.png') repeat-y right bottom;
+    border: none;
+    width: 30px;
+    height: 22px;
+    text-indent: -9999px;
+    overflow: hidden;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+}
+.tabbed > .tabs-slider > a.tabs-slider-left {
+    background-position: left bottom;
+    right: 30px;
+}
+.tabbed > .tabs-slider > a:hover {
+    background-position: right top;
+}
+.tabbed > .tabs-slider > a.tabs-slider-left:hover {
+    background-position: left top;
+}
+.tabbed > .tabs-slider-limit {
+    background-image: url('../img/theme/tab-slider-limit.png');
+    background-repeat: repeat-y;
+    background-position: right top;
+    position: absolute;
+    right: 60px;
+    top: 0;
+    z-index: 100;
+    width: 20px;
+    height: 22px;
+}
+.tabbed > .tabs-slider-limit-left {
+    left: 10px;
+    background-position: left top;
+}
+.tabbed > ul.tabs {
+    white-space: nowrap !important;
+}
+.tabbed > ul.tabs > li 
+{
+    white-space: nowrap !important;
+    float: none !important;
+    display: inline-block;
+}
+.tabbed > ul.tabs > li > a
+{
+    
 }
