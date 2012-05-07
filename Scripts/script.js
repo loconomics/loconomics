@@ -90,6 +90,11 @@ var TabbedUX = {
             .triggerHandler('tabFocused');
         return true;
     },
+    focusTabIndex: function (tabContainer, tabIndex) {
+        if (tabContainer)
+            return this.focusTab(this.getTabContext(null, tabContainer.find('>.tab-body:eq(' + tabIndex + ')'), null));
+        return false;
+    },
     /* Enable a tab, disabling all others tabs -usefull in wizard style pages- */
     enableTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
@@ -127,8 +132,59 @@ var TabbedUX = {
         // Show tab and menu item
         ctx.tab.hide(this.showhideDuration);
         ctx.menuitem.hide(this.showhideEasing);
+    },
+    tabBodyClassExceptions: ['tab-body', 'tabbed', 'current', 'disabled'],
+    createTab: function (tabContainer, idName, label) {
+        tabContainer = $(tabContainer);
+        // tabContainer must be only one and valid container
+        // and idName must not exists
+        if (tabContainer.length == 1 && tabContainer.is('.tabbed') &&
+            document.getElementById(idName) == null) {
+            // Create tab div:
+            var tab = document.createElement('div');
+            tab.id = idName;
+            // Required class
+            tab.className = "tab-body";
+            var $tab = $(tab);
+            // Get an existing sibling and copy (with some exceptions) their css classes
+            $.each(tabContainer.children('.tab-body:eq(0)').attr('class').split(/\s+/), function (i, v) {
+                if (!(v in TabbedUX.tabBodyClassExceptions))
+                    $tab.addClass(v);
+            });
+            // Add to container
+            tabContainer.append(tab);
+
+            // Create menu entry
+            var menuitem = document.createElement('li');
+            var menuanchor = document.createElement('a');
+            menuanchor.setAttribute('href', '#' + idName);
+            $(menuanchor).text(label);
+            $(menuitem).append(menuanchor);
+            // Add to tabs list container
+            tabContainer.children('.tabs:eq(0)').append(menuitem);
+
+            // Trigger event, on tabContainer, with the new tab as data
+            tabContainer.triggerHandler('tabCreated', [tab]);
+
+            return tab;
+        }
+        return false;
+    },
+    removeTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'createTab', arguments)) return;
+
+        // If tab is currently focused tab, change to first tab
+        if (ctx.menuitem.hasClass('current'))
+            this.focusTabIndex(tabContainer, 0);
+        ctx.menuitem.remove();
+        var tabid = ctx.tab.get(0).id;
+        ctx.tab.remove();
+
+        // Trigger event, on tabContainer, with the removed tab id as data
+        ctx.tabContainer.triggerHandler('tabRemoved', [tabid]);
     }
-    // TODO: createTab, removeTab; control tabs overflow (ul.tabs).
+    // TODO: control tabs overflow (ul.tabs).
 };
 
 /* Init code */
