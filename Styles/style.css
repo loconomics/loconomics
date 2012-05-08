@@ -1577,6 +1577,7 @@ html.boxshadow #loginBox .field-validation-error{
     z-index: 100;
     width: 20px;
     height: 22px;
+    cursor: e-resize;
 }
 .tabbed > .tabs-slider-limit-left {
     left: 10px;

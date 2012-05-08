@@ -32,27 +32,10 @@ var TabbedUX = {
             TabbedUX.focusTab($t.attr('href'));
             return false;
         })
-        .delegate('.tabbed > .tabs-slider > a', 'mousedown', function () {
-            var t = $(this);
-            var tabs = t.parent().parent().children('.tabs:eq(0)');
-            var speed = .3; /* speed unit: pixels/miliseconds */
-            var fxa = function () { TabbedUX.checkTabSliderLimits(tabs.parent(), tabs) };
-            if (t.hasClass('tabs-slider-right')) {
-                // Calculate time based on speed we want and how many distance there is:
-                var time = (tabs[0].scrollWidth - tabs[0].scrollLeft - tabs.width()) * 1 / speed;
-                tabs.animate({ scrollLeft: tabs[0].scrollWidth - tabs.width() },
-                { duration: time, step: fxa, complete: fxa, easing: 'swing' });
-            } else {
-                // Calculate time based on speed we want and how many distance there is:
-                var time = tabs[0].scrollLeft * 1 / speed;
-                tabs.animate({ scrollLeft: 0 },
-                { duration: time, step: fxa, complete: fxa, easing: 'swing' });
-            }
-        })
-        .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseout', function () {
-            $(this).parent().siblings('.tabs:eq(0)').stop(true);
-            TabbedUX.checkTabSliderLimits($(this).parent().parent());
-        });
+        .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
+        .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseleave', TabbedUX.endMoveTabsSlider)
+        .delegate('.tabbed > .tabs-slider-limit', 'mouseenter', TabbedUX.startMoveTabsSlider)
+        .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider);
 
         // Init page loaded tabbed containers:
         $('.tabbed').each(function () {
@@ -75,6 +58,29 @@ var TabbedUX = {
         TabbedUX.checkTabSliderLimits(tabsSlider.parent(), tabs);
         return false;
     },
+    startMoveTabsSlider: function () {
+        var t = $(this);
+        var tabs = t.closest('.tabbed').children('.tabs:eq(0)');
+        // Stop previous animations:
+        tabs.stop(true);
+        var speed = .3; /* speed unit: pixels/miliseconds */
+        var fxa = function () { TabbedUX.checkTabSliderLimits(tabs.parent(), tabs) };
+        if (t.hasClass('right')) {
+            // Calculate time based on speed we want and how many distance there is:
+            var time = (tabs[0].scrollWidth - tabs[0].scrollLeft - tabs.width()) * 1 / speed;
+            tabs.animate({ scrollLeft: tabs[0].scrollWidth - tabs.width() },
+            { duration: time, step: fxa, complete: fxa, easing: 'swing' });
+        } else {
+            // Calculate time based on speed we want and how many distance there is:
+            var time = tabs[0].scrollLeft * 1 / speed;
+            tabs.animate({ scrollLeft: 0 },
+            { duration: time, step: fxa, complete: fxa, easing: 'swing' });
+        }
+    },
+    endMoveTabsSlider: function () {
+        $(this).closest('.tabbed').children('.tabs:eq(0)').stop(true);
+        TabbedUX.checkTabSliderLimits($(this).parent().parent());
+    },
     checkTabSliderLimits: function (tabContainer, tabs) {
         tabs = tabs || tabContainer.children('.tabs:eq(0)');
         tabContainer.children('.tabs-slider-limit-left').toggle(tabs[0].scrollLeft > 0);
@@ -90,13 +96,13 @@ var TabbedUX = {
                 ts.className = 'tabs-slider';
                 $(ts)
                 // Arrows:
-                    .append('<a class="tabs-slider-left" href="#">&lt;&lt;</a>')
-                    .append('<a class="tabs-slider-right" href="#">&gt;&gt;</a>');
+                    .append('<a class="tabs-slider-left left" href="#">&lt;&lt;</a>')
+                    .append('<a class="tabs-slider-right right" href="#">&gt;&gt;</a>');
                 tabContainer.append(ts);
                 tabContainer
                 // Desing details:
-                    .append('<div class="tabs-slider-limit tabs-slider-limit-left" href="#"></div>')
-                    .append('<div class="tabs-slider-limit tabs-slider-limit-right" href="#"></div>');
+                    .append('<div class="tabs-slider-limit tabs-slider-limit-left left" href="#"></div>')
+                    .append('<div class="tabs-slider-limit tabs-slider-limit-right right" href="#"></div>');
             } else {
                 ts.show();
             }
