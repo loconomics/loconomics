@@ -113,7 +113,7 @@ var TabbedUX = {
     },
     getTabContextByArgs: function (args) {
         if (args.length == 1 && typeof (args[0]) == 'string')
-            return this.getTabContext(args[0], null, null);
+            return this.getTabContext(args[0], null);
         if (args.length == 1 && args[0].tab)
             return args[0];
         else

@@ -30,6 +30,7 @@
             throw new HttpException(404, "Page not found");
         }
     }
+    Scripts.Add(UrlUtil.AppPath + "Scripts/Dashboard.js");
 }
 @helper menu(string item){
     @(DashboardFunctions.CssCurrent(item, PageData["menu-item"]))

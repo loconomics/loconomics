@@ -28,6 +28,7 @@
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   R.ProviderUserID=@0
                  AND
                 R.BookingRequestStatusID = 2
@@ -60,6 +61,7 @@
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
         WHERE   R.ProviderUserID=@0
                  AND
                 E.StartTime >= @1
@@ -69,7 +71,7 @@
     dynamic pendingBookingRequests, todayBookings, tomorrowBookings, thisweekBookings, 
         upcomingBookings, pastBookings;
     using (var db = Database.Open("sqlloco")) {
-        pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, u.UserID);
+        pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, u.UserID, 1, 1);
         
         // Preparing dates for further filtering
         var today = DateTime.Today;
@@ -81,11 +83,11 @@
         var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
         var pastLastDay = thisweekFirstDay.AddDays(-1);
         
-        todayBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, today, today);
-        tomorrowBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, tomorrow, tomorrow);
-        thisweekBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, thisweekFirstDay, thisweekLastDay);
-        upcomingBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, upcomingFirstDay, upcomingLastDay);
-        pastBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, pastFirstDay, pastLastDay);
+        todayBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, today, today, 1, 1);
+        tomorrowBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, tomorrow, tomorrow, 1, 1);
+        thisweekBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, thisweekFirstDay, thisweekLastDay, 1, 1);
+        upcomingBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, upcomingFirstDay, upcomingLastDay, 1, 1);
+        pastBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, pastFirstDay, pastLastDay, 1, 1);
     }
     
     /* Some static strings */
@@ -107,7 +109,7 @@
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
     <div class="customer mini-user-info">
-        <h5>@item.CustomerFirstName @(getInitialLetter(item.CustomerLastName).ToUpper()).</h5>
+        <h5 class="user-public-name">@item.CustomerFirstName @(getInitialLetter(item.CustomerLastName).ToUpper()).</h5>
         <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@item.CustomerUserID" width="55" height="55" />
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@item.CustomerUserID">View profile</a>
     </div>
@@ -126,7 +128,7 @@
         </li>
     </ul>
     <div class="actions">
-        <button class="respond">Respond</button>
+        <button class="respond" data-booking-request-id="@item.BookingRequestID">Respond</button>
         <div class="total-price">$@item.TotalPrice</div>
     </div>
 }
