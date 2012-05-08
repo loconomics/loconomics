@@ -905,6 +905,24 @@ form fieldset.actions{
     -o-box-shadow: 0 0 5px 2px #99C027;
     -webkit-box-shadow: 0 0 5px 2px #99C027;
 }
+/* .item-action button, is the main-button equivalent for an item inside a list of items. */
+.actions .item-action {
+    text-transform: lowercase;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    background: #8b2143 !important;
+    color: White;
+    font-size: 1em;
+    padding: 0 1em;
+}
+.actions .item-action:hover{
+    box-shadow: 0 0 5px 2px #8b2143;
+    -moz-box-shadow: 0 0 5px 2px #8b2143;
+    -o-box-shadow: 0 0 5px 2px #8b2143;
+    -webkit-box-shadow: 0 0 5px 2px #8b2143;
+}
 
 /****************************************/
 /**** Box fieldset styles ***************/

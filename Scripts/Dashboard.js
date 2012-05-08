@@ -9,7 +9,7 @@
     /*
     * Booking list actions
     */
-    $('.bookings-list .actions .respond').click(function () {
+    $('.bookings-list .actions .item-action').click(function () {
         var tabId = 'bookingRequestID' + $(this).data('booking-request-id');
         TabbedUX.createTab('#main', tabId,
             $(this).closest('.bookings-list').find('.user-public-name:eq(0)').text());

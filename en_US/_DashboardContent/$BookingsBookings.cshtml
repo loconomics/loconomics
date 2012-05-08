@@ -108,9 +108,10 @@
 }
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
+  <li>
     <div class="customer mini-user-info">
-        <h5 class="user-public-name">@item.CustomerFirstName @(getInitialLetter(item.CustomerLastName).ToUpper()).</h5>
         <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@item.CustomerUserID" width="55" height="55" />
+        <h5 class="user-public-name">@item.CustomerFirstName @(getInitialLetter(item.CustomerLastName).ToUpper()).</h5>
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@item.CustomerUserID">View profile</a>
     </div>
     <ul class="mini-booking-summary">
@@ -128,9 +129,10 @@
         </li>
     </ul>
     <div class="actions">
-        <button class="respond" data-booking-request-id="@item.BookingRequestID">Respond</button>
+        <button class="item-action" data-booking-request-id="@item.BookingRequestID">Respond</button>
         <div class="total-price">$@item.TotalPrice</div>
     </div>
+  </li>
 }
 @helper printItemDetails(dynamic item) {
     /* Copied from Booking/$Payment */

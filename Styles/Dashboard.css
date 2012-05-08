@@ -734,3 +734,70 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     top: 70px;
     z-index: 1000;
 }
+
+/* Bookings List */
+.dashboard ul,
+.dashboard li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.bookings-list > li {
+    border: 1px solid #6c6c6c;
+    background: white;
+    padding: 10px;
+    color: #6c6c6c;
+}
+.bookings-list > li > .mini-user-info,
+.bookings-list > li > .mini-booking-summary,
+.bookings-list > li > .actions {
+    display: inline-block !important;
+    vertical-align: top;
+}
+.bookings-list > li > .mini-user-info {
+    width: 150px;
+}
+.bookings-list > li > .mini-booking-summary {
+    width: 390px;
+    margin: 0 14px;
+}
+.bookings-list > li > .actions {
+    text-align: center !important;
+    width: 110px;
+}
+.bookings-list > li > .actions > .total-price {
+    margin: 10px 0 0;
+}
+
+/* Class mini-user-info */
+.mini-user-info {
+    clear: both;
+}
+.mini-user-info > h5 {
+    font-size: 1em;
+    color: #6c6c6c;
+    display: inline;
+}
+.mini-user-info > img.avatar {
+    float: left;
+    margin: 0 10px 0 0;
+}
+.mini-user-info > a.view-profile,
+.mini-user-info > a.view-profile:link,
+.mini-user-info > a.view-profile:visited {
+    color: #00989a;
+    display: block;
+}
+/* Class mini-booking-summary */
+.mini-booking-summary > li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mini-booking-summary h5 {
+    color: #8B2143;
+    display: inline;
+    font-size: 1em;
+    line-height: normal;
+    margin: 0;
+}
