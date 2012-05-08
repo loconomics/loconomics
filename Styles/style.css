@@ -512,7 +512,18 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 .folders > ul.tabs li:hover a{
     background-color: #f5f0f8;
 }
-
+/* Removable style for generic .tabbed */
+.tabbed > ul.tabs > li.removable {
+    background-position: right -66px !important;
+    cursor: pointer;
+}
+.tabbed > ul.tabs > li.removable.current,
+.tabbed > ul.tabs > li.removable.current:hover {
+    background-position: right -88px !important;
+}
+.tabbed > ul.tabs > li.removable:hover {
+    background-position: right -110px !important;
+}
 
 .buttons ul.tabs { 
     /*height: 40px;*/
@@ -1075,19 +1086,19 @@ fieldset.has-confirm.confirmed-no > legend{
 .editable .folders > ul.tabs li a{
     background-color: #def2f2;
 }
-.editable .folders > ul.tabs li.current,
+/*.editable .folders > ul.tabs li.current,
 .editable .folders > ul.tabs li.current:hover {
     background-position: right -22px !important;
-}
+}*/
 .editable .folders > ul.tabs li.current a,
 .editable .folders > ul.tabs li.current:hover a {
     background-color: white;
     padding-top: 3px;
     border-bottom-color: white;
 }
-.editable .folders > ul.tabs li:hover {
+/*.editable .folders > ul.tabs li:hover {
     background-position: right -44px !important;
-}
+}*/
 .editable .folders > ul.tabs li:hover a{
     background-color: #eff8f9;
 }
@@ -1099,7 +1110,7 @@ fieldset.has-confirm.confirmed-no > legend{
 }
 .dashboard.editable .folders > ul.tabs li,
 .profile.editable .folders > ul.tabs li {
-    background-image: url('../img/tab-editable-right-gray.png');
+    background-image: url('../img/theme/tab-editable-right-gray.png');
 }
 .dashboard.editable .folders > ul.tabs li.current a,
 .dashboard.editable .folders > ul.tabs li.current:hover a,

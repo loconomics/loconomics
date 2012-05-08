@@ -35,7 +35,8 @@ var TabbedUX = {
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseleave', TabbedUX.endMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider-limit', 'mouseenter', TabbedUX.startMoveTabsSlider)
-        .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider);
+        .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider)
+        .delegate('.tabbed > .tabs > li.removable', 'click', function () { TabbedUX.removeTab(null, this) });
 
         // Init page loaded tabbed containers:
         $('.tabbed').each(function () {
@@ -78,11 +79,13 @@ var TabbedUX = {
         }
     },
     endMoveTabsSlider: function () {
-        $(this).closest('.tabbed').children('.tabs:eq(0)').stop(true);
-        TabbedUX.checkTabSliderLimits($(this).parent().parent());
+        var tabContainer = $(this).closest('.tabbed');
+        tabContainer.children('.tabs:eq(0)').stop(true);
+        TabbedUX.checkTabSliderLimits(tabContainer);
     },
     checkTabSliderLimits: function (tabContainer, tabs) {
         tabs = tabs || tabContainer.children('.tabs:eq(0)');
+        // Set visibility of visual limiters:
         tabContainer.children('.tabs-slider-limit-left').toggle(tabs[0].scrollLeft > 0);
         tabContainer.children('.tabs-slider-limit-right').toggle(
             (tabs[0].scrollLeft + tabs.width()) < tabs[0].scrollWidth);
@@ -106,11 +109,11 @@ var TabbedUX = {
             } else {
                 ts.show();
             }
-            TabbedUX.checkTabSliderLimits(tabContainer);
         } else {
             tabContainer.removeClass('has-tabs-slider');
             ts.hide();
         }
+        TabbedUX.checkTabSliderLimits(tabContainer);
     },
     getTabContextByArgs: function (args) {
         if (args.length == 1 && typeof (args[0]) == 'string')
@@ -124,12 +127,10 @@ var TabbedUX = {
                 args.length > 2 ? args[2] : null
             );
     },
-    getTabContext: function (tabId, tabOrSelector, menuitemOrSelector) {
+    getTabContext: function (tabOrSelector, menuitemOrSelector) {
         var mi, ma, tab, tabContainer;
-        if (tabId) {
-            if (!(/^#/).test(tabId))
-                tabId = '#' + tabId;
-            tab = $(tabId);
+        if (tabOrSelector) {
+            tab = $(tabOrSelector);
             if (tab.length == 1) {
                 tabContainer = tab.parent();
                 ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
@@ -137,14 +138,13 @@ var TabbedUX = {
             }
         } else if (menuitemOrSelector) {
             ma = $(menuitemOrSelector);
-            mi = ma.parent();
-            tabContainer = tab.parent();
-            tab = tabContainer.find('>.tab-body#' + mi.attr('href'));
-        } else if (tabOrSelector) {
-            tab = $(tabOrSelector);
-            tabContainer = tab.parent();
-            ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
-            mi = ma.parent();
+            if (ma.is('li')) {
+                mi = ma;
+                ma = mi.children('a:eq(0)');
+            } else
+                mi = ma.parent();
+            tabContainer = mi.parent().parent();
+            tab = tabContainer.find('>.tab-body#' + ma.attr('href'));
         }
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
@@ -182,7 +182,7 @@ var TabbedUX = {
     },
     focusTabIndex: function (tabContainer, tabIndex) {
         if (tabContainer)
-            return this.focusTab(this.getTabContext(null, tabContainer.find('>.tab-body:eq(' + tabIndex + ')'), null));
+            return this.focusTab(this.getTabContext(tabContainer.find('>.tab-body:eq(' + tabIndex + ')')));
         return false;
     },
     /* Enable a tab, disabling all others tabs -usefull in wizard style pages- */
@@ -246,6 +246,8 @@ var TabbedUX = {
 
             // Create menu entry
             var menuitem = document.createElement('li');
+            // Because is a dynamically created tab, is a dynamically removable tab:
+            menuitem.className = "removable";
             var menuanchor = document.createElement('a');
             menuanchor.setAttribute('href', '#' + idName);
             $(menuanchor).text(label);
@@ -264,11 +266,14 @@ var TabbedUX = {
     },
     removeTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
-        if (!this.checkTabContext(ctx, 'createTab', arguments)) return;
+        if (!this.checkTabContext(ctx, 'removeTab', arguments)) return;
 
+        // Only remove if is a 'removable' tab
+        if (!ctx.menuitem.hasClass('removable'))
+            return false;
         // If tab is currently focused tab, change to first tab
         if (ctx.menuitem.hasClass('current'))
-            this.focusTabIndex(tabContainer, 0);
+            this.focusTabIndex(ctx.tabContainer, 0);
         ctx.menuitem.remove();
         var tabid = ctx.tab.get(0).id;
         ctx.tab.remove();
@@ -277,8 +282,8 @@ var TabbedUX = {
 
         // Trigger event, on tabContainer, with the removed tab id as data
         ctx.tabContainer.triggerHandler('tabRemoved', [tabid]);
+        return true;
     }
-    // TODO: control tabs overflow (ul.tabs).
 };
 
 /* Init code */
