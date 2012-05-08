@@ -524,6 +524,9 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 .tabbed > ul.tabs > li.removable:hover {
     background-position: right -110px !important;
 }
+.tabbed > ul.tabs > li.removable > a {
+    padding-right: 5px;
+}
 
 .buttons ul.tabs { 
     /*height: 40px;*/

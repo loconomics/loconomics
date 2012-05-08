@@ -10,6 +10,7 @@ var errorBlock = function (error, reload, style) {
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
     }
 };
+var gLoadingRetard = 600;
 
 $.fn.HasScrollBar = function () {
     if (!this) return false;
@@ -491,7 +492,7 @@ $(document).ready(function () {
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
             currentStep.block(loadingBlock);
-        }, 600);
+        }, gLoadingRetard);
         var autoUnblockLoading = true;
 
         var ok = false;
@@ -545,7 +546,6 @@ $(document).ready(function () {
                     currentStep.html(data);
                     currentStep.trigger('reloadedHtmlWizardStep');
                 }
-                currentStep.unblock();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
@@ -589,7 +589,7 @@ $(document).ready(function () {
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
             box.block(loadingBlock);
-        }, 600);
+        }, gLoadingRetard);
         var autoUnblockLoading = true;
 
         // Do the Ajax post

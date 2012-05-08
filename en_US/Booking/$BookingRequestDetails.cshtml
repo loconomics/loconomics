@@ -1,0 +1,9 @@
+﻿@{
+    CommonHelpers.SecurePage();
+    
+    var u = DashboardFunctions.GetUserRow();
+    
+    var brID = Request["BookingRequestID"];
+}
+<h2>Booking Request Details</h2>
+<p>Booking Request ID: @brID</p>
