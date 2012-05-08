@@ -32,7 +32,27 @@ var TabbedUX = {
             TabbedUX.focusTab($t.attr('href'));
             return false;
         })
-        .delegate('.tabbed > .tabs-slider > a', 'click', TabbedUX.moveTabsSlider);
+        .delegate('.tabbed > .tabs-slider > a', 'mousedown', function () {
+            var t = $(this);
+            var tabs = t.parent().parent().children('.tabs:eq(0)');
+            var speed = .3; /* speed unit: pixels/miliseconds */
+            var fxa = function () { TabbedUX.checkTabSliderLimits(tabs.parent(), tabs) };
+            if (t.hasClass('tabs-slider-right')) {
+                // Calculate time based on speed we want and how many distance there is:
+                var time = (tabs[0].scrollWidth - tabs[0].scrollLeft - tabs.width()) * 1 / speed;
+                tabs.animate({ scrollLeft: tabs[0].scrollWidth - tabs.width() },
+                { duration: time, step: fxa, complete: fxa, easing: 'swing' });
+            } else {
+                // Calculate time based on speed we want and how many distance there is:
+                var time = tabs[0].scrollLeft * 1 / speed;
+                tabs.animate({ scrollLeft: 0 },
+                { duration: time, step: fxa, complete: fxa, easing: 'swing' });
+            }
+        })
+        .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseout', function () {
+            $(this).parent().siblings('.tabs:eq(0)').stop(true);
+            TabbedUX.checkTabSliderLimits($(this).parent().parent());
+        });
 
         // Init page loaded tabbed containers:
         $('.tabbed').each(function () {
