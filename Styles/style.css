@@ -1122,7 +1122,7 @@ fieldset.has-confirm.confirmed-no > legend{
 
 /** buttons **/
 .editable a.profile,
-.editable li.current > a.profile:focus,
+.editable button.search-again:focus,
 .editable button.search-again:hover,
 .editable a.view:hover {
     background-color: #b5e1e2;
