@@ -735,6 +735,14 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     z-index: 1000;
 }
 
+/* Bookings List Groups */
+.booking-list-groups > li > h3 {
+    font-size: 1.1em;
+    color: #6c6c6c;
+}
+.booking-list-groups > li > h3 > .bookings-number {
+    color: #8B2143;
+}
 /* Bookings List */
 .dashboard ul,
 .dashboard li {

@@ -157,68 +157,83 @@
     }
 }
 
-@if (pendingBookingRequests.Count > 0) {
-<h3>Need response: 
-    <span class="bookings-number">@pendingBookingRequests.Count @(pendingBookingRequests.Count == 1 ? strNewBookingRequestSingular : strNewBookingRequestPlural)</span>
-</h3>
-<ul class="bookings-list pending-booking-requests">
-    @foreach (var item in pendingBookingRequests) {
-        @printItem(item)
-    }
-</ul>
-}
+<ul class="booking-list-groups">
 
-@if (todayBookings.Count > 0) {
-<h3>Today: 
-    <span class="bookings-number">@todayBookings.Count @(todayBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-</h3>
-<ul class="bookings-list today-bookings">
-    @foreach (var item in todayBookings) {
-        @printItem(item)
+    @if (pendingBookingRequests.Count > 0) {
+    <li>
+        <h3>Need response: 
+            <span class="bookings-number">@pendingBookingRequests.Count @(pendingBookingRequests.Count == 1 ? strNewBookingRequestSingular : strNewBookingRequestPlural)</span>
+        </h3>
+        <ul class="bookings-list pending-booking-requests">
+            @foreach (var item in pendingBookingRequests) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
     }
-</ul>
-}
 
-@if (tomorrowBookings.Count > 0) {
-<h3>Tomorrow: 
-    <span class="bookings-number">@tomorrowBookings.Count @(tomorrowBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-</h3>
-<ul class="bookings-list tomorrow-bookings">
-    @foreach (var item in tomorrowBookings) {
-        @printItem(item)
+    @if (todayBookings.Count > 0) {
+    <li>
+        <h3>Today: 
+            <span class="bookings-number">@todayBookings.Count @(todayBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+        </h3>
+        <ul class="bookings-list today-bookings">
+            @foreach (var item in todayBookings) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
     }
-</ul>
-}
 
-@if (thisweekBookings.Count > 0) {
-<h3>This week: 
-    <span class="bookings-number">@thisweekBookings.Count @(thisweekBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-</h3>
-<ul class="bookings-list this-week-bookings">
-    @foreach (var item in thisweekBookings) {
-        @printItem(item)
+    @if (tomorrowBookings.Count > 0) {
+    <li>
+        <h3>Tomorrow: 
+            <span class="bookings-number">@tomorrowBookings.Count @(tomorrowBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+        </h3>
+        <ul class="bookings-list tomorrow-bookings">
+            @foreach (var item in tomorrowBookings) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
     }
-</ul>
-}
 
-@if (upcomingBookings.Count > 0) {
-<h3>Upcoming: 
-    <span class="bookings-number">@upcomingBookings.Count @(upcomingBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-</h3>
-<ul class="bookings-list upcoming-bookings">
-    @foreach (var item in upcomingBookings) {
-        @printItem(item)
+    @if (thisweekBookings.Count > 0) {
+    <li>
+        <h3>This week: 
+            <span class="bookings-number">@thisweekBookings.Count @(thisweekBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+        </h3>
+        <ul class="bookings-list this-week-bookings">
+            @foreach (var item in thisweekBookings) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
     }
-</ul>
-}
 
-@if (pastBookings.Count > 0) {
-<h3>Past: 
-    <span class="bookings-number">@pastBookings.Count @(pastBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-</h3>
-<ul class="bookings-list past-bookings">
-    @foreach (var item in pastBookings) {
-        @printItem(item)
+    @if (upcomingBookings.Count > 0) {
+    <li>
+        <h3>Upcoming: 
+            <span class="bookings-number">@upcomingBookings.Count @(upcomingBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+        </h3>
+        <ul class="bookings-list upcoming-bookings">
+            @foreach (var item in upcomingBookings) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
+    }
+
+    @if (pastBookings.Count > 0) {
+    <li>
+        <h3>Past: 
+            <span class="bookings-number">@pastBookings.Count @(pastBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+        </h3>
+        <ul class="bookings-list past-bookings">
+            @foreach (var item in pastBookings) {
+                @printItem(item)
+            }
+        </ul>
+    </li>
     }
 </ul>
-}
