@@ -13,10 +13,11 @@ var errorBlock = function (error, reload, style) {
 var gLoadingRetard = 600;
 
 $.fn.HasScrollBar = function () {
-    if (!this) return false;
+    if (!this || this.length == 0) return false;
     //note: clientHeight= height of holder
     //scrollHeight= we have content till this height
-    return (this.clientHeight < this.scrollHeight) || (this.clientWidth < this.scrollWidth);
+    var t = this.get(0);
+    return (t.clientHeight < t.scrollHeight) || (t.clientWidth < t.scrollWidth);
 }
 
 /*
@@ -31,6 +32,8 @@ var TabbedUX = {
         })
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseleave', TabbedUX.endMoveTabsSlider)
+        // the click return false is to disable standar url behavior
+        .delegate('.tabbed > .tabs-slider > a', 'click', function () { return false })
         .delegate('.tabbed > .tabs-slider-limit', 'mouseenter', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider)
         .delegate('.tabbed > .tabs > li.removable', 'click', function () { TabbedUX.removeTab(null, this) });
@@ -74,11 +77,13 @@ var TabbedUX = {
             tabs.animate({ scrollLeft: 0 },
             { duration: time, step: fxa, complete: fxa, easing: 'swing' });
         }
+        return false;
     },
     endMoveTabsSlider: function () {
         var tabContainer = $(this).closest('.tabbed');
         tabContainer.children('.tabs:eq(0)').stop(true);
         TabbedUX.checkTabSliderLimits(tabContainer);
+        return false;
     },
     checkTabSliderLimits: function (tabContainer, tabs) {
         tabs = tabs || tabContainer.children('.tabs:eq(0)');

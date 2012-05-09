@@ -1,4 +1,36 @@
-﻿            <form>
+﻿<div class="testTabbedUX">
+    <h3>Testing dynamic tab creation</h3>
+    <script type="text/javascript">
+            var testtabNumber = 1;
+            function testCreateTab(button) {
+                var $t = $(button);
+                var tt = $t.closest('form').find('input.tabtitle');
+                var tc = $t.closest('form').find('.tabcontent');
+                var tab = TabbedUX.createTab($('#main.tabbed'),
+                    'testtab_' + (testtabNumber++).toString(),
+                    tt.val());
+                if (tab)
+                    $(tab).html(tc.val());
+                else
+                    alert('Unknowed error creating the tab :-(');
+                return false;
+            };
+    </script>
+    <form action="" method="post">
+        <ul>
+            <li>
+                <button type="button" onclick="javascript:testCreateTab(this)" class="button createtab">Create tab</button>
+            </li><li>
+                <input class="tabtitle" style="width:400px" type="text" value="Tab Title" />
+            </li><li>
+                <textarea class="tabcontent" rows="7" style="width:400px; height: 70px">Testing the tab content, can be &lt;h2&gt;a title&lt;/h2&gt; or other html text.</textarea>
+            </li>
+        </ul>
+    </form>
+</div>
+<br /><br /><br /><br />
+<br /><br /><br /><br />
+            <form>
                 <ul>
                     <li>
                         <label>Name <input type="text" name="name" placeholder="Your name"/></label>
