@@ -124,4 +124,29 @@
             else
                 Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(Request.Url.PathAndQuery));
     }
+    
+    /*========= STRINGS ==============*/
+    public static string GetInitialLetter(string text) {
+        if (!String.IsNullOrEmpty(text)) {
+            // Is not empty, have almost 1 char:
+            return text.Substring(0, 1).ToUpper();
+        } else {
+            return "";
+        }
+    }
+    /*
+     * Return the Display or abbreviated name of the user, 
+     * as "Name InitialLastName.", example: "John S." for
+     * user FirstName=John LastName=Smith
+     * The row object must contains the properties FirstName and LastName to work
+     */
+    public static string GetUserDisplayName(dynamic row){
+        return row.FirstName + " " + GetInitialLetter(row.LastName) + ".";
+    }
+    public static string GetCustomerDisplayName(dynamic row){
+        return row.CustomerFirstName + " " + GetInitialLetter(row.CustomerLastName) + ".";
+    }
+    public static string GetProviderDisplayName(dynamic row){
+        return row.ProviderFirstName + " " + GetInitialLetter(row.ProviderLastName) + ".";
+    }
 }

@@ -4,6 +4,63 @@
     var u = DashboardFunctions.GetUserRow();
     
     var brID = Request["BookingRequestID"];
+    
+    var sqlGetBookingRequest = @"
+        SELECT  R.BookingRequestID,
+                0 As BookingID,
+                R.CustomerUserID,
+                R.PricingEstimateID,
+                C.FirstName As CustomerFirstName,
+                C.LastName As CustomerLastName,
+                C.CreatedDate As CustomerMemberSinceDate,
+                E.StartTime,
+                E.EndTime,
+                E.TimeZone,
+                Pos.PositionSingular,
+                Pr.TotalPrice,
+                R.UpdatedDate
+        FROM    BookingRequest As R
+                 INNER JOIN
+                PricingEstimate As Pr
+                  ON Pr.PricingEstimateID = R.PricingEstimateID
+                 INNER JOIN
+                Users As C
+                  ON C.UserID = R.CustomerUserID
+                 INNER JOIN
+                CalendarEvents As E
+                  ON E.Id = R.PreferredDateID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+        WHERE   R.BookingRequestID = @0
+                 AND
+                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
+                 AND
+                R.BookingRequestStatusID = 2
+    ";
+    
+    decimal customerRate = 0;
+    dynamic booking;
+    using (var db = Database.Open("sqlloco")) {
+        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
+    }
 }
-<h2>Booking Request Details</h2>
-<p>Booking Request ID: @brID</p>
+<h2>Booking request from @booking.CustomerFirstName</h2>
+<span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString()</span>
+    <div class="customer medium-user-info">
+        <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@booking.CustomerUserID" width="55" height="55" />
+        <h5 class="user-public-name">@CommonHelpers.GetCustomerDisplayName(booking)</h5>
+        <p class="user-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis.....         
+        </p>
+
+        <span class="member-since">Member since @booking.CustomerMemberSinceDate</span>
+
+        <div class="customer-rating">
+            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + booking.CustomerUserID, customerRate.ToString(), "true" })
+            <span class="note">100% of service providers would work for @CommonHelpers.GetCustomerDisplayName(booking) again.</span>
+        </div>
+
+        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@booking.CustomerUserID">View profile</a>
+    </div>

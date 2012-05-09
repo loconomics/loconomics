@@ -96,22 +96,12 @@
     string strBookingSingular = "booking";
     string strBookingPlural = "bookings";
 }
-@functions{
-    string getInitialLetter(string text) {
-        if (!String.IsNullOrEmpty(text)) {
-            // Is not empty, have almost 1 char:
-            return text.Substring(0, 1);
-        } else {
-            return "";
-        }
-    }
-}
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
   <li>
     <div class="customer mini-user-info">
         <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@item.CustomerUserID" width="55" height="55" />
-        <h5 class="user-public-name">@item.CustomerFirstName @(getInitialLetter(item.CustomerLastName).ToUpper()).</h5>
+        <h5 class="user-public-name">@item.CustomerFirstName @(CommonHelpers.GetInitialLetter(item.CustomerLastName)).</h5>
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@item.CustomerUserID">View profile</a>
     </div>
     <ul class="mini-booking-summary">
