@@ -1,0 +1,63 @@
+﻿@* Widget with the User (normally providers) Availability Calendar, showing the calendar itself, 
+    the calendar legend and optionally a div wrapper around the elements 
+    (by default true; if false, this widget must be placed inside an element with the 
+    required css class 'availability-calendar', to allo css styles work fine).
+*@
+@{
+    bool hasWrapper = true, hasLegend = true;
+    int userID = 0;
+    
+    userID = PageData["AvailabilityCalendar.UserID"] ?? Request["UserID"].AsInt();
+    hasWrapper = PageData["AvailabilityCalendar.HasWrapper"] ?? (N.W(Request["HasWrapper"]) ?? "true").AsBool();
+    hasLegend = PageData["AvailabilityCalendar.HasLegend"] ?? (N.W(Request["HasLegend"]) ?? "true").AsBool();
+
+    var sqlGetAvailability = "exec dbo.GetProviderAvailability @0, @1";
+    
+    DateTime date = DateTime.Today.AddDays(0 - (int)DateTime.Today.DayOfWeek);
+    
+    var availData = PageData["availData"] = new Dictionary<string,int>();
+    using (var db = Database.Open("sqlloco")) {
+        foreach (var a in db.Query(sqlGetAvailability, userID, date)) {
+            availData[a.DayOfWeek.ToString() + ":" + a.TimeBlock.ToString()] = a.CalendarAvailabilityTypeID;
+        }
+    }
+    
+    // Classes for differents calendar availability states
+    var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
+    Random r = new Random();
+    
+    var wrapperStart = hasWrapper ? "<div class='availability-calendar'>" : "";
+    var wrapperEnd = hasWrapper ? "</div>" : "";
+}
+@functions{
+    int GetAvailDataIn(int dayOfWeek, TimeSpan timeblock){
+        var availData = (Dictionary<string,int>)PageData["availData"];
+        string key = dayOfWeek.ToString() + ":" + timeblock.ToString();
+        if (availData.ContainsKey(key) ) {
+            return availData[key] - 1;
+        } else {
+            return 3; //unavailable index
+        }
+    }
+}
+@Html.Raw(wrapperStart)
+    <div class="calendar">
+        <ol class="days"><li><h5>S</h5></li><li><h5>M</h5></li><li><h5>T</h5></li><li><h5>W</h5></li><li><h5>T</h5></li><li><h5>F</h5></li><li><h5>S</h5></li></ol>
+        <ol class="hours">@for(var h = 7; h < 23; h++)
+                {<li><h5>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</h5></li>}</ol>
+        <ol class="datetimes">@for(var h = 7; h < 23; h++){
+            for(var b = 0; b < 2; b++){
+                var half = b == 0 ? "" : "half ";
+                for(var d = 0; d < 7; d++)
+                {<li class="@half@stateClasses[GetAvailDataIn(d+1, new TimeSpan(h, (b==0?0:30), 0))]"></li>}
+            }}</ol>
+    </div>
+    @if (hasLegend) {
+    <ul class="calendar-legend">
+        <li class="free"><span class="color">Green</span>Free</li>
+        <li class="busy"><span class="color">Purple</span>Busy</li>
+        <li class="tentative"><span class="color">Yellow</span>Tentative</li>
+        <li class="unavailable"><span class="color">White</span>Unavailable</li>
+    </ul>
+    }
+@Html.Raw(wrapperEnd)

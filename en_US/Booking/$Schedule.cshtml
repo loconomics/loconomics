@@ -14,11 +14,6 @@
         }
     }
     
-    // TODO Load from database real data
-    // Classes for differents calendar availability states
-    var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
-    Random r = new Random();
-    
     Validation.RequireFields("preferred-date", "preferred-start-time", "preferred-end-time",
         "alternative-1-date", "alternative-1-start-time", "alternative-1-end-time",
         "alternative-2-date", "alternative-2-start-time", "alternative-2-end-time");
@@ -240,30 +235,7 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
-        <div class="calendar">
-            <ol class="days">
-                <li><h5>S</h5></li><li><h5>M</h5></li><li><h5>T</h5></li><li><h5>W</h5></li><li><h5>T</h5></li><li><h5>F</h5></li><li><h5>S</h5></li>
-            </ol>
-            <ol class="hours">
-                @for(var h = 7; h < 23; h++){
-                <li><h5>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</h5></li>
-                }
-            </ol>
-            <ol class="datetimes">
-                @for(var h = 7; h < 23; h++){
-                 for(var b = 0; b < 2; b++){
-                    var half = b == 0 ? "" : "half ";
-                for(var d = 0; d < 7; d++)
-                {<li class="@half@stateClasses[r.Next(0, 4)]"></li>}
-                }}
-            </ol>
-        </div>
-        <ul class="calendar-legend">
-            <li class="free"><span class="color">Green</span>Free</li>
-            <li class="busy"><span class="color">Purple</span>Busy</li>
-            <li class="tentative"><span class="color">Yellow</span>Tentative</li>
-            <li class="unavailable"><span class="color">White</span>Unavailable</li>
-        </ul>
+        @RenderPage(UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID }, { "AvailabilityCalendar.HasWrapper", false} } )
     </fieldset>
     <fieldset class="location box">
         <legend>Location where services are to be performed:</legend>
