@@ -389,6 +389,12 @@ $(document).ready(function () {
 
     // Tabbed interface
     TabbedUX.init();
+    // If the current location have a hash, try to focus the matching tab in the Tabbed interface
+    if (window.location.hash) {
+        var hashes = window.location.hash.substring(1).split('/');
+        for (var ihash in hashes)
+            TabbedUX.focusTab('#' + hashes[ihash]);
+    }
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
     $('.autofill-submenu .current').each(function () {

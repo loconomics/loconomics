@@ -381,10 +381,10 @@ input[type="button"]:hover, button:hover {
 a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
 
-a.profile, a.profile.current:focus,
+a.profile,
 button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; } 
 
-li.current > a.profile, a.profile:hover, a.profile:focus,
+li.current > a.profile, a.profile:hover, a.profile:focus, a.profile.current:focus,
 button.search-again, a.view { background: #461864; color: #fff; }
 
 #modals { display: none; }
