@@ -1618,10 +1618,11 @@ html.boxshadow #loginBox .field-validation-error{
 .tabbed > ul.tabs {
     white-space: nowrap !important;
 }
-.tabbed > ul.tabs > li 
-{
+.tabbed > ul.tabs > li  {
     white-space: nowrap !important;
     float: none !important;
     display: inline-block;
+}
+.tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
 }
