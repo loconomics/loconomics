@@ -735,6 +735,15 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     z-index: 1000;
 }
 
+
+/*==================
+ * Bookings
+ */
+.bookings-tab #faqs {
+    border: none;
+    padding-top: 0;
+    padding-right: 0;
+}
 /* Bookings List Groups */
 .booking-list-groups > li > h3 {
     font-size: 1.1em;
@@ -808,4 +817,35 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     font-size: 1em;
     line-height: normal;
     margin: 0;
+}
+
+/* Class booking-request
+ * The auxiliar class main-side means that
+ * the element share parent with an 'aside' element
+ * or similar (a secondary article, a widget, etc.)
+ * that use a lower important/secondary/lower place in
+ * the vertical, reducing the normal element width to
+ * fit both in the parent
+ */
+.booking-request.main-side {
+    float: left;
+    width: 490px;
+}
+.booking-request > h3 {
+    color: #8B2143;
+    font-size: 1.2em;
+    margin: 0px;
+}
+
+/* Class message-section for box sections inside a 'like message'
+ * content, like bookings request, bookings..
+ */
+.message-section {
+    border: 1px solid #6c6c6c;
+    border-radius: 15px;
+    -o-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    background: white;
+    padding: 15px;
 }

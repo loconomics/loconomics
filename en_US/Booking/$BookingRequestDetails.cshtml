@@ -1,54 +1,136 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     CommonHelpers.SecurePage();
     
     var u = DashboardFunctions.GetUserRow();
-    
     var brID = Request["BookingRequestID"];
+    
+    var confirmationLimitHours = 18;
+    DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // TODO: Calculate location distance from provider to customer
     
     var sqlGetBookingRequest = @"
         SELECT  R.BookingRequestID,
                 0 As BookingID,
                 R.CustomerUserID,
                 R.PricingEstimateID,
+                R.SpecialRequests,
+                R.UpdatedDate,
+
+                --TODO where is bank account (last numbers) or how calculate paymentDate
+                getdate() As PaymentDate,
+                '1234' As PaymentAccountLastDigits,
+
+                Pos.PositionSingular,
+
                 C.FirstName As CustomerFirstName,
                 C.LastName As CustomerLastName,
                 C.CreatedDate As CustomerMemberSinceDate,
-                E.StartTime,
-                E.EndTime,
-                E.TimeZone,
-                Pos.PositionSingular,
-                Pr.TotalPrice,
-                R.UpdatedDate
+
+                SP.StateProvinceName, SP.StateProvinceCode,
+                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
+                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
+
+                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
         FROM    BookingRequest As R
                  INNER JOIN
-                PricingEstimate As Pr
-                  ON Pr.PricingEstimateID = R.PricingEstimateID
+                PricingEstimate As P
+                  ON P.PricingEstimateID = R.PricingEstimateID
                  INNER JOIN
                 Users As C
                   ON C.UserID = R.CustomerUserID
                  INNER JOIN
-                CalendarEvents As E
-                  ON E.Id = R.PreferredDateID
+                ServiceAddress As L
+                  ON R.ServiceAddressID = L.ServiceAddressID
+                 INNER JOIN
+                CalendarEvents As E1
+                  ON E1.ID = R.PreferredDateID
+                 INNER JOIN
+                CalendarEvents As E2
+                  ON E2.ID = R.AlternativeDate1ID
+                 INNER JOIN
+                CalendarEvents As E3
+                  ON E3.ID = R.AlternativeDate2ID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+                 INNER JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
         WHERE   R.BookingRequestID = @0
                  AND
                 (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
                  AND
                 R.BookingRequestStatusID = 2
     ";
-    
+     var getServicesIncluded = @"
+        SELECT  S.Name
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ServiceAttribute As S
+                  ON S.ServiceAttributeID = P.ServiceAttributeID
+        WHERE   P.PricingEstimateID = @0
+                 AND S.CountryId = @1 AND S.LanguageID = @2
+    ";
+    var getPricingVars = @"
+        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingVariable As V
+                  ON V.PricingVariableID = P.PricingVariableID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    var getPricingOptions = @"
+        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingOption As V
+                  ON V.PricingOptionID = P.PricingOptionID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    dynamic summary, services, pvars, poptions;   
     decimal customerRate = 0;
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
+        booking     = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
+        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
+        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
+        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+    }
+    confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
+    // auxiliar vars in view generation
+    int i = 0;
+    string iprint = "";
+}
+@helper printDateTimeRange(DateTime start, DateTime end){
+    @start.ToLongDateString()
+    <text> from </text>
+    @start.ToShortTimeString()
+    <text> to </text>
+    @end.ToShortTimeString()
+}
+@helper printQuantityIfNeeded(string q){
+    decimal quantity = 0;
+    decimal.TryParse(q, out quantity);
+    if (quantity > 1) {
+        @("(" + quantity.ToString() + " items)")
     }
 }
-<h2>Booking request from @booking.CustomerFirstName</h2>
-<span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString()</span>
-    <div class="customer medium-user-info">
+@CommonHelpers.SetupStarRatingPlugin()
+
+<div class="booking-request main-side">
+    <h3>Booking request from @booking.CustomerFirstName</h3>
+    <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+    <h4>Customer profile</h4>
+    <div class="customer medium-user-info message-section">
         <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@booking.CustomerUserID" width="55" height="55" />
         <h5 class="user-public-name">@CommonHelpers.GetCustomerDisplayName(booking)</h5>
         <p class="user-text">
@@ -64,3 +146,102 @@
 
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@booking.CustomerUserID">View profile</a>
     </div>
+
+    <h4>Requested booking times</h4>
+    <div class="requested-booking-times message-section">
+        <p class="info">
+        @CommonHelpers.GetCustomerDisplayName(booking) has booked you as a @booking.PositionSingular and chosen
+        the following times for you to provide the service. Please confirm one of these times 
+        <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+        to accept this booking.
+        </p>
+        <h5>Preferred time:</h5>
+        <button type="button" class="button-confirm-datetime">
+            Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+        </button>
+        <h5>Alternate times:</h5>
+        <button type="button" class="button-confirm-datetime">
+            Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+        </button>
+        <button type="button" class="button-confirm-datetime">
+            Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+        </button>
+        <h5>Decline booking request</h5>
+        <button type="button" class="button-decline-booking">
+            Decline booking (you can offer alternative times to the customer)
+        </button>
+    </div>
+
+    <h4>Requested services and pricing estimate</h4>
+    <div class="requested-booking-services message-section">
+        <h5>Services to be performed:</h5>
+        <ul class="services">
+            @foreach (var service in services)
+            {
+                <li>@service.Name</li>
+            }
+        </ul>
+        
+        <h5>Special instructions:</h5>
+        <p class="special-instructions">@booking.SpecialRequests</p>
+
+        <h5>Additional services and pricing summary:</h5>
+        <table class="pricing-summary">
+            @foreach (var pitem in poptions)
+            {
+            <tr class="option">
+                <td class="concept">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
+                <td class="price">$@pitem.Price</td>
+            </tr>
+            }
+            <tr class="vars">
+                <td class="concept">
+                    @{
+                        i = 0;
+                        iprint = "";
+                        decimal varsTime = 0;
+                        foreach (var pitem in pvars) {
+                            if (i > 0) {
+                                iprint = "; ";
+                            }
+                            i++;
+                            @(iprint + pitem.Name + " " + @pitem.Quantity)
+                            varsTime += pitem.Time;
+                        }
+                        @("(" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr")
+                    }
+                </td>
+                <td class="price">$@(varsTime * booking.HourlyPrice)</td>
+            </tr>
+            <tr class="fee">
+                <td class="concept">Locnomics service fee (includes credit card processing costs)</td>
+                <td class="price">$@booking.FeePrice</td>
+            </tr>
+            <tr class="total">
+                <td class="concept">Payment (direct deposit scheduled for @booking.PaymentDate.ToShortDateString()
+                to checking account <text>xxxx</text>@booking.PaymentAccountLastDigits)</td>
+                <td class="price">$@booking.TotalPrice</td>
+            </tr>
+        </table>
+
+        <h5>Location and contact information:</h5>
+        <div class="location">
+            x.y miles away (z1 minutes driving time, z2 minutes public tranport)
+            Full location and contact information will be shown after you accept a time above.
+        </div>
+    </div>
+
+    <h4>Reminders</h4>
+    <div class="reminders message-section">
+        <ol>
+            <li>You will be paid after the service is succesfully completed</li>
+            <li>Please arrive five minutes before the scheduled booking time</li>
+            <li>Dress appropriately and act professionally</li>
+            <li>Present your identification and professional license (if applicable)</li>
+            <li>Review the estimate together before starting the work</li>
+            <li>Call or e-mail us with any questions</li>
+            <li>Have fun!</li>
+        </ol>
+    </div>
+</div>
+@RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")
