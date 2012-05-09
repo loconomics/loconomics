@@ -1623,8 +1623,5 @@ html.boxshadow #loginBox .field-validation-error{
     white-space: nowrap !important;
     float: none !important;
     display: inline-block;
-}
-.tabbed > ul.tabs > li > a
-{
-    
+    margin-right: 4px;
 }
