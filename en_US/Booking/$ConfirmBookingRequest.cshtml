@@ -15,6 +15,9 @@
         WHERE   R.ProviderUserID = @0
                  AND
                 R.BookingRequestID = @1
+                -- Not Confirmed Booking Request, to avoid repeated confirmations happen
+                 AND
+                R.BookingRequestStatusID <> 7
     ";
     var sqlConfirmBooking = @"
         DECLARE @BookingRequestID int, @ConfirmedDateID int
@@ -73,6 +76,14 @@
             )
             */
 
+            /*
+             * Update Availability of the CalendarEvent record for the ConfirmedDateID,
+             * from 'tentative' to 'busy'
+             */
+            UPDATE  CalendarEvents
+            SET     CalendarAvailabilityTypeID = 2
+            WHERE   Id = @ConfirmedDateID
+
             COMMIT TRAN
 
             -- We return sucessful operation (Error=0)
@@ -89,16 +100,18 @@
     using (var db = Database.Open("sqlloco")) {
         var dateID = 0;
         var dates = db.QuerySingle(sqlGetBookingDates, u.UserID, brID);
-        switch (dateType.ToUpper()) {
-            case "PREFERRED":
-                dateID = dates.PreferredDateID;
-                break;
-            case "ALTERNATIVE1":
-                dateID = dates.AlternativeDate1ID;
-                break;
-            case "ALTERNATIVE2":
-                dateID = dates.AlternativeDate2ID;
-                break;
+        if (dates != null) {
+            switch (dateType.ToUpper()) {
+                case "PREFERRED":
+                    dateID = dates.PreferredDateID;
+                    break;
+                case "ALTERNATIVE1":
+                    dateID = dates.AlternativeDate1ID;
+                    break;
+                case "ALTERNATIVE2":
+                    dateID = dates.AlternativeDate2ID;
+                    break;
+            }
         }
         if (dateID > 0) {
             var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
@@ -110,8 +123,9 @@
             /* What? 
              * - BookingRequestID and UserID (as ProviderUserID) don't match?
              * - ConfirmedDateType is not correct?
+             * - BookingRequest is already confirmed?
              */
-            CommonHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date");
+            CommonHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Is already confirmed?");
         }
     }
 }
