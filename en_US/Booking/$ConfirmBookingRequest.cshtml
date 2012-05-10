@@ -47,22 +47,7 @@
                 getdate(), getdate(), 'sys'
             )
 
-            -- TODO: REVIEW, I think we don't need save BookingID at BookingRequest, but just for now...
-            DECLARE @BookingID int
-            SET @BookingID = @@Identity
-
-            /*
-             * Updating Booking Request status
-             */
-            UPDATE  BookingRequest
-            SET     BookingRequestStatusID = 7, -- accepted
-                    BookingID = @BookingID
-            WHERE   BookingRequestID = @BookingRequestID
-
-            --TODO: we will remove non needed CalendarEvents after accept one of them? If yes, we must 
-            -- set to null the PreferredDateID, AlternativeDate1ID, AlternativeDate2ID at BookingRequest
-            -- and remove the two unneded from CalendarEvents:
-            /*
+            -- Removing non needed CalendarEvents:
             DELETE FROM CalendarEvents
             WHERE ID IN (
                 SELECT TOP 1 PreferredDateID FROM BookingRequest
@@ -74,7 +59,6 @@
                 SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
                 WHERE BookingRequestID = @BookingRequestID AND AlternativeDate2ID <> @ConfirmedDateID
             )
-            */
 
             /*
              * Update Availability of the CalendarEvent record for the ConfirmedDateID,
@@ -83,6 +67,17 @@
             UPDATE  CalendarEvents
             SET     CalendarAvailabilityTypeID = 2
             WHERE   Id = @ConfirmedDateID
+
+            /*
+             * Updating Booking Request status, and removing references to the 
+             * user selected dates (there is already a confirmed date in booking).
+             */
+            UPDATE  BookingRequest
+            SET     BookingRequestStatusID = 7, -- accepted
+                    PreferredDateID = null,
+                    AlternativeDate1ID = null,
+                    AlternativeDate2ID = null
+            WHERE   BookingRequestID = @BookingRequestID
 
             COMMIT TRAN
 

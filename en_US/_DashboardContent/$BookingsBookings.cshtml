@@ -119,7 +119,11 @@
         </li>
     </ul>
     <div class="actions">
-        <button class="item-action" data-booking-request-id="@item.BookingRequestID">Respond</button>
+        @if (item.BookingID > 0) {
+            <button class="item-action responded" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">Responded</button>
+        } else {
+            <button class="item-action" data-booking-request-id="@item.BookingRequestID">Respond</button>
+        }
         <div class="total-price">$@item.TotalPrice</div>
     </div>
   </li>

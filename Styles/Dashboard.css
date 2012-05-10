@@ -758,6 +758,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     background: white;
     padding: 10px;
     color: #6c6c6c;
+    margin: 10px 0;
 }
 .bookings-list > li > .mini-user-info,
 .bookings-list > li > .mini-booking-summary,
@@ -778,6 +779,15 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 .bookings-list > li > .actions > .total-price {
     margin: 10px 0 0;
+}
+.bookings-list .actions .item-action.responded {
+    background: #f0b600 !important;
+}
+.bookings-list .actions .item-action.responded:hover {
+    box-shadow: 0 0 5px 2px #f0b600;
+    -moz-box-shadow: 0 0 5px 2px #f0b600;
+    -o-box-shadow: 0 0 5px 2px #f0b600;
+    -webkit-box-shadow: 0 0 5px 2px #f0b600;
 }
 
 /* Class mini-user-info */
