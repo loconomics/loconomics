@@ -153,14 +153,14 @@
         to accept this booking.
         </p>
         <h5>Preferred time:</h5>
-        <button type="button" class="button button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
             Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
         </button>
         <h5>Alternate times:</h5>
-        <button type="button" class="button button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
             Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
         </button>
-        <button type="button" class="button button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
             Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
         </button>
         <h5>Decline booking request</h5>

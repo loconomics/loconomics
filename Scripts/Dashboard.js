@@ -28,32 +28,9 @@
                 url: UrlUtil.LangPath + "Booking/$BookingRequestDetails/",
                 data: { BookingRequestID: $(this).data('booking-request-id') },
                 success: function (data, text, jx) {
-                    // If is a JSON result:
-                    if (typeof (data) === 'object') {
-                        // Special Code 1: do a redirect
-                        if (data.Code == 1) {
-                            window.location = data.Result;
-                        } else if (data.Code == 2) {
-                            $tab.unblock();
-                            popup(data.Result, { width: 410, height: 320 });
-                        } else { // data.Code < 0
-                            // There is an error code.
-
-                            // Unblock loading:
-                            box.unblock();
-                            // Block with message:
-                            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
-                            box.block({
-                                message: 'Error: ' + message,
-                                css: popupStyle(popupSize('small'))
-                            })
-                            .click(function () { box.unblock(); });
-
-                            // Do not unblock in complete function!
-                            autoUnblockLoading = false;
-                        }
-                    } else {
-                        $tab.html(data);
+                    if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
+                        // Unknowed sucessfull code (if this happen in production there is a bug!)
+                        alert("Result Code: " + data.Code);
                     }
                 },
                 error: ajaxErrorPopupHandler,
@@ -66,4 +43,90 @@
             });
         }
     });
+
+    /*
+    * Booking Request confirmation
+    */
+    $('body').delegate('.booking-request .button-confirm-datetime', 'click', function () {
+        var dateType = $(this).data('date-type');
+        var brId = $(this).data('booking-request-id');
+        var $tab = $(this).closest('.tab-body');
+        var options = { autoUnblockLoading: true };
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            $tab.block(loadingBlock);
+        }, gLoadingRetard);
+
+        // Do the Ajax post
+        $.ajax({
+            url: UrlUtil.LangPath + "Booking/$ConfirmBookingRequest/",
+            data: { BookingRequestID: brId, ConfirmedDateType: dateType },
+            success: function (data, text, jx) {
+                if (!dashboardGeneralJsonCodeHandler(data, $tab, options)) {
+                    // Unknowed sucessfull code (if this happen in production there is a bug!)
+                    alert("Result Code: " + data.Code);
+                }
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                if (options.autoUnblockLoading) {
+                    $tab.unblock();
+                }
+            }
+        });
+    });
 });
+/* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
+function dashboardGeneralJsonCodeHandler(data, container, options) {
+    if (!container) container = $(document);
+
+    // If is a JSON result:
+    if (typeof (data) === 'object') {
+        if (data.Code == 0) {
+            // Special Code 0: general success code, show message saying that 'all was fine'
+
+            // Unblock loading:
+            container.unblock();
+            // Block with message:
+            var message = data.Result || container.data('success-ajax-message') || 'Confirmed!';
+            container.block({
+                message: message,
+                css: popupStyle(popupSize('small'))
+            })
+            .click(function () { container.unblock(); });
+            // Do not unblock in complete function!
+            options.autoUnblockLoading = false;
+        } else if (data.Code == 1) {
+            // Special Code 1: do a redirect
+            window.location = data.Result;
+        } else if (data.Code == 2) {
+            container.unblock();
+            popup(data.Result, { width: 410, height: 320 });
+        } else if (data.Code > 0) {
+            // Not handled!
+            return false;
+        } else { // data.Code < 0
+            // There is an error code.
+
+            // Unblock loading:
+            container.unblock();
+            // Block with message:
+            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+            container.block({
+                message: 'Error: ' + message,
+                css: popupStyle(popupSize('small'))
+            })
+            .click(function () { container.unblock(); });
+
+            // Do not unblock in complete function!
+            options.autoUnblockLoading = false;
+        }
+    } else {
+        container.html(data);
+    }
+    return true;
+}
