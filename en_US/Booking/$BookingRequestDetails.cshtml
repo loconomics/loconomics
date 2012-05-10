@@ -131,20 +131,18 @@
 
     <h4>Customer profile</h4>
     <div class="customer medium-user-info message-section">
-        <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@booking.CustomerUserID" width="55" height="55" />
-        <h5 class="user-public-name">@CommonHelpers.GetCustomerDisplayName(booking)</h5>
+        <img class="mini-avatar avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@booking.CustomerUserID" width="50" height="50" />
         <p class="user-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis.....         
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis         
         </p>
-
-        <span class="member-since">Member since @booking.CustomerMemberSinceDate</span>
-
+        <h5 class="user-public-name">@CommonHelpers.GetCustomerDisplayName(booking)</h5>
+        <span class="member-since">Member since @booking.CustomerMemberSinceDate.ToString("MMMM yyyy")</span>
         <div class="customer-rating">
             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + booking.CustomerUserID, customerRate.ToString(), "true" })
-            <span class="note">100% of service providers would work for @CommonHelpers.GetCustomerDisplayName(booking) again.</span>
+            <span class="note">*100% of service providers would work for @CommonHelpers.GetCustomerDisplayName(booking) again.</span>
         </div>
 
-        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@booking.CustomerUserID">View profile</a>
+        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@booking.CustomerUserID">View full profile</a>
     </div>
 
     <h4>Requested booking times</h4>
@@ -156,18 +154,18 @@
         to accept this booking.
         </p>
         <h5>Preferred time:</h5>
-        <button type="button" class="button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime">
             Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
         </button>
         <h5>Alternate times:</h5>
-        <button type="button" class="button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime">
             Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
         </button>
-        <button type="button" class="button-confirm-datetime">
+        <button type="button" class="button button-confirm-datetime">
             Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
         </button>
         <h5>Decline booking request</h5>
-        <button type="button" class="button-decline-booking">
+        <button type="button" class="button button-decline-booking">
             Decline booking (you can offer alternative times to the customer)
         </button>
     </div>
@@ -208,10 +206,10 @@
                             @(iprint + pitem.Name + " " + @pitem.Quantity)
                             varsTime += pitem.Time;
                         }
-                        @("(" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr")
+                        @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
                     }
                 </td>
-                <td class="price">$@(varsTime * booking.HourlyPrice)</td>
+                <td class="price">$@((varsTime * booking.HourlyPrice).ToString("#,##0.00"))</td>
             </tr>
             <tr class="fee">
                 <td class="concept">Locnomics service fee (includes credit card processing costs)</td>
@@ -226,8 +224,12 @@
 
         <h5>Location and contact information:</h5>
         <div class="location">
+            <p>
             x.y miles away (z1 minutes driving time, z2 minutes public tranport)
+            </p>
+            <p>
             Full location and contact information will be shown after you accept a time above.
+            </p>
         </div>
     </div>
 

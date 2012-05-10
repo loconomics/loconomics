@@ -81,8 +81,8 @@ body, button, input, select, textarea { font-family: sans-serif; color: #222; }
    ========================================================================== */
 
 a { color: #00989a; }
-a:visited { color: #b2e1e1; }
-a:hover { color: #8B2143; }
+a:visited { color: #999999; }
+a:hover { color: #99C027; }
 a:focus { color: #99C027; }
 
 a:hover, a:active { outline: 0; }
@@ -126,7 +126,11 @@ sub { bottom: -0.25em; }
    Lists
    ========================================================================== */
 
-ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+ul, ol, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
 dd { margin: 0 0 0 40px; }
 nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
 
@@ -205,11 +209,6 @@ Yellow 	#F0B600
 
 body { color: #666; font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
 
-a { color: #00989a; }
-a:visited { color: #999999; }
-a:hover { color: #99C027; }
-a:focus { color: #99C027; }
-
 h1, h2, h3, h4, h5, h6 { margin: 1em 0; font-weight: 600; color: #00989A; }
 h1 { color: #b5e1e2; font-size: 3em; line-height: 100%; }
 h2 { font-size: 2em; }
@@ -229,8 +228,6 @@ h6 { font-size: 1.2em; }
 h1.withsub {
     margin-bottom: 5px;
 }
-
-ul, ol { padding: 0 0 0 20px; }
 
 dd { margin: 0; }
 
@@ -702,9 +699,6 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
 .categories ul:first-child > li:hover div.menu { display: block; } 
 
-.faq dt { font-weight: bold; }
-.faq dd { margin: 1em 0; }
-
 /** Modals **/
 
 #howItWorks { margin: 60px 0 0 0; padding: 0; width: 400px; text-align: left; }
@@ -985,6 +979,7 @@ fieldset.box legend{
     -o-border-radius: 20px;
     -webkit-border-radius: 20px;
     border: 1px solid #849a9a;
+    color: #999999;
 }
 .widget h2,
 .widget h3 {
@@ -1011,6 +1006,11 @@ fieldset.box legend{
 .widget section a.more{
     display: block;
     text-align: right;
+}
+
+/** Specific FAQs widget style **/
+#faqs.widget ol li {
+    list-style: decimal inside;
 }
 
 /** help-point>a class for link button to open the help-center **/
