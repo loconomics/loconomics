@@ -95,9 +95,8 @@
         WHERE   P.PricingEstimateID = @0
                  AND V.CountryId = @1 AND V.LanguageID = @2
     ";
-    dynamic summary, services, pvars, poptions;   
+    dynamic booking, services, pvars, poptions;   
     decimal customerRate = 0;
-    dynamic booking;
     using (var db = Database.Open("sqlloco")) {
         booking     = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
         services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
