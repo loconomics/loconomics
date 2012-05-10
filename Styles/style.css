@@ -1009,7 +1009,7 @@ fieldset.box legend{
 }
 
 /** Specific FAQs widget style **/
-#faqs.widget ol li {
+.faqs.widget ol li {
     list-style: decimal inside;
 }
 

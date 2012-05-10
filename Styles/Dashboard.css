@@ -739,7 +739,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 /*==================
  * Bookings
  */
-.bookings-tab #faqs {
+.bookings-tab .faqs {
     border: none;
     padding-top: 0;
     padding-right: 0;
