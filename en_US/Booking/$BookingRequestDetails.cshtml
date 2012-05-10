@@ -216,7 +216,7 @@
             </tr>
             <tr class="total">
                 <td class="concept">Payment (direct deposit scheduled for @booking.PaymentDate.ToShortDateString()
-                to checking account <text>xxxx</text>@booking.PaymentAccountLastDigits)</td>
+                to checking account @("xxxx" + booking.PaymentAccountLastDigits))</td>
                 <td class="price">$@booking.TotalPrice</td>
             </tr>
         </table>

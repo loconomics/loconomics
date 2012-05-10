@@ -64,9 +64,9 @@
 					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
         WHERE   R.ProviderUserID=@0
                  AND
-                E.StartTime >= @1
+                Convert(date, E.StartTime) >= @1
                  AND
-                E.StartTime <= @2
+                Convert(date, E.StartTime) <= @2
     ";
     dynamic pendingBookingRequests, todayBookings, tomorrowBookings, thisweekBookings, 
         upcomingBookings, pastBookings;
