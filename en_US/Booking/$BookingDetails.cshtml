@@ -1,0 +1,141 @@
+﻿@using WebMatrix.Data;
+@{
+    CommonHelpers.SecurePage();
+    
+    var u = DashboardFunctions.GetUserRow();
+    var brID = Request["BookingRequestID"];
+    var bID = Request["BookingID"];
+
+    var confirmationLimitHours = 18;
+    DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // TODO: Calculate location distance from provider to customer
+    
+    var sqlGetBookingRequest = @"
+        SELECT  R.BookingRequestID,
+                0 As BookingID,
+                R.CustomerUserID,
+                R.PricingEstimateID,
+                R.SpecialRequests,
+                R.UpdatedDate,
+
+                --TODO where is bank account (last numbers) or how calculate paymentDate
+                getdate() As PaymentDate,
+                '1234' As PaymentAccountLastDigits,
+
+                Pos.PositionSingular,
+
+                C.FirstName As CustomerFirstName,
+                C.LastName As CustomerLastName,
+                C.CreatedDate As CustomerMemberSinceDate,
+
+                SP.StateProvinceName, SP.StateProvinceCode,
+                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
+                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
+
+                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
+        FROM    BookingRequest As R
+                 INNER JOIN
+                PricingEstimate As P
+                  ON P.PricingEstimateID = R.PricingEstimateID
+                 INNER JOIN
+                Users As C
+                  ON C.UserID = R.CustomerUserID
+                 INNER JOIN
+                ServiceAddress As L
+                  ON R.ServiceAddressID = L.ServiceAddressID
+                 INNER JOIN
+                CalendarEvents As E1
+                  ON E1.ID = R.PreferredDateID
+                 INNER JOIN
+                CalendarEvents As E2
+                  ON E2.ID = R.AlternativeDate1ID
+                 INNER JOIN
+                CalendarEvents As E3
+                  ON E3.ID = R.AlternativeDate2ID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+                 INNER JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
+        WHERE   R.BookingRequestID = @0
+                 AND
+                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
+                 AND
+                R.BookingRequestStatusID = 2
+    ";
+    dynamic booking;
+    using (var db = Database.Open("sqlloco")) {
+        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
+        if (booking != null) {
+            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
+        }
+    }
+
+}
+@helper printDateTimeRange(DateTime start, DateTime end){
+    @start.ToLongDateString()
+    <text> from </text>
+    @start.ToShortTimeString()
+    <text> to </text>
+    @end.ToShortTimeString()
+}
+@CommonHelpers.SetupStarRatingPlugin()
+
+@if (booking == null)
+{
+    <div class="booking-request main-side">
+        Sorry, it could not be found the requested Booking Request.
+    </div>
+}
+else
+{
+<div class="booking-request main-side">
+    <h3>Booking request from @booking.CustomerFirstName</h3>
+    <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+    <h4>Customer profile</h4>
+    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddCssClasses", "message-section" },
+        {"Data", booking},
+        {"DataPrefix", "Customer"},
+        {"Size", "medium"},
+        {"UserType", "customer"}
+    })
+
+    <h4>Requested booking times</h4>
+    <div class="requested-booking-times message-section">
+        <p class="info">
+        @CommonHelpers.GetUserDisplayName(booking, "Customer") has booked you as a @booking.PositionSingular and chosen
+        the following times for you to provide the service. Please confirm one of these times 
+        <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+        to accept this booking.
+        </p>
+        <h5>Preferred time:</h5>
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
+            Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+        </button>
+        <h5>Alternate times:</h5>
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
+            Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+        </button>
+        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
+            Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+        </button>
+        <h5>Decline booking request</h5>
+        <button type="button" class="button button-decline-booking">
+            Decline booking (you can offer alternative times to the customer)
+        </button>
+    </div>
+
+    <h4>Requested services and pricing estimate</h4>
+    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
+
+    <h4>Reminders</h4>
+    @RenderPage("$BookingRemindersWidget.cshtml")
+</div>
+}
+@RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")

@@ -1,0 +1,119 @@
+﻿@using WebMatrix.Data;
+@{
+    dynamic booking = PageData[0];
+    
+    if (booking == null || booking["BookingRequestID"] == null) {
+        throw new Exception("No data to bound RequestedBookingServices");
+    }
+
+    var getServicesIncluded = @"
+        SELECT  S.Name
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ServiceAttribute As S
+                  ON S.ServiceAttributeID = P.ServiceAttributeID
+        WHERE   P.PricingEstimateID = @0
+                 AND S.CountryId = @1 AND S.LanguageID = @2
+    ";
+    var getPricingVars = @"
+        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingVariable As V
+                  ON V.PricingVariableID = P.PricingVariableID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    var getPricingOptions = @"
+        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingOption As V
+                  ON V.PricingOptionID = P.PricingOptionID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+     
+    dynamic services = null, pvars = null, poptions = null;
+    using (var db = Database.Open("sqlloco")) {         
+        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
+        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
+        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+    }
+     
+    // auxiliar vars in view generation
+    int i = 0;
+    string iprint = "";
+}
+@helper printQuantityIfNeeded(string q){
+    decimal quantity = 0;
+    decimal.TryParse(q, out quantity);
+    if (quantity > 1) {
+        @("(" + quantity.ToString() + " items)")
+    }
+}
+    <div class="requested-booking-services message-section">
+        <h5>Services to be performed:</h5>
+        <ul class="services">
+            @foreach (var service in services)
+            {
+                <li>@service.Name</li>
+            }
+        </ul>
+        
+        <h5>Special instructions:</h5>
+        <p class="special-instructions">@booking.SpecialRequests</p>
+
+        <h5>Additional services and pricing summary:</h5>
+        <table class="pricing-summary">
+            @foreach (var pitem in poptions)
+            {
+            <tr class="option">
+                <td class="concept">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
+                <td class="price">$@pitem.Price</td>
+            </tr>
+            }
+            <tr class="vars">
+                <td class="concept">
+                    @{
+            i = 0;
+            iprint = "";
+            decimal varsTime = 0;
+            foreach (var pitem in pvars)
+            {
+                if (i > 0)
+                {
+                    iprint = "; ";
+                }
+                i++;
+                            @(iprint + pitem.Name + " " + @pitem.Quantity)
+                varsTime += pitem.Time;
+            }
+                        @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
+                    }
+                </td>
+                <td class="price">$@((varsTime * booking.HourlyPrice).ToString("#,##0.00"))</td>
+            </tr>
+            <tr class="fee">
+                <td class="concept">Locnomics service fee (includes credit card processing costs)</td>
+                <td class="price">$@booking.FeePrice</td>
+            </tr>
+            <tr class="total">
+                <td class="concept">Payment (direct deposit scheduled for @booking.PaymentDate.ToShortDateString()
+                to checking account @("xxxx" + booking.PaymentAccountLastDigits))</td>
+                <td class="price">$@booking.TotalPrice</td>
+            </tr>
+        </table>
+
+        <h5>Location and contact information:</h5>
+        <div class="location">
+            <p>
+            x.y miles away (z1 minutes driving time, z2 minutes public tranport)
+            </p>
+            <p>
+            Full location and contact information will be shown after you accept a time above.
+            </p>
+        </div>
+    </div>

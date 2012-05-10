@@ -18,6 +18,16 @@
 
             var $tab = $(tab);
 
+            var bid = $(this).data('booking-id');
+            var brid = $(this).data('booking-request-id');
+            var data = { BookingRequestID: brid };
+            var url = "Booking/$BookingRequestDetails/";
+
+            if (bid) {
+                url = "Booking/$BookingDetails/";
+                data.BookingID = bid;
+            }
+
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
                 $tab.block(loadingBlock);
@@ -25,8 +35,8 @@
 
             // Do the Ajax post
             $.ajax({
-                url: UrlUtil.LangPath + "Booking/$BookingRequestDetails/",
-                data: { BookingRequestID: $(this).data('booking-request-id') },
+                url: UrlUtil.LangPath + url,
+                data: data,
                 success: function (data, text, jx) {
                     if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
                         // Unknowed sucessfull code (if this happen in production there is a bug!)
@@ -67,6 +77,9 @@
                     // Unknowed sucessfull code (if this happen in production there is a bug!)
                     alert("Result Code: " + data.Code);
                 }
+
+                // After update request, bookings-list tab need be reloaded
+                reloadBookingsList();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
@@ -80,6 +93,9 @@
         });
     });
 });
+function reloadBookingsList() {
+    $('#bookings-all').load(UrlUtil.LangPath + "Booking/$BookingsList/");
+}
 /* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
 function dashboardGeneralJsonCodeHandler(data, container, options) {
     if (!container) container = $(document);

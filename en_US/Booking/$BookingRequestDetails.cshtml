@@ -4,7 +4,8 @@
     
     var u = DashboardFunctions.GetUserRow();
     var brID = Request["BookingRequestID"];
-    
+    var bID = Request["BookingID"];
+
     var confirmationLimitHours = 18;
     DateTime confirmationLimitDate = DateTime.MaxValue;
     
@@ -66,50 +67,14 @@
                  AND
                 R.BookingRequestStatusID = 2
     ";
-     var getServicesIncluded = @"
-        SELECT  S.Name
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                ServiceAttribute As S
-                  ON S.ServiceAttributeID = P.ServiceAttributeID
-        WHERE   P.PricingEstimateID = @0
-                 AND S.CountryId = @1 AND S.LanguageID = @2
-    ";
-    var getPricingVars = @"
-        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                P.TimeEstimate As Time, P.PriceEstimate As Price
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingVariable As V
-                  ON V.PricingVariableID = P.PricingVariableID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
-    ";
-    var getPricingOptions = @"
-        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                P.TimeEstimate As Time, P.PriceEstimate As Price
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingOption As V
-                  ON V.PricingOptionID = P.PricingOptionID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
-    ";
-    dynamic booking, services = null, pvars = null, poptions = null;
-    decimal customerRate = 0;
+    dynamic booking;
     using (var db = Database.Open("sqlloco")) {
-        booking     = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
+        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
         if (booking != null) {
             confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
-            
-            services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
-            pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
-            poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
         }
     }
-    // auxiliar vars in view generation
-    int i = 0;
-    string iprint = "";
+
 }
 @helper printDateTimeRange(DateTime start, DateTime end){
     @start.ToLongDateString()
@@ -117,13 +82,6 @@
     @start.ToShortTimeString()
     <text> to </text>
     @end.ToShortTimeString()
-}
-@helper printQuantityIfNeeded(string q){
-    decimal quantity = 0;
-    decimal.TryParse(q, out quantity);
-    if (quantity > 1) {
-        @("(" + quantity.ToString() + " items)")
-    }
 }
 @CommonHelpers.SetupStarRatingPlugin()
 
@@ -140,25 +98,18 @@ else
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <h4>Customer profile</h4>
-    <div class="customer medium-user-info message-section">
-        <img class="mini-avatar avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@booking.CustomerUserID" width="50" height="50" />
-        <p class="user-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis         
-        </p>
-        <h5 class="user-public-name">@CommonHelpers.GetCustomerDisplayName(booking)</h5>
-        <span class="member-since">Member since @booking.CustomerMemberSinceDate.ToString("MMMM yyyy")</span>
-        <div class="customer-rating">
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + booking.CustomerUserID, customerRate.ToString(), "true" })
-            <span class="note">*100% of service providers would work for @CommonHelpers.GetCustomerDisplayName(booking) again.</span>
-        </div>
-
-        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@booking.CustomerUserID">View full profile</a>
-    </div>
+    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddCssClasses", "message-section" },
+        {"Data", booking},
+        {"DataPrefix", "Customer"},
+        {"Size", "medium"},
+        {"UserType", "customer"}
+    })
 
     <h4>Requested booking times</h4>
     <div class="requested-booking-times message-section">
         <p class="info">
-        @CommonHelpers.GetCustomerDisplayName(booking) has booked you as a @booking.PositionSingular and chosen
+        @CommonHelpers.GetUserDisplayName(booking, "Customer") has booked you as a @booking.PositionSingular and chosen
         the following times for you to provide the service. Please confirm one of these times 
         <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
         to accept this booking.
@@ -181,82 +132,10 @@ else
     </div>
 
     <h4>Requested services and pricing estimate</h4>
-    <div class="requested-booking-services message-section">
-        <h5>Services to be performed:</h5>
-        <ul class="services">
-            @foreach (var service in services)
-            {
-                <li>@service.Name</li>
-            }
-        </ul>
-        
-        <h5>Special instructions:</h5>
-        <p class="special-instructions">@booking.SpecialRequests</p>
-
-        <h5>Additional services and pricing summary:</h5>
-        <table class="pricing-summary">
-            @foreach (var pitem in poptions)
-            {
-            <tr class="option">
-                <td class="concept">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
-                <td class="price">$@pitem.Price</td>
-            </tr>
-            }
-            <tr class="vars">
-                <td class="concept">
-                    @{
-            i = 0;
-            iprint = "";
-            decimal varsTime = 0;
-            foreach (var pitem in pvars)
-            {
-                if (i > 0)
-                {
-                    iprint = "; ";
-                }
-                i++;
-                            @(iprint + pitem.Name + " " + @pitem.Quantity)
-                varsTime += pitem.Time;
-            }
-                        @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
-                    }
-                </td>
-                <td class="price">$@((varsTime * booking.HourlyPrice).ToString("#,##0.00"))</td>
-            </tr>
-            <tr class="fee">
-                <td class="concept">Locnomics service fee (includes credit card processing costs)</td>
-                <td class="price">$@booking.FeePrice</td>
-            </tr>
-            <tr class="total">
-                <td class="concept">Payment (direct deposit scheduled for @booking.PaymentDate.ToShortDateString()
-                to checking account @("xxxx" + booking.PaymentAccountLastDigits))</td>
-                <td class="price">$@booking.TotalPrice</td>
-            </tr>
-        </table>
-
-        <h5>Location and contact information:</h5>
-        <div class="location">
-            <p>
-            x.y miles away (z1 minutes driving time, z2 minutes public tranport)
-            </p>
-            <p>
-            Full location and contact information will be shown after you accept a time above.
-            </p>
-        </div>
-    </div>
+    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
 
     <h4>Reminders</h4>
-    <div class="reminders message-section">
-        <ol>
-            <li>You will be paid after the service is succesfully completed</li>
-            <li>Please arrive five minutes before the scheduled booking time</li>
-            <li>Dress appropriately and act professionally</li>
-            <li>Present your identification and professional license (if applicable)</li>
-            <li>Review the estimate together before starting the work</li>
-            <li>Call or e-mail us with any questions</li>
-            <li>Have fun!</li>
-        </ol>
-    </div>
+    @RenderPage("$BookingRemindersWidget.cshtml")
 </div>
 }
 @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")

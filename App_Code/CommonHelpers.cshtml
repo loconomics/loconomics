@@ -143,10 +143,7 @@
     public static string GetUserDisplayName(dynamic row){
         return row.FirstName + " " + GetInitialLetter(row.LastName) + ".";
     }
-    public static string GetCustomerDisplayName(dynamic row){
-        return row.CustomerFirstName + " " + GetInitialLetter(row.CustomerLastName) + ".";
-    }
-    public static string GetProviderDisplayName(dynamic row){
-        return row.ProviderFirstName + " " + GetInitialLetter(row.ProviderLastName) + ".";
+    public static string GetUserDisplayName(dynamic row, string fieldPrefix){
+        return row[fieldPrefix + "FirstName"] + " " + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
     }
 }
