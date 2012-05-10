@@ -822,6 +822,11 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     text-transform: lowercase;
     width: 100px;
 }
+.medium-user-info.user-contact-data a.view-profile {
+    position: static;
+    display: inline;
+    margin-left: 10px;
+}
 .medium-user-info .user-text {
     display: inline-block;
     height: 50px;

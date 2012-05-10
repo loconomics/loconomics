@@ -6,6 +6,10 @@
     var userType = PageData["UserType"] ?? "user"; // customer, provider
     var addCssClasses = PageData["AddCssClasses"] ?? "";
     
+    if (withContactData) {
+        addCssClasses += " user-contact-data";
+    }
+    
     if (data == null) {
         // TODO: load user data from database
         dataPrefix = "";
@@ -57,7 +61,10 @@
 
         <div class="customer-rating">
             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + data[dataPrefix + "UserID"], customerRate.ToString(), "true" })
+            @if (!withContactData)
+            {
             <span class="note">*100% of service providers would work for @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>
+            }
         </div>
 
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
