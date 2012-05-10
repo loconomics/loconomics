@@ -83,7 +83,7 @@
     <text> to </text>
     @end.ToShortTimeString()
 }
-@helper printAddress(IDictionary<string, object> addressDetails){
+@helper printAddress(IDictionary<string, object> addressDetails, bool editable){
         <div class="address">
             @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
             <span class="address-name">@addressDetails["name"]</span>
@@ -92,11 +92,13 @@
             <span class="address-city">@addressDetails["city"]</span>
             <span class="address-state">@addressDetails["state"]</span>
             <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            @if (editable) {
             <div class="tools">
                 <a href="#" class="edit">Edit</a>
                 <a href="#" class="map">Map</a>
                 <a href="#" class="remove">Remove</a>
             </div>
+            }
         </div>
 }
 @functions{
@@ -150,12 +152,12 @@ else
                 {"city", booking.City}, 
                 {"state", booking.StateProvinceCode},
                 {"zipcode", booking.PostalCode}
-            })
+            }, false)
 
             <div class="time-estimation">
             (x minutes driving time, y minutes walk)
             </div>
-            <a target="_blank" class="view-directions" href="http://maps.google.com/?s=@(booking.AddressLine1 + ", " + booking.City + ", " + booking.StateProvinceCode)">View directions</a>
+            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@(booking.AddressLine1 + ", " + booking.City + ", " + booking.StateProvinceCode + ", United States")">View directions</a>
         </div>
     </div>
 
