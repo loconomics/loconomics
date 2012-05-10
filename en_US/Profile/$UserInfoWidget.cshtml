@@ -20,15 +20,41 @@
         throw new Exception("UserType is not valid: " + userType);
     }
 }
+@helper printGoogleMap(string location){
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@functions{
+    string getLocationForGoogleMaps(dynamic data){
+        return data.AddressLine1 + ", " + data.City + ", " + data.StateProvinceCode + ", United States";
+    }
+}
 @if (size == "medium" && userType == "customer")
 {
     <div class="customer medium-user-info @addCssClasses">
+        <div class="user-micro-summary">
+            <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(data, dataPrefix)</h5>
+            <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
+        </div>
+        
         <img class="mini-avatar avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="50" height="50" />
+        
+        @if (withContactData) {
+            <div class="user-contact-data">
+                <div class="user-full-name">Name: <span class="value">@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
+                <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
+                <div class="user-location">@string.Join(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
+                <div class="user-mobile-phone">Mobile phone: <span class="value">@data[dataPrefix + "MobilePhone"]</span></div>
+                <div class="user-email">Email address: <span class="value">@data[dataPrefix + "Email"]</span></div>
+            </div>
+
+            @printGoogleMap(getLocationForGoogleMaps(data))
+        }
+        else {
         <p class="user-text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis
         </p>
-        <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(data, dataPrefix)</h5>
-        <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
+        }
+
         <div class="customer-rating">
             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + data[dataPrefix + "UserID"], customerRate.ToString(), "true" })
             <span class="note">*100% of service providers would work for @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>

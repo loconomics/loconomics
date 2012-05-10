@@ -830,10 +830,18 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     text-overflow: ellipsis;
     width: 400px;
 }
+.medium-user-info .user-contact-data {
+    display: inline-block;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 400px;
+}
 .medium-user-info h5.user-public-name {
     margin: 0;
     font-size: 1em;
     line-height: 1em;
+    display: inline;
 }
 .medium-user-info .customer-rating {
     width: 360px;
@@ -842,6 +850,11 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     font-size: .8em;
     color: #6c6c6c;
     font-style: italic;
+}
+.medium-user-info .google-map {
+    position: absolute;
+    right: 15px;
+    top: 15px;
 }
 
 /* Class mini-booking-summary */
@@ -869,6 +882,9 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .booking-request.main-side {
     float: left;
     width: 500px;
+}
+.booking-request {
+    position: relative;
 }
 .booking-request h3,
 .booking-request h4 {
@@ -943,6 +959,16 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 .booking-request .reminders ol li {
     list-style: decimal inside;
+}
+
+/* Booking (booking request confirmed) */
+.booking .booking-time-location {
+    position: relative;
+}
+.booking .booking-time-location .google-map {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
 }
 
 /* Class message-section for box sections inside a 'like message'

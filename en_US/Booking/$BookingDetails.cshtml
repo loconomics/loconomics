@@ -26,7 +26,17 @@
 
                 C.FirstName As CustomerFirstName,
                 C.LastName As CustomerLastName,
+                C.MiddleIn As CustomerMiddleIn,
                 C.CreatedDate As CustomerMemberSinceDate,
+                C.MobilePhone As CustomerMobilePhone,
+                CUP.Email As CustomerEmail,
+
+                CL.AddressLine1 As CustomerAddressLine1,
+                CL.AddressLine2 As CustomerAddressLine2,
+                CL.City As CustomerCity,
+                CSP.StateProvinceName As CustomerStateProvinceName,
+                CSP.StateProvinceCode As CustomerStateProvinceCode,
+                CPC.PostalCode As CustomerPostalCode,
 
                 L.UserID As LocationUserID,
                 L.NickName As LocationName,
@@ -49,8 +59,27 @@
                 Users As C
                   ON C.UserID = R.CustomerUserID
                  INNER JOIN
+                UserProfile As CUP
+                  ON CUP.UserID = C.UserID
+                 LEFT JOIN
+                ServiceAddress As CL
+                  ON CL.UserID = C.UserID
+                    AND CL.PreferredAddress = 1
+                 LEFT JOIN
+                StateProvince As CSP
+                  ON CSP.StateProvinceID = CL.StateProvinceID
+                 LEFT JOIN
+                PostalCode As CPC
+                  ON CPC.PostalCodeID = CL.PostalCodeID
+                 INNER JOIN
                 ServiceAddress As L
                   ON R.ServiceAddressID = L.ServiceAddressID
+                 INNER JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
+                 INNER JOIN
+                PostalCode As PC
+                  ON PC.PostalCodeID = L.PostalCodeID
                  INNER JOIN
                 CalendarEvents As E
                   ON E.ID = B.ConfirmedDateID
@@ -58,12 +87,6 @@
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
-                 INNER JOIN
-                StateProvince As SP
-                  ON SP.StateProvinceID = L.StateProvinceID
-                 INNER JOIN
-                PostalCode As PC
-                  ON PC.PostalCodeID = L.PostalCodeID
         WHERE   R.BookingRequestID = @0
                  AND
                 B.BookingID = @1
@@ -101,6 +124,9 @@
             }
         </div>
 }
+@helper printGoogleMap(string location){
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
 @functions{
     string getLocationName(dynamic data){
         if (data.LocationUserID == data.CustomerUserID) {
@@ -110,6 +136,9 @@
         } else {
             return "";
         }
+    }
+    string getLocationForGoogleMaps(dynamic data){
+        return data.AddressLine1 + ", " + data.City + ", " + data.StateProvinceCode + ", United States";
     }
 }
 @CommonHelpers.SetupStarRatingPlugin()
@@ -122,7 +151,7 @@
 }
 else
 {
-<div class="booking-request main-side">
+<div class="booking-request booking main-side">
     <h3>Waiting booking confirmation from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
@@ -157,7 +186,8 @@ else
             <div class="time-estimation">
             (x minutes driving time, y minutes walk)
             </div>
-            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@(booking.AddressLine1 + ", " + booking.City + ", " + booking.StateProvinceCode + ", United States")">View directions</a>
+            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View directions</a>
+            @printGoogleMap(getLocationForGoogleMaps(booking))
         </div>
     </div>
 
