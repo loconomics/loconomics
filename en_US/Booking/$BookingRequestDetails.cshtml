@@ -94,7 +94,7 @@
 else
 {
 <div class="booking-request main-side">
-    <h3>Booking request from @booking.CustomerFirstName</h3>
+    <h3>Booking request from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <h4>Customer profile</h4>

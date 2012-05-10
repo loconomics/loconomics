@@ -5,19 +5,18 @@
     var u = DashboardFunctions.GetUserRow();
     var brID = Request["BookingRequestID"];
     var bID = Request["BookingID"];
-
-    var confirmationLimitHours = 18;
-    DateTime confirmationLimitDate = DateTime.MaxValue;
     
     // TODO: Calculate location distance from provider to customer
     
     var sqlGetBookingRequest = @"
         SELECT  R.BookingRequestID,
-                0 As BookingID,
+                B.BookingID,
                 R.CustomerUserID,
                 R.PricingEstimateID,
                 R.SpecialRequests,
                 R.UpdatedDate,
+                R.BookingRequestStatusID,
+                B.BookingStatusID,
 
                 --TODO where is bank account (last numbers) or how calculate paymentDate
                 getdate() As PaymentDate,
@@ -29,13 +28,20 @@
                 C.LastName As CustomerLastName,
                 C.CreatedDate As CustomerMemberSinceDate,
 
+                L.UserID As LocationUserID,
+                L.NickName As LocationName,
+                L.AddressLine1, L.AddressLine2,
+                L.City,
                 SP.StateProvinceName, SP.StateProvinceCode,
-                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
-                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
-                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
+                PC.PostalCode,
+
+                E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
                 P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
         FROM    BookingRequest As R
+                 INNER JOIN
+                Booking As B
+                  ON R.BookingRequestID = B.BookingRequestID
                  INNER JOIN
                 PricingEstimate As P
                   ON P.PricingEstimateID = R.PricingEstimateID
@@ -46,33 +52,27 @@
                 ServiceAddress As L
                   ON R.ServiceAddressID = L.ServiceAddressID
                  INNER JOIN
-                CalendarEvents As E1
-                  ON E1.ID = R.PreferredDateID
-                 INNER JOIN
-                CalendarEvents As E2
-                  ON E2.ID = R.AlternativeDate1ID
-                 INNER JOIN
-                CalendarEvents As E3
-                  ON E3.ID = R.AlternativeDate2ID
+                CalendarEvents As E
+                  ON E.ID = B.ConfirmedDateID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
-					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
                  INNER JOIN
                 StateProvince As SP
                   ON SP.StateProvinceID = L.StateProvinceID
+                 INNER JOIN
+                PostalCode As PC
+                  ON PC.PostalCodeID = L.PostalCodeID
         WHERE   R.BookingRequestID = @0
                  AND
-                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
+                B.BookingID = @1
                  AND
-                R.BookingRequestStatusID = 2
+                (R.ProviderUserID = @2 OR R.CustomerUserID = @2)
     ";
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
-        if (booking != null) {
-            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
-        }
+        booking = db.QuerySingle(sqlGetBookingRequest, brID, bID, u.UserID, 1, 1);
     }
 
 }
@@ -83,52 +83,80 @@
     <text> to </text>
     @end.ToShortTimeString()
 }
+@helper printAddress(IDictionary<string, object> addressDetails){
+        <div class="address">
+            @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
+            <span class="address-name">@addressDetails["name"]</span>
+            }
+            <span class="address-location">@addressDetails["location"]</span>
+            <span class="address-city">@addressDetails["city"]</span>
+            <span class="address-state">@addressDetails["state"]</span>
+            <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            <div class="tools">
+                <a href="#" class="edit">Edit</a>
+                <a href="#" class="map">Map</a>
+                <a href="#" class="remove">Remove</a>
+            </div>
+        </div>
+}
+@functions{
+    string getLocationName(dynamic data){
+        if (data.LocationUserID == data.CustomerUserID) {
+            return data.CustomerFirstName + "'s " + data.LocationName;
+        } else if (data.LocationUserID == data.ProviderUserID) {
+            return data.ProviderFirstName + "'s " + data.LocationName;
+        } else {
+            return "";
+        }
+    }
+}
 @CommonHelpers.SetupStarRatingPlugin()
 
 @if (booking == null)
 {
-    <div class="booking-request main-side">
-        Sorry, it could not be found the requested Booking Request.
+    <div class="booking main-side">
+        Sorry, it could not be found the requested Booking.
     </div>
 }
 else
 {
 <div class="booking-request main-side">
-    <h3>Booking request from @booking.CustomerFirstName</h3>
+    <h3>Waiting booking confirmation from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-    <h4>Customer profile</h4>
+    <h4>Customer information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"AddCssClasses", "message-section" },
         {"Data", booking},
         {"DataPrefix", "Customer"},
         {"Size", "medium"},
-        {"UserType", "customer"}
+        {"UserType", "customer"},
+        {"WithContactData", true}
     })
 
-    <h4>Requested booking times</h4>
-    <div class="requested-booking-times message-section">
-        <p class="info">
-        @CommonHelpers.GetUserDisplayName(booking, "Customer") has booked you as a @booking.PositionSingular and chosen
-        the following times for you to provide the service. Please confirm one of these times 
-        <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
-        to accept this booking.
-        </p>
-        <h5>Preferred time:</h5>
-        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
-            Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
-        </button>
-        <h5>Alternate times:</h5>
-        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
-            Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
-        </button>
-        <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
-            Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
-        </button>
-        <h5>Decline booking request</h5>
-        <button type="button" class="button button-decline-booking">
-            Decline booking (you can offer alternative times to the customer)
-        </button>
+    <h4>Booking time and location</h4>
+    <div class="booking-time-location message-section">
+        <h5>Position: </h5>
+        <span class="position">@booking.PositionSingular</span>
+
+        <h5>Scheduled time: </h5>
+        <span class="scheduled-time">@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+
+        <h5>Location: </h5>
+        <div class="location">
+            @printAddress(new Dictionary<string, object>() {
+                {"name", getLocationName(booking)}, 
+                {"location", booking.AddressLine1 + " " + booking.AddressLine2},
+                {"city", booking.City}, 
+                {"state", booking.StateProvinceCode},
+                {"zipcode", booking.PostalCode}
+            })
+
+            <div class="time-estimation">
+            (x minutes driving time, y minutes walk)
+            </div>
+            <a target="_blank" class="view-directions" href="http://maps.google.com/?s=@(booking.AddressLine1 + ", " + booking.City + ", " + booking.StateProvinceCode)">View directions</a>
+        </div>
     </div>
 
     <h4>Requested services and pricing estimate</h4>
