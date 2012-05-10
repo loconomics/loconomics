@@ -95,15 +95,18 @@
         WHERE   P.PricingEstimateID = @0
                  AND V.CountryId = @1 AND V.LanguageID = @2
     ";
-    dynamic booking, services, pvars, poptions;   
+    dynamic booking, services = null, pvars = null, poptions = null;
     decimal customerRate = 0;
     using (var db = Database.Open("sqlloco")) {
         booking     = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
-        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
-        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
-        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+        if (booking != null) {
+            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
+            
+            services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
+            pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
+            poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+        }
     }
-    confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
     // auxiliar vars in view generation
     int i = 0;
     string iprint = "";
@@ -124,6 +127,14 @@
 }
 @CommonHelpers.SetupStarRatingPlugin()
 
+@if (booking == null)
+{
+    <div class="booking-request main-side">
+        Sorry, it could not be found the requested Booking Request.
+    </div>
+}
+else
+{
 <div class="booking-request main-side">
     <h3>Booking request from @booking.CustomerFirstName</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
@@ -194,17 +205,19 @@
             <tr class="vars">
                 <td class="concept">
                     @{
-                        i = 0;
-                        iprint = "";
-                        decimal varsTime = 0;
-                        foreach (var pitem in pvars) {
-                            if (i > 0) {
-                                iprint = "; ";
-                            }
-                            i++;
+            i = 0;
+            iprint = "";
+            decimal varsTime = 0;
+            foreach (var pitem in pvars)
+            {
+                if (i > 0)
+                {
+                    iprint = "; ";
+                }
+                i++;
                             @(iprint + pitem.Name + " " + @pitem.Quantity)
-                            varsTime += pitem.Time;
-                        }
+                varsTime += pitem.Time;
+            }
                         @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
                     }
                 </td>
@@ -245,4 +258,5 @@
         </ol>
     </div>
 </div>
+}
 @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")
