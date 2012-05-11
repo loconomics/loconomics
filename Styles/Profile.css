@@ -458,8 +458,6 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .profile form.message .message-body textarea:hover{
     color: Black !important;
 }
-.profile .message-sent {
-    margin-top: 100px;
-    text-align: center;
-    font-weight: bold;
+.profile .message .validation-summary-errors {
+    padding: 15px;
 }
