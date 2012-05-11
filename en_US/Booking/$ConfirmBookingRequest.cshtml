@@ -20,9 +20,13 @@
                 R.BookingRequestStatusID <> 7
     ";
     var sqlConfirmBooking = @"
+        -- Parameters
         DECLARE @BookingRequestID int, @ConfirmedDateID int
         SET @BookingRequestID = @0
         SET @ConfirmedDateID = @1
+
+        DECLARE @BookingID int
+        SET @BookingID = -1
 
         BEGIN TRY
             BEGIN TRAN
@@ -46,6 +50,7 @@
                 0, -- not applied price adjustement (now, almost)
                 getdate(), getdate(), 'sys'
             )
+            SET @BookingID = @@Identity
 
             -- Removing non needed CalendarEvents:
             DELETE FROM CalendarEvents
@@ -81,8 +86,9 @@
 
             COMMIT TRAN
 
-            -- We return sucessful operation (Error=0)
-            SELECT 0 As Error, '' As ErrorMessage
+            -- We return sucessful operation with Error=0
+            -- and attach the BookingID created instead of an ErrorMessage
+            SELECT 0 As Error, @BookingID As BookingID
         END TRY
         BEGIN CATCH
             IF @@TRANCOUNT > 0
@@ -111,9 +117,15 @@
         if (dateID > 0) {
             var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
-            // Return JSON result: If result.Error is 0, result will be 'all is fine!'
-            // but is not, we need negative numbers (is our convention for json errors code)
-            CommonHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+            if (result.Error == 0) {
+                // A redirect is performed to return the BookingDetails html to the user
+                Response.Redirect(UrlUtil.LangPath + String.Format(
+                    "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), true);
+            } else {
+                // Return JSON result:
+                // We need negative numbers to indicate an error (is our convention for json 'Code')
+                CommonHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+            }
         } else {
             /* What? 
              * - BookingRequestID and UserID (as ProviderUserID) don't match?
