@@ -18,6 +18,7 @@
                 R.PricingEstimateID,
                 R.SpecialRequests,
                 R.UpdatedDate,
+                R.BookingRequestStatusID,
 
                 --TODO where is bank account (last numbers) or how calculate paymentDate
                 getdate() As PaymentDate,
@@ -66,8 +67,8 @@
         WHERE   R.BookingRequestID = @0
                  AND
                 (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
-                 AND
-                R.BookingRequestStatusID = 2
+                /* AND
+                R.BookingRequestStatusID = 2 */
     ";
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
@@ -85,6 +86,34 @@
     <text> to </text>
     @end.ToShortTimeString()
 }
+@helper printTitleStatus(dynamic booking){
+    var statusTitle = "Booking request from {0}. Unknown status";
+    switch ((int)booking.BookingRequestStatusID) {
+        case 1: // created but not complete
+        case 3: // created but not complete because time out
+            statusTitle = "Incomplete booking request from {0}";
+            break;
+        case 2: // completed request by customer, awaiting provider confirmation
+            statusTitle = "Booking request from {0}";
+            break;
+        case 4: // cancelled by customer
+            statusTitle = "Booking request cancelled by {0}";
+            break;
+        case 5: // denied by provider
+            statusTitle = "Denied booking request from {0}";
+            break;
+        case 6: // expired (not answered by provider in time)
+            statusTitle = "Expired booking request from {0}";
+            break;
+        case 7: // accepted by provider (you must consider view the booking details!)
+            statusTitle = "Accepted booking request from {0}";
+            break;
+        case 8: // denied with alternatives
+            statusTitle = "Denied with alternatives booking request from {0}";
+            break;
+    }
+    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(booking, "Customer"))
+}
 @CommonHelpers.SetupStarRatingPlugin()
 
 @if (booking == null)
@@ -96,7 +125,7 @@
 else
 {
 <div class="booking-request main-side">
-    <h3>Booking request from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
+    <h3>@printTitleStatus(booking)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <h4>Customer profile</h4>

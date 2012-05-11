@@ -10,7 +10,7 @@ var errorBlock = function (error, reload, style) {
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
     }
 };
-var gLoadingRetard = 600;
+var gLoadingRetard = 300;
 
 /*
  * Our jQuery additions (small plugins)
