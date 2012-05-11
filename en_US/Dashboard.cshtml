@@ -19,13 +19,19 @@
         "ressources", "tools", "bookings"
     };
     if (pages.Contains(page)) {
-        fileToRender = "_DashboardContent/$" + page + ".cshtml";
+        fileToRender = UrlUtil.LangPath + "_DashboardContent/$" + page + ".cshtml";
         // Set menu option selected
         PageData["menu-item"] = page;
     } else {
-        string file = "_DashboardContent/" + string.Join("/", UrlData.ToArray<string>()) + ".cshtml";
-        if (File.Exists(file)) {
-            fileToRender = file;
+        string folder = "_DashboardContent/";
+        string file =  CommonHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
+        if (File.Exists(Server.MapPath(UrlUtil.LangPath + folder + file))) {
+            if (file.StartsWith("$")) {
+                @RenderPage(UrlUtil.LangPath + folder + file);
+                return;
+            } else {
+                fileToRender = UrlUtil.LangPath + folder + file;
+            }
         } else {
             throw new HttpException(404, "Page not found");
         }

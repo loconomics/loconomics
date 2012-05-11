@@ -27,7 +27,7 @@
             db.Execute(@"
                 UPDATE users
                 SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
-                        AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, UpdatedDate=getdate(), ModifiedBy='sys'
+                        AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, PublicBio=@11, UpdatedDate=getdate(), ModifiedBy='sys'
                 WHERE   UserId = @0
             ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
              State, Zip, Bio);
