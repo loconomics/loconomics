@@ -10,7 +10,7 @@
     
     // var Service, string ServiceType, string position
     
-    var providerrow = PageData["providerrow"] = ProfileFunctions.GetProfileRow(providerid);
+    var providerrow = PageData["providerrow"] = ProfileFunctions.GetProviderProfileRow(providerid);
     //var posrows = PageData["posrows"] = ProfileFunctions.GetPositionRow(providerid, positionid);
     var posrows = PageData["posrows"] = DashboardFunctions.GetUserPos(providerid);
     
@@ -32,7 +32,7 @@
     // Number of maximum positions displayed:
     var maxPositions = 5;
     
-    Page.Title = PageData["providerrow"].Name;
+    Page.Title = PageData["providerrow"].FirstName;
     Scripts.Add(UrlUtil.AppPath + "Scripts/Profile.js");
 }
 @helper printFriend(string name, string photo){

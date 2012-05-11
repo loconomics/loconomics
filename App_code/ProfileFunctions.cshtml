@@ -2,11 +2,11 @@
 
     /* Get a data row with the User Public Profile information from the database
     */
-    public static object GetProfileRow(int userId){
+    public static object GetProviderProfileRow(int userId){
         var db = Database.Open("sqlloco");
-        var profilesql = @"SELECT a.UserID, FirstName + ' ' + LastName AS Name,FirstName,LastName,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
+        var profilesql = @"SELECT a.UserID, FirstName,LastName,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
                         FROM users a 
-                        JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
+                        LEFT JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
                         JOIN dbo.userprofile e ON  (a.userid = e.userid)
                         LEFT JOIN dbo.ReviewScores rs ON (a.userid = rs.ProviderID)                     
                         WHERE a.userid = @0";
@@ -14,7 +14,7 @@
         return db.QuerySingle(profilesql, userId);
     }
     
-    public static object GetPositionRow(int userId, int positionId){
+    public static object GetProfilePositionRow(int userId, int positionId){
         var db = Database.Open("sqlloco");
         var positionsql ="select distinct  d.ServiceAttributeCategoryID,d.ServiceAttributeCategory from dbo.userprofilepositions a join dbo.userprofileserviceattributes b on a.UserID = b.UserID and a.PositionID = b.PositionID join dbo.servicecategoryattributemapping c on b.SCAMID = c.SCAMID join dbo.serviceattributecategory d on c.ServiceAttributeCategoryID = d.ServiceAttributeCategoryID where a.UserID = @0 and b.PositionID = @1 ";
         // TODO: (un-)used SQL sentence on body of "Profile/_Overview.cshtml" (come from the old ProviderProfile.cshtml file):
