@@ -138,7 +138,8 @@ function dashboardGeneralJsonCodeHandler(data, container, options) {
             // Special Code 3: reload current page content to the given url at data.Result)
             // Note: to reload same url page content, is better return the html directly from
             // this ajax server request.
-            container.unblock();
+            //container.unblock(); is blocked and unblocked againg by the reload method:
+            options.autoUnblockLoading = false;
             container.reload(data.Result);
         } else if (data.Code > 0) {
             // Not handled!

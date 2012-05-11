@@ -27,7 +27,15 @@ $.fn.reload = function (newurl) {
         this.data('source-url', newurl);
     var url = this.data('source-url');
     if (url) {
-        this.load(url);
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            this.block(loadingBlock);
+        }, gLoadingRetard);
+        var t = this;
+        this.load(url, function () {
+            clearTimeout(loadingtimer);
+            t.unblock();
+        });
     }
 }
 
@@ -546,6 +554,20 @@ $(document).ready(function () {
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
                         window.location = data.Result;
+                    } else if (data.Code == 2) {
+                        // Special Code 2: show login popup (with the given url at data.Result)
+                        container.unblock();
+                        popup(data.Result, { width: 410, height: 320 });
+                    } else if (data.Code == 3) {
+                        // Special Code 3: reload current page content to the given url at data.Result)
+                        // Note: to reload same url page content, is better return the html directly from
+                        // this ajax server request.
+                        //container.unblock(); is blocked and unblocked againg by the reload method:
+                        options.autoUnblockLoading = false;
+                        container.reload(data.Result);
+                    } else if (data.Code > 100) {
+                        // User Code: trigger custom event to manage results:
+                        form.trigger('ajaxSuccessPost', [data, text, jx]);
                     } else { // data.Code < 0
                         // There is an error code.
 
@@ -639,7 +661,18 @@ $(document).ready(function () {
                         .click(function () { box.unblock(); });
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
-                    } else if (data.Code > 1) {
+                    } else if (data.Code == 2) {
+                        // Special Code 2: show login popup (with the given url at data.Result)
+                        container.unblock();
+                        popup(data.Result, { width: 410, height: 320 });
+                    } else if (data.Code == 3) {
+                        // Special Code 3: reload current page content to the given url at data.Result)
+                        // Note: to reload same url page content, is better return the html directly from
+                        // this ajax server request.
+                        //container.unblock(); is blocked and unblocked againg by the reload method:
+                        options.autoUnblockLoading = false;
+                        container.reload(data.Result);
+                    } else if (data.Code > 100) {
                         // User Code: trigger custom event to manage results:
                         form.trigger('ajaxSuccessPost', [data, text, jx]);
                     } else { // data.Code < 0
