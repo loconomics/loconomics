@@ -1,8 +1,9 @@
 ﻿@{
     // Provider
-    var provider = PageData["providerrow"];
+    var provider = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["ProviderID"].AsInt());
     // Current position data record:
-    var p = PageData["position"];
+    var p = PageData["position"] ?? DashboardFunctions.GetUserPos(Request["ProviderID"].AsInt(),
+        Request["PositionID"].AsInt());
     // Current position number/index
     var n = PageData["npos"];
     
@@ -35,7 +36,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
         <div class="message-sent">Your message was succesfully sent!</div>
     } else {
         var u = DashboardFunctions.GetUserRow();
-        <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message" id="position#@(n)-message">
+        <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message ajax ajax-box" id="position#@(n)-message">
             <input type="hidden" name="ProviderID" value="@p.UserID"/>
             <input type="hidden" name="PositionID" value="@p.PositionID"/>
             @CommonHelpers.GetValidationScripts()

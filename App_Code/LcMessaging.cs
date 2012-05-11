@@ -121,46 +121,26 @@ public class LcMessaging
     #region Main
     public static void SendCustomerInquiry(int CustomerUserID, int ProviderUserID, int PositionID, string InquiryText)
     {
-        // Get Customer information
-        dynamic customer = null;
+        dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
+            // Get Customer information
             customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
         }
-        if (customer != null)
+        if (customer != null && provider != null)
         {
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, 1, InquiryText);
 
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryText,
-                UrlUtil.LangPath + "Dashboard/Mailbox/#Thread-" + threadID)));
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + threadID.ToString())));
         }
     }
     public static void SendProviderInquiryAnswer(int ThreadID, string InquiryAnswer)
     {
-        dynamic provider = null, thread = null;
-        using (var db = Database.Open("sqlloco"))
-        {
-            // Get Thread info
-            thread = db.QuerySingle(sqlGetThread, ThreadID);
-            if (thread != null)
-            {
-                // Get Provider information
-                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
-            }
-        }
-        if (provider != null)
-        {
-            int messageID = CreateMessage(ThreadID, 3, InquiryAnswer);
-
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
-                CommonHelpers.GetUserDisplayName(provider), InquiryAnswer,
-                UrlUtil.LangPath + "Dashboard/Mailbox/#Thread-" + ThreadID + "_Message-" + messageID)));
-        }
-    }
-    public static void SendCustomerInquiryAnswer(int ThreadID, string InquiryAnswer)
-    {
-        dynamic customer = null, thread = null;
+        dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
             // Get Thread info
@@ -169,15 +149,41 @@ public class LcMessaging
             {
                 // Get Customer information
                 customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
             }
         }
-        if (customer != null)
+        if (customer != null && provider != null)
+        {
+            int messageID = CreateMessage(ThreadID, 3, InquiryAnswer);
+
+            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
+                CommonHelpers.GetUserDisplayName(provider), InquiryAnswer,
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + ThreadID + "_Message-" + messageID.ToString())));
+        }
+    }
+    public static void SendCustomerInquiryAnswer(int ThreadID, string InquiryAnswer)
+    {
+        dynamic customer = null, provider = null, thread = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Thread info
+            thread = db.QuerySingle(sqlGetThread, ThreadID);
+            if (thread != null)
+            {
+                // Get Customer information
+                customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
+            }
+        }
+        if (customer != null && provider != null)
         {
             int threadID = CreateMessage(ThreadID, 3, InquiryAnswer);
 
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryAnswer,
-                UrlUtil.LangPath + "Dashboard/Mailbox/#Thread-" + threadID)));
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + threadID)));
         }
     }
     #endregion
@@ -185,14 +191,14 @@ public class LcMessaging
     #region Specific Message Templates
     private static readonly string TplLayout = @"
         <html><head><style type='text/css'>
-            .respond a {
+            .respond a {{
                 background: none repeat scroll 0 0 #8B2143 !important;
                 border-radius: 20px 20px 20px 20px;
                 color: White;
                 font-size: 1em;
                 padding: 0 1em;
                 text-transform: lowercase;
-            }
+            }}
         </style></head><body>{0}</body></html>
     ";
     private static readonly string TplInquiry = @"
