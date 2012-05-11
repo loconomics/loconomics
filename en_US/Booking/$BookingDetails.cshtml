@@ -138,7 +138,7 @@
         }
     }
     string getLocationForGoogleMaps(dynamic data){
-        return data.AddressLine1 + ", " + data.City + ", " + data.StateProvinceCode + ", United States";
+        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
 @CommonHelpers.SetupStarRatingPlugin()
@@ -152,7 +152,7 @@
 else
 {
 <div class="booking-request booking main-side">
-    <h3>Waiting booking confirmation from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
+    <h3>Booking confirmation from @CommonHelpers.GetUserDisplayName(booking, "Customer")</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <h4>Customer information</h4>

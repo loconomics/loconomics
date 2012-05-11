@@ -134,6 +134,16 @@
             return "";
         }
     }
+    public static string JoinNotEmptyStrings(string delimiter, params string[] strs){
+        return JoinNotEmptyStrings(delimiter, (IEnumerable<string>)strs);
+    }
+    public static string JoinNotEmptyStrings(string delimiter, IEnumerable<string> strs){
+        List<string> newstrs = new List<string>();
+        foreach (var str in strs)
+            if (!String.IsNullOrWhiteSpace(str))
+                newstrs.Add(str);
+        return String.Join(delimiter, newstrs);
+    }
     /*
      * Return the Display or abbreviated name of the user, 
      * as "Name InitialLastName.", example: "John S." for
