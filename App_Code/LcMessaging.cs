@@ -133,6 +133,9 @@ public class LcMessaging
         {
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, 1, InquiryText);
 
+            // HTMLizing a bit the InquiryText
+            InquiryText = new HtmlString(InquiryText).ToHtmlString().Replace("\n", "<br/>");
+
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryText,
                 UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + threadID.ToString())));
@@ -157,6 +160,9 @@ public class LcMessaging
         {
             int messageID = CreateMessage(ThreadID, 3, InquiryAnswer);
 
+            // HTMLizing a bit the InquiryText
+            InquiryAnswer = new HtmlString(InquiryAnswer).ToHtmlString().Replace("\n", "<br/>");
+
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
                 CommonHelpers.GetUserDisplayName(provider), InquiryAnswer,
                 UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + ThreadID + "_Message-" + messageID.ToString())));
@@ -180,6 +186,9 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             int threadID = CreateMessage(ThreadID, 3, InquiryAnswer);
+
+            // HTMLizing a bit the InquiryText
+            InquiryAnswer = new HtmlString(InquiryAnswer).ToHtmlString().Replace("\n", "<br/>");
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryAnswer,
