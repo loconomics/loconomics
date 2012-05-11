@@ -138,7 +138,7 @@ public class LcMessaging
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryText,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + threadID.ToString())));
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString())));
         }
     }
     public static void SendProviderInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -165,7 +165,7 @@ public class LcMessaging
 
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
                 CommonHelpers.GetUserDisplayName(provider), InquiryAnswer,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + ThreadID + "_Message-" + messageID.ToString())));
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString())));
         }
     }
     public static void SendCustomerInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -192,7 +192,7 @@ public class LcMessaging
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
                 CommonHelpers.GetUserDisplayName(customer), InquiryAnswer,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#Thread-" + threadID)));
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID)));
         }
     }
     #endregion
