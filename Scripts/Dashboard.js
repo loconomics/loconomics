@@ -10,7 +10,19 @@
     * Booking list actions
     */
     $('.bookings-list .actions .item-action').click(function () {
-        var tabId = 'bookingRequestID' + $(this).data('booking-request-id');
+
+        var bid = $(this).data('booking-id');
+        var brid = $(this).data('booking-request-id');
+        var data = { BookingRequestID: brid };
+        var url = "Booking/$BookingRequestDetails/";
+        var tabId = 'bookingRequestID' + brid;
+
+        if (bid) {
+            url = "Booking/$BookingDetails/";
+            data.BookingID = bid;
+            tabId += '_bookingID' + bid;
+        }
+
         var tab = TabbedUX.createTab('#main', tabId,
             $(this).closest('.bookings-list').find('.user-public-name:eq(0)').text());
         if (tab) {
@@ -51,7 +63,9 @@
                     $tab.unblock();
                 }
             });
-        }
+        } else
+        // Tab couln't be created, already must exist, focus it
+            TabbedUX.focusTab('#' + tabId);
     });
 
     /*
