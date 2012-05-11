@@ -98,11 +98,12 @@
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
   <li>
-    <div class="customer mini-user-info">
-        <img class="avatar" alt="Customer Photo" src="@(UrlUtil.LangPath)Profile/Photo/@item.CustomerUserID" width="55" height="55" />
-        <h5 class="user-public-name">@item.CustomerFirstName @(CommonHelpers.GetInitialLetter(item.CustomerLastName)).</h5>
-        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@item.CustomerUserID">View profile</a>
-    </div>
+    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"Data", item},
+        {"DataPrefix", "Customer"},
+        {"Size", "mini"},
+        {"UserType", "customer"}
+    })
     <ul class="mini-booking-summary">
         <li>
             <h5>Time:</h5> @*Monday, April 15th, 2012, 11:00am to 2:00pm*@

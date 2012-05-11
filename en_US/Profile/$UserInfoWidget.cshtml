@@ -40,7 +40,7 @@
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
-        <img class="mini-avatar avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="50" height="50" />
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         
         @if (withContactData) {
             <div class="user-contact-data">
@@ -77,7 +77,12 @@
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
     </div>
 }
-else
-{
+else if (size == "mini" && userType == "customer") {
+    <div class="customer mini-user-info @addCssClasses">
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <h5 class="user-public-name">@data[dataPrefix + "FirstName"] @(CommonHelpers.GetInitialLetter(data[dataPrefix + "LastName"])).</h5>
+        <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+    </div>
+} else {
     <strong>User Info Widget: option not implemented!</strong>
 }

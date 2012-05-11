@@ -1505,10 +1505,10 @@ html.boxshadow #loginBox .field-validation-error{
  */
 .mini-avatar{
     display: inline-block;
-    height: 50px;
+    height: 55px;
     margin: 0 5px 0 0;
     vertical-align: top;
-    width: 50px;
+    width: 55px;
 }
 
 /*******************************
