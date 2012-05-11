@@ -55,7 +55,14 @@
         }
         else {
         <p class="user-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis
+            @if (!String.IsNullOrWhiteSpace(data[dataPrefix + "PublicBio"])) {
+                @data[dataPrefix + "PublicBio"]
+            } else {
+                <text>Customer doesn't provide information about itself.</text>
+                <br />
+                <text>It's strongly recommended for all users write a public bio.</text>
+                @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
+            }
         </p>
         }
 
