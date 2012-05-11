@@ -1626,3 +1626,11 @@ html.boxshadow #loginBox .field-validation-error{
 .tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
 }
+
+/*
+ * Class require-login
+ */
+.require-login h2 {
+    text-align: center;
+    margin-top: 100px;
+}

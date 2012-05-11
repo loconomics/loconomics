@@ -36,6 +36,8 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
+@if (WebSecurity.IsAuthenticated)
+{
 <form action="#" method="post" class="message" id="position#@(n)-message">
     <div class="from-line">
         <label>From:</label>
@@ -53,3 +55,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
         </textarea>
     </div>
 </form>
+}
+else
+{
+    <div class="require-login">
+        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a message</h2>
+    </div>
+
+}

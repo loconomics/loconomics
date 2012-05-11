@@ -325,7 +325,8 @@ $(document).ready(function () {
 
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Login/', { width: 410, height: 320 });
+        popup(UrlUtil.LangPath + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location),
+         { width: 410, height: 320 });
         return false;
     });
     $(document).delegate('a.register', 'click', function () {
