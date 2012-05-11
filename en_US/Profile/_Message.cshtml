@@ -5,8 +5,6 @@
     var p = PageData["position"];
     // Current position number/index
     var n = PageData["npos"];
-    
-    var fromText = "Stephanie L.";
 }
 @helper oldPrintMessageForm(){
     // TODO Review old code:
@@ -38,21 +36,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 
 @if (WebSecurity.IsAuthenticated)
 {
+    var u = DashboardFunctions.GetUserRow();
 <form action="#" method="post" class="message" id="position#@(n)-message">
     <div class="from-line">
         <label>From:</label>
-        <img class="user-pic" alt="User photo" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>
-        <span class="from">@fromText</span>
+        <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
+        <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
     </div>
     <div class="subject">
-        <label>Subject: <input type="text" name="subject" value="Message from @fromText about @p.PositionSingular services"/></label>
+        <label>Subject: <input type="text" name="subject" value="Message from @CommonHelpers.GetUserDisplayName(u) about @p.PositionSingular services"/></label>
     </div>
     <div class="message-body">
-        <textarea name="message-body">
-            Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!  Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!
-            
-            Fernando was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, Fernando!!
-        </textarea>
+        <textarea name="message-body" placeholder="Write your message to @CommonHelpers.GetUserDisplayName(provider)"></textarea>
     </div>
 </form>
 }
