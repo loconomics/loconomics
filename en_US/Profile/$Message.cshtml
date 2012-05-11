@@ -30,13 +30,13 @@
 <p class="message-description">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
-
+<div class="ajax-box">
 @if (WebSecurity.IsAuthenticated) {
     if (messageSent) {
         <div class="message-sent">Your message was succesfully sent!</div>
     } else {
         var u = DashboardFunctions.GetUserRow();
-        <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message ajax ajax-box" id="position#@(n)-message">
+        <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message ajax" id="position#@(n)-message">
             <input type="hidden" name="ProviderID" value="@p.UserID"/>
             <input type="hidden" name="PositionID" value="@p.PositionID"/>
             @CommonHelpers.GetValidationScripts()
@@ -65,3 +65,4 @@ else
     </div>
 
 }
+</div>
