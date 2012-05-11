@@ -1,0 +1,66 @@
+﻿@{
+    // Provider
+    var provider = PageData["providerrow"];
+    // Current position data record:
+    var p = PageData["position"];
+    // Current position number/index
+    var n = PageData["npos"];
+    
+    bool messageSent = false;
+    
+    Validation.RequireField("message-body", "Message cannot be empty!");
+    Validation.RequireField("subject", "Subject cannot be empty!");
+    
+    if (IsPost && Validation.IsValid()) {
+        var u = DashboardFunctions.GetUserRow();
+        
+        if (u == null){
+            ModelState.AddFormError("You need be logged to post a message!");
+        }
+        
+        if (ModelState.IsValid) {
+            LcMessaging.SendCustomerInquiry(u.UserID, provider.UserID, p.PositionID, 
+                "Subject: " + Request["subject"] + "\n\n" + Request["message-body"]);
+            
+            messageSent = true;
+        }
+    }
+}
+<p class="message-description">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+</p>
+
+@if (WebSecurity.IsAuthenticated) {
+    if (messageSent) {
+        <div class="message-sent">Your message was succesfully sent!</div>
+    } else {
+        var u = DashboardFunctions.GetUserRow();
+        <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message" id="position#@(n)-message">
+            <input type="hidden" name="ProviderID" value="@p.UserID"/>
+            <input type="hidden" name="PositionID" value="@p.PositionID"/>
+            @CommonHelpers.GetValidationScripts()
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+            <div class="from-line">
+                <label>From:</label>
+                <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
+                <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
+            </div>
+            <div class="subject">
+                <label>Subject: <input type="text" name="subject" value="Message from @CommonHelpers.GetUserDisplayName(u) about @p.PositionSingular services"/></label>
+            </div>
+            <div class="message-body">
+                <textarea name="message-body" placeholder="Write your message to @CommonHelpers.GetUserDisplayName(provider)"></textarea>
+            </div>
+            <fieldset class="actions">
+                <button class="main-action" type="submit">Send message</button>
+            </fieldset>
+        </form>
+    }
+}
+else
+{
+    <div class="require-login">
+        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a message</h2>
+    </div>
+
+}
