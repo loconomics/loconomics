@@ -12,17 +12,28 @@ var errorBlock = function (error, reload, style) {
 };
 var gLoadingRetard = 600;
 
-$.fn.HasScrollBar = function () {
+/*
+ * Our jQuery additions (small plugins)
+ */
+$.fn.hasScrollBar = function () {
     if (!this || this.length == 0) return false;
     //note: clientHeight= height of holder
     //scrollHeight= we have content till this height
     var t = this.get(0);
     return (t.clientHeight < t.scrollHeight) || (t.clientWidth < t.scrollWidth);
 }
+$.fn.reload = function (newurl) {
+    if (newurl)
+        this.data('source-url', newurl);
+    var url = this.data('source-url');
+    if (url) {
+        this.load(url);
+    }
+}
 
 /*
- * Tabbed interface logic
- */
+* Tabbed interface logic
+*/
 var TabbedUX = {
     init: function () {
         $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
@@ -94,7 +105,7 @@ var TabbedUX = {
     },
     setupSlider: function (tabContainer) {
         var ts = tabContainer.children('.tabs-slider');
-        if (tabContainer.children('.tabs').HasScrollBar()) {
+        if (tabContainer.children('.tabs').hasScrollBar()) {
             tabContainer.addClass('has-tabs-slider');
             if (ts.length == 0) {
                 ts = document.createElement('div');

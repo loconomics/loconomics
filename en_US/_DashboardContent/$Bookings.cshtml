@@ -12,7 +12,7 @@
                 <li class="current"><a class="button profile fanciful" href="#bookings-all">All</a></li>
             </ul>
             
-            <div id="bookings-all" class="tab-body current">
+            <div id="bookings-all" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Booking/$BookingsList/")">
                 @RenderPage(UrlUtil.LangPath + "Booking/$BookingsList.cshtml")
             </div><!-- #bookings-all -->
 		</div><!-- #bookings -->

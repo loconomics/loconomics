@@ -119,8 +119,10 @@
             
             if (result.Error == 0) {
                 // A redirect is performed to return the BookingDetails html to the user
-                Response.Redirect(UrlUtil.LangPath + String.Format(
-                    "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), true);
+                /*Response.Redirect(UrlUtil.LangPath + String.Format(
+                    "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), true);*/
+                CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                    "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
             } else {
                 // Return JSON result:
                 // We need negative numbers to indicate an error (is our convention for json 'Code')

@@ -93,7 +93,7 @@
                 }
 
                 // After update request, bookings-list tab need be reloaded
-                reloadBookingsList();
+                $('#bookings-all').reload();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
@@ -107,9 +107,6 @@
         });
     });
 });
-function reloadBookingsList() {
-    $('#bookings-all').load(UrlUtil.LangPath + "Booking/$BookingsList/");
-}
 /* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
 function dashboardGeneralJsonCodeHandler(data, container, options) {
     if (!container) container = $(document);
@@ -134,8 +131,15 @@ function dashboardGeneralJsonCodeHandler(data, container, options) {
             // Special Code 1: do a redirect
             window.location = data.Result;
         } else if (data.Code == 2) {
+            // Special Code 2: show login popup (with the given url at data.Result)
             container.unblock();
             popup(data.Result, { width: 410, height: 320 });
+        } else if (data.Code == 3) {
+            // Special Code 3: reload current page content to the given url at data.Result)
+            // Note: to reload same url page content, is better return the html directly from
+            // this ajax server request.
+            container.unblock();
+            container.reload(data.Result);
         } else if (data.Code > 0) {
             // Not handled!
             return false;
