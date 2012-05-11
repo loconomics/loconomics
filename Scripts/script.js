@@ -16,11 +16,14 @@ var gLoadingRetard = 300;
  * Our jQuery additions (small plugins)
  */
 $.fn.hasScrollBar = function () {
-    if (!this || this.length == 0) return false;
+    if (!this || this.length == 0) return { vertical: false, horizontal: false };
     //note: clientHeight= height of holder
     //scrollHeight= we have content till this height
     var t = this.get(0);
-    return (t.clientHeight < t.scrollHeight) || (t.clientWidth < t.scrollWidth);
+    return {
+        vertical: t.clientHeight < t.scrollHeight,
+        horizontal: t.clientWidth < t.scrollWidth
+    };
 }
 $.fn.reload = function (newurl) {
     if (newurl)
@@ -113,7 +116,7 @@ var TabbedUX = {
     },
     setupSlider: function (tabContainer) {
         var ts = tabContainer.children('.tabs-slider');
-        if (tabContainer.children('.tabs').hasScrollBar()) {
+        if (tabContainer.children('.tabs').hasScrollBar().horizontal == true) {
             tabContainer.addClass('has-tabs-slider');
             if (ts.length == 0) {
                 ts = document.createElement('div');
