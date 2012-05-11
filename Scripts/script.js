@@ -419,9 +419,14 @@ $(document).ready(function () {
     TabbedUX.init();
     // If the current location have a hash, try to focus the matching tab in the Tabbed interface
     if (window.location.hash) {
-        var hashes = window.location.hash.substring(1).split('/');
-        for (var ihash in hashes)
-            TabbedUX.focusTab('#' + hashes[ihash]);
+        var hashvalue = window.location.hash.substring(1);
+        // If the hash value follow the 'hash bang' convention, let other
+        // scripts do their work throught a 'loadHashBang' event handler
+        if (/^!/.test(hashvalue))
+            $(document).trigger('loadHashBang', hashvalue.substring(1));
+        else
+            // Normal hash value, try focus a tab with that name
+            TabbedUX.focusTab('#' + hashvalue);
     }
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
