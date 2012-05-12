@@ -39,6 +39,7 @@
                   ON Pos.PositionID = T.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+        ORDER BY T.UpdatedDate DESC
     ";
     
     var sqlListCustomerMessageThread = @"
@@ -75,6 +76,7 @@
                   ON Pos.PositionID = T.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   T.CustomerUserID = @0
+        ORDER BY T.UpdatedDate DESC
     ";
     var sqlListProviderMessageThread = @"
         SELECT  T.ThreadID,
@@ -110,6 +112,7 @@
                   ON Pos.PositionID = T.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   T.ProviderUserID = @0
+        ORDER BY T.UpdatedDate DESC
     ";
 
     // All messages threads (as customer and as provider)
