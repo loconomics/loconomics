@@ -19,3 +19,8 @@
         }
     });
 </script>
+@functions{
+    string getMessageBody(string messageBody){
+        return messageBody.Replace("\n", "<br/>");
+    }
+} 

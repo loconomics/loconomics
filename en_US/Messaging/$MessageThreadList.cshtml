@@ -111,7 +111,7 @@
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   T.ProviderUserID = @0
     ";
-     
+
     // All messages threads (as customer and as provider)
     dynamic messageThreads = null;
     using (var db = Database.Open("sqlloco")) {
