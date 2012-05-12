@@ -1649,6 +1649,7 @@ html.boxshadow #loginBox .field-validation-error{
     clear: both;
     display: inline-block !important;
     width: 150px;
+    overflow: hidden;
 }
 .mini-user-info > h5 {
     font-size: 1em;

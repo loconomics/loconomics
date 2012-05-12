@@ -68,7 +68,7 @@
             {"UserType", "customer"},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
-        <div class="message-section message-conversation">@printMessageBodyAsHtml(message.BodyText)</div>
+        <div class="message-section message-conversation customer">@printMessageBodyAsHtml(message.BodyText)</div>
     </li>
 }
 @helper printItemProvider(dynamic thread, dynamic message){
@@ -81,7 +81,7 @@
             {"UserType", "provider"},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
-        <div class="message-section message-conversation">@printMessageBodyAsHtml(message.BodyText)</div>
+        <div class="message-section message-conversation provider">@printMessageBodyAsHtml(message.BodyText)</div>
     </li>
 }
 @if (thread == null)
@@ -105,7 +105,7 @@ else
         })
 
         <h4>Message thread</h4>
-        <ul class="messages-list">
+        <ul class="messages-list clearfix">
         @foreach (var message in messages)
         {
             if (message.MessageTypeID == 1)

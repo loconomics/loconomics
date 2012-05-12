@@ -915,6 +915,13 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 /*
  * Messaging, converstions
  */
+.mini-user-info.message-conversation {
+    width: 60px;
+    font-size: .8em;
+}
+.mini-user-info.message-conversation > div {
+    line-height: 1em;
+}
 .mini-user-info.message-conversation.customer {
     float: left;
 }
@@ -922,8 +929,13 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     float: right;
 }
 .message-section.message-conversation {
-    float: left;
     font-size: 0.9em;
-    margin: 0 7px;
-    width: 300px;
+    margin: 0 12px;
+    width: 320px;
+}
+.message-section.message-conversation.customer {
+    float: left;
+}
+.message-section.message-conversation.provider {
+    float: right;
 }
