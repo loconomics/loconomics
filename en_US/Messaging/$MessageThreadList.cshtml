@@ -1,3 +1,165 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    CommonHelpers.SecurePage();
+    // var u = DashboardFunctions.GetUserRow();
+    int userID = WebSecurity.CurrentUserId;
     
+    var sqlListMessageThread = @"
+        SELECT  T.ThreadID,
+                T.CustomerUserID,
+                T.ProviderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                (SELECT TOP 1 M.BodyText
+                 FROM Messages As M
+                 WHERE M.ThreadID = T.ThreadID
+                 ORDER BY M.CreatedDate DESC
+                ) As LastMessageBodyText,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                Pos.PositionSingular
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+        WHERE   (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+    ";
+    
+    var sqlListCustomerMessageThread = @"
+        SELECT  T.ThreadID,
+                T.CustomerUserID As ReceiverUserID,
+                T.ProviderUserID As SenderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                (SELECT TOP 1 BodyText
+                 FROM Messages As M
+                 WHERE M.ThreadID = T.ThreadID
+                 ORDER BY CreatedDate DESC
+                ) As LastMessageBodyText,
+
+                UR.FirstName As ReceiverFirstName,
+                UR.LastName As ReceiverLastName,
+
+                US.FirstName As SenderFirstName,
+                US.LastName As SenderLastName,
+
+                Pos.PositionSingular
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Users As UR
+                  ON UR.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As US
+                  ON US.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+        WHERE   T.CustomerUserID = @0
+    ";
+    var sqlListProviderMessageThread = @"
+        SELECT  T.ThreadID,
+                T.CustomerUserID As SenderUserID,
+                T.ProviderUserID As ReceiverUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                (SELECT TOP 1 BodyText
+                 FROM Messages As M
+                 WHERE M.ThreadID = T.ThreadID
+                 ORDER BY CreatedDate DESC
+                ) As LastMessageBodyText,
+
+                UR.FirstName As ReceiverFirstName,
+                UR.LastName As ReceiverLastName,
+
+                US.FirstName As SenderFirstName,
+                US.LastName As SenderLastName,
+
+                Pos.PositionSingular
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Users As UR
+                  ON UR.UserID = T.ProviderUserID
+                 INNER JOIN
+                Users As US
+                  ON US.UserID = T.CustomerUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+        WHERE   T.ProviderUserID = @0
+    ";
+     
+    // All messages threads (as customer and as provider)
+    dynamic messageThreads = null;
+    using (var db = Database.Open("sqlloco")) {
+        messageThreads = db.Query(sqlListMessageThread, userID, 1, 1);
+    }
 }
+@helper printItem(dynamic item, string senderPrefix = "Sender", string receiverPrefix = "Receiver", string senderUserType = "user") {
+  <li>
+    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"Data", item},
+        {"DataPrefix", senderPrefix},
+        {"Size", "mini"},
+        {"UserType", senderUserType}
+    })
+    <ul class="mini-booking-summary mini-message-thread-summary">
+        <li>
+            <h5>Inquiry:</h5> 
+            @item.PositionSingular
+        </li>
+        <li>
+            <h5>Subject:</h5> @item.Subject
+        </li>
+        <li>
+            <h5>Message:</h5> @item.LastMessageBodyText
+        </li>
+    </ul>
+    <div class="actions">
+        @if (item.MessageThreadStatusID == 1) {
+            <button class="item-action respond" data-message-thread-id="@item.ThreadID">Respond</button>
+        } else {
+            <button class="item-action responded" data-message-thread-id="@item.ThreadID">Responded</button>
+        }
+        <div class="date">@item.LastMessageDate</div>
+    </div>
+  </li>
+}
+<ul class="message-thread-list items-list list-all">
+    @if (messageThreads.Count > 0)
+    {
+        foreach (var item in messageThreads)
+        {
+            if (userID == item.ProviderUserID) {
+                @printItem(item, "Customer", "Provider", "customer");
+            } else {
+                @printItem(item, "Provider", "Customer", "provider");
+            }
+        }
+    } else {
+        <li class="empty-list">There is no messages still!</li>
+    }
+</ul>

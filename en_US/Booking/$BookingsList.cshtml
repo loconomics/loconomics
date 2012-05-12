@@ -1,5 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
+    CommonHelpers.SecurePage();
+    
     var u = DashboardFunctions.GetUserRow();
     
     var sqlGetPendingBookingRequest = @"

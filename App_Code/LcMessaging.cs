@@ -18,14 +18,23 @@ public class LcMessaging
                    ,[ProviderUserID]
                    ,[PositionID]
                    ,[MessageThreadStatusID]
+                   ,[Subject]
                    ,[CreatedDate]
                    ,[UpdatedDate]
                    ,[ModifiedBy])
              VALUES
                    (@0, @1, @2,
                     1, -- Status is 1 ever at first message (not responded)
+                    @3,
                     getdate(), getdate(), 'sys')
         SELECT @@Identity As MessagingThreadID
+    ";
+    private static readonly string sqlUpdThread = @"
+        UPDATE MessagingThreads
+        SET     MessageThreadStatusID = @1,
+                UpdatedDate = getdate()
+                ModifiedBy = 'sys'
+        WHERE   ThreadID = @0
     ";
     private static readonly string sqlInsMessage = @"
         INSERT INTO [Messages]
@@ -39,7 +48,7 @@ public class LcMessaging
         SELECT @@Identity As MessageID
     ";
     private static readonly string sqlGetThread = @"
-        SELECT CustomerUserID, ProviderUserID, PositionID, MessageThreadStatusID
+        SELECT CustomerUserID, ProviderUserID, PositionID, MessageThreadStatusID, Subject
         FROM    MessagingThreads
         WHERE   MessagingThreadID = @0
     ";
@@ -77,12 +86,12 @@ public class LcMessaging
     /// <param name="FirstMessageTypeID"></param>
     /// <param name="FirstMessageBody"></param>
     /// <returns></returns>
-    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, int FirstMessageTypeID, string FirstMessageBody)
+    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, string ThreadSubject, int FirstMessageTypeID, string FirstMessageBody)
     {
         int threadID = 0;
         using (var db = Database.Open("sqlloco"))
         {
-            threadID = (int)db.QueryValue(sqlInsThread, CustomerUserID, ProviderUserID, PositionID);
+            threadID = (int)db.QueryValue(sqlInsThread, CustomerUserID, ProviderUserID, PositionID, ThreadSubject);
             db.Execute(sqlInsMessage, threadID, FirstMessageTypeID, FirstMessageBody);
         }
         return threadID;
@@ -107,19 +116,22 @@ public class LcMessaging
     /// <param name="MessageTypeID"></param>
     /// <param name="MessageBody"></param>
     /// <returns></returns>
-    public static int CreateMessage(int ThreadID, int MessageTypeID, string MessageBody)
+    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody)
     {
         int messageID = 0;
         using (var db = Database.Open("sqlloco"))
         {
+            // Create Message
             messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody);
+            // Update Thread status (and date automatically)
+            db.Execute(sqlUpdThread, MessageThreadStatusID);
         }
         return messageID;
     }
     #endregion
 
     #region Main
-    public static void SendCustomerInquiry(int CustomerUserID, int ProviderUserID, int PositionID, string InquiryText)
+    public static void SendCustomerInquiry(int CustomerUserID, int ProviderUserID, int PositionID, string InquirySubject, string InquiryText)
     {
         dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
@@ -131,13 +143,13 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, 1, InquiryText);
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
 
             // HTMLizing a bit the InquiryText
             InquiryText = new HtmlString(InquiryText).ToHtmlString().Replace("\n", "<br/>");
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
-                CommonHelpers.GetUserDisplayName(customer), InquiryText,
+                CommonHelpers.GetUserDisplayName(customer), InquirySubject, InquiryText,
                 UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString())));
         }
     }
@@ -158,13 +170,14 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            int messageID = CreateMessage(ThreadID, 3, InquiryAnswer);
+            // ThreadStatus=2, responded; MessageStatus=3, provider answer
+            int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
             // HTMLizing a bit the InquiryText
             InquiryAnswer = new HtmlString(InquiryAnswer).ToHtmlString().Replace("\n", "<br/>");
 
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
-                CommonHelpers.GetUserDisplayName(provider), InquiryAnswer,
+                CommonHelpers.GetUserDisplayName(provider), thread.Subject, InquiryAnswer,
                 UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString())));
         }
     }
@@ -185,14 +198,15 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            int threadID = CreateMessage(ThreadID, 1, InquiryAnswer);
+            // ThreadStatus=1, respond; MessageStatus=1, customer inquiry
+            int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
 
             // HTMLizing a bit the InquiryText
             InquiryAnswer = new HtmlString(InquiryAnswer).ToHtmlString().Replace("\n", "<br/>");
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
-                CommonHelpers.GetUserDisplayName(customer), InquiryAnswer,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID)));
+                CommonHelpers.GetUserDisplayName(customer), thread.Subject, InquiryAnswer,
+                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString())));
         }
     }
     #endregion
@@ -207,20 +221,23 @@ public class LcMessaging
                 font-size: 1em;
                 padding: 0 1em;
                 text-transform: lowercase;
+                display: block;
             }}
         </style></head><body>{0}</body></html>
     ";
     private static readonly string TplInquiry = @"
         <h1>Customer Inquiry</h1>
         <p><strong>Customer: </strong>{0}</p>
-        <p><strong>Inquiry: </strong>{1}</p>
-        <p class='respond'><a href='{2}'>Respond to this inquiry at loconomics.com</a></p>
+        <p><strong>Subject: </strong>{1}</p>
+        <p><strong>Inquiry: </strong>{2}</p>
+        <p class='respond'><a href='{3}'>Respond to this inquiry at loconomics.com</a></p>
     ";
     private static readonly string TplInquiryAnswer = @"
         <h1>Provider answer to your inquiry</h1>
         <p><strong>Provider: </strong>{0}</p>
-        <p><strong>Answer: </strong>{1}</p>
-        <p class='respond'><a href='{2}'>Reply again at loconomics.com</a></p>
+        <p><strong>Subject: </strong>{1}</p>
+        <p><strong>Answer: </strong>{2}</p>
+        <p class='respond'><a href='{3}'>Reply again at loconomics.com</a></p>
     ";
     #endregion
 }

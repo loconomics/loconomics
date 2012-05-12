@@ -62,8 +62,12 @@ var TabbedUX = {
 
         // Init page loaded tabbed containers:
         $('.tabbed').each(function () {
+            var $t = $(this);
+            // Consistence check: this must be a valid container, this is, must have .tabs
+            if ($t.children('.tabs').length == 0)
+                return;
             // Init slider
-            TabbedUX.setupSlider($(this));
+            TabbedUX.setupSlider($t);
             // Clean white spaces (they create excesive separation between some tabs)
             $('.tabs', this).contents().each(function () {
                 // if this is a text node, remove it:
@@ -418,7 +422,7 @@ $(document).ready(function () {
     // Tabbed interface
     TabbedUX.init();
     // If the current location have a hash, try to focus the matching tab in the Tabbed interface
-    if (window.location.hash) {
+    if (window.location.hash && window.location.hash.length > 0) {
         var hashvalue = window.location.hash.substring(1);
         // If the hash value follow the 'hash bang' convention, let other
         // scripts do their work throught a 'loadHashBang' event handler
