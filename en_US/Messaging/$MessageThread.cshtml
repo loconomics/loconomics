@@ -1,26 +1,126 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
+    CommonHelpers.SecurePage();
+    // var u = DashboardFunctions.GetUserRow();
+    int userID = WebSecurity.CurrentUserId;
     
+    var threadID = Request["MessageThreadID"].AsInt();
+    
+    var sqlGetMessageThread = @"
+        SELECT  T.ThreadID,
+                T.CustomerUserID,
+                T.ProviderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+                UC.MiddleIn As CustomerMiddleIn,
+                UC.CreatedDate As CustomerMemberSinceDate,
+                UC.PublicBio As CustomerPublicBio,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                Pos.PositionSingular
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+        WHERE   ThreadID = @0
+                 AND
+                (T.CustomerUserID = @1 OR T.ProviderUserID = @1)
+    ";
+
+    var sqlListMessagesInThread = @"
+        SELECT  M.BodyText,
+                M.MessageTypeID,
+                M.UpdatedDate As MessageDate
+        FROM    Messages As M
+        WHERE   M.ThreadID = @0
+        ORDER BY M.CreatedDate DESC
+    ";
+    dynamic messages = null, thread = null;
+    using (var db = Database.Open("sqlloco")){
+        thread = db.QuerySingle(sqlGetMessageThread, threadID, userID, 1, 1);
+        messages = db.Query(sqlListMessagesInThread, threadID);
+    }
 }
-<script type="text/javascript">
-    $(document).bind('loadHashBang', function (event, hashbangvalue) {
-        // Hashbangvalue is something like: Thread-1_Message-2
-        // Where '1' is the ThreadID and '2' the optional MessageID
-        var pars = hashbangvalue.split('_');
-        var urlParameters = {};
-        for (var i = 0; i < pars.length; i++) {
-            var parsvalues = pars[i].split('-');
-            if (parsvalues.length == 2) {
-                urlParameters[parsvalues[0]] = parsvalues[1];
+@helper printMessageBodyAsHtml(string messageBody){
+    @Html.Raw(messageBody.Replace("\n", "<br/>"))
+}
+@helper printItemCustomer(dynamic thread, dynamic message){
+    <li>
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddCssClasses", "message-conversation" },
+            {"Data", thread},
+            {"DataPrefix", "Customer"},
+            {"Size", "mini"},
+            {"UserType", "customer"},
+            {"ExtraInfo", message.MessageDate.ToShortDateString()}
+        })
+        <div class="message-section message-conversation">@printMessageBodyAsHtml(message.BodyText)</div>
+    </li>
+}
+@helper printItemProvider(dynamic thread, dynamic message){
+    <li>
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddCssClasses", "message-conversation" },
+            {"Data", thread},
+            {"DataPrefix", "Provider"},
+            {"Size", "mini"},
+            {"UserType", "provider"},
+            {"ExtraInfo", message.MessageDate.ToShortDateString()}
+        })
+        <div class="message-section message-conversation">@printMessageBodyAsHtml(message.BodyText)</div>
+    </li>
+}
+@if (thread == null)
+{
+    <div class="empty">That message thread don't exist.</div>
+}
+else
+{
+    @CommonHelpers.SetupStarRatingPlugin()
+    <div class="booking-request main-side">
+        <h3>Conversation with @CommonHelpers.GetUserDisplayName(thread, "Customer")</h3>
+        <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
+
+        <h4>Customer profile</h4>
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddCssClasses", "message-section" },
+            {"Data", thread},
+            {"DataPrefix", "Customer"},
+            {"Size", "medium"},
+            {"UserType", "customer"}
+        })
+
+        <h4>Message thread</h4>
+        <ul class="messages-list">
+        @foreach (var message in messages)
+        {
+            if (message.MessageTypeID == 1)
+            {
+                @printItemCustomer(thread, message)
+            }
+            else if (message.MessageTypeID == 3)
+            {
+                @printItemProvider(thread, message);
             }
         }
-        // Analize parameters values
-        if (urlParameters.Thread) {
-            // TODO Load this Thread in a new Tab
-        }
-    });
-</script>
-@functions{
-    string getMessageBody(string messageBody){
-        return messageBody.Replace("\n", "<br/>");
-    }
-} 
+        </ul>
+
+        <h4>Reminders</h4>
+        @RenderPage(UrlUtil.LangPath + "Booking/$BookingRemindersWidget.cshtml")
+    </div>
+    @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")
+}

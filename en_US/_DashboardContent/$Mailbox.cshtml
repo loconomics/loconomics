@@ -10,7 +10,7 @@
 			@*<li><a href="#sent">Sent</a></li>*@
         </ul>
 
-		<div id="inbox" class="tab-body fancy tabbed buttons current">
+		<div id="inbox" class="tab-body fancy tabbed buttons current clearfix">
             @RenderPage(UrlUtil.LangPath + "Messaging/$MessageThreadList.cshtml")
             @*
             <ul class="tabs">
@@ -39,6 +39,6 @@
             *@
 		</div><!-- #mailbox -->
         
-		<div id="sent" class="tab-body fancy">
+		@*<div id="sent" class="tab-body fancy">
                 Sent <!-- TODO here must be the back-end content -->
-		</div><!-- #sent -->
+		</div><!-- #sent -->*@

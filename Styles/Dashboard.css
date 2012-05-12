@@ -911,3 +911,19 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     background: white;
     padding: 15px;
 }
+
+/*
+ * Messaging, converstions
+ */
+.mini-user-info.message-conversation.customer {
+    float: left;
+}
+.mini-user-info.message-conversation.provider {
+    float: right;
+}
+.message-section.message-conversation {
+    float: left;
+    font-size: 0.9em;
+    margin: 0 7px;
+    width: 300px;
+}

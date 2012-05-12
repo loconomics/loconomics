@@ -16,7 +16,10 @@ $(document).bind('loadHashBang', function (event, hashbangvalue) {
     }
     // Analize parameters values
     if (urlParameters.Thread) {
-        // TODO Load this Thread in a new Tab
+        openMessageThreadInTab(urlParameters.Thread, "Message Thread " + tid);
+
+        // TODO Select the message id 'urlParameters.Message' (if there is someone) in
+        // the message thread conversation.
     }
 });
 
@@ -124,47 +127,53 @@ $(document).ready(function () {
      * Messaging
      */
     $('.message-thread-list .actions .item-action').click(function () {
-        var tid = $(this).data('message-thread-id');
-        var data = { MessageThreadID: tid };
-        var url = "Messaging/$MessageThread/";
-        var tabId = 'messageThreadID-' + tid;
-
-        var tab = TabbedUX.createTab('#main', tabId,
+        openMessageThreadInTab(
+            $(this).data('message-thread-id'),
             $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
-        if (tab) {
-            TabbedUX.focusTab(tab);
-
-            var $tab = $(tab);
-
-            // Loading, with retard
-            var loadingtimer = setTimeout(function () {
-                $tab.block(loadingBlock);
-            }, gLoadingRetard);
-
-            // Do the Ajax post
-            $.ajax({
-                url: UrlUtil.LangPath + url,
-                data: data,
-                success: function (data, text, jx) {
-                    if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
-                        // Unknowed sucessfull code (if this happen in production there is a bug!)
-                        alert("Result Code: " + data.Code);
-                    }
-                },
-                error: ajaxErrorPopupHandler,
-                complete: function () {
-                    // Disable loading
-                    clearTimeout(loadingtimer);
-                    // Unblock
-                    $tab.unblock();
-                }
-            });
-        } else
-        // Tab couln't be created, already must exist, focus it
-            TabbedUX.focusTab('#' + tabId);
     });
 
 });
+
+function openMessageThreadInTab(threadId, tabTitle) {
+    var tid = threadId;
+    var data = { MessageThreadID: tid };
+    var url = "Messaging/$MessageThread/";
+    var tabId = 'messageThreadID-' + tid;
+
+    var tab = TabbedUX.createTab('#main', tabId, tabTitle);
+    if (tab) {
+        TabbedUX.focusTab(tab);
+
+        var $tab = $(tab);
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            $tab.block(loadingBlock);
+        }, gLoadingRetard);
+
+        // Do the Ajax post
+        $.ajax({
+            url: UrlUtil.LangPath + url,
+            data: data,
+            success: function (data, text, jx) {
+                if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
+                    // Unknowed sucessfull code (if this happen in production there is a bug!)
+                    alert("Result Code: " + data.Code);
+                }
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                $tab.unblock();
+            }
+        });
+    } else
+    // Tab couln't be created, already must exist, focus it
+        TabbedUX.focusTab('#' + tabId);
+}
+
 /* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
 function dashboardGeneralJsonCodeHandler(data, container, options) {
     if (!container) container = $(document);

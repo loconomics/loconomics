@@ -1012,6 +1012,12 @@ fieldset.box legend{
 .faqs.widget ol li {
     list-style: decimal inside;
 }
+/* faqs inside a tab have different integration style */
+.tab-body .faqs.widget {
+    border: none;
+    padding-top: 0;
+    padding-right: 0;
+}
 
 /** help-point>a class for link button to open the help-center **/
 .help-point a,
@@ -1641,6 +1647,7 @@ html.boxshadow #loginBox .field-validation-error{
 /* Class mini-user-info */
 .mini-user-info {
     clear: both;
+    display: inline-block !important;
     width: 150px;
 }
 .mini-user-info > h5 {
