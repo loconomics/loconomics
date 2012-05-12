@@ -311,6 +311,12 @@ var TabbedUX = {
         // Trigger event, on tabContainer, with the removed tab id as data
         ctx.tabContainer.triggerHandler('tabRemoved', [tabid]);
         return true;
+    },
+    setTabTitle: function (tabOrSelector, newTitle) {
+        var ctx = TabbedUX.getTabContext(tabOrSelector);
+        if (!this.checkTabContext(ctx, 'setTabTitle', arguments)) return;
+
+        ctx.menuanchor.text(newTitle);
     }
 };
 

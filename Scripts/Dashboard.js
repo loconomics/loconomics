@@ -167,6 +167,10 @@ function openMessageThreadInTab(threadId, tabTitle) {
                 clearTimeout(loadingtimer);
                 // Unblock
                 $tab.unblock();
+
+                // Updating the tab title, because when is loaded by URL, the title is the ID,
+                // here is setted something more usable:
+                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
             }
         });
     } else
