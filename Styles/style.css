@@ -1634,3 +1634,79 @@ html.boxshadow #loginBox .field-validation-error{
     text-align: center;
     margin-top: 100px;
 }
+
+/**
+ * Classes for User Info Widget
+ */
+/* Class mini-user-info */
+.mini-user-info {
+    clear: both;
+    width: 150px;
+}
+.mini-user-info > h5 {
+    font-size: 1em;
+    color: #6c6c6c;
+    display: inline;
+}
+.mini-user-info > img.avatar {
+    float: left;
+    margin: 0 10px 0 0;
+}
+.mini-user-info > a.view-profile,
+.mini-user-info > a.view-profile:link,
+.mini-user-info > a.view-profile:visited {
+    color: #00989a;
+    display: block;
+}
+/* Class medium-user-info */
+.medium-user-info {
+    position: relative;
+    font-size: .9em;
+}
+.medium-user-info a.view-profile {
+    bottom: 15px;
+    display: block;
+    position: absolute;
+    right: 15px;
+    text-transform: lowercase;
+    width: 100px;
+}
+.medium-user-info.user-contact-data a.view-profile {
+    position: static;
+    display: inline;
+    margin-left: 10px;
+}
+.medium-user-info .user-text {
+    display: inline-block;
+    height: 50px;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+.medium-user-info .user-contact-data {
+    display: inline-block;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+.medium-user-info h5.user-public-name {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1em;
+    display: inline;
+}
+.medium-user-info .customer-rating {
+    width: 360px;
+}
+.medium-user-info .customer-rating .note {
+    font-size: .8em;
+    color: #6c6c6c;
+    font-style: italic;
+}
+.medium-user-info .google-map {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}

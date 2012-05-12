@@ -126,7 +126,7 @@
         {"Size", "mini"},
         {"UserType", senderUserType}
     })
-    <ul class="mini-booking-summary mini-message-thread-summary">
+    <ul class="item-summary message-thread-summary">
         <li>
             <h5>Inquiry:</h5> 
             @item.PositionSingular
@@ -144,7 +144,7 @@
         } else {
             <button class="item-action responded" data-message-thread-id="@item.ThreadID">Responded</button>
         }
-        <div class="date">@item.LastMessageDate</div>
+        <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>
 }
