@@ -124,12 +124,16 @@ $(document).ready(function () {
 
 
     /*=========
-     * Messaging
-     */
+    * Messaging
+    */
     $('.message-thread-list .actions .item-action').click(function () {
         openMessageThreadInTab(
             $(this).data('message-thread-id'),
             $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
+    });
+
+    $('body').delegate('.new-message.message-conversation textarea', 'focus', function () {
+        $(this).animate({ height: 250 });
     });
 
 });

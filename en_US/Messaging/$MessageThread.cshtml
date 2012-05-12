@@ -1,4 +1,5 @@
 ﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
 @{
     CommonHelpers.SecurePage();
     // var u = DashboardFunctions.GetUserRow();
@@ -40,15 +41,40 @@
                  AND
                 (T.CustomerUserID = @1 OR T.ProviderUserID = @1)
     ";
-
     var sqlListMessagesInThread = @"
         SELECT  M.BodyText,
                 M.MessageTypeID,
                 M.UpdatedDate As MessageDate
         FROM    Messages As M
         WHERE   M.ThreadID = @0
-        ORDER BY M.CreatedDate DESC
+        ORDER BY M.CreatedDate ASC
     ";
+    var sqlCheckUserInThread = @"
+        SELECT  ThreadID, ProviderUserID, CustomerUserID
+        FROM    MessagingThreads As T
+        WHERE   ThreadID = @0
+                 AND
+                (T.CustomerUserID = @1 OR T.ProviderUserID = @1)
+    ";
+
+    Validation.RequireField("newmessage", "Cannot send an empty message");
+    Validation.Add("newmessage", Validator.StringLength(2500, 1, "Message is too big!"));
+     
+    if (IsPost && Validation.IsValid()) {
+        // Validate if user is on this Thread
+        using (var db = Database.Open("sqlloco")) {
+            
+            var check = db.QuerySingle(sqlCheckUserInThread, threadID, userID);
+            if (check != null && check.ThreadID == threadID) {
+                if (userID == check.ProviderUserID) {
+                    LcMessaging.SendProviderInquiryAnswer(threadID, Request["newmessage"]);
+                } else {
+                    LcMessaging.SendCustomerInquiryAnswer(threadID, Request["newmessage"]);
+                }
+            }
+        }
+    }
+     
     dynamic messages = null, thread = null;
     using (var db = Database.Open("sqlloco")){
         thread = db.QuerySingle(sqlGetMessageThread, threadID, userID, 1, 1);
@@ -59,7 +85,7 @@
     @Html.Raw(messageBody.Replace("\n", "<br/>"))
 }
 @helper printItemCustomer(dynamic thread, dynamic message){
-    <li>
+    <li class="customer">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-conversation" },
             {"Data", thread},
@@ -72,7 +98,7 @@
     </li>
 }
 @helper printItemProvider(dynamic thread, dynamic message){
-    <li>
+    <li class="provider">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-conversation" },
             {"Data", thread},
@@ -91,7 +117,8 @@
 else
 {
     @CommonHelpers.SetupStarRatingPlugin()
-    <div class="booking-request main-side">
+    @CommonHelpers.GetValidationScripts()
+    <div class="booking-request main-side ajax-box">
         <h3>Conversation with @CommonHelpers.GetUserDisplayName(thread, "Customer")</h3>
         <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 
@@ -116,6 +143,36 @@ else
             {
                 @printItemProvider(thread, message);
             }
+        }
+        @{
+            string userType = "", userPrefix = "";
+            if (thread.ProviderUserID == userID) {
+                userType = "provider";
+                userPrefix = "Provider";
+            } else {
+                userType = "customer";
+                userPrefix = "Customer";
+            }
+            <li class="userType new-message">
+                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+                    {"AddCssClasses", "message-conversation" },
+                    {"Data", thread},
+                    {"DataPrefix", userPrefix},
+                    {"Size", "mini"},
+                    {"UserType", userType},
+                    {"ExtraInfo", DateTime.Now.ToShortDateString()}
+                })
+                <div class="message-section new-message message-conversation @userType">
+                    <form action="@(UrlUtil.LangPath)Messaging/$MessageThread/" class="ajax">
+                        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+                        <input type="hidden" name="MessageThreadID" value="@threadID" />
+                        <textarea rows="4" name="newmessage" placeholder="Reply"></textarea>
+                        <fieldset class="actions">
+                            <button class="main-action" type="submit">Reply</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </li>
         }
         </ul>
 

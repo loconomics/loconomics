@@ -939,3 +939,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .message-section.message-conversation.provider {
     float: right;
 }
+.new-message.message-conversation textarea {
+    width: 288px;
+    height: 80px;
+}
+.new-message.message-conversation > form > fieldset.actions {
+    margin-bottom: 0 !important;
+}

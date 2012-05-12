@@ -32,7 +32,7 @@ public class LcMessaging
     private static readonly string sqlUpdThread = @"
         UPDATE MessagingThreads
         SET     MessageThreadStatusID = @1,
-                UpdatedDate = getdate()
+                UpdatedDate = getdate(),
                 ModifiedBy = 'sys'
         WHERE   ThreadID = @0
     ";
@@ -50,7 +50,7 @@ public class LcMessaging
     private static readonly string sqlGetThread = @"
         SELECT CustomerUserID, ProviderUserID, PositionID, MessageThreadStatusID, Subject
         FROM    MessagingThreads
-        WHERE   MessagingThreadID = @0
+        WHERE   ThreadID = @0
     ";
     private static readonly string sqlGetUserData = @"
         SELECT  U.FirstName, U.LastName, U.UserID, P.Email
@@ -124,7 +124,7 @@ public class LcMessaging
             // Create Message
             messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody);
             // Update Thread status (and date automatically)
-            db.Execute(sqlUpdThread, MessageThreadStatusID);
+            db.Execute(sqlUpdThread, ThreadID, MessageThreadStatusID);
         }
         return messageID;
     }
@@ -205,9 +205,9 @@ public class LcMessaging
     #region Specific Message Templates
     private static readonly string TplLayout = @"
         <html><head><style type='text/css'>
-            body {
+            body {{
                 font-size: 13px;
-            }
+            }}
             .respond a {{
                 background: none repeat scroll 0 0 #8B2143 !important;
                 border-radius: 20px 20px 20px 20px;
