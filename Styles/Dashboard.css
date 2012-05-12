@@ -913,36 +913,40 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 
 /*
- * Messaging, converstions
+ * Messaging, conversations
  */
-.mini-user-info.message-conversation {
+.conversation-messages > li {
+    overflow: hidden;
+    margin: 20px 0;
+}
+.conversation-messages > li > .mini-user-info {
     width: 60px;
     font-size: .8em;
 }
-.mini-user-info.message-conversation > div {
+.conversation-messages > li > .mini-user-info > div {
     line-height: 1em;
 }
-.mini-user-info.message-conversation.customer {
+.conversation-messages > li.customer > .mini-user-info {
     float: left;
 }
-.mini-user-info.message-conversation.provider {
+.conversation-messages > li.provider > .mini-user-info {
     float: right;
 }
-.message-section.message-conversation {
+.conversation-messages > li > .message-section {
     font-size: 0.9em;
     margin: 0 12px;
     width: 320px;
 }
-.message-section.message-conversation.customer {
+.conversation-messages > li.customer > .message-section {
     float: left;
 }
-.message-section.message-conversation.provider {
+.conversation-messages > li.provider > .message-section {
     float: right;
 }
-.new-message.message-conversation textarea {
+.conversation-messages > li.new-message form > textarea {
     width: 288px;
     height: 80px;
 }
-.new-message.message-conversation > form > fieldset.actions {
+.conversation-messages > li.new-message form > fieldset.actions {
     margin-bottom: 0 !important;
 }

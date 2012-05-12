@@ -132,7 +132,7 @@ $(document).ready(function () {
             $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
     });
 
-    $('body').delegate('.new-message.message-conversation textarea', 'focus', function () {
+    $('body').delegate('.conversation-messages > li.new-message textarea', 'focus', function () {
         $(this).animate({ height: 250 });
     });
 

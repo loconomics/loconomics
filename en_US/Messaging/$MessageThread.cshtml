@@ -87,27 +87,25 @@
 @helper printItemCustomer(dynamic thread, dynamic message){
     <li class="customer">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"AddCssClasses", "message-conversation" },
             {"Data", thread},
             {"DataPrefix", "Customer"},
             {"Size", "mini"},
             {"UserType", "customer"},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
-        <div class="message-section message-conversation customer">@printMessageBodyAsHtml(message.BodyText)</div>
+        <div class="message-section">@printMessageBodyAsHtml(message.BodyText)</div>
     </li>
 }
 @helper printItemProvider(dynamic thread, dynamic message){
     <li class="provider">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"AddCssClasses", "message-conversation" },
             {"Data", thread},
             {"DataPrefix", "Provider"},
             {"Size", "mini"},
             {"UserType", "provider"},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
-        <div class="message-section message-conversation provider">@printMessageBodyAsHtml(message.BodyText)</div>
+        <div class="message-section">@printMessageBodyAsHtml(message.BodyText)</div>
     </li>
 }
 @if (thread == null)
@@ -132,7 +130,7 @@ else
         })
 
         <h4>@(String.IsNullOrWhiteSpace(thread.Subject) ? "Message thread" : "Subject: " + thread.Subject)</h4>
-        <ul class="messages-list clearfix">
+        <ul class="conversation-messages clearfix">
         @foreach (var message in messages)
         {
             if (message.MessageTypeID == 1)
@@ -153,7 +151,7 @@ else
                 userType = "customer";
                 userPrefix = "Customer";
             }
-            <li class="userType new-message">
+            <li class="@userType new-message">
                 @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
                     {"AddCssClasses", "message-conversation" },
                     {"Data", thread},
@@ -162,7 +160,7 @@ else
                     {"UserType", userType},
                     {"ExtraInfo", DateTime.Now.ToShortDateString()}
                 })
-                <div class="message-section new-message message-conversation @userType">
+                <div class="message-section @userType">
                     <form action="@(UrlUtil.LangPath)Messaging/$MessageThread/" class="ajax">
                         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                         <input type="hidden" name="MessageThreadID" value="@threadID" />
