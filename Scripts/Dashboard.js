@@ -16,7 +16,7 @@ $(document).bind('loadHashBang', function (event, hashbangvalue) {
     }
     // Analize parameters values
     if (urlParameters.Thread) {
-        openMessageThreadInTab(urlParameters.Thread, "Message Thread " + tid);
+        openMessageThreadInTab(urlParameters.Thread, "Message Thread " + urlParameters.Thread);
 
         // TODO Select the message id 'urlParameters.Message' (if there is someone) in
         // the message thread conversation.
