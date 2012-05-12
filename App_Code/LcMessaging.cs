@@ -185,7 +185,7 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            int threadID = CreateMessage(ThreadID, 3, InquiryAnswer);
+            int threadID = CreateMessage(ThreadID, 1, InquiryAnswer);
 
             // HTMLizing a bit the InquiryText
             InquiryAnswer = new HtmlString(InquiryAnswer).ToHtmlString().Replace("\n", "<br/>");
