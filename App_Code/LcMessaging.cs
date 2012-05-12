@@ -205,6 +205,9 @@ public class LcMessaging
     #region Specific Message Templates
     private static readonly string TplLayout = @"
         <html><head><style type='text/css'>
+            body {
+                font-size: 13px;
+            }
             .respond a {{
                 background: none repeat scroll 0 0 #8B2143 !important;
                 border-radius: 20px 20px 20px 20px;
@@ -212,7 +215,7 @@ public class LcMessaging
                 font-size: 1em;
                 padding: 0 1em;
                 text-transform: lowercase;
-                display: block;
+                display: inline-block;
             }}
         </style></head><body>{0}</body></html>
     ";
