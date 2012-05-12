@@ -1,4 +1,26 @@
-﻿$(document).ready(function () {
+﻿
+/*
+ * For Messaging, waiting for loadHashBang to know if we must load
+ * an specific message thread at page loading
+ */
+$(document).bind('loadHashBang', function (event, hashbangvalue) {
+    // Hashbangvalue is something like: Thread-1_Message-2
+    // Where '1' is the ThreadID and '2' the optional MessageID
+    var pars = hashbangvalue.split('_');
+    var urlParameters = {};
+    for (var i = 0; i < pars.length; i++) {
+        var parsvalues = pars[i].split('-');
+        if (parsvalues.length == 2) {
+            urlParameters[parsvalues[0]] = parsvalues[1];
+        }
+    }
+    // Analize parameters values
+    if (urlParameters.Thread) {
+        // TODO Load this Thread in a new Tab
+    }
+});
+
+$(document).ready(function () {
     /*
     * Change Photo
     */
@@ -29,16 +51,6 @@
             TabbedUX.focusTab(tab);
 
             var $tab = $(tab);
-
-            var bid = $(this).data('booking-id');
-            var brid = $(this).data('booking-request-id');
-            var data = { BookingRequestID: brid };
-            var url = "Booking/$BookingRequestDetails/";
-
-            if (bid) {
-                url = "Booking/$BookingDetails/";
-                data.BookingID = bid;
-            }
 
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
@@ -106,6 +118,52 @@
             }
         });
     });
+
+
+    /*=========
+     * Messaging
+     */
+    $('.message-thread-list .actions .item-action').click(function () {
+        var tid = $(this).data('message-thread-id');
+        var data = { MessageThreadID: tid };
+        var url = "Messaging/$MessageThread/";
+        var tabId = 'messageThreadID-' + tid;
+
+        var tab = TabbedUX.createTab('#main', tabId,
+            $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
+        if (tab) {
+            TabbedUX.focusTab(tab);
+
+            var $tab = $(tab);
+
+            // Loading, with retard
+            var loadingtimer = setTimeout(function () {
+                $tab.block(loadingBlock);
+            }, gLoadingRetard);
+
+            // Do the Ajax post
+            $.ajax({
+                url: UrlUtil.LangPath + url,
+                data: data,
+                success: function (data, text, jx) {
+                    if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
+                        // Unknowed sucessfull code (if this happen in production there is a bug!)
+                        alert("Result Code: " + data.Code);
+                    }
+                },
+                error: ajaxErrorPopupHandler,
+                complete: function () {
+                    // Disable loading
+                    clearTimeout(loadingtimer);
+                    // Unblock
+                    $tab.unblock();
+                }
+            });
+        } else
+        // Tab couln't be created, already must exist, focus it
+            TabbedUX.focusTab('#' + tabId);
+    });
+
 });
 /* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
 function dashboardGeneralJsonCodeHandler(data, container, options) {
