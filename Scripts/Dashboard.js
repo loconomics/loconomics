@@ -86,11 +86,22 @@ $(document).ready(function () {
     /*
     * Booking Request confirmation
     */
-    $('body').delegate('.booking-request .button-confirm-datetime', 'click', function () {
-        var dateType = $(this).data('date-type');
+    $('body').delegate('.booking-request .button-confirm-datetime, .booking-request .button-decline-booking', 'click', function () {
         var brId = $(this).data('booking-request-id');
         var $tab = $(this).closest('.tab-body');
         var options = { autoUnblockLoading: true };
+        var data = { BookingRequestID: brId };
+        var $t = $(this);
+        var url;
+        if ($t.hasClass('button-confirm-datetime')) {
+            data.ConfirmedDateType = $(this).data('date-type');
+            url = 'Booking/$ConfirmBookingRequest/';
+        } else if ($t.hasClass('button-decline-booking')) {
+            url = 'Booking/$DeclineBookingRequest/';
+        } else {
+            // Bad handler:
+            return;
+        }
 
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
@@ -99,8 +110,8 @@ $(document).ready(function () {
 
         // Do the Ajax post
         $.ajax({
-            url: UrlUtil.LangPath + "Booking/$ConfirmBookingRequest/",
-            data: { BookingRequestID: brId, ConfirmedDateType: dateType },
+            url: UrlUtil.LangPath + url,
+            data: data,
             success: function (data, text, jx) {
                 if (!dashboardGeneralJsonCodeHandler(data, $tab, options)) {
                     // Unknowed sucessfull code (if this happen in production there is a bug!)

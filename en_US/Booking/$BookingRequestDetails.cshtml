@@ -67,8 +67,6 @@
         WHERE   R.BookingRequestID = @0
                  AND
                 (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
-                /* AND
-                R.BookingRequestStatusID = 2 */
     ";
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
@@ -157,7 +155,7 @@ else
             Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
         </button>
         <h5>Decline booking request</h5>
-        <button type="button" class="button button-decline-booking">
+        <button type="button" class="button button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
             Decline booking (you can offer alternative times to the customer)
         </button>
     </div>
