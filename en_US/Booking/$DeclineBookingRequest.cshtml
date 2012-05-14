@@ -20,8 +20,15 @@
         DECLARE @BookingRequestID int
         SET @BookingRequestID = @0
 
+        DECLARE @ServiceAddressID int
+
         BEGIN TRY
             BEGIN TRAN
+
+            -- Get Service Address ID to be (maybe) removed later
+            SELECT  @ServiceAddressID = ServiceAddressID
+            FROM    BookingRequest
+            WHERE   BookingRequestID = @BookingRequestID
 
             /*
              * Updating Booking Request status, and removing references to the 
@@ -31,7 +38,8 @@
             SET     BookingRequestStatusID = 5, -- denied/declined
                     PreferredDateID = null,
                     AlternativeDate1ID = null,
-                    AlternativeDate2ID = null
+                    AlternativeDate2ID = null,
+                    ServiceAddressID = null
             WHERE   BookingRequestID = @BookingRequestID
 
             -- Removing CalendarEvents:
@@ -46,6 +54,12 @@
                 SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
                 WHERE BookingRequestID = @BookingRequestID
             )
+
+            -- Removing Service Address, if is not an user saved location (it has not NickName)
+            DELETE FROM ServiceAddress
+            WHERE ServiceAddressID = @ServiceAddressID
+                   AND
+                  NickName is null
 
             COMMIT TRAN
 

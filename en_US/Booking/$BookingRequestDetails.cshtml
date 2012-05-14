@@ -45,23 +45,23 @@
                  INNER JOIN
                 Users As C
                   ON C.UserID = R.CustomerUserID
-                 INNER JOIN
+                 LEFT JOIN
                 ServiceAddress As L
                   ON R.ServiceAddressID = L.ServiceAddressID
-                 INNER JOIN
+                 LEFT JOIN
                 CalendarEvents As E1
                   ON E1.ID = R.PreferredDateID
-                 INNER JOIN
+                 LEFT JOIN
                 CalendarEvents As E2
                   ON E2.ID = R.AlternativeDate1ID
-                 INNER JOIN
+                 LEFT JOIN
                 CalendarEvents As E3
                   ON E3.ID = R.AlternativeDate2ID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
-                 INNER JOIN
+                 LEFT JOIN
                 StateProvince As SP
                   ON SP.StateProvinceID = L.StateProvinceID
         WHERE   R.BookingRequestID = @0
@@ -135,6 +135,7 @@ else
         {"UserType", "customer"}
     })
 
+    @if (booking.BookingRequestStatusID == 2) {
     <h4>Requested booking times</h4>
     <div class="requested-booking-times message-section">
         <p class="info">
@@ -159,6 +160,7 @@ else
             Decline booking (you can offer alternative times to the customer)
         </button>
     </div>
+    }
 
     <h4>Requested services and pricing estimate</h4>
     @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
