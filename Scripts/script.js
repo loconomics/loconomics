@@ -31,10 +31,10 @@ $.fn.reload = function (newurl) {
     var url = this.data('source-url');
     if (url) {
         // Loading, with retard
+        var t = this; // closure scope
         var loadingtimer = setTimeout(function () {
-            this.block(loadingBlock);
+            t.block(loadingBlock);
         }, gLoadingRetard);
-        var t = this;
         this.load(url, function () {
             clearTimeout(loadingtimer);
             t.unblock();
