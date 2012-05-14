@@ -6,7 +6,7 @@
     int userID = WebSecurity.CurrentUserId;
     
     var threadID = Request["MessageThreadID"].AsInt();
-    
+
     var sqlGetMessageThread = @"
         SELECT  T.ThreadID,
                 T.CustomerUserID,
@@ -59,7 +59,9 @@
 
     Validation.RequireField("newmessage", "Cannot send an empty message");
     Validation.Add("newmessage", Validator.StringLength(2500, 1, "Message is too big!"));
-     
+    
+    bool refreshThreadList = false;
+    
     if (IsPost && Validation.IsValid()) {
         // Validate if user is on this Thread
         using (var db = Database.Open("sqlloco")) {
@@ -71,6 +73,7 @@
                 } else {
                     LcMessaging.SendCustomerInquiryAnswer(threadID, Request["newmessage"]);
                 }
+                refreshThreadList = true;
             }
         }
     }
@@ -117,6 +120,12 @@ else
     @CommonHelpers.SetupStarRatingPlugin()
     @CommonHelpers.GetValidationScripts()
     <div class="booking-request main-side ajax-box">
+        @if (refreshThreadList) {
+            <script type="text/javascript">
+                // After update conversation, state change, reload thread list to reflect new state
+                $('#inbox').reload();
+            </script>
+        }
         <h3>Conversation with @CommonHelpers.GetUserDisplayName(thread, "Customer")</h3>
         <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 

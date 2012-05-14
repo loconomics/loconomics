@@ -10,7 +10,7 @@
 			@*<li><a href="#sent">Sent</a></li>*@
         </ul>
 
-		<div id="inbox" class="tab-body fancy tabbed buttons current clearfix">
+		<div id="inbox" class="tab-body fancy tabbed buttons current clearfix" data-source-url="@(UrlUtil.LangPath + "Messaging/$MessageThreadList/")">
             @RenderPage(UrlUtil.LangPath + "Messaging/$MessageThreadList.cshtml")
             @*
             <ul class="tabs">
