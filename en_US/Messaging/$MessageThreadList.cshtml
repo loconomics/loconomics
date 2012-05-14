@@ -142,11 +142,33 @@
         </li>
     </ul>
     <div class="actions">
-        @if (item.MessageThreadStatusID == 1) {
-            <button class="item-action respond" data-message-thread-id="@item.ThreadID">Respond</button>
-        } else {
-            <button class="item-action responded" data-message-thread-id="@item.ThreadID">Responded</button>
+        @{
+            string buttonAction = "view", buttonLabel = "View";
+            if (senderUserType == "customer") {
+                switch ((int)item.MessageThreadStatusID){
+                    case 1:
+                        buttonAction = "respond";
+                        buttonLabel = "Respond";
+                        break;
+                    case 2:
+                        buttonAction = "responded";
+                        buttonLabel = "Responded";
+                        break;
+                }
+            } else if (senderUserType == "provider") {
+                switch ((int)item.MessageThreadStatusID){
+                    case 1:
+                        buttonAction = "waiting-respond";
+                        buttonLabel = "Waiting";
+                        break;
+                    case 2:
+                        buttonAction = "responded";
+                        buttonLabel = "Responded";
+                        break;
+                }
+            }
         }
+        <button class="item-action @buttonAction" data-message-thread-id="@item.ThreadID">@buttonLabel</button>
         <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>
