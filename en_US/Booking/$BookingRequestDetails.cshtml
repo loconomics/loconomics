@@ -78,29 +78,61 @@
     @end.ToShortTimeString()
 }
 @helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
-    var statusTitle = "Booking request from {0}. Unknown status";
-    switch ((int)booking.BookingRequestStatusID) {
-        case 1: // created but not complete
-        case 3: // created but not complete because time out
-            statusTitle = "Incomplete booking request from {0}";
+    var statusTitle = "Booking request involving {0}. Unknown status";
+    switch (itsUserType) {
+        case "customer":
+            statusTitle = "Booking request from {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request from {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Booking request from {0}";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "Booking request cancelled by {0}";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request from {0}";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request from {0}";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Accepted booking request from {0}";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined with alternatives booking request from {0}";
+                    break;
+            }
             break;
-        case 2: // completed request by customer, awaiting provider confirmation
-            statusTitle = "Booking request from {0}";
-            break;
-        case 4: // cancelled by customer
-            statusTitle = "Booking request cancelled by {0}";
-            break;
-        case 5: // denied by provider
-            statusTitle = "Declined booking request from {0}";
-            break;
-        case 6: // expired (not answered by provider in time)
-            statusTitle = "Expired booking request from {0}";
-            break;
-        case 7: // accepted by provider (you must consider view the booking details!)
-            statusTitle = "Accepted booking request from {0}";
-            break;
-        case 8: // denied with alternatives
-            statusTitle = "Denied with alternatives booking request from {0}";
+        case "provider":
+            statusTitle = "Booking request for {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request for {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Waiting for {0} to confirm request";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "Booking request for {0} cancelled by me";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request by {0}";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request for {0}";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Accepted booking request for {0}";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined with alternatives booking request by {0}";
+                    break;
+            }
             break;
     }
     @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
@@ -173,12 +205,12 @@ else
             <p class="info">
             @if (itsUserType == "customer")
             {
-                <text>@CommonHelpers.GetUserDisplayName(itsUserType) has booked you as a @booking.PositionSingular and chosen
+                <text>@CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
                 the following times for you to provide the service.</text>
             }
             else
             {
-                <text>You have booked to @CommonHelpers.GetUserDisplayName(itsUserType) as a @booking.PositionSingular and chosen
+                <text>You have booked to @CommonHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
                 the following times for it to provide the service.</text>
             }
             </p>
