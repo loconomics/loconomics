@@ -150,10 +150,12 @@ else
     // Checking item: user type of the other user, not current user
     int itsUserID = booking.ProviderUserID;
     string itsUserType = "provider";
+    string itsUserLabel = "Provider";
     string myUserType = "customer";
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
         itsUserType = "customer";
+        itsUserLabel = "Customer";
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
@@ -163,7 +165,7 @@ else
         <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
         <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-        <h4>Customer profile</h4>
+        <h4>@itsUserLabel profile</h4>
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
             {"Data", itsUserData},
