@@ -1,16 +1,26 @@
 ﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
 @{
     CommonHelpers.SecurePage();
     
-    var u = DashboardFunctions.GetUserRow();
+    // var u = DashboardFunctions.GetUserRow();
+    int userID = WebSecurity.CurrentUserId;
     
     var sqlGetPendingBookingRequest = @"
         SELECT  R.BookingRequestID,
                 0 As BookingID,
+                R.ProviderUserID,
                 R.CustomerUserID,
                 R.PricingEstimateID,
-                C.FirstName As CustomerFirstName,
-                C.LastName As CustomerLastName,
+                R.BookingRequestStatusID,
+                0 As BookingStatusID,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
                 E.StartTime,
                 E.EndTime,
                 E.TimeZone,
@@ -21,8 +31,11 @@
                 PricingEstimate As Pr
                   ON Pr.PricingEstimateID = R.PricingEstimateID
                  INNER JOIN
-                Users As C
-                  ON C.UserID = R.CustomerUserID
+                Users As UC
+                  ON UC.UserID = R.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = R.ProviderUserID
                  LEFT JOIN
                 CalendarEvents As E
                   ON E.Id = R.PreferredDateID
@@ -50,10 +63,18 @@
     var sqlGetBookingsByDateRange = @"
         SELECT  R.BookingRequestID,
                 B.BookingID,
+                R.ProviderUserID,
                 R.CustomerUserID,
                 R.PricingEstimateID,
-                C.FirstName As CustomerFirstName,
-                C.LastName As CustomerLastName,
+                R.BookingRequestStatusID,
+                B.BookingStatusID,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
                 E.StartTime,
                 E.EndTime,
                 E.TimeZone,
@@ -67,8 +88,11 @@
                 PricingEstimate As Pr
                   ON Pr.PricingEstimateID = R.PricingEstimateID
                  INNER JOIN
-                Users As C
-                  ON C.UserID = R.CustomerUserID
+                Users As UC
+                  ON UC.UserID = R.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = R.ProviderUserID
                  LEFT JOIN
                 CalendarEvents As E
                   ON E.Id = B.ConfirmedDateID
@@ -90,7 +114,7 @@
     dynamic pendingBookingRequests, todayBookings, tomorrowBookings, thisweekBookings, 
         upcomingBookings, pastBookings;
     using (var db = Database.Open("sqlloco")) {
-        pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, u.UserID, 1, 1);
+        pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, userID, 1, 1);
         
         // Preparing dates for further filtering
         var today = DateTime.Today;
@@ -102,11 +126,11 @@
         var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
         var pastLastDay = thisweekFirstDay.AddDays(-1);
         
-        todayBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, today, today, 1, 1);
-        tomorrowBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, tomorrow, tomorrow, 1, 1);
-        thisweekBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, thisweekFirstDay, thisweekLastDay, 1, 1);
-        upcomingBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, upcomingFirstDay, upcomingLastDay, 1, 1);
-        pastBookings = db.Query(sqlGetBookingsByDateRange, u.UserID, pastFirstDay, pastLastDay, 1, 1);
+        todayBookings = db.Query(sqlGetBookingsByDateRange, userID, today, today, 1, 1);
+        tomorrowBookings = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, 1, 1);
+        thisweekBookings = db.Query(sqlGetBookingsByDateRange, userID, thisweekFirstDay, thisweekLastDay, 1, 1);
+        upcomingBookings = db.Query(sqlGetBookingsByDateRange, userID, upcomingFirstDay, upcomingLastDay, 1, 1);
+        pastBookings = db.Query(sqlGetBookingsByDateRange, userID, pastFirstDay, pastLastDay, 1, 1);
     }
     
     /* Some static strings */
@@ -128,12 +152,23 @@
 }
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
+    
+    // Checking item: user type of the other user, not current user
+    string itsUserType = "provider";
+    string itsUserPrefix = "Provider";
+    //string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == item.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserPrefix = "Customer";
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    
   <li>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"Data", item},
-        {"DataPrefix", "Customer"},
+        {"DataPrefix", itsUserPrefix},
         {"Size", "mini"},
-        {"UserType", "customer"}
+        {"UserType", itsUserType}
     })
     <ul class="item-summary">
         <li>
@@ -148,11 +183,65 @@
         </li>
     </ul>
     <div class="actions">
-        @if (item.BookingID > 0) {
-            <button class="item-action responded" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">Responded</button>
-        } else {
-            <button class="item-action" data-booking-request-id="@item.BookingRequestID">Respond</button>
+        @{
+            string buttonAction = "view", buttonLabel = "View";
+            if ((int)item.BookingStatusID > 0) {
+                switch ((int)item.BookingStatusID){
+                    case 1:
+                        buttonAction = "accepted";
+                        buttonLabel = "Accepted";
+                        break;
+                    case 2:
+                    case 3:
+                        buttonAction = "service-performed";
+                        buttonLabel = "Done";
+                        break;
+                    case 4:
+                        buttonAction = "completed";
+                        buttonLabel = "Completed";
+                        break;
+                    case 5:
+                        buttonAction = "dispute";
+                        buttonLabel = "Dispute";
+                        break;
+                }
+            } else {
+                switch ((int)item.BookingRequestStatusID){
+                    case 1:
+                    case 3:
+                        buttonAction = "incomplete";
+                        buttonLabel = "Incomplete";
+                        break;
+                    case 2:
+                        if (itsUserType == "customer") {
+                            buttonAction = "respond";
+                            buttonLabel = "Respond";
+                        } else {
+                            buttonAction = "waiting-respond";
+                            buttonLabel = "Waiting";
+                        }
+                        break;
+                    case 4:
+                        buttonAction = "cancelled";
+                        buttonLabel = "Cancelled";
+                        break;
+                    case 5:
+                    case 8:
+                        buttonAction = "declined";
+                        buttonLabel = "Declined";
+                        break;
+                    case 6:
+                        buttonAction = "expired";
+                        buttonLabel = "Expired";
+                        break;
+                    case 7:
+                        buttonAction = "accepted";
+                        buttonLabel = "Accepted";
+                        break;
+                }
+            }
         }
+        <button class="item-action @buttonAction" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">@buttonLabel</button>
         <div class="total-price item-extra-info">$@item.TotalPrice</div>
     </div>
   </li>
