@@ -1,4 +1,5 @@
 ﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
 @{
     CommonHelpers.SecurePage();
     
@@ -11,6 +12,7 @@
     var sqlGetBooking = @"
         SELECT  R.BookingRequestID,
                 B.BookingID,
+                R.ProviderUserID,
                 R.CustomerUserID,
                 R.PricingEstimateID,
                 R.SpecialRequests,
@@ -20,26 +22,13 @@
 
                 --TODO where is bank account (last numbers) or how calculate paymentDate
                 getdate() As PaymentDate,
+                -- account only for provider
                 '1234' As PaymentAccountLastDigits,
 
                 Pos.PositionSingular,
 
-                C.FirstName As CustomerFirstName,
-                C.LastName As CustomerLastName,
-                C.MiddleIn As CustomerMiddleIn,
-                C.CreatedDate As CustomerMemberSinceDate,
-                C.PublicBio As CustomerPublicBio,
-                C.MobilePhone As CustomerMobilePhone,
-                CUP.Email As CustomerEmail,
-
-                CL.AddressLine1 As CustomerAddressLine1,
-                CL.AddressLine2 As CustomerAddressLine2,
-                CL.City As CustomerCity,
-                CSP.StateProvinceName As CustomerStateProvinceName,
-                CSP.StateProvinceCode As CustomerStateProvinceCode,
-                CPC.PostalCode As CustomerPostalCode,
-
                 L.UserID As LocationUserID,
+                LU.FirstName As LocationUserFirstName,
                 L.NickName As LocationName,
                 L.AddressLine1, L.AddressLine2,
                 L.City,
@@ -57,24 +46,11 @@
                 PricingEstimate As P
                   ON P.PricingEstimateID = R.PricingEstimateID
                  INNER JOIN
-                Users As C
-                  ON C.UserID = R.CustomerUserID
-                 INNER JOIN
-                UserProfile As CUP
-                  ON CUP.UserID = C.UserID
-                 LEFT JOIN
-                ServiceAddress As CL
-                  ON CL.UserID = C.UserID
-                    AND CL.PreferredAddress = 1
-                 LEFT JOIN
-                StateProvince As CSP
-                  ON CSP.StateProvinceID = CL.StateProvinceID
-                 LEFT JOIN
-                PostalCode As CPC
-                  ON CPC.PostalCodeID = CL.PostalCodeID
-                 INNER JOIN
                 ServiceAddress As L
                   ON R.ServiceAddressID = L.ServiceAddressID
+                 INNER JOIN
+                Users As LU
+                  ON L.UserID = LU.UserID
                  INNER JOIN
                 StateProvince As SP
                   ON SP.StateProvinceID = L.StateProvinceID
@@ -127,35 +103,58 @@
 @helper printGoogleMap(string location){
     <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
 }
-@helper printTitleStatus(dynamic booking){
-    var statusTitle = "Booking from {0}. Unknown status";
-    switch ((int)booking.BookingStatusID) {
-        case 1: // confirmed
-            statusTitle = "Booking confirmation from {0}";
+@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
+    var statusTitle = "Booking involving {0}. Unknown status";
+    switch (itsUserType) {
+        case "customer":
+            statusTitle = "Booking from {0}. Unknown status";
+            switch ((int)booking.BookingStatusID) {
+                case 1: // confirmed
+                    statusTitle = "Confirmed booking from {0}";
+                    break;
+                case 2: // service performed no pricing adjustment
+                    statusTitle = "Service performed to {0}";
+                    break;
+                case 3: // service performed pricing adjustment
+                    statusTitle = "Service performed to {0} with pricing adjustment";
+                    break;
+                case 4: // service performed and paid full
+                    statusTitle = "Service paid by {0}";
+                    break;
+                case 5: // service dispute
+                    statusTitle = "Service dispute with {0}";
+                    break;
+            }
             break;
-        case 2: // service performed no pricing adjustment
-            statusTitle = "Service performed to {0}";
-            break;
-        case 3: // service performed pricing adjustment
-            statusTitle = "Service performed to {0} with pricing adjustment";
-            break;
-        case 4: // service performed and paid full
-            statusTitle = "Service paid by {0}";
-            break;
-        case 5: // service dispute
-            statusTitle = "Service dispute with {0}";
+        case "provider":
+            statusTitle = "Booking to {0}. Unknown status";
+            switch ((int)booking.BookingStatusID) {
+                case 1: // confirmed
+                    statusTitle = "Confirmed booking to {0}";
+                    break;
+                case 2: // service performed no pricing adjustment
+                    statusTitle = "Service performed by {0}";
+                    break;
+                case 3: // service performed pricing adjustment
+                    statusTitle = "Service performed by {0} with pricing adjustment";
+                    break;
+                case 4: // service performed and paid full
+                    statusTitle = "Service paid to {0}";
+                    break;
+                case 5: // service dispute
+                    statusTitle = "Service dispute with {0}";
+                    break;
+            }
             break;
     }
-    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(booking, "Customer"))
+    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
 }
 @functions{
     string getLocationName(dynamic data){
-        if (data.LocationUserID == data.CustomerUserID) {
-            return data.CustomerFirstName + "'s " + data.LocationName;
-        } else if (data.LocationUserID == data.ProviderUserID) {
-            return data.ProviderFirstName + "'s " + data.LocationName;
-        } else {
+        if (String.IsNullOrWhiteSpace(data.LocationName)) {
             return "";
+        } else {
+            return data.LocationUserFirstName + "'s " + data.LocationName;
         }
     }
     string getLocationForGoogleMaps(dynamic data){
@@ -172,17 +171,29 @@
 }
 else
 {
+    // Checking item: user type of the other user, not current user
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+        itsUserType = "customer";
+        myUserType = "provider";
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+
 <div class="booking-request booking main-side">
-    <h3>@printTitleStatus(booking)</h3>
+    <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <h4>Customer information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"AddCssClasses", "message-section" },
-        {"Data", booking},
-        {"DataPrefix", "Customer"},
+        {"Data", itsUserData},
+        {"DataPrefix", ""},
         {"Size", "medium"},
-        {"UserType", "customer"},
+        {"UserType", itsUserType},
         {"WithContactData", true}
     })
 
@@ -216,7 +227,7 @@ else
     @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
 
     <h4>Reminders</h4>
-    @RenderPage("$BookingRemindersWidget.cshtml")
+    @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
 </div>
 }
 @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")

@@ -20,6 +20,7 @@
                 var sqluser = 
                     //"exec GetUserDetails @0";
                     // NOTE: UserID is needed!
+                    // NOTE2: remove location details from this table and query, use GetUserWithContactData
                     @"
                         SELECT
                             a.UserID,
@@ -42,11 +43,74 @@
                             a.CountryID,
                             PostalCode,
                             a.CreatedDate As MemberSinceDate,
-                            PublicBio,
-                            ADD_Details 
-                        from users a 
-                        left join dbo.userprofilepositionadditional b 
-                        on a.userid = b.userid  where a.UserID = @0
+                            PublicBio
+                            ,UP.Email
+                            --,ADD_Details 
+                        from users A
+                             INNER JOIN
+                            UserProfile As UP
+                              ON UP.UserID = A.UserID
+                            -- left join dbo.userprofilepositionadditional b 
+                            --  ON a.userid = b.userid
+                        where a.UserID = @0
+                    ";
+                u = db.QuerySingle(sqluser, userId);
+            }
+            PageData["userow:" + userId.ToString()] = u;
+        }
+        return u;
+    }
+    public static dynamic GetUserRowWithContactData(int userId) {
+        // Implemented a basic, per-page, cache, faster and simplified for each page
+        var u = PageData["userow:" + userId.ToString()];
+        if (u == null){
+            using (var db = Database.Open("sqlloco")){
+                var sqluser = 
+                    //"exec GetUserDetails @0";
+                    // NOTE: UserID is needed!
+                    @"
+                        SELECT
+                            U.UserID
+                            ,U.FirstName
+                            ,U.LastName
+                            ,U.MiddleIn
+                            ,U.CreatedDate As MemberSinceDate
+                            ,U.PublicBio
+                            ,U.MobilePhone
+                            ,P.Email
+
+                            ,Photo
+                            ,PreferredLanguageID
+                            ,PreferredCountryID
+                            ,IsCustomer
+                            ,IsProvider
+                            ,MobilePhone
+                            ,AlternatePhone
+
+                            ,L.AddressLine1
+                            ,L.AddressLine2
+                            ,L.City
+                            ,SP.StateProvinceName
+                            ,SP.StateProvinceCode
+                            ,PC.PostalCode
+
+                        FROM
+                            Users As U
+                             INNER JOIN
+                            UserProfile As P
+                              ON P.UserID = U.UserID
+                             LEFT JOIN
+                            ServiceAddress As L
+                              ON L.UserID = U.UserID
+                                AND L.PreferredAddress = 1
+                             LEFT JOIN
+                            StateProvince As SP
+                              ON SP.StateProvinceID = L.StateProvinceID
+                             LEFT JOIN
+                            PostalCode As PC
+                              ON PC.PostalCodeID = L.PostalCodeID
+
+                        WHERE U.UserID = @0
                     ";
                 u = db.QuerySingle(sqluser, userId);
             }
