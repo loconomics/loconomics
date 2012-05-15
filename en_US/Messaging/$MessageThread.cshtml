@@ -18,9 +18,6 @@
 
                 UC.FirstName As CustomerFirstName,
                 UC.LastName As CustomerLastName,
-                UC.MiddleIn As CustomerMiddleIn,
-                UC.CreatedDate As CustomerMemberSinceDate,
-                UC.PublicBio As CustomerPublicBio,
 
                 UP.FirstName As ProviderFirstName,
                 UP.LastName As ProviderLastName,
@@ -87,25 +84,13 @@
 @helper printMessageBodyAsHtml(string messageBody){
     @Html.Raw(messageBody.Replace("\n", "<br/>"))
 }
-@helper printItemCustomer(dynamic thread, dynamic message){
-    <li class="customer">
+@helper printItem(dynamic thread, dynamic message, string userType, string userPrefix){
+    <li class="@userType">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", thread},
-            {"DataPrefix", "Customer"},
+            {"DataPrefix", userPrefix},
             {"Size", "mini"},
-            {"UserType", "customer"},
-            {"ExtraInfo", message.MessageDate.ToShortDateString()}
-        })
-        <div class="message-section">@printMessageBodyAsHtml(message.BodyText)</div>
-    </li>
-}
-@helper printItemProvider(dynamic thread, dynamic message){
-    <li class="provider">
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"Data", thread},
-            {"DataPrefix", "Provider"},
-            {"Size", "mini"},
-            {"UserType", "provider"},
+            {"UserType", userType},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
         <div class="message-section">@printMessageBodyAsHtml(message.BodyText)</div>
@@ -117,6 +102,21 @@
 }
 else
 {
+    // Checking item: user type of the other user, not current user
+    int itsUserID = thread.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == thread.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        myUserPrefix = "Provider";
+        itsUserID = thread.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    
     @CommonHelpers.SetupStarRatingPlugin()
     @CommonHelpers.GetValidationScripts()
     <div class="booking-request main-side ajax-box">
@@ -129,13 +129,13 @@ else
         <h3>Conversation with @CommonHelpers.GetUserDisplayName(thread, "Customer")</h3>
         <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 
-        <h4>Customer profile</h4>
+        <h4>@itsUserLabel profile</h4>
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
-            {"Data", thread},
-            {"DataPrefix", "Customer"},
+            {"Data", itsUserData},
+            {"DataPrefix", ""},
             {"Size", "medium"},
-            {"UserType", "customer"}
+            {"UserType", itsUserType}
         })
 
         <h4>@(String.IsNullOrWhiteSpace(thread.Subject) ? "Message thread" : "Subject: " + thread.Subject)</h4>
@@ -144,32 +144,24 @@ else
         {
             if (message.MessageTypeID == 1)
             {
-                @printItemCustomer(thread, message)
+                @printItem(thread, message, "customer", "Customer")
             }
             else if (message.MessageTypeID == 3)
             {
-                @printItemProvider(thread, message);
+                @printItem(thread, message, "provider", "Provider")
             }
         }
         @{
-            string userType = "", userPrefix = "";
-            if (thread.ProviderUserID == userID) {
-                userType = "provider";
-                userPrefix = "Provider";
-            } else {
-                userType = "customer";
-                userPrefix = "Customer";
-            }
-            <li class="@userType new-message">
+            <li class="@myUserType new-message">
                 @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
                     {"AddCssClasses", "message-conversation" },
                     {"Data", thread},
-                    {"DataPrefix", userPrefix},
+                    {"DataPrefix", myUserPrefix},
                     {"Size", "mini"},
-                    {"UserType", userType},
+                    {"UserType", myUserType},
                     {"ExtraInfo", DateTime.Now.ToShortDateString()}
                 })
-                <div class="message-section @userType">
+                <div class="message-section">
                     <form action="@(UrlUtil.LangPath)Messaging/$MessageThread/" class="ajax">
                         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                         <input type="hidden" name="MessageThreadID" value="@threadID" />
