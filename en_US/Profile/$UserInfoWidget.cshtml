@@ -15,8 +15,8 @@
         // TODO: load user data from database
         dataPrefix = "";
     }
-    // TODO: Get User Rate
-    var customerRate = 2;
+    // TODO: Get User Global Rate
+    var userRate = 2;
     
     if (Array.IndexOf<string>(new string[] { "mini", "medium", "large" }, size) == -1) {
         throw new Exception("Size is not valid: " + size);
@@ -33,9 +33,9 @@
         return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
-@if (size == "medium" && userType == "customer")
+@if (size == "medium")
 {
-    <div class="customer medium-user-info @addCssClasses">
+    <div class="@userType medium-user-info @addCssClasses">
         <div class="user-micro-summary">
             <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(data, dataPrefix)</h5>
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
@@ -59,21 +59,34 @@
             @if (!String.IsNullOrWhiteSpace(data[dataPrefix + "PublicBio"])) {
                 @data[dataPrefix + "PublicBio"]
             } else {
-                <text>Customer doesn't provide information about itself.</text>
+                <text>User doesn't provide information about itself.</text>
                 <br />
-                <text>It's strongly recommended for all users write a public bio.</text>
+                <text>It's strongly recommended for all users to write a public bio.</text>
                 @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
             }
         </p>
         }
 
-        <div class="customer-rating">
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + data[dataPrefix + "UserID"], customerRate.ToString(), "true" })
+        @if (userType == "customer")
+        {
+        <div class="user-rating global-rating">
+            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + data[dataPrefix + "UserID"], userRate.ToString(), "true" })
             @if (!withContactData)
             {
             <span class="note">*100% of service providers would work for @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>
             }
         </div>
+        }
+        else if (userType == "provider")
+        {
+        <div class="user-rating global-rating">
+            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Provider_" + data[dataPrefix + "UserID"], userRate.ToString(), "true" })
+            @if (!withContactData)
+            {
+            <span class="note">*100% of customer would work with @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>
+            }
+        </div>
+        }
 
         <a class="view-profile" href="@(UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
     </div>

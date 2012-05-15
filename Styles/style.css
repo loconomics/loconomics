@@ -1705,10 +1705,10 @@ html.boxshadow #loginBox .field-validation-error{
     line-height: 1em;
     display: inline;
 }
-.medium-user-info .customer-rating {
+.medium-user-info .user-rating {
     width: 360px;
 }
-.medium-user-info .customer-rating .note {
+.medium-user-info .user-rating .note {
     font-size: .8em;
     color: #6c6c6c;
     font-style: italic;

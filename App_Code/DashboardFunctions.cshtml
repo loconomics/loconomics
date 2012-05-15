@@ -41,6 +41,8 @@
                             StateProvinceID,
                             a.CountryID,
                             PostalCode,
+                            a.CreatedDate As MemberSinceDate,
+                            PublicBio,
                             ADD_Details 
                         from users a 
                         left join dbo.userprofilepositionadditional b 
