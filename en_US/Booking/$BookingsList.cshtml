@@ -31,13 +31,20 @@
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   
-                R.CustomerUserID=@0
-                 OR
-                R.ProviderUserID=@0
+                (R.CustomerUserID=@0
+                  OR
+                 (
+                  R.ProviderUserID=@0
+                   AND
+                  -- Not list incomplete requets to providers
+                  R.BookingRequestStatusID <> 1
+                   AND
+                  R.BookingRequestStatusID <> 3
+                 )
+                )
                  AND
-                R.BookingRequestStatusID <> 1
-                 AND
-                R.BookingRequestStatusID <> 3
+                -- Not list accepted requests, because now are just bookings!
+                R.BookingRequestStatusID <> 7
         ORDER BY E.StartTime, R.UpdatedDate
     ";
     var sqlGetBookingsByDateRange = @"
@@ -69,7 +76,11 @@
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
-        WHERE   R.ProviderUserID=@0
+        WHERE   (
+                 R.CustomerUserID=@0
+                  OR
+                 R.ProviderUserID=@0
+                )
                  AND
                 Convert(date, E.StartTime) >= @1
                  AND
