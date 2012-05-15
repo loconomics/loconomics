@@ -23,16 +23,21 @@
                  INNER JOIN
                 Users As C
                   ON C.UserID = R.CustomerUserID
-                 INNER JOIN
+                 LEFT JOIN
                 CalendarEvents As E
                   ON E.Id = R.PreferredDateID
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
-        WHERE   R.ProviderUserID=@0
+        WHERE   
+                R.CustomerUserID=@0
+                 OR
+                R.ProviderUserID=@0
                  AND
-                R.BookingRequestStatusID = 2
+                R.BookingRequestStatusID <> 1
+                 AND
+                R.BookingRequestStatusID <> 3
     ";
     var sqlGetBookingsByDateRange = @"
         SELECT  R.BookingRequestID,
@@ -56,7 +61,7 @@
                  INNER JOIN
                 Users As C
                   ON C.UserID = R.CustomerUserID
-                 INNER JOIN
+                 LEFT JOIN
                 CalendarEvents As E
                   ON E.Id = B.ConfirmedDateID
                  INNER JOIN
@@ -97,6 +102,17 @@
     string strBookingSingular = "booking";
     string strBookingPlural = "bookings";
 }
+@helper printDateTimeRange(DateTime? start, DateTime? end){
+    if (start.HasValue && end.HasValue) {
+        @start.Value.ToLongDateString()
+        <text>, </text>
+        @start.Value.ToShortTimeString()
+        <text> to </text>
+        @end.Value.ToShortTimeString()
+    } else {
+        <span class="no-dates">Date not available</span>
+    }
+}
 @* Print a Booking or BookingRequest *@
 @helper printItem(dynamic item) {
   <li>
@@ -109,9 +125,7 @@
     <ul class="item-summary">
         <li>
             <h5>Time:</h5> @*Monday, April 15th, 2012, 11:00am to 2:00pm*@
-                    @(item.StartTime.ToLongDateString()),
-                    @item.StartTime.ToShortTimeString() to
-                    @item.EndTime.ToShortTimeString()
+                @printDateTimeRange(item.StartTime, item.EndTime)
         </li>
         <li>
             <h5>Position:</h5> @item.PositionSingular
