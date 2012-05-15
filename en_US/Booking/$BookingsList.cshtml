@@ -38,6 +38,7 @@
                 R.BookingRequestStatusID <> 1
                  AND
                 R.BookingRequestStatusID <> 3
+        ORDER BY E.StartTime, R.UpdatedDate
     ";
     var sqlGetBookingsByDateRange = @"
         SELECT  R.BookingRequestID,
@@ -73,6 +74,7 @@
                 Convert(date, E.StartTime) >= @1
                  AND
                 Convert(date, E.StartTime) <= @2
+        ORDER BY E.StartTime, B.UpdatedDate, R.UpdatedDate
     ";
     dynamic pendingBookingRequests, todayBookings, tomorrowBookings, thisweekBookings, 
         upcomingBookings, pastBookings;
