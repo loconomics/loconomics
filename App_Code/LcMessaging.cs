@@ -157,14 +157,14 @@ public class LcMessaging
             })); */
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", 1 } // Customer inquiry (first message)
                 ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", -1 } // Copy to author of Customer inquiry (first message)
@@ -203,7 +203,7 @@ public class LcMessaging
             }));*/
 
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -211,7 +211,7 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -251,7 +251,7 @@ public class LcMessaging
             }));*/
 
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -259,7 +259,7 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate("Messaging/EmailInquiry/",
+                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -283,13 +283,14 @@ public class LcMessaging
             //HttpContext.Current.Response.Output = null;
             //var o = new System.IO.StringWriter();
             //var r = new System.Web.Hosting.SimpleWorkerRequest(tplUrl, "", o);
-            return w.DownloadString(UrlUtil.AppPath + tplUrl);
+            return w.DownloadString(UrlUtil.SiteUrl + tplUrl);
         }
     }
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
     {
-        if (HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
+        if (!HttpContext.Current.Request.IsLocal ||
+            HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
     private static string ApplyInquiryTemplate(string tpl, Dictionary<string, object> data)
