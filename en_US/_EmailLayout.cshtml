@@ -2,6 +2,13 @@
     var threadID = PageData["threadID"];
     var messageID = PageData["messageID"];
     var messageTitle = PageData["messageTitle"];
+    var viewOnSiteUrl = PageData["viewOnSiteUrl"];
+    if (threadID != null) {
+        viewOnSiteUrl = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
+        if (messageID) {
+            viewOnSiteUrl += "_Message-" + messageID;
+        }
+    }
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -64,7 +71,7 @@ alink="#FF0000" link="#FF0000" bgcolor="#000000" text="#FFFFFF" yahoo="fix">
 		            <h1><a id="logo" href="@Href(UrlUtil.LangUrl)"><img alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                 </td>
                 <td width="300" style="padding-bottom: 15px" align="right" style="padding-right: 30px">
-                    <a href="@(UrlUtil.LangUrl)Dashboard/Mailbox/#!Thread-@(threadID)_Message-@(messageID)">If you don't see well this message, click here</a>
+                    <a href="@viewOnSiteUrl">If you don't see well this message, click here</a>
                 </td>
             </tr>
             <tr class="content" style="padding:0 0 15px 0">
