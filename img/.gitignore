@@ -5,4 +5,5 @@
 !search-categories/*.*
 !userphotos/u0/*.*
 !theme/*.*
+!email/*.*
 theme/edit/*.*
