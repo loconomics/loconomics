@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
+    LcMessaging.SecureTemplate();
+    
     Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Inquiry";
     var kind = Request["Kind"].AsInt();

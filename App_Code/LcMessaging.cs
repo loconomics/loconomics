@@ -159,14 +159,16 @@ public class LcMessaging
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", threadID },
-                { "Kind", 1 } // Customer inquiry (first message)
+                { "ThreadID", threadID }
+                ,{ "Kind", 1 } // Customer inquiry (first message)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", threadID },
-                { "Kind", -1 } // Copy to author of Customer inquiry (first message)
+                { "ThreadID", threadID }
+                ,{ "Kind", -1 } // Copy to author of Customer inquiry (first message)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
         }
     }
@@ -203,16 +205,18 @@ public class LcMessaging
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", ThreadID },
-                { "MessageID", messageID },
-                { "Kind", 2 } // Provider inquiry answer (second message and upper evens)
+                { "ThreadID", ThreadID }
+                ,{ "MessageID", messageID }
+                ,{ "Kind", 2 } // Provider inquiry answer (second message and upper evens)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", ThreadID },
-                { "MessageID", messageID },
-                { "Kind", -2 } // Copy to author of Provider inquiry answer (second message and upper evens)
+                { "ThreadID", ThreadID }
+                ,{ "MessageID", messageID }
+                ,{ "Kind", -2 } // Copy to author of Provider inquiry answer (second message and upper evens)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
         }
     }
@@ -249,16 +253,18 @@ public class LcMessaging
             WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", ThreadID },
-                { "MessageID", messageID },
-                { "Kind", 3 } // Customer inquiry answer (third message and upper odds)
+                { "ThreadID", ThreadID }
+                ,{ "MessageID", messageID }
+                ,{ "Kind", 3 } // Customer inquiry answer (third message and upper odds)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
             WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
-                { "ThreadID", ThreadID },
-                { "MessageID", messageID },
-                { "Kind", -3 } // Copy to author of Customer inquiry answer (third message and upper odds)
+                { "ThreadID", ThreadID }
+                ,{ "MessageID", messageID }
+                ,{ "Kind", -3 } // Copy to author of Customer inquiry answer (third message and upper odds)
+                ,{ "RequestKey", SecurityRequestKey }
             }));
         }
     }
