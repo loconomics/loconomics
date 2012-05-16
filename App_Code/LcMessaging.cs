@@ -145,17 +145,23 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
-            var data = new Dictionary<string, object> {
+
+            /* Using static strings for templates:
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+                ApplyInquiryTemplate(TplInquiry,
+                new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
                 { "Subject", InquirySubject },
                 { "MessageText", InquiryText },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() }
+            })); */
+
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
                 { "ThreadID", threadID },
                 { "Kind", 1 } // Customer inquiry (first message)
-            };
-            //string msg = ApplyInquiryTemplate(TplInquiry, data);
-            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", msg);
+            }));
         }
     }
     public static void SendProviderInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -178,18 +184,23 @@ public class LcMessaging
             // ThreadStatus=2, responded; MessageStatus=3, provider answer
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
-            var data = new Dictionary<string, object> {
+            /* Using static strings for templates:
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry",
+                ApplyInquiryTemplate(TplInquiryAnswer,
+                new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(provider) },
                 { "Subject", thread.Subject },
                 { "MessageText", InquiryAnswer },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
+            }));*/
+
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
                 { "ThreadID", ThreadID },
                 { "MessageID", messageID },
                 { "Kind", 2 } // Provider inquiry answer (second message and upper evens)
-            };
-            //string msg = ApplyInquiryTemplate(TplInquiryAnswer, data);
-            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", msg);
+            }));
         }
     }
     public static void SendCustomerInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -211,18 +222,24 @@ public class LcMessaging
         {
             // ThreadStatus=1, respond; MessageStatus=1, customer inquiry
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
-            var data = new Dictionary<string, object> {
+
+            /* Using static strings for templates:
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry",
+                ApplyInquiryTemplate(TplInquiry,
+                new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
                 { "Subject", thread.Subject },
                 { "MessageText", InquiryAnswer },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
+            }));*/
+
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
                 { "ThreadID", ThreadID },
                 { "MessageID", messageID },
                 { "Kind", 3 } // Customer inquiry answer (third message and upper odds)
-            };
-            //string msg = ApplyInquiryTemplate(TplInquiry, data);
-            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", msg);
+            }));
         }
     }
     #endregion

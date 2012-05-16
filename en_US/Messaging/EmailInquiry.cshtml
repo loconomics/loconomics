@@ -1,7 +1,10 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Inquiry";
     var kind = Request["Kind"].AsInt();
+    var threadID = Request["ThreadID"].AsInt();
+    var messageID = Request["MessageID"].AsInt();
     
     // Data for the EmailLayout:
     PageData["threadID"] = Request["ThreadID"];
@@ -11,13 +14,75 @@
     } else {
         PageData["messageTitle"] = "Customer Inquiry";
     }
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() + "_Message-" + messageID.ToString();
+    
+    /* SQLs similar to Messaging/MessageThread but without user check */
+    var sqlGetMessageThread = @"
+        SELECT  T.ThreadID,
+                T.CustomerUserID,
+                T.ProviderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                Pos.PositionSingular
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+        WHERE   ThreadID = @0
+    ";
+    var sqlListMessagesInThread = @"
+        SELECT  M.MessageID,
+                M.BodyText,
+                M.MessageTypeID,
+                M.UpdatedDate As MessageDate
+        FROM    Messages As M
+        WHERE   M.ThreadID = @0
+        ORDER BY M.CreatedDate ASC
+    ";
+
+    dynamic messages = null, thread = null;
+    using (var db = Database.Open("sqlloco")){
+        thread = db.QuerySingle(sqlGetMessageThread, threadID, 1, 1);
+        messages = db.Query(sqlListMessagesInThread, threadID);
+    }
 }
-    <div class="message-subject">@Request["Subject"]</div>
-    <div class="message-conversation">
-        <div class="mini-user-info">
-            <div class="user-public-name">@Request["ItsUserName"]</div>
-            <div class="extra-info">@DateTime.Today.ToShortDateString()</div>
-        </div>
-        <div class="message-section">@Request["MessageText"]</div>
+@helper printMessageBodyAsHtml(string messageBody){
+    @Html.Raw(messageBody.Replace("\n", "<br/>"))
+}
+    <div class="message-subject">@thread.Subject</div>
+    <div class="conversation">
+        @foreach (var message in messages)
+        {
+            string userType = "customer", userPrefix = "Customer";
+            if (message.MessageTypeID == 3)
+            {
+                userType = "provider";
+                userPrefix = "Provider";
+            }
+            <div class="conversation-message @userType">
+                <div class="mini-user-info">
+                    <div class="user-public-name">@CommonHelpers.GetUserDisplayName(thread, userPrefix)</div>
+                    <div class="extra-info">@message.MessageDate.ToShortDateString()</div>
+                </div>
+                <div class="message-section @(message.MessageID == messageID ? "highlighted" : "")">@printMessageBodyAsHtml(message.BodyText)</div>
+            </div>
+        }
     </div>
-    <div><a class='respond' target="_blank" href='@Request["ReplyUrl"]'>Respond to this inquiry at loconomics.com</a></div>
+    <div><a class='respond' target="_blank" href="@PageData["viewOnSiteUrl"]">Respond to this inquiry at loconomics.com</a></div>

@@ -83,22 +83,40 @@
                 border-radius: 15px 15px 15px 15px;
                 padding: 15px;
             }
-            .message-conversation {
+            .highlighted {
+                background-color: #9ACECE;
+            }
+            .conversation {
+                clear: both;
+                overflow: hidden;
+            }
+            .conversation-message {
                 clear: both;
                 width: 100%;
                 overflow: hidden;
+                margin-bottom: 20px;
             }
-            .message-conversation .message-section {
-                float: left;
-                margin-left: 12px;
-                width: 440px;
+            .conversation-message .message-section {
+                margin: 0 12px;
+                width: 430px;
                 overflow: hidden;
             }
-            .message-conversation .mini-user-info {
-                float: left;
+            .conversation-message .mini-user-info {
                 width: 60px;
                 overflow: hidden;
                 margin: 8px 0;
+            }
+            .conversation-message.customer .message-section,
+            .conversation-message.customer .mini-user-info,
+            .conversation .customer .message-section,
+            .conversation .customer .mini-user-info {
+                float: left;
+            }
+            .conversation-message.provider .message-section,
+            .conversation-message.provider .mini-user-info,
+            .conversation .provider .message-section,
+            .conversation .provider .mini-user-info {
+                float: right;
             }
             .message-subject {
                 color: #8B2143;
