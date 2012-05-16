@@ -1718,3 +1718,8 @@ html.boxshadow #loginBox .field-validation-error{
     right: 15px;
     top: 15px;
 }
+
+/* Generic class highlighted */
+.highlighted {
+    background-color: #9ACECE;
+}

@@ -39,7 +39,8 @@
                 (T.CustomerUserID = @1 OR T.ProviderUserID = @1)
     ";
     var sqlListMessagesInThread = @"
-        SELECT  M.BodyText,
+        SELECT  M.MessageID,
+                M.BodyText,
                 M.MessageTypeID,
                 M.UpdatedDate As MessageDate
         FROM    Messages As M
@@ -85,7 +86,7 @@
     @Html.Raw(messageBody.Replace("\n", "<br/>"))
 }
 @helper printItem(dynamic thread, dynamic message, string userType, string userPrefix){
-    <li class="@userType">
+    <li class="@userType message-@message.MessageID">
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", thread},
             {"DataPrefix", userPrefix},

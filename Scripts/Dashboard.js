@@ -16,10 +16,7 @@ $(document).bind('loadHashBang', function (event, hashbangvalue) {
     }
     // Analize parameters values
     if (urlParameters.Thread) {
-        openMessageThreadInTab(urlParameters.Thread, "Message Thread " + urlParameters.Thread);
-
-        // TODO Select the message id 'urlParameters.Message' (if there is someone) in
-        // the message thread conversation.
+        openMessageThreadInTab(urlParameters.Thread, "Message Thread " + urlParameters.Thread, urlParameters.Message);
     }
 });
 
@@ -149,7 +146,7 @@ $(document).ready(function () {
 
 });
 
-function openMessageThreadInTab(threadId, tabTitle) {
+function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
     var tid = threadId;
     var data = { MessageThreadID: tid };
     var url = "Messaging/$MessageThread/";
@@ -186,11 +183,20 @@ function openMessageThreadInTab(threadId, tabTitle) {
                 // Updating the tab title, because when is loaded by URL, the title is the ID,
                 // here is setted something more usable:
                 TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
+
+                if (highlightMessageId) {
+                    $tab.find('.message-' + highlightMessageId + ' > .message-section').addClass('highlighted');
+                }
             }
         });
-    } else
-    // Tab couln't be created, already must exist, focus it
+    } else {
+        // Tab couln't be created, already must exist, focus it
         TabbedUX.focusTab('#' + tabId);
+        // Search MessageID to highlight it
+        if (highlightMessageId) {
+            $('#' + tabId).find('.message-' + highlightMessageId + ' > .message-section').addClass('highlighted');
+        }
+    }
 }
 
 /* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
