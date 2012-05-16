@@ -118,9 +118,12 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
     
-    @CommonHelpers.SetupStarRatingPlugin()
-    @CommonHelpers.GetValidationScripts()
+    <div class="not-faqs-duplication">
+
     <div class="booking-request main-side ajax-box">
+        @CommonHelpers.SetupStarRatingPlugin()
+        @CommonHelpers.GetValidationScripts()
+
         @if (refreshThreadList) {
             <script type="text/javascript">
                 // After update conversation, state change, reload thread list to reflect new state
@@ -177,7 +180,8 @@ else
         </ul>
 
         <h4>Reminders</h4>
-        @RenderPage(UrlUtil.LangPath + "Booking/$BookingRemindersWidget.cshtml")
+        @RenderPage(UrlUtil.LangPath + "Booking/$BookingRemindersWidget.cshtml", myUserType)
+    </div>
     </div>
     @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")
 }
