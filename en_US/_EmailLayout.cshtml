@@ -43,7 +43,7 @@
                 min-height:1000px;
                 color:#6c6c6c;
                 font-family:Arial, Helvetica, sans-serif;
-                font-size:12px;
+                font-size: 12px;
             }
             span.yshortcuts { color:#000; background-color:none; border:none;}
             span.yshortcuts:hover,
@@ -54,6 +54,9 @@
             a:focus   { color: #3c96e2; text-decoration: underline}
             a:hover   { color: #3c96e2; text-decoration: underline}
         /* End Boilerplate */
+            table {
+                font-size: 12px;
+            }
             h2.message-title {
                 font-size: 12px;
                 font-weight: bold;
@@ -67,7 +70,6 @@
                 -webkit-border-radius: 20px 20px 20px 20px;
                 -moz-border-radius: 20px 20px 20px 20px;
                 color: White;
-                font-size: 1em;
                 padding: .5em 1em;
                 margin: 1em;
                 text-transform: lowercase;
@@ -120,7 +122,7 @@
             }
             .message-subject {
                 color: #8B2143;
-                font-size: 1.4em;
+                font-size: 17px;
                 font-weight: bold;
                 margin: 15px 0;
             }
@@ -143,7 +145,7 @@
 <body style="background:#ffffff; min-height:1000px; color:#6c6c6c;font-family:Arial, Helvetica, sans-serif; font-size:12px"
 alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix"> 
     <div id="body_style" style="padding:15px;font-size:12px;">
-        <table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
+        <table id="table_layout" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
             <tr class="header">
                 <td width="300" style="padding-bottom: 15px">
 		            <h1><a id="logo" href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
