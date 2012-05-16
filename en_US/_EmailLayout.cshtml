@@ -43,7 +43,8 @@
                 min-height:1000px;
                 color:#6c6c6c;
                 font-family:Arial, Helvetica, sans-serif;
-                font-size: 12px;
+                font-size: 13px;
+                line-height: 150%;
             }
             span.yshortcuts { color:#000; background-color:none; border:none;}
             span.yshortcuts:hover,
@@ -54,14 +55,30 @@
             a:focus   { color: #3c96e2; text-decoration: underline}
             a:hover   { color: #3c96e2; text-decoration: underline}
         /* End Boilerplate */
+            ul, ol, li {
+                list-style: none outside none;
+                margin: 0;
+                padding: 0;
+            }
             table {
-                font-size: 12px;
+                font-size: 13px;
             }
             h2.message-title {
                 font-size: 12px;
                 font-weight: bold;
                 height: auto;
                 line-height: 15px;
+            }
+            h3 {
+                font-size: 20px;
+                margin: 0;
+                color: #8B2143;
+                font-weight: bold;
+            }
+            h4 {
+                margin: 15px 0 0;
+                font-size: 17px;
+                color: #8B2143;
             }
             a.respond {
                 background: none repeat scroll 0 0 #8B2143 !important;
@@ -70,7 +87,7 @@
                 -webkit-border-radius: 20px 20px 20px 20px;
                 -moz-border-radius: 20px 20px 20px 20px;
                 color: White;
-                padding: .5em 1em;
+                padding: .4em 1em;
                 margin: 1em;
                 text-transform: lowercase;
                 display: inline-block;
@@ -99,7 +116,7 @@
                 margin-bottom: 20px;
             }
             .conversation-message .message-section {
-                margin: 0 12px;
+                margin: 0 13px;
                 width: 430px;
                 overflow: hidden;
             }
@@ -107,6 +124,7 @@
                 width: 60px;
                 overflow: hidden;
                 margin: 8px 0;
+                font-size: 0.9em;
             }
             .conversation-message.customer .message-section,
             .conversation-message.customer .mini-user-info,
@@ -120,10 +138,7 @@
             .conversation .provider .mini-user-info {
                 float: right;
             }
-            .message-subject {
-                color: #8B2143;
-                font-size: 17px;
-                font-weight: bold;
+            h3.message-subject {
                 margin: 15px 0;
             }
             .user-public-name {
@@ -134,6 +149,181 @@
                 padding: 15px;
                 font-style: italic;
             }
+            /* Users */
+            .mini-avatar{
+                display: inline-block;
+                height: 55px;
+                margin: 0 5px 0 0;
+                vertical-align: top;
+                width: 55px;
+            }
+            /* Class mini-user-info */
+            .mini-user-info {
+                clear: both;
+                display: inline-block !important;
+                width: 150px;
+                overflow: hidden;
+            }
+            .mini-user-info > h5 {
+                font-size: 1em;
+                color: #6c6c6c;
+                display: inline;
+            }
+            .mini-user-info > img.avatar {
+                float: left;
+                margin: 0 10px 0 0;
+            }
+            .mini-user-info > a.view-profile,
+            .mini-user-info > a.view-profile:link,
+            .mini-user-info > a.view-profile:visited {
+                color: #00989a;
+                display: block;
+            }
+            /* Class medium-user-info */
+            .medium-user-info {
+                position: relative;
+                font-size: .9em;
+            }
+            .medium-user-info a.view-profile {
+                bottom: 15px;
+                display: block;
+                position: absolute;
+                right: 15px;
+                text-transform: lowercase;
+                width: 100px;
+            }
+            .medium-user-info.user-contact-data a.view-profile {
+                position: static;
+                display: inline;
+                margin-left: 10px;
+            }
+            .medium-user-info .user-text {
+                display: inline-block;
+                height: 50px;
+                line-height: normal;
+                overflow: hidden;
+                width: 400px;
+            }
+            .medium-user-info .user-contact-data {
+                display: inline-block;
+                line-height: normal;
+                overflow: hidden;
+                width: 400px;
+            }
+            .medium-user-info h5.user-public-name {
+                margin: 0;
+                font-size: 1em;
+                line-height: 1em;
+                display: inline;
+                color: #6C6C6C;
+            }
+            .medium-user-info .user-rating {
+                width: 360px;
+            }
+            .medium-user-info .user-rating .note {
+                font-size: .8em;
+                color: #6c6c6c;
+                font-style: italic;
+            }
+            .medium-user-info .google-map {
+                position: absolute;
+                right: 15px;
+                top: 15px;
+            }
+            /* bookings */
+            .booking-request h5 {
+                color: #6C6C6C;
+                font-size: 1.1em;
+                margin: 8px 0 0;
+            }
+            .booking-request {
+                position: relative;
+            }
+            .booking-request h3,
+            .booking-request h4 {
+                color: #8B2143;
+            }
+            .booking-request h3 {
+                font-size: 1.4em;
+                margin: 0;
+            }
+            .booking-request h4 {
+                font-size: 1.2em;
+                margin: 15px 0 0;
+            }
+            .booking-request h5 {
+                font-size: 1.1em;
+                margin: 8px 0 0;
+                color: #6c6c6c;
+            }
+            .booking-request p {
+                margin: 0;
+            }
+            .booking-request table.pricing-summary {
+                border: none;
+            }
+            .booking-request table.pricing-summary td.concept {
+                padding-right: 5px;
+            }
+            .booking-request table.pricing-summary td.price {
+                padding-left: 3px;
+                text-align: right;
+                vertical-align: bottom;
+            }
+            .booking-request table.pricing-summary tr.total {
+                font-weight: bold;
+            }
+            .requested-booking-services .services li {
+                margin-left: 20px;
+                width: 205px;
+                display: inline-block;
+            }
+            .requested-booking-times .button {
+                border-radius: 20px;
+                -moz-border-radius: 20px;
+                -o-border-radius: 20px;
+                -webkit-border-radius: 20px;
+                color: White;
+                font-size: .9em;
+                line-height: 160%;
+                margin: 3px 0;
+            }
+            .requested-booking-times strong {
+                font-weight: normal;
+                color: #8b2143;
+            }
+            .button-confirm-datetime {
+                background: #99C027 !important;
+            }
+            .button-decline-booking {
+                background: #e95d0f !important;
+            }
+            .button-confirm-datetime:hover {
+                box-shadow: 0 0 5px 2px #99C027;
+                -moz-box-shadow: 0 0 5px 2px #99C027;
+                -o-box-shadow: 0 0 5px 2px #99C027;
+                -webkit-box-shadow: 0 0 5px 2px #99C027;
+            }
+            .button-decline-booking:hover {
+                box-shadow: 0 0 5px 2px #e95d0f;
+                -moz-box-shadow: 0 0 5px 2px #e95d0f;
+                -o-box-shadow: 0 0 5px 2px #e95d0f;
+                -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+            }
+            .booking-request .reminders ol li {
+                list-style: decimal inside;
+            }
+
+            /* Booking (booking request confirmed) */
+            .booking .booking-time-location {
+                position: relative;
+            }
+            .booking .booking-time-location .google-map {
+                position: absolute;
+                right: 15px;
+                bottom: 15px;
+            }
+
             @@media only screen and (max-device-width: 480px) {
  
             }
@@ -142,9 +332,9 @@
             }
     </style>
 </head>
-<body style="background:#ffffff; min-height:1000px; color:#6c6c6c;font-family:Arial, Helvetica, sans-serif; font-size:12px"
+<body style="background:#ffffff; min-height:1000px; color:#6c6c6c;font-family:Arial, Helvetica, sans-serif; font-size:13px"
 alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix"> 
-    <div id="body_style" style="padding:15px;font-size:12px;">
+    <div id="body_style" style="padding:15px;font-size:13px;">
         <table id="table_layout" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
             <tr class="header">
                 <td width="300" style="padding-bottom: 15px">

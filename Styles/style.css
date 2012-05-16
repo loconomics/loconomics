@@ -1704,6 +1704,7 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: 1em;
     line-height: 1em;
     display: inline;
+    /*color: #6C6C6C;*/
 }
 .medium-user-info .user-rating {
     width: 360px;

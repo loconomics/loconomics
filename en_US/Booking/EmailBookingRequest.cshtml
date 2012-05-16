@@ -166,7 +166,7 @@ else
 
     <div class="booking-request main-side">
         <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
-        <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+        <span class="updateddate">Sent: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
         <h4>@itsUserLabel profile</h4>
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 

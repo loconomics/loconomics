@@ -72,7 +72,7 @@
     {
         <div class="message-copy">Copy of your sent message</div>
     }
-    <div class="message-subject">@thread.Subject</div>
+    <h3 class="message-subject">@thread.Subject</h3>
     <div class="conversation">
         @foreach (var message in messages)
         {
@@ -84,7 +84,7 @@
             }
             <div class="conversation-message @userType">
                 <div class="mini-user-info">
-                    <div class="user-public-name">@CommonHelpers.GetUserDisplayName(thread, userPrefix)</div>
+                    <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(thread, userPrefix)</h5>
                     <div class="extra-info">@message.MessageDate.ToShortDateString()</div>
                 </div>
                 <div class="message-section @(message.MessageID == messageID ? "highlighted" : "")">@printMessageBodyAsHtml(message.BodyText)</div>
