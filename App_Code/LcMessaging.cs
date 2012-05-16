@@ -279,11 +279,12 @@ public class LcMessaging
             {
                 w.QueryString.Add(d.Key, d.Value.ToString());
             }
-            // TODO Test secure alternatives (now email templates are anonymous accesible!!)
+            return w.DownloadString(UrlUtil.SiteUrl + tplUrl);
+            // Next commented line are test for another tries to get web content processed,
+            // can be usefull test if someone have best performance than others, when need.
             //HttpContext.Current.Response.Output = null;
             //var o = new System.IO.StringWriter();
             //var r = new System.Web.Hosting.SimpleWorkerRequest(tplUrl, "", o);
-            return w.DownloadString(UrlUtil.SiteUrl + tplUrl);
         }
     }
     private static readonly string SecurityRequestKey = "abcd3";
