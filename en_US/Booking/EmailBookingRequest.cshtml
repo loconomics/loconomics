@@ -1,6 +1,9 @@
 ﻿@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Booking Request";
 
     var thisUserID = Request["UserID"].AsInt();
     var thisUser = DashboardFunctions.GetUserRow(thisUserID);
@@ -8,6 +11,11 @@
 
     var confirmationLimitHours = 18;
     DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Booking Request";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
     
     // TODO: Calculate location distance from provider to customer
     
