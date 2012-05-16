@@ -253,6 +253,10 @@ public class LcMessaging
             {
                 w.QueryString.Add(d.Key, d.Value.ToString());
             }
+            // TODO Test secure alternatives (now email templates are anonymous accesible!!)
+            //HttpContext.Current.Response.Output = null;
+            //var o = new System.IO.StringWriter();
+            //var r = new System.Web.Hosting.SimpleWorkerRequest(tplUrl, "", o);
             return w.DownloadString(UrlUtil.AppPath + tplUrl);
         }
     }

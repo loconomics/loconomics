@@ -135,13 +135,13 @@
             }
     </style>
 </head>
-<body style="background:#000; min-height:1000px; color:#fff;font-family:Arial, Helvetica, sans-serif; font-size:12px"
-alink="#FF0000" link="#FF0000" bgcolor="#000000" text="#FFFFFF" yahoo="fix"> 
+<body style="background:#ffffff; min-height:1000px; color:#6c6c6c;font-family:Arial, Helvetica, sans-serif; font-size:12px"
+alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix"> 
     <div id="body_style" style="padding:15px">
-        <table cellpadding="0" cellspacing="0" border="0" bgcolor="#fff" width="600" align="center">
+        <table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
             <tr class="header">
                 <td width="300" style="padding-bottom: 15px">
-		            <h1><a id="logo" href="@UrlUtil.LangUrl"><img alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+		            <h1><a id="logo" href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                 </td>
                 <td width="300" style="padding-bottom: 15px;padding-right: 30px" align="right">
                     <a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">If you don't see well this message, click here</a>
@@ -153,9 +153,9 @@ alink="#FF0000" link="#FF0000" bgcolor="#000000" text="#FFFFFF" yahoo="fix">
                         <span style="display:inline-block;background-color:white;margin:0 0 0 15px;padding-top:3px;padding-left:10px;padding-right:10px;border-style: solid;border-color:#00989A;border-width:2px;border-bottom-color:white;border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0">@messageTitle</span>
                         <img style="position: relative;right: 12px;vertical-align: bottom;" src="@(UrlUtil.AppUrl)img/email/tab-right-border.png" width="32" height="22" />
                     </h2>
-                    <table width="600" style="position:relative;top:-2px;padding:20px;border-style: solid;border-width: 2px;border-color:#00989A;border-radius:10px;-o-border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px">
+                    <table width="600" style="position:relative;top:-2px;border-style: solid;border-width: 2px;border-color:#00989A;border-radius:10px;-o-border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px">
                         <tr>
-                            <td>
+                            <td style="padding:20px;">
                                 @RenderBody()
                             </td>
                         </tr>
