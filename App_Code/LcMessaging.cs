@@ -280,6 +280,12 @@ public class LcMessaging
             return w.DownloadString(UrlUtil.AppPath + tplUrl);
         }
     }
+    private static readonly string SecurityRequestKey = "abcd3";
+    public static void SecureTemplate()
+    {
+        if (HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
+            throw new HttpException(403, "Forbidden");
+    }
     private static string ApplyInquiryTemplate(string tpl, Dictionary<string, object> data)
     {
         return String.Format(TplLayout, String.Format(tpl,

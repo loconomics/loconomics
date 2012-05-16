@@ -1,0 +1,234 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+
+    var thisUserID = Request["UserID"].AsInt();
+    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    var brID = Request["BookingRequestID"].AsInt();
+
+    var confirmationLimitHours = 18;
+    DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // TODO: Calculate location distance from provider to customer
+    
+    var sqlGetBookingRequest = @"
+        SELECT  R.BookingRequestID,
+                0 As BookingID,
+                R.ProviderUserID,
+                R.CustomerUserID,
+                R.PricingEstimateID,
+                R.SpecialRequests,
+                R.UpdatedDate,
+                R.BookingRequestStatusID,
+
+                --TODO where is bank account (last numbers) or how calculate paymentDate
+                getdate() As PaymentDate,
+                '1234' As PaymentAccountLastDigits,
+
+                Pos.PositionSingular,
+
+                SP.StateProvinceName, SP.StateProvinceCode,
+                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
+                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
+
+                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
+        FROM    BookingRequest As R
+                 INNER JOIN
+                PricingEstimate As P
+                  ON P.PricingEstimateID = R.PricingEstimateID
+                 LEFT JOIN
+                ServiceAddress As L
+                  ON R.ServiceAddressID = L.ServiceAddressID
+                 LEFT JOIN
+                CalendarEvents As E1
+                  ON E1.ID = R.PreferredDateID
+                 LEFT JOIN
+                CalendarEvents As E2
+                  ON E2.ID = R.AlternativeDate1ID
+                 LEFT JOIN
+                CalendarEvents As E3
+                  ON E3.ID = R.AlternativeDate2ID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
+                 LEFT JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
+        WHERE   R.BookingRequestID = @0
+                 AND
+                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
+    ";
+    dynamic booking;
+    using (var db = Database.Open("sqlloco")) {
+        booking = db.QuerySingle(sqlGetBookingRequest, brID, thisUserID, 1, 1);
+        if (booking != null) {
+            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
+        }
+    }
+}
+@helper printDateTimeRange(DateTime start, DateTime end){
+    @start.ToLongDateString()
+    <text> from </text>
+    @start.ToShortTimeString()
+    <text> to </text>
+    @end.ToShortTimeString()
+}
+@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
+    var statusTitle = "Booking request involving {0}. Unknown status";
+    switch (itsUserType) {
+        case "customer":
+            statusTitle = "Booking request from {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request from {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Booking request from {0}";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "Booking request cancelled by {0}";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request from {0}";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request from {0}";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Accepted booking request from {0}";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined with alternatives booking request from {0}";
+                    break;
+            }
+            break;
+        case "provider":
+            statusTitle = "Booking request for {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request for {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Waiting for {0} to confirm request";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "Booking request for {0} cancelled by me";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request by {0}";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request for {0}";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Accepted booking request for {0}";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined with alternatives booking request by {0}";
+                    break;
+            }
+            break;
+    }
+    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
+}
+@CommonHelpers.SetupStarRatingPlugin()
+@if (booking == null)
+{
+    throw new Exception("Booking Request don't exists: " + brID.ToString());
+}
+else
+{
+    // Checking item: user type of the other user, not current user
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (thisUserID == booking.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = DashboardFunctions.GetUserRow(itsUserID);
+
+    <div class="booking-request main-side">
+        <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+        <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+        <h4>@itsUserLabel profile</h4>
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddCssClasses", "message-section" },
+            {"Data", itsUserData},
+            {"DataPrefix", ""},
+            {"Size", "medium"},
+            {"UserType", itsUserType}
+        })
+
+        @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer") {
+        <h4>Requested booking times</h4>
+        <div class="requested-booking-times message-section">
+            <p class="info">
+            @CommonHelpers.GetUserDisplayName(itsUserType) has booked you as a @booking.PositionSingular and chosen
+            the following times for you to provide the service. Please confirm one of these times 
+            <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+            to accept this booking.
+            </p>
+            <h5>Preferred time:</h5>
+            <a class="button button-confirm-datetime" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
+                Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+            </a>
+            <h5>Alternate times:</h5>
+            <a class="button button-confirm-datetime" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
+                Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+            </a>
+            <a class="button button-confirm-datetime" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
+                Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+            </a>
+            <h5>Decline booking request</h5>
+            <a class="button button-decline-booking" href="@(UrlUtil.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(booking.BookingRequestID)">
+                Decline booking (you can offer alternative times to the customer)
+            </a>
+        </div>
+        }
+        else if (booking.PreferredDateStart != null)
+        {
+        <h4>Requested booking times</h4>
+        <div class="requested-booking-times message-section">
+            <p class="info">
+            @if (itsUserType == "customer")
+            {
+                <text>@CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
+                the following times for you to provide the service.</text>
+            }
+            else
+            {
+                <text>You have booked to @CommonHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
+                the following times for it to provide the service.</text>
+            }
+            </p>
+            <h5>Preferred time:</h5>
+            <div class="selected-date preferred-date">
+                @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+            </div>
+            <h5>Alternate times:</h5>
+            <div class="selected-date alternative-date alternative-date-1">
+                @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+            </div>
+            <div class="selected-date alternative-date alternative-date-2">
+                @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+            </div>
+        </div>
+        }
+
+        <h4>Requested services and pricing estimate</h4>
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
+
+        <h4>Reminders</h4>
+        @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+    </div>
+}
