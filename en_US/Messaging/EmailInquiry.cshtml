@@ -1,0 +1,23 @@
+﻿@{
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Inquiry";
+    var kind = Request["Kind"].AsInt();
+    
+    // Data for the EmailLayout:
+    PageData["threadID"] = Request["ThreadID"];
+    PageData["messageID"] = Request["MessageID"];
+    if (kind == 2) {
+        PageData["messageTitle"] = "Provider answer to your inquiry";
+    } else {
+        PageData["messageTitle"] = "Customer Inquiry";
+    }
+}
+    <div class="message-subject">@Request["Subject"]</div>
+    <div class="message-conversation">
+        <div class="mini-user-info">
+            <div class="user-public-name">@Request["ItsUserName"]</div>
+            <div class="extra-info">@DateTime.Today.ToShortDateString()</div>
+        </div>
+        <div class="message-section">@Request["MessageText"]</div>
+    </div>
+    <div><a class='respond' target="_blank" href='@Request["ReplyUrl"]'>Respond to this inquiry at loconomics.com</a></div>

@@ -5,7 +5,7 @@
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
         viewOnSiteUrl = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
-        if (messageID) {
+        if (messageID != null) {
             viewOnSiteUrl += "_Message-" + messageID;
         }
     }
@@ -29,7 +29,7 @@
             p {margin:0; padding:0; margin-bottom:0;}       
 
             h1, h2, h3, h4, h5, h6 {
-                color: black; 
+                color: #00989A; 
                 line-height: 100%; 
             }
 
@@ -39,9 +39,9 @@
             }
  
             body, #body_style {
-                background:#000;
+                background:#fff;
                 min-height:1000px;
-                color:#fff;
+                color:#6c6c6c;
                 font-family:Arial, Helvetica, sans-serif;
                 font-size:12px;
             }
@@ -54,6 +54,61 @@
             a:focus   { color: #3c96e2; text-decoration: underline}
             a:hover   { color: #3c96e2; text-decoration: underline}
         /* End Boilerplate */
+            h2.message-title {
+                font-size: 12px;
+                font-weight: bold;
+                height: auto;
+                line-height: 15px;
+            }
+            a.respond {
+                background: none repeat scroll 0 0 #8B2143 !important;
+                border-radius: 20px 20px 20px 20px;
+                -o-border-radius: 20px 20px 20px 20px;
+                -webkit-border-radius: 20px 20px 20px 20px;
+                -moz-border-radius: 20px 20px 20px 20px;
+                color: White;
+                font-size: 1em;
+                padding: .5em 1em;
+                margin: 1em;
+                text-transform: lowercase;
+                display: inline-block;
+                text-decoration: none;
+            }
+            a.respond:hover {
+                box-shadow: 0 0 5px 2px #8B2143;
+            }
+            .message-section {
+                background: none repeat scroll 0 0 white;
+                border: 1px solid #6C6C6C;
+                border-radius: 15px 15px 15px 15px;
+                padding: 15px;
+            }
+            .message-conversation {
+                clear: both;
+                width: 100%;
+                overflow: hidden;
+            }
+            .message-conversation .message-section {
+                float: left;
+                margin-left: 12px;
+                width: 440px;
+                overflow: hidden;
+            }
+            .message-conversation .mini-user-info {
+                float: left;
+                width: 60px;
+                overflow: hidden;
+                margin: 8px 0;
+            }
+            .message-subject {
+                color: #8B2143;
+                font-size: 1.4em;
+                font-weight: bold;
+                margin: 15px 0;
+            }
+            .user-public-name {
+                font-weight: bold;
+            }
             @@media only screen and (max-device-width: 480px) {
  
             }
@@ -65,19 +120,19 @@
 <body style="background:#000; min-height:1000px; color:#fff;font-family:Arial, Helvetica, sans-serif; font-size:12px"
 alink="#FF0000" link="#FF0000" bgcolor="#000000" text="#FFFFFF" yahoo="fix"> 
     <div id="body_style" style="padding:15px">
-        <table cellpadding="0" cellspacing="0" border="0" bgcolor="#000000" width="600" align="center">
+        <table cellpadding="0" cellspacing="0" border="0" bgcolor="#fff" width="600" align="center">
             <tr class="header">
                 <td width="300" style="padding-bottom: 15px">
-		            <h1><a id="logo" href="@Href(UrlUtil.LangUrl)"><img alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+		            <h1><a id="logo" href="@UrlUtil.LangUrl"><img alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                 </td>
-                <td width="300" style="padding-bottom: 15px" align="right" style="padding-right: 30px">
-                    <a href="@viewOnSiteUrl">If you don't see well this message, click here</a>
+                <td width="300" style="padding-bottom: 15px;padding-right: 30px" align="right">
+                    <a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">If you don't see well this message, click here</a>
                 </td>
             </tr>
             <tr class="content" style="padding:0 0 15px 0">
                 <td colspan="2" style="border-color: #00989A;position:relative;">
-                    <h2 style="margin:0;padding-top:3px;padding-left:10px;padding-right:10px;border-color:#00989A;border-width:2px;border-bottom-color:white;border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0">@messageTitle</h2>
-                    <table width="600" style="position:relative;top:-2px;border-color:#00989A;border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0">
+                    <h2 class="message-title" style="margin:0;position:relative;z-index:1000;"><span style="display:inline-block;background-color:white;margin:0 0 0 15px;padding-top:3px;padding-left:10px;padding-right:10px;border-style: solid;border-color:#00989A;border-width:2px;border-bottom-color:white;border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0">@messageTitle</span></h2>
+                    <table width="600" style="position:relative;top:-2px;padding:20px;border-style: solid;border-width: 2px;border-color:#00989A;border-radius:10px;-o-border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px">
                         <tr>
                             <td>
                                 @RenderBody()
@@ -86,8 +141,8 @@ alink="#FF0000" link="#FF0000" bgcolor="#000000" text="#FFFFFF" yahoo="fix">
                     </table>
                 </td>
             </tr>
-            <tr class="footer">
-                <td colspan="2">Loconomics.com &#0169;@(DateTime.Today.Year). <a href="@(UrlUtil.LangUrl)About/Terms">Terms & Privacy</a></td>
+            <tr class="footer" height="60" align="center">
+                <td colspan="2">Loconomics.com &#0169; @(DateTime.Today.Year). <a style="margin-left: 20px" href="@(UrlUtil.LangUrl)About/Terms/">Terms & Privacy</a></td>
             </tr>
         </table>
  

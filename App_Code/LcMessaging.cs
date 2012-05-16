@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 using System.Web.Helpers;
 using ASP;
+using System.Net;
 
 /// <summary>
 /// Descripción breve de LcMessaging
@@ -130,7 +131,7 @@ public class LcMessaging
     }
     #endregion
 
-    #region Main
+    #region Type:Inquiry
     public static void SendCustomerInquiry(int CustomerUserID, int ProviderUserID, int PositionID, string InquirySubject, string InquiryText)
     {
         dynamic customer = null, provider = null;
@@ -144,10 +145,17 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
-
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
-                CommonHelpers.GetUserDisplayName(customer), InquirySubject, InquiryText,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString())));
+            var data = new Dictionary<string, object> {
+                { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
+                { "Subject", InquirySubject },
+                { "MessageText", InquiryText },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() },
+                { "ThreadID", threadID },
+                { "Kind", 1 } // Customer inquiry (first message)
+            };
+            //string msg = ApplyInquiryTemplate(TplInquiry, data);
+            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", msg);
         }
     }
     public static void SendProviderInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -170,9 +178,18 @@ public class LcMessaging
             // ThreadStatus=2, responded; MessageStatus=3, provider answer
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiryAnswer,
-                CommonHelpers.GetUserDisplayName(provider), thread.Subject, InquiryAnswer,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString())));
+            var data = new Dictionary<string, object> {
+                { "ItsUserName", CommonHelpers.GetUserDisplayName(provider) },
+                { "Subject", thread.Subject },
+                { "MessageText", InquiryAnswer },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() },
+                { "ThreadID", ThreadID },
+                { "MessageID", messageID },
+                { "Kind", 2 } // Provider inquiry answer (second message and upper evens)
+            };
+            //string msg = ApplyInquiryTemplate(TplInquiryAnswer, data);
+            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
+            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", msg);
         }
     }
     public static void SendCustomerInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -194,11 +211,39 @@ public class LcMessaging
         {
             // ThreadStatus=1, respond; MessageStatus=1, customer inquiry
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
-
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", String.Format(TplLayout, String.Format(TplInquiry,
-                CommonHelpers.GetUserDisplayName(customer), thread.Subject, InquiryAnswer,
-                UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString())));
+            var data = new Dictionary<string, object> {
+                { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
+                { "Subject", thread.Subject },
+                { "MessageText", InquiryAnswer },
+                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() },
+                { "ThreadID", ThreadID },
+                { "MessageID", messageID },
+                { "Kind", 3 } // Customer inquiry answer (third message and upper odds)
+            };
+            //string msg = ApplyInquiryTemplate(TplInquiry, data);
+            string msg = ApplyTemplate("Messaging/EmailInquiry/", data);
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", msg);
         }
+    }
+    #endregion
+
+    #region Template System
+    private static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
+    {
+        using (WebClient w = new WebClient())
+        {
+            foreach (var d in data)
+            {
+                w.QueryString.Add(d.Key, d.Value.ToString());
+            }
+            return w.DownloadString(UrlUtil.AppPath + tplUrl);
+        }
+    }
+    private static string ApplyInquiryTemplate(string tpl, Dictionary<string, object> data)
+    {
+        return String.Format(TplLayout, String.Format(tpl,
+            data["ItsUserName"], data["Subject"], data["MessageText"],
+            data["ReplyUrl"]));
     }
     #endregion
 
