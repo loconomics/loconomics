@@ -31,7 +31,7 @@ $(document).ready(function () {
     /*
     * Booking list actions
     */
-    $('.bookings-list .actions .item-action').click(function () {
+    $('body').delegate('.bookings-list .actions .item-action', 'click', function () {
 
         var bid = $(this).data('booking-id');
         var brid = $(this).data('booking-request-id');
@@ -134,13 +134,12 @@ $(document).ready(function () {
     /*=========
     * Messaging
     */
-    $('.message-thread-list .actions .item-action').click(function () {
+    $('body').delegate('.message-thread-list .actions .item-action', 'click', function () {
         openMessageThreadInTab(
             $(this).data('message-thread-id'),
             $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
-    });
-
-    $('body').delegate('.conversation-messages > li.new-message textarea', 'focus', function () {
+    })
+    .delegate('.conversation-messages > li.new-message textarea', 'focus', function () {
         $(this).animate({ height: 250 });
     });
 
