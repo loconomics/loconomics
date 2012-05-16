@@ -68,6 +68,10 @@
     @Html.Raw(messageBody.Replace("\n", "<br/>"))
 }
 @*Current user: @WebSecurity.CurrentUserId to test secure alternatives *@
+    @if (kind < 0)
+    {
+        <div class="message-copy">Copy of your sent message</div>
+    }
     <div class="message-subject">@thread.Subject</div>
     <div class="conversation">
         @foreach (var message in messages)

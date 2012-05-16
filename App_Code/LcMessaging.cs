@@ -162,6 +162,12 @@ public class LcMessaging
                 { "ThreadID", threadID },
                 { "Kind", 1 } // Customer inquiry (first message)
             }));
+            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
+                { "ThreadID", threadID },
+                { "Kind", -1 } // Copy to author of Customer inquiry (first message)
+            }));
         }
     }
     public static void SendProviderInquiryAnswer(int ThreadID, string InquiryAnswer)
@@ -194,12 +200,19 @@ public class LcMessaging
                 { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
             }));*/
 
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate("Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID },
                 { "MessageID", messageID },
                 { "Kind", 2 } // Provider inquiry answer (second message and upper evens)
+            }));
+            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
+                { "ThreadID", ThreadID },
+                { "MessageID", messageID },
+                { "Kind", -2 } // Copy to author of Provider inquiry answer (second message and upper evens)
             }));
         }
     }
@@ -239,6 +252,13 @@ public class LcMessaging
                 { "ThreadID", ThreadID },
                 { "MessageID", messageID },
                 { "Kind", 3 } // Customer inquiry answer (third message and upper odds)
+            }));
+            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
+                ApplyTemplate("Messaging/EmailInquiry/",
+                new Dictionary<string, object> {
+                { "ThreadID", ThreadID },
+                { "MessageID", messageID },
+                { "Kind", -3 } // Copy to author of Customer inquiry answer (third message and upper odds)
             }));
         }
     }
