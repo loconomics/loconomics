@@ -12,13 +12,13 @@
     
     using (var db = Database.Open("sqlloco")) {
         posRatings = db.QuerySingle(@"
-            SELECT	@0 As ProviderID, @1 As PositionID,
+            SELECT	@0 As ProviderUserID, @1 As PositionID,
                     avg(Rating1) As Rating1,
 		            avg(Rating2) As Rating2,
 		            avg(Rating3) As Rating3,
                     123 As Hours
             FROM	UserReviews
-            WHERE	ProviderID = @0
+            WHERE	ProviderUserID = @0
 		             AND
 		            PositionID = @1
         ", p["UserID"], pos["PositionID"]);

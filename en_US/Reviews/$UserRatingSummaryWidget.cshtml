@@ -10,18 +10,18 @@
     
         var getPositionRatings = @"
                 SELECT	0 As ReviewID,
-                        @0 As ProviderID, @1 As PositionID, @2 As CustomerID,
+                        @0 As ProviderUserID, @1 As PositionID, @2 As CustomerUserID,
                         avg(Rating1) As Rating1,
 		                avg(Rating2) As Rating2,
 		                avg(Rating3) As Rating3,
                         123 As Hours,
                         max(UpdatedDate) As LastRatingDate
                 FROM	UserReviews
-                WHERE	ProviderID = @0
+                WHERE	ProviderUserID = @0
 		                 AND
 		                PositionID = @1
                          AND
-                        (@2 = 0 OR UserID = @2)
+                        (@2 = 0 OR CustomerUserID = @2)
         ";
         using (var db = Database.Open("sqlloco")) {
             reviewRecord = db.QuerySingle(getPositionRatings, reviewedID, positionID, reviewerID);
@@ -37,14 +37,11 @@
 }
 @helper printStartRating(dynamic posrow, string index, string rate){
     var id = "UserRatingSummaryWidget:" + index;
-    if (posrow["ReviewID"] > 0) {
-        id += ":" + posrow["ReviewID"];
-    } else {
-        id += 
-        ":" + posrow["PositionID"] +
-        ":" + posrow["ProviderID"] +
-        ":" + posrow["CustomerID"];
-    }
+    id += 
+    ":" + posrow["BookingID"] +
+    ":" + posrow["PositionID"] +
+    ":" + posrow["ProviderUserID"] +
+    ":" + posrow["CustomerUserID"];
     var n = "rating" + index;
     switch(index){
         default:

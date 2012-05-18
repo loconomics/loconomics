@@ -10,7 +10,7 @@
 
  Use Ex:
  
- @RenderPage("ReviewsGrid.cshtml", ProviderID, PositionID)
+ @RenderPage("ReviewsGrid.cshtml", ProviderUserID, PositionID)
 *@
 @{
     var providerID = PageData[0];
@@ -23,13 +23,13 @@
     
     var db = Database.Open("sqlloco");
     var query = @"
-        SELECT  r.ReviewID, u.UserID As CustomerID, u.FirstName, u.LastName, u.Photo, r.PositionID, r.ProviderID,
-                r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.PaymentID,
+        SELECT  r.CustomerUserID, u.FirstName, u.LastName, u.Photo, r.PositionID, r.ProviderUserID,
+                r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.BookingID,
                 r.UpdatedDate As LastRatingDate,
                 321 As Hours
                 FROM dbo.UserReviews r
-                JOIN dbo.users u ON (u.UserID = r.UserID)
-                WHERE r.ProviderID = @0 AND r.PositionID = @1";
+                JOIN dbo.users u ON (u.UserID = r.CustomerUserID)
+                WHERE r.ProviderUserID = @0 AND r.PositionID = @1";
     var reviews = db.Query(query, providerID, positionID);
 }
 <h3>Reviews</h3>
@@ -57,7 +57,7 @@
 	    <li>
 		    <div class="author">
 			    <img alt="user photo" class="mini-avatar" src="@(UrlUtil.AppPath + review.Photo.Replace("\\", "/"))" />
-			    <a href="@(UrlUtil.LangPath)Profile/?UserId=@(review.CustomerID)">@review.FirstName @review.LastName</a>
+			    <a href="@(UrlUtil.LangPath)Profile/?UserId=@(review.CustomerUserID)">@review.FirstName @review.LastName</a>
 		    </div>
     	    <div class="wrap">
                 <p>@review.PublicReview</p>

@@ -8,7 +8,7 @@
                         FROM users a 
                         LEFT JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
                         JOIN dbo.userprofile e ON  (a.userid = e.userid)
-                        LEFT JOIN dbo.ReviewScores rs ON (a.userid = rs.ProviderID)                     
+                        LEFT JOIN dbo.UserReviewScores rs ON (a.userid = rs.UserID)                     
                         WHERE a.userid = @0";
 
         return db.QuerySingle(profilesql, userId);
