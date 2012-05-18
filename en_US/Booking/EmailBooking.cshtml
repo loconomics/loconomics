@@ -72,15 +72,13 @@
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
-        WHERE   R.BookingRequestID = @0
+        WHERE   B.BookingID = @0
                  AND
-                B.BookingID = @1
-                 AND
-                (R.ProviderUserID = @2 OR R.CustomerUserID = @2)
+                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
     ";
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBooking, brID, bID, thisUserID, 1, 1);
+        booking = db.QuerySingle(sqlGetBooking, bID, thisUserID, 1, 1);
     }
 }
 @helper printDateTimeRange(DateTime start, DateTime end){

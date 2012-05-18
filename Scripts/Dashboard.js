@@ -32,52 +32,12 @@ $(document).ready(function () {
     * Booking list actions
     */
     $('body').delegate('.bookings-list .actions .item-action', 'click', function () {
-
-        var bid = $(this).data('booking-id');
-        var brid = $(this).data('booking-request-id');
-        var data = { BookingRequestID: brid };
-        var url = "Booking/$BookingRequestDetails/";
-        var tabId = 'bookingRequestID' + brid;
-
-        if (bid) {
-            url = "Booking/$BookingDetails/";
-            data.BookingID = bid;
-            tabId += '_bookingID' + bid;
-        }
-
-        var tab = TabbedUX.createTab('#main', tabId,
-            $(this).closest('.bookings-list').find('.user-public-name:eq(0)').text());
-        if (tab) {
-            TabbedUX.focusTab(tab);
-
-            var $tab = $(tab);
-
-            // Loading, with retard
-            var loadingtimer = setTimeout(function () {
-                $tab.block(loadingBlock);
-            }, gLoadingRetard);
-
-            // Do the Ajax post
-            $.ajax({
-                url: UrlUtil.LangPath + url,
-                data: data,
-                success: function (data, text, jx) {
-                    if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
-                        // Unknowed sucessfull code (if this happen in production there is a bug!)
-                        alert("Result Code: " + data.Code);
-                    }
-                },
-                error: ajaxErrorPopupHandler,
-                complete: function () {
-                    // Disable loading
-                    clearTimeout(loadingtimer);
-                    // Unblock
-                    $tab.unblock();
-                }
-            });
-        } else
-        // Tab couln't be created, already must exist, focus it
-            TabbedUX.focusTab('#' + tabId);
+        var $t = $(this);
+        openBookingInTab(
+            $t.data('booking-request-id'),
+            $t.data('booking-id'),
+            $t.closest('.bookings-list').find('.user-public-name:eq(0)').text()
+        );
     });
 
     /*
@@ -135,9 +95,25 @@ $(document).ready(function () {
     * Messaging
     */
     $('body').delegate('.message-thread-list .actions .item-action', 'click', function () {
-        openMessageThreadInTab(
-            $(this).data('message-thread-id'),
-            $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
+        var $t = $(this);
+        var auxT = $t.data('message-aux-t');
+        var auxID = $t.data('message-aux-id');
+        if ((auxT == "Booking" || auxT == "BookingRequest") && auxID) {
+            var brID = auxID;
+            var bID = 0;
+            if (auxT == "Booking") {
+                brID = 0;
+                bID = auxID;
+            }
+            openBookingInTab(
+                brID,
+                bID,
+                $t.closest('.items-list').find('.user-public-name:eq(0)').text()
+            );
+        } else
+            openMessageThreadInTab(
+                $(this).data('message-thread-id'),
+                $(this).closest('.message-thread-list').find('.user-public-name:eq(0)').text());
     })
     .delegate('.conversation-messages > li.new-message textarea', 'focus', function () {
         $(this).animate({ height: 250 });
@@ -145,6 +121,56 @@ $(document).ready(function () {
 
 });
 
+function openBookingInTab(bookingRequestID, bookingID, tabTitle) {
+    var bid = bookingID;
+    var brid = bookingRequestID;
+    var data = { BookingRequestID: brid };
+    var url = "Booking/$BookingRequestDetails/";
+    var tabId = 'bookingRequestID' + brid;
+
+    if (bid && bid > 0) {
+        url = "Booking/$BookingDetails/";
+        data.BookingID = bid;
+        tabId += '_bookingID' + bid;
+    }
+
+    var tab = TabbedUX.createTab('#main', tabId, tabTitle);
+    if (tab) {
+        TabbedUX.focusTab(tab);
+
+        var $tab = $(tab);
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            $tab.block(loadingBlock);
+        }, gLoadingRetard);
+
+        // Do the Ajax post
+        $.ajax({
+            url: UrlUtil.LangPath + url,
+            data: data,
+            success: function (data, text, jx) {
+                if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
+                    // Unknowed sucessfull code (if this happen in production there is a bug!)
+                    alert("Result Code: " + data.Code);
+                }
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                $tab.unblock();
+
+                // Updating the tab title, because when is loaded by URL, the title is the ID,
+                // here is setted something more usable:
+                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
+            }
+        });
+    } else
+    // Tab couln't be created, already must exist, focus it
+        TabbedUX.focusTab('#' + tabId);
+}
 function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
     var tid = threadId;
     var data = { MessageThreadID: tid };

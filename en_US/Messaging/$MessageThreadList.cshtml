@@ -16,6 +16,8 @@
 
                 M.BodyText As LastMessageBodyText,
                 M.MessageTypeID As LastMessageTypeID,
+                M.AuxID As LastMessageAuxID,
+                M.AuxT As LastMessageAuxT,
 
                 UC.FirstName As CustomerFirstName,
                 UC.LastName As CustomerLastName,
@@ -206,7 +208,7 @@
                 }
             }
         }
-        <button class="item-action @buttonAction" data-message-thread-id="@item.ThreadID">@buttonLabel</button>
+        <button class="item-action @buttonAction" data-message-thread-id="@item.ThreadID" data-message-aux-id="@item.LastMessageAuxID" data-message-aux-t="@item.LastMessageAuxT">@buttonLabel</button>
         <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>
