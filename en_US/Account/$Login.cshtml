@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     // Initialize general page variables
     var username = "";
     var password = "";
@@ -50,6 +52,10 @@
             string redirect = N.W(Request.QueryString["ReturnUrl"])
                 ?? N.W(Request["Redirect"])
                 ?? UrlUtil.LangPath;
+            string hash = Request.QueryString["HASH"];
+            if (!string.IsNullOrEmpty(hash)) {
+                redirect += "#" + hash;
+            }
 
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
@@ -61,12 +67,24 @@
     }
 }
 @CommonHelpers.GetValidationScripts()
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (window.location.hash) {
+            var log = $('form.login');
+            var act = $('form.login').attr('action');
+            if (/\?/.test(act))
+                log.attr('action', act + "&HASH=" + window.location.hash.substring(1));
+            else
+                log.attr('action', act + "?HASH=" + window.location.hash.substring(1));
+        }
+    });
+</script>
 <article id="loginBox" class="ajax-box account-popup">
     <hgroup class="title">
         <h1>Log in to Loconomics</h1>
     </hgroup>
     <section>
-        <form class="choice-option ajax" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
+        <form class="choice-option ajax login" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
             @Html.ValidationSummary(null, true, null)
 
