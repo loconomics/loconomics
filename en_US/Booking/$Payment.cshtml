@@ -217,6 +217,7 @@
                         /*
                          * Create, save and send Message
                          */
+                        LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     }
                     
                 } catch (Exception ex) {

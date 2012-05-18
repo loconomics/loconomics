@@ -80,20 +80,35 @@
             var result = db.QuerySingle(sqlDeclineBooking, brID);
 
             if (result.Error == 0) {
-                // An ajax redirect is performed to return the updated BookingRequestDetails html to the user
-                CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
-                    "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ));
+                // Send message
+                LcMessaging.SendBookingRequestDenegation(brID, true);
+                if (Request.IsAjaxRequest()){
+                    // An ajax redirect is performed to return the updated BookingRequestDetails html to the user
+                    CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                        "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ));
+                } else {
+                    Response.Redirect(UrlUtil.LangPath + String.Format(
+                        "Dashboard/Bookings/$!BookingRequest-{0}", brID), true);
+                }
             } else {
-                // Return JSON result:
-                // We need negative numbers to indicate an error (is our convention for json 'Code')
-                CommonHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                if (Request.IsAjaxRequest()){
+                    // Return JSON result:
+                    // We need negative numbers to indicate an error (is our convention for json 'Code')
+                    CommonHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                } else {
+                    throw new HttpException(500, "Error declining the booking request: " + result.ErrorMessage);
+                }
             }
         } else {
-            /* What? 
-             * - BookingRequestID and UserID (as ProviderUserID) don't match?
-             * - BookingRequest is already confirmed?
-             */
-            CommonHelpers.ReturnJsonError(-1, "Impossible to decline that Booking Request. Is already confirmed?");
+            if (Request.IsAjaxRequest()){
+                /* What? 
+                 * - BookingRequestID and UserID (as ProviderUserID) don't match?
+                 * - BookingRequest is already confirmed?
+                 */
+                CommonHelpers.ReturnJsonError(-1, "Impossible to decline that Booking Request. Is already confirmed?");
+            } else {
+                throw new HttpException(500, "Impossible to decline that Booking Request. Is already confirmed?");
+            }
         }
     }
 }

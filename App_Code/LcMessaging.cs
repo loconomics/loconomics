@@ -42,10 +42,12 @@ public class LcMessaging
                    (ThreadID
                    ,MessageTypeID
                    ,BodyText
+                   ,AuxID
+                   ,AuxT
                    ,[CreatedDate]
                    ,[UpdatedDate]
                    ,[ModifiedBy])
-            VALUES (@0, @1, @2, getdate(), getdate(), 'sys')
+            VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
         SELECT @@Identity As MessageID
     ";
     private static readonly string sqlGetThread = @"
@@ -60,6 +62,17 @@ public class LcMessaging
              UserProfile As P
                ON U.UserID = P.UserID
         WHERE   U.UserID = @0
+    ";
+    private static readonly string sqlGetThreadByAux = @"
+        SELECT  ThreadID, CustomerUserID, ProviderUserID, PositionID, MessageThreadStatusID, Subject
+        FROM    MessagingThreads
+        WHERE   ThreadID = (
+                SELECT TOP 1 ThreadID
+                FROM Messages
+                WHERE Messages.AuxID = @0 -- BookingID, BookingRequestID or another posible Auxiliar IDs
+                       AND
+                      Messages.AuxT = @1 -- Table/Type AuxID name
+            )
     ";
     #endregion
 
@@ -87,13 +100,13 @@ public class LcMessaging
     /// <param name="FirstMessageTypeID"></param>
     /// <param name="FirstMessageBody"></param>
     /// <returns></returns>
-    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, string ThreadSubject, int FirstMessageTypeID, string FirstMessageBody)
+    public static int CreateThread(int CustomerUserID, int ProviderUserID, int PositionID, string ThreadSubject, int FirstMessageTypeID, string FirstMessageBody, int FirstMessageAuxID = -1, string FirstMessageAuxT = null)
     {
         int threadID = 0;
         using (var db = Database.Open("sqlloco"))
         {
             threadID = (int)db.QueryValue(sqlInsThread, CustomerUserID, ProviderUserID, PositionID, ThreadSubject);
-            db.Execute(sqlInsMessage, threadID, FirstMessageTypeID, FirstMessageBody);
+            db.Execute(sqlInsMessage, threadID, FirstMessageTypeID, FirstMessageBody, (FirstMessageAuxID == -1 ? null : (object)FirstMessageAuxID), FirstMessageAuxT);
         }
         return threadID;
     }
@@ -117,17 +130,146 @@ public class LcMessaging
     /// <param name="MessageTypeID"></param>
     /// <param name="MessageBody"></param>
     /// <returns></returns>
-    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody)
+    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody, int MessageAuxID = -1, string MessageAuxT = null)
     {
         int messageID = 0;
         using (var db = Database.Open("sqlloco"))
         {
             // Create Message
-            messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody);
+            messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody, (MessageAuxID == -1 ? null : (object)MessageAuxID), MessageAuxT);
             // Update Thread status (and date automatically)
             db.Execute(sqlUpdThread, ThreadID, MessageThreadStatusID);
         }
         return messageID;
+    }
+    #endregion
+
+    #region Type:Booking and Booking Request
+    /// <summary>
+    /// A Booking Request is ever sent by a customer
+    /// </summary>
+    /// <param name="CustomerUserID"></param>
+    /// <param name="ProviderUserID"></param>
+    /// <param name="PositionID"></param>
+    /// <param name="BookingRequestID"></param>
+    public static void SendBookingRequest(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID)
+    {
+        dynamic customer = null, provider = null, booking = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Customer information
+            customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
+            // Get Provider information
+            provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
+            // Get Booking Request information
+           // booking = db.QuerySingle("", BookingRequestID);
+        }
+        if (customer != null && provider != null && booking != null)
+        {
+            // Create message subject and message body based on detailed booking data
+            string subject = "", message = "";
+
+            int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
+
+            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                new Dictionary<string, object> {
+                { "BookingRequestID", BookingRequestID }
+                ,{ "UserID", ProviderUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                new Dictionary<string, object> {
+                { "BookingRequestID", BookingRequestID }
+                ,{ "UserID", CustomerUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+        }
+    }
+    public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID, bool sentByProvider)
+    {
+        dynamic customer = null, provider = null, booking = null, thread = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Thread info
+            thread = db.QuerySingle(sqlGetThreadByAux, BookingRequestID, "BookingRequest");
+            if (thread != null)
+            {
+                // Get Customer information
+                customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
+                // Get Booking Request information
+               // booking = db.QuerySingle("", BookingID);
+            }
+        }
+        if (customer != null && provider != null && booking != null)
+        {
+            // Create message body based on detailed booking data
+            string message = "";
+
+            // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
+            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID);
+
+            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "UserID", thread.ProviderUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "BookingRequestID", BookingRequestID }
+                ,{ "UserID", thread.CustomerUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+        }
+    }
+    public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
+    {
+        dynamic customer = null, provider = null, booking = null, thread = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Thread info
+            thread = db.QuerySingle(sqlGetThreadByAux, BookingRequestID, "BookingRequest");
+            if (thread != null)
+            {
+                // Get Customer information
+                customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
+                // Get Booking Request information
+               // booking = db.QuerySingle("", BookingID);
+            }
+        }
+        if (customer != null && provider != null && booking != null)
+        {
+            // Create message body based on detailed booking data
+            string message = "";
+
+            // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
+            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID);
+
+            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                new Dictionary<string, object> {
+                { "BookingRequestID", BookingRequestID }
+                ,{ "UserID", thread.ProviderUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                new Dictionary<string, object> {
+                { "BookingRequestID", BookingRequestID }
+                ,{ "UserID", thread.CustomerUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+            }));
+        }
     }
     #endregion
 
@@ -189,7 +331,7 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            // ThreadStatus=2, responded; MessageStatus=3, provider answer
+            // ThreadStatus=2, responded; MessageType=3, provider answer
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
             /* Using static strings for templates:
@@ -237,7 +379,7 @@ public class LcMessaging
         }
         if (customer != null && provider != null)
         {
-            // ThreadStatus=1, respond; MessageStatus=1, customer inquiry
+            // ThreadStatus=1, respond; MessageType=1, customer inquiry
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
 
             /* Using static strings for templates:
