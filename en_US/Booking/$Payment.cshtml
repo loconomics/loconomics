@@ -213,11 +213,6 @@
                                     BookingRequestStatusID = 2 -- Completed
                             WHERE   BookingRequestID = @0
                         ", bookingRequestID, transactionID);
-                        
-                        /*
-                         * Create, save and send Message
-                         */
-                        LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     }
                     
                 } catch (Exception ex) {
@@ -229,7 +224,11 @@
             }
             if (ModelState.IsValid) {
                 // Return OK result
-                CommonHelpers.ReturnJsonResult(0, null);
+                CommonHelpers.ReturnJsonResult(0, null, false);
+                /*
+                    * Create, save and send Message
+                    */
+                LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
             }
         }
     }
