@@ -1,0 +1,115 @@
+﻿@using WebMatrix.Data;
+@functions{
+    public static string GetBookingRequestDetails(int BookingRequestID){
+        var getBookingRequestPricingEstimate = @"
+            SELECT  PricingEstimateID
+            FROM    BookingRequest
+            WHERE   BookingRequestID = @0
+        ";
+        var getPricingVars = @"
+            SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    PricingVariable As V
+                      ON V.PricingVariableID = P.PricingVariableID
+            WHERE   P.PricingEstimateID = @0
+                     AND V.CountryId = @1 AND V.LanguageID = @2
+        ";
+        var getPricingOptions = @"
+            SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    PricingOption As V
+                      ON V.PricingOptionID = P.PricingOptionID
+            WHERE   P.PricingEstimateID = @0
+                     AND V.CountryId = @1 AND V.LanguageID = @2
+        ";
+        dynamic pvars, poptions;
+        using (var db = Database.Open("sqlloco")) {
+            int pricingEstimateID = db.QuerySingle(getBookingRequestPricingEstimate, BookingRequestID);
+            pvars       = db.Query(getPricingVars, pricingEstimateID, 1, 1);
+            poptions    = db.Query(getPricingOptions, pricingEstimateID, 1, 1);
+        }
+        
+        int i = 0;
+        string iprint = "";
+        string result = "";
+        foreach (var pitem in pvars) {
+            if (i > 0) {
+                iprint = "; ";
+            }
+            i++;
+            result += iprint + pitem.Name + " " + pitem.Quantity;
+        }
+        iprint = "";
+        if (pvars.Count > 0) {
+            iprint = "; ";
+        }
+        i = 0;
+        foreach (var pitem in poptions) {
+            if (i > 0) {
+                iprint = "; ";
+            }
+            i++;
+            result += iprint + pitem.Name + "" + pitem.Quantity;
+        }
+        
+        return result;
+    }
+    public static string GetBookingRequestSubject(int BookingRequestID){
+        var getBookingRequest = @"
+            SELECT  TOP 1
+                    P.PositionSingular,
+                    E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+            FROM    BookingRequest As B
+                     INNER JOIN
+                    CalendarEvents As E1
+                      ON E1.ID = B.PreferredDateID
+                     INNER JOIN
+                    Positions As P
+                      ON P.PositionID = B.PositionID
+            WHERE   B.BookingRequestID = @0
+        ";
+        dynamic summary = null;
+        using (var db = Database.Open("sqlloco")){
+            summary = db.QuerySingle(getBookingRequest, BookingRequestID);
+        }
+        string result = "";
+        if (summary != null) {
+            result = summary.PositionSingular + " " +
+                summary.PreferredDateStart.ToLongDateString() + ", " +
+                summary.PreferredDateStart.ToShortTimeString() + " to " +
+                summary.PreferredDateEnd.ToShortTimeString();
+        }
+        return result;
+    }
+    public static string GetBookingSubject(int BookingRequestID){
+        var getBookingRequest = @"
+            SELECT  TOP 1
+                    P.PositionSingular,
+                    E1.StartTime As ConfirmedDateStart, E1.EndTime As ConfirmedDateEnd,
+            FROM    Booking As B
+                     INNER JOIN
+                    CalendarEvents As E1
+                      ON E1.ID = B.ConfirmedDateID
+                     INNER JOIN
+                    BookingRequest As R
+                      ON R.BookingRequestID = B.BookingRequestID
+                    Positions As P
+                      ON P.PositionID = R.PositionID
+            WHERE   B.BookingID = @0
+        ";
+        dynamic summary = null;
+        using (var db = Database.Open("sqlloco")){
+            summary = db.QuerySingle(getBookingRequest, BookingRequestID);
+        }
+        string result = "";
+        if (summary != null) {
+            result = summary.PositionSingular + " " +
+                summary.ConfirmedDateStart.ToLongDateString() + ", " +
+                summary.ConfirmedDateStart.ToShortTimeString() + " to " +
+                summary.ConfirmedDateEnd.ToShortTimeString();
+        }
+        return result;
+    }
+}

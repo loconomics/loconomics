@@ -169,7 +169,8 @@ public class LcMessaging
         if (customer != null && provider != null && booking != null)
         {
             // Create message subject and message body based on detailed booking data
-            string subject = "", message = "";
+            string subject = BookingHelper.GetBookingRequestSubject(BookingRequestID);
+            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
@@ -209,10 +210,11 @@ public class LcMessaging
         if (customer != null && provider != null && booking != null)
         {
             // Create message body based on detailed booking data
-            string message = "";
+            string subject = BookingHelper.GetBookingSubject(BookingRequestID);
+            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
-            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID);
+            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID, "Booking", subject);
 
             WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
@@ -252,10 +254,10 @@ public class LcMessaging
         if (customer != null && provider != null && booking != null)
         {
             // Create message body based on detailed booking data
-            string message = "";
+            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
-            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID);
+            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID, "BookingRequest");
 
             WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
