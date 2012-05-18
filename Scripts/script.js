@@ -26,20 +26,22 @@ $.fn.hasScrollBar = function () {
     };
 }
 $.fn.reload = function (newurl) {
-    if (newurl)
-        this.data('source-url', newurl);
-    var url = this.data('source-url');
-    if (url) {
-        // Loading, with retard
-        var t = this; // closure scope
-        var loadingtimer = setTimeout(function () {
-            t.block(loadingBlock);
-        }, gLoadingRetard);
-        this.load(url, function () {
-            clearTimeout(loadingtimer);
-            t.unblock();
-        });
-    }
+    this.each(function () {
+        var $t = $(this);
+        if (newurl)
+            $t.data('source-url', newurl);
+        var url = $t.data('source-url');
+        if (url) {
+            // Loading, with retard
+            var loadingtimer = setTimeout(function () {
+                $t.block(loadingBlock);
+            }, gLoadingRetard);
+            this.load(url, function () {
+                clearTimeout(loadingtimer);
+                $t.unblock();
+            });
+        }
+    });
 }
 
 /*

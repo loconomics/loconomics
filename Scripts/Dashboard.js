@@ -72,9 +72,11 @@ $(document).ready(function () {
                     // Unknowed sucessfull code (if this happen in production there is a bug!)
                     alert("Result Code: " + data.Code);
                 }
-
+                // Some list updates
                 // After update request, bookings-list tab need be reloaded
                 $('#bookings-all').reload();
+                // After update request, state changed, new message created, reload thread list to reflect it
+                $('#inbox').reload();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
