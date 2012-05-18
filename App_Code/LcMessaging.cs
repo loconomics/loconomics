@@ -156,17 +156,15 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     public static void SendBookingRequest(int CustomerUserID, int ProviderUserID, int PositionID, int BookingRequestID)
     {
-        dynamic customer = null, provider = null, booking = null;
+        dynamic customer = null, provider = null;
         using (var db = Database.Open("sqlloco"))
         {
             // Get Customer information
             customer = db.QuerySingle(sqlGetUserData, CustomerUserID);
             // Get Provider information
             provider = db.QuerySingle(sqlGetUserData, ProviderUserID);
-            // Get Booking Request information
-           // booking = db.QuerySingle("", BookingRequestID);
         }
-        if (customer != null && provider != null && booking != null)
+        if (customer != null && provider != null)
         {
             // Create message subject and message body based on detailed booking data
             string subject = BookingHelper.GetBookingRequestSubject(BookingRequestID);
@@ -192,7 +190,7 @@ public class LcMessaging
     }
     public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID, bool sentByProvider)
     {
-        dynamic customer = null, provider = null, booking = null, thread = null;
+        dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
             // Get Thread info
@@ -203,11 +201,9 @@ public class LcMessaging
                 customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
                 // Get Provider information
                 provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
-                // Get Booking Request information
-               // booking = db.QuerySingle("", BookingID);
             }
         }
-        if (customer != null && provider != null && booking != null)
+        if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
             string subject = BookingHelper.GetBookingSubject(BookingRequestID);
@@ -236,7 +232,7 @@ public class LcMessaging
     }
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
-        dynamic customer = null, provider = null, booking = null, thread = null;
+        dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
             // Get Thread info
@@ -247,11 +243,9 @@ public class LcMessaging
                 customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
                 // Get Provider information
                 provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
-                // Get Booking Request information
-               // booking = db.QuerySingle("", BookingID);
             }
         }
-        if (customer != null && provider != null && booking != null)
+        if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
             string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);

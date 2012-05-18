@@ -26,7 +26,7 @@
         ";
         dynamic pvars, poptions;
         using (var db = Database.Open("sqlloco")) {
-            int pricingEstimateID = db.QuerySingle(getBookingRequestPricingEstimate, BookingRequestID);
+            int pricingEstimateID = db.QueryValue(getBookingRequestPricingEstimate, BookingRequestID);
             pvars       = db.Query(getPricingVars, pricingEstimateID, 1, 1);
             poptions    = db.Query(getPricingOptions, pricingEstimateID, 1, 1);
         }
@@ -60,7 +60,7 @@
         var getBookingRequest = @"
             SELECT  TOP 1
                     P.PositionSingular,
-                    E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+                    E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd
             FROM    BookingRequest As B
                      INNER JOIN
                     CalendarEvents As E1
@@ -87,7 +87,7 @@
         var getBookingRequest = @"
             SELECT  TOP 1
                     P.PositionSingular,
-                    E1.StartTime As ConfirmedDateStart, E1.EndTime As ConfirmedDateEnd,
+                    E1.StartTime As ConfirmedDateStart, E1.EndTime As ConfirmedDateEnd
             FROM    Booking As B
                      INNER JOIN
                     CalendarEvents As E1
