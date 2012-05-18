@@ -1,0 +1,240 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Booking";
+    
+    var thisUserID = Request["UserID"].AsInt();
+    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    var brID = Request["BookingRequestID"].AsInt();
+    var bID = Request["BookingID"].AsInt();
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Booking";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString() + "_Booking-" + bID.ToString();
+
+    // TODO: Calculate location distance from provider to customer
+    
+    var sqlGetBooking = @"
+        SELECT  R.BookingRequestID,
+                B.BookingID,
+                R.ProviderUserID,
+                R.CustomerUserID,
+                R.PricingEstimateID,
+                R.SpecialRequests,
+                R.UpdatedDate,
+                R.BookingRequestStatusID,
+                B.BookingStatusID,
+
+                --TODO where is bank account (last numbers) or how calculate paymentDate
+                getdate() As PaymentDate,
+                -- account only for provider
+                '1234' As PaymentAccountLastDigits,
+
+                Pos.PositionSingular,
+
+                L.UserID As LocationUserID,
+                LU.FirstName As LocationUserFirstName,
+                L.NickName As LocationName,
+                L.AddressLine1, L.AddressLine2,
+                L.City,
+                SP.StateProvinceName, SP.StateProvinceCode,
+                PC.PostalCode,
+
+                E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
+
+                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
+        FROM    BookingRequest As R
+                 INNER JOIN
+                Booking As B
+                  ON R.BookingRequestID = B.BookingRequestID
+                 INNER JOIN
+                PricingEstimate As P
+                  ON P.PricingEstimateID = R.PricingEstimateID
+                 INNER JOIN
+                ServiceAddress As L
+                  ON R.ServiceAddressID = L.ServiceAddressID
+                 INNER JOIN
+                Users As LU
+                  ON L.UserID = LU.UserID
+                 INNER JOIN
+                StateProvince As SP
+                  ON SP.StateProvinceID = L.StateProvinceID
+                 INNER JOIN
+                PostalCode As PC
+                  ON PC.PostalCodeID = L.PostalCodeID
+                 INNER JOIN
+                CalendarEvents As E
+                  ON E.ID = B.ConfirmedDateID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = R.PositionID
+					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
+        WHERE   R.BookingRequestID = @0
+                 AND
+                B.BookingID = @1
+                 AND
+                (R.ProviderUserID = @2 OR R.CustomerUserID = @2)
+    ";
+    dynamic booking;
+    using (var db = Database.Open("sqlloco")) {
+        booking = db.QuerySingle(sqlGetBooking, brID, bID, thisUserID, 1, 1);
+    }
+}
+@helper printDateTimeRange(DateTime start, DateTime end){
+    @start.ToLongDateString()
+    <text> from </text>
+    @start.ToShortTimeString()
+    <text> to </text>
+    @end.ToShortTimeString()
+}
+@helper printAddress(IDictionary<string, object> addressDetails, bool editable){
+        <div class="address">
+            @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
+            <span class="address-name">@addressDetails["name"]</span>
+            }
+            <span class="address-location">@addressDetails["location"]</span>
+            <span class="address-city">@addressDetails["city"]</span>
+            <span class="address-state">@addressDetails["state"]</span>
+            <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            @if (editable) {
+            <div class="tools">
+                <a href="#" class="edit">Edit</a>
+                <a href="#" class="map">Map</a>
+                <a href="#" class="remove">Remove</a>
+            </div>
+            }
+        </div>
+}
+@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
+    var statusTitle = "Booking involving {0}. Unknown status";
+    switch (itsUserType) {
+        case "customer":
+            statusTitle = "Booking from {0}. Unknown status";
+            switch ((int)booking.BookingStatusID) {
+                case 1: // confirmed
+                    statusTitle = "Confirmed booking from {0}";
+                    break;
+                case 2: // service performed no pricing adjustment
+                    statusTitle = "Service performed to {0}";
+                    break;
+                case 3: // service performed pricing adjustment
+                    statusTitle = "Service performed to {0} with pricing adjustment";
+                    break;
+                case 4: // service performed and paid full
+                    statusTitle = "Service paid by {0}";
+                    break;
+                case 5: // service dispute
+                    statusTitle = "Service dispute with {0}";
+                    break;
+            }
+            break;
+        case "provider":
+            statusTitle = "Booking to {0}. Unknown status";
+            switch ((int)booking.BookingStatusID) {
+                case 1: // confirmed
+                    statusTitle = "Confirmed booking to {0}";
+                    break;
+                case 2: // service performed no pricing adjustment
+                    statusTitle = "Service performed by {0}";
+                    break;
+                case 3: // service performed pricing adjustment
+                    statusTitle = "Service performed by {0} with pricing adjustment";
+                    break;
+                case 4: // service performed and paid full
+                    statusTitle = "Service paid to {0}";
+                    break;
+                case 5: // service dispute
+                    statusTitle = "Service dispute with {0}";
+                    break;
+            }
+            break;
+    }
+    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
+}
+@functions{
+    string getLocationName(dynamic data){
+        if (String.IsNullOrWhiteSpace(data.LocationName)) {
+            return "";
+        } else {
+            return data.LocationUserFirstName + "'s " + data.LocationName;
+        }
+    }
+    string getLocationForGoogleMaps(dynamic data){
+        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+}
+@CommonHelpers.SetupStarRatingPlugin()
+
+@if (booking == null)
+{
+    <div class="booking main-side">
+        Sorry, it could not be found the requested Booking.
+    </div>
+}
+else
+{
+    // Checking item: user type of the other user, not current user
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (thisUserID == booking.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+
+<div class="booking-request booking main-side">
+    <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+    <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+    <h4>@itsUserLabel information</h4>
+    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddCssClasses", "message-section" },
+        {"Data", itsUserData},
+        {"DataPrefix", ""},
+        {"Size", "medium"},
+        {"UserType", itsUserType},
+        {"WithContactData", true},
+        {"WithGoogleMap", false},
+        {"UseAbsoluteUrls", true}
+    })
+
+    <h4>Booking time and location</h4>
+    <div class="booking-time-location message-section">
+        <h5>Position: </h5>
+        <span class="position">@booking.PositionSingular</span>
+
+        <h5>Scheduled time: </h5>
+        <span class="scheduled-time">@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+
+        <h5>Location: </h5>
+        <div class="location">
+            @printAddress(new Dictionary<string, object>() {
+                {"name", getLocationName(booking)}, 
+                {"location", booking.AddressLine1 + " " + booking.AddressLine2},
+                {"city", booking.City}, 
+                {"state", booking.StateProvinceCode},
+                {"zipcode", booking.PostalCode}
+            }, false)
+
+            <div class="time-estimation">
+            (x minutes driving time, y minutes walk)
+            </div>
+            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
+        </div>
+    </div>
+
+    <h4>Requested services and pricing estimate</h4>
+    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
+
+    <h4>Reminders</h4>
+    @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+</div>
+}
