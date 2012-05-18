@@ -788,6 +788,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.item-summary > li.long-details {
+    white-space: normal;
+    height: 40px;
+}
 .item-summary h5 {
     color: #8B2143;
     display: inline;
