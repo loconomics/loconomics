@@ -14,11 +14,8 @@
                 T.UpdatedDate As LastMessageDate,
                 T.Subject,
 
-                (SELECT TOP 1 M.BodyText
-                 FROM Messages As M
-                 WHERE M.ThreadID = T.ThreadID
-                 ORDER BY M.CreatedDate DESC
-                ) As LastMessageBodyText,
+                M.BodyText As LastMessageBodyText,
+                M.MessageTypeID As LastMessageTypeID,
 
                 UC.FirstName As CustomerFirstName,
                 UC.LastName As CustomerLastName,
@@ -28,6 +25,11 @@
 
                 Pos.PositionSingular
         FROM    MessagingThreads As T
+                 INNER JOIN
+                Messages As M
+                  ON M.ThreadID = T.ThreadID
+                      AND
+                     M.MessageID = T.LastMessageID
                  INNER JOIN
                 Users As UC
                   ON UC.UserID = T.CustomerUserID
@@ -42,7 +44,7 @@
         ORDER BY T.UpdatedDate DESC
     ";
     
-    var sqlListCustomerMessageThread = @"
+/*    var sqlListCustomerMessageThread = @"
         SELECT  T.ThreadID,
                 T.CustomerUserID As ReceiverUserID,
                 T.ProviderUserID As SenderUserID,
@@ -113,7 +115,7 @@
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
         WHERE   T.ProviderUserID = @0
         ORDER BY T.UpdatedDate DESC
-    ";
+    ";*/
 
     // All messages threads (as customer and as provider)
     dynamic messageThreads = null;
@@ -129,17 +131,62 @@
         {"Size", "mini"},
         {"UserType", senderUserType}
     })
-    <ul class="item-summary message-thread-summary">
-        <li>
-            <h5>Inquiry:</h5> 
-            @item.PositionSingular
-        </li>
-        <li>
-            <h5>Subject:</h5> @item.Subject
-        </li>
-        <li>
-            <h5>Message:</h5> @item.LastMessageBodyText
-        </li>
+    @{
+        var itemType = "";
+        if (item.LastMessageTypeID >= 1 && item.LastMessageTypeID <= 3) {
+            itemType = "inquiry";
+        } else if (item.LastMessageTypeID == 8) {
+            itemType = "marketing";
+        } else if (item.LastMessageTypeID == 9) {
+            itemType = "booking-dispute";
+        } else if (item.LastMessageTypeID == 10) {
+            itemType = "booking-dispute-resolution";
+        } else if (item.LastMessageTypeID >= 17 && item.LastMessageTypeID <= 18) {
+            itemType = "booking-review";
+        } else if (item.LastMessageTypeID >= 4 && item.LastMessageTypeID <= 5) {
+            itemType = "bookingrequest";
+        } else if (item.LastMessageTypeID >= 6 && item.LastMessageTypeID <= 7) {
+            itemType = "bookingrequest-confirmation";
+        } else if (item.LastMessageTypeID >= 13 && item.LastMessageTypeID <= 14) {
+            itemType = "bookingrequest-denegation";
+        } else if (item.LastMessageTypeID >= 15 && item.LastMessageTypeID <= 16) {
+            itemType = "booking";
+        }
+    }
+    <ul class="item-summary message-thread-summary @itemType">
+        @* Inquiries messages (1 to 3) *@
+        @switch(itemType) {
+            case "inquiry":
+                <li>
+                    <h5>Inquiry:</h5> 
+                    @item.PositionSingular
+                </li>
+                <li>
+                    <h5>Subject:</h5> @item.Subject
+                </li>
+                <li>
+                    <h5>Message:</h5> @item.LastMessageBodyText
+                </li>
+                break;
+            case "bookingrequest":
+                <li>
+                    <h5>Booking Request:</h5> 
+                    @item.Subject
+                </li>
+                <li>
+                    <h5>Details:</h5> @item.LastMessageBodyText
+                </li>
+                break;
+            case "booking":
+                <li>
+                    <h5>Booking:</h5> 
+                    @item.Subject
+                </li>
+                <li>
+                    <h5>Details:</h5> @item.LastMessageBodyText
+                </li>
+                break;
+        }
     </ul>
     <div class="actions">
         @{

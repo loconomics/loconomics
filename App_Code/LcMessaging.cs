@@ -33,6 +33,8 @@ public class LcMessaging
     private static readonly string sqlUpdThread = @"
         UPDATE MessagingThreads
         SET     MessageThreadStatusID = @1,
+                LastMessageID = @2,
+                Subject = coalesce(@3, MessagingThreads.Subject),
                 UpdatedDate = getdate(),
                 ModifiedBy = 'sys'
         WHERE   ThreadID = @0
@@ -130,7 +132,7 @@ public class LcMessaging
     /// <param name="MessageTypeID"></param>
     /// <param name="MessageBody"></param>
     /// <returns></returns>
-    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody, int MessageAuxID = -1, string MessageAuxT = null)
+    public static int CreateMessage(int ThreadID, int MessageThreadStatusID, int MessageTypeID, string MessageBody, int MessageAuxID = -1, string MessageAuxT = null, string NewThreadSubject = null)
     {
         int messageID = 0;
         using (var db = Database.Open("sqlloco"))
@@ -138,7 +140,7 @@ public class LcMessaging
             // Create Message
             messageID = (int)db.QueryValue(sqlInsMessage, ThreadID, MessageTypeID, MessageBody, (MessageAuxID == -1 ? null : (object)MessageAuxID), MessageAuxT);
             // Update Thread status (and date automatically)
-            db.Execute(sqlUpdThread, ThreadID, MessageThreadStatusID);
+            db.Execute(sqlUpdThread, ThreadID, MessageThreadStatusID, messageID, NewThreadSubject);
         }
         return messageID;
     }
