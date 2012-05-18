@@ -158,7 +158,7 @@
         @switch(itemType) {
             case "inquiry":
                 <li>
-                    <h5>Inquiry:</h5> 
+                    <h5>@LcRessources.GetText("messaging-message-type-title-" + itemType):</h5> 
                     @item.PositionSingular
                 </li>
                 <li>
@@ -168,33 +168,15 @@
                     <h5>Message:</h5> @item.LastMessageBodyText
                 </li>
                 break;
-            case "bookingrequest":
-                <li>
-                    <h5>Booking Request:</h5> 
-                    @item.Subject
-                </li>
-                <li class="long-details">
-                    <h5>Details:</h5> @item.LastMessageBodyText
-                </li>
-                break;
-            case "booking":
-                <li>
-                    <h5>Booking:</h5> 
-                    @item.Subject
-                </li>
-                <li class="long-details">
-                    <h5>Details:</h5> @item.LastMessageBodyText
-                </li>
-                break;
             default:
                 <li>
-                    <h5>@itemType:</h5> 
+                    <h5>@LcRessources.GetText("messaging-message-type-title-" + itemType):</h5> 
                     @item.Subject
                 </li>
                 <li class="long-details">
                     <h5>Details:</h5> @item.LastMessageBodyText
                 </li>
-                break;                
+                break;
         }
     </ul>
     <div class="actions">
