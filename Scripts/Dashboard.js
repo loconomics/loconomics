@@ -4,19 +4,17 @@
  * an specific message thread at page loading
  */
 $(document).bind('loadHashBang', function (event, hashbangvalue) {
-    // Hashbangvalue is something like: Thread-1_Message-2
-    // Where '1' is the ThreadID and '2' the optional MessageID
-    var pars = hashbangvalue.split('_');
-    var urlParameters = {};
-    for (var i = 0; i < pars.length; i++) {
-        var parsvalues = pars[i].split('-');
-        if (parsvalues.length == 2) {
-            urlParameters[parsvalues[0]] = parsvalues[1];
-        }
-    }
+    var urlParameters = getHashBangParameters(hashbangvalue);
     // Analize parameters values
     if (urlParameters.Thread) {
         openMessageThreadInTab(urlParameters.Thread, "Message Thread " + urlParameters.Thread, urlParameters.Message);
+    }
+    if (urlParameters.BookingRequest) {
+        openBookingInTab(urlParameters.BookingRequest, urlParameters.Booking,
+            "Booking Request " + urlParameters.BookingRequest);
+    } else if (urlParameters.Booking) {
+        openBookingInTab(0, urlParameters.Booking,
+            "Booking " + urlParameters.Booking);
     }
 });
 
