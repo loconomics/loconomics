@@ -80,16 +80,17 @@
             var result = db.QuerySingle(sqlCancelBooking, brID);
 
             if (result.Error == 0) {
-                // Send message
-                LcMessaging.SendBookingRequestDenegation(brID, false);
                 if (Request.IsAjaxRequest()){
                     // An ajax redirect is performed to return the updated BookingRequestDetails html to the user
                     CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
-                        "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ));
+                        "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ), false);
                 } else {
                     Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}", brID), true);
+                        "Dashboard/Bookings/$!BookingRequest-{0}", brID), false);
                 }
+                // Send message
+                LcMessaging.SendBookingRequestDenegation(brID, false);
+                Response.End();
             } else {
                 if (Request.IsAjaxRequest()){
                     // Return JSON result:

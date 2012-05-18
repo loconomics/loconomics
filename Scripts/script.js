@@ -36,7 +36,7 @@ $.fn.reload = function (newurl) {
             var loadingtimer = setTimeout(function () {
                 $t.block(loadingBlock);
             }, gLoadingRetard);
-            this.load(url, function () {
+            $t.load(url, function () {
                 clearTimeout(loadingtimer);
                 $t.unblock();
             });

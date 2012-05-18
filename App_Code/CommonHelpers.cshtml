@@ -93,23 +93,24 @@
 @functions{
     /*========= JSON =============*/
     
-    public static void ReturnJson(object jsondata){
+    public static void ReturnJson(object jsondata, bool endResponse = true){
         Response.ContentType = "application/json";
         Json.Write(jsondata, Response.Output);
-        Response.End();
+        if (endResponse)
+            Response.End();
     }
-    public static void ReturnJsonError(int code, string errorMessage)
+    public static void ReturnJsonError(int code, string errorMessage, bool endResponse = true)
     {
         if (code >= 0)
-            ReturnJsonResult(code, errorMessage);
+            ReturnJsonResult(code, errorMessage, endResponse);
         else
-            ReturnJsonResult(code, new Dictionary<string, string>(){ { "ErrorMessage", errorMessage } });
+            ReturnJsonResult(code, new Dictionary<string, string>(){ { "ErrorMessage", errorMessage } }, endResponse);
     }
-    public static void ReturnJsonResult(int code, object result)
+    public static void ReturnJsonResult(int code, object result, bool endResponse = true)
     {
         ReturnJson(new Dictionary<string, object>(){
             { "Code", code }, { "Result", result } 
-        });
+        }, endResponse);
     }
     
     /*========= SECURITY ==========*/
