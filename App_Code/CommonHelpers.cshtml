@@ -5,17 +5,28 @@
 }
 @using WebMatrix.WebData;
 @using WebMatrix.Data;
-@helper CountryOptions(){
-    <option value="ca">California</option>
+@helper CountryOptions(string selectedCountryID = null){
+    var sql = @"
+        SELECT CountryID, CountryName, CountryCode
+        FROM    Country
+        WHERE   LanguageID=@0
+        ORDER BY CountryName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var country in db.Query(sql, 1)){
+            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID.ToString())>@country.CountryName</option>
+        }
+    }
 }
 @helper StateProvinceOptions(int selectedStateID){
     @StateProvinceOptions(selectedStateID.ToString())
 }
 @helper StateProvinceOptions(string selectedStateID){
     var sql = @"
-        SELECT StateProvinceID, StateProvinceName
+        SELECT StateProvinceID, StateProvinceName, StateProvinceCode
         FROM    StateProvince
         WHERE   CountryID=@0
+        ORDER BY StateProvinceName
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var state in db.Query(sql, 1)){

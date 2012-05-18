@@ -178,37 +178,6 @@
         }
         return PageData["position"];
     }
-    /* Function create with copying the code from the old 'provider-dashboard-profile.cshtml' file,
-        must be used in the appropiated Dashboard page by back-end code.
-      TODO: Un-used function
-    */
-    public static void ProcessProfileForm(){
-        if(IsPost){
-            var UserID = WebSecurity.CurrentUserId;
-            var db = Database.Open("sqlloco");
-            
-            var sqlupdatephoto ="update users set Photo = @0 where UserID = @1";
-            var sqlupdateabout ="update dbo.userprofilepositionadditional set ADD_Details = @0  where UserID = @1";
-            WebImage photo = null;
-            var newFileName = "";
-            var imagePath = "";
-            var imageThumbPath  = "";
-            var aboutMe = Request.Form["aboutMeText"];
-            photo = WebImage.GetImageFromRequest();
-            db.Query(sqlupdateabout,aboutMe,UserID);
-            if(photo != null){
-                newFileName = Guid.NewGuid().ToString() + "_" +
-                Path.GetFileName(photo.FileName);
-                imagePath = @"img\" + newFileName;
-                photo.Save(UrlUtil.AppPath + imagePath);
-                imageThumbPath = @"img\thumbs\" + newFileName;
-                photo.Resize(width: 180, height: 180, preserveAspectRatio: true,
-                preventEnlarge: true);
-                photo.Save(UrlUtil.AppPath + imageThumbPath);
-                db.Query(sqlupdatephoto,imageThumbPath,UserID);
-            }
-        }
-    }
     public static string CssCurrent(string a, string b){
         return (a == b ? "current" : "");
     }
