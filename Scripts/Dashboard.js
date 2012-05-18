@@ -41,7 +41,7 @@ $(document).ready(function () {
     /*
     * Booking Request confirmation
     */
-    $('body').delegate('.booking-request .button-confirm-datetime, .booking-request .button-decline-booking', 'click', function () {
+    $('body').delegate('.booking-request-action', 'click', function () {
         var brId = $(this).data('booking-request-id');
         var $tab = $(this).closest('.tab-body');
         var options = { autoUnblockLoading: true };
@@ -53,6 +53,8 @@ $(document).ready(function () {
             url = 'Booking/$ConfirmBookingRequest/';
         } else if ($t.hasClass('button-decline-booking')) {
             url = 'Booking/$DeclineBookingRequest/';
+        } else if ($t.hasClass('button-cancel-booking')) {
+            url = 'Booking/$CancelBookingRequest/';
         } else {
             // Bad handler:
             return;

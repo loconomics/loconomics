@@ -168,7 +168,7 @@ else
         @if (myUserType == "customer" && booking.BookingRequestStatusID <= 3)
         {
         <div class="actions">
-            <button class="button item-action" type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
+            <button class="button item-action booking-request-action button-cancel-booking" type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
         </div>
         }
         <h4>@itsUserLabel profile</h4>
@@ -190,18 +190,18 @@ else
             to accept this booking.
             </p>
             <h5>Preferred time:</h5>
-            <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
                 Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
             </button>
             <h5>Alternate times:</h5>
-            <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </button>
-            <button type="button" class="button button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
             </button>
             <h5>Decline booking request</h5>
-            <button type="button" class="button button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
+            <button type="button" class="butto booking-request-actionn button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
                 Decline booking (you can offer alternative times to the customer)
             </button>
         </div>
