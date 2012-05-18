@@ -902,6 +902,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     right: 15px;
     bottom: 15px;
 }
+.booking-request .actions,
+.booking .actions {
+    float: right;
+}
 
 /* Class message-section for box sections inside a 'like message'
  * content, like bookings request, bookings..

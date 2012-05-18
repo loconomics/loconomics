@@ -163,7 +163,14 @@ else
     <div class="booking-request main-side">
         <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
         <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
-
+        @* If is customer and booking request is incomplete or without provider response (status:1,2,3),
+            allow customer to cancel it *@
+        @if (myUserType == "customer" && booking.BookingRequestStatusID <= 3)
+        {
+        <div class="actions">
+            <button class="button item-action" type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
+        </div>
+        }
         <h4>@itsUserLabel profile</h4>
         @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
