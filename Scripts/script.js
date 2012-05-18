@@ -263,7 +263,7 @@ var TabbedUX = {
             // Create tab div:
             var tab = document.createElement('div');
             tab.id = idName;
-            // Required class
+            // Required classes
             tab.className = "tab-body";
             var $tab = $(tab);
             // Get an existing sibling and copy (with some exceptions) their css classes
@@ -444,8 +444,8 @@ $(document).ready(function () {
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
     $('.autofill-submenu .current').each(function () {
         var parentmenu = $(this);
-        // getting the submenu elementos from the tabs marked with class 'autofill-submenu-items'
-        var items = $('.autofill-submenu-items li');
+        // getting the submenu elements from tabs marked with class 'autofill-submenu-items'
+        var items = $('.autofill-submenu-items li:not(.removable)');
         // if there is items, create the submenu cloning it!
         if (items.length > 0) {
             var submenu = document.createElement("ul");
