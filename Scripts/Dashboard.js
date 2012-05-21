@@ -14,7 +14,7 @@ $(document).bind('loadHashBang', function (event, hashbangvalue) {
             "Booking Request " + urlParameters.BookingRequest);
     } else if (urlParameters.Booking) {
         openBookingInTab(0, urlParameters.Booking,
-            "Booking " + urlParameters.Booking);
+            "Booking " + urlParameters.Booking, ('Review' in urlParameters));
     }
 });
 
@@ -98,6 +98,14 @@ $(document).ready(function () {
             $t.data('booking-id'),
             $t.closest('.booking').find('.user-public-name:eq(0)').text(),
             true
+        );
+    })
+    .delegate('.booking-review .open-booking-action', 'click', function () {
+        var $t = $(this);
+        openBookingInTab(
+            0,
+            $t.data('booking-id'),
+            $t.closest('.booking-review').find('.user-public-name:eq(0)').text()
         );
     });
 

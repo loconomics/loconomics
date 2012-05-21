@@ -35,8 +35,8 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
 
-<div class="booking-request booking main-side">
-    <h3>Tell use how it went with @itsUserData.FirstName</h3>
+<div class="booking-request booking booking-review main-side">
+    <h3>Tell use how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
     <span class="updateddate">This will only a few minutes and be a big help to @itsUserData.FirstName and the community</span>
 
     <h4>Booking Summary</h4>
@@ -54,10 +54,11 @@ else
             </li>
         </ul>
         <div class="actions">
-            <button class="item-action" data-booking-id="@bID">View</button>
+            <button class="item-action open-booking-action" data-booking-id="@bID">View</button>
             <div class="money item-extra-info"></div>
         </div>
     </div>
     @RenderPage(UrlUtil.LangPath + "Reviews/$ProviderRatingForm.cshtml")
 </div>
 }
+@RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")

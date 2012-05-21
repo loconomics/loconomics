@@ -945,9 +945,10 @@ function getHashBangParameters(hashbangvalue) {
     var urlParameters = {};
     for (var i = 0; i < pars.length; i++) {
         var parsvalues = pars[i].split('-');
-        if (parsvalues.length == 2) {
+        if (parsvalues.length == 2)
             urlParameters[parsvalues[0]] = parsvalues[1];
-        }
+        else
+            urlParameters[parsvalues[0]] = true;
     }
     return urlParameters;
 }
