@@ -4,9 +4,7 @@
     CommonHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
 
-    var positionID = Request["PositionID"] ?? PageData["PositionID"];
-    var providerID = Request["ProviderID"] ?? PageData["ProviderID"];
-    var paymentID = Request["BookingID"] ?? PageData["BookingID"];
+    var bookingID = Request["BookingID"] ?? PageData["BookingID"];
 
     Validation.RequireField("question1", "Please response to section 1 question");
     Validation.RequireField("question2", "Please response to section 3 question");
@@ -32,56 +30,109 @@
         }
 
         if(ModelState.IsValid){
-            var SQLCHECK = @"SELECT r.ReviewID
-                            FROM dbo.UserReviews r
-                            WHERE r.PaymentID=@0";
-            var SQLSELECT = @"SELECT Rating1, Rating2 ,Rating3 ,Rating4 ,TotalRatings
-                            FROM dbo.ReviewScores rs
-                            WHERE rs.PositionID=@0 AND rs.ProviderID=@1";
-            var SQLUPDATESCORES = @"UPDATE dbo.ReviewScores
-                                SET Rating1 = @0, Rating2 = @1, Rating3 = @2, Rating4 = @3, TotalRatings = @4, UpdatedDate = @5, ModifiedBy = @6
-                                WHERE ProviderID = @7 AND PositionID = @8";
-            var SQLINSERTSCORES = @"INSERT INTO dbo.ReviewScores
-                                    (Rating1,Rating2,Rating3,Rating4,TotalRatings,ProviderID,PositionID,CreatedDate,UpdatedDate,ModifiedBy)
-                                   VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9)";
-            var SQLINSERTREVIEW = @"INSERT INTO dbo.UserReviews 
-                                (UserID,ProviderID,PositionID,PaymentID,PublicReview,PrivateReview,Rating1,Rating2,Rating3,Rating4,Answer1,Answer2,CreatedDate,UpdatedDate,ModifiedBy) 
-                                VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)";
+            var sqlGetBooking = @"
+                SELECT  CustomerUserID, ProviderUserID,
+                        PositionID
+                FROM    Booking
+                WHERE   BookingID = @0                        
+            ";
+            var sqlCheckReview = @"
+                SELECT  ReviewID
+                FROM    UserReviews
+                WHERE   BookingID = @0
+                         AND
+                        PositionID = @1
+            ";
+            var sqlGetScores = @"
+                SELECT  Rating1, Rating2, Rating3, Rating4, Answer1, Answer2, TotalRatings
+                FROM    UserReviewScores
+                WHERE   UserID = @0
+                         AND
+                        PositionID = @1
+            ";
+            var sqlInsertScores = @"
+                INSERT INTO UserReviewScores (
+                    UserID, PositionID,
+                    TotalRatings,
+                    Rating1, Rating2, Rating3, Rating4,
+                    Answer1, Answer2,
+                    CreatedDate, UpdatedDate, ModifiedBy
+                ) VALUES (
+                    @0, @1
+                    @2, 
+                    @3, @4, @5, @6
+                    @7, @8,
+                    getdate(), getdate(), 'sys'
+                )
+            ";
+            var sqlUpdateScores = @"
+                UPDATE UserReviewScores SET
+                    TotalRatings = @2,
+                    Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
+                    Answer1 = @7, Answer2 = @8,
+                    UpdatedDate = getdate(),
+                    ModifiedBy = 'sys'
+                WHERE   UserID = @0
+                         AND
+                        PositionID = @1
+            ";
+            var sqlInsertReview = @"
+                INSERT INTO UserReviews (
+                    BookingID, CustomerUserID, ProviderUserID, PositionID,
+                    Rating1, Rating2, Rating3, Rating4,
+                    Answer1, Answer2,
+                    Answer1Comment, Answer2Comment,
+                    PrivateReview, PublicReview,
+                    CreatedDate, ModifiedDate, ModifiedBy
+                ) VALUES (
+                    @0, @1, @2, @3,
+                    @4, @5, @6, @7,
+                    @8, @9,
+                    @10, @11,
+                    @12, @13,
+                    getdate, getdate, 'sys'
+                )
+            ";
 
             using (var db = Database.Open("sqlloco")) {
-                var reviewID = db.Query(SQLCHECK, paymentID);
-                //New review
-                if(reviewID.Count()!=0){  
-                        ModelState.AddError("Duplicated Review", "The review for this service already exist");
-                };
-                if(ModelState.IsValid){
-                    //Look for existing scores
-                    var scores = db.Query(SQLSELECT,positionID,providerID);
-                    if (scores.Count() == 0)
-                    {
-                        //First scores for the positionID
-                        db.Execute(SQLINSERTSCORES, rating1 + "", rating2 + "", rating3 + "", rating4 + "", 1 + "", providerID, positionID, System.DateTime.Now, System.DateTime.Now, "UserID: " + UserID);  
+                var booking = db.QuerySingle(sqlGetBooking, bookingID);
+                // Check booking is valid and current user is the customer (only he can rate provider at this bookingid)
+                if (booking == null || booking.CustomerUserID == thisUserID) {
+                    ModelState.AddFormError("Not valid booking to review");
+                } else {
+                    var reviewID = db.QueryValue(sqlCheckReview, bookingID, booking.PositionID);
+                    if(reviewID.Count() > 0){
+                        ModelState.AddFormError("The review for this service already exist");
+                    } else {
+                        //Look for existing scores
+                        var scores = db.QuerySingle(sqlGetScores, booking.ProviderID, booking.PositionID);
+                        if (scores == null) {
+                            //First scores for the provider and positionID
+                            db.Execute(sqlInsertScores, 
+                                booking.ProviderID, booking.PositionID,
+                                1,
+                                rating1, rating2, rating3, null,
+                                (answer1 ? 1 : 0), (answer2 ? 1 : 0));  
+                        } else {
+                            // Recalculate and Save the updated scores
+                            var tr = scores.TotalRating;
+                            var ntr = tr + 1;
+                            db.Execute(sqlUpdateScores,
+                                booking.ProviderID, booking.PositionID,
+                                ntr,
+                                (scores.Rating1 ?? 0 * tr + rating1) / ntr,
+                                (scores.Rating2 ?? 0 * tr + rating2) / ntr,
+                                (scores.Rating3 ?? 0 * tr + rating3) / ntr,
+                                // No usamos el rating4, mantenemos el valor que hubiese -que será null-
+                                scores.Rating4);
+                        };
+                        //Store Review
+                        db.Execute(sqlInsertReview, 
+                            bookingID, thisUserID, booking.ProviderID, booking.PositionID,
+                            rating1, rating2, rating3, null,
+                            answer1, answer2, answer1Comment, null,
+                            privatereview, publicreview);
                     }
-                    else {
-                        foreach(var value in scores){
-                            //Update Scores
-                            var score1 = value.Rating1;
-                            var score2 = value.Rating2;
-                            var score3 = value.Rating3;
-                            var score4 = value.Rating4;
-                            var totalRatings = Convert.ToDecimal(value.TotalRatings);
-                            //TODO change if senteces for a key/value selection
-                            var newscore1 = ((score1 * totalRatings) + (Convert.ToDecimal(rating1))) / (totalRatings + 1);
-                            var newscore2 = ((score2 * totalRatings) + (Convert.ToDecimal(rating2))) / (totalRatings + 1);
-                            var newscore3 = ((score3 * totalRatings) + (Convert.ToDecimal(rating3))) / (totalRatings + 1);
-                            var newscore4 = ((score4 * totalRatings) + (Convert.ToDecimal(rating4))) / (totalRatings + 1);
-
-                            //Save the updated scores
-                            db.Execute(SQLUPDATESCORES, newscore1, newscore2, newscore3, newscore4, (totalRatings + 1), System.DateTime.Now, "UserID: " + UserID, providerID, positionID);
-                        }
-                    };
-                    //Store Review
-                    db.Execute(SQLINSERTREVIEW, thisUserID, providerID, positionID, paymentID, publicreview, privatereview, Convert.ToInt32(rating1), Convert.ToInt32(rating2), Convert.ToInt32(rating3), Convert.ToInt32(rating4), answer1, answer2, System.DateTime.Now, System.DateTime.Now, "UserID: "+UserID);
                 }
             }
             if(ModelState.IsValid){
