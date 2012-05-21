@@ -1,0 +1,23 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Recommendation";
+    
+    var customerID = Request["CustomerUserID"].AsInt();
+    var customer = DashboardFunctions.GetUserRow(customerID);
+    var providerID = Request["ProviderUserID"].AsInt();
+    var provider = DashboardFunctions.GetUserRow(providerID);
+    var position = DashboardFunctions.GetUserPos(providerID, Request["PositionID"].AsInt());
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Recommendation";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
+}
+<div>
+    Your friend @customer.FirstName @customer.LastName recommends you book @CommonHelpers.GetUserDisplayName(provider)
+    as a @position.PositionSingular at <a href="@UrlUtil.SiteUrl">Loconomics.com</a>
+    <a href="@PageData["viewOnSiteUrl"]">View @provider.FirstName full profile</a>
+</div>

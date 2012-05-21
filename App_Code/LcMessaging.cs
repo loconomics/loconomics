@@ -413,8 +413,11 @@ public class LcMessaging
     #endregion
 
     #region Template System
-    private static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
+    public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
+        if (!data.ContainsKey("RequestKey"))
+            data["RequestKey"] = SecurityRequestKey;
+
         using (WebClient w = new WebClient())
         {
             foreach (var d in data)

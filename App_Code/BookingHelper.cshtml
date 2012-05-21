@@ -1,5 +1,24 @@
 ﻿@using WebMatrix.Data;
 @functions{
+    /// <summary>
+    /// Get a dynamic record with the most basic info from 
+    /// a Booking: CustomerUserID, ProviderUserID, PositionID,
+    /// BookingID, BookingStatusID, BookingRequestID
+    /// </summary>
+    /// <param name="BookingID"></param>
+    /// <returns></returns>
+    public static dynamic GetBookingBasicInfo(int BookingID){
+        var sqlGetBooking = @"
+            SELECT  CustomerUserID, ProviderUserID,
+                    PositionID, BookingID, BookingStatusID,
+                    BookingRequestID
+            FROM    Booking
+            WHERE   BookingID = @0
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(sqlGetBooking, BookingID);
+        }
+    }
     public static string GetBookingRequestDetails(int BookingRequestID){
         var getBookingRequestPricingEstimate = @"
             SELECT  PricingEstimateID

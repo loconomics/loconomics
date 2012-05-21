@@ -1,0 +1,63 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    CommonHelpers.SecurePage();
+    
+    var u = DashboardFunctions.GetUserRow();
+    int bID = Request["BookingID"].AsInt();
+    
+    dynamic booking = PageData["booking"] = BookingHelper.GetBookingBasicInfo(bID);
+
+}
+@if (booking.BookingStatusID != 4) {
+    <div class="booking main-side">
+        This booking cannot be reviewed yet.
+    </div>
+} else if (booking == null)
+{
+    <div class="booking main-side">
+        Sorry, it could not be found the requested Booking.
+    </div>
+}
+else
+{
+    // Checking item: user type of the other user, not current user
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+
+<div class="booking-request booking main-side">
+    <h3>Tell use how it went with @itsUserData.FirstName</h3>
+    <span class="updateddate">This will only a few minutes and be a big help to @itsUserData.FirstName and the community</span>
+
+    <h4>Booking Summary</h4>
+    <div class="booking-summary">
+        <ul>
+            <li class="time">
+                <h5>Time:</h5> 
+            
+            </li>
+            <li class="position">
+                <h5>Position:</h5>
+            </li>
+            <li class="long-details">
+                <h5>Details:</h5> @BookingHelper.GetBookingRequestDetails(booking.BookingRequestID)
+            </li>
+        </ul>
+        <div class="actions">
+            <button class="item-action" data-booking-id="@bID">View</button>
+            <div class="money item-extra-info"></div>
+        </div>
+    </div>
+    @RenderPage(UrlUtil.LangPath + "Reviews/$ProviderRatingForm.cshtml")
+</div>
+}
