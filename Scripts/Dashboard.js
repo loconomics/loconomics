@@ -90,6 +90,15 @@ $(document).ready(function () {
                 }
             }
         });
+    })
+    .delegate('.review-booking-action', 'click', function () {
+        var $t = $(this);
+        openBookingInTab(
+            0,
+            $t.data('booking-id'),
+            $t.closest('.booking').find('.user-public-name:eq(0)').text(),
+            true
+        );
     });
 
 
@@ -123,7 +132,7 @@ $(document).ready(function () {
 
 });
 
-function openBookingInTab(bookingRequestID, bookingID, tabTitle) {
+function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
     var bid = bookingID;
     var brid = bookingRequestID;
     var data = { BookingRequestID: brid };
@@ -134,6 +143,11 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle) {
         url = "Booking/$BookingDetails/";
         data.BookingID = bid;
         tabId += '_bookingID' + bid;
+
+        if (openReview === true) {
+            url = "Booking/$BookingReview/";
+            tabId += "_Review";
+        }
     }
 
     var tab = TabbedUX.createTab('#main', tabId, tabTitle);
@@ -164,9 +178,10 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle) {
                 // Unblock
                 $tab.unblock();
 
-                // Updating the tab title, because when is loaded by URL, the title is the ID,
-                // here is setted something more usable:
-                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
+                if (!openReview)
+                    // Updating the tab title, because when is loaded by URL, the title is the ID,
+                    // here is setted something more usable:
+                    TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
             }
         });
     } else

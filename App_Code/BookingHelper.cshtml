@@ -9,10 +9,13 @@
     /// <returns></returns>
     public static dynamic GetBookingBasicInfo(int BookingID){
         var sqlGetBooking = @"
-            SELECT  CustomerUserID, ProviderUserID,
-                    PositionID, BookingID, BookingStatusID,
-                    BookingRequestID
-            FROM    Booking
+            SELECT  R.CustomerUserID, R.ProviderUserID,
+                    R.PositionID, B.BookingID, B.BookingStatusID,
+                    R.BookingRequestID
+            FROM    Booking As B
+                     INNER JOIN
+                    BookingRequest As R
+                      ON R.BookingRequestID = B.BookingRequestID
             WHERE   BookingID = @0
         ";
         using (var db = Database.Open("sqlloco")) {

@@ -187,6 +187,13 @@ else
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
+    @if (booking.BookingStatusID == 4)
+    {
+    <div class="actions">
+        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID">Review</button>
+    </div>
+    }
+
     <h4>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"AddCssClasses", "message-section" },
