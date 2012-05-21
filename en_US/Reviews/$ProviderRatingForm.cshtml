@@ -46,7 +46,7 @@
 
             if(ModelState.IsValid){
                 var sqlCheckReview = @"
-                    SELECT  ReviewID
+                    SELECT  count(*)
                     FROM    UserReviews
                     WHERE   BookingID = @0
                              AND
@@ -67,9 +67,9 @@
                         Answer1, Answer2,
                         CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
-                        @0, @1
+                        @0, @1,
                         @2, 
-                        @3, @4, @5, @6
+                        @3, @4, @5, @6,
                         @7, @8,
                         getdate(), getdate(), 'sys'
                     )
@@ -92,47 +92,49 @@
                         Answer1, Answer2,
                         Answer1Comment, Answer2Comment,
                         PrivateReview, PublicReview,
-                        CreatedDate, ModifiedDate, ModifiedBy
+                        CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
                         @0, @1, @2, @3,
                         @4, @5, @6, @7,
                         @8, @9,
                         @10, @11,
                         @12, @13,
-                        getdate, getdate, 'sys'
+                        getdate(), getdate(), 'sys'
                     )
                 ";
 
                 using (var db = Database.Open("sqlloco")) {
-                    var reviewID = db.QueryValue(sqlCheckReview, bookingID, booking.PositionID);
-                    if(reviewID.Count() > 0){
+                    var hasreview = db.QueryValue(sqlCheckReview, bookingID, booking.PositionID);
+                    if(hasreview > 0){
                         ModelState.AddFormError("The review for this service already exist");
                     } else {
                         //Look for existing scores
-                        var scores = db.QuerySingle(sqlGetScores, booking.ProviderID, booking.PositionID);
+                        var scores = db.QuerySingle(sqlGetScores, booking.ProviderUserID, booking.PositionID);
                         if (scores == null) {
                             //First scores for the provider and positionID
                             db.Execute(sqlInsertScores, 
-                                booking.ProviderID, booking.PositionID,
+                                booking.ProviderUserID, booking.PositionID,
                                 1,
                                 rating1, rating2, rating3, null,
                                 (answer1 ? 1 : 0), (answer2 ? 1 : 0));  
                         } else {
                             // Recalculate and Save the updated scores
-                            var tr = scores.TotalRating;
+                            var tr = scores.TotalRatings;
                             var ntr = tr + 1;
                             db.Execute(sqlUpdateScores,
-                                booking.ProviderID, booking.PositionID,
+                                booking.ProviderUserID, booking.PositionID,
                                 ntr,
                                 (scores.Rating1 ?? 0 * tr + rating1) / ntr,
                                 (scores.Rating2 ?? 0 * tr + rating2) / ntr,
                                 (scores.Rating3 ?? 0 * tr + rating3) / ntr,
                                 // No usamos el rating4, mantenemos el valor que hubiese -que será null-
-                                scores.Rating4);
+                                scores.Rating4,
+                                (answer1 ? scores.Answer1 + 1 : scores.Answer1),
+                                (answer2 ? scores.Answer2 + 1 : scores.Answer2));
                         };
                         //Store Review
                         db.Execute(sqlInsertReview, 
-                            bookingID, thisUserID, booking.ProviderID, booking.PositionID,
+                            bookingID, thisUserID, booking.ProviderUserID, booking.PositionID,
                             rating1, rating2, rating3, null,
                             answer1, answer2, answer1Comment, null,
                             privatereview, publicreview);
@@ -140,7 +142,7 @@
                 }
                 if(ModelState.IsValid){
                     CommonHelpers.ReturnJsonResult(0, "Thanks for rating", false);
-                    
+
                     // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
                     var emails = Request["share-email-addresses"];
                     string subject = "{0} {1} recommends you book {2} as a {3}";
@@ -150,7 +152,7 @@
                             if (MyValidator.IsEmailAdress(ad)) {
                                 WebMail.Send(ad, String.Format(subject, customer.FirstName, customer.LastName,
                                     provider.FirstName, position.PositionSingular),
-                                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation",
+                                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation/",
                                     new Dictionary<string,object>{ 
                                         { "CustomerUserID", thisUserID },
                                         { "ProviderUserID", provider.UserID },
@@ -164,8 +166,8 @@
         }
     }
 }
-@CommonHelpers.SetupStarRatingPlugin()
 <form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/">
+    @CommonHelpers.SetupStarRatingPlugin()
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary()
     @if (booking != null && provider != null) {
@@ -175,28 +177,28 @@
             <ul>
                 <li class="question1">
                     <span>Did @provider.FirstName perform all the services you requested?</span>
-                    <label>Yes<input type="radio" name="question1" value="true" /></label>
-                    <label>No<input type="radio" name="question1" value="false" /></label>
+                    <label>Yes<input type="radio" @CommonHelpers.IsChecked("true", Request["question1"]) name="question1" value="true" /></label>
+                    <label>No<input type="radio" @CommonHelpers.IsChecked("false", Request["question1"]) name="question1" value="false" /></label>
                 </li>
                 <li class="question1-comment">
-                    <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")></textarea>
+                    <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")>@Request["question1-comment"]</textarea>
                 </li>
                 <li class="rating1">
                     <span>Rate the quality of work @provider.FirstName performed:</span>
                     <div class="rate-user">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", "0", "false" })
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                     </div>
                 </li>
                 <li class="rating1">
                     <span>Rate the efficience in which @provider.FirstName performed the work:</span>
                     <div class="rate-user">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", "0", "false" })
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                     </div>
                 </li>
                 <li class="publicreview">
                     <label for="public-review">Write a brief review for other Loconomics members to view 
                     (please be respectful and constructive)</label>
-                    <textarea rows="4" id="public-review" name="public-review" placeholder="(250 or fewer characters)"></textarea>
+                    <textarea rows="4" id="public-review" name="public-review" placeholder="(250 or fewer characters)">@Request["public-review"]</textarea>
                 </li>
 
             </ul>
@@ -207,13 +209,13 @@
                 <li class="rating3">
                     <span>Rate @(provider.FirstName)'s professionalism</span>
                     <div class="rate-user">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", "0", "false" })
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
                     </div>
                 </li>
                 <li class="private-review">
                     <label for="private-review">Please give @provider.FirstName any constructive criticism to help
                         him do a better job (only @provider.FirstName will see this):</label>
-                    <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)"></textarea>
+                    <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)">@Request["private-review"]</textarea>
                 </li>
             </ul>
         </fieldset>
@@ -222,8 +224,8 @@
             <ul>
                 <li class="question2">
                     <span>Would you hire @provider.FirstName as a @position.PositionSingular again?</span>
-                    <label>Yes<input type="radio" name="question2" value="true" /></label>
-                    <label>No<input type="radio" name="question2" value="false" /></label>
+                    <label>Yes<input type="radio" name="question2" @CommonHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
+                    <label>No<input type="radio" name="question2" @CommonHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
                 </li>
                 <li class="share-social">
                     Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
@@ -233,7 +235,7 @@
                 </li>
                 <li class="share-email">
                     <label for="share-email-addresses">Enter e-mail addresses, separated by commas:</label>
-                    <textarea rows="4" id="share-email-addresses" name="share-email-addresses"></textarea>
+                    <textarea rows="4" id="share-email-addresses" name="share-email-addresses">@Request["share-email-addresses"]</textarea>
                 </li>
             </ul>
         </fieldset>
