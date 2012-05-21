@@ -22,6 +22,54 @@
             return db.QuerySingle(sqlGetBooking, BookingID);
         }
     }
+    public static dynamic GetBooking(int BookingID) {
+        var sqlGetBooking = @"
+            SELECT  R.BookingRequestID,
+                    B.BookingID,
+                    R.ProviderUserID,
+                    R.CustomerUserID,
+                    R.PositionID,
+                    R.PricingEstimateID,
+                    R.BookingRequestStatusID,
+                    B.BookingStatusID,
+
+                    UC.FirstName As CustomerFirstName,
+                    UC.LastName As CustomerLastName,
+
+                    UP.FirstName As ProviderFirstName,
+                    UP.LastName As ProviderLastName,
+
+                    E.StartTime,
+                    E.EndTime,
+                    E.TimeZone,
+                    Pos.PositionSingular,
+                    Pr.TotalPrice
+            FROM    Booking As B
+                     INNER JOIN
+                    BookingRequest As R
+                      ON B.BookingRequestID = R.BookingRequestID
+                     INNER JOIN
+                    PricingEstimate As Pr
+                      ON Pr.PricingEstimateID = R.PricingEstimateID
+                     INNER JOIN
+                    Users As UC
+                      ON UC.UserID = R.CustomerUserID
+                     INNER JOIN
+                    Users As UP
+                      ON UP.UserID = R.ProviderUserID
+                     LEFT JOIN
+                    CalendarEvents As E
+                      ON E.Id = B.ConfirmedDateID
+                     INNER JOIN
+                    Positions As Pos
+                      ON Pos.PositionID = R.PositionID
+					    AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+            WHERE   B.BookingID = @0
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(sqlGetBooking, BookingID, 1, 1);
+        }
+    }
     public static string GetBookingRequestDetails(int BookingRequestID){
         var getBookingRequestPricingEstimate = @"
             SELECT  PricingEstimateID

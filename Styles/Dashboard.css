@@ -792,18 +792,15 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     white-space: normal;
     height: 40px;
 }
-.item-summary h5 {
+.item-summary > li > h5 {
     color: #8B2143;
     display: inline;
     font-size: 1em;
-    line-height: normal;
+    line-height: 1em;
     margin: 0;
 }
 
-/*==================
- * Bookings
- */
-/* Class booking-request
+/* 
  * The auxiliar class main-side means that
  * the element share parent with an 'aside' element
  * or similar (a secondary article, a widget, etc.)
@@ -811,10 +808,14 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
  * the vertical, reducing the normal element width to
  * fit both in the parent
  */
-.booking-request.main-side {
+.tab-body > .main-side {
     float: left;
     width: 500px;
 }
+
+/*==================
+ * Bookings
+ */
 .booking-request {
     position: relative;
 }
@@ -905,6 +906,43 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .booking-request .actions,
 .booking .actions {
     float: right;
+}
+
+/** Booking review **/
+.booking-review .booking-summary {
+    border: 1px solid #8B2143;
+    background: none repeat scroll 0 0 white;
+    border: 2px solid #8B2143;
+    padding: 10px;
+}
+.booking-review legend {
+    color: #8B2143;
+}
+.dashboard .booking-review form li label {
+    width: auto;
+}
+.booking-review .booking-summary > .item-summary {
+    width: 400px;
+    display: inline-block;
+}
+.booking-review .booking-summary > .actions {
+    text-align: center !important;
+    width: 70px;
+    display: inline-block !important;
+    vertical-align: top;
+    float: none;
+}
+.booking-review form li textarea {
+    width: 460px;
+}
+.booking-review .rate-user {
+    float: right;
+}
+
+/* Rate user: star-rating editable */
+.rate-user {
+    display: inline-block;
+    overflow: hidden;
 }
 
 /* Class message-section for box sections inside a 'like message'

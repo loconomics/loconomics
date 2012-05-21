@@ -186,10 +186,9 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
                 // Unblock
                 $tab.unblock();
 
-                if (!openReview)
-                    // Updating the tab title, because when is loaded by URL, the title is the ID,
-                    // here is setted something more usable:
-                    TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
+                // Updating the tab title, because when is loaded by URL, the title is the ID,
+                // here is setted something more usable:
+                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
             }
         });
     } else

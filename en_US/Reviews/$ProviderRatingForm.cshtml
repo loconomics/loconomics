@@ -4,8 +4,10 @@
     CommonHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
     var customer = DashboardFunctions.GetUserRow();
-
-    var bookingID = Request["BookingID"] ?? PageData["BookingID"];
+    int bookingID = Request["BookingID"].AsInt();
+    if (bookingID == 0) {
+        bookingID = (int)PageData["BookingID"];
+    }
     
     dynamic booking = PageData["booking"] ?? BookingHelper.GetBookingBasicInfo(bookingID);
     dynamic provider = null, position = null;
@@ -163,8 +165,8 @@
     }
 }
 @CommonHelpers.SetupStarRatingPlugin()
-@CommonHelpers.GetValidationScripts()
 <form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/">
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary()
     @if (booking != null && provider != null) {
         <input type="hidden" name="BookingID" value="@bookingID" />
@@ -177,11 +179,13 @@
                     <label>No<input type="radio" name="question1" value="false" /></label>
                 </li>
                 <li class="question1-comment">
-                    <textarea name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")></textarea>
+                    <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")></textarea>
                 </li>
                 <li class="rating1">
                     <span>Rate the quality of work @provider.FirstName performed:</span>
-                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", "0", "false" })
+                    <div class="rate-user">
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", "0", "false" })
+                    </div>
                 </li>
                 <li class="rating1">
                     <span>Rate the efficience in which @provider.FirstName performed the work:</span>
@@ -192,7 +196,7 @@
                 <li class="publicreview">
                     <label for="public-review">Write a brief review for other Loconomics members to view 
                     (please be respectful and constructive)</label>
-                    <textarea id="public-review" name="public-review" placeholder="(250 or fewer characters)"></textarea>
+                    <textarea rows="4" id="public-review" name="public-review" placeholder="(250 or fewer characters)"></textarea>
                 </li>
 
             </ul>
@@ -209,7 +213,7 @@
                 <li class="private-review">
                     <label for="private-review">Please give @provider.FirstName any constructive criticism to help
                         him do a better job (only @provider.FirstName will see this):</label>
-                    <textarea id="private-review" name="private-review" placeholder="(1000 or fewer characters)"></textarea>
+                    <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)"></textarea>
                 </li>
             </ul>
         </fieldset>
@@ -229,12 +233,12 @@
                 </li>
                 <li class="share-email">
                     <label for="share-email-addresses">Enter e-mail addresses, separated by commas:</label>
-                    <textarea id="share-email-addresses" name="share-email-addresses"></textarea>
+                    <textarea rows="4" id="share-email-addresses" name="share-email-addresses"></textarea>
                 </li>
             </ul>
         </fieldset>
         <fieldset class="actions">
-            <button class="button main-action" type="submit">Submig feedback</button>
+            <button class="button main-action" type="submit">Submit feedback</button>
         </fieldset>
     }
 </form>
