@@ -141,8 +141,10 @@
                     }
                 }
                 if(ModelState.IsValid){
-                    CommonHelpers.ReturnJsonResult(0, "Thanks for rating", false);
-
+                    //CommonHelpers.ReturnJsonResult(0, "Thanks for rating", false);
+                    CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
+                    Response.Flush();
+                    
                     // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
                     var emails = Request["share-email-addresses"];
                     string subject = "{0} {1} recommends you book {2} as a {3}";
@@ -161,6 +163,7 @@
                             }
                         }
                     }
+                    Response.End();
                 }
             }
         }

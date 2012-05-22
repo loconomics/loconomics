@@ -684,15 +684,15 @@ $(document).ready(function () {
                         autoUnblockLoading = false;
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
-                        container.unblock();
+                        box.unblock();
                         popup(data.Result, { width: 410, height: 320 });
                     } else if (data.Code == 3) {
                         // Special Code 3: reload current page content to the given url at data.Result)
                         // Note: to reload same url page content, is better return the html directly from
                         // this ajax server request.
                         //container.unblock(); is blocked and unblocked againg by the reload method:
-                        options.autoUnblockLoading = false;
-                        container.reload(data.Result);
+                        autoUnblockLoading = false;
+                        box.reload(data.Result);
                     } else if (data.Code > 100) {
                         // User Code: trigger custom event to manage results:
                         form.trigger('ajaxSuccessPost', [data, text, jx]);

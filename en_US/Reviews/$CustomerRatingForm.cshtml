@@ -129,7 +129,8 @@
                     }
                 }
                 if(ModelState.IsValid){
-                    CommonHelpers.ReturnJsonResult(0, "Thanks for rating");
+                    //CommonHelpers.ReturnJsonResult(0, "Thanks for rating");
+                    CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID);
                 }
             }
         }

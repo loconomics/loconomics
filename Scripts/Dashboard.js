@@ -164,6 +164,9 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
 
         var $tab = $(tab);
 
+        // Set the data-source-url of the new tab to the to be loaded url to enable jQuery.reload()
+        $tab.data('source-url', UrlUtil.LangPath + url);
+
         // Loading, with retard
         var loadingtimer = setTimeout(function () {
             $tab.block(loadingBlock);
