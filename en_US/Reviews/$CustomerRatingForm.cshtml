@@ -53,12 +53,14 @@
                         TotalRatings,
                         Rating1, Rating2, Rating3, Rating4,
                         Answer1, Answer2,
+                        ServiceHours, LastRatingDate,
                         CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
                         @0, @1,
                         @2, 
                         @3, @4, @5, @6,
                         @7, @8,
+                        @9, @10,
                         getdate(), getdate(), 'sys'
                     )
                 ";
@@ -67,6 +69,7 @@
                         TotalRatings = @2,
                         Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
                         Answer1 = @7, Answer2 = @8,
+                        ServiceHours = @9, LastRatingDate = @10,
                         UpdatedDate = getdate(),
                         ModifiedBy = 'sys'
                     WHERE   UserID = @0
@@ -80,6 +83,7 @@
                         Answer1, Answer2,
                         Answer1Comment, Answer2Comment,
                         PrivateReview, PublicReview,
+                        ServiceHours, HelpfulReviewCount,
                         CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
                         @0, @1, @2, @3,
@@ -87,6 +91,7 @@
                         @8, @9,
                         @10, @11,
                         @12, @13,
+                        @14, @15,
                         getdate(), getdate(), 'sys'
                     )
                 ";
@@ -104,7 +109,8 @@
                                 booking.CustomerUserID, 0,
                                 1,
                                 rating1, null, null, null,
-                                null, (answer2 ? 1 : 0));
+                                null, (answer2 ? 1 : 0),
+                                0, DateTime.Now);
                         } else {
                             // Recalculate and Save the updated scores
                             var tr = scores.TotalRatings;
@@ -118,14 +124,16 @@
                                 scores.Rating3,
                                 scores.Rating4,
                                 scores.Answer1,
-                                (answer2 ? scores.Answer2 + 1 : scores.Answer2));
+                                (answer2 ? scores.Answer2 + 1 : scores.Answer2),
+                                0, DateTime.Now);
                         };
                         //Store Review
                         db.Execute(sqlInsertReview, 
                             bookingID, booking.CustomerUserID, thisUserID, 0,
                             rating1, null, null, null,
                             null, answer2, null, null,
-                            privatereview, publicreview);
+                            privatereview, publicreview,
+                            0, 0);
                     }
                 }
                 if(ModelState.IsValid){

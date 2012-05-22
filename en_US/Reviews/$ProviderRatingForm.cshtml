@@ -9,7 +9,7 @@
         bookingID = (int)PageData["BookingID"];
     }
     
-    dynamic booking = PageData["booking"] ?? BookingHelper.GetBookingBasicInfo(bookingID);
+    dynamic booking = PageData["booking"] ?? BookingHelper.GetBooking(bookingID);
     dynamic provider = null, position = null;
 
     // Check booking is valid and current user is the customer (only he can rate provider at this bookingid)
@@ -65,12 +65,14 @@
                         TotalRatings,
                         Rating1, Rating2, Rating3, Rating4,
                         Answer1, Answer2,
+                        ServiceHours, LastRatingDate,
                         CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
                         @0, @1,
                         @2, 
                         @3, @4, @5, @6,
                         @7, @8,
+                        @9, @10,
                         getdate(), getdate(), 'sys'
                     )
                 ";
@@ -79,6 +81,7 @@
                         TotalRatings = @2,
                         Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
                         Answer1 = @7, Answer2 = @8,
+                        ServiceHours = @9, LastRatingDate = @10,
                         UpdatedDate = getdate(),
                         ModifiedBy = 'sys'
                     WHERE   UserID = @0
@@ -92,6 +95,7 @@
                         Answer1, Answer2,
                         Answer1Comment, Answer2Comment,
                         PrivateReview, PublicReview,
+                        ServiceHours, HelpfulReviewCount,
                         CreatedDate, UpdatedDate, ModifiedBy
                     ) VALUES (
                         @0, @1, @2, @3,
@@ -99,6 +103,7 @@
                         @8, @9,
                         @10, @11,
                         @12, @13,
+                        @14, @15,
                         getdate(), getdate(), 'sys'
                     )
                 ";
@@ -116,7 +121,8 @@
                                 booking.ProviderUserID, booking.PositionID,
                                 1,
                                 rating1, rating2, rating3, null,
-                                (answer1 ? 1 : 0), (answer2 ? 1 : 0));  
+                                (answer1 ? 1 : 0), (answer2 ? 1 : 0),
+                                booking.ServiceDuration, DateTime.Now);  
                         } else {
                             // Recalculate and Save the updated scores
                             var tr = scores.TotalRatings;
@@ -130,14 +136,17 @@
                                 // No usamos el rating4, mantenemos el valor que hubiese -que será null-
                                 scores.Rating4,
                                 (answer1 ? scores.Answer1 + 1 : scores.Answer1),
-                                (answer2 ? scores.Answer2 + 1 : scores.Answer2));
+                                (answer2 ? scores.Answer2 + 1 : scores.Answer2),
+                                scores.ServiceHours + booking.ServiceDuration,
+                                DateTime.Now);
                         };
                         //Store Review
                         db.Execute(sqlInsertReview, 
                             bookingID, thisUserID, booking.ProviderUserID, booking.PositionID,
                             rating1, rating2, rating3, null,
                             answer1, answer2, answer1Comment, null,
-                            privatereview, publicreview);
+                            privatereview, publicreview,
+                            booking.ServiceDuration, 0);
                     }
                 }
                 if(ModelState.IsValid){

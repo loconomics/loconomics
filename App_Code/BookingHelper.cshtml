@@ -44,6 +44,7 @@
                     E.TimeZone,
                     Pos.PositionSingular,
                     Pr.TotalPrice,
+                    Pr.ServiceDuration,
                     
                     CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
                      WHERE URP.BookingID = B.BookingID
