@@ -1,82 +1,82 @@
-@*
- This page paints a list of reviews for a given provider,user and position IDs.
-
- INPUT:
-    provider ID
-    position ID
-
- REFERENCES:
-    This page is rendered by the Provider Profile page.
-
- Use Ex:
- 
- @RenderPage("ReviewsGrid.cshtml", ProviderUserID, PositionID)
-*@
+@using WebMatrix.Data;
 @{
-    var providerID = PageData[0];
-    var positionID = PageData[1];
-
-    String[] rating1data = { "name", "rating_value", "true" };
-    String[] rating2data = { "name", "rating_value", "true" };
-    String[] rating3data = { "name", "rating_value", "true" };
-    String[] rating4data = { "name", "rating_value", "true" };
+    var reviewedID = PageData[0] ?? PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
+    var positionID = PageData[1] ?? PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var withHelpfulReview = PageData[2] ?? PageData["WithHelpfulReview"] ?? Request["WithHelpfulReview"].AsBool();
+    if (reviewedID == null) {
+        throw new Exception("Not valid ReviewedID");
+    }
+    if (positionID == null) {
+        positionID = 0;
+    }
     
-    var db = Database.Open("sqlloco");
-    var query = @"
-        SELECT  r.CustomerUserID, u.FirstName, u.LastName, u.Photo, r.PositionID, r.ProviderUserID,
-                r.Rating1, r.Rating2, r.Rating3, r.Rating4, r.PublicReview, r.BookingID,
-                r.UpdatedDate As LastRatingDate,
-                321 As Hours
-                FROM dbo.UserReviews r
-                JOIN dbo.users u ON (u.UserID = r.CustomerUserID)
-                WHERE r.ProviderUserID = @0 AND r.PositionID = @1";
-    var reviews = db.Query(query, providerID, positionID);
-}
-<h3>Reviews</h3>
-@CommonHelpers.SetupStarRatingPlugin()
-@foreach (var review in reviews)
-{
-    /*
-    rating1data.SetValue("rating1-" + review.PaymentID,0);//Rating Name
-    rating1data.SetValue(Convert.ToString(review.Rating1),1);//Rating value
-    rating1data.SetValue("true",2);//Rating: enable or disable
-
-    rating2data.SetValue("rating2-" + review.PaymentID, 0);//Rating Name
-    rating2data.SetValue(Convert.ToString(review.Rating2), 1);//Rating value
-    rating2data.SetValue("true", 2);//Rating: enable or disable
-
-    rating3data.SetValue("rating3-" + review.PaymentID, 0);//Rating Name
-    rating3data.SetValue(Convert.ToString(review.Rating3), 1);//Rating value
-    rating3data.SetValue("true", 2);//Rating: enable or disable
+    dynamic reviews = null;
+    string reviewerUserType = null, reviewedUserType = null;
     
-    rating4data.SetValue("rating4." + review.PaymentID, 0);//Rating Name
-    rating4data.SetValue(Convert.ToString(review.Rating4), 1);//Rating value
-    rating4data.SetValue("true", 2);//Rating: enable or disable */
-
-    <ul class="reviews">
-	    <li>
-		    <div class="author">
-			    <img alt="user photo" class="mini-avatar" src="@(UrlUtil.AppPath + review.Photo.Replace("\\", "/"))" />
-			    <a href="@(UrlUtil.LangPath)Profile/?UserId=@(review.CustomerUserID)">@review.FirstName @review.LastName</a>
-		    </div>
-    	    <div class="wrap">
-                <p>@review.PublicReview</p>
-		    </div>
-            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewRecord = review })
-            @*<ul class="review-ratings" style="clear:both">
-                <li>
-                <label>Proffessionalism</label>
-                @RenderPage("_StarRating.cshtml", rating1data)
-                </li>
-                <li>
-                <label>Quality of work</label>
-                @RenderPage("_StarRating.cshtml", rating2data)
-                </li>
-                <li>
-                <label>Efficiency</label>
-                @RenderPage("_StarRating.cshtml", rating3data)
-                </li>
-            </ul>*@
-	    </li>
-    </ul>
+    using (var db = Database.Open("sqlloco")) {
+        if (positionID == 0) {
+            // Reviewed is customer
+            reviewedUserType = "customer";
+            reviewerUserType = "provider";
+            
+            // TODO: reviews for customer
+        } else {
+            // Reviewed is provider
+            reviewedUserType = "provider";
+            reviewerUserType = "customer";
+            
+            var sqlReviews = @"
+                SELECT
+                    R.BookingID, R.PositionID,
+                    R.CustomerUserID As ReviewerUserID,
+                    R.ProviderUserID As ReviewedUserID,
+                    UC.FirstName As ReviewerFirstName,
+                    UC.LastName As ReviewerLastName,
+            
+                    R.Rating1, R.Rating2, R.Rating3, R.Rating4,
+                    R.PublicReview,
+                    R.UpdatedDate As LastRatingDate,
+                    R.ServiceHours, R.HelpfulReviewCount
+                FROM
+                    UserReviews As R
+                     INNER JOIN
+                    Users As UC
+                      ON UC.UserID = R.CustomerUserID
+                WHERE
+                    R.ProviderUserID = @0
+                     AND
+                    R.PositionID = @1                                                                                                                                                          
+            ";
+            reviews = db.Query(sqlReviews, reviewedID, positionID);
+        }
+    }
 }
+<div class="reviews-list">
+    @CommonHelpers.SetupStarRatingPlugin()
+    @foreach (var review in reviews)
+    {
+        <ul>
+	        <li>
+                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 
+                    AddCssClasses = "author",
+                    Data = review,
+                    DataPrefix = "Reviewer",
+                    Size = "mini",
+                    UserType = reviewerUserType,
+                    ExtraInfo = ""
+                })
+    	        <div class="public-review wrap">
+                    @CommonHelpers.PrintTextAsHtml(review.PublicReview)
+		        </div>
+                @if (withHelpfulReview == true) {
+                <div class="helpful-review">@(review.HelpfulReviewCount ?? 0) people found this review helpful <a class="helpful-review-action" href="#">rate as helpful</a></div>
+                }
+                @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
+                    ReviewRecord = review,
+                    ReviewerID = review.ReviewerUserID,
+                    PositionID = positionID
+                })
+	        </li>
+        </ul>
+    }
+</div>

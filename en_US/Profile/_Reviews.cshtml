@@ -13,8 +13,9 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
+@RenderPage(UrlUtil.LangPath + "Reviews/_ReviewsGrid.cshtml", provider.UserID, p.PositionID, true)
+
 <ul>
-   @for(var r=0; r < 3; r++){
     <li class="review">
         <img alt="Reviewer photo" class="reviewer-photo" width="50" height="50" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>
         <h6 class="reviewer-name">Joshua D.</h6>
@@ -40,5 +41,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
             <span class="note">*based on 4 hours hired 27 Jul 2011</span>
         </div>
     </li>
-   }
 </ul>

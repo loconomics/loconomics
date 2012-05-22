@@ -1,46 +1,58 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     //PageData["UserRatingSummaryWidget"];
     dynamic reviewRecord = PageData["ReviewRecord"];
     bool withNote = PageData["RatingWithNote"] ?? true;
-    int reviewedID = 0, positionID = 0, reviewerID = 0;
-    if (reviewRecord == null) {
-        reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
-        positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
-        reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
+    int reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
+    int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    int reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
     
+    if (reviewRecord == null) {
         var getPositionRatings = @"
                 SELECT	
-                        @0 As ProviderUserID, @1 As PositionID, @2 As CustomerUserID,
+                        @0 As ReviewedUserID, @1 As PositionID, @2 As ReviewerUserID,
                         avg(Rating1) As Rating1,
 		                avg(Rating2) As Rating2,
 		                avg(Rating3) As Rating3,
-                        123 As Hours,
+                        sum(ServiceHours) As ServiceHours,
                         max(UpdatedDate) As LastRatingDate
                 FROM	UserReviews
                 WHERE	ProviderUserID = @0
 		                 AND
 		                PositionID = @1
                          AND
-                        (@2 = 0 OR CustomerUserID = @2)
+                        CustomerUserID = @2
+        ";
+        var getRatingScores = @"
+            SELECT  UserID As ReviewedUserID, PositionID, 0 As ReviewerUserID,
+                    Rating1, Rating2, Rating3, Rating4, ServiceHours, LastRatingDate
+            FROM    UserReviewScores
+            WHERE   UserID = @0
+                     AND
+                    PositionID = @1
         ";
         using (var db = Database.Open("sqlloco")) {
-            reviewRecord = db.QuerySingle(getPositionRatings, reviewedID, positionID, reviewerID);
+            if (reviewerID > 0) {
+                reviewRecord = db.QuerySingle(getPositionRatings, reviewedID, positionID, reviewerID);
+            } else {
+                reviewRecord = db.QuerySingle(getRatingScores, reviewedID, positionID);
+            }
         }
     }
     
     var note = "";
     if (reviewerID > 0) {
-        note = "*based on " + reviewRecord.Hours + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
+        note = "*based on " + reviewRecord.ServiceHours + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
     } else {
-        note = "*based on " + reviewRecord.Hours + " hours of work";
+        note = "*based on " + reviewRecord.ServiceHours + " hours of work";
     }
 }
-@helper printStartRating(dynamic posrow, string index, string rate){
+@helper printProviderStartRating(dynamic posrow, string index, string rate){
     var id = "UserRatingSummaryWidget:" + index;
     id += 
     ":" + posrow["PositionID"] +
-    ":" + posrow["ProviderUserID"] +
-    ":" + posrow["CustomerUserID"];
+    ":" + posrow["ReviewedUserID"] +
+    ":" + posrow["ReviewerUserID"];
     var n = "rating" + index;
     switch(index){
         default:
@@ -58,6 +70,30 @@
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
 }
+<div class="user-rating-summary-widget">
+    <ul>
+        @{
+            if (positionID > 0) {
+                for(var s=1; s < 4; s++){
+                    var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
+                    <li>
+                        @printProviderStartRating(reviewRecord, s.ToString(), rate.ToString())
+                    </li>
+                }
+            } else {
+                var id = "UserRatingSummaryWidget:" + reviewedID.ToString();
+                var rate = reviewRecord["Rating1"].ToString();
+                <li>
+                @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" })
+                </li>
+            }
+        }
+    </ul>
+    @if (withNote){
+        <span class="note">@note</span>
+    }
+</div>
+
 @*
 <!-- Temporary static code -->
 <div class="user-rating-summary-widget static">
@@ -74,18 +110,3 @@
     </ul>
     <span class="note">*based on 156 hours</span>
 </div>*@
-<div class="user-rating-summary-widget">
-    <ul>
-        @{
-            for(var s=1; s < 4; s++){
-                var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
-                <li>
-                    @printStartRating(reviewRecord, s.ToString(), rate.ToString())
-                </li>
-            }
-        }
-    </ul>
-    @if (withNote){
-        <span class="note">@note</span>
-    }
-</div>
