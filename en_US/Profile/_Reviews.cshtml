@@ -13,32 +13,5 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
-@RenderPage(UrlUtil.LangPath + "Reviews/_ReviewsGrid.cshtml", provider.UserID, p.PositionID, true)
+@RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", provider.UserID, p.PositionID, true)
 
-<ul>
-    <li class="review">
-        <img alt="Reviewer photo" class="reviewer-photo" width="50" height="50" src="@Href(UrlUtil.AppPath + "img/eg-profile-pic.jpg")"/>
-        <h6 class="reviewer-name">Joshua D.</h6>
-        <p>
-            @provider.FirstName was an amazing cleaner with a great attention-to-detail and a sense of humor.  Right from the beginning, he was asking questions to ensure the job was done right.  I’m very thankful we met and will be hiring him again.  Great job, @provider.FirstName!!
-        </p>
-        <div class="helpful">
-            41 people found this review helpful <a href="#">rate as helpful</a>
-        </div>
-        <div class="star-ratings">
-            <!-- Temporary static code -->
-            <ul>
-                <li class="professionalism">
-                    <span class="rate"></span>Professionalism
-                </li>
-                <li class="quality">
-                    <span class="rate"></span>Quality-of-work
-                </li>
-                <li class="efficiency">
-                    <span class="rate"></span>Efficiency
-                </li>
-            </ul>
-            <span class="note">*based on 4 hours hired 27 Jul 2011</span>
-        </div>
-    </li>
-</ul>
