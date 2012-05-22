@@ -150,7 +150,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
     if (bid && bid > 0) {
         url = "Booking/$BookingDetails/";
         data.BookingID = bid;
-        tabId += '_bookingID' + bid;
+        tabId = 'bookingID' + bid;
 
         if (openReview === true) {
             url = "Booking/$BookingReview/";
