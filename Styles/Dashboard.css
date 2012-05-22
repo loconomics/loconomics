@@ -808,7 +808,8 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
  * the vertical, reducing the normal element width to
  * fit both in the parent
  */
-.tab-body > .main-side {
+.tab-body > .main-side,
+.tab-body > div > .main-side {
     float: left;
     width: 500px;
 }
