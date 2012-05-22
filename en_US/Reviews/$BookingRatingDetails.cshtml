@@ -1,3 +1,162 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    CommonHelpers.SecurePage();
+    var thisUserID = WebSecurity.CurrentUserId;
+    string thisUserType = "";
+    int reviewPositionID = 0;
+    int bookingID = Request["BookingID"].AsInt();
+    if (bookingID == 0) {
+        bookingID = (int)PageData["BookingID"];
+    }
     
+    dynamic booking = PageData["booking"] ?? BookingHelper.GetBookingBasicInfo(bookingID);
+    dynamic customer = null, provider = null, position = null, review = null;
+
+    // Check booking is valid and current user is the customer or provider
+    if (booking == null || (booking.CustomerUserID != thisUserID && booking.ProviderUserID != thisUserID )) {
+        ModelState.AddFormError("Not valid booking review");
+    } else {
+        customer = DashboardFunctions.GetUserRow(booking.CustomerUserID);
+        provider = DashboardFunctions.GetUserRow(booking.ProviderUserID);
+        position = DashboardFunctions.GetUserPos(booking.ProviderUserID, booking.PositionID);
+        if (booking.CustomerUserID == thisUserID) {
+            thisUserType = "customer";
+            reviewPositionID = booking.PositionID;
+        } else {
+            thisUserType = "provider";
+            reviewPositionID = 0;
+        }
+        
+        var sqlGetBookingReview = @"
+            SELECT  PrivateReview, PublicReview, Rating1, Rating2, Rating3, Rating4,
+                    Answer1, Answer2, Answer1Comment, Answer2Comment
+            FROM    UserReviews
+            WHERE   BookingID = @0
+                        AND
+                    PositionID = @1
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            review = db.QuerySingle(sqlGetBookingReview, bookingID, reviewPositionID);
+        }
+    }
 }
+@helper printAsHtml(string text){
+    @Html.Raw(text.Replace("\n", "<br/>"))
+}
+<div class="booking-review">
+    @if (!ModelState.IsValid) {
+        @Html.ValidationSummary()
+    } else {
+        @CommonHelpers.SetupStarRatingPlugin()
+        if (thisUserType == "customer") {
+            @* Customer view: provider review by customer *@
+            <section class="section-1">
+                <h4>Section 1: Review the work done</h4>
+                <ul>
+                    <li class="question1">
+                        <span>Did @provider.FirstName perform all the services you requested?</span>
+                        <span class="answer">@(review.Answer1 ? "Yes" : "No")</span>
+                    </li>
+                    @if (review.Answer1 == false) {
+                    <li class="question1-comment">
+                        <span>What work was not performed?</span>
+                        <div class="answer answer-text message-section">
+                            @printAsHtml(review.Answer1Comment)
+                        </div>
+                    </li>
+                    }
+                    <li class="rating1">
+                        <span>Quality of work @provider.FirstName performed:</span>
+                        <div class="rate-user">
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true" })
+                        </div>
+                    </li>
+                    <li class="rating2">
+                        <span>Efficience in which @provider.FirstName performed the work:</span>
+                        <div class="rate-user">
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", review.Rating2.ToString(), "true" })
+                        </div>
+                    </li>
+                    <li class="publicreview">
+                        <span>Public review:</span>
+                        <div class="answer answer-text message-section">
+                            @printAsHtml(review.PublicReview)
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="section-2">
+                <h4>Section 2: Help @provider.FirstName grow professionally</h4>
+                <ul>
+                    <li class="rating3">
+                        <span>@(provider.FirstName)'s professionalism</span>
+                        <div class="rate-user">
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", review.Rating3.ToString(), "true" })
+                        </div>
+                    </li>
+                    <li class="private-review">
+                        <span>Private review:</span>
+                        <div class="answer answer-text message-section">
+                            @printAsHtml(review.PrivateReview)
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="section-3">
+                <h4>Section 3: Recommend @provider.FirstName</h4>
+                <ul>
+                    <li class="question2">
+                        <span>Would you hire @provider.FirstName as a @position.PositionSingular again?</span>
+                        <span class="answer">@(review.Answer2 ? "Yes" : "No")</span>
+                    </li>
+                    <li class="share-social">
+                        Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
+                        credit when they make a purchase:
+                        <div class="social-connections">
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        } else if (thisUserType == "provider") {
+            @* Provider view: customer review by provider *@
+            <section class="section-1">
+                <h4>Section 1: @customer.FirstName rated as customer</h4>
+                <ul>
+                    <li class="rating1">
+                        <span>@customer.FirstName rated as customer:</span>
+                        <div class="rate-user">
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true" })
+                        </div>
+                    </li>
+                    <li class="publicreview">
+                        <span>Public review:</span>
+                        <div class="answer answer-text message-section">
+                            @printAsHtml(review.PublicReview)
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="section-2">
+                <h4>Section 2: Help @customer.FirstName</h4>
+                <ul>
+                    <li class="private-review">
+                        <span>Private review:</span>
+                        <div class="answer answer-text message-section">
+                            @printAsHtml(review.PrivateReview)
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="section-3">
+                <h4>Section 3: Recommend @customer.FirstName</h4>
+                <ul>
+                    <li class="question2">
+                        <span>Would you work with @customer.FirstName again?</span>
+                        <span class="answer">@(review.Answer2 ? "Yes" : "No")</span>
+                    </li>
+                </ul>
+            </section>
+        }
+    }
+</div>
