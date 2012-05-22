@@ -9,7 +9,7 @@
         reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
     
         var getPositionRatings = @"
-                SELECT	0 As ReviewID,
+                SELECT	
                         @0 As ProviderUserID, @1 As PositionID, @2 As CustomerUserID,
                         avg(Rating1) As Rating1,
 		                avg(Rating2) As Rating2,
@@ -38,7 +38,6 @@
 @helper printStartRating(dynamic posrow, string index, string rate){
     var id = "UserRatingSummaryWidget:" + index;
     id += 
-    ":" + posrow["BookingID"] +
     ":" + posrow["PositionID"] +
     ":" + posrow["ProviderUserID"] +
     ":" + posrow["CustomerUserID"];
@@ -47,13 +46,13 @@
         default:
             <label>@n</label>
             break;
-        case "1":
+        case "3":
             <label>Proffesionalism</label>
             break;
-        case "2":
+        case "1":
             <label>Quality-of-work</label>
             break;
-        case "3":
+        case "2":
             <label>Efficiency</label>
             break;
     }
