@@ -56,11 +56,11 @@
 <div class="featured-review have-view-more">
     <div class="review-micro-summary">
         <h5>Review from <span class="user-public-name reviewer-name">@CommonHelpers.GetUserDisplayName(review, "Reviewer")</span>
-            (<span class="reviewer-date">@review.LastRatingDate</span>):
+            (<span class="reviewer-date">@review.LastRatingDate.ToShortDateString()</span>):
         </h5>
     </div>
     <img class="reviewwer-avatar avatar mini-avatar" alt="@(review.ReviewerFirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@review.ReviewerUserID" width="55" height="55" />
-    <p>@CommonHelpers.PrintTextAsHtml(review.PublicReview)</p>
+    <div class="public-review">@CommonHelpers.PrintTextAsHtml(review.PublicReview)</div>
     <a href="#" class="view-more">More reviews</a>
 </div>
 }
