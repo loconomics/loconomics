@@ -938,6 +938,9 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .booking-review .rate-user {
     float: right;
 }
+.booking-review > form > fieldset {
+    display: block;
+}
 
 /* Rate user: star-rating editable */
 .rate-user {

@@ -70,7 +70,19 @@ else
             <div class="total-price item-extra-info">$@booking.TotalPrice</div>
         </div>
     </div>
-    @RenderPage(UrlUtil.LangPath + "Reviews/$ProviderRatingForm.cshtml")
+    @if (myUserType == "customer") {
+        if (booking.ReviewedByCustomer) {
+            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml")
+        } else {
+            @RenderPage(UrlUtil.LangPath + "Reviews/$ProviderRatingForm.cshtml")
+        }
+    } else if (myUserType == "provider") {
+        if (booking.ReviewedByProvider) {
+            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml")
+        } else {
+            @RenderPage(UrlUtil.LangPath + "Reviews/$CustomerRatingForm.cshtml")
+        }
+    }
 </div>
 }
 @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")

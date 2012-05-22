@@ -3,46 +3,34 @@
 @{
     CommonHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
-    var customer = DashboardFunctions.GetUserRow();
+    var provider = DashboardFunctions.GetUserRow();
     int bookingID = Request["BookingID"].AsInt();
     if (bookingID == 0) {
         bookingID = (int)PageData["BookingID"];
     }
     
     dynamic booking = PageData["booking"] ?? BookingHelper.GetBookingBasicInfo(bookingID);
-    dynamic provider = null, position = null;
+    dynamic customer = null;
 
-    // Check booking is valid and current user is the customer (only he can rate provider at this bookingid)
-    if (booking == null || booking.CustomerUserID != thisUserID) {
+    // Check booking is valid and current user is the provider (only he can rate customer at this bookingid)
+    if (booking == null || booking.ProviderUserID != thisUserID) {
         ModelState.AddFormError("Not valid booking to review");
     } else {
-        provider = DashboardFunctions.GetUserRow(booking.ProviderUserID);
-        position = DashboardFunctions.GetUserPos(booking.ProviderUserID, booking.PositionID);
+        customer = DashboardFunctions.GetUserRow(booking.CustomerUserID);
     }
 
     if (ModelState.IsValid) {
-        Validation.RequireField("question1", "Please response to section 1 question");
         Validation.RequireField("question2", "Please response to section 3 question");
-        Validation.RequireField("rating1", "Please rate its quality of work");
-        Validation.RequireField("rating2", "Please rate its efficiency");
-        Validation.RequireField("rating3", "Please rate its professionalism");
+        Validation.RequireField("rating1", "Please rate customer");
         Validation.RequireField("public-review", "Please write a public review");
         Validation.RequireField("private-review", "Please write a private review");
 
         if(IsPost && Validation.IsValid()){
 
-            var answer1 = Request["question1"].AsBool();
             var answer2 = Request["question2"].AsBool();
-            var answer1Comment = Request["question1-comment"];
             var rating1 = Request["rating1"].AsInt();
-            var rating2 = Request["rating2"].AsInt();
-            var rating3 = Request["rating3"].AsInt();
             var publicreview = Request["public-review"];
             var privatereview = Request["private-review"];
-        
-            if (answer1 == false && answer1Comment.IsEmpty()) {
-                ModelState.AddError("question1-comment", "Please, tell us what was not performed");
-            }
 
             if(ModelState.IsValid){
                 var sqlCheckReview = @"
@@ -104,95 +92,62 @@
                 ";
 
                 using (var db = Database.Open("sqlloco")) {
-                    var hasreview = db.QueryValue(sqlCheckReview, bookingID, booking.PositionID);
+                    var hasreview = db.QueryValue(sqlCheckReview, bookingID, 0);
                     if(hasreview > 0){
                         ModelState.AddFormError("The review for this service already exist");
                     } else {
                         //Look for existing scores
-                        var scores = db.QuerySingle(sqlGetScores, booking.ProviderUserID, booking.PositionID);
+                        var scores = db.QuerySingle(sqlGetScores, booking.CustomerUserID, 0);
                         if (scores == null) {
-                            //First scores for the provider and positionID
+                            //First scores for the customer (positionID=0)
                             db.Execute(sqlInsertScores, 
-                                booking.ProviderUserID, booking.PositionID,
+                                booking.CustomerUserID, 0,
                                 1,
-                                rating1, rating2, rating3, null,
-                                (answer1 ? 1 : 0), (answer2 ? 1 : 0));  
+                                rating1, null, null, null,
+                                null, (answer2 ? 1 : 0));
                         } else {
                             // Recalculate and Save the updated scores
                             var tr = scores.TotalRatings;
                             var ntr = tr + 1;
                             db.Execute(sqlUpdateScores,
-                                booking.ProviderUserID, booking.PositionID,
+                                booking.CustomerUserID, 0,
                                 ntr,
                                 ((scores.Rating1 ?? 0) * tr + rating1) / ntr,
-                                ((scores.Rating2 ?? 0) * tr + rating2) / ntr,
-                                ((scores.Rating3 ?? 0) * tr + rating3) / ntr,
-                                // No usamos el rating4, mantenemos el valor que hubiese -que será null-
+                                // No usamos rating2-4, mantenemos el valor que hubiese -que será null-
+                                scores.Rating2,
+                                scores.Rating3,
                                 scores.Rating4,
-                                (answer1 ? scores.Answer1 + 1 : scores.Answer1),
+                                scores.Answer1,
                                 (answer2 ? scores.Answer2 + 1 : scores.Answer2));
                         };
                         //Store Review
                         db.Execute(sqlInsertReview, 
-                            bookingID, thisUserID, booking.ProviderUserID, booking.PositionID,
-                            rating1, rating2, rating3, null,
-                            answer1, answer2, answer1Comment, null,
+                            bookingID, booking.CustomerUserID, thisUserID, 0,
+                            rating1, null, null, null,
+                            null, answer2, null, null,
                             privatereview, publicreview);
                     }
                 }
                 if(ModelState.IsValid){
-                    CommonHelpers.ReturnJsonResult(0, "Thanks for rating", false);
-
-                    // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
-                    var emails = Request["share-email-addresses"];
-                    string subject = "{0} {1} recommends you book {2} as a {3}";
-                    if (!string.IsNullOrWhiteSpace(emails)) {
-                        var add = emails.Split(',', ';', '\n');
-                        foreach (string ad in add) {
-                            if (MyValidator.IsEmailAdress(ad)) {
-                                WebMail.Send(ad, String.Format(subject, customer.FirstName, customer.LastName,
-                                    provider.FirstName, position.PositionSingular),
-                                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation/",
-                                    new Dictionary<string,object>{ 
-                                        { "CustomerUserID", thisUserID },
-                                        { "ProviderUserID", provider.UserID },
-                                        { "PositionID", position.PositionID }
-                                    }));
-                            }
-                        }
-                    }
+                    CommonHelpers.ReturnJsonResult(0, "Thanks for rating");
                 }
             }
         }
     }
 }
-<form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/">
+<form class="customer-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$CustomerRatingForm/">
     @CommonHelpers.SetupStarRatingPlugin()
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary()
     @if (booking != null && provider != null) {
         <input type="hidden" name="BookingID" value="@bookingID" />
         <fieldset class="section-1">
-            <legend>Section 1: Review the work done</legend>
+            <legend>Section 1: Rate @customer.FirstName as customer</legend>
             <ul>
-                <li class="question1">
-                    <span>Did @provider.FirstName perform all the services you requested?</span>
-                    <label>Yes<input type="radio" @CommonHelpers.IsChecked("true", Request["question1"]) name="question1" value="true" /></label>
-                    <label>No<input type="radio" @CommonHelpers.IsChecked("false", Request["question1"]) name="question1" value="false" /></label>
-                </li>
-                <li class="question1-comment">
-                    <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")>@Request["question1-comment"]</textarea>
-                </li>
                 <li class="rating1">
-                    <span>Rate the quality of work @provider.FirstName performed:</span>
+                    <span>Rate @customer.FirstName as customer:</span>
                     <div class="rate-user">
                         @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
-                    </div>
-                </li>
-                <li class="rating2">
-                    <span>Rate the efficience in which @provider.FirstName performed the work:</span>
-                    <div class="rate-user">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                     </div>
                 </li>
                 <li class="publicreview">
@@ -203,38 +158,22 @@
             </ul>
         </fieldset>
         <fieldset class="section-2">
-            <legend>Section 2: Help @provider.FirstName grow professionally</legend>
+            <legend>Section 2: Help @customer.FirstName</legend>
             <ul>
-                <li class="rating3">
-                    <span>Rate @(provider.FirstName)'s professionalism</span>
-                    <div class="rate-user">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
-                    </div>
-                </li>
                 <li class="private-review">
-                    <label for="private-review">Please give @provider.FirstName any constructive criticism to help
-                        him do a better job (only @provider.FirstName will see this):</label>
+                    <label for="private-review">Please give @customer.FirstName any constructive criticism to help
+                        him (only @customer.FirstName will see this):</label>
                     <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)">@Request["private-review"]</textarea>
                 </li>
             </ul>
         </fieldset>
         <fieldset class="section-3">
-            <legend>Section 3: Recommend @provider.FirstName</legend>
+            <legend>Section 3: Recommend @customer.FirstName</legend>
             <ul>
                 <li class="question2">
-                    <span>Would you hire @provider.FirstName as a @position.PositionSingular again?</span>
+                    <span>Would you work with @customer.FirstName again?</span>
                     <label>Yes<input type="radio" name="question2" @CommonHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
                     <label>No<input type="radio" name="question2" @CommonHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
-                </li>
-                <li class="share-social">
-                    Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
-                    credit when they make a purchase:
-                    <div class="social-connections">
-                    </div>
-                </li>
-                <li class="share-email">
-                    <label for="share-email-addresses">Enter e-mail addresses, separated by commas:</label>
-                    <textarea rows="4" id="share-email-addresses" name="share-email-addresses">@Request["share-email-addresses"]</textarea>
                 </li>
             </ul>
         </fieldset>
