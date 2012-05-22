@@ -41,10 +41,11 @@
     }
     
     var note = "";
+    var hours = reviewRecord.ServiceHours ?? 0;
     if (reviewerID > 0) {
-        note = "*based on " + reviewRecord.ServiceHours + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
+        note = "*based on " + hours.ToString("#,###.00") + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
     } else {
-        note = "*based on " + reviewRecord.ServiceHours + " hours of work";
+        note = "*based on " + hours.ToString("#,###.00") + " hours of work";
     }
 }
 @helper printProviderStartRating(dynamic posrow, string index, string rate){
