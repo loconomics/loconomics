@@ -13,7 +13,7 @@
     dynamic provider = null, position = null;
 
     // Check booking is valid and current user is the customer (only he can rate provider at this bookingid)
-    if (booking == null || booking.CustomerUserID == thisUserID) {
+    if (booking == null || booking.CustomerUserID != thisUserID) {
         ModelState.AddFormError("Not valid booking to review");
     } else {
         provider = DashboardFunctions.GetUserRow(booking.ProviderUserID);

@@ -37,7 +37,22 @@
 
                 E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
-                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
+                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice,
+
+                CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
+                    WHERE URP.BookingID = B.BookingID
+                        AND
+                        URP.ProviderUserID = R.ProviderUserID
+                        AND 
+                        URP.PositionID = 0
+                ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByProvider,
+                CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URC
+                    WHERE URC.BookingID = B.BookingID
+                        AND
+                        URC.CustomerUserID = R.CustomerUserID
+                        AND 
+                        URC.PositionID = R.PositionID
+                ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByCustomer
         FROM    BookingRequest As R
                  INNER JOIN
                 Booking As B
@@ -189,8 +204,14 @@ else
 
     @if (booking.BookingStatusID == 4)
     {
+        var reviewLabel = "Review";
     <div class="actions">
-        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID">Review</button>
+        @if (myUserType == "customer" && booking.ReviewedByCustomer == true ||
+             myUserType == "provider" && booking.ReviewedByProvider == true)
+        {
+            reviewLabel = "View revision";
+        }
+        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID">@reviewLabel</button>
     </div>
     }
 
