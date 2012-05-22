@@ -23,9 +23,16 @@
                          AND
                         CustomerUserID = @2
         ";
+        // SQL NOTE: really, to get results the aggregated operations are not needed in the sql
+        // but are needed to get default values when there are a record for the user and avoid
+        // exceptions because the null record:
         var getRatingScores = @"
-            SELECT  UserID As ReviewedUserID, PositionID, 0 As ReviewerUserID,
-                    Rating1, Rating2, Rating3, Rating4, ServiceHours, LastRatingDate
+            SELECT  @0 As ReviewedUserID, @1 As PositionID, 0 As ReviewerUserID,
+                    avg(Rating1) As Rating1,
+		            avg(Rating2) As Rating2,
+		            avg(Rating3) As Rating3,
+                    sum(ServiceHours) As ServiceHours,
+                    max(UpdatedDate) As LastRatingDate
             FROM    UserReviewScores
             WHERE   UserID = @0
                      AND
@@ -42,7 +49,7 @@
     
     var note = "";
     var hours = reviewRecord.ServiceHours ?? 0;
-    if (reviewerID > 0) {
+    if (reviewerID > 0 && reviewRecord.LastRatingDate != null) {
         note = "*based on " + hours.ToString("#,###.00") + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
     } else {
         note = "*based on " + hours.ToString("#,###.00") + " hours of work";
