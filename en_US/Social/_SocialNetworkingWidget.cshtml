@@ -7,9 +7,10 @@
         if (!socialScriptsLoaded) var socialScriptsLoaded = false;
         if (!socialScriptsLoaded) {
             socialScriptsLoaded = true;
-            Modernizr.load('https://connect.facebook.net/en_US/all.js#xfbml=1');
-            Modernizr.load('https://platform.linkedin.com/in.js');
-            Modernizr.load('https://platform.twitter.com/widgets.js');
+            Modernizr.load(['https://connect.facebook.net/en_US/all.js#xfbml=1',
+                'https://apis.google.com/js/plusone.js',
+                'https://platform.linkedin.com/in.js',
+                'https://platform.twitter.com/widgets.js']);
         } else {
             if (typeof (FB) != 'undefined' && FB.init) {
                 FB._initialized = false;
@@ -19,22 +20,17 @@
                 IN.parse();
             if (typeof(twttr) != 'undefined')
                 twttr.widgets.load();
-        }
-        var gbuttons = $(".g-plusone");
-        if (gbuttons.length > 0) {
             if (typeof (gapi) != 'undefined') {
-                gbuttons.each(function () {
+                $(".g-plusone").each(function () {
                     gapi.plusone.render($(this).get(0));
                 });
-            } else {
-                $.getScript('https://apis.google.com/js/plusone.js');
             }
         }
     </script>
     <ul class="social-networking">
         <li class="facebook">
             @*<fb:like href="@(url)" send="true" layout="button_count" width="100" show_faces="true" font=""></fb:like>*@
-            <div class="fb-like" data-send="true" data-width="230" data-show-faces="true"></div>
+            <div class="fb-like" data-href="@url" data-send="true" data-layout="button_count" data-width="50" data-show-faces="true"></div>
         </li><!-- facebook -->
         <li class="linkedin">
             <script type="IN/Share" data-url="@(url)" data-counter="right"></script>
@@ -44,7 +40,7 @@
                 { lang: 'en' }
             </script>
             <g:plusone size="medium" href="@(url)"></g:plusone>*@
-            <div class="g-plusone" data-annotation="inline" data-href="@url" data-size="medium" data-width="120"></div>
+            <div class="g-plusone" data-annotation="inline" data-href="@url" data-size="medium" data-width="80"></div>
         </li><!-- google -->
         <li class="twitter">
             @*
