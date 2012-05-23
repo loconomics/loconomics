@@ -246,8 +246,9 @@
                 <li class="share-social">
                     Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
                     credit when they make a purchase:
-                    <div class="social-connections">
-                    </div>
+                    @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml", 
+                        UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
+                        "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider))
                 </li>
                 <li class="share-email">
                     <label for="share-email-addresses">Enter e-mail addresses, separated by commas:</label>
