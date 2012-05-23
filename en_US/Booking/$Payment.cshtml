@@ -226,9 +226,10 @@
                 // Return OK result
                 CommonHelpers.ReturnJsonResult(0, null, false);
                 /*
-                    * Create, save and send Message
-                    */
+                * Create, save and send Message
+                */
                 LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                Response.End();
             }
         }
     }

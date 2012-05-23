@@ -74,11 +74,11 @@
                     if (requireEmailConfirmation) {
                         var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
-                        WebMail.Send(
-                            to: email,	
+                        LcMessaging.SendMail(
+                            to: email,
                             subject: "Please confirm your account", 
                             body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
-                        ); 
+                        );
                     }
 
                     if (requireEmailConfirmation) {

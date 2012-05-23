@@ -112,6 +112,8 @@
         Json.Write(jsondata, Response.Output);
         if (endResponse)
             Response.End();
+        else
+            Response.Flush();
     }
     public static void ReturnJsonError(int code, string errorMessage, bool endResponse = true)
     {

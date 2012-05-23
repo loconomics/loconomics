@@ -152,24 +152,29 @@
                 if(ModelState.IsValid){
                     //CommonHelpers.ReturnJsonResult(0, "Thanks for rating", false);
                     CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
-                    Response.Flush();
                     
                     // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
                     var emails = Request["share-email-addresses"];
                     string subject = "{0} {1} recommends you book {2} as a {3}";
                     if (!string.IsNullOrWhiteSpace(emails)) {
                         var add = emails.Split(',', ';', '\n');
+                        string newemails = "";
+                        List<string> emailslist = new List<string>();
                         foreach (string ad in add) {
                             if (MyValidator.IsEmailAdress(ad)) {
-                                WebMail.Send(ad, String.Format(subject, customer.FirstName, customer.LastName,
-                                    provider.FirstName, position.PositionSingular),
-                                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation/",
-                                    new Dictionary<string,object>{ 
-                                        { "CustomerUserID", thisUserID },
-                                        { "ProviderUserID", provider.UserID },
-                                        { "PositionID", position.PositionID }
-                                    }));
+                                emailslist.Add(ad);
                             }
+                        }
+                        newemails = CommonHelpers.JoinNotEmptyStrings(",", emailslist.ToArray<string>());
+                        if (!string.IsNullOrEmpty(newemails)) {
+                            LcMessaging.SendMail(newemails, String.Format(subject, customer.FirstName, customer.LastName,
+                                provider.FirstName, position.PositionSingular),
+                                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation/",
+                                new Dictionary<string,object>{ 
+                                    { "CustomerUserID", thisUserID },
+                                    { "ProviderUserID", provider.UserID },
+                                    { "PositionID", position.PositionID }
+                                }));
                         }
                     }
                     Response.End();

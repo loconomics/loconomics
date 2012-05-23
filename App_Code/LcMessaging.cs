@@ -175,14 +175,14 @@ public class LcMessaging
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
-            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+            SendMail(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+            SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -215,7 +215,7 @@ public class LcMessaging
             // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
             int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID, "Booking", subject);
 
-            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+            SendMail(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
@@ -223,7 +223,7 @@ public class LcMessaging
                 ,{ "UserID", thread.ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+            SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
@@ -256,14 +256,14 @@ public class LcMessaging
             // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
             int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID, "BookingRequest");
 
-            WebMail.Send(provider.Email, "Loconomics.com: Booking Request", 
+            SendMail(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(customer.Email, "Loconomics.com: Booking Request", 
+            SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -290,7 +290,7 @@ public class LcMessaging
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
 
             /* Using static strings for templates:
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+            SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyInquiryTemplate(TplInquiry,
                 new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
@@ -299,14 +299,14 @@ public class LcMessaging
                 { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() }
             })); */
 
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+            SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", 1 } // Customer inquiry (first message)
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
+            SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
@@ -336,7 +336,7 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
             /* Using static strings for templates:
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry",
+            SendMail(provider.Email, "Loconomics.com: Inquiry",
                 ApplyInquiryTemplate(TplInquiryAnswer,
                 new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(provider) },
@@ -345,7 +345,7 @@ public class LcMessaging
                 { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
             }));*/
 
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
+            SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -353,7 +353,7 @@ public class LcMessaging
                 ,{ "Kind", 2 } // Provider inquiry answer (second message and upper evens)
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+            SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -384,7 +384,7 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
 
             /* Using static strings for templates:
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry",
+            SendMail(provider.Email, "Loconomics.com: Inquiry",
                 ApplyInquiryTemplate(TplInquiry,
                 new Dictionary<string, object> {
                 { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
@@ -393,7 +393,7 @@ public class LcMessaging
                 { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
             }));*/
 
-            WebMail.Send(provider.Email, "Loconomics.com: Inquiry", 
+            SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -401,7 +401,7 @@ public class LcMessaging
                 ,{ "Kind", 3 } // Customer inquiry answer (third message and upper odds)
                 ,{ "RequestKey", SecurityRequestKey }
             }));
-            WebMail.Send(customer.Email, "Loconomics.com: Inquiry", 
+            SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
@@ -479,6 +479,14 @@ public class LcMessaging
         <p><strong>Answer: </strong>{2}</p>
         <p class='respond'><a href='{3}'>Reply again at loconomics.com</a></p>
     ";
+    #endregion
+
+    #region Send Mail wrapper function
+    public static void SendMail(string to, string subject, string body)
+    {
+        //WebMail.Send(to, subject, body);
+        ScheduleEmail(TimeSpan.FromSeconds(10), to, subject, body);
+    }
     #endregion
 
     #region Email Scheduling
