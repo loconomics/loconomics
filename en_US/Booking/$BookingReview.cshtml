@@ -3,7 +3,12 @@
 @{
     CommonHelpers.SecurePage();
     
-    var u = DashboardFunctions.GetUserRow();
+    int thisUserID = (int)(PageData["AsUserID"] ?? Request["AsUserID"].AsInt());
+    if (thisUserID == 0) {
+        thisUserID = WebSecurity.CurrentUserId;
+    }
+    
+    var thisUserData = DashboardFunctions.GetUserRow(thisUserID);
     int bID = Request["BookingID"].AsInt();
     
     dynamic booking = PageData["booking"] = BookingHelper.GetBooking(bID);
@@ -20,7 +25,7 @@
         <span class="no-dates">Date not available</span>
     }
 }
-@if (booking.BookingStatusID != 4) {
+@if (DateTime.Now <= booking.EndTime) {
     <div class="booking main-side">
         This booking cannot be reviewed yet.
     </div>
@@ -38,18 +43,23 @@ else
     string itsUserLabel = "Provider";
     string myUserType = "customer";
     //string myUserPrefix = "Customer";
-    if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+    if (thisUserID == booking.ProviderUserID) {
         itsUserType = "customer";
         itsUserLabel = "Customer";
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    
+    var readView = (myUserType == "customer" && booking.ReviewedByCustomer) || (myUserType == "provider" && booking.ReviewedByProvider);
 
 <div class="booking-review booking-request booking main-side">
-    <h3>Tell use how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
-    <span class="updateddate">This will only a few minutes and be a big help to @itsUserData.FirstName and the community</span>
-
+    @if (readView) {
+        <h3>@thisUserData.FirstName revision of <span class="user-public-name">@itsUserData.FirstName</span></h3>
+    } else {
+        <h3>Tell us how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
+        <span class="updateddate">This will only a few minutes and be a big help to @itsUserData.FirstName and the community</span>
+    }
     <h4>Booking Summary</h4>
     <div class="booking-summary">
         <ul class="item-summary">
@@ -72,13 +82,13 @@ else
     </div>
     @if (myUserType == "customer") {
         if (booking.ReviewedByCustomer) {
-            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml")
+            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
         } else {
             @RenderPage(UrlUtil.LangPath + "Reviews/$ProviderRatingForm.cshtml")
         }
     } else if (myUserType == "provider") {
         if (booking.ReviewedByProvider) {
-            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml")
+            @RenderPage(UrlUtil.LangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
         } else {
             @RenderPage(UrlUtil.LangPath + "Reviews/$CustomerRatingForm.cshtml")
         }

@@ -202,16 +202,28 @@ else
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-    @if (booking.BookingStatusID == 4)
+    @if (DateTime.Now > booking.ConfirmedDateEnd)
     {
-        var reviewLabel = "Review";
     <div class="actions">
-        @if (myUserType == "customer" && booking.ReviewedByCustomer == true ||
-             myUserType == "provider" && booking.ReviewedByProvider == true)
-        {
-            reviewLabel = "View revision";
+        @if (myUserType == "customer") {
+            <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
+            </button>
+            if (booking.ReviewedByProvider == true) {
+            <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
+                View provider revision
+            </button>
+            }
+        } else if (myUserType == "provider") {
+            <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
+            </button>
+            if (booking.ReviewedByCustomer == true) {
+            <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
+                View customer revision
+            </button>
+            }
         }
-        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID">@reviewLabel</button>
     </div>
     }
 

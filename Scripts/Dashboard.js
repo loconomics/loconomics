@@ -93,11 +93,16 @@ $(document).ready(function () {
     })
     .delegate('.review-booking-action', 'click', function () {
         var $t = $(this);
+        var extraData = {};
+        var asUserID = $t.data('as-user-id');
+        if (asUserID)
+            extraData = { AsUserID: asUserID };
         openBookingInTab(
             0,
             $t.data('booking-id'),
             $t.closest('.booking').find('.user-public-name:eq(0)').text(),
-            true
+            true,
+            extraData
         );
     })
     .delegate('.booking-review .open-booking-action', 'click', function () {
@@ -140,10 +145,11 @@ $(document).ready(function () {
 
 });
 
-function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
+function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {
     var bid = bookingID;
     var brid = bookingRequestID;
-    var data = { BookingRequestID: brid };
+    var data = extraData || {};
+    data.BookingRequestID = brid;
     var url = "Booking/$BookingRequestDetails/";
     var tabId = 'bookingRequestID' + brid;
 
@@ -155,6 +161,8 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview) {
         if (openReview === true) {
             url = "Booking/$BookingReview/";
             tabId += "_Review";
+            if (data.AsUserID)
+                tabId += "_AsOtherUser";
         }
     }
 

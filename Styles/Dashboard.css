@@ -912,6 +912,11 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .booking form fieldset.actions {
     float: none;
 }
+.booking > div.actions > .main-action {
+    padding: 0 1em;
+    display: block;
+    margin: 0 auto 4px;
+}
 
 /** Booking review **/
 .booking-review .booking-summary {

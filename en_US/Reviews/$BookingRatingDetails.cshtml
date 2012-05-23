@@ -2,7 +2,10 @@
 @using WebMatrix.WebData;
 @{
     CommonHelpers.SecurePage();
-    var thisUserID = WebSecurity.CurrentUserId;
+    int thisUserID = (int)(PageData["AsUserID"] ?? Request["AsUserID"].AsInt());
+    if (thisUserID == 0) {
+        thisUserID = WebSecurity.CurrentUserId;
+    }
     string thisUserType = "";
     int reviewPositionID = 0;
     int bookingID = Request["BookingID"].AsInt();
@@ -20,10 +23,12 @@
         customer = DashboardFunctions.GetUserRow(booking.CustomerUserID);
         provider = DashboardFunctions.GetUserRow(booking.ProviderUserID);
         position = DashboardFunctions.GetUserPos(booking.ProviderUserID, booking.PositionID);
+        // For security, we check both userId's (not only customer, and do a 'else' for provider), leaving
+        // empty thisUserType when user don't match, showing nothing later in html.
         if (booking.CustomerUserID == thisUserID) {
             thisUserType = "customer";
             reviewPositionID = booking.PositionID;
-        } else {
+        } else if (booking.ProviderUserID == thisUserID) {
             thisUserType = "provider";
             reviewPositionID = 0;
         }
