@@ -72,6 +72,8 @@ $(document).ready(function () {
 
                 // Execute first time when showing the step
                 $.proxy(bookingChangeLocation, $('.select-location'))();
+
+                applyDatePicker(tab);
             },
             error: ajaxErrorPopupHandler,
             complete: function () {

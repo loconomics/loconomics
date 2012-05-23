@@ -417,15 +417,7 @@ $(document).ready(function () {
     });
 
     // Date Picker
-    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-    $(".date-pick")
-        .val(new Date().asString($.datepicker._defaults.dateFormat))
-        .datepicker({
-            showOn: "button",
-            buttonImage: "",
-            buttonImageOnly: true,
-            showAnim: "blind"
-        });
+    setupDatePicker();
 
     // Tabbed interface
     TabbedUX.init();
@@ -437,7 +429,7 @@ $(document).ready(function () {
         if (/^!/.test(hashvalue))
             $(document).trigger('loadHashBang', hashvalue.substring(1));
         else
-            // Normal hash value, try focus a tab with that name
+        // Normal hash value, try focus a tab with that name
             TabbedUX.focusTab('#' + hashvalue);
     }
 
@@ -951,4 +943,19 @@ function getHashBangParameters(hashbangvalue) {
             urlParameters[parsvalues[0]] = true;
     }
     return urlParameters;
+}
+function setupDatePicker() {
+    // Date Picker
+    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+    applyDatePicker();
+}
+function applyDatePicker(element) {
+    $(".date-pick", element || document)
+        .val(new Date().asString($.datepicker._defaults.dateFormat))
+        .datepicker({
+            showOn: "button",
+            buttonImage: "",
+            buttonImageOnly: true,
+            showAnim: "blind"
+        });
 }
