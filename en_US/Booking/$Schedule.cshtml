@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
     var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
@@ -14,32 +15,38 @@
         }
     }
     
-    Validation.RequireFields("preferred-date", "preferred-start-time", "preferred-end-time",
-        "alternative-1-date", "alternative-1-start-time", "alternative-1-end-time",
-        "alternative-2-date", "alternative-2-start-time", "alternative-2-end-time");
-    Validation.Add("preferred-date", Validator.DateTime());
-    Validation.Add("alternative-1-date", Validator.DateTime());
-    Validation.Add("alternative-2-date", Validator.DateTime());
-    Validation.Add("select-location", Validator.Integer());
+    Validation.RequireField("preferred-date", "Must specify a preferred date");
+    Validation.RequireField("preferred-start-time", "Must specify a preferred start time");
+    Validation.RequireField("preferred-end-time", "Must specify a preferred end time");
+    Validation.RequireField("alternative-1-date", "Must specify a second date");
+    Validation.RequireField("alternative-1-start-time", "Must specify a second start time");
+    Validation.RequireField("alternative-1-end-time", "Must specify a second end time");
+    Validation.RequireField("alternative-2-date", "Must specify a third date");
+    Validation.RequireField("alternative-2-start-time", "Must specify a third start time");
+    Validation.RequireField("alternative-2-end-time", "Must specify a third end time");
+    Validation.Add("preferred-date", Validator.DateTime("Preferred date format is invalid"));
+    Validation.Add("alternative-1-date", Validator.DateTime("Alternative 1 format is invalid"));
+    Validation.Add("alternative-2-date", Validator.DateTime("Alternative 2 format is invalid"));
+    Validation.Add("select-location", Validator.Integer("Invalid selected location"));
     // TODO: create validators for only dates and only time and add for start-time, end-time and dates
+
+    // Check if is a valid booking process (session not expired or error at first step)
+    var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
+    if (bookingRequestID <= 0) {
+        /* Several options to do here
+            * - Show error (strange message for user, need restart again introducing first his login)
+            * X Silently redirect to start booking again
+            * - Request login via ajax, re-send form data, looking in the database for a 'timeouted'
+            *   bookingrequest for this customer at this provider and position, recover it to continue
+            *   processing the form (if there is no bookingrequestid again, do second option).
+            */
+        //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
+        CommonHelpers.ReturnJsonResult(1, 
+            UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+            "&PositionID=" + pos.PositionID.ToString());
+    }
     
     if (IsPost && Validation.IsValid()){
-        
-        // Check if is a valid booking process (session not expired or error at first step)
-        var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
-        if (bookingRequestID <= 0) {
-            /* Several options to do here
-             * - Show error (strange message for user, need restart again introducing first his login)
-             * X Silently redirect to start booking again
-             * - Request login via ajax, re-send form data, looking in the database for a 'timeouted'
-             *   bookingrequest for this customer at this provider and position, recover it to continue
-             *   processing the form (if there is no bookingrequestid again, do second option).
-             */
-            //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
-            CommonHelpers.ReturnJsonResult(1, 
-                UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
-                "&PositionID=" + pos.PositionID.ToString());
-        }
         
         // Check if a location was selected or new location must be validated:
         int locationID = Request["select-location"].AsInt();
@@ -196,6 +203,7 @@
      * Loading some data:
      */
     dynamic providerLocations, customerLocations;
+    decimal serviceDurationHours = 0;
     using (var db = Database.Open("sqlloco")) {
         // Provider locations
         providerLocations = db.Query(@"
@@ -212,6 +220,14 @@
             WHERE   UserId = @0 AND PositionID = 0
                      AND NickName IS NOT NULL
         ", c.UserID);
+        serviceDurationHours = (decimal)db.QueryValue(@"
+            SELECT  TOP 1 P.ServiceDuration
+            FROM    BookingRequest As R
+                     INNER JOIN
+                    PricingEstimate As P
+                      ON R.PricingEstimateID = P.PricingEstimateID
+            WHERE   R.BookingRequestID = @0
+        ", bookingRequestID);
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -233,6 +249,10 @@
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <script type="text/javascript">
+        if (!serviceDurationHours) var serviceDurationHours = 0;
+        serviceDurationHours = @(serviceDurationHours);
+    </script>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
         @RenderPage(UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID }, { "AvailabilityCalendar.HasWrapper", false} } )
@@ -262,7 +282,7 @@
                 <label>Street address line 1:<input type="text" value="@Request["street-address-line-1"]" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
             </li>
             <li class="street-address-line-2">
-                <label>Street address line 2:<input type="text" value="@Request["street-adderss-line-2"]" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
+                <label>Street address line 2:<input type="text" value="@Request["street-address-line-2"]" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
             </li>
             <li class="city">
                 <label>City:<input type="text" value="@Request["city"]" name="city" @Validation.GetHtml("city")/></label>
