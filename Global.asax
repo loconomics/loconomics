@@ -43,6 +43,13 @@
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
         System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
+        if (HttpContext.Current.Request.IsSecureConnection == false && 
+            HttpContext.Current.Request.IsLocal == false)
+        {
+            Response.Redirect("https://" + Request.ServerVariables["HTTP_HOST"]
+            + HttpContext.Current.Request.RawUrl);
+        }
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
