@@ -57,7 +57,9 @@
 }
 @helper printProviderStartRating(dynamic posrow, string index, string rate){
     var id = "UserRatingSummaryWidget:" + index;
+    var bid = (posrow.Columns.Contains("BookingID") ? posrow["BookingID"] : 0).ToString();
     id += 
+    ":" + bid +
     ":" + posrow["PositionID"] +
     ":" + posrow["ReviewedUserID"] +
     ":" + posrow["ReviewerUserID"];
