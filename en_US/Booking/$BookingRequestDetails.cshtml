@@ -32,7 +32,8 @@
                 E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
                 E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
 
-                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
+                P.ServiceDuration, coalesce(P.HourlyPrice, 0) As HourlyPrice,
+                P.SubtotalPrice, P.FeePrice, P.TotalPrice
         FROM    BookingRequest As R
                  INNER JOIN
                 PricingEstimate As P
