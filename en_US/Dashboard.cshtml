@@ -1,7 +1,6 @@
 ﻿@{
     CommonHelpers.SecurePage();
     
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "Make your life better!";
     
     var u = DashboardFunctions.GetUserRow();
@@ -38,6 +37,8 @@
             throw new HttpException(404, "Page not found");
         }
     }
+    // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Scripts.Add(UrlUtil.AppPath + "Scripts/Dashboard.js");
 }
 @helper menu(string item){

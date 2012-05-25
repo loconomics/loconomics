@@ -43,7 +43,9 @@
                             a.CountryID,
                             PostalCode,
                             a.CreatedDate As MemberSinceDate,
-                            PublicBio
+                            PublicBio,
+                            BirthYear,
+                            GenderID
                             ,UP.Email
                             --,ADD_Details 
                         from users A
@@ -78,6 +80,8 @@
                             ,U.PublicBio
                             ,U.MobilePhone
                             ,P.Email
+                            ,U.BirthYear
+                            ,U.GenderID
 
                             ,Photo
                             ,PreferredLanguageID
