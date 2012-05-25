@@ -135,25 +135,7 @@
                     } else {
                         // REAL Braintree Code
                         //TODO: check for existing user id or credit card
-                        BraintreeGateway gateway;
-                        if (ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()) {
-                            //SandBox API keys for testing
-                            gateway = new BraintreeGateway 
-                            {
-                                Environment = Braintree.Environment.SANDBOX,
-                                MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
-                                PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
-                                PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PrivateKey"]
-                            };
-                        } else {
-                            gateway = new BraintreeGateway
-                            {
-                                Environment = Braintree.Environment.PRODUCTION,
-                                MerchantId = ConfigurationManager.AppSettings["Braintree.Production.MerchantId"],
-                                PublicKey = ConfigurationManager.AppSettings["Braintree.Production.PublicKey"],
-                                PrivateKey = ConfigurationManager.AppSettings["Braintree.Production.PrivateKey"]
-                            };
-                        }
+                        BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
                         TransactionRequest request = new TransactionRequest
                         {
                             Amount = TotalPrice,

@@ -1,114 +1,134 @@
-﻿@{
-  
+﻿@using Braintree;
+@using WebMatrix.Data;
+@{
     var idprefix = "account-taxes";
-    var errormessage = "";
-    var debug = true;
- 
     var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
     
-    Braintree.BraintreeGateway gateway = null;
-    Braintree.CustomerGateway customer = null;
+    BraintreeGateway gateway = null;
+    Customer customer = null;
+    dynamic taxentities = null, tintypes = null;
     
     try{
-        gateway = new Braintree.BraintreeGateway(Braintree.Environment.PRODUCTION,System.Web.Configuration.WebConfigurationManager.AppSettings["BTMerchantID"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPublicKey"],System.Web.Configuration.WebConfigurationManager.AppSettings["BTPrivateKey"]);
-        customer = gateway.Customer.Find(user["UserID"].ToString());
-    } catch (Braintree.Exceptions.NotFoundException ex){
-    } catch (Exception ex){
+        gateway = LcPayment.NewBraintreeGateway();
+    } catch {
+        ModelState.AddFormError("There was an error communicating with our secure data store, please try again later.");
     }
-
-    var mycustomfieldvalue = "customer....";
-        
-    if (IsPost){
-     
-        
-        Braintree.CustomerRequest request;
-        
-        if (debug){
-            request = new Braintree.CustomerRequest{
-                //need to pass in the userid from the cookie
-                Id = "95",
-                CustomFields = new Dictionary<string, string>
-                {
-                    { "loco_tin", "555555555" }, // replace 55555555 with request form value
-                }
-            };
+    
+    if (ModelState.IsValid) {
+        if (!IsPost) {
+            // Try to get the data from this customer, if was previosly saved or user exist at Braintree
+            try {
+                customer = gateway.Customer.Find(user.UserID.ToString());
+                PageData["customer"] = customer;
+            }
+            //} catch (Braintree.Exceptions.NotFoundException ex){ // Customer don't exist exception
+            catch { }
         } else {
-            request = new Braintree.CustomerRequest{
-                //need to pass in the userid from the cookie
-                Id = user["UserID"],
-                CustomFields = new Dictionary<string, string>
-                {
-                    { "loco_tin", Request["tin"] },
+     
+            // Get form data:
+            var tinData = new Dictionary<string, string>();
+            foreach (var k in Request.Form.AllKeys) {
+                // "tin-" general prefix
+                if (k.StartsWith("tin-")) {
+                    tinData.Add(k, Request.Form[k]);
                 }
+            }
+            
+            CustomerRequest request = new CustomerRequest{
+                //need to pass in the userid from the cookie
+                Id = user.UserID.ToString(),
+                CustomFields = tinData
             };
-        }
 
-        var result = gateway.Customer.Create(request);
-        if (result.IsSuccess()){
-            errormessage = "Success";
-        }
-        else{
-            foreach (var row in result.Errors.DeepAll())
-            {
-                errormessage += row.Code + " _  " + row.Message;
+            var result = gateway.Customer.Create(request);
+            if (result.IsSuccess()){
+                CommonHelpers.ReturnJsonResult(0, "Data saved!");
+            } else {
+                foreach (var row in result.Errors.DeepAll())
+                {
+                    if (Context.IsDebuggingEnabled) {
+                        ModelState.AddFormError(row.Code.ToString() + ": " + row.Message);
+                    } else {
+                        ModelState.AddFormError(row.Message);
+                    }
+                }
             }
         }
     }
+    using (var db = Database.Open("sqlloco")) {
+        taxentities = db.Query(@"
+            SELECT  TaxEntityTypeID, TaxEntityTypeName
+            FROM    TaxEntityType
+            WHERE   LanguageID = @0 AND CountryID = @1
+        ", 1, 1);
+        tintypes = db.Query(@"
+            SELECT  TINTypeID, TINTypeAbbr, TINTypeName
+            FROM    TINType
+            WHERE   LanguageID = @0 AND CountryID = @1
+        ", 1, 1);
+    }
 }
-@helper printEntityType(string name){
-    <li><label><input type="radio" name="taxentitytype"/>@name</label></li>
+@functions{
+    string getTaxData(string fieldname) {
+        var c = (Customer)PageData["customer"];
+        if (c != null && c.CustomFields.ContainsKey(fieldname)) {
+            return (string)c.CustomFields[fieldname];
+        } else {
+            return Request[fieldname];
+        }
+    }
+}
+@helper printEntityType(int entityID, string name){
+    <li><label><input type="radio" name="tin-taxentitytype" value="@entityID" @CommonHelpers.IsChecked(getTaxData("tin-taxentitytype"), entityID.ToString())/>@name</label></li>
 }
 @* 
 <p class="setting-instructions">
 </p>
 *@
-<div class="error">@errormessage</div>
-<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountTaxes/">
+<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountTaxes/" class="ajax ajax-box">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>Please complete the IRS Form W-9 below:</legend>
         <ul>
-            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="fullname"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="businessname"/><span class="info">(only if different from above)</span></li>
+            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="tin-fullname" value="@getTaxData("tin-fullname")"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="tin-businessname" value="@getTaxData("tin-businessname")"/><span class="info">(only if different from above)</span></li>
             <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="streetaddress"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city"/></li>
+            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin-streetaddress" value="@getTaxData("tin-streetaddress")"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin-city" value="@getTaxData("tin-city")"/></li>
             <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="state">
-                    @CommonHelpers.CountryOptions()
+                <select id="@idprefix-state" name="tin-state">
+                    @CommonHelpers.StateProvinceOptions(getTaxData("tin-state"))
                 </select>
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode"/></li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin-zipcode" value="@getTaxData("tin-zipcode")"/></li>
             <li class="tax-entity-type">
                 <span>Tax Entity Type:</span>
                 <ul>
-                    @printEntityType("Individual/Sole propietary")
-                    @printEntityType("Partnership")
-                    @printEntityType("Corporation")
-                    @printEntityType("Trust/Estate")
-                    @printEntityType("C Corporation")
-                    @printEntityType("S Corporation")
-                    @printEntityType("Limited liability company")
-                    @printEntityType("Other")
+                    @foreach (var entity in taxentities)
+                    {
+                        @printEntityType(entity.TaxEntityTypeID, entity.TaxEntityTypeName)
+                    }
                 </ul>
             </li>
             <li class="tax-clasification">
                 <label for="@idprefix-tax-clasification">Choose the tax clasification:</label>
-                <select id="@idprefix-tax-clasification" name="tax-classification">
-                    <option value="C">C Corporation</option>
-                    <option value="S">S Corporation</option>
-                    <option value="P">Partnership</option>
+                <select id="@idprefix-tax-clasification" name="tin-tax-classification">
+                    <option value="C" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "C")>C Corporation</option>
+                    <option value="S" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "S")>S Corporation</option>
+                    <option value="P" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "P")>Partnership</option>
                 </select>
             </li>
-            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" name="exempt-payee"/></label></li>
+            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @CommonHelpers.IsChecked(getTaxData("tin-exempt-payee"), "true") name="tin-exempt-payee" value="true"/></label></li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin" value=@customer/>
-        <label><input type="radio" name="tin-type" value="SSN"/>SSN</label>
-        <label><input type="radio" name="tin-type" value="EIN"/>EIN</label>
+        <input type="text" name="tin-number" value="@getTaxData("tin-number")"/>
+        @foreach (var tintype in tintypes)
+        {
+        <label><input type="radio" name="tin-type" @CommonHelpers.IsChecked(getTaxData("tin-type"), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
+        }
     </fieldset>
     <fieldset id="@idprefix-fs-part2">
         <legend>Part 2: Certification</legend>
@@ -129,7 +149,7 @@
         </p>
         </div>
         <fieldset class="signature">
-            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="signature"/><span class="info">(typing in your name acts as your signature)</span>
+            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="tin-signature" value="@getTaxData("tin-signature")"/><span class="info">(typing in your name acts as your signature)</span>
         </fieldset>
         <p class="info">
             The date and time of submission and your computer's IP address will be recorded when you click Submit.
