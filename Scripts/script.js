@@ -280,7 +280,8 @@ var TabbedUX = {
             menuitem.className = "removable";
             var menuanchor = document.createElement('a');
             menuanchor.setAttribute('href', '#' + idName);
-            $(menuanchor).text(label);
+            // label cannot be null or empty
+            $(menuanchor).text(isEmptyString(label) ? "Tab" : label);
             $(menuitem).append(menuanchor);
             // Add to tabs list container
             tabContainer.children('.tabs:eq(0)').append(menuitem);
@@ -317,8 +318,9 @@ var TabbedUX = {
     setTabTitle: function (tabOrSelector, newTitle) {
         var ctx = TabbedUX.getTabContext(tabOrSelector);
         if (!this.checkTabContext(ctx, 'setTabTitle', arguments)) return;
-
-        ctx.menuanchor.text(newTitle);
+        // Set an empty string is not allowed, preserve previously:
+        if (!isEmptyString(newTitle))
+            ctx.menuanchor.text(newTitle);
     }
 };
 
@@ -958,4 +960,12 @@ function applyDatePicker(element) {
             buttonImageOnly: true,
             showAnim: "blind"
         });
+}
+/* Returns true when str is
+   - null
+   - empty string
+   - only white spaces string
+*/
+function isEmptyString(str) {
+    return !(/\S/g.test(str||""));
 }
