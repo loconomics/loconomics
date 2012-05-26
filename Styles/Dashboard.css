@@ -357,7 +357,7 @@ form.positionservices input{
     width: 90px !important;
 }
 .positionservices-languagesspoken ul {
-    height: 235px;
+    max-height: 235px;
     overflow: auto;
 }
 
