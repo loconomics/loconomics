@@ -60,8 +60,7 @@
 }
 @helper printYesNoOption(string fieldName, bool isYes) {
     string label = isYes ? "Yes" : "No";
-    string rvalue = isYes ? "true" : "false";
-    
+    string rvalue = isYes ? "True" : "False";
     <label>@label <input type="radio" @Validation.GetHtml(fieldName) value="@rvalue" name="@fieldName" @CommonHelpers.IsChecked(rvalue, Request[fieldName] ?? (PageData["userPrefs"] != null ? PageData["userPrefs"][fieldName].ToString() : "")) /></label>
 }
 @helper printChoiceOptions(string fieldName, string fieldLabel) {
