@@ -263,6 +263,9 @@
     padding: 0;
     width: 120px;
 }
+.dashboard form.preferences li label {
+    width: auto;
+}
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
 .dashboard form li select,
