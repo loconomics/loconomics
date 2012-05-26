@@ -28,8 +28,8 @@
             // Get form data:
             var tinData = new Dictionary<string, string>();
             foreach (var k in Request.Form.AllKeys) {
-                // "tin-" general prefix
-                if (k.StartsWith("tin-")) {
+                // "tin_" general prefix
+                if (k.StartsWith("tin_")) {
                     tinData.Add(k, Request.Form[k]);
                 }
             }
@@ -79,7 +79,7 @@
     }
 }
 @helper printEntityType(int entityID, string name){
-    <li><label><input type="radio" name="tin-taxentitytype" value="@entityID" @CommonHelpers.IsChecked(getTaxData("tin-taxentitytype"), entityID.ToString())/>@name</label></li>
+    <li><label><input type="radio" name="tin_taxentitytype" value="@entityID" @CommonHelpers.IsChecked(getTaxData("tin_taxentitytype"), entityID.ToString())/>@name</label></li>
 }
 @* 
 <p class="setting-instructions">
@@ -90,17 +90,17 @@
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>Please complete the IRS Form W-9 below:</legend>
         <ul>
-            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="tin-fullname" value="@getTaxData("tin-fullname")"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="tin-businessname" value="@getTaxData("tin-businessname")"/><span class="info">(only if different from above)</span></li>
+            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" type="text" name="tin_fullname" value="@getTaxData("tin_fullname")"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" type="text" name="tin_businessname" value="@getTaxData("tin_businessname")"/><span class="info">(only if different from above)</span></li>
             <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin-streetaddress" value="@getTaxData("tin-streetaddress")"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin-city" value="@getTaxData("tin-city")"/></li>
+            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" value="@getTaxData("tin_streetaddress")"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@getTaxData("tin_city")"/></li>
             <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="tin-state">
-                    @CommonHelpers.StateProvinceOptions(getTaxData("tin-state"))
+                <select id="@idprefix-state" name="tin_state">
+                    @CommonHelpers.StateProvinceOptions(getTaxData("tin_state"))
                 </select>
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin-zipcode" value="@getTaxData("tin-zipcode")"/></li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin_zipcode" value="@getTaxData("tin_zipcode")"/></li>
             <li class="tax-entity-type">
                 <span>Tax Entity Type:</span>
                 <ul>
@@ -112,22 +112,22 @@
             </li>
             <li class="tax-clasification">
                 <label for="@idprefix-tax-clasification">Choose the tax clasification:</label>
-                <select id="@idprefix-tax-clasification" name="tin-tax-classification">
-                    <option value="C" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "C")>C Corporation</option>
-                    <option value="S" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "S")>S Corporation</option>
-                    <option value="P" @CommonHelpers.IsSelected(getTaxData("tin-tax-classification"), "P")>Partnership</option>
+                <select id="@idprefix-tax-clasification" name="tin_tax-classification">
+                    <option value="C" @CommonHelpers.IsSelected(getTaxData("tin_tax-classification"), "C")>C Corporation</option>
+                    <option value="S" @CommonHelpers.IsSelected(getTaxData("tin_tax-classification"), "S")>S Corporation</option>
+                    <option value="P" @CommonHelpers.IsSelected(getTaxData("tin_tax-classification"), "P")>Partnership</option>
                 </select>
             </li>
-            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @CommonHelpers.IsChecked(getTaxData("tin-exempt-payee"), "true") name="tin-exempt-payee" value="true"/></label></li>
+            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @CommonHelpers.IsChecked(getTaxData("tin_exempt-payee"), "true") name="tin_exempt-payee" value="true"/></label></li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin-number" value="@getTaxData("tin-number")"/>
+        <input type="text" name="tin_number" value="@getTaxData("tin_number")"/>
         @foreach (var tintype in tintypes)
         {
-        <label><input type="radio" name="tin-type" @CommonHelpers.IsChecked(getTaxData("tin-type"), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
+        <label><input type="radio" name="tin_type" @CommonHelpers.IsChecked(getTaxData("tin_type"), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
         }
     </fieldset>
     <fieldset id="@idprefix-fs-part2">
@@ -149,7 +149,7 @@
         </p>
         </div>
         <fieldset class="signature">
-            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="tin-signature" value="@getTaxData("tin-signature")"/><span class="info">(typing in your name acts as your signature)</span>
+            <label for="@idprefix-signature">Your Signature:</label><input id="@idprefix-signature" type="text" name="tin_signature" value="@getTaxData("tin_signature")"/><span class="info">(typing in your name acts as your signature)</span>
         </fieldset>
         <p class="info">
             The date and time of submission and your computer's IP address will be recorded when you click Submit.
