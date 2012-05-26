@@ -346,16 +346,19 @@ form.positionservices input{
 }
 .positionservices-languagesspoken ul li label{
     display: inline-block !important;
-    width: 90px;
     min-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
     white-space: nowrap;
+    width: 90px !important;
 }
 .positionservices-languagesspoken ul li select{
-    width: 110px !important;
+    width: 90px !important;
 }
-.positionservices-clientstypes label{
-    display: inline-block !important;
-    width: 90px;
+.positionservices-languagesspoken ul {
+    height: 235px;
+    overflow: auto;
 }
 
 /** Form: Positions - Availability **/

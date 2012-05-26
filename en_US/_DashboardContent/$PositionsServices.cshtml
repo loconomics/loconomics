@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Current position data record:
     var pos = DashboardFunctions.GetUserCurrentPos();
     // Current position number/index
@@ -7,11 +8,13 @@
     var idprefix = "position#" + n + "-services";
     
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
+    var tplCatName = "positionservices-category[{0}]";
     
     var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
     
-    dynamic services, serviceswithfees;
-    int servicesId = 2, serviceswithfeesId = 3;
+    dynamic services, serviceswithfees, attsExperience, attsExperienceLevel, attsClientTypes, attsLanguages;
+    int servicesId = 2, serviceswithfeesId = 3, attsExperienceID = 1, attsExperienceLevelID = 4, attsClientTypesID = 7,
+        attsLanguagesID = 5;
     
     using (var db = Database.Open("sqlloco")){
         // Getting the 'Services routinely included' (cat=2)
@@ -19,13 +22,28 @@
         
         // Getting the 'Services upon request' (cat=3)
         serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, pos.UserID);
+        
+        attsExperience = db.Query(sqlattribute, pos.PositionID, attsExperienceID, pos.UserID);
+        
+        attsExperienceLevel = db.Query(sqlattribute, pos.PositionID, attsExperienceLevelID, pos.UserID);
+        
+        attsClientTypes = db.Query(sqlattribute, pos.PositionID, attsClientTypesID, pos.UserID);
+        
+        attsLanguages = db.Query(sqlattribute, pos.PositionID, attsLanguagesID, pos.UserID);
     }
     
     if (IsPost) {
         // Iterate categories and attributes, save what are checked and remove what not
+        // List of categories to iterate and check every attribute
         var cats = new Dictionary<int, dynamic>();
         cats.Add(servicesId, services);
         cats.Add(serviceswithfeesId, serviceswithfees);
+        cats.Add(attsClientTypesID, attsClientTypes);
+        cats.Add(attsLanguagesID, attsLanguages);
+        // List of categories that can only select one attribute of all possible in that category
+        var catsSelectOne = new Dictionary<int, dynamic>();
+        catsSelectOne.Add(attsExperienceID, attsExperience);
+        catsSelectOne.Add(attsExperienceLevelID, attsExperienceLevel);
         
         var sqlSetAttribute = @"
             BEGIN TRAN
@@ -56,6 +74,7 @@
                 foreach (var att in cat.Value) {
                     // Check if selection changes
                     bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                    // We check previous value with current to avoid do unneeded Database calls
                     if (att.UserChecked != wasChecked) {
                         // Value changed, update database
                         if (wasChecked) {
@@ -63,6 +82,24 @@
                             db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
                         } else {
                             // Delete record
+                            db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                        }
+                    }
+                }
+            }
+            foreach (var cat in catsSelectOne) {
+                // Get value selected by user
+                int selectedAttID = Request[String.Format(tplCatName, cat.Key)].AsInt();
+                // Iterate every attribute in category to unchecked except one was selected
+                foreach (var att in cat.Value) {
+                    // We check previous value with current to avoid do unneded Database calls
+                    // if value was checked previously and is the same as now, no call is needed
+                    // if value was not checked previously and is not what was selected now, no call is needed
+                    if (!att.UserChecked && att.ServiceAttributeID == selectedAttID ||
+                        att.UserChecked && att.ServiceAttributeID != selectedAttID) {
+                        if (att.ServiceAttributeID == selectedAttID) {
+                            db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                        } else {
                             db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
                         }
                     }
@@ -78,12 +115,22 @@
         @Html.Raw("checked='checked'")
     }
 }
-@helper printAttributes(int catId, dynamic atts){
+@helper printAttCheckList(int catId, dynamic atts){
     <ul>
         @foreach(var att in atts){
-            <li><label><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]"/>@att.ServiceAttribute</label></li>
+            <li>@printAttCheck(catId, att)</li>
         }
     </ul>
+}
+@helper printAttCheck(int catId, dynamic att){
+    <label title="@att.ServiceAttribute"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]"/>@att.ServiceAttribute</label>
+}
+@helper printAttSelect(int catId, dynamic atts){
+    <select name="positionservices-category[@(catId)]">
+        @foreach (var att in atts){
+        <option @getChecked(att) value="@att.ServiceAttributeID">@att.ServiceAttribute</option>
+        }
+    </select>
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
@@ -94,33 +141,58 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionservices-attributes">
         <legend>Services regularly included:</legend>
-        @printAttributes(servicesId, services)
+        @printAttCheckList(servicesId, services)
     </fieldset>
     <fieldset class="positionservices-attributes">
         <legend>Services upon request:</legend>
-        @printAttributes(serviceswithfeesId, serviceswithfees)
+        @printAttCheckList(serviceswithfeesId, serviceswithfees)
     </fieldset>
     <div class="positionservices-sidebar">
+        @if (attsExperienceLevel.Count > 0)
+        {
         <fieldset class="positionservices-experiencelevel">
             <legend>Experience Level</legend>
-            <select name="positionservices-experiencelevel">
+                @printAttSelect(attsExperienceLevelID, attsExperienceLevel)
+                @*<select name="positionservices-experiencelevel">
                 <option>Expert</option>
                 <option>Intermediate</option>
                 <option>Novice</option>
-            </select>
+            </select>*@
         </fieldset>
+        }
+        @if (attsExperience.Count > 0)
+        {
         <fieldset class="positionservices-yearsexperience">
             <legend>Years Experience</legend>
+            @printAttSelect(attsExperienceID, attsExperience)
+            @*
             <select name="positionservices-yearsexperience">
                 <option>+10 years</option>
                 <option>5 years</option>
                 <option>1.5 years</option>
                 <option>1 year</option>
                 <option>-1 year</option>
-            </select>
+            </select>*@
         </fieldset>
+        }
+        @if (attsLanguages.Count > 0)
+        {
         <fieldset class="positionservices-languagesspoken">
             <legend>Languages Spoken</legend>
+            <ul>
+                @foreach (var att in attsLanguages)
+                {
+                <li>@printAttCheck(attsLanguagesID, att)
+                    @*TODO: printAttSelect, where are language level atts? *@
+                    <select name="positionservices-category[@(attsLanguagesID)]-attribute[@(att.ServiceAttributeID)]-level">
+                        <option>Fluent</option>
+                        <option>Begginer</option>
+                        <option>N/A</option>
+                    </select>
+                </li>
+                }
+            </ul>
+            @*
             <ul>
                 <li><label><input name="positionservices-languagespoken-english" type="checkbox"/>English</label>
                     <select name="positionservices-languagesspoken-englishlevel">
@@ -150,13 +222,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                         <option>N/A</option>
                     </select>
                 </li>
-            </ul>
+            </ul>*@
         </fieldset>
+        }
+        @if (attsClientTypes.Count > 0)
+        {
         <fieldset class="positionservices-clientstypes">
             <legend>Clients Types</legend>
-            <label><input type="checkbox" name="positionservices-clientstypes-residential"/>Residential</label>
-            <label><input type="checkbox" name="positionservices-clientstypes-business"/>Business</label>
+            @printAttCheckList(attsClientTypesID, attsClientTypes)
+            @*<label><input type="checkbox" name="positionservices-clientstypes-residential"/>Residential</label>
+            <label><input type="checkbox" name="positionservices-clientstypes-business"/>Business</label>*@
         </fieldset>
+        }
     </div>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
