@@ -1,0 +1,113 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    CommonHelpers.SecurePage();
+    var idprefix = "preferences";
+    
+    var userID = WebSecurity.CurrentUserId;
+    PageData["userPrefs"] = null;
+       
+    if (IsPost) {
+        
+        validateBoolFor("SMSBookingCommunication", "Bookings by SMS preference is required");
+        validateBoolFor("PhoneBookingCommunication", "Bookings by Phone preference is required");
+        validateBoolFor("LoconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
+        validateBoolFor("ProfileSEOPermission", "Include my profile in search listings preference is required");
+        validateBoolFor("LoconomicsCommunityCommunication", "Loconomics community messages preference is required");
+        
+        if (ModelState.IsValid) {
+            using (var db = Database.Open("sqlloco")){
+                db.Execute(@"
+                    UPDATE  users
+                    SET     SMSBookingCommunication=@1
+                            ,PhoneBookingCommunication=@2
+                            ,LoconomicsMarketingCampaigns=@3
+                            ,ProfileSEOPermission=@4
+                            ,LoconomicsCommunityCommunication=@5
+                            ,UpdatedDate=getdate()
+                            ,ModifiedBy='sys'
+                    WHERE   UserID = @0
+                ", userID,
+                 Request["SMSBookingCommunication"].AsBool(), Request["PhoneBookingCommunication"].AsBool(),
+                 Request["LoconomicsMarketingCampaigns"].AsBool(), Request["ProfileSEOPermission"].AsBool(),
+                 Request["LoconomicsCommunityCommunication"].AsBool());
+            }
+            CommonHelpers.ReturnJsonResult(0, "Preferences updated!");
+        }
+    } else {
+        using (var db = Database.Open("sqlloco")){
+            PageData["userPrefs"] = db.QuerySingle(@"
+                SELECT  SMSBookingCommunication
+                        ,PhoneBookingCommunication
+                        ,LoconomicsMarketingCampaigns
+                        ,ProfileSEOPermission
+                        ,LoconomicsCommunityCommunication
+                FROM    Users
+                WHERE   UserID=@0
+            ", userID);
+        }
+    }
+}
+@functions{ 
+
+    void validateBoolFor(string fieldName, string errorMessage) {
+        var a = Request[fieldName];
+        bool ba = false;
+        if (!bool.TryParse(a, out ba)) {
+            ModelState.AddError(fieldName, errorMessage ?? "Field is Required");
+        }
+    }
+}
+@helper printYesNoOption(string fieldName, bool isYes) {
+    string label = isYes ? "Yes" : "No";
+    string rvalue = isYes ? "true" : "false";
+    
+    <label>@label <input type="radio" @Validation.GetHtml(fieldName) value="@rvalue" name="@fieldName" @CommonHelpers.IsChecked(rvalue, Request[fieldName] ?? (PageData["userPrefs"] != null ? PageData["userPrefs"][fieldName].ToString() : "")) /></label>
+}
+@helper printChoiceOptions(string fieldName, string fieldLabel) {
+    @printYesNoOption(fieldName, true)
+    @printYesNoOption(fieldName, false)
+    <span class="choice-label">@fieldLabel</span>
+}
+<p class="setting-instructions">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+</p>
+<div>
+<form method="post" action="@(UrlUtil.LangPath)Dashboard/$PreferencesPreferences/" class="ajax ajax-box">
+    @CommonHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <fieldset id="@idprefix-fs-bookingscommunication">
+        <legend>Communication about bookings</legend>
+        <ul>
+            <li>
+                @printChoiceOptions("SMSBookingCommunication", "It’s okay to contact me via SMS/text message about bookings or booking-related questions")
+            </li>
+            <li>
+                @printChoiceOptions("PhoneBookingCommunication", "It’s okay to phone me about bookings or booking-related questions")
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset id="@idprefix-fs-loconomicscommunication">
+        <legend>Communication about Loconomics</legend>
+        <ul>
+            <li>
+                @printChoiceOptions("LoconomicsCommunityCommunication", "It’s okay to e-mail me updates about the Loconomics community")
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset id="@idprefix-fs-marketingcommunication">
+        <legend>Marketing communications</legend>
+        <ul>
+            <li>
+                @printChoiceOptions("ProfileSEOPermission", "It’s okay to include me in search engine listings (e.g. Google, Bing, Yahoo)")
+            </li>
+            <li>
+                @printChoiceOptions("LoconomicsMarketingCampaigns", "It’s okay to include my profile in marketing done by Loconomics")
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="save main-action" type="submit">Save</button>
+    </fieldset>
+</form>
+</div>

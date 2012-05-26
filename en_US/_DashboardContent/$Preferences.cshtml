@@ -6,10 +6,16 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-			<li class="current"><a class="current" href="#preferences-communication">Communication</a></li>
-			<li><a href="#preferences-privacy">Privacy</a></li>
+            <li class="current"><a href="#preferences-preferences">Preferences</a></li>
+			@*<li class="current"><a class="current" href="#preferences-communication">Communication</a></li>
+			<li><a href="#preferences-privacy">Privacy</a></li>*@
         </ul>
 
+        <div id="preferences-preferences" class="tab-body fancy current">
+            @RenderPage("$PreferencesPreferences.cshtml")
+        </div>
+
+        @*
 		<div id="preferences-communication" class="tab-body fancy tabbed buttons current">
             <ul class="tabs">
                 <li class="current"><a class="button profile fanciful" href="#preferences-communication-mobile">Mobile</a></li>
@@ -46,3 +52,4 @@
                 Policy <!-- TODO here must be the back-end content -->
             </div><!-- #preferences-privacy-policy -->
 		</div><!-- #preferences-privacy -->
+        *@
