@@ -676,6 +676,9 @@ $(document).ready(function () {
                         .click(function () { box.unblock(); });
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
+
+                        // Clean previous validation errors
+                        setValidationSummaryAsValid(box);
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         box.unblock();
@@ -968,4 +971,14 @@ function applyDatePicker(element) {
 */
 function isEmptyString(str) {
     return !(/\S/g.test(str||""));
+}
+/* Clean previous validation errors of the validation summary
+    included in 'container' and set as valid the summary
+ */
+function setValidationSummaryAsValid(container) {
+    container = container || document;
+    $('.validation-summary-errors', container)
+    .removeClass('validation-summary-errors')
+    .addClass('validation-summary-valid')
+    .find('>ul>li').remove();
 }
