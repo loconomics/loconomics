@@ -631,21 +631,19 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     width: auto;
 }
 
-/**** Form: Account Verifications ****/
-#account-verification-basicinfo .legal{
+/**** Form: Account Personal ****/
+#account-personal auths > ul > li{
     color: #6c6c6c;
     margin-top: 10px;
 }
-#account-verification-basicinfo .legal label{
-    width: 370px !important;
+#account-personal .auths > ul > li label{
+    width: 295px !important;
     font-size: .9em;
     vertical-align: middle;
 }
-#account-verification-basicinfo .col-2-1{
-    width: 420px !important;
-}
-#account-verification-basicinfo .col-2-2{
-    width: 250px !important;
+form#personal li > label.gender {
+    width: auto;
+    min-width: 0;
 }
 
 /**** Form: Account Taxes ****/

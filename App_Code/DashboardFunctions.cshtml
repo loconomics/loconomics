@@ -28,7 +28,6 @@
                             LastName,
                             SecondLastName,
                             MiddleIn,
-                            PostalCode,
                             Photo,
                             PreferredLanguageID,
                             PreferredCountryID,
@@ -38,20 +37,26 @@
                             AlternatePhone,
                             AddressLine1,   
                             AddressLine2,
-                            City,
-                            StateProvinceID,
-                            a.CountryID,
-                            PostalCode,
+                            A.City,
+                            A.StateProvinceID,
+                            A.CountryID,
+                            PC.PostalCode,
+                            A.PostalCodeID,
                             a.CreatedDate As MemberSinceDate,
                             PublicBio,
                             BirthYear,
                             GenderID
                             ,UP.Email
+                            ,IAuthZumigoVerification
+                            ,IAuthZumigoLocation
                             --,ADD_Details 
                         from users A
                              INNER JOIN
                             UserProfile As UP
                               ON UP.UserID = A.UserID
+                             LEFT JOIN
+                            PostalCode As PC
+                              ON PC.PostalCodeID = A.PostalCodeID
                             -- left join dbo.userprofilepositionadditional b 
                             --  ON a.userid = b.userid
                         where a.UserID = @0

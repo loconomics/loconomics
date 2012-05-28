@@ -161,6 +161,18 @@
                 newstrs.Add(str);
         return String.Join(delimiter, newstrs);
     }
+    public static bool ReadBoolFrom(params object[] values) {
+        foreach (object val in values) {
+            if (val != null) {
+                if (val is bool) {
+                    return (bool)val;
+                } else if (val is string && ((string)val).IsBool()) {
+                    return ((string)val).AsBool();
+                }
+            }
+        }
+        return false;
+    }
     /*
      * Return the Display or abbreviated name of the user, 
      * as "Name InitialLastName.", example: "John S." for

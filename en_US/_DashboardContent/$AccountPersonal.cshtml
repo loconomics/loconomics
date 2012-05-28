@@ -18,7 +18,9 @@
     var Bio = Request["publicbio"] ?? u.PublicBio;
     var BirthYear = Request["birthyear"] ?? u.BirthYear;
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
-    
+    var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification);
+    var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation);
+
     // Initializing Validation rules
     Validation.RequireField("firstname", "First Name is required");
     Validation.RequireField("lastname", "Last Name is required");
@@ -29,9 +31,11 @@
     
     if (IsPost && Validation.IsValid()) {
         
-        Zip = LcValidators.ValidateZipCode(Zip, State);
-        if (Zip == 0) {
+        int auxZip = LcValidators.ValidateZipCode(Zip, State);
+        if (auxZip == 0) {
             ModelState.AddError("zipcode", "Zip code is not valid");
+        } else {
+            Zip = auxZip;
         }
         
         if (ModelState.IsValid) {
@@ -39,10 +43,12 @@
                 db.Execute(@"
                     UPDATE users
                     SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
-                            AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, UpdatedDate=getdate(), ModifiedBy='sys'
+                            AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCodeID=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, 
+                            IAuthZumigoVerification=@14, IAuthZumigoLocation=@15,
+                            UpdatedDate=getdate(), ModifiedBy='sys'
                     WHERE   UserId = @0
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-                 State, Zip, Bio, BirthYear, GenderID);
+                 State, Zip, Bio, BirthYear, GenderID, IAuthZumigoVerification, IAuthZumigoLocation);
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
@@ -63,6 +69,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <div class="col col-2 col-2-1">
     <fieldset id="@idprefix-fs-contactinformation">
         <legend>Contact Information:</legend>
         <ul>
@@ -116,7 +123,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <li><label>Gender:</label>
                 @foreach (var gender in genders)
                 {
-                    <label>@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID.ToString(), @gender.GenderID.ToString()) type="radio" name="gender" value="@gender.GenderID" /></label>
+                    <label class="gender">@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID.ToString(), @gender.GenderID.ToString()) type="radio" name="gender" value="@gender.GenderID" /></label>
                 }
                 @Html.ValidationMessage("gender")
             </li>
@@ -130,6 +137,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </li>
         </ul>
     </fieldset>
+    </div>
+    <div class="col col-2 col-2-2">
+        <fieldset id="@idprefix-fs-auths" class="auths">
+            <legend>Authorizations:</legend>
+            <ul>
+                <li><input id="@idprefix-auth-zumigo-verification" value="True" @CommonHelpers.IsChecked("True", IAuthZumigoVerification.ToString()) type="checkbox" name="auth-zumigo-verification"/><label for="@idprefix-auth-zumigo-verification">I authorize Zumigo, Inc. to use my mobile phone number to verify my name, address, and phone number.</label></li>
+                <li><input id="@idprefix-auth-zumigo-location" value="True" @CommonHelpers.IsChecked("True", IAuthZumigoLocation.ToString()) type="checkbox" name="auth-zumigo-location"/><label for="@idprefix-auth-zumigo-location">I authorize Loconomics to use Zumigo services for location-based messaging.</label></li>
+            </ul>
+        </fieldset>
+        <fieldset id="@idprefix-fs-socialmedia" class="social-media">
+            <legend>Social media:</legend>
+            <ul>
+                <li class="facebook"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-facebook.png")" alt="Facebook Connect"/></a></li>
+                <li class="twitter"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
+                <li class="linkedin"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>
+            </ul>
+        </fieldset>
+    </div>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
