@@ -920,6 +920,12 @@ form fieldset.actions{
     -o-box-shadow: 0 0 5px 2px #8b2143;
     -webkit-box-shadow: 0 0 5px 2px #8b2143;
 }
+.warning {
+    font-weight: bold;
+    color: #FF8300;
+    padding-left: 20px;
+    border-left: 2px solid #FF8300;
+}
 
 /****************************************/
 /**** Box fieldset styles ***************/

@@ -2,7 +2,7 @@
 @using WebMatrix.Data;
 @{
     var idprefix = "account-taxes";
-    var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
+    var user = DashboardFunctions.GetUserRow();
     
     BraintreeGateway gateway = null;
     //Customer customer = null;
@@ -133,12 +133,12 @@
         taxentities = db.Query(@"
             SELECT  TaxEntityTypeID, TaxEntityTypeName
             FROM    TaxEntityType
-            WHERE   LanguageID = @0 AND CountryID = @1
+            WHERE   LanguageID = @0 AND CountryID = @1 AND Active=1
         ", 1, 1);
         tintypes = db.Query(@"
             SELECT  TINTypeID, TINTypeAbbr, TINTypeName
             FROM    TINType
-            WHERE   LanguageID = @0 AND CountryID = @1
+            WHERE   LanguageID = @0 AND CountryID = @1 AND Active=1
         ", 1, 1);
         PageData["taxinfo"] = taxinfo = db.QuerySingle(@"
             SELECT  T.*, PC.PostalCode
@@ -146,7 +146,7 @@
                      LEFT JOIN
                     PostalCode As PC
                       ON T.PostalCodeID = PC.PostalCodeID
-            WHERE   ProviderUserID = @0
+            WHERE   ProviderUserID = @0 AND Active=1
         ", user.UserID);
     }
 }

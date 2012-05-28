@@ -2,43 +2,72 @@
 @using WebMatrix.Data;
 @{
     var idprefix = "account-payments-bankinfo";
-    var user = PageData["userow"] ?? DashboardFunctions.GetUserRow();
+    var user = DashboardFunctions.GetUserRow();
     
     BraintreeGateway gateway = null;
-    Customer customer = null;
+    //Customer customer = null;
+    dynamic bankinfo = null, paymentpreferences = null;
     
-    try{
-        gateway = LcPayment.NewBraintreeGateway();
-    } catch {
-        ModelState.AddFormError("There was an error communicating with our secure data store, please try again later.");
-    }
-    
-    if (ModelState.IsValid) {
-        if (!IsPost) {
-            // Try to get the data from this customer, if was previosly saved or user exist at Braintree
-            try {
-                customer = gateway.Customer.Find(user.UserID.ToString());
-                PageData["customer"] = customer;
-            }
-            //} catch (Braintree.Exceptions.NotFoundException ex){ // Customer don't exist exception
-            catch { }
-        } else {
-     
-            // Get form data:
-            var tinData = new Dictionary<string, string>();
-            foreach (var k in Request.Form.AllKeys) {
-                // "tin-" general prefix
-                if (k.StartsWith("bank_")) {
-                    tinData.Add(k, Request.Form[k]);
-                }
+    Validation.RequireField("bank_fullname", LcRessources.RequiredField("Full name"));
+    Validation.RequireField("bank_accounttype", LcRessources.RequiredField("Account type"));
+    Validation.RequireField("bank_abanumber", LcRessources.RequiredField("ABA Number"));
+    Validation.RequireField("bank_accountnumber", LcRessources.RequiredField("Account Number"));
+    Validation.Add("bank_abanumber", Validator.Integer("The ABA Number must be a nine digit number"));
+    Validation.Add("bank_abanumber", Validator.StringLength(9, 9, "The ABA Number must be a nine digit number"));
+    Validation.Add("bank_accountnumber", Validator.StringLength(40, 9, "Invalid Account number"));
+       
+    if (IsPost && Validation.IsValid()) {
+        
+        try{
+            gateway = LcPayment.NewBraintreeGateway();
+        } catch {
+            ModelState.AddFormError("There was an error communicating with our secure data store, please try again later.");
+        }
+                    
+        if (ModelState.IsValid) {
+
+            // We save data on our database
+            var sqlSetProviderTaxForm = @"
+            BEGIN TRAN
+                UPDATE  providerpaymentpreference WITH (serializable)
+                SET     AccountName = @1,
+                        ABANumber = @2,
+                        LastThreeAccountDigits = @3,
+                        ProviderPaymentPreferencyTypeID = @4,
+                        Verified = 0,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   ProviderUserId = @0
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO providerpaymentpreference (ProviderUserId,
+                        AccountName, ABANumber, LastThreeAccountDigits,
+                        ProviderPaymentPreferencyTypeID, Verified,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, 0, getdate(), getdate(), 'sys')
+                END
+            COMMIT TRAN
+            ";
+                
+            using (var db = Database.Open("sqlloco")) {
+                db.Execute(sqlSetProviderTaxForm, user.UserID,
+                    Request["bank_fullname"],
+                    Request["bank_abanumber"],
+                    // Bank Account Number: ONLY THE THREE LAST DIGITS
+                    Request["bank_accountnumber"].Substring(Request["bank_accountnumber"].Length - 3, 3),
+                    Request["bank_accounttype"].AsInt()
+                );
             }
             
+            // Save Bank account number on Braintree
             CustomerRequest request = new CustomerRequest{
                 //need to pass in the userid from the cookie
                 Id = user.UserID.ToString(),
-                CustomFields = tinData
+                CustomFields = new Dictionary<string,string>{
+                    { "loco_bank_account", Request["bank_accountnumber"] }
+                }
             };
-
             var result = gateway.Customer.Create(request);
             if (result.IsSuccess()){
                 CommonHelpers.ReturnJsonResult(0, "Data saved!");
@@ -54,45 +83,59 @@
             }
         }
     }
+@*// Try to get the data from this customer, if was previosly saved or user exist at Braintree
+try {
+    customer = gateway.Customer.Find(user.UserID.ToString());
+    PageData["customer"] = customer;
 }
-@functions{
-    string getData(string fieldname) {
-        var c = (Customer)PageData["customer"];
-        if (c != null && c.CustomFields.ContainsKey(fieldname)) {
-            return (string)c.CustomFields[fieldname];
-        } else {
-            return Request[fieldname];
-        }
+//} catch (Braintree.Exceptions.NotFoundException ex){ // Customer don't exist exception
+catch { }*@
+    using (var db = Database.Open("sqlloco")) {
+        paymentpreferences = db.Query(@"
+            SELECT  *
+            FROM    providerpaymentpreferencetype
+            WHERE   Active=1
+        ");
+        bankinfo = db.QuerySingle(@"
+            SELECT  TOP 1 *
+            FROM    providerpaymentpreference
+            WHERE   ProviderUserID = @0
+        ", user.UserID);
     }
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form method="post" id="@idprefix-form">
+<div>
+<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountPaymentsBankInfo/" class="ajax ajax-box">
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <div class="warning">
+        @if (bankinfo != null && bankinfo.Verified)
+        {
+        <p>Your bank account was succesfull verified.</p>
+        <p>Remember that if you modify some of this data now it will appear as 'not verified' until we verify it again.</p>
+        }
+        else
+        {
+            <p>Your bank account was not verified still.</p>
+        }
+    </div>
     <div class="col col-2 col-2-1">
         <fieldset id="@idprefix-fs-contactinfo" class="contact-info">
             <legend>Name on account:</legend>
             <ul>
-                <li><label for="@idprefix-bankaccount-firstname">First Name:</label><input id="@idprefix-bankaccount-firstname" type="text" name="bank_firstname" value="@getData("bank_firstname")"/></li>
-                <li><label for="@idprefix-bankaccount-middleinitial">Middle Initial:</label><input id="@idprefix-bankaccount-middleinitial" type="text" name="bank_middleinitial" value="@getData("bank_middleinitial")"/></li>
-                <li><label for="@idprefix-bankaccount-lastname">Last Name:</label><input id="@idprefix-bankaccount-lastname" type="text" name="bank_lastname" value="@getData("bank_lastname")"/></li>
+                <li><label for="@idprefix-fullname">Full Name:</label><input @Validation.GetHtml("bank_fullname") id="@idprefix-fullname" type="text" name="bank_fullname" value="@(Request["bank_fullname"] ?? (bankinfo != null ? bankinfo.AccountName : ""))"/></li>
             </ul>
         </fieldset>
-        <fieldset id="@idprefix-fs-bankinfo">
-            <legend>Bank Name and Address:</legend>
+        <fieldset id="@idprefix-fs-accounttype">
+            <legend>Bank Account Type:</legend>
             <ul>
-                <li><label for="@idprefix-bankname">Bank Name:</label><input id="@idprefix-bankname" type="text" name="bank_bankname" value="@getData("bank_bankname")"/></li>
-                <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="bank_streetaddress1" value="@getData("bank_streetaddress1")"/></li>
-                <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="bank_streetaddress2" value="@getData("bank_streetaddress2")"/></li>
-                <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="bank_city" value="@getData("bank_city")"/></li>
-                <li><label for="@idprefix-state">State:</label>
-                    <select id="@idprefix-state" name="bank_state">
-                        @CommonHelpers.StateProvinceOptions(getData("bank_state"))
-                    </select>
-                </li>
-                <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="bank_zipcode" value="@getData("bank_zipcode")"/></li>
-                <li><label for="@idprefix-phone">Phone:</label><input id="@idprefix-phone" type="text" name="bank_phone" value="@getData("bank_phone")"/></li>
+                @foreach (var paymentpreference in paymentpreferences)
+                {
+                <li><input type="radio" id="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]" @Validation.GetHtml("bank_accounttype") name="bank_accounttype" @CommonHelpers.IsChecked(Request["bank_accounttype"] ?? (bankinfo != null ? bankinfo.ProviderPaymentPreferencyTypeID.ToString() : ""), paymentpreference.ProviderPaymentPreferenceTypeID.ToString()) value="@paymentpreference.ProviderPaymentPreferenceTypeID"/>
+                <label for="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]"><abbr title="@paymentpreference.ProviderPaymentPreferenceTypeDescription">@paymentpreference.ProviderPaymentPreferenceTypeName</abbr></label></li>
+                }
             </ul>
         </fieldset>
     </div>
@@ -100,15 +143,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <fieldset id="@idprefix-fs-accountnumber">
             <legend>Bank Account Number:</legend>
             <ul>
-                <li><label for="@idprefix-accountnumber-aba">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-accountnumber-aba" name="bank_aba" value="@getData("bank_aba")"/></li>
-                <li><label for="@idprefix-accountnumber-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber-accountnumber" name="bank_accountnumber" value="@getData("bank_accountnumber")"/></li>
-            </ul>
-        </fieldset>
-        <fieldset id="@idprefix-fs-accounttype">
-            <legend>Bank Account Type:</legend>
-            <ul>
-                <li><input type="radio" id="@idprefix-accounttype-checking" name="bank_accounttype" @CommonHelpers.IsChecked(getData("bank_accounttype"), "checking") value="checking"/><label for="@idprefix-accounttype-checking">Checking</label></li>
-                <li><input type="radio" id="@idprefix-accounttype-savings" name="bank_accounttype" @CommonHelpers.IsChecked(getData("bank_accounttype"), "savings") value="savings"/><label for="@idprefix-accounttype-savings">Savings</label></li>
+                <li><label for="@idprefix-abanumber">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-abanumber" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
+                <li><label for="@idprefix-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + bankinfo.LastThreeAccountDigits : ""))"/></li>
             </ul>
         </fieldset>
     </div>
@@ -116,3 +152,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <button class="save main-action" type="submit">Submit</button>
     </fieldset>
 </form>
+</div>
