@@ -18,8 +18,8 @@
     var Bio = Request["publicbio"] ?? u.PublicBio;
     var BirthYear = Request["birthyear"] ?? u.BirthYear;
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
-    var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification);
-    var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation);
+    var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification ?? false);
+    var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation ?? false);
 
     // Initializing Validation rules
     Validation.RequireField("firstname", "First Name is required");
