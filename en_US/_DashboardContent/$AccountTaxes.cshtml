@@ -152,7 +152,7 @@
 }
 @helper printEntityType(int entityID, string name){
     var taxinfo = PageData["taxinfo"];
-    <li><label><input type="radio" @Validation.GetHtml("tin_taxentitytype") name="tin_taxentitytype" value="@entityID" @CommonHelpers.IsChecked(Request["tin_taxentitytype"] ?? taxinfo.TaxEntityTypeID.ToString(), entityID.ToString())/>@name</label></li>
+    <li><label><input type="radio" @Validation.GetHtml("tin_taxentitytype") name="tin_taxentitytype" value="@entityID" @CommonHelpers.IsChecked(Request["tin_taxentitytype"] ?? (taxinfo != null ? taxinfo.TaxEntityTypeID.ToString() : ""), entityID.ToString())/>@name</label></li>
 }
 @* 
 <p class="setting-instructions">
@@ -164,17 +164,17 @@
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>Please complete the IRS Form W-9 below:</legend>
         <ul>
-            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? taxinfo.FullName)"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? taxinfo.BusinessName)"/><span class="info">(only if different from above)</span></li>
+            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? (taxinfo != null ? taxinfo.FullName : ""))"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? (taxinfo != null ? taxinfo.BusinessName : ""))"/><span class="info">(only if different from above)</span></li>
             <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? taxinfo.StreetApt)"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@(Request["tin_city"] ?? taxinfo.City)" @Validation.GetHtml("tin_city")/></li>
+            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? (taxinfo != null ? taxinfo.StreetApt : ""))"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@(Request["tin_city"] ?? (taxinfo != null ? taxinfo.City : ""))" @Validation.GetHtml("tin_city")/></li>
             <li><label for="@idprefix-state">State:</label>
                 <select id="@idprefix-state" name="tin_state" @Validation.GetHtml("tin_state")>
-                    @CommonHelpers.StateProvinceOptions(Request["tin_state"] ?? taxinfo.StateProvinceID.ToString())
+                    @CommonHelpers.StateProvinceOptions(Request["tin_state"] ?? (taxinfo != null ? taxinfo.StateProvinceID.ToString() : ""))
                 </select>
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin_zipcode" value="@(Request["tin_zipcode"] ?? taxinfo.PostalCode)" @Validation.GetHtml("tin_zipcode")/></li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin_zipcode" value="@(Request["tin_zipcode"] ?? (taxinfo != null ? taxinfo.PostalCode : ""))" @Validation.GetHtml("tin_zipcode")/></li>
             <li class="tax-entity-type">
                 <span>Tax Entity Type:</span>
                 <ul>
@@ -192,16 +192,16 @@
                     <option value="P" @CommonHelpers.IsSelected(getTaxData("tin_tax_classification"), "P")>Partnership</option>
                 </select>
             </li>*@
-            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @CommonHelpers.IsChecked(Request["tin_exempt_payee"] ?? taxinfo.ExemptPayee ? "true" : "false", "true") name="tin_exempt_payee" value="true" @Validation.GetHtml("tin_exempt_payee")/></label></li>
+            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @CommonHelpers.IsChecked(Request["tin_exempt_payee"] ?? (taxinfo != null ? (taxinfo.ExemptPayee ? "true" : "false") : ""), "true") name="tin_exempt_payee" value="true" @Validation.GetHtml("tin_exempt_payee")/></label></li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? "*****" + taxinfo.LastThreeTINDigits)" @Validation.GetHtml("tin_number")/>
+        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + taxinfo.LastThreeTINDigits : ""))" @Validation.GetHtml("tin_number")/>
         @foreach (var tintype in tintypes)
         {
-        <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @CommonHelpers.IsChecked(Request["tin_type"] ?? taxinfo.TINTypeID.ToString(), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
+        <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @CommonHelpers.IsChecked(Request["tin_type"] ?? (taxinfo != null ? taxinfo.TINTypeID.ToString() : ""), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
         }
     </fieldset>
     <fieldset id="@idprefix-fs-part2">
@@ -223,7 +223,7 @@
         </p>
         </div>
         <fieldset class="signature">
-            <label for="@idprefix-signature">Your Signature:</label><input @Validation.GetHtml("tin_signature") id="@idprefix-signature" type="text" name="tin_signature" value="@(Request["tin_signature"] ?? taxinfo.Signature)"/><span class="info">(typing in your name acts as your signature)</span>
+            <label for="@idprefix-signature">Your Signature:</label><input @Validation.GetHtml("tin_signature") id="@idprefix-signature" type="text" name="tin_signature" value="@(Request["tin_signature"] ?? (taxinfo != null ? taxinfo.Signature : ""))"/><span class="info">(typing in your name acts as your signature)</span>
         </fieldset>
         <p class="info">
             The date and time of submission and your computer's IP address will be recorded when you click Submit.
