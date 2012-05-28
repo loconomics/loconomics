@@ -111,14 +111,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <div class="warning">
-        @if (bankinfo != null && bankinfo.Verified)
+        @if (bankinfo != null)
         {
-        <p>Your bank account was succesfull verified.</p>
-        <p>Remember that if you modify some of this data now it will appear as 'not verified' until we verify it again.</p>
-        }
-        else
-        {
-            <p>Your bank account was not verified still.</p>
+            if (bankinfo.Verified)
+            {
+            <p>Your bank account was succesfull verified.</p>
+            <p>Remember that if you modify some of this data now it will appear as 'not verified' until we verify it again.</p>
+            }
+            else
+            {
+                <p>Your bank account was not verified still.</p>
+            }
         }
     </div>
     <div class="col col-2 col-2-1">
