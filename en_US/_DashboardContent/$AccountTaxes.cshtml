@@ -5,7 +5,6 @@
     var user = DashboardFunctions.GetUserRow();
     
     BraintreeGateway gateway = null;
-    //Customer customer = null;
     dynamic taxentities = null, tintypes = null;
     
     Validation.RequireField("tin_fullname", LcRessources.RequiredField("Full name"));
@@ -22,23 +21,13 @@
     Validation.Add("tin_number", Validator.Integer("The tax identification number must be a nine digit number, without dashes"));
     Validation.Add("tin_number", Validator.StringLength(9, 9, "The tax identification number must be a nine digit number"));
    
-    /*if (!IsPost) {
-        // Try to get the data from this customer, if was previosly saved or user exist at Braintree
-        try {
-            customer = gateway.Customer.Find(user.UserID.ToString());
-            PageData["customer"] = customer;
-        }
-        //} catch (Braintree.Exceptions.NotFoundException ex){ // Customer don't exist exception
-        catch { }
-    }*/
-    
     if (IsPost && Validation.IsValid()) {
             
         var zipcodeID = LcValidators.ValidateZipCode(Request["tin_zipcode"], Request["tin_state"].AsInt());
         if (zipcodeID == 0) {
             ModelState.AddError("tin_zipcode", "Zip code is not valid");
         }
-            
+
         if (ModelState.IsValid) {
             try{
                 gateway = LcPayment.NewBraintreeGateway();
@@ -108,12 +97,24 @@
                 CustomerRequest request = new CustomerRequest{
                     //need to pass in the userid from the cookie
                     Id = user.UserID.ToString(),
+                    CustomerId = user.UserID.ToString(),
                     CustomFields = new Dictionary<string,string> {
                         { "loco_tin", Request["tin_number"] }
                     }
                 };
-                var result = gateway.Customer.Create(request);
-                if (result.IsSuccess()){                
+                // Check if user exists and must be updated, or be created
+                Customer customer = null;
+                try {
+                    customer = gateway.Customer.Find(user.UserID.ToString());
+                } catch (Braintree.Exceptions.NotFoundException ex){
+                }
+                Result<Customer> result = null;
+                if (customer != null) {
+                    result = gateway.Customer.Update(user.UserID.ToString(), request);
+                } else {
+                    result = gateway.Customer.Create(request);
+                }
+                if (result.IsSuccess()){
                     CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
                 } else {
                     foreach (var row in result.Errors.DeepAll())

@@ -5,7 +5,6 @@
     var user = DashboardFunctions.GetUserRow();
     
     BraintreeGateway gateway = null;
-    //Customer customer = null;
     dynamic bankinfo = null, paymentpreferences = null;
     
     Validation.RequireField("bank_fullname", LcRessources.RequiredField("Full name"));
@@ -64,11 +63,23 @@
             CustomerRequest request = new CustomerRequest{
                 //need to pass in the userid from the cookie
                 Id = user.UserID.ToString(),
+                CustomerId = user.UserID.ToString(),
                 CustomFields = new Dictionary<string,string>{
                     { "loco_bank_account", Request["bank_accountnumber"] }
                 }
             };
-            var result = gateway.Customer.Create(request);
+            // Check if user exists and must be updated, or be created
+            Customer customer = null;
+            try {
+                customer = gateway.Customer.Find(user.UserID.ToString());
+            } catch (Braintree.Exceptions.NotFoundException ex){
+            }
+            Result<Customer> result = null;
+            if (customer != null) {
+                result = gateway.Customer.Update(user.UserID.ToString(), request);
+            } else {
+                result = gateway.Customer.Create(request);
+            }
             if (result.IsSuccess()){
                 CommonHelpers.ReturnJsonResult(0, "Data saved!");
             } else {
