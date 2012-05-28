@@ -59,17 +59,8 @@
         using (var db = Database.Open("sqlloco")) {
 
             // Validate that Zip Postal Code is valid, and get the matching ID to be used later
-            var sqlGetPostalCodeID = @"
-                SELECT  PostalCodeID
-                FROM    PostalCode As PC
-                WHERE   PC.PostalCode = @0
-                         AND
-                        CountryID = @1
-                         AND
-                        StateProvinceID = @2
-            ";
-            var postalCodeID = db.QueryValue(sqlGetPostalCodeID, Request["zip"], 1, Request["state"]);
-            if (postalCodeID == null) {
+            var postalCodeID = LcValidators.ValidateZipCode(Request["zip"], Request["state"].AsInt());
+            if (postalCodeID == 0) {
                 ModelState.AddError("zip", "Zip Postal Code is not valid");
             }
         

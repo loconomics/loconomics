@@ -48,6 +48,7 @@
     
     if (IsPost && Validation.IsValid()){
         
+        var zipcodeID = 0;
         // Check if a location was selected or new location must be validated:
         int locationID = Request["select-location"].AsInt();
         if (Request["select-location"].IsEmpty()) {
@@ -66,7 +67,10 @@
                 ModelState.AddError("zip", "The Zip Code is required");
             } else if (!Request["zip"].IsInt()) {
                 ModelState.AddError("zip", "The Zip Code must be a number");
-                // TODO: add database check that zip is valid (table PostalCodes).
+            }
+            zipcodeID = LcValidators.ValidateZipCode(Request["zip"], Request["state"].AsInt());
+            if (zipcodeID == 0) {
+                ModelState.AddError("tin_zipcode", "Zip code is not valid");
             }
         }
         
@@ -173,7 +177,7 @@
                         Request["street-address-line-2"],
                         Request["city"],
                         Request["state"],
-                        Request["zip"],
+                        zipcodeID,
                         1, // countryID = 1
                         locationNickName);
                 }

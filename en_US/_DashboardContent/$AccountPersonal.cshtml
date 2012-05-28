@@ -28,16 +28,24 @@
     Validation.Add("birthyear", Validator.Range(DateTime.MinValue.Year, DateTime.Today.Year - adultLimit, "Birth year is not valid"));
     
     if (IsPost && Validation.IsValid()) {
-        using (var db = Database.Open("sqlloco")){
-            db.Execute(@"
-                UPDATE users
-                SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
-                        AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, UpdatedDate=getdate(), ModifiedBy='sys'
-                WHERE   UserId = @0
-            ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-             State, Zip, Bio, BirthYear, GenderID);
+        
+        Zip = LcValidators.ValidateZipCode(Zip, State);
+        if (Zip == 0) {
+            ModelState.AddError("zipcode", "Zip code is not valid");
         }
-        CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
+        
+        if (ModelState.IsValid) {
+            using (var db = Database.Open("sqlloco")){
+                db.Execute(@"
+                    UPDATE users
+                    SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
+                            AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCode=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, UpdatedDate=getdate(), ModifiedBy='sys'
+                    WHERE   UserId = @0
+                ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
+                 State, Zip, Bio, BirthYear, GenderID);
+            }
+            CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
+        }
     }
     dynamic genders = null;
     using (var db = Database.Open("sqlloco")){
