@@ -40,6 +40,27 @@
         
         if (ModelState.IsValid) {
             using (var db = Database.Open("sqlloco")){
+                // First, check if user name was changed to revoke Social Verifications
+                db.Execute(@"
+                    DECLARE @c int
+                    -- Check if data is equals (=1) or was changed (=0)
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @0
+                             AND
+                            FirstName = @1 AND MiddleIn = @2 AND LastName = @3 AND SecondLastName = @4
+                    IF @c = 0 BEGIN
+                        -- Revoke social verifications (all VerificationCategoryID = 3)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3,
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID IN (
+                                    SELECT VerificationID
+                                    FROM    Verification
+                                    WHERE   VerificationCategoryID = 3
+                                )
+                    END
+                ", u.UserID, FirstName, MiddleInitial, LastName, null);
                 db.Execute(@"
                     UPDATE users
                     SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
@@ -53,13 +74,27 @@
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
     }
-    dynamic genders = null;
+    dynamic genders = null, facebookVerification = null;
     using (var db = Database.Open("sqlloco")){
         genders = db.Query(@"
             SELECT  GenderID, GenderSingular
             FROM    Gender
             WHERE   LanguageID=@0 AND CountryID=@1
         ", 1, 1);
+        var sqlGetVerification = @"
+            SELECT  LastVerifiedDate,
+                    UV.VerificationStatusID,
+                    VS.VerificationStatusName
+            FROM    UserVerification As UV
+                     INNER JOIN
+                    VerificationStatus As VS
+                      ON UV.VerificationStatusID = VS.VerificationStatusID
+                        AND LanguageID = @2 AND CountryID = @3
+            WHERE   UserID = @0
+                     AND
+                    VerificationID = @1
+        ";
+        facebookVerification = db.QuerySingle(sqlGetVerification, u.UserID, 8, 1, 1);
     }
 }
 <p class="setting-instructions">
@@ -149,7 +184,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <fieldset id="@idprefix-fs-socialmedia" class="social-media">
             <legend>Social media verifications:</legend>
             <ul>
-                <li class="facebook">@RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", "Verify", "json")</li>
+                <li class="facebook">
+                    @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", "Verify", "json")
+                    @if (facebookVerification != null)
+                    {
+                        <div class="verification-details">
+                            Facebook verification status: @facebookVerification.VerificationStatusName since @facebookVerification.LastVerifiedDate
+                            @if (facebookVerification.VerificationStatusID == 1)
+                            {
+                            <div class="warning">If you change your name, your Facebook verification will be revoked and you will need to verify again after save the changes.</div>
+                            }
+                        </div>
+                    }
+                </li>
                 @*<li class="twitter"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
                 <li class="linkedin"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>*@
             </ul>
