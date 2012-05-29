@@ -57,7 +57,8 @@
     position: relative;
 }
 
-.sign-up-wizard #create-a-login .login-data input{
+.sign-up-wizard #create-a-login .login-data input,
+.sign-up-wizard #create-a-login .login-data select{
     position: absolute;
     right: 10px;
     width: 230px;

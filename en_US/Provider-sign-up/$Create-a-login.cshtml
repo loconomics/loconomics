@@ -1,5 +1,6 @@
-﻿
-   @{ 
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     // Initialize general page variables
     var userid = 99999;
     var email = "";
@@ -7,7 +8,8 @@
     var confirmPassword = "";
     var firstname  ="";
     var lastname  = "";
-    var zipcode   = "";
+    var zipcode   = 0;
+    var state = 0;
     var lang   = "1";
     var termsofuse = "0";
     var termsofuse1 = "0";
@@ -35,7 +37,8 @@
     confirmPassword = Request.Form["confirmPassword"];
     firstname = Request.Form["firstname"];
     lastname =   Request.Form["lastname"];
-    zipcode =  Request.Form["zipcode"];
+    zipcode =  Request.Form["zipcode"].AsInt();
+    state = Request["state"].AsInt();
     lang =  Request.Form["lang"];
     termsofuse = Request.Form["termsofuse"];
     termsofuse1 = Request.Form["termsofuse1"];
@@ -53,6 +56,12 @@
         // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
         //     ModelState.AddError("recaptcha", "Captcha response was not correct");
         // }
+        /*int auxZip = LcValidators.ValidateZipCode(zipcode, State);
+        if (auxZip == 0) {
+            ModelState.AddError("zipcode", "Zip code is not valid");
+        } else {
+            zipcode = auxZip;
+        }*/
 
         // If all information is valid, create a new account
         if (ModelState.IsValid) { 
@@ -96,7 +105,10 @@
                         // as opposed to via an OAuth or OpenID provider.
                         Session["OAuthLoggedIn"] = false;
                     
-                        db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",userid,firstname,lastname,zipcode, lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
+                        db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13",userid,firstname,lastname,
+                            (object)(zipcode == 0 ? null : (object)zipcode),
+                            (object)(state == 0 ? null : (object)state),
+                            lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
                         
                         // We return a json with result OK (=0), and response end just after this:
                         CommonHelpers.ReturnJsonResult(0, null);
@@ -139,13 +151,17 @@
                 @* need to have the error label class show up  *@   
              </li>
             
+            <li class="state"><label for="state" @if(!ModelState.IsValidField("state")){<text>class="error-label"</text>}>State:</label>
+                <select id="state" name="state" @Validation.GetHtml("state")>
+                    @CommonHelpers.StateProvinceOptions(state)
+                </select>
+                @Html.ValidationMessage("state")
+            </li>
+
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
                 <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@lastname" @Validation.GetHtml("zipcode") />
-                @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("zipcode")
-
-                @* need to have the error label class show up  *@   
             </li>
            
             <li class="email">
