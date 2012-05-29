@@ -63,8 +63,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <div class="edit-popup-container">
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="positionlocations ajax ajax-box" id="position#@(n)-locations">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
-        @* In javascript will be created hidden elements with location data with name=locations as next example
-        <input type="hidden" name="locations" data-location-id="0" value="location-edit-form data as form-query-string serialized format"/>
+        @* 
+        In javascript will be created hidden elements with location data to be created or updated with name=locations as next example
+        <input type="hidden" name="locations" value="location-edit-form data as form-query-string serialized format"/>
+        In javascript, will be created hidden elements with location id's to be deleted as next example
+        <input type="hidden" name="remove-locations" value="32"/>
          *@
         @CommonHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -182,6 +182,22 @@ $(document).ready(function () {
         editPanel.show();
         return false;
     })
+    .delegate('.address > .tools > .map', 'click', function () {
+        alert('To be implemented: here will go a Google Maps to get coordenates');
+        return false;
+    })
+    .delegate('.address > .tools > .remove', 'click', function () {
+        var $t = $(this);
+        var viewLoc = $t.closest('.address');
+        var locid = viewLoc.data('location-id');
+        var idview = viewLoc.attr('id');
+        if (idview)
+            $('#HIDE' + idview).remove();
+        if (locid && locid != '0')
+            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' + locid + '"/>');
+        viewLoc.remove();
+        return false;
+    })
     .delegate('.location-edit-form .button', 'click', function () {
         var $t = $(this);
         var editLoc = $t.closest('.edit-location');
