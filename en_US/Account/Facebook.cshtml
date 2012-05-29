@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     //try
     {
         /* Page to be redirected from Facebook Login, with next syntax if OK:
@@ -42,7 +44,7 @@
                 // If user don't exists, create it
                 if (!WebSecurity.UserExists(facebookemail)){
                     //Response.Write("\nEl usuario no existe, se crea\n");
-                    using (var db = WebMatrix.Data.Database.Open("sqlloco")){
+                    using (var db = Database.Open("sqlloco")){
  
                         // TOREVIEW: Asp.net DataBase Helper doesn't support transactions, but are needed
                         // to avoid problems creating the account letting bad records in some tables.
@@ -63,10 +65,84 @@
                             // Create asociation between locouser and facebookuser
                             db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
                             
+                            // Add Facebook verification as confirmed
+                            db.Execute(@"
+                                INSERT INTO UserVerifications (
+                                    UserID, VerificationID, DateVerified, CreatedDate, 
+                                    UpdatedDate, VerifiedBy, LastVerifiedDate, Active, VerificationStatusID,
+                                    UserVerificationID
+                                ) VALUES (
+                                    @0, @1, @2, getdate(), getdate(), 'sys', getdate(), 1, @3
+                                )
+                            ", userid, 8, DateTime.Now, 1);
+                            
                             //transaction.Commit();
                         } catch (Exception ex) {
                             //transaction.Rollback();
                             throw ex;
+                        }
+                    }
+                } else if (UrlData.Count > 0 && UrlData[0] == "Verify") {
+                    // User already exists, is requesting a Facebook verification:
+                    CommonHelpers.SecurePage();
+                    // First, check facebook email with current user id (user must be logged to verify)
+                    int userID = WebSecurity.GetUserId(facebookemail);
+                    if (userID != WebSecurity.CurrentUserId) {
+                        CommonHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
+                    }
+                    // Compare email and full name
+                    using (var db = Database.Open("sqlloco")) {
+                        var c = (int)db.QueryValue(@"
+                            SELECT  count(*)
+                            FROM    Users As U
+                                     INNER JOIN
+                                    UserProfile As P
+                                      ON U.UserID = P.UserID
+                            WHERE   U.UserID = @0
+                                     AND
+                                    P.Email = @1
+                                     AND
+                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') = dbo.fx_concat(@2, @3, ' ')
+                        ", userID, facebookemail, user.first_name, user.last_name);
+                        if (c == 1) {
+                            // Verified, save verification record
+                            db.Execute(@"
+                                UPDATE UserVerification WITH (serializable) SET
+                                    UpdatedDate = getdate(),
+                                    VerifiedBy = 'sys',
+                                    LastVerifiedDate = @2,
+                                    Active = 1,
+                                    VerificationStatusID = @3
+                                WHERE
+                                    UserID = @0
+                                     AND
+                                    VerificationID = @1
+
+                                IF @@rowcount = 0 BEGIN
+                                    INSERT INTO UserVerification (
+                                        UserID, VerificationID, DateVerified, CreatedDate, 
+                                        UpdatedDate, VerifiedBy, LastVerifiedDate, Active, VerificationStatusID
+                                    ) VALUES (
+                                        @0, @1, @2, getdate(), getdate(), 'sys', getdate(), 1, @3
+                                    )
+                                END
+                            ", userID, 8, DateTime.Now, 1);
+                            CommonHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
+                        } else {
+                            // Verification failed
+                            /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
+                            debugInfo += " = " + (string)db.QueryValue(@"
+                                SELECT  dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, U.MiddleIn, ' '), U.LastName, ' '), U.SecondLastName, ' ') as loconame
+                                FROM    Users As U
+                                         INNER JOIN
+                                        UserProfile As P
+                                          ON U.UserID = P.UserID
+                                WHERE   U.UserID = @0
+                                         AND
+                                        P.Email = @1
+                            ", userID, facebookemail);*/
+                            // + debugInfo
+                            CommonHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
                         }
                     }
                 }

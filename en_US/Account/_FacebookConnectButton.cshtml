@@ -1,8 +1,9 @@
 ﻿@helper GetFacebookInitializationScripts() {
+    var urlsection = PageData[0] ?? "Callback"; // Possible values: Callback, Verify
+    var result = PageData[1] ?? "redirect"; // Possible values: redirect, json
     <div id="fb-root" style="display: none"></div>
     <script type="text/javascript">
-        var facebookInitialized;
-        var facebookConnect;
+        var facebookInitialized, facebookConnect, fbtimer;
 
         if (!facebookInitialized) {
             Modernizr.load({ load: document.location.protocol +
@@ -14,18 +15,33 @@
 
             if (!facebookConnect)
                 facebookConnect = function () {
-                    FB.login(function (response) {
-                        if (response.authResponse) {
-                            //console.log('FacebookConnect: Welcome!');
-                            $.blockUI(loadingBlock);
-                            window.location = UrlUtil.LangPath + "Account/Facebook/Callback/";
-                            /*FB.api('/me', function (response) {
-                            console.log('FacebookConnect: Good to see you, ' + response.name + '.');
-                            });*/
-                        } else {
-                            //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
-                        }
-                    });
+                    // If FB is was not loaded still, auto try again
+                    if (typeof(FB) === 'undefined') {
+                        fbtimer = setTimeout(facebookConnect, 500);
+                    } else {
+                        if (fbtimer) clearTimeout(fbtimer);
+                        FB.login(function (response) {
+                            if (response.authResponse) {
+                                //console.log('FacebookConnect: Welcome!');
+                                $.blockUI(loadingBlock);
+                                var url = UrlUtil.LangPath + "Account/Facebook/@urlsection/";
+                                @if (result == "redirect") {
+                                <text>
+                                window.location = url;
+                                </text>
+                                } else if (result == "json") {
+                                <text>
+                                popup(url, 'small', null, "Verifing");
+                                </text>
+                                }
+                                /*FB.api('/me', function (response) {
+                                console.log('FacebookConnect: Good to see you, ' + response.name + '.');
+                                });*/
+                            } else {
+                                //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
+                            }
+                        });
+                    }
                 }
 
             facebookInitialized = true;
@@ -39,7 +55,7 @@
 
     <a href="javascript: facebookConnect();">
         @GetFacebookInitializationScripts()
-        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png"/>
     </a>
 
     @*

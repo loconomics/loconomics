@@ -822,7 +822,7 @@ function popupStyle(size) {
         'background-clip': 'padding-box'
     };
 }
-function popup(url, size, complete){
+function popup(url, size, complete, loadingText){
     // Native popup
     //window.open(url);
 
@@ -835,7 +835,7 @@ function popup(url, size, complete){
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({ 
-       message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>',
+       message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
        centerY: false,
        css: popupStyle(swh),
        overlayCSS: { cursor: 'default' }
