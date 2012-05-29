@@ -6,7 +6,94 @@
     var n = p.PositionID;
     
     if (IsPost) {
-        Request.Form.GetValues("");
+        var sqlRemoveLoc = @"
+            DELETE FROM ServiceAddress
+            WHERE ServiceAddressID = @0
+
+            IF @@ERROR <> 0 BEGIN
+                -- Non deletable serviceaddress, because is linked, simply 'unactive'
+                UPDATE ServiceAddress SET
+                    Active = 0
+                WHERE   ServiceAddressID = @0
+            END
+        ";
+        var sqlInsLoc = @"
+            INSERT INTO ServiceAddress (
+                UserID, PositionID, AddressTypeID, NickName, AddressLine1, AddressLine2,
+                City, StateProvinceID, PostalCodeID, CountryID, 
+                ServicesPerformedAtLocation, TravelFromLocation,
+                CreatedDate, UpdatedDate, ModifiedBy, Active
+            ) VALUES (
+                @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', 1
+            )
+        ";
+        var sqlUpdLoc = @"
+            UPDATE ServiceAddress SET
+                NickName = @1,
+                AddressLine1 = @2,
+                AddressLine2 = @3,
+                City = @4,
+                StateProvinceID = @5,
+                PostalCodeID = @6,
+                CountryID = @7
+            WHERE   ServiceAddressID = @0
+        ";
+        var removedLocs = Request.Form.GetValues("remove-locations");
+        var locs = Request.Form.GetValues("locations");
+        using (var db = Database.Open("sqlloco")) {
+            if (locs != null) {
+                foreach (string loc in locs) {
+                    var locdata = HttpUtility.ParseQueryString(loc, System.Text.Encoding.UTF8);
+                
+                    try{
+                        var locid = locdata["location-id"].AsInt();
+                        locdata["location-zipcode"].AsInt();
+                        // Validate Postal Code
+                        var state = locdata["location-state"].AsInt();
+                        var zip = LcValidators.ValidateZipCode(locdata["location-zipcode"], state);
+                        if (zip == 0) {
+                            ModelState.AddFormError("Location '" + locdata["location-name"] + "': Postal Code not valid");
+                        } else {
+                            if (locid == 0) {
+                                // @2 = 12 --others
+                                db.Execute(sqlInsLoc,
+                                    u.UserID, p.PositionID, 12, 
+                                    locdata["location-name"],
+                                    locdata["location-addressline1"],
+                                    locdata["location-addressline2"],
+                                    locdata["location-city"],
+                                    state,
+                                    zip,
+                                    1, // CountryID
+                                    locdata["location-type"] == "work",
+                                    locdata["location-type"] == "travel"
+                                );
+                            } else {
+                                db.Execute(sqlUpdLoc,
+                                    locdata["location-id"].AsInt(),
+                                    locdata["location-name"],
+                                    locdata["location-addressline1"],
+                                    locdata["location-addressline2"],
+                                    locdata["location-city"],
+                                    state,
+                                    zip,
+                                    1 // CountryID
+                                );
+                            }
+                        }
+                    }catch{}
+                }
+            }
+            if (removedLocs != null) {
+                foreach (string loc in removedLocs) {
+                    db.Execute(sqlRemoveLoc, loc);
+                }
+            }
+        }
+        
+        if (ModelState.IsValid) {
+            CommonHelpers.ReturnJsonResult(0, "Locations saved");
+        }
     }
 
     var sqlGetLocations = @"
@@ -21,8 +108,8 @@
                  INNER JOIN
                 PostalCode As PC
                   On PC.PostalCodeID = L.PostalCodeID
-        WHERE   UserID = @0
-                 AND NickName is not null AND NickName not like ''
+        WHERE   L.UserID = @0 AND Active = 1
+                 AND L.NickName is not null AND L.NickName not like ''
     ";
     var sqlcondWorkLocations = " AND ServicesPerformedAtLocation = 1";
     var sqlcondTravelLocations = " AND TravelFromLocation = 1";
