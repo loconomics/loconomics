@@ -4,7 +4,7 @@
     */
     public static object GetProviderProfileRow(int userId){
         var db = Database.Open("sqlloco");
-        var profilesql = @"SELECT a.UserID, FirstName,LastName,PostalCode,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
+        var profilesql = @"SELECT a.UserID, FirstName,LastName,Photo,PreferredLanguageID,PreferredCountryID,ADD_Details,Email,rs.Rating1,rs.Rating2,rs.Rating3,rs.Rating4 
                         FROM users a 
                         LEFT JOIN dbo.userprofilepositionadditional b ON (a.userid = b.userid)
                         JOIN dbo.userprofile e ON  (a.userid = e.userid)
