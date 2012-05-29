@@ -143,6 +143,52 @@ $(document).ready(function () {
         $(this).animate({ height: 250 });
     });
 
+    /*** Locations ***/
+    $('body').delegate('.positionlocations .addlocation', 'click', function () {
+        var editPanel = $('.location-edit-panel:eq(0)', $(this).closest('.positionlocations'));
+        var editBase = editPanel.children('.edit-location-base:eq(0)');
+        var locType = $(this).data('location-type'); // options: work, travel
+        var newLoc = editBase.clone();
+        newLoc.removeClass('edit-location-base');
+        newLoc.children('input[name=location-type]').val(locType);
+        editPanel.append(newLoc);
+        editPanel.show();
+        return false;
+    })
+    .delegate('.positionlocations .edit-location .item-action', 'click', function () {
+        // First at all, if unobtrusive validation is enabled, validate
+        /*var valobject = $(this).closest('form').data('unobtrusiveValidation');
+        if (valobject && valobject.validate() == false)
+        // Validation is actived, was executed and the result is 'false': bad data, stop:
+        return false;*/
+
+        var editLoc = $(this).closest('.edit-location');
+        var editPanel = editLoc.closest('.location-edit-panel');
+        // Copy location data to read-only view
+        var viewLoc;
+        // Find location readonly element if is not zero
+        var locId = editLoc.find('[name=location-id]').val();
+        if (locId != '0')
+            viewLoc = $('.address[data-location-id=' + locId + ']').closest('.address');
+        // If Id is zero, or readonly element doesn't exist, create one from base and add to DOM
+        if (!viewLoc) {
+            viewLoc = editPanel.find('.readonly-location-base > .address:eq(0)').clone();
+            var locType = editLoc.find('input[name=location-type]').val();
+            // add to DOM, in its list
+            $('ul.' + locType + '-locations').append('<li></li>').children().append(viewLoc);
+        }
+        viewLoc.children('.address-name').text(editLoc.find('[name=location-name]').val());
+        viewLoc.find('.address-line1').text(editLoc.find('[name=location-addressline1]').val());
+        viewLoc.find('.address-line2').text(editLoc.find('[name=location-addressline2]').val());
+        viewLoc.find('.address-city').text(editLoc.find('[name=location-city]').val());
+        viewLoc.find('.address-zipcode').text(editLoc.find('[name=location-zipcode]').val());
+        var state = editLoc.find('[name=location-state]');
+        viewLoc.find('.address-state').text(state.children('[value='+state.val()+']').data('stateprovince-code'));
+        // Hidding location and popup
+        editLoc.hide().closest('.edit-popup').hide();
+
+        return false;
+    });
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

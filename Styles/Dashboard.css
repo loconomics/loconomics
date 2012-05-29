@@ -594,7 +594,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     line-height: 1.3em;
 }
 .address .address-name,
-.address .address-location{
+.address .address-line{
     display: block;
 }
 .address .address-city:after{
@@ -608,6 +608,40 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 .address:hover .tools a {
     color: #00989A;
+}
+/* edit-location */
+.location-edit-panel {
+    display: block;
+    clear: both;
+}
+.location-edit-panel > .edit-location-base,
+.location-edit-panel > .readonly-location-base {
+    display: none;
+}
+.edit-location > ul > li > label {
+    width: auto;
+}
+.edit-location > ul > li > label > input,
+.edit-location > ul > li > label > select {
+    width: 200px;
+}
+.edit-popup .edit-location {
+    width: 400px;
+    margin: auto;
+}
+/* generic class edit-popup, used to edit locations for example */
+.edit-popup-container {
+    position: relative;
+}
+.edit-popup {
+    display: none;
+    position: absolute;
+    top: 0;
+    box-shadow: 0 0 10px 5px black;
+    width: 100%;
+    height: 100%;
+    padding: 40px 0 !important;
+    background: white;
 }
 /**** Form: Positions Licenses ****/
 .positionlicenses .license-info li label{

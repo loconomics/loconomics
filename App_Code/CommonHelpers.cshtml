@@ -30,7 +30,7 @@
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var state in db.Query(sql, 1)){
-            <option value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID.ToString())>@state.StateProvinceName</option>
+            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID.ToString())>@state.StateProvinceName</option>
         }
     }
 }

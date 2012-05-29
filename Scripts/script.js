@@ -757,11 +757,11 @@ $(document).ready(function () {
         fs.find("> .confirm input").change(function () {
             var t = $(this);
             if (t.is(':checked'))
-                if (t.val() == 'yes')
+                if (t.val() == 'yes' || t.val() == 'True')
                     fs.removeClass('confirmed-no').addClass('confirmed-yes');
                 else
                     fs.removeClass('confirmed-yes').addClass('confirmed-no');
-        });
+        }).change();
     });
 
     /* Generic script for help-point button, that will open the help-center at
