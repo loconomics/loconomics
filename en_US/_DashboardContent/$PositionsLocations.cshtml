@@ -8,7 +8,7 @@
     if (IsPost) {
         Request.Form.GetValues("");
     }
-    
+
     var sqlGetLocations = @"
         SELECT  L.*,
                 PC.PostalCode,
@@ -60,124 +60,130 @@
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="edit-popup-container positionlocations ajax ajax-box" id="position#@(n)-locations">
-    <input type="hidden" name="PositionID" value="@p.PositionID"/>
-    @CommonHelpers.GetValidationScripts()
-    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <div class="col col-2 col-2-1">
-        <fieldset class="positionlocations-itravel has-confirm">
-            <legend>I travel to clients:</legend>
-            <div class="confirm positionlocations-itravel-confirm">
-                <label>Yes<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count > 0).ToString()) name="positionlocations-itravel" value="True"/></label>
-                <label>No<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count == 0).ToString()) name="positionlocations-itravel" value="False"/></label>
-            </div>
-            <a href="#" class="addlocation" data-location-type="travel">Add location</a>
-            <fieldset class="positionlocations-itravelfrom">
-                <legend>I travel from this location (one only):</legend>
-                <ul class="travel-locations">
-                @foreach (var location in travelLocations)
-                {
-                    <li>
-                    @printAddress(new Dictionary<string, object>() {
-                        { "id", location.ServiceAddressID },
-                        { "name", location.NickName }, 
-                        { "addressline1", location.AddressLine1},
-                        { "addressline2", location.AddressLine2},
-                        { "city", location.City }, 
-                        { "state", location.StateProvinceCode },
-                        { "zipcode", location.PostalCode }
-                    })
-                    </li>
-                }
+<div class="edit-popup-container">
+    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="positionlocations ajax ajax-box" id="position#@(n)-locations">
+        <input type="hidden" name="PositionID" value="@p.PositionID"/>
+        @* In javascript will be created hidden elements with location data with name=locations as next example
+        <input type="hidden" name="locations" data-location-id="0" value="location-edit-form data as form-query-string serialized format"/>
+         *@
+        @CommonHelpers.GetValidationScripts()
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        <div class="col col-2 col-2-1">
+            <fieldset class="positionlocations-itravel has-confirm">
+                <legend>I travel to clients:</legend>
+                <div class="confirm positionlocations-itravel-confirm">
+                    <label>Yes<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count > 0).ToString()) name="positionlocations-itravel" value="True"/></label>
+                    <label>No<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count == 0).ToString()) name="positionlocations-itravel" value="False"/></label>
+                </div>
+                <a href="#" class="addlocation" data-location-type="travel">Add location</a>
+                <fieldset class="positionlocations-itravelfrom">
+                    <legend>I travel from this location (one only):</legend>
+                    <ul class="travel-locations">
+                    @foreach (var location in travelLocations)
+                    {
+                        <li>
+                        @printAddress(new Dictionary<string, object>() {
+                            { "id", location.ServiceAddressID },
+                            { "name", location.NickName }, 
+                            { "addressline1", location.AddressLine1},
+                            { "addressline2", location.AddressLine2},
+                            { "city", location.City }, 
+                            { "state", location.StateProvinceCode },
+                            { "zipcode", location.PostalCode }
+                        })
+                        </li>
+                    }
+                    </ul>
+                    <label>I will travel up to @printDistanceSelect() from this location.</label>
+                </fieldset>
+                <fieldset class="positionlocations-itravelusing">
+                    <legend>I travel to jobs using primarily:</legend>
+                    <label><input type="radio" name="positionlocations-itravelusing" value="public"/>Public transport</label>
+                    <label><input type="radio" name="positionlocations-itravelusing" value="walk"/>Walk</label>
+                    <label><input type="radio" name="positionlocations-itravelusing" value="automobile"/>Automobile</label>
+                </fieldset>
+            </fieldset>
+        </div>
+        <div class="col col-2 col-2-2">
+            <fieldset class="positionlocations-servicelocations has-confirm">
+                <legend>I perform services at specific locations:</legend>
+                <div class="positionlocations-servicelocations-confirm confirm">
+                    <label>Yes<input @CommonHelpers.IsChecked("True", (workLocations.Count > 0).ToString()) type="radio" name="positionlocations-iworkon" value="True"/></label>
+                    <label>No<input @CommonHelpers.IsChecked("True", (workLocations.Count == 0).ToString()) type="radio" name="positionlocations-iworkon" value="False"/></label>
+                </div>
+                <a href="#" class="addlocation" data-location-type="work">Add location</a>
+                <ul class="work-locations">
+                    @foreach (var location in workLocations)
+                    {
+                        <li>
+                        @printAddress(new Dictionary<string, object>() {
+                            { "id", location.ServiceAddressID },
+                            { "name", location.NickName }, 
+                            { "addressline1", location.AddressLine1},
+                            { "addressline2", location.AddressLine2},
+                            { "city", location.City }, 
+                            { "state", location.StateProvinceCode },
+                            { "zipcode", location.PostalCode }
+                        })
+                        </li>
+                    }
                 </ul>
-                <label>I will travel up to @printDistanceSelect() from this location.</label>
             </fieldset>
-            <fieldset class="positionlocations-itravelusing">
-                <legend>I travel to jobs using primarily:</legend>
-                <label><input type="radio" name="positionlocations-itravelusing" value="public"/>Public transport</label>
-                <label><input type="radio" name="positionlocations-itravelusing" value="walk"/>Walk</label>
-                <label><input type="radio" name="positionlocations-itravelusing" value="automobile"/>Automobile</label>
-            </fieldset>
+        </div>
+        <fieldset class="actions">
+            <button class="save main-action" type="submit">Save</button>
         </fieldset>
-    </div>
-    <div class="col col-2 col-2-2">
-        <fieldset class="positionlocations-servicelocations has-confirm">
-            <legend>I perform services at specific locations:</legend>
-            <div class="positionlocations-servicelocations-confirm confirm">
-                <label>Yes<input @CommonHelpers.IsChecked("True", (workLocations.Count > 0).ToString()) type="radio" name="positionlocations-iworkon" value="True"/></label>
-                <label>No<input @CommonHelpers.IsChecked("True", (workLocations.Count == 0).ToString()) type="radio" name="positionlocations-iworkon" value="False"/></label>
+    </form>
+    <form action="#" method="post" class="location-edit-form">
+        <fieldset class="location-edit-panel edit-popup">
+            <div class="readonly-location-base">
+                @printAddress(new Dictionary<string, object>() {
+                    { "id", 0 },
+                    { "name", "" }, 
+                    { "addressline1", ""},
+                    { "addressline2", ""},
+                    { "city", "" }, 
+                    { "state", "" },
+                    { "zipcode", "" }
+                })
             </div>
-            <a href="#" class="addlocation" data-location-type="work">Add location</a>
-            <ul class="work-locations">
-                @foreach (var location in workLocations)
-                {
-                    <li>
-                    @printAddress(new Dictionary<string, object>() {
-                        { "id", location.ServiceAddressID },
-                        { "name", location.NickName }, 
-                        { "addressline1", location.AddressLine1},
-                        { "addressline2", location.AddressLine2},
-                        { "city", location.City }, 
-                        { "state", location.StateProvinceCode },
-                        { "zipcode", location.PostalCode }
-                    })
+            <div class="edit-location">
+                <input type="hidden" name="location-id" value="0" />
+                <input type="hidden" name="location-type" value="" />
+                <ul>
+                    <li class="location-name">
+                        <label>Name: <input type="text" name="location-name" data-val="true" data-val-required="Location Name is required"/></label>
+                        <span data-valmsg-replace="true" data-valmsg-for="location-name" class="field-validation-valid"></span>
                     </li>
-                }
-            </ul>
-        </fieldset>
-    </div>
-    <fieldset class="location-edit-panel edit-popup">
-        <div class="readonly-location-base">
-            @printAddress(new Dictionary<string, object>() {
-                { "id", 0 },
-                { "name", "" }, 
-                { "addressline1", ""},
-                { "addressline2", ""},
-                { "city", "" }, 
-                { "state", "" },
-                { "zipcode", "" }
-            })
-        </div>
-        <div class="edit-location edit-location-base">
-            <input type="hidden" name="location-id" value="0" />
-            <input type="hidden" name="location-type" value="" />
-            <ul>
-                <li class="location-name">
-                    <label>Name: <input type="text" name="location-name" data-val="true" data-val-required="Location Name is required"/></label>
-                    <span data-valmsg-replace="true" data-valmsg-for="location-name" class="field-validation-valid"></span>
-                </li>
-                <li class="location-addressline location-addressline1">
-                    <label>Address Line 1: <input type="text" name="location-addressline1" data-val="true" data-val-required="Address Line 1 is required"/></label>
-                    <span data-valmsg-replace="true" data-valmsg-for="location-addressline1" class="field-validation-valid"></span>
-                </li>
-                <li class="location-addressline location-addressline2">
-                    <label>Address Line 2: <input type="text" name="location-addressline2" /></label>
-                </li>
-                <li class="location-city">
-                    <label>City: <input type="text" name="location-city" data-val="true" data-val-required="City is required"/></label>
-                    <span data-valmsg-replace="true" data-valmsg-for="location-city" class="field-validation-valid"></span>
-                </li>
-                <li class="location-state">
-                    <label>State: 
-                        <select name="location-state" data-val="true" data-val-required="State is required">
-                            @CommonHelpers.StateProvinceOptions(0)
-                        </select>
-                        <span data-valmsg-replace="true" data-valmsg-for="location-state" class="field-validation-valid"></span>
-                    </label>
-                </li>
-                <li class="location-zipcode">
-                    <label>Zip Code: <input type="text" name="location-zipcode" data-val="true" data-val-required="Zip Code is required"/></label>
-                    <span data-valmsg-replace="true" data-valmsg-for="location-zipcode" class="field-validation-valid"></span>
-                </li>
-            </ul>
-            <div class="actions">
-                <button class="item-action" type="button">Save location</button>        
+                    <li class="location-addressline location-addressline1">
+                        <label>Address Line 1: <input type="text" name="location-addressline1" data-val="true" data-val-required="Address Line 1 is required"/></label>
+                        <span data-valmsg-replace="true" data-valmsg-for="location-addressline1" class="field-validation-valid"></span>
+                    </li>
+                    <li class="location-addressline location-addressline2">
+                        <label>Address Line 2: <input type="text" name="location-addressline2" /></label>
+                    </li>
+                    <li class="location-city">
+                        <label>City: <input type="text" name="location-city" data-val="true" data-val-required="City is required"/></label>
+                        <span data-valmsg-replace="true" data-valmsg-for="location-city" class="field-validation-valid"></span>
+                    </li>
+                    <li class="location-state">
+                        <label>State: 
+                            <select name="location-state" data-val="true" data-val-required="State is required">
+                                @CommonHelpers.StateProvinceOptions(0)
+                            </select>
+                            <span data-valmsg-replace="true" data-valmsg-for="location-state" class="field-validation-valid"></span>
+                        </label>
+                    </li>
+                    <li class="location-zipcode">
+                        <label>Zip Code: <input type="text" name="location-zipcode" data-val="true" data-val-required="Zip Code is required"/></label>
+                        <span data-valmsg-replace="true" data-valmsg-for="location-zipcode" class="field-validation-valid"></span>
+                    </li>
+                </ul>
+                <div class="actions">
+                    <button class="button cancel fancy" type="button">Cancel</button>
+                    <button class="button save item-action" type="button">Save location</button>        
+                </div>
             </div>
-        </div>
-    </fieldset>
-    <fieldset class="actions">
-        <button class="save main-action" type="submit">Save</button>
-    </fieldset>
-</form>
+        </fieldset>
+    </form>
 </div>
