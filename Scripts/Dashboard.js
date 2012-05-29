@@ -151,12 +151,34 @@ $(document).ready(function () {
         var locType = $t.data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
         // Form reset for new location:
+        editLoc.attr('id', 'EDIT' + guidGenerator());
+        editLoc.find('input[name=location-id]').val('0');
         editLoc.find('input[name=location-name]').val('');
         editLoc.find('input[name=location-addressline1]').val('');
         editLoc.find('input[name=location-addressline2]').val('');
         editLoc.find('input[name=location-city]').val('');
         editLoc.find('input[name=location-zipcode]').val('');
         // We don't reset the state, most cases will be the same again
+        editPanel.show();
+        return false;
+    })
+    .delegate('.address > .tools > .edit', 'click', function () {
+        var $t = $(this);
+        var viewLoc = $t.closest('.address');
+        var editPanel = $('.location-edit-panel:eq(0)');
+        var editLoc = editPanel.children('.edit-location:eq(0)');
+        // Reset type, not needed in edit mode:
+        editLoc.children('input[name=location-type]').val('');
+        if (!viewLoc.attr('id')) viewLoc.attr('id', 'ID' + guidGenerator());
+        // Copying data from view to edit:
+        editLoc.attr('id', 'EDIT' + viewLoc.attr('id'));
+        editLoc.find('input[name=location-name]').val(viewLoc.find('.address-name').text());
+        editLoc.find('input[name=location-addressline1]').val(viewLoc.find('.address-line1').text());
+        editLoc.find('input[name=location-addressline2]').val(viewLoc.find('.address-line2').text());
+        editLoc.find('input[name=location-city]').val(viewLoc.find('.address-city').text());
+        editLoc.find('input[name=location-zipcode]').val(viewLoc.find('.address-zipcode').text());
+        var state = editLoc.find('[name=location-state][data-stateprovince-code=' + viewLoc.find('.address-state').text() + ']');
+        editLoc.find('input[name=location-state]').val(state);
         editPanel.show();
         return false;
     })
@@ -172,26 +194,32 @@ $(document).ready(function () {
             // Validation is actived, was executed and the result is 'false': bad data, stop:
                 return false;
 
-            // Saving this form data as a serialized value into the main form
-            var fdata = $('<input type="hidden" name="locations" data-location-id="0" value=""/>');
-            fdata.data('location-id', editLoc.find('[name=location-id]').val());
-            fdata.val(form.serialize());
-            $('form.positionlocations').append(fdata);
-
-            // Copy location data to read-only view
+            // Looking read-only location
             var viewLoc;
             // Find location readonly element if is not zero
             var locId = editLoc.find('[name=location-id]').val();
-            if (locId != '0')
-                viewLoc = $('.address[data-location-id=' + locId + ']').closest('.address');
+            if (/^EDIT/.test(editLoc.attr('id')))
+                viewLoc = $('.address#' + editLoc.attr('id').substr(4));
             // If Id is zero, or readonly element doesn't exist, create one from base and add to DOM
-            if (!viewLoc) {
+            if (!viewLoc || viewLoc.length == 0) {
                 viewLoc = editPanel.find('.readonly-location-base > .address:eq(0)').clone();
                 var locType = editLoc.find('input[name=location-type]').val();
+                viewLoc.attr('id', 'ID' + guidGenerator());
                 // add to DOM, in its list
                 var locLi = $('<li></li>').append(viewLoc);
                 $('ul.' + locType + '-locations').append(locLi);
             }
+            // Saving this form data as a serialized value into the main form
+            var fdata = $('#HIDE' + viewLoc.attr('id'));
+            if (fdata && fdata.length > 0) {
+                fdata.val(form.serialize());
+            } else {
+                fdata = $('<input type="hidden" name="locations" id="HIDE' + viewLoc.attr('id') + '"/>');
+                fdata.val(form.serialize());
+                $('form.positionlocations').append(fdata);
+            }
+
+            // Copy location data to read-only view
             viewLoc.find('.address-name').text(editLoc.find('[name=location-name]').val());
             viewLoc.find('.address-line1').text(editLoc.find('[name=location-addressline1]').val());
             viewLoc.find('.address-line2').text(editLoc.find('[name=location-addressline2]').val());
