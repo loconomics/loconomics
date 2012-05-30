@@ -92,10 +92,20 @@
 .sign-up-wizard #create-a-login .legal-agreement input{
     margin: 0 10px 0 0;
 }
-.sign-up-wizard #create-a-login .legal-agreement .stronger textarea{
+.sign-up-wizard #create-a-login .legal-agreement .stronger .short-legal-terms{
     display: block;
     height: 5em;
     width: 380px;
+    overflow: hidden;
+    height: 60px;
+    background: none repeat scroll 0 0 #B5E1E2;
+    border: medium none;
+    border-radius: 20px 20px 20px 20px;
+    color: #00989A;
+    padding: 5px 20px;
+}
+.view-terms-of-use, .view-privacy-policy {
+    cursor: pointer;
 }
 
 /** Form: Provider sign up - Your work **/

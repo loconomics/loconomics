@@ -61,6 +61,27 @@
         } else {
             zipcode = auxZip;
         }
+        if (!termsofuse.AsBool()){
+            ModelState.AddError("termsofuse", "You must agree all terms of use");
+        }
+        if (!termsofuse1.AsBool()){
+            ModelState.AddError("termsofuse1", "You must agree all terms of use");
+        }
+        if (!termsofuse2.AsBool()){
+            ModelState.AddError("termsofuse2", "You must agree all terms of use");
+        }
+        if (!termsofuse3.AsBool()){
+            ModelState.AddError("termsofuse", "You must agree all terms of use");
+        }
+        if (!termsofuse4.AsBool()){
+            ModelState.AddError("termsofuse4", "You must agree all terms of use");
+        }
+        if (!termsofuse5.AsBool()){
+            ModelState.AddError("termsofuse5", "You must agree all terms of use");
+        }
+        if (!ppolicy.AsBool()){
+            ModelState.AddError("ppolicy", "Do you understand the Privacy Policy?");
+        }
 
         // If all information is valid, create a new account
         if (ModelState.IsValid) { 
@@ -107,7 +128,15 @@
                         db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13",userid,firstname,lastname,
                             (object)(zipcode == 0 ? null : (object)zipcode),
                             (object)(state == 0 ? null : (object)state),
-                            lang,termsofuse,termsofuse1,termsofuse2,termsofuse3,termsofuse4,termsofuse5,ppolicy,emailcontact);
+                            lang,
+                            termsofuse.AsBool() ? 1 : 0,
+                            termsofuse1.AsBool() ? 1 : 0,
+                            termsofuse2.AsBool() ? 1 : 0,
+                            termsofuse3.AsBool() ? 1 : 0,
+                            termsofuse4.AsBool() ? 1 : 0,
+                            termsofuse5.AsBool() ? 1 : 0,
+                            ppolicy.AsBool() ? 1 : 0,
+                            emailcontact.AsBool() ? 1 : 0);
                         
                         // We return a json with result OK (=0), and response end just after this:
                         CommonHelpers.ReturnJsonResult(0, null);
@@ -159,7 +188,7 @@
 
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
-                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(zipcode == 0 ? Request["zipcode"] : zipcode.ToString())" @Validation.GetHtml("zipcode") />
+                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(Request["zipcode"])" @Validation.GetHtml("zipcode") />
                 @Html.ValidationMessage("zipcode")
             </li>
            
@@ -196,45 +225,54 @@
     <fieldset class="legal-agreement">
         <legend>We’re all in this together--please read these carefully!</legend>
         <ul>
-            <li>
-                <label class="stronger">Terms of use--this is how we will work together (view in separate window)
-                 <textarea disabled="disabled">Terms of use</textarea>
-                 </label>
+            <li class="view-terms-of-use">
+                <div class="stronger">Terms of use--this is how we will work together (view in separate window)
+                 <div class="short-legal-terms">This User Agreement contains the terms on which Loconomics, Inc. (“Loconomics”) offers you access to the loconomics.com site (the “Marketplace”) and various services provided by Loconomics or third parties.
+                 Click to see full Agreement.</div>
+                 </div>
              </li>
              <li>
-                <label><input type="checkbox" name="terms-of-use" id="termsofuse" value="1"/>I have read and understand the <a href="#">terms of use</a></label>
-             
+                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(@Request["termsofuse"].AsBool().ToString(), "True") name="terms-of-use" id="termsofuse" value="True"/>I have read and understand the <a href="#">terms of use</a></label>
+                @Html.ValidationMessage("termsofuse")
              </li>
              <li>
                  <strong>Specifically, I understand and agree to the following:</strong>
                  <ul>
                      <li>
-                        <label><input type="checkbox" name="termsofuse1" id="termsofuse1" value="1"/>Term of use most important item 1</label>
+                        <label><input type="checkbox" @Validation.GetHtml("termsofuse1") @CommonHelpers.IsChecked(@Request["termsofuse1"].AsBool().ToString(), "True") name="termsofuse1" id="termsofuse1" value="True"/>I personally will provide the services listed on my profile</label>
+                        @Html.ValidationMessage("termsofuse1")
                      </li>
                      <li>
-                        <label><input type="checkbox" name="termsofuse2" id="termsofuse2" value="1"/>Term of use most important item 2</label>
+                        <label><input type="checkbox" @Validation.GetHtml("termsofuse2") @CommonHelpers.IsChecked(@Request["termsofuse2"].AsBool().ToString(), "True") name="termsofuse2" id="termsofuse2" value="True"/>I am not employed by an agency or employer for services booked using my profile</label>
+                        @Html.ValidationMessage("termsofuse2")
                      </li>
                      <li>
-                        <label><input type="checkbox" name="termsofuse3" id="termsofuse3" value="1"/>Term of use most important item 3</label>
+                        <label><input type="checkbox" @Validation.GetHtml("termsofuse3") @CommonHelpers.IsChecked(@Request["termsofuse3"].AsBool().ToString(), "True") name="termsofuse3" id="termsofuse3" value="True"/>I am legally authorized to perform the services listed on my profile and possess any required licenses</label>
+                        @Html.ValidationMessage("termsofuse3")
                      </li>
                      <li>
-                        <label><input type="checkbox" name="termsofuse4" id="termsofuse4" value="1"/>Term of use most important item 4</label>
+                        <label><input type="checkbox" @Validation.GetHtml("termsofuse4") @CommonHelpers.IsChecked(@Request["termsofuse4"].AsBool().ToString(), "True") name="termsofuse4" id="termsofuse4" value="True"/>I will not engage in any unlawful or inappropriate activity while performing services for Loconomics Customers</label>
+                        @Html.ValidationMessage("termsofuse4")
                      </li>
                      <li>
-                        <label><input type="checkbox" name="termsofuse5" id="termsofuse5" value="1"/>Term of use most important item 5</label>
+                        <label><input type="checkbox" @Validation.GetHtml("termsofuse5") @CommonHelpers.IsChecked(@Request["termsofuse5"].AsBool().ToString(), "True") name="termsofuse5" id="termsofuse5" value="True"/>I will take the necessary safety precautions when meeting clients to ensure both their and my own safety</label>
+                        @Html.ValidationMessage("termsofuse5")
                      </li>
                  </ul>
              </li>
-             <li>
-                 <label class="stronger">Privacy policy--we want you to feel comfortable with how we use your data (view in separate window)
-                 <textarea disabled="disabled">Privacy policy</textarea>
-                 </label>
+             <li class="view-privacy-policy">
+                 <div class="stronger">Privacy policy--we want you to feel comfortable with how we use your data (view in separate window)
+                 <div class="short-legal-terms">Loconomics is committed to protecting the privacy of your personal information. We recognize that privacy is of utmost importance.  This Privacy Policy explains how we collect information from our users, and how we use this information. Please note that any term that is capitalized but not defined in this Privacy Policy is defined in the User Agreement.
+                 Click to see full Privacy Policy.</div>
+                 </div>
              </li>
              <li>
-                <label><input type="checkbox" name="ppolicy" id="ppolicy" value="1"/>I have read and understand the <a href="#">privacy policy</a></label>
+                <label><input type="checkbox" @Validation.GetHtml("ppolicy") @CommonHelpers.IsChecked(@Request["ppolicy"].AsBool().ToString(), "True") name="ppolicy" id="ppolicy" value="True"/>I have read and understand the <a href="#">privacy policy</a></label>
+                @Html.ValidationMessage("ppolicy")
              </li>
              <li>
-                <label><input type="checkbox" name="emailcontact" id="emailcontact" value="1"/>I don't mind being e-mailed with Loconomics news</label>
+                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @CommonHelpers.IsChecked(@Request["emailcontact"].AsBool().ToString(), "True") name="emailcontact" id="emailcontact" value="True"/>I don't mind being e-mailed with Loconomics news</label>
+                @Html.ValidationMessage("emailcontact")
              </li>
          </ul>
      </fieldset>

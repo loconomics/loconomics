@@ -342,14 +342,20 @@ $(document).ready(function () {
         popup(UrlUtil.LangPath + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location),
          { width: 410, height: 320 });
         return false;
-    });
-    $(document).delegate('a.register', 'click', function () {
+    })
+    .delegate('a.register', 'click', function () {
         popup(UrlUtil.LangPath + 'Account/$Register/', { width: 450, height: 430 });
         return false;
-    });
-    $(document).delegate('a.forgot-password', 'click', function () {
+    })
+    .delegate('a.forgot-password', 'click', function () {
         popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', { width: 400, height: 220 });
         return false;
+    })
+    .delegate('.view-privacy-policy', 'click', function () {
+        popup(UrlUtil.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
+    })
+    .delegate('.view-terms-of-use', 'click', function () {
+        popup(UrlUtil.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
     });
 
     $('a#launchHowItWorks').click(function (event) {
@@ -827,6 +833,7 @@ function popup(url, size, complete, loadingText){
     //window.open(url);
 
     // Smart popup
+    loadingText = loadingText || '';
     var swh;
     if (size && size.width)
         swh = size;

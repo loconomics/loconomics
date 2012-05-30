@@ -1412,6 +1412,9 @@ table .number{
     font-weight: bold;
     padding: 0;
 }
+.blockUI > article {
+    text-align: left;
+}
 
 
 /****************************
