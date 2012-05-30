@@ -61,7 +61,7 @@ Set the estimate parameters for your service.
             InitPricingWizardProviderSetup();
 </script>*@
 
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionPricing/" method="post" class="positionpricing pricingwizard ajax ajax-box" id="@idprefix">
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPricing/" method="post" class="positionpricing pricingwizard ajax ajax-box" id="@idprefix">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
