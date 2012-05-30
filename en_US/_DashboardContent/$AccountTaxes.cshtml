@@ -8,7 +8,8 @@
     dynamic taxentities = null, tintypes = null;
     
     Validation.RequireField("tin_fullname", LcRessources.RequiredField("Full name"));
-    Validation.RequireField("tin_businessname", LcRessources.RequiredField("Business name"));
+    // Business name is only required if taxentitytype is not 'individual'
+    //Validation.RequireField("tin_businessname", LcRessources.RequiredField("Business name"));
     Validation.RequireField("tin_streetaddress", LcRessources.RequiredField("Street Address"));
     Validation.RequireField("tin_city", LcRessources.RequiredField("City"));
     Validation.RequireField("tin_state", LcRessources.RequiredField("State"));
@@ -26,6 +27,11 @@
         var zipcodeID = LcValidators.ValidateZipCode(Request["tin_zipcode"], Request["tin_state"].AsInt());
         if (zipcodeID == 0) {
             ModelState.AddError("tin_zipcode", "Zip code is not valid");
+        }
+        int individualEntityTypeID = 1; // Hardcoded ID=1 for individual/sole propeitor entity type
+        if (Request["tin_taxentitytype"].AsInt() != individualEntityTypeID &&
+            Request["tin_businessname"].IsEmpty()) {
+            ModelState.AddError("tin_businessname", LcRessources.RequiredField("Business name"));
         }
 
         if (ModelState.IsValid) {
