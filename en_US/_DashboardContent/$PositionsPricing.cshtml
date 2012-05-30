@@ -22,12 +22,12 @@
         // TODO: Get Customer Type Id   
         var clienttypeid = PageData["ClientTypeID"] = 1;     
         
-        // Get our Pricing Type ID:
-        int pricingtypeid = (int)db.QueryValue(@"
+        // Get our Pricing Type ID: (TODO: just now, if there is no value, 2-custom is getted)
+        int pricingtypeid = ((int?)db.QueryValue(@"
             SELECT  pricingtypeid
             FROM    positionpricingtype
             WHERE   countryid=@0 AND clienttypeid=@1 AND positionid=@2
-        ", 1, clienttypeid, pos.PositionID);
+        ", 1, clienttypeid, pos.PositionID) ?? 2);
         
         switch (pricingtypeid) {
             case 1: // Hours
