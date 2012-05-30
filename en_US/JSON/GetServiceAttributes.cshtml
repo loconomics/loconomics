@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     /* Setup */
     var result = new Dictionary<string, object>();
     // Error result by default
@@ -7,6 +8,14 @@
     try{
         /* Input data */
         var positionId = int.Parse(Request["positionId"]);
+        var filter = Request["filter"];
+        var catsFilter = new List<int>();
+        
+        switch (filter) {
+            case "provider-services":
+                catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
+                break;
+        }
         
         /* Process data */
         //var sqlposition = "exec GetPosition @0,1,1";
@@ -23,6 +32,10 @@
         
         // Iterate the categories
         foreach (var cat in catrow){
+            // Apply filtering, if there are
+            if (catsFilter.Count > 0 && !catsFilter.Contains(cat.ServiceAttributeCategoryID)) {
+                continue;
+            }
             // Copy data to a new structure
             var rcat = new Dictionary<string, object>(){
                 { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },

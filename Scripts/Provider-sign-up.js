@@ -86,7 +86,7 @@ function initYourWork(){
         // Do the ajax to load attributes
         $.ajax({
             url: UrlUtil.JsonPath + 'GetServiceAttributes/',
-            data: { positionId: selectedPosition },
+            data: { positionId: selectedPosition, filter: 'provider-services' },
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
 
