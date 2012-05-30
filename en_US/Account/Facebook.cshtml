@@ -103,7 +103,7 @@
                             WHERE   U.UserID = @0
                                      AND
                                     (
-                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.'), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
+                                    dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(U.FirstName, dbo.fx_concatBothOrNothing(U.MiddleIn, '.', ''), ' '), U.LastName, ' '), U.SecondLastName, ' ') = @1
                                      OR
                                     dbo.fx_concat(U.FirstName, U.LastName, ' ') = @1
                                     )
