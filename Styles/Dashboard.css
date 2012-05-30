@@ -945,6 +945,9 @@ form#personal li > label.gender {
 .booking .actions {
     float: right;
 }
+.booking .pricing-wizard .actions {
+    float: none;
+}
 .booking-request form fieldset.actions,
 .booking form fieldset.actions {
     float: none;

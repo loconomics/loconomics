@@ -1,14 +1,14 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current provider data record:
-    var p = PageData["providerrow"];
+    var p = DashboardFunctions.GetRequestedUserRow();
     // Current position data record:
     var pos = PageData["position"];
     // Current position number/index
-    var n = PageData["npos"];
+    var n = pos.PositionID;
     
     dynamic services, serviceswithfees, posRatings;
-    int servicesId = 2, serviceswithfeesId = 3;    
+    int servicesId = 2, serviceswithfeesId = 3;
     
     using (var db = Database.Open("sqlloco")) {
         posRatings = db.QuerySingle(@"

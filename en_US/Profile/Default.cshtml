@@ -1,38 +1,46 @@
 ﻿@{     
-    Layout = "../_SiteLayout.cshtml";
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
    
-    int providerid = PageData["providerid"] = Request["ProviderID"].AsInt();
-    int positionid = PageData["positionid"] = Request["PositionID"].AsInt();
-    
-    if (providerid == 0 || positionid == 0) {
+    int userid = Request["userid"].AsInt();
+    if (userid == 0) {
+        userid = UrlData[0].AsInt();
+    }
+    // Preserve compability with providerid url param still:    
+    if (userid == 0) {
+        userid = Request["ProviderID"].AsInt();
+    }
+    int positionid = Request["PositionID"].AsInt();
+
+    if (userid == 0) {
         Response.Redirect(UrlUtil.LangPath);
     }
-    
-    // var Service, string ServiceType, string position
-    
-    var providerrow = PageData["providerrow"] = ProfileFunctions.GetProviderProfileRow(providerid);
-    //var posrows = PageData["posrows"] = ProfileFunctions.GetPositionRow(providerid, positionid);
-    var posrows = PageData["posrows"] = DashboardFunctions.GetUserPos(providerid);
-    
-    if (providerrow == null || posrows == null || posrows.Count == 0) {
+        
+    var u = DashboardFunctions.GetRequestedUserRow(userid);
+    if (u == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
+    userid = u.UserID;
     
-    // Check if the positionid requested exists for current user:
-    var posexists = false;
-    foreach(var c in posrows){
-        if (c.PositionID == positionid) {
-            posexists = true;
+    dynamic posrows = null;
+    if (u.IsProvider) {
+        posrows = DashboardFunctions.GetUserPos(userid);
+        
+        // Check if the positionid requested exists for current user:
+        var posexists = false;
+        foreach(var c in posrows){
+            if (c.PositionID == positionid) {
+                posexists = true;
+            }
         }
-    }
-    if (!posexists) {
-        Response.Redirect(UrlUtil.LangPath);
+        if (!posexists) {
+            Response.Redirect(UrlUtil.LangPath);
+        }
     }
     
     // Number of maximum positions displayed:
     var maxPositions = 5;
     
-    Page.Title = PageData["providerrow"].FirstName;
+    Page.Title = u.FirstName;
     Scripts.Add(UrlUtil.AppPath + "Scripts/Profile.js");
 }
 @helper printFriend(string name, string photo){
@@ -61,12 +69,12 @@
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
-            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + providerrow["UserID"])" alt="User Photo" />
-            <h1 class="profile-name">@printName(providerrow)</h1>
+            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + u["UserID"])" alt="User Photo" />
+            <h1 class="profile-name">@printName(u)</h1>
 		    
 		    <p class="profile-desc">
-                @if (!String.IsNullOrWhiteSpace(providerrow["PublicBio"])) {
-                    @providerrow["PublicBio"]
+                @if (!String.IsNullOrWhiteSpace(u["PublicBio"])) {
+                    @u["PublicBio"]
                 } else {
                     <text>User doesn't provide information about itself.</text>
                     <br />
@@ -97,7 +105,7 @@
 		<ul class="tabs">
             @{
                 var n = 0;
-                foreach(var c in PageData["posrows"]){
+                foreach(var c in posrows){
                     n++;
                     if (n > maxPositions) { break; }
                     var cls = (c.PositionID == positionid ? "current" : "");
@@ -108,12 +116,11 @@
         
         @{
             n = 0;
-            foreach(var position in PageData["posrows"]){
+            foreach(var position in posrows){
                 n++;
                 if (n > maxPositions) { break; }
                 var cls = (position.PositionID == positionid ? "current" : "");
                 PageData["position"] = position;
-                PageData["npos"] = n;
         <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls position-tab">
             
             @RenderPage("_PositionSummary.cshtml")
@@ -129,7 +136,7 @@
             </ul>
             
             <div id="@("position"+n)-overview" class="tab-body current overview">
-                @RenderPage("_Overview.cshtml")
+                @RenderPage("_ProviderOverview.cshtml")
             </div><!-- #@("position"+n)-overview -->
             <div id="@("position"+n)-reviews" class="tab-body reviews">
                 @RenderPage("_Reviews.cshtml")

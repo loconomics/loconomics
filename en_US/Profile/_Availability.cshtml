@@ -1,13 +1,11 @@
 ﻿@{
     // Provider
-    var provider = PageData["providerrow"];
+    var p = DashboardFunctions.GetRequestedUserRow();
     // Current position data record:
-    var p = PageData["position"];
-    // Current position number/index
-    var n = PageData["npos"];
+    var pos = PageData["position"];
 }
 <p class="map-description">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
-@RenderPage("$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", provider.UserID } } )
+@RenderPage("$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID } } )
