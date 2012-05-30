@@ -1,12 +1,14 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     // Provider
-    var provider = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["ProviderID"].AsInt());
+    var p = DashboardFunctions.GetRequestedUserRow(Request["ProviderID"].AsInt());
     // Current position data record:
-    var p = PageData["position"] ?? DashboardFunctions.GetUserPos(Request["ProviderID"].AsInt(),
+    var pos = PageData["position"] ?? DashboardFunctions.GetUserPos(Request["ProviderID"].AsInt(),
         Request["PositionID"].AsInt());
     // Current position number/index
-    var n = PageData["npos"];
-    
+    var n = pos.PositionID;
+
     Validation.RequireField("message-body", "Message cannot be empty!");
     Validation.RequireField("subject", "Subject cannot be empty!");
     
@@ -18,7 +20,7 @@
         }
         
         if (ModelState.IsValid) {
-            LcMessaging.SendCustomerInquiry(u.UserID, provider.UserID, p.PositionID, 
+            LcMessaging.SendCustomerInquiry(u.UserID, p.UserID, pos.PositionID, 
                 Request["subject"], Request["message-body"]);
             
             CommonHelpers.ReturnJsonResult(0, "Your message was sucessfully sent!");
@@ -32,7 +34,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
     var u = DashboardFunctions.GetUserRow();
     <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message ajax ajax-box" id="position#@(n)-message">
         <input type="hidden" name="ProviderID" value="@p.UserID"/>
-        <input type="hidden" name="PositionID" value="@p.PositionID"/>
+        <input type="hidden" name="PositionID" value="@pos.PositionID"/>
         @CommonHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <div class="from-line">
@@ -41,10 +43,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
             <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
         </div>
         <div class="subject">
-            <label>Subject: <input type="text" name="subject" value="Message from @CommonHelpers.GetUserDisplayName(u) about @p.PositionSingular services"/></label>
+            <label>Subject: <input type="text" name="subject" value="Message from @CommonHelpers.GetUserDisplayName(u) about @pos.PositionSingular services"/></label>
         </div>
         <div class="message-body">
-            <textarea name="message-body" placeholder="Write your message to @CommonHelpers.GetUserDisplayName(provider)"></textarea>
+            <textarea name="message-body" placeholder="Write your message to @CommonHelpers.GetUserDisplayName(p)"></textarea>
         </div>
         <fieldset class="actions">
             <button class="main-action" type="submit">Send message</button>

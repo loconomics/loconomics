@@ -133,8 +133,17 @@
         // Implemented a basic, per-page, cache, faster and simplified for each page
         var u = PageData["userow"];
         if (u == null){
-            u = GetUserRow(WebSecurity.CurrentUserId);
-            PageData["userow"] = u;
+            PageData["userow"] = u = GetUserRow(WebSecurity.CurrentUserId);
+        }
+        return u;
+    }
+    public static dynamic GetRequestedUserRow(int userid = 0) {
+        var u = PageData["requesteduserrow"];
+        if (u == null || u != null && userid > 0 && u.UserID != userid) {
+            if (userid == 0) {
+                userid = Request["userid"].AsInt();
+            }
+            PageData["requesteduserrow"] = u = GetUserRow(userid);
         }
         return u;
     }

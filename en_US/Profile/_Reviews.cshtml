@@ -1,10 +1,8 @@
 ﻿@{
     // Provider
-    var provider = PageData["providerrow"];
+    var p = DashboardFunctions.GetRequestedUserRow();
     // Current position data record:
-    var p = PageData["position"];
-    // Current position number/index
-    var n = PageData["npos"];
+    var pos = PageData["position"];
     
     // TODO Review old code:
     /* @RenderPage(UrlUtil.LangPath + "ReviewsGrid.cshtml", {ProviderID,PositionID}) */
@@ -13,5 +11,5 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
-@RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", provider.UserID, p.PositionID, true)
+@RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", p.UserID, pos.PositionID, true)
 
