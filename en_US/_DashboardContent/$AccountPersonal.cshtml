@@ -8,13 +8,14 @@
     var FirstName = Request["firstname"] ?? u.FirstName;
     var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
     var LastName = Request["lastname"] ?? u.LastName;
+    var SecondLastName = Request["secondlastname"] ?? u.SecondLastName;
     var MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
     var AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
     var Street1 = Request["streetaddress1"] ?? u.AddressLine1;
     var Street2 = Request["streetaddress2"] ?? u.AddressLine2;
     var City = Request["city"] ?? u.City;
     var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
-    var Zip = Request["zipcode"] ?? u.PostalCode;
+    string Zip = Request["zipcode"] ?? u.PostalCode;
     var Bio = Request["publicbio"] ?? u.PublicBio;
     var BirthYear = Request["birthyear"] ?? u.BirthYear;
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
@@ -31,11 +32,13 @@
     
     if (IsPost && Validation.IsValid()) {
         
-        int auxZip = LcValidators.ValidateZipCode(Zip, State);
-        if (auxZip == 0) {
-            ModelState.AddError("zipcode", "Zip code is not valid");
-        } else {
-            Zip = auxZip;
+        if (!Zip.IsEmpty()) {
+            int auxZip = LcValidators.ValidateZipCode(Zip, State);
+            if (auxZip == 0) {
+                ModelState.AddError("zipcode", "Zip code is not valid");
+            } else {
+                Zip = auxZip.ToString();
+            }
         }
         
         if (ModelState.IsValid) {
@@ -60,16 +63,16 @@
                                     WHERE   VerificationCategoryID = 3
                                 )
                     END
-                ", u.UserID, FirstName, MiddleInitial, LastName, null);
+                ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName);
                 db.Execute(@"
                     UPDATE users
                     SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
                             AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCodeID=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, 
-                            IAuthZumigoVerification=@14, IAuthZumigoLocation=@15,
+                            IAuthZumigoVerification=@14, IAuthZumigoLocation=@15, SecondLastName=@16,
                             UpdatedDate=getdate(), ModifiedBy='sys'
                     WHERE   UserId = @0
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-                 State, Zip, Bio, BirthYear, GenderID, IAuthZumigoVerification, IAuthZumigoLocation);
+                 State, Zip, Bio, BirthYear, GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName);
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
@@ -116,6 +119,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </li>
             <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
                 @Html.ValidationMessage("lastname")
+            </li>
+            <li><label for="@idprefix-secondlastname">Second Last Name:</label><input id="@idprefix-secondlastname" type="text" name="secondlastname" value="@SecondLastName" @Validation.GetHtml("secondlastname")/>
+                @Html.ValidationMessage("secondlastname")
             </li>
             <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
                 @Html.ValidationMessage("mobilephone")
