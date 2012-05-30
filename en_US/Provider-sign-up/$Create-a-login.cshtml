@@ -37,7 +37,6 @@
     confirmPassword = Request.Form["confirmPassword"];
     firstname = Request.Form["firstname"];
     lastname =   Request.Form["lastname"];
-    zipcode =  Request.Form["zipcode"].AsInt();
     state = Request["state"].AsInt();
     lang =  Request.Form["lang"];
     termsofuse = Request.Form["termsofuse"];
@@ -56,12 +55,12 @@
         // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
         //     ModelState.AddError("recaptcha", "Captcha response was not correct");
         // }
-        /*int auxZip = LcValidators.ValidateZipCode(zipcode, State);
+        int auxZip = LcValidators.ValidateZipCode(Request["zipcode"], state);
         if (auxZip == 0) {
             ModelState.AddError("zipcode", "Zip code is not valid");
         } else {
             zipcode = auxZip;
-        }*/
+        }
 
         // If all information is valid, create a new account
         if (ModelState.IsValid) { 
@@ -160,7 +159,7 @@
 
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
-                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@lastname" @Validation.GetHtml("zipcode") />
+                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(zipcode == 0 ? Request["zipcode"] : zipcode.ToString())" @Validation.GetHtml("zipcode") />
                 @Html.ValidationMessage("zipcode")
             </li>
            
