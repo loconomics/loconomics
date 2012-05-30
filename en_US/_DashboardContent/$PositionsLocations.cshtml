@@ -4,6 +4,9 @@
     // Current position data record:
     var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
+    dynamic workLocations = null, travelLocations = null;
+    var postedLocations = new Dictionary<string,System.Collections.Specialized.NameValueCollection>();
+    var postedRemovedLocs = new List<int>();
     
     if (IsPost) {
         var sqlRemoveLoc = @"
@@ -44,15 +47,16 @@
             if (locs != null) {
                 foreach (string loc in locs) {
                     var locdata = HttpUtility.ParseQueryString(loc, System.Text.Encoding.UTF8);
-                
+                    var locid = locdata["location-id"].AsInt();
+                    bool locerror = false;
+                    
                     try{
-                        var locid = locdata["location-id"].AsInt();
-                        locdata["location-zipcode"].AsInt();
                         // Validate Postal Code
                         var state = locdata["location-state"].AsInt();
                         var zip = LcValidators.ValidateZipCode(locdata["location-zipcode"], state);
                         if (zip == 0) {
                             ModelState.AddFormError("Location '" + locdata["location-name"] + "': Postal Code not valid");
+                            locerror = true;
                         } else {
                             if (locid == 0) {
                                 // @2 = 12 --others
@@ -65,8 +69,8 @@
                                     state,
                                     zip,
                                     1, // CountryID
-                                    locdata["location-type"] == "work",
-                                    locdata["location-type"] == "travel"
+                                    locdata["location-type"] == "work" ? 1 : 0,
+                                    locdata["location-type"] == "travel" ? 1 : 0
                                 );
                             } else {
                                 db.Execute(sqlUpdLoc,
@@ -81,18 +85,34 @@
                                 );
                             }
                         }
-                    }catch{}
+                    }catch (Exception ex){
+                        ModelState.AddFormError("There was an error saving the data " + ex.Message);
+                        locerror = true;
+                    }
+                    if (locerror) {
+                        // Saving location in an index for post-error recovering
+                        locdata.Add("original-posted-value", loc);
+                        if (locid > 0) {
+                            postedLocations.Add("LOCID" + locid.ToString(), locdata);
+                        } else {
+                            postedLocations.Add(locdata["location-editor-id"], locdata);
+                        }
+                    }
                 }
             }
             if (removedLocs != null) {
                 foreach (string loc in removedLocs) {
                     db.Execute(sqlRemoveLoc, loc);
+                    // Saving removed ID for post-error recovering
+                    postedRemovedLocs.Add(loc.AsInt());
                 }
             }
         }
         
         if (ModelState.IsValid) {
-            CommonHelpers.ReturnJsonResult(0, "Locations saved");
+            // To avoid duplications when posting form several times, this needs to be
+            // reset after every change posted, return html with a saved message instead json
+            //CommonHelpers.ReturnJsonResult(0, "Locations saved");
         }
     }
 
@@ -108,15 +128,16 @@
                  INNER JOIN
                 PostalCode As PC
                   On PC.PostalCodeID = L.PostalCodeID
-        WHERE   L.UserID = @0 AND Active = 1
+        WHERE   L.UserID = @0
+                 AND L.PositionID = @1
+                 AND Active = 1
                  AND L.NickName is not null AND L.NickName not like ''
     ";
     var sqlcondWorkLocations = " AND ServicesPerformedAtLocation = 1";
     var sqlcondTravelLocations = " AND TravelFromLocation = 1";
-    dynamic workLocations = null, travelLocations = null;
     using (var db = Database.Open("sqlloco")) {
-        workLocations = db.Query(sqlGetLocations + sqlcondWorkLocations, u.UserID);
-        travelLocations = db.Query(sqlGetLocations + sqlcondTravelLocations, u.UserID);
+        workLocations = db.Query(sqlGetLocations + sqlcondWorkLocations, u.UserID, p.PositionID);
+        travelLocations = db.Query(sqlGetLocations + sqlcondTravelLocations, u.UserID, p.PositionID);
     }
 }
 @helper printDistanceSelect(){
@@ -128,7 +149,9 @@
     </select>
 }
 @helper printAddress(IDictionary<string, object> addressDetails){
-        <div class="address" data-location-id="@addressDetails["id"]" data-location-name="@addressDetails["name"]">
+    var contId = (string)addressDetails["container-id"];
+    var cid = String.IsNullOrWhiteSpace(contId) ? "" : "id='" + contId + "'";
+        <div class="address" @Html.Raw(cid) data-location-id="@addressDetails["id"]" data-location-name="@addressDetails["name"]">
             <span class="address-name">@addressDetails["name"]</span>
             <span class="address-line">
                 <span class="address-line1">@addressDetails["addressline1"]</span>
@@ -155,33 +178,91 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <input type="hidden" name="locations" value="location-edit-form data as form-query-string serialized format"/>
         In javascript, will be created hidden elements with location id's to be deleted as next example
         <input type="hidden" name="remove-locations" value="32"/>
+        If we are in IsPost, we restore posted values:
          *@
+        @foreach (var l in postedLocations)
+        {
+            <input type="hidden" name="locations" value="@l.Value["original-posted-value"]" id="HIDE-@l.Value["location-editor-id"]" />
+        }
+        @foreach (var l in postedRemovedLocs)
+        {
+            <input type="hidden" name="remove-locations" value="@l.ToString()" id="HIDE-REMOVED-LOCATION-@l.ToString()" />
+        }
         @CommonHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        @if (IsPost && ModelState.IsValid)
+        {
+            <div class="saved info success">Locations saved!</div>
+        }
         <div class="col col-2 col-2-1">
-            <fieldset class="positionlocations-itravel has-confirm">
+            <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">
                 <legend>I travel to clients:</legend>
                 <div class="confirm positionlocations-itravel-confirm">
                     <label>Yes<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count > 0).ToString()) name="positionlocations-itravel" value="True"/></label>
                     <label>No<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count == 0).ToString()) name="positionlocations-itravel" value="False"/></label>
                 </div>
-                <a href="#" class="addlocation" data-location-type="travel">Add location</a>
+                <a href="#" class="addlocation">Add location</a>
                 <fieldset class="positionlocations-itravelfrom">
                     <legend>I travel from this location (one only):</legend>
                     <ul class="travel-locations">
                     @foreach (var location in travelLocations)
                     {
                         <li>
-                        @printAddress(new Dictionary<string, object>() {
-                            { "id", location.ServiceAddressID },
-                            { "name", location.NickName }, 
-                            { "addressline1", location.AddressLine1},
-                            { "addressline2", location.AddressLine2},
-                            { "city", location.City }, 
-                            { "state", location.StateProvinceCode },
-                            { "zipcode", location.PostalCode }
-                        })
+                        @* Must be checked the posted data too, to recover data when a post error happen.
+                            If there is not posted data, database location is showed.
+                         *@
+                        @if (!postedRemovedLocs.Contains((int)location.ServiceAddressID))
+                        {
+                            if (postedLocations.ContainsKey("LOCID" + location.ServiceAddressID.ToString()))
+                            {
+                                var l = postedLocations["LOCID" + location.ServiceAddressID.ToString()];
+                                @printAddress(new Dictionary<string, object>() {
+                                    { "container-id", l["location-editor-id"] },
+                                    { "id", l["location-id"] },
+                                    { "name", l["location-name"] },
+                                    { "addressline1", l["location-addressline1"]},
+                                    { "addressline2", l["location-addressline2"]},
+                                    { "city", l["location-city"] },
+                                    { "state", l["location-state-code"] },
+                                    { "zipcode", l["location-zipcode"] }
+                                })
+                                postedLocations.Remove("LOCID" + location.ServiceAddressID.ToString());
+                            }
+                            else
+                            {
+                                @printAddress(new Dictionary<string, object>() {
+                                    { "container-id", "" },
+                                    { "id", location.ServiceAddressID },
+                                    { "name", location.NickName },
+                                    { "addressline1", location.AddressLine1},
+                                    { "addressline2", location.AddressLine2},
+                                    { "city", location.City },
+                                    { "state", location.StateProvinceCode },
+                                    { "zipcode", location.PostalCode }
+                                })
+                            }
+                        }
                         </li>
+                    }
+                    @foreach (var location in postedLocations)
+                    {
+                        var l = location.Value;
+                        // Only type 'travel' locations
+                        if (l["location-type"] == "travel")
+                        {
+                            <li>
+                            @printAddress(new Dictionary<string, object>() {
+                                { "container-id", l["location-editor-id"] },
+                                { "id", l["location-id"] },
+                                { "name", l["location-name"] },
+                                { "addressline1", l["location-addressline1"]},
+                                { "addressline2", l["location-addressline2"]},
+                                { "city", l["location-city"] },
+                                { "state", l["location-state-code"] },
+                                { "zipcode", l["location-zipcode"] }
+                            })
+                            </li>
+                        }
                     }
                     </ul>
                     <label>I will travel up to @printDistanceSelect() from this location.</label>
@@ -195,27 +276,71 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </fieldset>
         </div>
         <div class="col col-2 col-2-2">
-            <fieldset class="positionlocations-servicelocations has-confirm">
+            <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-type="work">
                 <legend>I perform services at specific locations:</legend>
                 <div class="positionlocations-servicelocations-confirm confirm">
                     <label>Yes<input @CommonHelpers.IsChecked("True", (workLocations.Count > 0).ToString()) type="radio" name="positionlocations-iworkon" value="True"/></label>
                     <label>No<input @CommonHelpers.IsChecked("True", (workLocations.Count == 0).ToString()) type="radio" name="positionlocations-iworkon" value="False"/></label>
                 </div>
-                <a href="#" class="addlocation" data-location-type="work">Add location</a>
+                <a href="#" class="addlocation">Add location</a>
                 <ul class="work-locations">
                     @foreach (var location in workLocations)
                     {
                         <li>
-                        @printAddress(new Dictionary<string, object>() {
-                            { "id", location.ServiceAddressID },
-                            { "name", location.NickName }, 
-                            { "addressline1", location.AddressLine1},
-                            { "addressline2", location.AddressLine2},
-                            { "city", location.City }, 
-                            { "state", location.StateProvinceCode },
-                            { "zipcode", location.PostalCode }
-                        })
+                        @* Must be checked the posted data too, to recover data when a post error happen.
+                            If there is not posted data, database location is showed.
+                         *@
+                        @if (!postedRemovedLocs.Contains((int)location.ServiceAddressID))
+                        {
+                            if (postedLocations.ContainsKey("LOCID" + location.ServiceAddressID.ToString()))
+                            {
+                                var l = postedLocations["LOCID" + location.ServiceAddressID.ToString()];
+                                @printAddress(new Dictionary<string, object>() {
+                                    { "container-id", l["location-editor-id"] },
+                                    { "id", l["location-id"] },
+                                    { "name", l["location-name"] },
+                                    { "addressline1", l["location-addressline1"]},
+                                    { "addressline2", l["location-addressline2"]},
+                                    { "city", l["location-city"] },
+                                    { "state", l["location-state-code"] },
+                                    { "zipcode", l["location-zipcode"] }
+                                })
+                                postedLocations.Remove("LOCID" + location.ServiceAddressID.ToString());
+                            }
+                            {
+                                @printAddress(new Dictionary<string, object>() {
+                                   { "container-id", "" },
+                                   { "id", location.ServiceAddressID },
+                                    { "name", location.NickName },
+                                    { "addressline1", location.AddressLine1},
+                                    { "addressline2", location.AddressLine2},
+                                    { "city", location.City },
+                                    { "state", location.StateProvinceCode },
+                                    { "zipcode", location.PostalCode }
+                                })
+                            }
+                        }
                         </li>
+                    }
+                    @foreach (var location in postedLocations)
+                    {
+                        var l = location.Value;
+                        // Only type 'work' locations
+                        if (l["location-type"] == "work")
+                        {
+                            <li>
+                            @printAddress(new Dictionary<string, object>() {
+                                { "container-id", l["location-editor-id"] },
+                                { "id", l["location-id"] },
+                                { "name", l["location-name"] },
+                                { "addressline1", l["location-addressline1"]},
+                                { "addressline2", l["location-addressline2"]},
+                                { "city", l["location-city"] },
+                                { "state", l["location-state-code"] },
+                                { "zipcode", l["location-zipcode"] }
+                            })
+                            </li>
+                        }
                     }
                 </ul>
             </fieldset>
@@ -228,6 +353,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <fieldset class="location-edit-panel edit-popup">
             <div class="readonly-location-base">
                 @printAddress(new Dictionary<string, object>() {
+                    { "container-id", "" },
                     { "id", 0 },
                     { "name", "" }, 
                     { "addressline1", ""},
@@ -238,6 +364,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                 })
             </div>
             <div class="edit-location">
+                <input type="hidden" name="location-editor-id" value="" />
                 <input type="hidden" name="location-id" value="0" />
                 <input type="hidden" name="location-type" value="" />
                 <ul>
@@ -257,10 +384,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                         <span data-valmsg-replace="true" data-valmsg-for="location-city" class="field-validation-valid"></span>
                     </li>
                     <li class="location-state">
-                        <label>State: 
+                        <label>State:
                             <select name="location-state" data-val="true" data-val-required="State is required">
                                 @CommonHelpers.StateProvinceOptions(0)
                             </select>
+                            <input type="hidden" name="location-state-code" />
                             <span data-valmsg-replace="true" data-valmsg-for="location-state" class="field-validation-valid"></span>
                         </label>
                     </li>
@@ -271,7 +399,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                 </ul>
                 <div class="actions">
                     <button class="button cancel fancy" type="button">Cancel</button>
-                    <button class="button save item-action" type="button">Save location</button>        
+                    <button class="button save item-action" type="submit">Save location</button>        
                 </div>
             </div>
         </fieldset>

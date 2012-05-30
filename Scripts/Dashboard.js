@@ -148,10 +148,11 @@ $(document).ready(function () {
         var $t = $(this);
         var editPanel = $('.location-edit-panel:eq(0)');
         var editLoc = editPanel.children('.edit-location:eq(0)');
-        var locType = $t.data('location-type'); // values: work, travel
+        var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
         // Form reset for new location:
         editLoc.attr('id', 'EDIT' + guidGenerator());
+        editLoc.find('input[name=location-editor-id]').val(editLoc.attr('id'));
         editLoc.find('input[name=location-id]').val('0');
         editLoc.find('input[name=location-name]').val('');
         editLoc.find('input[name=location-addressline1]').val('');
@@ -162,23 +163,32 @@ $(document).ready(function () {
         editPanel.show();
         return false;
     })
+    .delegate('select[name=location-state]', 'change', function () {
+        var $t = $(this);
+        // Updating the hidden field with the state code, the state select use the state id for value.
+        $t.siblings('input[name=location-state-code]').val($t.children('[value=' + $t.val() + ']').data('stateprovince-code'));
+    })
     .delegate('.address > .tools > .edit', 'click', function () {
         var $t = $(this);
         var viewLoc = $t.closest('.address');
         var editPanel = $('.location-edit-panel:eq(0)');
         var editLoc = editPanel.children('.edit-location:eq(0)');
-        // Reset type, not needed in edit mode:
-        editLoc.children('input[name=location-type]').val('');
+        var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
+        editLoc.children('input[name=location-type]').val(locType);
         if (!viewLoc.attr('id')) viewLoc.attr('id', 'ID' + guidGenerator());
         // Copying data from view to edit:
         editLoc.attr('id', 'EDIT' + viewLoc.attr('id'));
+        editLoc.find('input[name=location-editor-id]').val(viewLoc.attr('id'));
         editLoc.find('input[name=location-name]').val(viewLoc.find('.address-name').text());
         editLoc.find('input[name=location-addressline1]').val(viewLoc.find('.address-line1').text());
         editLoc.find('input[name=location-addressline2]').val(viewLoc.find('.address-line2').text());
         editLoc.find('input[name=location-city]').val(viewLoc.find('.address-city').text());
         editLoc.find('input[name=location-zipcode]').val(viewLoc.find('.address-zipcode').text());
-        var state = editLoc.find('[name=location-state][data-stateprovince-code=' + viewLoc.find('.address-state').text() + ']');
-        editLoc.find('input[name=location-state]').val(state);
+        // State ID and Code
+        var stateCode = viewLoc.find('.address-state').text();
+        editLoc.find('input[name=location-state-code]').val(stateCode);
+        var selectState = editLoc.find('select[name=location-state]');
+        selectState.val(selectState.children('option[data-stateprovince-code=' + stateCode + ']').attr('value'));
         editPanel.show();
         return false;
     })
@@ -192,9 +202,10 @@ $(document).ready(function () {
         var locid = viewLoc.data('location-id');
         var idview = viewLoc.attr('id');
         if (idview)
-            $('#HIDE' + idview).remove();
+            $('#HIDE-' + idview).remove();
         if (locid && locid != '0')
-            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' + locid + '"/>');
+            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' + 
+                locid + '" id="HIDE-REMOVED-LOCATION-' + locid + '" />');
         viewLoc.remove();
         return false;
     })
@@ -210,7 +221,7 @@ $(document).ready(function () {
             // Validation is actived, was executed and the result is 'false': bad data, stop:
                 return false;
 
-            // Looking read-only location
+            // Looking for read-only location
             var viewLoc;
             // Find location readonly element if is not zero
             var locId = editLoc.find('[name=location-id]').val();
@@ -226,11 +237,12 @@ $(document).ready(function () {
                 $('ul.' + locType + '-locations').append(locLi);
             }
             // Saving this form data as a serialized value into the main form
-            var fdata = $('#HIDE' + viewLoc.attr('id'));
+            var viewID = 'HIDE-' + viewLoc.attr('id');
+            var fdata = $('#' + viewID);
             if (fdata && fdata.length > 0) {
                 fdata.val(form.serialize());
             } else {
-                fdata = $('<input type="hidden" name="locations" id="HIDE' + viewLoc.attr('id') + '"/>');
+                fdata = $('<input type="hidden" name="locations" id="HIDE-' + viewLoc.attr('id') + '"/>');
                 fdata.val(form.serialize());
                 $('form.positionlocations').append(fdata);
             }
@@ -241,8 +253,7 @@ $(document).ready(function () {
             viewLoc.find('.address-line2').text(editLoc.find('[name=location-addressline2]').val());
             viewLoc.find('.address-city').text(editLoc.find('[name=location-city]').val());
             viewLoc.find('.address-zipcode').text(editLoc.find('[name=location-zipcode]').val());
-            var state = editLoc.find('[name=location-state]');
-            viewLoc.find('.address-state').text(state.children('[value=' + state.val() + ']').data('stateprovince-code'));
+            viewLoc.find('.address-state').text(editLoc.find('[name=location-state-code]').val());
         }
         // Hidding
         editLoc.closest('.edit-popup').hide();
