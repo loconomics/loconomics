@@ -65,7 +65,14 @@
             <h1 class="profile-name">@printName(providerrow)</h1>
 		    
 		    <p class="profile-desc">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis mattis. Praesent vehicula justo quis justo laoreet et fringilla nibh iaculis. 
+                @if (!String.IsNullOrWhiteSpace(providerrow["PublicBio"])) {
+                    @providerrow["PublicBio"]
+                } else {
+                    <text>User doesn't provide information about itself.</text>
+                    <br />
+                    <text>It's strongly recommended for all users to write a public bio.</text>
+                    @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
+                }
             </p>
             <ul id="verifications">
                 <li class="license">Professional license</li>
