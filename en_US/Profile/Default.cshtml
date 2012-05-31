@@ -94,6 +94,8 @@
                 <li class="verification">SSN verified</li>
             </ul>
             @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
+            @*
+            @if (u.IsProvider) {
             <div class="social-connections">
                 <ul>
                     @printFriend("Fernando", null)
@@ -104,6 +106,8 @@
                 </ul>
                 <span class="friends"><span class="quantity">14</span> of your friends have used this provider's services</span>
             </div>
+            }
+            *@
 	    </div><!-- #profileHeader -->
         
         @if (u.IsProvider) {

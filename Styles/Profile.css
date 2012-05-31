@@ -367,6 +367,12 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     width: 210px;
     height: 95px;
 }
+.reviews-list > .no-reviews {
+    margin: 40px 0;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: bold;
+}
 
 /*.review img{
     float: left;
