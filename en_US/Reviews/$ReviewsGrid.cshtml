@@ -20,6 +20,29 @@
             reviewerUserType = "provider";
             
             // TODO: reviews for customer
+            var sqlReviews = @"
+                SELECT
+                    R.BookingID, R.PositionID,
+                    R.CustomerUserID As ReviewedUserID,
+                    R.ProviderUserID As ReviewerUserID,
+                    UP.FirstName As ReviewerFirstName,
+                    UP.LastName As ReviewerLastName,
+            
+                    R.Rating1, R.Rating2, R.Rating3, R.Rating4,
+                    R.PublicReview,
+                    R.UpdatedDate As LastRatingDate,
+                    R.ServiceHours, R.HelpfulReviewCount
+                FROM
+                    UserReviews As R
+                     INNER JOIN
+                    Users As UP
+                      ON UP.UserID = R.ProviderUserID
+                WHERE
+                    R.CustomerUserID = @0
+                     AND
+                    R.PositionID = 0
+            ";
+            reviews = db.Query(sqlReviews, reviewedID);
         } else {
             // Reviewed is provider
             reviewedUserType = "provider";
@@ -45,7 +68,7 @@
                 WHERE
                     R.ProviderUserID = @0
                      AND
-                    R.PositionID = @1                                                                                                                                                          
+                    R.PositionID = @1
             ";
             reviews = db.Query(sqlReviews, reviewedID, positionID);
         }
@@ -65,12 +88,14 @@
                     UserType = reviewerUserType,
                     ExtraInfo = ""
                 })
+                <div class="review-content">
     	        <div class="public-review wrap">
                     @CommonHelpers.PrintTextAsHtml(review.PublicReview)
 		        </div>
                 @if (withHelpfulReview == true) {
                 <div class="helpful-review">@(review.HelpfulReviewCount ?? 0) people found this review helpful <a class="helpful-review-action" href="#">rate as helpful</a></div>
                 }
+                </div>
                 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
                     ReviewRecord = review,
                     ReviewerID = review.ReviewerUserID,

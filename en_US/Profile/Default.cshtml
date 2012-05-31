@@ -33,8 +33,10 @@
             }
         }
         if (!posexists) {
-            Response.Redirect(UrlUtil.LangPath);
+            positionid = 0;
         }
+    } else {
+        positionid = 0;
     }
     
     // Number of maximum positions displayed:
@@ -42,6 +44,8 @@
     
     Page.Title = u.FirstName;
     Scripts.Add(UrlUtil.AppPath + "Scripts/Profile.js");
+    
+    int n = 0, ip = 0;
 }
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
@@ -102,66 +106,75 @@
             </div>
 	    </div><!-- #profileHeader -->
         
+        @if (u.IsProvider) {
 		<ul class="tabs">
             @{
-                var n = 0;
                 foreach(var c in posrows){
                     n++;
                     if (n > maxPositions) { break; }
+                    ip = c.PositionID;
                     var cls = (c.PositionID == positionid ? "current" : "");
-                    <li class="@cls"><a class="@cls" href="@("#position"+n)">@c.PositionSingular</a></li>
+                    <li class="@cls"><a class="@cls" href="@("#position"+ip)">@c.PositionSingular</a></li>
                 }
             }
+            @if (u.IsCustomer) {
+            <li class="@(positionid == 0 ? "current" : "")"><a href="#customer-overview">As Customer</a></li>
+            }
 		</ul><!-- .tabs -->
+        }
         
-        @{
+        @if (u.IsProvider) {
             n = 0;
             foreach(var position in posrows){
                 n++;
                 if (n > maxPositions) { break; }
                 var cls = (position.PositionID == positionid ? "current" : "");
                 PageData["position"] = position;
-        <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls position-tab">
+                ip = position.PositionID;
+                <div id="@("position"+ip)" class="tab-body fancy tabbed buttons @cls position-tab">
             
-            @RenderPage("_PositionSummary.cshtml")
+                    @RenderPage("_PositionSummary.cshtml")
+                    <ul class="tabs">
+                        <li class="current"><a class="button profile fanciful" href="@("#position"+ip)-overview">Overview</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-reviews">Reviews</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-mywork">My Work</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-map">Map</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-availability">Availability</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-verifications">Verifications</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-message">Message</a></li>
+                    </ul>
+
+                   <div id="@("position"+ip)-overview" class="tab-body current overview">
+                        @RenderPage("_ProviderOverview.cshtml")
+                    </div><!-- #@("position"+ip)-overview -->
+                    <div id="@("position"+ip)-reviews" class="tab-body reviews">
+                        @RenderPage("_Reviews.cshtml")
+                    </div><!-- #@("position"+ip)-reviews -->
+                    <div id="@("position"+ip)-mywork" class="tab-body mywork">
+                        @RenderPage("_MyWork.cshtml")
+                    </div><!-- #@("position"+ip)-mywork -->
+                    <div id="@("position"+ip)-map" class="tab-body map">
+                        @RenderPage("_Map.cshtml")
+                    </div><!-- #@("position"+ip)-map -->
+                    <div id="@("position"+ip)-availability" class="tab-body availability">
+                        @RenderPage("_Availability.cshtml")
+                    </div><!-- #@("position"+ip)-availability -->
+                    <div id="@("position"+ip)-verifications" class="tab-body verifications">
+                        @RenderPage("_Verifications.cshtml")
+                    </div><!-- #@("position"+ip)-verifications -->
+                    <div id="@("position"+ip)-message" class="tab-body message">
+                        @RenderPage("$Message.cshtml")
+                    </div><!-- #@("position"+ip)-message -->
+                    <!-- TODO Remove this element, without break the position-summary -->
+                    <div class="clearfix"></div>
             
-            <ul class="tabs">
-                <li class="current"><a class="button profile fanciful" href="@("#position"+n)-overview">Overview</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-reviews">Reviews</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-mywork">My Work</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-map">Map</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-availability">Availability</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-verifications">Verifications</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-message">Message</a></li>
-            </ul>
-            
-            <div id="@("position"+n)-overview" class="tab-body current overview">
-                @RenderPage("_ProviderOverview.cshtml")
-            </div><!-- #@("position"+n)-overview -->
-            <div id="@("position"+n)-reviews" class="tab-body reviews">
-                @RenderPage("_Reviews.cshtml")
-            </div><!-- #@("position"+n)-reviews -->
-            <div id="@("position"+n)-mywork" class="tab-body mywork">
-                @RenderPage("_MyWork.cshtml")
-            </div><!-- #@("position"+n)-mywork -->
-            <div id="@("position"+n)-map" class="tab-body map">
-                @RenderPage("_Map.cshtml")
-            </div><!-- #@("position"+n)-map -->
-            <div id="@("position"+n)-availability" class="tab-body availability">
-                @RenderPage("_Availability.cshtml")
-            </div><!-- #@("position"+n)-availability -->
-            <div id="@("position"+n)-verifications" class="tab-body verifications">
-                @RenderPage("_Verifications.cshtml")
-            </div><!-- #@("position"+n)-verifications -->
-            <div id="@("position"+n)-message" class="tab-body message">
-                @RenderPage("$Message.cshtml")
-            </div><!-- #@("position"+n)-message -->
-            
-            <!-- TODO Remove this element, without break the position-summary -->
-            <div class="clearfix"></div>
-            
-        </div><!-- #position@n -->
+                </div><!-- #position@n -->
             }
+        }
+        @if (u.IsCustomer) {
+            <div id="customer-overview" class="tab-body fancy customer customer-overview @(positionid == 0 ? "current" : "")">
+                @RenderPage("$CustomerOverview.cshtml")
+            </div><!-- #customer-overview -->
         }
         
     </div>
