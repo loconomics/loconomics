@@ -54,7 +54,7 @@
                     Request["bank_fullname"],
                     Request["bank_abanumber"],
                     // Bank Account Number: ONLY THE THREE LAST DIGITS
-                    Request["bank_accountnumber"].Substring(Request["bank_accountnumber"].Length - 3, 3),
+                    LcEncryptor.Encrypt(Request["bank_accountnumber"].Substring(Request["bank_accountnumber"].Length - 3, 3)),
                     Request["bank_accounttype"].AsInt()
                 );
             }
@@ -158,7 +158,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <legend>Bank Account Number:</legend>
             <ul>
                 <li><label for="@idprefix-abanumber">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-abanumber" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
-                <li><label for="@idprefix-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + bankinfo.LastThreeAccountDigits : ""))"/></li>
+                <li><label for="@idprefix-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + LcEncryptor.Decrypt((string)bankinfo.LastThreeAccountDigits) : ""))"/></li>
             </ul>
         </fieldset>
     </div>

@@ -5,6 +5,7 @@
 }
 @using WebMatrix.WebData;
 @using WebMatrix.Data;
+@using System.Security.Cryptography;
 @helper CountryOptions(string selectedCountryID = null){
     var sql = @"
         SELECT CountryID, CountryName, CountryCode

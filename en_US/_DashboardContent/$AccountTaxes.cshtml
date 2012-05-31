@@ -95,7 +95,7 @@
                         Request.UserHostAddress,
                         DateTime.Now,
                         // TIN Number: ONLY THE THREE LAST DIGITS
-                        Request["tin_number"].Substring(Request["tin_number"].Length - 3, 3)
+                        LcEncryptor.Encrypt(Request["tin_number"].Substring(Request["tin_number"].Length - 3, 3))
                     );
                 }
                 
@@ -205,7 +205,7 @@
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + taxinfo.LastThreeTINDigits : ""))" @Validation.GetHtml("tin_number")/>
+        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + LcEncryptor.Decrypt(taxinfo.LastThreeTINDigits) : ""))" @Validation.GetHtml("tin_number")/>
         @foreach (var tintype in tintypes)
         {
         <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @CommonHelpers.IsChecked(Request["tin_type"] ?? (taxinfo != null ? taxinfo.TINTypeID.ToString() : ""), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
