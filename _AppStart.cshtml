@@ -13,6 +13,13 @@
         consumerKey: "a",   // for Facebook, consumerKey is called AppID in the SDK 
         consumerSecret: "b");*/
     
+    WebMail.SmtpServer = "mail.loconomics.com";
+    WebMail.SmtpPort = 25;
+    WebMail.EnableSsl = false;
+    WebMail.UserName = "automated@loconomics.com";
+    WebMail.Password = "Loconomic$2011";
+    WebMail.From = "automated@loconomics.com";
+
     // Facebook connection options to the Developer App Version 'Loconomics Beta', SiteUrl: http://loconomics.com/beta/
     // Facebook App Link: https://developers.facebook.com/apps/384138354954139
     Facebook.Initialize("384138354954139", "2311db761a3605691d7c99ed35466132", "sqlloco");
