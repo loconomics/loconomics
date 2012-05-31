@@ -19,6 +19,7 @@
                 R.UpdatedDate,
                 R.BookingRequestStatusID,
                 B.BookingStatusID,
+                R.PositionID,
 
                 --TODO where is bank account (last numbers) or how calculate paymentDate
                 getdate() As PaymentDate,
@@ -234,7 +235,8 @@ else
         {"DataPrefix", ""},
         {"Size", "medium"},
         {"UserType", itsUserType},
-        {"WithContactData", true}
+        {"WithContactData", true},
+        {"PositionID", booking.PositionID}
     })
 
     <h4>Booking time and location</h4>

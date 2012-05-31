@@ -20,6 +20,7 @@
                 R.SpecialRequests,
                 R.UpdatedDate,
                 R.BookingRequestStatusID,
+                R.PositionID,
 
                 --TODO where is bank account (last numbers) or how calculate paymentDate
                 getdate() As PaymentDate,
@@ -178,7 +179,8 @@ else
             {"Data", itsUserData},
             {"DataPrefix", ""},
             {"Size", "medium"},
-            {"UserType", itsUserType}
+            {"UserType", itsUserType},
+            {"PositionID", booking.PositionID}
         })
 
         @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer") {

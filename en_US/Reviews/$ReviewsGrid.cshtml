@@ -3,7 +3,8 @@
     var reviewedID = PageData[0] ?? PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
     var positionID = PageData[1] ?? PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var withHelpfulReview = PageData[2] ?? PageData["WithHelpfulReview"] ?? Request["WithHelpfulReview"].AsBool();
-    if (reviewedID == null) {
+    var noReviewsMsg = PageData[3] ?? PageData["NoReviewsMessage"];
+    if (reviewedID == null || reviewedID == 0) {
         throw new Exception("Not valid ReviewedID");
     }
     if (positionID == null) {
@@ -20,6 +21,29 @@
             reviewerUserType = "provider";
             
             // TODO: reviews for customer
+            var sqlReviews = @"
+                SELECT
+                    R.BookingID, R.PositionID,
+                    R.CustomerUserID As ReviewedUserID,
+                    R.ProviderUserID As ReviewerUserID,
+                    UP.FirstName As ReviewerFirstName,
+                    UP.LastName As ReviewerLastName,
+            
+                    R.Rating1, R.Rating2, R.Rating3, R.Rating4,
+                    R.PublicReview,
+                    R.UpdatedDate As LastRatingDate,
+                    R.ServiceHours, R.HelpfulReviewCount
+                FROM
+                    UserReviews As R
+                     INNER JOIN
+                    Users As UP
+                      ON UP.UserID = R.ProviderUserID
+                WHERE
+                    R.CustomerUserID = @0
+                     AND
+                    R.PositionID = 0
+            ";
+            reviews = db.Query(sqlReviews, reviewedID);
         } else {
             // Reviewed is provider
             reviewedUserType = "provider";
@@ -45,7 +69,7 @@
                 WHERE
                     R.ProviderUserID = @0
                      AND
-                    R.PositionID = @1                                                                                                                                                          
+                    R.PositionID = @1
             ";
             reviews = db.Query(sqlReviews, reviewedID, positionID);
         }
@@ -53,30 +77,41 @@
 }
 <div class="reviews-list">
     @CommonHelpers.SetupStarRatingPlugin()
-    @foreach (var review in reviews)
-    {
+    @if (reviews.Count > 0) {
         <ul>
+        @foreach (var review in reviews)
+        {
 	        <li>
-                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 
-                    AddCssClasses = "author",
-                    Data = review,
-                    DataPrefix = "Reviewer",
-                    Size = "mini",
-                    UserType = reviewerUserType,
-                    ExtraInfo = ""
-                })
+                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new
+                   {
+                       AddCssClasses = "author",
+                       Data = review,
+                       DataPrefix = "Reviewer",
+                       Size = "mini",
+                       UserType = reviewerUserType,
+                       ExtraInfo = ""
+                   })
+                <div class="review-content">
     	        <div class="public-review wrap">
                     @CommonHelpers.PrintTextAsHtml(review.PublicReview)
 		        </div>
-                @if (withHelpfulReview == true) {
+                @if (withHelpfulReview == true)
+                {
                 <div class="helpful-review">@(review.HelpfulReviewCount ?? 0) people found this review helpful <a class="helpful-review-action" href="#">rate as helpful</a></div>
                 }
-                @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
-                    ReviewRecord = review,
-                    ReviewerID = review.ReviewerUserID,
-                    PositionID = positionID
-                })
+                </div>
+                @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                   {
+                       ReviewRecord = review,
+                       ReviewerID = review.ReviewerUserID,
+                       PositionID = positionID
+                   })
 	        </li>
+        }
         </ul>
+    }
+    else if (!String.IsNullOrWhiteSpace(noReviewsMsg))
+    {
+        <div class="no-items no-reviews">@noReviewsMsg</div>
     }
 </div>

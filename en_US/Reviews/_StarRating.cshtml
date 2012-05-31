@@ -33,69 +33,81 @@ Use Example:
     } else {
         Boolean.TryParse(PageData[2], out disabled);
     }
-
-    var checked025  = (value >= 0m && value <= 0.25m) ? "checked='checked'" : "";
-    var checked05   = (value > 0.25m && value <= 0.5m) ? "checked='checked'" : "";
-    var checked075 = (Decimal.Compare(value, 0.5m) > 0 && (Decimal.Compare(value, 0.75m) <= 0)) ? "checked='checked'" : "";
-    var checked1 = (Decimal.Compare(value, 0.75m) > 0 && (Decimal.Compare(value, 1m) <= 0)) ? "checked='checked'" : "";
     
-    var checked125 = (Decimal.Compare(value, 1m) > 0 && (Decimal.Compare(value, 1.25m) <= 0)) ? "checked='checked'" : "";
-    var checked15 = (Decimal.Compare(value, 1.25m) > 0 && (Decimal.Compare(value, 1.5m) <= 0)) ? "checked='checked'" : "";
-    var checked175 = (Decimal.Compare(value, 1.5m) > 0 && (Decimal.Compare(value, 1.75m) <= 0)) ? "checked='checked'" : "";
-    var checked2 = (Decimal.Compare(value, 1.75m) > 0 && (Decimal.Compare(value, 2m) <= 0)) ? "checked='checked'" : "";
+    var checks = new Dictionary<string, string>();
+    var hc = "checked='checked'";
+    
+    if (active4split) {
+        checks.Add("025",   (value >= 0m && value <= 0.25m) ? hc : "");
+        checks.Add("05",    (value > 0.25m && value <= 0.5m) ? hc : "");
+        checks.Add("075",   (value > 0.5m && value <= 0.75m) ? hc : "");
+        checks.Add("1",     (value > 0.75m && value <= 1) ? hc : "");
+    
+        checks.Add("125",   (value > 1m && value <= 1.25m) ? hc : "");
+        checks.Add("15",    (value > 1.25m && value <= 1.5m) ? hc : "");
+        checks.Add("175",   (value > 1.5m && value <= 1.75m) ? hc : "");
+        checks.Add("2",     (value > 1.75m && value <= 2m) ? hc : "");
 
-    var checked225 = (Decimal.Compare(value, 2m) > 0 && (Decimal.Compare(value, 2.25m) <= 0)) ? "checked='checked'" : "";
-    var checked25 = (Decimal.Compare(value, 2.25m) > 0 && (Decimal.Compare(value, 2.5m) <= 0)) ? "checked='checked'" : "";
-    var checked275 = (Decimal.Compare(value, 2.5m) > 0 && (Decimal.Compare(value, 2.75m) <= 0)) ? "checked='checked'" : "";
-    var checked3 = (Decimal.Compare(value, 2.75m) > 0 && (Decimal.Compare(value, 3m) <= 0)) ? "checked='checked'" : "";
-
-    var checked325 = (Decimal.Compare(value, 3m) > 0 && (Decimal.Compare(value, 3.25m) <= 0)) ? "checked='checked'" : "";
-    var checked35 = (Decimal.Compare(value, 3.25m) > 0 && (Decimal.Compare(value, 3.5m) <= 0)) ? "checked='checked'" : "";
-    var checked375 = (Decimal.Compare(value, 3.5m) > 0 && (Decimal.Compare(value, 3.75m) <= 0)) ? "checked='checked'" : "";
-    var checked4 = (Decimal.Compare(value, 3.75m) > 0 && (Decimal.Compare(value, 4m) <= 0)) ? "checked='checked'" : "";
-
-    var checked425 = (Decimal.Compare(value, 4m) > 0 && (Decimal.Compare(value, 4.25m) <= 0)) ? "checked='checked'" : "";
-    var checked45 = (Decimal.Compare(value, 4.25m) > 0 && (Decimal.Compare(value, 4.5m) <= 0)) ? "checked='checked'" : "";
-    var checked475 = (Decimal.Compare(value, 4.5m) > 0 && (Decimal.Compare(value, 4.75m) <= 0)) ? "checked='checked'" : "";
-    var checked5 = (Decimal.Compare(value, 4.75m) > 0 && (Decimal.Compare(value, 5m) <= 0)) ? "checked='checked'" : "";
+        checks.Add("225",   (value > 2m && value <= 2.25m) ? hc : "");
+        checks.Add("25",    (value > 2.25m && value <= 2.5m) ? hc : "");
+        checks.Add("275",   (value > 2.5m && value <= 2.75m) ? hc : "");
+        checks.Add("3",     (value > 2.75m && value <= 3) ? hc : "");
+    
+        checks.Add("325",   (value > 3m && value <= 3.25m) ? hc : "");
+        checks.Add("35",    (value > 3.25m && value <= 3.5m) ? hc : "");
+        checks.Add("375",   (value > 3.5m && value <= 3.75m) ? hc : "");
+        checks.Add("4",     (value > 3.75m && value <= 4) ? hc : "");
+    
+        checks.Add("425",   (value > 4m && value <= 4.25m) ? hc : "");
+        checks.Add("45",    (value > 4.25m && value <= 4.5m) ? hc : "");
+        checks.Add("475",   (value > 4.5m && value <= 4.75m) ? hc : "");
+        checks.Add("5",     (value > 4.75m && value <= 5) ? hc : "");
+    } else {
+        value = Math.Round(value);
+        checks.Add("1",     (value > 0m && value <= 1) ? hc : "");
+        checks.Add("2",     (value > 1m && value <= 2) ? hc : "");
+        checks.Add("3",     (value > 2m && value <= 3) ? hc : "");
+        checks.Add("4",     (value > 3m && value <= 4) ? hc : "");
+        checks.Add("5",     (value > 4m && value <= 5) ? hc : "");
+    }
  }
 
 
  @if (!disabled) {
-    <input name="@name" type="radio" class="star" value="1" @Html.Raw(checked1)/>
-    <input name="@name" type="radio" class="star" value="2" @Html.Raw(checked2)/>
-    <input name="@name" type="radio" class="star" value="3" @Html.Raw(checked3)/>
-    <input name="@name" type="radio" class="star" value="4" @Html.Raw(checked4)/>
-    <input name="@name" type="radio" class="star" value="5" @Html.Raw(checked5)/>
+    <input name="@name" type="radio" class="star" value="1" @Html.Raw(checks["1"])/>
+    <input name="@name" type="radio" class="star" value="2" @Html.Raw(checks["2"])/>
+    <input name="@name" type="radio" class="star" value="3" @Html.Raw(checks["3"])/>
+    <input name="@name" type="radio" class="star" value="4" @Html.Raw(checks["4"])/>
+    <input name="@name" type="radio" class="star" value="5" @Html.Raw(checks["5"])/>
  } else if (!active4split) {
-    <input name="@name" type="radio" class="star" @Html.Raw(checked1) disabled="disabled"/>
-    <input name="@name" type="radio" class="star" @Html.Raw(checked2) disabled="disabled"/>
-    <input name="@name" type="radio" class="star" @Html.Raw(checked3) disabled="disabled"/>
-    <input name="@name" type="radio" class="star" @Html.Raw(checked4) disabled="disabled"/>
-    <input name="@name" type="radio" class="star" @Html.Raw(checked5) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checks["1"]) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checks["2"]) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checks["3"]) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checks["4"]) disabled="disabled"/>
+    <input name="@name" type="radio" class="star" @Html.Raw(checks["5"]) disabled="disabled"/>
  } else {
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked025) disabled="disabled"/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked05)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked075)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked1)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["025"]) disabled="disabled"/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["05"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["075"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["1"])/>
 
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked125)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked15)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked175)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked2)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["125"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["15"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["175"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["2"])/>
     
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked225)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked25)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked275)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked3)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["225"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["25"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["275"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["3"])/>
 
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked325)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked35)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked375)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked4)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["325"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["35"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["375"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["4"])/>
 
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked425)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked45)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked475)/>
-    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checked5)/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["425"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["45"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["475"])/>
+    <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["5"])/>
  }
