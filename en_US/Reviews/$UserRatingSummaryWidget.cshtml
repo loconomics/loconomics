@@ -28,11 +28,11 @@
         // exceptions because the null record:
         var getRatingScores = @"
             SELECT  @0 As ReviewedUserID, @1 As PositionID, 0 As ReviewerUserID,
-                    avg(Rating1) As Rating1,
-		            avg(Rating2) As Rating2,
-		            avg(Rating3) As Rating3,
-                    sum(ServiceHours) As ServiceHours,
-                    max(UpdatedDate) As LastRatingDate
+                    coalesce(avg(Rating1), 0) As Rating1,
+		            coalesce(avg(Rating2), 0) As Rating2,
+		            coalesce(avg(Rating3), 0) As Rating3,
+                    coalesce(sum(ServiceHours), 0) As ServiceHours,
+                    coalesce(max(UpdatedDate), 0) As LastRatingDate
             FROM    UserReviewScores
             WHERE   UserID = @0
                      AND

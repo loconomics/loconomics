@@ -1,5 +1,11 @@
 ﻿@{
     var c = DashboardFunctions.GetRequestedUserRow();
 }
+
+@RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
+    ReviewedID = c.UserID,
+    PositionID = 0
+})
+
 <h3>Reviews from Loconomics providers</h3>
 @RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", c.UserID, 0, true)
