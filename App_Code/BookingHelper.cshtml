@@ -181,6 +181,7 @@
                      INNER JOIN
                     BookingRequest As R
                       ON R.BookingRequestID = B.BookingRequestID
+                     INNER JOIN
                     Positions As P
                       ON P.PositionID = R.PositionID
             WHERE   B.BookingID = @0

@@ -485,7 +485,7 @@ public class LcMessaging
     public static void SendMail(string to, string subject, string body)
     {
         //WebMail.Send(to, subject, body);
-        ScheduleEmail(TimeSpan.FromSeconds(10), to, subject, body);
+        ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body);
     }
     #endregion
 
