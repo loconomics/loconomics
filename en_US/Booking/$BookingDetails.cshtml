@@ -21,10 +21,11 @@
                 B.BookingStatusID,
                 R.PositionID,
 
-                --TODO where is bank account (last numbers) or how calculate paymentDate
-                getdate() As PaymentDate,
-                -- account only for provider
-                '1234' As PaymentAccountLastDigits,
+                DATEADD(day, 7, E.EndTime) As PaymentDate,
+                (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
+                 WHERE ProviderPaymentPreference.ProviderUserID = R.ProviderUserID)
+                 As PaymentProviderAccountLastDigits,
+                R.PaymentLastFourCardNumberDigits As PaymentCustomerCardLastDigits,
 
                 Pos.PositionSingular,
 
@@ -266,7 +267,7 @@ else
     </div>
 
     <h4>Requested services and pricing estimate</h4>
-    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
+    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType)
 
     <h4>Reminders</h4>
     @RenderPage("$BookingRemindersWidget.cshtml", myUserType)

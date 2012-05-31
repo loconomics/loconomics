@@ -39,6 +39,12 @@
                     UP.FirstName As ProviderFirstName,
                     UP.LastName As ProviderLastName,
 
+                    DATEADD(day, 7, E1.EndTime) As PaymentDate,
+                    (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
+                     WHERE ProviderPaymentPreference.ProviderUserID = R.ProviderUserID)
+                     As PaymentProviderAccountLastDigits,
+                    R.PaymentLastFourCardNumberDigits As PaymentCustomerCardLastDigits,
+
                     E.StartTime,
                     E.EndTime,
                     E.TimeZone,

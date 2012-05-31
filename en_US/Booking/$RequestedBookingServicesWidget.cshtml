@@ -1,6 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     dynamic booking = PageData[0];
+    string myUserType = PageData[1];
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
@@ -101,8 +102,27 @@
                 <td class="price">$@booking.FeePrice</td>
             </tr>
             <tr class="total">
-                <td class="concept">Payment (direct deposit scheduled for @booking.PaymentDate.ToShortDateString()
-                to checking account @("xxxx" + booking.PaymentAccountLastDigits))</td>
+                <td class="concept">
+                @switch(myUserType) {
+                    case "provider":
+                        <text>
+                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                        </text>
+                    break;
+                    case "customer":
+                        <text>
+                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                        </text>
+                    break;
+                    default:
+                        <text>
+                        Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        </text>
+                    break;
+                }
+                </td>
                 <td class="price">$@booking.TotalPrice</td>
             </tr>
         </table>
