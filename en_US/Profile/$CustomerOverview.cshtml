@@ -4,7 +4,9 @@
 
 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
     ReviewedID = c.UserID,
-    PositionID = 0
+    PositionID = 0,
+    ReviewedData = c,
+    RatingSummaryMode = "summary"
 })
 
 <h3>Reviews from Loconomics providers</h3>

@@ -1555,8 +1555,11 @@ html.boxshadow #loginBox .field-validation-error{
  */
 .user-rating-summary-widget {
     display: inline-block;
-    height: 70px;
     overflow: hidden;
+    height: 22px;
+}
+.user-rating-summary-widget.provider {
+    height: 90px;
 }
 .user-rating-summary-widget > ul {
     list-style: none;
@@ -1583,6 +1586,12 @@ html.boxshadow #loginBox .field-validation-error{
     color: #836b96;
     font-size: .9em;
     font-style: italic;
+}
+.user-rating-summary-widget.user-rating-summary .note {
+    font-size: 1.1em;
+    font-style: normal;
+    color: #461864;
+    font-weight: bold;
 }
 
 /*
@@ -1692,7 +1701,7 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: .9em;
 }
 .medium-user-info a.view-profile {
-    bottom: 15px;
+    bottom: 5px;
     display: block;
     position: absolute;
     right: 15px;
@@ -1727,7 +1736,10 @@ html.boxshadow #loginBox .field-validation-error{
     /*color: #6C6C6C;*/
 }
 .medium-user-info .user-rating {
-    width: 360px;
+    /*width: 360px;*/
+}
+.medium-user-info .user-rating-summary-widget {
+    height: auto !important;
 }
 .medium-user-info .user-rating .note {
     font-size: .8em;

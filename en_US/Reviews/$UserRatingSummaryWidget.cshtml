@@ -6,6 +6,13 @@
     int reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     int reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
+    string mode = PageData["RatingSummaryMode"] ?? "detailed"; // values: detailed, summary
+    dynamic reviewedData = PageData["ReviewedData"];
+    string reviewedDataPrefix = PageData["ReviewedDataPrefix"] ?? "";
+    if (reviewedData == null){
+        reviewedData = DashboardFunctions.GetUserRow(reviewedID);
+        reviewedDataPrefix = "";
+    }
     
     if (reviewRecord == null) {
         var getPositionRatings = @"
@@ -15,7 +22,9 @@
 		                avg(Rating2) As Rating2,
 		                avg(Rating3) As Rating3,
                         sum(ServiceHours) As ServiceHours,
-                        max(UpdatedDate) As LastRatingDate
+                        max(UpdatedDate) As LastRatingDate,
+                        count(*) As TotalRatings,
+                        sum(Answer2) As Answer2
                 FROM	UserReviews
                 WHERE	ProviderUserID = @0
 		                 AND
@@ -32,7 +41,9 @@
 		            coalesce(avg(Rating2), 0) As Rating2,
 		            coalesce(avg(Rating3), 0) As Rating3,
                     coalesce(sum(ServiceHours), 0) As ServiceHours,
-                    coalesce(max(UpdatedDate), 0) As LastRatingDate
+                    coalesce(max(UpdatedDate), 0) As LastRatingDate,
+                    coalesce(sum(TotalRatings), 0) As TotalRatings,
+                    coalesce(sum(Answer2), 0) As Answer2
             FROM    UserReviewScores
             WHERE   UserID = @0
                      AND
@@ -49,10 +60,31 @@
     
     var note = "";
     var hours = reviewRecord.ServiceHours ?? 0;
-    if (reviewerID > 0 && reviewRecord.LastRatingDate != null) {
-        note = "*based on " + hours.ToString("#,##0.00") + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
-    } else {
-        note = "*based on " + hours.ToString("#,##0.00") + " hours of work";
+    switch (mode) {
+        case "detailed":    
+            if (reviewerID > 0 && reviewRecord.LastRatingDate != null) {
+                note = "*based on " + hours.ToString("#,##0.00") + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
+            } else {
+                note = "*based on " + hours.ToString("#,##0.00") + " hours of work";
+            }
+            break;
+        case "summary":
+            if (reviewRecord.TotalRatings > 0) {
+                string notetpl = "";
+                var percentage = reviewRecord.Answer2 / (reviewRecord.TotalRatings == 0 ? 1 : reviewRecord.TotalRatings);
+                if (positionID > 0) {
+                    notetpl = "{0:##0%} of customers would work with {1} again (based on {2} reviews).";
+                } else {
+                    notetpl = "{0:##0%} of providers would work for {1} again (based on {2} reviews).";
+                }
+                note = String.Format(notetpl,
+                        percentage,
+                        CommonHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
+                        reviewRecord.TotalRatings);
+            } else {
+                note = "There are not enougth reviews still to show an average rating";
+            }
+            break;
     }
 }
 @helper printProviderStartRating(dynamic posrow, string index, string rate){
@@ -80,43 +112,43 @@
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
 }
-<div class="user-rating-summary-widget">
-    <ul>
-        @{
-            if (positionID > 0) {
-                for(var s=1; s < 4; s++){
-                    var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
-                    <li>
-                        @printProviderStartRating(reviewRecord, s.ToString(), rate.ToString())
-                    </li>
+<div class="user-rating-summary-widget user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
+    @switch(mode) {
+        case "detailed":
+            <ul>
+                @{
+                    if (positionID > 0) {
+                        for(var s=1; s < 4; s++){
+                            var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
+                            <li>
+                                @printProviderStartRating(reviewRecord, s.ToString(), rate.ToString())
+                            </li>
+                        }
+                    } else {
+                        var id = "UserRatingSummaryWidget:" + reviewedID.ToString();
+                        var rate = reviewRecord["Rating1"].ToString();
+                        <li>
+                        <label>Customer</label>
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" })
+                        </li>
+                    }
                 }
-            } else {
-                var id = "UserRatingSummaryWidget:" + reviewedID.ToString();
-                var rate = reviewRecord["Rating1"].ToString();
-                <li>
-                @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" })
-                </li>
+            </ul>
+            if (withNote){
+                <span class="note">@note</span>
             }
-        }
-    </ul>
-    @if (withNote){
-        <span class="note">@note</span>
+        break;
+        case "summary":
+            var globalRate = 0m;
+            if (positionID > 0) {
+                globalRate = (reviewRecord.Rating1 + reviewRecord.Rating2 + reviewRecord.Rating3) / 3m;
+            } else {
+                globalRate = reviewRecord.Rating1;
+            }
+            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true" })
+            if (withNote) {
+                <span class="note">@note</span>
+            }
+        break;
     }
 </div>
-
-@*
-<!-- Temporary static code -->
-<div class="user-rating-summary-widget static">
-    <ul>
-        <li class="professionalism">
-            <span class="rate"></span>Professionalism
-        </li>
-        <li class="quality">
-            <span class="rate"></span>Quality-of-work
-        </li>
-        <li class="efficiency">
-            <span class="rate"></span>Efficiency
-        </li>
-    </ul>
-    <span class="note">*based on 156 hours</span>
-</div>*@

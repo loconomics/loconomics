@@ -8,8 +8,9 @@
     var extraInfo = PageData["ExtraInfo"];
     var withGoogleMap = PageData["WithGoogleMap"] ?? true;
     var useAbsoluteUrls = PageData["UseAbsoluteUrls"] ?? false;
+    var positionID = (int)(PageData["PositionID"] ?? -1);
     var urlBase = useAbsoluteUrls ? UrlUtil.SiteUrl : "";
-    
+
     if (withContactData) {
         addCssClasses += " user-contact-data";
     }
@@ -18,8 +19,6 @@
         // TODO: load user data from database
         dataPrefix = "";
     }
-    // TODO: Get User Global Rate
-    var userRate = 2;
     
     if (Array.IndexOf<string>(new string[] { "mini", "medium", "large" }, size) == -1) {
         throw new Exception("Size is not valid: " + size);
@@ -74,21 +73,25 @@
         @if (userType == "customer")
         {
         <div class="user-rating global-rating">
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + data[dataPrefix + "UserID"], userRate.ToString(), "true" })
-            @if (!withContactData)
-            {
-            <span class="note">*100% of service providers would work for @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>
-            }
+            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
+                ReviewedID = data[dataPrefix + "UserID"],
+                PositionID = 0,
+                ReviewedData = data,
+                ReviewedDataPrefix = dataPrefix,
+                RatingSummaryMode = "summary"
+            })
         </div>
         }
         else if (userType == "provider")
         {
         <div class="user-rating global-rating">
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Provider_" + data[dataPrefix + "UserID"], userRate.ToString(), "true" })
-            @if (!withContactData)
-            {
-            <span class="note">*100% of customer would work with @CommonHelpers.GetUserDisplayName(data, dataPrefix) again.</span>
-            }
+            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
+                ReviewedID = data[dataPrefix + "UserID"],
+                PositionID = positionID,
+                ReviewedData = data,
+                ReviewedDataPrefix = dataPrefix,
+                RatingSummaryMode = "summary"
+            })
         </div>
         }
 

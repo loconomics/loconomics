@@ -83,14 +83,14 @@
         {
 	        <li>
                 @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new
-           {
-               AddCssClasses = "author",
-               Data = review,
-               DataPrefix = "Reviewer",
-               Size = "mini",
-               UserType = reviewerUserType,
-               ExtraInfo = ""
-           })
+                   {
+                       AddCssClasses = "author",
+                       Data = review,
+                       DataPrefix = "Reviewer",
+                       Size = "mini",
+                       UserType = reviewerUserType,
+                       ExtraInfo = ""
+                   })
                 <div class="review-content">
     	        <div class="public-review wrap">
                     @CommonHelpers.PrintTextAsHtml(review.PublicReview)
@@ -101,11 +101,11 @@
                 }
                 </div>
                 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
-           {
-               ReviewRecord = review,
-               ReviewerID = review.ReviewerUserID,
-               PositionID = positionID
-           })
+                   {
+                       ReviewRecord = review,
+                       ReviewerID = review.ReviewerUserID,
+                       PositionID = positionID
+                   })
 	        </li>
         }
         </ul>
