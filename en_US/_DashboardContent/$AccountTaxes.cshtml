@@ -95,7 +95,7 @@
                         Request.UserHostAddress,
                         DateTime.Now,
                         // TIN Number: ONLY THE THREE LAST DIGITS
-                        LcEncryptor.Encrypt(Request["tin_number"].Substring(Request["tin_number"].Length - 3, 3))
+                        LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["tin_number"], 3))
                     );
                 }
                 

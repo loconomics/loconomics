@@ -54,7 +54,7 @@
                     Request["bank_fullname"],
                     Request["bank_abanumber"],
                     // Bank Account Number: ONLY THE THREE LAST DIGITS
-                    LcEncryptor.Encrypt(Request["bank_accountnumber"].Substring(Request["bank_accountnumber"].Length - 3, 3)),
+                    LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["bank_accountnumber"], 3)),
                     Request["bank_accounttype"].AsInt()
                 );
             }

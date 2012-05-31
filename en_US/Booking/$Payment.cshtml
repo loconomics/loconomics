@@ -183,9 +183,11 @@
                         db.Execute(@"
                             UPDATE  BookingRequest
                             SET     PaymentTransactionID = @1,
+                                    PaymentLastFourCardNumberDigits = @2,
                                     BookingRequestStatusID = 2 -- Completed
                             WHERE   BookingRequestID = @0
-                        ", bookingRequestID, transactionID);
+                        ", bookingRequestID, transactionID, 
+                         LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["card-number"], 4)));
                     }
                     
                 } catch (Exception ex) {
