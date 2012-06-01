@@ -23,6 +23,8 @@
             break;
     }
 }
+@if (alerts != null && alerts.Count > 0)
+{
 <div id="dashboard-alerts">
     <a class="more previous" href="#previous">Previous alerts</a>
     <ul>
@@ -37,3 +39,4 @@
     </ul>
     <a class="more next" href="#next">Next alerts</a>
 </div><!-- dashboard-alerts -->
+}
