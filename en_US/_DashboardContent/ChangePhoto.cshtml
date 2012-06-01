@@ -34,7 +34,7 @@
     CommonHelpers.SecurePage();
     var u = DashboardFunctions.GetUserRow();
     var userId = u["UserID"];
-    var ajaxEnabled = false;
+    var ajaxEnabled = true;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
@@ -45,14 +45,17 @@
             if (!Directory.Exists(Server.MapPath(virtualPath))) {
                 Directory.CreateDirectory(Server.MapPath(virtualPath));
             }
-            using(FileStream file = File.OpenWrite(Server.MapPath(virtualPath + fileName))){
+            byte[] content = new byte[Request.InputStream.Length];
+            Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
+            File.WriteAllBytes(Server.MapPath(virtualPath + fileName), content);
+            /*using(FileStream file = File.OpenWrite(Server.MapPath(virtualPath + fileName))){
                 // Read input stream with the file content (only one file)
                 byte[] content = new byte[Request.InputStream.Length];
                 Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
                 file.Write(content, 0, content.Length);
                 file.Close();
                 Request.InputStream.Close();
-            }
+            }*/
         } catch(Exception ex) {
             CommonHelpers.ReturnJson(
                 new Dictionary<string, object>(){
