@@ -16,7 +16,22 @@
 @helper printCompleteUrl(dynamic alert){
     switch ((string)alert.AlertName) {
         case "personalinfo":
-            @(UrlUtil.LangPath + "Dashboard/Account/")
+            @(UrlUtil.LangPath + "Dashboard/Account/#account-personal")
+            break;
+        case "photo":
+            @("javascript:$('#changephoto').click()")
+            break;
+        case "payment":
+            @(UrlUtil.LangPath + "Dashboard/Account/#account-payments")
+            break;
+        case "taxdocs":
+            @(UrlUtil.LangPath + "Dashboard/Account/#account-taxes")
+            break;
+        case "availability":
+            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-availability")
+            break;
+        case "pricingdetails":
+            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-pricing")
             break;
         default:
             @("#")
