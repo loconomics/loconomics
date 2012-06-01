@@ -8,13 +8,12 @@
     <div id="main" class="tabbed folders wizard">
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We’re glad you’re here</p>
-        
+        <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
 		<ul class="tabs">
 			<li class="current"><a href="#create-a-login">Create a Login</a></li>
 			<li class="disabled"><a href="#your-work">Your Work</a></li>
             <li class="disabled"><a href="#next-steps">Next Steps</a></li>
         </ul>
-        
 		<div id="create-a-login" class="tab-body fancy current">
             @RenderPage("$Create-a-login.cshtml")
 		</div><!-- #create-a-login -->

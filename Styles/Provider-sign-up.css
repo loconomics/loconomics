@@ -1,7 +1,13 @@
 /***
     .sign-up-wizard
  ***/
-
+.sign-up-wizard .help-point {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 120px;
+    z-index: 1000;
+}
 .sign-up-wizard #main{
     width: 960px !important;
 }
