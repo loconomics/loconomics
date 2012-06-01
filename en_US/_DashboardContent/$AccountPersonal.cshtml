@@ -17,7 +17,7 @@
     var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
     string Zip = Request["zipcode"] ?? u.PostalCode;
     var Bio = Request["publicbio"] ?? u.PublicBio;
-    var BirthYear = Request["birthyear"] ?? u.BirthYear;
+    string BirthYear = (Request["birthyear"] ?? u.BirthYear ?? "").ToString();
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
     var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification ?? false);
     var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation ?? false);
@@ -69,10 +69,13 @@
                     SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
                             AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCodeID=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, 
                             IAuthZumigoVerification=@14, IAuthZumigoLocation=@15, SecondLastName=@16,
-                            UpdatedDate=getdate(), ModifiedBy='sys'
+                            CountryID=1, UpdatedDate=getdate(), ModifiedBy='sys'
                     WHERE   UserId = @0
+                    -- Check Alerts:
+                    EXEC TestAlertPersonalInfo @0
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-                 State, Zip, Bio, BirthYear, GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName);
+                 State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
+                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName);
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
