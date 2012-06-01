@@ -10,7 +10,7 @@
             ", userId);
             
             // If current photo is different than new photo filename,
-            if (photo != fileName){
+            if (!(photo is System.DBNull) && (string)photo != fileName) {
                 // we remove current photo file
                 string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + photo;
                 try{
@@ -18,7 +18,8 @@
                     // delete fails (the problem is just after upload that file, is a problem at upload)
                     File.Delete(Server.MapPath(virtualPath));
                 }catch{}
-                
+            }
+            if (photo is System.DBNull || (string)photo != fileName) {
                 // we update the new photo name
                 db.Execute(@"
                     UPDATE  users
@@ -33,20 +34,24 @@
     CommonHelpers.SecurePage();
     var u = DashboardFunctions.GetUserRow();
     var userId = u["UserID"];
+    var ajaxEnabled = false;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
         string fileName = (string)Request["qqfile"];
-        string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + (string)Request["qqfile"];
-        
+        string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
+
         try{
-            using(FileStream file = System.IO.File.OpenWrite(Server.MapPath(virtualPath))){
-        
+            if (!Directory.Exists(Server.MapPath(virtualPath))) {
+                Directory.CreateDirectory(Server.MapPath(virtualPath));
+            }
+            using(FileStream file = File.OpenWrite(Server.MapPath(virtualPath + fileName))){
                 // Read input stream with the file content (only one file)
                 byte[] content = new byte[Request.InputStream.Length];
                 Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
                 file.Write(content, 0, content.Length);
                 file.Close();
+                Request.InputStream.Close();
             }
         } catch(Exception ex) {
             CommonHelpers.ReturnJson(
@@ -56,7 +61,7 @@
             );
         }
         
-        // File saved, change the user preference at the database:
+        // File saved, change the user preference at the database and remove previous photo:
         SaveUserPhotoName(fileName, userId);
         
         CommonHelpers.ReturnJson(
@@ -69,35 +74,50 @@
             
             var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
             
-            System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
-            
-            string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + fileinfo.Name;
-            
-            try{
-                fileuploaded.SaveAs(Server.MapPath(virtualPath));
-            } catch(Exception ex) {
-                // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                //CommonHelpers.ReturnJson(
-                Json.Write(
-                    new Dictionary<string, object>(){
-                        { "error", "There was an error: " + ex.Message }
-                    },
-                Response.Output);
-                Response.End();
+            if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
+                ModelState.AddFormError("Please, select an image");
             }
             
-            // File saved, change the user preference at the database:
-            SaveUserPhotoName(fileinfo.Name, userId);
+            if (ModelState.IsValid) {
+                System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
             
-            // NOTE: There is some issues with IE managing this result with contenttype=json
-            // because of this, here we use directly the Json helper instead our helper
-            //CommonHelpers.ReturnJson(
-            Json.Write(
-                new Dictionary<string, object>(){
-                    { "success", "File was saved" }
-                },
-            Response.Output);
-            Response.End();
+                string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
+            
+                try{
+                    if (!Directory.Exists(Server.MapPath(virtualPath))) {
+                        Directory.CreateDirectory(Server.MapPath(virtualPath));
+                    }
+                    fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
+                } catch(Exception ex) {
+                    if (ajaxEnabled) {
+                    // NOTE: IE problems with contentype=json, use JsonHelper directly:
+                    //CommonHelpers.ReturnJson(
+                    Json.Write(
+                        new Dictionary<string, object>(){
+                            { "error", "There was an error: " + ex.Message }
+                        },
+                    Response.Output);
+                    Response.End();
+                    } else {
+                        ModelState.AddFormError("There was an error: " + ex.Message);
+                    }
+                }
+            
+                // File saved, change the user preference at the database:
+                SaveUserPhotoName(fileinfo.Name, userId);
+            
+                if (ajaxEnabled) {
+                    // NOTE: There is some issues with IE managing this result with contenttype=json
+                    // because of this, here we use directly the Json helper instead our helper
+                    //CommonHelpers.ReturnJson(
+                    Json.Write(
+                        new Dictionary<string, object>(){
+                            { "success", "File was saved" }
+                        },
+                    Response.Output);
+                    Response.End();
+                }
+            }
         } else {
             // Manage normal GET
         }
@@ -114,6 +134,16 @@
         </script>
 
         <script type="text/javascript">
+            function reloadUserPhoto() {
+                // Force image reload, in the parent document! (this is an iframe)
+                var src = window.parent.document.getElementById('avatar').getAttribute('src');
+                // avoid cache this time
+                src = src + "?v" + new Date();
+                window.parent.document.getElementById('avatar').setAttribute('src', src);
+            }
+            @if (ajaxEnabled)
+            {
+            <text>
             var a = jQuery.noConflict();
             a(document).ready(function () {
                 var uploader = new qq.FileUploader({
@@ -122,24 +152,31 @@
                     action: UrlUtil.LangPath + 'Dashboard/ChangePhoto/',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
-                        // Force image reload, in the parent document! (this is an iframe)
-                        var src = window.parent.document.getElementById('avatar').getAttribute('src');
-                        // avoid cache this time
-                        src = src + "?v" + new Date();
-                        window.parent.document.getElementById('avatar').setAttribute('src', src);
+                        reloadUserPhoto();
                     }
                 });
             });
+            </text>
+            }
+            else if (IsPost)
+            {
+                <text>
+                reloadUserPhoto();
+                window.close();
+                </text>
+            }
         </script>
     </head>
     <body>
         <div class="change-photo">
             <div id="change-photo-file-uploader">
-                <noscript>
-                    <form action="@(UrlUtil.LangPath)" method="post">
-                        <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
-                    </form>
-                </noscript>
+                @if(!ajaxEnabled) {
+                <form action="@(UrlUtil.LangPath)Dashboard/ChangePhoto/" method="post" enctype="multipart/form-data">
+                    @Html.ValidationSummary()
+                    <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
+                    <button class="button main-action" type="submit">Upload!</button>
+                </form>
+                }
             </div>
         </div>
     </body>
