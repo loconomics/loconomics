@@ -1,8 +1,6 @@
 ﻿@{
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Help Center";
-    
-    Scripts.Add(UrlUtil.AppPath + "Scripts/HelpCenter.js");
 }
   <div id="container" class="clearfix editable helpcenter">
     <div id="main" class="tabbed folders">
@@ -16,7 +14,7 @@
         </ul>
         
 		<div id="faqs" class="tab-body fancy current">
-            @RenderPage("$FAQs.cshtml", false, true)
+            @RenderPage("$FAQs.cshtml", false, true, true)
 		</div><!-- #faqs -->
 
 		<div id="request-help" class="tab-body fancy">

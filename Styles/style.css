@@ -1035,15 +1035,16 @@ fieldset.box legend{
     padding-top: 0;
     padding-right: 0;
 }
-/** FAQs on Help Center **/
-.helpcenter #faqs .faqs {
+/** FAQs widget as a page **/
+.faqs.widget.aspage {
     background-color: White;
     float: none;
     width: auto;
     padding: 0;
     margin: 0;
+    border: none;
 }
-.helpcenter #faqs .faqs > section {
+.faqs.widget.aspage > section {
     display: inline-block;
     width: 260px;
     vertical-align: top;

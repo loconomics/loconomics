@@ -372,11 +372,11 @@ $(document).ready(function () {
             TabbedUX.focusTab(thereIsTab);
     });
     /* Enable focus tab on every hash change, disabled, now there are two scripts for this: one onready,
-     * and another only for links with 'target-tab' class. It works. */
+    * and another only for links with 'target-tab' class. It works. */
     /*$(window).hashchange(function () {
-        var thereIsTab = TabbedUX.getTab(location.hash);
-        if (thereIsTab)
-            TabbedUX.focusTab(thereIsTab);
+    var thereIsTab = TabbedUX.getTab(location.hash);
+    if (thereIsTab)
+    TabbedUX.focusTab(thereIsTab);
     });*/
 
     $('a#launchHowItWorks').click(function (event) {
@@ -805,19 +805,46 @@ $(document).ready(function () {
         var c = $(".current:visible:last");
         // We save the path like an array
         var path = [];
-        path.push(c.data('help-point'));
+        var dat = c.data('help-point');
+        if (dat)
+            path.push(dat);
         // We look for parents with 'current' assigned, to get the full path
         c.parents('.current').each(function () {
-            path.push($(this).data('help-point'));
+            dat = $(this).data('help-point');
+            if (dat)
+                path.push(dat);
         });
         // Building the relative url for help-center
-        var rurl = path.reverse().join('');
+        var rurl;
+        var first = true;
+        for (var ir = path.length-1; ir >= 0; ir--) {
+            if (first) {
+                first = false;
+                rurl = path[ir] + '#';
+            } else
+                rurl += path[ir];
+        }
+
         // If there is not 'data-help-point' values, we use the current element id to search,
-        // or nothing (that means help center main page)
+        // or nothing (that means help center FAQs index page)
         if (!rurl) rurl = (c.attr('id') ? '?s=' + encodeURIComponent(c.attr('id')) : '');
         // Opening the help center
-        popup(UrlUtil.LangPath + 'HelpCenter/' + rurl, 'large');
+        popup(UrlUtil.LangPath + 'HelpCenter/$FAQs' + rurl, 'large');
         // Do not allow browser to open the link url:
+        return false;
+    });
+    // Generic script for to FAQs links, used by the FAQs widget
+    $(document).delegate('a[href|="#FAQs"]', 'click', function () {
+        var href = $(this).attr('href');
+        var urlparts = href.split('-');
+        var urlsection = '';
+        if (urlparts.length > 1) {
+            urlsection = urlparts[1];
+        }
+        urlsection += '#' + href;
+        var urlprefix = "HelpCenter/$FAQs";
+        if (urlsection)
+            popup(UrlUtil.LangPath + urlprefix + urlsection, 'large');
         return false;
     });
 });
