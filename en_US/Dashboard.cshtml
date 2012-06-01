@@ -52,54 +52,14 @@
                     <h1 class="greeting">Hello, <span id="username">@PageData["userow"].FirstName</span>!</h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
-                    
-                    <div class="profile-progress progress-bar">
-                        <span>Your profile is</span>
-                        <span class="text"><span class="percent-done">40%</span> complete</span>
-                        <span class="total"><span class="percent-done"></span></span>
-                    </div>
+                    @RenderPage("_DashboardContent/$ProfileProgressWidget.cshtml")
                 </div><!-- highlights -->
                 
                 <div id="dashboard-help">
                     <a class="skip" href="#main">Skip the help.</a>
                     <p>Welcome to your dashboard! Here you'll find everything you need to make your profile great, attract customers,
                         and manage your business. Please ensure you review all alerts ferquently, and let us know if you need any help.</p>
-                    <div id="dashboard-alerts">
-                        <a class="more previous" href="#previous">Previous alerts</a>
-                        <ul>
-                            <li>
-                                <h5>Alert 1: Complete your calendar</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                            <li>
-                                <h5>Alert 2: Fill out your pricing wizard</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                            <li>
-                                <h5>Alert 3: Fill out your pricing wizard</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                            <li>
-                                <h5>Alert 4: Fill out your pricing wizard</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                            <li>
-                                <h5>Alert 5: Fill out your pricing wizard</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                            <li>
-                                <h5>Alert 6: Fill out your pricing wizard</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus, porttitor</p>
-                                <a class="more" href="#">Complete &gt;&gt;</a>
-                            </li>
-                        </ul>
-                        <a class="more next" href="#next">Next alerts</a>
-                    </div><!-- dashboard-alerts -->
+                    @RenderPage("_DashboardContent/$UserAlertsWidget.csthml")
                     <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
                 </div><!-- dashboard-help -->
                 
