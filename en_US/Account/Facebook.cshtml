@@ -59,8 +59,13 @@
                             int userid = WebSecurity.GetUserId(facebookemail);
 
                             // Create Loconomics Customer user
-                            db.Execute("EXEC dbo.CreateCustomer @0,@1,@2,1,1",
-                                userid, user.first_name, user.last_name);
+                            var genderID = (user.gender == "female" ? 1 : 2);
+                            string birthyear = null;
+                            try {
+                                birthyear = ((string)user.birthday).Substring(6, 4);
+                            } catch {}
+                            db.Execute("EXEC dbo.CreateCustomer @0,@1,@2,1,1,@3,@4",
+                                userid, user.first_name, user.last_name, genderID, birthyear);
                                 
                             // Create asociation between locouser and facebookuser
                             db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
@@ -79,7 +84,7 @@
                             //transaction.Commit();
                         } catch (Exception ex) {
                             //transaction.Rollback();
-                            throw ex;
+                            //throw ex;
                         }
                     }
                 } else if (UrlData.Count > 0 && UrlData[0] == "Verify") {
