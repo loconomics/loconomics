@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     PageData["PositionID"] = 0;
     
     if (IsPost) {
@@ -27,7 +29,7 @@
             var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
             
             // Link the user with the selected position:
-            var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 1);
+            var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
 
             if (Results.Result != "Success") {
                 CommonHelpers.ReturnJsonError(-1, Results.Result);
