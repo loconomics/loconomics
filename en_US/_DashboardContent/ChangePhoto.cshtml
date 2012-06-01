@@ -25,6 +25,8 @@
                     UPDATE  users
                     SET     photo=@0
                     WHERE   UserID=@1
+                    -- Check Alerts:
+                    EXEC TestAlertPhoto @1
                 ", fileName, userId);
             }
         }
