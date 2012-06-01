@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Help Center";
+    
+    Scripts.Add(UrlUtil.AppPath + "Scripts/HelpCenter.js");
+}
+  <div id="container" class="clearfix editable helpcenter">
+    <div id="main" class="tabbed folders">
+		<h1 class="withsub cushycms">Have a question or need help?</h1>
+        <p class="subh1 cushycms">We're here to resolve any issues or concerns</p>
+        
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a href="#faqs" class="cushycms">FAQs</a></li>
+			<li><a href="#request-help" class="cushycms">Request help</a></li>
+            <li><a href="#site-feedback" class="cushycms">Site feedback</a></li>
+        </ul>
+        
+		<div id="faqs" class="tab-body fancy current">
+            @RenderPage("$FAQs.cshtml", false, true)
+		</div><!-- #faqs -->
+
+		<div id="request-help" class="tab-body fancy">
+            @RenderPage("$RequestHelp.cshtml")
+		</div><!-- #request-help -->
+
+		<div id="site-feedback" class="tab-body fancy">
+            @RenderPage("$SiteFeedback.cshtml")
+		</div><!-- #site-feedback -->
+        
+    </div><!-- #main -->
+    
+  </div><!-- #container -->

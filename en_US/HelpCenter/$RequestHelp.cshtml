@@ -1,0 +1,53 @@
+﻿@using WebMatrix.WebData;
+@{   
+    Validation.RequireField("message-body", "You must write something!");
+    Validation.RequireField("subject", "Subject cannot be empty!");
+    
+    if (IsPost && Validation.IsValid()) {
+        var u = DashboardFunctions.GetUserRow();
+        
+        if (u == null){
+            ModelState.AddFormError("You need be logged to post a message!");
+        }
+        
+        if (ModelState.IsValid) {
+            LcMessaging.SendMail("support@loconomics.com", "User Request Help",
+                Request["question"], u.Email);
+            CommonHelpers.ReturnJsonResult(0, "Your message was sent and will be answered as soon as possible.");
+        }
+    }
+}
+
+<form action="@(UrlUtil.LangPath)HelpCenter/$RequestHelp/" class="ajax ajax-box requesthelp send-message-form">
+    @CommonHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    <p>
+        Nobody’s perfect.  Let us help you with any issues or concerns you have by telling us what’s troubling you.  We’ll do our best to resolve your wories as quickly and effectively as possible.
+    </p>
+
+@if (WebSecurity.IsAuthenticated)
+{
+    var u = DashboardFunctions.GetUserRow();
+        <div class="from-line">
+            <label>From:</label>
+            <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
+            <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
+        </div>
+        <div class="subject">
+            <label>Subject: <input type="text" name="subject" value="Help request from @CommonHelpers.GetUserDisplayName(u)"/></label>
+        </div>
+        <div class="message-body">
+            <textarea name="message-body" placeholder="What is your question?"></textarea>
+        </div>
+        <fieldset class="actions">
+            <button class="main-action" type="submit">Send message</button>
+        </fieldset>
+}
+else
+{
+    <div class="require-login">
+        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a question</h2>
+    </div>
+}
+</form>

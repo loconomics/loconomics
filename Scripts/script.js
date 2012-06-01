@@ -52,6 +52,10 @@ var TabbedUX = {
         $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
             var $t = $(this);
             TabbedUX.focusTab($t.attr('href'));
+            // We want to see the hash value in location bar, but without the ugly default scroll!
+            var st = $(document).scrollTop();
+            location.hash = $t.attr('href');
+            $(document).scrollTop(st);
             return false;
         })
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
@@ -178,14 +182,19 @@ var TabbedUX = {
         }
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
-    checkTabContext: function (ctx, functionname, args) {
+    checkTabContext: function (ctx, functionname, args, isTest) {
         if (!ctx.tab || ctx.tab.length != 1 || !ctx.menuitem || ctx.menuitem.length != 1
             || !ctx.tabContainer || ctx.tabContainer.length != 1 || !ctx.menuanchor || ctx.menuanchor.length != 1) {
-            if (console && console.error)
+            if (!isTest && console && console.error)
                 console.error('TabbedUX.' + functionname + ', bad arguments: ' + Array.join(args, ', '));
             return false;
         }
         return true;
+    },
+    getTab: function () {
+        var ctx = this.getTabContextByArgs(arguments);
+        if (!this.checkTabContext(ctx, 'focusTab', arguments, true)) return null;
+        return ctx.tab.get(0);
     },
     focusTab: function () {
         var ctx = this.getTabContextByArgs(arguments);
@@ -356,7 +365,19 @@ $(document).ready(function () {
     })
     .delegate('.view-terms-of-use', 'click', function () {
         popup(UrlUtil.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
+    })
+    .delegate('a.target-tab', 'click', function () {
+        var thereIsTab = TabbedUX.getTab($(this).attr('href'));
+        if (thereIsTab)
+            TabbedUX.focusTab(thereIsTab);
     });
+    /* Enable focus tab on every hash change, disabled, now there are two scripts for this: one onready,
+     * and another only for links with 'target-tab' class. It works. */
+    /*$(window).hashchange(function () {
+        var thereIsTab = TabbedUX.getTab(location.hash);
+        if (thereIsTab)
+            TabbedUX.focusTab(thereIsTab);
+    });*/
 
     $('a#launchHowItWorks').click(function (event) {
         event.preventDefault();
@@ -436,9 +457,12 @@ $(document).ready(function () {
         // scripts do their work throught a 'loadHashBang' event handler
         if (/^!/.test(hashvalue))
             $(document).trigger('loadHashBang', hashvalue.substring(1));
-        else
-        // Normal hash value, try focus a tab with that name
-            TabbedUX.focusTab('#' + hashvalue);
+        else {
+            // Normal hash value, try focus a tab with that name
+            var tab = TabbedUX.getTab('#' + hashvalue);
+            if (tab)
+                TabbedUX.focusTab(tab);
+        }
     }
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/

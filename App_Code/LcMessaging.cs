@@ -482,10 +482,10 @@ public class LcMessaging
     #endregion
 
     #region Send Mail wrapper function
-    public static void SendMail(string to, string subject, string body)
+    public static void SendMail(string to, string subject, string body, string from = null)
     {
-        //WebMail.Send(to, subject, body);
-        ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body);
+        //WebMail.Send(to, subject, body, from);
+        ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
     #endregion
 
@@ -502,7 +502,7 @@ public class LcMessaging
     /// <param name="emailto"></param>
     /// <param name="emailsubject"></param>
     /// <param name="emailbody"></param>
-    public static bool ScheduleEmail(TimeSpan delayTime, string emailto, string emailsubject, string emailbody)
+    public static bool ScheduleEmail(TimeSpan delayTime, string emailto, string emailsubject, string emailbody, string from = null)
     {
         try
         {
@@ -511,7 +511,8 @@ public class LcMessaging
                 {
                     { "emailto", emailto },
                     { "emailsubject", emailsubject },
-                    { "emailbody", emailbody }
+                    { "emailbody", emailbody },
+                    { "emailfrom", from }
                 },
                 null,
                 System.Web.Caching.Cache.NoAbsoluteExpiration, delayTime,
@@ -540,8 +541,9 @@ public class LcMessaging
             string emailto = emaildata["emailto"];
             string body = emaildata["emailbody"]; //"This is a test e-mail message sent using loconomics as a relay server ";
             string subject = emaildata["emailsubject"]; //"Loconomics test email";
+            string from = emaildata["emailfrom"];
 
-            WebMail.Send(emailto, subject, body);
+            WebMail.Send(emailto, subject, body, from);
         }
         catch (Exception ex)
         {

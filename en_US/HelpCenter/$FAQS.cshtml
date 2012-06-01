@@ -1,49 +1,62 @@
-﻿    <article class="faqs widget">
-        <h2>FAQs</h2>
+﻿@{
+    var withTitle = (bool)(PageData[0] ?? PageData["WithTitle"] ?? true);
+    var withDesc = (bool)(PageData[1] ?? PageData["WithDescription"] ?? false);
+}
+    <article class="faqs widget">
+        @if (withTitle)
+        {
+        <h2 class="cushycms">FAQs</h2>
+        }
+        @if (withDesc)
+        {
+            <p class="description cushycms">
+                Here you’ll find everything you need to help you make the most out of the Loconomics community.  If we’ve missed something, <a class="target-tab" href="#request-help">let us know</a>.
+            </p>
+        }
         <section class="getting-started">
-            <h3>Getting Started</h3>
+            <h3 class="cushycms">Getting Started</h3>
             <ol>
-                <li><a href="#">How do I hire a service provider?</a></li>
-                <li><a href="#">How do I become a provider?</a></li>
-                <li><a href="#">What information do I need?</a></li>
+                <li><a href="#FAQs-GettingStarted-Q1" class="cushycms">How do I hire a service provider?</a></li>
+                <li><a href="#FAQs-GettingStarted-Q2" class="cushycms">How do I become a provider?</a></li>
+                <li><a href="#FAQs-GettingStarted-Q3" class="cushycms">What information do I need?</a></li>
             </ol>
-            <a href="#" class="more">View more</a>
+            <a href="#FAQs-GettingStarted" class="more cushycms">View more</a>
         </section>
         <section>
-            <h3>Scheduling Services</h3>
+            <h3 class="cushycms">Scheduling Services</h3>
             <ol>
-                <li><a href="#">Do I need to choose alternate times?</a></li>
-                <li><a href="#">When will my booking be confirmed?</a></li>
-                <li><a href="#">Why do I pay upfront?</a></li>
+                <li><a href="#FAQs-SchedulingServices-Q1" class="cushycms">Do I need to choose alternate times?</a></li>
+                <li><a href="#FAQs-SchedulingServices-Q2" class="cushycms">When will my booking be confirmed?</a></li>
+                <li><a href="#FAQs-SchedulingServices-Q3" class="cushycms">Why do I pay upfront?</a></li>
             </ol>
-            <a href="#" class="more">View more</a>
+            <a href="#FAQs-SchedulingServices" class="more cushycms">View more</a>
         </section>
         <section>
-            <h3>Reporting a problem</h3>
+            <h3 class="cushycms">Reporting a problem</h3>
             <ol>
-                <li><a href="#">Who do I contact with a problem?</a></li>
-                <li><a href="#">My provider hasn't shown up, what do I do?</a></li>
-                <li><a href="#">What do I do if ('m not happy with the services performed?</a></li>
+                <li><a href="#FAQs-ReportingAProblem-Q1" class="cushycms">Who do I contact with a problem?</a></li>
+                <li><a href="#FAQs-ReportingAProblem-Q2" class="cushycms">My provider hasn't shown up, what do I do?</a></li>
+                <li><a href="#FAQs-ReportingAProblem-Q3" class="cushycms">What do I do if I'm not happy with the services performed?</a></li>
             </ol>
-            <a href="#" class="more">View more</a>
+            <a href="#FAQs-ReportingAProblem" class="more cushycms">View more</a>
         </section>
         <section>
-            <h3>Submitting feedback</h3>
+            <h3 class="cushycms">Submitting feedback</h3>
             <ol>
-                <li><a href="#">Who submits reviews?</a></li>
-                <li><a href="#">Who submits references?</a></li>
-                <li><a href="#">Why am I reviewed as a customer?</a></li>
+                <li><a href="#FAQs-SubmittingFeedback-Q1" class="cushycms">Who submits reviews?</a></li>
+                <li><a href="#FAQs-SubmittingFeedback-Q2" class="cushycms">Who submits references?</a></li>
+                <li><a href="#FAQs-SubmittingFeedback-Q3" class="cushycms">Why am I reviewed as a customer?</a></li>
             </ol>
-            <a href="#" class="more">View more</a>
+            <a href="#FAQs-SubmittingFeedback" class="more cushycms">View more</a>
         </section>
         <section>
-            <h3>Safety</h3>
+            <h3 class="cushycms">Safety</h3>
             <ol>
-                <li><a href="#">How do I know the service provider is real?</a></li>
-                <li><a href="#">Can I trust the reviews?</a></li>
-                <li><a href="#">Have the providers been background-checked?</a></li>
+                <li><a href="#FAQs-Safety-Q1" class="cushycms">How do I know the service provider is real?</a></li>
+                <li><a href="#FAQs-Safety-Q2" class="cushycms">Can I trust the reviews?</a></li>
+                <li><a href="#FAQs-Safety-Q3" class="cushycms">Have the providers been background-checked?</a></li>
             </ol>
-            <a href="#" class="more">View more</a>
+            <a href="#FAQs-Safety" class="more cushycms">View more</a>
         </section>
     </article><!-- #faqs -->
     

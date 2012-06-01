@@ -32,7 +32,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 </p>
 @if (WebSecurity.IsAuthenticated) {
     var u = DashboardFunctions.GetUserRow();
-    <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message ajax ajax-box" id="position#@(n)-message">
+    <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message send-message-form ajax ajax-box" id="position#@(n)-message">
         <input type="hidden" name="ProviderID" value="@p.UserID"/>
         <input type="hidden" name="PositionID" value="@pos.PositionID"/>
         @CommonHelpers.GetValidationScripts()
