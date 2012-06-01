@@ -1,6 +1,8 @@
 ﻿@helper GetFacebookInitializationScripts() {
     var urlsection = PageData[0] ?? "Callback"; // Possible values: Callback, Verify
     var result = PageData[1] ?? "redirect"; // Possible values: redirect, json
+    var facebookPermissions = "email,user_birthday";
+    
     <div id="fb-root" style="display: none"></div>
     <script type="text/javascript">
         var facebookInitialized, facebookConnect, fbtimer;
@@ -40,7 +42,7 @@
                             } else {
                                 //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
                             }
-                        });
+                        }, { scope: '@facebookPermissions' });
                     }
                 }
 
