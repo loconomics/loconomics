@@ -1,9 +1,21 @@
 ﻿@{
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-    Page.Title = "About. Your quintessential app description page.";
+    Page.Title = "About Loconomics";
+    
+    string section = UrlData[0] != null ? UrlData[0].ToUpper() : "";
 }
 
 <div id="container" class="clearfix">
+    @if (section == "PRIVACYPOLICY")
+    {
+        @RenderPage("HelpCenter/$PrivacyPolicy.cshtml")
+    }
+    else if (section == "TERMSOFUSE")
+    {
+        @RenderPage("HelpCenter/$TermsOfUse.cshtml")
+    }
+    else
+    {
 	<div id="main" class="cushycms">
 		<h1>About Loconomics</h1>
 		<p>Loconomics is a new kind of marketplace that is changing the way local business is done.  Customers are able to search and book reviewed service providers in a safe and convenient environment.  We offer service providers all the tools they need to manage their current business and attract new customers.</p>
@@ -23,4 +35,5 @@
 		<p><em>Fernando Gago</em>, co-founder and Director, International</p>
 		<p><em>Patrick Coelho</em>, co-founder and VP of Engineering</p>
 	</div><!-- #main -->
+    }
 </div><!-- #container -->
