@@ -47,6 +47,7 @@
                     VALUES (@0, @1, @2, @3, @4, 0, getdate(), getdate(), 'sys')
                 END
             COMMIT TRAN
+            EXEC TestAlertPayment @0
             ";
                 
             using (var db = Database.Open("sqlloco")) {
