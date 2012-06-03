@@ -256,6 +256,9 @@
                         SET @revision = 1
                     END
 
+                    IF @id is null 
+                        SET @id = 1
+
                     INSERT INTO [pricingestimate]
                                ([PricingEstimateID]
                                ,[PricingEstimateRevision]
