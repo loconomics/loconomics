@@ -243,12 +243,15 @@
                         <option value="2">Spanish (ES)</option>
             </select></label></li>
         </ul>
+        @if (u == null)
+        {
         <p class="choice-or">or</p>
         <div class="facebook-connect social choice-option">
             @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", "Callback/Provider")
             <p class="footnote">*we don't post anything without your permission</p>
             <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a class="view-terms-of-use" href="@(UrlUtil.LangPath)About/TermsOfUse/" target="_blank">Terms of Use</a></p>
         </div>
+        }
     </fieldset>
     <fieldset class="legal-agreement">
         <legend>We’re all in this together--please read these carefully!</legend>
