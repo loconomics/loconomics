@@ -225,7 +225,7 @@
                      AND NickName IS NOT NULL
         ", c.UserID);
         serviceDurationHours = (decimal)db.QueryValue(@"
-            SELECT  TOP 1 P.ServiceDuration
+            SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
             FROM    BookingRequest As R
                      INNER JOIN
                     PricingEstimate As P
