@@ -156,6 +156,11 @@
 .sign-up-wizard .your-work .languages-spoken ul li select{
     width: 110px !important;
 }
+.sign-up-wizard .your-work .languages-spoken ul {
+    max-height: 235px;
+    overflow: auto;
+    width: 240px;
+}
 .sign-up-wizard .your-work .clients-types label{
     display: inline-block !important;
     width: 90px;
