@@ -161,10 +161,18 @@
             }
         }
     }
-   // catch{}
+    // catch{}
     
-    // Redirect to the home page:
-    Response.Redirect(UrlUtil.LangPath);
+    // Redirect the user to the page:
+    // If we are on /Callback/Provider/, go to the provider sign-up to continue the wizard.
+    if (UrlData.Count > 1 && 
+        UrlData[0] == "Callback" && 
+        UrlData[1] == "Provider") {
+        Response.Redirect(UrlUtil.LangPath + "Provider-sign-up/");
+    } else {
+        // Redirect to the home page in most cases:
+        Response.Redirect(UrlUtil.LangPath);
+    }
 
     // FACEBOOK LOGIN using the Microsoft Helper: EVER RETURN FALSE, doesn't work!
     /*if (!Facebook.IsFacebookUserAuthenticated) {
