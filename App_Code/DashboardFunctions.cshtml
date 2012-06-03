@@ -151,13 +151,21 @@
     }
     /* Get a data object with the Positions rows of the user identified with 'userId' from the database
     */
-    public static dynamic GetUserPos(int userId){
+    public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
         
         var poss = PageData["userposrows:" + userId.ToString()];
         if (poss == null) {
             using (var db = Database.Open("sqlloco")) {
-                var sqlpositions = "select a.UserID, a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, PositionSingular, a.UpdatedDate  from dbo.userprofilepositions a join  positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID where a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1";
-                poss = db.Query(sqlpositions, userId);
+                var sqlpositions = @"
+                    SELECT a.UserID, a.PositionID, 
+                        case when a.Active = 0 then 'not active' else 'active' end as active,
+                        PositionSingular, a.UpdatedDate
+                    FROM dbo.userprofilepositions a join
+                        positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID
+                    WHERE a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1
+                        AND (@1 = 0 OR a.Active = 1)
+                ";
+                poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0);
             }
             PageData["userposrows:" + userId.ToString()] = poss;
         }
@@ -165,7 +173,7 @@
     }
     /* Get a data object with the Positions rows of the current user from the database
     */
-    public static dynamic GetUserPos(){
+    public static dynamic GetUserPos(bool onlyActivePositions = false){
         var poss = PageData["posrows"];
         if (poss == null) {
             poss = GetUserPos(WebSecurity.CurrentUserId);

@@ -23,7 +23,7 @@
     
     dynamic posrows = null;
     if (u.IsProvider) {
-        posrows = DashboardFunctions.GetUserPos(userid);
+        posrows = DashboardFunctions.GetUserPos(userid, true);
         
         // Check if the positionid requested exists for current user:
         var posexists = false;
