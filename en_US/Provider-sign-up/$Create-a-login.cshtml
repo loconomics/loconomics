@@ -267,7 +267,7 @@
                  </div>
              </li>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("ppolicy") @CommonHelpers.IsChecked(Request["ppolicy"].AsBool().ToString(), "True") name="ppolicy" id="ppolicy" value="True"/>I have read and understand the <a href="#">privacy policy</a></label>
+                <label><input type="checkbox" @Validation.GetHtml("ppolicy") @CommonHelpers.IsChecked(Request["ppolicy"].AsBool().ToString(), "True") name="ppolicy" id="ppolicy" value="True"/>I have read and understand the <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">privacy policy</a></label>
                 @Html.ValidationMessage("ppolicy")
              </li>
              <li>

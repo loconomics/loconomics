@@ -362,14 +362,18 @@ $(document).ready(function () {
     })
     .delegate('.view-privacy-policy', 'click', function () {
         popup(UrlUtil.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
+        return false;
     })
     .delegate('.view-terms-of-use', 'click', function () {
         popup(UrlUtil.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
+        return false;
     })
     .delegate('a.target-tab', 'click', function () {
         var thereIsTab = TabbedUX.getTab($(this).attr('href'));
-        if (thereIsTab)
+        if (thereIsTab) {
             TabbedUX.focusTab(thereIsTab);
+            return false;
+        }
     });
     /* Enable focus tab on every hash change, disabled, now there are two scripts for this: one onready,
     * and another only for links with 'target-tab' class. It works. */
@@ -817,7 +821,7 @@ $(document).ready(function () {
         // Building the relative url for help-center
         var rurl;
         var first = true;
-        for (var ir = path.length-1; ir >= 0; ir--) {
+        for (var ir = path.length - 1; ir >= 0; ir--) {
             if (first) {
                 first = false;
                 rurl = path[ir] + '#';
