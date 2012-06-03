@@ -51,11 +51,12 @@ var TabbedUX = {
     init: function () {
         $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
             var $t = $(this);
-            TabbedUX.focusTab($t.attr('href'));
-            // We want to see the hash value in location bar, but without the ugly default scroll!
-            var st = $(document).scrollTop();
-            location.hash = $t.attr('href');
-            $(document).scrollTop(st);
+            if (TabbedUX.focusTab($t.attr('href'))) {
+                // We want to see the hash value in location bar, but without the ugly default scroll!
+                var st = $(document).scrollTop();
+                location.hash = $t.attr('href');
+                $(document).scrollTop(st);
+            }
             return false;
         })
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
