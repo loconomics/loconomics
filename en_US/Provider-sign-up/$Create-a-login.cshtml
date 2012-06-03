@@ -258,7 +258,7 @@
                  </div>
              </li>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool().ToString(), "True") name="termsofuse" id="termsofuse" value="True"/>I have read and understand the <a href="#">terms of use</a></label>
+                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool().ToString(), "True") name="termsofuse" id="termsofuse" value="True"/>I have read and understand the <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">terms of use</a></label>
                 @Html.ValidationMessage("termsofuse")
              </li>
              <li>
