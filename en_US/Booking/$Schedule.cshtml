@@ -104,6 +104,26 @@
             ModelState.AddFormError("Third best Date and End Time are not correct");
         }
         
+        // Validate provider availability with requested dates
+        var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
+        using (var db = Database.Open("sqlloco")) {
+            if (dt1Start != null) {
+                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End) == 1) {
+                    ModelState.AddFormError("The provider is not availaible for the Prefered Date");
+                }
+            }
+            if (dt2Start != null) {
+                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End) == 1) {
+                    ModelState.AddFormError("The provider is not availaible for the Second best Date");
+                }
+            }
+            if (dt3Start != null) {
+                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End) == 1) {
+                    ModelState.AddFormError("The provider is not availaible for the Third best Date");
+                }
+            }
+        }
+        
         // TODO: Add validation for: End Time cannot be lower than Start Time
         
         if (ModelState.IsValid){
