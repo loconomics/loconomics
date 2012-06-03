@@ -1,6 +1,12 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
+    var u = DashboardFunctions.GetUserRow();
+    if (u != null && u.IsProvider) {
+        // It's already a provider!
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
     // Initialize general page variables
     var userid = 99999;
     var email = "";
@@ -19,16 +25,19 @@
     var termsofuse5 = "0";
     var ppolicy = "0";
     var emailcontact = "0";
-   
-	// Validate the user's email address
-    Validation.RequireField("email", "You must specify an email address.");
-    // Validate the user's password and password confirmation
-    Validation.Add("email",
-        Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
 
-	Validation.RequireField("password", "The password cannot be blank.");
-    Validation.Add("confirmPassword", 
-        Validator.EqualsTo("password", "The new password and confirmation password do not match."));
+    if (u == null) {
+	    // Validate the user's email address
+        Validation.RequireField("email", "You must specify an email address.");
+        // Validate the user's password and password confirmation
+        Validation.Add("email",
+            Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
+	    Validation.RequireField("password", "The password cannot be blank.");
+        Validation.Add("confirmPassword", 
+            Validator.EqualsTo("password", "The new password and confirmation password do not match."));
+        Validation.RequireField("firstname", "You must specify your First Name.");
+        Validation.RequireField("lastname", "You must specify your Last Name.");
+    }
     
     // var captchaMessage = "";
     
@@ -88,65 +97,82 @@
             // Insert a new user into the database
             var db = Database.Open("sqlloco");
 
-            // Check if user already exists
-            //var user = db.QuerySingle("SELECT Email FROM UserProfile WHERE LOWER(Email) = LOWER(@0)", email);
-            var user = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
+            if (u != null) {
+                // Check if user already exists
+                var useremail = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
 
-            if (user == null) {
-                // Insert email into the profile table
-                db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
-                // Create and associate a new entry in the membership database.
-                // If successful, continue processing the request
-                try {
-                    bool requireEmailConfirmation = false ;//!WebMail.SmtpServer.IsEmpty();
-                    var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
-                    if (requireEmailConfirmation) {
-                        var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+                if (useremail == null) {
+                    // Insert email into the profile table
+                    db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+                    // Create and associate a new entry in the membership database.
+                    // If successful, continue processing the request
+                    try {
+                        bool requireEmailConfirmation = false ;//!WebMail.SmtpServer.IsEmpty();
+                        var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+                        if (requireEmailConfirmation) {
+                            var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
-                        LcMessaging.SendMail(
-                            to: email,
-                            subject: "Please confirm your account", 
-                            body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
-                        );
+                            LcMessaging.SendMail(
+                                to: email,
+                                subject: "Please confirm your account", 
+                                body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
+                            );
+                        }
+
+                        if (requireEmailConfirmation) {
+                            // Thank the user for registering and let them know an email is on its way
+                            CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                        } else {
+                            // Auto login user with just created credentials:
+                            WebSecurity.Login(email, password);
+                            // mark the user as logged in via a normal account,
+                            // as opposed to via an OAuth or OpenID provider.
+                            Session["OAuthLoggedIn"] = false;
+                        }
+                    } catch (System.Web.Security.MembershipCreateUserException e) {
+                        ModelState.AddFormError(e.Message);
                     }
-
-                    if (requireEmailConfirmation) {
-                        // Thank the user for registering and let them know an email is on its way
-                        CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
-                    } else {
-                        // Navigate back to the homepage and exit
-                        WebSecurity.Login(email, password);
-                                                
-                        userid = WebSecurity.GetUserId(email);
-                        
-                        // insert additional user details
-
-                        // mark the user as logged in via a normal account,
-                        // as opposed to via an OAuth or OpenID provider.
-                        Session["OAuthLoggedIn"] = false;
-                    
-                        db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13",userid,firstname,lastname,
-                            (object)(zipcode == 0 ? null : (object)zipcode),
-                            (object)(state == 0 ? null : (object)state),
-                            lang,
-                            termsofuse.AsBool() ? 1 : 0,
-                            termsofuse1.AsBool() ? 1 : 0,
-                            termsofuse2.AsBool() ? 1 : 0,
-                            termsofuse3.AsBool() ? 1 : 0,
-                            termsofuse4.AsBool() ? 1 : 0,
-                            termsofuse5.AsBool() ? 1 : 0,
-                            ppolicy.AsBool() ? 1 : 0,
-                            emailcontact.AsBool() ? 1 : 0);
-                        
-                        // We return a json with result OK (=0), and response end just after this:
-                        CommonHelpers.ReturnJsonResult(0, null);
-                    }
-                } catch (System.Web.Security.MembershipCreateUserException e) {
-                    ModelState.AddFormError(e.Message);
+                } else {
+                    // User already exists
+                    ModelState.AddFormError("Email address is already in use.");
                 }
-            } else {
-                // User already exists
-                ModelState.AddFormError("Email address is already in use.");
+            }
+            
+            if (ModelState.IsValid) {
+                // Insert provider details                        
+                userid = WebSecurity.GetUserId(email);
+                if (u != null) {
+                    db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",
+                        userid,
+                        (object)(zipcode == 0 ? null : (object)zipcode),
+                        (object)(state == 0 ? null : (object)state),
+                        lang,
+                        1, //countryid
+                        termsofuse.AsBool() ? 1 : 0,
+                        termsofuse1.AsBool() ? 1 : 0,
+                        termsofuse2.AsBool() ? 1 : 0,
+                        termsofuse3.AsBool() ? 1 : 0,
+                        termsofuse4.AsBool() ? 1 : 0,
+                        termsofuse5.AsBool() ? 1 : 0,
+                        ppolicy.AsBool() ? 1 : 0,
+                        emailcontact.AsBool() ? 1 : 0);
+                } else {
+                    db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13",userid,firstname,lastname,
+                        (object)(zipcode == 0 ? null : (object)zipcode),
+                        (object)(state == 0 ? null : (object)state),
+                        lang,
+                        termsofuse.AsBool() ? 1 : 0,
+                        termsofuse1.AsBool() ? 1 : 0,
+                        termsofuse2.AsBool() ? 1 : 0,
+                        termsofuse3.AsBool() ? 1 : 0,
+                        termsofuse4.AsBool() ? 1 : 0,
+                        termsofuse5.AsBool() ? 1 : 0,
+                        ppolicy.AsBool() ? 1 : 0,
+                        emailcontact.AsBool() ? 1 : 0);
+                }
+                        
+                // We return a json with result OK (=0), and response end just after this:
+                CommonHelpers.ReturnJsonResult(0, null);
             }
         }    
     }
@@ -163,7 +189,7 @@
          <ul class="choice-option">
              <li class="first-name">
                 <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name:</label>
-                <input type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
+                <input @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
                 @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("firstname")
 
@@ -172,7 +198,7 @@
            
             <li class="last-name">
               <label for="lastname" @if(!ModelState.IsValidField("lastname")){<text>class="error-label"</text>}>Last Name:</label>
-                <input type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
+                <input @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
                 @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("lastname")
 
@@ -194,7 +220,7 @@
            
             <li class="email">
                 <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email:</label>
-                <input type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
+                <input @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
                 @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("email")
 
@@ -202,13 +228,13 @@
             </li>
             <li class="password">
                 <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password:</label>
-                <input type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
+                <input @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
                 @* Write any password validation errors to the page *@
                 @Html.ValidationMessage("password")
              </li>
             <li class="confirm-password">
                 <label for="confirmPassword" @if(!ModelState.IsValidField("confirmPassword")) {<text>class="error-label"</text>} >Confirm Password:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
+                <input @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
                 @* Write any password validation errors to the page *@
                 @Html.ValidationMessage("confirmPassword")
              <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
