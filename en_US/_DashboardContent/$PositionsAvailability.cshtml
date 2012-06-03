@@ -1,8 +1,33 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
+    // Current user data
+    var u = DashboardFunctions.GetUserRow();
     // Current position data record:
-    var p = PageData["position"];
-    // Current position number/index
-    var n = PageData["npos"];
+    var p = DashboardFunctions.GetUserCurrentPos();
+    var n = p.PositionID;
+    
+    // Validation rules go here
+    // Validation.AddRequiredField("", "");
+    
+    if (IsPost && Validation.IsValid()) {
+        // Some extra validations with ModelState.AddError("field", "error message")
+        // If there are not extra validations, next if-block can be removed
+        if (ModelState.IsValid) {
+            using (var db = Database.Open("sqlloco")) {
+                // Save data
+                //db.Execute(
+                
+                // All was fine, AJAX-JSON response
+                CommonHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
+            }
+        }
+    }
+    
+    // Load availability data to show to the user
+    dynamic data = null;
+    using (var db = Database.Open("sqlloco")) {
+        //data = db.QuerySingle("", u.UserID, p.PositionID);
+    }
 }
 @helper printOptionsHours(){
     var firstHour = new TimeSpan(9, 0, 0);
@@ -48,9 +73,10 @@
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form action="#" method="post" class="positionavailability" id="position#@(n)-availability">
-    <input type="hidden" name="position-number" value="@n"/>
-    <input type="hidden" name="position-id" value="@p.PositionID"/>
+<div>
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsAvailability/" method="post" class="positionavailability ajax ajax-box" id="position#@(n)-availability">
+    <input type="hidden" name="PositionID" value="@p.PositionID"/>
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
@@ -94,3 +120,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
 </form>
+</div>
