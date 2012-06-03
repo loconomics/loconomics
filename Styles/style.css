@@ -1263,8 +1263,16 @@ table .number{
     padding: 0;
     margin: 0;
 }
+.availability-calendar .calendar-container {
+    float: left;
+}
+.availability-calendar .calendar-controls .button {
+    padding: 0 .5em;
+    margin: 5px 0;
+}
 .availability-calendar div.calendar,
-.availability-calendar .calendar-legend {
+.availability-calendar .calendar-legend,
+.availability-calendar .calendar-container {
     display: inline-block;
     vertical-align: top;
 }
