@@ -14,6 +14,7 @@
     var confirmPassword = "";
     var firstname  ="";
     var lastname  = "";
+    var formzipcode = "";
     var zipcode   = 0;
     var state = 0;
     var lang   = "1";
@@ -46,6 +47,7 @@
     confirmPassword = Request.Form["confirmPassword"];
     firstname = Request.Form["firstname"];
     lastname =   Request.Form["lastname"];
+    formzipcode = Request.Form["zipcode"];
     state = Request["state"].AsInt();
     lang =  Request.Form["lang"];
     termsofuse = Request.Form["termsofuse"];
@@ -64,7 +66,7 @@
         // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
         //     ModelState.AddError("recaptcha", "Captcha response was not correct");
         // }
-        int auxZip = LcValidators.ValidateZipCode(Request["zipcode"], state);
+        int auxZip = LcValidators.ValidateZipCode(formzipcode, state);
         if (auxZip == 0) {
             ModelState.AddError("zipcode", "Zip code is not valid");
         } else {
@@ -176,6 +178,13 @@
             }
         }    
     }
+    if (u != null) {
+        firstname = u.FirstName;
+        lastname = u.LastName;
+        email = u.Email;
+        formzipcode = u.PostalCode;
+        state = u.StateProvinceID ?? 0;
+    }
 }
 <p class="info">
      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
@@ -214,7 +223,7 @@
 
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
-                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(Request["zipcode"])" @Validation.GetHtml("zipcode") />
+                <input type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(formzipcode)" @Validation.GetHtml("zipcode") />
                 @Html.ValidationMessage("zipcode")
             </li>
            
