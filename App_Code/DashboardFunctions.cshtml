@@ -131,6 +131,7 @@
     /* Get a data row with the current user information from the database
     */
     public static dynamic GetUserRow() {
+        if (!WebSecurity.IsAuthenticated) return null;
         // Implemented a basic, per-page, cache, faster and simplified for each page
         var u = PageData["userow"];
         if (u == null){

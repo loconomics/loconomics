@@ -51,11 +51,12 @@ var TabbedUX = {
     init: function () {
         $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
             var $t = $(this);
-            TabbedUX.focusTab($t.attr('href'));
-            // We want to see the hash value in location bar, but without the ugly default scroll!
-            var st = $(document).scrollTop();
-            location.hash = $t.attr('href');
-            $(document).scrollTop(st);
+            if (TabbedUX.focusTab($t.attr('href'))) {
+                // We want to see the hash value in location bar, but without the ugly default scroll!
+                var st = $(document).scrollTop();
+                location.hash = $t.attr('href');
+                $(document).scrollTop(st);
+            }
             return false;
         })
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
@@ -362,14 +363,18 @@ $(document).ready(function () {
     })
     .delegate('.view-privacy-policy', 'click', function () {
         popup(UrlUtil.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
+        return false;
     })
     .delegate('.view-terms-of-use', 'click', function () {
         popup(UrlUtil.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
+        return false;
     })
     .delegate('a.target-tab', 'click', function () {
         var thereIsTab = TabbedUX.getTab($(this).attr('href'));
-        if (thereIsTab)
+        if (thereIsTab) {
             TabbedUX.focusTab(thereIsTab);
+            return false;
+        }
     });
     /* Enable focus tab on every hash change, disabled, now there are two scripts for this: one onready,
     * and another only for links with 'target-tab' class. It works. */
@@ -599,6 +604,10 @@ $(document).ready(function () {
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
                         window.location = data.Result;
+                        // If the new url is the same current page but with a hash, page will not be reloaded as
+                        // wanted, do a refresh.
+                        if (/#/.test(window.location))
+                            window.location.reload();
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         container.unblock();
@@ -692,6 +701,10 @@ $(document).ready(function () {
                     // Special Code 1: do a redirect
                     if (data.Code == 1) {
                         window.location = data.Result;
+                        // If the new url is the same current page but with a hash, page will not be reloaded as
+                        // wanted, do a refresh.
+                        if (/#/.test(window.location))
+                            window.location.reload();
                     } else if (data.Code == 0) {
                         // Special Code 0: general success code, show message saying that 'all was fine'
 
@@ -817,7 +830,7 @@ $(document).ready(function () {
         // Building the relative url for help-center
         var rurl;
         var first = true;
-        for (var ir = path.length-1; ir >= 0; ir--) {
+        for (var ir = path.length - 1; ir >= 0; ir--) {
             if (first) {
                 first = false;
                 rurl = path[ir] + '#';

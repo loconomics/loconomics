@@ -63,21 +63,60 @@ function initYourWork(){
             jActions.block({ overlayCSS: { cursor: 'default'} });
             return;
         }
-
+        // Get all fieldsets and fieldset containers container
+        var catscontainer = $('.select-attributes');
         // Get dynamic fieldsets container:
         var fscontainer = $('.service-attribute-categories');
 
         /* Template to create a fieldset for attribute-category 
-        {0} CategoryId
-        {1} CategoryName
+        @0 CategoryId
+        @1 CategoryName
         */
-        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-{0}"><legend>{1}:</legend></fieldset>';
+        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-@0"><legend>@1:</legend></fieldset>';
         /* Template to create a label with checkbox, markers:
-        {0} CategoryId
-        {1} AttributeId
-        {3} AttributeName
+        @0 CategoryId
+        @1 AttributeId
+        @2 AttributeName
+        @3 SCAMID
         */
-        var tplAttribute = '<label><input name="positionservices-category[{0}]-attribute[{1}]" type="checkbox" value="{3}"/><span>{2}</span></label>';
+        var tplAttCheck = '<label title="@2"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@3"/><span>@2</span></label>';
+        /* Template to create a select for attributes options, markers:
+        @0 CategoryId
+        */
+        var tplAttSelect = '<select name="positionservices-category[@0]"></select>';
+        /* Template to create the select options for attributes, markers:
+        @0 AttributeID
+        @1 Attribute Display Name
+        */
+        var tplAttSelectOpt = '<option value="@0">@1</option>';
+
+        function createAttCheckList(cat, checkSelectCat) {
+            var c = $('<ul></ul>');
+            // Iterate category attributes
+            $.each(cat.ServiceAttributes, function (iAtt, att) {
+                var hAtt = tplAttCheck
+                    .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                    .replace(/@1/g, att.ServiceAttributeID)
+                    .replace(/@2/g, att.ServiceAttribute)
+                    .replace(/@3/g, att.SCAMID);
+
+                // Add new attribute html
+                c.append('<li>' + hAtt + 
+                    (checkSelectCat ? createAttSelect(checkSelectCat) : '') + 
+                    '</li>');
+            });
+            return c;
+        }
+        function createAttSelect(cat) {
+            var c = $(tplAttSelect
+                .replace(/@0/g, cat.ServiceAttributeCategoryID));
+            $.each(cat.ServiceAttributes, function (iAtt, att) {
+                c.append(tplAttSelectOpt
+                    .replace(/@0/g, att.ServiceAttributeID)
+                    .replace(/@1/g, att.ServiceAttribute));
+            });
+            return c;
+        }
 
         // Locking elements and showing loading message
         jAttributes.block(loadingBlock);
@@ -97,57 +136,49 @@ function initYourWork(){
                 }
 
                 // First, hide all fieldset (not all will be needed)
-                fscontainer.find('fieldset').hide();
+                catscontainer.find('fieldset').hide();
 
                 // Iterate categories
                 $.each(data.Result.ServiceAttributeCategories, function (iCat, cat) {
                     // Locate the category fieldset
                     var fs = $('#service-attribute-category-' + cat.ServiceAttributeCategoryID);
-                    // Fieldset exists, update:
-                    if (fs.length > 0) {
-                        if (cat.ServiceAttributeCategoryID == 5)
-                        // TODO: language attributes need special template
-                            return;
 
-                        fs.find('legend').text(cat.ServiceAttributeCategoryName);
+                    // Only if there are attributes on the category, else break into next
+                    if (!cat.ServiceAttributes || cat.ServiceAttributes.length == 0)
+                        return; // break each
 
-                        // Remove existing attributes
-                        fs.find('>*:not(legend)').remove();
-
-                        // Iterate category attributes
-                        $.each(cat.ServiceAttributes, function (iAtt, att) {
-                            var hAtt = tplAttribute
-                                .replace('{0}', cat.ServiceAttributeCategoryID)
-                                .replace('{1}', att.ServiceAttributeID)
-                                .replace('{2}', att.ServiceAttribute)
-                                .replace("{3}", att.SCAMID);
-
-                            // Add new attribute html to fieldset
-                            fs.append(hAtt);
-                        });
-
-                        // Show it again
-                        fs.show();
-                    } else {
-                        // Fieldset doesn't exist, create:
-                        var jCat = $(tplCategory
-                            .replace('{0}', cat.ServiceAttributeCategoryID)
-                            .replace('{1}', cat.ServiceAttributeCategoryName));
-
-                        fscontainer.append(jCat);
-
-                        // Create Category Attributes checboxes:
-                        // Iterate category attributes
-                        $.each(cat.ServiceAttributes, function (iAtt, att) {
-                            var hAtt = tplAttribute
-                                .replace('{0}', cat.ServiceAttributeCategoryID)
-                                .replace('{1}', att.ServiceAttributeID)
-                                .replace('{2}', att.ServiceAttribute);
-
-                            // Add new attribute html to fieldset
-                            jCat.append(hAtt);
-                        });
+                    // If category fieldset doesn't exist, create it:
+                    if (fs.length == 0) {
+                        var fs = $(tplCategory
+                            .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                            .replace(/@1/g, cat.ServiceAttributeCategoryName));
+                        fscontainer.append(fs);
                     }
+
+                    // Update Fieldset Label
+                    fs.find('legend').text(cat.ServiceAttributeCategoryName);
+
+                    // Remove existing attributes
+                    fs.find('>*:not(legend)').remove();
+
+                    switch (cat.ServiceAttributeCategoryID) {
+                        case 2:
+                        case 3:
+                        case 7:
+                            fs.append(createAttCheckList(cat));
+                            break;
+                        case 5:
+                            // TODO: instead null, we need pass here the categoryID for language levels
+                            fs.append(createAttCheckList(cat, null));
+                            break;
+                        case 1:
+                        case 4:
+                            fs.append(createAttSelect(cat));
+                            break;
+                    }
+
+                    // Show it again
+                    fs.show();
                 });
 
                 jAttributes.unblock();

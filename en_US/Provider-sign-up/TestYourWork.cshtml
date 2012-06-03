@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Welcome to Loconomics";
+    Scripts.Add(UrlUtil.AppPath + "Scripts/Provider-sign-up.js");
+}
+  <div id="container" class="clearfix sign-up-wizard editable">
+    <div id="main" class="tabbed folders wizard">
+		<div id="your-work" class="tab-body current fancy">
+            @RenderPage("$Your-work.cshtml")
+		</div><!-- #your-work -->
+    </div>
+  </div>

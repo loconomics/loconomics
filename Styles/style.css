@@ -289,6 +289,10 @@ form textarea {
     -webkit-border-radius: 20px;
     -o-border-radius: 20px;
 }
+form input[disabled],
+form textarea[disabled] {
+    background: #ddd;
+}
 form textarea{
     line-height: 1.5em;
     height: inherit;

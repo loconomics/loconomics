@@ -126,8 +126,8 @@
                         }
                     </li>*@
                     <li class="remember-me">
-                        <input type="checkbox" id="iAgree" name="iagree" value="true" title="I agree the Terms of Use" />
-                        <label class="checkbox" for="iAgree">I agree to the <a href="@(UrlUtil.LangPath)Account/TermsOfUse/">Terms of Use</a></label>
+                        <input type="checkbox" id="register-iagree" name="iagree" value="true" title="I agree the Terms of Use" />
+                        <label class="checkbox" for="register-iagree">I agree to the <a target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a></label>
                     </li>
                     <li class="actions">
                         <button type="submit" class="main-action">Sign up</button>
@@ -139,7 +139,7 @@
         <div class="social choice-option">
              @RenderPage("_FacebookConnectButton.cshtml")
             <p class="footnote">*we don't post anything without your permission</p>
-            <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a href="@(UrlUtil.LangPath)Account/TermsOfUse/">Terms of Use</a></p>
+            <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a></p>
         </div>
     </section>
 </article>

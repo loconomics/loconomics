@@ -26,7 +26,7 @@
             //var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
         
             var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
-            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',0)";
+            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',1)";
             
             // Link the user with the selected position:
             var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
@@ -99,19 +99,19 @@
         </div>
 
         <div class="your-work-sidebar">
-            <fieldset class="experience-level-dropdown">
-                <legend>Experience Level</legend>
-                <select name="experience-level">
+            <fieldset class="experience-level-dropdown" id="service-attribute-category-4">
+                <legend>@*Experience Level*@</legend>
+                @*<select name="experience-level">
                     <option value="1">I'm new to this!</option>
                     <option value="2">Beginner</option>
                     <option value="3">Intermediate</option>
                     <option value="4">Professional</option>
                     <option value="5">Expert</option>
-                </select>
+                </select>*@
             </fieldset>
-            <fieldset class="year-experience">
-                <legend>Years Experience</legend>
-                <select name="year-sexperience">
+            <fieldset class="year-experience" id="service-attribute-category-1">
+                <legend>@*Years Experience*@</legend>
+                @*<select name="year-sexperience">
                     <option value="0">&lt;0.5 years</option>
                     <option value="0.5">0.5 years</option>
                     <option value="1">1 year</option>
@@ -119,11 +119,11 @@
                     @for(int y = 2; y < 41; y++){
                     <option value="@y">@y years</option>
                     }
-                </select>
+                </select>*@
             </fieldset>
             <fieldset class="languages-spoken" id="service-attribute-category-5">
-                <legend>Languages Spoken</legend>
-                <ul>
+                <legend>@*Languages Spoken*@</legend>
+                @*<ul>
                     <li><label><input name="language-spoken-english" type="checkbox"/>English</label>
                         <select name="languages-spoken-englishlevel">
                             <option>Fluent</option>
@@ -152,12 +152,12 @@
                             <option>N/A</option>
                         </select>
                     </li>
-                </ul>
+                </ul>*@
             </fieldset>
             <fieldset class="clients-types" id="service-attribute-category-7">
-                <legend>Clients Types</legend>
-                <label><input type="checkbox" name="clients-types-residential"/>Residential</label>
-                <label><input type="checkbox" name="clients-types-business"/>Business</label>
+                <legend>@*Clients Types*@</legend>
+                @*<label><input type="checkbox" name="clients-types-residential"/>Residential</label>
+                <label><input type="checkbox" name="clients-types-business"/>Business</label>*@
             </fieldset>
         </div>
     </fieldset>
