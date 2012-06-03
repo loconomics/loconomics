@@ -1,4 +1,5 @@
-﻿@using WebMatrix.WebData;
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
 @{
     var userCulture = "";
     if(IsPost){
@@ -12,12 +13,7 @@
                Response.Redirect(UrlUtil.AppPath + "en_US/");
            }
     }
-}
-@functions{
-    bool IsCurrentUserAProvider(){
-        var db = Database.Open("sqlloco");
-        return ((int)db.QueryValue("EXEC IsUserAProvider @0", WebSecurity.CurrentUserId) == 1);
-    }
+    var u = DashboardFunctions.GetUserRow();
 }
 <!doctype html>
     <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="en"> <![endif]-->
@@ -99,7 +95,7 @@
                     @if (WebSecurity.IsAuthenticated) {
 			            <li>
 					        <dl class="user-nav">
-						        <dt class="fancy">Hi, @WebSecurity.CurrentUserName! &#x25BC;</dt>
+						        <dt class="fancy">Hi, @((u != null ? u.FullName : null) ?? WebSecurity.CurrentUserName)! &#x25BC;</dt>
 						        <dd>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/")" title="Dashboard">Dashboard</a>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/positions/")">Your services</a>
@@ -110,7 +106,7 @@
 						        </dd>
 					        </dl>
 				        </li>
-                        if (!IsCurrentUserAProvider()){
+                        if (!u.IsProvider){
 			            <li><a class="button fancy" href="@Href(UrlUtil.LangPath + "Provider-sign-up/")">Become a provider</a></li>
                         }
                     } else {

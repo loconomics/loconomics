@@ -14,14 +14,14 @@
         }
     }
   
-    var sqlattribute = "exec GetServiceAttributes @0,@1,1,1";
+    var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
     
     dynamic services;
     int servicesId = 2;
     
     using (var db = Database.Open("sqlloco")){
         // Getting the 'Services routinely included' (cat=2)
-        services = db.Query(sqlattribute, pos.PositionID, servicesId);
+        services = db.Query(sqlattribute, pos.PositionID, servicesId, p.UserID);
     }
    
     /*
@@ -49,7 +49,10 @@
             <legend>Services regularly included:</legend>
             <ul>
                 @foreach(var att in services){
+                    // Only provider checked attributes
+                    if (att.UserChecked) {
                     <li><label><input type="checkbox" name="positionservices-category[@(servicesId)]-attribute[@(att.ServiceAttributeID)]"/>@att.ServiceAttribute</label></li>
+                    }
                 }
             </ul>
         </fieldset>
