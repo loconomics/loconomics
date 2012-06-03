@@ -603,6 +603,10 @@ $(document).ready(function () {
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
                         window.location = data.Result;
+                        // If the new url is the same current page but with a hash, page will not be reloaded as
+                        // wanted, do a refresh.
+                        if (/#/.test(window.location))
+                            window.location.reload();
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         container.unblock();
@@ -696,6 +700,10 @@ $(document).ready(function () {
                     // Special Code 1: do a redirect
                     if (data.Code == 1) {
                         window.location = data.Result;
+                        // If the new url is the same current page but with a hash, page will not be reloaded as
+                        // wanted, do a refresh.
+                        if (/#/.test(window.location))
+                            window.location.reload();
                     } else if (data.Code == 0) {
                         // Special Code 0: general success code, show message saying that 'all was fine'
 
