@@ -99,7 +99,7 @@
             // Insert a new user into the database
             var db = Database.Open("sqlloco");
 
-            if (u != null) {
+            if (u == null) {
                 // Check if user already exists
                 var useremail = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
 
@@ -142,10 +142,9 @@
             
             if (ModelState.IsValid) {
                 // Insert provider details                        
-                userid = WebSecurity.GetUserId(email);
                 if (u != null) {
                     db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",
-                        userid,
+                        u.UserID,
                         (object)(zipcode == 0 ? null : (object)zipcode),
                         (object)(state == 0 ? null : (object)state),
                         lang,
@@ -159,6 +158,7 @@
                         ppolicy.AsBool() ? 1 : 0,
                         emailcontact.AsBool() ? 1 : 0);
                 } else {
+                    userid = WebSecurity.GetUserId(email);
                     db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13",userid,firstname,lastname,
                         (object)(zipcode == 0 ? null : (object)zipcode),
                         (object)(state == 0 ? null : (object)state),
