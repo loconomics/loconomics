@@ -1,0 +1,36 @@
+﻿@{  
+    CommonHelpers.SecurePage();
+    
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Let's get this booked";
+    
+    PageData["customerrow"] = DashboardFunctions.GetUserRow();
+
+    int providerid = Request["ProviderID"].AsInt();
+    int positionid = Request["PositionID"].AsInt();
+    
+    if (providerid == 0 || positionid == 0) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+        
+    PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
+    PageData["positionrow"] = DashboardFunctions.GetUserPos(providerid, positionid);
+    
+    if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
+    Session["BookingRequestID"] = 1;
+}
+<script type="text/javascript" src="@(UrlUtil.AppPath)Scripts/Booking.js"></script>
+  <div id="container" class="clearfix booking editable have-boxes have-sidebar">
+    <div id="main" class="tabbed folders wizard">
+        
+		<div id="services" class="tab-body fancy current">
+            @RenderPage("$" + UrlData[0] + ".cshtml")
+		</div><!-- #services -->
+        
+    </div><!-- #main -->
+    @RenderPage("../HelpCenter/$FAQs.cshtml")
+    
+  </div><!-- #container -->
