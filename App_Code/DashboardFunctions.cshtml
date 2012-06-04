@@ -34,6 +34,11 @@
                             PreferredCountryID,
                             IsCustomer,
                             IsProvider,
+                            (CASE WHEN IsProvider=1 AND (
+                                SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                ) > 0 THEN Cast(1 As bit)
+                                ELSE Cast(0 As bit)
+                            END) As IsActiveProvider,
                             MobilePhone,
                             AlternatePhone,
                             AddressLine1,   
@@ -94,6 +99,11 @@
                             ,PreferredCountryID
                             ,IsCustomer
                             ,IsProvider
+                            (CASE WHEN IsProvider=1 AND (
+                                SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                ) > 0 THEN Cast(1 As bit)
+                                ELSE Cast(0 As bit)
+                            END) As IsActiveProvider,
                             ,MobilePhone
                             ,AlternatePhone
 
