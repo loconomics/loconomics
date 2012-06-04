@@ -376,13 +376,16 @@ $(document).ready(function () {
             return false;
         }
     });
-    /* Enable focus tab on every hash change, disabled, now there are two scripts for this: one onready,
-    * and another only for links with 'target-tab' class. It works. */
-    /*$(window).hashchange(function () {
-    var thereIsTab = TabbedUX.getTab(location.hash);
-    if (thereIsTab)
-    TabbedUX.focusTab(thereIsTab);
-    });*/
+    /* Enable focus tab on every hash change, now there are two scripts more specific for this:
+     * one when page load,
+     * and another only for links with 'target-tab' class.
+     * Need be study if something of there must be removed or changed.
+     * This is needed for other behaviors to work. */
+    $(window).hashchange(function () {
+        var thereIsTab = TabbedUX.getTab(location.hash);
+        if (thereIsTab)
+            TabbedUX.focusTab(thereIsTab);
+    });
 
     $('a#launchHowItWorks').click(function (event) {
         event.preventDefault();
