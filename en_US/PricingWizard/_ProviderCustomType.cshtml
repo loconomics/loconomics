@@ -171,6 +171,10 @@
                 pos.PositionID,
                 PageData["ClientTypeID"],
                 Request["hourly-rate"].AsDecimal());
+            // Test alert conditions to update alert and provider state
+            db.Execute("EXEC TestAlertPricingDetails @0,@1",
+                p.UserID,
+                pos.PositionID);
         }
             
         // All OK:
