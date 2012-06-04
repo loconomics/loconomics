@@ -148,8 +148,9 @@
                     break;
             }
             
+            timeInHours = Math.Round(timeInHours, 2);
             timeRequired += timeInHours;
-            pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()] = new decimal[]{timeInHours, hourPrice * timeInHours};
+            pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()] = new decimal[]{timeInHours, Math.Round(hourPrice * timeInHours, 2)};
         }
         // Calculating the price for Pricing Options
         foreach (var popt in poptions){               
@@ -171,20 +172,23 @@
                         quantity = 1;
                         break;
                 }
-                optPrice = quantity * unitprice;
+                optPrice = Math.Round(quantity * unitprice, 2);
                 // Get the equivalent time required from table
                 decimal timeVar = 0;
                 if (popt.ProviderTimeRequired is decimal) {
                     timeVar = (decimal)popt.ProviderTimeRequired;
                 }
+                // Add pricing option estimate time to the total time,
+                // it's in minutes, we use hours for timeRequired:
+                timeRequired += Math.Round(timeVar / 60, 2);
                 pricingItemsNumbers["2." + popt.PricingOptionID.ToString()] = new decimal[]{timeVar, optPrice};
             }
             optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
             optionalServicesTotalPrice += optPrice;
         }
             
-        subtotalPrice = timeRequired * hourPrice + optionalServicesTotalPrice;
-        feePrice = .1M * subtotalPrice;
+        subtotalPrice = Math.Round(timeRequired * hourPrice + optionalServicesTotalPrice, 2);
+        feePrice = Math.Round(.1M * subtotalPrice, 2);
         totalPrice = subtotalPrice + feePrice;
 
         /* SAVE DATA 
