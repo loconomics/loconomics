@@ -11,6 +11,7 @@
 
         @{
             int n = 0;
+            var pid = 0;
         }
 		<ul class="tabs autofill-submenu-items">
             @{
@@ -18,7 +19,7 @@
                     n++;
                     if (n > maxPositions) { break; }
                     var cls = (n==1 ? "current" : "");
-                    <li class="@cls"><a class="@cls" href="@("#position"+n)">@c.PositionSingular</a></li>
+                    <li class="@cls"><a class="@cls" href="@("#position"+c.PositionID)">@c.PositionSingular</a></li>
                 }
             }
 		</ul>
@@ -31,41 +32,41 @@
                 var cls = (n==1 ? "current" : "");
                 // Setting the current pos (returned with GetUserCurrentPos) in PageData:
                 PageData["position"] = position;
-                PageData["npos"] = n;
-        <div id="@("position"+n)" class="tab-body fancy tabbed buttons @cls">
+                pid = position.PositionID;
+        <div id="@("position"+pid)" class="tab-body fancy tabbed buttons @cls">
             <ul class="tabs">
-                <li class="current"><a class="button profile fanciful" href="@("#position"+n)-services">Services</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-availability">Availability</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-pricing">Pricing</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-photos">Photos</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-locations">Locations</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-licenses">Licenses</a></li>
-                <li><a class="button profile fanciful" href="@("#position"+n)-reviews">Reviews</a></li>
+                <li class="current"><a class="button profile fanciful" href="@("#position"+pid)-services">Services</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-availability">Availability</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-pricing">Pricing</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-photos">Photos</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-locations">Locations</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-licenses">Licenses</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
             </ul>
             
-            <div id="@("position"+n)-services" class="tab-body current">
+            <div id="@("position"+pid)-services" class="tab-body current">
                 @RenderPage("$PositionsServices.cshtml")                
-            </div><!-- #@("position"+n)-services -->
-            <div id="@("position"+n)-availability" class="tab-body">
+            </div><!-- #@("position"+pid)-services -->
+            <div id="@("position"+pid)-availability" class="tab-body">
                 @RenderPage("$PositionsAvailability.cshtml")                
-            </div><!-- #@("position"+n)-availability -->
-            <div id="@("position"+n)-pricing" class="tab-body">
+            </div><!-- #@("position"+pid)-availability -->
+            <div id="@("position"+pid)-pricing" class="tab-body">
                 @*@RenderPage("_PricingWizard.cshtml")*@
                 @RenderPage("$PositionsPricing.cshtml")
-            </div><!-- #@("position"+n)-pricing -->
-            <div id="@("position"+n)-photos" class="tab-body">
+            </div><!-- #@("position"+pid)-pricing -->
+            <div id="@("position"+pid)-photos" class="tab-body">
                 @RenderPage("$PositionsPhotos.cshtml")
-            </div><!-- #@("position"+n)-photos -->
-            <div id="@("position"+n)-locations" class="tab-body">
+            </div><!-- #@("position"+pid)-photos -->
+            <div id="@("position"+pid)-locations" class="tab-body">
                 @RenderPage("$PositionsLocations.cshtml")
-            </div><!-- #@("position"+n)-locations -->
-            <div id="@("position"+n)-licenses" class="tab-body">
+            </div><!-- #@("position"+pid)-locations -->
+            <div id="@("position"+pid)-licenses" class="tab-body">
                 @RenderPage("$PositionsLicenses.cshtml")
-            </div><!-- #@("position"+n)-licenses -->
-            <div id="@("position"+n)-reviews" class="tab-body">
+            </div><!-- #@("position"+pid)-licenses -->
+            <div id="@("position"+pid)-reviews" class="tab-body">
                 @RenderPage("$PositionsReviews.cshtml")
-            </div><!-- #@("position"+n)-reviews -->
+            </div><!-- #@("position"+pid)-reviews -->
             
-        </div><!-- #position@n -->
+        </div><!-- #position@pid -->
             }
         }

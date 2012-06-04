@@ -1,10 +1,9 @@
 ﻿@{
-    // Current position number/index
-    var n = PageData["npos"];
     // Current provider data record:
     var p = DashboardFunctions.GetUserRow();
     // Current position data record:
     var pos = DashboardFunctions.GetUserCurrentPos();
+    var n = pos.PositionID;
     
     if (p == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
