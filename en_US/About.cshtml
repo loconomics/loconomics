@@ -3,37 +3,60 @@
     Page.Title = "About Loconomics";
     
     string section = UrlData[0] != null ? UrlData[0].ToUpper() : "";
+    
 }
 
-<div id="container" class="clearfix">
-    @if (section == "PRIVACYPOLICY")
-    {
-        @RenderPage("HelpCenter/$PrivacyPolicy.cshtml")
-    }
-    else if (section == "TERMSOFUSE")
-    {
-        @RenderPage("HelpCenter/$TermsOfUse.cshtml")
-    }
-    else
-    {
-	<div id="main" class="cushycms">
-		<h1>About Loconomics</h1>
-		<p>Loconomics is a new kind of marketplace that is changing the way local business is done.  Customers are able to search and book reviewed service providers in a safe and convenient environment.  We offer service providers all the tools they need to manage their current business and attract new customers.</p>
-		<p><strong>Loconomics believes:</strong></p>
-		<ul>
-			<li>services provide a quality of life that consumer products cannot  substitute</li>
-			<li>given the right tools, both service providers and customers can bypass agencies giving more money to the provider and consumers paying less</li>
-			<li>there is a large untapped resource of services due to a lack of an intelligent marketplace</li>
-			<li>there is value in community members both providing and receiving services creating trust and cooperation</li>
-			<li>running a business with the highest ethical and business standards engaging its stakeholders is more important and effective than simply profit-driven goals</li>
-		</ul>
-		<p>We believe that anyone is capable of running their own business.  We also believe that no matter how small the task, everyone should be able to find the help they need.  Loconomics was created to provide the tools to empower individuals and small businesses to do just that.  Are you a skilled painter looking for a project during your off time?  Or maybe you have a build-it-yourself shed that you just haven't had the time to assemble?  With Loconomics, not only can you connect with qualified people to get a job done but you can also schedule, manage, review and analyze all of your transactions easily and efficiently.</p>
-		<p>Whether you're an individual who would like to offer your skills or a small business looking to expand your services, Loconomics has you covered.  You can list all the services you have available, certifications, experience and even designate your operational area or neighborhood.  Utilize our calendar with new and existing contracts to help keep you on schedule.  Loconomics even assists you when it comes time for filing your taxes.</p>
-		<h2>The Team</h2>
-		<p><em>Joshua Danielson</em>, co-founder and CEO, graduated from the University of Minnesota Carlson School of Management and IESE Business School in Barcelona.</p>
-		<p><em>Nigel Harrison</em>, co-founder and CFO</p>
-		<p><em>Fernando Gago</em>, co-founder and Director, International</p>
-		<p><em>Patrick Coelho</em>, co-founder and VP of Engineering</p>
-	</div><!-- #main -->
-    }
-</div><!-- #container -->
+      <div id="container" class="clearfix editable helpcenter">
+        @if (section == "PRIVACYPOLICY")
+        {
+            @RenderPage("HelpCenter/$PrivacyPolicy.cshtml")
+        }
+        else if (section == "TERMSOFUSE")
+        {
+            @RenderPage("HelpCenter/$TermsOfUse.cshtml")
+        }
+        else
+        {
+        <div id="main" class="tabbed folders">
+		    <h1 class="withsub cushycms">A different kind of marketplace</h1>
+            <p class="subh1 cushycms">We want you to feel at home</p>
+        
+		    <ul class="tabs autofill-submenu-items">
+			    <li class="current"><a href="#about" class="cushycms">About</a></li>
+			    <li><a href="#theteam" class="cushycms">The Team</a></li>
+                <li><a href="#privacypolicy" class="cushycms">Privacy Policy</a></li>
+                <li><a href="#termsofuse" class="cushycms">Terms of Use</a></li>
+            </ul>
+        
+		    <div id="about" class="tab-body fancy current">
+		        <p>Loconomics is a new kind of marketplace that is changing the way local business is done.  Customers are able to search and book reviewed service providers in a safe and convenient environment.  We offer service providers all the tools they need to manage their current business and attract new customers.</p>
+		        <p><strong>Loconomics believes:</strong></p>
+		        <ul>
+			        <li>services provide a quality of life that consumer products cannot  substitute</li>
+			        <li>given the right tools, both service providers and customers can bypass agencies giving more money to the provider and consumers paying less</li>
+			        <li>there is a large untapped resource of services due to a lack of an intelligent marketplace</li>
+			        <li>there is value in community members both providing and receiving services creating trust and cooperation</li>
+			        <li>running a business with the highest ethical and business standards engaging its stakeholders is more important and effective than simply profit-driven goals</li>
+		        </ul>
+		        <p>We believe that anyone is capable of running their own business.  We also believe that no matter how small the task, everyone should be able to find the help they need.  Loconomics was created to provide the tools to empower individuals and small businesses to do just that.  Are you a skilled painter looking for a project during your off time?  Or maybe you have a build-it-yourself shed that you just haven't had the time to assemble?  With Loconomics, not only can you connect with qualified people to get a job done but you can also schedule, manage, review and analyze all of your transactions easily and efficiently.</p>
+		        <p>Whether you're an individual who would like to offer your skills or a small business looking to expand your services, Loconomics has you covered.  You can list all the services you have available, certifications, experience and even designate your operational area or neighborhood.  Utilize our calendar with new and existing contracts to help keep you on schedule.  Loconomics even assists you when it comes time for filing your taxes.</p>
+		    </div><!-- #about -->
+
+		    <div id="theteam" class="tab-body fancy">
+	            <p><em>Joshua Danielson</em>, co-founder and CEO, graduated from the University of Minnesota Carlson School of Management and IESE Business School in Barcelona.</p>
+	            <p><em>Nigel Harrison</em>, co-founder and CFO</p>
+	            <p><em>Fernando Gago</em>, co-founder and Director, International</p>
+	            <p><em>Patrick Coelho</em>, co-founder and VP of Engineering</p>
+		    </div><!-- #team -->
+
+		    <div id="privacypolicy" class="tab-body fancy">
+                @RenderPage("HelpCenter/$PrivacyPolicy.cshtml")
+		    </div><!-- #privacypolicy -->
+
+		    <div id="termsofuse" class="tab-body fancy">
+                @RenderPage("HelpCenter/$TermsOfUse.cshtml")
+		    </div><!-- #termsofuse -->
+        
+        </div><!-- #main -->
+        }
+      </div><!-- #container -->
