@@ -181,6 +181,7 @@ public class LcMessaging
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
@@ -188,6 +189,7 @@ public class LcMessaging
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", CustomerUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
         }
     }
@@ -222,6 +224,7 @@ public class LcMessaging
                 ,{ "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
@@ -230,6 +233,7 @@ public class LcMessaging
                 ,{ "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.CustomerUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
         }
     }
@@ -262,6 +266,7 @@ public class LcMessaging
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.ProviderUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
@@ -269,6 +274,7 @@ public class LcMessaging
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.CustomerUserID }
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
         }
     }
@@ -305,6 +311,7 @@ public class LcMessaging
                 { "ThreadID", threadID }
                 ,{ "Kind", 1 } // Customer inquiry (first message)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
@@ -312,6 +319,7 @@ public class LcMessaging
                 { "ThreadID", threadID }
                 ,{ "Kind", -1 } // Copy to author of Customer inquiry (first message)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
         }
     }
@@ -352,6 +360,7 @@ public class LcMessaging
                 ,{ "MessageID", messageID }
                 ,{ "Kind", 2 } // Provider inquiry answer (second message and upper evens)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
             SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
@@ -360,6 +369,7 @@ public class LcMessaging
                 ,{ "MessageID", messageID }
                 ,{ "Kind", -2 } // Copy to author of Provider inquiry answer (second message and upper evens)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
         }
     }
@@ -400,6 +410,7 @@ public class LcMessaging
                 ,{ "MessageID", messageID }
                 ,{ "Kind", 3 } // Customer inquiry answer (third message and upper odds)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
@@ -408,8 +419,21 @@ public class LcMessaging
                 ,{ "MessageID", messageID }
                 ,{ "Kind", -3 } // Copy to author of Customer inquiry answer (third message and upper odds)
                 ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
             }));
         }
+    }
+    #endregion
+
+    #region Type:Welcome
+    public static void SendWelcomeProvider(int providerID, string providerEmail)
+    {
+        SendMail(providerEmail, "Welcome to Loconomics.com",
+            ApplyTemplate(UrlUtil.LangPath + "Provider-sign-up/EmailWelcomeProvider/",
+            new Dictionary<string,object> {
+                { "UserID", providerID },
+                { "EmailTo", providerEmail }
+         }));
     }
     #endregion
 

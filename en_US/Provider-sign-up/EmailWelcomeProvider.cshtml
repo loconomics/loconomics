@@ -1,0 +1,69 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Welcome to Loconomics.com";
+    
+    var thisUserID = Request["UserID"].AsInt();
+    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Welcome";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/";
+}
+
+<div class="welcome">
+    <h3>We’re glad you’re here, @thisUser.FirstName</h3>
+    <p class="subh3">Welcome to the Loconomics community!  Below you’ll find instructions on how to complete 
+    your profile and start marketing your services.</p>
+
+    <h4>Step 1.  Activate your profile</h4>
+    <div>
+        <p>
+        To activate your profile, you’ll need to complete a few more things like:
+        </p>
+        <ul class="ul" style="list-style: disc inside">
+            <li>upload your photo and short descriptions of yourself and your work</li>
+            <li>complete your contact information, fill-in your availability, and verify work eligibility</li>
+            <li>ask for references</li>
+        </ul>
+    </div>
+
+    <h4>Step 2.  Tell us how you’d like us to pay you</h4>
+    <div>
+        <p>
+        Let’s be honest, that’s why you’re here.  You can be paid in two ways:
+        </p>
+        <ul class="ul" style="list-style: disc inside">
+            <li>direct deposit into your checking or savings account</li>
+            <li>paper check mailed to you (may take longer)</li>
+        </ul>
+    </div>
+
+    <h4>Step 3.  Enhance your profile</h4>
+    <div>
+        <p>This is the fun part where you can differentiate yourself from the competition by:</p>
+        <ul class="ul" style="list-style: disc inside">
+            <li>adding photos of your work </li>
+            <li>completing a background check and license verification (if applicable)</li>
+            <li>connecting your profile to your social media accounts</li>
+            <li>share with your profile with current clients, friends, and family</li>
+        </ul>
+    </div>
+
+    <div><a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Go to my dashboard</a></div>
+
+    <h4>Reminders</h4>
+
+    <div class="reminders message-section">
+        <ol class="ol" style="list-style: decimal inside">
+            <li>You must complete the steps above for your profile to become active.</li>
+            <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/">here</a> for your reference</li>
+            <li>We’re here to help you and welcome your feedback--please e-mail us at
+    providersupport@loconomics.com at any time with questions or feedback.</li>
+            <li>Never share your Loconomics password with anyone via email, including us!</li>
+        </ol>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿@{
+    var emailTo = PageData["emailTo"] ?? Request["EmailTo"];
     var threadID = PageData["threadID"];
     var messageID = PageData["messageID"];
     var messageTitle = PageData["messageTitle"];
@@ -59,6 +60,13 @@
                 list-style: none outside none;
                 margin: 0;
                 padding: 0;
+            }
+            ul.ul li {
+                list-style: disc inside none;
+            }
+            ol.ol li
+            {
+                list-style: decimal inside none;
             }
             table {
                 font-size: 13px;
@@ -361,12 +369,13 @@ alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix">
             </tr>
             <tr class="footer" height="60" align="center">
                 <td colspan="2">
-                    Loconomics.com &#0169; @(DateTime.Today.Year). <a style="margin-left: 20px" href="@(UrlUtil.LangUrl)About/Terms/">Terms & Privacy</a>
-                    <div>
-                        We respect your right to privacy. Please <a href="@(UrlUtil.LangUrl)About/PrivacyPolicy/">view our Privacy Policy here</a>.
-                        <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">Update your communication preferences</a> or <a href="@(UrlUtil.LangUrl)Dashboard/Account/#Unsubscribe">unsubscribe</a>
-                        This e-mail was sent by Loconomics, Inc., 3150 18th Street, San Francisco, CA 94110.
-                    </div>
+                    This message was sent to @emailTo <br />
+                    @*If you would like to update your email address, please click here.*@
+                    Visit <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. <br />
+                    Please add automated@loconomics.com to your address book to ensure delivery of our emails to your in-box. <br />
+                    &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
+                    3150 18th Street, Suite 438, San Francisco, CA 94110 <br />
+                    <a href="@(UrlUtil.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@(UrlUtil.LangUrl)About/TermsOfUse/">Terms of Use</a>
                 </td>
             </tr>
         </table>
