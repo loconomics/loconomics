@@ -313,12 +313,12 @@ html.ie #booking-services .special-instructions legend{
     width: 167px;
 }
 #booking-payment .billing-info .card-number input{
-    width: 90px;
+    width: 238px;
 }
-#booking-payment .billing-info .card-number,
+#booking-payment .billing-info .card-cvv,
 #booking-payment .billing-info .card-exp{
     display: inline-block;
 }
-#booking-payment .billing-info .card-exp label{
-    padding: 0 0 0 3px;
+#booking-payment .billing-info .card-cvv input{
+    width: 100px;
 }

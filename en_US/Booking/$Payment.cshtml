@@ -45,6 +45,7 @@
     Validation.RequireField("state", "State is required");
     Validation.RequireField("zip", "Zip Postal Code is required");
     Validation.RequireField("card-number", "Card number is required");
+    Validation.RequireField("cvv", "CVV code is required");
     Validation.RequireField("card-exp-month", "Card expiration month is required");
     Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
@@ -135,7 +136,8 @@
                                 Token = paymentNickName,
                                 CardholderName = Request["name-on-card"],
                                 Number = Request["card-number"],
-                                ExpirationDate = Request["card-exp-month"] + Request["card-exp-year"],
+                                ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
+                                CVV = Request["cvv"]
                             },
                             Customer = new CustomerRequest
                             {
@@ -321,6 +323,9 @@
                     </select></label><select name="card-exp-year">
                         @CommonHelpers.CardYearOptions(Request["card-exp-year"])
                     </select></li>
+            <li class="card-cvv">
+                <label>CVV Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
+            </li>
             <li class="save-to-my-payments">
                 <label class="save"><input type="checkbox" @CommonHelpers.IsChecked(Request["save-payment"], "true") name="save-payment" value="true" />Save</label>
                 <label class="save-as">payment details as:<input type="text" value="@Request["save-payment-as"]" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
