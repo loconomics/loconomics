@@ -603,11 +603,7 @@ $(document).ready(function () {
                         }
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
-                        window.location = data.Result;
-                        // If the new url is the same current page but with a hash, page will not be reloaded as
-                        // wanted, do a refresh.
-                        if (/#/.test(window.location))
-                            window.location.reload();
+                        lcRedirectTo(data.Result);
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         container.unblock();
@@ -700,11 +696,7 @@ $(document).ready(function () {
                 if (typeof (data) === 'object') {
                     // Special Code 1: do a redirect
                     if (data.Code == 1) {
-                        window.location = data.Result;
-                        // If the new url is the same current page but with a hash, page will not be reloaded as
-                        // wanted, do a refresh.
-                        if (/#/.test(window.location))
-                            window.location.reload();
+                        lcRedirectTo(data.Result);
                     } else if (data.Code == 0) {
                         // Special Code 0: general success code, show message saying that 'all was fine'
 
@@ -1058,4 +1050,18 @@ function guidGenerator() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+function lcRedirectTo(url) {
+    var ihash = url.indexOf('#');
+    var rurl = url.substring(0, (ihash == -1 ? null : ihash));
+    window.location.hash = '';
+    if (window.location.pathname == rurl) {
+        window.location = url;
+        window.location.reload();
+    } else
+        window.location = url;
+    // If the new url is the same current page but with a hash, page will not be reloaded as
+    // wanted, do a refresh.
+    //if (/#/.test(window.location))
+    //    window.location.reload();
 }

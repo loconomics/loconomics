@@ -703,6 +703,10 @@ form#personal li > label.gender {
     width: auto;
     min-width: 0;
 }
+/**** From: Account Profider Terms ****/
+#providerterms label {
+    width: auto;
+}
 
 /**** Form: Account Taxes ****/
 #account-taxes fieldset span.info{

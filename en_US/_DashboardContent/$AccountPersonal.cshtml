@@ -73,6 +73,7 @@
                     WHERE   UserId = @0
                     -- Check Alerts:
                     EXEC TestAlertPersonalInfo @0
+                    EXEC TestAlertProviderLogin @0
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName);

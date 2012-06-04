@@ -10,6 +10,7 @@
             @if (u.IsProvider){
 			<li><a href="#account-payments">Payments</a></li>
             <li><a href="#account-taxes">Taxes</a></li>
+            <li><a href="#account-terms">Terms &amp; Privacy</a></li>
             }
         </ul>
 
@@ -35,4 +36,8 @@
 		<div id="account-taxes" class="tab-body fancy buttons">
             @RenderPage("$AccountTaxes.cshtml")
 		</div><!-- #account-taxes -->
+        
+        <div id="account-terms" class="tab-body fancy">
+            @RenderPage("$AccountTerms.cshtml")
+        </div><!-- #account-terms -->
     }
