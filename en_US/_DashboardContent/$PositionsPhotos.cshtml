@@ -6,8 +6,15 @@
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
-<form action="#" method="post" class="positionphotos" id="position#@(n)-photos">
-    <input type="hidden" name="position-number" value="@n"/>
+<div>
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".positionphotos .positionphotos-gallery > ol").sortable({
+                placeholder: "ui-state-highlight"
+            });
+        });
+    </script>
     <input type="hidden" name="position-id" value="@p.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionphotos-edit">
@@ -41,10 +48,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-tools">
         <ul>
             <li class="positionphotos-tools-upload"><a href="#">Upload photos</a></li>
-            <li class="positionphotos-tools-arrange"><a href="#">Arrange photos</a></li>
+            <li class="positionphotos-tools-arrange">To arrange photos, click hover a photo and drag and drop. When finish, click save to remember the order.</li>
         </ul>
     </fieldset>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
 </form>
+</div>
