@@ -104,6 +104,8 @@
                     }
                 }
             }
+            // Check alert
+            db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
         }
         
         CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
