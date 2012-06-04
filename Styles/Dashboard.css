@@ -666,6 +666,18 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .dashboard form.positionpricing li label {
     width: auto;
 }
+.dashboard form.positionpricing table.pricing-vars {
+    width: 500px;
+}
+.dashboard form.positionpricing table.pricing-vars label {
+    padding: 0;
+}
+.dashboard form.positionpricing table.pricing-options {
+    width: 100%;
+}
+.dashboard form.positionpricing table td.pricing-item-name {
+    padding-left: 25px;
+}
 
 /**** Form: Account Personal ****/
 #account-personal auths > ul > li{

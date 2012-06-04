@@ -37,7 +37,9 @@
                     pr.ProviderInputDataRequired, pr.ProviderDataInputType,
                     pr.ProviderDataValues, pr.ProviderPricingOptionDisplayText,
                     pr.ProviderDataInputUnit,
-                    pi.PricingDataInput As ProviderDataInputValue
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pr.ProviderTimeInputRequired,
+                    pr.ProviderTimeRequiredValues
             FROM    pricingoption As pr
                      LEFT JOIN
                     providerpricingoptioninputs as pi
@@ -132,28 +134,38 @@
 }
 @if (pvars.Count > 0)
 {
-    <ul class="pricing-vars">
+    <table class="pricing-vars">
+        <thead>
+            <tr>
+                <th>Please enter a time estimate for each vairable below:</th>
+                <th>Average Time</th>
+            </tr>
+        </thead>
+        <tbody>
     @foreach (var pvar in pvars)
     {
-        <li class="@pvar.PricingVariableName data-type-@pvar.ProviderDataInputType">
-            <label for="@idprefix-@pvar.PricingVariableName">@pvar.ProviderPricingVariableDisplayText</label>
+        <tr class="@pvar.PricingVariableName data-type-@pvar.ProviderDataInputType">
+            <td class="pricing-item-name pricing-var-name">
+                <label for="@idprefix-var-@pvar.PricingVariableName">@pvar.ProviderPricingVariableDisplayText</label>
+            </td>
+            <td class="pricing-var-value">
             @switch ((string)@pvar.ProviderDataInputType)
             {
                 case "dropdown":
-                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
+                    <select id="@idprefix-var-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
                         @{
                             var optvalues = getValuesFromCSV(pvar.ProviderDataValues);
                             foreach (string optv in optvalues)
                             {
                                 var v = optv.Trim();
-                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v @pvar.ProviderDataInputUnit</option>
                             }
                         }
                     </select>
                     break;
                 case "number":
                 case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.ProviderDataInputValue)"/>
+                    <input type="text" id="@idprefix-var-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.ProviderDataInputValue)"/>
                     break;
                 case "":
                     break;
@@ -161,9 +173,11 @@
                     <text>Unknowed ProviderDataInputType: @pvar.ProviderDataInputType</text>
                     break;
             }
-        </li>
+            </td>
+        </tr>
     }
-    </ul>
+       </tbody>
+   </table>
 } else {
     <div class="no-pricing-wizard">
         There is not variables to customize the pricing wizard for your position.
@@ -173,15 +187,16 @@
     <table class="pricing-options">
         <thead>
             <tr>
-                <th>Services upon request</th>
-                <th>Value</th>
+                <th>Optional services/materials you can provide:</th>
+                <th>Fee</th>
+                <th>Average time:</th>
             </tr>
         </thead>
         <tbody>
         @foreach (var popt in poptions)
         {
             <tr class="@popt.PricingOptionName data-type-@popt.ProviderDataInputType">
-                <td class="pricing-option-check">
+                <td class="pricing-option-check pricing-item-name">
                     <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
                     <label for="@idprefix-@popt.PricingOptionName-check">@popt.ProviderPricingOptionDisplayText</label>
                 </td>
@@ -211,6 +226,25 @@
                         <text>Unknowed ProviderDataInputType: @popt.ProviderDataInputType</text>
                         break;
                 }
+                </td>
+                <td class="pricing-option-time">
+                    @if (popt.ProviderTimeInputRequired)
+                    {
+                        <select id="@idprefix-@(popt.PricingOptionName)-time" name="@(popt.PricingOptionName)-time">
+                            @{
+                                var optvalues = getValuesFromCSV(popt.ProviderTimeRequiredValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName + "-time", v, popt)>@v minutes</option>
+                                }
+                             }
+                        </select>
+                    }
+                    else
+                    {
+                        @: N/A
+                    }
                 </td>
             </tr>
         }
