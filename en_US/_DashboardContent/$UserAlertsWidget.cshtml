@@ -35,7 +35,10 @@
             break;
         case "providerlogin":
             @(UrlUtil.LangPath + "Dashboard/Account/#account-terms")
-            break;   
+            break;
+        case "positionservices":
+            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-services")
+            break;
         default:
             @("#")
             break;
