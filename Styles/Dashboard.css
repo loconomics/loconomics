@@ -667,7 +667,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     width: auto;
 }
 .dashboard form.positionpricing table.pricing-vars {
-    width: 500px;
+    width: 490px;
 }
 .dashboard form.positionpricing table.pricing-vars label {
     padding: 0;
@@ -677,6 +677,16 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 }
 .dashboard form.positionpricing table td.pricing-item-name {
     padding-left: 25px;
+}
+.dashboard form.positionpricing .hourly-rate {
+    float: right;
+    border-left: 1px solid #DADADA;
+}
+.hourly-rate label {
+    font-weight: bold;
+}
+.hourly-rate input.money {
+    width: 40px;
 }
 
 /**** Form: Account Personal ****/

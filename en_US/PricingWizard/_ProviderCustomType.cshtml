@@ -8,6 +8,7 @@
     var pos = DashboardFunctions.GetUserCurrentPos();
     var idprefix = PageData["idprefix"] ?? "pricingwizard";
     dynamic pvars, poptions;
+    dynamic hourlyRate = 0;
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables with the selected Provider Value
@@ -54,9 +55,36 @@
                      AND
                     pr.Active = 1 AND pr.PricingTypeID = @4
         ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+        
+        // Get hourly rate
+        hourlyRate = db.QueryValue(@"
+            SELECT  HourlyRate
+            FROM    ProviderHourlyRate
+            WHERE   UserID = @0
+                        AND
+                    PositionID = @1
+                        AND
+                    ClientTypeID = @2
+        ", p.UserID, pos.PositionID, PageData["ClientTypeID"]);
     }
     
-    if (IsPost){
+    Validation.RequireField("hourly-rate", "Please, enter your hourly rate");
+    
+    // IMPORTANT NOTE: There are some crazy problems with validation inside RenderPage's
+    // with form outside, I don't know why but break validation and modelstate errors control
+    // Doing some manual check, adding ModelState errors if validation fails (must be auto, but not
+    // just here !?).
+    if (IsPost) {
+        if (Validation.IsValid()) {
+            if (!Request["hourly-rate"].IsDecimal()){
+                ModelState.AddError("hourly-rate", "Hourly rate must be a number");
+            }
+        } else {
+            ModelState.AddError("hourly-rate", "Please, enter your hourly rate");
+        }
+    }
+    
+    if (IsPost && Validation.IsValid() && ModelState.IsValid){
         var sqlSetVar = @"
             BEGIN TRAN
                 UPDATE  providerpricingvariableinputs WITH (serializable)
@@ -103,6 +131,24 @@
             DELETE FROM providerpricingoptioninputs
             WHERE       ProviderUserId = @0 AND PricingOptionID = @1
         ";
+        var sqlSetHourlyRate = @"
+            BEGIN TRAN
+                UPDATE  ProviderHourlyRate WITH (serializable)
+                SET     HourlyRate = @3
+                WHERE   UserID = @0
+                         AND
+                        PositionID = @1
+                         AND
+                        ClientTypeID = @2
+
+                IF @@rowcount = 0 BEGIN
+                    INSERT INTO ProviderHourlyRate (
+                        UserID, PositionID, ClientTypeID,
+                        HourlyRate, CreatedDate, UpdatedDate, ModifiedBy, Active
+                    ) VALUES (@0, @1, @2, @3, getdate(), getdate(), 'sys', 1)
+                END
+            COMMIT TRAN
+        ";
         
         using (var db = Database.Open("sqlloco")){
             // Iterate all variables and save into providerpricingvariableinputs
@@ -119,6 +165,12 @@
                     db.Execute(sqlDelOpt, p.UserID, popt.PricingOptionID);
                 }
             }
+            // Save Hourly Rate
+            db.Execute(sqlSetHourlyRate,
+                p.UserID,
+                pos.PositionID,
+                PageData["ClientTypeID"],
+                Request["hourly-rate"].AsDecimal());
         }
             
         // All OK:
@@ -138,6 +190,12 @@
     var valuealt = (value2 == null ? "" : value2.ToString());
     @Html.Raw((Request[name] == value || valuealt == value) ? "selected='selected'" : "")
 }
+@Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+<div class="hourly-rate">
+    <label>My hourly rate ($):
+        <input type="text" class="number money" value="@(Request["hourly-rate"] ?? hourlyRate)" name="hourly-rate" @Validation.GetHtml("hourly-rate")/>
+    </label>
+</div>
 @if (pvars.Count > 0)
 {
     <table class="pricing-vars">
