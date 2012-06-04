@@ -238,8 +238,11 @@
     font-weight: bold;
 }
 
-.dashboard .tab-body > p{
+.dashboard .tab-body > p {
     margin: 0 0 15px 0;
+}
+.dashboard .tabbed.buttons .tab-body > p {
+    margin: 1em 0 15px 0;
 }
 
 /*** Dashboard forms ***/
