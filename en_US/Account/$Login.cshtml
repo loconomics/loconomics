@@ -52,8 +52,19 @@
             string redirect = N.W(Request.QueryString["ReturnUrl"])
                 ?? N.W(Request["Redirect"])
                 ?? UrlUtil.LangPath;
+            
+            // The redirect cannot be done to an url inside the /Account/ segment:
+            if (redirect.Contains("/Account/")) {
+                redirect = UrlUtil.LangPath;
+            }
+            
+            // Be carefully with hash value: if a user enter from an external link in an email
+            // or bookmark and in some specific cases inside the web,
+            // hash value will be send it well but some other times will not be send it;
+            // a javascript add the 'HASH' parameter to allow the server to know what is the
+            // stripped hash value, re-adding it just now if url doesn't contain it.
             string hash = Request.QueryString["HASH"];
-            if (!string.IsNullOrEmpty(hash)) {
+            if (!redirect.Contains('#') && !string.IsNullOrEmpty(hash)) {
                 redirect += "#" + hash;
             }
 

@@ -17,6 +17,7 @@ public static class UrlUtil
     {
         get
         {
+            //Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             HttpContext context = HttpContext.Current;
             return context.Request.Url.Scheme + "://" + context.Request.Url.Authority;
         }
