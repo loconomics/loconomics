@@ -9,9 +9,9 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcData
 {
-    public static List<object> GetServiceCatsAndItsAttributes(int positionId, string filter = null)
+    public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filter = null)
     {
-        var rcats = new List<object>();
+        var rcats = new Dictionary<int, Dictionary<string, object>>();
         var catsFilter = new List<int>();
         
         switch (filter) {
@@ -38,12 +38,12 @@ public static class LcData
                 }
                 // Copy data to a new structure
                 var rcat = new Dictionary<string, object>(){
-                { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
-                { "ServiceAttributeCategoryName", cat.ServiceCat }
-            };
+                    { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
+                    { "ServiceAttributeCategoryName", cat.ServiceCat }
+                };
                 // Getting attributes of the category
                 rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID);
-                rcats.Add(rcat);
+                rcats.Add(cat.ServiceAttributeCategoryID, rcat);
             }
         }
         return rcats;

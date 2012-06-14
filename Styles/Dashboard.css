@@ -322,19 +322,37 @@ form#personal li label{
 }
 
 /** Form: Positions - Services **/
+.dashboard .positionservices div.service-attribute-categories {
+    border-right: 1px solid #DADADA;
+    display: inline-block;
+    /*margin: 20px 10px 10px 0 !important;
+    padding: 0 10px 0 0 !important;*/
+    min-height: 350px;
+    width: 460px;
+}
 fieldset.positionservices-attributes{
     display: inline-block;
-    width: 210px;
-    border-right: solid 1px #dadada;
+    width: 205px;
+    overflow: hidden;
+    /*border-right: solid 1px #dadada;*/
     margin: 0 10px 10px 0 !important;
     padding: 0 10px 0 0 !important;
     vertical-align: top;
+}
+/* Fixing the buggy browsers implementation of legend element */
+fieldset.positionservices-attributes > legend {
+    clear: both;
+    float: left;
+    overflow: hidden;
+    width: 205px;
+    margin: 0 0 5px;
 }
 form.positionservices label{
     display: block;
 }
 .dashboard form.positionservices li label{
     width: auto;
+    white-space: nowrap;
 }
 form.positionservices input{
     margin-right: .4em;

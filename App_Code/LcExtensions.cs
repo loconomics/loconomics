@@ -24,4 +24,12 @@ public static class LcExtensions
         }
         return (request["X-Requested-With"] == "XMLHttpRequest") || ((request.Headers != null) && (request.Headers["X-Requested-With"] == "XMLHttpRequest"));
     }
+    public static Dictionary<string, object> ToJsonDictionary<TKey, TValue>(this Dictionary<TKey, TValue> input)
+    {
+	    var output = new Dictionary<string, object>(input.Count);
+	    foreach (KeyValuePair<TKey, TValue> pair in input)
+		    output.Add(pair.Key.ToString(), pair.Value);
+	    return output;
+        //return input.ToDictionary(item => item.Key.ToString(), item => item.Value);
+    }
 }

@@ -10,7 +10,7 @@
         var positionId = Request["positionId"].AsInt();
         var filter = Request["filter"];
         
-        result.Add("ServiceAttributeCategories", LcData.GetServiceCatsAndItsAttributes(positionId, filter));
+        result.Add("ServiceAttributeCategories", LcData.GetServiceCatsAndItsAttributes(positionId, filter).ToJsonDictionary());
         
         // No error
         resultCode = 0;
