@@ -7,46 +7,10 @@
     
     try{
         /* Input data */
-        var positionId = int.Parse(Request["positionId"]);
+        var positionId = Request["positionId"].AsInt();
         var filter = Request["filter"];
-        var catsFilter = new List<int>();
         
-        switch (filter) {
-            case "provider-services":
-                //catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
-                //catsFilter.AddRange(new int[]{1, 2, 4, 5, 7});
-                break;
-        }
-        
-        /* Process data */
-        //var sqlposition = "exec GetPosition @0,1,1";
-        var sqlcat = "exec GetServiceAttributeCategories @0,1,1";
-        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1";
-        
-        var db = Database.Open("sqlloco");
-        
-        //var posrow = db.QuerySingle(sqlposition, positionId);
-        var catrow = db.Query(sqlcat, positionId);
-
-        var rcats = new List<object>();
-        result.Add("ServiceAttributeCategories", rcats);
-        
-        // Iterate the categories
-        foreach (var cat in catrow){
-            // Apply filtering, if there are
-            if (catsFilter.Count > 0 && !catsFilter.Contains(cat.ServiceAttributeCategoryID)) {
-                continue;
-            }
-            // Copy data to a new structure
-            var rcat = new Dictionary<string, object>(){
-                { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
-                { "ServiceAttributeCategoryName", cat.ServiceCat }
-            };
-            // Getting attributes of the category
-            rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID);
-    
-            rcats.Add(rcat);
-        }
+        result.Add("ServiceAttributeCategories", LcData.GetServiceCatsAndItsAttributes(positionId, filter));
         
         // No error
         resultCode = 0;
