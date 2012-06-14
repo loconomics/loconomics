@@ -112,7 +112,7 @@
     </ul>
 }
 @helper printAttCheck(int catId, dynamic att){
-    <label title="@att["ServiceAttribute"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
+    <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
 @helper printAttSelect(int catId, dynamic atts){
     <select name="positionservices-category[@(catId)]">

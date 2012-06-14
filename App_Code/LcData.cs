@@ -39,7 +39,8 @@ public static class LcData
                 // Copy data to a new structure
                 var rcat = new Dictionary<string, object>(){
                     { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
-                    { "ServiceAttributeCategoryName", cat.ServiceCat }
+                    { "ServiceAttributeCategoryName", cat.ServiceCat },
+                    { "ServiceAttributeCategoryDescription", cat.ServiceAttributeCategoryDescription }
                 };
                 // Getting attributes of the category
                 rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID, (userId == 0 ? null : (object)userId));

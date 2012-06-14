@@ -377,10 +377,10 @@ $(document).ready(function () {
         }
     });
     /* Enable focus tab on every hash change, now there are two scripts more specific for this:
-     * one when page load,
-     * and another only for links with 'target-tab' class.
-     * Need be study if something of there must be removed or changed.
-     * This is needed for other behaviors to work. */
+    * one when page load,
+    * and another only for links with 'target-tab' class.
+    * Need be study if something of there must be removed or changed.
+    * This is needed for other behaviors to work. */
     $(window).hashchange(function () {
         var thereIsTab = TabbedUX.getTab(location.hash);
         if (thereIsTab)
@@ -855,6 +855,28 @@ $(document).ready(function () {
             popup(UrlUtil.LangPath + urlprefix + urlsection, 'large');
         return false;
     });
+
+    // Generic script for enhanced tooltips and element descriptions
+    configureTooltip();
+
+    /*Modernizr.load({
+    load: [
+    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.bgiframe.js',
+    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.dimensions.js',
+    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.delegate.js',
+    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.tooltip.css',
+    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.tooltip.js'
+    ],
+    complete: function () {
+    $('[title]').tooltip({
+    delay: 0,
+    showURL: false,
+    bodyHandler: function () {
+    return $(this).attr("title");
+    }
+    });
+    }
+    });*/
 });
 
 /*******************
@@ -1067,4 +1089,38 @@ function lcRedirectTo(url) {
     // wanted, do a refresh.
     //if (/#/.test(window.location))
     //    window.location.reload();
+}
+function configureTooltip() {
+    var posoffset = { x: 20, y: 10 };
+    function pos(t, x, y) {
+        t.css('left', x + posoffset.x);
+        t.css('top', y + posoffset.y);
+    }
+    function con(t, l) {
+        var h = l.attr('title');
+        var d = l.data('description');
+        if (d)
+            t.html('<h4>' + h + '</h4><p>' + d + '</p>');
+        else
+            t.html(h);
+        l.attr('title', '');
+    }
+    $('body').on('mousemove focusin', '[title]', function (e) {
+        var $t = $(this);
+        var t = $t.data('tooltip');
+        if (!t) {
+            t = $('<div style="position:absolute" class="tooltip fancy"></div>');
+            pos(t, e.pageX, e.pageY);
+            con(t, $t);
+            $('body').append(t);
+            $t.data('tooltip', t);
+        } else {
+            pos(t, e.pageX, e.pageY);
+            if (!t.is(':visible'))
+                t.stop().show(200);
+        }
+    }).on('mouseleave focusout', '[title]', function () {
+        var t = $(this).data('tooltip');
+        if (t) t.stop().hide(200);
+    });
 }

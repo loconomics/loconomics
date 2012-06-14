@@ -1851,3 +1851,17 @@ html.boxshadow #loginBox .field-validation-error{
 .helpcenter .require-login h2 {
     margin-top: 1em;
 }
+/**** tooltip class ****/
+.tooltip {
+    padding:5px 10px;
+    z-index:9000;
+    background: #B5E1E2;
+}
+.tooltip > h4 {
+    margin: 4px 0 0 !important;
+    font-size: 1em;
+    text-align: left !important;
+}
+.tooltip > p {
+    margin: 3px 0;
+}
