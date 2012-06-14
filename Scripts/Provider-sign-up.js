@@ -162,9 +162,10 @@ function initYourWork(){
                     fs.find('>*:not(legend)').remove();
 
                     switch (cat.ServiceAttributeCategoryID) {
-                        case 2:
+                        /*case 2:
                         case 3:
-                        case 7:
+                        case 7:*/
+                        default:
                             fs.append(createAttCheckList(cat));
                             break;
                         case 5:
