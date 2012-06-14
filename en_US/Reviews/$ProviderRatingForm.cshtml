@@ -161,7 +161,7 @@
                         string newemails = "";
                         List<string> emailslist = new List<string>();
                         foreach (string ad in add) {
-                            if (MyValidator.IsEmailAdress(ad)) {
+                            if (LcValidators.IsEmailAdress(ad)) {
                                 emailslist.Add(ad);
                             }
                         }

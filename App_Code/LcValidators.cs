@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.WebPages;
 using System.Web.WebPages.Html;
 using WebMatrix.Data;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Descripción breve de LcValidators
@@ -28,5 +29,13 @@ public static class LcValidators
             var postalCodeID = db.QueryValue(sqlGetPostalCodeID, zipcode, 1, provinceStateID);
             return postalCodeID == null ? 0 : (int)postalCodeID;
         }
+    }
+    public static bool IsEmailAdress(string sEmail){
+            if(sEmail!=""){
+                var sRegex = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
+                return sRegex.IsMatch(sEmail) ?true:false ;
+        }else{
+                return false ;
+            }
     }
 }
