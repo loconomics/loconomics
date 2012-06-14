@@ -21,22 +21,26 @@
                 SET     Active = 1,
                         UpdatedDate = getdate(),
                         ModifiedBy = 'sys'
-                WHERE   UserId = @0 AND PositionID = @1 AND SCAMID = @2
-                         AND LanguageID = @3 AND CountryID = @4
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeCategoryID = @2
+                         AND ServiceAttributeID = @3
+                         AND LanguageID = @4 AND CountryID = @5
 
                 IF @@rowcount = 0
                 BEGIN
                     INSERT INTO userprofileserviceattributes (UserID,
-                        PositionID, SCAMID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                        PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
                         ModifiedBy, Active)
-                    VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys', 1)
                 END
             COMMIT TRAN
         ";
         var sqlDelAttribute = @"
             DELETE FROM userprofileserviceattributes
-            WHERE       UserID = @0 AND PositionID = @1 AND SCAMID = @2
-                         AND LanguageID = @3 AND CountryID = @4
+            WHERE       UserID = @0 AND PositionID = @1
+                         AND ServiceAttributeCategoryID = @2
+                         AND ServiceAttributeID = @3
+                         AND LanguageID = @4 AND CountryID = @5
         ";
         
         using (var db = Database.Open("sqlloco")) {
@@ -53,10 +57,10 @@
                                 // Value changed, update database
                                 if (wasChecked) {
                                     // Set record (insert or update)
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
                                 } else {
                                     // Delete record
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
                                 }
                             }
                         }
@@ -74,9 +78,9 @@
                             if (!att.UserChecked && att.ServiceAttributeID == selectedAttID ||
                                 att.UserChecked && att.ServiceAttributeID != selectedAttID) {
                                 if (att.ServiceAttributeID == selectedAttID) {
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
                                 } else {
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.SCAMID, 1, 1);
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
                                 }
                             }
                         }

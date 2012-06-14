@@ -1,5 +1,6 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
+@using System.Text.RegularExpressions;
 @{
     PageData["PositionID"] = 0;
     
@@ -26,7 +27,7 @@
             //var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
         
             var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
-            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,'Sys',1)";
+            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,@7,'Sys',1)";
             
             // Link the user with the selected position:
             var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
@@ -34,20 +35,30 @@
             if (Results.Result != "Success") {
                 CommonHelpers.ReturnJsonError(-1, Results.Result);
             } else {
+                var getcatid = new Regex("^positionservices-category\\[(\\d+)\\]", RegexOptions.Compiled);
                 foreach (string fname in Request.Form.Keys){
-                    
                     // In the form, the 'name' of each input-checkbox element per service-attribute have
-                    // the format: positionservices-category[{0}]-attribute[{1}]
+                    // the format: positionservices-category[{0}]-attribute[{1}] or a simpler positionservices-category[{0}]
                     // where {0} is replaced by the ServiceAttributeCategoryID
                     // and {1} is replaced by the ServiceAttributeID
-                    // BUT, the important is that the value associated with the checkboxes is the SCAMID
-                    // just wast we need save into the database.
+                    // BUT, the important is that the value associated with the checkboxes is the ServiceAttributeID
+                    // and the ServiceAttributeCategoryID is ever present in the name as param {0}
+                    // just both are what we need save into the database.
                     // And remember: web forms only send to the server in the POST (just here!)
                     // the pair  name-value  of checked checkboxes 
                     // (it means that unchecked values are not in the Request.Form collection)
-                    if (fname.StartsWith("positionservices-category")){
-                        // Is an attribute SCAMID value
-                        db.Execute(sqlInsertAttribute, UserID, PositionID, Request.Form[fname], LanguageID, CountryID, theDate, theDate);
+                    if (fname.StartsWith("positionservices-category[")){
+                        var serviceAttributeID = Request.Form[fname];
+                        string serviceAttributeCategoryID = "";
+                        var matches = getcatid.Match(fname);
+                        if (matches.Success && matches.Groups.Count == 2) {
+                            serviceAttributeCategoryID = matches.Groups[1].Value;
+                        } else {
+                            continue;
+                        }
+                        db.Execute(sqlInsertAttribute, UserID, PositionID,
+                            serviceAttributeCategoryID, serviceAttributeID,
+                            LanguageID, CountryID, theDate, theDate);
                     }
                 }
 

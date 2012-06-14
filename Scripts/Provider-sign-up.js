@@ -77,9 +77,8 @@ function initYourWork(){
         @0 CategoryId
         @1 AttributeId
         @2 AttributeName
-        @3 SCAMID
         */
-        var tplAttCheck = '<label title="@2"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@3"/><span>@2</span></label>';
+        var tplAttCheck = '<label title="@2"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@1"/><span>@2</span></label>';
         /* Template to create a select for attributes options, markers:
         @0 CategoryId
         */
@@ -97,8 +96,7 @@ function initYourWork(){
                 var hAtt = tplAttCheck
                     .replace(/@0/g, cat.ServiceAttributeCategoryID)
                     .replace(/@1/g, att.ServiceAttributeID)
-                    .replace(/@2/g, att.ServiceAttribute)
-                    .replace(/@3/g, att.SCAMID);
+                    .replace(/@2/g, att.ServiceAttribute);
 
                 // Add new attribute html
                 c.append('<li>' + hAtt + 
