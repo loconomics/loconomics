@@ -9,7 +9,7 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcData
 {
-    public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filter = null)
+    public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filter = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
         var catsFilter = new List<int>();
@@ -22,7 +22,7 @@ public static class LcData
         }
 
         var sqlcat = "exec GetServiceAttributeCategories @0,1,1";
-        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1";
+        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
 
         using (var db = Database.Open("sqlloco"))
         {
@@ -42,7 +42,7 @@ public static class LcData
                     { "ServiceAttributeCategoryName", cat.ServiceCat }
                 };
                 // Getting attributes of the category
-                rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID);
+                rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID, (userId == 0 ? null : (object)userId));
                 rcats.Add(cat.ServiceAttributeCategoryID, rcat);
             }
         }

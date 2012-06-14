@@ -9,13 +9,12 @@
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
     var tplCatName = "positionservices-category[{0}]";
     
-    const int servicesId = 2, serviceswithfeesId = 3, attsExperienceID = 1, attsExperienceLevelID = 4, attsClientTypesID = 7,
-        attsLanguagesID = 5;
+    const int attsExperienceID = 1, attsExperienceLevelID = 4, attsClientTypesID = 7, attsLanguagesID = 5;
 
     var specialCatIDs = new List<int> { 1, 4, 7, 5 };
-    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services");
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services", pos.UserID);
     
-    if (IsPost) {       
+    if (IsPost) {
         var sqlSetAttribute = @"
             BEGIN TRAN
                 UPDATE  userprofileserviceattributes WITH (serializable)
