@@ -508,8 +508,8 @@ public class LcMessaging
     #region Send Mail wrapper function
     public static void SendMail(string to, string subject, string body, string from = null)
     {
-        //WebMail.Send(to, subject, body, from);
-        ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
+        WebMail.Send(to, subject, body, from);
+        //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
     #endregion
 
