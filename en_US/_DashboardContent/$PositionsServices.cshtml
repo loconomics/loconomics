@@ -114,12 +114,15 @@
 @helper printAttCheck(int catId, dynamic att){
     <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
-@helper printAttSelect(int catId, dynamic atts){
-    <select name="positionservices-category[@(catId)]">
-        @foreach (var att in atts){
-        <option @getChecked(att) value="@att["ServiceAttributeID"]">@att["ServiceAttribute"]</option>
+@helper printAttSelect(dynamic cat){
+    <select title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]">
+        @foreach (var att in cat["ServiceAttributes"]){
+        <option @getChecked(att) title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" value="@att["ServiceAttributeID"]">@att["ServiceAttribute"]</option>
         }
     </select>
+}
+@helper printCatLegend(dynamic cat){
+    <legend data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
@@ -137,7 +140,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
                     <fieldset class="positionservices-attributes">
-                        <legend title="@cat.Value["ServiceAttributeCategoryName"]">@cat.Value["ServiceAttributeCategoryName"]:</legend>
+                        @printCatLegend(cat.Value)
                         @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                     </fieldset>
                 }
@@ -156,9 +159,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <div class="positionservices-sidebar">
         @if (dataCats.ContainsKey(attsExperienceLevelID) && dataCats[attsExperienceLevelID]["ServiceAttributes"].Count > 0)
         {
+            var cat = dataCats[attsExperienceLevelID];
         <fieldset class="positionservices-experiencelevel">
-            <legend>Experience Level</legend>
-                @printAttSelect(attsExperienceLevelID, dataCats[attsExperienceLevelID]["ServiceAttributes"])
+            @*<legend>Experience Level</legend>*@
+            @printCatLegend(cat)
+                @printAttSelect(cat["ServiceAttributes"])
                 @*<select name="positionservices-experiencelevel">
                 <option>Expert</option>
                 <option>Intermediate</option>
@@ -168,9 +173,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         }
         @if (dataCats.ContainsKey(attsExperienceID) && dataCats[attsExperienceID]["ServiceAttributes"].Count > 0)
         {
+            var cat = dataCats[attsExperienceID];
         <fieldset class="positionservices-yearsexperience">
-            <legend>Years Experience</legend>
-            @printAttSelect(attsExperienceID, dataCats[attsExperienceID]["ServiceAttributes"])
+            @*<legend>Years Experience</legend>*@
+            @printCatLegend(cat)
+            @printAttSelect(cat["ServiceAttributes"])
             @*
             <select name="positionservices-yearsexperience">
                 <option>+10 years</option>
@@ -183,15 +190,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         }
         @if (dataCats.ContainsKey(attsLanguagesID) && dataCats[attsLanguagesID]["ServiceAttributes"].Count > 0)
         {
+            var cat = dataCats[attsLanguagesID];
         <fieldset class="positionservices-languagesspoken">
-            <legend>Languages Spoken</legend>
+            @*<legend>Languages Spoken</legend>*@
+            @printCatLegend(cat)
             <ul>
                 @foreach (var att in dataCats[attsLanguagesID]["ServiceAttributes"])
                 {
                 <li>@printAttCheck(attsLanguagesID, att)
                     @*TODO: printAttSelect, where are language level atts? *@
-                    <select name="positionservices-category[@(attsLanguagesID)]-attribute[@(att.ServiceAttributeID)]-level">
-                        <option>Fluent</option>
+                    <select title="Level" data-description="Language Level" name="positionservices-category[@(attsLanguagesID)]-attribute[@(att.ServiceAttributeID)]-level">
+                        <option data-description="It means fluent" title="Fluent">Fluent</option>
                         <option>Begginer</option>
                         <option>N/A</option>
                     </select>
@@ -233,8 +242,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         }
         @if (dataCats.ContainsKey(attsClientTypesID) && dataCats[attsClientTypesID]["ServiceAttributes"].Count > 0)
         {
+            var cat = dataCats[attsClientTypesID];
         <fieldset class="positionservices-clientstypes">
-            <legend>Clients Types</legend>
+            @*<legend>Clients Types</legend>*@
+            @printCatLegend(cat)
             @printAttCheckList(attsClientTypesID, dataCats[attsClientTypesID]["ServiceAttributes"])
             @*<label><input type="checkbox" name="positionservices-clientstypes-residential"/>Residential</label>
             <label><input type="checkbox" name="positionservices-clientstypes-business"/>Business</label>*@

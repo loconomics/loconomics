@@ -1854,7 +1854,7 @@ html.boxshadow #loginBox .field-validation-error{
 /**** tooltip class ****/
 .tooltip {
     padding:5px 10px;
-    z-index:9000;
+    z-index:99999;
     background: #B5E1E2;
 }
 .tooltip > h4 {
