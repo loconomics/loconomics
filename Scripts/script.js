@@ -1092,7 +1092,16 @@ function lcRedirectTo(url) {
 }
 function configureTooltip() {
     var posoffset = { x: 20, y: 10 };
-    function pos(t, x, y) {
+    function pos(t, e) {
+        var x, y;
+        if (e.pageX && e.pageY) {
+            x = e.pageX;
+            y = e.pageY;
+        } else if (e.target) {
+            var $et = $(e.target);
+            x = $et.outerWidth() + $et.offset().left;
+            y = $et.outerHeight() + $et.offset().top;
+        }
         t.css('left', x + posoffset.x);
         t.css('top', y + posoffset.y);
     }
@@ -1110,12 +1119,12 @@ function configureTooltip() {
         var t = $t.data('tooltip');
         if (!t) {
             t = $('<div style="position:absolute" class="tooltip fancy"></div>');
-            pos(t, e.pageX, e.pageY);
+            pos(t, e);
             con(t, $t);
             $('body').append(t);
             $t.data('tooltip', t);
         } else {
-            pos(t, e.pageX, e.pageY);
+            pos(t, e);
             if (!t.is(':visible'))
                 t.stop().show(200);
         }
