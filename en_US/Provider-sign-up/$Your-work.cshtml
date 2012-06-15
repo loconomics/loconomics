@@ -86,11 +86,11 @@
 }
 @helper printPositions(){
     var db = Database.Open("sqlloco");
-    var sql = "SELECT distinct PositionSingular, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1 ORDER BY PositionSingular";
+    var sql = "SELECT distinct PositionSingular, PositionDescription, PositionID FROM positions WHERE PositionSingular LIKE @0 and LanguageID = 1 and CountryID = 1 ORDER BY PositionSingular";
     var data = db.Query(sql, "%");
     int PositionID = PageData["PositionID"];
     foreach (var row in data){
-        <option value="@row.PositionID" @(row.PositionID == PositionID ? "selected" : "" )>@row.PositionSingular</option>
+        <option title="@row.PositionSingular" data-description="@row.PositionDescription" value="@row.PositionID" @(row.PositionID == PositionID ? "selected" : "" )>@row.PositionSingular</option>
     }
 }
 <p class="info">

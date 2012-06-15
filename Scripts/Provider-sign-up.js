@@ -71,23 +71,28 @@ function initYourWork(){
         /* Template to create a fieldset for attribute-category 
         @0 CategoryId
         @1 CategoryName
+        @2 CategoryDescription
         */
-        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-@0"><legend>@1:</legend></fieldset>';
+        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-@0"><legend title="@1" data-description="@2">@1:</legend></fieldset>';
         /* Template to create a label with checkbox, markers:
         @0 CategoryId
         @1 AttributeId
         @2 AttributeName
+        @3 AttributeDescription
         */
-        var tplAttCheck = '<label title="@2"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@1"/><span>@2</span></label>';
+        var tplAttCheck = '<label title="@2" data-description="@3"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@1"/><span>@2</span></label>';
         /* Template to create a select for attributes options, markers:
         @0 CategoryId
+        @1 CategoryName
+        @2 CategoryDescription
         */
-        var tplAttSelect = '<select name="positionservices-category[@0]"></select>';
+        var tplAttSelect = '<select name="positionservices-category[@0]" title="@1" data-description="@2"></select>';
         /* Template to create the select options for attributes, markers:
         @0 AttributeID
-        @1 Attribute Display Name
+        @1 AttributeName
+        @2 AttributeDescription
         */
-        var tplAttSelectOpt = '<option value="@0">@1</option>';
+        var tplAttSelectOpt = '<option title="@1" data-description="@2" value="@0">@1</option>';
 
         function createAttCheckList(cat, checkSelectCat) {
             var c = $('<ul></ul>');
@@ -96,7 +101,8 @@ function initYourWork(){
                 var hAtt = tplAttCheck
                     .replace(/@0/g, cat.ServiceAttributeCategoryID)
                     .replace(/@1/g, att.ServiceAttributeID)
-                    .replace(/@2/g, att.ServiceAttribute);
+                    .replace(/@2/g, att.ServiceAttribute)
+                    .replace(/@3/g, att.ServiceAttributeDescription);
 
                 // Add new attribute html
                 c.append('<li>' + hAtt + 
@@ -107,11 +113,14 @@ function initYourWork(){
         }
         function createAttSelect(cat) {
             var c = $(tplAttSelect
-                .replace(/@0/g, cat.ServiceAttributeCategoryID));
+                .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                .replace(/@1/g, cat.ServiceAttributeCategoryName)
+                .replace(/@2/g, cat.ServiceAttributeCategoryDescription));
             $.each(cat.ServiceAttributes, function (iAtt, att) {
                 c.append(tplAttSelectOpt
                     .replace(/@0/g, att.ServiceAttributeID)
-                    .replace(/@1/g, att.ServiceAttribute));
+                    .replace(/@1/g, att.ServiceAttribute)
+                    .replace(/@2/g, att.ServiceAttributeDescription));
             });
             return c;
         }
@@ -149,12 +158,16 @@ function initYourWork(){
                     if (fs.length == 0) {
                         var fs = $(tplCategory
                             .replace(/@0/g, cat.ServiceAttributeCategoryID)
-                            .replace(/@1/g, cat.ServiceAttributeCategoryName));
+                            .replace(/@1/g, cat.ServiceAttributeCategoryName)
+                            .replace(/@2/g, cat.ServiceAttributeCategoryDescription));
                         fscontainer.append(fs);
                     }
 
                     // Update Fieldset Label
-                    fs.find('legend').text(cat.ServiceAttributeCategoryName);
+                    fs.find('legend').text(cat.ServiceAttributeCategoryName)
+                        .attr('title', cat.ServiceAttributeCategoryName)
+                        .attr('data-description', cat.ServiceAttributeCategoryDescription);
+
 
                     // Remove existing attributes
                     fs.find('>*:not(legend)').remove();
@@ -162,7 +175,7 @@ function initYourWork(){
                     switch (cat.ServiceAttributeCategoryID) {
                         /*case 2:
                         case 3:
-                        case 7:*/
+                        case 7:*/ 
                         default:
                             fs.append(createAttCheckList(cat));
                             break;
