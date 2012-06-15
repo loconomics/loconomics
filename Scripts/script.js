@@ -1112,8 +1112,8 @@ function configureTooltip() {
     function con(t, l) {
         var c = l.data('tooltip-content');
         if (!c) {
-            var h = l.attr('title');
-            var d = l.data('description');
+            var h = l.attr('title').replace(/\s/g, ' ');
+            var d = l.data('description').replace(/\s/g, ' ');
             if (d)
                 c = '<h4>' + h + '</h4><p>' + d + '</p>';
             else
