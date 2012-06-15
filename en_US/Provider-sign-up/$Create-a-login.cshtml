@@ -172,7 +172,12 @@
                         ppolicy.AsBool() ? 1 : 0,
                         emailcontact.AsBool() ? 1 : 0);
                 }
-                        
+                
+                // All ok, send welcome email
+                LcMessaging.SendWelcomeProvider(
+                    (u != null ? u.UserID : userid), 
+                    (u != null ? u.Email : email));
+
                 // We return a json with result OK (=0), and response end just after this:
                 CommonHelpers.ReturnJsonResult(0, null);
             }
