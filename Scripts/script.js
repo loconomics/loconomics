@@ -1110,31 +1110,40 @@ function configureTooltip() {
         //t.height($(document).height() - y - posoffset.y);
     }
     function con(t, l) {
-        var h = l.attr('title');
-        var d = l.data('description');
-        if (d)
-            t.html('<h4>' + h + '</h4><p>' + d + '</p>').children()
-                 .css('width', t.css('max-width'));
-        else
-            t.html(h);
-        l.attr('title', '');
+        var c = l.data('tooltip-content');
+        if (!c) {
+            var h = l.attr('title');
+            var d = l.data('description');
+            if (d)
+                c = '<h4>' + h + '</h4><p>' + d + '</p>';
+            else
+                c = h;
+            l.data('tooltip-content', c);
+            l.attr('title', '');
+        }
+        t.html(c);
+
+        // Adjust content elements
+        t.children().css('max-width', t.css('max-width'));
     }
     $('body').on('mousemove focusin', '[title]', function (e) {
         var $t = $(this);
-        var t = $t.data('tooltip');
-        if (!t) {
+        var t = $('body > .tooltip:eq(0)');
+        if (t.length == 0) {
             t = $('<div style="position:absolute" class="tooltip fancy"></div>');
-            pos(t, e);
-            con(t, $t);
+            t.hide();
             $('body').append(t);
-            $t.data('tooltip', t);
-        } else {
-            pos(t, e);
-            if (!t.is(':visible'))
-                t.stop().show(200);
         }
+        //if (!$t.data('tooltip-owner-id')) $t.data('tooltip-owner-id', guidGenerator());
+        //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
+        con(t, $t);
+        pos(t, e);
+        t.stop(true, true);
+        if (!t.is(':visible'))
+            t.fadeIn();
     }).on('mouseleave focusout', '[title]', function () {
-        var t = $(this).data('tooltip');
-        if (t) t.stop().hide(200);
+        var t = $('body > .tooltip:eq(0)');
+        if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
+            t.stop(true, true).fadeOut();
     });
 }

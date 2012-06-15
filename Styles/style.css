@@ -1863,9 +1863,11 @@ html.boxshadow #loginBox .field-validation-error{
     margin: 4px 0 0 !important;
     font-size: 1em;
     text-align: left !important;
+    overflow: hidden;
 }
 .tooltip > p {
     margin: 3px 0;
     text-align: left;
     white-space: normal;
+    overflow: hidden;
 }
