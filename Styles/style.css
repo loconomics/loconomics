@@ -1856,6 +1856,8 @@ html.boxshadow #loginBox .field-validation-error{
     padding:5px 10px;
     z-index:99999;
     background: #B5E1E2;
+    white-space: normal;
+    overflow: hidden;
 }
 .tooltip > h4 {
     margin: 4px 0 0 !important;
@@ -1864,4 +1866,6 @@ html.boxshadow #loginBox .field-validation-error{
 }
 .tooltip > p {
     margin: 3px 0;
+    text-align: left;
+    white-space: normal;
 }

@@ -1091,7 +1091,7 @@ function lcRedirectTo(url) {
     //    window.location.reload();
 }
 function configureTooltip() {
-    var posoffset = { x: 20, y: 10 };
+    var posoffset = { x: 16, y: 8 };
     function pos(t, e) {
         var x, y;
         if (e.pageX && e.pageY) {
@@ -1104,12 +1104,17 @@ function configureTooltip() {
         }
         t.css('left', x + posoffset.x);
         t.css('top', y + posoffset.y);
+        // Adjust width to visible viewport
+        var tdif = t.outerWidth() - t.width();
+        t.css('max-width', $(window).width() - x - posoffset.x - tdif);
+        //t.height($(document).height() - y - posoffset.y);
     }
     function con(t, l) {
         var h = l.attr('title');
         var d = l.data('description');
         if (d)
-            t.html('<h4>' + h + '</h4><p>' + d + '</p>');
+            t.html('<h4>' + h + '</h4><p>' + d + '</p>').children()
+                 .css('width', t.css('max-width'));
         else
             t.html(h);
         l.attr('title', '');
