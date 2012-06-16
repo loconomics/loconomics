@@ -1090,6 +1090,7 @@ function lcRedirectTo(url) {
     //if (/#/.test(window.location))
     //    window.location.reload();
 }
+/* Currently only applies to elements with title and data-description attributes */
 function configureTooltip() {
     var posoffset = { x: 16, y: 8 };
     function pos(t, e) {
@@ -1110,23 +1111,30 @@ function configureTooltip() {
         //t.height($(document).height() - y - posoffset.y);
     }
     function con(t, l) {
+        if (t.length == 0 || l.length == 0) return;
         var c = l.data('tooltip-content');
         if (!c) {
             var h = (l.attr('title') || '').replace(/\s/g, ' ');
             var d = (l.data('description') || '').replace(/\s/g, ' ');
             if (d)
                 c = '<h4>' + h + '</h4><p>' + d + '</p>';
-            else
-                c = h;
+            /*else {
+                // Only create tooltip content if element content is different
+                // from title value, or element content is not full visible
+                if ($.trim(l.html()) != h ||
+                    l.outerWidth() < l[0].scrollWidth)
+                    c = h;
+            }*/
             l.data('tooltip-content', c);
             l.attr('title', '');
         }
         t.html(c);
-
         // Adjust content elements
         t.children().css('max-width', t.css('max-width'));
+        // Return the content added:
+        return c;
     }
-    $('body').on('mousemove focusin', '[title]', function (e) {
+    $('body').on('mousemove focusin', '[title][data-description]', function (e) {
         var $t = $(this);
         var t = $('body > .tooltip:eq(0)');
         if (t.length == 0) {
@@ -1136,11 +1144,13 @@ function configureTooltip() {
         }
         //if (!$t.data('tooltip-owner-id')) $t.data('tooltip-owner-id', guidGenerator());
         //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
-        con(t, $t);
-        pos(t, e);
-        t.stop(true, true);
-        if (!t.is(':visible'))
-            t.fadeIn();
+        // Create content, and only if non-null, non-empty content was added, continue executing:
+        if (con(t, $t)) {
+            pos(t, e);
+            t.stop(true, true);
+            if (!t.is(':visible'))
+                t.fadeIn();
+        }
     }).on('mouseleave focusout', '[title]', function () {
         var t = $('body > .tooltip:eq(0)');
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
