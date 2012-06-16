@@ -5,6 +5,16 @@
     // Current position data record:
     var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
+    var mDay ="";
+    var tDay ="";
+    var wDay ="";
+    var thDay ="";
+    var fDay ="";
+    var saDay ="";
+    var suDay ="";
+
+    var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
+    var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
     
     // Validation rules go here
     // Validation.AddRequiredField("", "");
@@ -13,10 +23,62 @@
         // Some extra validations with ModelState.AddError("field", "error message")
         // If there are not extra validations, next if-block can be removed
         if (ModelState.IsValid) {
+            
+            mDay = Request["positionavailability-days-mondays"];
+            tDay = Request["positionavailability-days-tuesdays"];
+            wDay = Request["positionavailability-days-wednesdays"];
+            thDay = Request["positionavailability-days-thursdays"];
+            fDay = Request["positionavailability-days-fridays"];
+            saDay = Request["positionavailability-days-saturdays"];
+            suDay = Request["positionavailability-days-sundays"];
+            
+            
+            
+            
             using (var db = Database.Open("sqlloco")) {
                 // Save data
-                //db.Execute(
                 
+                if(mDay=="yes" ){
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 1, Request["positionavailability-hours-mondays-since"], Request["positionavailability-hours-mondays-to"]);
+                }
+
+                if (tDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 2, Request["positionavailability-hours-tuesdays-since"], Request["positionavailability-hours-tuesdays-to"]);
+                }
+
+                if (wDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 3, Request["positionavailability-hours-wednesdays-since"], Request["positionavailability-hours-wednesdays-to"]);
+                }
+
+
+                if (thDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 4, Request["positionavailability-hours-thursdays-since"], Request["positionavailability-hours-thursdays-to"]);
+                }
+
+                if (fDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 5, Request["positionavailability-hours-fridays-since"], Request["positionavailability-hours-fridays-to"]);
+                }
+
+                if (saDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 6, Request["positionavailability-hours-saturdays-since"], Request["positionavailability-hours-saturdays-to"]);
+                }
+
+                if (suDay == "yes")
+                {
+
+                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 7, Request["positionavailability-hours-sundays-since"], Request["positionavailability-hours-sundays-to"]);
+                }      
                 // All was fine, AJAX-JSON response
                 CommonHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
             }
@@ -26,7 +88,13 @@
     // Load availability data to show to the user
     dynamic data = null;
     using (var db = Database.Open("sqlloco")) {
-        //data = db.QuerySingle("", u.UserID, p.PositionID);
+        data = db.Execute(varSqlGetAvailTime, u.UserID, DateTime.Now);
+            
+        
+        
+        
+        
+        
     }
 }
 @helper printOptionsHours(){
