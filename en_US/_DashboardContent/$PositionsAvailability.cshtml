@@ -15,6 +15,8 @@
 
     var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
     var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
+    var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
+    
     
     // Validation rules go here
     // Validation.AddRequiredField("", "");
@@ -31,12 +33,15 @@
             fDay = Request["positionavailability-days-fridays"];
             saDay = Request["positionavailability-days-saturdays"];
             suDay = Request["positionavailability-days-sundays"];
-            
-            
+               
             
             
             using (var db = Database.Open("sqlloco")) {
                 // Save data
+
+
+                db.Execute(varSqlInsertCalendarProviderAttributes, u.UserID, Request["positionsavailability-booking-advance"], Request["positionsavailability-booking-min"], Request["positionsavailability-booking-max"], Request["positionsavailability-booking-between"], Request["positionavailability-use-program"], Request["positionavailability-program-type"], Request["positionavailability-program-url"]);
+                
                 
                 if(mDay=="yes" ){
 
