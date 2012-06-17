@@ -50,12 +50,12 @@
     margin:0;
 }
 .sign-up-wizard form ul li{
-    margin: 2px 0;
+    margin: 10px 0;
     padding: 0;
 }
 
 .sign-up-wizard #create-a-login .login-data{
-    width: 400px;
+    width: 200px;
     display: inline-block;
     vertical-align: top;
 }
@@ -63,12 +63,15 @@
     position: relative;
 }
 
-.sign-up-wizard #create-a-login .login-data input,
+.sign-up-wizard #create-a-login .login-data label {
+    display: none;
+}
+/*.sign-up-wizard #create-a-login .login-data input,
 .sign-up-wizard #create-a-login .login-data select{
     position: absolute;
     right: 10px;
     width: 230px;
-}
+}*/
 .sign-up-wizard #create-a-login .login-data select{
     margin: 0 20px;
     width: 210px;
@@ -84,16 +87,20 @@
     text-align: center;
 }
 .sign-up-wizard #create-a-login .login-data .choice-or{
-    margin: 30px;
+    margin: 10px;
 }
 
 .sign-up-wizard #create-a-login .legal-agreement{
-    width: 460px;
+    width: 580px;
     display: inline-block;
     vertical-align: top;
     margin-left: 10px;
     padding-left: 20px;
     border-left: 1px solid #dadada;
+}
+ol.legal-agreement-terms > li {
+    list-style: decimal inside;
+    margin: 6px 0;
 }
 .sign-up-wizard #create-a-login .legal-agreement input{
     margin: 0 10px 0 0;

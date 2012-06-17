@@ -49,4 +49,54 @@ public static class LcData
         }
         return rcats;
     }
+    /// <summary>
+    /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
+    /// returns the integer ID on database for the language part
+    /// </summary>
+    /// <returns></returns>
+    public static int GetCurrentLanguageID()
+    {
+        switch (UrlUtil.LangId.Substring(0, 2))
+        {
+            case "en":
+                return 1;
+            case "es":
+                return 2;
+            default:
+                return 0;
+        }
+    }
+    /// <summary>
+    /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
+    /// returns the integer ID on database for the country part
+    /// </summary>
+    /// <returns></returns>
+    public static int GetCurrentCountryID()
+    {
+        switch (UrlUtil.LangId.Substring(3, 2))
+        {
+            case "EN":
+                return 1;
+            case "ES":
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    public static int GetStateFromZipCode(string zipcode)
+    {
+        var sqlGetStateIDFromZipCode = @"
+            SELECT TOP 1 StateProvinceID
+            FROM    PostalCode As PC
+            WHERE   PC.PostalCode = @0
+                        AND
+                    CountryID = @1
+        ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            var stateID = db.QueryValue(sqlGetStateIDFromZipCode, zipcode, LcData.GetCurrentCountryID());
+            return stateID == null ? 0 : (int)stateID;
+        }
+    }
 }
