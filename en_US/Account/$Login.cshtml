@@ -76,8 +76,7 @@
             var token = Database.Open("sqlloco").QueryValue("SELECT ConfirmationToken FROM webpages_Membership WHERE UserID=@0", WebSecurity.GetUserId(username));
             var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);      
             // IagoSRL: there is some problem with sheculedmail when used here on register form, using the standard
-            //LcMessaging.SendMail(
-            WebMail.Send(
+            LcMessaging.SendMail(
                 to: username,
                 subject: "Loconomics.com, please confirm your account", 
                 body: "Welcome to Loconomics.com!<br/><br/>Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account " +

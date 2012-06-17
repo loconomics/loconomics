@@ -508,7 +508,7 @@ public class LcMessaging
     #region Send Mail wrapper function
     public static void SendMail(string to, string subject, string body, string from = null)
     {
-        WebMail.Send(to, subject, body, from);
+        WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
         //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
     #endregion
@@ -567,7 +567,7 @@ public class LcMessaging
             string subject = emaildata["emailsubject"]; //"Loconomics test email";
             string from = emaildata["emailfrom"];
 
-            WebMail.Send(emailto, subject, body, from);
+            WebMail.Send(emailto, subject, body, from, contentEncoding: "utf-8");
         }
         catch (Exception ex)
         {
