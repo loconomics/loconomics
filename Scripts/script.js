@@ -1125,8 +1125,10 @@ function configureTooltip() {
                     l.outerWidth() < l[0].scrollWidth)
                     c = h;
             }*/
-            l.data('tooltip-content', c);
-            l.attr('title', '');
+            if (c) {
+                l.data('tooltip-content', c);
+                l.attr('title', '');
+            }
         }
         t.html(c);
         // Adjust content elements
