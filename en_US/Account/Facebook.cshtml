@@ -27,7 +27,7 @@
             string userAccessToken = getUserAccessToken();
             //Response.Write(userAccessToken);
             var user = getUserFromAccessToken(userAccessToken);
-            
+
             // If we have user info
             if (user != null && user["username"] != null)
             {
@@ -278,12 +278,13 @@
         try{
             var browser = new WebClient();
             // Do a server request to Facebook to get the user information
-            var url = String.Format("https://graph.facebook.com/{0}?access_token={1}",
+            var url = String.Format("https://graph.facebook.com/{0}?access_token={1}", //&fields=id,name,first_name,last_name,gender,birthday,about",
                 Session["facebookUserId"] ?? "me",
                 (userAccessToken)); // YOUR_USER_ACCESS_TOKEN
-
+                
             var response = browser.DownloadString(url);
-
+            //Response.Write(url + "<br/>\n" + response);
+            //Response.End();
             // Response is OK (throw exception if not)
             return Json.Decode(response);
         }catch{}
