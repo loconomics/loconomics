@@ -1153,6 +1153,7 @@ function configureTooltip() {
             if (!t.is(':visible'))
                 t.fadeIn();
         }
+        return false;
     }).on('mouseleave focusout', '[title]', function () {
         var t = $('body > .tooltip:eq(0)');
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
