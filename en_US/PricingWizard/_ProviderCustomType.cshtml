@@ -68,7 +68,13 @@
         ", p.UserID, pos.PositionID, PageData["ClientTypeID"]);
     }
     
-    Validation.RequireField("hourly-rate", "Please, enter your hourly rate");
+    // IMPORTANT: because limitations of 'asp.net web pages', add several times the
+    // same validation rule (that happens if this page is added more than one time
+    // in the same execution, like with multiple positions providers), 
+    // page WILL BREAK if we don't check if we added rules previously:
+    if (Validation.GetHtml("hourly-rate") == null) {
+        Validation.RequireField("hourly-rate", "Please, enter your hourly rate");
+    }
     
     // IMPORTANT NOTE: There are some crazy problems with validation inside RenderPage's
     // with form outside, I don't know why but break validation and modelstate errors control

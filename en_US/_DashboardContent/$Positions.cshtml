@@ -7,6 +7,7 @@
     
     // Number of maximum positions displayed:
     var maxPositions = 5;
+    Scripts.Add(UrlUtil.AppPath + "Scripts/Provider-sign-up.js");
 }
 
         @{
@@ -21,6 +22,9 @@
                     var cls = (n==1 ? "current" : "");
                     <li class="@cls"><a class="@cls" href="@("#position"+c.PositionID)">@c.PositionSingular</a></li>
                 }
+            }
+            @if (n < maxPositions) {
+                <li class="new-tab new-position @(n == 0 ? "current" : "")"><a href="#position-new">Add a new position</a></li>
             }
 		</ul>
         
@@ -45,7 +49,7 @@
             </ul>
             
             <div id="@("position"+pid)-services" class="tab-body current">
-                @RenderPage("$PositionsServices.cshtml")                
+                @RenderPage("$PositionsServices.cshtml")
             </div><!-- #@("position"+pid)-services -->
             <div id="@("position"+pid)-availability" class="tab-body">
                 @RenderPage("$PositionsAvailability.cshtml")                
@@ -69,4 +73,10 @@
             
         </div><!-- #position@pid -->
             }
+        }
+        @if (n < maxPositions)
+        {
+            <div id="position-new" class="tab-body fancy tabbed buttons @(n == 0 ? "current" : "")">
+                @RenderPage(UrlUtil.LangPath + "Provider-sign-up/$Your-work.cshtml")
+            </div><!-- position-new -->
         }
