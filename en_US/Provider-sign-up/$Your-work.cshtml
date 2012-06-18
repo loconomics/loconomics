@@ -3,28 +3,17 @@
 @using System.Text.RegularExpressions;
 @{
     PageData["PositionID"] = 0;
+    var insideWizard = (bool)(PageData["InsideWizard"] ?? false);
     
     if (IsPost) {
         if (WebSecurity.IsAuthenticated) {
             var db = Database.Open("sqlloco");
             var UserID = WebSecurity.CurrentUserId;
-            var LanguageID = 1;
-            var CountryID = 1;
+            var LanguageID = LcData.GetCurrentLanguageID();
+            var CountryID = LcData.GetCurrentCountryID();
             var theDate = DateTime.Now;
 
             var PositionID = PageData["PositionID"] = Request.Form["select-position"].AsInt();
-        
-            /*
-            var ADD_Details = Request.Form["ADD_Details"];
-            var ADD_minTime = Request.Form["ADD_minTime"];
-            var ADD_maxTime = Request.Form["ADD_maxTime"];
-            var ADD_minBetween = Request.Form["ADD_minBetween"];
-            var ADD_experience = Request.Form["ADD_experience"];
-            var ADD_travelRadius = Request.Form["ADD_travelRadius"];
-            var ADD_Personal = Request.Form["ADD_Personal"];
-            var ADD_Public = Request.Form["ADD_Public"];
-            */
-            //var sqlInsertAdditional = "insert into userprofilepositionadditional values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,'Sys')";
         
             var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
             var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,@7,'Sys',1)";
@@ -62,8 +51,6 @@
                     }
                 }
 
-                //db.Execute(sqlInsertAdditional, UserID, PositionID, LanguageID, CountryID, ADD_minTime, ADD_maxTime, ADD_minBetween, ADD_experience, ADD_travelRadius, ADD_Details, ADD_Personal, ADD_Public, "0000000", "000000000000000000000000", "AM", "PST", theDate, theDate);
-                
                 // We return a json with result OK (=0), and response end just after this:
                 CommonHelpers.ReturnJsonError(0, "");
             }
