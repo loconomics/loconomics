@@ -1689,6 +1689,9 @@ html.boxshadow #loginBox .field-validation-error{
 .tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
 }
+.tabbed > ul.tabs > li.new-tab > a {
+    color: #AE637B;
+}
 
 /*
  * Class require-login
