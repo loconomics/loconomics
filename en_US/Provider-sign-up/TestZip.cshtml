@@ -1,0 +1,24 @@
+﻿@{
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    
+    var formzip = Request["zip"];
+    var zip = 0;
+    var stateid = 0;
+    stateid = LcData.GetStateFromZipCode(formzip);
+    zip = LcValidators.ValidateZipCode(formzip, stateid);
+    
+}
+  <div id="container" class="clearfix sign-up-wizard editable">
+    <div id="main" class="tabbed folders wizard">
+<form action="" method="post" class="ajax ajax-box">
+    <label>Zip code
+        <input name="zip" value="@formzip" />
+    </label>
+    <label>Zip ID: @zip</label>
+    <label>State: @stateid
+    </label>
+    <label>country: @LcData.GetCurrentCountryID()</label>
+    <label>language: @LcData.GetCurrentLanguageID()</label>
+    <input type="submit" value="Enviar!" />
+</form>
+</div></div>

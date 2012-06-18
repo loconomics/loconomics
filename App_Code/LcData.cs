@@ -56,11 +56,11 @@ public static class LcData
     /// <returns></returns>
     public static int GetCurrentLanguageID()
     {
-        switch (UrlUtil.LangId.Substring(0, 2))
+        switch (UrlUtil.LangId.Substring(0, 2).ToUpper())
         {
-            case "en":
+            case "EN":
                 return 1;
-            case "es":
+            case "ES":
                 return 2;
             default:
                 return 0;
@@ -73,8 +73,10 @@ public static class LcData
     /// <returns></returns>
     public static int GetCurrentCountryID()
     {
-        switch (UrlUtil.LangId.Substring(3, 2))
+        switch (UrlUtil.LangId.Substring(3, 2).ToUpper())
         {
+            case "US":
+            case "GB":
             case "EN":
                 return 1;
             case "ES":
