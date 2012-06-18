@@ -206,7 +206,8 @@ function initYourWork(){
     //loadPositions();
 
     // First Attributes Load:
-    $.proxy(loadAttributes, jSelectPosition.get(0))();
+    if (jSelectPosition.length > 0)
+        $.proxy(loadAttributes, jSelectPosition.get(0))();
 
     // Auto post back when select a position:
     jSelectPosition.change(loadAttributes);
