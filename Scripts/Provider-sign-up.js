@@ -7,9 +7,10 @@ function initYourWork(){
     /* ============
     *  Your Work
     */
-    var jSelectPosition = $('select[name=select-position]');
-    var jAttributes = $('.select-attributes');
-    var jActions = $('.your-work fieldset.actions');
+    var jForm = $('form.your-work');
+    var jSelectPosition = $('select[name=select-position]', jForm);
+    var jAttributes = $('.select-attributes', jForm);
+    var jActions = $('.your-work fieldset.actions', jForm);
     $.blockUI.defaults.message = null;
 
     var loadPositions = public.loadPositions = function loadPositions() {
@@ -64,9 +65,9 @@ function initYourWork(){
             return;
         }
         // Get all fieldsets and fieldset containers container
-        var catscontainer = $('.select-attributes');
+        var catscontainer = $('.select-attributes', jForm);
         // Get dynamic fieldsets container:
-        var fscontainer = $('.service-attribute-categories');
+        var fscontainer = $('.service-attribute-categories', jForm);
 
         /* Template to create a fieldset for attribute-category 
         @0 CategoryId
