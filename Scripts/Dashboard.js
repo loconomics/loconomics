@@ -146,7 +146,8 @@ $(document).ready(function () {
     /*** Locations ***/
     $('body').delegate('.positionlocations .addlocation', 'click', function () {
         var $t = $(this);
-        var editPanel = $('.location-edit-panel:eq(0)');
+        var tab = $t.closest('.tab-body');
+        var editPanel = $('.location-edit-panel:eq(0)', tab);
         var editLoc = editPanel.children('.edit-location:eq(0)');
         var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
@@ -170,8 +171,9 @@ $(document).ready(function () {
     })
     .delegate('.address > .tools > .edit', 'click', function () {
         var $t = $(this);
+        var tab = $t.closest('.tab-body');
         var viewLoc = $t.closest('.address');
-        var editPanel = $('.location-edit-panel:eq(0)');
+        var editPanel = $('.location-edit-panel:eq(0)', tab);
         var editLoc = editPanel.children('.edit-location:eq(0)');
         var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
@@ -204,7 +206,7 @@ $(document).ready(function () {
         if (idview)
             $('#HIDE-' + idview).remove();
         if (locid && locid != '0')
-            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' + 
+            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' +
                 locid + '" id="HIDE-REMOVED-LOCATION-' + locid + '" />');
         viewLoc.remove();
         return false;
