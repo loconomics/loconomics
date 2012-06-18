@@ -51,8 +51,17 @@
                     }
                 }
 
-                // We return a json with result OK (=0), and response end just after this:
-                CommonHelpers.ReturnJsonError(0, "");
+                if (insideWizard) {
+                    // We return a json with result OK (=0), and response end just after this:
+                    CommonHelpers.ReturnJsonError(0, "");
+                } else {
+                    // Redirect to the same page to force a refresh and see loaded the new position in its tab
+                    string ur = Request.UrlReferrer.PathAndQuery;
+                    if (ur.IndexOf("#") == -1) {
+                        ur += "#position" + PositionID.ToString();
+                    }
+                    CommonHelpers.ReturnJsonError(1, ur);
+                }
             }
         } else {
             CommonHelpers.ReturnJsonError(-1, "Un-authenticated");
@@ -80,8 +89,9 @@
 <p class="info">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
 </p>
-@CommonHelpers.GetValidationScripts()
-<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work">
+<div>
+<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box")">
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="select-position">
         <legend>Select position:</legend>
@@ -160,6 +170,14 @@
         </div>
     </fieldset>
     <fieldset class="actions">
-        <button data-wizard-next-step="#next-steps" class="next main-action">Continue</button>
+        @if (insideWizard)
+        {
+            <button data-wizard-next-step="#next-steps" class="next main-action">Continue</button>
+        }
+        else
+        {
+            <button class="main-action save">Save</button>
+        }
     </fieldset>
 </form>
+</div>
