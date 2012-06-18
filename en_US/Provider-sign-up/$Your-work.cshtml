@@ -90,7 +90,7 @@
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpatid adipiscing placerat, convallis sit orci. Donec quis enim nunc Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volut
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box")">
+<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box positionservices")">
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="select-position">
@@ -106,7 +106,7 @@
             
         </div>
 
-        <div class="your-work-sidebar">
+        <div class="@(insideWizard ? "your-work-sidebar" : "positionservices-sidebar")">
             <fieldset class="experience-level-dropdown" id="service-attribute-category-4">
                 <legend>@*Experience Level*@</legend>
                 @*<select name="experience-level">
@@ -129,7 +129,7 @@
                     }
                 </select>*@
             </fieldset>
-            <fieldset class="languages-spoken" id="service-attribute-category-5">
+            <fieldset class="languages-spoken @(insideWizard ? "" : "positionservices-languagesspoken")" id="service-attribute-category-5">
                 <legend>@*Languages Spoken*@</legend>
                 @*<ul>
                     <li><label><input name="language-spoken-english" type="checkbox"/>English</label>
