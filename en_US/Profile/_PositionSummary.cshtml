@@ -1,8 +1,24 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     var p = DashboardFunctions.GetRequestedUserRow();
     var pos = PageData["position"];
     
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
+    
+    var hourlyRate = 0M;
+    using (var db = Database.Open("sqlloco")){
+        // Get hourly rate
+        hourlyRate = db.QueryValue(@"
+            SELECT  HourlyRate
+            FROM    ProviderHourlyRate
+            WHERE   UserID = @0
+                        AND
+                    PositionID = @1
+                        AND
+                    ClientTypeID = @2
+        ", p.UserID, pos.PositionID, 1);
+        // TODO: ClientTypeID must NOT BE static! (but still is not defined how will work :(
+    }
 }
 @helper printAttList(dynamic cat){
     <ul>
@@ -22,7 +38,7 @@
                 <div class="actions book">
                     <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
-                <span class="hour-price"><span class="price">$25.00</span>/h</span>
+                <span class="hour-price"><span class="price">$@hourlyRate</span>/h</span>
                 <!--Updated 30/03/2012 by manfontan Added a href to the Pricing Wizard page TODO: Front End tech review-->
                 <a class="calculate-price" href="@(UrlUtil.LangPath)PricingWizard/">Calculate for your needs</a>
                 
