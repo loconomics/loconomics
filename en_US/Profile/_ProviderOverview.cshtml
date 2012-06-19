@@ -7,8 +7,8 @@
     // Current position number/index
     var n = pos.PositionID;
     
-    dynamic services, serviceswithfees, posRatings;
-    int servicesId = 2, serviceswithfeesId = 3;
+    dynamic posRatings;
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "without-special-cats", pos.UserID);
     
     using (var db = Database.Open("sqlloco")) {
         posRatings = db.QuerySingle(@"
@@ -22,28 +22,16 @@
 		             AND
 		            PositionID = @1
         ", p["UserID"], pos["PositionID"]);
-     
-        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
-        // Getting the 'Services routinely included' (cat=2)
-        services = db.Query(sqlattribute, pos.PositionID, servicesId, p.UserID);
-        // Getting the 'Services upon request' (cat=3)
-        serviceswithfees = db.Query(sqlattribute, pos.PositionID, serviceswithfeesId, p.UserID);
-    }    
-}
-@helper printTestAttributes(string cat){
-    string[] atts = new string[]{ "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping", "Vacuuning", "Sweeping",  "Ironing", "Mopping" };
-    for(int i=0; i < 10; i++){
-        <li class="attribute-@cat-@i">@atts[i]</li>
     }
 }
 @helper printAttributes(int catId, dynamic atts){
     <ul>
         @foreach(var att in atts){
             if (att.UserChecked) {
-                <li class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
+                <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
             }
         }
-    </ul>    
+    </ul>
 }
 <p class="profile-intro">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
@@ -53,30 +41,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 @RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 
 <div class="service-attribute-category two-columns">
-    <div class="have-view-more">
-        <h5>Service regularly included:</h5>
-        <a class="button view-more" href="#">More</a>
-        @*<ul>
-            @printTestAttributes("1")
-        </ul>*@
-        @printAttributes(servicesId, services)
-        <a class="view-more" href="#">View more</a>
+
+    <div class="service-attribute-categories">
+        @foreach (var cat in dataCats)
+        {
+            if (cat.Value["ServiceAttributes"].Count > 0)
+            {
+                <div class="have-view-more">
+                    <h5 data-description="@cat.Value["ServiceAttributeCategoryDescription"]" title="@cat.Value["ServiceAttributeCategoryName"]">@cat.Value["ServiceAttributeCategoryName"]:</h5>
+                    <a class="button view-more" href="#">More</a>
+                    @printAttributes(cat.Key, cat.Value["ServiceAttributes"])
+                    <a class="view-more" href="#">View more</a>
+                </div>
+            }
+        }
     </div>
-    <div class="service-attribute-category2 have-view-more">
-        <h5>Services upon request:</h5>
-        <a class="button view-more" href="#">More</a>
-        @*<ul>
-            @printTestAttributes("2")
-        </ul>*@
-        @printAttributes(serviceswithfeesId, serviceswithfees)
-        <a class="view-more" href="#">View more</a>
-    </div>
-    @*<div class="service-attribute-category3 have-view-more">
-        <h5>Service regularly included:</h5>
-        <a class="button view-more" href="#">More</a>
-        <ul>
-            @printTestAttributes("3")
-        </ul>
-        <a class="view-more" href="#">View more</a>
-    </div>*@
 </div>

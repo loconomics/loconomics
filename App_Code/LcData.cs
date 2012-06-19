@@ -13,11 +13,19 @@ public static class LcData
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
         var catsFilter = new List<int>();
+        // Set if the catsFilter is the list of cats to be excluded from the total (value: true)
+        // or is a list of unique cats to be returned (value: false)
+        bool excludeCats = false;
         
         switch (filter) {
             case "provider-services":
                 //catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
                 //catsFilter.AddRange(new int[]{1, 2, 4, 5, 7});
+                excludeCats = false;
+                break;
+            case "without-special-cats":
+                catsFilter = SpecialServicesAttCats;
+                excludeCats = true;
                 break;
         }
 
@@ -32,7 +40,11 @@ public static class LcData
             foreach (var cat in catrow)
             {
                 // Apply filtering, if there are
-                if (catsFilter.Count > 0 && !catsFilter.Contains(cat.ServiceAttributeCategoryID))
+                if (catsFilter.Count > 0 && 
+                    (excludeCats && catsFilter.Contains(cat.ServiceAttributeCategoryID)
+                     ||
+                     !excludeCats && !catsFilter.Contains(cat.ServiceAttributeCategoryID)
+                    ))
                 {
                     continue;
                 }
@@ -49,6 +61,11 @@ public static class LcData
         }
         return rcats;
     }
+    /// <summary>
+    /// List of special service attribute categories IDs, with a special
+    /// treatment (languages, experience, ...)
+    /// </summary>
+    public static List<int> SpecialServicesAttCats = new List<int> { 1, 4, 7, 5 };
     /// <summary>
     /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
     /// returns the integer ID on database for the language part

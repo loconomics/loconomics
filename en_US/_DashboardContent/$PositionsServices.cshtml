@@ -11,7 +11,7 @@
     
     const int attsExperienceID = 1, attsExperienceLevelID = 4, attsClientTypesID = 7, attsLanguagesID = 5;
 
-    var specialCatIDs = new List<int> { 1, 4, 7, 5 };
+    var specialCatIDs = LcData.SpecialServicesAttCats;
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services", pos.UserID);
     
     if (IsPost) {
