@@ -16,7 +16,7 @@
                     PositionID = @1
                         AND
                     ClientTypeID = @2
-        ", p.UserID, pos.PositionID, 1);
+        ", p.UserID, pos.PositionID, 1) ?? 0;
         // TODO: ClientTypeID must NOT BE static! (but still is not defined how will work :(
     }
 }
