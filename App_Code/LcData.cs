@@ -9,6 +9,7 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcData
 {
+    #region Service Attributes and Categories
     public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filter = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
@@ -26,6 +27,10 @@ public static class LcData
             case "without-special-cats":
                 catsFilter = SpecialServicesAttCats;
                 excludeCats = true;
+                break;
+            case "only-special-cats":
+                catsFilter = SpecialServicesAttCats;
+                excludeCats = false;
                 break;
         }
 
@@ -65,7 +70,19 @@ public static class LcData
     /// List of special service attribute categories IDs, with a special
     /// treatment (languages, experience, ...)
     /// </summary>
-    public static List<int> SpecialServicesAttCats = new List<int> { 1, 4, 7, 5 };
+    public static List<int> SpecialServicesAttCats = new List<int> { 
+        ServiceAttCatIDExperience
+        ,ServiceAttCatIDExperienceLevel
+        ,ServiceAttCatIDLanguages
+        ,ServiceAttCatIDClientTypes
+    };
+    public const int ServiceAttCatIDExperience = 1;
+    public const int ServiceAttCatIDExperienceLevel = 4;
+    public const int ServiceAttCatIDLanguages = 5;
+    public const int ServiceAttCatIDClientTypes = 7;
+    #endregion
+
+    #region l18n
     /// <summary>
     /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
     /// returns the integer ID on database for the language part
@@ -102,7 +119,9 @@ public static class LcData
                 return 0;
         }
     }
+    #endregion
 
+    #region Locations
     public static int GetStateFromZipCode(string zipcode)
     {
         var sqlGetStateIDFromZipCode = @"
@@ -118,4 +137,5 @@ public static class LcData
             return stateID == null ? 0 : (int)stateID;
         }
     }
+    #endregion
 }

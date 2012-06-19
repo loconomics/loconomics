@@ -984,6 +984,7 @@ fieldset.box legend{
     display: inline-block;
     font-size: 1em;
     margin: 5px 0;
+    max-width: 170px;
 }
 
 /** Widget class (used in FAQ's, refine search,... **/

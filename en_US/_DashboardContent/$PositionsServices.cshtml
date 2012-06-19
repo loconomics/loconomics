@@ -9,8 +9,6 @@
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
     var tplCatName = "positionservices-category[{0}]";
     
-    const int attsExperienceID = 1, attsExperienceLevelID = 4, attsClientTypesID = 7, attsLanguagesID = 5;
-
     var specialCatIDs = LcData.SpecialServicesAttCats;
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services", pos.UserID);
     
@@ -66,8 +64,8 @@
                         }
                         break;
                     // Select One attributes
-                    case attsExperienceID:
-                    case attsExperienceLevelID:
+                    case LcData.ServiceAttCatIDExperience:
+                    case LcData.ServiceAttCatIDExperienceLevel:
                         // Get value selected by user
                         int selectedAttID = Request[String.Format(tplCatName, cat.Key)].AsInt();
                         // Iterate every attribute in category to unchecked except one was selected
@@ -86,7 +84,7 @@
                         }
                         break;
                     // Check attribute and select a linked value
-                    //case attsLanguagesID:
+                    //case LcData.ServiceAttCatIDLanguages:
                         // TODO
                     //    break;
                 }
@@ -157,23 +155,23 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         </fieldset>*@
     </div>
     <div class="positionservices-sidebar">
-        @if (dataCats.ContainsKey(attsExperienceLevelID) && dataCats[attsExperienceLevelID]["ServiceAttributes"].Count > 0)
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
         {
-            var cat = dataCats[attsExperienceLevelID];
+            var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
         <fieldset class="positionservices-experiencelevel">
             @*<legend>Experience Level</legend>*@
             @printCatLegend(cat)
-                @printAttSelect(cat["ServiceAttributes"])
-                @*<select name="positionservices-experiencelevel">
+            @printAttSelect(cat["ServiceAttributes"])
+            @*<select name="positionservices-experiencelevel">
                 <option>Expert</option>
                 <option>Intermediate</option>
                 <option>Novice</option>
             </select>*@
         </fieldset>
         }
-        @if (dataCats.ContainsKey(attsExperienceID) && dataCats[attsExperienceID]["ServiceAttributes"].Count > 0)
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
         {
-            var cat = dataCats[attsExperienceID];
+            var cat = dataCats[LcData.ServiceAttCatIDExperience];
         <fieldset class="positionservices-yearsexperience">
             @*<legend>Years Experience</legend>*@
             @printCatLegend(cat)
@@ -188,18 +186,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </select>*@
         </fieldset>
         }
-        @if (dataCats.ContainsKey(attsLanguagesID) && dataCats[attsLanguagesID]["ServiceAttributes"].Count > 0)
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
         {
-            var cat = dataCats[attsLanguagesID];
+            var cat = dataCats[LcData.ServiceAttCatIDLanguages];
         <fieldset class="positionservices-languagesspoken">
             @*<legend>Languages Spoken</legend>*@
             @printCatLegend(cat)
             <ul>
-                @foreach (var att in dataCats[attsLanguagesID]["ServiceAttributes"])
+                @foreach (var att in dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"])
                 {
-                <li>@printAttCheck(attsLanguagesID, att)
+                <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
                     @*TODO: printAttSelect, where are language level atts? *@
-                    <select title="Level" data-description="Language Level" name="positionservices-category[@(attsLanguagesID)]-attribute[@(att.ServiceAttributeID)]-level">
+                    <select title="Level" data-description="Language Level" name="positionservices-category[@(LcData.ServiceAttCatIDLanguages)]-attribute[@(att.ServiceAttributeID)]-level">
                         <option data-description="It means fluent" title="Fluent">Fluent</option>
                         <option>Begginer</option>
                         <option>N/A</option>
@@ -240,13 +238,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </ul>*@
         </fieldset>
         }
-        @if (dataCats.ContainsKey(attsClientTypesID) && dataCats[attsClientTypesID]["ServiceAttributes"].Count > 0)
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
         {
-            var cat = dataCats[attsClientTypesID];
+            var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
         <fieldset class="positionservices-clientstypes">
             @*<legend>Clients Types</legend>*@
             @printCatLegend(cat)
-            @printAttCheckList(attsClientTypesID, dataCats[attsClientTypesID]["ServiceAttributes"])
+            @printAttCheckList(LcData.ServiceAttCatIDClientTypes, dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"])
             @*<label><input type="checkbox" name="positionservices-clientstypes-residential"/>Residential</label>
             <label><input type="checkbox" name="positionservices-clientstypes-business"/>Business</label>*@
         </fieldset>

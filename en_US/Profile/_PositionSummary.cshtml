@@ -1,6 +1,22 @@
 ﻿@{
     var p = DashboardFunctions.GetRequestedUserRow();
     var pos = PageData["position"];
+    
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
+}
+@helper printAttList(dynamic cat){
+    <ul>
+        @foreach (var att in cat["ServiceAttributes"]) {
+            if (att.UserChecked) {
+            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
+            }
+        }
+    </ul>
+}
+@helper printCatTitle(dynamic cat){
+    <h5 title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]">
+        @cat["ServiceAttributeCategoryName"]
+    </h5>
 }
             <div class="position-summary">
                 <div class="actions book">
@@ -11,18 +27,24 @@
                 <a class="calculate-price" href="@(UrlUtil.LangPath)PricingWizard/">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
-                    <div class="experience-level">
-                        <h5>Experience level:</h5>
-                        <a class="button view-more" href="#">More</a>
-                        <ul><li>Expert</li></ul>
-                    </div>
-                    <div class="years-experience">
-                        <h5>Years experience:</h5>
-                        <a class="button view-more" href="#">More</a>
-                        <ul><li>
-                            0.5 years
-                            </li></ul>
-                    </div>
+                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
+                        <div class="experience-level">
+                            @printCatTitle(cat)
+                            <a class="button view-more" href="#">More</a>
+                            @printAttList(cat)
+                        </div>
+                    }
+                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDExperience];
+                        <div class="years-experience">
+                            @printCatTitle(cat)
+                            <a class="button view-more" href="#">More</a>
+                            @printAttList(cat)
+                        </div>
+                    }
                     <div class="min-booing-time">
                         <h5>Minimum booking time:</h5>
                         <a class="button view-more" href="#">More</a>
@@ -30,25 +52,23 @@
                             2 hours
                             </li></ul>
                     </div>
-                    <div class="client-types">
-                        <h5>Client types:</h5>
-                        <a class="button view-more" href="#">More</a>
-                        <ul><li>
-                            Residential
-                        </li><li>
-                            Business
-                        </li></ul>
-                    </div>
-                    <div class="languages-spoken">
-                        <h5>Language spoken:</h5>
-                        <a class="button view-more" href="#">More</a>
-                        <ul><li>
-                            English
-                        </li><li>
-                            Spanish
-                        </li><li>
-                            French
-                        </li></ul>
-                    </div>
+                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
+                        <div class="client-types">
+                            @printCatTitle(cat)
+                            <a class="button view-more" href="#">More</a>
+                            @printAttList(cat)
+                        </div>
+                    }
+                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDLanguages];
+                        <div class="languages-spoken">
+                            @printCatTitle(cat)
+                            <a class="button view-more" href="#">More</a>
+                            @printAttList(cat)
+                        </div>
+                    }
                 </div>
             </div>
