@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    
     var userCulture = "";
     if(IsPost){
            userCulture = Request.Form["LangSelection"];

@@ -50,8 +50,11 @@
     margin:0;
 }
 .sign-up-wizard form ul li{
-    margin: 10px 0;
+    margin: 2px 0;
     padding: 0;
+}
+.sign-up-wizard #create-a-login ul li {
+    margin: 10px 0;
 }
 
 .sign-up-wizard #create-a-login .login-data{

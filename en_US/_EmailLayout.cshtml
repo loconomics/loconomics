@@ -1,4 +1,6 @@
 ﻿@{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    
     var emailTo = PageData["emailTo"] ?? Request["EmailTo"];
     var threadID = PageData["threadID"];
     var messageID = PageData["messageID"];
@@ -15,6 +17,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Loconomics - @Page.Title</title>
     <style type="text/css">
