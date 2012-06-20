@@ -100,10 +100,10 @@
 						        <dt class="fancy">Hi, @((u != null ? u.FullName : null) ?? WebSecurity.CurrentUserName)! &#x25BC;</dt>
 						        <dd>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/")" title="Dashboard">Dashboard</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/positions/")">Your services</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/positions/")">Your positions</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/preferences/")">Profile</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">Account</a>
+                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Bookings/")">Your bookings</a>
+                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Positions/")">Your positions</a>
+                                    <a href="@Href(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">Public profile</a>
+                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Account/")">Account</a>
                                     <a href="@Href(UrlUtil.LangPath + "Account/Logout/")">Logout</a>
 						        </dd>
 					        </dl>
