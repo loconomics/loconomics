@@ -111,6 +111,11 @@
                        ,[UpdatedDate]
                        ,[ModifiedBy])
                 VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+
+            -- Update customer user profile to be a customer (if is not still, maybe is only provider)
+            UPDATE Users SET IsCustomer = 1
+            WHERE UserID = @0 AND IsCustomer <> 1
+
             SELECT Cast(@@Identity As int) As BookingRequestID
         ";
         
