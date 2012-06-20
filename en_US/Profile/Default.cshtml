@@ -113,6 +113,7 @@
         @if (u.IsProvider) {
 		<ul class="tabs">
             @{
+                n = 0;
                 foreach(var c in posrows){
                     n++;
                     if (n > maxPositions) { break; }
@@ -121,7 +122,7 @@
                     <li class="@cls"><a class="@cls" href="@("#position"+ip)">@c.PositionSingular</a></li>
                 }
             }
-            @if (u.IsCustomer) {
+            @if (n > 0 && u.IsCustomer) {
             <li class="@(positionid == 0 ? "current" : "")"><a href="#customer-overview">As Customer</a></li>
             }
 		</ul><!-- .tabs -->
