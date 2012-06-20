@@ -445,6 +445,7 @@ public class LcMessaging
 
         using (WebClient w = new WebClient())
         {
+            w.Encoding = System.Text.Encoding.UTF8;
             foreach (var d in data)
             {
                 w.QueryString.Add(d.Key, d.Value.ToString());
