@@ -7,12 +7,13 @@ and test on both.
 @using System.Text.RegularExpressions;
 @{
     PageData["PositionID"] = 0;
-    var insideWizard = (bool)(PageData["InsideWizard"] ?? false);
+    var insideWizard = (bool)(PageData["InsideWizard"] ?? Request["InsideWizard"].AsBool());
     
     if (IsPost) {
-        if (WebSecurity.IsAuthenticated) {
+        var UserID = (Session["RegisteredUserID"] != null ? (int)Session["RegisteredUserID"] : 
+            (WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0));
+        if (UserID > 0) {
             var db = Database.Open("sqlloco");
-            var UserID = (Session["RegisteredUserID"] != null ? (int)Session["RegisteredUserID"] : WebSecurity.CurrentUserId);
             var LanguageID = LcData.GetCurrentLanguageID();
             var CountryID = LcData.GetCurrentCountryID();
             var theDate = DateTime.Now;
@@ -97,6 +98,7 @@ and test on both.
 <form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box positionservices")">
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <input type="hidden" name="InsideWizard" value="@insideWizard" />
     <fieldset class="select-position">
         <legend>Select position:</legend>
         <select name="select-position">
