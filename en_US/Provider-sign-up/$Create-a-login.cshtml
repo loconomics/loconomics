@@ -79,7 +79,7 @@
                     // Create and associate a new entry in the membership database.
                     // If successful, continue processing the request
                     try {
-                        bool requireEmailConfirmation = false ;//!WebMail.SmtpServer.IsEmpty();
+                        bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
                         var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                         if (requireEmailConfirmation) {
                             var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
@@ -92,8 +92,8 @@
                         }
 
                         if (requireEmailConfirmation) {
-                            // Thank the user for registering and let them know an email is on its way
-                            CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                            //CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                            Session["RegisteredUserID"] = WebSecurity.GetUserId(email);
                         } else {
                             // Auto login user with just created credentials:
                             WebSecurity.Login(email, password);

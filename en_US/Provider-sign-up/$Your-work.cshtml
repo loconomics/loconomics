@@ -12,7 +12,7 @@ and test on both.
     if (IsPost) {
         if (WebSecurity.IsAuthenticated) {
             var db = Database.Open("sqlloco");
-            var UserID = WebSecurity.CurrentUserId;
+            var UserID = (Session["RegisteredUserID"] != null ? (int)Session["RegisteredUserID"] : WebSecurity.CurrentUserId);
             var LanguageID = LcData.GetCurrentLanguageID();
             var CountryID = LcData.GetCurrentCountryID();
             var theDate = DateTime.Now;
