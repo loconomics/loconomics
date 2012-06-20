@@ -13,7 +13,8 @@
     Validation.RequireField("bank_accountnumber", LcRessources.RequiredField("Account Number"));
     Validation.Add("bank_abanumber", Validator.Integer("The ABA Number must be a nine digit number"));
     Validation.Add("bank_abanumber", Validator.StringLength(9, 9, "The ABA Number must be a nine digit number"));
-    Validation.Add("bank_accountnumber", Validator.StringLength(40, 9, "Invalid Account number"));
+    //Validation.Add("bank_accountnumber", Validator.StringLength(40, 6, "Invalid Account number"));
+    Validation.Add("bank_accountnumber", Validator.Regex("^\\d{6,}$", "Invalid Account number"));
        
     if (IsPost && Validation.IsValid()) {
         
@@ -22,7 +23,7 @@
         } catch {
             ModelState.AddFormError("There was an error communicating with our secure data store, please try again later.");
         }
-                    
+
         if (ModelState.IsValid) {
 
             // We save data on our database
