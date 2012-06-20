@@ -33,7 +33,11 @@
             }
         }
         if (!posexists) {
-            positionid = 0;
+            if (!u.IsCustomer && posrows.Count > 0) {
+                positionid = posrows[0].PositionID;
+            } else {
+                positionid = 0;
+            }
         }
     } else {
         positionid = 0;
