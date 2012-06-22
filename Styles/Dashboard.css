@@ -726,6 +726,11 @@ form#personal li > label.gender {
     width: auto;
 }
 
+/**** Form: Bank Account ****/
+#account-payments .payment-type label {
+    display: block;
+}
+
 /**** Form: Account Taxes ****/
 #account-taxes fieldset span.info{
     margin-left: 10px;

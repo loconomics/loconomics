@@ -261,6 +261,27 @@ $(document).ready(function () {
         editLoc.closest('.edit-popup').hide();
         return false;
     });
+
+    /*==============
+    * Payments
+    */
+    function payment_preference_check() {
+        var bank = $('.bank-account-preference');
+        var checkedvalue = null;
+        $('input[name=payment-type]').each(function () {
+            if (this.checked)
+                checkedvalue = this.value;
+        });
+        if (checkedvalue == '4')
+            bank.show(300);
+        else
+            if (bank.is(':visible'))
+                bank.hide(300);
+            else
+                bank.css('display', 'none');
+    }
+    $('input[name=payment-type]').change(payment_preference_check);
+    payment_preference_check();
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {
