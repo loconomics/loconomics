@@ -118,15 +118,21 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name" value="@FirstName" @Validation.GetHtml("firstname")/>
                 @Html.ValidationMessage("firtname")
             </li>
+            @if (LcData.GetCurrentCountryID() == 1)
+            {
             <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial" value="@MiddleInitial" @Validation.GetHtml("middleinitial")/>
                 @Html.ValidationMessage("middleinitial")
             </li>
+            }
             <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
                 @Html.ValidationMessage("lastname")
             </li>
+            @if (LcData.GetCurrentCountryID() == 2)
+            {
             <li><label for="@idprefix-secondlastname">Second Last Name:</label><input id="@idprefix-secondlastname" type="text" name="secondlastname" value="@SecondLastName" @Validation.GetHtml("secondlastname")/>
                 @Html.ValidationMessage("secondlastname")
             </li>
+            }
             <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
                 @Html.ValidationMessage("mobilephone")
             </li>
@@ -165,7 +171,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                 <input type="text" id="@idprefix-birthyear" name="birthyear" value="@BirthYear" @Validation.GetHtml("birthyear") />
                 @Html.ValidationMessage("birthyear")
             </li>
-            <li><label>Gender:</label>
+            <li><label>Gender Identity:</label>
                 @foreach (var gender in genders)
                 {
                     <label class="gender">@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID.ToString(), @gender.GenderID.ToString()) type="radio" name="gender" value="@gender.GenderID" /></label>
@@ -184,6 +190,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     </fieldset>
     </div>
     <div class="col col-2 col-2-2">
+        <!--
         <fieldset id="@idprefix-fs-auths" class="auths">
             <legend>Authorizations:</legend>
             <ul>
@@ -191,6 +198,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                 <li><input id="@idprefix-auth-zumigo-location" value="True" @CommonHelpers.IsChecked("True", IAuthZumigoLocation.ToString()) type="checkbox" name="auth-zumigo-location"/><label for="@idprefix-auth-zumigo-location">I authorize Loconomics to use Zumigo services for location-based messaging.</label></li>
             </ul>
         </fieldset>
+        -->
         <fieldset id="@idprefix-fs-socialmedia" class="social-media">
             <legend>Social media verifications:</legend>
             <ul>
