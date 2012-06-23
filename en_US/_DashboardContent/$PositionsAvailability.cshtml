@@ -16,6 +16,10 @@
     var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
     var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
     var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
+
+    var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
+    var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
+    
     
     
     // Validation rules go here
@@ -91,14 +95,14 @@
     }
     
     // Load availability data to show to the user
-    dynamic data = null;
+    dynamic data = null, UserFreeTimeSettings = null, UserCalendarProviderAttributes = null;
+    
+    
     using (var db = Database.Open("sqlloco")) {
-        data = db.Execute(varSqlGetAvailTime, u.UserID, DateTime.Now);
             
-        
-        
-        
-        
+        data = db.Execute(varSqlGetAvailTime, u.UserID, DateTime.Now);
+        UserFreeTimeSettings = db.Execute(varSQLGetUserFreeTimeSettings ,u.UserID);
+        UserCalendarProviderAttributes = db.Execute(varSQLGetUserCalendarProviderAttributes, u.UserID);  
         
     }
 }
@@ -125,11 +129,12 @@
 @helper printDaysElements(){
     var days = new string[]{"Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Sundays"};
     foreach (var day in days){
-    <li>
-        <span class="day">@day</span>
-        <label>Yes<input name="positionavailability-days-@day.ToLower()" value="yes" type="radio"/></label>
-        <label>No<input name="positionavailability-days-@day.ToLower()" value="no" type="radio"/></label>
-    </li>
+        <li>
+            <span class="day">@day</span>
+            <label>Yes<input name="positionavailability-days-@day.ToLower()" value="yes" type="radio"/></label>
+            <label>No<input name="positionavailability-days-@day.ToLower()" value="no" type="radio"/></label>
+        </li>
+        
     }
 }
 @helper printHoursBooking(string what){
@@ -165,6 +170,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     </fieldset>
     <fieldset class="positionavailability-program has-confirm">
         <legend>I already use a calendar program:</legend>
+        @if(
         <div class="confirm positionavailability-use-program">
             <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
             <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
@@ -173,7 +179,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <li class="positionavailability-program-type">
                 <label for="position#@(n)-availability-program-type">Which type?</label>
                 <select name="positionavailability-program-type" id="position#@(n)-availability-program-type">
-                    <option value="gmail">Gmail</option>
+                    <option value="gmail" selected=>Gmail</option>
                 </select>
             </li>
             <li class="positionavailability-program-url">
