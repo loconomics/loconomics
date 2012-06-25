@@ -5,105 +5,78 @@
     // Current position data record:
     var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
-    var mDay ="";
-    var tDay ="";
-    var wDay ="";
-    var thDay ="";
-    var fDay ="";
-    var saDay ="";
-    var suDay ="";
+    // From 0 (sunday) to 6 (saturday), true: is available
+    bool[] availDates = new bool[7];
+    bool useCalendarProgram = false;
+    var programType = "";
+    var programURL = "";
+    var advanceTime = 0;
+    var minTime = 0;
+    var maxTime = 0;
+    var betweenTime = 0;
 
-    var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
-    var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
-    var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
-
+    // fullset needed?
+    //var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
-    
-    
-    // Validation rules go here
-    // Validation.AddRequiredField("", "");
-    
-    if (IsPost && Validation.IsValid()) {
-        // Some extra validations with ModelState.AddError("field", "error message")
-        // If there are not extra validations, next if-block can be removed
-        if (ModelState.IsValid) {
+    if (!IsPost) {
+        dynamic UserFreeTimeSettings = null, atts = null;
+        using (var db = Database.Open("sqlloco")) {
+            //data = db.Query(varSqlGetAvailTime, u.UserID, DateTime.Now);
+            UserFreeTimeSettings = db.Query(varSQLGetUserFreeTimeSettings ,u.UserID);
+            atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, u.UserID);  
+        }
+        if (atts != null) {
+            useCalendarProgram      = atts.UseCalendarProgram;
+            programType             = atts.CalendarType;
+            programURL              = atts.CalendarURL;
+            advanceTime             = atts.AdvanceTime;
+            minTime                 = atts.MinTime;
+            maxTime                 = atts.MaxTime;
+            betweenTime             = atts.BetweenTime;
+        }
+    } else {
+        for (int d = 0; d < 7; d++) {
+            availDates[d] = Request["availday-" + d.ToString()].AsBool();
+        }
+        useCalendarProgram      = Request["use-program"].AsBool();
+        programType             = Request["program-type"];
+        programURL              = Request["program-url"];
+        advanceTime             = Request["advance-time"].AsInt();
+        minTime                 = Request["min-time"].AsInt();
+        maxTime                 = Request["max-time"].AsInt();
+        betweenTime             = Request["between-time"].AsInt();
+        
+        if (Validation.IsValid()) {
             
-            mDay = Request["positionavailability-days-mondays"];
-            tDay = Request["positionavailability-days-tuesdays"];
-            wDay = Request["positionavailability-days-wednesdays"];
-            thDay = Request["positionavailability-days-thursdays"];
-            fDay = Request["positionavailability-days-fridays"];
-            saDay = Request["positionavailability-days-saturdays"];
-            suDay = Request["positionavailability-days-sundays"];
-               
-            
-            
+            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
+            var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
+
             using (var db = Database.Open("sqlloco")) {
                 // Save data
 
+                db.Execute(varSqlInsertCalendarProviderAttributes, u.UserID, 
+                    advanceTime,
+                    minTime,
+                    maxTime,
+                    betweenTime,
+                    useCalendarProgram,
+                    programType,
+                    programURL);
 
-                db.Execute(varSqlInsertCalendarProviderAttributes, u.UserID, Request["positionsavailability-booking-advance"], Request["positionsavailability-booking-min"], Request["positionsavailability-booking-max"], Request["positionsavailability-booking-between"], Request["positionavailability-use-program"], Request["positionavailability-program-type"], Request["positionavailability-program-url"]);
-                
-                
-                if(mDay=="yes" ){
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 1, Request["positionavailability-hours-mondays-since"], Request["positionavailability-hours-mondays-to"]);
+                foreach (var d in availDates) {
+                    if (d) {
+                        db.Execute(varSqlInsertAvailFreetime, u.UserID, 1, 
+                            Request["hours-" + d.ToString() + "-since"], 
+                            Request["hours-" + d.ToString() + "-to"]);
+                    }
                 }
 
-                if (tDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 2, Request["positionavailability-hours-tuesdays-since"], Request["positionavailability-hours-tuesdays-to"]);
-                }
-
-                if (wDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 3, Request["positionavailability-hours-wednesdays-since"], Request["positionavailability-hours-wednesdays-to"]);
-                }
-
-
-                if (thDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 4, Request["positionavailability-hours-thursdays-since"], Request["positionavailability-hours-thursdays-to"]);
-                }
-
-                if (fDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 5, Request["positionavailability-hours-fridays-since"], Request["positionavailability-hours-fridays-to"]);
-                }
-
-                if (saDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 6, Request["positionavailability-hours-saturdays-since"], Request["positionavailability-hours-saturdays-to"]);
-                }
-
-                if (suDay == "yes")
-                {
-
-                    db.Execute(varSqlInsertAvailFreetime, u.UserID, 7, Request["positionavailability-hours-sundays-since"], Request["positionavailability-hours-sundays-to"]);
-                }      
                 // All was fine, AJAX-JSON response
                 CommonHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
             }
         }
-    }
-    
-    // Load availability data to show to the user
-    dynamic data = null, UserFreeTimeSettings = null, UserCalendarProviderAttributes = null;
-    
-    
-    using (var db = Database.Open("sqlloco")) {
-            
-        data = db.Execute(varSqlGetAvailTime, u.UserID, DateTime.Now);
-        UserFreeTimeSettings = db.Execute(varSQLGetUserFreeTimeSettings ,u.UserID);
-        UserCalendarProviderAttributes = db.Execute(varSQLGetUserCalendarProviderAttributes, u.UserID);  
-        
     }
 }
 @helper printOptionsHours(){
@@ -116,35 +89,33 @@
     }
 }
 @helper printHourPerDayElements(){
-    var days = new string[]{"Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Sundays"};
-    foreach (var day in days){
+    var days = new string[]{"Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"};
+
+    for (var d = 0; d < 7; d++){
     <li>
-        <span class="day">@day</span>
-        <select name="positionavailability-hours-@day.ToLower()-since">@printOptionsHours()</select>
+        <span class="day">@days[d]</span>
+        <select name="hours-@d-since">@printOptionsHours()</select>
         and
-        <select name="positionavailability-hours-@day.ToLower()-to">@printOptionsHours()</select>
+        <select name="hours-@d-to">@printOptionsHours()</select>
     </li>
     }
 }
 @helper printDaysElements(){
-    var days = new string[]{"Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Sundays"};
-    foreach (var day in days){
+    var days = new string[]{"Sundays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Mondays"};
+    for (var d = 0; d < 7; d++){
         <li>
-            <span class="day">@day</span>
-            <label>Yes<input name="positionavailability-days-@day.ToLower()" value="yes" type="radio"/></label>
-            <label>No<input name="positionavailability-days-@day.ToLower()" value="no" type="radio"/></label>
+            <span class="day">@days[d]</span>
+            <label>Yes<input name="days-@d" value="yes" type="radio"/></label>
+            <label>No<input name="days-@d" value="no" type="radio"/></label>
         </li>
-        
     }
 }
-@helper printHoursBooking(string what){
-    <select name="positionsavailability-booking-@what">
+@helper printHoursBooking(string what, string selected){
+    <select name="@(what)-time">
         <option value="1">1 Hour</option>
-        <option value="2">2 Hours</option>
-        <option value="3">3 Hours</option>
-        <option value="4">4 Hours</option>
-        <option value="5">5 Hours</option>
-        <option value="6">6 Hours</option>
+        @for(var h = 2; h < 10; h++) {
+            <option @CommonHelpers.IsSelected(selected, h.ToString()) value="@h">@h Hours</option>
+        }
     </select>
 }
 
@@ -170,30 +141,30 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     </fieldset>
     <fieldset class="positionavailability-program has-confirm">
         <legend>I already use a calendar program:</legend>
-        @if(
+
         <div class="confirm positionavailability-use-program">
-            <label>Yes<input type="radio" name="positionavailability-use-program" value="yes"/></label>
-            <label>No<input type="radio" name="positionavailability-use-program" value="no"/></label>
+            <label>Yes<input @CommonHelpers.IsChecked(useCalendarProgram.ToString(), "True") type="radio" name="use-program" value="True"/></label>
+            <label>No<input @CommonHelpers.IsChecked(useCalendarProgram.ToString(), "False") type="radio" name="use-program" value="False"/></label>
         </div>
         <ul>
             <li class="positionavailability-program-type">
                 <label for="position#@(n)-availability-program-type">Which type?</label>
-                <select name="positionavailability-program-type" id="position#@(n)-availability-program-type">
-                    <option value="gmail" selected=>Gmail</option>
+                <select name="program-type" id="position#@(n)-availability-program-type">
+                    <option @CommonHelpers.IsSelected(programType, "gmail") value="gmail">Gmail</option>
                 </select>
             </li>
             <li class="positionavailability-program-url">
                 <label for="position#@(n)-availability-program-url">Public URL:</label>
-                <input type="text" name="positionavailability-program-url" id="position#@(n)-availability-program-url"/>
+                <input type="text" name="program-url" value="@programURL" id="position#@(n)-availability-program-url"/>
             </li>
         </ul>
     </fieldset>
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
-        <label>Time in advance of bookings:@printHoursBooking("advance")</label>
-        <label>Minimun booking time:@printHoursBooking("min")</label>
-        <label>Maximum booking time:@printHoursBooking("max")</label>
-        <label>Minimun time between bookings:@printHoursBooking("between")</label>
+        <label>Time in advance of bookings:@printHoursBooking("advance", advanceTime.ToString())</label>
+        <label>Minimun booking time:@printHoursBooking("min", minTime.ToString())</label>
+        <label>Maximum booking time:@printHoursBooking("max", maxTime.ToString())</label>
+        <label>Minimun time between bookings:@printHoursBooking("between", betweenTime.ToString())</label>
     </fieldset>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
