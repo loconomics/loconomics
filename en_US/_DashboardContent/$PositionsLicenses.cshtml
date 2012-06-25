@@ -1,49 +1,123 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Current position data record:
     var p = PageData["position"];
     var n = p.PositionID;
     
     var idprefix = "position#" + n + "-licenses";
+    
+    dynamic licenses = null;
+    var sqlGetLicenses = @"
+        SELECT
+            L.*,
+            SP.StateProvinceName,
+            SP.StateProvinceCode
+        FROM
+            licensecertification As L
+             INNER JOIN
+            positionlicense As P
+              ON L.LicenseCertificationID = P.LicenseCertificationID
+                AND L.StateProvinceID = P.StateProvinceID
+                AND L.CountryID = P.CountryID
+             INNER JOIN
+            StateProvince As SP
+              ON SP.StateProvinceID = L.StateProvinceID
+        WHERE
+            P.PositionID = @0
+             AND
+            L.Active = 1
+             AND
+            P.Active = 1
+    ";
+    
+    using (var db = Database.Open("sqlloco")) {
+        licenses = db.Query(sqlGetLicenses, p.PositionID);
+    }
 }
-<p class="setting-instructions">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
-</p>
-<form action="#" method="post" class="positionlicenses" id="@idprefix-licenses">
-    <input type="hidden" name="position-number" value="@n"/>
-    <input type="hidden" name="position-id" value="@p.PositionID"/>
-    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <fieldset class="license-info has-confirm">
-        <legend>I possess a license to perform this work:</legend>
-        <div class="confirm">
-            <label>Yes<input type="radio" name="positionlicenses-havelicense" value="yes"/></label>
-            <label>No<input type="radio" name="positionlicenses-havelicense" value="no"/></label>
-        </div>
-        <ul>
-            <li>
-                <label for="@idprefix-license-state">State licensed in:</label>
-                <select id="@idprefix-license-state" name="state">
-                    @CommonHelpers.CountryOptions()
-                </select>
-            </li>
-            <li>
-                <label for="@idprefix-license-type">License type:</label>
-                <input type="text" id="@idprefix-license-type" name="license-type"/>
-            </li>
-            <li>
-                <label for="@idprefix-license-number">License number:</label>
-                <input type="text" id="@idprefix-license-number" name="license-number"/>
-            </li>
-            <li>
-                <label for="@idprefix-license-valid-date">Valid through:</label>
-                <input type="text" id="@idprefix-license-valid-date" name="license-valid-date" class="date-pick date"/>
-            </li>
-            <li>
-                <label for="@idprefix-license-link">Link to license:</label>
-                <input type="text" id="@idprefix-license-link" name="license-link"/>
-            </li>
-        </ul>
-    </fieldset>
-    <fieldset class="actions">
-        <button class="save main-action" type="submit">Save</button>
-    </fieldset>
-</form>
+@if (licenses == null || licenses.Count == 0)
+{
+    <p class="setting-instructions">
+        Our research has indicated that a license or certification is not needed for this type of work. If you feel that is incorrect, please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>. We'd be happy to hear from you!
+    </p>
+}
+else
+{
+    <p class="setting-instructions">
+        Our research tells that you require a professional license or certication to perform this work. Please input your license details below, and we’ll verify it right away.  If you feel any of the information below is incomplete or inaccurate, please e-mail us. We’d be happy to hear from you!
+    </p>
+    <form action="#" method="post" class="positionlicenses" id="@idprefix-licenses">
+        <input type="hidden" name="position-number" value="@n"/>
+        <input type="hidden" name="position-id" value="@p.PositionID"/>
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        <fieldset class="license-info">
+            <ul>
+                <li>
+                    <label for="@idprefix-license-type">Please select the license you possess:</label>
+                    <select id="@idprefix-license-type" name="license-type">
+                        @foreach (var license in licenses)
+                        {
+                            <option value="@license.LicenseCertificationID" 
+                             data-description="@license.LicenseCertificationTypeDescription"
+                             data-state-name="@license.StateProvinceName"
+                             data-authority-name="@license.LicenseCertificationAuthority"
+                             data-verification-url="@license.VerificationWebsiteURL"
+                             data-get-license-url="@license.HowToGetLicensedURL">
+                             @license.LicenseCertificationType</option>
+                        }
+                    </select>
+                    <ul class="license-details">
+                        <li><strong>Description:</strong> <span class="license-description"></span></li>
+                        <li><strong>State:</strong> <span class="license-state"></span></li>
+                        <li><strong>Certifying Board:</strong> <a href="#" class="license-authority"></a></li>
+                    </ul>
+                </li>
+                <li>
+                    <label for="@idprefix-county">County:</label>
+                    <select id="@idprefix-county" name="county">
+                        @CommonHelpers.CountyOptions()
+                    </select>
+                </li>
+                <li>
+                    <label for="@idprefix-license-number">License number:</label>
+                    <input type="text" id="@idprefix-license-number" name="license-number"/>
+                </li>
+                <li>
+                    <label for="@idprefix-business-name">Business name (optional):</label>
+                    <input type="text" id="@idprefix-business-name" name="business-name"/>
+                </li>
+                <li>
+                    <label for="@idprefix-first-name">First Name:</label>
+                    <input type="text" id="@idprefix-first-name" name="first-name"/>
+                </li>
+                <li>
+                    <label for="@idprefix-last-name">Last Name:</label>
+                    <input type="text" id="@idprefix-last-name" name="last-name"/>
+                </li>
+                @if (LcData.GetCurrentCountryID() == 1)
+                {
+                <li>
+                    <label for="@idprefix-middle-initial">Middle Initial:</label>
+                    <input type="text" id="@idprefix-middle-initial" name="middle-initial"/>
+                </li>
+                }
+                @if (LcData.GetCurrentCountryID() == 2)
+                {
+                <li>
+                    <label for="@idprefix-second-last-name">Second Last Name:</label>
+                    <input type="text" id="@idprefix-second-last-name" name="second-last-name"/>
+                </li>
+                }
+                <li>
+                    <label for="@idprefix-license-link">Link to license:</label>
+                    <input type="text" id="@idprefix-license-link" name="license-link"/>
+                </li>
+                <li>
+                    Need to apply or renew this license/certification? Please <a class="get-license-url" href="#">visit this link</a>.
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="actions">
+            <button class="save main-action" type="submit">Save</button>
+        </fieldset>
+    </form>
+}

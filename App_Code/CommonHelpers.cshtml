@@ -14,8 +14,20 @@
         ORDER BY CountryName
     ";
     using (var db = Database.Open("sqlloco")){
-        foreach (var country in db.Query(sql, 1)){
+        foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID())){
             <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID.ToString())>@country.CountryName</option>
+        }
+    }
+}
+@helper CountyOptions(string selectedCountyID = null){
+    var sql = @"
+        SELECT CountyID, CountyName, FIPSCode, StateProvinceID
+        FROM    County
+        ORDER BY CountyName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var county in db.Query(sql)){
+            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID.ToString())>@county.CountyName</option>
         }
     }
 }
@@ -30,7 +42,7 @@
         ORDER BY StateProvinceName
     ";
     using (var db = Database.Open("sqlloco")){
-        foreach (var state in db.Query(sql, 1)){
+        foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
             <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID.ToString())>@state.StateProvinceName</option>
         }
     }
