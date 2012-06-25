@@ -298,7 +298,11 @@ $(document).ready(function () {
             $('.license-state', det).text(option.data('state-name'));
             $('.license-authority', det).text(option.data('authority-name'))
                 .attr('href', option.data('verification-url'));
-            $('.get-license-url', form).attr('href', option.data('get-license-url'));
+            var geturl = option.data('get-license-url');
+            if (geturl)
+                $('.get-license-url', form).show().attr('href', geturl);
+            else
+                $('.get-license-url', form).hide();
             // Showing:
             det.show(300);
             licenseRequest.show(300);

@@ -1,7 +1,9 @@
 ﻿@using WebMatrix.Data;
 @{
+    // Current user data
+    var u = DashboardFunctions.GetUserRow();
     // Current position data record:
-    var p = PageData["position"];
+    var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
     
     var idprefix = "position#" + n + "-licenses";
@@ -33,6 +35,56 @@
     using (var db = Database.Open("sqlloco")) {
         licenses = db.Query(sqlGetLicenses, p.PositionID);
     }
+    
+    Validation.RequireField("license-type", LcRessources.RequiredField("License"));
+    Validation.RequireField("license-link", LcRessources.RequiredField("Link to license"));
+    Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
+    Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
+    Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
+    Validation.RequireField("county", LcRessources.RequiredField("County"));
+    
+    if (IsPost && Validation.IsValid()) {
+        var sqlInsRequest = @"
+            INSERT INTO licensecertificationverificationrequest (
+                ProviderUserID,
+                LicenseCertificationID,
+                LicenseCertificationURL,
+                FirstName,                
+                LastName,
+                SecondLastName,
+                MiddleInitial,
+                BusinessName,
+                LicenseCertificationNumber,
+                CountyID,
+                StateProvinceID,
+                CountryID,
+                CreatedDate,
+                ModifiedDate,
+                ModifiedBy
+            ) VALUES (
+                @0, @1, @2,
+                @3, @4, @5, @6, @7,
+                @8, @9, @10, @11,
+                getdate(), getdate(), 'sys'
+            )
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(sqlInsRequest,
+                p.UserID,
+                Request["license-type"],
+                Request["license-link"],
+                Request["first-name"],
+                Request["last-name"],
+                Request["second-last-name"],
+                Request["middle-initial"],
+                Request["business-name"],
+                Request["license-number"],
+                Request["county"],
+                u.StateProvinceID,
+                LcData.GetCurrentCountryID()
+            );
+        }
+    }
 }
 @if (licenses == null || licenses.Count == 0)
 {
@@ -45,13 +97,14 @@ else
     <p class="setting-instructions">
         Our research tells that you require a professional license or certication to perform this work. Please input your license details below, and we’ll verify it right away.  If you feel any of the information below is incomplete or inaccurate, please e-mail us. We’d be happy to hear from you!
     </p>
-    <form action="#" method="post" class="positionlicenses" id="@idprefix-licenses">
-        <input type="hidden" name="position-number" value="@n"/>
-        <input type="hidden" name="position-id" value="@p.PositionID"/>
+    <div>
+    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax ajax-box" id="@idprefix-licenses">
+        <input type="hidden" name="PositionID" value="@p.PositionID"/>
+        @CommonHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="license-type-selector">
             <label for="@idprefix-license-type">Please select the license you possess:</label>
-            <select id="@idprefix-license-type" name="license-type">
+            <select id="@idprefix-license-type" name="license-type" @Validation.GetHtml("license-type")>
                 <option value=""></option>
                 @foreach (var license in licenses)
                 {
@@ -74,43 +127,43 @@ else
             <ul>
                 <li>
                     <label for="@idprefix-county">County:</label>
-                    <select id="@idprefix-county" name="county">
+                    <select id="@idprefix-county" name="county" @Validation.GetHtml("county")>
                         @CommonHelpers.CountyOptions()
                     </select>
                 </li>
                 <li>
                     <label for="@idprefix-license-number">License number:</label>
-                    <input type="text" id="@idprefix-license-number" name="license-number"/>
+                    <input type="text" id="@idprefix-license-number" name="license-number" @Validation.GetHtml("license-number")/>
                 </li>
                 <li>
                     <label for="@idprefix-business-name">Business name (optional):</label>
-                    <input type="text" id="@idprefix-business-name" name="business-name"/>
+                    <input type="text" id="@idprefix-business-name" name="business-name" @Validation.GetHtml("business-name")/>
                 </li>
                 <li>
                     <label for="@idprefix-first-name">First Name:</label>
-                    <input type="text" id="@idprefix-first-name" name="first-name"/>
+                    <input type="text" id="@idprefix-first-name" name="first-name" @Validation.GetHtml("first-name")/>
                 </li>
                 <li>
                     <label for="@idprefix-last-name">Last Name:</label>
-                    <input type="text" id="@idprefix-last-name" name="last-name"/>
+                    <input type="text" id="@idprefix-last-name" name="last-name" @Validation.GetHtml("last-name")/>
                 </li>
                 @if (LcData.GetCurrentCountryID() == 1)
                 {
                 <li>
                     <label for="@idprefix-middle-initial">Middle Initial:</label>
-                    <input type="text" id="@idprefix-middle-initial" name="middle-initial"/>
+                    <input type="text" id="@idprefix-middle-initial" name="middle-initial" @Validation.GetHtml("middle-initial")/>
                 </li>
                 }
                 @if (LcData.GetCurrentCountryID() == 2)
                 {
                 <li>
                     <label for="@idprefix-second-last-name">Second Last Name:</label>
-                    <input type="text" id="@idprefix-second-last-name" name="second-last-name"/>
+                    <input type="text" id="@idprefix-second-last-name" name="second-last-name" @Validation.GetHtml("second-last-name")/>
                 </li>
                 }
                 <li>
                     <label for="@idprefix-license-link">Link to license:</label>
-                    <input type="text" id="@idprefix-license-link" name="license-link"/>
+                    <input type="text" id="@idprefix-license-link" name="license-link" @Validation.GetHtml("license-link")/>
                 </li>
                 <li class="get-license-info">
                     Need to apply or renew this license/certification? Please <a class="get-license-url" target="_blank" href="#">visit this link</a>.
@@ -120,5 +173,5 @@ else
         <fieldset class="actions">
             <button class="save main-action" type="submit">Save</button>
         </fieldset>
-    </form>
+    </form></div>
 }
