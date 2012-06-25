@@ -426,13 +426,14 @@ public class LcMessaging
     #endregion
 
     #region Type:Welcome
-    public static void SendWelcomeProvider(int providerID, string providerEmail)
+    public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
         SendMail(providerEmail, "Welcome to Loconomics.com",
             ApplyTemplate(UrlUtil.LangPath + "Provider-sign-up/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
-                { "EmailTo", providerEmail }
+                { "EmailTo", providerEmail },
+                { "ConfirmationURL", confirmationURL }
          }));
     }
     #endregion

@@ -67,6 +67,7 @@
 
         // If all information is valid, create a new account
         if (ModelState.IsValid) { 
+            string confirmationUrl = null;
             // Insert a new user into the database
             var db = Database.Open("sqlloco");
 
@@ -83,13 +84,14 @@
                         bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
                         var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                         if (requireEmailConfirmation) {
-                            var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+                            confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
-                            LcMessaging.SendMail(
+                            // Verification code is sent along with the Welcome email, commenting the other email sent:
+                            /*LcMessaging.SendMail(
                                 to: email,
                                 subject: "Please confirm your account", 
                                 body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
-                            );
+                            );*/
                         }
 
                         if (requireEmailConfirmation) {
@@ -148,7 +150,8 @@
                 // All ok, send welcome email
                 LcMessaging.SendWelcomeProvider(
                     (u != null ? u.UserID : userid), 
-                    (u != null ? u.Email : email));
+                    (u != null ? u.Email : email),
+                    confirmationUrl);
 
                 // We return a json with result OK (=0), and response end just after this:
                 CommonHelpers.ReturnJsonResult(0, null);

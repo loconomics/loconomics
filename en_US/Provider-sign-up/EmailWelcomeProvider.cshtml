@@ -8,6 +8,8 @@
     var thisUserID = Request["UserID"].AsInt();
     var thisUser = DashboardFunctions.GetUserRow(thisUserID);
     
+    var confirmationURL = Request["ConfirmationURL"];
+    
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Welcome";
     // Create URL:
@@ -53,7 +55,16 @@
         </ul>
     </div>
 
-    <div><a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Go to my dashboard</a></div>
+    <div>
+        @if (String.IsNullOrEmpty(confirmationURL))
+        {
+        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Go to my dashboard</a>
+        }
+        else
+        {
+            <a href="@confirmationURL" target="_blank" class="respond">Verify my account</a>
+        }
+    </div>
 
     <h4>Reminders</h4>
 
