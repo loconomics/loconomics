@@ -49,28 +49,29 @@ else
         <input type="hidden" name="position-number" value="@n"/>
         <input type="hidden" name="position-id" value="@p.PositionID"/>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-        <fieldset class="license-info">
+        <fieldset class="license-type-selector">
+            <label for="@idprefix-license-type">Please select the license you possess:</label>
+            <select id="@idprefix-license-type" name="license-type">
+                <option value=""></option>
+                @foreach (var license in licenses)
+                {
+                    <option value="@license.LicenseCertificationID" 
+                        data-description="@license.LicenseCertificationTypeDescription"
+                        data-state-name="@license.StateProvinceName"
+                        data-authority-name="@license.LicenseCertificationAuthority"
+                        data-verification-url="@license.VerificationWebsiteURL"
+                        data-get-license-url="@license.HowToGetLicensedURL">
+                        @license.LicenseCertificationType</option>
+                }
+            </select>
+            <ul class="license-details">
+                <li><strong>Description:</strong> <span class="license-description"></span></li>
+                <li><strong>State:</strong> <span class="license-state"></span></li>
+                <li><strong>Certifying Board:</strong> <a href="#" target="_blank" class="license-authority"></a></li>
+            </ul>
+        </fieldset>
+        <fieldset class="license-request">
             <ul>
-                <li>
-                    <label for="@idprefix-license-type">Please select the license you possess:</label>
-                    <select id="@idprefix-license-type" name="license-type">
-                        @foreach (var license in licenses)
-                        {
-                            <option value="@license.LicenseCertificationID" 
-                             data-description="@license.LicenseCertificationTypeDescription"
-                             data-state-name="@license.StateProvinceName"
-                             data-authority-name="@license.LicenseCertificationAuthority"
-                             data-verification-url="@license.VerificationWebsiteURL"
-                             data-get-license-url="@license.HowToGetLicensedURL">
-                             @license.LicenseCertificationType</option>
-                        }
-                    </select>
-                    <ul class="license-details">
-                        <li><strong>Description:</strong> <span class="license-description"></span></li>
-                        <li><strong>State:</strong> <span class="license-state"></span></li>
-                        <li><strong>Certifying Board:</strong> <a href="#" class="license-authority"></a></li>
-                    </ul>
-                </li>
                 <li>
                     <label for="@idprefix-county">County:</label>
                     <select id="@idprefix-county" name="county">
@@ -111,8 +112,8 @@ else
                     <label for="@idprefix-license-link">Link to license:</label>
                     <input type="text" id="@idprefix-license-link" name="license-link"/>
                 </li>
-                <li>
-                    Need to apply or renew this license/certification? Please <a class="get-license-url" href="#">visit this link</a>.
+                <li class="get-license-info">
+                    Need to apply or renew this license/certification? Please <a class="get-license-url" target="_blank" href="#">visit this link</a>.
                 </li>
             </ul>
         </fieldset>

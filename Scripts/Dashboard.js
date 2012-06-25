@@ -282,6 +282,37 @@ $(document).ready(function () {
     }
     $('input[name=payment-type]').change(payment_preference_check);
     payment_preference_check();
+
+    /*==============
+    * Licenses
+    */
+    function setup_license_request_form($t) {
+        var v = $t.val();
+        var option = $t.find(':selected');
+        var p = $t.parent();
+        var form = p.closest('.positionlicenses');
+        var licenseRequest = $('.license-request', form);
+        var det = $('.license-details', p);
+        if (v) {
+            $('.license-description', det).text(option.data('description'));
+            $('.license-state', det).text(option.data('state-name'));
+            $('.license-authority', det).text(option.data('authority-name'))
+                .attr('href', option.data('verification-url'));
+            $('.get-license-url', form).attr('href', option.data('get-license-url'));
+            // Showing:
+            det.show(300);
+            licenseRequest.show(300);
+            form.find('.actions button').show(300);
+        } else {
+            det.hide(300);
+            licenseRequest.hide(300);
+            form.find('.actions button').hide(300);
+        }
+    }
+    $('body').delegate('.license-type-selector > select', 'change', function () {
+        setup_license_request_form($(this));
+    });
+    setup_license_request_form($('.license-type-selector > select'));
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

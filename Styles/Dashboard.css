@@ -663,9 +663,17 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     background: white;
 }
 /**** Form: Positions Licenses ****/
-.positionlicenses .license-info li label{
+.positionlicenses .license-request li label{
     font-weight: bold;
-    width: 150px;
+    min-width: 230px;
+    width: auto;
+}
+.positionlicenses .license-type-selector .license-details,
+.positionlicenses .license-request {
+    display: none;
+}
+.positionlicenses .license-type-selector label {
+    font-weight: bold;
 }
 /** Form: Positions Reviews **/
 .positionreviews .references li label {
