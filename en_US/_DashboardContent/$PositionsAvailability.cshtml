@@ -7,6 +7,8 @@
     var n = p.PositionID;
     // From 0 (sunday) to 6 (saturday), true: is available
     bool[] availDates = new bool[7];
+    // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
+    TimeSpan[,] dateHours = new TimeSpan[7,2];
     bool useCalendarProgram = false;
     var programType = "";
     var programURL = "";
@@ -21,11 +23,20 @@
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
     if (!IsPost) {
-        dynamic UserFreeTimeSettings = null, atts = null;
+        dynamic hoursData = null, atts = null;
         using (var db = Database.Open("sqlloco")) {
             //data = db.Query(varSqlGetAvailTime, u.UserID, DateTime.Now);
-            UserFreeTimeSettings = db.Query(varSQLGetUserFreeTimeSettings ,u.UserID);
+            hoursData = db.Query(varSQLGetUserFreeTimeSettings ,u.UserID);
             atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, u.UserID);  
+        }
+        foreach (var dayHours in hoursData) {
+            if (dayHours.DayofWeek != null && 
+                dayHours.DayofWeek > -1 &&
+                dayHours.DayofWeek < 7) {
+                availDates[dayHours.DayofWeek] = true;
+                dateHours[dayHours.DayofWeek, 0] = dayHours.StartTime;
+                dateHours[dayHours.DayofWeek, 1] = dayHours.EndTime;
+            }
         }
         if (atts != null) {
             useCalendarProgram      = atts.UseCalendarProgram;
@@ -38,7 +49,9 @@
         }
     } else {
         for (int d = 0; d < 7; d++) {
-            availDates[d] = Request["availday-" + d.ToString()].AsBool();
+            availDates[d]   = Request["availday-" + d.ToString()].AsBool();
+            dateHours[d, 0] = Request["day-" + d.ToString() + "-since-hour"].AsDateTime().TimeOfDay;
+            dateHours[d, 1] = Request["day-" + d.ToString() + "-to-hour"].AsDateTime().TimeOfDay;
         }
         useCalendarProgram      = Request["use-program"].AsBool();
         programType             = Request["program-type"];
@@ -65,11 +78,12 @@
                     programType,
                     programURL);
 
-                foreach (var d in availDates) {
-                    if (d) {
-                        db.Execute(varSqlInsertAvailFreetime, u.UserID, 1, 
-                            Request["hours-" + d.ToString() + "-since"], 
-                            Request["hours-" + d.ToString() + "-to"]);
+                for (int d = 0; d < 7; d++) {
+                    if (availDates[d]) {
+                        db.Execute(varSqlInsertAvailFreetime, u.UserID,
+                            d,
+                            dateHours[d, 0],
+                            dateHours[d, 1]);
                     }
                 }
 
@@ -79,34 +93,34 @@
         }
     }
 }
-@helper printOptionsHours(){
+@helper printOptionsHours(TimeSpan selectedHour){
     var firstHour = new TimeSpan(9, 0, 0);
     var lastHour = new TimeSpan(18, 30, 0);
     var interval = new TimeSpan(0, 30, 0);
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
-        <option value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+        <option @CommonHelpers.IsSelected(selectedHour.ToString("c"), hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
     }
 }
-@helper printHourPerDayElements(){
+@helper printHourPerDayElements(dynamic dateHours){
     var days = new string[]{"Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"};
 
     for (var d = 0; d < 7; d++){
     <li>
         <span class="day">@days[d]</span>
-        <select name="hours-@d-since">@printOptionsHours()</select>
+        <select name="day-@d-since-hour">@printOptionsHours(dateHours[d, 0])</select>
         and
-        <select name="hours-@d-to">@printOptionsHours()</select>
+        <select name="day-@d-to-hour">@printOptionsHours(dateHours[d, 1])</select>
     </li>
     }
 }
-@helper printDaysElements(){
-    var days = new string[]{"Sundays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Mondays"};
+@helper printDaysElements(dynamic availDates){
+    var days = new string[]{"Sundays",  "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"};
     for (var d = 0; d < 7; d++){
         <li>
             <span class="day">@days[d]</span>
-            <label>Yes<input name="days-@d" value="yes" type="radio"/></label>
-            <label>No<input name="days-@d" value="no" type="radio"/></label>
+            <label>Yes<input @CommonHelpers.IsChecked(availDates[d].ToString(), "True") name="availday-@d" value="True" type="radio"/></label>
+            <label>No<input @CommonHelpers.IsChecked(availDates[d].ToString(), "False") name="availday-@d" value="False" type="radio"/></label>
         </li>
     }
 }
@@ -130,13 +144,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
         <ul>
-            @printDaysElements()
+            @printDaysElements(availDates)
         </ul>
     </fieldset>
     <fieldset class="positionavailability-hours">
         <legend>Generally between these hours:</legend>
         <ul>
-            @printHourPerDayElements()
+            @printHourPerDayElements(dateHours)
         </ul>
     </fieldset>
     <fieldset class="positionavailability-program has-confirm">

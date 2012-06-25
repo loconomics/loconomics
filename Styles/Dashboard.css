@@ -439,7 +439,6 @@ form.positionavailability input{
 }
 .positionavailability-booking {
     border-left: 1px solid #DADADA;
-    height: 320px;
     padding-left: 13px !important;
     position: absolute;
     right: 0;
