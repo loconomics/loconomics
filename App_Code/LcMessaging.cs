@@ -433,7 +433,7 @@ public class LcMessaging
             new Dictionary<string,object> {
                 { "UserID", providerID },
                 { "EmailTo", providerEmail },
-                { "ConfirmationURL", confirmationURL }
+                { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) }
          }));
     }
     #endregion
