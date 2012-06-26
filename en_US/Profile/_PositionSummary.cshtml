@@ -45,8 +45,7 @@
                     <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
                 <span class="hour-price"><span class="price">$@hourlyRate</span>/h</span>
-                <!--Updated 30/03/2012 by manfontan Added a href to the Pricing Wizard page TODO: Front End tech review-->
-                <a class="calculate-price" href="@(UrlUtil.LangPath)PricingWizard/">Calculate for your needs</a>
+                <a class="calculate-price" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
                     @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
