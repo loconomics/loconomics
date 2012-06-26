@@ -53,11 +53,13 @@
             V.PositionID = @1
     ";
     
-    Validation.RequireField("license-type", LcRessources.RequiredField("License"));
-    Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
-    Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
-    Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
-    Validation.RequireField("county", LcRessources.RequiredField("County"));
+    if (Validation.GetHtml("license-type") == null) {
+        Validation.RequireField("license-type", LcRessources.RequiredField("License"));
+        Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
+        Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
+        Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
+        Validation.RequireField("county", LcRessources.RequiredField("County"));
+    }
 
     if (IsPost && Validation.IsValid()) {
         var sqlCheckLicense = @"
