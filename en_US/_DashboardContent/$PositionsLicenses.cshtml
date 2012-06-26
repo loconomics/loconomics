@@ -9,7 +9,7 @@
     var idprefix = "position#" + n + "-licenses";
     bool saved = false;
     
-    dynamic licenses = null;
+    dynamic licenses = null, userLicenses = null;
     var sqlGetLicenses = @"
         SELECT
             L.*,
@@ -34,18 +34,30 @@
              AND
             L.StateProvinceID = @1
     ";
+    var sqlGetUserLicenses = @"
+        SELECT
+            L.LicenseCertificationType,
+            S.StatusName,
+            S.StatusDescription
+        FROM
+            LicenseCertification As L
+             INNER JOIN
+            LicenseCertificationVerificationRequest As R
+              ON L.LicenseCertificationID = R.LicenseCertificationID
+             INNER JOIN
+            Status As S
+              ON R.StatusID = S.StatusID
+        WHERE
+            R.ProviderUserID = @0
+    ";
     
-    using (var db = Database.Open("sqlloco")) {
-        licenses = db.Query(sqlGetLicenses, p.PositionID, u.StateProvinceID);
-    }
-
     Validation.RequireField("license-type", LcRessources.RequiredField("License"));
     Validation.RequireField("license-link", LcRessources.RequiredField("Link to license"));
     Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
     Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
     Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
     Validation.RequireField("county", LcRessources.RequiredField("County"));
-    
+
     if (IsPost && Validation.IsValid()) {
         var sqlCheckLicense = @"
             SELECT  count(*)
@@ -138,6 +150,11 @@
             }
         }
     }
+    
+    using (var db = Database.Open("sqlloco")) {
+        licenses = db.Query(sqlGetLicenses, p.PositionID, u.StateProvinceID);
+        userLicenses = db.Query(sqlGetUserLicenses, u.UserID);
+    }
 }
 @if (licenses == null || licenses.Count == 0)
 {
@@ -151,13 +168,25 @@ else
         Our research tells that you require a professional license or certication to perform this work. Please input your license details below, and we’ll verify it right away.  If you feel any of the information below is incomplete or inaccurate, please e-mail us. We’d be happy to hear from you!
     </p>
     <div>
+        @if (userLicenses != null && userLicenses.Count > 0)
+        {
+        <div class="user-licenses">
+            <h4>You have @userLicenses.Count @(userLicenses.Count == 1 ? "license" : "licenses"): </h4>
+            <ul>
+            @foreach (var ul in userLicenses)
+            {
+                <strong>@(ul.LicenseCertificationType)</strong><text>,
+                status: </text><em>@ul.StatusName</em> <text>@ul.StatusDescription</text>
+            }
+            </ul>
+        </div>
+        }
     @if (IsPost && saved)
     {
         <p class="success">Your license verification request was successfully registered! We are working to verify it and you will be noticed when complete.</p>
     }
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax ajax-box" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
-        @CommonHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="license-type-selector">
             <label for="@idprefix-license-type">Please select the license you possess:</label>
@@ -230,5 +259,6 @@ else
         <fieldset class="actions">
             <button class="save main-action" type="submit">Save</button>
         </fieldset>
+        @CommonHelpers.GetValidationScripts()
     </form></div>
 }
