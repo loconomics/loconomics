@@ -2,16 +2,34 @@
 @{
     var userID = PageData["UserID"] ?? Request["UserID"];
     string size = PageData["Size"] ?? "medium"; // mini
+    string contID = PageData["ContainerID"] ?? "verifications";
+    
+    dynamic data;
+    using (var db = Database.Open("sqlloco")) {
+        data = db.Query(@"
+            SELECT  V.VerificationType, V.Icon
+            FROM    UserVerification As UV
+                     INNER JOIN
+                    Verification As V
+                      ON UV.VerificationID = V.VerificationID
+            WHERE   UV.UserID = @0
+                     AND
+                    UV.Active = 1
+                     AND
+                    V.Active = 1
+                     AND
+                    UV.VerificationStatusID = 1 -- Confirmed
+        ", userID);
+    }
 }
 @switch (size)
 {
     case "medium":
-        <ul id="verifications">
-            <li class="license">Professional license</li>
-            <li class="verification">Customer-reviewed</li>
-            <li class="verification">Background checked</li>
-            <li class="verification">Address verified</li>
-            <li class="verification">SSN verified</li>
+        <ul id="@contID">
+            @foreach (var v in data)
+            {
+            <li class="@v.Icon">@v.VerificationType</li>
+            }
         </ul>
         break;
     case "mini":

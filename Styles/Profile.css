@@ -57,11 +57,12 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     padding: 0 0 0 10px;
     margin: 0;
     list-style: none;
+    width: 180px;
 }
 #verifications li{
     padding: 0 0 0 30px;
     margin: 3px 0;
-    height: 25px;
+    min-height: 25px;
 }
 /* This fixed size for social-networking is a try to fix an uggly flickering effect
     of the google+ widget */
@@ -151,6 +152,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 #verifications li.verification{
     background-image: url('../img/icon-verifications.png');
+}
+#verifications li.share{
+    background-image: url('../img/icon-share-medium.png');
 }
 .profile h3 {
     font-size: 1.4em;
