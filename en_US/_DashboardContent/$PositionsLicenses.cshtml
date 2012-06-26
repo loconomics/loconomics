@@ -7,6 +7,7 @@
     var n = p.PositionID;
     
     var idprefix = "position#" + n + "-licenses";
+    bool saved = false;
     
     dynamic licenses = null;
     var sqlGetLicenses = @"
@@ -30,12 +31,14 @@
             L.Active = 1
              AND
             P.Active = 1
+             AND
+            L.StateProvinceID = @1
     ";
     
     using (var db = Database.Open("sqlloco")) {
-        licenses = db.Query(sqlGetLicenses, p.PositionID);
+        licenses = db.Query(sqlGetLicenses, p.PositionID, u.StateProvinceID);
     }
-    
+
     Validation.RequireField("license-type", LcRessources.RequiredField("License"));
     Validation.RequireField("license-link", LcRessources.RequiredField("Link to license"));
     Validation.RequireField("first-name", LcRessources.RequiredField("First name"));
@@ -44,45 +47,95 @@
     Validation.RequireField("county", LcRessources.RequiredField("County"));
     
     if (IsPost && Validation.IsValid()) {
+        var sqlCheckLicense = @"
+            SELECT  count(*)
+            FROM    licensecertificationverificationrequest
+            WHERE   ProviderUserID = @0
+                     AND
+                    LicenseCertificationID = @1
+        ";
+        var sqlCheckOptionGroup = @"
+            DECLARE @OptionGroup varchar(50)
+
+            SELECT  @OptionGroup = OptionGroup
+            FROM    LicenseCertification As L
+            WHERE   L.LicenseCertificationID = @1
+
+            SELECT  count(*)
+            FROM    licensecertification As L
+                     INNER JOIN
+                    licensecertificationverificationrequest As R
+                      ON L.LicenseCertificationID = R.LicenseCertificationID
+            WHERE
+                    ProviderUserID = @0
+                     AND
+                    L.Active = 1
+                     AND
+                    L.OptionGroup is not null
+                     AND
+                    L.OptionGroup = @OptionGroup
+        ";
         var sqlInsRequest = @"
             INSERT INTO licensecertificationverificationrequest (
                 ProviderUserID,
+                -- License info
                 LicenseCertificationID,
                 LicenseCertificationURL,
+                LicenseCertificationNumber,
+                -- Provider personal
                 FirstName,                
                 LastName,
                 SecondLastName,
                 MiddleInitial,
                 BusinessName,
-                LicenseCertificationNumber,
+                -- Provider location
+                City,
                 CountyID,
                 StateProvinceID,
                 CountryID,
+                -- Record
                 CreatedDate,
                 ModifiedDate,
-                ModifiedBy
+                ModifiedBy,
+                StatusID
             ) VALUES (
-                @0, @1, @2,
-                @3, @4, @5, @6, @7,
-                @8, @9, @10, @11,
-                getdate(), getdate(), 'sys'
+                @0,
+                @1, @2, @3,
+                @4, @5, @6, @7, @8,
+                @9, @10, @11, @12,
+                getdate(), getdate(), 'sys', 1 --Pending status
             )
         ";
         using (var db = Database.Open("sqlloco")) {
-            db.Execute(sqlInsRequest,
-                p.UserID,
-                Request["license-type"],
-                Request["license-link"],
-                Request["first-name"],
-                Request["last-name"],
-                Request["second-last-name"],
-                Request["middle-initial"],
-                Request["business-name"],
-                Request["license-number"],
-                Request["county"],
-                u.StateProvinceID,
-                LcData.GetCurrentCountryID()
-            );
+            
+            if (db.QueryValue(sqlCheckLicense, u.UserID, Request["license-type"]) > 0) {
+                ModelState.AddError("license-type", "You already have this license registered!");
+            }
+            if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, Request["license-type"]) > 0) {
+                ModelState.AddError("license-type", "You have a license that is incompatible with this one.");
+            }
+            
+            if (ModelState.IsValid) {
+                db.Execute(sqlInsRequest,
+                    p.UserID,
+                    Request["license-type"],
+                    Request["license-link"],
+                    Request["license-number"],
+                    Request["first-name"],
+                    Request["last-name"],
+                    Request["second-last-name"],
+                    Request["middle-initial"],
+                    Request["business-name"],
+                    u.City,
+                    Request["county"],
+                    u.StateProvinceID,
+                    u.PreferredCountryID //LcData.GetCurrentCountryID()
+                );
+                saved = true;
+                /*if (!saved) {
+                    ModelState.AddFormError("We're sorry, there was an unexpected error and your request couldn't be registered.");
+                }*/
+            }
         }
     }
 }
@@ -98,6 +151,10 @@ else
         Our research tells that you require a professional license or certication to perform this work. Please input your license details below, and we’ll verify it right away.  If you feel any of the information below is incomplete or inaccurate, please e-mail us. We’d be happy to hear from you!
     </p>
     <div>
+    @if (IsPost && saved)
+    {
+        <p class="success">Your license verification request was successfully registered! We are working to verify it and you will be noticed when complete.</p>
+    }
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax ajax-box" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         @CommonHelpers.GetValidationScripts()
