@@ -1,0 +1,19 @@
+﻿@using WebMatrix.Data;
+@{
+    var userID = PageData["UserID"] ?? Request["UserID"];
+    string size = PageData["Size"] ?? "medium"; // mini
+}
+@switch (size)
+{
+    case "medium":
+        <ul id="verifications">
+            <li class="license">Professional license</li>
+            <li class="verification">Customer-reviewed</li>
+            <li class="verification">Background checked</li>
+            <li class="verification">Address verified</li>
+            <li class="verification">SSN verified</li>
+        </ul>
+        break;
+    case "mini":
+        break;
+}

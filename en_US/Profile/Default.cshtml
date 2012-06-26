@@ -56,17 +56,6 @@
     /* Between LI and A elements must not have white spaces */
     <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/" + photo)"/></a></li>
 }
-@helper oldPrintMailbox(){
-    // TODO Review old code: (is a section removed from the current design)
-    /*
-         <div id="inbox_grid" class="tab-body">
-         <h1>
-             <title>Inbox</title>
-         </h1>
-            @RenderPage(UrlUtil.LangPath + "MailBoxGrid/")
-        </div>
-    */
-}
 @helper printName(dynamic p){
     string l = (string)p["LastName"];
     if (l.Length > 1) { l = l.Substring(0, 1); }
@@ -77,7 +66,7 @@
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
-            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + u["UserID"])" alt="User Photo" />
+            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"])" alt="User Photo" />
             <h1 class="profile-name">@printName(u)</h1>
 		    
 		    <p class="profile-desc">
@@ -87,16 +76,9 @@
                     <text>User doesn't provide information about itself.</text>
                     <br />
                     <text>It's strongly recommended for all users to write a public bio.</text>
-                    @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
                 }
             </p>
-            <ul id="verifications">
-                <li class="license">Professional license</li>
-                <li class="verification">Customer-reviewed</li>
-                <li class="verification">Background checked</li>
-                <li class="verification">Address verified</li>
-                <li class="verification">SSN verified</li>
-            </ul>
+            @RenderPage("$UserVerificationsWidget.cshtml")
             @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
             @*
             @if (u.IsProvider) {
