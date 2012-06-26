@@ -2,9 +2,8 @@
 @{
     // Current user data
     var u = DashboardFunctions.GetUserRow();
-    // Current position data record:
-    var p = DashboardFunctions.GetUserCurrentPos();
-    var n = p.PositionID;
+    var idprefix = "availability-form";
+    
     // From 0 (sunday) to 6 (saturday), true: is available
     bool[] availDates = new bool[7];
     // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
@@ -134,11 +133,10 @@
 }
 
 <p class="setting-instructions">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+Please enter your availability below.  This should be the hours you generally keep that includes current jobs.  We are continually working on tools to make this easy for you to manage.  
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsAvailability/" method="post" class="positionavailability ajax ajax-box" id="position#@(n)-availability">
-    <input type="hidden" name="PositionID" value="@p.PositionID"/>
+<form action="@(UrlUtil.LangPath)Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
@@ -162,14 +160,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         </div>
         <ul>
             <li class="positionavailability-program-type">
-                <label for="position#@(n)-availability-program-type">Which type?</label>
-                <select name="program-type" id="position#@(n)-availability-program-type">
+                <label for="@idprefix-program-type">Which type?</label>
+                <select name="program-type" id="@idprefix-program-type">
                     <option @CommonHelpers.IsSelected(programType, "gmail") value="gmail">Gmail</option>
                 </select>
             </li>
             <li class="positionavailability-program-url">
-                <label for="position#@(n)-availability-program-url">Public URL:</label>
-                <input type="text" name="program-url" value="@programURL" id="position#@(n)-availability-program-url"/>
+                <label for="@idprefix-program-url">Public URL:</label>
+                <input type="text" name="program-url" value="@programURL" id="@idprefix-program-url"/>
             </li>
         </ul>
     </fieldset>
