@@ -7,7 +7,6 @@
     var n = p.PositionID;
     
     var idprefix = "position" + n + "-licenses";
-    bool saved = false;
     
     dynamic licenses = null, userLicenses = null;
     var sqlGetLicenses = @"
@@ -152,10 +151,6 @@
                     u.StateProvinceID,
                     u.PreferredCountryID //LcData.GetCurrentCountryID()
                 );
-                saved = true;
-                /*if (!saved) {
-                    ModelState.AddFormError("We're sorry, there was an unexpected error and your request couldn't be registered.");
-                }*/
             }
         }
     }
@@ -192,10 +187,6 @@ else
             </ul>
         </div>
         }
-    @if (IsPost && saved)
-    {
-        <p class="success">Your license verification request was successfully registered! We are working to verify it and you will be noticed when complete.</p>
-    }
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
