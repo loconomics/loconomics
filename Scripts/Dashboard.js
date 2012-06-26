@@ -315,6 +315,9 @@ $(document).ready(function () {
     }
     $('body').delegate('.license-type-selector > select', 'change', function () {
         setup_license_request_form($(this));
+    }).delegate('form.positionlicenses', 'ajaxFormReturnedHtml', function () {
+        // Listen the form.ajax event about returning html after post the form:
+        setup_license_request_form($('.license-type-selector > select'));
     });
     setup_license_request_form($('.license-type-selector > select'));
 });

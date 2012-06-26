@@ -6,7 +6,7 @@
     var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
     
-    var idprefix = "position#" + n + "-licenses";
+    var idprefix = "position" + n + "-licenses";
     bool saved = false;
     
     dynamic licenses = null, userLicenses = null;
@@ -163,6 +163,7 @@
         userLicenses = db.Query(sqlGetUserLicenses, u.UserID, p.PositionID);
     }
 }
+@CommonHelpers.GetValidationScripts()
 @if (licenses == null || licenses.Count == 0)
 {
     <p class="setting-instructions">
@@ -174,7 +175,8 @@ else
     <p class="setting-instructions">
         Our research tells that you require a professional license or certication to perform this work. Please input your license details below, and we’ll verify it right away.  If you feel any of the information below is incomplete or inaccurate, please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>. We’d be happy to hear from you!
     </p>
-    <div>
+   <div>
+    <div class="ajax-box">
         @if (userLicenses != null && userLicenses.Count > 0)
         {
         <div class="user-licenses">
@@ -192,7 +194,7 @@ else
     {
         <p class="success">Your license verification request was successfully registered! We are working to verify it and you will be noticed when complete.</p>
     }
-    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax ajax-box" id="@idprefix-licenses">
+    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="license-type-selector">
@@ -201,7 +203,8 @@ else
                 <option value=""></option>
                 @foreach (var license in licenses)
                 {
-                    <option value="@license.LicenseCertificationID" 
+                    <option @CommonHelpers.IsSelected(Request["license-type"], license.LicenseCertificationID.ToString())
+                        value="@license.LicenseCertificationID" 
                         data-description="@license.LicenseCertificationTypeDescription"
                         data-state-name="@license.StateProvinceName"
                         data-authority-name="@license.LicenseCertificationAuthority"
@@ -221,42 +224,42 @@ else
                 <li>
                     <label for="@idprefix-county">County:</label>
                     <select id="@idprefix-county" name="county" @Validation.GetHtml("county")>
-                        @CommonHelpers.CountyOptions()
+                        @CommonHelpers.CountyOptions(Request["county"])
                     </select>
                 </li>
                 <li>
                     <label for="@idprefix-license-number">License number:</label>
-                    <input type="text" id="@idprefix-license-number" name="license-number" @Validation.GetHtml("license-number")/>
+                    <input type="text" id="@idprefix-license-number" value="@Request["license-number"]" name="license-number" @Validation.GetHtml("license-number")/>
                 </li>
                 <li>
                     <label for="@idprefix-business-name">Business name (optional):</label>
-                    <input type="text" id="@idprefix-business-name" name="business-name" @Validation.GetHtml("business-name")/>
+                    <input type="text" id="@idprefix-business-name" value="@Request["business-name"]" name="business-name" @Validation.GetHtml("business-name")/>
                 </li>
                 <li>
                     <label for="@idprefix-first-name">First Name:</label>
-                    <input type="text" id="@idprefix-first-name" name="first-name" @Validation.GetHtml("first-name")/>
+                    <input type="text" id="@idprefix-first-name" value="@Request["first-name"]" name="first-name" @Validation.GetHtml("first-name")/>
                 </li>
                 <li>
                     <label for="@idprefix-last-name">Last Name:</label>
-                    <input type="text" id="@idprefix-last-name" name="last-name" @Validation.GetHtml("last-name")/>
+                    <input type="text" id="@idprefix-last-name" value="@Request["last-name"]" name="last-name" @Validation.GetHtml("last-name")/>
                 </li>
                 @if (LcData.GetCurrentCountryID() == 1)
                 {
                 <li>
                     <label for="@idprefix-middle-initial">Middle Initial:</label>
-                    <input type="text" id="@idprefix-middle-initial" name="middle-initial" @Validation.GetHtml("middle-initial")/>
+                    <input type="text" id="@idprefix-middle-initial" value="@Request["middle-initial"]" name="middle-initial" @Validation.GetHtml("middle-initial")/>
                 </li>
                 }
                 @if (LcData.GetCurrentCountryID() == 2)
                 {
                 <li>
                     <label for="@idprefix-second-last-name">Second Last Name:</label>
-                    <input type="text" id="@idprefix-second-last-name" name="second-last-name" @Validation.GetHtml("second-last-name")/>
+                    <input type="text" id="@idprefix-second-last-name" value="@Request["second-last-name"]" name="second-last-name" @Validation.GetHtml("second-last-name")/>
                 </li>
                 }
                 <li>
                     <label for="@idprefix-license-link">Link to license:</label>
-                    <input type="text" id="@idprefix-license-link" name="license-link" @Validation.GetHtml("license-link")/>
+                    <input type="text" id="@idprefix-license-link" value="@Request["license-link"]" name="license-link" @Validation.GetHtml("license-link")/>
                 </li>
                 <li class="get-license-info">
                     Need to apply or renew this license/certification? Please <a class="get-license-url" target="_blank" href="#">visit this link</a>.
@@ -266,6 +269,7 @@ else
         <fieldset class="actions">
             <button class="save main-action" type="submit">Save</button>
         </fieldset>
-        @CommonHelpers.GetValidationScripts()
-    </form></div>
+    </form>
+   </div> 
+  </div>
 }

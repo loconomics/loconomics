@@ -757,6 +757,7 @@ $(document).ready(function () {
                         newhtml = newhtml.find('.ajax-box');
                     // Replace the box with the new html:
                     box.replaceWith(newhtml);
+                    box.find('form.ajax').trigger('ajaxFormReturnedHtml');
                 }
             },
             error: ajaxErrorPopupHandler,
