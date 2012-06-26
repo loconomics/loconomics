@@ -78,7 +78,7 @@
                     <text>It's strongly recommended for all users to write a public bio.</text>
                 }
             </p>
-            @RenderPage("$UserVerificationsWidget.cshtml")
+            @RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })
             @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
             @*
             @if (u.IsProvider) {
