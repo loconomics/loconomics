@@ -217,6 +217,7 @@ else
                 <li>
                     <label for="@idprefix-county">County:</label>
                     <select id="@idprefix-county" name="county" @Validation.GetHtml("county")>
+                        <option value=""></option>
                         @CommonHelpers.CountyOptions(Request["county"])
                     </select>
                 </li>
