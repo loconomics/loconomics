@@ -6,6 +6,7 @@
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
     
     var hourlyRate = 0M;
+    var minimumBookingTime = 0M;
     using (var db = Database.Open("sqlloco")){
         // Get hourly rate
         hourlyRate = db.QueryValue(@"
@@ -18,6 +19,11 @@
                     ClientTypeID = @2
         ", p.UserID, pos.PositionID, 1) ?? 0;
         // TODO: ClientTypeID must NOT BE static! (but still is not defined how will work :(
+        minimumBookingTime = db.QueryValue(@"
+            SELECT  MinTime
+            FROM    CalendarProviderAttributes
+            WHERE   UserID = @0
+        ", p.UserID);
     }
 }
 @helper printAttList(dynamic cat){
@@ -61,13 +67,16 @@
                             @printAttList(cat)
                         </div>
                     }
+                    @if (minimumBookingTime > 0)
+                    {
                     <div class="min-booing-time">
                         <h5>Minimum booking time:</h5>
                         <a class="button view-more" href="#">More</a>
                         <ul><li>
-                            2 hours
+                            @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
                             </li></ul>
                     </div>
+                    }
                     @if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
