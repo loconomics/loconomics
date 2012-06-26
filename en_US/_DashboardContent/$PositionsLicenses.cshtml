@@ -42,13 +42,15 @@
         FROM
             LicenseCertification As L
              INNER JOIN
-            LicenseCertificationVerificationRequest As R
-              ON L.LicenseCertificationID = R.LicenseCertificationID
+            userlicenseverification As V
+              ON L.LicenseCertificationID = V.LicenseCertificationID
              INNER JOIN
             Status As S
-              ON R.StatusID = S.StatusID
+              ON V.StatusID = S.StatusID
         WHERE
-            R.ProviderUserID = @0
+            V.ProviderUserID = @0
+             AND
+            V.PositionID = @1
     ";
     
     Validation.RequireField("license-type", LcRessources.RequiredField("License"));
@@ -60,25 +62,29 @@
     if (IsPost && Validation.IsValid()) {
         var sqlCheckLicense = @"
             SELECT  count(*)
-            FROM    licensecertificationverificationrequest
+            FROM    userlicenseverification
             WHERE   ProviderUserID = @0
                      AND
-                    LicenseCertificationID = @1
+                    PositionID = @1
+                     AND
+                    LicenseCertificationID = @2 
         ";
         var sqlCheckOptionGroup = @"
             DECLARE @OptionGroup varchar(50)
 
             SELECT  @OptionGroup = OptionGroup
             FROM    LicenseCertification As L
-            WHERE   L.LicenseCertificationID = @1
+            WHERE   L.LicenseCertificationID = @2
 
             SELECT  count(*)
             FROM    licensecertification As L
                      INNER JOIN
-                    licensecertificationverificationrequest As R
+                    userlicenseverification As R
                       ON L.LicenseCertificationID = R.LicenseCertificationID
             WHERE
                     ProviderUserID = @0
+                     AND
+                    PositionID = @1
                      AND
                     L.Active = 1
                      AND
@@ -87,8 +93,9 @@
                     L.OptionGroup = @OptionGroup
         ";
         var sqlInsRequest = @"
-            INSERT INTO licensecertificationverificationrequest (
+            INSERT INTO userlicenseverification (
                 ProviderUserID,
+                PositionID,
                 -- License info
                 LicenseCertificationID,
                 LicenseCertificationURL,
@@ -110,25 +117,26 @@
                 ModifiedBy,
                 StatusID
             ) VALUES (
-                @0,
-                @1, @2, @3,
-                @4, @5, @6, @7, @8,
-                @9, @10, @11, @12,
+                @0, @1,
+                @2, @3, @4,
+                @5, @6, @7, @8, @9,
+                @10, @11, @12, @13,
                 getdate(), getdate(), 'sys', 1 --Pending status
             )
         ";
         using (var db = Database.Open("sqlloco")) {
             
-            if (db.QueryValue(sqlCheckLicense, u.UserID, Request["license-type"]) > 0) {
+            if (db.QueryValue(sqlCheckLicense, u.UserID, p.PositionID, Request["license-type"]) > 0) {
                 ModelState.AddError("license-type", "You already have this license registered!");
             }
-            if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, Request["license-type"]) > 0) {
+            if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, p.PositionID, Request["license-type"]) > 0) {
                 ModelState.AddError("license-type", "You have a license that is incompatible with this one.");
             }
             
             if (ModelState.IsValid) {
                 db.Execute(sqlInsRequest,
-                    p.UserID,
+                    u.UserID,
+                    p.PositionID,
                     Request["license-type"],
                     Request["license-link"],
                     Request["license-number"],
@@ -152,7 +160,7 @@
     
     using (var db = Database.Open("sqlloco")) {
         licenses = db.Query(sqlGetLicenses, p.PositionID, u.StateProvinceID);
-        userLicenses = db.Query(sqlGetUserLicenses, u.UserID);
+        userLicenses = db.Query(sqlGetUserLicenses, u.UserID, p.PositionID);
     }
 }
 @if (licenses == null || licenses.Count == 0)
