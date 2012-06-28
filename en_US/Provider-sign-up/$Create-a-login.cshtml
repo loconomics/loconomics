@@ -31,9 +31,9 @@
 	    Validation.RequireField("password", "The password cannot be blank.");
         Validation.Add("confirmPassword", 
             Validator.EqualsTo("password", "The new password and confirmation password do not match."));
-        Validation.RequireField("firstname", "You must specify your First Name.");
-        Validation.RequireField("lastname", "You must specify your Last Name.");
     }
+    Validation.RequireField("firstname", "You must specify your First Name.");
+    Validation.RequireField("lastname", "You must specify your Last Name.");
     
     // var captchaMessage = "";
     
@@ -118,6 +118,8 @@
                 if (u != null) {
                     db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12",
                         u.UserID,
+                        firstname,
+                        lastname,
                         (object)(zipcode == 0 ? null : (object)zipcode),
                         (object)(state == 0 ? null : (object)state),
                         lang,
@@ -175,7 +177,7 @@
          <ul class="choice-option">
              <li class="first-name">
                 <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name:</label>
-                <input placeholder="First Name" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
+                <input placeholder="First Name" type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
                 @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("firstname")
 
@@ -184,7 +186,7 @@
            
             <li class="last-name">
               <label for="lastname" @if(!ModelState.IsValidField("lastname")){<text>class="error-label"</text>}>Last Name:</label>
-                <input placeholder="Last Name" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
+                <input placeholder="Last Name" type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
                 @* Write any email validation errors to the page *@
                 @Html.ValidationMessage("lastname")
 
