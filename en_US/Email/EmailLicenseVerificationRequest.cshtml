@@ -8,6 +8,7 @@
     var providerID = Request["ProviderUserID"].AsInt();
     var positionID = Request["PositionID"].AsInt();
     var licenseID = Request["LicenseCertificationID"].AsInt();
+    var provider = DashboardFunctions.GetUserRow(providerID);
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "License Verification Request";
@@ -16,6 +17,7 @@
     
     var sqlGetLicenseRequest = @"
         SELECT
+            V.ProviderUserID,
             L.LicenseCertificationType,
             V.LicenseCertificationURL,
             V.FirstName,
@@ -60,17 +62,29 @@
     <ul>
         <li><strong>License Certification Type:</strong> @data.LicenseCertificationType</li>
         <li><strong>License Certification URL:</strong> <a href="@data.LicenseCertificationURL">@data.LicenseCertificationURL</a></li>
-        <li><strong>First Name:</strong> @data.FirstName</li>
-        <li><strong>Last Name:</strong> @data.LastName</li>
+        <li><strong>User - UserID:</strong> @providerID</li>
+        <li><strong>User - Email:</strong> @provider.Email</li>
+        <li><strong>User - First Name:</strong> @provider.FirstName</li>
+        <li><strong>User - Last Name:</strong> @provider.LastName</li>
         @if (LcData.GetCurrentCountryID() == 1)
         {
-        <li><strong>Middle Initial:</strong> @data.MiddleInitial</li>
+        <li><strong>User - Middle Initial:</strong> @provider.MiddleIn</li>
         }
         @if (LcData.GetCurrentCountryID() == 2)
         {
-        <li><strong>Second Last Name:</strong> @data.SecondLastName</li>
+        <li><strong>User - Second Last Name:</strong> @provider.SecondLastName</li>
         }
-        <li><strong>Business Name:</strong> @data.BusinessName</li>
+        <li><strong>License - First Name:</strong> @data.FirstName</li>
+        <li><strong>License - Last Name:</strong> @data.LastName</li>
+        @if (LcData.GetCurrentCountryID() == 1)
+        {
+        <li><strong>License - Middle Initial:</strong> @data.MiddleInitial</li>
+        }
+        @if (LcData.GetCurrentCountryID() == 2)
+        {
+        <li><strong>License - Second Last Name:</strong> @data.SecondLastName</li>
+        }
+        <li><strong>License - Business Name:</strong> @data.BusinessName</li>
         <li><strong>License Certification Number:</strong> @data.LicenseCertificationNumber</li>
         <li><strong>City:</strong> @data.City</li>
         <li><strong>State Province Name:</strong> @data.StateProvinceName</li>
