@@ -38,4 +38,15 @@ public static class LcValidators
                 return false ;
             }
     }
+    public static bool IsEmailAddressList(string emails)
+    {
+        if (String.IsNullOrWhiteSpace(emails)) return false;
+        var l = emails.Replace("\n", ",").Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string email in l)
+        {
+            if (!IsEmailAdress(email))
+                return false;
+        }
+        return l.Length > 0;
+    }
 }

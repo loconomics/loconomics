@@ -1,25 +1,45 @@
 ﻿@{
     // Current position data record:
-    var p = PageData["position"];
+    var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
     // Current user data record:
-    var u = PageData["userow"];
+    var u = DashboardFunctions.GetUserRow();
     
     var idprefix = "position#" + n + "-reviews";
+    
+    if (Validation.GetHtml("clientsemails") == null) {
+        Validation.RequireField("clientsemails", LcRessources.RequiredField("Email addresses list"));
+    }
+    
+    if (IsPost && Validation.IsValid()) {
+        
+        if (!LcValidators.IsEmailAddressList(Request["clientsemails"])){
+            ModelState.AddError("clientsemails", "There are errors in the email list. Please, use a comma to separate emails and verify all are valid addresses.");
+        }
+        if (ModelState.IsValid) {
+            LcMessaging.SendMail(Request["clientsemails"],
+                String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
+                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
+                    { "UserID", u.UserID }
+            }));
+            CommonHelpers.ReturnJsonResult(0, "Message was sent!");
+        }
+    }
 }
 <p class="setting-instructions">
 To let customers know you’ve done some great work in the past, we’ll start by allowing you to invite your past clients
 to write you a reference. Invite as many as you’d like, and we’ll post the first five to your profile.
 </p>
-<form action="#" method="post" class="positionreviews" id="position#@(n)-reviews">
-    <input type="hidden" name="position-number" value="@n"/>
-    <input type="hidden" name="position-id" value="@p.PositionID"/>
+<div>
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
+    <input type="hidden" name="PositionID" value="@p.PositionID"/>
+    @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="references">
         <ul>
             <li>
                 <label for="@idprefix-clientsemails">Please enter the e-mail addresses of past clients (don’t worry, we will not spam them):</label>
-                <textarea id="@idprefix-clientsemails" name="clientsemails" placeholder="type e-mail addresses separated by commas"></textarea>
+                <textarea id="@idprefix-clientsemails" @Validation.GetHtml("clientsemails") name="clientsemails" placeholder="type e-mail addresses separated by commas">@Request["clientsemails"]</textarea>
             </li>
         </ul>
     </fieldset>
@@ -29,6 +49,7 @@ to write you a reference. Invite as many as you’d like, and we’ll post the f
         @RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", u.UserID, p.PositionID)
     </fieldset>*@
     <fieldset class="actions">
-        <button class="save main-action" type="submit">Save</button>
+        <button class="save main-action" type="submit">Send</button>
     </fieldset>
 </form>
+</div>
