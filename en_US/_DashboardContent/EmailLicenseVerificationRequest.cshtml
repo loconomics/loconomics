@@ -6,6 +6,8 @@
     Page.Title = "Loconomics.com - License Verification Request";
     
     var providerID = Request["ProviderUserID"].AsInt();
+    var positionID = Request["PositionID"].AsInt();
+    var licenseID = Request["LicenseCertificationID"].AsInt();
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "License Verification Request";
@@ -51,13 +53,13 @@
     ";
     dynamic data = null;
     using (var db = Database.Open("sqlloco")) {
-        data = db.QuerySingle(sqlGetLicenseRequest, providerID);
+        data = db.QuerySingle(sqlGetLicenseRequest, providerID, positionID, licenseID);
     }
 }
 <div>
     <ul>
         <li><strong>License Certification Type:</strong> @data.LicenseCertificationType</li>
-        <li><strong>License Certification URL:</strong> @data.LicenseCertificationURL</li>
+        <li><strong>License Certification URL:</strong> <a href="@data.LicenseCertificationURL">@data.LicenseCertificationURL</a></li>
         <li><strong>First Name:</strong> @data.FirstName</li>
         <li><strong>Last Name:</strong> @data.LastName</li>
         @if (LcData.GetCurrentCountryID() == 1)
@@ -75,6 +77,6 @@
         <li><strong>County Name:</strong> @data.CountyName</li>
         <li><strong>Status Name:</strong> @data.StatusName</li>
         <li><strong>Status Description:</strong> @data.StatusDescription</li>
-        <li><strong>Verification Website URL:</strong> @data.VerificationWebsiteURL</li>
+        <li><strong>Verification Website URL:</strong> <a href="@data.VerificationWebsiteURL">@data.VerificationWebsiteURL</a></li>
     </ul>
 </div>
