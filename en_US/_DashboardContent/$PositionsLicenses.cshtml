@@ -63,106 +63,111 @@
     }
 
     if (IsPost && Validation.IsValid()) {
-        var sqlCheckLicense = @"
-            SELECT  count(*)
-            FROM    userlicenseverification
-            WHERE   ProviderUserID = @0
-                     AND
-                    PositionID = @1
-                     AND
-                    LicenseCertificationID = @2 
-        ";
-        var sqlCheckOptionGroup = @"
-            DECLARE @OptionGroup varchar(50)
+        if (Request["middle-initial"].Length > 1) {
+            ModelState.AddError("middle-initial", "Middle Initial must be only one letter");
+        }
+        if (ModelState.IsValid) {
+            var sqlCheckLicense = @"
+                SELECT  count(*)
+                FROM    userlicenseverification
+                WHERE   ProviderUserID = @0
+                         AND
+                        PositionID = @1
+                         AND
+                        LicenseCertificationID = @2 
+            ";
+            var sqlCheckOptionGroup = @"
+                DECLARE @OptionGroup varchar(50)
 
-            SELECT  @OptionGroup = OptionGroup
-            FROM    LicenseCertification As L
-            WHERE   L.LicenseCertificationID = @2
+                SELECT  @OptionGroup = OptionGroup
+                FROM    LicenseCertification As L
+                WHERE   L.LicenseCertificationID = @2
 
-            SELECT  count(*)
-            FROM    licensecertification As L
-                     INNER JOIN
-                    userlicenseverification As R
-                      ON L.LicenseCertificationID = R.LicenseCertificationID
-            WHERE
-                    ProviderUserID = @0
-                     AND
-                    PositionID = @1
-                     AND
-                    L.Active = 1
-                     AND
-                    L.OptionGroup is not null
-                     AND
-                    L.OptionGroup = @OptionGroup
-        ";
-        var sqlInsRequest = @"
-            INSERT INTO userlicenseverification (
-                ProviderUserID,
-                PositionID,
-                -- License info
-                LicenseCertificationID,
-                LicenseCertificationURL,
-                LicenseCertificationNumber,
-                -- Provider personal
-                FirstName,                
-                LastName,
-                SecondLastName,
-                MiddleInitial,
-                BusinessName,
-                -- Provider location
-                City,
-                CountyID,
-                StateProvinceID,
-                CountryID,
-                -- Record
-                CreatedDate,
-                ModifiedDate,
-                ModifiedBy,
-                StatusID
-            ) VALUES (
-                @0, @1,
-                @2, @3, @4,
-                @5, @6, @7, @8, @9,
-                @10, @11, @12, @13,
-                getdate(), getdate(), 'sys', 1 --Pending status
-            )
-        ";
-        using (var db = Database.Open("sqlloco")) {
+                SELECT  count(*)
+                FROM    licensecertification As L
+                         INNER JOIN
+                        userlicenseverification As R
+                          ON L.LicenseCertificationID = R.LicenseCertificationID
+                WHERE
+                        ProviderUserID = @0
+                         AND
+                        PositionID = @1
+                         AND
+                        L.Active = 1
+                         AND
+                        L.OptionGroup is not null
+                         AND
+                        L.OptionGroup = @OptionGroup
+            ";
+            var sqlInsRequest = @"
+                INSERT INTO userlicenseverification (
+                    ProviderUserID,
+                    PositionID,
+                    -- License info
+                    LicenseCertificationID,
+                    LicenseCertificationURL,
+                    LicenseCertificationNumber,
+                    -- Provider personal
+                    FirstName,                
+                    LastName,
+                    SecondLastName,
+                    MiddleInitial,
+                    BusinessName,
+                    -- Provider location
+                    City,
+                    CountyID,
+                    StateProvinceID,
+                    CountryID,
+                    -- Record
+                    CreatedDate,
+                    ModifiedDate,
+                    ModifiedBy,
+                    StatusID
+                ) VALUES (
+                    @0, @1,
+                    @2, @3, @4,
+                    @5, @6, @7, @8, @9,
+                    @10, @11, @12, @13,
+                    getdate(), getdate(), 'sys', 1 --Pending status
+                )
+            ";
+            using (var db = Database.Open("sqlloco")) {
             
-            if (db.QueryValue(sqlCheckLicense, u.UserID, p.PositionID, Request["license-type"]) > 0) {
-                ModelState.AddError("license-type", "You already have this license registered!");
-            }
-            if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, p.PositionID, Request["license-type"]) > 0) {
-                ModelState.AddError("license-type", "You have a license that is incompatible with this one.");
-            }
+                if (db.QueryValue(sqlCheckLicense, u.UserID, p.PositionID, Request["license-type"]) > 0) {
+                    ModelState.AddError("license-type", "You already have this license registered!");
+                }
+                if (ModelState.IsValid && db.QueryValue(sqlCheckOptionGroup, u.UserID, p.PositionID, Request["license-type"]) > 0) {
+                    ModelState.AddError("license-type", "You have a license that is incompatible with this one.");
+                }
             
-            if (ModelState.IsValid) {
-                // Save request
-                db.Execute(sqlInsRequest,
-                    u.UserID,
-                    p.PositionID,
-                    Request["license-type"],
-                    Request["license-link"],
-                    Request["license-number"],
-                    Request["first-name"],
-                    Request["last-name"],
-                    Request["second-last-name"],
-                    Request["middle-initial"],
-                    Request["business-name"],
-                    u.City,
-                    Request["county"],
-                    u.StateProvinceID,
-                    u.PreferredCountryID //LcData.GetCurrentCountryID()
-                );
-                // Send email to loconomics
-                LcMessaging.SendMail("verifications@loconomics.com",
-                    "License verification request",
-                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Dashboard/EmailLicenseVerificationRequest",
-                        new Dictionary<string, object> { 
-                            { "ProviderUserID", u.UserID },
-                            { "PositionID", p.PositionID },
-                            { "LicenseCertificationID", Request["license-type"] }
-                }));
+                if (ModelState.IsValid) {
+                    // Save request
+                    db.Execute(sqlInsRequest,
+                        u.UserID,
+                        p.PositionID,
+                        Request["license-type"],
+                        Request["license-link"],
+                        Request["license-number"],
+                        Request["first-name"],
+                        Request["last-name"],
+                        Request["second-last-name"],
+                        Request["middle-initial"],
+                        Request["business-name"],
+                        u.City,
+                        Request["county"],
+                        u.StateProvinceID,
+                        u.PreferredCountryID //LcData.GetCurrentCountryID()
+                    );
+                    // Send email to loconomics
+                    LcMessaging.SendMail("verifications@loconomics.com",
+                        "License verification request",
+                        LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Dashboard/EmailLicenseVerificationRequest",
+                            new Dictionary<string, object> { 
+                                { "ProviderUserID", u.UserID },
+                                { "PositionID", p.PositionID },
+                                { "LicenseCertificationID", Request["license-type"] }
+                    }));
+                }
             }
         }
     }
