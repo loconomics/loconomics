@@ -27,7 +27,7 @@
         string folder = "_DashboardContent/";
         string file =  CommonHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(UrlUtil.LangPath + folder + file))) {
-            if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file.StartsWith("Email")) {
+            if (file.StartsWith("$") || file == "ChangePhoto.cshtml") {
                 @RenderPage(UrlUtil.LangPath + folder + file);
                 return;
             } else {
