@@ -1,0 +1,6 @@
+﻿@{
+    var providerID = Request["UserID"].AsInt();
+    var provider = DashboardFunctions.GetUserRow(providerID);
+}
+
+Here will be a form for you and @provider.FirstName!

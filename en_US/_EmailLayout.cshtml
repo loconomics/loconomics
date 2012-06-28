@@ -12,6 +12,7 @@
             viewOnSiteUrl += "_Message-" + messageID;
         }
     }
+    var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -373,8 +374,9 @@ alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix">
             <tr class="footer" height="60" align="center">
                 <td colspan="2">
                     This message was sent to @emailTo <br />
-                    @*If you would like to update your email address, please click here.*@
-                    Visit <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. <br />
+                    @if (!isNotAUser) {
+                    <text>Visit <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
+                    }
                     Please add automated@loconomics.com to your address book to ensure delivery of our emails to your in-box. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
                     3150 18th Street, Suite 438, San Francisco, CA 94110 <br />
