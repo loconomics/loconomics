@@ -168,18 +168,6 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: 5px 0;
     display: inline-block;
 }
-.profile a.button.view-more{
-    text-indent: -9999px;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    padding: 0;
-    background: url('../img/plus.png') no-repeat;
-    margin: 2px 5px;
-    vertical-align: middle;
-    
-    position: static;
-}
 .profile a.view-more{
     font-style: italic;
     text-decoration: underline;

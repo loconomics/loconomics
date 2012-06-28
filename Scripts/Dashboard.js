@@ -320,6 +320,13 @@ $(document).ready(function () {
         setup_license_request_form($('.license-type-selector > select'));
     });
     setup_license_request_form($('.license-type-selector > select'));
+    /*==========================
+    * Verified licenses widget
+    */
+    $('body').on('click', '.user-verified-licenses h5', function () {
+        $(this).siblings('.verified-license-details').toggle(300);
+        return false;
+    });
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

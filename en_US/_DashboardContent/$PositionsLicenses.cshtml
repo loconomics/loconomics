@@ -50,6 +50,8 @@
             V.ProviderUserID = @0
              AND
             V.PositionID = @1
+             AND
+            V.StatusID <> 2
     ";
     
     if (Validation.GetHtml("license-type") == null) {
@@ -177,14 +179,24 @@ else
         @if (userLicenses != null && userLicenses.Count > 0)
         {
         <div class="user-licenses">
-            <h4>You have @userLicenses.Count @(userLicenses.Count == 1 ? "license" : "licenses"): </h4>
+            @{ 
+                var resRequestedLicensesSingular = "You have requested {0} license verification:";
+                var resRequestedLicensesPlural = "You have requested {0} licenses verifications:";
+            }
+            <h4>@String.Format(userLicenses.Count == 1 ? resRequestedLicensesSingular : resRequestedLicensesPlural, userLicenses.Count) </h4>
             <ul>
             @foreach (var ul in userLicenses)
             {
-                <strong>@(ul.LicenseCertificationType)</strong><text>,
-                status: </text><em>@ul.StatusName</em> <text>@ul.StatusDescription</text>
+                <li>
+                    <strong>@(ul.LicenseCertificationType)</strong><text>,
+                    status: </text><em>@ul.StatusName</em> <text>@ul.StatusDescription</text>
+                </li>
             }
             </ul>
+            @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+                UserID = u.UserID,
+                Title = "Your verified licenses:"
+            })
         </div>
         }
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">

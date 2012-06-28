@@ -675,12 +675,24 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .positionlicenses .license-type-selector label {
     font-weight: bold;
 }
-.user-licenses > h4 {
+.user-licenses h4 {
     font-size: 1.1em;
     margin: 1em 0 0;
 }
 .user-licenses {
     margin: 0 0 2em;
+}
+/* Widget user-verified-licenses */
+.user-verified-licenses h5 {
+    font-size: 1em;
+    color: #666;
+}
+html.js .user-verified-licenses .verified-license-details {
+    display: none;
+}
+html.js .user-verified-licenses h5 {
+    cursor: hand;
+    cursor: pointer;
 }
 /** Form: Positions Reviews **/
 .positionreviews .references li label {

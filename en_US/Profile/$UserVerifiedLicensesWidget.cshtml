@@ -1,0 +1,59 @@
+﻿@using WebMatrix.Data;
+@{
+    var userID = PageData["UserID"] ?? Request["UserID"];
+    string size = PageData["Size"] ?? "medium"; // 
+    string contID = PageData["ContainerID"] ?? "";
+    string classes = PageData["ContainerClasses"] ?? "user-verified-licenses";
+    string title = PageData["Title"];
+
+    dynamic data;
+    using (var db = Database.Open("sqlloco")) {
+        data = db.Query(@"
+            SELECT  
+                    L.LicenseCertificationType,
+                    SP.StateProvinceName,
+                    C.CountyName,
+                    UL.LicenseStatus,
+                    UL.ExpirationDate
+            FROM    UserLicenseVerification As UL
+                     INNER JOIN
+                    LicenseCertification As L
+                      ON UL.LicenseCertificationID = L.LicenseCertificationID
+                     INNER JOIN
+                    StateProvince As SP
+                      ON L.StateProvinceID = SP.StateProvinceID
+                     INNER JOIN
+                    County As C
+                      ON C.CountyID = UL.CountyID
+            WHERE   UL.ProviderUserID = @0
+                     AND
+                    L.Active = 1
+                     AND
+                    UL.StatusID = 2 -- Verified succesfully.
+        ", userID);
+    }
+}
+@switch (size)
+{
+    case "medium":
+        <div id="@contID" class="@classes">
+            @if (!String.IsNullOrEmpty(title))
+            { <h4>@title</h4> }
+            <ul>
+            @foreach (var v in data)
+            {
+            <li>
+                <h5>@v.LicenseCertificationType<a class="button view-more" href="#">More</a></h5>
+                <ul class="verified-license-details">
+                    <li><strong>License type:</strong> @v.LicenseCertificationType</li>
+                    <li><strong>State:</strong> @v.StateProvinceName</li>
+                    <li><strong>County:</strong> @v.CountyName</li>
+                    <li><strong>Status:</strong> @v.LicenseStatus</li>
+                    <li><strong>Expiration Date:</strong> @v.ExpirationDate</li>                     
+                </ul>
+            </li>
+            }
+            </ul>
+        </div>
+        break;
+}
