@@ -137,6 +137,7 @@
             }
             
             if (ModelState.IsValid) {
+                // Save request
                 db.Execute(sqlInsRequest,
                     u.UserID,
                     p.PositionID,
@@ -153,6 +154,15 @@
                     u.StateProvinceID,
                     u.PreferredCountryID //LcData.GetCurrentCountryID()
                 );
+                // Send email to loconomics
+                LcMessaging.SendMail("verifications@loconomics.com",
+                    "License verification request",
+                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Dashboard/EmailLicenseVerificationRequest",
+                        new Dictionary<string, object> { 
+                            { "ProviderUserID", u.UserID },
+                            { "PositionID", p.PositionID },
+                            { "LicenseCertificationID", Request["license-type"] }
+                }));
             }
         }
     }

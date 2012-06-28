@@ -1,0 +1,80 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - License Verification Request";
+    
+    var providerID = Request["ProviderUserID"].AsInt();
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "License Verification Request";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
+    
+    var sqlGetLicenseRequest = @"
+        SELECT
+            L.LicenseCertificationType,
+            V.LicenseCertificationURL,
+            V.FirstName,
+            V.LastName,
+            V.MiddleInitial,
+            V.SecondLastName,
+            V.BusinessName,
+            V.LicenseCertificationNumber,
+            V.City,
+            SP.StateProvinceName,
+            C.CountyName,
+            S.StatusName,
+            S.StatusDescription,
+            L.VerificationWebsiteURL
+        FROM
+            LicenseCertification As L
+             INNER JOIN
+            userlicenseverification As V
+              ON L.LicenseCertificationID = V.LicenseCertificationID
+             INNER JOIN
+            Status As S
+              ON V.StatusID = S.StatusID
+             INNER JOIN
+            StateProvince As SP
+              ON V.StateProvinceID = SP.StateProvinceID
+             INNER JOIN
+            County As C
+              ON C.CountyID = V.CountyID
+        WHERE
+            V.ProviderUserID = @0
+             AND
+            V.PositionID = @1
+             AND
+            V.LicenseCertificationID = @2
+    ";
+    dynamic data = null;
+    using (var db = Database.Open("sqlloco")) {
+        data = db.QuerySingle(sqlGetLicenseRequest, providerID);
+    }
+}
+<div>
+    <ul>
+        <li><strong>License Certification Type:</strong> @data.LicenseCertificationType</li>
+        <li><strong>License Certification URL:</strong> @data.LicenseCertificationURL</li>
+        <li><strong>First Name:</strong> @data.FirstName</li>
+        <li><strong>Last Name:</strong> @data.LastName</li>
+        @if (LcData.GetCurrentCountryID() == 1)
+        {
+        <li><strong>Middle Initial:</strong> @data.MiddleInitial</li>
+        }
+        @if (LcData.GetCurrentCountryID() == 2)
+        {
+        <li><strong>Second Last Name:</strong> @data.SecondLastName</li>
+        }
+        <li><strong>Business Name:</strong> @data.BusinessName</li>
+        <li><strong>License Certification Number:</strong> @data.LicenseCertificationNumber</li>
+        <li><strong>City:</strong> @data.City</li>
+        <li><strong>State Province Name:</strong> @data.StateProvinceName</li>
+        <li><strong>County Name:</strong> @data.CountyName</li>
+        <li><strong>Status Name:</strong> @data.StatusName</li>
+        <li><strong>Status Description:</strong> @data.StatusDescription</li>
+        <li><strong>Verification Website URL:</strong> @data.VerificationWebsiteURL</li>
+    </ul>
+</div>
