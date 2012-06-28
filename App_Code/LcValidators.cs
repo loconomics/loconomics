@@ -38,15 +38,24 @@ public static class LcValidators
                 return false ;
             }
     }
-    public static bool IsEmailAddressList(string emails)
+    /// <summary>
+    /// Read a list of email addresses from emails param, returning
+    /// the list of emails or null if there is no emails or some email is not valid
+    /// </summary>
+    /// <param name="emails"></param>
+    /// <returns></returns>
+    public static string[] ReadEmailAddressList(string emails)
     {
-        if (String.IsNullOrWhiteSpace(emails)) return false;
+        List<string> list = new List<string>();
+        if (String.IsNullOrWhiteSpace(emails)) return null;
         var l = emails.Replace("\n", ",").Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
         foreach (string email in l)
         {
-            if (!IsEmailAdress(email))
-                return false;
+            if (IsEmailAdress(email))
+                list.Add(email);
+            else
+                return null;
         }
-        return l.Length > 0;
+        return list.Count == 0 ? null : list.ToArray<string>();
     }
 }

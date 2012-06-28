@@ -13,15 +13,18 @@
     
     if (IsPost && Validation.IsValid()) {
         
-        if (!LcValidators.IsEmailAddressList(Request["clientsemails"])){
+        var emails = LcValidators.ReadEmailAddressList(Request["clientsemails"]);
+        if (emails == null){
             ModelState.AddError("clientsemails", "There are errors in the email list. Please, use a comma to separate emails and verify all are valid addresses.");
         }
         if (ModelState.IsValid) {
-            LcMessaging.SendMail(Request["clientsemails"],
-                String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
-                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
-                    { "UserID", u.UserID }
-            }));
+            foreach (string email in emails) {
+                LcMessaging.SendMail(email,
+                    String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
+                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
+                        { "UserID", u.UserID }
+                }));
+            }
             CommonHelpers.ReturnJsonResult(0, "Message was sent!");
         }
     }
