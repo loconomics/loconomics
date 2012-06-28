@@ -151,7 +151,7 @@
                 LcMessaging.SendWelcomeProvider(
                     (u != null ? u.UserID : userid), 
                     (u != null ? u.Email : email),
-                    confirmationUrl);
+                    confirmationUrl ?? "");
 
                 // We return a json with result OK (=0), and response end just after this:
                 CommonHelpers.ReturnJsonResult(0, null);
