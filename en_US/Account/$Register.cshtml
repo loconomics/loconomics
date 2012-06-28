@@ -55,12 +55,7 @@
                 if (requireEmailConfirmation) {
                     var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
                     
-                    LcMessaging.SendMail(
-                        to: email,	
-                        subject: "Loconomics.com, please confirm your account", 
-                        body: "Welcome to Loconomics.com!<br/><br/>Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account " +
-                            "or enter in " + UrlUtil.LangUrl + "Account/Confirm/ and use the following confirmation code: " + token
-                    );
+                    LcMessaging.SendWelcomeCustomer(userid, email, confirmationUrl, token);
                 }
 
                 if (requireEmailConfirmation) {

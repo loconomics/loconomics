@@ -436,6 +436,31 @@ public class LcMessaging
                 { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) }
          }));
     }
+    public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
+    {
+        //string msg = "Welcome to Loconomics.com!<br/><br/>Visit <a href=\"" + confirmationURL + "\">" + confirmationURL + "</a> to activate your account " +
+        //        "or enter in " + UrlUtil.LangUrl + "Account/Confirm/ and use the following confirmation code: " + confirmationToken;
+
+        SendMail(userEmail, "Welcome to Loconomics.com", //"Loconomics.com, please confirm your account",
+            ApplyTemplate(UrlUtil.LangPath + "Email/EmailWelcomeCustomer/",
+            new Dictionary<string, object> {
+                { "UserID", userID },
+                { "EmailTo", userEmail },
+                { "ConfirmationURL", HttpUtility.UrlEncode(confirmationURL) },
+                { "ConfirmationToken", HttpUtility.UrlEncode(confirmationToken) }
+        }));
+    }
+    public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
+    {
+        SendMail(userEmail, "Loconomics.com, please reset your password",
+            ApplyTemplate(UrlUtil.LangPath + "Email/EmailResetPassword/",
+            new Dictionary<string, object> {
+                { "UserID", userID },
+                { "EmailTo", userEmail },
+                { "ResetURL", HttpUtility.UrlEncode(resetURL) },
+                { "ResetToken", HttpUtility.UrlEncode(resetToken) }
+        }));
+    }
     #endregion
 
     #region Template System
