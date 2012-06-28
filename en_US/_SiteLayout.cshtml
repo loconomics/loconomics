@@ -97,7 +97,7 @@
                     @if (WebSecurity.IsAuthenticated) {
 			            <li>
 					        <dl class="user-nav">
-						        <dt class="fancy">Hi, @((u != null ? u.FullName : null) ?? WebSecurity.CurrentUserName)! &#x25BC;</dt>
+						        <dt class="fancy">Hi, @((u != null ? (N.W(u.FullName) ?? "Hello!")  : null) ?? WebSecurity.CurrentUserName)! &#x25BC;</dt>
 						        <dd>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/")" title="Dashboard">Dashboard</a>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/Bookings/")">Your bookings</a>

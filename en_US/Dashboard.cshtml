@@ -49,7 +49,10 @@
             <div id="container" class="clearfix">
                 
                 <div id="highlights">
-                    <h1 class="greeting">Hello, <span id="username">@PageData["userow"].FirstName</span>!</h1>
+                    @{
+                        var greeting = N.W(u.FirstName) == null ? "Hello!" : "Hello, " + u.FirstName;
+                    }
+                    <h1 class="greeting">@greeting!</h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
                     @RenderPage("_DashboardContent/$ProfileProgressWidget.cshtml")
