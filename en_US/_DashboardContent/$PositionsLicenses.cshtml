@@ -60,6 +60,7 @@
         Validation.RequireField("last-name", LcRessources.RequiredField("Last name"));
         Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
         Validation.RequireField("county", LcRessources.RequiredField("County"));
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
     }
 
     if (IsPost && Validation.IsValid()) {
@@ -153,7 +154,7 @@
                         Request["second-last-name"],
                         Request["middle-initial"],
                         Request["business-name"],
-                        u.City,
+                        Request["city"],
                         Request["county"],
                         u.StateProvinceID,
                         u.PreferredCountryID //LcData.GetCurrentCountryID()
@@ -278,6 +279,10 @@ else
                     <input type="text" id="@idprefix-second-last-name" value="@Request["second-last-name"]" name="second-last-name" @Validation.GetHtml("second-last-name")/>
                 </li>
                 }
+                <li>
+                    <label for="@idprefix-city">City:</label>
+                    <input type="text" id="@idprefix-city" value="@Request["city"]" name="city" @Validation.GetHtml("city")/>
+                </li>
                 <li>
                     <label for="@idprefix-license-link">Link to license:</label>
                     <input type="text" id="@idprefix-license-link" value="@Request["license-link"]" name="license-link" @Validation.GetHtml("license-link")/>

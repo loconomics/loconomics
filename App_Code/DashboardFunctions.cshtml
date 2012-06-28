@@ -45,6 +45,7 @@
                             AddressLine2,
                             A.City,
                             A.StateProvinceID,
+                            SP.StateProvinceName,
                             A.CountryID,
                             PC.PostalCode,
                             A.PostalCodeID,
@@ -60,6 +61,9 @@
                              INNER JOIN
                             UserProfile As UP
                               ON UP.UserID = A.UserID
+                             LEFT JOIN
+                            StateProvince As SP
+                              ON SP.StateProvinceID = A.StateProvinceID
                              LEFT JOIN
                             PostalCode As PC
                               ON PC.PostalCodeID = A.PostalCodeID
@@ -86,7 +90,9 @@
                             U.UserID
                             ,U.FirstName
                             ,U.LastName
-                            ,U.MiddleIn
+                            ,SecondLastName
+                            ,MiddleIn
+                            ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(A.FirstName, dbo.fx_concatBothOrNothing(A.MiddleIn, '.', ''), ' '), A.LastName, ' '), A.SecondLastName, ' ')) As FullName
                             ,U.CreatedDate As MemberSinceDate
                             ,U.PublicBio
                             ,U.MobilePhone
