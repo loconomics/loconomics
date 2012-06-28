@@ -5,6 +5,8 @@
     string contID = PageData["ContainerID"] ?? "";
     string classes = PageData["ContainerClasses"] ?? "user-verified-licenses";
     string title = PageData["Title"];
+    // if there is no empty text, nothing will be displayed
+    string emptyText = PageData["EmptyText"];
 
     dynamic data;
     using (var db = Database.Open("sqlloco")) {
@@ -36,6 +38,17 @@
 @switch (size)
 {
     case "medium":
+        if (data.Count == 0)
+        {
+            if (!String.IsNullOrEmpty(emptyText))
+            {
+                <div id="@contID" class="@classes empty">
+                    @emptyText
+                </div>
+            }
+        }
+        else
+        {
         <div id="@contID" class="@classes">
             @if (!String.IsNullOrEmpty(title))
             { <h4>@title</h4> }
@@ -55,5 +68,6 @@
             }
             </ul>
         </div>
+        }
         break;
 }

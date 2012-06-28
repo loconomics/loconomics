@@ -203,12 +203,12 @@ else
                 </li>
             }
             </ul>
-            @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
-                UserID = u.UserID,
-                Title = "Your verified licenses:"
-            })
         </div>
         }
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+            UserID = u.UserID,
+            Title = "Your verified licenses:"
+        })
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
