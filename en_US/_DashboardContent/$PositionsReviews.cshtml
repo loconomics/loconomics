@@ -21,24 +21,13 @@ to write you a reference. Invite as many as you’d like, and we’ll post the f
                 <label for="@idprefix-clientsemails">Please enter the e-mail addresses of past clients (don’t worry, we will not spam them):</label>
                 <textarea id="@idprefix-clientsemails" name="clientsemails" placeholder="type e-mail addresses separated by commas"></textarea>
             </li>
-            <li>
-                <label for="@idprefix-note">Write a short note explaining how it would help you out:</label>
-                <textarea id="@idprefix-note" name="note">
-Hello!
-
-Please help me build my reputation on www.loconomics.com by reviewing the work I’ve done for you in the past.  You’ll even get a $5 credit on the site for helping me out.  
-
-Thanks so much,
-
-Jonathan P.</textarea>
-            </li>
         </ul>
     </fieldset>
-    <fieldset>
+    @*<fieldset>
         <legend>Testing the Reviews/ReviewsGrid</legend>
         <h3>Reviews</h3>
         @RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", u.UserID, p.PositionID)
-    </fieldset>
+    </fieldset>*@
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
