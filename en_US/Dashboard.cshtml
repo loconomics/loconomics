@@ -50,9 +50,14 @@
                 
                 <div id="highlights">
                     @{
-                        var greeting = N.W(u.FirstName) == null ? "Hello!" : "Hello, " + u.FirstName;
+                        var greeting = "Hello, {0}!";
+                        if (N.W(u.FullName) == null) {
+                            greeting = "Hello!";
+                        } else {
+                            greeting = String.Format(greeting, u.FullName);
+                        }
                     }
-                    <h1 class="greeting">@greeting!</h1>
+                    <h1 class="greeting">@greeting</h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
                     @RenderPage("_DashboardContent/$ProfileProgressWidget.cshtml")
