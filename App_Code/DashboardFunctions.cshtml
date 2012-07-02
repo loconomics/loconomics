@@ -28,7 +28,7 @@
                             LastName,
                             SecondLastName,
                             MiddleIn,
-                            (dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(A.FirstName, dbo.fx_concatBothOrNothing(A.MiddleIn, '.', ''), ' '), A.LastName, ' '), A.SecondLastName, ' ')) As FullName,
+                            (dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName,
                             Photo,
                             PreferredLanguageID,
                             PreferredCountryID,
@@ -92,7 +92,7 @@
                             ,U.LastName
                             ,SecondLastName
                             ,MiddleIn
-                            ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(A.FirstName, dbo.fx_concatBothOrNothing(A.MiddleIn, '.', ''), ' '), A.LastName, ' '), A.SecondLastName, ' ')) As FullName
+                            ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
                             ,U.CreatedDate As MemberSinceDate
                             ,U.PublicBio
                             ,U.MobilePhone
