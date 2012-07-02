@@ -44,7 +44,7 @@
 
         // Attempt to login to the Security object using provided creds
         if (WebSecurity.Login(username, password, rememberMe)) {
-                
+
             // mark the user as logged in via a normal account,
             // as opposed to via an OAuth or OpenID provider.
             Session["OAuthLoggedIn"] = false;

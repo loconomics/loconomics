@@ -22,8 +22,28 @@
 
     void Session_Start(object sender, EventArgs e) 
     {
-        // Código que se ejecuta cuando se inicia una nueva sesión
-
+        // We check if user browser sent an auth cookie (lcAuth), if is a non persistent cookie
+        // (have not expired date), we force logout; this is how non persistent sessions die
+        // when server-session timeout dies, sharing this configurable time 
+        // (web.config/system.web/sessionState/timeout)
+        // NOTE: Response.Write lines are debug code.
+        var c = Request.Cookies[FormsAuthentication.FormsCookieName]; //["lcAuth"];
+        if (c != null)
+        {
+            var t = FormsAuthentication.Decrypt(c.Value);
+            if (!t.IsPersistent)
+            {
+                // Non persistent
+                //Response.Write("session cookie!");
+                WebMatrix.WebData.WebSecurity.Logout();
+            }
+            /*else
+            {
+                // persistent
+                Response.Write("persistent cookie until: " + t.Expiration.ToString());
+            }*/
+        }
+        
     }
 
     void Session_End(object sender, EventArgs e) 
@@ -50,6 +70,7 @@
             Response.Redirect("https://" + Request.ServerVariables["HTTP_HOST"]
             + HttpContext.Current.Request.RawUrl);
         }
+        
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
