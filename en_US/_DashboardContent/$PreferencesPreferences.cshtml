@@ -4,57 +4,53 @@
     CommonHelpers.SecurePage();
     var idprefix = "preferences";
     
-    var userID = WebSecurity.CurrentUserId;
+    var u = DashboardFunctions.GetUserRow();
     PageData["userPrefs"] = null;
-       
+    
+    Validation.RequireField("SMSBookingCommunication", "Bookings by SMS preference is required");
+    Validation.RequireField("PhoneBookingCommunication", "Bookings by Phone preference is required");
+    Validation.RequireField("LoconomicsCommunityCommunication", "Loconomics community messages preference is required");
+    Validation.RequireField("LoconomicsDBMCampaigns", "Marketing e-mails about Loconomics Service Providers preference is required");
+    if (u.IsProvider) {
+        Validation.RequireField("ProfileSEOPermission", "Include my profile in search listings preference is required");
+        Validation.RequireField("LoconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
+    }
+
     if (IsPost) {
-        
-        validateBoolFor("SMSBookingCommunication", "Bookings by SMS preference is required");
-        validateBoolFor("PhoneBookingCommunication", "Bookings by Phone preference is required");
-        validateBoolFor("LoconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
-        validateBoolFor("ProfileSEOPermission", "Include my profile in search listings preference is required");
-        validateBoolFor("LoconomicsCommunityCommunication", "Loconomics community messages preference is required");
-        
-        if (ModelState.IsValid) {
-            using (var db = Database.Open("sqlloco")){
-                db.Execute(@"
-                    UPDATE  users
-                    SET     SMSBookingCommunication=@1
-                            ,PhoneBookingCommunication=@2
-                            ,LoconomicsMarketingCampaigns=@3
-                            ,ProfileSEOPermission=@4
-                            ,LoconomicsCommunityCommunication=@5
-                            ,UpdatedDate=getdate()
-                            ,ModifiedBy='sys'
-                    WHERE   UserID = @0
-                ", userID,
-                 Request["SMSBookingCommunication"].AsBool(), Request["PhoneBookingCommunication"].AsBool(),
-                 Request["LoconomicsMarketingCampaigns"].AsBool(), Request["ProfileSEOPermission"].AsBool(),
-                 Request["LoconomicsCommunityCommunication"].AsBool());
-            }
-            CommonHelpers.ReturnJsonResult(0, "Preferences updated!");
+        using (var db = Database.Open("sqlloco")){
+            db.Execute(@"
+                UPDATE  users
+                SET     SMSBookingCommunication=@1
+                        ,PhoneBookingCommunication=@2
+                        ,LoconomicsCommunityCommunication=@3
+                        ,LoconomicsDBMCampaigns=@4
+                        ,ProfileSEOPermission=@5
+                        ,LoconomicsMarketingCampaigns=@6
+                        ,UpdatedDate=getdate()
+                        ,ModifiedBy='sys'
+                WHERE   UserID = @0
+            ", u.UserID,
+                Request["SMSBookingCommunication"].AsBool(), 
+                Request["PhoneBookingCommunication"].AsBool(),
+                Request["LoconomicsCommunityCommunication"].AsBool(),
+                Request["LoconomicsDBMCampaigns"].AsBool(),
+                u.IsProvider ? Request["ProfileSEOPermission"].AsBool() : false,
+                u.IsProvider ? Request["LoconomicsMarketingCampaigns"].AsBool() : false
+            );
         }
+        CommonHelpers.ReturnJsonResult(0, "Preferences updated!");
     } else {
         using (var db = Database.Open("sqlloco")){
             PageData["userPrefs"] = db.QuerySingle(@"
                 SELECT  SMSBookingCommunication
                         ,PhoneBookingCommunication
-                        ,LoconomicsMarketingCampaigns
-                        ,ProfileSEOPermission
                         ,LoconomicsCommunityCommunication
+                        ,LoconomicsDBMCampaigns
+                        ,ProfileSEOPermission
+                        ,LoconomicsMarketingCampaigns
                 FROM    Users
                 WHERE   UserID=@0
-            ", userID);
-        }
-    }
-}
-@functions{ 
-
-    void validateBoolFor(string fieldName, string errorMessage) {
-        var a = Request[fieldName];
-        bool ba = false;
-        if (!bool.TryParse(a, out ba)) {
-            ModelState.AddError(fieldName, errorMessage ?? "Field is Required");
+            ", u.UserID);
         }
     }
 }
@@ -92,8 +88,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <li>
                 @printChoiceOptions("LoconomicsCommunityCommunication", "It’s okay to e-mail me updates about the Loconomics community")
             </li>
+            <li>
+                @printChoiceOptions("LoconomicsDBMCampaigns", "It's okay to e-mail me marketing e-mails about Loconomics Service Providers")
+            </li>
         </ul>
     </fieldset>
+    @if (u.IsProvider)
+    {
     <fieldset id="@idprefix-fs-marketingcommunication">
         <legend>Marketing communications</legend>
         <ul>
@@ -105,6 +106,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </li>
         </ul>
     </fieldset>
+    }
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
