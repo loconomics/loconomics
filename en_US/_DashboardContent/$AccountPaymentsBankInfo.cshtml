@@ -36,6 +36,8 @@
                 ModelState.AddError("bank_abanumber", "The ABA Number must be a nine digit number");
             }
             
+            // Now, paymentType is a value with '4.' as prefix, being the last number (after the dot) what must
+            // be saved:
             paymentType = Request["bank_accounttype"];
             
             if (ModelState.IsValid) {
@@ -75,13 +77,13 @@
             ";
                 
             using (var db = Database.Open("sqlloco")) {
-                if (paymentType == "4") {
+                if (paymentType.StartsWith("4.")) {
                     db.Execute(sqlSetProviderTaxForm, user.UserID,
                         Request["bank_fullname"],
                         Request["bank_abanumber"],
                         // Bank Account Number: ONLY THE THREE LAST DIGITS
                         LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["bank_accountnumber"], 3)),
-                        paymentType.AsInt()
+                        paymentType.Substring(2).AsInt()
                     );
                 } else {
                     db.Execute(sqlSetProviderTaxForm, user.UserID,
@@ -93,7 +95,7 @@
                 }
             }
             
-            if (paymentType == "4") {
+            if (paymentType.StartsWith("4.")) {
                 // Save Bank account number on Braintree
                 CustomerRequest request = new CustomerRequest{
                     //need to pass in the userid from the cookie
@@ -145,8 +147,11 @@ catch { }*@
             WHERE   Active=1
         ");
         bankinfo = db.QuerySingle(@"
-            SELECT  TOP 1 *
-            FROM    providerpaymentpreference
+            SELECT  TOP 1 P.*,
+                    (SELECT TOP 1 DependsOnID FROM ProviderPaymentPreferenceType As T
+                     WHERE T.ProviderPaymentPreferenceTypeID = P.ProviderPaymentPreferenceTypeID
+                    ) As ProviderPaymentPreferenceTypeDependsOnID
+            FROM    providerpaymentpreference As P
             WHERE   ProviderUserID = @0
         ", user.UserID);
     }
@@ -165,7 +170,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
             if (paymentpreference.DependsOnID == null)
             {
                 <label>
-                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @CommonHelpers.IsChecked(Request["payment-type"] ?? (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : ""), paymentpreference.ProviderPaymentPreferenceTypeID.ToString()) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
+                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID.ToString(), Request["payment-type"] ?? (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : ""), bankinfo.ProviderPaymentPreferenceTypeDependsOnID) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
                     <abbr title="@paymentpreference.ProviderPaymentPreferenceTypeName">@paymentpreference.ProviderPaymentPreferenceTypeDescription</abbr>
                 </label>
             }
