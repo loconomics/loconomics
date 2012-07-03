@@ -57,7 +57,7 @@
                             greeting = String.Format(greeting, u.FirstName);
                         }
                     }
-                    <h1 class="greeting">@greeting <a class="view-profile" href="@(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">View Profile</a></h1>
+                    <h1 class="greeting">@greeting <a class="view-profile" href="@(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">View Public Profile</a></h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
                     @RenderPage("_DashboardContent/$ProfileProgressWidget.cshtml")
