@@ -137,7 +137,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             {
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
-                    <fieldset class="positionservices-attributes">
+                    <fieldset class="positionservices-attributes @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
                         @printCatLegend(cat.Value)
                         @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                     </fieldset>
@@ -158,7 +158,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
-        <fieldset class="positionservices-experiencelevel">
+        <fieldset class="positionservices-experiencelevel @(cat["RequiredInput"] ? "required-attribute-category" : "")">
             @*<legend>Experience Level</legend>*@
             @printCatLegend(cat)
             @printAttSelect(cat["ServiceAttributes"])
@@ -172,7 +172,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDExperience];
-        <fieldset class="positionservices-yearsexperience">
+        <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? "required-attribute-category" : "")">
             @*<legend>Years Experience</legend>*@
             @printCatLegend(cat)
             @printAttSelect(cat["ServiceAttributes"])
@@ -189,7 +189,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDLanguages];
-        <fieldset class="positionservices-languagesspoken">
+        <fieldset class="positionservices-languagesspoken @(cat["RequiredInput"] ? "required-attribute-category" : "")">
             @*<legend>Languages Spoken</legend>*@
             @printCatLegend(cat)
             <ul>
@@ -241,7 +241,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
-        <fieldset class="positionservices-clientstypes">
+        <fieldset class="positionservices-clientstypes @(cat["RequiredInput"] ? "required-attribute-category" : "")">
             @*<legend>Clients Types</legend>*@
             @printCatLegend(cat)
             @printAttCheckList(LcData.ServiceAttCatIDClientTypes, dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"])
@@ -250,6 +250,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         </fieldset>
         }
     </div>
+    <div class="required-attribute-category-footnote">* This category require data in order to enable your profile</div>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>

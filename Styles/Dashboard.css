@@ -343,6 +343,14 @@ fieldset.positionservices-attributes{
     padding: 0 10px 0 0 !important;
     vertical-align: top;
 }
+fieldset.required-attribute-category > legend:after {
+    content: '*';
+    color: #dd3333;
+    margin-left: 5px;
+}
+.required-attribute-category-footnote {
+    color: #dd3333;
+}
 /* Fixing the buggy browsers implementation of legend element */
 fieldset.positionservices-attributes > legend {
     clear: both;

@@ -57,7 +57,8 @@ public static class LcData
                 var rcat = new Dictionary<string, object>(){
                     { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
                     { "ServiceAttributeCategoryName", cat.ServiceCat },
-                    { "ServiceAttributeCategoryDescription", cat.ServiceAttributeCategoryDescription }
+                    { "ServiceAttributeCategoryDescription", cat.ServiceAttributeCategoryDescription },
+                    { "RequiredInput", cat.RequiredInput }
                 };
                 // Getting attributes of the category
                 rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID, (userId == 0 ? null : (object)userId));
