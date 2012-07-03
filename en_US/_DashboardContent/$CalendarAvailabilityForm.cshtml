@@ -16,15 +16,12 @@
     var maxTime = 0;
     var betweenTime = 0;
 
-    // fullset needed?
-    //var varSqlGetAvailTime = "EXEC GetProviderAvailabilityFullSet @0, @1";
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
     if (!IsPost) {
         dynamic hoursData = null, atts = null;
         using (var db = Database.Open("sqlloco")) {
-            //data = db.Query(varSqlGetAvailTime, u.UserID, DateTime.Now);
             hoursData = db.Query(varSQLGetUserFreeTimeSettings ,u.UserID);
             atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, u.UserID);  
         }
@@ -85,6 +82,8 @@
                             dateHours[d, 1]);
                     }
                 }
+                
+                db.Execute("EXEC TestAlertAvailability @0", u.UserID);
 
                 // All was fine, AJAX-JSON response
                 CommonHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
