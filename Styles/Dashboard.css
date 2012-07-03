@@ -42,6 +42,10 @@
     float: left;
     margin: 0;
 }
+.dashboard .greeting .view-profile {
+    font-size: 0.9em;
+    margin-left: 20px;
+}
 .dashboard .profile-progress {
     float: right;
 }
