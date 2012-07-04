@@ -40,6 +40,31 @@
                          AND ServiceAttributeID = @3
                          AND LanguageID = @4 AND CountryID = @5
         ";
+        var sqlSetLangLevel = @"
+            BEGIN TRAN
+                UPDATE  ServiceAttributeLanguageLevel WITH (serializable)
+                SET     LanguageLevelID = @5,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO ServiceAttributeLanguageLevel (UserID,
+                        PositionID, ServiceAttributeID, LanguageID, CountryID, LanguageLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelLangLevel = @"
+            DELETE FROM ServiceAttributeLanguageLevel
+            WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+        ";
         
         using (var db = Database.Open("sqlloco")) {
             // Iterate categories and attributes, save what are checked and remove what not
@@ -51,14 +76,24 @@
                             // Check if selection changes
                             bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
                             // We check previous value with current to avoid do unneeded Database calls
-                            if (att.UserChecked != wasChecked) {
+                            if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
                                 // Value changed, update database
                                 if (wasChecked) {
                                     // Set record (insert or update)
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                                        // If is language, we must save the Language Level value too
+                                        // name: positionservices-category[@(cat["ServiceAttributeCategoryID"])-attribute[@(att.ServiceAttributeID)]-level
+                                        var langlevel = Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID) + "-level"];
+                                        db.Execute(sqlSetLangLevel, pos.UserID, pos.PositionID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                                            langlevel);
+                                    }
                                 } else {
                                     // Delete record
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                                        db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    }
                                 }
                             }
                         }
@@ -76,9 +111,9 @@
                             if (!att.UserChecked && att.ServiceAttributeID == selectedAttID ||
                                 att.UserChecked && att.ServiceAttributeID != selectedAttID) {
                                 if (att.ServiceAttributeID == selectedAttID) {
-                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                                 } else {
-                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, 1, 1);
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                                 }
                             }
                         }
@@ -95,6 +130,27 @@
         }
         
         CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
+    }
+    
+    dynamic langLevels = null;
+    var userLangLevels = new Dictionary<int, int>();
+    //, userExpLevels;
+    using (var db = Database.Open("sqlloco")) {
+        langLevels = db.Query(@"
+            SELECT  LanguageLevelID, LanguageLevelName, LanguageLevelDescription
+            FROM    LanguageLevel
+            WHERE   LanguageID = @0 AND CountryID = @1
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        foreach (var ulanglevel in db.Query(@"
+            SELECT  LanguageLevelID, ServiceAttributeID
+            FROM    ServiceAttributeLanguageLevel
+            WHERE   UserID = @0 AND
+                    PositionID = @1 AND
+                    LanguageID = @2 AND
+                    CountryID = @3
+        ", pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())) {
+            userLangLevels.Add(ulanglevel.ServiceAttributeID, ulanglevel.LanguageLevelID);
+        };
     }
 }
 @helper getChecked(dynamic att){
@@ -125,6 +181,7 @@
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
 </p>
+<div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
@@ -195,12 +252,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <ul>
                 @foreach (var att in dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"])
                 {
+                    string selLangLevel = 
+                        Request[String.Format(tplAttName, LcData.ServiceAttCatIDLanguages, att.ServiceAttributeID) + "-level"] ??
+                        (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
+                        
                 <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
-                    @*TODO: printAttSelect, where are language level atts? *@
-                    <select title="Level" data-description="Language Level" name="positionservices-category[@(LcData.ServiceAttCatIDLanguages)]-attribute[@(att.ServiceAttributeID)]-level">
-                        <option data-description="It means fluent" title="Fluent">Fluent</option>
-                        <option>Begginer</option>
-                        <option>N/A</option>
+                    <select title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
+                        @foreach (var level in langLevels)
+                        {
+                            <option @CommonHelpers.IsSelected(level.LanguageLevelID.ToString(), selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
+                        }
                     </select>
                 </li>
                 }
@@ -255,3 +316,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
 </form>
+</div>
