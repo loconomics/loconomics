@@ -65,6 +65,29 @@
                          AND ServiceAttributeID = @2
                          AND LanguageID = @3 AND CountryID = @4
         ";
+        var sqlSetExpLevel = @"
+            BEGIN TRAN
+                UPDATE  ServiceAttributeExperienceLevel WITH (serializable)
+                SET     ExperienceLevelID = @4,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND LanguageID = @2 AND CountryID = @3
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO ServiceAttributeExperienceLevel (UserID,
+                        PositionID, LanguageID, CountryID, ExperienceLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelExpLevel = @"
+            DELETE FROM ServiceAttributeExperienceLevel
+            WHERE   UserId = @0 AND PositionID = @1
+                         AND LanguageID = @2 AND CountryID = @3
+        ";
         
         using (var db = Database.Open("sqlloco")) {
             // Iterate categories and attributes, save what are checked and remove what not
@@ -76,6 +99,7 @@
                             // Check if selection changes
                             bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
                             // We check previous value with current to avoid do unneeded Database calls
+                            // Except for Language to save the Language Level, we need do it anyway
                             if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
                                 // Value changed, update database
                                 if (wasChecked) {
@@ -100,7 +124,7 @@
                         break;
                     // Select One attributes
                     case LcData.ServiceAttCatIDExperience:
-                    case LcData.ServiceAttCatIDExperienceLevel:
+                    //case LcData.ServiceAttCatIDExperienceLevel:
                         // Get value selected by user
                         int selectedAttID = Request[String.Format(tplCatName, cat.Key)].AsInt();
                         // Iterate every attribute in category to unchecked except one was selected
@@ -124,6 +148,16 @@
                     //    break;
                 }
             }
+            
+            // Since ExperienceLevel is not a service category anymore else an independent table, we need
+            // specific code to save its data.
+            var selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
+            if (!String.IsNullOrEmpty(selExpLevel)) {
+                db.Execute(sqlSetExpLevel, pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    selExpLevel);
+            } else {
+                db.Execute(sqlDelExpLevel, pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
 
             // Check alert
             db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
@@ -132,10 +166,11 @@
         CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
     }
     
-    dynamic langLevels = null;
+    dynamic langLevels = null, expLevels = null;
     var userLangLevels = new Dictionary<int, int>();
-    //, userExpLevels;
+    dynamic userExpLevel = null;
     using (var db = Database.Open("sqlloco")) {
+        /* Language Levels */
         langLevels = db.Query(@"
             SELECT  LanguageLevelID, LanguageLevelName, LanguageLevelDescription
             FROM    LanguageLevel
@@ -151,6 +186,20 @@
         ", pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())) {
             userLangLevels.Add(ulanglevel.ServiceAttributeID, ulanglevel.LanguageLevelID);
         };
+        /* Experience Levels */
+        expLevels = db.Query(@"
+            SELECT  ExperienceLevelID, ExperienceLevelName, ExperienceLevelDescription
+            FROM    ExperienceLevel
+            WHERE   LanguageID = @0 AND CountryID = @1
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        userExpLevel = db.QueryValue(@"
+            SELECT  ExperienceLevelID
+            FROM    ServiceAttributeExperienceLevel
+            WHERE   UserID = @0 AND
+                    PositionID = @1 AND
+                    LanguageID = @2 AND
+                    CountryID = @3
+        ", pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
     }
 }
 @helper getChecked(dynamic att){
@@ -212,18 +261,26 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
         </fieldset>*@
     </div>
     <div class="positionservices-sidebar">
-        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
+        @if (expLevels != null && expLevels.Count > 0)
         {
-            var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
-        <fieldset class="positionservices-experiencelevel @(cat["RequiredInput"] ? "required-attribute-category" : "")">
-            @*<legend>Experience Level</legend>*@
-            @printCatLegend(cat)
-            @printAttSelect(cat["ServiceAttributes"])
+            string selExpLevel = 
+                Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"] 
+                ?? userExpLevel.ToString();
+
+        <fieldset class="positionservices-experiencelevel required-attribute-category">
+            <legend>Experience Level</legend>
             @*<select name="positionservices-experiencelevel">
                 <option>Expert</option>
                 <option>Intermediate</option>
                 <option>Novice</option>
             </select>*@
+            <select title="Experience Level" name="positionservices-category[@LcData.ServiceAttCatIDExperienceLevel]-level">
+                    <option value=""></option>
+                @foreach (var level in expLevels)
+                {
+                    <option @CommonHelpers.IsSelected(level.ExperienceLevelID.ToString(), selExpLevel) value="@level.ExperienceLevelID" data-description="@level.ExperienceLevelDescription" title="@level.ExperienceLevelName">@level.ExperienceLevelName</option>
+                }
+            </select>
         </fieldset>
         }
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
