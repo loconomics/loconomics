@@ -22,6 +22,18 @@ and test on both.
         
             var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
             var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,@7,'Sys',1)";
+            var sqlInsertExpLevel = @"
+                    INSERT INTO ServiceAttributeExperienceLevel (UserID,
+                        PositionID, LanguageID, CountryID, ExperienceLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+            ";
+            var sqlInsertLangLevel = @"
+                    INSERT INTO ServiceAttributeLanguageLevel (UserID,
+                        PositionID, ServiceAttributeID, LanguageID, CountryID, LanguageLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
+            ";
             
             // Link the user with the selected position:
             var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
@@ -29,7 +41,10 @@ and test on both.
             if (Results.Result != "Success") {
                 CommonHelpers.ReturnJsonError(-1, Results.Result);
             } else {
-                var getcatid = new Regex("^positionservices-category\\[(\\d+)\\]", RegexOptions.Compiled);
+                
+                var getcatid = new Regex("^positionservices-category\\[(-?\\d+)\\]", RegexOptions.Compiled);
+                var getattid = new Regex("^positionservices-category\\[-?\\d+\\]-attribute\\[(\\d+)\\]", RegexOptions.Compiled);
+                
                 foreach (string fname in Request.Form.Keys){
                     // In the form, the 'name' of each input-checkbox element per service-attribute have
                     // the format: positionservices-category[{0}]-attribute[{1}] or a simpler positionservices-category[{0}]
@@ -43,6 +58,7 @@ and test on both.
                     // (it means that unchecked values are not in the Request.Form collection)
                     if (fname.StartsWith("positionservices-category[")){
                         var serviceAttributeID = Request.Form[fname];
+                        
                         string serviceAttributeCategoryID = "";
                         var matches = getcatid.Match(fname);
                         if (matches.Success && matches.Groups.Count == 2) {
@@ -50,11 +66,65 @@ and test on both.
                         } else {
                             continue;
                         }
-                        db.Execute(sqlInsertAttribute, UserID, PositionID,
-                            serviceAttributeCategoryID, serviceAttributeID,
-                            LanguageID, CountryID, theDate, theDate);
+                        
+                        switch (serviceAttributeCategoryID.AsInt()) {
+                            case 0-LcData.ServiceAttCatIDLanguages:
+                                // Do nothing: this fields will be skiped silently, while will be
+                                // saved only when Language category is read it, to avoid save the
+                                // level of languages not checked by the user, but without this
+                                // 'case' sentence, errors will happen executing the 'default' switch-case.
+                                
+                                // Next code was the first approach, but only valid if checkboxes are not used
+                                // and language level select's contains an empty/null option
+                                /*
+                                // Really, in 'serviceAttributeID' variable we have the Form Value
+                                // that in this case matches the LanguageLevelID..
+                                if (serviceAttributeID.IsInt()) {
+                                    var languageLevelID = serviceAttributeID;
+                                    // ..we must look for the serviceAttributeID in the form name
+                                    var matchesAtt = getattid.Match(fname);
+                                    if (matchesAtt.Success && matchesAtt.Groups.Count == 2) {
+                                        serviceAttributeID = matchesAtt.Groups[1].Value;
+                                    } else {
+                                        continue;
+                                    }
+                                
+                                    db.Execute(sqlInsertLangLevel, UserID, PositionID,
+                                        serviceAttributeID, LanguageID, CountryID,
+                                        languageLevelID);
+                                }
+                                */
+                                
+                                break;
+                            case LcData.ServiceAttCatIDExperienceLevel:
+                                db.Execute(sqlInsertExpLevel, UserID, PositionID,
+                                    LanguageID, CountryID,
+                                    // Here, serviceAttributeID contains the form value that is
+                                    // the ExperienceLevelID on this case
+                                    serviceAttributeID);
+                                break;
+                            default:
+                                db.Execute(sqlInsertAttribute, UserID, PositionID,
+                                    serviceAttributeCategoryID, serviceAttributeID,
+                                    LanguageID, CountryID, theDate, theDate);
+                                
+                                // If is Language category, read and save the Level option:
+                                if (serviceAttributeCategoryID.AsInt() == LcData.ServiceAttCatIDLanguages) {
+                                    var languageLevelID = Request.Form[fname.Replace("category[5]", "category[-5]") + "-level"];
+                                    if (languageLevelID.IsInt()) {
+                                        db.Execute(sqlInsertLangLevel, UserID, PositionID,
+                                            serviceAttributeID, LanguageID, CountryID,
+                                            languageLevelID);
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
+                
+                // Check alert for services attributes after being filled: (the first full 
+                // user test -TestAllAlerts- is done by a trigger on userprofilepositions table)
+                db.Execute("EXEC TestAlertPositionServices @0, @1", UserID, PositionID);
 
                 if (insideWizard) {
                     // We return a json with result OK (=0), and response end just after this:
