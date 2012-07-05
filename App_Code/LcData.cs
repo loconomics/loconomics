@@ -19,6 +19,7 @@ public static class LcData
         bool excludeCats = false;
         
         switch (filter) {
+            case "provider-services-without-virtual-cats":
             case "provider-services":
                 //catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
                 //catsFilter.AddRange(new int[]{1, 2, 4, 5, 7});
@@ -64,6 +65,58 @@ public static class LcData
                 rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID, (userId == 0 ? null : (object)userId));
                 rcats.Add(cat.ServiceAttributeCategoryID, rcat);
             }
+            
+
+            /* SPECIAL CASES */
+            if (filter == "provider-services" || filter == "only-special-cats")
+            {
+                // Adding the extra tables Language Levels and Experience Levels as 'virtual' categories, using the same
+                // fields name to be easy to implement
+                // Returning a 'virtual' language levels category
+                var rcat = new Dictionary<string, object>(){
+                    { "ServiceAttributeCategoryID", ServiceAttCatIDLanguageLevel },
+                    { "ServiceAttributeCategoryName", LcRessources.GetText("Language Level") },
+                    { "ServiceAttributeCategoryDescription", LcRessources.GetText("Language Level Description") },
+                    { "RequiredInput", false }
+                };
+                var levelsIndex = new Dictionary<int, int>();
+                var langlevels = new List<object>();
+                foreach(var level in LcData.GetLanguageLevels()) {
+                    langlevels.Add(new Dictionary<string, object>{
+                        { "ServiceAttributeDescription", level.LanguageLevelDescription },
+                        { "ServiceAttributeID", level.LanguageLevelID },
+                        { "ServiceAttribute", level.LanguageLevelName },
+                        { "UserChecked", false }
+                    });
+                    levelsIndex.Add(level.LanguageLevelID, langlevels.Count - 1);
+                }
+                rcat["ServiceAttributes"] = langlevels;
+                if (userId > 0){
+                    rcat["LevelsIndex"] = levelsIndex;
+                    rcat["UserSelectedLevels"] = LcData.GetUserLanguageLevels(userId, positionId);
+                }
+                rcats[ServiceAttCatIDLanguageLevel] = rcat;
+
+                // Returning a 'virtual' experience levels category
+                rcat = new Dictionary<string, object>(){
+                    { "ServiceAttributeCategoryID", ServiceAttCatIDExperienceLevel },
+                    { "ServiceAttributeCategoryName", LcRessources.GetText("Experience Level") },
+                    { "ServiceAttributeCategoryDescription", LcRessources.GetText("Experience Level Description") },
+                    { "RequiredInput", false }
+                };
+                var explevels = new List<object>();
+                foreach (var level in GetExperienceLevels(userId, positionId))
+                {
+                    explevels.Add(new Dictionary<string, object>{
+                        { "ServiceAttributeDescription", level.ExperienceLevelDescription },
+                        { "ServiceAttributeID", level.ExperienceLevelID },
+                        { "ServiceAttribute", level.ExperienceLevelName },
+                        { "UserChecked", level.UserChecked }
+                    });
+                }
+                rcat["ServiceAttributes"] = explevels;
+                rcats[ServiceAttCatIDExperienceLevel] = rcat;
+            }
         }
         return rcats;
     }
@@ -75,11 +128,13 @@ public static class LcData
         ServiceAttCatIDExperience
         ,ServiceAttCatIDExperienceLevel
         ,ServiceAttCatIDLanguages
+        ,ServiceAttCatIDLanguageLevel
         ,ServiceAttCatIDClientTypes
     };
     public const int ServiceAttCatIDExperience = 1;
     public const int ServiceAttCatIDExperienceLevel = 4;
     public const int ServiceAttCatIDLanguages = 5;
+    public const int ServiceAttCatIDLanguageLevel = -5; // Virtual cat, doesn't exist
     public const int ServiceAttCatIDClientTypes = 7;
 
     #region Extra tables for Service attributes (Languages&Experience Levels)

@@ -10,7 +10,7 @@
     var tplCatName = "positionservices-category[{0}]";
     
     var specialCatIDs = LcData.SpecialServicesAttCats;
-    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services", pos.UserID);
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     
     if (IsPost) {
         var sqlSetAttribute = @"
@@ -173,12 +173,12 @@
     dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);
 }
 @helper getChecked(dynamic att){
-    if (att.UserChecked) {
+    if (att["UserChecked"]) {
         @Html.Raw("checked='checked'")
     }
 }
 @helper printSelected(dynamic att, string valueA = null, string valueB = null){
-    if ((valueA != null && valueB != null && valueA == valueB) || att.UserChecked) {
+    if ((valueA != null && valueB != null && valueA == valueB) || att["UserChecked"]) {
         @Html.Raw("selected='selected'")
     }
 }

@@ -68,7 +68,7 @@ and test on both.
                         }
                         
                         switch (serviceAttributeCategoryID.AsInt()) {
-                            case 0-LcData.ServiceAttCatIDLanguages:
+                            case LcData.ServiceAttCatIDLanguageLevel:
                                 // Do nothing: this fields will be skiped silently, while will be
                                 // saved only when Language category is read it, to avoid save the
                                 // level of languages not checked by the user, but without this
@@ -110,7 +110,10 @@ and test on both.
                                 
                                 // If is Language category, read and save the Level option:
                                 if (serviceAttributeCategoryID.AsInt() == LcData.ServiceAttCatIDLanguages) {
-                                    var languageLevelID = Request.Form[fname.Replace("category[5]", "category[-5]") + "-level"];
+                                    var languageLevelID = Request.Form[fname
+                                        .Replace("category[" + LcData.ServiceAttCatIDLanguages.ToString() + "]"
+                                        , "category[" + LcData.ServiceAttCatIDLanguageLevel.ToString() + "]")
+                                        + "-level"];
                                     if (languageLevelID.IsInt()) {
                                         db.Execute(sqlInsertLangLevel, UserID, PositionID,
                                             serviceAttributeID, LanguageID, CountryID,

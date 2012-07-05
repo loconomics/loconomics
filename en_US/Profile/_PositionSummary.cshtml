@@ -29,8 +29,24 @@
 @helper printAttList(dynamic cat){
     <ul>
         @foreach (var att in cat["ServiceAttributes"]) {
-            if (att.UserChecked) {
+            if (att["UserChecked"]) {
             <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
+            }
+        }
+    </ul>
+}
+@helper printAttListLangs(dynamic cat, dynamic levelsCat){
+    var selected = levelsCat["UserSelectedLevels"];
+    var levelsIndex = levelsCat["LevelsIndex"];
+    <ul>
+        @foreach (var att in cat["ServiceAttributes"]) {
+            if (att["UserChecked"]) {
+                string levelStr = null;
+                if (selected.ContainsKey(att["ServiceAttributeID"])) {
+                    var levelId = selected[att["ServiceAttributeID"]];
+                    levelStr = levelsCat["ServiceAttributes"][levelsIndex[levelId]]["ServiceAttribute"];
+                }
+                <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"] @(levelStr == null ? "" : "(" + levelStr + ")")</li>
             }
         }
     </ul>
@@ -91,7 +107,7 @@
                         <div class="languages-spoken">
                             @printCatTitle(cat)
                             <a class="button view-more" href="#">More</a>
-                            @printAttList(cat)
+                            @printAttListLangs(cat, dataCats[LcData.ServiceAttCatIDLanguageLevel])
                         </div>
                     }
                 </div>
