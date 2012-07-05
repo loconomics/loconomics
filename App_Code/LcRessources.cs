@@ -22,6 +22,11 @@ public static class LcRessources
         ,{ "messaging-message-type-title-bookingrequest-confirmation", "Booking Request Confirmation" }
         ,{ "messaging-message-type-title-bookingrequest-denegation", "Booking Request Denegation" }
         ,{ "messaging-message-type-title-booking", "Booking" }
+
+        ,{ "Experience Level", "Experience Level" }
+        ,{ "Experience Level Description", "" }
+        ,{ "Language Level", "Language Level" }
+        ,{ "Language Level Description", "" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

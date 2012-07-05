@@ -10,7 +10,55 @@
         var positionId = Request["positionId"].AsInt();
         var filter = Request["filter"];
         
-        result.Add("ServiceAttributeCategories", LcData.GetServiceCatsAndItsAttributes(positionId, filter).ToJsonDictionary());
+        // Get the service categories and its attributes
+        var data = LcData.GetServiceCatsAndItsAttributes(positionId, filter);
+        
+        // Adding the extra tables Language Levels and Experience Levels as 'virtual' categories, using the same
+        // fields name to be easy to implement from javascript
+        /* Language Levels */
+        //result.Add("LanguageLevels", LcData.GetLanguageLevels());
+        // Returning a 'virtual' language levels category
+        int langlevelsID = 0-LcData.ServiceAttCatIDLanguages;
+        data.Add(langlevelsID,
+            new Dictionary<string, object>(){
+            { "ServiceAttributeCategoryID", langlevelsID },
+            { "ServiceAttributeCategoryName", LcRessources.GetText("Language Level") },
+            { "ServiceAttributeCategoryDescription", LcRessources.GetText("Language Level Description") },
+            { "RequiredInput", false }
+        });
+        var langlevels = new List<object>();
+        foreach(var level in LcData.GetLanguageLevels()) {
+            langlevels.Add(new Dictionary<string, object>(){
+                    { "ServiceAttributeDescription", level.LanguageLevelDescription },
+                    { "ServiceAttributeID", level.LanguageLevelID },
+                    { "ServiceAttribute", level.LanguageLevelName }
+            });
+        }
+        data[langlevelsID].Add("ServiceAttributes", langlevels);
+
+        /* Experience Levels */
+        //result.Add("ExperienceLevels", LcData.GetExperienceLevels());
+        // Returning a 'virtual' experience levels category
+        int explevelsID = LcData.ServiceAttCatIDExperienceLevel;
+        data.Add(explevelsID,
+            new Dictionary<string, object>(){
+            { "ServiceAttributeCategoryID", explevelsID },
+            { "ServiceAttributeCategoryName", LcRessources.GetText("Experience Level") },
+            { "ServiceAttributeCategoryDescription", LcRessources.GetText("Experience Level Description") },
+            { "RequiredInput", false }
+        });
+        var explevels = new List<object>();
+        foreach(var level in LcData.GetExperienceLevels()) {
+            explevels.Add(new Dictionary<string, object>(){
+                    { "ServiceAttributeDescription", level.ExperienceLevelDescription },
+                    { "ServiceAttributeID", level.ExperienceLevelID },
+                    { "ServiceAttribute", level.ExperienceLevelName }
+            });
+        }
+        data[explevelsID].Add("ServiceAttributes", explevels);
+        
+        // Add all the data to the result:
+        result.Add("ServiceAttributeCategories", data.ToJsonDictionary());
         
         // No error
         resultCode = 0;

@@ -83,19 +83,21 @@ function initYourWork(){
         */
         var tplAttCheck = '<label title="@2" data-description="@3"><input name="positionservices-category[@0]-attribute[@1]" type="checkbox" value="@1"/><span>@2</span></label>';
         /* Template to create a select for attributes options, markers:
-        @0 CategoryId
+        @0 Form field name, using templates tplNameCat or tplNameCatAtt
         @1 CategoryName
         @2 CategoryDescription
         */
-        var tplAttSelect = '<select name="positionservices-category[@0]" title="@1" data-description="@2"></select>';
+        var tplAttSelect = '<select name="@0" title="@1" data-description="@2"></select>';
         /* Template to create the select options for attributes, markers:
         @0 AttributeID
         @1 AttributeName
         @2 AttributeDescription
         */
+        var tplNameCatAtt = 'positionservices-category[@0]-attribute[@1]';
+        var tplNameCat = 'positionservices-category[@0]';
         var tplAttSelectOpt = '<option title="@1" data-description="@2" value="@0">@1</option>';
 
-        function createAttCheckList(cat, checkSelectCat) {
+        function createAttCheckList(cat, selectNameSufix, checkSelectCat) {
             var c = $('<ul></ul>');
             // Iterate category attributes
             $.each(cat.ServiceAttributes, function (iAtt, att) {
@@ -106,15 +108,28 @@ function initYourWork(){
                     .replace(/@3/g, att.ServiceAttributeDescription);
 
                 // Add new attribute html
-                c.append('<li>' + hAtt + 
-                    (checkSelectCat ? createAttSelect(checkSelectCat) : '') + 
-                    '</li>');
+                var cli = $('<li>' + hAtt + '</li>');
+                if (checkSelectCat) {
+                    cli.append(createAttSelect(checkSelectCat, selectNameSufix, att.ServiceAttributeID));
+                }
+                c.append(cli);
             });
             return c;
         }
-        function createAttSelect(cat) {
+        function createAttSelect(cat, nameSufix, relatedAttID) {
+            var name;
+            if (relatedAttID)
+                name = tplNameCatAtt
+                    .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                    .replace(/@1/g, relatedAttID)
+                    + nameSufix;
+            else
+                name = tplNameCatAtt
+                    .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                    + nameSufix;
+
             var c = $(tplAttSelect
-                .replace(/@0/g, cat.ServiceAttributeCategoryID)
+                .replace(/@0/g, name)
                 .replace(/@1/g, cat.ServiceAttributeCategoryName)
                 .replace(/@2/g, cat.ServiceAttributeCategoryDescription));
             $.each(cat.ServiceAttributes, function (iAtt, att) {
@@ -152,7 +167,8 @@ function initYourWork(){
                     var fs = $('#service-attribute-category-' + cat.ServiceAttributeCategoryID);
 
                     // Only if there are attributes on the category, else break into next
-                    if (!cat.ServiceAttributes || cat.ServiceAttributes.length == 0)
+                    if (!cat.ServiceAttributes || cat.ServiceAttributes.length == 0
+                        || cat.ServiceAttributeCategoryID == -5)
                         return; // break each
 
                     // If category fieldset doesn't exist, create it:
@@ -181,12 +197,16 @@ function initYourWork(){
                             fs.append(createAttCheckList(cat));
                             break;
                         case 5:
-                            // TODO: instead null, we need pass here the categoryID for language levels
-                            fs.append(createAttCheckList(cat, null));
+                            fs.append(createAttCheckList(cat, '-level', data.Result.ServiceAttributeCategories[-5]));
                             break;
                         case 1:
-                        case 4:
                             fs.append(createAttSelect(cat));
+                            break;
+                        case 4:
+                            fs.append(createAttSelect(cat, '-level'));
+                            break;
+                        case -5:
+                            // do nothing with virtual languages level category, is used on catID:5 for every language
                             break;
                     }
 

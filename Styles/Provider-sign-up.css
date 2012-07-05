@@ -162,6 +162,9 @@ ol.legal-agreement-terms > li {
     width: 90px;
     min-width: 90px;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    vertical-align: top;
 }
 .sign-up-wizard .your-work .languages-spoken ul li select{
     width: 110px !important;

@@ -166,45 +166,20 @@
         CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
     }
     
-    dynamic langLevels = null, expLevels = null;
-    var userLangLevels = new Dictionary<int, int>();
-    dynamic userExpLevel = null;
-    using (var db = Database.Open("sqlloco")) {
-        /* Language Levels */
-        langLevels = db.Query(@"
-            SELECT  LanguageLevelID, LanguageLevelName, LanguageLevelDescription
-            FROM    LanguageLevel
-            WHERE   LanguageID = @0 AND CountryID = @1
-        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        foreach (var ulanglevel in db.Query(@"
-            SELECT  LanguageLevelID, ServiceAttributeID
-            FROM    ServiceAttributeLanguageLevel
-            WHERE   UserID = @0 AND
-                    PositionID = @1 AND
-                    LanguageID = @2 AND
-                    CountryID = @3
-        ", pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())) {
-            userLangLevels.Add(ulanglevel.ServiceAttributeID, ulanglevel.LanguageLevelID);
-        };
-        /* Experience Levels */
-        expLevels = db.Query(@"
-            SELECT  ExperienceLevelID, ExperienceLevelName, ExperienceLevelDescription
-            FROM    ExperienceLevel
-            WHERE   LanguageID = @0 AND CountryID = @1
-        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        userExpLevel = db.QueryValue(@"
-            SELECT  ExperienceLevelID
-            FROM    ServiceAttributeExperienceLevel
-            WHERE   UserID = @0 AND
-                    PositionID = @1 AND
-                    LanguageID = @2 AND
-                    CountryID = @3
-        ", pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
-    }
+    /* Language Levels */
+    dynamic langLevels = LcData.GetLanguageLevels();
+    var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
+    /* Experience Levels */
+    dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);
 }
 @helper getChecked(dynamic att){
     if (att.UserChecked) {
         @Html.Raw("checked='checked'")
+    }
+}
+@helper printSelected(dynamic att, string valueA = null, string valueB = null){
+    if ((valueA != null && valueB != null && valueA == valueB) || att.UserChecked) {
+        @Html.Raw("selected='selected'")
     }
 }
 @helper printAttCheckList(int catId, dynamic atts){
@@ -263,12 +238,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <div class="positionservices-sidebar">
         @if (expLevels != null && expLevels.Count > 0)
         {
-            string selExpLevel = 
-                Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"] 
-                ?? userExpLevel.ToString();
+            string selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
 
         <fieldset class="positionservices-experiencelevel">
-            <legend>Experience Level</legend>
+            <legend title="@LcRessources.GetText("Experience Level")" data-description="@LcRessources.GetText("Experience Level Description")">@LcRessources.GetText("Experience Level")</legend>
             @*<select name="positionservices-experiencelevel">
                 <option>Expert</option>
                 <option>Intermediate</option>
@@ -278,7 +251,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                     <option value=""></option>
                 @foreach (var level in expLevels)
                 {
-                    <option @CommonHelpers.IsSelected(level.ExperienceLevelID.ToString(), selExpLevel) value="@level.ExperienceLevelID" data-description="@level.ExperienceLevelDescription" title="@level.ExperienceLevelName">@level.ExperienceLevelName</option>
+                    <option @printSelected(level, level.ExperienceLevelID.ToString(), selExpLevel) value="@level.ExperienceLevelID" data-description="@level.ExperienceLevelDescription" title="@level.ExperienceLevelName">@level.ExperienceLevelName</option>
                 }
             </select>
         </fieldset>
@@ -314,7 +287,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                         (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
                         
                 <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
-                    <select title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
+                    <select title="@LcRessources.GetText("Language Level")" data-description="@LcRessources.GetText("Language Level Description")" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
                         @foreach (var level in langLevels)
                         {
                             <option @CommonHelpers.IsSelected(level.LanguageLevelID.ToString(), selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>

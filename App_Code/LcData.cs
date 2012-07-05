@@ -5,7 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 
 /// <summary>
-/// Descripción breve de LcData
+/// Static class simplifying data access
 /// </summary>
 public static class LcData
 {
@@ -81,6 +81,71 @@ public static class LcData
     public const int ServiceAttCatIDExperienceLevel = 4;
     public const int ServiceAttCatIDLanguages = 5;
     public const int ServiceAttCatIDClientTypes = 7;
+
+    #region Extra tables for Service attributes (Languages&Experience Levels)
+    public static dynamic GetExperienceLevels(int UserID = 0, int PositionID = 0)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                DECLARE @UserID int, @PositionID int
+                SET @UserID = @2
+                SET @PositionID = @3
+
+                SELECT  L.ExperienceLevelID, L.ExperienceLevelName, L.ExperienceLevelDescription,
+		                  (case when @UserID <= 0 OR US.UserID is null then cast(0 as bit)
+				                else cast(1 as bit)
+		                  end) as UserChecked
+                FROM    ExperienceLevel As L
+                         LEFT JOIN
+                        ServiceAttributeExperienceLevel As US
+                          ON L.ExperienceLevelID = US.ExperienceLevelID
+                            AND L.LanguageID = US.LanguageID AND L.CountryID = US.CountryID
+                            AND US.UserID = @UserID AND US.PositionID = @PositionID
+                WHERE   L.LanguageID = @0 AND L.CountryID = @1
+            ", GetCurrentLanguageID(), GetCurrentCountryID(),
+             UserID, PositionID);
+        }
+    }
+    public static dynamic GetLanguageLevels()
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+                SELECT  LanguageLevelID, LanguageLevelName, LanguageLevelDescription
+                FROM    LanguageLevel
+                WHERE   LanguageID = @0 AND CountryID = @1
+            ", GetCurrentLanguageID(), GetCurrentCountryID());
+        }
+    }
+    /// <summary>
+    /// Get a dictionary list of Language Levels (LanguageLevelID on Value)
+    /// selected by the user per Language (ServiceAttributeID matching a Language attribute,
+    /// on the dictionary Key).
+    /// </summary>
+    /// <param name="UserID"></param>
+    /// <param name="PositionID"></param>
+    /// <returns></returns>
+    public static Dictionary<int, int> GetUserLanguageLevels(int UserID, int PositionID)
+    {
+        var userLangLevels = new Dictionary<int, int>();
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var ulanglevel in db.Query(@"
+                SELECT  LanguageLevelID, ServiceAttributeID
+                FROM    ServiceAttributeLanguageLevel
+                WHERE   UserID = @0 AND
+                        PositionID = @1 AND
+                        LanguageID = @2 AND
+                        CountryID = @3
+            ", UserID, PositionID, GetCurrentLanguageID(), GetCurrentCountryID()))
+            {
+                userLangLevels.Add(ulanglevel.ServiceAttributeID, ulanglevel.LanguageLevelID);
+            };
+        }
+        return userLangLevels;
+    }
+    #endregion
     #endregion
 
     #region l18n
