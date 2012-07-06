@@ -25,6 +25,12 @@ $(document).ready(function () {
     $('#changephoto').click(function () {
         popup(UrlUtil.LangPath + 'Dashboard/ChangePhoto/', 'small');
     });
+    /*
+    * Upload Photo
+    */
+    $('.positionphotos-tools-upload > a').click(function () {
+        popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/', 'small');
+    });
 
     /*
     * Booking list actions
