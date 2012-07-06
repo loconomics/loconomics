@@ -43,42 +43,136 @@
         
         if (ModelState.IsValid) {
             using (var db = Database.Open("sqlloco")){
-                // First, check if user name was changed to revoke Social Verifications
+                // Check what data changes to revoke verifications and update data:
                 db.Execute(@"
+                    DECLARE 
+                    @UserID int
+                    ,@FirstName varchar(50)
+                    ,@MiddleIn varchar(1)
+                    ,@LastName varchar(145)
+                    ,@SecondLastName varchar(145)
+                    ,@MobilePhone varchar(20)
+                    ,@AlternatePhone varchar(20)
+                    ,@AddressLine1 varchar(145)
+                    ,@AddressLine2 varchar(145)
+                    ,@City varchar(145)
+                    ,@StateProvinceID int
+                    ,@PostalCodeID int
+                    ,@CountryID int
+                    ,@PublicBio varchar(500)
+                    ,@BirthYear int
+                    ,@GenderID int
+                    ,@IAuthZumigoVerification bit
+                    ,@IAuthZumigoLocation bit
+
+                    SET @UserID = @0
+                    SET @FirstName = @1
+                    SET @MiddleIn = @2
+                    SET @LastName = @3
+                    SET @SecondLastName = @16
+                    SET @MobilePhone = @4
+                    SET @AlternatePhone = @5
+                    SET @AddressLine1 = @6
+                    SET @AddressLine2 = @7
+                    SET @City = @8
+                    SET @StateProvinceID = @9
+                    SET @PostalCodeID = @10
+                    SET @CountryID = @17
+                    SET @PublicBio = @11
+                    SET @BirthYear = @12
+                    SET @GenderID = @13
+                    SET @IAuthZumigoVerification = @14
+                    SET @IAuthZumigoLocation = @15
+
+
+                    /* Do checks to revoke verifications on some changes */
+                    -- @c var allow us check if data is equals (=1) or was changed (=0)
                     DECLARE @c int
-                    -- Check if data is equals (=1) or was changed (=0)
+                    -- Checking Full Name
                     SELECT  @c = count(*)
                     FROM    Users
-                    WHERE   UserID = @0
+                    WHERE   UserID = @UserID
                              AND
-                            FirstName = @1 AND MiddleIn = @2 AND LastName = @3 AND SecondLastName = @4
+                            FirstName = @FirstName AND MiddleIn = @MiddleIn AND LastName = @LastName AND SecondLastName = @SecondLastName
                     IF @c = 0 BEGIN
                         -- Revoke social verifications (all VerificationCategoryID = 3)
                         UPDATE  UserVerification SET
-                            VerificationStatusID = 3,
+                            VerificationStatusID = 3, -- revoked status
                             UpdatedDate = getdate()
                         WHERE   VerificationID IN (
                                     SELECT VerificationID
                                     FROM    Verification
                                     WHERE   VerificationCategoryID = 3
                                 )
-                        -- Re-check social verifications Alert
-                        EXEC TestAlertSocialMediaVerification @0
+
+                        -- Revoke name verification (VerificationID=1)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 1
                     END
-                ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName);
-                db.Execute(@"
-                    UPDATE users
-                    SET     FirstName=@1, MiddleIn=@2, LastName=@3, MobilePhone=@4, AlternatePhone=@5, AddressLine1=@6,
-                            AddressLine2=@7, City=@8, StateProvinceID=@9, PostalCodeID=@10, PublicBio=@11, BirthYear=@12, GenderID=@13, 
-                            IAuthZumigoVerification=@14, IAuthZumigoLocation=@15, SecondLastName=@16,
-                            CountryID=1, UpdatedDate=getdate(), ModifiedBy='sys'
-                    WHERE   UserId = @0
-                    -- Check Alerts:
-                    EXEC TestAlertPersonalInfo @0
-                    EXEC TestAlertProviderLogin @0
+                    -- Checking Address
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                            AND AddressLine1 = @AddressLine1
+                            AND AddressLine2 = @AddressLine2
+                            AND City = @City
+                            AND StateProvinceID = @StateProvinceID
+                            AND PostalCodeID = @PostalCodeID
+                            AND CountryID = @CountryID
+                    IF @c = 0 BEGIN
+                        -- Revoke address verification (VerificationID=2)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 2
+                    END
+                    -- Checking Phone
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                            AND MobilePhone = @MobilePhone
+                            AND AlternatePhone = @AlternatePhone
+                    IF @c = 0 BEGIN
+                        -- Revoke phone verification (VerificationID=4)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 4
+                    END
+
+                    /* Update Data */
+                    UPDATE	Users
+                    SET     FirstName = @FirstName
+		                    ,MiddleIn = @MiddleIn
+		                    ,LastName = @LastName
+		                    ,SecondLastName = @SecondLastName
+		                    ,MobilePhone = @MobilePhone
+		                    ,AlternatePhone = @AlternatePhone
+		                    ,AddressLine1 = @AddressLine1
+		                    ,AddressLine2 = @AddressLine2
+		                    ,City=@City
+		                    ,StateProvinceID = @StateProvinceID
+		                    ,PostalCodeID = @PostalCodeID
+		                    ,CountryID = @CountryID
+		                    ,PublicBio = @PublicBio
+		                    ,BirthYear = @BirthYear
+		                    ,GenderID = @GenderID
+		                    ,IAuthZumigoVerification = @IAuthZumigoVerification
+		                    ,IAuthZumigoLocation = @IAuthZumigoLocation
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    -- Check Alerts related with user info:
+                    EXEC TestAlertPersonalInfo @UserID
+                    EXEC TestAlertProviderLogin @UserID
+                    EXEC TestAlertBasicInfoVerification @UserID
+                    EXEC TestAlertSocialMediaVerification @UserID
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
-                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName);
+                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, LcData.GetCurrentCountryID());
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
