@@ -58,6 +58,7 @@
                 file.Close();
                 Request.InputStream.Close();
             }*/
+            Request.InputStream.Dispose();
         } catch(Exception ex) {
             CommonHelpers.ReturnJson(
                 new Dictionary<string, object>(){
@@ -93,6 +94,7 @@
                         Directory.CreateDirectory(Server.MapPath(virtualPath));
                     }
                     fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
+                    fileuploaded.InputStream.Dispose();
                 } catch(Exception ex) {
                     if (ajaxEnabled) {
                     // NOTE: IE problems with contentype=json, use JsonHelper directly:

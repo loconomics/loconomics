@@ -58,6 +58,8 @@ public static class ImageUtility
                     Attributes);
             }
         }
+        // OriginalImage Must be disposed to avoid file locking
+        OriginalImage.Dispose();
         return NewBitmap;
     }
 }
