@@ -16,6 +16,9 @@
 @helper printCompleteUrl(dynamic alert){
     switch ((string)alert.AlertName) {
         case "personalinfo":
+        case "socialmediaverification":
+        case "basicinfoverification":
+        case "backgroundcheck":
             @(UrlUtil.LangPath + "Dashboard/Account/#account-personal")
             break;
         case "photo":
@@ -38,6 +41,12 @@
             break;
         case "positionservices":
             @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-services")
+            break;
+        case "referencerequests":
+            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-reviews")
+            break;
+        case "professionallicense":
+            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-licenses")
             break;
         default:
             @("#")
