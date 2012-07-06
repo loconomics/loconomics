@@ -28,12 +28,12 @@
         // Validate the user's password and password confirmation
         Validation.Add("email",
             Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
-	    Validation.RequireField("password", "The password cannot be blank.");
+	    Validation.RequireField("password", "The password cannot be left blank.");
         Validation.Add("confirmPassword", 
             Validator.EqualsTo("password", "The new password and confirmation password do not match."));
     }
-    Validation.RequireField("firstname", "You must specify your First Name.");
-    Validation.RequireField("lastname", "You must specify your Last Name.");
+    Validation.RequireField("firstname", "You must specify your first name.");
+    Validation.RequireField("lastname", "You must specify your last name.");
     
     // var captchaMessage = "";
     
@@ -62,7 +62,7 @@
             zipcode = auxZip;
         }
         if (!termsofuse.AsBool()){
-            ModelState.AddError("termsofuse", "You must agree all terms of service and privacy policy");
+            ModelState.AddError("termsofuse", "You must agree to the Terms of Use and Privacy Policy");
         }
 
         // If all information is valid, create a new account
@@ -90,7 +90,7 @@
                             /*LcMessaging.SendMail(
                                 to: email,
                                 subject: "Please confirm your account", 
-                                body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to activate your account."
+                                body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to confirm your account."
                             );*/
                         }
 
@@ -230,7 +230,7 @@
     <fieldset class="legal-agreement">
         <legend><h4>Agree to the following:</h4></legend>
         <ol class="legal-agreement-terms">
-            <li>I am 18 years old and personally will provide the services listed on my profile.</li>
+            <li>I am at least 18 years old and will personally provide the services listed on my profile.</li>
             <li>I am not acting on behalf of an agency or employer for services booked using my profile</li>
             <li>I am legally authorized to perform the services listed on my profile and possess any 
     licenses required to perform those services.</li>
@@ -240,7 +240,7 @@
         </ol>
         <ul>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool().ToString(), "True") name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Service</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
+                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool().ToString(), "True") name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
                 @Html.ValidationMessage("termsofuse")
              </li>
              <li>
