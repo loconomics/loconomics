@@ -62,6 +62,8 @@
                                     FROM    Verification
                                     WHERE   VerificationCategoryID = 3
                                 )
+                        -- Re-check social verifications Alert
+                        EXEC TestAlertSocialMediaVerification @0
                     END
                 ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName);
                 db.Execute(@"
