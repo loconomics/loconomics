@@ -110,6 +110,12 @@
                             VerificationStatusID = 3, -- revoked status
                             UpdatedDate = getdate()
                         WHERE   VerificationID = 1
+
+                        -- Revoke background check verification (VerificationID=7)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 7
                     END
                     -- Checking Address
                     SELECT  @c = count(*)
@@ -170,6 +176,7 @@
                     EXEC TestAlertProviderLogin @UserID
                     EXEC TestAlertBasicInfoVerification @UserID
                     EXEC TestAlertSocialMediaVerification @UserID
+                    EXEC TestAlertBackgroundCheck @UserID
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, LcData.GetCurrentCountryID());
