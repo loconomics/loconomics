@@ -1,10 +1,40 @@
 ﻿@* Page being called as a Popup-iframe from Position/#Photos to
     upload new provider photos to its personal folder.
  *@
+@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@functions{
+    void RegisterUserPhoto(string filePathName, int userId, int positionId){
+        using (var db = Database.Open("sqlloco")){
+            // we update the new photo name
+            db.Execute(@"
+                INSERT INTO ProviderServicePhoto (
+                    UserID
+                    ,PositionID
+                    ,PhotoAddress
+                    ,RankPosition
+                    ,CreatedDate
+                    ,UpdatedDate
+                    ,ModifiedBy
+                    ,Active
+                ) VALUES (
+	                @0
+	                ,@1
+	                ,@2
+	                ,(SELECT coalesce(max(P2.RankPosition),0) + 1 FROM ProviderServicePhoto As P2 WHERE P2.UserID=@0 AND P2.PositionID=@1)
+	                ,getdate()
+	                ,getdate()
+	                ,'sys'
+	                ,1
+                )
+            ", userId, positionId, filePathName);
+        }
+    }
+}
 @{
     CommonHelpers.SecurePage();
-    var u = DashboardFunctions.GetUserRow();
-    var userId = u["UserID"];
+    var userId = WebSecurity.CurrentUserId;
+    var positionId = Request["PositionID"].AsInt();
     var ajaxEnabled = true;
     // This is only for Post uploads
     var uploadedFileURI = "";
@@ -12,7 +42,8 @@
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
         string fileName = (string)Request["qqfile"];
-        string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
+        string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
+        string virtualPath = UrlUtil.AppPath + filePathInApp;
 
         try{
             if (!Directory.Exists(Server.MapPath(virtualPath))) {
@@ -29,6 +60,9 @@
                 }
             );
         }
+        
+        // File saved, register it on the database:
+        RegisterUserPhoto(filePathInApp + fileName, userId, positionId);
         
         CommonHelpers.ReturnJson(
             new Dictionary<string, object>(){
@@ -48,7 +82,8 @@
             if (ModelState.IsValid) {
                 System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
             
-                string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
+                string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
+                string virtualPath = UrlUtil.AppPath + filePathInApp;
             
                 try{
                     if (!Directory.Exists(Server.MapPath(virtualPath))) {
@@ -71,6 +106,9 @@
                         ModelState.AddFormError("There was an error: " + ex.Message);
                     }
                 }
+                
+                // File saved, register it on the database:
+                RegisterUserPhoto(filePathInApp + fileinfo.Name, userId, positionId);
             
                 if (ajaxEnabled) {
                     // NOTE: There is some issues with IE managing this result with contenttype=json
@@ -123,6 +161,7 @@
                     action: UrlUtil.LangPath + 'Dashboard/UploadPhoto/',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
+                        if (responseJSON.success)
                         reloadUserPhoto(responseJSON.fileURI);
                     }
                 });

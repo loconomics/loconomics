@@ -30,7 +30,8 @@ $(document).ready(function () {
     * Upload Photo
     */
     $('.positionphotos-tools-upload > a').click(function () {
-        popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/', 'small');
+        var posID = $(this).closest('form').find('input[name=PositionID]').val();
+        popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
         return false;
     });
 
