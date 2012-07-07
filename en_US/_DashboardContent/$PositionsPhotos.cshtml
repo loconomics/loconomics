@@ -1,7 +1,23 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Current position data record:
-    var p = PageData["position"];
+    var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
+    
+    string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    
+    dynamic photos = null;
+    using (var db = Database.Open("sqlloco")) {
+        photos = db.Query(@"
+            SELECT [ProviderServicePhotoID]
+                  ,[PhotoCaption]
+                  ,[PhotoAddress]
+                  ,[IsPrimaryPhoto]
+              FROM [providerservicephoto]
+              WHERE UserID = @0 AND PositionID = @1 AND Active = 1
+              ORDER BY RankPosition
+        ", p.UserID, p.PositionID);
+    }
 }
 <p class="setting-instructions">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
@@ -38,11 +54,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-gallery">
         <legend>Stored photos:</legend>
         <ol>
-            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li class="selected"><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/stevejobs.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
-            <li><a href="#"><img alt="Stored photo" src="@Href(UrlUtil.AppPath + "img/thumbs/billgates.jpeg")"/></a><a class="edit" href="#">Edit</a></li>
+            @foreach (var photo in photos)
+            {
+                <li class="@(photo.IsPrimaryPhoto ? "selected" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
+            }
         </ol>
     </fieldset>
     <fieldset class="positionphotos-tools">

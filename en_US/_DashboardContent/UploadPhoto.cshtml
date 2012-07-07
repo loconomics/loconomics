@@ -17,6 +17,7 @@
                     ,UpdatedDate
                     ,ModifiedBy
                     ,Active
+                    ,IsPrimaryPhoto
                 ) VALUES (
 	                @0
 	                ,@1
@@ -26,6 +27,7 @@
 	                ,getdate()
 	                ,'sys'
 	                ,1
+                    ,0
                 )
             ", userId, positionId, fileName);
         }
@@ -158,7 +160,7 @@
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('change-photo-file-uploader'),
                     // path to server-side upload script
-                    action: UrlUtil.LangPath + 'Dashboard/UploadPhoto/',
+                    action: '@(UrlUtil.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
@@ -181,7 +183,7 @@
         <div class="change-photo">
             <div id="change-photo-file-uploader">
                 @if(!ajaxEnabled) {
-                <form action="@(UrlUtil.LangPath)Dashboard/UploadPhoto/" method="post" enctype="multipart/form-data">
+                <form id="uploadPhotoForm" action="@(UrlUtil.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
                     @Html.ValidationSummary()
                     <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
                     <button class="button main-action" type="submit">Upload!</button>
