@@ -45,7 +45,7 @@ $(document).ready(function () {
         editPanel.unblock();
         // Set this photo as selected
         var selected = $t.closest('li');
-        selected.addClass('selected');
+        selected.addClass('selected').siblings().removeClass('selected');
         //var selected = $('.positionphotos-gallery > ol > li.selected', form);
         if (selected != null && selected.length > 0) {
             var selImg = selected.find('img');
@@ -547,7 +547,6 @@ function initPositionPhotos() {
     });
 
     // Set primary photo to be edited
-    
     var editPanel = $('.positionphotos-edit', form);
     // Look for a selected photo in the list
     var selected = $('.positionphotos-gallery > ol > li.selected', form);
