@@ -777,7 +777,7 @@ $(document).ready(function () {
                     // Executing scripts returned by the page
                     jQuery.each(responseScript, function (idx, val) { eval(val.text); });
 
-                    box.find('form.ajax').trigger('ajaxFormReturnedHtml');
+                    newhtml.trigger('ajaxFormReturnedHtml');
                 }
             },
             error: ajaxErrorPopupHandler,
@@ -1012,6 +1012,17 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     if (iframe)
         $('.blockMsg').html(iframe);
     $('.blockUI').click(function () { $.unblockUI() });
+}
+function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
+    var $t = $(form);
+    // If there is no form errors, show a successful message
+    if ($t.find('.validation-summary-errors').length == 0) {
+        $t.block({
+            message: message,
+            css: popupStyle(popupSize('small'))
+        })
+            .click(function () { $t.unblock(); });
+    }
 }
 /* Puts full html inside the iframe element passed in a secure and compliant mode */
 function injectIframeHtml(iframe, html) {
