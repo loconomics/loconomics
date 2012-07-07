@@ -27,18 +27,14 @@ $(document).ready(function () {
         return false;
     });
     /*
-    * Upload Photo
+    * Modify position photos: Upload Photo, Edit, Delete
     */
     $('.positionphotos').parent().on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=PositionID]').val();
         popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
         return false;
-    });
-    /*
-    * Edit Photo
-    */
-    //initPositionPhotos();
-    $('form.positionphotos').parent().on('click', '.positionphotos-gallery li a', function () {
+    })
+    .on('click', '.positionphotos-gallery li a', function () {
         var $t = $(this);
         var form = $t.closest('form');
         var editPanel = $('.positionphotos-edit', form);
@@ -61,6 +57,13 @@ $(document).ready(function () {
             editPanel.block(infoBlock($('.no-photos', this).html()));
         }
         return false;
+    })
+    .on('click', '.positionphotos-edit-delete a', function () {
+        var editPanel = $(this).closest('.positionphotos-edit');
+        // Change the field delete-photo to True and send form for an ajax request with
+        // server delete task and content reload
+        editPanel.find('[name=delete-photo]').val('True');
+        editPanel.closest('form').submit();
     });
 
     /*

@@ -7,23 +7,62 @@
     string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
     
     if (IsPost) {
-        var caption = Request["photo-caption"];
-        var isPrimary = Request["is-primary-photo"].AsBool();
+        var delete = Request["delete-photo"].AsBool();
         var photoID = Request["PhotoID"].AsInt();
-        
-        using (var db = Database.Open("sqlloco")) {
-            db.Execute(@"
-                IF @2 = 1 BEGIN
-                    UPDATE ProviderServicePhoto SET
-                        IsPrimaryPhoto = 0
-                    WHERE   UserID = @3 AND PositionID = @4
-                END
+        if (delete) {
+            using (var db = Database.Open("sqlloco")) {
+                // Delete file from database, checking if exist more than one record
+                // using the same image file, returning the PhotoAddress when there is
+                // no more records sharing that address, and 'empty string' when there is more and
+                // cannot be removed (without know the address, cannot be removed ;-)
+                string photoAddress = db.QueryValue(@"
+                    DECLARE @PhotoID int
+                    SET @PhotoID = @0
 
-                UPDATE ProviderServicePhoto SET
-                    PhotoCaption = @1
-                    ,IsPrimaryPhoto = @2
-                WHERE   ProviderServicePhotoID = @0 AND UserID = @3 AND PositionID = @4
-            ", photoID, caption, isPrimary, p.UserID, p.PositionID);
+                    -- Retrieving the PhotoAddress
+                    DECLARE @address varchar(2073)
+                    SELECT  @address = PhotoAddress
+                    FROM    ProviderServicePhoto
+                    WHERE   ProviderServicePhotoID = @PhotoID
+
+                    DELETE FROM ProviderServicePhoto WHERE ProviderServicePhotoID = @PhotoID
+
+                    -- Checking if there are more records with the same file, or returning the address
+                    IF 0 = (SELECT  count(*)
+                            FROM    ProviderServicePhoto
+                            WHERE   PhotoAddress like @address)
+                        SELECT @address As PhotoAddress
+                    ELSE
+                        SELECT '' As PhotoAddress
+                ", photoID);
+                
+                if (!String.IsNullOrEmpty(photoAddress)) {
+                    // Remove file from user folder
+                    try{
+                        File.Delete(Server.MapPath(photosFolder + photoAddress));
+                    }catch{
+                        throw new Exception("Photo file could not be deleted");
+                    }
+                }
+            }
+        } else {
+            var caption = Request["photo-caption"];
+            var isPrimary = Request["is-primary-photo"].AsBool();
+        
+            using (var db = Database.Open("sqlloco")) {
+                db.Execute(@"
+                    IF @2 = 1 BEGIN
+                        UPDATE ProviderServicePhoto SET
+                            IsPrimaryPhoto = 0
+                        WHERE   UserID = @3 AND PositionID = @4
+                    END
+
+                    UPDATE ProviderServicePhoto SET
+                        PhotoCaption = @1
+                        ,IsPrimaryPhoto = @2
+                    WHERE   ProviderServicePhotoID = @0 AND UserID = @3 AND PositionID = @4
+                ", photoID, caption, isPrimary, p.UserID, p.PositionID);
+            }
         }
     }
     
@@ -66,6 +105,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             </li>
             <li class="positionphotos-edit-delete">
                 <a href="#">Delete this photo</a>
+                <input type="hidden" name="delete-photo" value="False" />
             </li>
         </ul>
     </fieldset>
