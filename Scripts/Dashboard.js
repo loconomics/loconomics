@@ -29,6 +29,7 @@ $(document).ready(function () {
     /*
     * Modify position photos: Upload Photo, Edit, Delete
     */
+    initPositionPhotos();
     $('.positionphotos').parent().on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=PositionID]').val();
         popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
@@ -38,7 +39,7 @@ $(document).ready(function () {
         var $t = $(this);
         var form = $t.closest('form');
         var editPanel = $('.positionphotos-edit', form);
-        editPanel.unblock();
+        smoothBoxBlockCloseAll(form)
         // Set this photo as selected
         var selected = $t.closest('li');
         selected.addClass('selected').siblings().removeClass('selected');
@@ -53,8 +54,6 @@ $(document).ready(function () {
             var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
             editPanel.find('[name=is-primary-photo]').prop('checked', false);
             editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
-        } else {
-            editPanel.block(infoBlock($('.no-photos', this).html()));
         }
         return false;
     })
@@ -546,34 +545,39 @@ function dashboardGeneralJsonCodeHandler(data, container, options) {
     return true;
 }
 function initPositionPhotos() {
-    var form = $('form.positionphotos');
-    
-    // Prepare sortable script
-    $(".positionphotos-gallery > ol", form).sortable({
-        placeholder: "ui-state-highlight",
-        update: function () {
-            // Get photo order, a comma separated value of items IDs
-            var order = $(this).sortable("toArray").toString();
-            // Set order in the form element, to be sent later with the form
-            $(this).closest('form').find('[name=gallery-order]').val(order);
+    $('form.positionphotos').each(function () {
+        var form = $(this);
+        // Prepare sortable script
+        $(".positionphotos-gallery > ol", form).sortable({
+            placeholder: "ui-state-highlight",
+            update: function () {
+                // Get photo order, a comma separated value of items IDs
+                var order = $(this).sortable("toArray").toString();
+                // Set order in the form element, to be sent later with the form
+                $(this).closest('form').find('[name=gallery-order]').val(order);
+            }
+        });
+
+        // Set primary photo to be edited
+        var editPanel = $('.positionphotos-edit', form);
+        // Look for a selected photo in the list
+        var selected = $('.positionphotos-gallery > ol > li.selected', form);
+        if (selected != null && selected.length > 0) {
+            var selImg = selected.find('img');
+            // Moving selected to be edit panel
+            var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+            editPanel.find('[name=PhotoID]').val(photoID);
+            editPanel.find('img').attr('src', selImg.attr('src'));
+            editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
+            var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
+            editPanel.find('[name=is-primary-photo]').prop('checked', false);
+            editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+        } else {
+            if (form.find('.positionphotos-gallery > ol > li').length == 0) {
+                smoothBoxBlock(form.find('.no-photos'), editPanel);
+            } else {
+                smoothBoxBlock(form.find('.no-primary-photo'), editPanel);
+            }
         }
     });
-
-    // Set primary photo to be edited
-    var editPanel = $('.positionphotos-edit', form);
-    // Look for a selected photo in the list
-    var selected = $('.positionphotos-gallery > ol > li.selected', form);
-    if (selected != null && selected.length > 0) {
-        var selImg = selected.find('img');
-        // Moving selected to be edit panel
-        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
-        editPanel.find('[name=PhotoID]').val(photoID);
-        editPanel.find('img').attr('src', selImg.attr('src'));
-        editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
-        var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
-        editPanel.find('[name=is-primary-photo]').prop('checked', false);
-        editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
-    } else {
-        editPanel.block(infoBlock($('.no-photos', form).html()));
-    }
 }

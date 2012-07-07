@@ -107,8 +107,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="gallery-order" value=""/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <div class="no-photos">
+    <div id="position[@n]photos-no-photos" class="no-photos fancy">
         <span class="positionphotos-tools-upload">Start <a href="#">uploading</a> a photo!</span>
+    </div>
+    <div id="position[@n]photos-no-primary-photo" class="no-primary-photo fancy">
+        Select a photo on the right to edit it and make one them the primary photo.
     </div>
     <fieldset class="positionphotos-edit">
         <input type="hidden" name="PhotoID" value="" />
@@ -148,11 +151,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
+    @if (IsPost)
+    {
     <script type="text/javascript">
-        if (typeof (initPositionPhotos) == 'undefined')
-            $(function () { initPositionPhotos(); });
-        else
-            initPositionPhotos();
+        initPositionPhotos();
     </script>
+    }
 </form>
 </div>

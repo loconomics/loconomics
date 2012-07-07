@@ -471,8 +471,12 @@ form.positionavailability input{
     display: inline-block;
     vertical-align: top;
 }
-.positionphotos .no-photos {
+.positionphotos .no-photos,
+.positionphotos .no-primary-photo {
     display: none;
+    padding: 20px;
+    margin: 20px;
+    background: white;
 }
 .dashboard form.positionphotos fieldset li{
     margin: 6px 0;

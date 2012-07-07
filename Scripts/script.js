@@ -1192,3 +1192,41 @@ function configureTooltip() {
             t.stop(true, true).fadeOut();
     });
 }
+function smoothBoxBlock(contentBox, blocked, close) {
+    contentBox = $(contentBox);
+    blocked = $(blocked);
+    var bID = (contentBox.attr('id') || 'contentbox') + (blocked.attr('id') || 'blocked') + '-smoothBoxBlock';
+    if (bID == 'contentboxblocked-smoothBoxBlock') {
+        if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
+        return;
+    }
+    var box = $('#' + escapeJQuerySelectorValue(bID));
+    if (close) {
+        box.hide();
+        return;
+    }
+    if (box.length == 0) {
+        box = $('<div/>');
+        box.attr('id', bID);
+        blocked.append(box);
+        box.addClass('smooth-box-block');
+    }
+    box.hide();
+    box.append(contentBox);
+    box.width(blocked.outerWidth());
+    box.height(blocked.outerHeight());
+    box.css('z-index', blocked.css('z-index') + 10);
+    box.css('position', 'absolute');
+    blocked.css('position', 'relative');
+    offs = blocked.position();
+    box.css('top', 0);
+    box.css('left', 0);
+    box.show();
+    contentBox.show();
+}
+function smoothBoxBlockCloseAll(container) {
+    $(container).find('.smooth-box-block').hide();
+}
+function escapeJQuerySelectorValue(str) {
+    return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
+}
