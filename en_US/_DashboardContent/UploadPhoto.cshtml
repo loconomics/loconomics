@@ -4,7 +4,7 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
-    void RegisterUserPhoto(string filePathName, int userId, int positionId){
+    void RegisterUserPhoto(string fileName, int userId, int positionId){
         using (var db = Database.Open("sqlloco")){
             // we update the new photo name
             db.Execute(@"
@@ -27,7 +27,7 @@
 	                ,'sys'
 	                ,1
                 )
-            ", userId, positionId, filePathName);
+            ", userId, positionId, fileName);
         }
     }
 }
@@ -62,7 +62,7 @@
         }
         
         // File saved, register it on the database:
-        RegisterUserPhoto(filePathInApp + fileName, userId, positionId);
+        RegisterUserPhoto(fileName, userId, positionId);
         
         CommonHelpers.ReturnJson(
             new Dictionary<string, object>(){
@@ -108,7 +108,7 @@
                 }
                 
                 // File saved, register it on the database:
-                RegisterUserPhoto(filePathInApp + fileinfo.Name, userId, positionId);
+                RegisterUserPhoto(fileinfo.Name, userId, positionId);
             
                 if (ajaxEnabled) {
                     // NOTE: There is some issues with IE managing this result with contenttype=json
