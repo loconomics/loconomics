@@ -4,10 +4,10 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
-    void RegisterUserPhoto(string fileName, int userId, int positionId){
+    int RegisterUserPhoto(string fileName, int userId, int positionId){
         using (var db = Database.Open("sqlloco")){
             // we update the new photo name
-            db.Execute(@"
+            return (int)db.QueryValue(@"
                 INSERT INTO ProviderServicePhoto (
                     UserID
                     ,PositionID
@@ -29,6 +29,7 @@
 	                ,1
                     ,0
                 )
+                SELECT Cast(@@Identity as int)
             ", userId, positionId, fileName);
         }
     }
@@ -40,6 +41,7 @@
     var ajaxEnabled = true;
     // This is only for Post uploads
     var uploadedFileURI = "";
+    var photoID = 0;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
@@ -64,12 +66,13 @@
         }
         
         // File saved, register it on the database:
-        RegisterUserPhoto(fileName, userId, positionId);
+        photoID = RegisterUserPhoto(fileName, userId, positionId);
         
         CommonHelpers.ReturnJson(
             new Dictionary<string, object>(){
                 { "success", "File was saved" }
                 ,{ "fileURI", virtualPath + fileName }
+                ,{ "photoID", photoID }
             }
         );
     } else {
@@ -110,7 +113,7 @@
                 }
                 
                 // File saved, register it on the database:
-                RegisterUserPhoto(fileinfo.Name, userId, positionId);
+                photoID = RegisterUserPhoto(fileinfo.Name, userId, positionId);
             
                 if (ajaxEnabled) {
                     // NOTE: There is some issues with IE managing this result with contenttype=json
@@ -120,6 +123,7 @@
                         new Dictionary<string, object>(){
                             { "success", "File was saved" }
                             ,{ "fileURI", uploadedFileURI }
+                            ,{ "photoID", photoID }
                         },
                     Response.Output);
                     Response.End();
@@ -143,10 +147,11 @@
         </script>
 
         <script type="text/javascript">
-            function reloadUserPhoto(fileName) {
+            function reloadUserPhoto(fileName, photoID) {
                 // Add image to the gallery, in the parent document! (this is an iframe)
                 var gallery = jQuery('.tab-body.current .positionphotos-gallery > ol', window.parent.document);
-                gallery.append('<li><a href="#"><img alt="Uploaded photo" src="' + fileName + '"/></a><a class="edit" href="#">Edit</a></li>')
+                var tplImg = '<li id="UserPhoto-@@0"><a href="#"><img alt="Uploaded photo" src="@@1"/></a><a class="edit" href="#">Edit</a></li>';
+                gallery.append(tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName))
                     // scroll the gallery to see the new element; using '-2' to avoid some browsers automatic scroll.
                     .animate({scrollTop: gallery[0].scrollHeight - gallery.height() - 2}, 1400)
                     .find('li:last-child')
@@ -164,7 +169,7 @@
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
-                        reloadUserPhoto(responseJSON.fileURI);
+                        reloadUserPhoto(responseJSON.fileURI, responseJSON.photoID);
                     }
                 });
             });
@@ -173,7 +178,7 @@
             else if (IsPost)
             {
                 <text>
-                reloadUserPhoto(@uploadedFileURI);
+                reloadUserPhoto('@uploadedFileURI', @photoID);
                 window.close();
                 </text>
             }
