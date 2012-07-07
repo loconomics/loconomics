@@ -29,9 +29,37 @@ $(document).ready(function () {
     /*
     * Upload Photo
     */
-    $('.positionphotos-tools-upload > a').click(function () {
+    $('.positionphotos').parent().on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=PositionID]').val();
         popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
+        return false;
+    });
+    /*
+    * Edit Photo
+    */
+    //initPositionPhotos();
+    $('form.positionphotos').parent().on('click', '.positionphotos-gallery li a', function () {
+        var $t = $(this);
+        var form = $t.closest('form');
+        var editPanel = $('.positionphotos-edit', form);
+        editPanel.unblock();
+        // Set this photo as selected
+        var selected = $t.closest('li');
+        selected.addClass('selected');
+        //var selected = $('.positionphotos-gallery > ol > li.selected', form);
+        if (selected != null && selected.length > 0) {
+            var selImg = selected.find('img');
+            // Moving selected to be edit panel
+            var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+            editPanel.find('[name=PhotoID]').val(photoID);
+            editPanel.find('img').attr('src', selImg.attr('src'));
+            editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
+            var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
+            editPanel.find('[name=is-primary-photo]').prop('checked', false);
+            editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+        } else {
+            editPanel.block(infoBlock($('.no-photos', this).html()));
+        }
         return false;
     });
 
@@ -509,4 +537,29 @@ function dashboardGeneralJsonCodeHandler(data, container, options) {
         container.html(data);
     }
     return true;
+}
+function initPositionPhotos() {
+    var form = $('form.positionphotos');
+    
+    // Prepare sortable script
+    $(".positionphotos-gallery > ol", form).sortable({
+        placeholder: "ui-state-highlight"
+    });
+
+    // Set primary photo to be edited
+    
+    var editPanel = $('.positionphotos-edit', form);
+    // Look for a selected photo in the list
+    var selected = $('.positionphotos-gallery > ol > li.selected', form);
+    if (selected != null && selected.length > 0) {
+        var selImg = selected.find('img');
+        // Moving selected to be edit panel
+        editPanel.find('img').attr('src', selImg.attr('src'));
+        editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
+        var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';
+        editPanel.find('[name=is-primary-photo]').prop('checked', false);
+        editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
+    } else {
+        editPanel.block(infoBlock($('.no-photos', form).html()));
+    }
 }

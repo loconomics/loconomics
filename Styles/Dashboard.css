@@ -471,6 +471,9 @@ form.positionavailability input{
     display: inline-block;
     vertical-align: top;
 }
+.positionphotos .no-photos {
+    display: none;
+}
 .dashboard form.positionphotos fieldset li{
     margin: 6px 0;
     padding: 0;
@@ -500,10 +503,11 @@ form.positionavailability input{
     width: 380px;
     height: 240px;
     overflow: hidden;
+    text-align: center;
 }
 .positionphotos-edit-photo img{
-    min-width: 380px;
-    min-height: 240px;
+    max-height: 240px;
+    max-width: 380px;
 }
 .positionphotos-gallery ol{
     list-style: none;
