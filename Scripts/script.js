@@ -10,6 +10,13 @@ var errorBlock = function (error, reload, style) {
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
     }
 };
+var infoBlock = function (message) {
+    return {
+        message: message,
+        css: { cursor: 'default' },
+        overlayCSS: { cursor: 'default' }
+    };
+}
 var gLoadingRetard = 300;
 
 /*
@@ -640,7 +647,13 @@ $(document).ready(function () {
                     }
                 } else {
                     // Post was wrong, html was returned to replace current form:
-                    currentStep.html(data);
+                    var newhtml = $(data);
+                    currentStep.html(newhtml);
+                    // Reading original scripts tags to be able to execute later
+                    var responseScript = newhtml.filter("script");
+                    // Executing scripts returned by the page
+                    jQuery.each(responseScript, function (idx, val) { eval(val.text); });
+
                     currentStep.trigger('reloadedHtmlWizardStep');
                 }
             },
@@ -751,12 +764,19 @@ $(document).ready(function () {
                     // Post was wrong, html was returned to replace current 
                     // form container: the ajax-box.
                     var newhtml = $(data);
+                    // Reading original scripts tags to be able to execute later
+                    var responseScript = newhtml.filter("script");
+
                     // Check if the returned element is the ajax-box, if not, find
                     // the element in the newhtml:
                     if (!newhtml.is('.ajax-box'))
                         newhtml = newhtml.find('.ajax-box');
                     // Replace the box with the new html:
                     box.replaceWith(newhtml);
+
+                    // Executing scripts returned by the page
+                    jQuery.each(responseScript, function (idx, val) { eval(val.text); });
+
                     box.find('form.ajax').trigger('ajaxFormReturnedHtml');
                 }
             },
