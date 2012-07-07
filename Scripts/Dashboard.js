@@ -546,7 +546,13 @@ function initPositionPhotos() {
     
     // Prepare sortable script
     $(".positionphotos-gallery > ol", form).sortable({
-        placeholder: "ui-state-highlight"
+        placeholder: "ui-state-highlight",
+        update: function () {
+            // Get photo order, a comma separated value of items IDs
+            var order = $(this).sortable("toArray").toString();
+            // Set order in the form element, to be sent later with the form
+            $(this).closest('form').find('[name=gallery-order]').val(order);
+        }
     });
 
     // Set primary photo to be edited
@@ -556,6 +562,8 @@ function initPositionPhotos() {
     if (selected != null && selected.length > 0) {
         var selImg = selected.find('img');
         // Moving selected to be edit panel
+        var photoID = selected.attr('id').match(/^UserPhoto-(\d+)$/)[1];
+        editPanel.find('[name=PhotoID]').val(photoID);
         editPanel.find('img').attr('src', selImg.attr('src'));
         editPanel.find('[name=photo-caption]').val(selImg.attr('alt'));
         var isPrimaryValue = selected.hasClass('is-primary-photo') ? 'True' : 'False';

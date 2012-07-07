@@ -7,10 +7,11 @@
     string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
     
     if (IsPost) {
-        var delete = Request["delete-photo"].AsBool();
-        var photoID = Request["PhotoID"].AsInt();
-        if (delete) {
-            using (var db = Database.Open("sqlloco")) {
+        using (var db = Database.Open("sqlloco")) {
+            
+            var delete = Request["delete-photo"].AsBool();
+            var photoID = Request["PhotoID"].AsInt();
+            if (delete) {
                 // Delete file from database, checking if exist more than one record
                 // using the same image file, returning the PhotoAddress when there is
                 // no more records sharing that address, and 'empty string' when there is more and
@@ -44,12 +45,10 @@
                         throw new Exception("Photo file could not be deleted");
                     }
                 }
-            }
-        } else {
-            var caption = Request["photo-caption"];
-            var isPrimary = Request["is-primary-photo"].AsBool();
+            } else {
+                var caption = Request["photo-caption"];
+                var isPrimary = Request["is-primary-photo"].AsBool();
         
-            using (var db = Database.Open("sqlloco")) {
                 db.Execute(@"
                     IF @2 = 1 BEGIN
                         UPDATE ProviderServicePhoto SET
@@ -62,6 +61,27 @@
                         ,IsPrimaryPhoto = @2
                     WHERE   ProviderServicePhotoID = @0 AND UserID = @3 AND PositionID = @4
                 ", photoID, caption, isPrimary, p.UserID, p.PositionID);
+            }
+            // Indiferent if we are on 'delete' task or 'update details', we try to save the photo gallery
+            // order (RankPosition field on database) if there are data abou it
+            var galleryOrder = Request["gallery-order"];
+            if (!String.IsNullOrEmpty(galleryOrder)) {
+                // Comma separated values with the html element IDs that have the format 'UserPhoto-PHOTOID'
+                // where PHOTOID is a number with the database record ID.
+                // Reading that order and sending to the server
+                int orderIndex = 0;
+                foreach (var go in galleryOrder.Split(',')) {
+                    // If we have a valid ID (integer number)
+                    var goID = go.Replace("UserPhoto-", "").AsInt();
+                    if (goID > 0) {
+                        // Save order to the database
+                        db.Execute(@"
+                            UPDATE  ProviderServicePhoto
+                            SET     RankPosition = @1
+                            WHERE   ProviderServicePhotoID = @0
+                        ", goID, ++orderIndex);
+                    }
+                }
             }
         }
     }
@@ -85,6 +105,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
+    <input type="hidden" name="gallery-order" value=""/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <div class="no-photos">
         <span class="positionphotos-tools-upload">Start <a href="#">uploading</a> a photo!</span>
