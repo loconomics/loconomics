@@ -14,13 +14,15 @@
     if (userid == 0) {
         Response.Redirect(UrlUtil.LangPath);
     }
-        
+
     var u = DashboardFunctions.GetRequestedUserRow(userid);
     if (u == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
     userid = u.UserID;
     
+    string view = Request["view"]; // possible values: "customer"
+
     dynamic posrows = null;
     if (u.IsProvider) {
         posrows = DashboardFunctions.GetUserPos(userid, true);
@@ -40,6 +42,10 @@
             }
         }
     } else {
+        positionid = 0;
+    }
+    // If is customer view, positionid is not relevant:
+    if (view == "customer") {
         positionid = 0;
     }
     
@@ -108,7 +114,7 @@
                     <li class="@cls"><a class="@cls" href="@("#position"+ip)">@c.PositionSingular</a></li>
                 }
             }
-            @if (n > 0 && u.IsCustomer) {
+            @if (n > 0 && u.IsCustomer && view == "customer") {
             <li class="@(positionid == 0 ? "current" : "")"><a href="#customer-overview">As Customer</a></li>
             }
 		</ul><!-- .tabs -->
@@ -163,7 +169,7 @@
                 </div><!-- #position@n -->
             }
         }
-        @if (u.IsCustomer) {
+        @if (u.IsCustomer && view == "customer") {
             <div id="customer-overview" class="tab-body fancy customer customer-overview @(positionid == 0 ? "current" : "")">
                 @RenderPage("$CustomerOverview.cshtml")
             </div><!-- #customer-overview -->
