@@ -23,7 +23,7 @@
             SELECT  MinTime
             FROM    CalendarProviderAttributes
             WHERE   UserID = @0
-        ", p.UserID);
+        ", p.UserID) ?? 0;
     }
 }
 @helper printAttList(dynamic cat){
