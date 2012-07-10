@@ -20,32 +20,34 @@
         Response.Redirect(UrlUtil.LangPath);
     }
     userid = u.UserID;
-    
-    string view = Request["view"]; // possible values: "customer"
+
+    string view = Request["PositionID"] == "0" ? "customer" : ""; // possible values: "customer"
+    // If is customer view, positionid is not relevant:
+    if (view == "customer") {
+        positionid = 0;
+    }
 
     dynamic posrows = null;
     if (u.IsProvider) {
         posrows = DashboardFunctions.GetUserPos(userid, true);
         
-        // Check if the positionid requested exists for current user:
-        var posexists = false;
-        foreach(var c in posrows){
-            if (c.PositionID == positionid) {
-                posexists = true;
+        if (view != "customer") {
+            // Check if the positionid requested exists for current user:
+            var posexists = false;
+            foreach(var c in posrows){
+                if (c.PositionID == positionid) {
+                    posexists = true;
+                }
             }
-        }
-        if (!posexists) {
-            if (!u.IsCustomer && posrows.Count > 0) {
-                positionid = posrows[0].PositionID;
-            } else {
-                positionid = 0;
+            if (!posexists) {
+                if (posrows.Count > 0) {
+                    positionid = posrows[0].PositionID;
+                } else {
+                    positionid = 0;
+                }
             }
         }
     } else {
-        positionid = 0;
-    }
-    // If is customer view, positionid is not relevant:
-    if (view == "customer") {
         positionid = 0;
     }
     
