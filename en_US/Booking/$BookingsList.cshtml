@@ -6,7 +6,10 @@
     // var u = DashboardFunctions.GetUserRow();
     int userID = WebSecurity.CurrentUserId;
     
-    var sqlGetPendingBookingRequest = @"
+    // possible values: "all", "failed-requests"
+    string view = PageData["view"] ?? Request["view"] ?? "all";
+    
+    var sqlSelectBookingRequest = @"
         SELECT  R.BookingRequestID,
                 0 As BookingID,
                 R.ProviderUserID,
@@ -43,23 +46,36 @@
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
 					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+    ";
+    var sqlWherePendingBookingRequest = @"
         WHERE   
+                (R.CustomerUserID=@0
+                  OR
+                  R.ProviderUserID=@0)
+                 AND
+                -- Only Confirmed by customer and denied with alternatives requests
+                R.BookingRequestStatusID IN (2, 8)
+    ";
+    var sqlWhereFailedBookingRequest = @"
+        WHERE
                 (R.CustomerUserID=@0
                   OR
                  (
                   R.ProviderUserID=@0
                    AND
-                  -- Not list incomplete requets to providers
-                  R.BookingRequestStatusID <> 1
-                   AND
-                  R.BookingRequestStatusID <> 3
+                  -- Not list incomplete requests to providers
+                  R.BookingRequestStatusID NOT IN (1, 3)
                  )
                 )
                  AND
-                -- Not list accepted requests, because now are just bookings!
-                R.BookingRequestStatusID <> 7
+                -- Incomplete (only customers), declined or expired requests
+                R.BookingRequestStatusID IN (1, 3, 4, 5, 6)
+    ";
+    var sqlOrderBookingRequest = @"
         ORDER BY E.StartTime, R.UpdatedDate
     ";
+    var sqlGetPendingBookingRequest = sqlSelectBookingRequest + sqlWherePendingBookingRequest + sqlOrderBookingRequest;
+    var sqlGetFailedBookingRequest = sqlSelectBookingRequest + sqlWhereFailedBookingRequest + sqlOrderBookingRequest;
     var sqlGetBookingsByDateRange = @"
         SELECT  R.BookingRequestID,
                 B.BookingID,
@@ -111,31 +127,40 @@
                 Convert(date, E.StartTime) <= @2
         ORDER BY E.StartTime, B.UpdatedDate, R.UpdatedDate
     ";
-    dynamic pendingBookingRequests, todayBookings, tomorrowBookings, thisweekBookings, 
-        upcomingBookings, pastBookings;
+    dynamic pendingBookingRequests = null, todayBookings = null, tomorrowBookings = null, thisweekBookings = null, 
+        upcomingBookings = null, pastBookings = null, failedRequests = null;
     using (var db = Database.Open("sqlloco")) {
-        pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, userID, 1, 1);
+        switch (view) {
+            case "all":
+                pendingBookingRequests = db.Query(sqlGetPendingBookingRequest, userID, 1, 1);
+                
+                // Preparing dates for further filtering
+                var today = DateTime.Today;
+                var tomorrow = today.AddDays(1);
+                var thisweekFirstDay = today.AddDays(0 - today.DayOfWeek);
+                var thisweekLastDay = thisweekFirstDay.AddDays(6);
+                var upcomingFirstDay = tomorrow.AddDays(1);
+                var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
+                var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
+                var pastLastDay = thisweekFirstDay.AddDays(-1);
         
-        // Preparing dates for further filtering
-        var today = DateTime.Today;
-        var tomorrow = today.AddDays(1);
-        var thisweekFirstDay = today.AddDays(0 - today.DayOfWeek);
-        var thisweekLastDay = thisweekFirstDay.AddDays(6);
-        var upcomingFirstDay = tomorrow.AddDays(1);
-        var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
-        var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
-        var pastLastDay = thisweekFirstDay.AddDays(-1);
-        
-        todayBookings = db.Query(sqlGetBookingsByDateRange, userID, today, today, 1, 1);
-        tomorrowBookings = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, 1, 1);
-        thisweekBookings = db.Query(sqlGetBookingsByDateRange, userID, thisweekFirstDay, thisweekLastDay, 1, 1);
-        upcomingBookings = db.Query(sqlGetBookingsByDateRange, userID, upcomingFirstDay, upcomingLastDay, 1, 1);
-        pastBookings = db.Query(sqlGetBookingsByDateRange, userID, pastFirstDay, pastLastDay, 1, 1);
+                todayBookings = db.Query(sqlGetBookingsByDateRange, userID, today, today, 1, 1);
+                tomorrowBookings = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, 1, 1);
+                thisweekBookings = db.Query(sqlGetBookingsByDateRange, userID, thisweekFirstDay, thisweekLastDay, 1, 1);
+                upcomingBookings = db.Query(sqlGetBookingsByDateRange, userID, upcomingFirstDay, upcomingLastDay, 1, 1);
+                pastBookings = db.Query(sqlGetBookingsByDateRange, userID, pastFirstDay, pastLastDay, 1, 1);
+                break;
+            case "failed-requests":
+                failedRequests = db.Query(sqlGetFailedBookingRequest, userID, 1, 1);;
+                break;
+        }
     }
     
     /* Some static strings */
     string strNewBookingRequestSingular = "new booking request";
     string strNewBookingRequestPlural = "new booking requests";
+    string strBookingRequestSingular = "booking request";
+    string strBookingRequestPlural = "booking requests";
     string strBookingSingular = "booking";
     string strBookingPlural = "bookings";
 }
@@ -271,81 +296,113 @@
 
 <ul class="booking-list-groups items-groups-list">
 
-    @if (pendingBookingRequests.Count > 0) {
-    <li>
-        <h3>Need response: 
-            <span class="items-count bookings-number">@pendingBookingRequests.Count @(pendingBookingRequests.Count == 1 ? strNewBookingRequestSingular : strNewBookingRequestPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list pending-booking-requests">
-            @foreach (var item in pendingBookingRequests) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
-    }
+    @if (view == "all")
+    {
+        if (pendingBookingRequests.Count > 0)
+        {
+        <li>
+            <h3>Need response: 
+                <span class="items-count bookings-number">@pendingBookingRequests.Count @(pendingBookingRequests.Count == 1 ? strNewBookingRequestSingular : strNewBookingRequestPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list pending-booking-requests">
+                @foreach (var item in pendingBookingRequests)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
 
-    @if (todayBookings.Count > 0) {
-    <li>
-        <h3>Today: 
-            <span class="items-count bookings-number">@todayBookings.Count @(todayBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list today-bookings">
-            @foreach (var item in todayBookings) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
-    }
+        if (todayBookings.Count > 0)
+        {
+        <li>
+            <h3>Today: 
+                <span class="items-count bookings-number">@todayBookings.Count @(todayBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list today-bookings">
+                @foreach (var item in todayBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
 
-    @if (tomorrowBookings.Count > 0) {
-    <li>
-        <h3>Tomorrow: 
-            <span class="items-count bookings-number">@tomorrowBookings.Count @(tomorrowBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list tomorrow-bookings">
-            @foreach (var item in tomorrowBookings) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
-    }
+        if (tomorrowBookings.Count > 0)
+        {
+        <li>
+            <h3>Tomorrow: 
+                <span class="items-count bookings-number">@tomorrowBookings.Count @(tomorrowBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list tomorrow-bookings">
+                @foreach (var item in tomorrowBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
 
-    @if (thisweekBookings.Count > 0) {
-    <li>
-        <h3>This week: 
-            <span class="items-count bookings-number">@thisweekBookings.Count @(thisweekBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list this-week-bookings">
-            @foreach (var item in thisweekBookings) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
-    }
+        if (thisweekBookings.Count > 0)
+        {
+        <li>
+            <h3>This week: 
+                <span class="items-count bookings-number">@thisweekBookings.Count @(thisweekBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list this-week-bookings">
+                @foreach (var item in thisweekBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
 
-    @if (upcomingBookings.Count > 0) {
-    <li>
-        <h3>Upcoming: 
-            <span class="items-count bookings-number">@upcomingBookings.Count @(upcomingBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list upcoming-bookings">
-            @foreach (var item in upcomingBookings) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
-    }
+        if (upcomingBookings.Count > 0)
+        {
+        <li>
+            <h3>Upcoming: 
+                <span class="items-count bookings-number">@upcomingBookings.Count @(upcomingBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list upcoming-bookings">
+                @foreach (var item in upcomingBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
 
-    @if (pastBookings.Count > 0) {
-    <li>
-        <h3>Past: 
-            <span class="items-count bookings-number">@pastBookings.Count @(pastBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
-        </h3>
-        <ul class="bookings-list items-list past-bookings">
-            @foreach (var item in pastBookings) {
-                @printItem(item)
-            }
-        </ul>
-    </li>
+        if (pastBookings.Count > 0)
+        {
+        <li>
+            <h3>Past: 
+                <span class="items-count bookings-number">@pastBookings.Count @(pastBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list past-bookings">
+                @foreach (var item in pastBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
+    }
+    else if (view == "failed-requests")
+    {
+        if (failedRequests.Count > 0)
+        {
+        <li>
+            <h3>Failed:
+                <span class="items-count bookings-number">@failedRequests.Count @(failedRequests.Count == 1 ? strBookingRequestSingular : strBookingRequestPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list failed-booking-requests">
+                @foreach (var item in failedRequests)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
     }
 </ul>
