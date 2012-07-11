@@ -6,7 +6,7 @@ $(function () {
     $("#PositionSingular").hide();
 
     /* Photos (MyWork) selection: */
-    $('.position-tab > .mywork').parent().on('click', '.photo-library li a', function () {
+    $('.position-tab > .mywork').on('click', '.photo-library li a', function () {
         var $t = $(this);
         var cont = $t.closest('.mywork');
         var hlPanel = $('.gallery-highlighted', cont);
@@ -24,6 +24,13 @@ $(function () {
         }
         return false;
     })
+    .each(function () {
+        // Check if there are photos, removing tabs on false
+        var hasPhotos = ($(this).find('.gallery-content > li').length > 0);
+        if (!hasPhotos) {
+            TabbedUX.removeTab('#'+this.id);
+        }
+    });
 });
 
 /* Google Map */
