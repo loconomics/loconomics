@@ -41,6 +41,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 <ol class="photo-library gallery-content">
     @foreach (var photo in photos)
     {
-        <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
+        <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@((photo.IsPrimaryPhoto || photo == primaryPhoto) ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
     }
 </ol>
