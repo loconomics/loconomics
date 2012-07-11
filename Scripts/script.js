@@ -317,7 +317,7 @@ var TabbedUX = {
         if (!this.checkTabContext(ctx, 'removeTab', arguments)) return;
 
         // Only remove if is a 'removable' tab
-        if (!ctx.menuitem.hasClass('removable'))
+        if (!ctx.menuitem.hasClass('removable') && !ctx.menuitem.hasClass('volatile'))
             return false;
         // If tab is currently focused tab, change to first tab
         if (ctx.menuitem.hasClass('current'))
