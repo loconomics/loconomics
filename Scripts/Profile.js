@@ -1,9 +1,29 @@
 /* TODO doc */
-$(document).ready(function () {
+$(function () {
     $("#customerName").hide();
     $("#PositionID").hide();
     $("#ProviderID").hide();
     $("#PositionSingular").hide();
+
+    /* Photos (MyWork) selection: */
+    $('.position-tab > .mywork').parent().on('click', '.photo-library li a', function () {
+        var $t = $(this);
+        var cont = $t.closest('.mywork');
+        var hlPanel = $('.gallery-highlighted', cont);
+
+        // Set this photo as selected
+        var selected = $t.closest('li');
+        selected.addClass('selected').siblings().removeClass('selected');
+        if (selected != null && selected.length > 0) {
+            var selImg = selected.find('img');
+            // Moving selected to be highlighted panel
+            hlPanel.find('img').attr('src', selImg.attr('src'));
+            var caption = selImg.attr('alt');
+            hlPanel.find('img').attr('alt', caption);
+            hlPanel.find('.photo-caption').text(caption);
+        }
+        return false;
+    })
 });
 
 /* Google Map */

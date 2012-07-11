@@ -402,14 +402,17 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 .gallery-highlighted {
     margin-left: 5px;
+    text-align: center;
+    width: 442px;
 }
 .gallery-highlighted h5{
     display: block;
     width: 436px;
+    text-align: left;
 }
 .gallery-highlighted img{
-    width: 442px;
-    height: 283px;
+    max-width: 442px;
+    /*max-height: 283px;*/
 }
 .gallery-content{
     list-style: none;

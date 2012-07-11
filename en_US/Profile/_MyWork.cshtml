@@ -1,21 +1,46 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Provider
     var p = DashboardFunctions.GetRequestedUserRow();
     // Current position data record:
     var pos = PageData["position"];
+    
+    string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    
+    dynamic photos = null;
+    using (var db = Database.Open("sqlloco")) {
+        photos = db.Query(@"
+            SELECT [ProviderServicePhotoID]
+                  ,[PhotoCaption]
+                  ,[PhotoAddress]
+                  ,[IsPrimaryPhoto]
+              FROM [providerservicephoto]
+              WHERE UserID = @0 AND PositionID = @1 AND Active = 1
+              ORDER BY RankPosition
+        ", pos.UserID, pos.PositionID);
+    }
+    // Get primary photo, or the first if there are not one
+    dynamic primaryPhoto = null;
+    bool first = true;
+    foreach (var photo in photos) {
+        if (photo.IsPrimaryPhoto || first) {
+            primaryPhoto = photo;
+            first = false;
+        }
+    }
 }
 <p class="my-work-description">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
 <div class="highlighted-photo-large gallery-highlighted">
-    <img alt="Highlighted photo" src="@Href(UrlUtil.AppPath + "img/child.jpg")" />
-    <h5 class="photo-caption">This is a picture of a child.</h5>
+    <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? UrlUtil.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
+    <h5 class="photo-caption">@(primaryPhoto == null ? "" : primaryPhoto.PhotoCaption)</h5>
 </div>
 
 <ol class="photo-library gallery-content">
-    <li class="selected"><a href="#"><img alt="Library photo" src="@Href(UrlUtil.AppPath + "img/child.jpg")"/></a></li>
-    <li><a href="#"><img alt="Library photo" src="@Href(UrlUtil.AppPath + "img/child.jpg")"/></a></li>
-    <li><a href="#"><img alt="Library photo" src="@Href(UrlUtil.AppPath + "img/child.jpg")"/></a></li>
-    <li><a href="#"><img alt="Library photo" src="@Href(UrlUtil.AppPath + "img/child.jpg")"/></a></li>
+    @foreach (var photo in photos)
+    {
+        <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
+    }
 </ol>

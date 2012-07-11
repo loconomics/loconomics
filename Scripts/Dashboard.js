@@ -39,7 +39,7 @@ $(document).ready(function () {
         var $t = $(this);
         var form = $t.closest('form');
         var editPanel = $('.positionphotos-edit', form);
-        smoothBoxBlockCloseAll(form)
+        smoothBoxBlockCloseAll(form);
         // Set this photo as selected
         var selected = $t.closest('li');
         selected.addClass('selected').siblings().removeClass('selected');
