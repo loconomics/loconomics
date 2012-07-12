@@ -157,7 +157,7 @@ catch { }*@
     }
 }
 <p class="setting-instructions">
-Doing the job is the tough part, getting paid is the easy part.  You can be paid directly into your bank account or we can mail you a paper check.  Please indicate your preferences below, and be rest assured your data is stored securely.
+Doing the job is the tough part, getting paid is the easy part.  You can be paid via direct deposit, or we can mail you a paper check.  Please indicate your preference below.  Rest assured your data is stored securely.
 </p>
 <div>
 <form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountPaymentsBankInfo/" class="ajax ajax-box">
@@ -181,12 +181,11 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
         {
             if (bankinfo.Verified)
             {
-            <p>Your bank account was succesfull verified.</p>
-            <p>Remember that if you modify some of this data now it will appear as 'not verified' until we verify it again.</p>
+            <p>Your bank account was successfully verified.</p>
             }
             else
             {
-                <p>Your bank account was not verified still.</p>
+                <p>Your bank account will be verified after your first job is complete.</p>
             }
         }
     </div>
