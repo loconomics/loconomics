@@ -289,14 +289,14 @@
             @if (providerLocations != null && providerLocations.Count > 0) {
                 <optgroup label="Provider perform services at following locations">
                     @foreach (var ploc in providerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID.ToString()) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID) value="@ploc.ServiceAddressID">@ploc.NickName</option>
                     }
                 </optgroup>
             }
             @if (customerLocations != null && customerLocations.Count > 0) {
                 <optgroup label="Your locations">
                     @foreach (var ploc in customerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID.ToString()) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID) value="@ploc.ServiceAddressID">@ploc.NickName</option>
                     }
                 </optgroup>
             }

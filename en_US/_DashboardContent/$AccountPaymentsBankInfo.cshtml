@@ -170,7 +170,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
             if (paymentpreference.DependsOnID == null)
             {
                 <label>
-                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID.ToString(), Request["payment-type"] ?? (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : ""), bankinfo.ProviderPaymentPreferenceTypeDependsOnID) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
+                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["payment-type"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID : null), (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeDependsOnID : null ) }) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
                     <abbr title="@paymentpreference.ProviderPaymentPreferenceTypeName">@paymentpreference.ProviderPaymentPreferenceTypeDescription</abbr>
                 </label>
             }
@@ -204,7 +204,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
                 {
                     if (paymentpreference.DependsOnID == 4)
                     {
-                        <li><input type="radio" id="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]" @Validation.GetHtml("bank_accounttype") name="bank_accounttype" @CommonHelpers.IsChecked(Request["bank_accounttype"] ?? (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : ""), paymentpreference.ProviderPaymentPreferenceTypeID.ToString()) value="4.@paymentpreference.ProviderPaymentPreferenceTypeID"/>
+                        <li><input type="radio" id="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]" @Validation.GetHtml("bank_accounttype") name="bank_accounttype" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["bank_accounttype"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : null) }) value="4.@paymentpreference.ProviderPaymentPreferenceTypeID"/>
                         <label for="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]"><abbr title="@paymentpreference.ProviderPaymentPreferenceTypeDescription">@paymentpreference.ProviderPaymentPreferenceTypeName</abbr></label></li>
                     }
                 }

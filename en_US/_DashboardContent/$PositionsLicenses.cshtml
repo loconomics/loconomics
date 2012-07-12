@@ -224,7 +224,7 @@ else
                 <option value=""></option>
                 @foreach (var license in licenses)
                 {
-                    <option @CommonHelpers.IsSelected(Request["license-type"], license.LicenseCertificationID.ToString())
+                    <option @CommonHelpers.IsSelected(Request["license-type"], license.LicenseCertificationID)
                         value="@license.LicenseCertificationID" 
                         data-description="@license.LicenseCertificationTypeDescription"
                         data-state-name="@license.StateProvinceName"

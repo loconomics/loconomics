@@ -277,7 +277,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <li><label>Gender Identity:</label>
                 @foreach (var gender in genders)
                 {
-                    <label class="gender">@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID.ToString(), @gender.GenderID.ToString()) type="radio" name="gender" value="@gender.GenderID" /></label>
+                    <label class="gender">@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
                 }
                 @Html.ValidationMessage("gender")
             </li>

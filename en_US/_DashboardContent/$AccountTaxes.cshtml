@@ -160,7 +160,7 @@
 }
 @helper printEntityType(int entityID, string name){
     var taxinfo = PageData["taxinfo"];
-    <li><label><input type="radio" @Validation.GetHtml("tin_taxentitytype") name="tin_taxentitytype" value="@entityID" @CommonHelpers.IsChecked(Request["tin_taxentitytype"] ?? (taxinfo != null ? taxinfo.TaxEntityTypeID.ToString() : ""), entityID.ToString())/>@name</label></li>
+    <li><label><input type="radio" @Validation.GetHtml("tin_taxentitytype") name="tin_taxentitytype" value="@entityID" @CommonHelpers.IsChecked(Request["tin_taxentitytype"] ?? (taxinfo != null ? taxinfo.TaxEntityTypeID : ""), entityID)/>@name</label></li>
 }
 @* 
 <p class="setting-instructions">
@@ -209,7 +209,7 @@
         <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + LcEncryptor.Decrypt(taxinfo.LastThreeTINDigits) : ""))" @Validation.GetHtml("tin_number")/>
         @foreach (var tintype in tintypes)
         {
-        <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @CommonHelpers.IsChecked(Request["tin_type"] ?? (taxinfo != null ? taxinfo.TINTypeID.ToString() : ""), tintype.TINTypeID.ToString()) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
+        <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @CommonHelpers.IsChecked(Request["tin_type"] ?? (taxinfo != null ? taxinfo.TINTypeID : ""), tintype.TINTypeID) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
         }
     </fieldset>
     <fieldset id="@idprefix-fs-part2">

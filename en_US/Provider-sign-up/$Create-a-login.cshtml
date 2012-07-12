@@ -240,11 +240,11 @@
         </ol>
         <ul>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool().ToString(), "True") name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
+                <label><input type="checkbox" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
                 @Html.ValidationMessage("termsofuse")
              </li>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @CommonHelpers.IsChecked(Request["emailcontact"].AsBool().ToString(), "True") name="emailcontact" id="emailcontact" value="True"/>I don't mind having you e-mail me important news.</label>
+                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @CommonHelpers.IsChecked(Request["emailcontact"].AsBool(), true) name="emailcontact" id="emailcontact" value="True"/>I don't mind having you e-mail me important news.</label>
                 @Html.ValidationMessage("emailcontact")
              </li>
          </ul>

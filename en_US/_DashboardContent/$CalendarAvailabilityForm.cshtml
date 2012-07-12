@@ -112,13 +112,13 @@
     </li>
     }
 }
-@helper printDaysElements(dynamic availDates){
+@helper printDaysElements(bool[] availDates){
     var days = new string[]{"Sundays",  "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"};
     for (var d = 0; d < 7; d++){
         <li>
             <span class="day">@days[d]</span>
-            <label>Yes<input @CommonHelpers.IsChecked(availDates[d].ToString(), "True") name="availday-@d" value="True" type="radio"/></label>
-            <label>No<input @CommonHelpers.IsChecked(availDates[d].ToString(), "False") name="availday-@d" value="False" type="radio"/></label>
+            <label>Yes<input @CommonHelpers.IsChecked(availDates[d], true) name="availday-@d" value="True" type="radio"/></label>
+            <label>No<input @CommonHelpers.IsChecked(availDates[d], false) name="availday-@d" value="False" type="radio"/></label>
         </li>
     }
 }
@@ -154,8 +154,8 @@ Please enter your availability below.  This should be the hours you generally ke
         <legend>I already use a calendar program:</legend>
 
         <div class="confirm positionavailability-use-program">
-            <label>Yes<input @CommonHelpers.IsChecked(useCalendarProgram.ToString(), "True") type="radio" name="use-program" value="True"/></label>
-            <label>No<input @CommonHelpers.IsChecked(useCalendarProgram.ToString(), "False") type="radio" name="use-program" value="False"/></label>
+            <label>Yes<input @CommonHelpers.IsChecked(useCalendarProgram, true) type="radio" name="use-program" value="True"/></label>
+            <label>No<input @CommonHelpers.IsChecked(useCalendarProgram, false) type="radio" name="use-program" value="False"/></label>
         </div>
         <ul>
             <li class="positionavailability-program-type">

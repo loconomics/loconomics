@@ -233,8 +233,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">
                 <legend>I travel to clients:</legend>
                 <div class="confirm positionlocations-itravel-confirm">
-                    <label>Yes<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count > 0).ToString()) name="positionlocations-itravel" value="True"/></label>
-                    <label>No<input type="radio" @CommonHelpers.IsChecked("True", (travelLocations.Count == 0).ToString()) name="positionlocations-itravel" value="False"/></label>
+                    <label>Yes<input type="radio" @CommonHelpers.IsChecked(true, (travelLocations.Count > 0)) name="positionlocations-itravel" value="True"/></label>
+                    <label>No<input type="radio" @CommonHelpers.IsChecked(true, (travelLocations.Count == 0)) name="positionlocations-itravel" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <fieldset class="positionlocations-itravelfrom">
@@ -306,7 +306,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                     <legend>I travel to jobs using primarily:</legend>
                     @foreach (var t in transports)
                     {
-                    <label><input type="radio" @CommonHelpers.IsChecked(t.TransportTypeID.ToString(), Request["positionlocations-itravelusing"] ?? transportType) name="positionlocations-itravelusing" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
+                    <label><input type="radio" @CommonHelpers.IsChecked(t.TransportTypeID, Request["positionlocations-itravelusing"] ?? transportType) name="positionlocations-itravelusing" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
                     }
                 </fieldset>
             </fieldset>
@@ -315,8 +315,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
             <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-type="work">
                 <legend>I perform services at specific locations:</legend>
                 <div class="positionlocations-servicelocations-confirm confirm">
-                    <label>Yes<input @CommonHelpers.IsChecked("True", (workLocations.Count > 0).ToString()) type="radio" name="positionlocations-iworkon" value="True"/></label>
-                    <label>No<input @CommonHelpers.IsChecked("True", (workLocations.Count == 0).ToString()) type="radio" name="positionlocations-iworkon" value="False"/></label>
+                    <label>Yes<input @CommonHelpers.IsChecked(true, (workLocations.Count > 0)) type="radio" name="positionlocations-iworkon" value="True"/></label>
+                    <label>No<input @CommonHelpers.IsChecked(true, (workLocations.Count == 0)) type="radio" name="positionlocations-iworkon" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <ul class="work-locations">

@@ -15,7 +15,7 @@
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID())){
-            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID.ToString())>@country.CountryName</option>
+            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
         }
     }
 }
@@ -27,7 +27,7 @@
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var county in db.Query(sql)){
-            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID.ToString())>@county.CountyName</option>
+            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
         }
     }
 }
@@ -43,27 +43,55 @@
     ";
     using (var db = Database.Open("sqlloco")){
         foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
-            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID.ToString())>@state.StateProvinceName</option>
+            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
         }
     }
 }
 @helper MonthOptions(string selectedMonth){
     for (var i = 1; i < 13; i++) {
-        <option @IsSelected(selectedMonth, i.ToString()) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
+        <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
     }
 }
 @helper CardYearOptions(string selectedYear){
     var year = DateTime.Today.Year;
     var limitYear = year + 10;
     for (; year < limitYear; year++) {
-        <option @IsSelected(selectedYear, year.ToString()) value="@(year)">@(year)</option>
+        <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
     }
 }
-@helper IsChecked(string valueA, string valueB, object valueB2 = null){
-    @Html.Raw((valueA == valueB || valueA == (valueB2 ?? "").ToString()) ? "checked='checked'" : "")
+@functions{ static bool AreEquivalents(IEnumerable<object> A, IEnumerable<object> B) {
+        foreach (var a in A) {
+            var av = a ?? "";
+            foreach (var b in B) {
+                var bv = b ?? "";
+                if (av == bv || av.ToString() == bv.ToString()) 
+                    return true;
+            }
+        }
+        return false;
+    }
+    static bool AreEquivalents(object A, object B) {
+        IEnumerable<object> a, b;
+        if (A is IEnumerable<object>)
+            a = (IEnumerable<object>)A;
+        else
+            a = new object[]{ A };
+        if (B is IEnumerable<object>)
+            b = (IEnumerable<object>)B;
+        else
+            b = new object[]{ B };
+        return AreEquivalents(a, b);
+    }
 }
-@helper IsSelected(string valueA, string valueB, object valueB2 = null){
-    @Html.Raw((valueA == valueB || valueA == (valueB2 ?? "").ToString()) ? "selected='selected'" : "")
+@helper IsChecked(object valueA, object valueB){
+    if (AreEquivalents(valueA, valueB)) {
+        @Html.Raw("checked='checked'")
+    }
+}
+@helper IsSelected(object valueA, object valueB){
+    if (AreEquivalents(valueA, valueB)) {
+        @Html.Raw("selected='selected'")
+    }
 }
 @helper SetupStarRatingPlugin(){
     <script type="text/javascript">

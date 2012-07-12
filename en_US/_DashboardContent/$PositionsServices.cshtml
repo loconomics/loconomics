@@ -290,7 +290,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
                     <select title="@LcRessources.GetText("Language Level")" data-description="@LcRessources.GetText("Language Level Description")" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
                         @foreach (var level in langLevels)
                         {
-                            <option @CommonHelpers.IsSelected(level.LanguageLevelID.ToString(), selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
+                            <option @CommonHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
                         }
                     </select>
                 </li>
