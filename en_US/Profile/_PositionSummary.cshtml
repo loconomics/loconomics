@@ -69,7 +69,7 @@
                         var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
                         <div class="experience-level">
                             @printCatTitle(cat)
-                            <a class="button view-more" href="#">More</a>
+                            <!--<a class="button view-more" href="#">More</a>-->
                             @printAttList(cat)
                         </div>
                     }
@@ -78,7 +78,7 @@
                         var cat = dataCats[LcData.ServiceAttCatIDExperience];
                         <div class="years-experience">
                             @printCatTitle(cat)
-                            <a class="button view-more" href="#">More</a>
+                            <!--<a class="button view-more" href="#">More</a>-->
                             @printAttList(cat)
                         </div>
                     }
@@ -86,7 +86,7 @@
                     {
                     <div class="min-booing-time">
                         <h5>Minimum booking time:</h5>
-                        <a class="button view-more" href="#">More</a>
+                        <!--<a class="button view-more" href="#">More</a>-->
                         <ul><li>
                             @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
                             </li></ul>
@@ -97,7 +97,7 @@
                         var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
                         <div class="client-types">
                             @printCatTitle(cat)
-                            <a class="button view-more" href="#">More</a>
+                            <!--<a class="button view-more" href="#">More</a>-->
                             @printAttList(cat)
                         </div>
                     }
@@ -106,7 +106,7 @@
                         var cat = dataCats[LcData.ServiceAttCatIDLanguages];
                         <div class="languages-spoken">
                             @printCatTitle(cat)
-                            <a class="button view-more" href="#">More</a>
+                            <!--<a class="button view-more" href="#">More</a>-->
                             @printAttListLangs(cat, dataCats[LcData.ServiceAttCatIDLanguageLevel])
                         </div>
                     }
