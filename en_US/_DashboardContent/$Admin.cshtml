@@ -1,0 +1,24 @@
+﻿@{
+    CommonHelpers.SecurePage();
+   
+    PageData["userow"] = DashboardFunctions.GetUserRow();
+    PageData["menu-item"] = "admin";
+}
+
+		<ul class="tabs autofill-submenu-items">
+			<li class="current"><a class="current" href="#admin-bookings">Bookings</a></li>
+        </ul>
+
+		<div id="admin-bookings" class="tab-body current fancy tabbed buttons clearfix bookings-tab">
+            <ul class="tabs">
+                <li class="current"><a class="button profile fanciful" href="#bookings-maybe-performed">Maybe Performed</a></li>
+                <li><a class="button profile fanciful" href="#bookings-dispute">In Dispute</a></li>
+            </ul>
+            
+            <div id="bookings-maybe-performed" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=maybe-performed")">
+                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "maybe-performed" })
+            </div><!-- #bookings-maybe-performed -->
+            <div id="bookings-dispute" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=dispute")">
+                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })
+            </div><!-- #bookings-dispute -->
+		</div><!-- #admin-bookings -->

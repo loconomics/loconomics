@@ -45,7 +45,7 @@
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
-					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+					AND Pos.LanguageID = @1 AND Pos.CountryID = @2
     ";
     var sqlWherePendingBookingRequest = @"
         WHERE   
@@ -115,7 +115,7 @@
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = R.PositionID
-					AND Pos.CountryID = @3 AND Pos.LanguageID = @4
+					AND Pos.LanguageID = @3 AND Pos.CountryID = @4
         WHERE   (
                  R.CustomerUserID=@0
                   OR
@@ -213,8 +213,8 @@
             if ((int)item.BookingStatusID > 0) {
                 switch ((int)item.BookingStatusID){
                     case 1:
-                        buttonAction = "accepted";
-                        buttonLabel = "Accepted";
+                        buttonAction = "confirmed";
+                        buttonLabel = "Confirmed";
                         break;
                     case 2:
                     case 3:

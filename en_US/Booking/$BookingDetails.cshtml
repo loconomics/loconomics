@@ -83,11 +83,11 @@
 					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
         WHERE   B.BookingID = @0
                  AND
-                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
+                (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)
     ";
     dynamic booking;
     using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBooking, bID, u.UserID, 1, 1);
+        booking = db.QuerySingle(sqlGetBooking, bID, u.UserID, 1, 1, u.IsAdmin);
     }
 }
 @helper printDateTimeRange(DateTime start, DateTime end){

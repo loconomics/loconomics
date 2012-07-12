@@ -17,7 +17,7 @@
 
     var pages = new List<string> {
         "account", "calendar", "mailbox", "myclients", "myproviders", "positions", "preferences",
-        "ressources", "tools", "bookings"
+        "ressources", "tools", "bookings", "admin"
     };
     if (pages.Contains(page)) {
         fileToRender = UrlUtil.LangPath + "_DashboardContent/$" + page + ".cshtml";
@@ -86,6 +86,9 @@
                         }
                         <li class="@menu("preferences")"><a href="@(UrlUtil.LangPath)Dashboard/Preferences/">Preferences</a></li>
                         <li class="@menu("account")"><a href="@(UrlUtil.LangPath)Dashboard/Account/">Account</a></li>
+                        @if (u.IsAdmin){
+                        <li class="@menu("admin") admin"><a href="@(UrlUtil.LangPath)Dashboard/Admin/">Admin</a></li>
+                        }
                     </ul>
                 </div><!-- nav -->
             

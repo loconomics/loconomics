@@ -177,6 +177,13 @@
     */
     public static void SecurePage() {
         if (!WebSecurity.IsAuthenticated)
+            RedirectToLogin();
+    }
+    public static void AdminPage() {
+        if (!WebSecurity.IsAuthenticated || DashboardFunctions.GetUserRow().IsAdmin == false)
+            RedirectToLogin();
+    }
+    public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
                 ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(Request.UrlReferrer.PathAndQuery));
             else

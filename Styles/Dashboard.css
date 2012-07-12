@@ -197,6 +197,12 @@
     width: 186px;
     overflow: hidden;
 }
+.dashboard #profile-menu li.admin {
+    background: #8B2143 !important;
+}
+.dashboard #profile-menu li.admin a {
+    color: white !important;
+}
 .dashboard #profile-menu {
     list-style: none;
     padding: 0;
@@ -1148,4 +1154,20 @@ form#personal li > label.gender {
 }
 .conversation-messages > li.new-message form > fieldset.actions {
     margin-bottom: 0 !important;
+}
+
+/*=== Admin dashboard
+ */
+#admin-bookings .items-list h5 {
+    font-size: 1em;
+    display: inline;
+}
+#admin-bookings .items-list > li > .item-summary {
+    width: 660px;
+}
+#admin-bookings .items-list > li > .actions {
+    width: 250px;
+}
+#admin-bookings .change-booking-status {
+    display: none;
 }

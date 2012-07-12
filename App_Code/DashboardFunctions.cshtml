@@ -32,6 +32,7 @@
                             Photo,
                             PreferredLanguageID,
                             PreferredCountryID,
+                            coalesce(IsAdmin, cast(0 as bit)) As IsAdmin,
                             IsCustomer,
                             IsProvider,
                             (CASE WHEN IsProvider=1 AND (
@@ -103,6 +104,7 @@
                             ,Photo
                             ,PreferredLanguageID
                             ,PreferredCountryID
+                            ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                             ,IsCustomer
                             ,IsProvider
                             ,(CASE WHEN IsProvider=1 AND (
