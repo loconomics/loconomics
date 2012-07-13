@@ -382,6 +382,11 @@ $(document).ready(function () {
             TabbedUX.focusTab(thereIsTab);
             return false;
         }
+    })
+    .on('click', '.reload-action', function () {
+        // Generic action to call lc.jquery 'reload' function from an element inside itself.
+        var $t = $(this);
+        $t.closest($t.data('reload-target')).reload();
     });
     /* Enable focus tab on every hash change, now there are two scripts more specific for this:
     * one when page load,

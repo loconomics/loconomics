@@ -76,7 +76,7 @@
                     }
                 }
             } else if (Request.Form["see-payment-data"] != null) {
-                
+                paymentdata = "This must a dynamic database row with payment data";
             }
         }
 
@@ -106,14 +106,19 @@
 }
 @if (paymentdata != null)
 {
-<div class="payment-data">
-    TODO PAYMENT DATA
+<div class="payment-data ajax-box">
+    <p>TODO PAYMENT DATA</p>
+
+    <button type="button" class="button fancy reload-action" data-reload-target=".edit-popup">Return to 'change booking state' form</button>
 </div>
 }
+else
+{
 <form method="post" action="@(UrlUtil.LangPath)Admin/$ChangeBookingState/?BookingID=@(bookingID)" class="ajax ajax-box change-booking-status-form">
     @if (IsPost) { CommonHelpers.GetValidationScripts(); }
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    @if (bookingID > 0 && booking != null) {
+    @if (bookingID > 0 && booking != null)
+    {
         <input class="change-booking-state-action" type="hidden" />
         <fieldset>
             <legend>Change Booking Status:</legend>
@@ -162,3 +167,4 @@
         </fieldset>
     }
 </form>
+}
