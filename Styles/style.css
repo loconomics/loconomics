@@ -1,9 +1,3 @@
-@import url('Profile.css');
-@import url('Search.css');
-@import url('Provider-sign-up.css');
-@import url('Dashboard.css');
-@import url('Booking.css');
-
 @font-face {
     font-family: 'Hand Of Sean';
     src: url('fonts/handsean.otf');

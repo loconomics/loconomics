@@ -1,6 +1,7 @@
 ﻿@{     
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-   
+    Styles.Add(UrlUtil.AppPath + "Styles/Profile.css");
+
     int userid = Request["userid"].AsInt();
     if (userid == 0) {
         userid = UrlData[0].AsInt();

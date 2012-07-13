@@ -1,6 +1,9 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "Search Results...";
+    Styles.Add(UrlUtil.AppPath + "Styles/Profile.css");
+    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
     
     /* Getting search parameters */
     var serviceType = PageData["serviceType"] = Request["serviceType"];
