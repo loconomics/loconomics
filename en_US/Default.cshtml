@@ -3,6 +3,18 @@
     Page.Title = "Make your life better.";
 
     PageData["BodyClass"] = "home";
+    PageData["IsHomePage"] = true;
+    PageData["InlineScript"] = @"
+        $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+        $('.date-pick', document)
+            .val(new Date().asString($.datepicker._defaults.dateFormat))
+            .datepicker({
+                showOn: 'button',
+                buttonImage: '',
+                buttonImageOnly: true,
+                showAnim: 'blind'
+            });
+    ";
 }
 
   <div id="container" class="home clearfix"> 
@@ -13,13 +25,13 @@
 				<!-- <label for="serviceType">Enter Service </label> -->
             <input class="fanciful" type="text" name="serviceType" id="serviceType" placeholder="e.g. Cleaner, Tutor..." /> in 
             <input class="fanciful" type="text" name="serviceLocation" id="serviceLocation" placeholder="San Francisco, CA" />
-            <!-- <input class="go" type="submit" value="Find Services"/> -->
+            @*<!-- <input class="go" type="submit" value="Find Services"/> -->
 				<!-- <select id="serviceLocation" name="serviceLocation">
 					<option value="" selected>Select a location</option>
 					<option value="madrid">Madrid</option>
 					<option value="minneapolis">Minneapolis</option>
 					<option value="new-york">NYC</option>
-				</select> -->
+				</select> -->*@
 			</fieldset>
 			<fieldset>
 				<label class="serviceDate" for="serviceDate">Preferred date:</label> <input class="fanciful date-pick" type="text" id="serviceDate" name="serviceDate" value="today" /> <button class="fancy" type="submit">Find Services</button>
