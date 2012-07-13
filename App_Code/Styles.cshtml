@@ -1,0 +1,18 @@
+﻿@* IagoSRL: Styles Helper class similar to buit-in ScriptsHelper
+*@
+@using System.Web.WebPages.Scope;
+@functions{ static public void Add(string cssFile){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__Styles"] == null){
+        p["__Styles"] = new List<string>();
+    }
+    ((List<string>)p["__Styles"]).Add(cssFile);
+}}
+@helper GetStylesTags(){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__Styles"] != null){
+        foreach(var s in (List<string>)p["__Styles"]){
+            <link rel="stylesheet" href="@s"/>
+        }
+    }
+}
