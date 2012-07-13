@@ -75,7 +75,7 @@ $(document).ready(function () {
     $('body').delegate('.bookings-list .actions .item-action', 'click', function () {
         var $t = $(this);
         if ($t.hasClass('change-state'))
-            openChangeBookingStateForm($t.data('booking-id'));
+            openChangeBookingStateForm($t.data('booking-id'), $t);
         else
             openBookingInTab(
                 $t.data('booking-request-id'),
@@ -160,6 +160,20 @@ $(document).ready(function () {
         );
     });
 
+    /*===============
+    * Admin bookings
+    */
+    $('body').on('click', '.change-booking-status .set-status, .change-booking-status .see-payment-data', function () {
+        var $t = $(this);
+        var form = $t.closest('form');
+        var h = form.find('.change-booking-state-action');
+        h.val($t.val());
+        if ($t.hasClass('set-status'))
+            h.attr('name', 'change-booking-status-id');
+        else if ($t.hasClass('see-payment-data'))
+            h.attr('name', 'see-payment-data');
+        form.submit();
+    });
 
     /*=========
     * Messaging
@@ -587,6 +601,11 @@ function initPositionPhotos() {
         }
     });
 }
-function openChangeBookingStateForm(bookingID) {
-    $('.change-booking-status.edit-popup').show();
+function openChangeBookingStateForm(bookingID, button) {
+    var tab = button.closest('.tab-body');
+    var editPanel = $('.change-booking-status.edit-popup', tab);
+    var bookingID = button.data('booking-id');
+    var url = editPanel.data('source-url').replace('BookingID=0', 'BookingID=' + bookingID);
+    editPanel.reload(url);
+    editPanel.show();
 }

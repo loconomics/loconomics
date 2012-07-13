@@ -687,6 +687,7 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     width: 100%;
     padding: 40px 0 !important;
     background: white;
+    z-index: 2000;
 }
 /**** Form: Positions Licenses ****/
 .positionlicenses .license-request li label{
@@ -1170,4 +1171,11 @@ form#personal li > label.gender {
 }
 #admin-bookings .change-booking-status {
     display: none;
+    margin: 36px auto;
+}
+#admin-bookings .change-booking-status form {
+    padding: 0 10px;
+}
+#admin-bookings .set-as-performed {
+    margin: 20px 0;
 }

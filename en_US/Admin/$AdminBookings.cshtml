@@ -158,7 +158,7 @@
     })
     <div class="actions">
         <button class="item-action @buttonAction" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">View</button>
-        <button class="item-action change-state" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">Change State</button>
+        <button class="item-action change-state" data-booking-id="@item.BookingID">Change State</button>
         <div class="total-price item-extra-info">$@item.TotalPrice</div>
     </div>
     <ul class="item-summary">
@@ -197,38 +197,7 @@
         @(iprint + pitem.Name + " " + pitem.Quantity)
     }
 }
-<div>
-    <form method="post" action="@(UrlUtil.LangPath)Admin/$AdminBookings/" id="@idprefix" class="ajax ajax-box change-booking-status edit-popup">
-        @if(IsPost) {CommonHelpers.GetValidationScripts();}
-        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-        <fieldset>
-            <legend>Change Booking Status:</legend>
-            <ul>
-                <li><strong>BookingID:</strong> <span class="booking-id"></span></li>
-                <li><strong>Current Status:</strong> <span class="booking-status"></span></li>
-                <li>
-                    <button class="button fancy set-status performed-without-status">Set as Performed With NO Pricing Adjustment (an email will be sent to providers and customers to allow them review each other)</button>
-                </li>
-                <li>
-                    <label>Adjusted price: <input name="booking-adjusted-price" /></label>
-                    <button class="button fancy set-status performed-with-status">Set as Performed With Pricing Adjustment (booking price will change and an email will be sent to providers and customers to allow them review each other)</button>
-                </li>
-                <li>
-                    <button class="button fancy set-status complete-status">Set as Complete (email will be sent to providers and customers to notify the Status)</button>
-                </li>
-                <li>
-                    <button class="button fancy set-status dispute-status">Set as Dispute (an email will be sent to providers and customers to notify the Status)</button>
-                </li>
-                <li>
-                    <button class="button fancy see-payment-data">Click here to see the provider payment data (you will need it after set status 'performed'!)</button>
-                </li>
-                <li>
-                    <button class="button fancy close-edit-popup">Do nothing and close me!</button>
-                </li>
-            </ul>
-        </fieldset>
-    </form>
-</div>
+<div class="change-booking-status edit-popup" data-source-url="@(UrlUtil.LangPath)Admin/$ChangeBookingState/?BookingID=0"></div>
 <ul class="booking-list-groups items-groups-list">
 
     @if (view == "maybe-performed")
@@ -273,7 +242,7 @@
         if (disputeBookings.Count > 0)
         {
         <li>
-            <h3>Failed:
+            <h3>In Dispute:
                 <span class="items-count bookings-number">@disputeBookings.Count @(disputeBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
             </h3>
             <ul class="bookings-list items-list dispute-bookings">
