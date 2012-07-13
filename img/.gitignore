@@ -2,7 +2,6 @@
 *.jpg
 *.png
 *.gif
-!search-categories/*.*
 !userphotos/u0/*.*
 !theme/*.*
 !email/*.*

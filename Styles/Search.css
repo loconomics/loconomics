@@ -90,7 +90,8 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search-categories ul li{
     text-indent: -9999px;
-    background: transparent no-repeat center;
+    /* Using an sprite, mantain width and height exactly as image fragment */
+    background: url('../img/theme/search-categories.png') no-repeat 0 0;
     width: 84px;
     height: 84px;
     float: left;
@@ -104,31 +105,32 @@ ul.search-results table td { padding-right: 16px; }*/
     height: 84px;
     display: block;
 }
-.search-categories li.cat-home{             background-image: url('../img/search-categories/icon-home.gif');}
-.search-categories li.cat-child{            background-image: url('../img/search-categories/icon-child.gif');}
-.search-categories li.cat-pets{             background-image: url('../img/search-categories/icon-pets.gif');}
-.search-categories li.cat-people{           background-image: url('../img/search-categories/icon-people.gif');}
-.search-categories li.cat-transport{        background-image: url('../img/search-categories/icon-transport.gif');}
-.search-categories li.cat-business{         background-image: url('../img/search-categories/icon-business.gif');}
-.search-categories li.cat-elderly{          background-image: url('../img/search-categories/icon-elderly.gif');}
-.search-categories li.cat-celebrations{     background-image: url('../img/search-categories/icon-celebrations.gif'); }
+.search-categories li.cat-list-title {      background: none;}
+.search-categories li.cat-home{             background-position: -336px 0}
+.search-categories li.cat-child{            background-position: -168px 0}
+.search-categories li.cat-pets{             background-position: -504px 0}
+.search-categories li.cat-people{           background-position: -420px 0}
+.search-categories li.cat-transport{        background-position: -588px 0}
+.search-categories li.cat-business{         background-position: 0 0}
+.search-categories li.cat-elderly{          background-position: -252px 0}
+.search-categories li.cat-celebrations{     background-position: -84px 0}
 /* Selected image */
 .search-categories li.selected.cat-home,
-.search-categories li.cat-home:hover{             background-image: url('../img/search-categories/icon-home-on.gif');}
+.search-categories li.cat-home:hover{             background-position: -336px -84px}
 .search-categories li.selected.cat-child,
-.search-categories li.cat-child:hover{            background-image: url('../img/search-categories/icon-child-on.gif');}
+.search-categories li.cat-child:hover{            background-position: -168px -84px}
 .search-categories li.selected.cat-pets,
-.search-categories li.cat-pets:hover{             background-image: url('../img/search-categories/icon-pets-on.gif');}
+.search-categories li.cat-pets:hover{             background-position: -504px -84px}
 .search-categories li.selected.cat-people,
-.search-categories li.cat-people:hover{           background-image: url('../img/search-categories/icon-people-on.gif');}
+.search-categories li.cat-people:hover{           background-position: -420px -84px}
 .search-categories li.selected.cat-transport,
-.search-categories li.cat-transport:hover{        background-image: url('../img/search-categories/icon-transport-on.gif');}
+.search-categories li.cat-transport:hover{        background-position: -588px -84px}
 .search-categories li.selected.cat-business,
-.search-categories li.cat-business:hover{         background-image: url('../img/search-categories/icon-business-on.gif');}
+.search-categories li.cat-business:hover{         background-position: 0 -84px}
 .search-categories li.selected.cat-elderly,
-.search-categories li.cat-elderly:hover{          background-image: url('../img/search-categories/icon-elderly-on.gif');}
+.search-categories li.cat-elderly:hover{          background-position: -252px -84px}
 .search-categories li.selected.cat-celebrations,
-.search-categories li.cat-celebrations:hover{     background-image: url('../img/search-categories/icon-celebrations-on.gif'); }
+.search-categories li.cat-celebrations:hover{     background-position: -84px -84px}
 
 /********************************************/
 /*** generic buttons-list class *************/
