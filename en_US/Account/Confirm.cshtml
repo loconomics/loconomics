@@ -9,7 +9,7 @@
     WebSecurity.Logout();
     if (!confirmationToken.IsEmpty()) {
         if (WebSecurity.ConfirmAccount(confirmationToken)) {
-            message = "Registration Confirmed! Click on Login to start.";
+            message = "Registration Confirmed! Please login to begin.";
         } else {
             message = "Could not confirm your registration info";
         }
@@ -18,7 +18,7 @@
   <div id="container" class="clearfix">
 
 <hgroup class="title">
-    <h1>Confirm.</h1>
+    <h1>Your account has been verified</h1>
     @if (confirmationToken.IsEmpty())
     {
     <h2>Use the form below to confirm your account.</h2>
