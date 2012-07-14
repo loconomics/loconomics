@@ -24,6 +24,11 @@
            <link rel="stylesheet" href="@Href(UrlUtil.AppPath + "Styles/style.css?v=20120713")"/>
            @Styles.GetStylesTags()
            <script src="@Href(UrlUtil.AppPath + "Scripts/modernizr.custom.2.5.3.js")" type="text/javascript"></script>
+           <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+            @* Our UrlUtil class *@
+            <script type="text/javascript">
+                @Html.Raw(UrlUtil.ToJsVar())
+            </script>
     </head>
 
     <body class="@PageData["BodyClass"]">
@@ -106,7 +111,6 @@
 			</div>
 		</div><!-- #modals -->
         <div class="scripts">
-            <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
             <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
             <script src="@Href(UrlUtil.AppPath + "Scripts/date.js")" type="text/javascript"></script>
             @if (LcData.GetCurrentLanguageID() == 2)
