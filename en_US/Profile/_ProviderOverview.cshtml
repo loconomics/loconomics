@@ -49,7 +49,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
             {
                 <div class="have-view-more">
                     <h5 data-description="@cat.Value["ServiceAttributeCategoryDescription"]" title="@cat.Value["ServiceAttributeCategoryName"]">@cat.Value["ServiceAttributeCategoryName"]:</h5>
-                    <!--<a class="button view-more" href="#">More</a>-->
+                    @if(!String.IsNullOrEmpty(cat.Value["ServiceAttributeCategoryDescription"])){<a class="tooltip-button button view-more" href="#" data-description="@cat.Value["ServiceAttributeCategoryDescription"]" title="@cat.Value["ServiceAttributeCategoryName"]">More</a>}
                     @printAttributes(cat.Key, cat.Value["ServiceAttributes"])
                     <!--<a class="view-more" href="#">View more</a>-->
                 </div>

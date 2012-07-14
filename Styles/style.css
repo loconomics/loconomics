@@ -944,7 +944,7 @@ form fieldset.actions{
     background: url('../img/plus.png') no-repeat;
     margin: 2px 5px;
     vertical-align: middle;
-    position: static;
+    position: static !important;
 }
 
 /****************************************/

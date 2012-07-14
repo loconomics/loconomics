@@ -1173,11 +1173,11 @@ function configureTooltip() {
         // Return the content added:
         return c;
     }
-    $('body').on('mousemove focusin', '[title][data-description]', function (e) {
+    function showTooltip(e) {
         var $t = $(this);
-        var t = $('body > .tooltip:eq(0)');
+        var t = $('body > .tooltip-singleton-layer:eq(0)');
         if (t.length == 0) {
-            t = $('<div style="position:absolute" class="tooltip fancy"></div>');
+            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer fancy"></div>');
             t.hide();
             $('body').append(t);
         }
@@ -1191,11 +1191,15 @@ function configureTooltip() {
                 t.fadeIn();
         }
         return false;
-    }).on('mouseleave focusout', '[title]', function () {
-        var t = $('body > .tooltip:eq(0)');
+    }
+    function hideTooltip(e) {
+        var t = $('body > .tooltip-singleton-layer:eq(0)');
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
-    });
+    }
+    $('body').on('mousemove focusin', '[title][data-description]', showTooltip)
+    .on('mouseleave focusout', '[title]', hideTooltip)
+    .on('click', '.tooltip-button', function () { return false });
 }
 function smoothBoxBlock(contentBox, blocked, close) {
     contentBox = $(contentBox);
