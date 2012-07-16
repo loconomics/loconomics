@@ -21,12 +21,22 @@
                 @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "maybe-performed" })
             </div><!-- #bookings-maybe-performed -->
             <div id="bookings-dispute" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=dispute")">
-                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })
+                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })*@
             </div><!-- #bookings-dispute -->
             <div id="bookings-performed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=performed")">
-                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "performed" })
+                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "performed" })*@
             </div><!-- #bookings-performed -->
             <div id="bookings-completed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=completed")">
-                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "completed" })
+                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "completed" })*@
             </div><!-- #bookings-completed -->
 		</div><!-- #admin-bookings -->
+        <script type="text/javascript">
+            $(function () {
+                //$('#admin-bookings').on('tabFocused', '.tab-body', function () {
+                $('#admin-bookings > .tab-body').on('tabFocused', function () {
+                    var $t = $(this);
+                    if ($t.children().length == 0)
+                        $t.reload();
+                });
+            });
+        </script>
