@@ -151,7 +151,7 @@
             itemType = "bookingrequest-confirmation";
         } else if (item.LastMessageTypeID >= 13 && item.LastMessageTypeID <= 14) {
             itemType = "bookingrequest-denegation";
-        } else if (item.LastMessageTypeID >= 15 && item.LastMessageTypeID <= 16) {
+        } else if (item.LastMessageTypeID >= 15 && item.LastMessageTypeID <= 16 || item.lastMessageTypeID == 19) {
             itemType = "booking";
         }
     }
