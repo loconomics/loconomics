@@ -8,7 +8,7 @@
     
     string idprefix = "admin-bookings";
     
-    // possible values: "maybe-performed", "dispute", "performed-without-pricing-adjustment", "performed-with-pricing-adjustment"
+    // possible values: "maybe-performed" (confirmed in post end-time dates), "dispute", "performed" (both with and without pricing adjustment), "completed"
     string view = PageData["view"] ?? Request["view"] ?? "maybe-performed";
     
     // NOTE: SAME as the Select part of the sqlGetBookingsByDateRange found in Booking/$BookingsList; must be converted to a database view (and with the order clause)
@@ -67,14 +67,29 @@
                 -- State dispute-dispute
                 B.BookingStatusID = 5
     ";
-    var sqlOrderBooking = @"
-        ORDER BY E.EndTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
+    var sqlWherePerformedBooking = @"
+        WHERE
+                -- States performed with or without pricing adjustment
+                B.BookingStatusID IN (2, 3)
     ";
-    var sqlGetMaybePerformedBooking = sqlSelectBookings + sqlWhereMaybePerformedBooking + sqlOrderBooking;
-    var sqlGetDisputeBooking = sqlSelectBookings + sqlWhereDisputeBooking + sqlOrderBooking;
+    var sqlWhereCompletedBooking = @"
+        WHERE
+                -- State Completed
+                B.BookingStatusID = 4
+    ";
+    var sqlOrderASCBooking = @"
+        ORDER BY E.EndTime ASC, B.UpdatedDate ASC, R.UpdatedDate ASC
+    ";
+    var sqlOrderDESCBooking = @"
+        ORDER BY E.EndTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
+    "; 
+    var sqlGetMaybePerformedBooking = sqlSelectBookings + sqlWhereMaybePerformedBooking + sqlOrderDESCBooking;
+    var sqlGetDisputeBooking = sqlSelectBookings + sqlWhereDisputeBooking + sqlOrderDESCBooking;
+    var sqlGetPerformedBooking = sqlSelectBookings + sqlWherePerformedBooking + sqlOrderDESCBooking;
+    var sqlGetCompletedBooking = sqlSelectBookings + sqlWhereCompletedBooking + sqlOrderASCBooking;
 
-    dynamic justMaybePerformedBookings = null, maybePerformedBookings = null, disputeBookings = null, performedWihoutBookings = null, 
-        performedWithBookings = null;
+    dynamic justMaybePerformedBookings = null, maybePerformedBookings = null, disputeBookings = null, performedBookings = null, 
+        completedBookings = null;
     using (var db = Database.Open("sqlloco")) {
         switch (view) {
             case "maybe-performed":
@@ -90,6 +105,12 @@
                 break;
             case "dispute":
                 disputeBookings = db.Query(sqlGetDisputeBooking, null, null, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                break;
+            case "performed":
+                performedBookings = db.Query(sqlGetPerformedBooking, null, null, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                break;
+            case "completed":
+                completedBookings = db.Query(sqlGetCompletedBooking, null, null, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 break;
         }
     }
@@ -120,11 +141,11 @@
                 break;
             case 2:
                 buttonAction = "performed-without";
-                buttonLabel = "Done, no adjustment";
+                buttonLabel = "Performed, no pricing adjustment";
                 break;
             case 3:
                 buttonAction = "performed-with";
-                buttonLabel = "Done, with adjustment";
+                buttonLabel = "Performed, with pricing adjustment";
                 break;
             case 4:
                 buttonAction = "completed";
@@ -247,6 +268,48 @@
             </h3>
             <ul class="bookings-list items-list dispute-bookings">
                 @foreach (var item in disputeBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
+        else
+        {
+            <li class="no-items">There are not bookings</li>
+        }
+    }
+    else if (view == "performed")
+    {
+        if (performedBookings.Count > 0)
+        {
+        <li>
+            <h3>Performed (both with or without pricing adjustment):
+                <span class="items-count bookings-number">@performedBookings.Count @(performedBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list performed-bookings">
+                @foreach (var item in performedBookings)
+                {
+                    @printItem(item)
+                }
+            </ul>
+        </li>
+        }
+        else
+        {
+            <li class="no-items">There are not bookings</li>
+        }
+    }
+    else if (view == "completed")
+    {
+        if (completedBookings.Count > 0)
+        {
+        <li>
+            <h3>Completed:
+                <span class="items-count bookings-number">@completedBookings.Count @(completedBookings.Count == 1 ? strBookingSingular : strBookingPlural)</span>
+            </h3>
+            <ul class="bookings-list items-list completed-bookings">
+                @foreach (var item in completedBookings)
                 {
                     @printItem(item)
                 }

@@ -13,6 +13,8 @@
             <ul class="tabs">
                 <li class="current"><a class="button profile fanciful" href="#bookings-maybe-performed">Maybe Performed</a></li>
                 <li><a class="button profile fanciful" href="#bookings-dispute">In Dispute</a></li>
+                <li><a class="button profile fanciful" href="#bookings-performed">Performed</a></li>
+                <li><a class="button profile fanciful" href="#bookings-completed">Completed</a></li>
             </ul>
             
             <div id="bookings-maybe-performed" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=maybe-performed")">
@@ -21,4 +23,10 @@
             <div id="bookings-dispute" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=dispute")">
                 @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })
             </div><!-- #bookings-dispute -->
+            <div id="bookings-performed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=performed")">
+                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "performed" })
+            </div><!-- #bookings-performed -->
+            <div id="bookings-completed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=completed")">
+                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "completed" })
+            </div><!-- #bookings-completed -->
 		</div><!-- #admin-bookings -->
