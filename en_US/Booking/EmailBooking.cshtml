@@ -17,69 +17,7 @@
 
     // TODO: Calculate location distance from provider to customer
     
-    var sqlGetBooking = @"
-        SELECT  R.BookingRequestID,
-                B.BookingID,
-                R.ProviderUserID,
-                R.CustomerUserID,
-                R.PricingEstimateID,
-                R.SpecialRequests,
-                R.UpdatedDate,
-                R.BookingRequestStatusID,
-                B.BookingStatusID,
-
-                --TODO where is bank account (last numbers) or how calculate paymentDate
-                getdate() As PaymentDate,
-                -- account only for provider
-                '1234' As PaymentAccountLastDigits,
-
-                Pos.PositionSingular,
-
-                L.UserID As LocationUserID,
-                LU.FirstName As LocationUserFirstName,
-                L.NickName As LocationName,
-                L.AddressLine1, L.AddressLine2,
-                L.City,
-                SP.StateProvinceName, SP.StateProvinceCode,
-                PC.PostalCode,
-
-                E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
-
-                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
-        FROM    BookingRequest As R
-                 INNER JOIN
-                Booking As B
-                  ON R.BookingRequestID = B.BookingRequestID
-                 INNER JOIN
-                PricingEstimate As P
-                  ON P.PricingEstimateID = R.PricingEstimateID
-                 INNER JOIN
-                ServiceAddress As L
-                  ON R.ServiceAddressID = L.ServiceAddressID
-                 INNER JOIN
-                Users As LU
-                  ON L.UserID = LU.UserID
-                 INNER JOIN
-                StateProvince As SP
-                  ON SP.StateProvinceID = L.StateProvinceID
-                 INNER JOIN
-                PostalCode As PC
-                  ON PC.PostalCodeID = L.PostalCodeID
-                 INNER JOIN
-                CalendarEvents As E
-                  ON E.ID = B.ConfirmedDateID
-                 INNER JOIN
-                Positions As Pos
-                  ON Pos.PositionID = R.PositionID
-					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
-        WHERE   B.BookingID = @0
-                 AND
-                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
-    ";
-    dynamic booking;
-    using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBooking, bID, thisUserID, 1, 1);
-    }
+    var booking = BookingHelper.GetBookingForUser(bID, thisUserID, true);
 }
 @helper printDateTimeRange(DateTime start, DateTime end){
     @start.ToLongDateString()
@@ -191,6 +129,31 @@ else
 <div class="booking-request booking main-side">
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+    @if (DateTime.Now > booking.ConfirmedDateEnd)
+    {
+    <div class="actions">
+        @if (myUserType == "customer") {
+            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+                @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
+            </a>
+            if (booking.ReviewedByProvider == true) {
+            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+                View provider revision
+            </a>
+            }
+        } else if (myUserType == "provider") {
+            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+                @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
+            </a>
+            if (booking.ReviewedByCustomer == true) {
+            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+                View customer revision
+            </a>
+            }
+        }
+    </div>
+    }
 
     <h4>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 

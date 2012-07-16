@@ -85,11 +85,94 @@
                      INNER JOIN
                     Positions As Pos
                       ON Pos.PositionID = R.PositionID
-					    AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+					    AND Pos.LanguageID = @1 AND Pos.CountryID = @2
             WHERE   B.BookingID = @0
         ";
         using (var db = Database.Open("sqlloco")) {
-            return db.QuerySingle(sqlGetBooking, BookingID, 1, 1);
+            return db.QuerySingle(sqlGetBooking, BookingID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+    public static dynamic GetBookingForUser(int BookingID, int UserID, bool IsAdmin) {
+        var sqlGetBooking = @"
+            SELECT  R.BookingRequestID,
+                    B.BookingID,
+                    R.ProviderUserID,
+                    R.CustomerUserID,
+                    R.PricingEstimateID,
+                    R.SpecialRequests,
+                    R.UpdatedDate,
+                    R.BookingRequestStatusID,
+                    B.BookingStatusID,
+                    R.PositionID,
+
+                    DATEADD(day, 7, E.EndTime) As PaymentDate,
+                    (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
+                     WHERE ProviderPaymentPreference.ProviderUserID = R.ProviderUserID)
+                     As PaymentProviderAccountLastDigits,
+                    R.PaymentLastFourCardNumberDigits As PaymentCustomerCardLastDigits,
+
+                    Pos.PositionSingular,
+
+                    L.UserID As LocationUserID,
+                    LU.FirstName As LocationUserFirstName,
+                    L.NickName As LocationName,
+                    L.AddressLine1, L.AddressLine2,
+                    L.City,
+                    SP.StateProvinceName, SP.StateProvinceCode,
+                    PC.PostalCode,
+
+                    E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
+
+                    P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice,
+
+                    CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
+                        WHERE URP.BookingID = B.BookingID
+                            AND
+                            URP.ProviderUserID = R.ProviderUserID
+                            AND 
+                            URP.PositionID = 0
+                    ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByProvider,
+                    CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URC
+                        WHERE URC.BookingID = B.BookingID
+                            AND
+                            URC.CustomerUserID = R.CustomerUserID
+                            AND 
+                            URC.PositionID = R.PositionID
+                    ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByCustomer
+            FROM    BookingRequest As R
+                     INNER JOIN
+                    Booking As B
+                      ON R.BookingRequestID = B.BookingRequestID
+                     INNER JOIN
+                    PricingEstimate As P
+                      ON P.PricingEstimateID = R.PricingEstimateID
+                     INNER JOIN
+                    ServiceAddress As L
+                      ON R.ServiceAddressID = L.ServiceAddressID
+                     INNER JOIN
+                    Users As LU
+                      ON L.UserID = LU.UserID
+                     INNER JOIN
+                    StateProvince As SP
+                      ON SP.StateProvinceID = L.StateProvinceID
+                     INNER JOIN
+                    PostalCode As PC
+                      ON PC.PostalCodeID = L.PostalCodeID
+                     INNER JOIN
+                    CalendarEvents As E
+                      ON E.ID = B.ConfirmedDateID
+                     INNER JOIN
+                    Positions As Pos
+                      ON Pos.PositionID = R.PositionID
+					    AND Pos.LanguageID = @2 AND Pos.CountryID = @3
+            WHERE   B.BookingID = @0
+                     AND
+                    (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(sqlGetBooking, BookingID, UserID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), 
+                IsAdmin);
         }
     }
     public static string GetBookingRequestDetails(int BookingRequestID){
