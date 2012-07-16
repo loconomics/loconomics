@@ -211,7 +211,7 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
-            string subject = BookingHelper.GetBookingSubject(BookingRequestID);
+            string subject = BookingHelper.GetBookingSubject(BookingID);
             string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
@@ -272,6 +272,57 @@ public class LcMessaging
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
+                ,{ "UserID", thread.CustomerUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", customer.Email }
+            }));
+        }
+    }
+    /// <summary>
+    /// Send a message notifing of an update in the booking (status mainly, but maybe some data as price change or...),
+    /// can be done by (bySystemProviderOrCustomer) a provider 'p', a customer 'c' or a sys-admin 's'
+    /// </summary>
+    /// <param name="BookingRequestID"></param>
+    /// <param name="BookingID"></param>
+    /// <param name="bySystemProviderOrCustomer"></param>
+    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer)
+    {
+        dynamic customer = null, provider = null, thread = null;
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get Thread info
+            thread = db.QuerySingle(sqlGetThreadByAux, BookingID, "Booking");
+            if (thread != null)
+            {
+                // Get Customer information
+                customer = db.QuerySingle(sqlGetUserData, thread.CustomerUserID);
+                // Get Provider information
+                provider = db.QuerySingle(sqlGetUserData, thread.ProviderUserID);
+            }
+        }
+        if (customer != null && provider != null)
+        {
+            // Create message body based on detailed booking data
+            string subject = BookingHelper.GetBookingSubject(BookingID);
+            string message = BookingHelper.GetBookingStatus(BookingID);
+
+            // ThreadStatus=2, responded;
+            // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19
+            int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
+            int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
+
+            SendMail(provider.Email, "Loconomics.com: Booking Update", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
+                ,{ "UserID", thread.ProviderUserID }
+                ,{ "RequestKey", SecurityRequestKey }
+                ,{ "EmailTo", provider.Email }
+            }));
+            SendMail(customer.Email, "Loconomics.com: Booking Update", 
+                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                new Dictionary<string, object> {
+                { "BookingID", BookingID }
                 ,{ "UserID", thread.CustomerUserID }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }

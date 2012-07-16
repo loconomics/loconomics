@@ -67,9 +67,9 @@
                             ", bookingID, statusID);
                         }
                         
-                        // Send email notifying the booking change
-                        // TODO
-                        
+                        // Send email notifying the booking status change/update
+                        LcMessaging.SendBookingUpdate(bookingID, 's');
+
                         if (ModelState.IsValid) {
                             CommonHelpers.ReturnJsonResult(0, "Booking State Changed! An email was sent to provider and customer");
                         }

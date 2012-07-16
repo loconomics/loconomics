@@ -175,7 +175,7 @@
         }
         return result;
     }
-    public static string GetBookingSubject(int BookingRequestID){
+    public static string GetBookingSubject(int BookingID){
         var getBookingRequest = @"
             SELECT  TOP 1
                     P.PositionSingular,
@@ -194,7 +194,7 @@
         ";
         dynamic summary = null;
         using (var db = Database.Open("sqlloco")){
-            summary = db.QuerySingle(getBookingRequest, BookingRequestID);
+            summary = db.QuerySingle(getBookingRequest, BookingID);
         }
         string result = "";
         if (summary != null) {
@@ -204,5 +204,22 @@
                 summary.ConfirmedDateEnd.ToShortTimeString();
         }
         return result;
+    }
+    public static string GetBookingStatus(int BookingID){
+        var getBookingStatus = @"
+            SELECT  BookingStatusName, BookingStatusDescription
+            FROM    BookingStatus As BS
+                     INNER JOIN
+                    Booking As B
+                      ON B.BookingStatusID = BS.BookingStatusID
+            WHERE   B.BookingID = @0
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            var b = db.QuerySingle(getBookingStatus, BookingID);
+            if (b != null){
+                return b.BookingStatusDescription ?? b.BookingStatusName;
+            }
+        }
+        return "";
     }
 }
