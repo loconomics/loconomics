@@ -54,9 +54,6 @@
                              Request["TotalServiceFeesPaidByCustomer"].AsDecimal(),
                              Request["TotalPaidToProvider"].AsDecimal(),
                              Request["TotalServiceFeesPaidByProvider"].AsDecimal());
-                            
-                            // Send email for provider-customer reviews:
-                            // TODO
                         } else {
                             db.Execute(@"
                                 UPDATE Booking SET
@@ -67,7 +64,7 @@
                             ", bookingID, statusID);
                         }
                         
-                        // Send email notifying the booking status change/update
+                        // Send email notifying the booking status change/update. That email includes review buttons when need it.
                         LcMessaging.SendBookingUpdate(bookingID, 's');
 
                         if (ModelState.IsValid) {
