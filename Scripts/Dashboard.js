@@ -174,6 +174,18 @@ $(document).ready(function () {
             h.attr('name', 'see-payment-data');
         form.submit();
     });
+    $('#admin-bookings').on('ajaxSuccessPostMessageClosed', '.change-booking-status-form', function (e, data) {
+        if (data.Code == 0) $(this).closest('.tab-body').reload();
+    }).on('ajaxSuccessPost', '.change-booking-status-form', function (e, data) {
+        if (data.Code == 0)
+        // Reload bookings lists already loaded to refresh state (because could change the content)
+            $(this).closest('.tab-body').siblings('.tab-body').each(function () {
+                // only if already loaded:
+                var $t = $(this);
+                if ($t.children().length > 0)
+                    $t.reload();
+            });
+    });
 
     /*=========
     * Messaging

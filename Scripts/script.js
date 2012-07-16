@@ -41,11 +41,13 @@ $.fn.reload = function (newurl) {
         if (url) {
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
-                $t.block(loadingBlock);
+                smoothBoxBlock(loadingBlock.message, $t, 'loading');
+                //$t.block(loadingBlock);
             }, gLoadingRetard);
             $t.load(url, function () {
                 clearTimeout(loadingtimer);
-                $t.unblock();
+                //smoothBoxBlock(null, $t, true);
+                //$t.unblock();
             });
         }
     });
@@ -729,12 +731,14 @@ $(document).ready(function () {
                             message: message,
                             css: popupStyle(popupSize('small'))
                         })
-                        .click(function () { box.unblock(); });
+                        .click(function () { box.unblock(); box.trigger('ajaxSuccessPostMessageClosed', [data]); });
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
 
                         // Clean previous validation errors
                         setValidationSummaryAsValid(box);
+
+                        form.trigger('ajaxSuccessPost', [data, text, jx]);
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         box.unblock();
@@ -1201,32 +1205,41 @@ function configureTooltip() {
     .on('mouseleave focusout', '[title]', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
-function smoothBoxBlock(contentBox, blocked, close) {
+function smoothBoxBlock(contentBox, blocked, addclass) {
     contentBox = $(contentBox);
     blocked = $(blocked);
-    var bID = (contentBox.attr('id') || 'contentbox') + (blocked.attr('id') || 'blocked') + '-smoothBoxBlock';
-    if (bID == 'contentboxblocked-smoothBoxBlock') {
-        if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
-        return;
+    var bID = blocked.data('smooth-box-block-id');
+    if (!bID)
+        bID = (contentBox.attr('id') || '') + (blocked.attr('id') || '') + '-smoothBoxBlock';
+    if (bID == '-smoothBoxBlock') {
+        bID = 'id-' + guidGenerator() + '-smoothBoxBlock';
+        //if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
+        //return;
     }
+    blocked.data('smooth-box-block-id', bID);
     var box = $('#' + escapeJQuerySelectorValue(bID));
-    if (close) {
+    if (contentBox.length == 0) {
         box.hide();
         return;
     }
     if (box.length == 0) {
-        box = $('<div/>');
+        var boxc = $('<div class="smooth-box-block-element fancy"/>');
+        box = $('<div class="smooth-box-block-overlay fancy"></div>');
+        box.addClass(addclass);
+        box.append(boxc);
         box.attr('id', bID);
         blocked.append(box);
-        box.addClass('smooth-box-block');
+    } else {
+        var boxc = box.children('.smooth-box-block-content');
     }
     box.hide();
-    box.append(contentBox);
+    boxc.append(contentBox);
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());
     box.css('z-index', blocked.css('z-index') + 10);
     box.css('position', 'absolute');
-    blocked.css('position', 'relative');
+    if (!blocked.css('position') || blocked.css('position') == 'static')
+        blocked.css('position', 'relative');
     offs = blocked.position();
     box.css('top', 0);
     box.css('left', 0);
@@ -1234,7 +1247,7 @@ function smoothBoxBlock(contentBox, blocked, close) {
     contentBox.show();
 }
 function smoothBoxBlockCloseAll(container) {
-    $(container).find('.smooth-box-block').hide();
+    $(container).find('.smooth-box-block-overlay').hide();
 }
 function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')

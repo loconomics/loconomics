@@ -10,7 +10,7 @@
     
     // possible values: "maybe-performed" (confirmed in post end-time dates), "dispute", "performed" (both with and without pricing adjustment), "completed"
     string view = PageData["view"] ?? Request["view"] ?? "maybe-performed";
-    
+
     // NOTE: SAME as the Select part of the sqlGetBookingsByDateRange found in Booking/$BookingsList; must be converted to a database view (and with the order clause)
     var sqlSelectBookings = @"
         SELECT  R.BookingRequestID,
@@ -20,7 +20,7 @@
                 R.PricingEstimateID,
                 R.BookingRequestStatusID,
                 B.BookingStatusID,
-
+                
                 UC.FirstName As CustomerFirstName,
                 UC.LastName As CustomerLastName,
 

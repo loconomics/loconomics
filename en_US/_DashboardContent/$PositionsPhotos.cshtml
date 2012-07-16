@@ -5,7 +5,7 @@
     var n = p.PositionID;
     
     string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
-    
+
     if (IsPost) {
         using (var db = Database.Open("sqlloco")) {
             
@@ -107,10 +107,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="gallery-order" value=""/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <div id="position[@n]photos-no-photos" class="no-photos fancy">
+    <div id="position[@n]photos-no-photos" class="no-photos">
         <span class="positionphotos-tools-upload">Start <a href="#">uploading</a> a photo!</span>
     </div>
-    <div id="position[@n]photos-no-primary-photo" class="no-primary-photo fancy">
+    <div id="position[@n]photos-no-primary-photo" class="no-primary-photo">
         Select a photo on the right to edit it and make one them the primary photo.
     </div>
     <fieldset class="positionphotos-edit">

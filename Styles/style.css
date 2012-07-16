@@ -1881,6 +1881,15 @@ html.boxshadow #loginBox .field-validation-error{
     overflow: hidden;
 }
 
-.smooth-box-block {
+.smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
+}
+.smooth-box-block-element {
+    background: white;
+    margin: 20px;
+    padding: 20px;
+}
+.smooth-box-block-overlay.loading .smooth-box-block-element {
+    width: 50px;
+    margin: 20px auto;
 }
