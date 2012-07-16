@@ -295,16 +295,6 @@ public class LcMessaging
         {
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
 
-            /* Using static strings for templates:
-            SendMail(provider.Email, "Loconomics.com: Inquiry", 
-                ApplyInquiryTemplate(TplInquiry,
-                new Dictionary<string, object> {
-                { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
-                { "Subject", InquirySubject },
-                { "MessageText", InquiryText },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() }
-            })); */
-
             SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
@@ -342,16 +332,6 @@ public class LcMessaging
         {
             // ThreadStatus=2, responded; MessageType=3, provider answer
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
-
-            /* Using static strings for templates:
-            SendMail(provider.Email, "Loconomics.com: Inquiry",
-                ApplyInquiryTemplate(TplInquiryAnswer,
-                new Dictionary<string, object> {
-                { "ItsUserName", CommonHelpers.GetUserDisplayName(provider) },
-                { "Subject", thread.Subject },
-                { "MessageText", InquiryAnswer },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
-            }));*/
 
             SendMail(customer.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
@@ -393,16 +373,6 @@ public class LcMessaging
             // ThreadStatus=1, respond; MessageType=1, customer inquiry
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
 
-            /* Using static strings for templates:
-            SendMail(provider.Email, "Loconomics.com: Inquiry",
-                ApplyInquiryTemplate(TplInquiry,
-                new Dictionary<string, object> {
-                { "ItsUserName", CommonHelpers.GetUserDisplayName(customer) },
-                { "Subject", thread.Subject },
-                { "MessageText", InquiryAnswer },
-                { "ReplyUrl", UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + ThreadID + "_Message-" + messageID.ToString() }
-            }));*/
-
             SendMail(provider.Email, "Loconomics.com: Inquiry", 
                 ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
@@ -438,9 +408,6 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
-        //string msg = "Welcome to Loconomics.com!<br/><br/>Visit <a href=\"" + confirmationURL + "\">" + confirmationURL + "</a> to activate your account " +
-        //        "or enter in " + UrlUtil.LangUrl + "Account/Confirm/ and use the following confirmation code: " + confirmationToken;
-
         SendMail(userEmail, "Welcome to Loconomics.com", //"Loconomics.com, please confirm your account",
             ApplyTemplate(UrlUtil.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
@@ -491,45 +458,6 @@ public class LcMessaging
             HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
-    private static string ApplyInquiryTemplate(string tpl, Dictionary<string, object> data)
-    {
-        return String.Format(TplLayout, String.Format(tpl,
-            data["ItsUserName"], data["Subject"], data["MessageText"],
-            data["ReplyUrl"]));
-    }
-    #endregion
-
-    #region Specific Message Templates
-    private static readonly string TplLayout = @"
-        <html><head><style type='text/css'>
-            body {{
-                font-size: 13px;
-            }}
-            .respond a {{
-                background: none repeat scroll 0 0 #8B2143 !important;
-                border-radius: 20px 20px 20px 20px;
-                color: White;
-                font-size: 1em;
-                padding: 0 1em;
-                text-transform: lowercase;
-                display: inline-block;
-            }}
-        </style></head><body>{0}</body></html>
-    ";
-    private static readonly string TplInquiry = @"
-        <h1>Customer Inquiry</h1>
-        <p><strong>Customer: </strong>{0}</p>
-        <p><strong>Subject: </strong>{1}</p>
-        <p><strong>Inquiry: </strong>{2}</p>
-        <p class='respond'><a href='{3}'>Respond to this inquiry at loconomics.com</a></p>
-    ";
-    private static readonly string TplInquiryAnswer = @"
-        <h1>Provider answer to your inquiry</h1>
-        <p><strong>Provider: </strong>{0}</p>
-        <p><strong>Subject: </strong>{1}</p>
-        <p><strong>Answer: </strong>{2}</p>
-        <p class='respond'><a href='{3}'>Reply again at loconomics.com</a></p>
-    ";
     #endregion
 
     #region Send Mail wrapper function
