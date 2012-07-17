@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Current position data record:
     var p = DashboardFunctions.GetUserCurrentPos();
     var n = p.PositionID;
@@ -25,6 +26,11 @@
                         { "UserID", u.UserID }
                 }));
             }
+            // Set VerificationID:12 for this user as confirmed just with only sent references requests (see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651
+            using (var db = Database.Open("sqlloco")){
+                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 1);
+            }
+            
             CommonHelpers.ReturnJsonResult(0, "Message was sent!");
         }
     }

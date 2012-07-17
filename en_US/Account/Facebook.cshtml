@@ -119,27 +119,7 @@
                         ", userID, user.name);
                         if (c == 1) {
                             // Verified, save verification record
-                            db.Execute(@"
-                                UPDATE UserVerification WITH (serializable) SET
-                                    UpdatedDate = getdate(),
-                                    VerifiedBy = 'sys',
-                                    LastVerifiedDate = @2,
-                                    Active = 1,
-                                    VerificationStatusID = @3
-                                WHERE
-                                    UserID = @0
-                                     AND
-                                    VerificationID = @1
-
-                                IF @@rowcount = 0 BEGIN
-                                    INSERT INTO UserVerification (
-                                        UserID, VerificationID, DateVerified, CreatedDate, 
-                                        UpdatedDate, VerifiedBy, LastVerifiedDate, Active, VerificationStatusID
-                                    ) VALUES (
-                                        @0, @1, @2, getdate(), getdate(), 'sys', getdate(), 1, @3
-                                    )
-                                END
-                            ", userID, 8, DateTime.Now, 1);
+                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
                             CommonHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
                         } else {
                             // Verification failed
