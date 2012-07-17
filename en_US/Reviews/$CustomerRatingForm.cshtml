@@ -1,4 +1,6 @@
-﻿@using WebMatrix.Data;
+﻿@* Form to review a customer by a provider based on a performed Booking
+*@
+@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
     CommonHelpers.SecurePage();
@@ -134,6 +136,9 @@
                             null, answer2, null, null,
                             privatereview, publicreview,
                             0, 0);
+                        
+                        // Set VerificationID:11 for reviewed user as confirmed just with only receive a review(see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651)
+                        db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", booking.CustomerUserID, 11, DateTime.Now, 1);
                     }
                 }
                 if(ModelState.IsValid){
