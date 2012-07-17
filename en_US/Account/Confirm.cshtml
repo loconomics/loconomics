@@ -1,17 +1,38 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
     // Set the layout page and page title
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "Registration Confirmation Page";
 
     string message = "";
     var confirmationToken = Request["confirmationCode"];
+    bool showLogin = false;
 
     WebSecurity.Logout();
     if (!confirmationToken.IsEmpty()) {
-        if (WebSecurity.ConfirmAccount(confirmationToken)) {
-            message = "Registration Confirmed! Please login to begin.";
-        } else {
-            message = "Could not confirm your registration info";
+        // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
+        // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
+        // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
+        // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
+        // we will hack changing it to true:1 manually -before of time- on provider create-a-login) and the confirmationToken that we will mantain to allow user confirmation
+        // from the welcome-email sent and to off the alert:15, just the next code:
+        
+        // We need discover what is the UserID for this confirmationToken before confirm, because asp.net WebSecurity API don't tell us nothing:
+        using(var db = Database.Open("sqlloco")) {
+            int userID = db.QueryValue(@"
+                SELECT UserId FROM webpages_Membership
+                WHERE ConfirmationToken = @0
+            ", confirmationToken);
+        
+            if (WebSecurity.ConfirmAccount(confirmationToken)) {
+                //message = "Registration Confirmed! Please login to begin.";
+                db.Execute("EXEC TestAlertVerifyEmail @0", userID);
+                message = "Your email was verified successfully! Please login to go to your dashboard:";
+                showLogin = true;
+            } else {
+                message = "Could not confirm your registration info";
+            }
         }
     }
 }
@@ -27,6 +48,10 @@
 
 @if (!@message.IsEmpty()) {
     <p>@message</p>
+    if (showLogin)
+    {
+        @RenderPage("$Login.cshtml", new { ShowHeader = false, ShowTools = false, Redirect = UrlUtil.LangPath + "Dashboard/" })
+    }
 } else {
     <form method="post" action="">
         <fieldset>

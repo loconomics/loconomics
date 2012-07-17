@@ -126,6 +126,7 @@
     -webkit-border-radius: 12px;
     -o-border-radius: 12px;
     padding: 5px 10px;
+    vertical-align: top;
 }
 #dashboard-alerts h5{
     font-size: .9em;

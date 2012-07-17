@@ -13,45 +13,36 @@
         ", WebSecurity.CurrentUserId);
     }
 }
-@helper printCompleteUrl(dynamic alert){
+@functions{ string getCompleteAlertUrl(dynamic alert){
     switch ((string)alert.AlertName) {
         case "personalinfo":
         case "socialmediaverification":
         case "basicinfoverification":
         case "backgroundcheck":
-            @(UrlUtil.LangPath + "Dashboard/Account/#account-personal")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Account/#account-personal");
         case "photo":
-            @("javascript:$('#changephoto').click()")
-            break;
+            return ("javascript:$('#changephoto').click()");
         case "payment":
-            @(UrlUtil.LangPath + "Dashboard/Account/#account-payments")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Account/#account-payments");
         case "taxdocs":
-            @(UrlUtil.LangPath + "Dashboard/Account/#account-taxes")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Account/#account-taxes");
         case "availability":
-            @(UrlUtil.LangPath + "Dashboard/Calendar/#availability-form")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Calendar/#availability-form");
         case "pricingdetails":
-            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-pricing")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-pricing");
         case "providerlogin":
-            @(UrlUtil.LangPath + "Dashboard/Account/#account-terms")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Account/#account-terms");
         case "positionservices":
-            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-services")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-services");
         case "referencerequests":
-            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-reviews")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-reviews");
         case "professionallicense":
-            @(UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-licenses")
-            break;
+            return (UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-licenses");
+        case "verifyemail":
         default:
-            @("#")
-            break;
+            return null;
     }
+ }
 }
 @if (alerts != null && alerts.Count > 0)
 {
@@ -60,10 +51,13 @@
     <ul>
         @foreach (var alert in alerts)
         {
+            var completeUrl = getCompleteAlertUrl(alert);
             <li>
                 <h5>@alert.AlertHeadlineDisplay</h5>
                 <p>@alert.AlertTextDisplay</p>
-                <a class="more" href="@printCompleteUrl(alert)">Complete &gt;&gt;</a>
+                @if (completeUrl != null){
+                    <a class="more" href="@completeUrl">Complete &gt;&gt;</a>
+                }
             </li>
         }
     </ul>

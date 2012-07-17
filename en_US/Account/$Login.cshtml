@@ -6,6 +6,10 @@
     var password = "";
     var rememberMe = false;
     
+    var showHeader = PageData["ShowHeader"] ?? true;
+    var showTools = PageData["ShowTools"] ?? true;
+    string redirectTo = N.W(PageData["Redirect"]) ?? N.W(Request.QueryString["Redirect"]) ?? N.W(Request.Form["Redirect"]);
+    
     var facebookAppId = Facebook.AppId;
     var facebookRedirectUri = UrlUtil.LangUrl + "Account/Facebook/";
     var facebookPermissions = "email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
@@ -50,7 +54,7 @@
             Session["OAuthLoggedIn"] = false;
 
             string redirect = N.W(Request.QueryString["ReturnUrl"])
-                ?? N.W(Request["Redirect"])
+                ?? redirectTo
                 ?? UrlUtil.LangPath;
             
             // The redirect cannot be done to an url inside the /Account/ segment:
@@ -84,27 +88,31 @@
         }
     }
 }
-@CommonHelpers.GetValidationScripts()
-<script type="text/javascript">
-    $(document).ready(function () {
-        if (window.location.hash) {
-            var log = $('form.login');
-            var act = $('form.login').attr('action');
-            if (/\?/.test(act))
-                log.attr('action', act + "&HASH=" + window.location.hash.substring(1));
-            else
-                log.attr('action', act + "?HASH=" + window.location.hash.substring(1));
-        }
-    });
-</script>
-<article id="loginBox" class="ajax-box account-popup">
+<article id="loginBox" class="account-popup">
+    @if(showHeader){
     <hgroup class="title">
         <h1>Log in to Loconomics</h1>
     </hgroup>
+    }
     <section>
-        <form class="choice-option ajax login" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
+        <form class="choice-option ajax ajax-box login" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
             @Html.ValidationSummary(null, true, null)
+            <input type="hidden" name="Redirect" value="@redirectTo" />
+
+            @CommonHelpers.GetValidationScripts()
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    if (window.location.hash) {
+                        var log = $('form.login');
+                        var act = $('form.login').attr('action');
+                        if (/\?/.test(act))
+                            log.attr('action', act + "&HASH=" + window.location.hash.substring(1));
+                        else
+                            log.attr('action', act + "?HASH=" + window.location.hash.substring(1));
+                    }
+                });
+            </script>
 
             <fieldset>
                 <legend>Log in to Your Account</legend>
@@ -135,9 +143,11 @@
         <div class="social choice-option">
             @RenderPage("_FacebookConnectButton.cshtml")
         </div>
+        @if(showTools){
         <div class="account-tools">
             <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
             <a class="register" href="@(UrlUtil.LangPath)Account/Register/">Need an account?</a>
         </div>
+        }
     </section>
 </article>
