@@ -177,6 +177,7 @@
                     EXEC TestAlertBasicInfoVerification @UserID
                     EXEC TestAlertSocialMediaVerification @UserID
                     EXEC TestAlertBackgroundCheck @UserID
+                    EXEC TestAlertPublicBio @UserID
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, LcData.GetCurrentCountryID());
