@@ -774,6 +774,25 @@ form#personal li > label.gender {
     width: auto;
     min-width: 0;
 }
+.user-verifications > ul > li{
+    background: no-repeat center left;
+    padding: 0 0 0 30px;
+}
+.user-verifications  li.license{
+    background-image: url('../img/icon-licenses.png');
+}
+.user-verifications  li.verification{
+    background-image: url('../img/icon-verifications.png');
+}
+.user-verifications  li.share{
+    background-image: url('../img/icon-share-medium.png');
+}
+.user-verifications li .status{
+    color: Red;
+}
+.user-verifications li.status-confirmed .status{
+    color: Green;
+}
 /**** From: Account Profider Terms ****/
 #providerterms label {
     width: auto;

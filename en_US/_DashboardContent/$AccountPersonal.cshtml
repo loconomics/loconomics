@@ -185,14 +185,16 @@
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
     }
-    dynamic genders = null, facebookVerification = null;
+    dynamic genders = null, verifications = null;
+    //dynamic facebookVerification = null;
+    bool hasNameVerifications = false, hasAddressVerifications = false, hasPhoneVerifications = false;
     using (var db = Database.Open("sqlloco")){
         genders = db.Query(@"
             SELECT  GenderID, GenderSingular
             FROM    Gender
             WHERE   LanguageID=@0 AND CountryID=@1
         ", 1, 1);
-        var sqlGetVerification = @"
+        /*var sqlGetVerification = @"
             SELECT  LastVerifiedDate,
                     UV.VerificationStatusID,
                     VS.VerificationStatusName
@@ -205,7 +207,40 @@
                      AND
                     VerificationID = @1
         ";
-        facebookVerification = db.QuerySingle(sqlGetVerification, u.UserID, 8, 1, 1);
+        facebookVerification = db.QuerySingle(sqlGetVerification, u.UserID, 8, 1, 1);*/
+        verifications = db.Query(@"
+            SELECT  UV.LastVerifiedDate,
+                    UV.VerificationStatusID,
+                    VS.VerificationStatusName,
+                    V.VerificationType,
+                    V.Icon,
+                    V.VerificationID,
+                    V.VerificationCategoryID
+            FROM    UserVerification As UV
+                     INNER JOIN
+                    Verification As V
+                      ON UV.VerificationID = V.VerificationID
+                     INNER JOIN
+                    VerificationStatus As VS
+                      ON UV.VerificationStatusID = VS.VerificationStatusID
+                        AND V.LanguageID = @1 AND V.CountryID = @2
+            WHERE   UserID = @0
+        ", u.UserID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        // Enabling needed warning messages:
+        foreach (var v in verifications){
+            // Only confirmed
+            if (v.VerificationStatusID == 1) {
+                if (v.VerificationCategoryID == 3 ||
+                    v.VerificationID == 1 ||
+                    v.VerificationID == 7) {
+                    hasNameVerifications = true;
+                } else if (v.VerificationID == 2) {
+                    hasAddressVerifications = true;
+                } else if (v.VerificationID == 4) {
+                    hasPhoneVerifications = true;
+                }
+            }
+        }
     }
 }
 <p class="setting-instructions">
@@ -215,6 +250,22 @@ Please complete the information below as accurately as possible.  Only your firs
 <form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
+    <div class="warning">
+        <h6>Be carefull:</h6>
+        <ul>
+        @if (hasNameVerifications) {
+        <li>If you change your name, your Social, Name and Background Check verifications will be revoked and you will need to verify it again after save the changes.</li>
+        }
+        @if (hasAddressVerifications) {
+        <li>If you change your address, your Address verification will be revoked and you will need to verify it again after save the changes.</li>
+        }
+        @if (hasPhoneVerifications) {
+        <li>If you change your phone numbers, your Phone verification will be revoked and you will need to verify it again after save the changes.</li>
+        }
+        </ul>
+    </div>
+    }
     <div class="col col-2 col-2-1">
     <fieldset id="@idprefix-fs-contactinformation">
         <legend>Contact Information:</legend>
@@ -308,7 +359,7 @@ Please complete the information below as accurately as possible.  Only your firs
             <ul>
                 <li class="facebook">
                     @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", "Verify", "json")
-                    @if (facebookVerification != null)
+                    @*if (facebookVerification != null)
                     {
                         <div class="verification-details">
                             Facebook verification status: @facebookVerification.VerificationStatusName since @facebookVerification.LastVerifiedDate
@@ -317,10 +368,19 @@ Please complete the information below as accurately as possible.  Only your firs
                             <div class="warning">If you change your name, your Facebook verification will be revoked and you will need to verify again after save the changes.</div>
                             }
                         </div>
-                    }
+                    }*@
                 </li>
                 @*<li class="twitter"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
                 <li class="linkedin"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>*@
+            </ul>
+        </fieldset>
+        <fieldset class="user-verifications">
+            <legend>Verifications:</legend>
+            <ul>
+                @foreach (var v in verifications)
+                {
+                    <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> since @v.LastVerifiedDate</li>
+                }
             </ul>
         </fieldset>
     </div>
