@@ -15,22 +15,22 @@
     PageData["isNotAUser"] = true;
 }
 
-<div class="welcome">
-    <h3>Hello!</h3>
+<div>
+    <h3 @LcEmailTemplateHelper.StyleH3()>Hello!</h3>
 
     <div style="margin:20px 0;font-size:1.1em">
-        <p>@thisUser.FirstName @thisUser.LastName is building a reputation on Loconomics, a community
+        <p @LcEmailTemplateHelper.StyleResetP()>@thisUser.FirstName @thisUser.LastName is building a reputation on Loconomics, a community
             marketplace for local services built on trust and reviews. @thisUser.FirstName has indicated
             you as a past customer and is asking you to provide a reference to display publicly on
             @thisUser.FirstName's Loconomics profile that will help @thisUser.FirstName:</p>
-        <ul style="margin:8px 4px;">
-            <li style="list-style:inside disc">build a reputation within the community</li>
-            <li style="list-style:inside disc">attract new customers</li>
+        <ul @LcEmailTemplateHelper.StyleUlOl(true, "margin:8px 4px;")>
+            <li>build a reputation within the community</li>
+            <li>attract new customers</li>
         </ul>
         <p style="margin:15px 0">Let @thisUser.FirstName know if you have any questions.</p>
         <p style="margin:10px 0">Your help is appreciated!</p>
     </div>
     <div>
-        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Write @thisUser.FirstName a reference</a>
+        <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Write @thisUser.FirstName a reference</a>
     </div>
 </div>
