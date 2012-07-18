@@ -1,0 +1,41 @@
+﻿@* Helper functions for Email templates page (every file with prefix Email), intended for be requested by a server-side
+    http request to generate an email sent to users.
+    Because some mail client limitations (specially webmails as gmail and hotmail) that doesn't allow css classes and 
+    style element block, here we have helpers prefixed with Style that will print a style attribute (not block, attribute)
+    with the desired css attributes for some general classes and tag styles.
+*@
+@*=== Elements/tags *@
+@helper StyleH1(string addCss = null) {
+    <text>style="color:#00989A;line-height:100%;@addCss"</text>
+}
+@helper StyleH2(string addCss = null) {
+    <text>style="color:#00989A;line-height:100%;@addCss"</text>
+}
+@helper StyleH3(string addCss = null) {
+    <text>style="color: #00989A;line-height:100%;font-size:20px;margin:0;color:#8B2143;font-weight:bold;@addCss"</text>
+}
+@helper StyleH4(string addCss = null) {
+    <text>style="color: #00989A;line-height:100%;margin:15px 0;font-size:17px;color:#8B2143;@addCss"</text>
+}
+@helper StyleH5(string addCss = null) {
+    <text>style="color:#00989A;line-height:100%;@addCss"</text>
+}
+@helper StyleH6(string addCss = null) {
+    <text>style="color:#00989A;line-height:100%;@addCss"</text>
+}
+@helper StyleUlOl(bool withListStyle = false, string addCss = null) {
+    <text>style="@(withListStyle ? "list-style-position:inside" : "list-style:none inside none");margin:0;padding:0;@addCss"</text>
+}
+
+@*=== Resets *@
+@helper StyleResetP(string addCss = null) {
+    <text>style="margin:0;padding:0;@addCss"</text>
+}
+
+@*=== Classes *@
+@helper StyleRespondButton(string addCss = null) {
+    <text>style="background:none repeat scroll 0 0 #8B2143 !important;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;margin:1em;text-transform:lowercase;display:inline-block;text-decoration:none;@addCss"</text>
+}
+@helper StyleMessageSection(string addCss = null) {
+    <text>style="background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;@addCss"</text>
+}

@@ -21,35 +21,17 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Loconomics - @Page.Title</title>
+    @* Some styles only for capable mail clients -some are features imposible to use without using style-element 
+        that is removed by gmail, hotmail and others services-; other are specific for some mail clients that support
+        'style' block and has special hacks -as yahoo mail, outlook- *@
     <style type="text/css">
         /* Boilerplate */
             .ExternalClass {width:100%;} 
             .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
-                line-height: 100%;} 
-                         
-            body {-webkit-text-size-adjust:none; -ms-text-size-adjust:none;} 
-            body {margin:0; padding:0;} 
-            table td {border-collapse:collapse;}    
-
-            p {margin:0; padding:0; margin-bottom:0;}       
-
-            h1, h2, h3, h4, h5, h6 {
-                color: #00989A; 
-                line-height: 100%; 
-            }
-
+                line-height: 100%;}
             a, a:link {
                 color:#2A5DB0;
                 text-decoration: underline;
-            }
- 
-            body, #body_style {
-                background:#fff;
-                min-height:1000px;
-                color:#6c6c6c;
-                font-family:Arial, Helvetica, sans-serif;
-                font-size: 13px;
-                line-height: 150%;
             }
             span.yshortcuts { color:#000; background-color:none; border:none;}
             span.yshortcuts:hover,
@@ -60,60 +42,19 @@
             a:focus   { color: #3c96e2; text-decoration: underline}
             a:hover   { color: #3c96e2; text-decoration: underline}
         /* End Boilerplate */
-            ul, ol, li {
-                list-style: none outside none;
-                margin: 0;
-                padding: 0;
-            }
-            ul.ul li {
-                list-style: disc inside none;
-            }
-            ol.ol li
-            {
-                list-style: decimal inside none;
-            }
-            table {
-                font-size: 13px;
-            }
-            h2.message-title {
-                font-size: 12px;
-                font-weight: bold;
-                height: auto;
-                line-height: 15px;
-            }
-            h3 {
-                font-size: 20px;
-                margin: 0;
-                color: #8B2143;
-                font-weight: bold;
-            }
-            h4 {
-                margin: 15px 0 0;
-                font-size: 17px;
-                color: #8B2143;
-            }
-            a.respond {
-                background: none repeat scroll 0 0 #8B2143 !important;
-                border-radius: 20px 20px 20px 20px;
-                -o-border-radius: 20px 20px 20px 20px;
-                -webkit-border-radius: 20px 20px 20px 20px;
-                -moz-border-radius: 20px 20px 20px 20px;
-                color: White;
-                padding: .4em 1em;
-                margin: 1em;
-                text-transform: lowercase;
-                display: inline-block;
-                text-decoration: none;
-            }
             a.respond:hover {
                 box-shadow: 0 0 5px 2px #8B2143;
             }
-            .message-section {
-                background: none repeat scroll 0 0 white;
-                border: 1px solid #6C6C6C;
-                border-radius: 15px 15px 15px 15px;
-                padding: 15px;
+            body,table,table td,table th { @* Required to avoid problems with default sizes of table contents in some email clients that don't inherit the body font-size or inline table font-size (but gmail works file without this) *@
+                font-size:13px;
             }
+            @*@@media only screen and (max-device-width: 480px) {
+            }
+            @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {          
+            }*@
+        
+        @* TODO: STYLES TO BE MOVED TO LcEmailTemplateHelper and Email* files BECAUSE GMAIL, HOTMAIL DOESN'T READ IT *@
+            .message-section {background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;}
             .highlighted {
                 background-color: #9ACECE;
             }
@@ -322,9 +263,6 @@
                 -o-box-shadow: 0 0 5px 2px #e95d0f;
                 -webkit-box-shadow: 0 0 5px 2px #e95d0f;
             }
-            .booking-request .reminders ol li {
-                list-style: decimal inside;
-            }
 
             /* Booking (booking request confirmed) */
             .booking .booking-time-location {
@@ -335,43 +273,34 @@
                 right: 15px;
                 bottom: 15px;
             }
-
-            @@media only screen and (max-device-width: 480px) {
- 
-            }
-            @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {          
- 
-            }
     </style>
 </head>
-<body style="background:#ffffff; min-height:1000px; color:#6c6c6c;font-family:Arial, Helvetica, sans-serif; font-size:13px"
-alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix"> 
-    <div id="body_style" style="padding:15px;font-size:13px;">
-        <table id="table_layout" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
-            <tr class="header">
+<body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix" style="margin:0;padding:0">
+    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#6c6c6c;font-family:Arial,Helvetica,sans-serif;font-size:13px">
+        @***table_layout*@<table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
+            @***header*@<tr>
                 <td width="300" style="padding-bottom: 15px">
-		            <h1><a id="logo" href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+		            <h1 style="font-size:1.4em"><a href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                 </td>
                 <td width="300" style="padding-bottom: 15px;padding-right: 30px" align="right">
                     <a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">If you don't see well this message, click here</a>
                 </td>
             </tr>
-            <tr class="content" style="padding:0 0 15px 0">
-                <td colspan="2" style="border-color: #00989A;position:relative;">
-                    <h2 class="message-title" style="margin:0;position:relative;z-index:1000;">
-                        <span style="display:inline-block;background-color:white;margin:0 0 0 15px;padding-top:3px;padding-left:10px;padding-right:10px;border-style: solid;border-color:#00989A;border-width:2px;border-bottom-color:white;border-radius:10px 10px 0 0;-o-border-radius:10px 10px 0 0;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0">@messageTitle</span>
-                        <img style="position: relative;right: 12px;vertical-align: bottom;" src="@(UrlUtil.AppUrl)img/email/tab-right-border.png" width="32" height="22" />
+            @***content*@<tr style="padding:0 0 15px 0">
+                <td colspan="2" style="border-color:#00989A;background:url('@(UrlUtil.AppUrl)img/email/tab-bottom.png') no-repeat left bottom;padding-bottom:12px">
+                    <h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + UrlUtil.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
+                        <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
                     </h2>
-                    <table width="600" style="position:relative;top:-2px;border-style: solid;border-width: 2px;border-color:#00989A;border-radius:10px;-o-border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px">
+                    <table width="600" style="border:solid 2px #00989A;border-width: 0 2px;font-size:13px;">
                         <tr>
-                            <td style="padding:20px;">
+                            <td style="padding:8px 20px">
                                 @RenderBody()
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            <tr class="footer" height="60" align="center">
+            @***footer*@<tr height="60" align="center">
                 <td colspan="2">
                     This message was sent to @emailTo <br />
                     @if (!isNotAUser) {
@@ -384,8 +313,8 @@ alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix">
                 </td>
             </tr>
         </table>
- 
-    @* Some notes to create great html emails, more on http://htmlemailboilerplate.com and http://www.emailology.org
+    @* IF something more is added, add it EVER INSIDE table_layout!!!
+        Some notes to create great html emails, more on http://htmlemailboilerplate.com and http://www.emailology.org
         <p style="margin-top:0"></p>
  
         <a href="http://www.emailonacid.html" style="color:#F00" target ="_blank" title="Email on Acid">Text Link Here</a>

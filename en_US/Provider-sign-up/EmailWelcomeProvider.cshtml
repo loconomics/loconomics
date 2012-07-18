@@ -22,38 +22,38 @@
     }
 }
 
-<div class="welcome">
-    <h3>We’re glad you’re here, @thisUser.FirstName</h3>
-    <p class="subh3">Welcome to the Loconomics community!  Below you’ll find instructions on how to complete 
+<div>
+    <h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>
+    <p @LcEmailTemplateHelper.StyleResetP()>Welcome to the Loconomics community!  Below you’ll find instructions on how to complete 
     your profile and start marketing your services.</p>
 
-    <h4>Step 1.  Activate your profile</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 1.  Activate your profile</h4>
     <div>
-        <p>
+        <p @LcEmailTemplateHelper.StyleResetP()>
         To activate your profile, you’ll need to complete a few more things like:
         </p>
-        <ul class="ul" style="list-style: disc inside">
+        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>upload your photo and short descriptions of yourself and your work</li>
             <li>complete your contact information, fill-in your availability, and verify work eligibility</li>
             <li>ask for references</li>
         </ul>
     </div>
 
-    <h4>Step 2.  Tell us how you’d like us to pay you</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 2.  Tell us how you’d like us to pay you</h4>
     <div>
-        <p>
+        <p @LcEmailTemplateHelper.StyleResetP()>
         Let’s be honest, that’s why you’re here.  You can be paid in two ways:
         </p>
-        <ul class="ul" style="list-style: disc inside">
+        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>direct deposit into your checking or savings account</li>
             <li>paper check mailed to you (may take longer)</li>
         </ul>
     </div>
 
-    <h4>Step 3.  Enhance your profile</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 3.  Enhance your profile</h4>
     <div>
-        <p>This is the fun part where you can differentiate yourself from the competition by:</p>
-        <ul class="ul" style="list-style: disc inside">
+        <p @LcEmailTemplateHelper.StyleResetP()>This is the fun part where you can differentiate yourself from the competition by:</p>
+        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>adding photos of your work </li>
             <li>completing a background check and license verification (if applicable)</li>
             <li>connecting your profile to your social media accounts</li>
@@ -64,25 +64,25 @@
     <div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
-        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Go to my dashboard</a>
+        <a href="@PageData["viewOnSiteUrl"]" target="_blank" @LcEmailTemplateHelper.StyleRespondButton()>Go to my dashboard</a>
         }
         else
         {
-            <a href="@confirmationURL" target="_blank" class="respond">Verify my account</a>
-            <div style="font-size:.9em; margin: 10px;color:#666">
-                <p>If you have problems clicking on 'verify my account' or viewing this email, please copy and paste next
+            <a href="@confirmationURL" target="_blank" @LcEmailTemplateHelper.StyleRespondButton() class="respond">Verify my account</a>
+            <div style="font-size:.9em;margin:0 10px 20px;color:#666">
+                <p @LcEmailTemplateHelper.StyleResetP()>If you have problems clicking on 'verify my account' or viewing this email, please copy and paste next
                 link on your browser: @confirmationURL</p>
                 @if (!String.IsNullOrEmpty(confirmationToken)) {
-                <p>Or go to @(UrlUtil.LangUrl)Account/Confirm/ and input
+                <p @LcEmailTemplateHelper.StyleResetP()>Or go to @(UrlUtil.LangUrl)Account/Confirm/ and input
                 the confirmation code: @confirmationToken </p>
                 }
             </div>
         }
     </div>
-    <h4>Reminders</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
 
-    <div class="reminders message-section">
-        <ol class="ol" style="list-style: decimal inside">
+    <div @LcEmailTemplateHelper.StyleMessageSection()>
+        <ol @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>You must complete the steps above for your profile to become active.</li>
             <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/">here</a> for your reference</li>
             <li>We’re here to help you and welcome your feedback--please e-mail us at
