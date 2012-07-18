@@ -127,14 +127,14 @@ else
     var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
 
 <div class="booking-request booking main-side">
-    <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+    <h3 @LcEmailTemplateHelper.StyleH3()>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     @if (DateTime.Now > booking.ConfirmedDateEnd)
     {
     <div class="actions">
         @if (myUserType == "customer") {
-            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
                 @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
             </a>
             if (booking.ReviewedByProvider == true) {
@@ -155,7 +155,7 @@ else
     </div>
     }
 
-    <h4>@itsUserLabel information</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"AddCssClasses", "message-section" },
         {"Data", itsUserData},
@@ -167,16 +167,16 @@ else
         {"UseAbsoluteUrls", true}
     })
 
-    <h4>Booking time and location</h4>
-    <div class="booking-time-location message-section">
-        <h5>Position: </h5>
-        <span class="position">@booking.PositionSingular</span>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Booking time and location</h4>
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Position: </h5>
+        <span>@booking.PositionSingular</span>
 
-        <h5>Scheduled time: </h5>
-        <span class="scheduled-time">@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Scheduled time: </h5>
+        <span>@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
 
-        <h5>Location: </h5>
-        <div class="location">
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location: </h5>
+        <div>
             @printAddress(new Dictionary<string, object>() {
                 {"name", getLocationName(booking)}, 
                 {"location", booking.AddressLine1 + " " + booking.AddressLine2},
@@ -185,17 +185,17 @@ else
                 {"zipcode", booking.PostalCode}
             }, false)
 
-            <div class="time-estimation">
+            @*<div>
             (x minutes driving time, y minutes walk)
-            </div>
-            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
+            </div>*@
+            <a target="_blank" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
         </div>
     </div>
 
-    <h4>Requested services and pricing estimate</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Requested services and pricing estimate</h4>
     @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
 
-    <h4>Reminders</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>
     @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
 </div>
 }
