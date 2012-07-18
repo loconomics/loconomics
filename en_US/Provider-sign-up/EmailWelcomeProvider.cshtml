@@ -68,7 +68,7 @@
         }
         else
         {
-            <a href="@confirmationURL" target="_blank" @LcEmailTemplateHelper.StyleRespondButton() class="respond">Verify my account</a>
+            <a href="@confirmationURL" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Verify my account</a>
             <div style="font-size:.9em;margin:0 10px 20px;color:#666">
                 <p @LcEmailTemplateHelper.StyleResetP()>If you have problems clicking on 'verify my account' or viewing this email, please copy and paste next
                 link on your browser: @confirmationURL</p>
@@ -81,7 +81,7 @@
     </div>
     <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
 
-    <div @LcEmailTemplateHelper.StyleMessageSection()>
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
         <ol @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>You must complete the steps above for your profile to become active.</li>
             <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/">here</a> for your reference</li>
