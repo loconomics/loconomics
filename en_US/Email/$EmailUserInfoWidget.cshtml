@@ -1,6 +1,7 @@
 ﻿@{
     var size = PageData["Size"] ?? "mini"; // medium, large
     var withContactData = PageData["WithContactData"] ?? false;
+    var userID = PageData["UserID"] ?? 0;
     var data = PageData["Data"];
     var dataPrefix = PageData["DataPrefix"] ?? "";
     var userType = PageData["UserType"] ?? "user"; // customer, provider
@@ -11,7 +12,12 @@
     var urlBase = UrlUtil.SiteUrl;
 
     if (data == null) {
-        // TODO: load user data from database
+        // TODO: review how works GetUserRowWithContactData and why GetUserRow returns contact data too but from different table:
+        //if (withContactData) {
+        //    data = DashboardFunctions.GetUserRowWithContactData(userID);
+        //} else {
+            data = DashboardFunctions.GetUserRow(userID);
+        //}
         dataPrefix = "";
     }
     

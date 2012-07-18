@@ -18,6 +18,16 @@
 }
 <div>
     Your friend @customer.FirstName @customer.LastName recommends you book @CommonHelpers.GetUserDisplayName(provider)
-    as a @position.PositionSingular at <a href="@UrlUtil.SiteUrl">Loconomics.com</a>
+    as a @position.PositionSingular at <a href="@UrlUtil.LangUrl">Loconomics.com</a>
     <a href="@PageData["viewOnSiteUrl"]">View @provider.FirstName full profile</a>
+
+    @RenderPage(UrlUtil.LangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
+        {"Data", provider},
+        {"DataPrefix", ""},
+        {"Size", "medium"},
+        {"UserType", "provider"},
+        {"WithContactData", true},
+        {"WithGoogleMap", false}
+    })
 </div>
