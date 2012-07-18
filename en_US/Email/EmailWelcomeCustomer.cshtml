@@ -17,19 +17,19 @@
     PageData["viewOnSiteUrl"] = confirmationURL;
 }
 
-<div class="welcome">
-    <h3>We’re glad you’re here, @thisUser.FirstName</h3>
-    <p class="subh3">Welcome to the Loconomics community!</p>
+<div>
+    <h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>
+    <p @LcEmailTemplateHelper.StyleResetP()>Welcome to the Loconomics community!</p>
 
     @if (!String.IsNullOrEmpty(confirmationURL))
     {
-    <h4>Active your account</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Active your account</h4>
     <div>
-        <p>Click on 'Verify my account' to confirm your email!</p>
-        <p>If you have problems with the link or viewing this email, please copy and paste next
+        <p @LcEmailTemplateHelper.StyleResetP()>Click on 'Verify my account' to confirm your email!</p>
+        <p @LcEmailTemplateHelper.StyleResetP()>If you have problems with the link or viewing this email, please copy and paste next
         link on your browser: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
-        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
+        <p @LcEmailTemplateHelper.StyleResetP()>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
         the confirmation code: @confirmationToken </p>
         }
     </div>
@@ -37,18 +37,18 @@
     <div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
-        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond">Go to my dashboard</a>
+            <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Go to my dashboard</a>
         }
         else
         {
-            <a href="@confirmationURL" target="_blank" class="respond">Verify my account</a>
+            <a href="@confirmationURL" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Verify my account</a>
         }
     </div>
 
-    <h4>Reminders</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
 
-    <div class="reminders message-section">
-        <ol class="ol" style="list-style: decimal inside">
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        <ol @LcEmailTemplateHelper.StyleUlOl(true)>
             <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/">here</a> for your reference</li>
             <li>We’re here to help you and welcome your feedback--please e-mail us at
                 support@loconomics.com at any time with questions or feedback.</li>
