@@ -251,17 +251,17 @@ Please complete the information below as accurately as possible.  Only your firs
     @CommonHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
-    <div class="warning">
+    <div class="warning warning-large">
         <h6>Be carefull:</h6>
         <ul>
         @if (hasNameVerifications) {
-        <li>If you change your name, your Social, Name and Background Check verifications will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>name</strong>, your <strong><em>Social, Name and Background Check verifications</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
         }
         @if (hasAddressVerifications) {
-        <li>If you change your address, your Address verification will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>address</strong>, your <strong><em>Address verification</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
         }
         @if (hasPhoneVerifications) {
-        <li>If you change your phone numbers, your Phone verification will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>phone numbers</strong>, your <strong><em>Phone verification</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
         }
         </ul>
     </div>

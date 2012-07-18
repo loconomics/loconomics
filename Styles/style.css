@@ -929,6 +929,9 @@ form fieldset.actions{
     border-left: 2px solid #FF8300;
     margin: 10px 5px;
 }
+.warning.warning-large {
+    font-weight: normal;
+}
 .success {
     margin: 10px 5px;
     font-weight: bold;
