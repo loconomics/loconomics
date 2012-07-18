@@ -43,7 +43,7 @@
             a:hover   { color: #3c96e2; text-decoration: underline}
         /* End Boilerplate */
             a.respond:hover {
-                box-shadow: 0 0 5px 2px #8B2143;
+                box-shadow: 0 0 5px 2px #00989A;
             }
             body,table,table td,table th { @* Required to avoid problems with default sizes of table contents in some email clients that don't inherit the body font-size or inline table font-size (but gmail works file without this) *@
                 font-size:13px;
@@ -54,91 +54,21 @@
             }*@
         
         @* TODO: STYLES TO BE MOVED TO LcEmailTemplateHelper and Email* files BECAUSE GMAIL, HOTMAIL DOESN'T READ IT *@
-            .message-section {background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;}
+            @*.message-section {background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;}
             .highlighted {background-color: #9ACECE;}
             .user-public-name {font-weight: bold;}
             .mini-user-info { clear: both;display: inline-block !important;width: 150px;overflow: hidden;      }
             /* Class mini-user-info */
             .mini-user-info > h5 {font-size: 1em;color: #6c6c6c;display: inline;}
-
             /* Users */
-            .mini-avatar{
-                display: inline-block;
-                height: 55px;
-                margin: 0 5px 0 0;
-                vertical-align: top;
-                width: 55px;
-            }
-            
+            .mini-avatar{display: inline-block;height: 55px;margin: 0 5px 0 0;vertical-align: top;width: 55px;}
             /* Class medium-user-info */
-            .medium-user-info {
-                font-size: .9em;
-            }
-            .medium-user-info a.view-profile {
-                bottom: 15px;
-                display: block;
-                position: absolute;
-                right: 15px;
-                text-transform: lowercase;
-                width: 100px;
-            }
-            .medium-user-info.user-contact-data a.view-profile {
-                display: inline;
-                margin-left: 10px;
-            }
-            .medium-user-info .user-text {
-                display: inline-block;
-                height: 50px;
-                line-height: normal;
-                overflow: hidden;
-                width: 400px;
-            }
-            .medium-user-info .user-contact-data {
-                display: inline-block;
-                line-height: normal;
-                overflow: hidden;
-                width: 400px;
-            }
-            .medium-user-info h5.user-public-name {
-                margin: 0;
-                font-size: 1em;
-                line-height: 1em;
-                display: inline;
-                color: #6C6C6C;
-            }
-            .medium-user-info .user-rating {
-                display: inline-block;
-            }
-            .medium-user-info .user-rating .note {
-                font-size: .8em;
-                color: #6c6c6c;
-                font-style: italic;
-            }
-            .medium-user-info .google-map {
-                position: absolute;
-                right: 15px;
-                top: 15px;
-            }
-            /* bookings */
-            .booking-request table.pricing-summary {
-                border: none;
-            }
-            .booking-request table.pricing-summary td.concept {
-                padding-right: 5px;
-            }
-            .booking-request table.pricing-summary td.price {
-                padding-left: 3px;
-                text-align: right;
-                vertical-align: bottom;
-            }
-            .booking-request table.pricing-summary tr.total {
-                font-weight: bold;
-            }
-            .requested-booking-services .services li {
-                margin-left: 20px;
-                width: 205px;
-                display: inline-block;
-            }
+            .medium-user-info {font-size: .9em;}
+            .medium-user-info a.view-profile {display: block;text-transform: lowercase;width: 100px;}
+            .medium-user-info .user-text {display: inline-block;height: 50px;line-height: normal;overflow: hidden;width: 400px;}
+            .medium-user-info .user-contact-data {display: inline-block;line-height: normal;overflow: hidden;width: 400px;}*@
+
+
             .requested-booking-times .button {
                 border-radius: 20px;
                 -moz-border-radius: 20px;

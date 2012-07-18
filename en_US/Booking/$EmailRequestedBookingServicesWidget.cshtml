@@ -1,0 +1,139 @@
+﻿@using WebMatrix.Data;
+@{
+    dynamic booking = PageData[0];
+    string myUserType = PageData[1];
+    
+    if (booking == null || booking["BookingRequestID"] == null) {
+        throw new Exception("No data to bound RequestedBookingServices");
+    }
+
+    var getServicesIncluded = @"
+        SELECT  S.Name
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ServiceAttribute As S
+                  ON S.ServiceAttributeID = P.ServiceAttributeID
+        WHERE   P.PricingEstimateID = @0
+                 AND S.CountryId = @1 AND S.LanguageID = @2
+    ";
+    var getPricingVars = @"
+        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingVariable As V
+                  ON V.PricingVariableID = P.PricingVariableID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+    var getPricingOptions = @"
+        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingOption As V
+                  ON V.PricingOptionID = P.PricingOptionID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.CountryId = @1 AND V.LanguageID = @2
+    ";
+     
+    dynamic services = null, pvars = null, poptions = null;
+    using (var db = Database.Open("sqlloco")) {         
+        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
+        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
+        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+    }
+     
+    // auxiliar vars in view generation
+    int i = 0;
+    string iprint = "";
+}
+@helper printQuantityIfNeeded(string q){
+    decimal quantity = 0;
+    decimal.TryParse(q, out quantity);
+    if (quantity > 1) {
+        @("(" + quantity.ToString() + " items)")
+    }
+}
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Services to be performed:</h5>
+        <ul  @LcEmailTemplateHelper.StyleUlOl()>
+            @foreach (var service in services)
+            {
+                <li style="margin-left: 20px;width: 205px;display: inline-block;">@service.Name</li>
+            }
+        </ul>
+        
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
+        <p @LcEmailTemplateHelper.StyleResetP()>@booking.SpecialRequests</p>
+
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Additional services and pricing summary:</h5>
+        <table border="0" style="border: none;">
+            @foreach (var pitem in poptions)
+            {
+            <tr>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@pitem.Price</td>
+            </tr>
+            }
+            <tr>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
+                    @{
+                        i = 0;
+                        iprint = "";
+                        decimal varsTime = 0;
+                        foreach (var pitem in pvars)
+                        {
+                            if (i > 0)
+                            {
+                                iprint = "; ";
+                            }
+                            i++;
+                                        @(iprint + pitem.Name + " " + @pitem.Quantity)
+                            varsTime += pitem.Time;
+                        }
+                        @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
+                    }
+                </td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@((varsTime * booking.HourlyPrice).ToString("#,##0.00"))</td>
+            </tr>
+            <tr>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Locnomics service fee (includes credit card processing costs)</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@booking.FeePrice</td>
+            </tr>
+            <tr style="@LcEmailTemplateHelper.StylePricingSummaryTotal()">
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
+                @switch(myUserType) {
+                    case "provider":
+                        <text>
+                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                        </text>
+                    break;
+                    case "customer":
+                        <text>
+                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                        </text>
+                    break;
+                    default:
+                        <text>
+                        Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        </text>
+                    break;
+                }
+                </td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@booking.TotalPrice</td>
+            </tr>
+        </table>
+
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location and contact information:</h5>
+        <div>
+            @*<p>
+            x.y miles away (z1 minutes driving time, z2 minutes public tranport)
+            </p>*@
+            <p>
+            Full location and contact information will be shown after you accept a time above.
+            </p>
+        </div>
+    </div>

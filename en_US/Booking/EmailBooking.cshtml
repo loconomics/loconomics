@@ -26,22 +26,15 @@
     <text> to </text>
     @end.ToShortTimeString()
 }
-@helper printAddress(IDictionary<string, object> addressDetails, bool editable){
-        <div class="address">
+@helper printAddress(IDictionary<string, object> addressDetails){
+        <div>
             @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
-            <span class="address-name">@addressDetails["name"]</span>
+            <div>@addressDetails["name"]</div>
             }
-            <span class="address-location">@addressDetails["location"]</span>
-            <span class="address-city">@addressDetails["city"]</span>
-            <span class="address-state">@addressDetails["state"]</span>
-            <span class="address-zipcode">@addressDetails["zipcode"]</span>
-            @if (editable) {
-            <div class="tools">
-                <a href="#" class="edit">Edit</a>
-                <a href="#" class="map">Map</a>
-                <a href="#" class="remove">Remove</a>
-            </div>
-            }
+            <span>@addressDetails["location"]</span>
+            <span>@addressDetails["city"]</span>
+            <span>@addressDetails["state"]</span>
+            <span>@addressDetails["zipcode"]</span>
         </div>
 }
 @helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
@@ -102,11 +95,10 @@
         return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
-@CommonHelpers.SetupStarRatingPlugin()
 
 @if (booking == null)
 {
-    <div class="booking main-side">
+    <div>
         Sorry, it could not be found the requested Booking.
     </div>
 }
@@ -126,28 +118,28 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
 
-<div class="booking-request booking main-side">
+<div>
     <h3 @LcEmailTemplateHelper.StyleH3()>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
-    <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+    <span>last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     @if (DateTime.Now > booking.ConfirmedDateEnd)
     {
-    <div class="actions">
+    <div style="float: right;">
         @if (myUserType == "customer") {
-            <a style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
                 @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
             </a>
             if (booking.ReviewedByProvider == true) {
-            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
                 View provider revision
             </a>
             }
         } else if (myUserType == "provider") {
-            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
                 @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
             </a>
             if (booking.ReviewedByCustomer == true) {
-            <a class="respond button main-action" href="@PageData["viewOnSiteUrl"]" target="_blank">
+            <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
                 View customer revision
             </a>
             }
@@ -156,15 +148,13 @@ else
     }
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@itsUserLabel information</h4>
-    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-        {"AddCssClasses", "message-section" },
+    @RenderPage(UrlUtil.LangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"Data", itsUserData},
         {"DataPrefix", ""},
         {"Size", "medium"},
         {"UserType", itsUserType},
         {"WithContactData", true},
-        {"WithGoogleMap", false},
-        {"UseAbsoluteUrls", true}
+        {"WithGoogleMap", false}
     })
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Booking time and location</h4>
@@ -183,7 +173,7 @@ else
                 {"city", booking.City}, 
                 {"state", booking.StateProvinceCode},
                 {"zipcode", booking.PostalCode}
-            }, false)
+            })
 
             @*<div>
             (x minutes driving time, y minutes walk)
@@ -193,9 +183,29 @@ else
     </div>
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Requested services and pricing estimate</h4>
-    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking)
+    @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", booking)
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>
-    @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        <ol @LcEmailTemplateHelper.StyleUlOl(true)>
+            @if (myUserType == "provider")
+            {
+            <li>You will be paid after the service is succesfully completed</li>
+            <li>Please arrive five minutes before the scheduled booking time</li>
+            <li>Dress appropriately and act professionally</li>
+            <li>Present your identification and professional license (if applicable)</li>
+            <li>Review the estimate together before starting the work</li>
+            <li>Call or e-mail us with any questions</li>
+            <li>Have fun!</li>
+            }
+            else
+            {
+            <li>Provider will be paid after the service is succesfully completed</li>
+            <li>Review the estimate together before starting the work</li>
+            <li>Call or e-mail us with any questions</li>
+            <li>Have fun!</li>
+            }
+        </ol>
+    </div>
 </div>
 }

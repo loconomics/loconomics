@@ -1,0 +1,159 @@
+﻿@using WebMatrix.Data;
+@{
+    //PageData["UserRatingSummaryWidget"];
+    dynamic reviewRecord = PageData["ReviewRecord"];
+    bool withNote = PageData["RatingWithNote"] ?? true;
+    int reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
+    int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    int reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
+    string mode = PageData["RatingSummaryMode"] ?? "detailed"; // values: detailed, summary
+    dynamic reviewedData = PageData["ReviewedData"];
+    string reviewedDataPrefix = PageData["ReviewedDataPrefix"] ?? "";
+    if (reviewedData == null){
+        reviewedData = DashboardFunctions.GetUserRow(reviewedID);
+        reviewedDataPrefix = "";
+    }
+    
+    if (reviewRecord == null) {
+        var getPositionRatings = @"
+                SELECT	
+                        @0 As ReviewedUserID, @1 As PositionID, @2 As ReviewerUserID,
+                        avg(Rating1) As Rating1,
+		                avg(Rating2) As Rating2,
+		                avg(Rating3) As Rating3,
+                        sum(ServiceHours) As ServiceHours,
+                        max(UpdatedDate) As LastRatingDate,
+                        count(*) As TotalRatings,
+                        sum(Answer2) As Answer2
+                FROM	UserReviews
+                WHERE	ProviderUserID = @0
+		                 AND
+		                PositionID = @1
+                         AND
+                        CustomerUserID = @2
+        ";
+        // SQL NOTE: really, to get results the aggregated operations are not needed in the sql
+        // but are needed to get default values when there are a record for the user and avoid
+        // exceptions because the null record:
+        var getRatingScores = @"
+            SELECT  @0 As ReviewedUserID, @1 As PositionID, 0 As ReviewerUserID,
+                    coalesce(avg(Rating1), 0) As Rating1,
+		            coalesce(avg(Rating2), 0) As Rating2,
+		            coalesce(avg(Rating3), 0) As Rating3,
+                    coalesce(sum(ServiceHours), 0) As ServiceHours,
+                    coalesce(max(UpdatedDate), 0) As LastRatingDate,
+                    coalesce(sum(TotalRatings), 0) As TotalRatings,
+                    coalesce(sum(Answer2), 0) As Answer2
+            FROM    UserReviewScores
+            WHERE   UserID = @0
+                     AND
+                    PositionID = @1
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            if (reviewerID > 0) {
+                reviewRecord = db.QuerySingle(getPositionRatings, reviewedID, positionID, reviewerID);
+            } else {
+                reviewRecord = db.QuerySingle(getRatingScores, reviewedID, positionID);
+            }
+        }
+    }
+    
+    var note = "";
+    var hours = reviewRecord.ServiceHours ?? 0;
+    switch (mode) {
+        case "detailed":    
+            if (reviewerID > 0 && reviewRecord.LastRatingDate != null) {
+                note = "*based on " + hours.ToString("#,##0.00") + " hours hired " + reviewRecord.LastRatingDate.ToShortDateString();
+            } else {
+                note = "*based on " + hours.ToString("#,##0.00") + " hours of work";
+            }
+            break;
+        case "summary":
+            if (reviewRecord.TotalRatings > 0) {
+                string notetpl = "";
+                var percentage = reviewRecord.Answer2 / (reviewRecord.TotalRatings == 0 ? 1 : reviewRecord.TotalRatings);
+                if (positionID > 0) {
+                    notetpl = "{0:##0%} of customers would work with {1} again (based on {2} reviews).";
+                } else {
+                    notetpl = "{0:##0%} of providers would work for {1} again (based on {2} reviews).";
+                }
+                note = String.Format(notetpl,
+                        percentage,
+                        CommonHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
+                        reviewRecord.TotalRatings);
+            } else {
+                note = "There are not enougth reviews still to show an average rating";
+            }
+            break;
+    }
+}
+@helper printProviderStartRating(dynamic posrow, int index, decimal rate){
+    var n = "rating" + index.ToString();
+    switch(index){
+        default:
+            <label>@n</label>
+            break;
+        case 3:
+            <label>Proffesionalism</label>
+            break;
+        case 1:
+            <label>Quality-of-work</label>
+            break;
+        case 2:
+            <label>Efficiency</label>
+            break;
+    }
+    @printRating(rate)
+}
+@helper printRating(decimal globalRate){
+    var inText = "";
+    globalRate = Decimal.Round(globalRate);
+    for (decimal n = 0; n < 5; n++) {
+        if (globalRate > n) {
+            inText += "X ";
+        } else {
+            inText += "O ";
+        }
+    }
+    inText += "(" + globalRate.ToString() + "/ 5)";
+    <img alt="@inText" src="@(UrlUtil.AppUrl)img/email/star-rating-@(globalRate).png" />
+}
+<div>
+    @switch(mode) {
+        case "detailed":
+            <ul>
+                @{
+                    if (positionID > 0) {
+                        for(var s=1; s < 4; s++){
+                            var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
+                            <li>
+                                @printProviderStartRating(reviewRecord, s, rate)
+                            </li>
+                        }
+                    } else {
+                        var rate = reviewRecord["Rating1"].ToString();
+                        <li>
+                        <label>Customer</label>
+                        @printRating(rate)
+                        </li>
+                    }
+                }
+            </ul>
+            if (withNote){
+                <span style="@LcEmailTemplateHelper.StyleRatingNote()">@note</span>
+            }
+        break;
+        case "summary":
+            var globalRate = 0m;
+            if (positionID > 0) {
+                globalRate = Decimal.Round((reviewRecord.Rating1 + reviewRecord.Rating2 + reviewRecord.Rating3) / 3m);
+            } else {
+                globalRate = Decimal.Round(reviewRecord.Rating1);
+            }
+            @printRating(globalRate)
+            if (withNote) {
+                <span style="@LcEmailTemplateHelper.StyleRatingNote()">@note</span>
+            }
+        break;
+    }
+</div>

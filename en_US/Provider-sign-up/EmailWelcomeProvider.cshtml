@@ -64,7 +64,7 @@
     <div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
-        <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()">Go to my dashboard</a>
+        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()">Go to my dashboard</a>
         }
         else
         {

@@ -1,0 +1,108 @@
+﻿@{
+    var size = PageData["Size"] ?? "mini"; // medium, large
+    var withContactData = PageData["WithContactData"] ?? false;
+    var data = PageData["Data"];
+    var dataPrefix = PageData["DataPrefix"] ?? "";
+    var userType = PageData["UserType"] ?? "user"; // customer, provider
+    var addContainerStyle = PageData["AddContainerStyle"] ?? "";
+    var extraInfo = PageData["ExtraInfo"];
+    var withGoogleMap = PageData["WithGoogleMap"] ?? true;
+    var positionID = (int)(PageData["PositionID"] ?? -1);
+    var urlBase = UrlUtil.SiteUrl;
+
+
+    if (data == null) {
+        // TODO: load user data from database
+        dataPrefix = "";
+    }
+    
+    if (Array.IndexOf<string>(new string[] { "mini", "medium", "large" }, size) == -1) {
+        throw new Exception("Size is not valid: " + size);
+    }
+    if (Array.IndexOf<string>(new string[] { "user", "customer", "provider" }, userType) == -1) {
+        throw new Exception("UserType is not valid: " + userType);
+    }
+}
+@helper printGoogleMap(string location){
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@functions{
+    string getLocationForGoogleMaps(dynamic data){
+        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+}
+@if (size == "medium")
+{
+    <div style="font-size: .9em;@addContainerStyle">
+        <div>
+            <h5 @LcEmailTemplateHelper.StyleH5("margin: 0;font-size: 1em;line-height: 1em;display: inline;color: #6C6C6C;")>@CommonHelpers.GetUserDisplayName(data, dataPrefix)</h5>
+            <span>Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
+        </div>
+        
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        
+        @if (withContactData) {
+            <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
+                <div>Name: <span>@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
+                <div>Address: <span>@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
+                <div>@CommonHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
+                <div>Mobile phone: <span>@data[dataPrefix + "MobilePhone"]</span></div>
+                <div>Email address: <span>@data[dataPrefix + "Email"]</span></div>
+            </div>
+            if (withGoogleMap) {
+                @printGoogleMap(getLocationForGoogleMaps(data))
+            }
+        }
+        else {
+        <p style="display: inline-block;height: 50px;line-height: normal;overflow: hidden;width: 400px;">
+            @if (!String.IsNullOrWhiteSpace(data[dataPrefix + "PublicBio"])) {
+                @data[dataPrefix + "PublicBio"]
+            } else {
+                <text>User doesn't provide information about itself.</text>
+                <br />
+                <text>It's strongly recommended for all users to write a public bio.</text>
+                @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
+            }
+        </p>
+        }
+
+        <div style="display: inline-block;">
+        @if (userType == "customer")
+        {
+            @RenderPage(UrlUtil.LangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+                ReviewedID = data[dataPrefix + "UserID"],
+                PositionID = 0,
+                ReviewedData = data,
+                ReviewedDataPrefix = dataPrefix,
+                RatingSummaryMode = "summary"
+            })
+        }
+        else if (userType == "provider")
+        {
+            @RenderPage(UrlUtil.LangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+                ReviewedID = data[dataPrefix + "UserID"],
+                PositionID = positionID,
+                ReviewedData = data,
+                ReviewedDataPrefix = dataPrefix,
+                RatingSummaryMode = "summary"
+            })
+        }
+        </div>
+
+        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
+    </div>
+}
+@* Mini size is the same for all userType's *@
+else if (size == "mini") {
+    <div style="@addContainerStyle">
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()">@data[dataPrefix + "FirstName"] @(CommonHelpers.GetInitialLetter(data[dataPrefix + "LastName"])).</h5>
+        @if (!String.IsNullOrWhiteSpace(extraInfo)) {
+            <div>@extraInfo</div>
+        } else {
+            <a href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+        }
+    </div>
+} else {
+    <strong>User Info Widget: option not implemented!</strong>
+}
