@@ -70,25 +70,25 @@
 @*Current user: @WebSecurity.CurrentUserId to test secure alternatives *@
     @if (kind < 0)
     {
-        <div class="message-copy">Copy of your sent message</div>
+        <div style="@LcEmailTemplateHelper.StyleMessageCopy()">Copy of your sent message</div>
     }
-    <h3 class="message-subject">@thread.Subject</h3>
-    <div class="conversation">
+    <h3 style="@LcEmailTemplateHelper.StyleMessageSubject()">@thread.Subject</h3>
+    <div style="clear:both;overflow:hidden;">
         @foreach (var message in messages)
         {
-            string userType = "customer", userPrefix = "Customer";
+            string userPrefix = "Customer", messageStyle = "float: left;";
             if (message.MessageTypeID == 3)
             {
-                userType = "provider";
                 userPrefix = "Provider";
+                messageStyle = "float:right;";
             }
-            <div class="conversation-message @userType">
-                <div class="mini-user-info">
-                    <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(thread, userPrefix)</h5>
-                    <div class="extra-info">@message.MessageDate.ToShortDateString()</div>
+            <div style="clear: both;width: 100%;overflow: hidden;margin-bottom: 20px;">
+                <div style="@LcEmailTemplateHelper.StyleMiniUserInfo();@(messageStyle)width: 60px;overflow: hidden;margin: 8px 0;font-size: .9em">
+                    <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()@LcEmailTemplateHelper.StyleMiniUserInfoH5()">@CommonHelpers.GetUserDisplayName(thread, userPrefix)</h5>
+                    <div>@message.MessageDate.ToShortDateString()</div>
                 </div>
-                <div class="message-section @(message.MessageID == messageID ? "highlighted" : "")">@printMessageBodyAsHtml(message.BodyText)</div>
+                <div style="@LcEmailTemplateHelper.StyleMessageSection();margin: 0 13px;width: 430px;overflow: hidden;@(messageStyle)@(message.MessageID == messageID ? LcEmailTemplateHelper.StyleHighlighted() : ""))">@printMessageBodyAsHtml(message.BodyText)</div>
             </div>
         }
     </div>
-    <div><a class='respond' target="_blank" href="@PageData["viewOnSiteUrl"]">Respond to this inquiry at loconomics.com</a></div>
+    <div><a style="@LcEmailTemplateHelper.StyleRespondButton()" target="_blank" href="@PageData["viewOnSiteUrl"]">Respond to this inquiry at loconomics.com</a></div>

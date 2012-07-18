@@ -4,6 +4,11 @@
     style element block, here we have helpers prefixed with Style that will print a style attribute (not block, attribute)
     with the desired css attributes for some general classes and tag styles.
 *@
+
+@helper PrintStyle(string styleContent) {
+    <text>style="@styleContent"</text>
+}
+
 @*=== Elements/tags *@
 @helper StyleH1(string addCss = null) {
     <text>style="color:#00989A;line-height:100%;@addCss"</text>
@@ -33,9 +38,29 @@
 }
 
 @*=== Classes *@
-@helper StyleRespondButton(string addCss = null) {
-    <text>style="background:none repeat scroll 0 0 #8B2143 !important;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;margin:1em;text-transform:lowercase;display:inline-block;text-decoration:none;@addCss"</text>
-}
-@helper StyleMessageSection(string addCss = null) {
-    <text>style="background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;@addCss"</text>
+@functions{
+    public static string StyleRespondButton() {
+        return "background:none repeat scroll 0 0 #8B2143 !important;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;margin:1em;text-transform:lowercase;display:inline-block;text-decoration:none;";
+    }
+    public static string StyleMessageCopy() {
+        return "float: right;padding: 15px;font-style: italic;";
+    }
+    public static string StyleMessageSubject() {
+        return "margin: 15px 0;";            
+    }
+    public static string StyleMessageSection() {
+        return "background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;";
+    }
+    public static string StyleHighlighted() {
+        return "background-color: #9ACECE;";
+    }
+    public static string StyleUserPublicName() {
+        return "font-weight: bold;";
+    }
+    public static string StyleMiniUserInfo() {
+        return "clear: both;display: inline-block !important;width: 150px;overflow: hidden;";
+    }
+    public static string StyleMiniUserInfoH5() {
+        return "font-size: 1em;color: #6c6c6c;display: inline;";
+    }
 }

@@ -55,53 +55,12 @@
         
         @* TODO: STYLES TO BE MOVED TO LcEmailTemplateHelper and Email* files BECAUSE GMAIL, HOTMAIL DOESN'T READ IT *@
             .message-section {background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;}
-            .highlighted {
-                background-color: #9ACECE;
-            }
-            .conversation {
-                clear: both;
-                overflow: hidden;
-            }
-            .conversation-message {
-                clear: both;
-                width: 100%;
-                overflow: hidden;
-                margin-bottom: 20px;
-            }
-            .conversation-message .message-section {
-                margin: 0 13px;
-                width: 430px;
-                overflow: hidden;
-            }
-            .conversation-message .mini-user-info {
-                width: 60px;
-                overflow: hidden;
-                margin: 8px 0;
-                font-size: 0.9em;
-            }
-            .conversation-message.customer .message-section,
-            .conversation-message.customer .mini-user-info,
-            .conversation .customer .message-section,
-            .conversation .customer .mini-user-info {
-                float: left;
-            }
-            .conversation-message.provider .message-section,
-            .conversation-message.provider .mini-user-info,
-            .conversation .provider .message-section,
-            .conversation .provider .mini-user-info {
-                float: right;
-            }
-            h3.message-subject {
-                margin: 15px 0;
-            }
-            .user-public-name {
-                font-weight: bold;
-            }
-            .message-copy {
-                float: right;
-                padding: 15px;
-                font-style: italic;
-            }
+            .highlighted {background-color: #9ACECE;}
+            .user-public-name {font-weight: bold;}
+            .mini-user-info { clear: both;display: inline-block !important;width: 150px;overflow: hidden;      }
+            /* Class mini-user-info */
+            .mini-user-info > h5 {font-size: 1em;color: #6c6c6c;display: inline;}
+
             /* Users */
             .mini-avatar{
                 display: inline-block;
@@ -110,28 +69,7 @@
                 vertical-align: top;
                 width: 55px;
             }
-            /* Class mini-user-info */
-            .mini-user-info {
-                clear: both;
-                display: inline-block !important;
-                width: 150px;
-                overflow: hidden;
-            }
-            .mini-user-info > h5 {
-                font-size: 1em;
-                color: #6c6c6c;
-                display: inline;
-            }
-            .mini-user-info > img.avatar {
-                float: left;
-                margin: 0 10px 0 0;
-            }
-            .mini-user-info > a.view-profile,
-            .mini-user-info > a.view-profile:link,
-            .mini-user-info > a.view-profile:visited {
-                color: #00989a;
-                display: block;
-            }
+            
             /* Class medium-user-info */
             .medium-user-info {
                 position: relative;
