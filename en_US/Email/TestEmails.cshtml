@@ -1,0 +1,32 @@
+﻿@{
+    var list = new Dictionary<string, List<string>>{
+        { "EmailWelcomeProvider", new List<string> { 
+            "Provider-sign-up/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&ConfirmationToken=sometoken&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
+            ,"Provider-sign-up/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
+        ,{ "EmailLicenseVerificationRequest", new List<string> { "Email/EmailLicenseVerificationRequest/?ProviderUserID=141&PositionID=14&LicenseCertificationID=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
+        ,{ "EmailInquiry", new List<string> { "Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
+        ,{ "EmailBooking", new List<string> { "Booking/EmailBooking/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3" } }
+        ,{ "EmailBookingRequest", new List<string> { "Booking/EmailBookingRequest/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3" } }
+    };
+}
+<!doctype html>
+<html>
+    <head></head>
+    <body>
+    
+        <h1>Testing Email Templates along the site</h1>
+        <h2>Use next links to test every template with some example data in the parameters</h2>
+        <ul>
+            @foreach(var l in list){
+                <li>@l.Key
+                    <ul>
+                        @foreach (var l2 in l.Value)
+                        {
+                            <li><a target="_blank" href="@(UrlUtil.LangPath + l2)">@l2</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </body>
+</html>
