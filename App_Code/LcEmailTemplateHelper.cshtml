@@ -39,8 +39,11 @@
 
 @*=== Classes *@
 @functions{
+    public static string StyleButton() {
+        return "background:none repeat scroll 0 0 #00989A;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;text-transform:lowercase;display:inline-block;text-decoration:none;";
+    }
     public static string StyleRespondButton() {
-        return "background:none repeat scroll 0 0 #00989A;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;margin:1em;text-transform:lowercase;display:inline-block;text-decoration:none;";
+        return StyleButton() + "margin:1em;";
     }
     public static string StyleMessageCopy() {
         return "float: right;padding: 15px;font-style: italic;";
@@ -65,7 +68,7 @@
     }
 
     public static string StyleMiniAvatar() {
-        return "display: inline-block;height: 55px;margin: 0 5px 0 0;vertical-align: top;width: 55px;";
+        return "display: inline-block;height: 55px;margin: 2px 5px 5px 0;vertical-align: top;width: 55px;";
     }
     public static string StyleRatingNote() {
         return "font-size: .8em;color: #6c6c6c;font-style: italic;";

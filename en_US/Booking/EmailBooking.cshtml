@@ -149,6 +149,7 @@ else
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
         {"Data", itsUserData},
         {"DataPrefix", ""},
         {"Size", "medium"},
@@ -186,26 +187,6 @@ else
     @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", booking)
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>
-    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-        <ol @LcEmailTemplateHelper.StyleUlOl(true)>
-            @if (myUserType == "provider")
-            {
-            <li>You will be paid after the service is succesfully completed</li>
-            <li>Please arrive five minutes before the scheduled booking time</li>
-            <li>Dress appropriately and act professionally</li>
-            <li>Present your identification and professional license (if applicable)</li>
-            <li>Review the estimate together before starting the work</li>
-            <li>Call or e-mail us with any questions</li>
-            <li>Have fun!</li>
-            }
-            else
-            {
-            <li>Provider will be paid after the service is succesfully completed</li>
-            <li>Review the estimate together before starting the work</li>
-            <li>Call or e-mail us with any questions</li>
-            <li>Have fun!</li>
-            }
-        </ol>
-    </div>
+    @RenderPage("$EmailBookingRemindersWidget.cshtml", myUserType)
 </div>
 }

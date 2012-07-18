@@ -45,6 +45,12 @@
             a.respond:hover {
                 box-shadow: 0 0 5px 2px #00989A;
             }
+            .button-confirm-datetime:hover {
+                box-shadow: 0 0 5px 2px #99C027;
+            }
+            .button-decline-booking:hover {
+                box-shadow: 0 0 5px 2px #e95d0f;
+            }
             body,table,table td,table th { @* Required to avoid problems with default sizes of table contents in some email clients that don't inherit the body font-size or inline table font-size (but gmail works file without this) *@
                 font-size:13px;
             }
@@ -52,56 +58,6 @@
             }
             @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px)  {          
             }*@
-        
-        @* TODO: STYLES TO BE MOVED TO LcEmailTemplateHelper and Email* files BECAUSE GMAIL, HOTMAIL DOESN'T READ IT *@
-            @*.message-section {background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;}
-            .highlighted {background-color: #9ACECE;}
-            .user-public-name {font-weight: bold;}
-            .mini-user-info { clear: both;display: inline-block !important;width: 150px;overflow: hidden;      }
-            /* Class mini-user-info */
-            .mini-user-info > h5 {font-size: 1em;color: #6c6c6c;display: inline;}
-            /* Users */
-            .mini-avatar{display: inline-block;height: 55px;margin: 0 5px 0 0;vertical-align: top;width: 55px;}
-            /* Class medium-user-info */
-            .medium-user-info {font-size: .9em;}
-            .medium-user-info a.view-profile {display: block;text-transform: lowercase;width: 100px;}
-            .medium-user-info .user-text {display: inline-block;height: 50px;line-height: normal;overflow: hidden;width: 400px;}
-            .medium-user-info .user-contact-data {display: inline-block;line-height: normal;overflow: hidden;width: 400px;}*@
-
-
-            .requested-booking-times .button {
-                border-radius: 20px;
-                -moz-border-radius: 20px;
-                -o-border-radius: 20px;
-                -webkit-border-radius: 20px;
-                color: White;
-                font-size: .9em;
-                line-height: 160%;
-                margin: 3px 0;
-            }
-            .requested-booking-times strong {
-                font-weight: normal;
-                color: #8b2143;
-            }
-            .button-confirm-datetime {
-                background: #99C027 !important;
-            }
-            .button-decline-booking {
-                background: #e95d0f !important;
-            }
-            .button-confirm-datetime:hover {
-                box-shadow: 0 0 5px 2px #99C027;
-                -moz-box-shadow: 0 0 5px 2px #99C027;
-                -o-box-shadow: 0 0 5px 2px #99C027;
-                -webkit-box-shadow: 0 0 5px 2px #99C027;
-            }
-            .button-decline-booking:hover {
-                box-shadow: 0 0 5px 2px #e95d0f;
-                -moz-box-shadow: 0 0 5px 2px #e95d0f;
-                -o-box-shadow: 0 0 5px 2px #e95d0f;
-                -webkit-box-shadow: 0 0 5px 2px #e95d0f;
-            }
-
     </style>
 </head>
 <body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix" style="margin:0;padding:0">

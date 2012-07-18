@@ -5,8 +5,14 @@
             ,"Provider-sign-up/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailLicenseVerificationRequest", new List<string> { "Email/EmailLicenseVerificationRequest/?ProviderUserID=141&PositionID=14&LicenseCertificationID=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailInquiry", new List<string> { "Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        ,{ "EmailBooking", new List<string> { "Booking/EmailBooking/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3" } }
-        ,{ "EmailBookingRequest", new List<string> { "Booking/EmailBookingRequest/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3" } }
+        ,{ "EmailBooking", new List<string> { 
+            "Booking/EmailBooking/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3"
+            ,"Booking/EmailBooking/?BookingRequestID=59&BookingID=11&UserID=34&RequestKey=abcd3" } }
+        ,{ "EmailBookingRequest", new List<string> { 
+            "Booking/EmailBookingRequest/?BookingRequestID=59&BookingID=11&UserID=147&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=59&BookingID=11&UserID=34&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=70&UserID=141&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=70&UserID=147&RequestKey=abcd3" } }
     };
 }
 <!doctype html>
