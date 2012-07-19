@@ -92,8 +92,8 @@
     }
 }
 @helper printOptionsHours(TimeSpan selectedHour){
-    var firstHour = new TimeSpan(9, 0, 0);
-    var lastHour = new TimeSpan(18, 30, 0);
+    var firstHour = new TimeSpan(0, 0, 0);
+    var lastHour = new TimeSpan(24, 0, 0);
     var interval = new TimeSpan(0, 30, 0);
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
@@ -173,9 +173,9 @@ Please enter your availability below.  This should be the hours you generally ke
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
         <label>Time in advance of bookings:@printHoursBooking("advance", advanceTime.ToString())</label>
-        <label>Minimun booking time:@printHoursBooking("min", minTime.ToString())</label>
+        <label>Minimum booking time:@printHoursBooking("min", minTime.ToString())</label>
         <label>Maximum booking time:@printHoursBooking("max", maxTime.ToString())</label>
-        <label>Minimun time between bookings:@printHoursBooking("between", betweenTime.ToString())</label>
+        <label>Minimum time between bookings:@printHoursBooking("between", betweenTime.ToString())</label>
     </fieldset>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
