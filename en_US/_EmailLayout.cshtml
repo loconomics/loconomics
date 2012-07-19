@@ -14,8 +14,8 @@
     }
     var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
 }
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8"/>
@@ -72,29 +72,29 @@
                 </td>
             </tr>
             @***content*@<tr style="padding:0 0 15px 0">
-                <td colspan="2">
+                <td colspan="2" style="padding:1px 1px 10px 1px">
                     @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + UrlUtil.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
                         <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
                     </h2>*@
                     <table width="600" style="font-size:13px;border-collapse:collapse">
                         <tr>
-                            <td width="27" height="33" style="padding:0;width:27px;background: url('@(UrlUtil.AppUrl)img/email/tab-left-border.png') no-repeat left bottom;">&nbsp;</td>
-                            <td width="1%" height="33" nowrap="nowrap" style="padding:0;white-space:nowrap;" valign="top">
-                                <h2 @LcEmailTemplateHelper.StyleH2("font-size: 12px;font-weight: bold;line-height: 15px;margin:0;padding:0;padding-top:5px;border:solid 2px #00989A;border-width: 2px 0 0 0;vertical-align:top")>@messageTitle</h2>
+                            <td width="27" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:27px;height:33px;"><img border="none" width="27" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-left-border.png" /></td>
+                            <td width="1%" height="33" nowrap="nowrap" style="padding:0;white-space:nowrap;width:1%;height:33px;" valign="top">
+                                <h2 @LcEmailTemplateHelper.StyleH2("white-space:nowrap;font-size: 12px;font-weight: bold;line-height: 15px;margin:0;padding:0;padding-top:5px;border:solid 2px #00989A;border-width: 2px 0 0 0;vertical-align:top")>@messageTitle</h2>
                             </td>
-                            <td width="26" height="33" style="padding:0;width:26px;background: url('@(UrlUtil.AppUrl)img/email/tab-right-border.png') no-repeat left bottom">&nbsp;</td>
-                            <td height="33" valign="top" style="padding:0;"><div style="border:solid 2px #00989A;border-width: 0 0 2px 0;height:20px;vertical-align:top;">&nbsp;</div></td>
-                            <td width="12" height="33" style="padding:0;background: url('@(UrlUtil.AppUrl)img/email/tab-row-right-border.png') no-repeat right bottom">&nbsp;</td>
+                            <td width="26" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:26px;height:33px;"><img border="none" width="26" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-right-border.png" /></td>
+                            <td width="600" height="33" valign="top" nowrap="nowrap" style="white-space:nowrap;padding:0;width:600px;height:33px;"><div style="border:solid 2px #00989A;border-width: 0 0 2px 0;height:20px;vertical-align:top;">&nbsp;</div></td>
+                            <td width="12" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:12px;height:33px;"><img border="none" width="12" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-row-right-border.png" /></td>
                         </tr>
                         <tr>
                             <td colspan="5" style="padding:0">
-                                <table width="600" style="padding:8px 20px;font-size:13px;border:solid 2px #00989A;border-width: 0 2px;"><tr><td>
+                                <table width="600" style="font-size:13px;border:solid 2px #00989A;border-width:0 2px;"><tr><td style="padding:8px 20px;">
                                 @RenderBody()
                                 </td></tr></table>
                             </td>
                         </tr>
                         <tr>
-                            <td style="background:url('@(UrlUtil.AppUrl)img/email/tab-bottom.png') no-repeat left top;" colspan="5" height="12">&nbsp;</td>
+                            <td colspan="5" height="12" style="padding:0"><img height="12" width="600" style="vertical-align:bottom" border="none" src="@(UrlUtil.AppUrl)img/email/tab-bottom.png" /></td>
                         </tr>
                     </table>
                 </td>
