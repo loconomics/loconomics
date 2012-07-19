@@ -128,6 +128,18 @@ and test on both.
                 // Check alert for services attributes after being filled: (the first full 
                 // user test -TestAllAlerts- is done by a trigger on userprofilepositions table)
                 db.Execute("EXEC TestAlertPositionServices @0, @1", UserID, PositionID);
+                
+                // Check request-more-attributes and send email to loconomics if there is something
+                if (!Request.Form["request-more-attributes"].IsEmpty()) {
+                     LcMessaging.SendMail("providerhelp@loconomics.com",
+                        "Loconomics.com: Provider request more service attributes",
+                        LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailRequestMoreServiceAttributes/",
+                            new Dictionary<string, object> { 
+                                { "ProviderUserID", UserID },
+                                { "PositionID", PositionID },
+                                { "RequestedAttributes", Request.Form["request-more-attributes"] }
+                    }));
+                }
 
                 if (insideWizard) {
                     // We return a json with result OK (=0), and response end just after this:
@@ -248,6 +260,9 @@ and test on both.
             </fieldset>
         </div>
     </fieldset>
+    <fieldset class="request-more-attributes">
+        <textarea class="fancy" rows="6" name="request-more-attributes" placeholder="Please list anything we’ve missed, and we’ll ensure we get it added to your profile right away."></textarea>
+    </fieldset>
     <fieldset class="actions">
         @if (insideWizard)
         {
@@ -258,5 +273,13 @@ and test on both.
             <button class="main-action save">Save</button>
         }
     </fieldset>
+    @if (!insideWizard)
+    {
+      <script type="text/javascript">
+          $(function () {
+              initYourWork();
+          });
+      </script>
+    }
 </form>
 </div>

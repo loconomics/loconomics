@@ -10,7 +10,7 @@ function initYourWork(){
     var jForm = $('form.your-work');
     var jSelectPosition = $('select[name=select-position]', jForm);
     var jAttributes = $('.select-attributes', jForm);
-    var jActions = $('fieldset.actions', jForm);
+    var jActions = $('fieldset.actions,fieldset.request-more-attributes', jForm);
     $.blockUI.defaults.message = null;
 
     var loadPositions = public.loadPositions = function loadPositions() {

@@ -178,6 +178,16 @@ ol.legal-agreement-terms > li {
     display: inline-block !important;
     width: 90px;
 }
+.sign-up-wizard .your-work .request-more-attributes{
+    padding: 6px 0;
+}
+.sign-up-wizard .your-work .request-more-attributes textarea {
+    color: black;
+    font-size: 1.2em;
+    height: 8em;
+    padding: 6px 12px;
+    width: 882px;
+}
 
 /** Page: next-steps **/
 .next-steps-info{

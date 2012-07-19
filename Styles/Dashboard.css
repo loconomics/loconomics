@@ -358,6 +358,18 @@ fieldset.required-attribute-category > legend:after {
 .required-attribute-category-footnote {
     color: #dd3333;
 }
+/* Your-work - more attributes */
+.dashboard .your-work .request-more-attributes{
+    padding: 6px 0;
+}
+.dashboard .your-work .request-more-attributes textarea {
+    color: black;
+    font-size: 1.2em;
+    height: 8em;
+    padding: 6px 12px;
+    width: 692px;
+}
+
 /* Fixing the buggy browsers implementation of legend element */
 fieldset.positionservices-attributes > legend {
     clear: both;
