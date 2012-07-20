@@ -44,37 +44,55 @@
         ", p.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
 }
-<div class="add-package"><a href="#add-package">@(ppackages.Count == 0 ? "Start adding a package, click me!" : "Add another package")</a></div>
-<div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0">
-    @if (ppackages.Count == 0){
-        @RenderPage("$ProviderPackageEdit.cshtml")
-    }
-</div>
-<div class="your-packages">
-    <h3>Your Packages:</h3>
-    <ul>
-        @foreach (var pak in ppackages) {
-        <li class="provider-package">
-            <h4>@pak.ProviderPackageName</h4>
-            <div class="provider-package-service-summary">
-                @pak.NumberOfSessions sessions - @pak.ServiceDuration minutes each
-            </div>
-            <div class="provider-package-price">@pak.Price</div>
-            <div class="edit-actions">
-                <a href="#delete" class="delete">Delete</a>
-                <a href="#edit" class="edit">Edit</a>
-            </div>
-            <h5>Description:</h5>
-            <div class="provider-package-description">
-                @pak.Description
-            </div>
-            <h5>Services included in this package:</h5>
-            <ul class="provider-package-services">
-                @foreach (var ser in ppackagesdetails){
-                    <li alt="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
-                }
-            </ul>
-        </li>
+<div class="@PageData["PricingWizardClasses"] pricingwizard package-pricing-type">
+    <div class="add-package"><a href="#add-package">Add another package</a></div>
+    <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0&PositionID=@pos.PositionID">
+        @if (ppackages.Count == 0){
+            <div class="empty">You have not packages, start adding one!</div>
+            @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID })
         }
-    </ul>
+    </div>
+    <div class="your-packages" data-source-url="@(UrlUtil.LangPath)PricingWizard/">
+        <h3>Your Packages:</h3>
+        <ul>
+            @foreach (var pak in ppackages) {
+            <li class="provider-package">
+                <h4>@pak.Name</h4>
+                <div class="provider-package-service-summary">
+                    @pak.NumberOfSessions sessions - @pak.ServiceDuration minutes each
+                </div>
+                <div class="provider-package-price">@pak.Price</div>
+                <div class="edit-actions">
+                    <a href="#delete" class="delete">Delete</a>
+                    <a href="#edit" class="edit">Edit</a>
+                </div>
+                <h5>Description:</h5>
+                <div class="provider-package-description">
+                    @pak.Description
+                </div>
+                <h5>Services included in this package:</h5>
+                <ul class="provider-package-services">
+                    @foreach (var ser in ppackagesdetails){
+                        <li alt="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
+                    }
+                </ul>
+            </li>
+            }
+        </ul>
+    </div>
+    <script type="text/javascript">
+        $('.add-package').click(function () {
+            $(this).siblings('.edit-panel').reload();
+            $(this).hide('slow');
+        });
+        $('.pricingwizard').on('ajaxSuccessPost', '.edit-panel form', function (data) {
+            if (data.Code == 0) {
+                var pw = $(this).closest('.pricingwizard');
+                pw.find('.your-packages').reload();
+                pw.find('.add-package').show('slow');
+            }
+        }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (data) {
+            $(this).closest('.edit-panel').hide('fast');
+        });
+    </script>
 </div>

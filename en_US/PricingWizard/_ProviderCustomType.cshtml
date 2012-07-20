@@ -201,7 +201,7 @@
     @Html.Raw((Request[name] == value || valuealt == value) ? "selected='selected'" : "")
 }
 
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPricing/" method="post" class="@PageData["FormClasses"] pricingwizard ajax ajax-box" id="@idprefix">
+<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPricing/" method="post" class="@PageData["PricingWizardClasses"] pricingwizard ajax ajax-box" id="@idprefix">
     <input type="hidden" name="PositionID" value="@pos.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="pricing-wizard">

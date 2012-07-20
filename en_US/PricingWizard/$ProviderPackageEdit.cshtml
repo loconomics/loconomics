@@ -2,53 +2,159 @@
     CommonHelpers.SecurePage();
     var p = DashboardFunctions.GetUserRow();
     var packageID = Request["ProviderPackageID"].AsInt();
+    var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var attributesInPackage = new List<int>();
     
-    dynamic package, attributes = null;
+    Validation.RequireField("package-name", LcRessources.RequiredField("Package name"));
+    Validation.RequireField("package-description", LcRessources.RequiredField("Description"));
+    Validation.RequireField("price", LcRessources.RequiredField("Price"));
+    Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
+    Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of sessions"));
+    Validation.Add("price", Validator.Decimal("Price must be a number"));
+    Validation.Add("minutes", Validator.Integer("Session duration in minutes must be a number without decimals"));
+    Validation.Add("sessions-number", Validator.Integer("Number of sessions must be a number without decimals"));
+    
+    if (IsPost) {
+        var checkedAtts = Request.Form.GetValues("package-service-attribute");
+        foreach (var att in checkedAtts) {
+            int attId = att.AsInt();
+            if (attId > 0) {
+                attributesInPackage.Add(attId);
+            }
+        }
+        
+        if (Validation.IsValid()) {
+            var sqlSetPackage = @"
+                DECLARE @PackageID int
+                SET @PackageID = @0
+            
+                IF @PackageID = 0
+                    INSERT INTO ProviderPackage (
+                        ProviderUserID
+                        ,PositionID
+                        ,LanguageID
+                        ,CountryID
+                        ,ProviderPackageName
+                        ,ProviderPackageDescription
+                        ,ProviderPackagePrice
+                        ,ProviderPackageServiceDuration
+                        ,FirstTimeClientsOnly
+                        ,NumberOfSessions
+                        ,CreatedDate
+                        ,UpdatedDate
+                        ,ModifiedBy
+                        ,Active
+                    ) VALUES (
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, getdate(), getdate(), 'sys', 1
+                    )
+                ELSE
+                    UPDATE ProviderPackage SET
+                        ProviderPackageName = @3
+                        ,ProviderPackageDescription = @4
+                        ,ProviderPackagePrice = @5
+                        ,ProviderPackageServiceDuration = @6
+                        ,FirstTimeClientsOnly = @7
+                        ,NumberOfSessions = @8
+                        ,UpdatedDate = getdate()
+                        ,ModifiedBy = 'sys'
+                        ,Active = 1
+                    WHERE ProviderPackageID = @PackageID
+            ";
+            var sqlSetDetail = @"
+                BEGIN TRAN
+                    UPDATE  ProviderPackageDetail WITH (serializable)
+                    SET     Active = 1,
+                            UpdatedDate = getdate(),
+                            ModifiedBy = 'sys'
+                    WHERE   ProviderPackageID = @0 AND ServiceAttributeID = @1
+
+                    IF @@rowcount = 0
+                    BEGIN
+                        INSERT INTO ProviderPackageDetail (
+                            ProviderPackageID, ServiceAttributeID, 
+                            CreatedDate, UpdatedDate, 
+                            ModifiedBy, Active)
+                        VALUES (@0, @1, getdate(), getdate(), 'sys', 1)
+                    END
+                COMMIT TRAN
+            ";
+            using (var db = Database.Open("sqlloco")) {
+                db.Execute(sqlSetPackage, packageID,
+                    p.UserID, positionID, 
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    Request["package-name"],
+                    Request["package-description"],
+                    Request["price"].AsDecimal(),
+                    Request["minutes"].AsDecimal(),
+                    Request["first-time-clients-only"].AsBool(),
+                    Request["sessions-number"].AsInt()
+                );
+                foreach(var att in attributesInPackage) {
+                    db.Execute(sqlSetDetail,
+                        packageID,
+                        att
+                    );
+                }
+            }
+        
+            CommonHelpers.ReturnJsonResult(0, null);
+        }
+    }
+    
+    dynamic package = null, attributes = null;
     using (var db = Database.Open("sqlloco")) {
-        package = db.QuerySingle(@"
-            SELECT  p.ProviderPackageID
-                    ,p.ProviderPackageName As Name
-                    ,p.ProviderPackageDescription As Description
-                    ,p.ProviderPackagePrice As Price
-                    ,p.ProviderPackageServiceDuration As ServiceDuration
-                    ,p.FirstTimeClientsOnly
-                    ,p.NumberOfSessions
-                    ,p.ProviderUserID
-                    ,p.PositionID
-            FROM    providerpackage As p
-            WHERE   p.ProviderPackageID = @0
-                     AND 
-                    p.LanguageID = @1 AND p.CountryID = @2
-                     AND 
-                    p.Active = 1
-        ", packageID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());     
-        attributes = db.Query(@"
-
-            -- GetServiceAttributes
-
-            SELECT  A.ServiceAttributeID
-                    ,PD.ServiceAttributeID As PackageAttributeID
-                    ,A.Name
-                    ,A.ServiceAttributeDescription
-            FROM    ServiceAttribute As A
-                     LEFT JOIN
-                    ProviderPackageDetail As PD
-                      ON A.ServiceAttributeID = PD.ServiceAttributeID
-                        AND PD.ProviderPackageID = @0 AND PD.Active = 1
-            WHERE   1=1--A.PositionID = @1
-                     AND A.LanguageID = @2 AND A.CountryID = @3
-        ", packageID, package == null ? 0 : package.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        if (!IsPost) {
+            package = db.QuerySingle(@"
+                SELECT  p.ProviderPackageID
+                        ,p.ProviderPackageName As Name
+                        ,p.ProviderPackageDescription As Description
+                        ,p.ProviderPackagePrice As Price
+                        ,p.ProviderPackageServiceDuration As ServiceDuration
+                        ,p.FirstTimeClientsOnly
+                        ,p.NumberOfSessions
+                        ,p.ProviderUserID
+                        ,p.PositionID
+                FROM    providerpackage As p
+                WHERE   p.ProviderPackageID = @0
+                         AND 
+                        p.LanguageID = @1 AND p.CountryID = @2
+                         AND 
+                        p.Active = 1
+            ", packageID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            // If there is a package to be edited (packageID different from 0 and exists and we will edit it)
+            // we overwrite the positionID field with that from database (package var) to avoid some 'hacks' with
+            // data corruption
+            if (package != null) {
+                positionID = package.PositionID;
+            }
+            // getting attributes included in this package
+            var packagesdetails = db.Query(@"
+                SELECT  PD.ServiceAttributeID
+                FROM    ProviderPackageDetail As PD
+                WHERE   PD.ProviderPackageID = @0
+                         AND PD.Active = 1
+            ", packageID);
+            if (packagesdetails != null) {
+                foreach(var pakatt in packagesdetails) {
+                    attributesInPackage.Add(pakatt.ServiceAttributeID);
+                }
+            }
+        }
+        // Getting full attributes for the position (all categories)
+        attributes = db.Query(@"EXEC GetServiceAttributes @0,@1,@2,@3,@4",
+            positionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@packageID">
+<form method="post" class="ajax ajax-box" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)">
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
-        <input class="package-name" type="text" name="package-name" placeholder="Type the name of the package; e.g., Introductory Special" value="@(Request["package-name"] ?? package == null ? "" : package.Name)" />
+        <input class="package-name" type="text" name="package-name" placeholder="Type the name of the package; e.g., Introductory Special" value="@(Request["package-name"] ?? (package == null ? "" : package.ProviderPackageName))" />
         <label class="package-sessions">Number of sessions included in this package: 
-            <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? package == null ? "" : package.NumberOfSessions)" /></label>
+            <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "" : package.NumberOfSessions))" /></label>
         <label class="package-price">Total price for package: 
-            <input type="text" name="price" value="@(Request["price"] ?? package == null ? "" : package.Price)" /></label>
+            <input type="text" name="price" value="@(Request["price"] ?? (package == null ? "" : package.Price))" /></label>
         <label class="package-duration">Duration of each session: 
-            <input type="text" name="minutes" value="@(Request["minutes"] ?? package == null ? "" : package.ServiceDuration)" /> minutes</label>
+            <input type="text" name="minutes" value="@(Request["minutes"] ?? (package == null ? "" : package.ServiceDuration))" /> minutes</label>
         <label class="only-first-time-clients">
             <input type="checkbox" name="first-time-clients-only" value="True" @CommonHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
             This package is only available to first-time clients
@@ -66,9 +172,12 @@
         {
             foreach (var att in attributes)
             {
-                <li alt="@att.Name" data-description="@att.ServiceAttributeDescription">
-                    <label><input name="package-service-attribute" type="checkbox" value="@att.ServiceAttributeID" /> @att.Name</label>
+                if (att.EligibleForPackages)
+                {
+                <li alt="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
+                    <label><input name="package-service-attribute" type="checkbox" @CommonHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
                 </li>
+                }
             }
         }
         </ul>

@@ -771,6 +771,16 @@ html.js .user-verified-licenses h5 {
 .hourly-rate input.money {
     width: 40px;
 }
+/**** Page/Form: package-pricing-type ****/
+.package-pricing-type label {
+    width: auto !important;
+}
+.package-pricing-type form .package-data label {
+    display: block;
+}
+.package-pricing-type form .package-name {
+    width: 600px;
+}
 
 /**** Form: Account Personal ****/
 #account-personal auths > ul > li{
