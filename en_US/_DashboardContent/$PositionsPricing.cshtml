@@ -61,13 +61,5 @@ Transparent pricing is the key to a successful job.  We’re here to help you an
             InitPricingWizardProviderSetup();
 </script>*@
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPricing/" method="post" class="positionpricing pricingwizard ajax ajax-box" id="@idprefix">
-    <input type="hidden" name="PositionID" value="@pos.PositionID"/>
-    <fieldset class="pricing-wizard">
-        @RenderPage(UrlUtil.LangPath + "PricingWizard/" + pageToLoad)
-    </fieldset>
-    <fieldset class="actions">
-		<button class="next main-action" type="submit">Save</button>
-    </fieldset>
-</form>
+    @RenderPage(UrlUtil.LangPath + "PricingWizard/" + pageToLoad, new { FormClasses = "positionpricing" })
 </div>
