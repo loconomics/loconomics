@@ -100,7 +100,7 @@
     }
 }
 <p class="setting-instructions">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, egestas quis fermentum a, rutrum sed justo. Duis nulla tellus.
+Showcasing photos of your work can help clients get a better picture of the services you provide.  We're working on other creative tools to display your work.  <a href="mailto:providerhelp@loconomics.com">Let us know</a> if you have any suggestions as we'd love to hear them.
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
@@ -108,10 +108,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <input type="hidden" name="gallery-order" value=""/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <div id="position[@n]photos-no-photos" class="no-photos">
-        <span class="positionphotos-tools-upload">Start <a href="#">uploading</a> a photo!</span>
+        <span class="positionphotos-tools-upload">Start by <a href="#">uploading</a> a photo!</span>
     </div>
     <div id="position[@n]photos-no-primary-photo" class="no-primary-photo">
-        Select a photo on the right to edit it and make one them the primary photo.
+        Select a photo from the right as your primary photo.
     </div>
     <fieldset class="positionphotos-edit">
         <input type="hidden" name="PhotoID" value="" />
@@ -145,7 +145,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer justo lorem, eg
     <fieldset class="positionphotos-tools">
         <ul>
             <li class="positionphotos-tools-upload"><a href="#">Upload photos</a></li>
-            <li class="positionphotos-tools-arrange">To arrange photos, click hover a photo and drag and drop. When finish, click save to remember the order.</li>
+            <li class="positionphotos-tools-arrange">To arrange photos, drag and drop them in the order you'd like and click save.</li>
         </ul>
     </fieldset>
     <fieldset class="actions">
