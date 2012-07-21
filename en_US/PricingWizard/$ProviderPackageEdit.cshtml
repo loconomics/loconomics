@@ -17,10 +17,12 @@
     
     if (IsPost) {
         var checkedAtts = Request.Form.GetValues("package-service-attribute");
-        foreach (var att in checkedAtts) {
-            int attId = att.AsInt();
-            if (attId > 0) {
-                attributesInPackage.Add(attId);
+        if (checkedAtts != null && checkedAtts.Length > 0) {
+            foreach (var att in checkedAtts) {
+                int attId = att.AsInt();
+                if (attId > 0) {
+                    attributesInPackage.Add(attId);
+                }
             }
         }
         
