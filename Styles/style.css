@@ -922,6 +922,22 @@ form fieldset.actions{
     -o-box-shadow: 0 0 5px 2px #8b2143;
     -webkit-box-shadow: 0 0 5px 2px #8b2143;
 }
+/* .cancel-action for cancel buttons */
+.actions .cancel-action {
+    background: none repeat scroll 0 0 #8B2143 !important;
+    border-radius: 20px 20px 20px 20px;
+    color: White;
+    font-size: 1.1em;
+    line-height: 150%;
+    padding: 0 1em;
+    text-transform: lowercase;
+}
+.actions .cancel-action:hover{
+    box-shadow: 0 0 5px 2px #8B2143;
+    -moz-box-shadow: 0 0 5px 2px #8B2143;
+    -o-box-shadow: 0 0 5px 2px #8B2143;
+    -webkit-box-shadow: 0 0 5px 2px #8B2143;
+}
 .warning {
     font-weight: bold;
     color: #FF8300;

@@ -169,7 +169,9 @@
             <input type="checkbox" name="first-time-clients-only" value="True" @CommonHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
             This package is only available to first-time clients
         </label>
-        <textarea name="package-description" placeholder="Describe in full detail what the client will receive.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
+        <label class="package-description">
+            <textarea name="package-description" placeholder="Describe in full detail what the client will receive.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
+        </label>
     </fieldset>
     <fieldset class="package-details">
         <h5>Services included in this package:</h5>
@@ -193,7 +195,7 @@
         </ul>
     </fieldset>
     <fieldset class="actions">
-        <button type="button" class="button cancel-action item-action">Cancel</button>
+        <button type="button" class="button cancel-action">Cancel</button>
         <button class="button main-action">Save</button>
     </fieldset>
 </form>

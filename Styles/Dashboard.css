@@ -772,8 +772,78 @@ html.js .user-verified-licenses h5 {
     width: 40px;
 }
 /**** Page/Form: package-pricing-type ****/
+.package-pricing-type .add-package {
+    float: right;
+}
+.package-pricing-type .add-package > a {
+    background: url('../img/theme/add-new-button.png') no-repeat right center;
+    min-height: 23px;
+    padding-right: 34px;
+    display: block;
+    color: Black;
+    text-decoration: none;
+}
+.package-pricing-type .add-package > a:hover {
+    text-decoration: underline;
+}
+/* general provider-package -both read-only and edit-panel 
+    for read-only use .view-panel as parent selector
+    and .edit-panel for editable form
+*/
+.provider-package {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+}
+.provider-package h4 {
+    margin: 0;
+}
+.provider-package h5 {
+    color: #6C6C6C;
+    font-size: 1.1em;
+    margin: 8px 0 0;
+}
 .package-pricing-type label {
     width: auto !important;
+}
+.package-pricing-type .view-panel .provider-package-services li.empty {
+    width: auto !important;
+}
+.package-pricing-type .view-panel .provider-package-services {
+    overflow: hidden;
+}
+.package-pricing-type .view-panel .provider-package-services li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    float: left;
+    list-style: disc inside url("../img/bullet-editable.png") !important;
+}
+.view-panel .provider-package {
+    position: relative;
+}
+.view-panel .provider-package .provider-package-service-summary {
+    color: #00989A;
+    position: relative;
+    font-size: 1.5em;
+}
+.view-panel .provider-package .provider-package-service-summary .provider-package-price {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.view-panel .provider-package .edit-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.view-panel .provider-package .edit-actions a {
+    color: #00989A;
+    text-decoration: none;
+}
+.view-panel .provider-package .edit-actions a:hover {
+    text-decoration: underline;
 }
 .package-pricing-type .edit-panel .provider-package-services {
     max-height: 300px;
@@ -787,34 +857,34 @@ html.js .user-verified-licenses h5 {
     width: 200px !important;
     text-overflow: ellipsis;
 }
-.package-pricing-type .view-panel .provider-package-services li.empty {
-    width: auto !important;
+.package-pricing-type .edit-panel .package-data label {
+    display: block;
+    margin: 2px 0;
 }
-.package-pricing-type .view-panel .provider-package-services li {
-    width: 200px !important;
-    text-overflow: ellipsis;
+.package-pricing-type .edit-panel .package-data .package-name {
+    width: 630px;
+}
+.package-pricing-type .edit-panel .package-data .package-sessions,
+.package-pricing-type .edit-panel .package-data .package-price {
+    width: auto;
     display: inline-block;
 }
-.package-pricing-type form .package-data label {
-    display: block;
+.package-pricing-type .edit-panel .package-data .package-sessions input {
+    width: 2em;
 }
-.package-pricing-type form .package-name {
-    width: 600px;
+.package-pricing-type .edit-panel .package-price input {
+    width: 5em;
+}
+.package-pricing-type .edit-panel .package-data .package-duration input {
+    width: 3em;
+}
+.package-pricing-type .edit-panel .package-data .package-description textarea {
+    width: 620px;
+    height: 8em;
 }
 .package-pricing-type .edit-panel {
     display: none;
     min-height: 160px;
-}
-/* general provider-package -both read-only and edit-panel 
-    for read-only use .view-panel as parent selector
-    and .edit-panel for editable form
-*/
-.provider-package {
-    background: none repeat scroll 0 0 white;
-    border: 3px solid #61bdbe;
-    border-radius: 15px 15px 15px 15px;
-    padding: 15px;
-    margin: 0 0 10px 0;
 }
 
 /**** Form: Account Personal ****/
