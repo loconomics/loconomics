@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     CommonHelpers.SecurePage();
     var p = DashboardFunctions.GetUserRow();
     var packageID = Request["ProviderPackageID"].AsInt();
@@ -28,7 +29,7 @@
                 DECLARE @PackageID int
                 SET @PackageID = @0
             
-                IF @PackageID = 0
+                IF @PackageID = 0 BEGIN
                     INSERT INTO ProviderPackage (
                         ProviderUserID
                         ,PositionID
@@ -47,18 +48,24 @@
                     ) VALUES (
                         @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, getdate(), getdate(), 'sys', 1
                     )
-                ELSE
+                    SET @PackageID = @@Identity
+                END ELSE
                     UPDATE ProviderPackage SET
-                        ProviderPackageName = @3
-                        ,ProviderPackageDescription = @4
-                        ,ProviderPackagePrice = @5
-                        ,ProviderPackageServiceDuration = @6
-                        ,FirstTimeClientsOnly = @7
-                        ,NumberOfSessions = @8
+                        ProviderPackageName = @5
+                        ,ProviderPackageDescription = @6
+                        ,ProviderPackagePrice = @7
+                        ,ProviderPackageServiceDuration = @8
+                        ,FirstTimeClientsOnly = @9
+                        ,NumberOfSessions = @10
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
                         ,Active = 1
                     WHERE ProviderPackageID = @PackageID
+                SELECT @PackageID As ProviderPackageID
+            ";
+            var sqlDelDetails = @"
+                DELETE FROM ProviderPackageDetail
+                WHERE ProviderPackageID = @0
             ";
             var sqlSetDetail = @"
                 BEGIN TRAN
@@ -79,7 +86,7 @@
                 COMMIT TRAN
             ";
             using (var db = Database.Open("sqlloco")) {
-                db.Execute(sqlSetPackage, packageID,
+                packageID = db.QueryValue(sqlSetPackage, packageID,
                     p.UserID, positionID, 
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
                     Request["package-name"],
@@ -89,6 +96,7 @@
                     Request["first-time-clients-only"].AsBool(),
                     Request["sessions-number"].AsInt()
                 );
+                db.Execute(sqlDelDetails, packageID);
                 foreach(var att in attributesInPackage) {
                     db.Execute(sqlSetDetail,
                         packageID,
@@ -103,7 +111,7 @@
     
     dynamic package = null, attributes = null;
     using (var db = Database.Open("sqlloco")) {
-        if (!IsPost) {
+        if (!IsPost && packageID > 0) {
             package = db.QuerySingle(@"
                 SELECT  p.ProviderPackageID
                         ,p.ProviderPackageName As Name
@@ -145,10 +153,10 @@
             positionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)">
+<form method="post" class="ajax ajax-box provider-package" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
-        <input class="package-name" type="text" name="package-name" placeholder="Type the name of the package; e.g., Introductory Special" value="@(Request["package-name"] ?? (package == null ? "" : package.ProviderPackageName))" />
+        <input class="package-name" type="text" name="package-name" placeholder="Type the name of the package; e.g., Introductory Special" value="@(Request["package-name"] ?? (package == null ? "" : package.Name))" />
         <label class="package-sessions">Number of sessions included in this package: 
             <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "" : package.NumberOfSessions))" /></label>
         <label class="package-price">Total price for package: 
@@ -174,7 +182,7 @@
             {
                 if (att.EligibleForPackages)
                 {
-                <li alt="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
+                <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
                     <label><input name="package-service-attribute" type="checkbox" @CommonHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
                 </li>
                 }
@@ -183,6 +191,7 @@
         </ul>
     </fieldset>
     <fieldset class="actions">
+        <button type="button" class="button cancel-action item-action">Cancel</button>
         <button class="button main-action">Save</button>
     </fieldset>
 </form>

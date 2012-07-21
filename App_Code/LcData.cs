@@ -259,4 +259,55 @@ public static class LcData
         }
     }
     #endregion
+
+    #region Pricing Wizard
+    #region Package Type (Provider Packages)
+    public class ProviderPackagesView
+    {
+        public dynamic Packages;
+        public dynamic PackagesDetails;
+    }
+    public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID)
+    {
+        dynamic packages, details;
+        using (var db = Database.Open("sqlloco")){
+            // Get the Provider Packages
+            packages = db.Query(@"
+                SELECT  p.ProviderPackageID
+                        ,p.ProviderPackageName As Name
+                        ,p.ProviderPackageDescription As Description
+                        ,p.ProviderPackagePrice As Price
+                        ,p.ProviderPackageServiceDuration As ServiceDuration
+                        ,p.FirstTimeClientsOnly
+                        ,p.NumberOfSessions
+                FROM    providerpackage As p
+                WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
+                         AND 
+                        p.LanguageID = @2 AND p.CountryID = @3
+                         AND 
+                        p.Active = 1
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID());
+            details = db.Query(@"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   P.ProviderUserID = @0 AND P.PositionID = @1
+                         AND P.LanguageID = @2 AND P.CountryID = @3
+                         AND PD.Active = 1 AND P.Active = 1
+                ORDER BY A.Name ASC
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID());
+        }
+        return new ProviderPackagesView { Packages = packages, PackagesDetails = details };
+    }
+    #endregion
+    #endregion
 }

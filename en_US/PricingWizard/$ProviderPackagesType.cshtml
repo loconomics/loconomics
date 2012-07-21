@@ -1,0 +1,25 @@
+﻿@* 
+    Pricing Wizard, Provider Setup View, PricingType 3:Packages
+ *@
+@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"];
+    var p = DashboardFunctions.GetUserRow();
+    var pos = DashboardFunctions.GetUserCurrentPos();
+    var idprefix = PageData["idprefix"] ?? "pricingwizard";
+    dynamic poptions;
+    
+    var data = LcData.GetProviderPackageByProviderPosition(p.UserID, pos.PositionID);
+}
+<div class="@PageData["PricingWizardClasses"] pricingwizard package-pricing-type">
+    <div class="add-package"><a href="#add-package">Add another package</a></div>
+    <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0&PositionID=@pos.PositionID">
+        @if (data.Packages.Count == 0){
+            <div class="empty">You have not packages, start adding one!</div>
+            @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID })
+        }
+    </div>
+    <div class="your-packages view-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@pos.PositionID">
+        @RenderPage("$ProviderPackagesList.cshtml", new { Data = data })
+    </div>
+</div>

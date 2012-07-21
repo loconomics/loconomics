@@ -1,0 +1,46 @@
+﻿@{
+    dynamic data = PageData["data"];
+    if (data == null) {
+        var pos = DashboardFunctions.GetUserCurrentPos();
+        data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
+    }
+}
+        @if (data.Packages != null && data.Packages.Count > 0)
+        {
+        <h3>Your Packages:</h3>
+        <ul>
+            @foreach (var pak in data.Packages)
+            {
+                var withDetails = false;
+            <li class="provider-package">
+                <h4>@pak.Name</h4>
+                <div class="provider-package-service-summary">
+                    @pak.NumberOfSessions sessions - @pak.ServiceDuration minutes each
+                </div>
+                <div class="provider-package-price">@pak.Price</div>
+                <div class="edit-actions">
+                    <a href="#delete" class="delete" data-provider-package-id="@pak.ProviderPackageID">Delete</a>
+                    <a href="#edit" class="edit" data-provider-package-id="@pak.ProviderPackageID">Edit</a>
+                </div>
+                <h5>Description:</h5>
+                <div class="provider-package-description">
+                    @pak.Description
+                </div>
+                <h5>Services included in this package:</h5>
+                <ul class="provider-package-services">
+                    @foreach (var ser in data.PackagesDetails)
+                    {
+                        // PackagesDetails has details for ALL provider packages, filter for only this package
+                        if (ser.ProviderPackageID == pak.ProviderPackageID) {
+                            withDetails = true;
+                            <li title="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
+                        }
+                    }
+                    @if (!withDetails) {
+                        <li class="empty">This package has not defined services</li>
+                    }
+                </ul>
+            </li>
+            }
+        </ul>
+        }

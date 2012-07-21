@@ -775,11 +775,46 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type label {
     width: auto !important;
 }
+.package-pricing-type .edit-panel .provider-package-services {
+    max-height: 300px;
+    overflow: auto;
+}
+.package-pricing-type .edit-panel .provider-package-services li {
+    float: left;
+    margin: 0;
+}
+.package-pricing-type .edit-panel .provider-package-services li > label {
+    width: 200px !important;
+    text-overflow: ellipsis;
+}
+.package-pricing-type .view-panel .provider-package-services li.empty {
+    width: auto !important;
+}
+.package-pricing-type .view-panel .provider-package-services li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
 .package-pricing-type form .package-data label {
     display: block;
 }
 .package-pricing-type form .package-name {
     width: 600px;
+}
+.package-pricing-type .edit-panel {
+    display: none;
+    min-height: 160px;
+}
+/* general provider-package -both read-only and edit-panel 
+    for read-only use .view-panel as parent selector
+    and .edit-panel for editable form
+*/
+.provider-package {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
 }
 
 /**** Form: Account Personal ****/

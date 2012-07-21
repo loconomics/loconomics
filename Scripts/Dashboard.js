@@ -402,6 +402,48 @@ $(document).ready(function () {
         $(this).siblings('.verified-license-details').toggle(300);
         return false;
     });
+
+    /*==========================
+    * Pricing Wizard: packages
+    */
+    (function ($pricingPackage) {
+        $pricingPackage.find('.add-package').click(function () {
+            var editPanel = $(this).siblings('.edit-panel');
+            // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:
+            editPanel.show().reload(editPanel.attr('data-source-url'));
+            $(this).hide('slow');
+            return false;
+        });
+        $pricingPackage.find('.view-panel').on('click', '.provider-package .edit', function () {
+            var editPanel = $(this).closest('.package-pricing-type').find('.edit-panel');
+            // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
+            editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
+            return false;
+        });
+        $pricingPackage.find('.edit-panel').each(function () {
+            var editPanel = $(this);
+            var pw = editPanel.closest('.pricingwizard');
+            var hasEdit = editPanel.children().length == 0;
+            pw.find('.add-package').toggle(hasEdit);
+            editPanel.toggle(!hasEdit)
+                    .on('click', '.cancel-action', function () {
+                        editPanel.hide('slow');
+                        var pw = editPanel.closest('.pricingwizard');
+                        pw.find('.add-package').show('fast');
+                    });
+        });
+        $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
+            if (data.Code == 0) {
+                var pw = $(this).closest('.pricingwizard');
+                pw.find('.your-packages').show('slow').reload();
+                pw.find('.add-package').show('slow');
+            }
+        }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
+            $(this).closest('.edit-panel').hide('slow', function () { $(this).children().remove() });
+            var pw = $(this).closest('.pricingwizard');
+            pw.find('.add-package').show('fast');
+        });
+    })($('.pricingwizard.package-pricing-type'));
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {
