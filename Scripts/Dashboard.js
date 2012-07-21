@@ -416,6 +416,7 @@ $(document).ready(function () {
         });
         $pricingPackage.find('.view-panel').on('click', '.provider-package .edit', function () {
             var editPanel = $(this).closest('.package-pricing-type').find('.edit-panel');
+            editPanel.closest('.pricingwizard').find('.add-package').hide('slow');
             // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
             editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
             return false;
