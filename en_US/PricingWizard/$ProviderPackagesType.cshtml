@@ -18,8 +18,8 @@
             @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID })
         }
     </div>
-    <div class="your-packages view-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@pos.PositionID">
-        <h3>Your Packages:</h3>
+    <h3>Your Packages:</h3>
+    <div class="your-packages view-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@(pos.PositionID)&Editable=true">
         @RenderPage("$ProviderPackagesList.cshtml", new { Data = data, Editable = true})
     </div>
     <div class="package-pricing-options">
