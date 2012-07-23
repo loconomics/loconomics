@@ -32,7 +32,7 @@ $.fn.hasScrollBar = function () {
         horizontal: t.clientWidth < t.scrollWidth
     };
 }
-$.fn.reload = function (newurl) {
+$.fn.reload = function (newurl, onload) {
     this.each(function () {
         var $t = $(this);
         if (newurl)
@@ -46,6 +46,7 @@ $.fn.reload = function (newurl) {
             }, gLoadingRetard);
             $t.load(url, function () {
                 clearTimeout(loadingtimer);
+                if (onload) $.proxy(onload, this)();
                 //smoothBoxBlock(null, $t, true);
                 //$t.unblock();
             });
@@ -1230,7 +1231,7 @@ function smoothBoxBlock(contentBox, blocked, addclass) {
         box.attr('id', bID);
         blocked.append(box);
     } else {
-        var boxc = box.children('.smooth-box-block-content');
+        var boxc = box.children('.smooth-box-block-element');
     }
     box.hide();
     boxc.append(contentBox);

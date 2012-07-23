@@ -420,6 +420,24 @@ $(document).ready(function () {
             // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
             editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
             return false;
+        }).on('click', '.provider-package .delete', function () {
+            var pak = $(this).closest('.provider-package');
+            var res = pak.closest('.view-panel').find('.lc-ressources');
+            if (confirm(res.children('.confirm-delete-package-message').text())) {
+                smoothBoxBlock(res.children('.delete-package-loading-message'), pak);
+                $.ajax({ url: UrlUtil.LangPath + 'PricingWizard/$ProviderPackageEdit/?action=delete&ProviderPackageID=' + $(this).data('provider-package-id'),
+                    success: function (data) {
+                        if (data && data.Code == 0) {
+                            smoothBoxBlock('<div>' + data.Result + '</div>', pak);
+                            pak.click(function () { smoothBoxBlock(null, pak); pak.hide('slow', function () { pak.remove() }) });
+                        }
+                    },
+                    error: function (jx, message, ex) {
+                        ajaxErrorPopupHandler(jx, message, ex);
+                        smoothBoxBlock(null, pak);
+                    }
+                });
+            }
         });
         $pricingPackage.find('.edit-panel').each(function () {
             var editPanel = $(this);
@@ -428,21 +446,22 @@ $(document).ready(function () {
             pw.find('.add-package').toggle(hasEdit);
             editPanel.toggle(!hasEdit)
                     .on('click', '.cancel-action', function () {
-                        editPanel.hide('slow', function () { $(this).children().remove() });
-                        var pw = editPanel.closest('.pricingwizard');
-                        pw.find('.add-package').show('fast');
+                        editPanel.hide('slow', function () {
+                            $(this).closest('.pricingwizard').find('.add-package').show('fast');
+                            $(this).children().remove();
+                        });
                     });
         });
         $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
             if (data.Code == 0) {
                 var pw = $(this).closest('.pricingwizard');
                 pw.find('.your-packages').show('slow').reload();
-                pw.find('.add-package').show('slow');
             }
         }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
-            $(this).closest('.edit-panel').hide('slow', function () { $(this).children().remove() });
-            var pw = $(this).closest('.pricingwizard');
-            pw.find('.add-package').show('fast');
+            $(this).closest('.edit-panel').hide('slow', function () {
+                $(this).closest('.pricingwizard').find('.add-package').show('fast');
+                $(this).children().remove() 
+            });
         });
     })($('.pricingwizard.package-pricing-type'));
 });

@@ -1912,3 +1912,6 @@ html.boxshadow #loginBox .field-validation-error{
     width: 50px;
     margin: 20px auto;
 }
+.lc-ressources {
+    display: none;
+}

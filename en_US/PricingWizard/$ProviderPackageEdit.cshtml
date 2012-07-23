@@ -5,6 +5,19 @@
     var packageID = Request["ProviderPackageID"].AsInt();
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var attributesInPackage = new List<int>();
+    var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
+    
+    if (action == "delete") {
+        var sqlDelPackage = @"
+            DELETE ProviderPackage
+            WHERE ProviderPackageID = @0
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(sqlDelPackage, packageID);
+            
+            CommonHelpers.ReturnJsonResult(0, "Package removed succesfully");
+        }
+    }
     
     Validation.RequireField("package-name", LcRessources.RequiredField("Package name"));
     Validation.RequireField("package-description", LcRessources.RequiredField("Description"));

@@ -8,6 +8,10 @@
         @if (data.Packages != null && data.Packages.Count > 0)
         {
         <h3>Your Packages:</h3>
+        <div class="lc-ressources">
+            <div class="confirm-delete-package-message">Are you sure do you want to remove this package?</div>
+            <div class="delete-package-loading-message">The package is being removed...</div>
+        </div>
         <ul>
             @foreach (var pak in data.Packages)
             {
