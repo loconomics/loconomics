@@ -116,6 +116,39 @@ html.ie #booking-services .special-instructions legend{
 #booking-services div.calculate-price-button{
     margin: 7px 0;
 }
+/** Form: Services package pricing **/
+#booking-services.package-pricing {
+    margin: 0;
+}
+#booking-services.package-pricing .special-instructions,
+#booking-services.package-pricing .special-instructions textarea {
+    width: auto;
+    display: block;
+}
+#booking-services.package-pricing .special-instructions textarea {
+    width:100%;
+    height:100%; 
+    box-sizing: border-box;         /* For IE and modern versions of Chrome */
+    -moz-box-sizing: border-box;    /* For Firefox                          */
+    -webkit-box-sizing: border-box; /* For Safari                           */
+}
+#booking-services.package-pricing .select-packages,
+#booking-services.package-pricing .package-pricing-options {
+    display: block;
+}
+#booking-services.package-pricing table {
+    width: 100%;
+}
+#booking-services.package-pricing th.number {
+    white-space: nowrap;
+    width: 7em;
+}
+#booking-services.package-pricing input.package-quantity {
+    width: 2em;
+}
+#booking-services.package-pricing .package-price {
+    text-align: right;
+}
 
 /** Form: Schedule **/
 #booking-schedule{

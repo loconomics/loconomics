@@ -335,8 +335,8 @@
     }
     </ul>
 }
-@* TODO insert pricing options *@
-    @RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid } )
+
+@RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid } )
 
 @if (LcHelpers.RenderPageReturns.OptionsCount == 0 && pvars.Count == 0)
 {

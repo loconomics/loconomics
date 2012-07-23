@@ -1,0 +1,69 @@
+﻿@* 
+    Pricing Wizard, Customer View, PricingType 3:Packages
+ *@
+@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"] ?? 1;
+    var p = PageData["providerrow"];
+    var c = PageData["customerrow"];
+    var pos = PageData["positionrow"];
+    var idprefix = "booking-services-package-pricing";
+    var pricingtypeid = 3;
+    var preSelectedPackage = Request["PackageID"];
+    
+    var packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
+    
+    using (var db = Database.Open("sqlloco")){
+        
+    }
+}
+@helper printQuantities()
+{
+    for(int i = 0; i < 21; i++) {
+        <option value="@i">@i</option>
+    }
+}
+
+<form action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/" method="post" class="services package-pricing" id="booking-services">
+    <input type="hidden" name="providerid" value="@pos.UserID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <fieldset class="select-packages">
+        <table class="packages-list calculate-items-totals">
+            <tr>
+                <th class="package-name">Please select a package:</th>
+                <th class="package-price number">Item Price</th>
+                <th class="package-quantity number">Quantity</th>
+                <th class="package-total-price number">Total Price</th>
+            </tr>
+            @foreach (var pak in packages.Packages)
+            {
+            <tr>
+                <td>
+                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @CommonHelpers.IsChecked(preSelectedPackage, @pak.ProviderPackageID) name="provider-package" value="@pak.ProviderPackageID" />
+                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)</label>
+                </td>
+                <td class="package-price number">$<span class="calculate-item-price">@pak.Price</span></td>
+                <td class="number">
+                    @*<input class="package-quantity" type="text" name="provider-package-quantity" value="1" />*@
+                    <select name="provider-package-quantity" class="calculate-item-quantity">
+                        @printQuantities()
+                    </select>
+                </td>
+                <td class="package-total-price number">$<span class="calculate-item-total">@pak.Price</span></td>
+            </tr>
+            }
+        </table>
+    </fieldset>
+    <fieldset class="package-pricing-options">
+        @RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid,
+           TableTitle = "Please add any additional options you’d like:" } )
+    </fieldset>
+    <fieldset class="special-instructions">
+        <legend>Let @c.FirstName know of any special instructions or requests:</legend>
+        <textarea rows="7" name="booking-services-special-instructions"></textarea>
+    </fieldset>
+    <fieldset class="actions">
+        <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
+    </fieldset>
+</form>

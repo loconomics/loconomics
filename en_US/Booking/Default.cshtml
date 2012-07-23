@@ -38,7 +38,7 @@
         @{
             int pricingType = PageData["PricingTypeID"] = LcData.GetPositionPricingTypeID(PageData["positionrow"].PositionID, 1 /*TODO implement clientTypeID*/ );
             if (pricingType == 3) {
-                @RenderPage(UrlUtil.LangPath + "PricingWizard/_CustomerPackagesType.cshtml")
+                @RenderPage(UrlUtil.LangPath + "PricingWizard/$CustomerPackagesType.cshtml")
             } else {
                 @RenderPage("$Services.cshtml")
             }
