@@ -6,8 +6,7 @@
     var clienttypeid = PageData["ClientTypeID"];
     var p = DashboardFunctions.GetUserRow();
     var pos = DashboardFunctions.GetUserCurrentPos();
-    var idprefix = PageData["idprefix"] ?? "pricingwizard";
-    dynamic poptions;
+    var idprefix = PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "-pricingwizard-packages";
     
     var data = LcData.GetProviderPackageByProviderPosition(p.UserID, pos.PositionID);
 }
@@ -21,5 +20,9 @@
     </div>
     <div class="your-packages view-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@pos.PositionID">
         @RenderPage("$ProviderPackagesList.cshtml", new { Data = data })
+    </div>
+    <div class="package-pricing-options">
+        <h3>Your Pricing Options:</h3>
+        @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix } )
     </div>
 </div>

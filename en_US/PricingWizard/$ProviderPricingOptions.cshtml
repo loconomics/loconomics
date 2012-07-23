@@ -1,0 +1,186 @@
+﻿@using WebMatrix.Data;
+@{
+    var embMode = PageData["EmbeddedMode"] ?? "none"; // possible values: front-end, back-end, full
+    var clienttypeid = PageData["ClientTypeID"] ?? Request["ClientTypeID"].AsInt();
+    var p = DashboardFunctions.GetUserRow();
+    var pos = DashboardFunctions.GetUserCurrentPos();
+    var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
+    dynamic poptions;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Get the Pricing Options
+        poptions = db.Query(@"
+            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
+                    pr.ProviderInputDataRequired, pr.ProviderDataInputType,
+                    pr.ProviderDataValues, pr.ProviderPricingOptionDisplayText,
+                    pr.ProviderDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pr.ProviderTimeInputRequired,
+                    pr.ProviderTimeRequiredValues,
+                    pi.ProviderTimeRequired
+            FROM    pricingoption As pr
+                     LEFT JOIN
+                    providerpricingoptioninputs as pi
+                      ON pr.PricingOptionID = pi.PricingOptionID
+                       AND pi.Active = 1 AND pi.ProviderUserID = @5
+            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
+                     AND 
+                    pr.ClientTypeID=@2 AND pr.PositionID=@3
+                     AND 
+                    pr.ProviderInputDataRequired = 1
+                     AND
+                    pr.Active = 1 AND pr.PricingTypeID = @4
+        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+    }
+    
+
+    if (IsPost && Validation.IsValid() && embMode != "front-end"){
+        var sqlSetOpt = @"
+            BEGIN TRAN
+                UPDATE  providerpricingoptioninputs WITH (serializable)
+                SET     PricingDataInput = @2,
+                        ProviderTimeRequired = @3,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys',
+                        Active = 1
+                WHERE   ProviderUserId = @0 AND PricingOptionID = @1
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO providerpricingoptioninputs (
+                        ProviderUserID, PricingOptionID, 
+                        PricingDataInput, ProviderTimeRequired,
+                        CreatedDate, UpdatedDate, ModifiedBy, Active)
+                    VALUES (@0, @1, @2, @3, getdate(), getdate(), 'sys', 1)
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelOpt = @"
+            DELETE FROM providerpricingoptioninputs
+            WHERE       ProviderUserId = @0 AND PricingOptionID = @1
+        ";
+        using (var db = Database.Open("sqlloco")){
+            // Iterate all options and save into providerpricingoptioninputs
+            foreach (var popt in poptions) {
+                if (Request[popt.PricingOptionName + "-check"] == "true") {
+                    db.Execute(sqlSetOpt, p.UserID, popt.PricingOptionID, 
+                        Request[popt.PricingOptionName], 
+                        Request[popt.PricingOptionName + "-time"]);
+                } else {
+                    db.Execute(sqlDelOpt, p.UserID, popt.PricingOptionID);
+                }
+            }
+        }
+        if (embMode == "none") {
+            CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
+        } else {
+            LcHelpers.RenderPageReturns = 0;
+        }
+    }
+}
+@helper getChecked(string name, string value, dynamic poptvar){
+    // Get checked if was setted by form of is was previously setted at database
+    @Html.Raw((Request[name] == value || poptvar.ProviderDataInputValue != null) ? "checked='checked'" : "")
+}
+@helper getSelected(string name, string value, object value2){
+    var valuealt = (value2 == null ? "" : value2.ToString());
+    @Html.Raw((Request[name] == value || valuealt == value) ? "selected='selected'" : "")
+}
+@helper printTableOptions(dynamic poptions, string idprefix){
+    if (poptions.Count > 0)
+    {
+        <table class="pricing-options">
+            <thead>
+                <tr>
+                    <th>Optional services/materials you can provide:</th>
+                    <th>Fee</th>
+                    <th>Average time:</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var popt in poptions)
+            {
+                <tr class="@popt.PricingOptionName data-type-@popt.ProviderDataInputType">
+                    <td class="pricing-option-check pricing-item-name">
+                        <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
+                        <label for="@idprefix-@popt.PricingOptionName-check">@popt.ProviderPricingOptionDisplayText</label>
+                    </td>
+                    <td class="pricing-option-value">
+                    @switch ((string)@popt.ProviderDataInputType)
+                    {
+                        case "dropdown":
+                            <select id="@idprefix-@(popt.PricingOptionName)" name="@(popt.PricingOptionName)">
+                            @{
+                                var optvalues = LcHelpers.GetValuesFromCSVLine(popt.ProviderDataValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName, v, popt.ProviderDataInputValue)>@v</option>
+                                }
+                            }
+                            </select>
+                            break;
+                        case "number":
+                        case "text":
+                            <input type="text" id="@idprefix-@(popt.PricingOptionName)" name="@(popt.PricingOptionName)-value" value="@(Request[popt.PricingOptionName] ?? popt.ProviderDataInputValue)"/>
+                            break;
+                        case "":
+                            <text>N/A</text>
+                            break;
+                        default:
+                            <text>Unknowed ProviderDataInputType: @popt.ProviderDataInputType</text>
+                            break;
+                    }
+                    </td>
+                    <td class="pricing-option-time">
+                        @if (popt.ProviderTimeInputRequired)
+                        {
+                            <select id="@idprefix-@(popt.PricingOptionName)-time" name="@(popt.PricingOptionName)-time">
+                            @{
+                                var optvalues = LcHelpers.GetValuesFromCSVLine(popt.ProviderTimeRequiredValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName + "-time", v, popt.ProviderTimeRequired)>@v minutes</option>
+                                }
+                            }
+                            </select>
+                        }
+                        else
+                        {
+                            @: N/A
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-pricing-wizard">
+            There is not options to customize the pricing wizard for your position.
+        </div>
+    }
+}
+@if (embMode != "back-end")
+{
+    if (embMode == "none")
+    {
+        <form action="@(UrlUtil.LangPath)PricingWizard/$ProviderPricingOptions/" method="post" class="@PageData["PricingWizardClasses"] pricingwizard positionpricing ajax ajax-box" id="@idprefix">
+            <input type="hidden" name="PositionID" value="@pos.PositionID" />
+            <input type="hidden" name="ClientTypeID" value="@clienttypeid" />
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+            <fieldset class="pricing-wizard">
+                @printTableOptions(poptions, idprefix)
+            </fieldset>
+            <fieldset class="actions">
+		        <button class="button main-action" type="submit">Save</button>
+            </fieldset>
+        </form>
+    }
+    else
+    {
+        @printTableOptions(poptions, idprefix)
+    }
+}

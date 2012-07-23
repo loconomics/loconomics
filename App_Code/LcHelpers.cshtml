@@ -1,0 +1,14 @@
+﻿@using System.Web.WebPages.Scope;
+@functions{
+    public static string[] GetValuesFromCSVLine(string line){
+        return line.Split(',');
+    }
+    public static dynamic RenderPageReturns{
+        get {
+            return ScopeStorage.GlobalScope["_lcRenderPageReturns"];
+        }
+        set {
+            ScopeStorage.GlobalScope["_lcRenderPageReturns"] = value;
+        }
+    }
+}
