@@ -35,7 +35,14 @@
         </ul>
         
 		<div id="services" class="tab-body fancy current">
-            @RenderPage("$Services.cshtml")
+        @{
+            int pricingType = PageData["PricingTypeID"] = LcData.GetPositionPricingTypeID(PageData["positionrow"].PositionID, 1 /*TODO implement clientTypeID*/ );
+            if (pricingType == 3) {
+                @RenderPage(UrlUtil.LangPath + "PricingWizard/_CustomerPackagesType.cshtml")
+            } else {
+                @RenderPage("$Services.cshtml")
+            }
+        }
 		</div><!-- #services -->
 
 		<div id="schedule" class="tab-body fancy">

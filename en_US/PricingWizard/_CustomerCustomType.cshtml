@@ -9,13 +9,12 @@
     var p = PageData["providerrow"];
     var pos = PageData["positionrow"];
     var idprefix = "pricingwizard";
-    dynamic pvars, poptions;
+    dynamic pvars;
     decimal timeRequired = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0;
-    Dictionary<int, decimal> optionalServicesPrices = new Dictionary<int,decimal>();
-    // Collection to save time and price for each pricing item (pricing variable, pricing options)
-    // Key will be "1.VarID" or "2.OptID", first decimal is time required for the item
+    // Collection to save time and price for each pricing variable item
+    // Key will be VariableID, first decimal is time required for the item
     // and second is calculated price for this item
-    Dictionary<string, decimal[]> pricingItemsNumbers = new Dictionary<string,decimal[]>();
+    var pricingVariablesNumbers = new Dictionary<int,decimal[]>();
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
@@ -64,49 +63,12 @@
             WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
         ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
         
-        // The the Pricing Options
-        poptions = db.Query(@"
-            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
-                    pr.CustomerInputDataRequired, pr.CustomerDataInputType,
-                    pr.CustomerDataValues, pr.CustomerPricingOptionDisplayText,
-                    pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
-                    pr.ServiceAttributeID,
-                    pi.PricingDataInput As ProviderDataInputValue,
-                    pi.ProviderTimeRequired,
-                    pc.PricingDataInput As CustomerDataInputValue
-            FROM    pricingoption As pr
-                     LEFT JOIN
-                    providerpricingoptioninputs as pi
-                      ON pr.PricingOptionID = pi.PricingOptionID
-                     LEFT JOIN
-                    customerpricingoptioninputs as pc
-                      ON pr.PricingOptionID = pc.PricingOptionID
-                        AND pc.Active = 1 AND pc.UserID = @6
-            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
-                     AND 
-                    pr.ClientTypeID=@2 AND pr.PositionID=@3
-                     AND 
-                    pr.CustomerInputDataRequired = 1
-                     AND
-                    pr.Active = 1 AND pr.PricingTypeID = @4
-                     AND
-                    (
-                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
-                     --  no needs relationed record at providerpricingoptioninputs (pi) table
-                     pr.ProviderInputDataRequired = 0
-                      OR
-                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
-                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
-                     --  relationship at providerpricingoptioninputs (pi) and proper conditional values
-                     pi.PricingDataInput is not null
-                      AND
-                     pi.Active = 1 AND pi.ProviderUserID = @5
-                    )
-        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
+        // Get the Pricing Options
+        // TODO embed pricingotpions
     }
     
     if (IsPost){
-        /* DO CALCULATION: (not only on /calculate url, is neede to save data too)
+        /* DO CALCULATION: (not only on /calculate url, is need to save data too)
          */
         // Calculate time required per Pricing Variables
         foreach (var pvar in pvars){
@@ -150,43 +112,18 @@
             
             timeInHours = Math.Round(timeInHours, 2);
             timeRequired += timeInHours;
-            pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()] = new decimal[]{timeInHours, Math.Round(hourPrice * timeInHours, 2)};
+            pricingVariablesNumbers[pvar.PricingVariableID] = new decimal[]{timeInHours, Math.Round(hourPrice * timeInHours, 2)};
         }
+
         // Calculating the price for Pricing Options
-        foreach (var popt in poptions){               
-            decimal optPrice = 0;
-                
-            if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
-                string strprice = popt.ProviderDataInputValue.Replace("$", "");
-                decimal unitprice = 0;
-                decimal.TryParse(strprice, out unitprice);
-                decimal quantity = 0;
-                switch ((string)popt.CustomerDataInputUnit) {
-                    case "number":
-                    case "times":
-                    case "quantity":
-                        quantity = Request[(string)popt.PricingOptionName].AsDecimal();
-                        break;
-                    case "":
-                    default:
-                        quantity = 1;
-                        break;
-                }
-                optPrice = Math.Round(quantity * unitprice, 2);
-                // Get the equivalent time required from table
-                decimal timeVar = 0;
-                if (popt.ProviderTimeRequired is decimal) {
-                    timeVar = (decimal)popt.ProviderTimeRequired;
-                }
-                // Add pricing option estimate time to the total time,
-                // it's in minutes, we use hours for timeRequired:
-                timeRequired += Math.Round(timeVar / 60, 2);
-                pricingItemsNumbers["2." + popt.PricingOptionID.ToString()] = new decimal[]{timeVar, optPrice};
-            }
-            optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
-            optionalServicesTotalPrice += optPrice;
-        }
-            
+        @RenderPage("$CustomerPricingOptions.cshtml", new { 
+            EmbeddedMode = "calculate",
+            PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+        } );
+        var optionsCalculation = LcHelpers.RenderPageReturns.CalculatedData;
+        timeRequired += optionsCalculation.TimeRequired;
+        optionalServicesTotalPrice = optionsCalculation.OptionalServicesTotalPrice;
+        
         subtotalPrice = Math.Round(timeRequired * hourPrice + optionalServicesTotalPrice, 2);
         feePrice = Math.Round(.1M * subtotalPrice, 2);
         totalPrice = subtotalPrice + feePrice;
@@ -213,32 +150,10 @@
                    END
                 COMMIT TRAN
             ";
-            var sqlDelVar = @"
+            /*var sqlDelVar = @"
                 DELETE FROM customerpricingvariableinputs
                 WHERE       UserId = @0 AND PricingVariableID = @1
-            ";
-            var sqlSetOpt = @"
-                BEGIN TRAN
-                    UPDATE  customerpricingoptioninputs WITH (serializable)
-                    SET     PricingDataInput = @0,
-                            UpdatedDate = getdate(),  
-                            ModifiedBy = 'sys',
-                            Active = 1
-                    WHERE   UserId = @1 AND PricingOptionID = @2
-
-                   IF @@rowcount = 0
-                   BEGIN
-                        INSERT INTO customerpricingoptioninputs (PricingDataInput,
-                            UserID, PricingOptionID, CreatedDate, UpdatedDate, 
-                            ModifiedBy, Active)
-                        VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
-                   END
-                COMMIT TRAN
-            ";
-            var sqlDelOpt = @"
-                DELETE FROM customerpricingoptioninputs
-                WHERE       UserId = @0 AND PricingOptionID = @1
-            ";
+            ";*/
             
             /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
                 BEGIN TRAN
@@ -307,20 +222,9 @@
                 
                 /* Save data into pricingwizard tables to remember customer preferences
                 */
-                
                 // Iterate all variables and save into customerpricingvariableinputs
                 foreach (var pvar in pvars) {
                     db.Execute(sqlSetVar, Request[pvar.PricingVariableName], c.UserID, pvar.PricingVariableID);
-                }
-                // Iterate all options and save into customerpricingoptioninputs
-                foreach (var popt in poptions) {
-                    if (Request[popt.PricingOptionName + "-check"] == "true") {
-                        // Value to set can be null for options without quantity/value (only check), that cases
-                        // we set value '1'
-                        db.Execute(sqlSetOpt, Request[popt.PricingOptionName] ?? 1, c.UserID, popt.PricingOptionID);
-                    } else {
-                        db.Execute(sqlDelOpt, c.UserID, popt.PricingOptionID);
-                    }
                 }
                 
                 /* Save data into the pricingestimate tables
@@ -344,7 +248,7 @@
                 // Inserting details: every variable, option
                 foreach (var pvar in pvars) {
                     // Get pair time and price
-                    decimal[] timeprice = pricingItemsNumbers["1." + pvar.PricingVariableID.ToString()];
+                    decimal[] timeprice = pricingVariablesNumbers[pvar.PricingVariableID];
                     // Insert data:
                     db.Execute(sqlInsEstimateDetails, estimateID, revisionID,
                         pvar.PricingVariableID,
@@ -355,22 +259,15 @@
                         hourPrice,
                         timeprice[0], timeprice[1]);
                 }
-                foreach (var popt in poptions) {
-                    if (Request[popt.PricingOptionName + "-check"] == "true") {
-                        // Get pair time and price
-                        decimal[] timeprice = pricingItemsNumbers["2." + popt.PricingOptionID.ToString()];
-                        // Insert data:
-                        db.Execute(sqlInsEstimateDetails, estimateID, revisionID,
-                            0, 0,
-                            popt.PricingOptionID,
-                            popt.ServiceAttributeID,
-                            0,
-                            popt.ProviderDataInputValue,
-                            Request[popt.PricingOptionName] ?? 1,
-                            0, // systemPricingDataInput
-                            hourPrice,
-                            timeprice[0], timeprice[1]);
-                    }
+
+                // Execute 'save' code of Pricing Options page
+                @RenderPage("$CustomerPricingOptions.cshtml", new { 
+                    EmbeddedMode = "back-end", 
+                    EstimateID = estimateID, RevisionID = revisionID,
+                    PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+                } );
+                if (LcHelpers.RenderPageReturns.SavedCode != 0) {
+                    ModelState.AddFormError("Options not saved");
                 }
                 
                 // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
@@ -438,62 +335,18 @@
     }
     </ul>
 }
+@* TODO insert pricing options *@
+    @RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid } )
 
-@if (poptions.Count > 0) {
-    <table class="pricing-options">
-        <thead>
-            <tr>
-                <th>Services upon request</th>
-                <th>Item Price</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var popt in poptions)
-        {
-            <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
-                <td class="pricing-option-check">
-                    <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
-                    <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
-                </td>
-                <td class="pricing-option-item-price number money">
-                    @popt.ProviderDataInputValue
-                </td>
-                <td class="pricing-option-quantity number">
-                @switch ((string)@popt.CustomerDataInputType)
-                {
-                    case "dropdown":
-                        <select id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName">
-                            @{
-                                var optvalues = getValuesFromCSV(popt.CustomerDataValues);
-                                foreach (string optv in optvalues)
-                                {
-                                    var v = optv.Trim();
-                                    <option value="@v" @getSelected(popt.PricingOptionName, v, popt)>@v</option>
-                                }
-                             }
-                        </select>
-                        break;
-                    case "number":
-                    case "text":
-                        <input type="text" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
-                        break;
-                    case "":
-                        <text>N/A</text>
-                        break;
-                    default:
-                        <text>Unknowed CustomerDataInputType: @popt.CustomerDataInputType</text>
-                        break;
-                }
-                </td>
-                <td class="pricing-option-total-price calculated number money">
-                    $@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+@if (LcHelpers.RenderPageReturns.OptionsCount == 0 && pvars.Count == 0)
+{
+    <div class="no-pricing-wizard">
+        It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting
+        for a provider response with the price.
+    </div>
+}
+else
+{
     <div class="calculate-price-button actions">
         <button class="button calculate-price-button ajax-fieldset-submit">Calculate</button>
     </div>
@@ -517,12 +370,5 @@
                 <td class="total-price">$@totalPrice.ToString("#,##0.00")</td>
             </tr>
         </table>
-    </div>
-}
-
-@if (poptions.Count == 0 && pvars.Count == 0) {
-    <div class="no-pricing-wizard">
-        It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting
-        for a provider response with the price.
-    </div>
+    </div>    
 }
