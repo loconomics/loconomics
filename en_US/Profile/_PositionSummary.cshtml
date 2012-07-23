@@ -5,20 +5,36 @@
     
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
     
+    // TODO: Get Customer Type Id   
+    var clienttypeid = PageData["ClientTypeID"] = 1;
+        
+    // Get our Pricing Type ID:
+    int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);    
+    
     var hourlyRate = 0M;
     var minimumBookingTime = 0M;
     using (var db = Database.Open("sqlloco")){
-        // Get hourly rate
-        hourlyRate = db.QueryValue(@"
-            SELECT  HourlyRate
-            FROM    ProviderHourlyRate
-            WHERE   UserID = @0
-                        AND
-                    PositionID = @1
-                        AND
-                    ClientTypeID = @2
-        ", p.UserID, pos.PositionID, 1) ?? 0;
-        // TODO: ClientTypeID must NOT BE static! (but still is not defined how will work :(
+        if (pricingtypeid == 2 || pricingtypeid == 1) {
+            // Get hourly rate
+            hourlyRate = db.QueryValue(@"
+                SELECT  HourlyRate
+                FROM    ProviderHourlyRate
+                WHERE   UserID = @0
+                            AND
+                        PositionID = @1
+                            AND
+                        ClientTypeID = @2
+            ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
+        } else if (pricingtypeid == 3) {
+            hourlyRate = db.QueryValue(@"
+                SELECT  min(ProviderPackagePrice)
+                FROM    ProviderPackage
+                WHERE   ProviderUserID = @0
+                         AND PositionID = @1
+                         AND LanguageID = @2 AND CountryID = @3
+            ", p.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+        }
+        
         minimumBookingTime = db.QueryValue(@"
             SELECT  MinTime
             FROM    CalendarProviderAttributes
@@ -60,7 +76,11 @@
                 <div class="actions book">
                     <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
-                <span class="hour-price"><span class="price">$@hourlyRate</span>/h</span>
+                <span class="hour-price">
+                    <span class="price">
+                        @if (pricingtypeid == 3) { <span class="price-since">from:</span> }
+                        $@hourlyRate</span>@if (pricingtypeid != 3) { <text>/h</text> }
+                    </span>
                 <a class="calculate-price" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">

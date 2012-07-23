@@ -224,6 +224,11 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 .position-summary .hour-price .price {
     font-weight: bold;
 }
+.position-summary .price-since {
+    font-size: .6em;
+    display: block;
+    margin-top: -10px;
+}
 .position-summary a.calculate-price,
 .position-summary a.calculate-price:link,
 .position-summary a.calculate-price:visited{
