@@ -1,0 +1,61 @@
+﻿.provider-package {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+}
+.profile .provider-package {
+    border-color: #461864;
+}
+.profile .pricing h3 {
+    margin: 10px 0;
+}
+.provider-package h4 {
+    margin: 0;
+}
+.provider-package h5 {
+    color: #6C6C6C;
+    font-size: 1.1em;
+    margin: 8px 0 0;
+}
+.profile .provider-package a.button.book {
+    font-size: 0.6em;
+}
+.view-panel .provider-package-services li.empty {
+    font-style: italic;
+    list-style: none outside none !important;
+    margin: 0 0 0 10px;
+    width: auto !important;
+}
+.view-panel .provider-package-services {
+    overflow: hidden;
+}
+.view-panel .provider-package-services li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    float: left;
+}
+.view-panel .provider-package {
+    position: relative;
+}
+.view-panel .provider-package .provider-package-service-summary {
+    color: #00989A;
+    position: relative;
+    font-size: 1.5em;
+}
+.profile .view-panel .provider-package .provider-package-service-summary {
+    position: static;
+}
+.profile .view-panel .provider-package .provider-package-service-summary {
+    color: #461864;
+}
+.view-panel .provider-package .provider-package-service-summary .provider-package-price {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.profile .view-panel .provider-package .provider-package-service-summary .provider-package-price {
+    right: 10px;
+    top: 6px;
+}

@@ -1,7 +1,10 @@
 /* ============== Dashboard pages ================
    ====== IagoSRL for Loconomics S.L. ============
  */
-
+@import url('Pricing.css');
+ul.attributes-list li {
+    list-style: disc inside url("../img/bullet-editable.png") !important;
+}
 /* Extra padding to avoid collision with .help-point */
 .dashboard .folders > .tab-body {
     padding-top: 35px;
@@ -775,6 +778,9 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type .add-package {
     float: right;
 }
+.package-pricing-type label {
+    width: auto !important;
+}
 .package-pricing-type .add-package > a {
     background: url('../img/theme/add-new-button.png') no-repeat right center;
     min-height: 23px;
@@ -786,56 +792,7 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type .add-package > a:hover {
     text-decoration: underline;
 }
-/* general provider-package -both read-only and edit-panel 
-    for read-only use .view-panel as parent selector
-    and .edit-panel for editable form
-*/
-.provider-package {
-    background: none repeat scroll 0 0 white;
-    border: 3px solid #61bdbe;
-    border-radius: 15px 15px 15px 15px;
-    padding: 15px;
-    margin: 0 0 10px 0;
-}
-.provider-package h4 {
-    margin: 0;
-}
-.provider-package h5 {
-    color: #6C6C6C;
-    font-size: 1.1em;
-    margin: 8px 0 0;
-}
-.package-pricing-type label {
-    width: auto !important;
-}
-.package-pricing-type .view-panel .provider-package-services li.empty {
-    font-style: italic;
-    list-style: none outside none !important;
-    margin: 0 0 0 10px;
-    width: auto !important;
-}
-.package-pricing-type .view-panel .provider-package-services {
-    overflow: hidden;
-}
-.package-pricing-type .view-panel .provider-package-services li {
-    width: 200px !important;
-    text-overflow: ellipsis;
-    float: left;
-    list-style: disc inside url("../img/bullet-editable.png") !important;
-}
-.view-panel .provider-package {
-    position: relative;
-}
-.view-panel .provider-package .provider-package-service-summary {
-    color: #00989A;
-    position: relative;
-    font-size: 1.5em;
-}
-.view-panel .provider-package .provider-package-service-summary .provider-package-price {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+ /* on pricing.css there are more css specific for general provider-package */
 .view-panel .provider-package .edit-actions {
     position: absolute;
     top: 15px;

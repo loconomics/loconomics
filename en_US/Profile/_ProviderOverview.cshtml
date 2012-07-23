@@ -25,7 +25,7 @@
     }
 }
 @helper printAttributes(int catId, dynamic atts){
-    <ul>
+    <ul class="attributes-list">
         @foreach(var att in atts){
             if (att.UserChecked) {
                 <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>

@@ -27,7 +27,7 @@
     }
 }
 @helper printAttList(dynamic cat){
-    <ul>
+    <ul class="attributes-list">
         @foreach (var att in cat["ServiceAttributes"]) {
             if (att["UserChecked"]) {
             <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
@@ -38,7 +38,7 @@
 @helper printAttListLangs(dynamic cat, dynamic levelsCat){
     var selected = levelsCat["UserSelectedLevels"];
     var levelsIndex = levelsCat["LevelsIndex"];
-    <ul>
+    <ul class="attributes-list">
         @foreach (var att in cat["ServiceAttributes"]) {
             if (att["UserChecked"]) {
                 string levelStr = null;
@@ -87,7 +87,7 @@
                     <div class="min-booing-time">
                         <h5>Minimum booking time:</h5>
                         <!--<a class="button view-more" href="#">More</a>-->
-                        <ul><li>
+                        <ul class="attributes-list"><li>
                             @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
                             </li></ul>
                     </div>

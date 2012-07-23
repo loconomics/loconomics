@@ -137,6 +137,7 @@
                     @RenderPage("_PositionSummary.cshtml")
                     <ul class="tabs">
                         <li class="current"><a class="button profile fanciful" href="@("#position"+ip)-overview">Overview</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-pricing">Pricing</a></li>
                         <li><a class="button profile fanciful" href="@("#position"+ip)-reviews">Reviews</a></li>
                         <li class="volatile"><a class="button profile fanciful" href="@("#position"+ip)-mywork">My Work</a></li>
                         <li><a class="button profile fanciful" href="@("#position"+ip)-map">Map</a></li>
@@ -148,6 +149,9 @@
                    <div id="@("position"+ip)-overview" class="tab-body current overview">
                         @RenderPage("_ProviderOverview.cshtml")
                     </div><!-- #@("position"+ip)-overview -->
+                    <div id="@("position"+ip)-pricing" class="tab-body pricing">
+                        @RenderPage("_Pricing.cshtml")
+                    </div><!-- #@("position"+ip)-pricing -->
                     <div id="@("position"+ip)-reviews" class="tab-body reviews">
                         @RenderPage("_Reviews.cshtml")
                     </div><!-- #@("position"+ip)-reviews -->

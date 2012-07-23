@@ -1,13 +1,13 @@
 ﻿@{
     dynamic data = PageData["data"];
+    dynamic editable = PageData["editable"] ?? false;
+    var pos = DashboardFunctions.GetUserCurrentPos();
     if (data == null) {
-        var pos = DashboardFunctions.GetUserCurrentPos();
         data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
     }
 }
         @if (data.Packages != null && data.Packages.Count > 0)
         {
-        <h3>Your Packages:</h3>
         <div class="lc-ressources">
             <div class="confirm-delete-package-message">Are you sure do you want to remove this package?</div>
             <div class="delete-package-loading-message">The package is being removed...</div>
@@ -20,18 +20,32 @@
                 <h4>@pak.Name</h4>
                 <div class="provider-package-service-summary">
                     @pak.NumberOfSessions sessions - @pak.ServiceDuration minutes each
-                    <div class="provider-package-price">$@pak.Price</div>
+                    <div class="provider-package-price">
+                        @if (editable)
+                        {
+                            <text>$@pak.Price</text>
+                        }
+                        else
+                        {
+                            <div class="actions book">
+                                <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @pak.Price</a>
+                            </div>
+                        }
+                    </div>
                 </div>
+                @if (editable)
+                {
                 <div class="edit-actions">
                     <a href="#delete" class="delete" data-provider-package-id="@pak.ProviderPackageID">Delete</a>
                     <a href="#edit" class="edit" data-provider-package-id="@pak.ProviderPackageID">Edit</a>
                 </div>
+                }
                 <h5>Description:</h5>
                 <div class="provider-package-description">
                     @pak.Description
                 </div>
                 <h5>Services included in this package:</h5>
-                <ul class="provider-package-services">
+                <ul class="provider-package-services attributes-list">
                     @foreach (var ser in data.PackagesDetails)
                     {
                         // PackagesDetails has details for ALL provider packages, filter for only this package

@@ -1,6 +1,7 @@
 /* ============== Profile pages ==================
    ====== IagoSRL for Loconomics S.L. ============
  */
+@import url('Pricing.css');
 
 .profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
 
@@ -162,6 +163,11 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     color: #461864;
     font-weight: bold;
 }
+.profile h4 {
+    font-size: 1.3em;
+    color: #461864;
+    font-weight: bold;
+}
 .profile h5 {
     color: #3b3b3b;
     font-size: 1em;
@@ -301,7 +307,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin: 0;
     padding: 0 0 24px 0;
 }
-.profile .overview .service-attribute-category ul li {
+ul.attributes-list li {
     list-style-position: inside;
     list-style-image: url('../img/bullet.png');
 }
