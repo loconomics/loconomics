@@ -428,7 +428,7 @@ $(document).ready(function () {
             pw.find('.add-package').toggle(hasEdit);
             editPanel.toggle(!hasEdit)
                     .on('click', '.cancel-action', function () {
-                        editPanel.hide('slow');
+                        editPanel.hide('slow', function () { $(this).children().remove() });
                         var pw = editPanel.closest('.pricingwizard');
                         pw.find('.add-package').show('fast');
                     });
