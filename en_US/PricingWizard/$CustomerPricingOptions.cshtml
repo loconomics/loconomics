@@ -202,7 +202,7 @@
         OptionsCount = poptions.Count
     };
     if (poptions.Count > 0) {
-        <table class="pricing-options">
+        <table class="pricing-options calculate-items-totals">
             <thead>
                 <tr>
                     <th>@(PageData["TableTitle"] ?? "Services upon request")</th>
@@ -219,14 +219,12 @@
                         <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
                         <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                     </td>
-                    <td class="pricing-option-item-price number money">
-                        @popt.ProviderDataInputValue
-                    </td>
+                    <td class="pricing-option-item-price number money calculate-item-price">@popt.ProviderDataInputValue</td>
                     <td class="pricing-option-quantity number">
                     @switch ((string)@popt.CustomerDataInputType)
                     {
                         case "dropdown":
-                            <select id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName">
+                            <select id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" class="calculate-item-quantity">
                                 @{
                                     var optvalues = LcHelpers.GetValuesFromCSVLine(popt.CustomerDataValues);
                                     foreach (string optv in optvalues)
@@ -239,7 +237,7 @@
                             break;
                         case "number":
                         case "text":
-                            <input type="text" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
+                            <input type="text" class="calculate-item-quantity" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
                             break;
                         case "":
                             <text>N/A</text>
@@ -250,7 +248,7 @@
                     }
                     </td>
                     <td class="pricing-option-total-price calculated number money">
-                        $@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))
+                        $<span class="calculate-item-total">@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))</span>
                     </td>
                 </tr>
             }
