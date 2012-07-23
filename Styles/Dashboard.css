@@ -809,6 +809,9 @@ html.js .user-verified-licenses h5 {
     width: auto !important;
 }
 .package-pricing-type .view-panel .provider-package-services li.empty {
+    font-style: italic;
+    list-style: none outside none !important;
+    margin: 0 0 0 10px;
     width: auto !important;
 }
 .package-pricing-type .view-panel .provider-package-services {
