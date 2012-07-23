@@ -2,6 +2,7 @@
 @{
     var embMode = PageData["EmbeddedMode"] ?? "none"; // possible values: front-end, back-end, full
     var clienttypeid = PageData["ClientTypeID"] ?? Request["ClientTypeID"].AsInt();
+    var pricingTypeID = PageData["PricingTypeID"];
     var p = DashboardFunctions.GetUserRow();
     var pos = DashboardFunctions.GetUserCurrentPos();
     var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
@@ -30,7 +31,7 @@
                     pr.ProviderInputDataRequired = 1
                      AND
                     pr.Active = 1 AND pr.PricingTypeID = @4
-        ", 1, 1, clienttypeid, pos.PositionID, 2, p.UserID);
+        ", 1, 1, clienttypeid, pos.PositionID, pricingTypeID, p.UserID);
     }
     
 

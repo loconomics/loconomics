@@ -225,6 +225,14 @@
         }
         return PageData["position"];
     }
+    public static dynamic GetCurrentRequestedUserPos() {
+        if (PageData["position"] == null) {
+            int userid = Request["UserID"].AsInt();
+            userid = userid == 0 ? PageData["requesteduserrow"] != null ? PageData["requesteduserrow"].UserID : WebSecurity.CurrentUserId : userid;
+            PageData["position"] = GetUserPos(userid, Request["positionid"].AsInt());
+        }
+        return PageData["position"];
+    }
     public static string CssCurrent(string a, string b){
         return (a == b ? "current" : "");
     }

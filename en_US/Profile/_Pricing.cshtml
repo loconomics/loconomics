@@ -1,6 +1,6 @@
 ﻿@{
     // Provider
-    var p = DashboardFunctions.GetRequestedUserRow();
+    //var p = DashboardFunctions.GetRequestedUserRow();
     // Current position data record:
     var pos = PageData["position"];
 
@@ -9,12 +9,12 @@
 
     int pricingType = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
 }
-<h4>Cancellation policy:</h4>
+<h3>Cancellation policy:</h3>
 <ul class="attributes-list">
     <li>Cancellations prior to 24 hours:  Full refund </li>
     <li>Same-day cancellations:  No refund</li>
 </ul>
-<h4>Additional information:</h4>
+<h3>Additional information:</h3>
 <ul class="attributes-list">
     <li>Please arrive 10 minutes before your schedule appointment time if it’s your first visit!</li>
     <li>Let me know of any injuries or health issues prior to the start of the massage.</li>
@@ -25,5 +25,8 @@
     {
         <h3>Select a package that meets your needs:</h3>
         @RenderPage(UrlUtil.LangPath + "PricingWizard/$ProviderPackagesList.cshtml")
+        
+        <h3>Additional options available during checkout:</h3>
+        @RenderPage(UrlUtil.LangPath + "PricingWizard/$ViewPricingOptions.cshtml", new { PricingTypeID = 3, ClientTypeID = clienttypeid } )
     }
 </div>

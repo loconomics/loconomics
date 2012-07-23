@@ -1,0 +1,61 @@
+﻿@using WebMatrix.Data;
+@{
+    var clienttypeid = PageData["ClientTypeID"] ?? Request["ClientTypeID"].AsInt();
+    var pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
+    var pos = DashboardFunctions.GetCurrentRequestedUserPos();
+    var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
+    dynamic poptions;
+    
+    using (var db = Database.Open("sqlloco")){
+        // Get the Pricing Options
+        poptions = db.Query(@"
+            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
+                    pr.CustomerInputDataRequired, pr.CustomerDataInputType,
+                    pr.CustomerDataValues, pr.CustomerPricingOptionDisplayText,
+                    pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
+                    pr.ServiceAttributeID,
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pi.ProviderTimeRequired
+            FROM    pricingoption As pr
+                     LEFT JOIN
+                    providerpricingoptioninputs as pi
+                      ON pr.PricingOptionID = pi.PricingOptionID
+            WHERE   pr.LanguageID=@0 AND pr.CountryID=@1
+                     AND 
+                    pr.ClientTypeID=@2 AND pr.PositionID=@3
+                     AND 
+                    pr.CustomerInputDataRequired = 1
+                     AND
+                    pr.Active = 1 AND pr.PricingTypeID = @4
+                     AND
+                    (
+                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
+                     --  no needs relationed record at providerpricingoptioninputs (pi) table
+                     pr.ProviderInputDataRequired = 0
+                      OR
+                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
+                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
+                     --  relationship at providerpricingoptioninputs (pi) and proper conditional values
+                     pi.PricingDataInput is not null
+                      AND
+                     pi.Active = 1 AND pi.ProviderUserID = @5
+                    )
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), clienttypeid, pos.PositionID, pricingTypeID, pos.UserID);
+    }
+}
+
+@if (poptions.Count > 0)
+{
+    <ul class="pricing-options attributes-list">
+        @foreach (var popt in poptions)
+        {
+            <li>@popt.CustomerPricingOptionDisplayText @(popt.ProviderDataInputValue != null ? "(" + popt.ProviderDataInputValue + ")" : "")</li>
+        }
+    </ul>
+}
+else
+{
+    <div class="no-pricing-wizard empty">
+        There is not options.
+    </div>
+}
