@@ -120,9 +120,9 @@
             EmbeddedMode = "calculate",
             PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
         } );
-        var optionsCalculation = LcHelpers.RenderPageReturns.CalculatedData;
-        timeRequired += optionsCalculation.TimeRequired;
-        optionalServicesTotalPrice = optionsCalculation.OptionalServicesTotalPrice;
+        var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
+        timeRequired += optionsCalculation["TimeRequired"];
+        optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
         
         subtotalPrice = Math.Round(timeRequired * hourPrice + optionalServicesTotalPrice, 2);
         feePrice = Math.Round(.1M * subtotalPrice, 2);
@@ -203,7 +203,7 @@
                     EstimateID = estimateID, RevisionID = revisionID,
                     PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
                 } );
-                if (LcHelpers.RenderPageReturns.SavedCode != 0) {
+                if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
                     ModelState.AddFormError("Options not saved");
                 }
                 
@@ -275,7 +275,7 @@
 
 @RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid } )
 
-@if (LcHelpers.RenderPageReturns.OptionsCount == 0 && pvars.Count == 0)
+@if (LcHelpers.RenderPageReturns["OptionsCount"] == 0 && pvars.Count == 0)
 {
     <div class="no-pricing-wizard">
         It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting

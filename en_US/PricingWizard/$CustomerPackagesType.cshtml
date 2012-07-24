@@ -63,10 +63,10 @@
             EmbeddedMode = "calculate",
             PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
         } );
-        var optionsCalculation = LcHelpers.RenderPageReturns.CalculatedData;
-        timeRequired += optionsCalculation.TimeRequired;
-        timeFirstSession += optionsCalculation.TimeRequired;
-        optionalServicesTotalPrice = optionsCalculation.OptionalServicesTotalPrice;
+        var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
+        timeRequired += optionsCalculation["TimeRequired"];
+        timeFirstSession += optionsCalculation["TimeRequired"];
+        optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
         subtotalPrice += optionalServicesTotalPrice;
         
         feePrice = Math.Round(.1M * subtotalPrice, 2);
@@ -126,7 +126,7 @@
                     EstimateID = pricingEstimateID, RevisionID = pricingEstimateRevision,
                     PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
                 } );
-                if (LcHelpers.RenderPageReturns.SavedCode != 0) {
+                if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
                     ModelState.AddFormError("Options not saved");
                 }
                 
@@ -223,7 +223,7 @@
             <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
         </fieldset>
 
-    @if (LcHelpers.RenderPageReturns.OptionsCount == 0 && packages.Count == 0)
+    @if (LcHelpers.RenderPageReturns["OptionsCount"] == 0 && packages.Packages.Count == 0)
     {
         <div class="no-pricing-wizard">
             It's not possible do a pricing estimate currently for this provider. Please, continue with the free quote waiting

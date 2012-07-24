@@ -92,9 +92,9 @@
             optionalServicesTotalPrice += optPrice;
         }
         // Preparing calculated data to be returned lately
-        var calculatedData = new {
-            TimeRequired = timeRequired,
-            OptionalServicesTotalPrice = optionalServicesTotalPrice
+        var calculatedData = new Dictionary<string, object>{
+            { "TimeRequired", timeRequired },
+            { "OptionalServicesTotalPrice", optionalServicesTotalPrice }
         };
         int dataSaved = -1; // error code for not saved (maybe becaused we are only calculating and is not an error itself)
         
@@ -183,9 +183,9 @@
         if (embMode == "none") {
             CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
         } else {
-            LcHelpers.RenderPageReturns = new {
-                CalculatedData = calculatedData,
-                SavedCode = dataSaved
+            LcHelpers.RenderPageReturns = new Dictionary<string, object> {
+                { "CalculatedData", calculatedData },
+                { "SavedCode", dataSaved }
             };
         }
     }
@@ -198,8 +198,8 @@
     @Html.Raw((Request[name] == value || poptvar.CustomerDataInputValue == value) ? "selected='selected'" : "")
 }
 @if (embMode != "back-end" && embMode != "calculate") {
-    LcHelpers.RenderPageReturns = new {
-        OptionsCount = poptions.Count
+    LcHelpers.RenderPageReturns = new Dictionary<string, object>() {
+        { "OptionsCount", poptions.Count }
     };
     if (poptions.Count > 0) {
         <table class="pricing-options calculate-items-totals">
