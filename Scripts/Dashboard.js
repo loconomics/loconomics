@@ -460,10 +460,40 @@ $(document).ready(function () {
         }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
             $(this).closest('.edit-panel').hide('slow', function () {
                 $(this).closest('.pricingwizard').find('.add-package').show('fast');
-                $(this).children().remove() 
+                $(this).children().remove()
             });
         });
     })($('.pricingwizard.package-pricing-type'));
+
+    /**==================
+    * Background check 
+    */
+    $('.position-background-check .buy-action').click(function () {
+        var bcid = $(this).data('background-check-id');
+        var cont = $(this).closest('.position-background-check');
+        var ps1 = cont.find('.popup.buy-step-1');
+        var f = ps1.find('form');
+        f.find('[name=BackgroundCheckID]').val(bcid);
+        f.find('.main-action').val($(this).text());
+
+        if (!f.data('initialized')) {
+            f.data('initialized', true);
+            cont.on('click', '.close-popup-action', function () {
+                smoothBoxBlock(null, cont);
+                return false;
+            });
+            f.on('ajaxSuccessPost', function (e, data) {
+                if (data.Code == 0) {
+                    smoothBoxBlock(null, cont);
+                    var ps2 = cont.find('popup.buy-step-2');
+                    smoothBoxBlock(ps2, cont, 'background-check');
+                }
+            });
+        }
+
+        smoothBoxBlock(ps1, cont, 'background-check');
+        return false;
+    });
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

@@ -736,6 +736,23 @@ html.js .user-verified-licenses h5 {
     cursor: hand;
     cursor: pointer;
 }
+/** Form: Positions Background Checks **/
+.background-check {
+    position: relative;
+}
+.background-check h5 {
+    font-size: 1em;
+    margin-bottom: .5em;
+}
+.background-check .buy-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1em;
+}
+.background-check .smooth-box-block-element {
+    border: 5px solid #B5E1E2;
+}
 /** Form: Positions Reviews **/
 .positionreviews .references li label {
     width: auto;

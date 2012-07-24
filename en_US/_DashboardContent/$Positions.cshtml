@@ -45,6 +45,7 @@
                 <li><a class="button profile fanciful" href="@("#position"+pid)-locations">Locations</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+pid)-licenses">Licenses</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-backgroundcheck">Background Check</a></li>
             </ul>
             
             <div id="@("position"+pid)-services" class="tab-body current">
@@ -66,6 +67,9 @@
             <div id="@("position"+pid)-reviews" class="tab-body">
                 @RenderPage("$PositionsReviews.cshtml")
             </div><!-- #@("position"+pid)-reviews -->
+            <div id="@("position"+pid)-backgroundcheck" class="tab-body">
+                @RenderPage("$PositionsBackgroundCheck.cshtml")
+            </div><!-- #@("position"+pid)-backgroundcheck -->
             
         </div><!-- #position@pid -->
             }
