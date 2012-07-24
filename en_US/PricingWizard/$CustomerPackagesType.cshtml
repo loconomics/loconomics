@@ -113,7 +113,7 @@
                     db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
                         0, 0, 0, 0, 
                         pak.ProviderPackageID,
-                        timeprice[0], // unit price as provider value (only informational)
+                        null, // there is no provider value
                         Request["provider-package-" + (string)pak.ProviderPackageID.ToString() + "-quantity"].AsInt(),
                         0, // systemPricingDataInput
                         hourPrice,

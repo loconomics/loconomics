@@ -1090,6 +1090,7 @@ form#personal li > label.gender {
 }
 .booking-request table.pricing-summary {
     border: none;
+    width: 100%;
 }
 .booking-request table.pricing-summary td.concept {
     padding-right: 5px;

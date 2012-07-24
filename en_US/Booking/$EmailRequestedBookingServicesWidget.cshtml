@@ -13,8 +13,10 @@
                  INNER JOIN
                 ServiceAttribute As S
                   ON S.ServiceAttributeID = P.ServiceAttributeID
+                    -- Avoid show service attributes related to options
+                    AND P.PricingOptionID = 0
         WHERE   P.PricingEstimateID = @0
-                 AND S.CountryId = @1 AND S.LanguageID = @2
+                 AND S.LanguageID = @1 AND S.CountryId = @2
     ";
     var getPricingVars = @"
         SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
@@ -24,7 +26,7 @@
                 PricingVariable As V
                   ON V.PricingVariableID = P.PricingVariableID
         WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
+                 AND V.LanguageID = @1 AND V.CountryId = @2
     ";
     var getPricingOptions = @"
         SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
@@ -34,14 +36,33 @@
                 PricingOption As V
                   ON V.PricingOptionID = P.PricingOptionID
         WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
+                 AND V.LanguageID = @1 AND V.CountryId = @2
+    ";
+    var getPackages = @"
+        SELECT  PP.ProviderPackageID
+                ,PP.ProviderPackageName As Name
+                ,PP.ProviderPackageDescription As Description
+                ,PP.ProviderPackagePrice As Price
+                ,PP.ProviderPackageServiceDuration As ServiceDuration
+                ,PP.FirstTimeClientsOnly
+                ,PP.NumberOfSessions
+                ,P.PriceEstimate
+                ,P.CustomerPricingDataInput
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ProviderPackage As PP
+                  ON PP.ProviderPackageID = P.ProviderPackageID
+        WHERE   P.PricingEstimateID = @0
+                    AND 
+                PP.LanguageID = @1 AND PP.CountryID = @2
     ";
      
-    dynamic services = null, pvars = null, poptions = null;
+    dynamic services = null, pvars = null, poptions = null, packages = null;
     using (var db = Database.Open("sqlloco")) {         
-        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, 1, 1);
-        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, 1, 1);
-        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, 1, 1);
+        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        packages    = db.Query(getPackages, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
      
     // auxiliar vars in view generation
@@ -56,6 +77,8 @@
     }
 }
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        @if (services != null && services.Count > 0)
+        {
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Services to be performed:</h5>
         <ul  @LcEmailTemplateHelper.StyleUlOl()>
             @foreach (var service in services)
@@ -63,19 +86,46 @@
                 <li style="margin-left: 20px;width: 205px;display: inline-block;">@service.Name</li>
             }
         </ul>
+        }
+        @if (packages != null && packages.Count > 0)
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Packages:</h5>
+            <table border="0" style="border:none;width:100%">
+                @foreach (var pak in packages)
+                {
+                <tr>
+                    <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
+                        @pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)
+                        @{
+                            var quantity = ((string)pak.CustomerPricingDataInput).AsInt();
+                        }
+                        @if (quantity > 1)
+                        {
+                            <span>(@quantity packages * @pak.Price.ToString("c") each)</span>
+                        }
+                    </td>
+                    <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">
+                        @pak.PriceEstimate.ToString("c")
+                    </td>
+                </tr>
+                }
+            </table>
+        }
         
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
         <p @LcEmailTemplateHelper.StyleResetP()>@booking.SpecialRequests</p>
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Additional services and pricing summary:</h5>
-        <table border="0" style="border: none;">
+        <table border="0" style="border:none;width:100%">
             @foreach (var pitem in poptions)
             {
             <tr>
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@pitem.Price</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@pitem.Price.ToString("c")</td>
             </tr>
             }
+            @if (pvars != null && pvars.Count > 0)
+            {
             <tr>
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
                     @{
@@ -92,14 +142,15 @@
                                         @(iprint + pitem.Name + " " + @pitem.Quantity)
                             varsTime += pitem.Time;
                         }
-                        @(" (" + booking.ServiceDuration.ToString() + " hours @ $" + booking.HourlyPrice.ToString() + "/hr)")
+                        @(" (" + booking.ServiceDuration.ToString() + " hours @ " + booking.HourlyPrice.ToString("c") + "/hr)")
                     }
                 </td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@((varsTime * booking.HourlyPrice).ToString("#,##0.00"))</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((varsTime * booking.HourlyPrice).ToString("c"))</td>
             </tr>
+            }
             <tr>
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Locnomics service fee (includes credit card processing costs)</td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@booking.FeePrice</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@booking.FeePrice.ToString("c")</td>
             </tr>
             <tr style="@LcEmailTemplateHelper.StylePricingSummaryTotal()">
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
@@ -123,7 +174,7 @@
                     break;
                 }
                 </td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">$@booking.TotalPrice</td>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@booking.TotalPrice.ToString("c")</td>
             </tr>
         </table>
 
