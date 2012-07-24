@@ -132,8 +132,7 @@ html.ie #booking-services .special-instructions legend{
     -moz-box-sizing: border-box;    /* For Firefox                          */
     -webkit-box-sizing: border-box; /* For Safari                           */
 }
-#booking-services.package-pricing .select-packages,
-#booking-services.package-pricing .package-pricing-options {
+#booking-services.package-pricing fieldset {
     display: block;
 }
 #booking-services.package-pricing table {

@@ -273,6 +273,92 @@ public static class LcData
             ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 2);
         }
     }
+
+
+    /// <summary>
+    ///        /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
+    ///            BEGIN TRAN
+    ///                SELECT @id = MAX(id) + 1 FROM Table1 WITH (UPDLOCK, HOLDLOCK)
+    ///                INSERT INTO Table1(id, data_field)
+    ///                VALUES (@id ,'[blob of data]')
+    ///            COMMIT TRAN
+    ///         */
+    /// </summary>
+    public const string sqlInsEstimate = @"
+                BEGIN TRAN
+
+                    -- Getting a new ID if was not provided one
+                    DECLARE @id int, @revision int
+                    SET @id = @0
+                    SET @revision = @1
+
+                    If @id <= 0 BEGIN
+                        SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
+                        SET @revision = 1
+                    END
+
+                    IF @id is null 
+                        SET @id = 1
+
+                    INSERT INTO [pricingestimate]
+                               ([PricingEstimateID]
+                               ,[PricingEstimateRevision]
+                               ,[PricingTypeID]
+                               ,[ServiceDuration]
+                               ,[HourlyPrice]
+                               ,[SubtotalPrice]
+                               ,[FeePrice]
+                               ,[TotalPrice]
+                               ,[CreatedDate]
+                               ,[UpdatedDate]
+                               ,[ModifiedBy]
+                               ,[Active])
+                         VALUES
+                               (@id, @revision, @2, @3, @4, @5, @6, @7, getdate(), getdate(), 'sys', 1)
+
+                    SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
+                COMMIT TRAN
+    ";
+    public const string sqlInsEstimateDetails = @"
+                INSERT INTO [pricingestimatedetail]
+                           ([PricingEstimateID]
+                           ,[PricingEstimateRevision]
+                           ,[PricingVariableID]
+                           ,[PricingSurchargeID]
+                           ,[PricingOptionID]
+                           ,[ServiceAttributeID]
+                           ,[ProviderPackageID]
+                           ,[ProviderPricingDataInput]
+                           ,[CustomerPricingDataInput]
+                           ,[SystemPricingDataInput]
+                           ,[ProviderHourlyRate]
+                           ,[TimeEstimate]
+                           ,[PriceEstimate]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy])
+                     VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
+    ";
+    public const string sqlInsBookingRequest = @"
+            INSERT INTO BookingRequest
+                       ([BookingTypeID]
+                       ,[CustomerUserID]
+                       ,[ProviderUserID]
+                       ,[PositionID]
+                       ,[PricingEstimateID]
+                       ,[BookingRequestStatusID]
+                       ,[SpecialRequests]
+                       ,[CreatedDate]
+                       ,[UpdatedDate]
+                       ,[ModifiedBy])
+                VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+
+            -- Update customer user profile to be a customer (if is not still, maybe is only provider)
+            UPDATE Users SET IsCustomer = 1
+            WHERE UserID = @0 AND IsCustomer <> 1
+
+            SELECT Cast(@@Identity As int) As BookingRequestID
+    ";
     #endregion
     #region Package Type (Provider Packages)
     public class ProviderPackagesView

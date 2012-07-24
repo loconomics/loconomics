@@ -33,7 +33,7 @@
                     customerpricingoptioninputs as pc
                       ON pr.PricingOptionID = pc.PricingOptionID
                         AND pc.Active = 1 AND pc.UserID = @6
-            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
+            WHERE   pr.LanguageID=@0 AND pr.CountryID=@1
                      AND 
                     pr.ClientTypeID=@2 AND pr.PositionID=@3
                      AND 
@@ -53,7 +53,7 @@
                       AND
                      pi.Active = 1 AND pi.ProviderUserID = @5
                     )
-        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
     }
     
     if (IsPost && Validation.IsValid() && embMode != "front-end"){
