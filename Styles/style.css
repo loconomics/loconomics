@@ -1915,3 +1915,75 @@ html.boxshadow #loginBox .field-validation-error{
 .lc-ressources, .popups {
     display: none;
 }
+
+/*** Home and search pages categories ***/
+/***********************/
+/*** search categories */
+.search .search-categories{
+    margin-bottom: 10px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #999;
+}
+.search-categories h1 {
+    color: #bde1e1;
+    font-size: 2.4em;
+    text-transform: lowercase;
+}
+.search-categories h1 strong{
+    color: #28aaa6;
+    font-weight: normal;
+}
+.search-categories p,
+.search-categories div{
+    font-size: 1.1em;
+}
+.search-categories p{
+    margin: 10px 0;
+}
+
+.search-categories ul{
+    overflow: hidden;
+}
+.search-categories ul li{
+    text-indent: -9999px;
+    /* Using an sprite, mantain width and height exactly as image fragment */
+    background: url('../img/theme/search-categories.png') no-repeat 0 0;
+    width: 84px;
+    height: 84px;
+    float: left;
+    margin: 0 1px;
+}
+.search-categories ul li h3{
+    text-indent: 0;
+}
+.search-categories ul li a{
+    width: 84px;
+    height: 84px;
+    display: block;
+}
+.search-categories li.cat-list-title {      background: none;}
+.search-categories li.cat-home{             background-position: -336px 0}
+.search-categories li.cat-child{            background-position: -168px 0}
+.search-categories li.cat-pets{             background-position: -504px 0}
+.search-categories li.cat-people{           background-position: -420px 0}
+.search-categories li.cat-transport{        background-position: -588px 0}
+.search-categories li.cat-business{         background-position: 0 0}
+.search-categories li.cat-elderly{          background-position: -252px 0}
+.search-categories li.cat-celebrations{     background-position: -84px 0}
+/* Selected image */
+.search-categories li.selected.cat-home,
+.search-categories li.cat-home:hover{             background-position: -336px -84px}
+.search-categories li.selected.cat-child,
+.search-categories li.cat-child:hover{            background-position: -168px -84px}
+.search-categories li.selected.cat-pets,
+.search-categories li.cat-pets:hover{             background-position: -504px -84px}
+.search-categories li.selected.cat-people,
+.search-categories li.cat-people:hover{           background-position: -420px -84px}
+.search-categories li.selected.cat-transport,
+.search-categories li.cat-transport:hover{        background-position: -588px -84px}
+.search-categories li.selected.cat-business,
+.search-categories li.cat-business:hover{         background-position: 0 -84px}
+.search-categories li.selected.cat-elderly,
+.search-categories li.cat-elderly:hover{          background-position: -252px -84px}
+.search-categories li.selected.cat-celebrations,
+.search-categories li.cat-celebrations:hover{     background-position: -84px -84px}
