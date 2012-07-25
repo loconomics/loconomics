@@ -401,11 +401,12 @@ $(document).ready(function () {
     * and another only for links with 'target-tab' class.
     * Need be study if something of there must be removed or changed.
     * This is needed for other behaviors to work. */
-    $(window).hashchange(function () {
-        var thereIsTab = TabbedUX.getTab(location.hash);
-        if (thereIsTab)
-            TabbedUX.focusTab(thereIsTab);
-    });
+    if ($.fn.hashchange)
+        $(window).hashchange(function () {
+            var thereIsTab = TabbedUX.getTab(location.hash);
+            if (thereIsTab)
+                TabbedUX.focusTab(thereIsTab);
+        });
 
     $('a#launchHowItWorks').click(function (event) {
         event.preventDefault();
