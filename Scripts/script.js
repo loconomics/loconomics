@@ -1095,7 +1095,7 @@ function setupDatePicker() {
 }
 function applyDatePicker(element) {
     $(".date-pick", element || document)
-        .val(new Date().asString($.datepicker._defaults.dateFormat))
+        //.val(new Date().asString($.datepicker._defaults.dateFormat))
         .datepicker({
             showOn: "button",
             buttonImage: "",
