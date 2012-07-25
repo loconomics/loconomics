@@ -39,8 +39,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 </div>
 
 <ol class="photo-library gallery-content">
-    @foreach (var photo in photos)
+    @if (photos.Count == 0)
     {
-        <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@((photo.IsPrimaryPhoto || photo == primaryPhoto) ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
+        <li class="empty volatize-my-tab">There is now photos</li>
+    }
+    else
+    {
+        foreach (var photo in photos)
+        {
+            <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@((photo.IsPrimaryPhoto || photo == primaryPhoto) ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a></li>
+        }
     }
 </ol>

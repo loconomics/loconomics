@@ -473,6 +473,13 @@ $(document).ready(function () {
                 TabbedUX.focusTab(tab);
         }
     }
+    // Auto remove 'volatile' tabs if they are empty
+    $('.tabbed > .tabs > .volatile').each(function () {
+        var tab = TabbedUX.getTab(null, this);
+        if (tab && ($(tab).children().length == 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length )) {
+            TabbedUX.removeTab(tab);
+        }
+    });
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
     $('.autofill-submenu .current').each(function () {

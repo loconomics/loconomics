@@ -23,13 +23,6 @@ $(function () {
             hlPanel.find('.photo-caption').text(caption);
         }
         return false;
-    })
-    .each(function () {
-        // Check if there are photos, removing tabs on false
-        var hasPhotos = ($(this).find('.gallery-content > li').length > 0);
-        if (!hasPhotos) {
-            TabbedUX.removeTab('#'+this.id);
-        }
     });
 });
 

@@ -72,10 +72,12 @@
         }
     }
 }
-@if (!IsPost)
+@if (IsPost || checks != null && checks.Count > 0)
 {
-    @CommonHelpers.GetValidationScripts()
-}
+    if (!IsPost)
+    {
+        @CommonHelpers.GetValidationScripts()
+    }
     <p class="setting-instructions">
         We’ve partnered with HireRight, a leading background screening company, to give you the ability to purchase and complete a background check. Background checks can be essential for some customers to feel at ease hiring your services, especially those may include children or the elderly.  Please select one of the options below, and HireRight will contact you directly via e-mail to complete the payment and process.  
     </p>
@@ -105,7 +107,8 @@
 
         <div class="popups">
             <div class="popup buy-step-1 ajax-box">
-                <p>Use of background check services is voluntary. If you opt to use or access information provided by a background check service offered through the Marketplace, you agree that Loconomics offers this background check service as a convenience and does not have control over or assume any responsibility for the quality, accuracy, or reliability of the background check service or the information provided by the background check service. </p>                <p>If you are a Service Provider and you opt to purchase background check services in connection with your Services: (i) you affirm that all of the information you provide to Loconomics in connection with the background check services is correct, complete, and applicable; (ii) you understand that you will be required to complete and sign a disclosure and consent form, which will have additional terms applicable to the background check services; (iii) you agree that Loconomics may obtain a report from HireRight that may contain information on your criminal history, address history, character, general reputation, personal characteristics, and mode of living; (iv) you agree that Loconomics may release the results of this report in connection with transactions on the Marketplace; (v) you understand that the information in the report may factor into other parties’ decisions to engage your services; (vi) you agree that Loconomics may review the information provided by the background check service and retains the right to terminate your membership based on the information; (vii) if you disagree with the contents of the report, or wish to stop the release of the results of the report, you must delete your profile; and (viii) you agree to indemnify and hold harmless Loconomics from any loss or liability that may result from the creation or release of the report.</p>
+                <p>Use of background check services is voluntary. If you opt to use or access information provided by a background check service offered through the Marketplace, you agree that Loconomics offers this background check service as a convenience and does not have control over or assume any responsibility for the quality, accuracy, or reliability of the background check service or the information provided by the background check service. </p>
+                <p>If you are a Service Provider and you opt to purchase background check services in connection with your Services: (i) you affirm that all of the information you provide to Loconomics in connection with the background check services is correct, complete, and applicable; (ii) you understand that you will be required to complete and sign a disclosure and consent form, which will have additional terms applicable to the background check services; (iii) you agree that Loconomics may obtain a report from HireRight that may contain information on your criminal history, address history, character, general reputation, personal characteristics, and mode of living; (iv) you agree that Loconomics may release the results of this report in connection with transactions on the Marketplace; (v) you understand that the information in the report may factor into other parties’ decisions to engage your services; (vi) you agree that Loconomics may review the information provided by the background check service and retains the right to terminate your membership based on the information; (vii) if you disagree with the contents of the report, or wish to stop the release of the results of the report, you must delete your profile; and (viii) you agree to indemnify and hold harmless Loconomics from any loss or liability that may result from the creation or release of the report.</p>
                 <form class="ajax" action="@(UrlUtil.LangPath)Dashboard/$PositionsBackgroundCheck/" method="post">
                     <input type="hidden" name="BackgroundCheckID" value="" />
                     <input type="hidden" name="PositionID" value="@p.PositionID" />
@@ -128,12 +131,17 @@
                     </li>
                     <li><strong>Complete payment and application</strong>
                         <div class="step-details">
-                            We’ve negotiated discounted rates with HireRight to keep the cost of obtaining a background check as low as possible.                              Pay HireRight directly for the background check--Loconomics does not make commission from this transaction.  Please                             carefully follow all instructions and  accurately enter the data as required. Also, please respond quickly to HireRight r                            equests for more information.
+                            We’ve negotiated discounted rates with HireRight to keep the cost of obtaining a background check as low as possible.  
+                            Pay HireRight directly for the background check--Loconomics does not make commission from this transaction.  Please 
+                            carefully follow all instructions and  accurately enter the data as required. Also, please respond quickly to HireRight r
+                            equests for more information.
                         </div>
                     </li>
                     <li><strong>You're done</strong>
                         <div class="step-details">
-                            Loconomics will review your background check.  If the results are not 100% clear, we will contact you to ask permission                             to post to your profile.  If you choose not to post the information on your profile, you will be required to remove your profile                            permanently.  
+                            Loconomics will review your background check.  If the results are not 100% clear, we will contact you to ask permission 
+                            to post to your profile.  If you choose not to post the information on your profile, you will be required to remove your profile
+                            permanently.  
                         </div>
                     </li>
                 </ol>
@@ -141,3 +149,4 @@
             </div>
         </div>
    </div>
+}
