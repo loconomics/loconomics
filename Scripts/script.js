@@ -228,6 +228,11 @@ var TabbedUX = {
         // Show current tab-body and trigger event
         ctx.tab.addClass('current')
             .triggerHandler('tabFocused');
+
+        // Check if there is a parent tab and focus it too (will be recursive calling this same function)
+        var parTab = ctx.tab.parents('.tab-body:eq(0)');
+        if (parTab.length == 1) this.focusTab(parTab);
+
         return true;
     },
     focusTabIndex: function (tabContainer, tabIndex) {
