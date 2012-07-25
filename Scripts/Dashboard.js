@@ -468,8 +468,9 @@ $(document).ready(function () {
     /**==================
     * Background check 
     */
-    $('.position-background-check .buy-action').click(function () {
+    $('.position-background-check').on('click', '.buy-action', function () {
         var bcid = $(this).data('background-check-id');
+        var posID = $(this).data('position-id');
         var cont = $(this).closest('.position-background-check');
         var ps1 = cont.find('.popup.buy-step-1');
         var f = ps1.find('form');
@@ -480,12 +481,14 @@ $(document).ready(function () {
             f.data('initialized', true);
             cont.on('click', '.close-popup-action', function () {
                 smoothBoxBlock(null, cont);
+                if ($(this).closest('.popup').is('.buy-step-2'))
+                    cont.closest('.tab-body').reload(UrlUtil.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
                 return false;
             });
             f.on('ajaxSuccessPost', function (e, data) {
-                if (data.Code == 0) {
+                if (data.Code == 101) {
                     smoothBoxBlock(null, cont);
-                    var ps2 = cont.find('popup.buy-step-2');
+                    var ps2 = cont.find('.popup.buy-step-2');
                     smoothBoxBlock(ps2, cont, 'background-check');
                 }
             });

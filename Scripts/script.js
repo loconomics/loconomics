@@ -1230,6 +1230,7 @@ function smoothBoxBlock(contentBox, blocked, addclass) {
         var boxc = box.children('.smooth-box-block-element');
     }
     box.hide();
+    boxc.children().remove();
     boxc.append(contentBox);
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());

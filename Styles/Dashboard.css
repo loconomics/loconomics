@@ -744,6 +744,11 @@ html.js .user-verified-licenses h5 {
     font-size: 1em;
     margin-bottom: .5em;
 }
+.background-check .requested {
+    margin: 4px 0;
+    border-left: 5px solid #00989A;
+    padding-left: 10px;
+}
 .background-check .buy-action {
     position: absolute;
     top: 0;
