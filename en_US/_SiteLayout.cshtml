@@ -67,7 +67,7 @@
                         <li class="new-user">
                             <a class="register" href="@(UrlUtil.LangPath)Account/Register/">Sign Up</a> | 
                             <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> | 
-                            <a id="launchHowItWorks" href="@(UrlUtil.LangPath)HowItWorks/">How it works</a>
+                            <a id="launchHowItWorks" href="@(UrlUtil.LangPath)HelpCenter/HowItWorks/">How it works</a>
                         </li>
                         <li><a class="button fancy" href="@(UrlUtil.LangPath)provider-sign-up/">Become a provider</a></li>
                     }
@@ -88,9 +88,7 @@
 		    </div>
         </header>
         <footer><a href="@(UrlUtil.LangPath)About/">About</a> | <a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> | <a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a> | <a href="/Blog/">Blog</a></footer>
-		<div id="modals">
-
-		</div><!-- #modals -->
+		@* Study if can be removed the 'modals' element -check scripts- *@<div id="modals"></div><!-- #modals -->
         <div class="scripts">
             <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
             @if (LcData.GetCurrentLanguageID() == 2)

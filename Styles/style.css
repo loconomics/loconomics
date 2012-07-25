@@ -698,8 +698,8 @@ footer a:hover { text-decoration: underline; color: #a1a1a1; }
 .categories ul:first-child > li:hover div.menu { display: block; } 
 
 /** Modals **/
-
-#howItWorks { margin: 60px 0 0 0; padding: 0; width: 400px; text-align: left; }
+#howItWorksModal { margin: 0 auto; }
+#howItWorks { margin: 60px auto 0; padding: 0; width: 400px; text-align: left; }
 #howItWorks li { margin: 0 0 30px 0; padding: 0 0 30px 0; height: 66px; list-style-type: none; border-bottom: 2px dashed #b5e1e2; }
 #howItWorks li img.num { float: left; }
 #howItWorks li img.icon { float: right; }
