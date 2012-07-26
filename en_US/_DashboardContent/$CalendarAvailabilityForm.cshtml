@@ -11,10 +11,10 @@
     bool useCalendarProgram = false;
     var programType = "";
     var programURL = "";
-    var advanceTime = 0;
-    var minTime = 0;
-    var maxTime = 0;
-    var betweenTime = 0;
+    var advanceTime = 0M;
+    var minTime = 0M;
+    var maxTime = 0M;
+    var betweenTime = 0M;
 
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
@@ -52,10 +52,10 @@
         useCalendarProgram      = Request["use-program"].AsBool();
         programType             = Request["program-type"];
         programURL              = Request["program-url"];
-        advanceTime             = Request["advance-time"].AsInt();
-        minTime                 = Request["min-time"].AsInt();
-        maxTime                 = Request["max-time"].AsInt();
-        betweenTime             = Request["between-time"].AsInt();
+        advanceTime             = Request["advance-time"].AsDecimal();
+        minTime                 = Request["min-time"].AsDecimal();
+        maxTime                 = Request["max-time"].AsDecimal();
+        betweenTime             = Request["between-time"].AsDecimal();
         
         if (Validation.IsValid()) {
             
@@ -130,6 +130,127 @@
         }
     </select>
 }
+@helper printHoursBooking(string what, string selected, TimeSpan[] range){
+    var aHour = new TimeSpan(1, 0, 0);
+    var aDay = new TimeSpan(1, 0, 0, 0, 0);
+    var aWeek = new TimeSpan(7, 0, 0, 0, 0);
+    <select name="@(what)-time">
+        @foreach (var h in range) {
+            var sh = "";
+            if (h < aHour) {
+                sh = h.TotalMinutes.ToString() + " minutes";
+            } else if (h < aDay) {
+                sh = h.TotalHours.ToString() + " hours";
+            } else if (h < aWeek) {
+                sh = h.TotalDays.ToString() + " days";
+            } else {
+                sh = (h.TotalDays / 7).ToString() + " weeks";
+            }
+            <option @CommonHelpers.IsSelected(selected, h.TotalHours.ToString()) value="@h">@sh</option>
+        }
+    </select>
+}
+@helper printOption(string selected, string val, string label) {
+    <option @CommonHelpers.IsSelected(selected, val) value="@val">@label</option>
+}
+@helper printHoursTimeInAdvance(string selected){
+    // Time in advance of bookings: 1 hour, 1.5 hours, 2 hours, 2.5 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day, 2 days, 3 days, 4 days, 5 days, 6 days, 1 week, 2 weeks
+    @*@printHoursBooking("advance", selected, new TimeSpan[]{
+        TimeSpan.FromHours(1),
+        TimeSpan.FromHours(1.5),
+        TimeSpan.FromHours(2),
+        TimeSpan.FromHours(2.5),
+        TimeSpan.FromHours(3),
+        TimeSpan.FromHours(4),
+        TimeSpan.FromHours(5),
+        TimeSpan.FromHours(6),
+        TimeSpan.FromHours(7),
+        TimeSpan.FromHours(8),
+        TimeSpan.FromHours(12),
+        TimeSpan.FromHours(18),
+        TimeSpan.FromDays(1),
+        TimeSpan.FromDays(2),
+        TimeSpan.FromDays(3),
+        TimeSpan.FromDays(4),
+        TimeSpan.FromDays(5),
+        TimeSpan.FromDays(6),
+        TimeSpan.FromDays(7),
+        TimeSpan.FromDays(14)
+    });*@
+    <select name="advance-time">
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "1.5",   "1.5 hours")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "2.5",   "2.5 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+        @printOption(selected, "7",     "7 hours")
+        @printOption(selected, "8",     "8 hours")
+        @printOption(selected, "12",    "12 hours")
+        @printOption(selected, "18",    "18 hours")
+        @printOption(selected, "24",    "1 day")
+        @printOption(selected, "48",    "2 days")
+        @printOption(selected, "72",    "3 days")
+        @printOption(selected, "96",    "4 days")
+        @printOption(selected, "120",   "5 days")
+        @printOption(selected, "144",   "6 days")
+        @printOption(selected, "168",   "1 week")
+        @printOption(selected, "336",   "2 weeks")
+    </select>
+}
+@helper printHoursMinBookingTime(string selected){
+    // Minimum booking time: 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day
+    <select name="min-time">
+        @printOption(selected, "0.25",  "15 minutes")
+        @printOption(selected, "0.5",   "30 minutes")
+        @printOption(selected, "0.75",  "45 minutes")
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+        @printOption(selected, "7",     "7 hours")
+        @printOption(selected, "8",     "8 hours")
+        @printOption(selected, "12",    "12 hours")
+        @printOption(selected, "18",    "18 hours")
+        @printOption(selected, "24",    "1 day")
+    </select>
+}
+@helper printHoursMaxBookingTime(string selected){
+    // Maximum booking time: 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day
+    <select name="max-time">
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+        @printOption(selected, "7",     "7 hours")
+        @printOption(selected, "8",     "8 hours")
+        @printOption(selected, "12",    "12 hours")
+        @printOption(selected, "18",    "18 hours")
+        @printOption(selected, "24",    "1 day")
+    </select>
+}
+@helper printHoursBetweenBookingTime(string selected){
+    // Minimum time between bookings: 5 minutes, 10 minutes, 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours
+    <select name="between-time">
+        @printOption(selected, "0.08",  "5 minutes")
+        @printOption(selected, "0.16",  "10 minutes")
+        @printOption(selected, "0.25",  "15 minutes")
+        @printOption(selected, "0.5",   "30 minutes")
+        @printOption(selected, "0.75",  "45 minutes")
+        @printOption(selected, "1",     "1 hour")
+        @printOption(selected, "2",     "2 hours")
+        @printOption(selected, "3",     "3 hours")
+        @printOption(selected, "4",     "4 hours")
+        @printOption(selected, "5",     "5 hours")
+        @printOption(selected, "6",     "6 hours")
+    </select>
+}
 
 <p class="setting-instructions">
 Please enter your availability below.  This should be the hours you generally keep including current clients.  We are continually working on tools to make this easy for you to manage.  
@@ -172,10 +293,10 @@ Please enter your availability below.  This should be the hours you generally ke
     </fieldset>
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
-        <label>Time in advance of bookings:@printHoursBooking("advance", advanceTime.ToString())</label>
-        <label>Minimum booking time:@printHoursBooking("min", minTime.ToString())</label>
-        <label>Maximum booking time:@printHoursBooking("max", maxTime.ToString())</label>
-        <label>Minimum time between bookings:@printHoursBooking("between", betweenTime.ToString())</label>
+        <label>Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>
+        <label>Minimum booking time:@printHoursMinBookingTime(minTime.ToString("###0.##"))</label>
+        <label>Maximum booking time:@printHoursMaxBookingTime(maxTime.ToString("###0.##"))</label>
+        <label>Minimum time between bookings:@printHoursBetweenBookingTime(betweenTime.ToString("###0.##"))</label>
     </fieldset>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>

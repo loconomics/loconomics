@@ -490,6 +490,7 @@ form.positionavailability input{
 .positionavailability-booking select{
     position: absolute;
     right: 0;
+    text-align: right;
 }
 
 /** Form Positions - Photos **/
