@@ -37,8 +37,15 @@
                 )
             ", u.UserID, Request["BackgroundCheckID"]);
             
-            // Send email to provider for confirmation and to Loconomics
-            // TODO
+            // Send email to loconomics
+            LcMessaging.SendMail("verifications@loconomics.com",
+                "Background check request",
+                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailLicenseVerificationRequest",
+                    new Dictionary<string, object> { 
+                        { "ProviderUserID", u.UserID },
+                        { "PositionID", p.PositionID },
+                        { "BackgroundCheckID", Request["BackgroundCheckID"] }
+            }));
             
             CommonHelpers.ReturnJsonResult(101, null);
         }

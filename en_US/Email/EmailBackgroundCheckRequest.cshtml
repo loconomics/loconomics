@@ -1,0 +1,51 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Background Check Request";
+    
+    var providerID = Request["ProviderUserID"].AsInt();
+    var positionID = Request["PositionID"].AsInt();
+    var checkID = Request["BackgroundCheckID"].AsInt();
+    var provider = DashboardFunctions.GetUserRow(providerID);
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Background Check Request";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
+    
+    var sqlGetBackgroundCheckRequest = @"
+        SELECT  B.BackgroundCheckID
+                ,B.BackgroundCheckName
+                ,B.BackgroundCheckDescription
+                ,B.BackgroundCheckPrice
+        FROM    BackgroundCheck As B
+        WHERE   B.BackgroundCheckID = @0
+                AND B.LanguageID = @1 AND B.CountryID = @2
+    ";
+    dynamic data = null;
+    using (var db = Database.Open("sqlloco")) {
+        data = db.QuerySingle(sqlGetBackgroundCheckRequest, checkID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+    }
+}
+<div>
+    <ul>
+        <li><strong>User - UserID:</strong> @providerID</li>
+        <li><strong>User - Email:</strong> @provider.Email</li>
+        <li><strong>User - First Name:</strong> @provider.FirstName</li>
+        <li><strong>User - Last Name:</strong> @provider.LastName</li>
+        @if (LcData.GetCurrentCountryID() == 1)
+        {
+        <li><strong>User - Middle Initial:</strong> @provider.MiddleIn</li>
+        }
+        @if (LcData.GetCurrentCountryID() == 2)
+        {
+        <li><strong>User - Second Last Name:</strong> @provider.SecondLastName</li>
+        }
+        
+        <li><strong>Background Check - ID:</strong> @checkID</li>
+        <li><strong>Background Check - Name:</strong> @data.BackgroundCheckName</li>
+        <li><strong>Background Check - Price:</strong> @data.BackgroundCheckPrice</li>
+    </ul>
+</div>
