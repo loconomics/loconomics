@@ -758,6 +758,19 @@ html.js .user-verified-licenses h5 {
 .background-check .smooth-box-block-element {
     border: 5px solid #B5E1E2;
 }
+.position-background-check .popup.buy-step-2 ol {
+    margin: 0 0 0 35px;
+}
+.position-background-check .popup.buy-step-2 ol li {
+    list-style: decimal outside;
+    color: #B5E1E2;
+    font-size: 1.6em;
+    margin: 10px 0 0;
+}
+.position-background-check .popup.buy-step-2 ol li .step-details {
+    font-size: .6em;
+    color: #666666;
+}
 /** Form: Positions Reviews **/
 .positionreviews .references li label {
     width: auto;
