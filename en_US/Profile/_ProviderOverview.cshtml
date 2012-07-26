@@ -34,7 +34,7 @@
     </ul>
 }
 <p class="profile-intro">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
+    @CommonHelpers.PrintTextAsHtml(pos.PositionIntro)
 </p>
 @CommonHelpers.SetupStarRatingPlugin()
 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })

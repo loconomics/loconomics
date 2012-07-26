@@ -143,7 +143,9 @@
     </script>
 }
 @helper PrintTextAsHtml(string text){
-    @Html.Raw(text.Replace("\n", "<br/>"))
+    if (text != null) {
+        @Html.Raw(text.Replace("\n", "<br/>"))
+    }
 }
 @functions{
     /*========= JSON =============*/

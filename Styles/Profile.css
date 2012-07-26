@@ -115,7 +115,7 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     float: right;
 }
 .profile .position-tab .tab-body > p{
-    margin: 0 0 10px;
+    margin: 10px 0;
 }
 
 /*****************************************/
