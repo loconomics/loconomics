@@ -12,7 +12,16 @@
     var specialCatIDs = LcData.SpecialServicesAttCats;
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     
-    if (IsPost) {
+    if (Validation.GetHtml("position-intro") == null) {
+        Validation.Add("position-intro", Validator.StringLength(225, 0, "Position Introduction must be lower than 225"));
+    }
+    
+    if (IsPost && Validation.IsValid()) {
+        var sqlSetPosIntro = @"
+            UPDATE  UserProfilePositions
+            SET     PositionIntro = @2
+            WHERE   UserID = @0 AND PositionID = @1
+        ";
         var sqlSetAttribute = @"
             BEGIN TRAN
                 UPDATE  userprofileserviceattributes WITH (serializable)
@@ -90,6 +99,9 @@
         ";
         
         using (var db = Database.Open("sqlloco")) {
+            // Save position-intro
+            db.Execute(sqlSetPosIntro, pos.UserID, pos.PositionID, Request["position-intro"]);
+            
             // Iterate categories and attributes, save what are checked and remove what not
             foreach (var cat in dataCats) {
                 switch ((int)cat.Key) {
@@ -210,7 +222,10 @@ Let clients know about the services you provide.  It helps you both work better 
     <input type="hidden" name="position-number" value="@n"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-
+    <fieldset class="position-intro">
+        <legend>Position introduction (optional):</legend>
+        <textarea name="position-intro" @Validation.GetHtml("position-intro") placeholder="Write a couple sentences about how your @pos.PositionSingular services are unique. Avoid repeating the information you fill out below.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
+    </fieldset>
     <div class="service-attribute-categories">
         @foreach (var cat in dataCats)
         {

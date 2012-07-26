@@ -336,6 +336,10 @@ form#personal li label{
 }
 
 /** Form: Positions - Services **/
+.dashboard .position-intro textarea {
+    width: 660px;
+    height: 6em;
+}
 .dashboard .positionservices div.service-attribute-categories {
     border-right: 1px solid #DADADA;
     display: inline-block;
