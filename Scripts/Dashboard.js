@@ -468,34 +468,34 @@ $(document).ready(function () {
     /**==================
     * Background check 
     */
-    $('.position-background-check').on('click', '.buy-action', function () {
+    $('.position-background-check-tab').on('click', '.position-background-check .buy-action', function () {
         var bcid = $(this).data('background-check-id');
         var posID = $(this).data('position-id');
         var cont = $(this).closest('.position-background-check');
+        cont.data('position-id', posID);
         var ps1 = cont.find('.popup.buy-step-1');
         var f = ps1.find('form');
         f.find('[name=BackgroundCheckID]').val(bcid);
         f.find('.main-action').val($(this).text());
 
-        if (!f.data('initialized')) {
-            f.data('initialized', true);
-            cont.on('click', '.close-popup-action', function () {
-                smoothBoxBlock(null, cont);
-                if ($(this).closest('.popup').is('.buy-step-2'))
-                    cont.closest('.tab-body').reload(UrlUtil.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
-                return false;
-            });
-            f.on('ajaxSuccessPost', function (e, data) {
-                if (data.Code == 101) {
-                    smoothBoxBlock(null, cont);
-                    var ps2 = cont.find('.popup.buy-step-2');
-                    smoothBoxBlock(ps2, cont, 'background-check');
-                }
-            });
-        }
-
         smoothBoxBlock(ps1, cont, 'background-check');
         return false;
+    })
+    .on('click', '.position-background-check .close-popup-action', function () {
+        var cont = $(this).closest('.position-background-check');
+        var posID = cont.data('position-id');
+        smoothBoxBlock(null, cont);
+        if ($(this).closest('.popup').is('.buy-step-2'))
+            cont.closest('.tab-body').reload(UrlUtil.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
+        return false;
+    })
+    .on('ajaxSuccessPost', '.popup.buy-step-1 form', function (e, data) {
+        if (data.Code == 101) {
+            var cont = $(this).closest('.position-background-check');
+            smoothBoxBlock(null, cont);
+            var ps2 = cont.find('.popup.buy-step-2');
+            smoothBoxBlock(ps2, cont, 'background-check');
+        }
     });
 });
 
