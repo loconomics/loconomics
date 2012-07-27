@@ -476,7 +476,7 @@ $(document).ready(function () {
     // Auto remove 'volatile' tabs if they are empty
     $('.tabbed > .tabs > .volatile').each(function () {
         var tab = TabbedUX.getTab(null, this);
-        if (tab && ($(tab).children().length == 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length )) {
+        if (tab && ($(tab).children().length == 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length)) {
             TabbedUX.removeTab(tab);
         }
     });
@@ -577,8 +577,14 @@ $(document).ready(function () {
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = form.data('unobtrusiveValidation');
         if (valobject && valobject.validate() == false)
-        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
-            return;
+            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+            return false;
+
+        // If custom validation is enabled, validate
+        var cusval = form.data('customValidation');
+        if (cusval && cusval.validate && cusval.validate() == false)
+            // custom validation not passed, out!
+            return false;
 
         // Raise event
         currentStep.trigger('beginSubmitWizardStep');
