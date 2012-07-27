@@ -18,8 +18,9 @@
         case "personalinfo":
         case "socialmediaverification":
         case "basicinfoverification":
-        case "backgroundcheck":
             return (UrlUtil.LangPath + "Dashboard/Account/#account-personal");
+        case "backgroundcheck":
+            return (UrlUtil.LangPath + "Dashboard/Positions/#position" + alert.PositionID + "-backgroundcheck");
         case "photo":
             return ("javascript:$('#changephoto').click()");
         case "payment":
