@@ -245,7 +245,7 @@ $(document).ready(function () {
         var $t = $(this);
         var tab = $t.closest('.tab-body');
         var viewLoc = $t.closest('.address');
-        var editPanel = $('.location-edit-panel:eq(0)', tab);
+        var editPanel = tab.find('.location-edit-panel:eq(0)');
         var editLoc = editPanel.children('.edit-location:eq(0)');
         var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
@@ -253,6 +253,7 @@ $(document).ready(function () {
         // Copying data from view to edit:
         editLoc.attr('id', 'EDIT' + viewLoc.attr('id'));
         editLoc.find('input[name=location-editor-id]').val(viewLoc.attr('id'));
+        editLoc.find('input[name=location-id]').val(viewLoc.data('location-id'));
         editLoc.find('input[name=location-name]').val(viewLoc.find('.address-name').text());
         editLoc.find('input[name=location-addressline1]').val(viewLoc.find('.address-line1').text());
         editLoc.find('input[name=location-addressline2]').val(viewLoc.find('.address-line2').text());
@@ -272,23 +273,25 @@ $(document).ready(function () {
     })
     .delegate('.address > .tools > .remove', 'click', function () {
         var $t = $(this);
+        var tab = $t.closest('.tab-body');
         var viewLoc = $t.closest('.address');
         var locid = viewLoc.data('location-id');
         var idview = viewLoc.attr('id');
         if (idview)
             $('#HIDE-' + idview).remove();
         if (locid && locid != '0')
-            $('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' +
+            tab.find('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' +
                 locid + '" id="HIDE-REMOVED-LOCATION-' + locid + '" />');
         viewLoc.remove();
         return false;
     })
     .delegate('.location-edit-form .button', 'click', function () {
         var $t = $(this);
+        var tab = $t.closest('.tab-body');
         var editLoc = $t.closest('.edit-location');
         var editPanel = editLoc.closest('.location-edit-panel');
         if ($t.hasClass('save')) {
-            var form = $(this).closest('form');
+            var form = $t.closest('form');
             // First at all, if unobtrusive validation is enabled, validate
             var valobject = form.data('unobtrusiveValidation');
             if (valobject && valobject.validate() == false)
@@ -300,7 +303,7 @@ $(document).ready(function () {
             // Find location readonly element if is not zero
             var locId = editLoc.find('[name=location-id]').val();
             if (/^EDIT/.test(editLoc.attr('id')))
-                viewLoc = $('.address#' + editLoc.attr('id').substr(4));
+                viewLoc = tab.find('.address#' + editLoc.attr('id').substr(4));
             // If Id is zero, or readonly element doesn't exist, create one from base and add to DOM
             if (!viewLoc || viewLoc.length == 0) {
                 viewLoc = editPanel.find('.readonly-location-base > .address:eq(0)').clone();
@@ -308,7 +311,7 @@ $(document).ready(function () {
                 viewLoc.attr('id', 'ID' + guidGenerator());
                 // add to DOM, in its list
                 var locLi = $('<li></li>').append(viewLoc);
-                $('ul.' + locType + '-locations').append(locLi);
+                tab.find('ul.' + locType + '-locations').append(locLi);
             }
             // Saving this form data as a serialized value into the main form
             var viewID = 'HIDE-' + viewLoc.attr('id');
@@ -318,7 +321,7 @@ $(document).ready(function () {
             } else {
                 fdata = $('<input type="hidden" name="locations" id="HIDE-' + viewLoc.attr('id') + '"/>');
                 fdata.val(form.serialize());
-                $('form.positionlocations').append(fdata);
+                tab.find('form.positionlocations').append(fdata);
             }
 
             // Copy location data to read-only view
