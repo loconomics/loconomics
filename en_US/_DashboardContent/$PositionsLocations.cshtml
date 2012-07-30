@@ -169,9 +169,7 @@
     var sqlGetLocationPreferences = @"
         SELECT  TOP 1 ServiceRadiusFromLocation, TransportType
         FROM    ServiceAddress
-        WHERE   Active = 1
-                    AND
-                UserID = @0
+        WHERE   UserID = @0
                     AND
                 PositionID = @1
                     AND
