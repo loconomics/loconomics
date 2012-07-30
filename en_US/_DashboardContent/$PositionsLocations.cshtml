@@ -117,6 +117,25 @@
                     postedRemovedLocs.Add(loc.AsInt());
                 }
             }
+            
+            // Set addresses as Active or not depending on the yes/no buttons
+            db.Execute(@"
+                UPDATE  ServiceAddress
+                SET     Active = @2
+                WHERE   UserID = @0
+                         AND PositionID = @1
+                         AND NickName is not null AND NickName not like ''
+                         AND TravelFromLocation = 1
+            ", u.UserID, p.PositionID, Request["positionlocations-itravel"].AsBool());
+            db.Execute(@"
+                UPDATE  ServiceAddress
+                SET     Active = @2
+                WHERE   UserID = @0
+                         AND PositionID = @1
+                         AND NickName is not null AND NickName not like ''
+                         AND ServicesPerformedAtLocation = 1
+            ", u.UserID, p.PositionID, Request["positionlocations-iworkon"].AsBool());
+            
             // Save location preferences:
             var transportTypeId = Request["positionlocations-itravelusing"].AsInt();
             var travelRadius = Request["positionlocations-maxdistance"];
@@ -144,7 +163,7 @@
                   On PC.PostalCodeID = L.PostalCodeID
         WHERE   L.UserID = @0
                  AND L.PositionID = @1
-                 AND Active = 1
+                 -- We get all location, not only active AND Active = 1
                  AND L.NickName is not null AND L.NickName not like ''
     ";
     var sqlGetLocationPreferences = @"
@@ -174,6 +193,20 @@
     }
     var transportType = preferences == null ? "" : preferences.TransportType.ToString();
     var serviceradius = preferences == null ? "" : preferences.ServiceRadiusFromLocation.ToString();
+    
+    bool itravelActive = false, iworkonActive = false;
+    foreach (var l in travelLocations){
+        if (l.Active) {
+            itravelActive = true;
+            break;
+        }
+    }
+    foreach (var l in workLocations){
+        if (l.Active) {
+            iworkonActive = true;
+            break;
+        }
+    }
 }
 @helper printDistanceSelect(string selected){
     <select name="positionlocations-maxdistance">
@@ -233,8 +266,8 @@ Let clients know where you'll perform services.  We won't disclose the exact add
             <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">
                 <legend>I travel to clients:</legend>
                 <div class="confirm positionlocations-itravel-confirm">
-                    <label>Yes<input type="radio" @CommonHelpers.IsChecked(true, (travelLocations.Count > 0)) name="positionlocations-itravel" value="True"/></label>
-                    <label>No<input type="radio" @CommonHelpers.IsChecked(true, (travelLocations.Count == 0)) name="positionlocations-itravel" value="False"/></label>
+                    <label>Yes<input type="radio" @CommonHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
+                    <label>No<input type="radio" @CommonHelpers.IsChecked(false, itravelActive) name="positionlocations-itravel" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <fieldset class="positionlocations-itravelfrom">
@@ -315,8 +348,8 @@ Let clients know where you'll perform services.  We won't disclose the exact add
             <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-type="work">
                 <legend>I perform services at specific locations:</legend>
                 <div class="positionlocations-servicelocations-confirm confirm">
-                    <label>Yes<input @CommonHelpers.IsChecked(true, (workLocations.Count > 0)) type="radio" name="positionlocations-iworkon" value="True"/></label>
-                    <label>No<input @CommonHelpers.IsChecked(true, (workLocations.Count == 0)) type="radio" name="positionlocations-iworkon" value="False"/></label>
+                    <label>Yes<input @CommonHelpers.IsChecked(true, iworkonActive) type="radio" name="positionlocations-iworkon" value="True"/></label>
+                    <label>No<input @CommonHelpers.IsChecked(false, iworkonActive) type="radio" name="positionlocations-iworkon" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <ul class="work-locations">
