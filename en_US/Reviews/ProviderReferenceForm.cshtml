@@ -8,6 +8,7 @@
     var provider = DashboardFunctions.GetUserRow(providerID);
     var position = DashboardFunctions.GetUserPos(providerID, Request["PositionID"].AsInt());
 }
+
 <div id="container" class="provider-review clearfix">
     <div id="main" class="provider-reference-welcome">
         @if (provider == null || position == null) {
@@ -16,12 +17,9 @@
                 Contact <a href="mailto:support@@loconomics.com">support@@loconomics.com</a> for more help.
             </div>
         } else {
-            <h1>Welcome! Help @provider.FirstName build his reputation</h1>
-            <p><strong>You are here because @provider.FirstName ask you to write a reference about it.</strong></p>
-            <p>It's quick and easy! But first you need Log-in or create an account (it's free!)</p>
+            <h1>Help @provider.FirstName build his reputation</h1>
             
-            @RenderPage(UrlUtil.LangPath + "Account/$Login.cshtml", new { ShowHeader = false, ShowTools = true, 
-                Redirect = UrlUtil.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID } )
+            @RenderPage("$ProviderRatingForm.cshtml", new { BookingID = 0 } )
         }
     </div>
 </div>

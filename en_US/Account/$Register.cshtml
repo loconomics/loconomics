@@ -73,7 +73,9 @@
 
                     // We return a json with result OK and redirect link (Code=1),
                     // and response end just after this:
-                    CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath);
+                    string redirect = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
+                    
+                    CommonHelpers.ReturnJsonResult(1, redirect);
                 }
             } catch (System.Web.Security.MembershipCreateUserException e) {
                 ModelState.AddFormError(e.Message);

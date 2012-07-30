@@ -23,7 +23,8 @@
                 LcMessaging.SendMail(email,
                     String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
                     LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
-                        { "UserID", u.UserID }
+                        { "ProviderUserID", u.UserID }
+                        ,{ "PositionID", p.PositionID }
                 }));
             }
             // Set VerificationID:12 for this user as confirmed just with only sent references requests (see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651

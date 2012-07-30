@@ -5,13 +5,14 @@
     Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Reference";
     
-    var thisUserID = Request["UserID"].AsInt();
+    var thisUserID = Request["ProviderUserID"].AsInt();
+    var posID = Request["PositionID"].AsInt();
     var thisUser = DashboardFunctions.GetUserRow(thisUserID);
 
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Reference";
     // Create URL:
-    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Reviews/ProviderReferenceWelcome/?UserID=" + thisUserID;
+    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Reviews/ProviderReferenceWelcome/?ProviderUserID=" + thisUserID.ToString() + "&PositionID=" + posID.ToString();
     PageData["isNotAUser"] = true;
 }
 
