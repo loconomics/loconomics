@@ -338,6 +338,15 @@ $(document).ready(function () {
     })
     .delegate('.edit-popup .close-edit-popup', 'click', function () {
         $(this).closest('.edit-popup').hide();
+    })
+    // Add handler for success post actions:
+    .on('ajaxFormReturnedHtml', 'form.positionlocations', function () {
+        var $t = $(this);
+        // do first initialization of has-confirm:
+        $t.find('fieldset.has-confirm > .confirm input').change();
+        // Show success message, if there are one! (server will not retrieve one if there is an error)
+        smoothBoxBlock($t.find('.popups > .saved'), $t)
+            .click(function(){ smoothBoxBlock(null, $t) });
     });
 
     /*==============

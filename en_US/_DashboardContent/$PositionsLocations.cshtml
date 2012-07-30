@@ -260,7 +260,9 @@ Let clients know where you'll perform services.  We won't disclose the exact add
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         @if (IsPost && ModelState.IsValid)
         {
-            <div class="saved info success">Locations saved!</div>
+            <div class="popups">
+                <div class="saved info success">Locations saved!</div>
+            </div>
         }
         <div class="col col-2 col-2-1">
             <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">

@@ -577,13 +577,13 @@ $(document).ready(function () {
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = form.data('unobtrusiveValidation');
         if (valobject && valobject.validate() == false)
-            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return false;
 
         // If custom validation is enabled, validate
         var cusval = form.data('customValidation');
         if (cusval && cusval.validate && cusval.validate() == false)
-            // custom validation not passed, out!
+        // custom validation not passed, out!
             return false;
 
         // Raise event
@@ -823,17 +823,17 @@ $(document).ready(function () {
 
     /* Generic script for fieldsets with class .has-confirm, allowing show
     the content only if the main confirm fields have 'yes' selected */
-    $("fieldset.has-confirm").each(function () {
-        var fs = $(this);
-        fs.find("> .confirm input").change(function () {
-            var t = $(this);
-            if (t.is(':checked'))
-                if (t.val() == 'yes' || t.val() == 'True')
-                    fs.removeClass('confirmed-no').addClass('confirmed-yes');
-                else
-                    fs.removeClass('confirmed-yes').addClass('confirmed-no');
-        }).change();
+    $(document).on('change', 'fieldset.has-confirm > .confirm input', function () {
+        var t = $(this);
+        var fs = t.closest('fieldset');
+        if (t.is(':checked'))
+            if (t.val() == 'yes' || t.val() == 'True')
+                fs.removeClass('confirmed-no').addClass('confirmed-yes');
+            else
+                fs.removeClass('confirmed-yes').addClass('confirmed-no');
     });
+    // Perform initialization of fieldset.has-confirm:
+    $('fieldset.has-confirm > .confirm input').change();
 
     /* Generic script for help-point button, that will open the help-center at
     index or at specific page depending on the context
@@ -1249,6 +1249,7 @@ function smoothBoxBlock(contentBox, blocked, addclass) {
     box.css('left', 0);
     box.show();
     contentBox.show();
+    return box;
 }
 function smoothBoxBlockCloseAll(container) {
     $(container).find('.smooth-box-block-overlay').hide();
