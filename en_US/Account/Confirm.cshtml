@@ -20,14 +20,22 @@
         
         // We need discover what is the UserID for this confirmationToken before confirm, because asp.net WebSecurity API don't tell us nothing:
         using(var db = Database.Open("sqlloco")) {
-            int userID = db.QueryValue(@"
+            var confirmatedUserID = db.QueryValue(@"
                 SELECT UserId FROM webpages_Membership
                 WHERE ConfirmationToken = @0
             ", confirmationToken);
         
-            if (WebSecurity.ConfirmAccount(confirmationToken)) {
+            // The standard WebSecurity.ConfirmAccount code DON'T let use do the auto-login on provider-sign-up without previuos confirmation (with an alert for the email
+            // confirmation instead a lock login), because of this a hack is done on provider-sign-up login over the IsConfirmed field, and this becomes the ConfirmAccount
+            // standard method unuseful (do nothing, really, because it checks IsConfirmed field previuosly and ever is true, doing nothing -we need set to null 
+            // ConfirmationToken to off the alert-). On success, ConfirmationToken is set to null and IsConfirmed to 1 (true), supporting both cases, when IsConfirmed is
+            // already true and when no.
+            //if (WebSecurity.ConfirmAccount(confirmationToken)) {
+            if (confirmatedUserID != null) {
+                // Set to null ConfirmationToken
+                db.Execute("UPDATE webpages_Membership SET ConfirmationToken = null, IsConfirmed = 1 WHERE ConfirmationToken like @0 AND UserID = @1", confirmationToken, confirmatedUserID);
                 //message = "Registration Confirmed! Please login to begin.";
-                db.Execute("EXEC TestAlertVerifyEmail @0", userID);
+                db.Execute("EXEC TestAlertVerifyEmail @0", confirmatedUserID);
                 message = "Your email was verified successfully! Please login to go to your dashboard:";
                 showLogin = true;
             } else {
@@ -39,7 +47,14 @@
   <div id="container" class="clearfix">
 
 <hgroup class="title">
-    <h1>Your account has been verified</h1>
+    @if (showLogin)
+    {
+        <h1>Your account has been verified</h1>
+    }
+    else
+    {
+        <h1>Your account is not verified</h1>
+    }
     @if (confirmationToken.IsEmpty())
     {
     <h2>Use the form below to confirm your account.</h2>
