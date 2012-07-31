@@ -26,10 +26,10 @@
     <h4 @LcEmailTemplateHelper.StyleH4()>Activate your account</h4>
     <div>
         <p @LcEmailTemplateHelper.StyleResetP()>Click on 'Verify my account' to confirm your email!</p>
-        <p @LcEmailTemplateHelper.StyleResetP()>If you have problems with the link or viewing this email, please copy and paste next
+        <p>If you have problems with the link or viewing this email, please copy and paste next
         link on your browser: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
-        <p @LcEmailTemplateHelper.StyleResetP()>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
+        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
         the confirmation code: @confirmationToken </p>
         }
     </div>

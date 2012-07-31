@@ -369,11 +369,13 @@ $(document).ready(function () {
         return false;
     })
     .delegate('a.register', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Register/', { width: 450, height: 430 });
+        var url = this.getAttribute('href').replace('/Account/Register', '/Account/$Register');
+        popup(url, { width: 450, height: 430 });
         return false;
     })
     .delegate('a.forgot-password', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$ForgotPassword/', { width: 400, height: 220 });
+        var url = this.getAttribute('href').replace('/Account/ForgotPassword', '/Account/$ForgotPassword');
+        popup(url, { width: 400, height: 220 });
         return false;
     })
     .delegate('.view-privacy-policy', 'click', function () {

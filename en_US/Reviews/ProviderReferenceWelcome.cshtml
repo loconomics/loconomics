@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.WebData;
+@{
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
@@ -17,11 +18,25 @@
             </div>
         } else {
             <h1>Welcome! Help @provider.FirstName build his reputation</h1>
-            <p><strong>You are here because @provider.FirstName ask you to write a reference about it.</strong></p>
-            <p>It's quick and easy! But first you need Log-in or create an account (it's free!)</p>
+            <p><strong>You are here because @provider.FirstName ask you to write a reference about it.</strong> It's quick and easy!</p>
             
-            @RenderPage(UrlUtil.LangPath + "Account/$Login.cshtml", new { ShowHeader = false, ShowTools = true, 
-                Redirect = UrlUtil.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID } )
+            if (WebSecurity.IsAuthenticated)
+            {
+                <a href="@(UrlUtil.LangPath)Reviews/ProviderReferenceForm/?ProviderUserID=@(providerID)&PositionID=@(position.PositionID)">Go! (to the review form)</a>
+            }
+            else
+            {
+                <p>But first you need Log-in or create an account (it's free!)</p>
+            
+                @RenderPage(UrlUtil.LangPath + "Account/$Login.cshtml", new
+                   {
+                       ShowHeader = false,
+                       ShowTools = true,
+                       Redirect = UrlUtil.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID
+                       ,
+                       RegisterWaitConfirmation = false
+                   })
+            }
         }
     </div>
 </div>

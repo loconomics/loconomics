@@ -11,6 +11,7 @@
     string redirect =  N.W(Request.QueryString["ReturnUrl"]) ??
         N.W(PageData["Redirect"]) ?? N.W(Request.QueryString["Redirect"]) ?? N.W(Request.Form["Redirect"]) ??
         UrlUtil.LangPath;
+    Session["RegisterWaitConfirmation"] = PageData["RegisterWaitConfirmation"] ?? true;
     
     var facebookAppId = Facebook.AppId;
     var facebookRedirectUri = UrlUtil.LangUrl + "Account/Facebook/";
@@ -144,7 +145,7 @@
         @if(showTools){
         <div class="account-tools">
             <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
-            <a class="register" href="@(UrlUtil.LangPath)Account/Register/?Redirect=@redirect">Need an account?</a>
+            <a class="register" href="@(UrlUtil.LangPath)Account/Register/?Redirect=@Uri.EscapeDataString(redirect)">Need an account?</a>
         </div>
         }
     </section>

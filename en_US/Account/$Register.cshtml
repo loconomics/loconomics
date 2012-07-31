@@ -7,6 +7,11 @@
     var confirmPassword = "";
     //var captchaMessage = "";
     
+    // Set if the system must wait for the confirmation code (sent on email) before allow user to login
+    // By default is true, the standard behavior, but with false the user will be logged automatically
+    // on registering, with 'partially confirmed', but an email will sent will the link to confirm its address still.
+    bool waitConfirmation = PageData["WaitConfirmation"] ?? Session["RegisterWaitConfirmation"] ?? true;
+    
     // Setup Validation
 	// Validate the user's email address
     Validation.RequireField("email", "You must specify an email address.");
@@ -51,14 +56,27 @@
                 //string firstname = email.Substring(0, email.IndexOf('@'));
                 db.Execute("exec CreateCustomer @0,@1,@2,1,1",
                     userid, "", "");
+                
+                string confirmationUrl = null;
 
                 if (requireEmailConfirmation) {
-                    var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
-                    
-                    LcMessaging.SendWelcomeCustomer(userid, email, confirmationUrl, token);
+                    confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
                 }
+                
+                // Sent welcome email (if there is a confirmationUrl and token values, the email will contain it to perform the required confirmation)
+                LcMessaging.SendWelcomeCustomer(userid, email, confirmationUrl, token);
 
                 if (requireEmailConfirmation) {
+                    // For for info about next lines, see the comment "IMPORTANT: 2012-07-17" on Provider-sign-up/$create-a-login.cshtml file
+                    db.Execute(@"
+                        UPDATE webpages_Membership SET
+                            IsConfirmed = 1
+                        WHERE UserId = @0
+                    ", userid);
+                }
+                
+                if (requireEmailConfirmation && waitConfirmation) {
+                    Session["RegisteredUserID"] = userid;
                     // Thank the user for registering and let them know an email is on its way
                     // We return a json with result OK and redirect link (Code=1),
                     // and response end just after this:
