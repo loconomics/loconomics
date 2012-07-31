@@ -223,6 +223,7 @@ $(document).ready(function () {
         var editLoc = editPanel.children('.edit-location:eq(0)');
         var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
+        editPanel.addClass('type-' + locType);
         // Form reset for new location:
         editLoc.attr('id', 'EDIT' + guidGenerator());
         editLoc.find('input[name=location-editor-id]').val(editLoc.attr('id'));
@@ -232,6 +233,8 @@ $(document).ready(function () {
         editLoc.find('input[name=location-addressline2]').val('');
         editLoc.find('input[name=location-city]').val('');
         editLoc.find('input[name=location-zipcode]').val('');
+        //editLoc.find('input[name=location-travel-radius]').val('');
+        //editLoc.find('input[name=location-travel-transport]').val('');
         // We don't reset the state, most cases will be the same again
         editPanel.show();
         return false;
@@ -249,6 +252,7 @@ $(document).ready(function () {
         var editLoc = editPanel.children('.edit-location:eq(0)');
         var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
         editLoc.children('input[name=location-type]').val(locType);
+        editPanel.addClass('type-' + locType);
         if (!viewLoc.attr('id')) viewLoc.attr('id', 'ID' + guidGenerator());
         // Copying data from view to edit:
         editLoc.attr('id', 'EDIT' + viewLoc.attr('id'));
@@ -264,6 +268,8 @@ $(document).ready(function () {
         editLoc.find('input[name=location-state-code]').val(stateCode);
         var selectState = editLoc.find('select[name=location-state]');
         selectState.val(selectState.children('option[data-stateprovince-code=' + stateCode + ']').attr('value'));
+        editLoc.find('select[name=location-travel-radius] option[value=' + viewLoc.find('.travel-radius').text() + ']').prop('selected', true);
+        editLoc.find('input[name=location-travel-transport][value=' + viewLoc.find('.travel-transport').data('transport-id') + ']').prop('checked', true);
         editPanel.show();
         return false;
     })
@@ -290,6 +296,8 @@ $(document).ready(function () {
         var tab = $t.closest('.tab-body');
         var editLoc = $t.closest('.edit-location');
         var editPanel = editLoc.closest('.location-edit-panel');
+        var locType = editLoc.find('input[name=location-type]').val();
+        editPanel.removeClass('type-' + locType);
         if ($t.hasClass('save')) {
             var form = $t.closest('form');
             // First at all, if unobtrusive validation is enabled, validate
@@ -307,7 +315,6 @@ $(document).ready(function () {
             // If Id is zero, or readonly element doesn't exist, create one from base and add to DOM
             if (!viewLoc || viewLoc.length == 0) {
                 viewLoc = editPanel.find('.readonly-location-base > .address:eq(0)').clone();
-                var locType = editLoc.find('input[name=location-type]').val();
                 viewLoc.attr('id', 'ID' + guidGenerator());
                 // add to DOM, in its list
                 var locLi = $('<li></li>').append(viewLoc);
@@ -331,6 +338,12 @@ $(document).ready(function () {
             viewLoc.find('.address-city').text(editLoc.find('[name=location-city]').val());
             viewLoc.find('.address-zipcode').text(editLoc.find('[name=location-zipcode]').val());
             viewLoc.find('.address-state').text(editLoc.find('[name=location-state-code]').val());
+            viewLoc.find('.travel-radius').text(editLoc.find('select[name=location-travel-radius]').val());
+            var tti = editLoc.find('input[name=location-travel-transport]:checked').val();
+            var tts = editLoc.find('input[name=location-travel-transport]:checked').parent().text();
+            viewLoc.find('.travel-transport')
+                .data('transport-id', tti)
+                .text(tts);
         }
         // Hidding
         editLoc.closest('.edit-popup').hide();
@@ -346,7 +359,7 @@ $(document).ready(function () {
         $t.find('fieldset.has-confirm > .confirm input').change();
         // Show success message, if there are one! (server will not retrieve one if there is an error)
         smoothBoxBlock($t.find('.popups > .saved'), $t)
-            .click(function(){ smoothBoxBlock(null, $t) });
+            .click(function () { smoothBoxBlock(null, $t) });
     });
 
     /*==============

@@ -25,9 +25,10 @@
                 UserID, PositionID, AddressTypeID, NickName, AddressLine1, AddressLine2,
                 City, StateProvinceID, PostalCodeID, CountryID, 
                 ServicesPerformedAtLocation, TravelFromLocation,
+                ServiceRadiusFromLocation, TransportType,
                 CreatedDate, UpdatedDate, ModifiedBy, Active
             ) VALUES (
-                @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', 1
+                @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys', 1
             )
         ";
         var sqlUpdLoc = @"
@@ -38,10 +39,12 @@
                 City = @4,
                 StateProvinceID = @5,
                 PostalCodeID = @6,
-                CountryID = @7
+                CountryID = @7,
+                ServiceRadiusFromLocation = @8,
+                TransportType = @9
             WHERE   ServiceAddressID = @0
         ";
-        var sqlSetLocationPreferences = @"
+        /*var sqlSetLocationPreferences = @"
             UPDATE ServiceAddress SET
                 ServiceRadiusFromLocation = @2,
                 TransportType = @3
@@ -50,7 +53,7 @@
                     PositionID = @1
                      AND
                     TravelFromLocation = 1
-        ";
+        ";*/
         var removedLocs = Request.Form.GetValues("remove-locations");
         var locs = Request.Form.GetValues("locations");
         using (var db = Database.Open("sqlloco")) {
@@ -78,9 +81,11 @@
                                     locdata["location-city"],
                                     state,
                                     zip,
-                                    1, // CountryID
+                                    u.CountryID,
                                     locdata["location-type"] == "work" ? 1 : 0,
-                                    locdata["location-type"] == "travel" ? 1 : 0
+                                    locdata["location-type"] == "travel" ? 1 : 0,
+                                    locdata["location-travel-radius"].AsDecimal(),
+                                    locdata["location-travel-transport"].AsInt()
                                 );
                             } else {
                                 db.Execute(sqlUpdLoc,
@@ -91,7 +96,9 @@
                                     locdata["location-city"],
                                     state,
                                     zip,
-                                    1 // CountryID
+                                    u.CountryID,
+                                    locdata["location-travel-radius"].AsDecimal(),
+                                    locdata["location-travel-transport"].AsInt()
                                 );
                             }
                         }
@@ -137,9 +144,9 @@
             ", u.UserID, p.PositionID, Request["positionlocations-iworkon"].AsBool());
             
             // Save location preferences:
-            var transportTypeId = Request["positionlocations-itravelusing"].AsInt();
-            var travelRadius = Request["positionlocations-maxdistance"];
-            db.Execute(sqlSetLocationPreferences, u.UserID, p.PositionID, travelRadius, transportTypeId);
+            //var transportTypeId = Request["positionlocations-itravelusing"].AsInt();
+            //var travelRadius = Request["positionlocations-maxdistance"];
+            //db.Execute(sqlSetLocationPreferences, u.UserID, p.PositionID, travelRadius, transportTypeId);
         }
         
         if (ModelState.IsValid) {
@@ -153,14 +160,19 @@
         SELECT  L.*,
                 PC.PostalCode,
                 SP.StateProvinceCode,
-                SP.StateProvinceName
+                SP.StateProvinceName,
+                TT.TransportTypeID,
+                TT.TransportTypeName
         FROM    ServiceAddress As L
                  INNER JOIN
                 StateProvince As SP
                   ON L.StateProvinceID = SP.StateProvinceID
                  INNER JOIN
                 PostalCode As PC
-                  On PC.PostalCodeID = L.PostalCodeID
+                  ON PC.PostalCodeID = L.PostalCodeID
+                 LEFT JOIN
+                TransportType As TT
+                  ON TT.TransportTypeID = L.TransportType
         WHERE   L.UserID = @0
                  AND L.PositionID = @1
                  -- We get all location, not only active AND Active = 1
@@ -183,11 +195,15 @@
         WHERE   Active = 1
     ";
     dynamic transports = null, preferences = null;
+    var transportsDictionary = new Dictionary<int, string>();
     using (var db = Database.Open("sqlloco")) {
         workLocations = db.Query(sqlGetLocations + sqlcondWorkLocations, u.UserID, p.PositionID);
         travelLocations = db.Query(sqlGetLocations + sqlcondTravelLocations, u.UserID, p.PositionID);
         transports = db.Query(sqlgetTransports);
         preferences = db.QuerySingle(sqlGetLocationPreferences, u.UserID, p.PositionID);
+    }
+    foreach (var t in transports){
+        transportsDictionary.Add(t.TransportTypeID, t.TransportTypeName);
     }
     var transportType = preferences == null ? "" : preferences.TransportType.ToString();
     var serviceradius = preferences == null ? "" : preferences.ServiceRadiusFromLocation.ToString();
@@ -207,16 +223,20 @@
     }
 }
 @helper printDistanceSelect(string selected){
-    <select name="positionlocations-maxdistance">
+    <select name="location-travel-radius">
         <option @CommonHelpers.IsSelected(selected, "1") value="1">1 mile</option>
         <option @CommonHelpers.IsSelected(selected, "5") value="5">5 miles</option>
         <option @CommonHelpers.IsSelected(selected, "10") value="10">10 miles</option>
         <option @CommonHelpers.IsSelected(selected, "25") value="25">25 miles</option>
     </select>
 }
-@helper printAddress(IDictionary<string, object> addressDetails){
+@helper printAddress(IDictionary<string, object> addressDetails, IDictionary<int, string> transportsDictionary = null){
     var contId = (string)addressDetails["container-id"];
     var cid = String.IsNullOrWhiteSpace(contId) ? "" : "id='" + contId + "'";
+    var transportName = "";
+    if (transportsDictionary != null && addressDetails.ContainsKey("travel-transport-id")){
+        transportName = transportsDictionary[(int)addressDetails["travel-transport-id"]];
+    }
         <div class="address" @Html.Raw(cid) data-location-id="@addressDetails["id"]" data-location-name="@addressDetails["name"]">
             <span class="address-name">@addressDetails["name"]</span>
             <span class="address-line">
@@ -226,6 +246,12 @@
             <span class="address-city">@addressDetails["city"]</span>
             <span class="address-state">@addressDetails["state"]</span>
             <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            @if (transportsDictionary != null) {
+            <div class="travel-options">
+                <span class="travel-radius-label">Transport radius: <span class="travel-radius">@addressDetails["travel-radius"]</span></span>
+                <span class="travel-transport-label">I travel using primarly: <span data-transport-id="@addressDetails["travel-transport-id"]" class="travel-transport">@transportName</span></span>
+            </div>
+            }
             <div class="tools">
                 <a href="#" class="edit">Edit</a>
                 <a href="#" class="map">Map</a>
@@ -292,8 +318,10 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                                     { "addressline2", l["location-addressline2"]},
                                     { "city", l["location-city"] },
                                     { "state", l["location-state-code"] },
-                                    { "zipcode", l["location-zipcode"] }
-                                })
+                                    { "zipcode", l["location-zipcode"] },
+                                    { "travel-radius", l["location-travel-radius"] },
+                                    { "travel-transport-id", l["location-travel-transport"] }
+                                }, transportsDictionary)
                                 postedLocations.Remove("LOCID" + location.ServiceAddressID.ToString());
                             }
                             else
@@ -306,8 +334,10 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                                     { "addressline2", location.AddressLine2},
                                     { "city", location.City },
                                     { "state", location.StateProvinceCode },
-                                    { "zipcode", location.PostalCode }
-                                })
+                                    { "zipcode", location.PostalCode },
+                                    { "travel-radius", location.ServiceRadiusFromLocation },
+                                    { "travel-transport-id", location.TransportType }
+                                }, transportsDictionary)
                             }
                         }
                         </li>
@@ -327,20 +357,14 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                                 { "addressline2", l["location-addressline2"]},
                                 { "city", l["location-city"] },
                                 { "state", l["location-state-code"] },
-                                { "zipcode", l["location-zipcode"] }
+                                { "zipcode", l["location-zipcode"] },
+                                { "travel-radius", l["location-travel-radius"] },
+                                { "travel-transport-id", l["location-travel-transport"] }
                             })
                             </li>
                         }
                     }
                     </ul>
-                    <label>I will travel up to @printDistanceSelect(Request["positionlocations-maxdistance"] ?? serviceradius) from this location.</label>
-                </fieldset>
-                <fieldset class="positionlocations-itravelusing">
-                    <legend>I travel to jobs using primarily:</legend>
-                    @foreach (var t in transports)
-                    {
-                    <label><input type="radio" @CommonHelpers.IsChecked(t.TransportTypeID, Request["positionlocations-itravelusing"] ?? transportType) name="positionlocations-itravelusing" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
-                    }
                 </fieldset>
             </fieldset>
         </div>
@@ -436,7 +460,7 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                 <input type="hidden" name="location-editor-id" value="" />
                 <input type="hidden" name="location-id" value="0" />
                 <input type="hidden" name="location-type" value="" />
-                <ul>
+                <ul class="location-data">
                     <li class="location-name">
                         <label>Name: <input type="text" name="location-name" data-val="true" data-val-required="Location Name is required"/></label>
                         <span data-valmsg-replace="true" data-valmsg-for="location-name" class="field-validation-valid"></span>
@@ -464,6 +488,20 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                     <li class="location-zipcode">
                         <label>Zip Code: <input type="text" name="location-zipcode" data-val="true" data-val-required="Zip Code is required"/></label>
                         <span data-valmsg-replace="true" data-valmsg-for="location-zipcode" class="field-validation-valid"></span>
+                    </li>
+                </ul>
+                <ul class="travel-options">
+                    <li><label>I will travel up to @printDistanceSelect(Request["location-travel-radius"] ?? serviceradius) from this location.</label></li>
+                    <li>
+                        <span>I travel to jobs using primarily:</span>
+                        <ul class="transport-type">
+                        @foreach (var t in transports)
+                        {
+                            <li>
+                                <label><input type="radio" @CommonHelpers.IsChecked(t.TransportTypeID, Request["location-travel-transport"] ?? transportType) name="location-travel-transport" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
+                            </li>
+                        }
+                        </ul>
                     </li>
                 </ul>
                 <div class="actions">

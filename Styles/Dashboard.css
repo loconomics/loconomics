@@ -633,6 +633,9 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     font-weight: bold;
     padding: 0 !important;
 }
+.positionlocations-servicelocations .address .travel-options {
+    display: none;
+}
 .positionlocations-servicelocations ul{
     margin: 0 25px 5px !important;
 }
@@ -670,6 +673,9 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     right: 0;
     font-weight: normal;
 }
+.address .travel-transport-label {
+    display: block;
+}
 .address:hover .tools a {
     color: #00989A;
 }
@@ -685,12 +691,23 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .edit-location > ul > li > label {
     width: auto;
 }
-.edit-location > ul > li > label > input,
-.edit-location > ul > li > label > select {
-    width: 200px;
+.edit-location > ul.location-data label {
+    display: block;
+}
+.edit-location > ul.location-data input,
+.edit-location > ul.location-data select {
+    width: 240px !important;
+    float: right;
+}
+.edit-location > ul.travel-options label {
+    width: auto !important;
+    float: none;
+}
+.location-edit-panel.type-work .travel-options {
+    display: none;
 }
 .edit-popup .edit-location {
-    width: 400px;
+    width: 450px;
     margin: auto;
 }
 /* generic class edit-popup, used to edit locations for example */
