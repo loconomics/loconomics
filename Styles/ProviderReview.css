@@ -2,3 +2,31 @@
     float: none;
     width: auto;
 }
+#main .provider-reference-form {
+    float: left;
+    width: 730px;
+}
+#provider-reference-form-tab {
+    min-width: 500px;
+}
+.provider-review article.faqs {
+    margin-top: 22px;
+}
+
+.provider-review .booking-review form li textarea {
+    width: 640px;
+}
+.provider-review .booking-review li.serviceHours label {
+    padding: 0 !important;
+}
+.provider-review .booking-review li.serviceHours input {
+    width: 4em;
+}
+.provider-review form li input[type="radio"], .provider-review form li input[type="checkbox"] {
+    margin: 0 6px;
+}
+.provider-review .booking-review legend {
+    color: #6c6c6c;
+    font-weight: bold;
+    font-size: 1.1em;
+}

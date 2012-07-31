@@ -1243,6 +1243,10 @@ form#personal li > label.gender {
 .booking-review > form > fieldset {
     display: block;
 }
+.booking-review .social-networking > li {
+    display: inline-block;
+    width: 100px;
+}
 
 /* Rate user: star-rating editable */
 .rate-user {

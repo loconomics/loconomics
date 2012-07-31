@@ -1,16 +1,19 @@
 ﻿@{
+    CommonHelpers.SecurePage();
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
     Styles.Add(UrlUtil.AppPath + "Styles/ProviderReview.css");
+    Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
     var provider = DashboardFunctions.GetUserRow(providerID);
     var position = DashboardFunctions.GetUserPos(providerID, Request["PositionID"].AsInt());
 }
 
-<div id="container" class="provider-review clearfix">
-    <div id="main" class="provider-reference-welcome">
+<div id="container" class="provider-review editable clearfix">
+    <div id="main" class="booking-review">
+
         @if (provider == null || position == null) {
             <h1>Ups! There is a problem</h1>
             <div>We're sorry, there is a problem with your request and cannot be processed. If you did click on an email link, try to copy and paste that link instead of clicking on it.
@@ -18,8 +21,15 @@
             </div>
         } else {
             <h1>Help @provider.FirstName build his reputation</h1>
-            
-            @RenderPage("$ProviderRatingForm.cshtml", new { BookingID = 0 } )
+            <div class="provider-reference-form tabbed folders">
+		        <ul class="tabs">
+			        <li class="current"><a href="#provider-reference-form-tab">Reference</a></li>
+                </ul>
+		        <div id="provider-reference-form-tab" class="tab-body fancy current">
+                    @RenderPage("$ProviderRatingForm.cshtml", new { BookingID = 0 } )
+                </div><!-- #provider-reference-form-tab -->
+            </div>
+            @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQs.cshtml")
         }
     </div>
 </div>
