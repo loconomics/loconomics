@@ -156,6 +156,11 @@
         if (u == null){
             PageData["userow"] = u = GetUserRow(WebSecurity.CurrentUserId);
         }
+        // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
+        if (u == null) {
+            // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
+            Response.Redirect(UrlUtil.LangPath + "Account/Logout/", true);
+        }
         return u;
     }
     public static dynamic GetRequestedUserRow(int userid = 0) {
