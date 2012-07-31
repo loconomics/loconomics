@@ -28,7 +28,7 @@
                         else
                         {
                             <div class="actions book">
-                                <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @pak.Price</a>
+                                <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", pak.Price)</a>
                             </div>
                         }
                     </div>
