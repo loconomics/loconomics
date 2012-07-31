@@ -38,13 +38,15 @@
     }
 
     if (ModelState.IsValid) {
-        Validation.RequireField("question1", "Please response to section 1 question");
+        if (!pastReference){
+            Validation.RequireField("question1", "Please response to section 1 question");
+            Validation.RequireField("private-review", "Please write a private review");
+        }
         Validation.RequireField("question2", "Please response to section 3 question");
         Validation.RequireField("rating1", "Please rate its quality of work");
         Validation.RequireField("rating2", "Please rate its efficiency");
         Validation.RequireField("rating3", "Please rate its professionalism");
         Validation.RequireField("public-review", "Please write a public review");
-        Validation.RequireField("private-review", "Please write a private review");
         if (pastReference) {
             Validation.Add("serviceHours", Validator.Decimal("Service Hours must be a valid number"));
         }
@@ -61,6 +63,9 @@
             var privatereview = Request["private-review"];
             if (pastReference) {
                 serviceHours = Request["serviceHours"].AsDecimal();
+                // there is no question1 showed to a past customer, but if he/she is here rating is because is happy with the provider, not? We set 'true'
+                answer1 = true;
+                answer1Comment = "";
             }
         
             if (answer1 == false && answer1Comment.IsEmpty()) {
@@ -212,6 +217,14 @@
         }
     }
 }
+@helper printProviderRating3(dynamic provider){
+            <li class="rating3">
+                <span>Rate @(provider.FirstName)'s professionalism</span>
+                <div class="rate-user">
+                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
+                </div>
+            </li>
+}
 <form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/@(Request.Url.Query)">
     @CommonHelpers.SetupStarRatingPlugin()
     @CommonHelpers.GetValidationScripts()
@@ -222,6 +235,8 @@
     <fieldset class="section-1">
         <legend>Section 1: @(pastReference ? "Review " + provider.FirstName + "’s past work for you as a " + position.PositionSingular : "Review the work done")</legend>
         <ul>
+            @if (!pastReference)
+            {
             <li class="question1">
                 <span>Did @provider.FirstName perform all the services you requested?</span>
                 <label>Yes<input type="radio" @CommonHelpers.IsChecked("true", Request["question1"]) name="question1" value="true" /></label>
@@ -230,6 +245,7 @@
             <li class="question1-comment">
                 <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")>@Request["question1-comment"]</textarea>
             </li>
+            }
             <li class="rating1">
                 <span>Rate the quality of work @provider.FirstName performed:</span>
                 <div class="rate-user">
@@ -244,6 +260,7 @@
             </li>
             @if (pastReference)
             {
+                @printProviderRating3(provider)
             <li class="serviceHours">
                 <label>Please, let us know how many hours (approximately) took the work done by @provider.FirstName:
                     <input type="text" name="serviceHours" @Validation.GetHtml("serviceHours") value="@(Request["serviceHours"])" />
@@ -257,24 +274,22 @@
             </li>
         </ul>
     </fieldset>
+    if (!pastReference)
+    {
     <fieldset class="section-2">
         <legend>Section 2: Help @provider.FirstName grow professionally</legend>
         <ul>
-            <li class="rating3">
-                <span>Rate @(provider.FirstName)'s professionalism</span>
-                <div class="rate-user">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
-                </div>
-            </li>
+            @printProviderRating3(provider)
             <li class="private-review">
                 <label for="private-review">Please give @provider.FirstName any constructive criticism to help
                     him do a better job (only @provider.FirstName will see this):</label>
                 <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)">@Request["private-review"]</textarea>
-            </li>
+            </li>               
         </ul>
     </fieldset>
+    }
     <fieldset class="section-3">
-        <legend>Section 3: Recommend @provider.FirstName</legend>
+        <legend>Section @(pastReference ? "2" : "3"): Recommend @provider.FirstName</legend>
         <ul>
             <li class="question2">
                 <span>Would you hire @provider.FirstName as a @position.PositionSingular again?</span>
@@ -282,8 +297,10 @@
                 <label>No<input type="radio" name="question2" @CommonHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
             </li>
             <li class="share-social">
-                Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
-                credit when they make a purchase:
+                Please share @(provider.FirstName)'s profile with your family and friends 
+                @if (!pastReference){ 
+                    <text> and earn a $5 credit when they make a purchase:</text> 
+                }
                 @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml",
                     UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
                     "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider))

@@ -21,6 +21,7 @@
 }
 .provider-review .booking-review li.serviceHours input {
     width: 4em;
+    float: right;
 }
 .provider-review form li input[type="radio"], .provider-review form li input[type="checkbox"] {
     margin: 0 6px;
