@@ -4,7 +4,7 @@
     var u = DashboardFunctions.GetUserRow();
     var idprefix = "availability-form";
     
-    // From 0 (sunday) to 6 (saturday), true: is available
+    // From 0 (sunday) to 6 (saturday), true: is available. ON DATABASE use base-1; base-zero only arrays on this page
     bool[] availDates = new bool[7];
     // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
     TimeSpan[,] dateHours = new TimeSpan[7,2];
@@ -27,11 +27,11 @@
         }
         foreach (var dayHours in hoursData) {
             if (dayHours.DayofWeek != null && 
-                dayHours.DayofWeek > -1 &&
-                dayHours.DayofWeek < 7) {
+                dayHours.DayofWeek > 0 &&
+                dayHours.DayofWeek < 8) {
                 availDates[dayHours.DayofWeek] = true;
-                dateHours[dayHours.DayofWeek, 0] = dayHours.StartTime;
-                dateHours[dayHours.DayofWeek, 1] = dayHours.EndTime;
+                dateHours[dayHours.DayofWeek - 1, 0] = dayHours.StartTime;
+                dateHours[dayHours.DayofWeek - 1, 1] = dayHours.EndTime;
             }
         }
         if (atts != null) {
@@ -73,13 +73,19 @@
                     useCalendarProgram,
                     programType,
                     programURL);
-
+             
                 for (int d = 0; d < 7; d++) {
                     if (availDates[d]) {
                         db.Execute(varSqlInsertAvailFreetime, u.UserID,
-                            d,
+                            d + 1, // DATABASE Base-1
                             dateHours[d, 0],
                             dateHours[d, 1]);
+                    } else {
+                        // Not available, execute without date range to remove the existing data
+                        db.Execute(varSqlInsertAvailFreetime, u.UserID,
+                            d + 1, // DATABASE Base-1
+                            TimeSpan.Zero,
+                            TimeSpan.Zero);
                     }
                 }
                 

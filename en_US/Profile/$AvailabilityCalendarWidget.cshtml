@@ -66,8 +66,8 @@
         <ol class="datetimes">@for(var h = 7; h < 23; h++){
             for(var b = 0; b < 2; b++){
                 var half = b == 0 ? "" : "half ";
-                for(var d = 0; d < 7; d++)
-                {<li class="@half@stateClasses[GetAvailDataIn(d+1, new TimeSpan(h, (b==0?0:30), 0))]"></li>}
+                for(var d = 1; d < 8; d++)
+                {<li class="@half@stateClasses[GetAvailDataIn(d, new TimeSpan(h, (b==0?0:30), 0))]"></li>}
             }}</ol>
     </div>
     </div>
