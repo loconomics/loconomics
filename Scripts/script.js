@@ -918,12 +918,13 @@ $(document).ready(function () {
         var next = $(this).hasClass('next-week');
         var cal = $(this).closest('.calendar-controls').siblings('.calendar-container');
         var date = new Date(cal.find('.calendar').data('showed-date'));
+        var userId = cal.find('.calendar').data('user-id');
         if (next)
             date.setDate(date.getDate() + 7);
         else
             date.setDate(date.getDate() - 7);
         var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "?UserID=@userID";
+        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "?UserID=" + userId;
         cal.reload(url);
         return false;
     });

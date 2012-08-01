@@ -59,7 +59,7 @@
     @Html.Raw(wrapperStart)
 }
     <div class="calendar-container">
-    <div class="calendar" data-showed-date="@date.ToString("R")">
+    <div class="calendar" data-showed-date="@date.ToString("R")" data-user-id="@userID">
         <ol class="days"><li><h5>S</h5></li><li><h5>M</h5></li><li><h5>T</h5></li><li><h5>W</h5></li><li><h5>T</h5></li><li><h5>F</h5></li><li><h5>S</h5></li></ol>
         <ol class="hours">@for(var h = 7; h < 23; h++)
                 {<li><h5>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</h5></li>}</ol>
