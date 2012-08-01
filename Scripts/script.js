@@ -912,6 +912,21 @@ $(document).ready(function () {
     });
     }
     });*/
+
+    /***** AVAILABILITY CALENDAR WIDGET *****/
+    $(document).delegate('.calendar-controls .button', 'click', function () {
+        var next = $(this).hasClass('next-week');
+        var cal = $(this).closest('.calendar-controls').siblings('.calendar-container');
+        var date = new Date(cal.find('.calendar').data('showed-date'));
+        if (next)
+            date.setDate(date.getDate() + 7);
+        else
+            date.setDate(date.getDate() - 7);
+        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "?UserID=@userID";
+        cal.reload(url);
+        return false;
+    });
 });
 
 /*******************
