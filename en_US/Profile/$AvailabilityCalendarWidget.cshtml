@@ -15,7 +15,7 @@
 
     var sqlGetAvailability = "exec dbo.GetProviderAvailabilityFullSet @0, @1";
     
-    DateTime date = DateTime.Today.AddDays(0 - (int)DateTime.Today.DayOfWeek);
+    DateTime date = LcHelpers.GetFirstWeekDay(DateTime.Today);
     
     if (UrlData.Count > 1 && UrlData[0] == "Week") {
         var sd = UrlData[1];
@@ -58,8 +58,8 @@
 @if (!onlyData) {
     @Html.Raw(wrapperStart)
 }
-    <div class="calendar-container">
-    <div class="calendar" data-showed-date="@date.ToString("R")" data-user-id="@userID">
+    @if (!onlyData) { @Html.Raw("<div class='calendar-container'>") }
+    <div class="calendar" data-showed-date="@date.ToString("R")" data-user-id="@userID" data-showed-week="@LcHelpers.GetWeekOfTheYear(date)" data-showed-first-day="@LcHelpers.GetFirstWeekDay(date).ToShortDateString()" data-showed-last-day="@LcHelpers.GetLastWeekDay(date).ToShortDateString()">
         <ol class="days"><li><h5>S</h5></li><li><h5>M</h5></li><li><h5>T</h5></li><li><h5>W</h5></li><li><h5>T</h5></li><li><h5>F</h5></li><li><h5>S</h5></li></ol>
         <ol class="hours">@for(var h = 7; h < 23; h++)
                 {<li><h5>@((new DateTime(2000, 1, 1, h, 0, 0)).ToString("ht"))</h5></li>}</ol>
@@ -70,7 +70,7 @@
                 {<li class="@half@stateClasses[GetAvailDataIn(d, new TimeSpan(h, (b==0?0:30), 0))]"></li>}
             }}</ol>
     </div>
-    </div>
+    @if (!onlyData) { @Html.Raw("</div>") }
     @if (!onlyData && hasLegend) {
     <ul class="calendar-legend">
         <li class="free"><span class="color">Green</span>Free</li>
@@ -79,10 +79,19 @@
         <li class="unavailable"><span class="color">White</span>Unavailable</li>
     </ul>
     }
+    @if (!onlyData)
+    {
+        <div class="calendar-info">
+            <span class="year-week-label">Showing week <span class="year-week">@(LcHelpers.GetWeekOfTheYear(date))</span></span>
+            <div class="week-days-label">
+                (from day <span class="first-week-day">@LcHelpers.GetFirstWeekDay(date).ToShortDateString()</span> to <span class="last-week-day">@LcHelpers.GetLastWeekDay(date).ToShortDateString()</span>)
+            </div>
+        </div>
+    }
     @if (!onlyData && hasControls)
     {
         <div class="calendar-controls">
-            <a href="#" class="button fancy previous-week">previuos week</a>
+            <a href="#" class="button fancy previous-week">previous week</a>
             <a href="#" class="button fancy next-week">next week</a>
         </div>
     }

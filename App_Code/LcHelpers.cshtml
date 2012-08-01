@@ -11,4 +11,18 @@
             ScopeStorage.GlobalScope["_lcRenderPageReturns"] = value;
         }
     }
+    /*==============
+     * Dates
+     */
+    public static int GetWeekOfTheYear(DateTime date) {
+        System.Globalization.CultureInfo cult_info = System.Globalization.CultureInfo.CurrentUICulture;
+        System.Globalization.Calendar cal = cult_info.Calendar;
+        return cal.GetWeekOfYear(date, cult_info.DateTimeFormat.CalendarWeekRule, cult_info.DateTimeFormat.FirstDayOfWeek);
+    }
+    public static DateTime GetFirstWeekDay(DateTime date) {
+        return date.AddDays(0 - (int)date.DayOfWeek);
+    }
+    public static DateTime GetLastWeekDay(DateTime date) {
+        return date.AddDays(6 - (int)date.DayOfWeek);
+    }
 }

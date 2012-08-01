@@ -39,6 +39,8 @@ $.fn.reload = function (newurl, onload) {
             $t.data('source-url', newurl);
         var url = $t.data('source-url');
         if (url) {
+            // TODO ADD auto cancelation of previous requests (use .ajax instead .load)
+            // TODO Add lcJSON code interpreter (.ajax instead .load), and errors
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
                 smoothBoxBlock(loadingBlock.message, $t, 'loading');
@@ -916,16 +918,24 @@ $(document).ready(function () {
     /***** AVAILABILITY CALENDAR WIDGET *****/
     $(document).delegate('.calendar-controls .button', 'click', function () {
         var next = $(this).hasClass('next-week');
-        var cal = $(this).closest('.calendar-controls').siblings('.calendar-container');
-        var date = new Date(cal.find('.calendar').data('showed-date'));
-        var userId = cal.find('.calendar').data('user-id');
+        var calcont = $(this).closest('.calendar-controls').siblings('.calendar-container');
+        var cal = calcont.children('.calendar');
+        var calinfo = calcont.siblings('.calendar-info');
+        var date = new Date(cal.data('showed-date'));
+        var userId = cal.data('user-id');
         if (next)
             date.setDate(date.getDate() + 7);
         else
             date.setDate(date.getDate() - 7);
         var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "?UserID=" + userId;
-        cal.reload(url);
+        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "/?UserID=" + userId;
+        calcont.reload(url, function () {
+            // get the new object:
+            var cal = $(this).children('.calendar');
+            calinfo.find('.year-week').text(cal.data('showed-week'));
+            calinfo.find('.first-week-day').text(cal.data('showed-first-day'));
+            calinfo.find('.last-week-day').text(cal.data('showed-last-day'));
+        });
         return false;
     });
 });
