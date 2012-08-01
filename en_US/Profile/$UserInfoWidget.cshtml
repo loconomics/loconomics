@@ -101,7 +101,7 @@
         </div>
         }
 
-        <a class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
+        <a target="_blank" class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
     </div>
 }
 @* Mini size is the same for all userType's *@
@@ -112,7 +112,7 @@ else if (size == "mini") {
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div class="extra-info">@extraInfo</div>
         } else {
-            <a class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+            <a target="_blank" class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
         }
     </div>
 } else {
