@@ -266,13 +266,13 @@ html.ie #booking-services .special-instructions legend{
     margin-left: 5px;
     width: 270px;
 }
-#booking-payment .your-provider .avatar{
+/*#booking-payment .your-provider .avatar{
     width: 70px;
     height: 70px;
     float: left;
     vertical-align: middle;
     margin: 0 4px;
-}
+}*/
 #booking-payment .appt-time-price .schedule{
     margin-bottom: 5px;
 }

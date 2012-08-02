@@ -1612,7 +1612,7 @@ html.boxshadow #loginBox .field-validation-error{
     height: 22px;
 }
 .user-rating-summary-widget.provider {
-    height: 90px;
+    min-height: 74px;
 }
 .user-rating-summary-widget > ul {
     list-style: none;
@@ -1735,21 +1735,47 @@ html.boxshadow #loginBox .field-validation-error{
     display: inline-block !important;
     width: 150px;
     overflow: hidden;
+    position: relative;
+}
+.mini-user-info.with-full-rating {
+    width: 265px;
+    padding-top: 34px;
 }
 .mini-user-info > h5 {
     font-size: 1em;
     color: #6c6c6c;
     display: inline;
 }
+.mini-user-info.with-full-rating > h5 {
+    color: #6C6C6C;
+    display: block;
+    font-size: 1em;
+    left: 4px;
+    margin: 0;
+    position: absolute;
+    top: 5px;
+}
 .mini-user-info > img.avatar {
     float: left;
     margin: 0 10px 0 0;
+}
+.mini-user-info.with-full-rating > img.avatar {
+    float: left;
+    height: 70px;
+    margin: 0 4px;
+    vertical-align: middle;
+    width: 70px;
 }
 .mini-user-info > a.view-profile,
 .mini-user-info > a.view-profile:link,
 .mini-user-info > a.view-profile:visited {
     color: #00989a;
     display: block;
+}
+.mini-user-info.with-full-rating > a.view-profile {
+    position: absolute;
+    right: 0;
+    top: 5px;
 }
 /* Class medium-user-info */
 .medium-user-info {

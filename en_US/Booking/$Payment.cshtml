@@ -334,10 +334,22 @@
     </fieldset>
     <fieldset class="your-provider box">
         <legend>Your provider:</legend>
+
+                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new
+                   {
+                       Data = p,
+                       Size = "mini",
+                       WithGoogleMap = false,
+                       UserType = "provider",
+                       PositionData = pos,
+                       WithFullRating = true
+                   })
+                   @*
         <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">@pos.PositionSingular</span></h6>
-        <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>      
+        <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
         @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
-        <div class="provider-features-lists">
+        <a target="_blank" href="@(UrlUtil.LangPath)Profile/?UserID=@(p.UserID)">View profile</a>*@
+        @*<div class="provider-features-lists">
             <div class="years-experience">
                 <h5>Years experience:</h5>
                 <ul><li>0.5 years</li></ul>
@@ -350,7 +362,7 @@
                 <h5>Experience level:</h5>
                 <ul><li>Expert</li></ul>
             </div>
-        </div>
+        </div>*@
     </fieldset>
     <fieldset class="services-summary box">
         <legend>Summary of services to be performed:</legend>
