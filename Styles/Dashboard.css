@@ -431,6 +431,10 @@ form.positionavailability input{
 .dashboard form.positionavailability li{
     padding: 0;
 }
+.dashboard form.positionavailability .positionavailability-days li,
+.dashboard form.positionavailability .positionavailability-hours li {
+    height: 24px;
+}
 .dashboard form.positionavailability li input[type="radio"],
 .dashboard form.positionavailability li input[type="checkbox"]{
     margin: 0 3px;
