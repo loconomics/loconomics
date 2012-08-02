@@ -283,6 +283,54 @@
     int i = 0;
     string iprint = "";
 }
+@* From Profile/_PositionSummary *@
+@helper printCatTitle(dynamic cat){
+    <h5 title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]">
+        @cat["ServiceAttributeCategoryName"]
+    </h5>
+}
+@* From Profile/_PositionSummary *@
+@helper printAttList(dynamic cat){
+    <ul class="attributes-list">
+        @foreach (var att in cat["ServiceAttributes"]) {
+            if (att["UserChecked"]) {
+            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
+            }
+        }
+    </ul>
+}
+@* Portion from Profile/_PositionSummary *@
+@helper printProviderFeaturedInfo(dynamic pos){
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
+    <div class="provider-features-lists">
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
+        {
+            var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
+            <div class="experience-level">
+                @printCatTitle(cat)
+                <!--<a class="button view-more" href="#">More</a>-->
+                @printAttList(cat)
+            </div>
+        }
+        
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+            UserID = pos.UserID,
+            ContainerClasses = "licenses",
+            Size = "mini",
+            Title = "Licenses"
+        })
+
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+        {
+            var cat = dataCats[LcData.ServiceAttCatIDExperience];
+            <div class="years-experience">
+                @printCatTitle(cat)
+                <!--<a class="button view-more" href="#">More</a>-->
+                @printAttList(cat)
+            </div>
+        }
+    </div>
+}
 <p class="info">
     Please review the summary and provide your payment details below. You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
 </p>
@@ -344,7 +392,10 @@
                        PositionData = pos,
                        WithFullRating = true
                    })
-                   @*
+
+                @printProviderFeaturedInfo(pos)
+
+        @*
         <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">@pos.PositionSingular</span></h6>
         <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
         @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })

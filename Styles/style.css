@@ -1612,7 +1612,7 @@ html.boxshadow #loginBox .field-validation-error{
     height: 22px;
 }
 .user-rating-summary-widget.provider {
-    min-height: 74px;
+    min-height: 6.5em;
 }
 .user-rating-summary-widget > ul {
     list-style: none;
