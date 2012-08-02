@@ -29,7 +29,7 @@
             if (dayHours.DayofWeek != null && 
                 dayHours.DayofWeek > 0 &&
                 dayHours.DayofWeek < 8) {
-                availDates[dayHours.DayofWeek] = true;
+                availDates[dayHours.DayofWeek - 1] = true;
                 dateHours[dayHours.DayofWeek - 1, 0] = dayHours.StartTime;
                 dateHours[dayHours.DayofWeek - 1, 1] = dayHours.EndTime;
             }
