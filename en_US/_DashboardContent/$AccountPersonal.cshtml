@@ -33,13 +33,11 @@
     //Validation.Add("birthyear", Validator.Range(1900, DateTime.Today.Year - adultLimit, "Sorry we are not able to accept your registration at this time."));
     
     if (IsPost && Validation.IsValid()) {
-        
+        int zipID = 0;
         if (!Zip.IsEmpty()) {
-            int auxZip = LcValidators.ValidateZipCode(Zip, State);
-            if (auxZip == 0) {
+            zipID = LcValidators.ValidateZipCode(Zip, State);
+            if (zipID == 0) {
                 ModelState.AddError("zipcode", "Zip code is not valid");
-            } else {
-                Zip = auxZip.ToString();
             }
         }
         if (Request["birthyear"].AsInt() < 1900 || Request["birthyear"].AsInt() > DateTime.Today.Year - adultLimit) {
@@ -184,7 +182,7 @@
                     EXEC TestAlertBackgroundCheck @UserID
                     EXEC TestAlertPublicBio @UserID
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-                 State, Zip, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
+                 State, zipID, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, LcData.GetCurrentCountryID());
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
