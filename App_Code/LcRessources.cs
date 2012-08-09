@@ -27,6 +27,8 @@ public static class LcRessources
         ,{ "Experience Level Description", "" }
         ,{ "Language Level", "Language Level" }
         ,{ "Language Level Description", "" }
+
+        ,{ "postal-code-validation-error", "Postal Code is not valid" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

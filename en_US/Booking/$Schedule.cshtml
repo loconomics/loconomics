@@ -68,7 +68,7 @@
             } else if (!Request["zip"].IsInt()) {
                 ModelState.AddError("zip", "The Zip Code must be a number");
             }
-            zipcodeID = LcValidators.ValidateZipCode(Request["zip"], Request["state"].AsInt());
+            zipcodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
             if (zipcodeID == 0) {
                 ModelState.AddError("tin_zipcode", "Zip code is not valid");
             }

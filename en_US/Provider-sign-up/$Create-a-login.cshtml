@@ -35,9 +35,9 @@
     Validation.RequireField("firstname", "You must specify your first name.");
     Validation.RequireField("lastname", "You must specify your last name.");
     Validation.RequireField("termsofuse", "You must agree the terms of use.");
-    if (!IsPost) {
+    /*if (!IsPost) {
         Validation.RequireField("zipcode", "You must specify your Zip Code.");
-    }
+    }*/
     
     // var captchaMessage = "";
     
@@ -59,9 +59,9 @@
         //     ModelState.AddError("recaptcha", "Captcha response was not correct");
         // }
         state = LcData.GetStateFromZipCode(formzipcode);
-        int auxZip = LcValidators.ValidateZipCode(formzipcode, state);
+        int auxZip = LcData.GetPostalCodeID(formzipcode, state);
         if (auxZip == 0) {
-            ModelState.AddError("zipcode", "Zip code is not valid");
+            ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
         } else {
             zipcode = auxZip;
         }
@@ -213,7 +213,7 @@
 
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
-                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
+                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" data-val-postalcode="@LcRessources.GetText("postal-code-validation-error")" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
                 @Html.ValidationMessage("zipcode")
             </li>
            

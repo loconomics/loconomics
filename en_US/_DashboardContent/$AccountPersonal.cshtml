@@ -35,7 +35,7 @@
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
         if (!Zip.IsEmpty()) {
-            zipID = LcValidators.ValidateZipCode(Zip, State);
+            zipID = LcData.GetPostalCodeID(Zip, State);
             if (zipID == 0) {
                 ModelState.AddError("zipcode", "Zip code is not valid");
             }

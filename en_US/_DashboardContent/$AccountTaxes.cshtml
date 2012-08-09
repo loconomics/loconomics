@@ -24,7 +24,7 @@
    
     if (IsPost && Validation.IsValid()) {
             
-        var zipcodeID = LcValidators.ValidateZipCode(Request["tin_zipcode"], Request["tin_state"].AsInt());
+        var zipcodeID = LcData.GetPostalCodeID(Request["tin_zipcode"], Request["tin_state"].AsInt());
         if (zipcodeID == 0) {
             ModelState.AddError("tin_zipcode", "Zip code is not valid");
         }

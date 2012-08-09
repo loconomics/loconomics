@@ -1,0 +1,28 @@
+﻿@using WebMatrix.Data;
+@{
+    /* Setup */
+    var result = new Dictionary<string, object>();
+    // Error result by default
+    int resultCode = -1;
+    
+    try{
+        /* Input data */
+        var postalCode = Request["PostalCode"];
+        
+        // Get the service categories and its attributes
+        var isValid = LcData.GetStateFromZipCode(postalCode) > 0;
+
+        // Add all the data to the result:
+        result.Add("IsValid", isValid);
+
+        // No error
+        resultCode = 0;
+    }
+    catch (Exception ex){
+        /* Output error */
+        result["ErrorMessage"] = ex.Message;
+    }
+    
+    /* Output data */
+    CommonHelpers.ReturnJsonResult(resultCode, result);
+}

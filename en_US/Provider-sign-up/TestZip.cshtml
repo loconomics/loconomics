@@ -5,7 +5,7 @@
     var zip = 0;
     var stateid = 0;
     stateid = LcData.GetStateFromZipCode(formzip);
-    zip = LcValidators.ValidateZipCode(formzip, stateid);
+    zip = LcData.GetPostalCodeID(formzip, stateid);
     
 }
   <div id="container" class="clearfix sign-up-wizard editable">
