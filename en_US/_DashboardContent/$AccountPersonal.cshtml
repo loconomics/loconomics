@@ -27,8 +27,10 @@
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
     Validation.Add("birthyear", Validator.Integer("Birth year is not valid"));
-    int adultLimit = 16; // 16, 18, 19, 21 !!?
-    Validation.Add("birthyear", Validator.Range(DateTime.MinValue.Year, DateTime.Today.Year - adultLimit, "Birth year is not valid"));
+    // Age bump error message must not (TRUSTe says) identify the real problem (age limit), because of this field validation is removed
+    // to avoid field identification of the error message. Age is checked on server validation (ModelState errors) with generic error message.
+    int adultLimit = 13; // 16, 18, 19, 21 !!?
+    //Validation.Add("birthyear", Validator.Range(1900, DateTime.Today.Year - adultLimit, "Sorry we are not able to accept your registration at this time."));
     
     if (IsPost && Validation.IsValid()) {
         
@@ -39,6 +41,9 @@
             } else {
                 Zip = auxZip.ToString();
             }
+        }
+        if (Request["birthyear"].AsInt() < 1900 || Request["birthyear"].AsInt() > DateTime.Today.Year - adultLimit) {
+            ModelState.AddFormError("Sorry we are not able to accept your registration at this time.");
         }
         
         if (ModelState.IsValid) {
