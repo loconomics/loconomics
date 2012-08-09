@@ -305,8 +305,9 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     vertical-align: top;
     margin-right: 6px;
 }
-.profile .overview .two-columns.service-attribute-category div{
-    width: 320px;
+.profile .overview .service-attribute-category div{
+    width: auto;
+    margin-right: 18px;
 }
 .profile .overview .service-attribute-category ul {
     margin: 0;
