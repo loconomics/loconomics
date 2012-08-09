@@ -35,7 +35,9 @@
     Validation.RequireField("firstname", "You must specify your first name.");
     Validation.RequireField("lastname", "You must specify your last name.");
     Validation.RequireField("termsofuse", "You must agree the terms of use.");
-    Validation.RequireField("zipcode", "You must specify your Zip Code.");
+    if (!IsPost) {
+        Validation.RequireField("zipcode", "You must specify your Zip Code.");
+    }
     
     // var captchaMessage = "";
     
@@ -211,7 +213,7 @@
 
             <li class="zip-code">
                 <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code:</label>
-                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(formzipcode)" @Validation.GetHtml("zipcode") />
+                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
                 @Html.ValidationMessage("zipcode")
             </li>
            
