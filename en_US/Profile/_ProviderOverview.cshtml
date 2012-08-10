@@ -8,7 +8,7 @@
     var n = pos.PositionID;
     
     dynamic posRatings;
-    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "without-special-cats", pos.UserID);
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "without-special-cats only-user-checked", pos.UserID);
     
     using (var db = Database.Open("sqlloco")) {
         posRatings = db.QuerySingle(@"
@@ -27,9 +27,7 @@
 @helper printAttributes(int catId, dynamic atts){
     <ul class="attributes-list">
         @foreach(var att in atts){
-            if (att.UserChecked) {
-                <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
-            }
+            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
         }
     </ul>
 }

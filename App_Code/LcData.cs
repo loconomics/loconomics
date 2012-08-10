@@ -10,37 +10,48 @@ using WebMatrix.Data;
 public static class LcData
 {
     #region Service Attributes and Categories
-    public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filter = null, int userId = 0)
+    public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filters = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
         var catsFilter = new List<int>();
         // Set if the catsFilter is the list of cats to be excluded from the total (value: true)
         // or is a list of unique cats to be returned (value: false)
         bool excludeCats = false;
-        
-        switch (filter) {
-            case "provider-services-without-virtual-cats":
-            case "provider-services":
-                //catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
-                //catsFilter.AddRange(new int[]{1, 2, 4, 5, 7});
-                excludeCats = false;
-                break;
-            case "without-special-cats":
-                catsFilter = SpecialServicesAttCats;
-                excludeCats = true;
-                break;
-            case "only-special-cats":
-                catsFilter = SpecialServicesAttCats;
-                excludeCats = false;
-                break;
-        }
+        // This bool config set that only attributes related to the userId must be returned (query field 'UserChecked' == True)
+        bool onlyUserChecked = false;
 
-        var sqlcat = "exec GetServiceAttributeCategories @0,1,1";
-        var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
+        List<string> filterList = new List<string>();
+        // Reading filters:
+        if (filters != null)
+            filterList.AddRange(filters.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries));
+
+        foreach(string filter in filterList)
+            switch (filter) {
+                case "provider-services-without-virtual-cats":
+                case "provider-services":
+                    //catsFilter.AddRange(new int[]{1, 2, 3, 4, 5, 7});
+                    //catsFilter.AddRange(new int[]{1, 2, 4, 5, 7});
+                    excludeCats = false;
+                    break;
+                case "without-special-cats":
+                    catsFilter = SpecialServicesAttCats;
+                    excludeCats = true;
+                    break;
+                case "only-special-cats":
+                    catsFilter = SpecialServicesAttCats;
+                    excludeCats = false;
+                    break;
+                case "only-user-checked":
+                    onlyUserChecked = true;
+                    break;
+            }
+
+        var sqlcat = "exec GetServiceAttributeCategories @0, @1, @2";
+        var sqlattribute = "exec GetServiceAttributes @0, @1, @2, @3, @4, @5";
 
         using (var db = Database.Open("sqlloco"))
         {
-            var catrow = db.Query(sqlcat, positionId);
+            var catrow = db.Query(sqlcat, positionId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
             // Iterate the categories
             foreach (var cat in catrow)
@@ -62,13 +73,19 @@ public static class LcData
                     { "RequiredInput", cat.RequiredInput }
                 };
                 // Getting attributes of the category
-                rcat["ServiceAttributes"] = db.Query(sqlattribute, positionId, cat.ServiceAttributeCategoryID, (userId == 0 ? null : (object)userId));
+                rcat["ServiceAttributes"] = db.Query(sqlattribute, 
+                    positionId, 
+                    cat.ServiceAttributeCategoryID,
+                    LcData.GetCurrentLanguageID(),
+                    LcData.GetCurrentCountryID(),
+                    (userId == 0 ? null : (object)userId),
+                    onlyUserChecked);
                 rcats.Add(cat.ServiceAttributeCategoryID, rcat);
             }
             
 
             /* SPECIAL CASES */
-            if (filter == "provider-services" || filter == "only-special-cats")
+            if (filterList.Contains("provider-services") || filterList.Contains("only-special-cats"))
             {
                 // Adding the extra tables Language Levels and Experience Levels as 'virtual' categories, using the same
                 // fields name to be easy to implement
@@ -107,12 +124,13 @@ public static class LcData
                 var explevels = new List<object>();
                 foreach (var level in GetExperienceLevels(userId, positionId))
                 {
-                    explevels.Add(new Dictionary<string, object>{
-                        { "ServiceAttributeDescription", level.ExperienceLevelDescription },
-                        { "ServiceAttributeID", level.ExperienceLevelID },
-                        { "ServiceAttribute", level.ExperienceLevelName },
-                        { "UserChecked", level.UserChecked }
-                    });
+                    if (!onlyUserChecked || level.UserChecked)
+                        explevels.Add(new Dictionary<string, object>{
+                            { "ServiceAttributeDescription", level.ExperienceLevelDescription },
+                            { "ServiceAttributeID", level.ExperienceLevelID },
+                            { "ServiceAttribute", level.ExperienceLevelName },
+                            { "UserChecked", level.UserChecked }
+                        });
                 }
                 rcat["ServiceAttributes"] = explevels;
                 rcats[ServiceAttCatIDExperienceLevel] = rcat;
