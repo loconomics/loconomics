@@ -82,9 +82,9 @@
     @if (!onlyData)
     {
         <div class="calendar-info">
-            <span class="year-week-label">Showing week <span class="year-week">@(LcHelpers.GetWeekOfTheYear(date))</span></span>
+            @*<span class="year-week-label">Showing week <span class="year-week">@(LcHelpers.GetWeekOfTheYear(date))</span></span>*@
             <div class="week-days-label">
-                (from day <span class="first-week-day">@LcHelpers.GetFirstWeekDay(date).ToShortDateString()</span> to <span class="last-week-day">@LcHelpers.GetLastWeekDay(date).ToShortDateString()</span>)
+                Showing week from day <span class="first-week-day">@LcHelpers.GetFirstWeekDay(date).ToShortDateString()</span> to <span class="last-week-day">@LcHelpers.GetLastWeekDay(date).ToShortDateString()</span>
             </div>
         </div>
     }

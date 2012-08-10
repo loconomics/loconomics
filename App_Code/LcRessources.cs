@@ -29,7 +29,7 @@ public static class LcRessources
         ,{ "Language Level Description", "" }
 
         ,{ "postal-code-validation-error", "Postal Code is not valid" }
-        ,{ "quit-without-save", "You will lost changes if continue, re you sure?" }
+        ,{ "quit-without-save", "You will lost changes if continue, are you sure?" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))
