@@ -934,9 +934,10 @@ $(document).ready(function () {
     /***** AVAILABILITY CALENDAR WIDGET *****/
     $(document).delegate('.calendar-controls .button', 'click', function () {
         var next = $(this).hasClass('next-week');
-        var calcont = $(this).closest('.calendar-controls').siblings('.calendar-container');
+        var cont = $(this).closest('.availability-calendar');
+        var calcont = cont.children('.calendar-container');
         var cal = calcont.children('.calendar');
-        var calinfo = calcont.siblings('.calendar-info');
+        var calinfo = cont.find('.calendar-info');
         var date = new Date(cal.data('showed-date'));
         var userId = cal.data('user-id');
         if (next)

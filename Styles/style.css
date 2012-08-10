@@ -1283,6 +1283,12 @@ table .number{
  */
 
 /** Shared Component: availability-calendar **/
+.availability-calendar {
+    overflow: hidden;
+}
+.availability-calendar .calendar-info{
+    text-align: center;
+}
 .availability-calendar ol,
 .availability-calendar ul{
     padding: 0;
@@ -1290,6 +1296,7 @@ table .number{
 }
 .availability-calendar .calendar-container {
     float: left;
+    margin-top: 10px;
 }
 .availability-calendar .calendar-controls .button {
     padding: 0 .5em;
@@ -1302,12 +1309,12 @@ table .number{
     vertical-align: top;
 }
 .availability-calendar .calendar ol h5{
+    color: Black;
     font-size: 11em;
+    font-weight: normal;
     line-height: 1em;
     margin: 0;
     padding: 0;
-    font-weight: normal;
-    color: Black;
 }
 .availability-calendar div.calendar{
     font-size: 1px;
@@ -1330,23 +1337,23 @@ table .number{
 }
 .availability-calendar .calendar ol.hours{
     left: 0;
-    top: 20em;
+    top: 18em;
 }
 .availability-calendar .calendar ol.days{
     top: 0;
     left: 34em;
 }
 .availability-calendar .calendar ol.datetimes{
-    top: 20em;
-    left: 34em;
-    height: 208em;
+    height: 214em;
+    left: 30em;
+    top: 18em;
+    padding-left: 4em;
 }
 .availability-calendar .calendar ol.days li,
 .availability-calendar .calendar ol.datetimes li{
-    border: 1px solid #a99fb8;
     display: inline-block;
     float: left;
-    margin: 2em 2em 0;
+    margin: 3em 2em 0;
     width: 30em;
 }
 .availability-calendar .calendar ol.days li{
@@ -1359,8 +1366,8 @@ table .number{
     vertical-align: middle;
 }
 .availability-calendar .calendar ol.datetimes li{
-    height: 4em;
-    border-width: 1px;
+    height: 5em;
+    outline: 1px solid #A99FB8;
 }
 .availability-calendar .calendar ol.datetimes li:hover{
     box-shadow: 0 0 2em 2em #00989A;
@@ -1369,6 +1376,7 @@ table .number{
     -webkit-box-shadow: 0 0 2em 2em #00989A;
     z-index: 9000;
     position: relative;
+    outline: none;
 }
 .availability-calendar .calendar ol.datetimes li.half{
     margin-top: 0;
@@ -1378,10 +1386,10 @@ table .number{
     display: inline-block;
 }
 .availability-calendar .calendar ol.hours li{
-    margin: 0 5em 0 0;
+    height: 11em;
+    margin: 2em 5em 0 0;
     text-align: right;
     width: 30em;
-    height: 13em;
 }
 .availability-calendar .calendar li.free{
     background-color: #ddeab8;
@@ -1400,9 +1408,11 @@ table .number{
     list-style: none;
     color: #461864;
     text-transform: lowercase;
+    margin-bottom: 60px;
+    margin-top: 30px;
 }
 .availability-calendar .calendar-legend li{
-    margin: 6px 0;
+    margin: 0 0 6px 0;
 }
 .availability-calendar .calendar-legend li .color{
     width: 30px;

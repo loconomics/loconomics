@@ -86,13 +86,12 @@
             <div class="week-days-label">
                 Showing week from day <span class="first-week-day">@LcHelpers.GetFirstWeekDay(date).ToShortDateString()</span> to <span class="last-week-day">@LcHelpers.GetLastWeekDay(date).ToShortDateString()</span>
             </div>
-        </div>
-    }
-    @if (!onlyData && hasControls)
-    {
-        <div class="calendar-controls">
-            <a href="#" class="button fancy previous-week">previous week</a>
-            <a href="#" class="button fancy next-week">next week</a>
+            @if (hasControls) {
+            <div class="calendar-controls">
+                <a href="#" class="button fancy previous-week">previous week</a>
+                <a href="#" class="button fancy next-week">next week</a>
+            </div>
+            }
         </div>
     }
 @if (!onlyData)
