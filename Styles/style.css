@@ -1367,6 +1367,8 @@ table .number{
     -moz-box-shadow: 0 0 2em 2em #00989A;
     -o-box-shadow: 0 0 2em 2em #00989A;
     -webkit-box-shadow: 0 0 2em 2em #00989A;
+    z-index: 9000;
+    position: relative;
 }
 .availability-calendar .calendar ol.datetimes li.half{
     margin-top: 0;
