@@ -601,6 +601,9 @@ $(document).ready(function () {
 
         var ok = false;
 
+        // Mark as saved:
+        gNotSavedData = false;
+
         // Do the Ajax post
         $.ajax({
             url: (form.attr('action') || ''),
@@ -645,6 +648,9 @@ $(document).ready(function () {
                     } else { // data.Code < 0
                         // There is an error code.
 
+                        // Data not saved:
+                        gNotSavedData = true;
+
                         // Unblock loading:
                         currentStep.unblock();
                         // Block with message:
@@ -660,6 +666,8 @@ $(document).ready(function () {
                         autoUnblockLoading = false;
                     }
                 } else {
+                    // Data not saved:
+                    gNotSavedData = true;
                     // Post was wrong, html was returned to replace current form:
                     var newhtml = $(data);
                     currentStep.html(newhtml);
@@ -763,6 +771,9 @@ $(document).ready(function () {
                     } else { // data.Code < 0
                         // There is an error code.
 
+                        // Data not saved
+                        gNotSavedData = true;
+
                         // Unblock loading:
                         box.unblock();
                         // Block with message:
@@ -779,6 +790,9 @@ $(document).ready(function () {
                 } else {
                     // Post was wrong, html was returned to replace current 
                     // form container: the ajax-box.
+                    // Most times this means data not saved (if was, page script must set to false next global var:)
+                    gNotSavedData = true;
+
                     var newhtml = $(data);
                     // Reading original scripts tags to be able to execute later
                     var responseScript = newhtml.filter("script");
@@ -1095,6 +1109,8 @@ function popup(url, size, complete, loadingText){
     $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
 }
 function ajaxErrorPopupHandler(jx, message, ex) {
+    // data not saved
+    gNotSavedData = true;
     var m = message;
     var iframe = null;
     size = popupSize('large');
