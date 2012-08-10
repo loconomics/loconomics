@@ -821,6 +821,8 @@ $(document).ready(function () {
                 box: form.closest('.ajax-box'),
                 action: form.data('ajax-fieldset-action')
             };
+            // Avoid generic warning message:
+            gNotSavedData = false;
             return ajaxFormsSubmitHandler(event);
         }
     );
@@ -984,6 +986,22 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    /***** Don't lost data! warning message ******/
+    window.onbeforeunload = function () {
+        // Check a variable that forms can create to recognize unsaved changes made
+        if (typeof (gNotSavedData) != 'undefined' && gNotSavedData === true) {
+            return $('#lcres-quit-without-save').text() || '';
+        }
+    }
+    // Generic control: check form field changes
+    $(document).on('change', 'form :input', function () {
+        gNotSavedData = true;
+    })
+    // Generic control: set data as saved when a submit happens to avoid the not saved message
+    .on('submit', 'form', function () {
+        gNotSavedData = false;
     });
 });
 
