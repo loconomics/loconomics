@@ -149,13 +149,19 @@
     
     // Redirect the user to the page:
     // If we are on /Callback/Provider/, go to the provider sign-up to continue the wizard.
+    string redirectUrl = null;
     if (UrlData.Count > 1 && 
         UrlData[0] == "Callback" && 
         UrlData[1] == "Provider") {
-        Response.Redirect(UrlUtil.LangPath + "Provider-sign-up/");
+        redirectUrl = UrlUtil.LangPath + "Provider-sign-up/";
     } else {
-        // Redirect to the home page in most cases:
-        Response.Redirect(UrlUtil.LangPath);
+        // Redirect to the desired page or to home:
+        redirectUrl = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
+    }
+    if (Request.IsAjaxRequest()){
+        CommonHelpers.ReturnJsonResult(1, redirectUrl);
+    } else {
+        Response.Redirect(redirectUrl);
     }
 
     // FACEBOOK LOGIN using the Microsoft Helper: EVER RETURN FALSE, doesn't work!

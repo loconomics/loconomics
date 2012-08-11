@@ -2,6 +2,7 @@
     var urlsection = PageData[0] ?? "Callback"; // Possible values: Callback, Verify, Callback/Provider
     var result = PageData[1] ?? "redirect"; // Possible values: redirect, json
     var facebookPermissions = "email,user_birthday,user_about_me";
+    var redirectUrl = Request["Redirect"];
     
     <div id="fb-root" style="display: none"></div>
     <script type="text/javascript">
@@ -26,7 +27,7 @@
                             if (response.authResponse) {
                                 //console.log('FacebookConnect: Welcome!');
                                 $.blockUI(loadingBlock);
-                                var url = UrlUtil.LangPath + "Account/Facebook/@urlsection/";
+                                var url = UrlUtil.LangPath + "Account/Facebook/@urlsection/?Redirect=@redirectUrl";
                                 @if (result == "redirect") {
                                 <text>
                                 window.location = url;
