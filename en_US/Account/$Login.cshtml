@@ -140,7 +140,7 @@
         </form>
         <p class="choice-or">or</p>
         <div class="social choice-option">
-            @RenderPage("_FacebookConnectButton.cshtml")
+            @RenderPage("_FacebookConnectButton.cshtml", new { Redirect = redirect } )
         </div>
         @if(showTools){
         <div class="account-tools">

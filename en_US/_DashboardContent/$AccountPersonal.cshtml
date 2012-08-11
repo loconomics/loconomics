@@ -361,7 +361,7 @@ Please complete the information below as accurately as possible.  Only your firs
             <legend>Social media verifications:</legend>
             <ul>
                 <li class="facebook">
-                    @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", "Verify", "json")
+                    @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
                     @*if (facebookVerification != null)
                     {
                         <div class="verification-details">

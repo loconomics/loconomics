@@ -11,6 +11,7 @@
     // By default is true, the standard behavior, but with false the user will be logged automatically
     // on registering, with 'partially confirmed', but an email will sent will the link to confirm its address still.
     bool waitConfirmation = PageData["WaitConfirmation"] ?? Session["RegisterWaitConfirmation"] ?? true;
+    string redirect = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
     
     // Setup Validation
 	// Validate the user's email address
@@ -91,8 +92,6 @@
 
                     // We return a json with result OK and redirect link (Code=1),
                     // and response end just after this:
-                    string redirect = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
-                    
                     CommonHelpers.ReturnJsonResult(1, redirect);
                 }
             } catch (System.Web.Security.MembershipCreateUserException e) {
@@ -154,7 +153,7 @@
         </form>
         <p class="choice-or">or</p>
         <div class="social choice-option">
-             @RenderPage("_FacebookConnectButton.cshtml")
+             @RenderPage("_FacebookConnectButton.cshtml", new { Redirect = redirect } )
             <p class="footnote">*we don't post anything without your permission</p>
             <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a></p>
         </div>
