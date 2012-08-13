@@ -5,17 +5,18 @@ var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
-        message: 'There was an error'
+        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">' + message + 'There was an error'
             + (error ? ': ' + error : '')
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
+            + '</div>'
     }
 };
-var infoBlock = function (message) {
-    return {
-        message: message,
-        css: { cursor: 'default' },
-        overlayCSS: { cursor: 'default' }
-    };
+var infoBlock = function (message, options) {
+    return $.extend({
+        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">' + message + '</div>'
+        /*,css: { cursor: 'default' }*/
+        ,overlayCSS: { cursor: 'default' }
+    }, options);
 }
 var gLoadingRetard = 300;
 
@@ -655,12 +656,10 @@ $(document).ready(function () {
                         currentStep.unblock();
                         // Block with message:
                         var message = (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
-                        currentStep.block({
-                            message: 'Error: ' + message,
-                            css: popupStyle(popupSize('small')),
-                            timeout: 20000
-                        })
-                        .click(function () { currentStep.unblock(); });
+                        currentStep.block(infoBlock('Error: ' + message, {
+                            css: popupStyle(popupSize('small'))
+                        }))
+                        .on('click', '.close-popup', function () { currentStep.unblock(); });
 
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
@@ -706,119 +705,35 @@ $(document).ready(function () {
     *    - Major 1: success result, with custom handler throught the form event 'success-post-message'.
     */
     function ajaxFormsSubmitHandler(event) {
+        // Context var, used as ajax context:
+        var ctx = {};
         // Default data for required params:
-        var form = (event.data ? event.data.form : null) || $(this);
-        var box = (event.data ? event.data.box : null) || form.closest(".ajax-box");
-        var action = (event.data ? event.data.action : null) || form.attr('action') || '';
-        var data = form.find(':input').serialize();
+        ctx.form = (event.data ? event.data.form : null) || $(this);
+        ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
+        var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
+        var data = ctx.form.find(':input').serialize();
 
         // First at all, if unobtrusive validation is enabled, validate
-        var valobject = form.data('unobtrusiveValidation');
+        var valobject = ctx.form.data('unobtrusiveValidation');
         if (valobject && valobject.validate() == false)
         // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return;
 
         // Loading, with retard
-        var loadingtimer = setTimeout(function () {
-            box.block(loadingBlock);
+        ctx.loadingtimer = setTimeout(function () {
+            ctx.box.block(loadingBlock);
         }, gLoadingRetard);
-        var autoUnblockLoading = true;
+        ctx.autoUnblockLoading = true;
 
         // Do the Ajax post
         $.ajax({
             url: (action),
             type: 'POST',
             data: data,
-            success: function (data, text, jx) {
-                // If is a JSON result:
-                if (typeof (data) === 'object') {
-                    // Special Code 1: do a redirect
-                    if (data.Code == 1) {
-                        lcRedirectTo(data.Result);
-                    } else if (data.Code == 0) {
-                        // Special Code 0: general success code, show message saying that 'all was fine'
-
-                        // Unblock loading:
-                        box.unblock();
-                        // Block with message:
-                        var message = data.Result || form.data('success-post-message') || 'Saved';
-                        box.block({
-                            message: message,
-                            css: popupStyle(popupSize('small'))
-                        })
-                        .click(function () { box.unblock(); box.trigger('ajaxSuccessPostMessageClosed', [data]); });
-                        // Do not unblock in complete function!
-                        autoUnblockLoading = false;
-
-                        // Clean previous validation errors
-                        setValidationSummaryAsValid(box);
-
-                        form.trigger('ajaxSuccessPost', [data, text, jx]);
-                    } else if (data.Code == 2) {
-                        // Special Code 2: show login popup (with the given url at data.Result)
-                        box.unblock();
-                        popup(data.Result, { width: 410, height: 320 });
-                    } else if (data.Code == 3) {
-                        // Special Code 3: reload current page content to the given url at data.Result)
-                        // Note: to reload same url page content, is better return the html directly from
-                        // this ajax server request.
-                        //container.unblock(); is blocked and unblocked againg by the reload method:
-                        autoUnblockLoading = false;
-                        box.reload(data.Result);
-                    } else if (data.Code > 100) {
-                        // User Code: trigger custom event to manage results:
-                        form.trigger('ajaxSuccessPost', [data, text, jx]);
-                    } else { // data.Code < 0
-                        // There is an error code.
-
-                        // Data not saved
-                        gNotSavedData = true;
-
-                        // Unblock loading:
-                        box.unblock();
-                        // Block with message:
-                        var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
-                        box.block({
-                            message: 'Error: ' + message,
-                            css: popupStyle(popupSize('small'))
-                        })
-                        .click(function () { box.unblock(); });
-
-                        // Do not unblock in complete function!
-                        autoUnblockLoading = false;
-                    }
-                } else {
-                    // Post was wrong, html was returned to replace current 
-                    // form container: the ajax-box.
-                    // Most times this means data not saved (if was, page script must set to false next global var:)
-                    gNotSavedData = true;
-
-                    var newhtml = $(data);
-                    // Reading original scripts tags to be able to execute later
-                    var responseScript = newhtml.filter("script");
-
-                    // Check if the returned element is the ajax-box, if not, find
-                    // the element in the newhtml:
-                    if (!newhtml.is('.ajax-box'))
-                        newhtml = newhtml.find('.ajax-box');
-                    // Replace the box with the new html:
-                    box.replaceWith(newhtml);
-
-                    // Executing scripts returned by the page
-                    jQuery.each(responseScript, function (idx, val) { eval(val.text); });
-
-                    newhtml.trigger('ajaxFormReturnedHtml');
-                }
-            },
+            context: ctx,
+            success: ajaxFormsSuccessHandler,
             error: ajaxErrorPopupHandler,
-            complete: function () {
-                // Disable loading
-                clearTimeout(loadingtimer);
-                // Unblock
-                if (autoUnblockLoading) {
-                    box.unblock();
-                }
-            }
+            complete: ajaxFormsCompleteHandler
         });
 
         // Stop normal POST:
@@ -1109,6 +1024,106 @@ function popup(url, size, complete, loadingText){
     
     $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
 }
+function ajaxFormsCompleteHandler() {
+    // Disable loading
+    clearTimeout(this.loadingtimer);
+    // Unblock
+    if (this.autoUnblockLoading) {
+        this.box.unblock();
+    }
+}
+function ajaxFormsSuccessHandler(data, text, jx) {
+    var ctx = this;
+    if (!ctx.form) ctx.form = this;
+    if (!ctx.box) ctx.box = ctx.form;
+    ctx.autoUnblockLoading = true;
+
+    // If is a JSON result:
+    if (typeof (data) === 'object') {
+        if (data.Code == 0) {
+            // Special Code 0: general success code, show message saying that 'all was fine'
+            // Unblock loading:
+            ctx.box.unblock();
+            // Block with message:
+            var message = data.Result || ctx.form.data('success-post-message') || 'Done!';
+            ctx.box.block(infoBlock(message, {
+                css: popupStyle(popupSize('small'))
+            }))
+            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); });
+            // Do not unblock in complete function!
+            ctx.autoUnblockLoading = false;
+
+            // Clean previous validation errors
+            setValidationSummaryAsValid(ctx.box);
+
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        // Special Code 1: do a redirect
+        } else if (data.Code == 1) {
+            lcRedirectTo(data.Result);
+        } else if (data.Code == 2) {
+            // Special Code 2: show login popup (with the given url at data.Result)
+            ctx.box.unblock();
+            popup(data.Result, { width: 410, height: 320 });
+        } else if (data.Code == 3) {
+            // Special Code 3: reload current page content to the given url at data.Result)
+            // Note: to reload same url page content, is better return the html directly from
+            // this ajax server request.
+            //container.unblock(); is blocked and unblocked againg by the reload method:
+            ctx.autoUnblockLoading = false;
+            ctx.box.reload(data.Result);
+        } else if (data.Code > 100) {
+            // User Code: trigger custom event to manage results:
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        } else { // data.Code < 0
+            // There is an error code.
+            // Data not saved
+            gNotSavedData = true;
+
+            // Unblock loading:
+            ctx.box.unblock();
+            // Block with message:
+            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+            ctx.box.block({
+                message: 'Error: ' + message,
+                css: popupStyle(popupSize('small'))
+            })
+            .on('click', '.close-popup', function () { ctx.box.unblock(); });
+
+            // Do not unblock in complete function!
+            ctx.autoUnblockLoading = false;
+        }
+    } else {
+        // Post 'maybe' was wrong, html was returned to replace current 
+        // form container: the ajax-box.
+        // Most times this means data not saved (if was, page script must set to false next global var:)
+        gNotSavedData = true;
+
+        var newhtml = $(data);
+        // Reading original scripts tags to be able to execute later
+        var responseScript = newhtml.filter("script");
+
+        // Check if the returned element is the ajax-box, if not, find
+        // the element in the newhtml:
+        var jb = newhtml;
+        if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
+            jb = newhtml.find('.ajax-box:eq(0)');
+        if (!jb || jb.length == 0) {
+            // There is no ajax-box, use all element returned:
+            jb = newhtml;
+        }
+        if (ctx.boxIsContainer)
+            // jb is content of the box container:
+            ctx.box.html(jb);
+        else
+            // box is content that must be replaced by the new content:
+            ctx.box.replaceWith(jb);
+
+        // Executing scripts returned by the page
+        jQuery.each(responseScript, function (idx, val) { eval(val.text); });
+
+        newhtml.trigger('ajaxFormReturnedHtml');
+    }
+}
 function ajaxErrorPopupHandler(jx, message, ex) {
     // data not saved
     gNotSavedData = true;
@@ -1133,17 +1148,16 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     $.blockUI(errorBlock(m, null, popupStyle(size)));
     if (iframe)
         $('.blockMsg').html(iframe);
-    $('.blockUI').click(function () { $.unblockUI() });
+    $('.blockUI .close-popup').click(function () { $.unblockUI() });
 }
 function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
     var $t = $(form);
     // If there is no form errors, show a successful message
     if ($t.find('.validation-summary-errors').length == 0) {
-        $t.block({
-            message: message,
+        $t.block(infoBlock(message, {
             css: popupStyle(popupSize('small'))
-        })
-            .click(function () { $t.unblock(); });
+        }))
+        .on('click', '.close-popup', function () { $t.unblock(); });
     }
 }
 /* Puts full html inside the iframe element passed in a secure and compliant mode */

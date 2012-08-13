@@ -105,9 +105,10 @@ $(document).ready(function () {
             // Bad handler:
             return;
         }
+        var ctx = { form: $tab, boxIsContainer: true };
 
         // Loading, with retard
-        var loadingtimer = setTimeout(function () {
+        ctx.loadingtimer = setTimeout(function () {
             $tab.block(loadingBlock);
         }, gLoadingRetard);
 
@@ -115,11 +116,9 @@ $(document).ready(function () {
         $.ajax({
             url: UrlUtil.LangPath + url,
             data: data,
+            context: ctx,
             success: function (data, text, jx) {
-                if (!dashboardGeneralJsonCodeHandler(data, $tab, options)) {
-                    // Unknowed sucessfull code (if this happen in production there is a bug!)
-                    alert("Result Code: " + data.Code);
-                }
+                $.proxy(ajaxFormsSuccessHandler, this)(data, text, jx);
                 // Some list updates
                 // After update request, bookings-list tab need be reloaded
                 $('#bookings-all').reload();
@@ -127,14 +126,7 @@ $(document).ready(function () {
                 $('#inbox').reload();
             },
             error: ajaxErrorPopupHandler,
-            complete: function () {
-                // Disable loading
-                clearTimeout(loadingtimer);
-                // Unblock
-                if (options.autoUnblockLoading) {
-                    $tab.unblock();
-                }
-            }
+            complete: ajaxFormsCompleteHandler
         });
     })
     .delegate('.review-booking-action', 'click', function () {
@@ -554,8 +546,10 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
         // Set the data-source-url of the new tab to the to be loaded url to enable jQuery.reload()
         $tab.data('source-url', UrlUtil.LangPath + url);
 
+        var ctx = { form: $tab, boxIsContainer: true };
+
         // Loading, with retard
-        var loadingtimer = setTimeout(function () {
+        ctx.loadingtimer = setTimeout(function () {
             $tab.block(loadingBlock);
         }, gLoadingRetard);
 
@@ -563,18 +557,11 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
         $.ajax({
             url: UrlUtil.LangPath + url,
             data: data,
-            success: function (data, text, jx) {
-                if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
-                    // Unknowed sucessfull code (if this happen in production there is a bug!)
-                    alert("Result Code: " + data.Code);
-                }
-            },
+            context: ctx,
+            success: ajaxFormsSuccessHandler,
             error: ajaxErrorPopupHandler,
             complete: function () {
-                // Disable loading
-                clearTimeout(loadingtimer);
-                // Unblock
-                $tab.unblock();
+                $.proxy(ajaxFormsCompleteHandler, this)();
 
                 // Updating the tab title, because when is loaded by URL, the title is the ID,
                 // here is setted something more usable:
@@ -596,9 +583,10 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
         TabbedUX.focusTab(tab);
 
         var $tab = $(tab);
+        var ctx = { form: $tab, boxIsContainer: true };
 
         // Loading, with retard
-        var loadingtimer = setTimeout(function () {
+        ctx.loadingtimer = setTimeout(function () {
             $tab.block(loadingBlock);
         }, gLoadingRetard);
 
@@ -606,18 +594,11 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
         $.ajax({
             url: UrlUtil.LangPath + url,
             data: data,
-            success: function (data, text, jx) {
-                if (!dashboardGeneralJsonCodeHandler(data, $tab)) {
-                    // Unknowed sucessfull code (if this happen in production there is a bug!)
-                    alert("Result Code: " + data.Code);
-                }
-            },
+            context: ctx,
+            success: ajaxFormsSuccessHandler,
             error: ajaxErrorPopupHandler,
             complete: function () {
-                // Disable loading
-                clearTimeout(loadingtimer);
-                // Unblock
-                $tab.unblock();
+                $.proxy(ajaxFormsCompleteHandler, this)();
 
                 // Updating the tab title, because when is loaded by URL, the title is the ID,
                 // here is setted something more usable:
@@ -638,64 +619,6 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
     }
 }
 
-/* Return true for 'handled' and false for 'not handled' (there is a custom data.Code to be managed) */
-function dashboardGeneralJsonCodeHandler(data, container, options) {
-    if (!container) container = $(document);
-
-    // If is a JSON result:
-    if (typeof (data) === 'object') {
-        if (data.Code == 0) {
-            // Special Code 0: general success code, show message saying that 'all was fine'
-
-            // Unblock loading:
-            container.unblock();
-            // Block with message:
-            var message = data.Result || container.data('success-ajax-message') || 'Confirmed!';
-            container.block({
-                message: message,
-                css: popupStyle(popupSize('small'))
-            })
-            .click(function () { container.unblock(); });
-            // Do not unblock in complete function!
-            options.autoUnblockLoading = false;
-        } else if (data.Code == 1) {
-            // Special Code 1: do a redirect
-            window.location = data.Result;
-        } else if (data.Code == 2) {
-            // Special Code 2: show login popup (with the given url at data.Result)
-            container.unblock();
-            popup(data.Result, { width: 410, height: 320 });
-        } else if (data.Code == 3) {
-            // Special Code 3: reload current page content to the given url at data.Result)
-            // Note: to reload same url page content, is better return the html directly from
-            // this ajax server request.
-            //container.unblock(); is blocked and unblocked againg by the reload method:
-            options.autoUnblockLoading = false;
-            container.reload(data.Result);
-        } else if (data.Code > 0) {
-            // Not handled!
-            return false;
-        } else { // data.Code < 0
-            // There is an error code.
-
-            // Unblock loading:
-            container.unblock();
-            // Block with message:
-            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
-            container.block({
-                message: 'Error: ' + message,
-                css: popupStyle(popupSize('small'))
-            })
-            .click(function () { container.unblock(); });
-
-            // Do not unblock in complete function!
-            options.autoUnblockLoading = false;
-        }
-    } else {
-        container.html(data);
-    }
-    return true;
-}
 function initPositionPhotos() {
     $('form.positionphotos').each(function () {
         var form = $(this);
