@@ -67,17 +67,16 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
 }
 /* This fixed size for social-networking is a try to fix an uggly flickering effect
     of the google+ widget */
-.social-networking{
+.social-networking.network-widgets{
     height: 26px;
 }
-.social-networking,
+.social-networking.network-widgets,
 .social-connections ul{
     list-style: none;
     margin: 5px 0;
     padding: 0;
 }
-.social-networking li{
-    display: inline-block;
+.social-networking.network-widgets li{
     margin: 0 80px 0 0;
 }
 .social-connections ul{

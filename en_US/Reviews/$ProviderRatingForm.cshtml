@@ -302,8 +302,11 @@
                     <text> and earn a $5 credit when they make a purchase:</text> 
                 }
                 @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml",
-                    UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
-                    "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider))
+                    new
+                    {
+                        URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
+                        Title = "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider)
+                    })
             </li>
             <li class="share-email">
                 <label for="share-email-addresses">Enter e-mail addresses, separated by commas:</label>

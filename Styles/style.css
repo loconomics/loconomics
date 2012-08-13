@@ -2025,3 +2025,38 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories li.cat-elderly:hover{          background-position: -252px -84px}
 .search-categories li.selected.cat-celebrations,
 .search-categories li.cat-celebrations:hover{     background-position: -84px -84px}
+
+/*==================
+ * Social networking
+ *==================*/
+.social-networking li {
+    display: inline-block;
+    padding: 0;
+}
+.social-networking.custom-icons {
+    margin: 10px 0;
+}
+.social-networking.custom-icons a {
+    text-indent: -9999px;
+    display: block;
+    margin: 0 20px;
+    background: no-repeat 0 0;
+}
+.social-networking.custom-icons.size-32x32 a {
+    background-image: url('../img/theme/social-icons.png');
+    width: 32px;
+    height: 32px;
+    padding: 0;
+}
+.social-networking.custom-icons.size-32x32 li.facebook > a {
+    background-position: 0 -64px;
+}
+.social-networking.custom-icons.size-32x32 li.linkedin > a {
+    background-position: 0 -32px;
+}
+.social-networking.custom-icons.size-32x32 li.googleplus > a {
+    background-position: 0 0;
+}
+.social-networking.custom-icons.size-32x32 li.twitter > a {
+    background-position: 0 -96px;
+}

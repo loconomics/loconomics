@@ -1264,8 +1264,7 @@ form#personal li > label.gender {
 .booking-review > form > fieldset {
     display: block;
 }
-.booking-review .social-networking > li {
-    display: inline-block;
+.booking-review .social-networking.network-widgets > li {
     width: 100px;
 }
 

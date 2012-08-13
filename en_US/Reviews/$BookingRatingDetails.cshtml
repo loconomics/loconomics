@@ -118,9 +118,12 @@
                     <li class="share-social">
                         Please share @(provider.FirstName)'s profile with your family and friends and earn a $5
                         credit when they make a purchase:
-                        @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml", 
-                        UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
-                        "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider))
+                        @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml",
+                            new
+                            {
+                                URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
+                                Title = "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider)
+                            })
                     </li>
                 </ul>
             </section>

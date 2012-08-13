@@ -1,8 +1,13 @@
 ﻿@{
-    string url = (string)PageData[0];
+    string url = (string)PageData["URL"];
     url = UrlUtil.SiteUrl + (url ?? Request.Url.PathAndQuery);
-    string title = (string)PageData[0];
+    string title = (string)PageData["Title"];
+    string view = (string)PageData["View"] ?? "custom-icons"; // Possible values: custom-icons, network-widgets
+    string size = PageData["Size"] ?? "32x32"; // Possible values: 32x32 (only one for now)
 }
+    @* network-widgets: widgets provided by the social network, 'originals', with its own scripts and images *@
+    @if (view == "network-widgets")
+    {
     <script type="text/javascript">
         if (!socialScriptsLoaded) var socialScriptsLoaded = false;
         if (!socialScriptsLoaded) {
@@ -27,7 +32,7 @@
             }
         }
     </script>
-    <ul class="social-networking">
+    <ul class="social-networking network-widgets">
         <li class="facebook">
             @*<fb:like href="@(url)" send="true" layout="button_count" width="100" show_faces="true" font=""></fb:like>*@
             <div class="fb-like" data-href="@url" data-send="true" data-layout="button_count" data-width="50" data-show-faces="true"></div>
@@ -51,3 +56,14 @@
             @*<iframe scrolling="no" frameborder="0" allowtransparency="true" src="//platform.twitter.com/widgets/tweet_button.html?url=@(url)&test=@(title)" class="twitter-share-button twitter-count-horizontal" style="width: 110px; height: 20px;" title="Twitter For Websites: Tweet Button"></iframe>*@
         </li><!-- twitter -->
     </ul>
+    }
+    @* custom-icons: our own icons with link to share in the different supported social networks. This reduce overload not using external scripts, images; it's the simplest way. *@
+    else if (view == "custom-icons")
+    {
+        <ul class="social-networking custom-icons size-@size">
+            <li class="facebook"><a target="_blank" href="http://www.facebook.com/share.php?u=@Uri.EscapeUriString(url)&t=@Uri.EscapeDataString(title)" title="Share on Facebook">Share on Facebook</a></li>
+            <li class="linkedin"><a target="_blank" href="http://www.linkedin.com/shareArticle?mini=true&url=@Uri.EscapeUriString(url)&title=@Uri.EscapeDataString(title)&source=Loconomics&summary=@Uri.EscapeDataString(title)" title="Share on LinkedIN">Share on LinkedIN</a></li>
+            <li class="googleplus"><a target="_blank" href="https://plus.google.com/share?url=@Uri.EscapeUriString(url)" title="Share on Google+">Share on Google+</a></li>
+            <li class="twitter"><a target="_blank" href="http://twitter.com/intent/tweet?text=@Uri.EscapeDataString(title)-@Uri.EscapeUriString(url)" title="Share on Twitter+">Share on Twitter</a></li>
+        </ul>
+    }
