@@ -2,7 +2,7 @@
 @{
     var idprefix = "account-personal";
     
-    var u = DashboardFunctions.GetUserRow();
+    var u = DashboardFunctions.GetUserRowWithContactData();
     
     // Initializing local data:
     var FirstName = Request["firstname"] ?? u.FirstName;
@@ -67,6 +67,7 @@
                     ,@GenderID int
                     ,@IAuthZumigoVerification bit
                     ,@IAuthZumigoLocation bit
+                    ,@LanguageID int
 
                     SET @UserID = @0
                     SET @FirstName = @1
@@ -86,11 +87,14 @@
                     SET @GenderID = @13
                     SET @IAuthZumigoVerification = @14
                     SET @IAuthZumigoLocation = @15
+                    SET @LanguageID = @18
 
+                    BEGIN TRAN
 
                     /* Do checks to revoke verifications on some changes */
                     -- @c var allow us check if data is equals (=1) or was changed (=0)
                     DECLARE @c int
+
                     -- Checking Full Name
                     SELECT  @c = count(*)
                     FROM    Users
@@ -120,10 +124,12 @@
                             UpdatedDate = getdate()
                         WHERE   VerificationID = 7
                     END
+
                     -- Checking Address
                     SELECT  @c = count(*)
-                    FROM    Users
+                    FROM    Address
                     WHERE   UserID = @UserID
+                            AND AddressID = 1 -- Must be the number 1, its personal address
                             AND AddressLine1 = @AddressLine1
                             AND AddressLine2 = @AddressLine2
                             AND City = @City
@@ -137,6 +143,7 @@
                             UpdatedDate = getdate()
                         WHERE   VerificationID = 2
                     END
+
                     -- Checking Phone
                     SELECT  @c = count(*)
                     FROM    Users
@@ -151,7 +158,38 @@
                         WHERE   VerificationID = 4
                     END
 
-                    /* Update Data */
+
+                    /** UPSERT Personal Address **/
+                    UPDATE  Address WITH (serializable)
+                    SET     AddressLine1 = @AddressLine1
+		                    ,AddressLine2 = @AddressLine2
+		                    ,City=@City
+		                    ,StateProvinceID = @StateProvinceID
+		                    ,PostalCodeID = @PostalCodeID
+		                    ,CountryID = @CountryID
+
+                            ,Active = 1
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    IF @@rowcount = 0
+                    BEGIN
+                        DECLARE @AddressName nvarchar(50)
+                        SELECT @AddressName = AddressType
+                        FROM AddressType
+                        WHERE AddressTypeID = 1 -- Home
+                               AND LanguageID = @LanguageID
+
+                        INSERT INTO Address (UserID, AddressID, AddressTypeID, AddressName,
+                            AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
+                            Active, CreatedDate, UpdatedDate, ModifiedBy)
+                        VALUES (@UserID, 1 /* Personal address is ever 1 */, 1 /* Type: Home */, @AddressName, 
+                            @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, 
+                            1, getdate(), getdate(), 'sys')
+                    END
+
+                    /* Update User Personal Data */
                     UPDATE	Users
                     SET     FirstName = @FirstName
 		                    ,MiddleIn = @MiddleIn
@@ -159,17 +197,13 @@
 		                    ,SecondLastName = @SecondLastName
 		                    ,MobilePhone = @MobilePhone
 		                    ,AlternatePhone = @AlternatePhone
-		                    ,AddressLine1 = @AddressLine1
-		                    ,AddressLine2 = @AddressLine2
-		                    ,City=@City
-		                    ,StateProvinceID = @StateProvinceID
-		                    ,PostalCodeID = @PostalCodeID
-		                    ,CountryID = @CountryID
+
 		                    ,PublicBio = @PublicBio
 		                    ,BirthYear = @BirthYear
 		                    ,GenderID = @GenderID
 		                    ,IAuthZumigoVerification = @IAuthZumigoVerification
 		                    ,IAuthZumigoLocation = @IAuthZumigoLocation
+
                             ,UpdatedDate = getdate()
                             ,ModifiedBy = 'sys'
                     WHERE   UserId = @UserID
@@ -181,9 +215,12 @@
                     EXEC TestAlertSocialMediaVerification @UserID
                     EXEC TestAlertBackgroundCheck @UserID
                     EXEC TestAlertPublicBio @UserID
+
+                    COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, zipID, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
-                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, LcData.GetCurrentCountryID());
+                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, 
+                 LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
             }
             CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
         }

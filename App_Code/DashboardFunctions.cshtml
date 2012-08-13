@@ -8,13 +8,9 @@
     /* Get a data row with the User information identified with 'userId' from the database
     */
     public static dynamic GetUserRow(int userId) {
-
-        // Commented unused vars:
-        //var stringPosted = "Nothing";
-        //var theDate = DateTime.Now.ToString("yyyy-MM-dd");
         
         // Implemented a basic, per-page, cache, faster and simplified for each page
-        var u = PageData["userow:" + userId.ToString()];
+        var u = PageData["userow:" + userId.ToString()] ?? PageData["userow-withcontactdata:" + userId.ToString()];
         if (u == null){
             using (var db = Database.Open("sqlloco")){
                 var sqluser = 
@@ -23,55 +19,49 @@
                     // NOTE2: remove location details from this table and query, use GetUserWithContactData
                     @"
                         SELECT
-                            a.UserID,
-                            FirstName, 
-                            LastName,
-                            SecondLastName,
-                            MiddleIn,
-                            (dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName,
-                            Photo,
-                            PreferredLanguageID,
-                            PreferredCountryID,
-                            coalesce(IsAdmin, cast(0 as bit)) As IsAdmin,
-                            IsCustomer,
-                            IsProvider,
-                            (CASE WHEN IsProvider=1 AND (
+                            -- Basic data
+                            a.UserID
+                            ,UP.Email
+                            ,a.CreatedDate As MemberSinceDate
+
+                            -- Name
+                            ,FirstName
+                            ,LastName
+                            ,SecondLastName
+                            ,MiddleIn
+                            ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
+                            
+                            -- DEPRECATED PHOTO
+                            ,Photo
+
+                            -- User Type
+                            ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
+                            ,IsCustomer
+                            ,IsProvider
+
+                            -- Only Providers:
+                            ,(CASE WHEN IsProvider=1 AND (
                                 SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
                                 ) > 0 THEN Cast(1 As bit)
                                 ELSE Cast(0 As bit)
-                            END) As IsActiveProvider,
-                            MobilePhone,
-                            AlternatePhone,
-                            AddressLine1,   
-                            AddressLine2,
-                            A.City,
-                            A.StateProvinceID,
-                            SP.StateProvinceName,
-                            SP.StateProvinceCode,
-                            A.CountryID,
-                            PC.PostalCode,
-                            A.PostalCodeID,
-                            a.CreatedDate As MemberSinceDate,
-                            PublicBio,
-                            BirthYear,
-                            GenderID
-                            ,UP.Email
+                            END) As IsActiveProvider
+                            
+                            -- Personal data
+                            ,PublicBio
+                            ,BirthYear
+                            ,GenderID
+
+                            -- Some preferences
+                            ,PreferredLanguageID
+                            ,PreferredCountryID
                             ,IAuthZumigoVerification
                             ,IAuthZumigoLocation
-                            --,ADD_Details 
-                        from users A
+
+                        FROM Users A
                              INNER JOIN
                             UserProfile As UP
                               ON UP.UserID = A.UserID
-                             LEFT JOIN
-                            StateProvince As SP
-                              ON SP.StateProvinceID = A.StateProvinceID
-                             LEFT JOIN
-                            PostalCode As PC
-                              ON PC.PostalCodeID = A.PostalCodeID
-                            -- left join dbo.userprofilepositionadditional b 
-                            --  ON a.userid = b.userid
-                        where a.UserID = @0
+                        WHERE A.UserID = @0
                     ";
                 u = db.QuerySingle(sqluser, userId);
             }
@@ -81,7 +71,7 @@
     }
     public static dynamic GetUserRowWithContactData(int userId) {
         // Implemented a basic, per-page, cache, faster and simplified for each page
-        var u = PageData["userow:" + userId.ToString()];
+        var u = PageData["userow-withcontactdata:" + userId.ToString()];
         if (u == null){
             using (var db = Database.Open("sqlloco")){
                 var sqluser = 
@@ -89,61 +79,78 @@
                     // NOTE: UserID is needed!
                     @"
                         SELECT
-                            U.UserID
-                            ,U.FirstName
-                            ,U.LastName
+                            -- Basic data
+                            a.UserID
+                            ,UP.Email
+                            ,a.CreatedDate As MemberSinceDate
+
+                            -- Name
+                            ,FirstName
+                            ,LastName
                             ,SecondLastName
                             ,MiddleIn
                             ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
-                            ,U.CreatedDate As MemberSinceDate
-                            ,U.PublicBio
-                            ,U.MobilePhone
-                            ,P.Email
-                            ,U.BirthYear
-                            ,U.GenderID
-
+                            
+                            -- DEPRECATED PHOTO
                             ,Photo
-                            ,PreferredLanguageID
-                            ,PreferredCountryID
+
+                            -- User Type
                             ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                             ,IsCustomer
                             ,IsProvider
+
+                            -- Only Providers:
                             ,(CASE WHEN IsProvider=1 AND (
-                                SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = U.UserID AND UPS.Active=1
+                                SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
                                 ) > 0 THEN Cast(1 As bit)
                                 ELSE Cast(0 As bit)
                             END) As IsActiveProvider
+
+                            -- Contact data
                             ,MobilePhone
                             ,AlternatePhone
-
+                            
+                            -- Address
                             ,L.AddressLine1
                             ,L.AddressLine2
                             ,L.City
+                            ,L.StateProvinceID
                             ,SP.StateProvinceName
                             ,SP.StateProvinceCode
+                            ,L.CountryID
                             ,PC.PostalCode
+                            ,L.PostalCodeID
 
-                        FROM
-                            Users As U
+                            -- Personal data
+                            ,PublicBio
+                            ,BirthYear
+                            ,GenderID
+                            
+                            -- Some preferences
+                            ,PreferredLanguageID
+                            ,PreferredCountryID
+                            ,IAuthZumigoVerification
+                            ,IAuthZumigoLocation
+
+                        FROM Users A
                              INNER JOIN
-                            UserProfile As P
-                              ON P.UserID = U.UserID
+                            UserProfile As UP
+                              ON UP.UserID = A.UserID
                              LEFT JOIN
-                            ServiceAddress As L
-                              ON L.UserID = U.UserID
-                                AND L.PreferredAddress = 1
+                            Address As L
+                              ON L.UserID = A.UserID
+                                AND L.AddressID = 1 -- EVER 1 for Personal User address (Home, as AddressTypeID:1 too)
                              LEFT JOIN
                             StateProvince As SP
                               ON SP.StateProvinceID = L.StateProvinceID
                              LEFT JOIN
                             PostalCode As PC
                               ON PC.PostalCodeID = L.PostalCodeID
-
-                        WHERE U.UserID = @0
+                        WHERE A.UserID = @0
                     ";
                 u = db.QuerySingle(sqluser, userId);
             }
-            PageData["userow:" + userId.ToString()] = u;
+            PageData["userow-withcontactdata:" + userId.ToString()] = u;
         }
         return u;
     }
@@ -152,9 +159,23 @@
     public static dynamic GetUserRow() {
         if (!WebSecurity.IsAuthenticated) return null;
         // Implemented a basic, per-page, cache, faster and simplified for each page
-        var u = PageData["userow"];
+        var u = PageData["userow"] ?? PageData["userow-withcontactdata"];
         if (u == null){
             PageData["userow"] = u = GetUserRow(WebSecurity.CurrentUserId);
+        }
+        // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
+        if (u == null) {
+            // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
+            Response.Redirect(UrlUtil.LangPath + "Account/Logout/", true);
+        }
+        return u;
+    }
+    public static dynamic GetUserRowWithContactData() {
+        if (!WebSecurity.IsAuthenticated) return null;
+        // Implemented a basic, per-page, cache, faster and simplified for each page
+        var u = PageData["userow-withcontactdata"];
+        if (u == null){
+            PageData["userow-withcontactdata"] = u = GetUserRowWithContactData(WebSecurity.CurrentUserId);
         }
         // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
         if (u == null) {
