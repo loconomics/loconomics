@@ -1480,7 +1480,7 @@ table .number{
 .blockUI > article {
     text-align: left;
 }
-.blockUI.blockMsg.blockElement {
+.blockUI.blockMsg {
     overflow: visible !important;
     cursor: inherit !important;
 }

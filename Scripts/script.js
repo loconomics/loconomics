@@ -5,7 +5,7 @@ var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
-        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">' + message + 'There was an error'
+        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">There was an error'
             + (error ? ': ' + error : '')
             + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
             + '</div>'
@@ -1131,7 +1131,7 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     var iframe = null;
     size = popupSize('large');
     if (m == 'error') {
-        iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 10) + '"></iframe>').get(0);
+        iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 34) + '"></iframe>').get(0);
         var iframeloaded = false;
         iframe.onload = function () {
             // Using iframeloaded to avoid infinite loops
@@ -1147,7 +1147,7 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     // Block all window, not only current element
     $.blockUI(errorBlock(m, null, popupStyle(size)));
     if (iframe)
-        $('.blockMsg').html(iframe);
+        $('.blockMsg').append(iframe);
     $('.blockUI .close-popup').click(function () { $.unblockUI() });
 }
 function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
