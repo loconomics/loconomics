@@ -484,11 +484,8 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 
     border-color: #461864;
     border-style: solid;
-    border-width: 2px 0 2px 2px;
+    border-width: 2px 0 3px 2px;
     border-radius: 10px 0 0 0;
-    background-color: #e9e0f0;
-}
-.folders > ul.tabs li a{
     background-color: #e9e0f0;
 }
 .folders > ul.tabs li.current,
@@ -1168,7 +1165,7 @@ fieldset.has-confirm.confirmed-no > legend{
     
     border-color: #00989A;
     border-style: solid;
-    border-width: 2px 0 2px 2px;
+    border-width: 2px 0 3px 2px;
     border-radius: 10px 0 0 0;
     background-color: #def2f2;
 }
@@ -1740,6 +1737,7 @@ html.boxshadow #loginBox .field-validation-error{
     white-space: nowrap !important;
     float: none !important;
     display: inline-block;
+    height: 22px;
 }
 .tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
