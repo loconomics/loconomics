@@ -145,10 +145,13 @@
                       ON R.BookingRequestID = B.BookingRequestID
                      INNER JOIN
                     PricingEstimate As P
-                      ON P.PricingEstimateID = R.PricingEstimateID
+                      ON P.PricingEstimateID = R.PricingEstimateID   /** TODO:PROBLEMA: En bookingRequest se guarda el AddressID sólamente, pero no un hipotético 'AddressUserID' que identifique únicamente a ese Address ***/
                      INNER JOIN
-                    ServiceAddress As L
-                      ON R.ServiceAddressID = L.ServiceAddressID
+                    Address As L
+                      ON R.AddressID = L.AddressID
+                     INNER JOIN
+                    ServiceAddress As SA
+                      ON L.AddressID = SA.AddressID
                      INNER JOIN
                     Users As LU
                       ON L.UserID = LU.UserID

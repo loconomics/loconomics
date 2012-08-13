@@ -22,7 +22,7 @@
         ";
         var sqlInsLoc = @"
             INSERT INTO ServiceAddress (
-                UserID, PositionID, AddressTypeID, NickName, AddressLine1, AddressLine2,
+                UserID, PositionID, AddressTypeID, AddressName, AddressLine1, AddressLine2,
                 City, StateProvinceID, PostalCodeID, CountryID, 
                 ServicesPerformedAtLocation, TravelFromLocation,
                 ServiceRadiusFromLocation, TransportType,
@@ -157,13 +157,37 @@
     }
 
     var sqlGetLocations = @"
-        SELECT  L.*,
-                PC.PostalCode,
-                SP.StateProvinceCode,
-                SP.StateProvinceName,
-                TT.TransportTypeID,
-                TT.TransportTypeName
-        FROM    ServiceAddress As L
+        SELECT  L.AddressID
+                ,L.UserID
+                ,SA.PositionID
+                ,L.AddressTypeID
+                ,L.AddressName
+                ,L.AddressLine1
+                ,L.AddressLine2
+                ,L.City
+                ,L.StateProvinceID
+                ,L.PostalCodeID
+                ,L.CountryID
+                ,L.Latitude
+                ,L.Longitude
+                ,L.GoogleMapsURL
+                ,L.SpecialInstructions
+
+                ,SA.ServicesPerformedAtLocation
+                ,SA.TravelFromLocation
+                ,SA.ServiceRadiusFromLocation
+                ,SA.PreferredAddress                                                                                                                                                                                                                                                
+
+                ,PC.PostalCode
+                ,SP.StateProvinceCode
+                ,SP.StateProvinceName
+                ,TT.TransportTypeID
+                ,TT.TransportTypeName
+        FROM    Address As L
+                 INNER JOIN
+                ServiceAddress As SA
+                  ON L.AddressID = SA.AddressID
+                      AND L.UserID = SA.UserID
                  INNER JOIN
                 StateProvince As SP
                   ON L.StateProvinceID = SP.StateProvinceID
@@ -172,11 +196,11 @@
                   ON PC.PostalCodeID = L.PostalCodeID
                  LEFT JOIN
                 TransportType As TT
-                  ON TT.TransportTypeID = L.TransportType
+                  ON TT.TransportTypeID = SA.TransportType
         WHERE   L.UserID = @0
-                 AND L.PositionID = @1
-                 -- We get all location, not only active AND Active = 1
-                 AND L.NickName is not null AND L.NickName not like ''
+                 AND SA.PositionID = @1
+                 -- We get all location, not only active: -- AND Active = 1
+                 AND L.AddressName is not null AND L.AddressName not like ''
     ";
     var sqlGetLocationPreferences = @"
         SELECT  TOP 1 ServiceRadiusFromLocation, TransportType
