@@ -145,7 +145,7 @@
         @if(showTools){
         <div class="account-tools">
             <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
-            <a class="register" href="@(UrlUtil.LangPath)Account/Register/?Redirect=@Uri.EscapeDataString(redirect)">Need an account?</a>
+            <a class="register" href="@(UrlUtil.LangPath)Account/Register/?Redirect=@Uri.EscapeDataString(redirect ?? "")">Need an account?</a>
         </div>
         }
     </section>
