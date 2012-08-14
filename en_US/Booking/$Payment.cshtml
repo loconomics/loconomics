@@ -214,41 +214,10 @@
     /*
      * Get Data
      */
+    dynamic summary = BookingHelper.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
+    string strDetails = BookingHelper.GetBookingRequestDetails(0, summary.PricingEstimateID);
+    string strServices = BookingHelper.GetBookingRequestServices(0, summary.PricingEstimateID);
 
-     var getServicesIncluded = @"
-        SELECT  S.Name
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                ServiceAttribute As S
-                  ON S.ServiceAttributeID = P.ServiceAttributeID
-        WHERE   P.PricingEstimateID = @0
-                 AND S.CountryId = @1 AND S.LanguageID = @2
-    ";
-    var getPricingVars = @"
-        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingVariable As V
-                  ON V.PricingVariableID = P.PricingVariableID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
-    ";
-    var getPricingOptions = @"
-        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingOption As V
-                  ON V.PricingOptionID = P.PricingOptionID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
-    ";
-    dynamic summary, services, pvars, poptions;
-    using (var db = Database.Open("sqlloco")) {
-        summary     = BookingHelper.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
-        services    = db.Query(getServicesIncluded, summary.PricingEstimateID, 1, 1);
-        pvars       = db.Query(getPricingVars, summary.PricingEstimateID, 1, 1);
-        poptions    = db.Query(getPricingOptions, summary.PricingEstimateID, 1, 1);
-    }
     // auxiliar vars in view generation
     int i = 0;
     string iprint = "";
@@ -391,17 +360,7 @@
             <li class="services-list">
                 <strong>Services:</strong>
                 @*Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets*@
-                @{
-                    i = 0;
-                    iprint = "";
-                    foreach (var service in services) {
-                        if (i > 0) {
-                            iprint = ", ";
-                        }
-                        i++;
-                        @(iprint + service.Name)
-                    }
-                }
+                @strServices
             </li>
             <li class="special-instructions">
                 <strong>Special instructions:</strong>
@@ -415,29 +374,7 @@
             <li class="details">
                 <strong>Details:</strong>
                 @*Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.*@
-                @{
-                    i = 0;
-                    iprint = "";
-                    foreach (var pitem in pvars) {
-                        if (i > 0) {
-                            iprint = "; ";
-                        }
-                        i++;
-                        @(iprint + pitem.Name + " " + @pitem.Quantity)
-                    }
-                    iprint = "";
-                    if (pvars.Count > 0) {
-                        iprint = "; ";
-                    }
-                    i = 0;
-                    foreach (var pitem in poptions) {
-                        if (i > 0) {
-                            iprint = "; ";
-                        }
-                        i++;
-                        @(iprint + pitem.Name + "" + @pitem.Quantity)
-                    }
-                 }
+                @strDetails
             </li>
         </ul>
         @*<div class="acti

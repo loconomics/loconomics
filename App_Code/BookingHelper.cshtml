@@ -243,12 +243,12 @@
                 IsAdmin);
         }
     }
-    public static string GetBookingRequestDetails(int BookingRequestID){
-        var getBookingRequestPricingEstimate = @"
-            SELECT  PricingEstimateID
-            FROM    BookingRequest
-            WHERE   BookingRequestID = @0
-        ";
+    private static string sqlGetBookingRequestPricingEstimate = @"
+        SELECT  PricingEstimateID
+        FROM    BookingRequest
+        WHERE   BookingRequestID = @0
+    ";
+    public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0){
         var getPricingVars = @"
             SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
             FROM    PricingEstimateDetail As P
@@ -256,7 +256,7 @@
                     PricingVariable As V
                       ON V.PricingVariableID = P.PricingVariableID
             WHERE   P.PricingEstimateID = @0
-                     AND V.CountryId = @1 AND V.LanguageID = @2
+                     AND V.LanguageID = @1 AND V.CountryId = @2
         ";
         var getPricingOptions = @"
             SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity
@@ -265,13 +265,17 @@
                     PricingOption As V
                       ON V.PricingOptionID = P.PricingOptionID
             WHERE   P.PricingEstimateID = @0
-                     AND V.CountryId = @1 AND V.LanguageID = @2
+                     AND V.LanguageID = @1 AND V.CountryId = @2
         ";
         dynamic pvars, poptions;
         using (var db = Database.Open("sqlloco")) {
-            int pricingEstimateID = db.QueryValue(getBookingRequestPricingEstimate, BookingRequestID);
-            pvars       = db.Query(getPricingVars, pricingEstimateID, 1, 1);
-            poptions    = db.Query(getPricingOptions, pricingEstimateID, 1, 1);
+            if (pricingEstimateID == 0) {
+                pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, BookingRequestID);
+            }
+            pvars       = db.Query(getPricingVars, pricingEstimateID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            poptions    = db.Query(getPricingOptions, pricingEstimateID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
         
         int i = 0;
@@ -295,6 +299,38 @@
             }
             i++;
             result += iprint + pitem.Name + "" + pitem.Quantity;
+        }
+        
+        return result;
+    }
+    public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0){
+         var getServicesIncluded = @"
+            SELECT  S.Name
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    ServiceAttribute As S
+                      ON S.ServiceAttributeID = P.ServiceAttributeID
+            WHERE   P.PricingEstimateID = @0
+                     AND S.LanguageID = @1 AND S.CountryId = @2
+        ";
+        dynamic services;
+        using (var db = Database.Open("sqlloco")) {
+            if (pricingEstimateID == 0){
+                pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
+            }
+            services = db.Query(getServicesIncluded, pricingEstimateID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        
+        int i = 0;
+        string iprint = "";
+        string result = "";
+        foreach (var service in services) {
+            if (i > 0) {
+                iprint = ", ";
+            }
+            i++;
+            result += iprint + service.Name;
         }
         
         return result;
