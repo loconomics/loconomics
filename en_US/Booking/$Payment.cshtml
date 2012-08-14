@@ -200,13 +200,13 @@
                 }
             }
             if (ModelState.IsValid) {
-                // Return OK result
-                CommonHelpers.ReturnJsonResult(0, null, false);
                 /*
                 * Create, save and send Message
                 */
                 LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
-                Response.End();
+                
+                // Return OK result
+                CommonHelpers.ReturnJsonResult(0, null);
             }
         }
     }
@@ -214,37 +214,7 @@
     /*
      * Get Data
      */
-    var getBookingRequest = @"
-        SELECT  TOP 1
-                B.SpecialRequests, B.PricingEstimateID,
-                L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
-                SP.StateProvinceName, SP.StateProvinceCode,
-                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
-                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
-                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
-                P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice
-        FROM    BookingRequest As B
-                 INNER JOIN
-                ServiceAddress As L
-                  ON B.ServiceAddressID = L.ServiceAddressID
-                 INNER JOIN
-                CalendarEvents As E1
-                  ON E1.ID = B.PreferredDateID
-                 INNER JOIN
-                CalendarEvents As E2
-                  ON E2.ID = B.AlternativeDate1ID
-                 INNER JOIN
-                CalendarEvents As E3
-                  ON E3.ID = B.AlternativeDate2ID
-                 INNER JOIN
-                PricingEstimate As P
-                  ON P.PricingEstimateID = B.PricingEstimateID
-                 INNER JOIN
-                StateProvince As SP
-                  ON SP.StateProvinceID = L.StateProvinceID
-        WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
-                 AND B.PositionID = @2 AND B.BookingRequestID = @3
-    ";
+
      var getServicesIncluded = @"
         SELECT  S.Name
         FROM    PricingEstimateDetail As P
@@ -274,7 +244,7 @@
     ";
     dynamic summary, services, pvars, poptions;
     using (var db = Database.Open("sqlloco")) {
-        summary     = db.QuerySingle(getBookingRequest, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+        summary     = BookingHelper.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
         services    = db.Query(getServicesIncluded, summary.PricingEstimateID, 1, 1);
         pvars       = db.Query(getPricingVars, summary.PricingEstimateID, 1, 1);
         poptions    = db.Query(getPricingOptions, summary.PricingEstimateID, 1, 1);

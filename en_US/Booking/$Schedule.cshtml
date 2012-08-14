@@ -124,15 +124,18 @@
             }
         }
         
-        // TODO: Add validation for: End Time cannot be lower than Start Time
+        // TODO: Add validation for: End Time cannot be lower than Start Time --- END TIME MUST BE AUTO, using the ServiceDuration field
         
         if (ModelState.IsValid){
             var sqlInsServiceLocation = @"
-                INSERT INTO [serviceaddress]
+                BEGIN TRAN
+
+                DECLARE @AddressID int
+
+                INSERT INTO [Address]
                            ([UserID]
-                           ,[PositionID]
                            ,[AddressTypeID]
-                           ,[NickName]
+                           ,[AddressName]
                            ,[AddressLine1]
                            ,[AddressLine2]
                            ,[City]
@@ -142,6 +145,20 @@
                            ,[Latitude]
                            ,[Longitude]
                            ,[GoogleMapsURL]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy]
+                           ,[Active])
+                     VALUES (@0, 13 /*AddressType: Billing*/,
+                             @7, @1, @2, @3, @4, @5, @6, 
+                             null, null, null, getdate(), getdate(), 'sys', 1)
+                
+                SELECT @AddressID = @@Identity
+
+                INSERT INTO [serviceaddress]
+                           ([UserID]
+                           ,[AddressID]
+                           ,[PositionID]
                            ,[ServicesPerformedAtLocation]
                            ,[TravelFromLocation]
                            ,[ServiceRadiusFromLocation]
@@ -151,9 +168,12 @@
                            ,[UpdatedDate]
                            ,[ModifiedBy]
                            ,[Active])
-                     VALUES (@0, 0, 12, @7, @1, @2, @3, @4, @5, @6, 
-                             null, null, null, 0, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
-                SELECT Cast(@@Identity As int) As ServiceAddressID
+                     VALUES (@0, @AddressId, 0 /*Position Zero, customer*/,
+                             1 /*Service performed at this location*/, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
+
+                COMMIT TRAN
+
+                SELECT @AddressID As AddressID
             ";
             var sqlInsCalendarEvent = @"
                 INSERT INTO [CalendarEvents]
@@ -173,7 +193,7 @@
             ";
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET
-                        ServiceAddressID = @1,
+                        AddressID = @1,
                         PreferredDateID = @2,
                         AlternativeDate1ID = @3,
                         AlternativeDate2ID = @4
@@ -198,7 +218,7 @@
                         Request["city"],
                         Request["state"],
                         zipcodeID,
-                        1, // countryID = 1
+                        LcData.GetCurrentCountryID(),
                         locationNickName);
                 }
                 
@@ -231,18 +251,21 @@
     using (var db = Database.Open("sqlloco")) {
         // Provider locations
         providerLocations = db.Query(@"
-            SELECT  ServiceAddressID, NickName
-            FROM    serviceaddress
-            WHERE   UserId = @0 AND PositionID = @1
-                     AND NickName IS NOT NULL
-                     AND ServicesPerformedAtLocation = 1
+            SELECT  DISTINCT L.AddressID, L.AddressName
+            FROM    ServiceAddress As SA
+                     INNER JOIN
+                    Address As L
+                      ON L.AddressID = SA.AddressID
+            WHERE   L.UserId = @0 AND SA.PositionID = @1
+                     AND L.AddressName IS NOT NULL
+                     AND SA.ServicesPerformedAtLocation = 1
         ", p.UserID, pos.PositionID);
         // Customer locations
         customerLocations = db.Query(@"
-            SELECT  ServiceAddressID, NickName
-            FROM    serviceaddress
-            WHERE   UserId = @0 AND PositionID = 0
-                     AND NickName IS NOT NULL
+            SELECT  DISTINCT L.AddressID, L.AddressName
+            FROM    Address As L
+            WHERE   L.UserId = @0
+                     AND L.AddressName IS NOT NULL
         ", c.UserID);
         serviceDurationHours = (decimal)db.QueryValue(@"
             SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
@@ -289,14 +312,14 @@
             @if (providerLocations != null && providerLocations.Count > 0) {
                 <optgroup label="Provider perform services at following locations">
                     @foreach (var ploc in providerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
                     }
                 </optgroup>
             }
             @if (customerLocations != null && customerLocations.Count > 0) {
                 <optgroup label="Your locations">
                     @foreach (var ploc in customerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.ServiceAddressID) value="@ploc.ServiceAddressID">@ploc.NickName</option>
+                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
                     }
                 </optgroup>
             }

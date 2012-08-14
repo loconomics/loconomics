@@ -172,6 +172,8 @@
                             ,UpdatedDate = getdate()
                             ,ModifiedBy = 'sys'
                     WHERE   UserId = @UserID
+                             AND
+                            AddressTypeID = 1 -- Ever Type: Home
 
                     IF @@rowcount = 0
                     BEGIN
@@ -181,10 +183,10 @@
                         WHERE AddressTypeID = 1 -- Home
                                AND LanguageID = @LanguageID
 
-                        INSERT INTO Address (UserID, AddressID, AddressTypeID, AddressName,
+                        INSERT INTO Address (UserID, AddressTypeID, AddressName,
                             AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
                             Active, CreatedDate, UpdatedDate, ModifiedBy)
-                        VALUES (@UserID, 1 /* Personal address is ever 1 */, 1 /* Type: Home */, @AddressName, 
+                        VALUES (@UserID, 1 /* Type: Home */, @AddressName, 
                             @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, 
                             1, getdate(), getdate(), 'sys')
                     END

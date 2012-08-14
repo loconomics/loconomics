@@ -115,7 +115,7 @@
 
                     L.UserID As LocationUserID,
                     LU.FirstName As LocationUserFirstName,
-                    L.NickName As LocationName,
+                    L.AddressName As LocationName,
                     L.AddressLine1, L.AddressLine2,
                     L.City,
                     SP.StateProvinceName, SP.StateProvinceCode,
@@ -145,7 +145,7 @@
                       ON R.BookingRequestID = B.BookingRequestID
                      INNER JOIN
                     PricingEstimate As P
-                      ON P.PricingEstimateID = R.PricingEstimateID   /** TODO:PROBLEMA: En bookingRequest se guarda el AddressID sólamente, pero no un hipotético 'AddressUserID' que identifique únicamente a ese Address ***/
+                      ON P.PricingEstimateID = R.PricingEstimateID
                      INNER JOIN
                     Address As L
                       ON R.AddressID = L.AddressID
@@ -174,6 +174,71 @@
         ";
         using (var db = Database.Open("sqlloco")) {
             return db.QuerySingle(sqlGetBooking, BookingID, UserID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), 
+                IsAdmin);
+        }
+    }
+    public static dynamic GetBookingRequestForUser(int BookingRequestID, int UserID, bool IsAdmin) {
+        var sqlGetBookingRequest = @"
+            SELECT  R.BookingRequestID,
+                    0 As BookingID,
+                    R.ProviderUserID,
+                    R.CustomerUserID,
+                    R.PricingEstimateID,
+                    R.SpecialRequests,
+                    R.UpdatedDate,
+                    R.BookingRequestStatusID,
+                    R.PositionID,
+
+                    DATEADD(day, 7, E1.EndTime) As PaymentDate,
+                    (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
+                     WHERE ProviderPaymentPreference.ProviderUserID = R.ProviderUserID)
+                     As PaymentProviderAccountLastDigits,
+                    R.PaymentLastFourCardNumberDigits As PaymentCustomerCardLastDigits,
+
+                    Pos.PositionSingular,
+
+                    L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
+                    SP.StateProvinceName, SP.StateProvinceCode,
+
+                    E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
+                    E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
+                    E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
+
+                    P.ServiceDuration, coalesce(P.HourlyPrice, 0) As HourlyPrice,
+                    P.SubtotalPrice, P.FeePrice, P.TotalPrice
+            FROM    BookingRequest As R
+                     INNER JOIN
+                    PricingEstimate As P
+                      ON P.PricingEstimateID = R.PricingEstimateID
+                     LEFT JOIN
+                    Address As L
+                      ON R.AddressID = L.AddressID
+                    -- LEFT JOIN
+                    --ServiceAddress As SA
+                    --  ON L.AddressID = SA.AddressID
+                     LEFT JOIN
+                    CalendarEvents As E1
+                      ON E1.ID = R.PreferredDateID
+                     LEFT JOIN
+                    CalendarEvents As E2
+                      ON E2.ID = R.AlternativeDate1ID
+                     LEFT JOIN
+                    CalendarEvents As E3
+                      ON E3.ID = R.AlternativeDate2ID
+                     INNER JOIN
+                    Positions As Pos
+                      ON Pos.PositionID = R.PositionID
+					    AND Pos.LanguageID = @2 AND Pos.CountryID = @3
+                     LEFT JOIN
+                    StateProvince As SP
+                      ON SP.StateProvinceID = L.StateProvinceID
+            WHERE   R.BookingRequestID = @0
+                     AND
+                    (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(sqlGetBookingRequest, BookingRequestID, UserID, 
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), 
                 IsAdmin);
         }
@@ -307,5 +372,98 @@
             }
         }
         return "";
+    }
+    
+    /// <summary>
+    /// Invalide a Booking Request setting it as 'cancelled', 'declined',
+    /// or 'expired', preserving the main data but removing some unneded
+    /// data as the events-dates and the address (if this can be removed)
+    /// and every reference to that events and address from the BookingRequest
+    /// table.
+    /// The desired new BookingStatusID must be provided, but is filtered and
+    /// if is not a valid ID an exception is throw.
+    /// List of BookingRequestStatusID:
+    /// BookingRequestStatusID	BookingRequestStatusName
+    /// 3	timed out
+    /// 4	cancelled
+    /// 5	denied
+    /// 6	expired
+    /// 8	denied with alternatives
+    /// </summary>
+    /// <param name="BookingRequestID"></param>
+    public static dynamic InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID){
+        if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID)){
+            throw new Exception(String.Format(
+                "BookingRequestStatusID '{0}' is not valid to invalidate the booking request", 
+                BookingRequestStatusID));
+        }
+        
+        var sqlInvalidateBookingRequest = @"
+            -- Parameters
+            DECLARE @BookingRequestID int, @BookingRequestStatusID int
+            SET @BookingRequestID = @0
+            SET @BookingRequestStatusID = @1
+
+            DECLARE @AddressID int
+
+            BEGIN TRY
+                BEGIN TRAN
+
+                -- Get Service Address ID to be (maybe) removed later
+                SELECT  @AddressID = AddressID
+                FROM    BookingRequest
+                WHERE   BookingRequestID = @BookingRequestID
+
+                /*
+                 * Updating Booking Request status, and removing references to the 
+                 * user selected dates.
+                 */
+                UPDATE  BookingRequest
+                SET     BookingRequestStatusID = @BookingRequestStatusID,
+                        PreferredDateID = null,
+                        AlternativeDate1ID = null,
+                        AlternativeDate2ID = null,
+                        AddressID = null
+                WHERE   BookingRequestID = @BookingRequestID
+
+                -- Removing CalendarEvents:
+                DELETE FROM CalendarEvents
+                WHERE ID IN (
+                    SELECT TOP 1 PreferredDateID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
+                    WHERE BookingRequestID = @BookingRequestID
+                )
+
+                -- Removing Service Address, if is not an user saved location (it has not AddressName)
+                DELETE FROM ServiceAddress
+                WHERE AddressID = @AddressID
+                      AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
+                DELETE FROM Address
+                WHERE AddressID = @AddressID
+                       AND
+                      AddressName is null
+
+                COMMIT TRAN
+
+                -- We return sucessful operation with Error=0
+                SELECT 0 As Error
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0
+                    ROLLBACK TRAN
+                -- We return error number and message
+                SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
+            END CATCH
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(sqlInvalidateBookingRequest, 
+                BookingRequestID,
+                BookingRequestStatusID);
+        }
     }
 }

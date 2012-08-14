@@ -15,69 +15,12 @@
                  AND
                 R.BookingRequestStatusID <> 7
     ";
-    var sqlDeclineBooking = @"
-        -- Parameters
-        DECLARE @BookingRequestID int
-        SET @BookingRequestID = @0
-
-        DECLARE @ServiceAddressID int
-
-        BEGIN TRY
-            BEGIN TRAN
-
-            -- Get Service Address ID to be (maybe) removed later
-            SELECT  @ServiceAddressID = ServiceAddressID
-            FROM    BookingRequest
-            WHERE   BookingRequestID = @BookingRequestID
-
-            /*
-             * Updating Booking Request status, and removing references to the 
-             * user selected dates.
-             */
-            UPDATE  BookingRequest
-            SET     BookingRequestStatusID = 5, -- denied/declined
-                    PreferredDateID = null,
-                    AlternativeDate1ID = null,
-                    AlternativeDate2ID = null,
-                    ServiceAddressID = null
-            WHERE   BookingRequestID = @BookingRequestID
-
-            -- Removing CalendarEvents:
-            DELETE FROM CalendarEvents
-            WHERE ID IN (
-                SELECT TOP 1 PreferredDateID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID
-                UNION
-                SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID
-                UNION
-                SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
-                WHERE BookingRequestID = @BookingRequestID
-            )
-
-            -- Removing Service Address, if is not an user saved location (it has not NickName)
-            DELETE FROM ServiceAddress
-            WHERE ServiceAddressID = @ServiceAddressID
-                   AND
-                  NickName is null
-
-            COMMIT TRAN
-
-            -- We return sucessful operation with Error=0
-            SELECT 0 As Error
-        END TRY
-        BEGIN CATCH
-            IF @@TRANCOUNT > 0
-                ROLLBACK TRAN
-            -- We return error number and message
-            SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
-        END CATCH
-    ";
     
     using (var db = Database.Open("sqlloco")) {
         var checkID = db.QueryValue(sqlCheckBookingRequest, u.UserID, brID);
         if (checkID != null && (int)checkID == brID) {
-            var result = db.QuerySingle(sqlDeclineBooking, brID);
+
+            var result = BookingHelper.InvalidateBookingRequest(brID, 5); // 5:denied/declined
 
             if (result.Error == 0) {
                 if (Request.IsAjaxRequest()){

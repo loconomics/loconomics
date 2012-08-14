@@ -11,67 +11,11 @@
     
     // TODO: Calculate location distance from provider to customer
     
-    var sqlGetBookingRequest = @"
-        SELECT  R.BookingRequestID,
-                0 As BookingID,
-                R.ProviderUserID,
-                R.CustomerUserID,
-                R.PricingEstimateID,
-                R.SpecialRequests,
-                R.UpdatedDate,
-                R.BookingRequestStatusID,
-                R.PositionID,
+    var booking = BookingHelper.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
 
-                DATEADD(day, 7, E1.EndTime) As PaymentDate,
-                (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
-                 WHERE ProviderPaymentPreference.ProviderUserID = R.ProviderUserID)
-                 As PaymentProviderAccountLastDigits,
-                R.PaymentLastFourCardNumberDigits As PaymentCustomerCardLastDigits,
-
-                Pos.PositionSingular,
-
-                SP.StateProvinceName, SP.StateProvinceCode,
-                E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
-                E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
-                E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
-
-                P.ServiceDuration, coalesce(P.HourlyPrice, 0) As HourlyPrice,
-                P.SubtotalPrice, P.FeePrice, P.TotalPrice
-        FROM    BookingRequest As R
-                 INNER JOIN
-                PricingEstimate As P
-                  ON P.PricingEstimateID = R.PricingEstimateID
-                 LEFT JOIN
-                ServiceAddress As L
-                  ON R.ServiceAddressID = L.ServiceAddressID
-                 LEFT JOIN
-                CalendarEvents As E1
-                  ON E1.ID = R.PreferredDateID
-                 LEFT JOIN
-                CalendarEvents As E2
-                  ON E2.ID = R.AlternativeDate1ID
-                 LEFT JOIN
-                CalendarEvents As E3
-                  ON E3.ID = R.AlternativeDate2ID
-                 INNER JOIN
-                Positions As Pos
-                  ON Pos.PositionID = R.PositionID
-					AND Pos.CountryID = @2 AND Pos.LanguageID = @3
-                 LEFT JOIN
-                StateProvince As SP
-                  ON SP.StateProvinceID = L.StateProvinceID
-        WHERE   R.BookingRequestID = @0
-                 AND
-                (R.ProviderUserID = @1 OR R.CustomerUserID = @1)
-    ";
-    dynamic booking;
-    using (var db = Database.Open("sqlloco")) {
-        booking = db.QuerySingle(sqlGetBookingRequest, brID, u.UserID, 1, 1);
-        if (booking != null) {
-            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
-        }
+    if (booking != null) {
+        confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
     }
-
 }
 @helper printDateTimeRange(DateTime start, DateTime end){
     @start.ToLongDateString()
