@@ -243,38 +243,69 @@
                 IsAdmin);
         }
     }
-    private static string sqlGetBookingRequestPricingEstimate = @"
+    public static string sqlGetBookingRequestPricingEstimate = @"
         SELECT  PricingEstimateID
         FROM    BookingRequest
         WHERE   BookingRequestID = @0
     ";
+    public static string sqlGetPricingPackagesInPricingEstimate = @"
+        SELECT  PP.ProviderPackageID
+                ,PP.ProviderPackageName As Name
+                ,PP.ProviderPackageDescription As Description
+                ,PP.ProviderPackagePrice As Price
+                ,PP.ProviderPackageServiceDuration As ServiceDuration
+                ,PP.FirstTimeClientsOnly
+                ,PP.NumberOfSessions
+                ,P.PriceEstimate
+                ,P.CustomerPricingDataInput
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ProviderPackage As PP
+                  ON PP.ProviderPackageID = P.ProviderPackageID
+        WHERE   P.PricingEstimateID = @0
+                    AND 
+                PP.LanguageID = @1 AND PP.CountryID = @2
+    ";
+    public static string sqlGetPricingOptionsInPricingEstimate = @"
+        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingOption As V
+                  ON V.PricingOptionID = P.PricingOptionID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.LanguageID = @1 AND V.CountryId = @2
+    ";
+    public static string sqlGetPricingVarsInPricingEstimate = @"
+        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                P.TimeEstimate As Time, P.PriceEstimate As Price
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                PricingVariable As V
+                  ON V.PricingVariableID = P.PricingVariableID
+        WHERE   P.PricingEstimateID = @0
+                 AND V.LanguageID = @1 AND V.CountryId = @2
+    ";
+    public static string sqlGetServicesIncludedInPricingEstimate = @"
+        SELECT  S.Name
+        FROM    PricingEstimateDetail As P
+                 INNER JOIN
+                ServiceAttribute As S
+                  ON S.ServiceAttributeID = P.ServiceAttributeID
+                    -- Avoid show service attributes related to options
+                    AND P.PricingOptionID = 0
+        WHERE   P.PricingEstimateID = @0
+                 AND S.LanguageID = @1 AND S.CountryId = @2
+    ";
     public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0){
-        var getPricingVars = @"
-            SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingVariable As V
-                      ON V.PricingVariableID = P.PricingVariableID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
-        var getPricingOptions = @"
-            SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingOption As V
-                      ON V.PricingOptionID = P.PricingOptionID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
         dynamic pvars, poptions;
         using (var db = Database.Open("sqlloco")) {
             if (pricingEstimateID == 0) {
                 pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, BookingRequestID);
             }
-            pvars       = db.Query(getPricingVars, pricingEstimateID, 
+            pvars       = db.Query(sqlGetPricingVarsInPricingEstimate, pricingEstimateID, 
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            poptions    = db.Query(getPricingOptions, pricingEstimateID, 
+            poptions    = db.Query(sqlGetPricingOptionsInPricingEstimate, pricingEstimateID, 
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
         
@@ -304,21 +335,12 @@
         return result;
     }
     public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0){
-         var getServicesIncluded = @"
-            SELECT  S.Name
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    ServiceAttribute As S
-                      ON S.ServiceAttributeID = P.ServiceAttributeID
-            WHERE   P.PricingEstimateID = @0
-                     AND S.LanguageID = @1 AND S.CountryId = @2
-        ";
         dynamic services;
         using (var db = Database.Open("sqlloco")) {
             if (pricingEstimateID == 0){
                 pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
             }
-            services = db.Query(getServicesIncluded, pricingEstimateID, 
+            services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID, 
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
         
@@ -333,6 +355,29 @@
             result += iprint + service.Name;
         }
         
+        return result;
+    }
+    public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0){
+        dynamic packages;
+        using (var db = Database.Open("sqlloco")) {
+            if (pricingEstimateID == 0){
+                pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
+            }
+            packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID, 
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        
+        int i = 0;
+        string iprint = "";
+        string result = "";
+        foreach (var pak in packages) {
+            if (i > 0) {
+                iprint = ", ";
+            }
+            i++;
+            result += iprint + pak.Name + " (" + pak.CustomerPricingDataInput + ")";
+        }
+
         return result;
     }
     public static string GetBookingRequestSubject(int BookingRequestID){

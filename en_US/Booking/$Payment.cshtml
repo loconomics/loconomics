@@ -217,10 +217,7 @@
     dynamic summary = BookingHelper.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
     string strDetails = BookingHelper.GetBookingRequestDetails(0, summary.PricingEstimateID);
     string strServices = BookingHelper.GetBookingRequestServices(0, summary.PricingEstimateID);
-
-    // auxiliar vars in view generation
-    int i = 0;
-    string iprint = "";
+    string strPackages = BookingHelper.GetBookingRequestPackages(0, summary.PricingEstimateID);
 }
 @* From Profile/_PositionSummary *@
 @helper printCatTitle(dynamic cat){
@@ -357,11 +354,21 @@
     <fieldset class="services-summary box">
         <legend>Summary of services to be performed:</legend>
         <ul>
+            @if (!String.IsNullOrEmpty(strServices))
+            {
             <li class="services-list">
                 <strong>Services:</strong>
                 @*Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets*@
                 @strServices
             </li>
+            }
+            @if (!String.IsNullOrEmpty(strPackages))
+            {
+            <li class="packages-list">
+                <strong>Packages:</strong>
+                @strPackages
+            </li>
+            }
             <li class="special-instructions">
                 <strong>Special instructions:</strong>
                 @summary.SpecialRequests

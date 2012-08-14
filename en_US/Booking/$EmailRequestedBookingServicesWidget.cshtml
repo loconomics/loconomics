@@ -6,63 +6,13 @@
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
     }
-
-    var getServicesIncluded = @"
-        SELECT  S.Name
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                ServiceAttribute As S
-                  ON S.ServiceAttributeID = P.ServiceAttributeID
-                    -- Avoid show service attributes related to options
-                    AND P.PricingOptionID = 0
-        WHERE   P.PricingEstimateID = @0
-                 AND S.LanguageID = @1 AND S.CountryId = @2
-    ";
-    var getPricingVars = @"
-        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                P.TimeEstimate As Time, P.PriceEstimate As Price
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingVariable As V
-                  ON V.PricingVariableID = P.PricingVariableID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.LanguageID = @1 AND V.CountryId = @2
-    ";
-    var getPricingOptions = @"
-        SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                P.TimeEstimate As Time, P.PriceEstimate As Price
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingOption As V
-                  ON V.PricingOptionID = P.PricingOptionID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.LanguageID = @1 AND V.CountryId = @2
-    ";
-    var getPackages = @"
-        SELECT  PP.ProviderPackageID
-                ,PP.ProviderPackageName As Name
-                ,PP.ProviderPackageDescription As Description
-                ,PP.ProviderPackagePrice As Price
-                ,PP.ProviderPackageServiceDuration As ServiceDuration
-                ,PP.FirstTimeClientsOnly
-                ,PP.NumberOfSessions
-                ,P.PriceEstimate
-                ,P.CustomerPricingDataInput
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                ProviderPackage As PP
-                  ON PP.ProviderPackageID = P.ProviderPackageID
-        WHERE   P.PricingEstimateID = @0
-                    AND 
-                PP.LanguageID = @1 AND PP.CountryID = @2
-    ";
      
     dynamic services = null, pvars = null, poptions = null, packages = null;
     using (var db = Database.Open("sqlloco")) {         
-        services    = db.Query(getServicesIncluded, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        pvars       = db.Query(getPricingVars, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        poptions    = db.Query(getPricingOptions, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        packages    = db.Query(getPackages, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        services    = db.Query(BookingHelper.sqlGetServicesIncludedInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        pvars       = db.Query(BookingHelper.sqlGetPricingVarsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        poptions    = db.Query(BookingHelper.sqlGetPricingOptionsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        packages    = db.Query(BookingHelper.sqlGetPricingPackagesInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
      
     // auxiliar vars in view generation
