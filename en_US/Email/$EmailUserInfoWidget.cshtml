@@ -33,14 +33,14 @@
 }
 @functions{
     string getLocationForGoogleMaps(dynamic data){
-        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+        return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
 @if (size == "medium")
 {
     <div style="font-size: .9em;@addContainerStyle">
         <div>
-            <h5 @LcEmailTemplateHelper.StyleH5("margin: 0;font-size: 1em;line-height: 1em;display: inline;color: #6C6C6C;")>@CommonHelpers.GetUserDisplayName(data, dataPrefix)</h5>
+            <h5 @LcEmailTemplateHelper.StyleH5("margin: 0;font-size: 1em;line-height: 1em;display: inline;color: #6C6C6C;")>@LcHelpers.GetUserDisplayName(data, dataPrefix)</h5>
             <span>Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
@@ -50,7 +50,7 @@
             <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
                 <div>Name: <span>@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
                 <div>Address: <span>@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
-                <div>@CommonHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
+                <div>@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
                 <div>Mobile phone: <span>@data[dataPrefix + "MobilePhone"]</span></div>
                 <div>Email address: <span>@data[dataPrefix + "Email"]</span></div>
             </div>
@@ -101,7 +101,7 @@
 else if (size == "mini") {
     <div style="@addContainerStyle">
         <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
-        <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()">@data[dataPrefix + "FirstName"] @(CommonHelpers.GetInitialLetter(data[dataPrefix + "LastName"])).</h5>
+        <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()">@data[dataPrefix + "FirstName"] @(LcHelpers.GetInitialLetter(data[dataPrefix + "LastName"])).</h5>
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div>@extraInfo</div>
         } else {

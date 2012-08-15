@@ -23,7 +23,7 @@
             LcMessaging.SendCustomerInquiry(u.UserID, p.UserID, pos.PositionID, 
                 Request["subject"], Request["message-body"]);
             
-            CommonHelpers.ReturnJsonResult(0, "Your message was sucessfully sent!");
+            LcHelpers.ReturnJsonResult(0, "Your message was sucessfully sent!");
         }
     }
 }
@@ -35,18 +35,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
     <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message send-message-form ajax ajax-box" id="position#@(n)-message">
         <input type="hidden" name="ProviderID" value="@p.UserID"/>
         <input type="hidden" name="PositionID" value="@pos.PositionID"/>
-        @CommonHelpers.GetValidationScripts()
+        @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <div class="from-line">
             <label>From:</label>
             <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
-            <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
+            <span class="from">@LcHelpers.GetUserDisplayName(u)</span>
         </div>
         <div class="subject">
-            <label>Subject: <input type="text" name="subject" value="Message from @CommonHelpers.GetUserDisplayName(u) about @pos.PositionSingular services"/></label>
+            <label>Subject: <input type="text" name="subject" value="Message from @LcHelpers.GetUserDisplayName(u) about @pos.PositionSingular services"/></label>
         </div>
         <div class="message-body">
-            <textarea name="message-body" placeholder="Write your message to @CommonHelpers.GetUserDisplayName(p)"></textarea>
+            <textarea name="message-body" placeholder="Write your message to @LcHelpers.GetUserDisplayName(p)"></textarea>
         </div>
         <fieldset class="actions">
             <button class="main-action" type="submit">Send message</button>

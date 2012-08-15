@@ -178,7 +178,7 @@
         userLicenses = db.Query(sqlGetUserLicenses, u.UserID, p.PositionID);
     }
 }
-@CommonHelpers.GetValidationScripts()
+@LcHelpers.GetValidationScripts()
 @if (licenses == null || licenses.Count == 0)
 {
     <p class="setting-instructions">
@@ -224,7 +224,7 @@ else
                 <option value=""></option>
                 @foreach (var license in licenses)
                 {
-                    <option @CommonHelpers.IsSelected(Request["license-type"], license.LicenseCertificationID)
+                    <option @LcHelpers.IsSelected(Request["license-type"], license.LicenseCertificationID)
                         value="@license.LicenseCertificationID" 
                         data-description="@license.LicenseCertificationTypeDescription"
                         data-state-name="@license.StateProvinceName"
@@ -246,7 +246,7 @@ else
                     <label for="@idprefix-county">County:</label>
                     <select id="@idprefix-county" name="county" @Validation.GetHtml("county")>
                         <option value=""></option>
-                        @CommonHelpers.CountyOptions(Request["county"])
+                        @LcHelpers.CountyOptions(Request["county"])
                     </select>
                 </li>
                 <li>

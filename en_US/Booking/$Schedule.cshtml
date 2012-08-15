@@ -9,7 +9,7 @@
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
         if (IsPost){
-            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
             throw new Exception(inputdataerrormessage);
         }
@@ -41,7 +41,7 @@
             *   processing the form (if there is no bookingrequestid again, do second option).
             */
         //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
-        CommonHelpers.ReturnJsonResult(1, 
+        LcHelpers.ReturnJsonResult(1, 
             UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
     }
@@ -198,7 +198,7 @@
             }
             
             // Return OK result
-            CommonHelpers.ReturnJsonResult(0, null);
+            LcHelpers.ReturnJsonResult(0, null);
         }
     }
     
@@ -243,7 +243,7 @@
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
         string thisvalue = hour.ToString("c");
-        <option @CommonHelpers.IsSelected(selectedHour, thisvalue) value="@thisvalue">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+        <option @LcHelpers.IsSelected(selectedHour, thisvalue) value="@thisvalue">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
     }
 }
 
@@ -253,7 +253,7 @@
 <form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <script type="text/javascript">
         if (!serviceDurationHours) var serviceDurationHours = 0;
@@ -266,19 +266,19 @@
     <fieldset class="location box">
         <legend>Location where services are to be performed:</legend>
         <select name="select-location" class="select-location">
-            <option value="" @CommonHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
-            <option value="0" @CommonHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
+            <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
+            <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
             @if (providerLocations != null && providerLocations.Count > 0) {
                 <optgroup label="Provider perform services at following locations">
                     @foreach (var ploc in providerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
+                        <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
                     }
                 </optgroup>
             }
             @if (customerLocations != null && customerLocations.Count > 0) {
                 <optgroup label="Your locations">
                     @foreach (var ploc in customerLocations) {
-                        <option @CommonHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
+                        <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
                     }
                 </optgroup>
             }
@@ -295,13 +295,13 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
-                        @CommonHelpers.StateProvinceOptions(Request["state"].AsInt())
+                        @LcHelpers.StateProvinceOptions(Request["state"].AsInt())
                     </select></label></li>
             <li class="zip">
                 <label>Zip Code:<input type="text" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="save-to-my-locations">
-                <label class="save"><input type="checkbox" @CommonHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
                 <label>to my locations as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
             </li>
         </ul>
@@ -351,7 +351,7 @@
         </fieldset>
         @*
         <fieldset class="recurring">
-            <label><input type="checkbox" @CommonHelpers.IsChecked(Request["recurring"], "true") value="true" name="recurring"/>Make this appointment recurring</label>
+            <label><input type="checkbox" @LcHelpers.IsChecked(Request["recurring"], "true") value="true" name="recurring"/>Make this appointment recurring</label>
         </fieldset>
         *@
     </fieldset>

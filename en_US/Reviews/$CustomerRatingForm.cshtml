@@ -3,7 +3,7 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
     var provider = DashboardFunctions.GetUserRow();
     int bookingID = Request["BookingID"].AsInt();
@@ -142,16 +142,16 @@
                     }
                 }
                 if(ModelState.IsValid){
-                    //CommonHelpers.ReturnJsonResult(0, "Thanks for rating");
-                    CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID);
+                    //LcHelpers.ReturnJsonResult(0, "Thanks for rating");
+                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID);
                 }
             }
         }
     }
 }
 <form class="customer-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$CustomerRatingForm/">
-    @CommonHelpers.SetupStarRatingPlugin()
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.SetupStarRatingPlugin()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary()
     @if (booking != null && provider != null) {
         <input type="hidden" name="BookingID" value="@bookingID" />
@@ -186,8 +186,8 @@
             <ul>
                 <li class="question2">
                     <span>Would you work with @customer.FirstName again?</span>
-                    <label>Yes<input type="radio" name="question2" @CommonHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
-                    <label>No<input type="radio" name="question2" @CommonHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
+                    <label>Yes<input type="radio" name="question2" @LcHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
+                    <label>No<input type="radio" name="question2" @LcHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
                 </li>
             </ul>
         </fieldset>

@@ -79,7 +79,7 @@
                 }
                 note = String.Format(notetpl,
                         percentage,
-                        CommonHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
+                        LcHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
                         reviewRecord.TotalRatings);
             } else {
                 note = "There are not enougth reviews still to show an average rating";

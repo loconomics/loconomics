@@ -3,7 +3,7 @@
  *@
 @using WebMatrix.Data;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     var clienttypeid = PageData["ClientTypeID"] ?? 1;
     var p = PageData["providerrow"] ?? (PageData["providerrow"] = DashboardFunctions.GetUserRow(Request["providerid"].AsInt()));
@@ -165,18 +165,18 @@
                     Session["BookingRequestID"] = (int)bookingRequestID;
 
                 } catch (Exception ex) {
-                    CommonHelpers.ReturnJsonError(-1, ex.Message);
+                    LcHelpers.ReturnJsonError(-1, ex.Message);
                 }
             }
             // All fine, continue wizard next step:
-            CommonHelpers.ReturnJsonResult(0, null);
+            LcHelpers.ReturnJsonResult(0, null);
         }
     }
 }
 @helper printQuantities(int q)
 {
     for(int i = 0; i < 21; i++) {
-        <option @CommonHelpers.IsSelected(q, i) value="@i">@i</option>
+        <option @LcHelpers.IsSelected(q, i) value="@i">@i</option>
     }
 }
 
@@ -199,7 +199,7 @@
                     var paknumbers = pricingPackagesNumbers.ContainsKey(pak.ProviderPackageID) ? pricingPackagesNumbers[pak.ProviderPackageID] : null;
                 <tr>
                     <td>
-                        <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @CommonHelpers.IsChecked(pak.ProviderPackageID, (paknumbers != null ? pak.ProviderPackageID : preSelectedPackage)) name="provider-package-@pak.ProviderPackageID" value="True" />
+                        <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @LcHelpers.IsChecked(pak.ProviderPackageID, (paknumbers != null ? pak.ProviderPackageID : preSelectedPackage)) name="provider-package-@pak.ProviderPackageID" value="True" />
                         <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)</label>
                     </td>
                     <td class="package-price number">$<span class="calculate-item-price">@pak.Price</span></td>

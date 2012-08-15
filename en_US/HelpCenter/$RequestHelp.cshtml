@@ -13,13 +13,13 @@
         if (ModelState.IsValid) {
             LcMessaging.SendMail("support@loconomics.com", "User Request Help",
                 Request["question"], u.Email);
-            CommonHelpers.ReturnJsonResult(0, "Your message was sent and will be answered as soon as possible.");
+            LcHelpers.ReturnJsonResult(0, "Your message was sent and will be answered as soon as possible.");
         }
     }
 }
 
 <form action="@(UrlUtil.LangPath)HelpCenter/$RequestHelp/" class="ajax ajax-box requesthelp send-message-form">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
     <p>
@@ -32,10 +32,10 @@
         <div class="from-line">
             <label>From:</label>
             <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
-            <span class="from">@CommonHelpers.GetUserDisplayName(u)</span>
+            <span class="from">@LcHelpers.GetUserDisplayName(u)</span>
         </div>
         <div class="subject">
-            <label>Subject: <input type="text" name="subject" value="Help request from @CommonHelpers.GetUserDisplayName(u)"/></label>
+            <label>Subject: <input type="text" name="subject" value="Help request from @LcHelpers.GetUserDisplayName(u)"/></label>
         </div>
         <div class="message-body">
             <textarea name="message-body" placeholder="What is your question?"></textarea>

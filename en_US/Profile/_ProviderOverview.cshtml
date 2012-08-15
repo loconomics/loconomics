@@ -32,9 +32,9 @@
     </ul>
 }
 <p class="profile-intro">
-    @CommonHelpers.PrintTextAsHtml(pos.PositionIntro)
+    @LcHelpers.PrintTextAsHtml(pos.PositionIntro)
 </p>
-@CommonHelpers.SetupStarRatingPlugin()
+@LcHelpers.SetupStarRatingPlugin()
 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 @RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 

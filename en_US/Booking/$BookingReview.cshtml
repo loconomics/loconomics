@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     int thisUserID = (int)(PageData["AsUserID"] ?? Request["AsUserID"].AsInt());
     if (thisUserID == 0) {

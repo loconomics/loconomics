@@ -92,7 +92,7 @@
                 db.Execute("EXEC TestAlertAvailability @0", u.UserID);
 
                 // All was fine, AJAX-JSON response
-                CommonHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
+                LcHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
             }
         }
     }
@@ -103,7 +103,7 @@
     var interval = new TimeSpan(0, 30, 0);
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
-        <option @CommonHelpers.IsSelected(selectedHour.ToString("c"), hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+        <option @LcHelpers.IsSelected(selectedHour.ToString("c"), hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
     }
 }
 @helper printHourPerDayElements(dynamic dateHours){
@@ -123,8 +123,8 @@
     for (var d = 0; d < 7; d++){
         <li>
             <span class="day">@days[d]</span>
-            <label>Yes<input @CommonHelpers.IsChecked(availDates[d], true) name="availday-@d" value="True" type="radio"/></label>
-            <label>No<input @CommonHelpers.IsChecked(availDates[d], false) name="availday-@d" value="False" type="radio"/></label>
+            <label>Yes<input @LcHelpers.IsChecked(availDates[d], true) name="availday-@d" value="True" type="radio"/></label>
+            <label>No<input @LcHelpers.IsChecked(availDates[d], false) name="availday-@d" value="False" type="radio"/></label>
         </li>
     }
 }
@@ -132,7 +132,7 @@
     <select name="@(what)-time">
         <option value="1">1 Hour</option>
         @for(var h = 2; h < 10; h++) {
-            <option @CommonHelpers.IsSelected(selected, h.ToString()) value="@h">@h Hours</option>
+            <option @LcHelpers.IsSelected(selected, h.ToString()) value="@h">@h Hours</option>
         }
     </select>
 }
@@ -152,12 +152,12 @@
             } else {
                 sh = (h.TotalDays / 7).ToString() + " weeks";
             }
-            <option @CommonHelpers.IsSelected(selected, h.TotalHours.ToString()) value="@h">@sh</option>
+            <option @LcHelpers.IsSelected(selected, h.TotalHours.ToString()) value="@h">@sh</option>
         }
     </select>
 }
 @helper printOption(string selected, string val, string label) {
-    <option @CommonHelpers.IsSelected(selected, val) value="@val">@label</option>
+    <option @LcHelpers.IsSelected(selected, val) value="@val">@label</option>
 }
 @helper printHoursTimeInAdvance(string selected){
     // Time in advance of bookings: 1 hour, 1.5 hours, 2 hours, 2.5 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day, 2 days, 3 days, 4 days, 5 days, 6 days, 1 week, 2 weeks
@@ -263,7 +263,7 @@ Please enter your availability below.  This should be the hours you generally ke
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
@@ -281,14 +281,14 @@ Please enter your availability below.  This should be the hours you generally ke
         <legend>I already use a calendar program:</legend>
 
         <div class="confirm positionavailability-use-program">
-            <label>Yes<input @CommonHelpers.IsChecked(useCalendarProgram, true) type="radio" name="use-program" value="True"/></label>
-            <label>No<input @CommonHelpers.IsChecked(useCalendarProgram, false) type="radio" name="use-program" value="False"/></label>
+            <label>Yes<input @LcHelpers.IsChecked(useCalendarProgram, true) type="radio" name="use-program" value="True"/></label>
+            <label>No<input @LcHelpers.IsChecked(useCalendarProgram, false) type="radio" name="use-program" value="False"/></label>
         </div>
         <ul>
             <li class="positionavailability-program-type">
                 <label for="@idprefix-program-type">Which type?</label>
                 <select name="program-type" id="@idprefix-program-type">
-                    <option @CommonHelpers.IsSelected(programType, "gmail") value="gmail">Gmail</option>
+                    <option @LcHelpers.IsSelected(programType, "gmail") value="gmail">Gmail</option>
                 </select>
             </li>
             <li class="positionavailability-program-url">

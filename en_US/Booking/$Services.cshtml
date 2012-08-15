@@ -8,7 +8,7 @@
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
         if (IsPost){
-            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
             throw new Exception(inputdataerrormessage);
         }
@@ -86,7 +86,7 @@
         var pricingEstimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
         int errorCode = (pricingEstimateID == 0 ? -1 : pricingEstimateID);
         if (errorCode < 0) {
-            CommonHelpers.ReturnJsonError(errorCode, PageData["PricingEstimateData"]["PricingEstimateErrorMessage"]);
+            LcHelpers.ReturnJsonError(errorCode, PageData["PricingEstimateData"]["PricingEstimateErrorMessage"]);
         } else {
             using (var db = Database.Open("sqlloco")) {
                 try {
@@ -125,12 +125,12 @@
                     Session["BookingRequestID"] = (int)bookingRequestID;
                                         
                 } catch (Exception ex) {
-                    CommonHelpers.ReturnJsonError(-1, ex.Message);
+                    LcHelpers.ReturnJsonError(-1, ex.Message);
                 }
             }
                 
             // All fine, continue wizard next step:
-            CommonHelpers.ReturnJsonResult(0, null);
+            LcHelpers.ReturnJsonResult(0, null);
         }
     }
 }

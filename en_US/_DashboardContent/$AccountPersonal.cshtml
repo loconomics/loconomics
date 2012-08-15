@@ -224,7 +224,7 @@
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, 
                  LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
             }
-            CommonHelpers.ReturnJsonResult(0, "Personal data updated!");
+            LcHelpers.ReturnJsonResult(0, "Personal data updated!");
         }
     }
     dynamic genders = null, verifications = null;
@@ -290,7 +290,7 @@ Please complete the information below as accurately as possible.  Only your firs
 </p>
 <div>
 <form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
     <div class="warning warning-large">
@@ -352,7 +352,7 @@ Please complete the information below as accurately as possible.  Only your firs
             </li>
             <li><label for="@idprefix-state">State:</label>
                 <select id="@idprefix-state" name="state" @Validation.GetHtml("state")>
-                    @CommonHelpers.StateProvinceOptions(State)
+                    @LcHelpers.StateProvinceOptions(State)
                 </select>
                 @Html.ValidationMessage("state")
             </li>
@@ -371,7 +371,7 @@ Please complete the information below as accurately as possible.  Only your firs
             <li><label>Gender Identity:</label>
                 @foreach (var gender in genders)
                 {
-                    <label class="gender">@gender.GenderSingular <input @CommonHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
+                    <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
                 }
                 @Html.ValidationMessage("gender")
             </li>
@@ -391,8 +391,8 @@ Please complete the information below as accurately as possible.  Only your firs
         <fieldset id="@idprefix-fs-auths" class="auths">
             <legend>Authorizations:</legend>
             <ul>
-                <li><input id="@idprefix-auth-zumigo-verification" value="True" @CommonHelpers.IsChecked("True", IAuthZumigoVerification.ToString()) type="checkbox" name="auth-zumigo-verification"/><label for="@idprefix-auth-zumigo-verification">I authorize Zumigo, Inc. to use my mobile phone number to verify my name, address, and phone number.</label></li>
-                <li><input id="@idprefix-auth-zumigo-location" value="True" @CommonHelpers.IsChecked("True", IAuthZumigoLocation.ToString()) type="checkbox" name="auth-zumigo-location"/><label for="@idprefix-auth-zumigo-location">I authorize Loconomics to use Zumigo services for location-based messaging.</label></li>
+                <li><input id="@idprefix-auth-zumigo-verification" value="True" @LcHelpers.IsChecked("True", IAuthZumigoVerification.ToString()) type="checkbox" name="auth-zumigo-verification"/><label for="@idprefix-auth-zumigo-verification">I authorize Zumigo, Inc. to use my mobile phone number to verify my name, address, and phone number.</label></li>
+                <li><input id="@idprefix-auth-zumigo-location" value="True" @LcHelpers.IsChecked("True", IAuthZumigoLocation.ToString()) type="checkbox" name="auth-zumigo-location"/><label for="@idprefix-auth-zumigo-location">I authorize Loconomics to use Zumigo services for location-based messaging.</label></li>
             </ul>
         </fieldset>
         -->

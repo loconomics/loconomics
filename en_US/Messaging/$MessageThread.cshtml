@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     // var u = DashboardFunctions.GetUserRow();
     int userID = WebSecurity.CurrentUserId;
     
@@ -121,8 +121,8 @@ else
     <div class="not-faqs-duplication">
 
     <div class="booking-request main-side ajax-box">
-        @CommonHelpers.SetupStarRatingPlugin()
-        @CommonHelpers.GetValidationScripts()
+        @LcHelpers.SetupStarRatingPlugin()
+        @LcHelpers.GetValidationScripts()
 
         @if (refreshThreadList) {
             <script type="text/javascript">
@@ -130,7 +130,7 @@ else
                 $('#inbox').reload();
             </script>
         }
-        <h3>Conversation with @CommonHelpers.GetUserDisplayName(thread, "Customer")</h3>
+        <h3>Conversation with @LcHelpers.GetUserDisplayName(thread, "Customer")</h3>
         <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 
         <h4>@itsUserLabel profile</h4>

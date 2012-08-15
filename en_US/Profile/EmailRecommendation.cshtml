@@ -17,7 +17,7 @@
     PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
 }
 <div>
-    Your friend @customer.FirstName @customer.LastName recommends you book @CommonHelpers.GetUserDisplayName(provider)
+    Your friend @customer.FirstName @customer.LastName recommends you book @LcHelpers.GetUserDisplayName(provider)
     as a @position.PositionSingular at <a href="@UrlUtil.LangUrl">Loconomics.com</a>
     <a href="@PageData["viewOnSiteUrl"]">View @provider.FirstName full profile</a>
 

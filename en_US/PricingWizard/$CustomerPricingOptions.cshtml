@@ -181,7 +181,7 @@
         }
         
         if (embMode == "none") {
-            CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
+            LcHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
         } else {
             LcHelpers.RenderPageReturns = new Dictionary<string, object> {
                 { "CalculatedData", calculatedData },

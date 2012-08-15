@@ -82,7 +82,7 @@
                         Request["bank_fullname"],
                         Request["bank_abanumber"],
                         // Bank Account Number: ONLY THE THREE LAST DIGITS
-                        LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["bank_accountnumber"], 3)),
+                        LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["bank_accountnumber"], 3)),
                         paymentType.Substring(2).AsInt()
                     );
                 } else {
@@ -118,7 +118,7 @@
                     result = gateway.Customer.Create(request);
                 }
                 if (result.IsSuccess()){
-                    CommonHelpers.ReturnJsonResult(0, "Data saved!");
+                    LcHelpers.ReturnJsonResult(0, "Data saved!");
                 } else {
                     foreach (var row in result.Errors.DeepAll())
                     {
@@ -130,7 +130,7 @@
                     }
                 }
             }
-            CommonHelpers.ReturnJsonResult(0, "Data saved!");
+            LcHelpers.ReturnJsonResult(0, "Data saved!");
         }
     }
 @*// Try to get the data from this customer, if was previosly saved or user exist at Braintree
@@ -161,7 +161,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
 </p>
 <div>
 <form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountPaymentsBankInfo/" class="ajax ajax-box">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="payment-type">
         <legend>Payment preference:</legend>
@@ -170,7 +170,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
             if (paymentpreference.DependsOnID == null)
             {
                 <label>
-                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["payment-type"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID : null), (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeDependsOnID : null ) }) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
+                    <input @Validation.GetHtml("payment-type") type="radio" name="payment-type" @LcHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["payment-type"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID : null), (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeDependsOnID : null ) }) value="@paymentpreference.ProviderPaymentPreferenceTypeID" />
                     <abbr title="@paymentpreference.ProviderPaymentPreferenceTypeName">@paymentpreference.ProviderPaymentPreferenceTypeDescription</abbr>
                 </label>
             }
@@ -203,7 +203,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
                 {
                     if (paymentpreference.DependsOnID == 4)
                     {
-                        <li><input type="radio" id="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]" @Validation.GetHtml("bank_accounttype") name="bank_accounttype" @CommonHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["bank_accounttype"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : null) }) value="4.@paymentpreference.ProviderPaymentPreferenceTypeID"/>
+                        <li><input type="radio" id="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]" @Validation.GetHtml("bank_accounttype") name="bank_accounttype" @LcHelpers.IsChecked(paymentpreference.ProviderPaymentPreferenceTypeID, new object[]{ Request["bank_accounttype"], (bankinfo != null ? bankinfo.ProviderPaymentPreferenceTypeID.ToString() : null) }) value="4.@paymentpreference.ProviderPaymentPreferenceTypeID"/>
                         <label for="@idprefix-accounttype[@paymentpreference.ProviderPaymentPreferenceTypeID]"><abbr title="@paymentpreference.ProviderPaymentPreferenceTypeDescription">@paymentpreference.ProviderPaymentPreferenceTypeName</abbr></label></li>
                     }
                 }

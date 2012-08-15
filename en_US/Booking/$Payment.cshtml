@@ -14,7 +14,7 @@
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
         if (Request.IsAjaxRequest()){
-            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
             throw new Exception(inputdataerrormessage);
         }
@@ -31,7 +31,7 @@
             *   processing the form (if there is no bookingrequestid again, do second option).
             */
         //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
-        CommonHelpers.ReturnJsonResult(1, 
+        LcHelpers.ReturnJsonResult(1, 
             UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
     }
@@ -202,11 +202,11 @@
                                     BookingRequestStatusID = 2 -- Completed
                             WHERE   BookingRequestID = @0
                         ", bookingRequestID, transactionID, 
-                         LcEncryptor.Encrypt(CommonHelpers.GetLastStringChars(Request["card-number"], 4)));
+                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)));
                     }
                     
                 } catch (Exception ex) {
-                    CommonHelpers.ReturnJsonError(-1, ex.Message);
+                    LcHelpers.ReturnJsonError(-1, ex.Message);
                     if (Context.IsDebuggingEnabled) {
                         throw ex;
                     }
@@ -219,7 +219,7 @@
                 LcMessaging.SendBookingRequest(c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                 
                 // Return OK result
-                CommonHelpers.ReturnJsonResult(0, null);
+                LcHelpers.ReturnJsonResult(0, null);
             }
         }
     }
@@ -286,8 +286,8 @@
 <form action="@(UrlUtil.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    @CommonHelpers.GetValidationScripts()
-    @CommonHelpers.SetupStarRatingPlugin()
+    @LcHelpers.GetValidationScripts()
+    @LcHelpers.SetupStarRatingPlugin()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="billing-info box">
         <legend>Billing information:</legend>
@@ -306,7 +306,7 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
-                        @CommonHelpers.StateProvinceOptions(Request["state"])
+                        @LcHelpers.StateProvinceOptions(Request["state"])
                     </select></label></li>
             <li class="zip">
                 <label>Zip Code:<input type="text" name="zip" value="@Request["zip"]" @Validation.GetHtml("zip")/></label>
@@ -316,15 +316,15 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="card-exp"><label>Exp:<select name="card-exp-month" @Validation.GetHtml("card-exp-month")>
-                        @CommonHelpers.MonthOptions(Request["card-exp-month"])
+                        @LcHelpers.MonthOptions(Request["card-exp-month"])
                     </select></label><select name="card-exp-year">
-                        @CommonHelpers.CardYearOptions(Request["card-exp-year"])
+                        @LcHelpers.CardYearOptions(Request["card-exp-year"])
                     </select></li>
             <li class="card-cvv">
                 <label>CVV Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" @CommonHelpers.IsChecked(Request["save-payment"], "true") name="save-payment" value="true" />Save</label>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-payment"], "true") name="save-payment" value="true" />Save</label>
                 <label class="save-as">payment details as:<input type="text" value="@Request["save-payment-as"]" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
             </li>
         </ul>

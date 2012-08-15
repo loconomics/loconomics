@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.Data;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var p = DashboardFunctions.GetUserRow();
     var packageID = Request["ProviderPackageID"].AsInt();
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
@@ -15,7 +15,7 @@
         using (var db = Database.Open("sqlloco")) {
             db.Execute(sqlDelPackage, packageID);
             
-            CommonHelpers.ReturnJsonResult(0, "Package removed succesfully");
+            LcHelpers.ReturnJsonResult(0, "Package removed succesfully");
         }
     }
     
@@ -120,7 +120,7 @@
                 }
             }
         
-            CommonHelpers.ReturnJsonResult(0, null);
+            LcHelpers.ReturnJsonResult(0, null);
         }
     }
     
@@ -179,7 +179,7 @@
         <label class="package-duration">Duration of each session: 
             <input type="text" name="minutes" value="@(Request["minutes"] ?? (package == null ? "" : package.ServiceDuration))" /> minutes</label>
         <label class="only-first-time-clients">
-            <input type="checkbox" name="first-time-clients-only" value="True" @CommonHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
+            <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
             This package is only available to first-time clients
         </label>
         <label class="package-description">
@@ -200,7 +200,7 @@
                 if (att.EligibleForPackages)
                 {
                 <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
-                    <label><input name="package-service-attribute" type="checkbox" @CommonHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
+                    <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
                 </li>
                 }
             }

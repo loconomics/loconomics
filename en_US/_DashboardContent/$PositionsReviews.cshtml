@@ -32,7 +32,7 @@
                 db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 1);
             }
             
-            CommonHelpers.ReturnJsonResult(0, "Message was sent!");
+            LcHelpers.ReturnJsonResult(0, "Message was sent!");
         }
     }
 }
@@ -43,7 +43,7 @@ to write you a reference. Invite as many as you’d like, and we’ll post the f
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="references">
         <ul>

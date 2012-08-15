@@ -23,7 +23,7 @@
 
         // Result format is different to feed the Autocomplete jQueryUI feature:
         if (UrlData.Count > 0 && UrlData[0].ToLower() == "autocomplete") {
-            CommonHelpers.ReturnJson(
+            LcHelpers.ReturnJson(
                 data.Select(p => new{label = p.PositionSingular, value = p.PositionID})
             );
         }
@@ -44,5 +44,5 @@
     //throw new Exception("Test error");
     
     // Output data
-    CommonHelpers.ReturnJsonResult(resultCode, result);
+    LcHelpers.ReturnJsonResult(resultCode, result);
 }

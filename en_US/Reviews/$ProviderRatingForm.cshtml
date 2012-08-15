@@ -3,7 +3,7 @@
 @using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var customerUserID = WebSecurity.CurrentUserId;
     var customer = DashboardFunctions.GetUserRow();
     int bookingID = PageData["BookingID"] ?? Request["BookingID"].AsInt();
@@ -182,9 +182,9 @@
                 }
                 if(ModelState.IsValid){
                     if (pastReference) {
-                        CommonHelpers.ReturnJsonResult(0, "Thanks for rating! Press on the Loconomics logo to continue.", false);
+                        LcHelpers.ReturnJsonResult(0, "Thanks for rating! Press on the Loconomics logo to continue.", false);
                     } else {
-                        CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
+                        LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
                     }
                     
                     // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
@@ -199,7 +199,7 @@
                                 emailslist.Add(ad);
                             }
                         }
-                        newemails = CommonHelpers.JoinNotEmptyStrings(",", emailslist.ToArray<string>());
+                        newemails = LcHelpers.JoinNotEmptyStrings(",", emailslist.ToArray<string>());
                         if (!string.IsNullOrEmpty(newemails)) {
                             LcMessaging.SendMail(newemails, String.Format(subject, customer.FirstName, customer.LastName,
                                 provider.FirstName, position.PositionSingular),
@@ -226,8 +226,8 @@
             </li>
 }
 <form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/@(Request.Url.Query)">
-    @CommonHelpers.SetupStarRatingPlugin()
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.SetupStarRatingPlugin()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary()
     @if (provider != null && position != null)
     {
@@ -239,8 +239,8 @@
             {
             <li class="question1">
                 <span>Did @provider.FirstName perform all the services you requested?</span>
-                <label>Yes<input type="radio" @CommonHelpers.IsChecked("true", Request["question1"]) name="question1" value="true" /></label>
-                <label>No<input type="radio" @CommonHelpers.IsChecked("false", Request["question1"]) name="question1" value="false" /></label>
+                <label>Yes<input type="radio" @LcHelpers.IsChecked("true", Request["question1"]) name="question1" value="true" /></label>
+                <label>No<input type="radio" @LcHelpers.IsChecked("false", Request["question1"]) name="question1" value="false" /></label>
             </li>
             <li class="question1-comment">
                 <textarea rows="3" name="question1-comment" placeholder="Tell use what work was not performed." @Validation.GetHtml("question1-comment")>@Request["question1-comment"]</textarea>
@@ -293,8 +293,8 @@
         <ul>
             <li class="question2">
                 <span>Would you hire @provider.FirstName as a @position.PositionSingular again?</span>
-                <label>Yes<input type="radio" name="question2" @CommonHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
-                <label>No<input type="radio" name="question2" @CommonHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
+                <label>Yes<input type="radio" name="question2" @LcHelpers.IsChecked("true", Request["question2"]) value="true" /></label>
+                <label>No<input type="radio" name="question2" @LcHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
             </li>
             <li class="share-social">
                 Please share @(provider.FirstName)'s profile with your family and friends 
@@ -305,7 +305,7 @@
                     new
                     {
                         URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
-                        Title = "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider)
+                        Title = "An amazing " + position.PositionSingular + ": " + LcHelpers.GetUserDisplayName(provider)
                     })
             </li>
             <li class="share-email">

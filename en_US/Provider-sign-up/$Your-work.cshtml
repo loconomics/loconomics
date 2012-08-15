@@ -39,7 +39,7 @@ and test on both.
             var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
 
             if (Results.Result != "Success") {
-                CommonHelpers.ReturnJsonError(-1, Results.Result);
+                LcHelpers.ReturnJsonError(-1, Results.Result);
             } else {
                 
                 var getcatid = new Regex("^positionservices-category\\[(-?\\d+)\\]", RegexOptions.Compiled);
@@ -143,18 +143,18 @@ and test on both.
 
                 if (insideWizard) {
                     // We return a json with result OK (=0), and response end just after this:
-                    CommonHelpers.ReturnJsonError(0, "");
+                    LcHelpers.ReturnJsonError(0, "");
                 } else {
                     // Redirect to the same page to force a refresh and see loaded the new position in its tab
                     string ur = Request.UrlReferrer.PathAndQuery;
                     if (ur.IndexOf("#") == -1) {
                         ur += "#position" + PositionID.ToString();
                     }
-                    CommonHelpers.ReturnJsonError(1, ur);
+                    LcHelpers.ReturnJsonError(1, ur);
                 }
             }
         } else {
-            CommonHelpers.ReturnJsonError(-1, "Un-authenticated");
+            LcHelpers.ReturnJsonError(-1, "Un-authenticated");
         }
     }
 }
@@ -181,7 +181,7 @@ and test on both.
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box positionservices")">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <input type="hidden" name="InsideWizard" value="@insideWizard" />
     <fieldset class="select-position">

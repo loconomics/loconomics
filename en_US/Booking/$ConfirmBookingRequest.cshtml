@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.Data;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     var u = DashboardFunctions.GetUserRow();
     var brID = Request["BookingRequestID"].AsInt();
@@ -122,7 +122,7 @@
                     // A redirect is performed to return the BookingDetails html to the user
                     /*Response.Redirect(UrlUtil.LangPath + String.Format(
                         "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), true);*/
-                    CommonHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
                         "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), false);
                 } else {
                     Response.Redirect(UrlUtil.LangPath + String.Format(
@@ -135,7 +135,7 @@
                 if (Request.IsAjaxRequest()) {
                     // Return JSON result:
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    CommonHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
                 } else {
                     throw new HttpException(500, "Error confirming the booking request: " + result.ErrorMessage);
                 }
@@ -147,7 +147,7 @@
                  * - ConfirmedDateType is not correct?
                  * - BookingRequest is already confirmed?
                  */
-                CommonHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Is already confirmed?");
+                LcHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Is already confirmed?");
             } else {
                 throw new HttpException(500, "Impossible to confirm that Booking Request and date. Is already confirmed?");
             }

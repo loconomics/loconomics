@@ -93,13 +93,13 @@
                     }
                 } else if (UrlData.Count > 0 && UrlData[0] == "Verify") {
                     // User already exists, is requesting a Facebook verification:
-                    CommonHelpers.SecurePage();
+                    LcHelpers.SecurePage();
                     int userID = WebSecurity.CurrentUserId;
                     /*
                     // First, check facebook email with current user id (user must be logged to verify)
                     int userID = WebSecurity.GetUserId(facebookemail);
                     if (userID != WebSecurity.CurrentUserId) {
-                        CommonHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
+                        LcHelpers.ReturnJsonResult(2801, "Facebook verification failed: Facebook email don't match current Loconomics user email", true);
                     }*/
                     // Compare email and full name
                     using (var db = Database.Open("sqlloco")) {
@@ -120,7 +120,7 @@
                         if (c == 1) {
                             // Verified, save verification record
                             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-                            CommonHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
+                            LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
                         } else {
                             // Verification failed
                             /*var debugInfo = " Facebook:" + user.first_name + " " + user.last_name;
@@ -135,7 +135,7 @@
                                         P.Email = @1
                             ", userID, facebookemail);*/
                             // + debugInfo
-                            CommonHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
+                            LcHelpers.ReturnJsonResult(2802, "Facebook verification failed: Facebook full name don't match current Loconomics user full name.", true);
                         }
                     }
                 }
@@ -159,7 +159,7 @@
         redirectUrl = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
     }
     if (Request.IsAjaxRequest()){
-        CommonHelpers.ReturnJsonResult(1, redirectUrl);
+        LcHelpers.ReturnJsonResult(1, redirectUrl);
     } else {
         Response.Redirect(redirectUrl);
     }

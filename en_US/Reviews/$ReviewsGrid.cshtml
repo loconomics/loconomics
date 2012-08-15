@@ -76,7 +76,7 @@
     }
 }
 <div class="reviews-list">
-    @CommonHelpers.SetupStarRatingPlugin()
+    @LcHelpers.SetupStarRatingPlugin()
     @if (reviews.Count > 0) {
         <ul>
         @foreach (var review in reviews)
@@ -93,7 +93,7 @@
                    })
                 <div class="review-content">
     	        <div class="public-review wrap">
-                    @CommonHelpers.PrintTextAsHtml(review.PublicReview)
+                    @LcHelpers.PrintTextAsHtml(review.PublicReview)
 		        </div>
                 @if (withHelpfulReview == true)
                 {

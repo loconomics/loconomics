@@ -152,7 +152,7 @@
         if (ModelState.IsValid) {
             // To avoid duplications when posting form several times, this needs to be
             // reset after every change posted, return html with a saved message instead json
-            //CommonHelpers.ReturnJsonResult(0, "Locations saved");
+            //LcHelpers.ReturnJsonResult(0, "Locations saved");
         }
     }
 
@@ -248,10 +248,10 @@
 }
 @helper printDistanceSelect(string selected){
     <select name="location-travel-radius">
-        <option @CommonHelpers.IsSelected(selected, "1") value="1">1 mile</option>
-        <option @CommonHelpers.IsSelected(selected, "5") value="5">5 miles</option>
-        <option @CommonHelpers.IsSelected(selected, "10") value="10">10 miles</option>
-        <option @CommonHelpers.IsSelected(selected, "25") value="25">25 miles</option>
+        <option @LcHelpers.IsSelected(selected, "1") value="1">1 mile</option>
+        <option @LcHelpers.IsSelected(selected, "5") value="5">5 miles</option>
+        <option @LcHelpers.IsSelected(selected, "10") value="10">10 miles</option>
+        <option @LcHelpers.IsSelected(selected, "25") value="25">25 miles</option>
     </select>
 }
 @helper printAddress(IDictionary<string, object> addressDetails, IDictionary<int, string> transportsDictionary = null){
@@ -304,7 +304,7 @@ Let clients know where you'll perform services.  We won't disclose the exact add
         {
             <input type="hidden" name="remove-locations" value="@l.ToString()" id="HIDE-REMOVED-LOCATION-@l.ToString()" />
         }
-        @CommonHelpers.GetValidationScripts()
+        @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         @if (IsPost && ModelState.IsValid)
         {
@@ -316,8 +316,8 @@ Let clients know where you'll perform services.  We won't disclose the exact add
             <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">
                 <legend>I travel to clients:</legend>
                 <div class="confirm positionlocations-itravel-confirm">
-                    <label>Yes<input type="radio" @CommonHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
-                    <label>No<input type="radio" @CommonHelpers.IsChecked(false, itravelActive) name="positionlocations-itravel" value="False"/></label>
+                    <label>Yes<input type="radio" @LcHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
+                    <label>No<input type="radio" @LcHelpers.IsChecked(false, itravelActive) name="positionlocations-itravel" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <fieldset class="positionlocations-itravelfrom">
@@ -396,8 +396,8 @@ Let clients know where you'll perform services.  We won't disclose the exact add
             <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-type="work">
                 <legend>I perform services at specific locations:</legend>
                 <div class="positionlocations-servicelocations-confirm confirm">
-                    <label>Yes<input @CommonHelpers.IsChecked(true, iworkonActive) type="radio" name="positionlocations-iworkon" value="True"/></label>
-                    <label>No<input @CommonHelpers.IsChecked(false, iworkonActive) type="radio" name="positionlocations-iworkon" value="False"/></label>
+                    <label>Yes<input @LcHelpers.IsChecked(true, iworkonActive) type="radio" name="positionlocations-iworkon" value="True"/></label>
+                    <label>No<input @LcHelpers.IsChecked(false, iworkonActive) type="radio" name="positionlocations-iworkon" value="False"/></label>
                 </div>
                 <a href="#" class="addlocation">Add location</a>
                 <ul class="work-locations">
@@ -503,7 +503,7 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                     <li class="location-state">
                         <label>State:
                             <select name="location-state" data-val="true" data-val-required="State is required">
-                                @CommonHelpers.StateProvinceOptions(0)
+                                @LcHelpers.StateProvinceOptions(0)
                             </select>
                             <input type="hidden" name="location-state-code" />
                             <span data-valmsg-replace="true" data-valmsg-for="location-state" class="field-validation-valid"></span>
@@ -522,7 +522,7 @@ Let clients know where you'll perform services.  We won't disclose the exact add
                         @foreach (var t in transports)
                         {
                             <li>
-                                <label><input type="radio" @CommonHelpers.IsChecked(t.TransportTypeID, Request["location-travel-transport"] ?? transportType) name="location-travel-transport" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
+                                <label><input type="radio" @LcHelpers.IsChecked(t.TransportTypeID, Request["location-travel-transport"] ?? transportType) name="location-travel-transport" value="@t.TransportTypeID"/>@t.TransportTypeName</label>
                             </li>
                         }
                         </ul>

@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     var u = DashboardFunctions.GetUserRow();
     var brID = Request["BookingRequestID"];
@@ -82,9 +82,9 @@
             }
             break;
     }
-    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
+    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
 }
-@CommonHelpers.SetupStarRatingPlugin()
+@LcHelpers.SetupStarRatingPlugin()
 
 @if (booking == null)
 {
@@ -133,7 +133,7 @@ else
         <h4>Requested booking times</h4>
         <div class="requested-booking-times message-section">
             <p class="info">
-            @CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
+            @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
             the following times for you to provide the service. Please confirm one of these times 
             <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
             to accept this booking.
@@ -162,12 +162,12 @@ else
             <p class="info">
             @if (itsUserType == "customer")
             {
-                <text>@CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
+                <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
                 the following times for you to provide the service.</text>
             }
             else
             {
-                <text>You have booked to @CommonHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
+                <text>You have booked to @LcHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
                 the following times for it to provide the service.</text>
             }
             </p>

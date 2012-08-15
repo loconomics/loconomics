@@ -44,14 +44,14 @@
 }
 @functions{
     string getLocationForGoogleMaps(dynamic data){
-        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+        return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
 @if (size == "medium")
 {
     <div class="@userType medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <div class="user-micro-summary">
-            <h5 class="user-public-name">@CommonHelpers.GetUserDisplayName(data, dataPrefix) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
+            <h5 class="user-public-name">@LcHelpers.GetUserDisplayName(data, dataPrefix) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
@@ -61,7 +61,7 @@
             <div class="user-contact-data">
                 <div class="user-full-name">Name: <span class="value">@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
                 <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
-                <div class="user-location">@CommonHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
+                <div class="user-location">@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
                 <div class="user-mobile-phone">Mobile phone: <span class="value">@data[dataPrefix + "MobilePhone"]</span></div>
                 <div class="user-email">Email address: <span class="value">@data[dataPrefix + "Email"]</span></div>
             </div>
@@ -123,7 +123,7 @@
 else if (size == "mini") {
     <div class="@userType mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
-        <h5 class="user-public-name">@data[dataPrefix + "FirstName"] @(CommonHelpers.GetInitialLetter(data[dataPrefix + "LastName"])) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
+        <h5 class="user-public-name">@data[dataPrefix + "FirstName"] @(LcHelpers.GetInitialLetter(data[dataPrefix + "LastName"])) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div class="extra-info">@extraInfo</div>
         } else {

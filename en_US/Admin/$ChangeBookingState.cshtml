@@ -68,7 +68,7 @@
                         LcMessaging.SendBookingUpdate(bookingID, 's');
 
                         if (ModelState.IsValid) {
-                            CommonHelpers.ReturnJsonResult(0, "Booking State Changed! An email was sent to provider and customer");
+                            LcHelpers.ReturnJsonResult(0, "Booking State Changed! An email was sent to provider and customer");
                         }
                     }
                 }
@@ -112,7 +112,7 @@
 else
 {
 <form method="post" action="@(UrlUtil.LangPath)Admin/$ChangeBookingState/?BookingID=@(bookingID)" class="ajax ajax-box change-booking-status-form">
-    @if (IsPost) { CommonHelpers.GetValidationScripts(); }
+    @if (IsPost) { LcHelpers.GetValidationScripts(); }
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (bookingID > 0 && booking != null)
     {

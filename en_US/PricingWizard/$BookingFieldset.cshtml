@@ -9,7 +9,7 @@
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
         if (IsPost){
-            CommonHelpers.ReturnJsonError(-1, inputdataerrormessage);
+            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
             throw new Exception(inputdataerrormessage);
         }

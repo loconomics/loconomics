@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var idprefix = "preferences";
     
     var u = DashboardFunctions.GetUserRow();
@@ -38,7 +38,7 @@
                 u.IsProvider ? Request["LoconomicsMarketingCampaigns"].AsBool() : false
             );
         }
-        CommonHelpers.ReturnJsonResult(0, "Preferences updated!");
+        LcHelpers.ReturnJsonResult(0, "Preferences updated!");
     } else {
         using (var db = Database.Open("sqlloco")){
             PageData["userPrefs"] = db.QuerySingle(@"
@@ -57,7 +57,7 @@
 @helper printYesNoOption(string fieldName, bool isYes) {
     string label = isYes ? "Yes" : "No";
     string rvalue = isYes ? "True" : "False";
-    <label>@label <input type="radio" @Validation.GetHtml(fieldName) value="@rvalue" name="@fieldName" @CommonHelpers.IsChecked(rvalue, Request[fieldName] ?? (PageData["userPrefs"] != null ? PageData["userPrefs"][fieldName].ToString() : "")) /></label>
+    <label>@label <input type="radio" @Validation.GetHtml(fieldName) value="@rvalue" name="@fieldName" @LcHelpers.IsChecked(rvalue, Request[fieldName] ?? (PageData["userPrefs"] != null ? PageData["userPrefs"][fieldName].ToString() : "")) /></label>
 }
 @helper printChoiceOptions(string fieldName, string fieldLabel) {
     @printYesNoOption(fieldName, true)
@@ -69,7 +69,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
 </p>
 <div>
 <form method="post" action="@(UrlUtil.LangPath)Dashboard/$PreferencesPreferences/" class="ajax ajax-box preferences">
-    @CommonHelpers.GetValidationScripts()
+    @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset id="@idprefix-fs-bookingscommunication">
         <legend>Communication about bookings</legend>

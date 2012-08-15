@@ -46,7 +46,7 @@
         if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
-            CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
+            LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
         }
 
         // Attempt to login to the Security object using provided creds
@@ -73,7 +73,7 @@
 
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
-            CommonHelpers.ReturnJsonResult(1, redirect);
+            LcHelpers.ReturnJsonResult(1, redirect);
         } else if (WebSecurity.GetUserId(username) > -1 && !WebSecurity.IsConfirmed(username)) {
             // Resend confirmation mail, like in register
             var token = Database.Open("sqlloco").QueryValue("SELECT ConfirmationToken FROM webpages_Membership WHERE UserID=@0", WebSecurity.GetUserId(username));
@@ -99,7 +99,7 @@
             @Html.ValidationSummary(null, true, null)
             <input type="hidden" name="Redirect" value="@redirect" />
 
-            @CommonHelpers.GetValidationScripts()
+            @LcHelpers.GetValidationScripts()
             <script type="text/javascript">
                 $(document).ready(function () {
                     if (window.location.hash) {

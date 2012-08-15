@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     int thisUserID = (int)(PageData["AsUserID"] ?? Request["AsUserID"].AsInt());
     if (thisUserID == 0) {
         thisUserID = WebSecurity.CurrentUserId;
@@ -53,7 +53,7 @@
     @if (!ModelState.IsValid) {
         @Html.ValidationSummary()
     } else {
-        @CommonHelpers.SetupStarRatingPlugin()
+        @LcHelpers.SetupStarRatingPlugin()
         if (thisUserType == "customer") {
             @* Customer view: provider review by customer *@
             <section class="section-1">
@@ -122,7 +122,7 @@
                             new
                             {
                                 URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
-                                Title = "An amazing " + position.PositionSingular + ": " + CommonHelpers.GetUserDisplayName(provider)
+                                Title = "An amazing " + position.PositionSingular + ": " + LcHelpers.GetUserDisplayName(provider)
                             })
                     </li>
                 </ul>

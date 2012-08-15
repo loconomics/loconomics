@@ -81,7 +81,7 @@
                     // Thank the user for registering and let them know an email is on its way
                     // We return a json with result OK and redirect link (Code=1),
                     // and response end just after this:
-                    CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                    LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
                 } else {
                     // Navigate back to the homepage and exit
                     WebSecurity.Login(email, password);
@@ -92,7 +92,7 @@
 
                     // We return a json with result OK and redirect link (Code=1),
                     // and response end just after this:
-                    CommonHelpers.ReturnJsonResult(1, redirect);
+                    LcHelpers.ReturnJsonResult(1, redirect);
                 }
             } catch (System.Web.Security.MembershipCreateUserException e) {
                 ModelState.AddFormError(e.Message);
@@ -103,7 +103,7 @@
         }
     }
 }
-@CommonHelpers.GetValidationScripts()
+@LcHelpers.GetValidationScripts()
 <article id="registerBox" class="ajax-box account-popup">
     <hgroup class="title">
         <h1>Create a free account</h1>

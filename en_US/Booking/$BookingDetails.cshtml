@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     var u = DashboardFunctions.GetUserRow();
     //var brID = Request["BookingRequestID"];
@@ -84,7 +84,7 @@
             }
             break;
     }
-    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
+    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
 }
 @functions{
     string getLocationName(dynamic data){
@@ -95,10 +95,10 @@
         }
     }
     string getLocationForGoogleMaps(dynamic data){
-        return CommonHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+        return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
-@CommonHelpers.SetupStarRatingPlugin()
+@LcHelpers.SetupStarRatingPlugin()
 
 @if (booking == null)
 {

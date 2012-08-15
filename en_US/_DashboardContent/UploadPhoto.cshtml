@@ -35,7 +35,7 @@
     }
 }
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var userId = WebSecurity.CurrentUserId;
     var positionId = Request["PositionID"].AsInt();
     var ajaxEnabled = true;
@@ -58,7 +58,7 @@
             File.WriteAllBytes(Server.MapPath(virtualPath + fileName), content);
             Request.InputStream.Dispose();
         } catch(Exception ex) {
-            CommonHelpers.ReturnJson(
+            LcHelpers.ReturnJson(
                 new Dictionary<string, object>(){
                     { "error", "There was an error: " + ex.Message }
                 }
@@ -68,7 +68,7 @@
         // File saved, register it on the database:
         photoID = RegisterUserPhoto(fileName, userId, positionId);
         
-        CommonHelpers.ReturnJson(
+        LcHelpers.ReturnJson(
             new Dictionary<string, object>(){
                 { "success", "File was saved" }
                 ,{ "fileURI", virtualPath + fileName }
@@ -100,7 +100,7 @@
                 } catch(Exception ex) {
                     if (ajaxEnabled) {
                     // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                    //CommonHelpers.ReturnJson(
+                    //LcHelpers.ReturnJson(
                     Json.Write(
                         new Dictionary<string, object>(){
                             { "error", "There was an error: " + ex.Message }
@@ -118,7 +118,7 @@
                 if (ajaxEnabled) {
                     // NOTE: There is some issues with IE managing this result with contenttype=json
                     // because of this, here we use directly the Json helper instead our helper
-                    //CommonHelpers.ReturnJson(
+                    //LcHelpers.ReturnJson(
                     Json.Write(
                         new Dictionary<string, object>(){
                             { "success", "File was saved" }

@@ -90,7 +90,7 @@
             }
             break;
     }
-    @String.Format(statusTitle, CommonHelpers.GetUserDisplayName(itsUserData))
+    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
 }
 @if (booking == null)
 {
@@ -129,7 +129,7 @@ else
         <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
         <div style="@LcEmailTemplateHelper.StyleMessageSection()">
             <p @LcEmailTemplateHelper.StyleResetP()>
-            @CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
+            @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
             the following times for you to provide the service. Please confirm one of these times 
             <strong style="font-weight: normal;color: #8b2143;">within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
             to accept this booking.
@@ -158,12 +158,12 @@ else
             <p @LcEmailTemplateHelper.StyleResetP()>
             @if (itsUserType == "customer")
             {
-                <text>@CommonHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
+                <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
                 the following times for you to provide the service.</text>
             }
             else
             {
-                <text>You have booked to @CommonHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
+                <text>You have booked to @LcHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
                 the following times for it to provide the service.</text>
             }
             </p>

@@ -1,5 +1,5 @@
 ﻿@{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     Page.Title = "Make your life better!";
     Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
@@ -26,7 +26,7 @@
         PageData["menu-item"] = page;
     } else {
         string folder = "_DashboardContent/";
-        string file =  CommonHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
+        string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(UrlUtil.LangPath + folder + file))) {
             if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
                 @RenderPage(UrlUtil.LangPath + folder + file);

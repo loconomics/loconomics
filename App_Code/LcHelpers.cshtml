@@ -1,5 +1,17 @@
-﻿@using System.Web.WebPages.Scope;
+﻿@{/**
+  * Set of common, general helpers
+  * used around all the site
+  */
+}
+@using WebMatrix.WebData;
+@using WebMatrix.Data;
+@using System.Security.Cryptography;
+@using System.Web.WebPages.Scope;
+
 @functions{
+    /*=========================
+     * Generic data management
+     */
     public static string[] GetValuesFromCSVLine(string line){
         return line.Split(',');
     }
@@ -24,5 +36,246 @@
     }
     public static DateTime GetLastWeekDay(DateTime date) {
         return date.AddDays(6 - (int)date.DayOfWeek);
+    }
+}
+@*===============
+ * Form Helpers
+ *@
+@helper CountryOptions(string selectedCountryID = null){
+    var sql = @"
+        SELECT CountryID, CountryName, CountryCode
+        FROM    Country
+        WHERE   LanguageID=@0
+        ORDER BY CountryName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID())){
+            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
+        }
+    }
+}
+@helper CountyOptions(string selectedCountyID = null){
+    var sql = @"
+        SELECT CountyID, CountyName, FIPSCode, StateProvinceID
+        FROM    County
+        ORDER BY CountyName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var county in db.Query(sql)){
+            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
+        }
+    }
+}
+@helper StateProvinceOptions(int selectedStateID){
+    @StateProvinceOptions(selectedStateID.ToString())
+}
+@helper StateProvinceOptions(string selectedStateID){
+    var sql = @"
+        SELECT StateProvinceID, StateProvinceName, StateProvinceCode
+        FROM    StateProvince
+        WHERE   CountryID=@0
+        ORDER BY StateProvinceName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
+            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
+        }
+    }
+}
+@helper MonthOptions(string selectedMonth){
+    for (var i = 1; i < 13; i++) {
+        <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
+    }
+}
+@helper CardYearOptions(string selectedYear){
+    var year = DateTime.Today.Year;
+    var limitYear = year + 10;
+    for (; year < limitYear; year++) {
+        <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
+    }
+}
+@functions{ static bool AreEquivalents(IEnumerable<object> A, IEnumerable<object> B) {
+        foreach (var a in A) {
+            var av = a ?? "";
+            foreach (var b in B) {
+                var bv = b ?? "";
+                if (av == bv || av.ToString() == bv.ToString()) 
+                    return true;
+            }
+        }
+        return false;
+    }
+    static bool AreEquivalents(object A, object B) {
+        IEnumerable<object> a, b;
+        if (A is IEnumerable<object>)
+            a = (IEnumerable<object>)A;
+        else
+            a = new object[]{ A };
+        if (B is IEnumerable<object>)
+            b = (IEnumerable<object>)B;
+        else
+            b = new object[]{ B };
+        return AreEquivalents(a, b);
+    }
+}
+@helper IsChecked(object valueA, object valueB){
+    if (AreEquivalents(valueA, valueB)) {
+        @Html.Raw("checked='checked'")
+    }
+}
+@helper IsSelected(object valueA, object valueB){
+    if (AreEquivalents(valueA, valueB)) {
+        @Html.Raw("selected='selected'")
+    }
+}
+@*=================
+ * JavaScript
+ *@
+@helper SetupStarRatingPlugin(){
+    <script type="text/javascript">
+        if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
+        if (!jqueryStarRatingPluginLoaded) {
+            jqueryStarRatingPluginLoaded = true;
+            Modernizr.load([
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.css"
+            ]);
+        } else {
+            if ($ && $().rating)
+                // Re-apply plugin (to new added elements without the plugin loaded):
+                $('input[type=radio].star').rating();
+        }
+    </script>
+}
+@helper GetValidationScripts(){
+    <script type="text/javascript">
+        if (!jqueryValidateUnobtrusiveLoaded) var jqueryValidateUnobtrusiveLoaded = false;
+        if (!jqueryValidateUnobtrusiveLoaded) {
+            jqueryValidateUnobtrusiveLoaded = true;
+            Modernizr.load([
+                { load: UrlUtil.AppPath + "Scripts/jquery.validate.min.js" },
+                { load: UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js" }
+            ]);
+        } else {
+            // Check first if validation is enabled (can happen that twice includes of
+            // this code happen at same page, being executed this code after first appearance
+            // with the switch jqueryValidateUnobtrusiveLoaded changed
+            // but without validation being already loaded and enabled)
+            if ($ && $.validator && $.validator.unobtrusive) {
+                // Apply the validation rules to the new elements
+                $(document).removeData('validator');
+                $(document).removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(document);
+            }
+        }
+    </script>
+}
+@helper GetGoogleMapsScripts(){
+    <script type="text/javascript">
+        if (!googleMapsLoaded) var googleMapsLoaded = false;
+        if (!googleMapsLoaded) {
+            googleMapsLoaded = true;
+            Modernizr.load("http://maps.google.com/maps/api/js?sensor=false");
+        }
+    </script>
+}
+@functions{
+    /*========= JSON =============*/
+    public static void ReturnJson(object jsondata, bool endResponse = true){
+        Response.ContentType = "application/json";
+        Json.Write(jsondata, Response.Output);
+        if (endResponse)
+            Response.End();
+        else
+            Response.Flush();
+    }
+    public static void ReturnJsonError(int code, string errorMessage, bool endResponse = true)
+    {
+        if (code >= 0)
+            ReturnJsonResult(code, errorMessage, endResponse);
+        else
+            ReturnJsonResult(code, new Dictionary<string, string>(){ { "ErrorMessage", errorMessage } }, endResponse);
+    }
+    public static void ReturnJsonResult(int code, object result, bool endResponse = true)
+    {
+        ReturnJson(new Dictionary<string, object>(){
+            { "Code", code }, { "Result", result } 
+        }, endResponse);
+    }
+    
+    /*========= SECURITY ==========*/
+    /* Ensure that only register users enter here, redirecting to login page when appropiated.
+     * If request is an ajax request, a json object will be return in the response with code=2
+     * that means un-authenticated and a Result string with the ajax login url.
+    */
+    public static void SecurePage() {
+        if (!WebSecurity.IsAuthenticated)
+            RedirectToLogin();
+    }
+    public static void AdminPage() {
+        if (!WebSecurity.IsAuthenticated || DashboardFunctions.GetUserRow().IsAdmin == false)
+            RedirectToLogin();
+    }
+    public static void RedirectToLogin() {
+            if (Request.IsAjaxRequest())
+                ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(Request.UrlReferrer.PathAndQuery));
+            else
+                Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(Request.Url.PathAndQuery));
+    }
+    
+    /*========= STRINGS ==============*/
+    public static string GetInitialLetter(string text) {
+        if (!String.IsNullOrEmpty(text)) {
+            // Is not empty, have almost 1 char:
+            return text.Substring(0, 1).ToUpper();
+        } else {
+            return "";
+        }
+    }
+    public static string JoinNotEmptyStrings(string delimiter, params string[] strs){
+        return JoinNotEmptyStrings(delimiter, (IEnumerable<string>)strs);
+    }
+    public static string JoinNotEmptyStrings(string delimiter, IEnumerable<string> strs){
+        List<string> newstrs = new List<string>();
+        foreach (var str in strs)
+            if (!String.IsNullOrWhiteSpace(str))
+                newstrs.Add(str);
+        return String.Join(delimiter, newstrs);
+    }
+    public static bool ReadBoolFrom(params object[] values) {
+        foreach (object val in values) {
+            if (val != null) {
+                if (val is bool) {
+                    return (bool)val;
+                } else if (val is string && ((string)val).IsBool()) {
+                    return ((string)val).AsBool();
+                }
+            }
+        }
+        return false;
+    }
+    public static string GetLastStringChars(string str, int number){
+        if (str != null && str.Length > number) {
+            return str.Substring(str.Length - number, number);
+        }
+        return str;
+    }
+    /*
+     * Return the Display or abbreviated name of the user, 
+     * as "Name InitialLastName.", example: "John S." for
+     * user FirstName=John LastName=Smith
+     * The row object must contains the properties FirstName and LastName to work
+     */
+    public static string GetUserDisplayName(dynamic row){
+        return row.FirstName + " " + GetInitialLetter(row.LastName) + ".";
+    }
+    public static string GetUserDisplayName(dynamic row, string fieldPrefix){
+        return row[fieldPrefix + "FirstName"] + " " + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
+    }
+}
+@helper PrintTextAsHtml(string text){
+    if (text != null) {
+        @Html.Raw(text.Replace("\n", "<br/>"))
     }
 }

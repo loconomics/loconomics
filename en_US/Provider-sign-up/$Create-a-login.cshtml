@@ -99,7 +99,7 @@
                         }
 
                         if (requireEmailConfirmation) {
-                            //CommonHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                            //LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
                             Session["RegisteredUserID"] = WebSecurity.GetUserId(email);
                             // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
                             // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
@@ -174,7 +174,7 @@
                     confirmationUrl ?? "");
 
                 // We return a json with result OK (=0), and response end just after this:
-                CommonHelpers.ReturnJsonResult(0, null);
+                LcHelpers.ReturnJsonResult(0, null);
             }
         }
     }
@@ -258,11 +258,11 @@
         </ol>
         <ul>
              <li>
-                <label><input type="checkbox" data-customval-requirechecked="You must agree terms of use" @Validation.GetHtml("termsofuse") @CommonHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
+                <label><input type="checkbox" data-customval-requirechecked="You must agree terms of use" @Validation.GetHtml("termsofuse") @LcHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
                 @Html.ValidationMessage("termsofuse")
              </li>
              <li>
-                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @CommonHelpers.IsChecked(Request["emailcontact"].AsBool(), true) name="emailcontact" id="emailcontact" value="True"/>I don't mind having you e-mail me important news.</label>
+                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @LcHelpers.IsChecked(Request["emailcontact"].AsBool(), true) name="emailcontact" id="emailcontact" value="True"/>I don't mind having you e-mail me important news.</label>
                 @Html.ValidationMessage("emailcontact")
              </li>
          </ul>
@@ -271,7 +271,7 @@
         <button data-wizard-next-step="#your-work" class="next main-action">Continue</button>
      </fieldset>
 </form>
-@CommonHelpers.GetValidationScripts()
+@LcHelpers.GetValidationScripts()
 <script type="text/javascript">
     // custom validation for agree termsofuse
     (function () {

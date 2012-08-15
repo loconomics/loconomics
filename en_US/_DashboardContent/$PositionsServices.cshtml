@@ -175,7 +175,7 @@
             db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
         }
         
-        CommonHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
+        LcHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
     }
     
     /* Language Levels */
@@ -305,7 +305,7 @@ Let clients know about the services you provide.  It helps you both work better 
                     <select title="@LcRessources.GetText("Language Level")" data-description="@LcRessources.GetText("Language Level Description")" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
                         @foreach (var level in langLevels)
                         {
-                            <option @CommonHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
+                            <option @LcHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
                         }
                     </select>
                 </li>

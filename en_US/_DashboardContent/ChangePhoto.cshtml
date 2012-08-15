@@ -31,7 +31,7 @@
     }
 }
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     var u = DashboardFunctions.GetUserRow();
     var userId = u["UserID"];
     var ajaxEnabled = true;
@@ -50,7 +50,7 @@
             File.WriteAllBytes(Server.MapPath(virtualPath + fileName), content);
             Request.InputStream.Dispose();
         } catch(Exception ex) {
-            CommonHelpers.ReturnJson(
+            LcHelpers.ReturnJson(
                 new Dictionary<string, object>(){
                     { "error", "There was an error: " + ex.Message }
                 }
@@ -60,7 +60,7 @@
         // File saved, change the user preference at the database and remove previous photo:
         SaveUserPhotoName(fileName, userId);
         
-        CommonHelpers.ReturnJson(
+        LcHelpers.ReturnJson(
             new Dictionary<string, object>(){
                 { "success", "File was saved" }
             }
@@ -88,7 +88,7 @@
                 } catch(Exception ex) {
                     if (ajaxEnabled) {
                     // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                    //CommonHelpers.ReturnJson(
+                    //LcHelpers.ReturnJson(
                     Json.Write(
                         new Dictionary<string, object>(){
                             { "error", "There was an error: " + ex.Message }
@@ -106,7 +106,7 @@
                 if (ajaxEnabled) {
                     // NOTE: There is some issues with IE managing this result with contenttype=json
                     // because of this, here we use directly the Json helper instead our helper
-                    //CommonHelpers.ReturnJson(
+                    //LcHelpers.ReturnJson(
                     Json.Write(
                         new Dictionary<string, object>(){
                             { "success", "File was saved" }

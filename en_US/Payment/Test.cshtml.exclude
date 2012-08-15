@@ -1,6 +1,6 @@
 @using Braintree
 @{
-    CommonHelpers.SecurePage();
+    LcHelpers.SecurePage();
     
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     var UserID = WebSecurity.CurrentUserId;
