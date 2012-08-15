@@ -295,51 +295,139 @@ public static partial class LcData
         }
     }
 
-    public const string sqlInsAddress = @"
-        DECLARE @AddressID int
+    public const string sqlGetAddresses = @"
+        SELECT  L.AddressID
+                ,L.UserID
+                ,SA.PositionID
+                ,L.AddressTypeID
+                ,L.AddressName
+                ,L.AddressLine1
+                ,L.AddressLine2
+                ,L.City
+                ,L.StateProvinceID
+                ,L.PostalCodeID
+                ,L.CountryID
+                ,L.Latitude
+                ,L.Longitude
+                ,L.GoogleMapsURL
+                ,L.SpecialInstructions
 
-        INSERT INTO [Address]
-                    ([UserID]
-                    ,[AddressTypeID]
-                    ,[AddressName]
-                    ,[AddressLine1]
-                    ,[AddressLine2]
-                    ,[City]
-                    ,[StateProvinceID]
-                    ,[PostalCodeID]
-                    ,[CountryID]
-                    ,[Latitude]
-                    ,[Longitude]
-                    ,[GoogleMapsURL]
-                    ,[CreatedDate]
-                    ,[UpdatedDate]
-                    ,[ModifiedBy]
-                    ,[Active])
-                VALUES (@0, @8,
-                        @7, @1, @2, @3, @4, @5, @6, 
-                        null, null, null, getdate(), getdate(), 'sys', 1)
+                ,SA.ServicesPerformedAtLocation
+                ,SA.TravelFromLocation
+                ,SA.ServiceRadiusFromLocation
+                ,SA.PreferredAddress
 
-        SET @AddressID = @@Identity
+                ,PC.PostalCode
+                ,SP.StateProvinceCode
+                ,SP.StateProvinceName
+                ,TT.TransportTypeID
+                ,TT.TransportTypeName
+                ,L.Active
+        FROM    Address As L
+                 INNER JOIN
+                ServiceAddress As SA
+                  ON L.AddressID = SA.AddressID
+                      AND L.UserID = SA.UserID
+                 INNER JOIN
+                StateProvince As SP
+                  ON L.StateProvinceID = SP.StateProvinceID
+                 INNER JOIN
+                PostalCode As PC
+                  ON PC.PostalCodeID = L.PostalCodeID
+                 LEFT JOIN
+                TransportType As TT
+                  ON TT.TransportTypeID = SA.TransportType
+        WHERE   L.UserID = @0
+                 AND SA.PositionID = @1
+                 -- We get all location, not only active: -- AND L.Active = 1
+                 AND L.AddressName is not null AND L.AddressName not like ''
     ";
-    public const string sqlInsServiceAddress = @"
+    public const string sqlSetAddress = @"
+        DECLARE @AddressID int
+        SET @AddressID = @0
+
+        IF @AddressID = 0 BEGIN
+            INSERT INTO [Address] (
+                [UserID]
+                ,[AddressTypeID]
+                ,[AddressName]
+                ,[AddressLine1]
+                ,[AddressLine2]
+                ,[City]
+                ,[StateProvinceID]
+                ,[PostalCodeID]
+                ,[CountryID]
+                ,[Latitude]
+                ,[Longitude]
+                ,[GoogleMapsURL]
+                ,[CreatedDate]
+                ,[UpdatedDate]
+                ,[ModifiedBy]
+                ,[Active]
+            ) VALUES (
+                @1, @9,
+                @8, @2, @3, @4, @5, @6, @7, 
+                @10, @11, @12, getdate(), getdate(), 'sys', 1
+            )
+
+            SET @AddressID = @@Identity
+
+        END ELSE BEGIN
+            UPDATE Address SET
+                AddressTypeId = @9
+                ,AddressName = @8
+                ,AddressLine1 = @2
+                ,AddressLine2 = @3
+                ,City = @4
+                ,StateProvinceID = @5
+                ,PostalCodeID = @6
+                ,CountryID = @7
+                ,Latitude = @10
+                ,Longitude = @11
+                ,GoogleMapsURL = @12
+                ,UpdatedDate = getdate()
+                ,ModifiedBy = 'sys'
+            WHERE
+                AddressID = @AddressID
+                 AND UserID = @1
+        END
+    ";
+    public const string sqlSetServiceAddress = @"
         BEGIN TRAN
-    " + sqlInsAddress +
+    " + sqlSetAddress +
     @"
-        INSERT INTO [serviceaddress]
-                    ([UserID]
-                    ,[AddressID]
-                    ,[PositionID]
-                    ,[ServicesPerformedAtLocation]
-                    ,[TravelFromLocation]
-                    ,[ServiceRadiusFromLocation]
-                    ,[TransportType]
-                    ,[PreferredAddress]
-                    ,[CreatedDate]
-                    ,[UpdatedDate]
-                    ,[ModifiedBy]
-                    ,[Active])
-                VALUES (@0, @AddressId, @9,
-                        @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', 1)
+        -- First, try to update, if nothing updated (rowcount=0), try to insert
+        UPDATE ServiceAddress SET
+            ServicesPerformedAtLocation = @14
+            ,TravelFromLocation = @15
+            ,ServiceRadiusFromLocation = @16
+            ,TransportType = @17
+            ,PreferredAddress = @18
+            ,UpdatedDate = getdate()
+            ,ModifiedBy = 'sys'
+        WHERE
+            AddressID = @AddressID
+             AND
+            UserID = @1 AND PositionID = @13
+
+        IF @@rowcount = 0
+            INSERT INTO [ServiceAddress] (
+                [UserID]
+                ,[AddressID]
+                ,[PositionID]
+                ,[ServicesPerformedAtLocation]
+                ,[TravelFromLocation]
+                ,[ServiceRadiusFromLocation]
+                ,[TransportType]
+                ,[PreferredAddress]
+                ,[CreatedDate]
+                ,[UpdatedDate]
+                ,[ModifiedBy]
+                ,[Active]
+            ) VALUES (
+                @1, @AddressId, @13,
+                @14, @15, @16, @17, @18, getdate(), getdate(), 'sys', 1
+            )
 
         COMMIT TRAN
 

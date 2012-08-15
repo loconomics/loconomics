@@ -164,7 +164,9 @@
                         locationNickName = Request["save-location-as"];
                     }
                     // Save location as service location
-                    locationID = db.QueryValue(LcData.sqlInsServiceAddress, c.UserID,
+                    locationID = db.QueryValue(LcData.sqlSetServiceAddress,
+                        0, // AddressID:0, new address to be inserted
+                        c.UserID,
                         Request["street-address-line-1"],
                         Request["street-address-line-2"],
                         Request["city"],
@@ -173,6 +175,7 @@
                         LcData.GetCurrentCountryID(),
                         locationNickName,
                         12 /*AddressType: Other*/,
+                        null, null, null, /* latitude, longitude, googlemapsurl */
                         0 /*Position Zero, customer*/,
                         true /*Service performed at this location*/,
                         false,

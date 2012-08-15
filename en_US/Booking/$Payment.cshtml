@@ -120,7 +120,9 @@
                     
                     if (paymentNickName != null) {
                         // Save location as service location
-                        db.Execute(LcData.sqlInsAddress, c.UserID,
+                        db.Execute(LcData.sqlSetAddress,
+                            0, // AddressID:0, ever inserts a new one
+                            c.UserID,
                             Request["street-address-line-1"],
                             Request["street-address-line-2"],
                             Request["city"],
@@ -128,7 +130,8 @@
                             postalCodeID,
                             LcData.GetCurrentCountryID(),
                             paymentNickName,
-                            13 /*AddressType: Billing*/);
+                            13 /*AddressType: Billing*/,
+                            null, null, null /* coordinates and googlemaps */);
                     }
                     
                     var transactionID = "";

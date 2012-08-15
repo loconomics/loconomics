@@ -208,151 +208,61 @@ $(document).ready(function () {
     });
 
     /*** Locations ***/
-    $('body').delegate('.positionlocations .addlocation', 'click', function () {
-        var $t = $(this);
-        var tab = $t.closest('.tab-body');
-        var editPanel = $('.location-edit-panel:eq(0)', tab);
-        var editLoc = editPanel.children('.edit-location:eq(0)');
-        var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
-        editLoc.children('input[name=location-type]').val(locType);
-        editPanel.addClass('type-' + locType);
-        // Form reset for new location:
-        editLoc.attr('id', 'EDIT' + guidGenerator());
-        editLoc.find('input[name=location-editor-id]').val(editLoc.attr('id'));
-        editLoc.find('input[name=location-id]').val('0');
-        editLoc.find('input[name=location-name]').val('');
-        editLoc.find('input[name=location-addressline1]').val('');
-        editLoc.find('input[name=location-addressline2]').val('');
-        editLoc.find('input[name=location-city]').val('');
-        editLoc.find('input[name=location-zipcode]').val('');
-        //editLoc.find('input[name=location-travel-radius]').val('');
-        //editLoc.find('input[name=location-travel-transport]').val('');
-        // We don't reset the state, most cases will be the same again
-        editPanel.show();
-        return false;
-    })
-    .delegate('select[name=location-state]', 'change', function () {
-        var $t = $(this);
-        // Updating the hidden field with the state code, the state select use the state id for value.
-        $t.siblings('input[name=location-state-code]').val($t.children('[value=' + $t.val() + ']').data('stateprovince-code'));
-    })
-    .delegate('.address > .tools > .edit', 'click', function () {
-        var $t = $(this);
-        var tab = $t.closest('.tab-body');
-        var viewLoc = $t.closest('.address');
-        var editPanel = tab.find('.location-edit-panel:eq(0)');
-        var editLoc = editPanel.children('.edit-location:eq(0)');
-        var locType = $t.closest('.locations-set').data('location-type'); // values: work, travel
-        editLoc.children('input[name=location-type]').val(locType);
-        editPanel.addClass('type-' + locType);
-        if (!viewLoc.attr('id')) viewLoc.attr('id', 'ID' + guidGenerator());
-        // Copying data from view to edit:
-        editLoc.attr('id', 'EDIT' + viewLoc.attr('id'));
-        editLoc.find('input[name=location-editor-id]').val(viewLoc.attr('id'));
-        editLoc.find('input[name=location-id]').val(viewLoc.data('location-id'));
-        editLoc.find('input[name=location-name]').val(viewLoc.find('.address-name').text());
-        editLoc.find('input[name=location-addressline1]').val(viewLoc.find('.address-line1').text());
-        editLoc.find('input[name=location-addressline2]').val(viewLoc.find('.address-line2').text());
-        editLoc.find('input[name=location-city]').val(viewLoc.find('.address-city').text());
-        editLoc.find('input[name=location-zipcode]').val(viewLoc.find('.address-zipcode').text());
-        // State ID and Code
-        var stateCode = viewLoc.find('.address-state').text();
-        editLoc.find('input[name=location-state-code]').val(stateCode);
-        var selectState = editLoc.find('select[name=location-state]');
-        selectState.val(selectState.children('option[data-stateprovince-code=' + stateCode + ']').attr('value'));
-        editLoc.find('select[name=location-travel-radius] option[value=' + viewLoc.find('.travel-radius').text() + ']').prop('selected', true);
-        editLoc.find('input[name=location-travel-transport][value=' + viewLoc.find('.travel-transport').data('transport-id') + ']').prop('checked', true);
-        editPanel.show();
-        return false;
-    })
-    .delegate('.address > .tools > .map', 'click', function () {
-        alert('To be implemented: here will go a Google Maps to get coordenates');
-        return false;
-    })
-    .delegate('.address > .tools > .remove', 'click', function () {
-        var $t = $(this);
-        var tab = $t.closest('.tab-body');
-        var viewLoc = $t.closest('.address');
-        var locid = viewLoc.data('location-id');
-        var idview = viewLoc.attr('id');
-        if (idview)
-            $('#HIDE-' + idview).remove();
-        if (locid && locid != '0')
-            tab.find('form.positionlocations').append('<input type="hidden" name="remove-locations" value="' +
-                locid + '" id="HIDE-REMOVED-LOCATION-' + locid + '" />');
-        viewLoc.remove();
-        return false;
-    })
-    .delegate('.location-edit-form .button', 'click', function () {
-        var $t = $(this);
-        var tab = $t.closest('.tab-body');
-        var editLoc = $t.closest('.edit-location');
-        var editPanel = editLoc.closest('.location-edit-panel');
-        var locType = editLoc.find('input[name=location-type]').val();
-        editPanel.removeClass('type-' + locType);
-        if ($t.hasClass('save')) {
-            var form = $t.closest('form');
-            // First at all, if unobtrusive validation is enabled, validate
-            var valobject = form.data('unobtrusiveValidation');
-            if (valobject && valobject.validate() == false)
-            // Validation is actived, was executed and the result is 'false': bad data, stop:
+    (function ($positionslocations) {
+        // Fast quick
+        if ($positionslocations.length == 0) return;
+
+        $positionslocations.each(function () {
+            var $locationsPanel = $(this);
+
+            var ep = $locationsPanel.children('.edit-panel');
+            var vp = $locationsPanel.children('.view-panel');
+
+            vp.on('click', '.addlocation', function () {
+                // We read the data-source-url attribute to get the Default value, with LocationID=0, instead the last reload value:
+                ep.show().reload(ep.attr('data-source-url') + '&' + $(this).data('extra-query'));
                 return false;
-
-            // Looking for read-only location
-            var viewLoc;
-            // Find location readonly element if is not zero
-            var locId = editLoc.find('[name=location-id]').val();
-            if (/^EDIT/.test(editLoc.attr('id')))
-                viewLoc = tab.find('.address#' + editLoc.attr('id').substr(4));
-            // If Id is zero, or readonly element doesn't exist, create one from base and add to DOM
-            if (!viewLoc || viewLoc.length == 0) {
-                viewLoc = editPanel.find('.readonly-location-base > .address:eq(0)').clone();
-                viewLoc.attr('id', 'ID' + guidGenerator());
-                // add to DOM, in its list
-                var locLi = $('<li></li>').append(viewLoc);
-                tab.find('ul.' + locType + '-locations').append(locLi);
+            })
+            .on('click', '.address .edit', function () {
+                // We read the data-source-url attribute to get the Default value, and we replace LocationID=0 with the clicked location-id data:
+                ep.show().reload(ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + $(this).closest('.address').data('location-id')));
+                return false;
+            }).on('click', '.address .delete', function () {
+                var res = vp.find('.lc-ressources');
+                var loc = $(this).closest('.address');
+                if (confirm(res.children('.confirm-delete-location-message').text())) {
+                    smoothBoxBlock(res.children('.delete-location-loading-message'), loc);
+                    $.ajax({
+                        url: ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + loc.data('location-id')) + '&action=delete',
+                        //UrlUtil.LangPath + 'Dashboard/$PositionsLocationEdit/?action=delete&LocationID=' + loc.data('location-id'),
+                        success: function (data) {
+                            if (data && data.Code == 0) {
+                                smoothBoxBlock('<div>' + data.Result + '</div>', loc);
+                                loc.click(function () { smoothBoxBlock(null, loc); loc.hide('slow', function () { loc.remove() }) });
+                            }
+                        },
+                        error: function (jx, message, ex) {
+                            ajaxErrorPopupHandler(jx, message, ex);
+                            smoothBoxBlock(null, loc);
+                        }
+                    });
+                }
+                return false;
+            });
+            function closeAndClearEditPanel() {
+                ep.hide('slow', function () {
+                    // Remove form to avoid a 'flickering cached data' effect next time is showed:
+                    ep.children().remove()
+                });
+                return false;
             }
-            // Saving this form data as a serialized value into the main form
-            var viewID = 'HIDE-' + viewLoc.attr('id');
-            var fdata = $('#' + viewID);
-            if (fdata && fdata.length > 0) {
-                fdata.val(form.serialize());
-            } else {
-                fdata = $('<input type="hidden" name="locations" id="HIDE-' + viewLoc.attr('id') + '"/>');
-                fdata.val(form.serialize());
-                tab.find('form.positionlocations').append(fdata);
-            }
-
-            // Copy location data to read-only view
-            viewLoc.find('.address-name').text(editLoc.find('[name=location-name]').val());
-            viewLoc.find('.address-line1').text(editLoc.find('[name=location-addressline1]').val());
-            viewLoc.find('.address-line2').text(editLoc.find('[name=location-addressline2]').val());
-            viewLoc.find('.address-city').text(editLoc.find('[name=location-city]').val());
-            viewLoc.find('.address-zipcode').text(editLoc.find('[name=location-zipcode]').val());
-            viewLoc.find('.address-state').text(editLoc.find('[name=location-state-code]').val());
-            viewLoc.find('.travel-radius').text(editLoc.find('select[name=location-travel-radius]').val());
-            var tti = editLoc.find('input[name=location-travel-transport]:checked').val();
-            var tts = editLoc.find('input[name=location-travel-transport]:checked').parent().text();
-            viewLoc.find('.travel-transport')
-                .data('transport-id', tti)
-                .text(tts);
-        }
-        // Hidding
-        editLoc.closest('.edit-popup').hide();
-        return false;
-    })
-    .delegate('.edit-popup .close-edit-popup', 'click', function () {
-        $(this).closest('.edit-popup').hide();
-    })
-    // Add handler for success post actions:
-    .on('ajaxFormReturnedHtml', 'form.positionlocations', function () {
-        var $t = $(this);
-        // do first initialization of has-confirm:
-        $t.find('fieldset.has-confirm > .confirm input').change();
-        // Show success message, if there are one! (server will not retrieve one if there is an error)
-        smoothBoxBlock($t.find('.popups > .saved'), $t)
-            .click(function () { smoothBoxBlock(null, $t) });
-    });
+            ep.on('click', '.cancel-action', closeAndClearEditPanel)
+            .on('ajaxSuccessPost', 'form', function (e, data) {
+                if (data.Code == 0) vp.show('slow').reload();
+            })
+            .on('ajaxSuccessPostMessageClosed', '.ajax-box', closeAndClearEditPanel);
+        });
+    })($('.positionlocations'));
 
     /*==============
     * Payments
@@ -424,6 +334,9 @@ $(document).ready(function () {
     * Pricing Wizard: packages
     */
     (function ($pricingPackage) {
+        // Fast quick
+        if ($pricingPackage.length == 0) return;
+
         $pricingPackage.find('.add-package').click(function () {
             var editPanel = $(this).siblings('.edit-panel');
             // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:

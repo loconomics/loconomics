@@ -1,0 +1,210 @@
+﻿@using WebMatrix.Data;
+@{
+    var u = LcData.UserInfo.GetUserRow();
+    var locationID = Request["LocationID"].AsInt();
+    // Current position data record:
+    var p = LcData.UserInfo.GetUserCurrentPos();
+    var n = p.PositionID;
+    var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
+
+    if (action == "delete") {
+        var sqlRemoveLoc = @"
+            DELETE FROM ServiceAddress
+            WHERE AddressID = @0 AND PositionID = @1
+
+            IF @@ERROR <> 0 BEGIN
+                -- Non deletable serviceaddress, because is linked, simply 'unactive'
+                UPDATE ServiceAddress SET
+                    Active = 0
+                WHERE   AddressID = @0 AND PositionID = @1
+            END
+        ";
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(sqlRemoveLoc, locationID, p.PositionID);
+            
+            LcHelpers.ReturnJsonResult(0, "Location removed succesfully");
+        }
+    }
+    
+    Validation.RequireField("name", LcRessources.RequiredField("Name"));
+    Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
+    Validation.RequireField("city", LcRessources.RequiredField("City"));
+    Validation.RequireField("state", LcRessources.RequiredField("State"));
+    Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
+    Validation.RequireField("iworkon", "Are services performed at this location?");
+    Validation.RequireField("itravel", "Do you travel to clients from this location?");
+    Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
+    Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
+    Validation.Add("google-map-url", Validator.Url("Google Maps URL is not valid"));
+    Validation.Add("travel-radius", Validator.Decimal("Service Radius must be a number"));
+
+    if (IsPost && Validation.IsValid()) {
+
+        using (var db = Database.Open("sqlloco")) {
+
+            // Validate Postal Code
+            var state = Request["state"].AsInt();
+            var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], state);
+            if (postalCodeID == 0) {
+                ModelState.AddFormError("Postal Code not valid");
+            } else {
+                db.Execute(LcData.sqlSetServiceAddress,
+                    locationID,
+                    u.UserID,
+                    Request["addressline1"],
+                    Request["addressline2"],
+                    Request["city"],
+                    state,
+                    postalCodeID,
+                    u.PreferredCountryID,
+                    Request["name"],
+                    Request["type"].AsInt(),
+                    Request["latitude"].AsDecimal(),
+                    Request["longitude"].AsDecimal(),
+                    Request["google-map-url"],
+                    p.PositionID,
+                    Request["iworkon"].AsBool(),
+                    Request["itravel"].AsBool(),
+                    Request["travel-radius"].AsDecimal(),
+                    Request["travel-transport"].AsInt(),
+                    Request["preferred-address"].AsBool()
+                );
+            }
+        }
+        
+        if (ModelState.IsValid) {
+            LcHelpers.ReturnJsonResult(0, "Location saved");
+        }
+    }
+    
+    var sqlGetTransports = @"
+        SELECT *
+        FROM    TransportType
+        WHERE   Active = 1
+    ";
+    var sqlCondAddressID = @"
+        AND L.AddressID = @2
+    ";
+    var sqlGetAddressTypes = @"
+        SELECT  AddressTypeID, AddressType
+        FROM    AddressType
+        WHERE   Active = 1
+    ";
+    dynamic transports = null, location = null, types = null;
+    using (var db = Database.Open("sqlloco")) {
+        location = db.QuerySingle(LcData.sqlGetAddresses + sqlCondAddressID, p.UserID, p.PositionID, locationID);
+        transports = db.Query(sqlGetTransports);
+        types = db.Query(sqlGetAddressTypes);
+    }
+}
+@helper printDistanceOptions(string selected){
+        <option @LcHelpers.IsSelected(selected, "1") value="1">1 mile</option>
+        <option @LcHelpers.IsSelected(selected, "5") value="5">5 miles</option>
+        <option @LcHelpers.IsSelected(selected, "10") value="10">10 miles</option>
+        <option @LcHelpers.IsSelected(selected, "25") value="25">25 miles</option>
+}
+    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocationEdit/?LocationID=@(locationID)&PositionID=@(p.PositionID)" method="post" class="ajax ajax-box edit-location">
+        @LcHelpers.GetValidationScripts()
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        <fieldset>
+            <ul class="location-data">
+                <li class="location-name">
+                    <label>Name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
+                    @Html.ValidationMessage("name")
+                </li>
+                <li class="location-addressline location-addressline1">
+                    <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" @Validation.GetHtml("addressline1") /></label>
+                    @Html.ValidationMessage("addressline1")
+                </li>
+                <li class="location-addressline location-addressline2">
+                    <label>Address Line 2: <input type="text" name="addressline2" value="@(Request["addressline2"] ?? (location != null ? location.AddressLine2 : null))" @Validation.GetHtml("addressline2") /></label>
+                    @Html.ValidationMessage("addressline2")
+                </li>
+                <li class="location-city">
+                    <label>City: <input type="text" name="city" value="@(Request["city"] ?? (location != null ? location.City : null))" @Validation.GetHtml("city") /></label>
+                </li>
+                <li class="location-state">
+                    <label>State:
+                        <select name="state" @Validation.GetHtml("state")>
+                            @LcHelpers.StateProvinceOptions(Request["state"] ?? (location != null ? location.StateProvinceID : null))
+                        </select>
+                        @Html.ValidationMessage("state")
+                    </label>
+                </li>
+                <li class="location-zipcode">
+                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" @Validation.GetHtml("postalcode")/></label>
+                    @Html.ValidationMessage("postalcode")
+                </li>
+                <li class="location-specialinstructions">
+                    <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions")>@(Request["special-instructions"] ?? (location != null ? location.SpecialInstructions : null))</textarea></label>
+                    @Html.ValidationMessage("special-instructions")
+                </li>
+                <li class="location-preferredaddress input-option">
+                    <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null ? location.PreferredAddress : null)) /> This is my prefered address</label>
+                </li>
+                <li class="location-type">
+                    <label>Address Type: 
+                        <select name="type" @Validation.GetHtml("type")>
+                            @foreach (var t in types)
+                            {
+                                <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
+                            }
+                        </select>
+                    </label>
+                </li>
+            </ul>
+            <ul class="location-map">
+                <li>
+                    <strong>GPS Coordenates</strong>
+                </li>
+                <li><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
+                <li><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
+                <li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>
+            </ul>
+            <ul class="location-travel">
+                <li class="input-option">
+                    I perform services at this location:
+                    <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["iworkon"] ?? (location != null ? location.ServicesPerformedAtLocation : null)) name="iworkon" value="True"/></label>
+                    <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["iworkon"] ?? (location != null ? location.ServicesPerformedAtLocation : false)) name="iworkon" value="False"/></label>
+                </li>
+                <li class="input-option">
+                    <fieldset class="has-confirm">
+                        <legend>I travel to clients from this location</legend>
+                        <div class="confirm positionlocations-itravel-confirm">
+                            <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["itravel"] ?? (location != null ? location.TravelFromLocation : null)) name="itravel" value="True"/></label>
+                            <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["itravel"] ?? (location != null ? location.TravelFromLocation : false)) name="itravel" value="False"/></label>
+                        </div>
+                        <ul class="travel-options">
+                            <li><label>I will travel up to 
+                                <select name="travel-radius" @Validation.GetHtml("travel-radius")>
+                                    @printDistanceOptions(Request["travel-radius"] ?? (location != null ? location.ServiceRadiusFromLocation : null))
+                                </select>
+                                from this location.</label>
+                                @Html.ValidationMessage("travel-radius")
+                                </li>
+                            <li>
+                                <span>I travel to jobs using primarily:</span>
+                                <ul class="transport-type">
+                                @foreach (var t in transports)
+                                {
+                                    <li>
+                                        <label><input type="radio" @LcHelpers.IsChecked(t.TransportTypeID, Request["travel-transport"] ?? (location != null ? location.TransportTypeID : null)) name="travel-transport" value="@t.TransportTypeID" @Validation.GetHtml("travel-transport") />@t.TransportTypeName</label>
+                                    </li>
+                                }
+                                </ul>
+                                @Html.ValidationMessage("travel-transport")
+                            </li>
+                        </ul>
+                    </fieldset>
+                </li>
+            </ul>
+            <script type="text/javascript">
+                @* Force execution of the 'has-confirm' script *@
+                $('fieldset.has-confirm > .confirm input').change();
+            </script>
+        </fieldset>
+        <fieldset class="actions">
+            <button class="button cancel-action" type="button">Cancel</button>
+            <button class="button main-action" type="submit">Save</button>
+        </fieldset>
+    </form>

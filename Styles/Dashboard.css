@@ -684,37 +684,47 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     color: #00989A;
 }
 /* edit-location */
-.location-edit-panel {
+.positionlocations .edit-panel {
+    min-height: 150px;
+    display: none; /* at start */
+}
+.edit-location {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61BDBE;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    margin: 0 0 10px;
+    padding: 15px;
+}
+.edit-location ul > li label {
+    width: auto;
+}
+.edit-location ul.location-data label,
+.edit-location ul.location-map label {
     display: block;
     clear: both;
 }
-.location-edit-panel > .edit-location-base,
-.location-edit-panel > .readonly-location-base {
-    display: none;
-}
-.edit-location > ul > li > label {
-    width: auto;
-}
-.edit-location > ul.location-data label {
-    display: block;
-}
-.edit-location > ul.location-data input,
-.edit-location > ul.location-data select {
-    width: 240px !important;
+.edit-location ul.location-data input,
+.edit-location ul.location-data select,
+.edit-location ul.location-data textarea,
+.edit-location ul.location-map input {
+    width: 450px !important;
     float: right;
 }
-.edit-location > ul.travel-options label {
+.edit-location ul.travel-options label {
     width: auto !important;
     float: none;
 }
-.location-edit-panel.type-work .travel-options {
-    display: none;
+.edit-location ul.location-data li.input-option input {
+    width: auto !important;
+    float: none;
 }
-.edit-popup .edit-location {
-    width: 450px;
-    margin: auto;
+.edit-location .location-travel legend {
+    font-weight: normal;
 }
-/* generic class edit-popup, used to edit locations for example */
+
+/* generic class edit-popup (removed from locations, maybe unused) */
 .edit-popup-container {
     position: relative;
 }

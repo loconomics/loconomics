@@ -1119,11 +1119,11 @@ fieldset.has-confirm > .confirm > label > input{
     margin: 0 3px;
 }
 fieldset.has-confirm.confirmed-no > *{
-    display: none;
+    display: none !important;
 }
 fieldset.has-confirm.confirmed-no > .confirm,
 fieldset.has-confirm.confirmed-no > legend{
-    display: inherit;
+    display: inherit !important;
 }
 
 /* ============== Editable content ===============
