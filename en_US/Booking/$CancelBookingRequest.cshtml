@@ -19,7 +19,7 @@
     using (var db = Database.Open("sqlloco")) {
         var checkID = db.QueryValue(sqlCheckBookingRequest, u.UserID, brID);
         if (checkID != null && (int)checkID == brID) {
-            var result = BookingHelper.InvalidateBookingRequest(brID, 4); // 4:Cancelled
+            var result = LcData.Booking.InvalidateBookingRequest(brID, 4); // 4:Cancelled
 
             if (result.Error == 0) {
                 if (Request.IsAjaxRequest()){

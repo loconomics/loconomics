@@ -170,8 +170,8 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message subject and message body based on detailed booking data
-            string subject = BookingHelper.GetBookingRequestSubject(BookingRequestID);
-            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
+            string subject = LcData.Booking.GetBookingRequestSubject(BookingRequestID);
+            string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
@@ -211,8 +211,8 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
-            string subject = BookingHelper.GetBookingSubject(BookingID);
-            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
             int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID, "Booking", subject);
@@ -255,7 +255,7 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
-            string message = BookingHelper.GetBookingRequestDetails(BookingRequestID);
+            string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
             int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID, "BookingRequest");
@@ -303,8 +303,8 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
-            string subject = BookingHelper.GetBookingSubject(BookingID);
-            string message = BookingHelper.GetBookingStatus(BookingID);
+            string subject = LcData.Booking.GetBookingSubject(BookingID);
+            string message = LcData.Booking.GetBookingStatus(BookingID);
 
             // ThreadStatus=2, responded;
             // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19

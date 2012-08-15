@@ -20,7 +20,7 @@
         var checkID = db.QueryValue(sqlCheckBookingRequest, u.UserID, brID);
         if (checkID != null && (int)checkID == brID) {
 
-            var result = BookingHelper.InvalidateBookingRequest(brID, 5); // 5:denied/declined
+            var result = LcData.Booking.InvalidateBookingRequest(brID, 5); // 5:denied/declined
 
             if (result.Error == 0) {
                 if (Request.IsAjaxRequest()){

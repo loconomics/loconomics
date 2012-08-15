@@ -9,7 +9,7 @@
     
     // TODO: Calculate location distance from provider to customer
     
-    var booking = BookingHelper.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
+    var booking = LcData.Booking.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
 
 }
 @helper printDateTimeRange(DateTime start, DateTime end){

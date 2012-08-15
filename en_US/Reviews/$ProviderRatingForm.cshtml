@@ -18,7 +18,7 @@
         positionID = Request["PositionID"].AsInt();
         pastReference = true;
     } else if (bookingID > 0) {
-        dynamic booking = PageData["booking"] ?? BookingHelper.GetBooking(bookingID);
+        dynamic booking = PageData["booking"] ?? LcData.Booking.GetBooking(bookingID);
         
         // Check booking is valid and current user is the customer (only he can rate provider at this bookingid)
         if (booking == null || booking.CustomerUserID != customerUserID) {

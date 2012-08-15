@@ -9,10 +9,10 @@
      
     dynamic services = null, pvars = null, poptions = null, packages = null;
     using (var db = Database.Open("sqlloco")) {         
-        services    = db.Query(BookingHelper.sqlGetServicesIncludedInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        pvars       = db.Query(BookingHelper.sqlGetPricingVarsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        poptions    = db.Query(BookingHelper.sqlGetPricingOptionsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        packages    = db.Query(BookingHelper.sqlGetPricingPackagesInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        services    = db.Query(LcData.Booking.sqlGetServicesIncludedInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        pvars       = db.Query(LcData.Booking.sqlGetPricingVarsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        poptions    = db.Query(LcData.Booking.sqlGetPricingOptionsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        packages    = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
      
     // auxiliar vars in view generation

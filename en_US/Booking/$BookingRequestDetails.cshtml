@@ -11,7 +11,7 @@
     
     // TODO: Calculate location distance from provider to customer
     
-    var booking = BookingHelper.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
+    var booking = LcData.Booking.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
 
     if (booking != null) {
         confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);

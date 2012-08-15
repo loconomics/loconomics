@@ -13,7 +13,7 @@
         bookingID = (int)PageData["BookingID"];
     }
     
-    dynamic booking = PageData["booking"] ?? BookingHelper.GetBookingBasicInfo(bookingID);
+    dynamic booking = PageData["booking"] ?? LcData.Booking.GetBookingBasicInfo(bookingID);
     dynamic customer = null, provider = null, position = null, review = null;
 
     // Check booking is valid and current user is the customer or provider

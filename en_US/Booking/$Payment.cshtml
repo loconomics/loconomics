@@ -227,10 +227,10 @@
     /*
      * Get Data
      */
-    dynamic summary = BookingHelper.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
-    string strDetails = BookingHelper.GetBookingRequestDetails(0, summary.PricingEstimateID);
-    string strServices = BookingHelper.GetBookingRequestServices(0, summary.PricingEstimateID);
-    string strPackages = BookingHelper.GetBookingRequestPackages(0, summary.PricingEstimateID);
+    dynamic summary = LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
+    string strDetails = LcData.Booking.GetBookingRequestDetails(0, summary.PricingEstimateID);
+    string strServices = LcData.Booking.GetBookingRequestServices(0, summary.PricingEstimateID);
+    string strPackages = LcData.Booking.GetBookingRequestPackages(0, summary.PricingEstimateID);
 }
 @* From Profile/_PositionSummary *@
 @helper printCatTitle(dynamic cat){

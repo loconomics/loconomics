@@ -11,7 +11,7 @@
     var thisUserData = DashboardFunctions.GetUserRow(thisUserID);
     int bID = Request["BookingID"].AsInt();
     
-    dynamic booking = PageData["booking"] = BookingHelper.GetBooking(bID);
+    dynamic booking = PageData["booking"] = LcData.Booking.GetBooking(bID);
 
 }
 @helper printDateTimeRange(DateTime? start, DateTime? end){
@@ -72,7 +72,7 @@ else
                 @booking.PositionSingular
             </li>
             <li class="details">
-                <h5>Details:</h5> @BookingHelper.GetBookingRequestDetails(booking.BookingRequestID)
+                <h5>Details:</h5> @LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID)
             </li>
         </ul>
         <div class="actions">

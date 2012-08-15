@@ -7,7 +7,7 @@ using WebMatrix.Data;
 /// <summary>
 /// Static class simplifying data access
 /// </summary>
-public static class LcData
+public static partial class LcData
 {
     #region Service Attributes and Categories
     public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filters = null, int userId = 0)
