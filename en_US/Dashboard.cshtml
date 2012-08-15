@@ -43,7 +43,7 @@
     Scripts.Add(UrlUtil.AppPath + "Scripts/Dashboard.js");
 }
 @helper menu(string item){
-    @(DashboardFunctions.CssCurrent(item, PageData["menu-item"]))
+    @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
 }
         <!-- Dashboard -->
         <div class="provider dashboard editable">
