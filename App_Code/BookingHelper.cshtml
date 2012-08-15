@@ -243,12 +243,12 @@
                 IsAdmin);
         }
     }
-    public static string sqlGetBookingRequestPricingEstimate = @"
+    public const string sqlGetBookingRequestPricingEstimate = @"
         SELECT  PricingEstimateID
         FROM    BookingRequest
         WHERE   BookingRequestID = @0
     ";
-    public static string sqlGetPricingPackagesInPricingEstimate = @"
+    public const string sqlGetPricingPackagesInPricingEstimate = @"
         SELECT  PP.ProviderPackageID
                 ,PP.ProviderPackageName As Name
                 ,PP.ProviderPackageDescription As Description
@@ -266,7 +266,7 @@
                     AND 
                 PP.LanguageID = @1 AND PP.CountryID = @2
     ";
-    public static string sqlGetPricingOptionsInPricingEstimate = @"
+    public const string sqlGetPricingOptionsInPricingEstimate = @"
         SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
                 P.TimeEstimate As Time, P.PriceEstimate As Price
         FROM    PricingEstimateDetail As P
@@ -276,7 +276,7 @@
         WHERE   P.PricingEstimateID = @0
                  AND V.LanguageID = @1 AND V.CountryId = @2
     ";
-    public static string sqlGetPricingVarsInPricingEstimate = @"
+    public const string sqlGetPricingVarsInPricingEstimate = @"
         SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
                 P.TimeEstimate As Time, P.PriceEstimate As Price
         FROM    PricingEstimateDetail As P
@@ -286,7 +286,7 @@
         WHERE   P.PricingEstimateID = @0
                  AND V.LanguageID = @1 AND V.CountryId = @2
     ";
-    public static string sqlGetServicesIncludedInPricingEstimate = @"
+    public const string sqlGetServicesIncludedInPricingEstimate = @"
         SELECT  S.Name
         FROM    PricingEstimateDetail As P
                  INNER JOIN

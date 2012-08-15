@@ -127,54 +127,6 @@
         // TODO: Add validation for: End Time cannot be lower than Start Time --- END TIME MUST BE AUTO, using the ServiceDuration field
         
         if (ModelState.IsValid){
-            var sqlInsServiceLocation = @"
-                BEGIN TRAN
-
-                DECLARE @AddressID int
-
-                INSERT INTO [Address]
-                           ([UserID]
-                           ,[AddressTypeID]
-                           ,[AddressName]
-                           ,[AddressLine1]
-                           ,[AddressLine2]
-                           ,[City]
-                           ,[StateProvinceID]
-                           ,[PostalCodeID]
-                           ,[CountryID]
-                           ,[Latitude]
-                           ,[Longitude]
-                           ,[GoogleMapsURL]
-                           ,[CreatedDate]
-                           ,[UpdatedDate]
-                           ,[ModifiedBy]
-                           ,[Active])
-                     VALUES (@0, 12 /*AddressType: Other*/,
-                             @7, @1, @2, @3, @4, @5, @6, 
-                             null, null, null, getdate(), getdate(), 'sys', 1)
-                
-                SELECT @AddressID = @@Identity
-
-                INSERT INTO [serviceaddress]
-                           ([UserID]
-                           ,[AddressID]
-                           ,[PositionID]
-                           ,[ServicesPerformedAtLocation]
-                           ,[TravelFromLocation]
-                           ,[ServiceRadiusFromLocation]
-                           ,[TransportType]
-                           ,[PreferredAddress]
-                           ,[CreatedDate]
-                           ,[UpdatedDate]
-                           ,[ModifiedBy]
-                           ,[Active])
-                     VALUES (@0, @AddressId, 0 /*Position Zero, customer*/,
-                             1 /*Service performed at this location*/, 0, null, null, 0, getdate(), getdate(), 'sys', 1)
-
-                COMMIT TRAN
-
-                SELECT @AddressID As AddressID
-            ";
             var sqlInsCalendarEvent = @"
                 INSERT INTO [CalendarEvents]
                            ([UserId]
@@ -212,14 +164,21 @@
                         locationNickName = Request["save-location-as"];
                     }
                     // Save location as service location
-                    locationID = db.QueryValue(sqlInsServiceLocation, c.UserID,
+                    locationID = db.QueryValue(LcData.sqlInsServiceAddress, c.UserID,
                         Request["street-address-line-1"],
                         Request["street-address-line-2"],
                         Request["city"],
                         Request["state"],
                         zipcodeID,
                         LcData.GetCurrentCountryID(),
-                        locationNickName);
+                        locationNickName,
+                        12 /*AddressType: Other*/,
+                        0 /*Position Zero, customer*/,
+                        true /*Service performed at this location*/,
+                        false,
+                        null,
+                        null,
+                        false);
                 }
                 
                 // Save date-times as 'tentative' provider Events

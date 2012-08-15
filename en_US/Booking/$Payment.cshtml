@@ -118,6 +118,19 @@
                         paymentNickName = Request["save-payment-as"];
                     }
                     
+                    if (paymentNickName != null) {
+                        // Save location as service location
+                        db.Execute(LcData.sqlInsAddress, c.UserID,
+                            Request["street-address-line-1"],
+                            Request["street-address-line-2"],
+                            Request["city"],
+                            Request["state"],
+                            postalCodeID,
+                            LcData.GetCurrentCountryID(),
+                            paymentNickName,
+                            13 /*AddressType: Billing*/);
+                    }
+                    
                     var transactionID = "";
                     
                     if (TESTING_EMULATEBRAINTREE) {

@@ -294,6 +294,57 @@ public static class LcData
             return postalCodeID == null ? 0 : (int)postalCodeID;
         }
     }
+
+    public const string sqlInsAddress = @"
+        DECLARE @AddressID int
+
+        INSERT INTO [Address]
+                    ([UserID]
+                    ,[AddressTypeID]
+                    ,[AddressName]
+                    ,[AddressLine1]
+                    ,[AddressLine2]
+                    ,[City]
+                    ,[StateProvinceID]
+                    ,[PostalCodeID]
+                    ,[CountryID]
+                    ,[Latitude]
+                    ,[Longitude]
+                    ,[GoogleMapsURL]
+                    ,[CreatedDate]
+                    ,[UpdatedDate]
+                    ,[ModifiedBy]
+                    ,[Active])
+                VALUES (@0, @8,
+                        @7, @1, @2, @3, @4, @5, @6, 
+                        null, null, null, getdate(), getdate(), 'sys', 1)
+
+        SET @AddressID = @@Identity
+    ";
+    public const string sqlInsServiceAddress = @"
+        BEGIN TRAN
+    " + sqlInsAddress +
+    @"
+        INSERT INTO [serviceaddress]
+                    ([UserID]
+                    ,[AddressID]
+                    ,[PositionID]
+                    ,[ServicesPerformedAtLocation]
+                    ,[TravelFromLocation]
+                    ,[ServiceRadiusFromLocation]
+                    ,[TransportType]
+                    ,[PreferredAddress]
+                    ,[CreatedDate]
+                    ,[UpdatedDate]
+                    ,[ModifiedBy]
+                    ,[Active])
+                VALUES (@0, @AddressId, @9,
+                        @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', 1)
+
+        COMMIT TRAN
+
+        SELECT @AddressID As AddressID
+    ";
     #endregion
 
     #region Pricing Wizard
