@@ -11,30 +11,30 @@
 
 @*=== Elements/tags *@
 @helper StyleH1(string addCss = null) {
-    <text>style="color:#8B2143 !important;line-height:100%;@addCss"</text>
+    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
 }
 @helper StyleH2(string addCss = null) {
-    <text>style="color:#8B2143 !important;line-height:100%;@addCss"</text>
+    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
 }
 @helper StyleH3(string addCss = null) {
-    <text>style="color: #8B2143 !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;@addCss"</text>
+    @PrintStyle("color: #8B2143 !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss)
 }
 @helper StyleH4(string addCss = null) {
-    <text>style="color: #8B2143 !important;line-height:100%;margin:15px 0;font-size:17px;@addCss"</text>
+    @PrintStyle("color: #8B2143 !important;line-height:100%;margin:15px 0;font-size:17px;" + addCss)
 }
 @helper StyleH5(string addCss = null) {
-    <text>style="color:#8B2143 !important;line-height:100%;@addCss"</text>
+    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
 }
 @helper StyleH6(string addCss = null) {
-    <text>style="color:#8B2143 !important;line-height:100%;@addCss"</text>
+    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
 }
 @helper StyleUlOl(bool withListStyle = false, string addCss = null) {
-    <text>style="@(withListStyle ? "list-style-position:inside" : "list-style:none inside none");margin:0;padding:0;@addCss"</text>
+    @PrintStyle((withListStyle ? "list-style-position:inside" : "list-style:none inside none") + ";margin:0;padding:0;" + addCss)
 }
 
 @*=== Resets *@
 @helper StyleResetP(string addCss = null) {
-    <text>style="margin:0;padding:0;@addCss"</text>
+    @PrintStyle("margin:0;padding:0;" + addCss)
 }
 
 @*=== Classes *@
