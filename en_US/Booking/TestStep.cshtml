@@ -4,7 +4,7 @@
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Let's get this booked";
     
-    PageData["customerrow"] = DashboardFunctions.GetUserRow();
+    PageData["customerrow"] = LcData.UserInfo.GetUserRow();
 
     int providerid = Request["ProviderID"].AsInt();
     int positionid = Request["PositionID"].AsInt();
@@ -13,8 +13,8 @@
         Response.Redirect(UrlUtil.LangPath);
     }
         
-    PageData["providerrow"] = DashboardFunctions.GetUserRow(providerid);
-    PageData["positionrow"] = DashboardFunctions.GetUserPos(providerid, positionid);
+    PageData["providerrow"] = LcData.UserInfo.GetUserRow(providerid);
+    PageData["positionrow"] = LcData.UserInfo.GetUserPos(providerid, positionid);
     
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
         Response.Redirect(UrlUtil.LangPath);

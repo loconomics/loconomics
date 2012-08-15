@@ -16,7 +16,7 @@
         Response.Redirect(UrlUtil.LangPath);
     }
 
-    var u = DashboardFunctions.GetRequestedUserRow(userid);
+    var u = LcData.UserInfo.GetRequestedUserRow(userid);
     if (u == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
@@ -30,7 +30,7 @@
 
     dynamic posrows = null;
     if (u.IsProvider) {
-        posrows = DashboardFunctions.GetUserPos(userid, true);
+        posrows = LcData.UserInfo.GetUserPos(userid, true);
         
         if (view != "customer") {
             // Check if the positionid requested exists for current user:

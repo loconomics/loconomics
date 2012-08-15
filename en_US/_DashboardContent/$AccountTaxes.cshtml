@@ -2,7 +2,7 @@
 @using WebMatrix.Data;
 @{
     var idprefix = "account-taxes";
-    var user = DashboardFunctions.GetUserRow();
+    var user = LcData.UserInfo.GetUserRow();
     
     BraintreeGateway gateway = null;
     dynamic taxentities = null, tintypes = null;

@@ -7,7 +7,7 @@
     
     var thisUserID = Request["ProviderUserID"].AsInt();
     var posID = Request["PositionID"].AsInt();
-    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
 
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Reference";

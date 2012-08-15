@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.Data;
 @{
-    var p = DashboardFunctions.GetRequestedUserRow();
+    var p = LcData.UserInfo.GetRequestedUserRow();
     var pos = PageData["position"];
     
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);

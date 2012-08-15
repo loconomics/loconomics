@@ -5,7 +5,7 @@
 @{
     LcHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
-    var provider = DashboardFunctions.GetUserRow();
+    var provider = LcData.UserInfo.GetUserRow();
     int bookingID = Request["BookingID"].AsInt();
     if (bookingID == 0) {
         bookingID = (int)PageData["BookingID"];
@@ -18,7 +18,7 @@
     if (booking == null || booking.ProviderUserID != thisUserID) {
         ModelState.AddFormError("Not valid booking to review");
     } else {
-        customer = DashboardFunctions.GetUserRow(booking.CustomerUserID);
+        customer = LcData.UserInfo.GetUserRow(booking.CustomerUserID);
     }
 
     if (ModelState.IsValid) {

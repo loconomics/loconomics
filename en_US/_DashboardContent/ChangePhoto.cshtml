@@ -32,7 +32,7 @@
 }
 @{
     LcHelpers.SecurePage();
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     var userId = u["UserID"];
     var ajaxEnabled = true;
     

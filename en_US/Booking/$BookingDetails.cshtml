@@ -3,7 +3,7 @@
 @{
     LcHelpers.SecurePage();
     
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     //var brID = Request["BookingRequestID"];
     var bID = Request["BookingID"];
     
@@ -120,7 +120,7 @@ else
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
 <div class="booking-request booking main-side">
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>

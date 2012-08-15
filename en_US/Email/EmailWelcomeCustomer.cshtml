@@ -6,7 +6,7 @@
     Page.Title = "Welcome to Loconomics.com";
     
     var thisUserID = Request["UserID"].AsInt();
-    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
     
     var confirmationURL = Request["ConfirmationURL"];
     var confirmationToken = Request["ConfirmationToken"];

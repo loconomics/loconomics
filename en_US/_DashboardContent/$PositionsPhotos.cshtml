@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current position data record:
-    var p = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     
     string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";

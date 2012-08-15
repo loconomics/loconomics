@@ -2,9 +2,9 @@
 @using WebMatrix.WebData;
 @{
     // Provider
-    var p = DashboardFunctions.GetRequestedUserRow(Request["ProviderID"].AsInt());
+    var p = LcData.UserInfo.GetRequestedUserRow(Request["ProviderID"].AsInt());
     // Current position data record:
-    var pos = PageData["position"] ?? DashboardFunctions.GetUserPos(Request["ProviderID"].AsInt(),
+    var pos = PageData["position"] ?? LcData.UserInfo.GetUserPos(Request["ProviderID"].AsInt(),
         Request["PositionID"].AsInt());
     // Current position number/index
     var n = pos.PositionID;
@@ -13,7 +13,7 @@
     Validation.RequireField("subject", "Subject cannot be empty!");
     
     if (IsPost && Validation.IsValid()) {
-        var u = DashboardFunctions.GetUserRow();
+        var u = LcData.UserInfo.GetUserRow();
         
         if (u == null){
             ModelState.AddFormError("You need be logged to post a message!");
@@ -31,7 +31,7 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 @if (WebSecurity.IsAuthenticated) {
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message send-message-form ajax ajax-box" id="position#@(n)-message">
         <input type="hidden" name="ProviderID" value="@p.UserID"/>
         <input type="hidden" name="PositionID" value="@pos.PositionID"/>

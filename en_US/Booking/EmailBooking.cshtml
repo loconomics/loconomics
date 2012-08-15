@@ -6,7 +6,7 @@
     Page.Title = "Loconomics.com - Booking";
     
     var thisUserID = Request["UserID"].AsInt();
-    var thisUser = DashboardFunctions.GetUserRow(thisUserID);
+    var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
     var brID = Request["BookingRequestID"].AsInt();
     var bID = Request["BookingID"].AsInt();
     
@@ -116,7 +116,7 @@ else
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
 <div>
     <h3 @LcEmailTemplateHelper.StyleH3()>@printTitleStatus(booking, itsUserData, itsUserType)</h3>

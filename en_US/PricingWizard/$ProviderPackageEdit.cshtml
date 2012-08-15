@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     LcHelpers.SecurePage();
-    var p = DashboardFunctions.GetUserRow();
+    var p = LcData.UserInfo.GetUserRow();
     var packageID = Request["ProviderPackageID"].AsInt();
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var attributesInPackage = new List<int>();

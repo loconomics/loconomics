@@ -6,10 +6,10 @@
     Page.Title = "Loconomics.com - Recommendation";
     
     var customerID = Request["CustomerUserID"].AsInt();
-    var customer = DashboardFunctions.GetUserRow(customerID);
+    var customer = LcData.UserInfo.GetUserRow(customerID);
     var providerID = Request["ProviderUserID"].AsInt();
-    var provider = DashboardFunctions.GetUserRow(providerID);
-    var position = DashboardFunctions.GetUserPos(providerID, Request["PositionID"].AsInt());
+    var provider = LcData.UserInfo.GetUserRow(providerID);
+    var position = LcData.UserInfo.GetUserPos(providerID, Request["PositionID"].AsInt());
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Recommendation";

@@ -1,8 +1,8 @@
 ﻿@using WebMatrix.Data;
 @{
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     // Current position data record:
-    var p = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     dynamic workLocations = null, travelLocations = null;
     var postedLocations = new Dictionary<string,System.Collections.Specialized.NameValueCollection>();

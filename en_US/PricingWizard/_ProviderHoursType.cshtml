@@ -4,8 +4,8 @@
 @using WebMatrix.Data;
 @{
     var clienttypeid = PageData["ClientTypeID"];
-    var p = DashboardFunctions.GetUserRow();
-    var pos = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserRow();
+    var pos = LcData.UserInfo.GetUserCurrentPos();
     var idprefix = PageData["idprefix"] ?? "pricingwizard";
     dynamic pvars, poptions;
     

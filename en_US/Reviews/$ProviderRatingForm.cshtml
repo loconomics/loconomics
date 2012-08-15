@@ -5,7 +5,7 @@
 @{
     LcHelpers.SecurePage();
     var customerUserID = WebSecurity.CurrentUserId;
-    var customer = DashboardFunctions.GetUserRow();
+    var customer = LcData.UserInfo.GetUserRow();
     int bookingID = PageData["BookingID"] ?? Request["BookingID"].AsInt();
     int providerUserID = 0, positionID = 0;
     decimal serviceHours = 0M;
@@ -30,8 +30,8 @@
         }
     }
     
-    provider = DashboardFunctions.GetUserRow(providerUserID);
-    position = DashboardFunctions.GetUserPos(providerUserID, positionID);
+    provider = LcData.UserInfo.GetUserRow(providerUserID);
+    position = LcData.UserInfo.GetUserPos(providerUserID, positionID);
     
     if (provider == null || position == null) {
         ModelState.AddFormError("No valid provider or position to review");

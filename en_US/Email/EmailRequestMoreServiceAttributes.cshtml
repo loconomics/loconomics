@@ -8,8 +8,8 @@
     var providerID = Request["ProviderUserID"].AsInt();
     var positionID = Request["PositionID"].AsInt();
     var reqatts = Request["RequestedAttributes"];
-    var provider = DashboardFunctions.GetUserRow(providerID);
-    var position = DashboardFunctions.GetUserPos(providerID, positionID);
+    var provider = LcData.UserInfo.GetUserRow(providerID);
+    var position = LcData.UserInfo.GetUserPos(providerID, positionID);
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Provider Request More Service Attributes";

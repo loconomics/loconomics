@@ -4,7 +4,7 @@
     Validation.RequireField("subject", "Subject cannot be empty!");
     
     if (IsPost && Validation.IsValid()) {
-        var u = DashboardFunctions.GetUserRow();
+        var u = LcData.UserInfo.GetUserRow();
         
         if (u == null){
             ModelState.AddFormError("You need be logged to post a message!");
@@ -28,7 +28,7 @@
 
 @if (WebSecurity.IsAuthenticated)
 {
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
         <div class="from-line">
             <label>From:</label>
             <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />

@@ -7,8 +7,8 @@
     Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
-    var provider = DashboardFunctions.GetUserRow(providerID);
-    var position = DashboardFunctions.GetUserPos(providerID, Request["PositionID"].AsInt());
+    var provider = LcData.UserInfo.GetUserRow(providerID);
+    var position = LcData.UserInfo.GetUserPos(providerID, Request["PositionID"].AsInt());
 }
 
 <div id="container" class="provider-review editable clearfix">

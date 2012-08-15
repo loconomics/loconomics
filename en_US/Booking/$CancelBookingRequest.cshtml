@@ -2,7 +2,7 @@
 @{
     LcHelpers.SecurePage();
     
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     var brID = Request["BookingRequestID"].AsInt();
     
     var sqlCheckBookingRequest = @"

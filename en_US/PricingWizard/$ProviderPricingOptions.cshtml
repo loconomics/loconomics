@@ -3,8 +3,8 @@
     var embMode = PageData["EmbeddedMode"] ?? "none"; // possible values: front-end, back-end, full
     var clienttypeid = PageData["ClientTypeID"] ?? Request["ClientTypeID"].AsInt();
     var pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
-    var p = DashboardFunctions.GetUserRow();
-    var pos = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserRow();
+    var pos = LcData.UserInfo.GetUserCurrentPos();
     var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
     dynamic poptions;
     

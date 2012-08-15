@@ -10,7 +10,7 @@
     dynamic reviewedData = PageData["ReviewedData"];
     string reviewedDataPrefix = PageData["ReviewedDataPrefix"] ?? "";
     if (reviewedData == null){
-        reviewedData = DashboardFunctions.GetUserRow(reviewedID);
+        reviewedData = LcData.UserInfo.GetUserRow(reviewedID);
         reviewedDataPrefix = "";
     }
     

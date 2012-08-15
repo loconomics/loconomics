@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current position data record:
-    var pos = DashboardFunctions.GetUserCurrentPos();
+    var pos = LcData.UserInfo.GetUserCurrentPos();
     var n = pos.PositionID;
     
     var idprefix = "position#" + n + "-services";

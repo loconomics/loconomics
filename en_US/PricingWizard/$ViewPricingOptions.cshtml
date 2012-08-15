@@ -2,7 +2,7 @@
 @{
     var clienttypeid = PageData["ClientTypeID"] ?? Request["ClientTypeID"].AsInt();
     var pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
-    var pos = DashboardFunctions.GetCurrentRequestedUserPos();
+    var pos = LcData.UserInfo.GetCurrentRequestedUserPos();
     var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
     dynamic poptions;
     

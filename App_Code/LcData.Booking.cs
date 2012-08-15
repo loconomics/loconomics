@@ -7,7 +7,7 @@ using WebMatrix.Data;
 public static partial class LcData
 {
     /// <summary>
-    /// Descripción breve de LcData
+    /// Methods to get data related with Bookings
     /// </summary>
     public static class Booking
     {

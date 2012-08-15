@@ -1,9 +1,9 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current user data
-    var u = DashboardFunctions.GetUserRowWithContactData();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     // Current position data record:
-    var p = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserCurrentPos();
     
     var idprefix = "position" + p.PositionID.ToString() + "-licenses";
     dynamic checks = null;

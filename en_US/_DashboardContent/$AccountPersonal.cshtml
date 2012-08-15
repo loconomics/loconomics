@@ -2,7 +2,7 @@
 @{
     var idprefix = "account-personal";
     
-    var u = DashboardFunctions.GetUserRowWithContactData();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     
     // Initializing local data:
     var FirstName = Request["firstname"] ?? u.FirstName;

@@ -219,7 +219,7 @@
             RedirectToLogin();
     }
     public static void AdminPage() {
-        if (!WebSecurity.IsAuthenticated || DashboardFunctions.GetUserRow().IsAdmin == false)
+        if (!WebSecurity.IsAuthenticated || LcData.UserInfo.GetUserRow().IsAdmin == false)
             RedirectToLogin();
     }
     public static void RedirectToLogin() {

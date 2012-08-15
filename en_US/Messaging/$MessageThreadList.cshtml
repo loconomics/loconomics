@@ -2,7 +2,7 @@
 @using WebMatrix.WebData;
 @{
     LcHelpers.SecurePage();
-    // var u = DashboardFunctions.GetUserRow();
+    // var u = LcData.UserInfo.GetUserRow();
     int userID = WebSecurity.CurrentUserId;
     
     var sqlListMessageThread = @"

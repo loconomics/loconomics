@@ -2,7 +2,7 @@
 @using WebMatrix.WebData;
 @{
     LcHelpers.SecurePage();
-    // var u = DashboardFunctions.GetUserRow();
+    // var u = LcData.UserInfo.GetUserRow();
     int userID = WebSecurity.CurrentUserId;
     
     var threadID = Request["MessageThreadID"].AsInt();
@@ -116,7 +116,7 @@ else
         myUserPrefix = "Provider";
         itsUserID = thread.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
     
     <div class="not-faqs-duplication">
 

@@ -1,8 +1,8 @@
 ﻿@using WebMatrix.Data;
 @{
-    var p = PageData["providerrow"] ?? DashboardFunctions.GetUserRow(Request["providerid"].AsInt());
-    var c = PageData["customerrow"] ?? DashboardFunctions.GetUserRow();
-    var pos = PageData["positionrow"] ?? DashboardFunctions.GetUserPos(Request["providerid"].AsInt(),
+    var p = PageData["providerrow"] ?? LcData.UserInfo.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
+    var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
     
     if (p == null || c == null || pos == null){

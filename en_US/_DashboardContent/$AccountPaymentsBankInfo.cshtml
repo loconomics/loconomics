@@ -3,7 +3,7 @@
 @using System.Text.RegularExpressions;
 @{
     var idprefix = "account-payments-bankinfo";
-    var user = DashboardFunctions.GetUserRow();
+    var user = LcData.UserInfo.GetUserRow();
     
     BraintreeGateway gateway = null;
     dynamic bankinfo = null, paymentpreferences = null;

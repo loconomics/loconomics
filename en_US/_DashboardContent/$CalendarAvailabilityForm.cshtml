@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current user data
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     var idprefix = "availability-form";
     
     // From 0 (sunday) to 6 (saturday), true: is available. ON DATABASE use base-1; base-zero only arrays on this page

@@ -8,7 +8,7 @@
         thisUserID = WebSecurity.CurrentUserId;
     }
     
-    var thisUserData = DashboardFunctions.GetUserRow(thisUserID);
+    var thisUserData = LcData.UserInfo.GetUserRow(thisUserID);
     int bID = Request["BookingID"].AsInt();
     
     dynamic booking = PageData["booking"] = LcData.Booking.GetBooking(bID);
@@ -49,7 +49,7 @@ else
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-    var itsUserData = DashboardFunctions.GetUserRowWithContactData(itsUserID);
+    var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
     
     var readView = (myUserType == "customer" && booking.ReviewedByCustomer) || (myUserType == "provider" && booking.ReviewedByProvider);
 

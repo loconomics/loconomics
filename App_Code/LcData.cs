@@ -361,7 +361,6 @@ public static partial class LcData
         }
     }
 
-
     /// <summary>
     ///        /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
     ///            BEGIN TRAN

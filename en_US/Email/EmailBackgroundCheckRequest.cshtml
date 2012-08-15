@@ -8,7 +8,7 @@
     var providerID = Request["ProviderUserID"].AsInt();
     var positionID = Request["PositionID"].AsInt();
     var checkID = Request["BackgroundCheckID"].AsInt();
-    var provider = DashboardFunctions.GetUserRow(providerID);
+    var provider = LcData.UserInfo.GetUserRow(providerID);
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Background Check Request";

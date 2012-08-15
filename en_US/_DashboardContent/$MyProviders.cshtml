@@ -1,7 +1,7 @@
 ﻿@{
     LcHelpers.SecurePage();
 
-    var u = PageData["userow"] = DashboardFunctions.GetUserRow();
+    var u = PageData["userow"] = LcData.UserInfo.GetUserRow();
     
     if (!u.IsCustomer) {
         return;

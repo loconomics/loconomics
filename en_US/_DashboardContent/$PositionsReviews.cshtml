@@ -1,10 +1,10 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current position data record:
-    var p = DashboardFunctions.GetUserCurrentPos();
+    var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     // Current user data record:
-    var u = DashboardFunctions.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     
     var idprefix = "position#" + n + "-reviews";
     

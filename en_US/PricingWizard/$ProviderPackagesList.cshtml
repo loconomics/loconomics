@@ -1,7 +1,7 @@
 ﻿@{
     dynamic data = PageData["data"];
     dynamic editable = PageData["editable"] ?? Request["editable"].AsBool();
-    var pos = DashboardFunctions.GetUserCurrentPos();
+    var pos = LcData.UserInfo.GetUserCurrentPos();
     if (data == null) {
         data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
     }

@@ -1,9 +1,9 @@
 ﻿@using WebMatrix.Data;
 @{
     // Current provider data record:
-    var p = DashboardFunctions.GetUserRow();
+    var p = LcData.UserInfo.GetUserRow();
     // Current position data record:
-    var pos = DashboardFunctions.GetUserCurrentPos();
+    var pos = LcData.UserInfo.GetUserCurrentPos();
     var n = pos.PositionID;
     
     if (p == null || pos == null){

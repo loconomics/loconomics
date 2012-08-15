@@ -9,10 +9,10 @@
     
     if (userId == 0){
         // Get databse user information
-        ur = DashboardFunctions.GetUserRow();
+        ur = LcData.UserInfo.GetUserRow();
     } else {
         // Get databse user information
-        ur = DashboardFunctions.GetUserRow(userId);
+        ur = LcData.UserInfo.GetUserRow(userId);
     }
     
     if (ur != null){

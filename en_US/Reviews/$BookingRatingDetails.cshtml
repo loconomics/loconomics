@@ -20,9 +20,9 @@
     if (booking == null || (booking.CustomerUserID != thisUserID && booking.ProviderUserID != thisUserID )) {
         ModelState.AddFormError("Not valid booking review");
     } else {
-        customer = DashboardFunctions.GetUserRow(booking.CustomerUserID);
-        provider = DashboardFunctions.GetUserRow(booking.ProviderUserID);
-        position = DashboardFunctions.GetUserPos(booking.ProviderUserID, booking.PositionID);
+        customer = LcData.UserInfo.GetUserRow(booking.CustomerUserID);
+        provider = LcData.UserInfo.GetUserRow(booking.ProviderUserID);
+        position = LcData.UserInfo.GetUserPos(booking.ProviderUserID, booking.PositionID);
         // For security, we check both userId's (not only customer, and do a 'else' for provider), leaving
         // empty thisUserType when user don't match, showing nothing later in html.
         if (booking.CustomerUserID == thisUserID) {
