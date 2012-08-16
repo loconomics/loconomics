@@ -1,0 +1,57 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    dynamic alerts = null;
+    using (var db = Database.Open("sqlloco")) {
+        alerts = db.Query(@"
+            SELECT  A.AlertID,
+                    A.AlertTypeID,
+                    A.AlertName,
+                    A.AlertHeadlineDisplay,
+                    A.AlertTextDisplay,
+                    A.AlertDescription,
+                    A.AlertPageURL,
+                    A.PositionSpecific,
+                    UA.PositionID,
+                    AT.AlertTypeName,
+                    AT.AlertTypeDescription
+            FROM    Alert As A
+                     INNER JOIN
+                    UserAlert As UA
+                      ON A.AlertID = UA.AlertID
+                     INNER JOIN
+                    AlertType As AT
+                      ON AT.AlertTypeID = A.AlertTypeID
+            WHERE   UA.UserID = @0
+            ORDER BY AT.AlertTypeName, A.AlertName
+        ", WebSecurity.CurrentUserId);
+    }
+}
+<div id="dashboard-alerts" class="dashboard-alerts">
+    <ul>
+        @foreach (var alert in alerts)
+        {
+            string completeUrl = N.W(alert.AlertPageURL);
+            if (completeUrl != null)
+            {
+                if (alert.PositionSpecific)
+                {
+                    completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
+                }
+                if (!completeUrl.StartsWith("javascript:"))
+                {
+                    completeUrl = UrlUtil.LangPath + completeUrl;
+                }
+            }
+            <li>
+                <h5>@alert.AlertHeadlineDisplay</h5>
+                <p>@alert.AlertTextDisplay</p>
+                @if (completeUrl != null){
+                    <a class="more" href="@completeUrl">Complete &gt;&gt;</a>
+                }
+            </li>
+        }
+    </ul>
+</div>
