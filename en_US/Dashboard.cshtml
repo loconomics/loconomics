@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebMatrix.WebData;
+@{
     LcHelpers.SecurePage();
     
     Page.Title = "Make your life better!";
@@ -18,7 +19,7 @@
 
     var pages = new List<string> {
         "account", "calendar", "mailbox", "myclients", "myproviders", "positions", "preferences",
-        "ressources", "tools", "bookings", "admin"
+        "ressources", "tools", "bookings", "admin", "alerts"
     };
     if (pages.Contains(page)) {
         fileToRender = UrlUtil.LangPath + "_DashboardContent/$" + page + ".cshtml";
@@ -50,35 +51,30 @@
             <div id="container" class="clearfix">
                 
                 <div id="highlights">
-                    @{
-                        var greeting = "Hello, {0}!";
-                        if (N.W(u.FullName) == null) {
-                            greeting = "Hello!";
-                        } else {
-                            greeting = String.Format(greeting, u.FirstName);
-                        }
-                    }
-                    <h1 class="greeting">@greeting <a class="view-profile" href="@(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">View Public Profile</a></h1>
+                    <h1 class="greeting">Dashboard</h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
-                    @RenderPage("_DashboardContent/$ProfileProgressWidget.cshtml")
                 </div><!-- highlights -->
                 
                 <div id="dashboard-help">
                     <a class="skip" href="#main">Skip the help.</a>
-                    <p>Welcome to your dashboard! Here you'll find everything you need to make your profile great, attract customers,
-                        and manage your business. Please ensure you review all alerts frequently, and <a href="mailto:providerhelp@loconomics.com">let us know</a> if you need any help.</p>
-                    @RenderPage("_DashboardContent/$UserAlertsWidget.cshtml")
+                    <p>You’ll find everything you need to manage your 
+                        <a href="@(UrlUtil.LangPath)Account/">account</a>, 
+                        <a href="@(UrlUtil.LangPath)Positions/">profiles</a>,
+                        and <a href="@(UrlUtil.LangPath)Bookings/">bookings</a> here.
+                    </p>
+                    @RenderPage(UrlUtil.LangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
                     <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
                 </div><!-- dashboard-help -->
                 
                 <div id="nav">
                     <ul id="profile-menu" class="autofill-submenu">
+                        <li class="@menu("alerts")"><a href="@(UrlUtil.LangPath)Dashboard/Alerts/">Alerts</a></li>
                         <li class="@menu("mailbox")"><a href="@(UrlUtil.LangPath)Dashboard/Mailbox/">Inbox</a></li>
                         <li class="@menu("bookings")"><a href="@(UrlUtil.LangPath)Dashboard/Bookings/">Bookings</a></li>
                         @if (u.IsProvider){
                         <li class="@menu("calendar")"><a href="@(UrlUtil.LangPath)Dashboard/Calendar/">Calendar</a></li>
-                        <li class="@menu("positions")"><a href="@(UrlUtil.LangPath)Dashboard/Positions/">Positions</a></li>
+                        <li class="@menu("positions")"><a href="@(UrlUtil.LangPath)Dashboard/Positions/">My Profile</a></li>
                         <li class="@menu("tools")"><a href="@(UrlUtil.LangPath)Dashboard/Tools/">Tools</a></li>
                         <li class="@menu("myclients")"><a href="@(UrlUtil.LangPath)Dashboard/MyClients/">My Clients</a></li>
                         }
