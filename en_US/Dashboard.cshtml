@@ -51,7 +51,7 @@
             <div id="container" class="clearfix">
                 
                 <div id="highlights">
-                    <h1 class="greeting">Dashboard</h1>
+                    <h1>Dashboard</h1>
                     <img id="avatar" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
                     <a id="changephoto" href="#">Change Photo</a>
                 </div><!-- highlights -->
@@ -63,10 +63,9 @@
                         <a href="@(UrlUtil.LangPath)Positions/">profiles</a>,
                         and <a href="@(UrlUtil.LangPath)Bookings/">bookings</a> here.
                     </p>
-                    @RenderPage(UrlUtil.LangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
-                    <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
+                    @RenderPage(UrlUtil.LangPath + "HelpCenter/$DashboardHelpWidget.cshtml")                   
                 </div><!-- dashboard-help -->
-                
+
                 <div id="nav">
                     <ul id="profile-menu" class="autofill-submenu">
                         <li class="@menu("alerts")"><a href="@(UrlUtil.LangPath)Dashboard/Alerts/">Alerts</a></li>
@@ -90,7 +89,8 @@
                 </div><!-- nav -->
             
                 <div id="main" class="tabbed folders">
-    
+                    <div class="help-point"><a target="_blank" href="@Href(UrlUtil.LangPath + "HelpCenter/")">?</a></div>
+
                     @RenderPage(fileToRender)
         
                 </div><!-- #main -->

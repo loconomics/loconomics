@@ -22,6 +22,8 @@ ul.attributes-list li {
 .dashboard #dashboard-help,
 .dashboard #main{
     margin: 0 0 0 200px;
+}
+.dashboard #main{
     width: 760px;
 }
 .dashboard #main {
@@ -36,42 +38,34 @@ ul.attributes-list li {
 .dashboard #container {
     padding-bottom: 60px;
 }
-.dashboard #highlights{
-    min-height: 26px;
+#highlights, #dashboard-help {
+    border: 1px solid #747474;
+    margin-top: 0;
+    margin-bottom: 0;
+    background: white;
+    padding: 14px 20px;
+    width: 720px;
 }
-.dashboard #highlights h1.greeting{
-    font-size: 1.4em;
-    color: #4cb7b8;
-    float: left;
+#highlights {
+    padding-bottom: 1px;
+    border-bottom-width: 0;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+}
+#dashboard-help {
+    padding-top: 1px;
+    border-top-width: 0;
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+.dashboard #highlights h1 {
+    font-size: 2em;
+    color: #00989A;
     margin: 0;
-}
-.dashboard .greeting .view-profile {
-    font-size: 0.9em;
-    margin-left: 20px;
-}
-.dashboard .profile-progress {
-    float: right;
-}
-.dashboard .profile-progress{
-    font-size: 1.1em;
-    color: #4cb7b8;
-}
-.dashboard .profile-progress .percent-done{
-    color: #ae637b;
-}
-.dashboard .profile-progress .progress-bar{
-    display: inline-block;
-}
-.dashboard div.progress-bar .total,
-.dashboard div.progress-bar .total .percent-done{
-    height: 24px;
-}
-.dashboard .progress-bar .total,
-.dashboard .progress-bar .total .percent-done{
-    border-radius: 20px 20px 20px 20px;
-    -moz-border-radius: 20px 20px 20px 20px;
-    -o-border-radius: 20px 20px 20px 20px;
-    -webkit-border-radius: 20px 20px 20px 20px;
 }
 .dashboard #avatar{
     width: 186px;
@@ -97,101 +91,56 @@ ul.attributes-list li {
 .dashboard #changephoto:hover{
     background-color: White;
 }
+.dashboard-help-widget {
+    overflow: hidden;
+    margin-top: 10px;
+}
+.dashboard-help-widget h3 {
+    font-size: 1.2em;
+    margin-bottom: 0;
+    display: inline;
+}
+.dashboard-help-widget a.view-more {
+    float: right;
+    color: #00989A !important;
+    text-decoration: underline !important;
+}
+.dashboard-help-widget article {
+    float: left;
+    margin: 0 10px;
+    width: 220px;
+}
+.dashboard-help-widget article ul {
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px 0 #C9C9C9;
+    margin-bottom: 10px;
+}
+.dashboard-help-widget article ul > li {
+    border-top: 1px solid #c9c9c9;
+}
+.dashboard-help-widget article ul > li:first-child {
+    border-top-width: 0;
+}
+.dashboard-help-widget article ul > li > a {
+    margin: 0 10px;
+}
+.dashboard-help-widget a,
+.dashboard-help-widget a:link,
+.dashboard-help-widget a:visited {
+    color: #eb6e42;
+    text-decoration: none;
+    font-size: .9em;
+}
+.dashboard-help-widget a:hover {
+    text-decoration: underline;
+}
 #dashboard-help .skip {
     display: none;
 }
 #dashboard-help p{
     margin: 2px 0;
     font-size: .9em;
-}
-#dashboard-alerts {
-    text-align: center;
-    height: 140px;
-    overflow: hidden;
-}
-#dashboard-alerts ul{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: inline-block;
-    text-align: left;
-    width: 637px;
-    overflow: hidden;
-    white-space: nowrap;
-}
-#dashboard-alerts li{
-    display: inline-block;
-    width: 286px;
-    height: 120px;
-    border: 5px solid #daf0f1;
-    border-radius: 12px;
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    -o-border-radius: 12px;
-    padding: 5px 10px;
-    vertical-align: top;
-}
-#dashboard-alerts h5{
-    font-size: .9em;
-    color: #ae637b;
-    margin: 0;
-}
-#dashboard-alerts p{
-    font-size: .8em;
-    line-height: 1.5em;
-    padding: 0 0 0 75px;
-    background: url('../img/Dashboard-alert.png') no-repeat left center;
-    display: block;
-    height: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-}
-#dashboard-alerts li a.more,
-#dashboard-alerts li a.more:link,
-#dashboard-alerts li a.more:visited{
-    color: #00989a;
-    text-decoration: none;
-    font-style: italic;
-    font-weight: bold;
-    text-align: right;
-    display: block;
-}
-#dashboard-alerts li a.more:hover{
-    color: #b5e1e2;
-}
-#dashboard-alerts > .more {
-    text-indent: -9999px;
-    color: White;
-    display: inline-block;
-    height: 140px;
-    width: 46px;
-    vertical-align: top;
-    text-decoration: none;
-    background: no-repeat center center;
-}
-#dashboard-alerts > .more.previous {
-    background-image: url('../img/dashboard-previous-alerts-off.png');
-}
-#dashboard-alerts > .more.next {
-    background-image: url('../img/dashboard-next-alerts-off.png');
-}
-#dashboard-alerts > .more.previous:hover {
-    background-image: url('../img/dashboard-previous-alerts-on.png');
-}
-#dashboard-alerts > .more.next:hover {
-    background-image: url('../img/dashboard-next-alerts-on.png');
-}
-/* Dashboard Alerts no javascript (usable) version */
-.no-js #dashboard-alerts {
-    overflow: auto;
-}
-.no-js #dashboard-alerts ul{
-    white-space: normal;
-    overflow: visible;
-}
-.no-js #dashboard-alerts > .more {
-    display: none;
 }
 
 .dashboard #nav {
@@ -1047,10 +996,9 @@ form#personal li > label.gender {
   * position for dashboard pages
   */
 .dashboard .help-point{
-    display: inline-block;
-    left: 715px;
-    position: relative;
-    top: 70px;
+    position: absolute;
+    right: 10px;
+    top: 30px;
     z-index: 1000;
 }
 
