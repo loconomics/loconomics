@@ -208,6 +208,13 @@ ul.attributes-list li {
     margin: 1em 0 15px 0;
 }
 
+/*** dashboard-alerts ***/
+#dashboard-alerts {
+    border: 1px solid #00989a;
+    border-radius: 4px;
+    padding: 5px 20px;
+}
+
 /*** Dashboard forms ***/
 .dashboard form fieldset{
     margin: 0 0 10px 0;
