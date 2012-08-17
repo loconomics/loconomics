@@ -239,6 +239,17 @@ ul.attributes-list li {
 .dashboard form.preferences li label {
     width: auto;
 }
+.dashboard form.preferences .personal-data-info ul > li {
+    list-style: disc inside none;
+}
+.dashboard form.preferences .personal-data-info .note {
+    color: #8b2143;
+    margin-left: 10px;
+}
+.dashboard form.preferences .personal-data-info .note em {
+    text-decoration: underline;
+    font-style: normal;
+}
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
 .dashboard form li select,

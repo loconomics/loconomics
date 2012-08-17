@@ -14,6 +14,7 @@
     if (u.IsProvider) {
         Validation.RequireField("ProfileSEOPermission", "Include my profile in search listings preference is required");
         Validation.RequireField("LoconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
+        Validation.RequireField("CoBrandedPartnerPermissions", "Co-branded promotions preference is required");
     }
 
     if (IsPost) {
@@ -26,6 +27,7 @@
                         ,LoconomicsDBMCampaigns=@4
                         ,ProfileSEOPermission=@5
                         ,LoconomicsMarketingCampaigns=@6
+                        ,CoBrandedPartnerPermissions=@7
                         ,UpdatedDate=getdate()
                         ,ModifiedBy='sys'
                 WHERE   UserID = @0
@@ -35,7 +37,8 @@
                 Request["LoconomicsCommunityCommunication"].AsBool(),
                 Request["LoconomicsDBMCampaigns"].AsBool(),
                 u.IsProvider ? Request["ProfileSEOPermission"].AsBool() : false,
-                u.IsProvider ? Request["LoconomicsMarketingCampaigns"].AsBool() : false
+                u.IsProvider ? Request["LoconomicsMarketingCampaigns"].AsBool() : false,
+                u.IsProvider ? Request["CoBrandedPartnerPermissions"].AsBool() : false
             );
         }
         LcHelpers.ReturnJsonResult(0, "Preferences updated!");
@@ -48,6 +51,7 @@
                         ,LoconomicsDBMCampaigns
                         ,ProfileSEOPermission
                         ,LoconomicsMarketingCampaigns
+                        ,CoBrandedPartnerPermissions
                 FROM    Users
                 WHERE   UserID=@0
             ", u.UserID);
@@ -68,9 +72,37 @@
 Your privacy is of our upmost concern.  Please indicate your preferences below, and <a href="mailto:providerhelp@loconomics.com">e-mail us</a> with any questions.  
 </p>
 <div>
-<form method="post" action="@(UrlUtil.LangPath)Dashboard/$PreferencesPreferences/" class="ajax ajax-box preferences">
+<form method="post" action="@(UrlUtil.LangPath)Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box preferences">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    @if (u.IsProvider)
+    {
+        <fieldset class="personal-data-info">
+            <legend>Personal data shown to clients after you’ve accepted a booking*</legend>
+            <ul>
+                <li>Full name</li>
+                <li>E-mail address</li>
+                <li>Phone number(s)</li>
+                <li>Address where service is to be performed</li>
+                <li>Personal website (if listed)</li>
+                <li>Professional license or certifcation information (if applicable)</li>
+            </ul>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <em>delete your account</em>.</span>
+        </fieldset>
+    }
+    @if (u.IsCustomer)
+    {
+        <fieldset class="personal-data-info">
+            <legend>Personal data shown to providers after your booking has been accepted*</legend>
+            <ul>
+                <li>Full name</li>
+                <li>E-mail address</li>
+                <li>Phone number(s)</li>
+                <li>Address where service is to be performed</li>
+            </ul>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <em>delete your account</em>.</span>
+        </fieldset>
+    }
     <fieldset id="@idprefix-fs-bookingscommunication">
         <legend>Communication about bookings</legend>
         <ul>
@@ -103,6 +135,14 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
             </li>
             <li>
                 @printChoiceOptions("LoconomicsMarketingCampaigns", "It’s okay to include my profile in marketing done by Loconomics")
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset id="@idprefix-fs-cobrandingpartners">
+        <legend>Co-branding partners</legend>
+        <ul>
+            <li>
+                @printChoiceOptions("CoBrandedPartnerPermissions", "It’s okay to share my user data for co-branded promotions with select partners")
             </li>
         </ul>
     </fieldset>
