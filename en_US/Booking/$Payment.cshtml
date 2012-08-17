@@ -244,6 +244,10 @@
     string strDetails = LcData.Booking.GetBookingRequestDetails(0, summary.PricingEstimateID);
     string strServices = LcData.Booking.GetBookingRequestServices(0, summary.PricingEstimateID);
     string strPackages = LcData.Booking.GetBookingRequestPackages(0, summary.PricingEstimateID);
+    dynamic billingAddress = null;
+    using (var db = Database.Open("sqlloco")) {
+        billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
+    }
 }
 @* From Profile/_PositionSummary *@
 @helper printCatTitle(dynamic cat){
@@ -309,20 +313,20 @@
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
             </li>
             <li class="street-address-line-1">
-                <label>Street address line 1:<input type="text" name="street-address-line-1" value="@Request["street-address-line-1"]" @Validation.GetHtml("street-address-line-1")/></label>
+                <label>Street address line 1:<input type="text" name="street-address-line-1" value="@(Request["street-address-line-1"] ?? (billingAddress == null ? null : billingAddress.AddressLine1) )" @Validation.GetHtml("street-address-line-1")/></label>
             </li>
             <li class="street-address-line-2">
-                <label>Street address line 2:<input type="text" name="street-address-line-2" value="@Request["street-address-line-2"]" @Validation.GetHtml("street-address-line-2")/></label>
+                <label>Street address line 2:<input type="text" name="street-address-line-2" value="@(Request["street-address-line-2"] ?? (billingAddress == null ? null : billingAddress.AddressLine2) ) " @Validation.GetHtml("street-address-line-2")/></label>
             </li>
             <li class="city">
-                <label>City:<input type="text" name="city" value="@Request["city"]" @Validation.GetHtml("city")/></label>
+                <label>City:<input type="text" name="city" value="@(Request["city"] ?? (billingAddress == null ? null : billingAddress.City) )" @Validation.GetHtml("city")/></label>
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
-                        @LcHelpers.StateProvinceOptions(Request["state"])
+                        @LcHelpers.StateProvinceOptions(Request["state"] ?? (billingAddress == null ? null : billingAddress.StateProvinceID) )
                     </select></label></li>
             <li class="zip">
-                <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" @Validation.GetHtml("zip")/></label>
+                <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@(Request["zip"] ?? (billingAddress == null ? null : billingAddress.PostalCode) )" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="card-number">
                 <label>Card number:<input type="text" name="card-number" value="@Request["card-number"]" @Validation.GetHtml("card-number")/></label>
@@ -337,8 +341,8 @@
                 <label>CVV Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-payment"], "true") name="save-payment" value="true" />Save</label>
-                <label class="save-as">payment details as:<input type="text" value="@Request["save-payment-as"]" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save</label>
+                <label class="save-as">payment details as:<input type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
             </li>
         </ul>
     </fieldset>

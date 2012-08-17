@@ -298,6 +298,43 @@ public static partial class LcData
     public const string sqlGetAddresses = @"
         SELECT  L.AddressID
                 ,L.UserID
+  
+                ,L.AddressTypeID
+                ,L.AddressName
+                ,L.AddressLine1
+                ,L.AddressLine2
+                ,L.City
+                ,L.StateProvinceID
+                ,L.PostalCodeID
+                ,L.CountryID
+                ,L.Latitude
+                ,L.Longitude
+                ,L.GoogleMapsURL
+                ,L.SpecialInstructions
+                ,L.Active
+
+                ,PC.PostalCode
+                ,SP.StateProvinceCode
+                ,SP.StateProvinceName
+
+                ,AT.AddressType
+                ,AT.UniquePerUser
+        FROM    Address As L
+                 INNER JOIN
+                StateProvince As SP
+                  ON L.StateProvinceID = SP.StateProvinceID
+                 INNER JOIN
+                PostalCode As PC
+                  ON PC.PostalCodeID = L.PostalCodeID
+                 INNER JOIN
+                AddressType As AT
+                  ON AT.AddressTypeID = L.AddressTypeID
+        WHERE   L.UserID = @0
+    ";
+
+    public const string sqlGetServiceAddresses = @"
+        SELECT  L.AddressID
+                ,L.UserID
                 ,SA.PositionID
                 ,L.AddressTypeID
                 ,L.AddressName

@@ -143,7 +143,7 @@
     ";
     dynamic transports = null, location = null, types = null;
     using (var db = Database.Open("sqlloco")) {
-        location = db.QuerySingle(LcData.sqlGetAddresses + sqlCondAddressID, p.UserID, p.PositionID, locationID);
+        location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID, locationID);
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes);
     }
