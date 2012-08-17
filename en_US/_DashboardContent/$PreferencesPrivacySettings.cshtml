@@ -150,9 +150,18 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
     <fieldset class="my-account">
         <legend>My Account</legend>
         <ul>
+            @if (u.AccountStatusID > 0)
+            {            
             <li><a href="#delete-my-account">Delete my account</a></li>
+            }
+            @if (u.AccountStatusID == 1)
+            {
             <li><a href="#deactivate-my-account">Deactivate my account</a></li>
+            }
+            @if (u.AccountStatusID == 2)
+            {
             <li><a href="#reactivate-my-account">Reactivate my account</a></li>
+            }
         </ul>
     </fieldset>
     <fieldset class="actions">
@@ -160,6 +169,8 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
     </fieldset>
 </form>
 <div class="my-account-ressources lc-ressources">
+    @if (u.AccountStatusID > 0)
+    {
     <div class="delete-message-confirm">
         <p>Are you really sure you want to delete your account?</p>
         <p>Lorem ipsum, lorem ipsum, lorem ipsum</p>
@@ -168,6 +179,9 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
             <button type="submit" class="main-action">Yes</button>
         </form>
     </div>
+    }
+    @if (u.AccountStatusID == 1)
+    {
     <div class="deactivate-message-confirm">
         <p>Are you really sure you want to deactivate your account?</p>
         <p>Lorem ipsum, lorem ipsum, lorem ipsum</p>
@@ -176,6 +190,9 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
             <button type="submit" class="main-action">Yes</button>
         </form>
     </div>
+    }
+    @if (u.AccountStatusID == 2)
+    {
     <div class="reactivate-message-confirm">
         <p>Are you really sure you want to reactivate your account?</p>
         <form action="@(UrlUtil.LangPath)Account/$Reactivate/" method="post" class="ajax ajax-box confirm actions">
@@ -183,5 +200,6 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
             <button type="submit" class="main-action">Yes</button>
         </form>
     </div>
+    }
 </div>
 </div>
