@@ -56,6 +56,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,AccountStatusID
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (
@@ -115,6 +116,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,AccountStatusID
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (

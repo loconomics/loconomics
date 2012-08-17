@@ -438,16 +438,20 @@ $(document).ready(function () {
             smoothBoxBlock(null, c);
         });
         var lres = c.find('.my-account-ressources');
+        var b;
         switch ($(this).attr('href')) {
             case '#delete-my-account':
-                smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
+                b = smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
                 break;
             case '#deactivate-my-account':
-                smoothBoxBlock(lres.children('.deactivate-message-confirm').clone(), c);
+                b = smoothBoxBlock(lres.children('.deactivate-message-confirm').clone(), c);
                 break;
             case '#reactivate-my-account':
-                smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
+                b = smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
                 break;
+        }
+        if (b) {
+            $('html,body').stop(true, true).animate({ scrollTop: b.offset().top }, 500, null);
         }
         return false;
     });

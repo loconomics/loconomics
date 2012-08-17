@@ -236,20 +236,20 @@ ul.attributes-list li {
     padding: 0;
     width: 120px;
 }
-.dashboard form.preferences li label {
+.dashboard .preferences li label {
     width: auto;
 }
-.dashboard form.preferences .personal-data-info ul > li {
+.dashboard .preferences .personal-data-info ul > li {
     list-style: disc inside none;
 }
-.dashboard form.preferences .personal-data-info .note,
-.dashboard form.preferences .my-account a,
-.dashboard form.preferences .my-account a:link,
-.dashboard form.preferences .my-account a:visited {
+.dashboard .preferences .personal-data-info .note,
+.dashboard .preferences .my-account a,
+.dashboard .preferences .my-account a:link,
+.dashboard .preferences .my-account a:visited {
     color: #8b2143;
     margin-left: 10px;
 }
-.dashboard form.preferences .personal-data-info .note em {
+.dashboard .preferences .personal-data-info .note em {
     text-decoration: underline;
     font-style: normal;
 }
