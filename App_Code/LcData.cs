@@ -411,6 +411,14 @@ public static partial class LcData
         BEGIN TRAN
     " + sqlSetAddress +
     @"
+
+        -- If '@PreferredAddress' was set to true, first we set to false that field in all user service addresses
+        IF @18 = 1
+            UPDATE ServiceAddress SET
+                PreferredAddress = 0
+            WHERE
+                UserID = @1 AND PositionID = @13
+
         -- First, try to update, if nothing updated (rowcount=0), try to insert
         UPDATE ServiceAddress SET
             ServicesPerformedAtLocation = @14
