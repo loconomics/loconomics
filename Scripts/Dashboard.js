@@ -232,8 +232,9 @@ $(document).ready(function () {
                 var loc = $(this).closest('.address');
                 if (confirm(res.children('.confirm-delete-location-message').text())) {
                     smoothBoxBlock(res.children('.delete-location-loading-message'), loc);
+                    var luse = loc.closest('.locations-set').data('location-use');
                     $.ajax({
-                        url: ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + loc.data('location-id')) + '&action=delete',
+                        url: ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + loc.data('location-id')) + '&action=delete&use=' + luse,
                         //UrlUtil.LangPath + 'Dashboard/$PositionsLocationEdit/?action=delete&LocationID=' + loc.data('location-id'),
                         success: function (data) {
                             if (data && data.Code == 0) {

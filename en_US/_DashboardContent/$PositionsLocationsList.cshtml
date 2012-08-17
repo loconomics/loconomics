@@ -52,7 +52,7 @@
 @helper printAddress(string contId, dynamic address){
     var cid = String.IsNullOrWhiteSpace(contId) ? "" : "id='" + contId + "'";
 
-        <div class="address" @Html.Raw(cid) data-location-id="@address.AddressID" data-location-name="@address.AddressName">
+        <div class="address" @Html.Raw(cid) data-location-id="@address.AddressID">
             <span class="address-name">@address.AddressName</span>
             <span class="address-line">
                 <span class="address-line1">@address.AddressLine1</span>
@@ -84,7 +84,7 @@
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <div class="col col-2 col-2-1">
-            <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-type="travel">
+            <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-use="travel">
                 <legend>I travel to clients:</legend>
                 <div class="confirm positionlocations-itravel-confirm">
                     <label>Yes<input type="radio" @LcHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
@@ -105,7 +105,7 @@
             </fieldset>
         </div>
         <div class="col col-2 col-2-2">
-            <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-type="work">
+            <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-use="work">
                 <legend>I perform services at specific locations:</legend>
                 <div class="positionlocations-servicelocations-confirm confirm">
                     <label>Yes<input @LcHelpers.IsChecked(true, iworkonActive) type="radio" name="positionlocations-iworkon" value="True"/></label>

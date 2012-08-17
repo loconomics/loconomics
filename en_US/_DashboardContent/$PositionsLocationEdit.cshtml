@@ -9,18 +9,55 @@
 
     if (action == "delete") {
         var sqlRemoveLoc = @"
-            DELETE FROM ServiceAddress
-            WHERE AddressID = @0 AND PositionID = @1
 
-            IF @@ERROR <> 0 BEGIN
-                -- Non deletable serviceaddress, because is linked, simply 'unactive'
-                UPDATE ServiceAddress SET
-                    Active = 0
-                WHERE   AddressID = @0 AND PositionID = @1
+            /* Be carefull with removing an address, if exists both as 'travel' and 'work' addresses, only
+                uncheck the type, don't delete */
+            DECLARE @Type varchar(10)
+            SET @Type = @2
+
+            IF EXISTS (SELECT AddressID FROM ServiceAddress
+                        WHERE AddressID = @0 AND PositionID = @1
+                              AND ServicesPerformedAtLocation = 1
+                              AND TravelFromLocation = 1)
+            BEGIN
+
+                IF @Type like 'work'
+                    UPDATE ServiceAddress SET
+                        ServicesPerformedAtLocation = 0
+                    WHERE AddressID = @0 AND PositionID = @1
+                ELSE IF @Type like 'travel'
+                    UPDATE ServiceAddress SET
+                        TravelFromLocation = 0
+                    WHERE AddressID = @0 AND PositionID = @1
+
+            END ELSE BEGIN
+
+                DELETE FROM ServiceAddress
+                WHERE AddressID = @0 AND PositionID = @1
+
+                IF @@ERROR <> 0
+                    -- Non deletable serviceaddress, because is linked, simply 'unactive'
+                    UPDATE ServiceAddress SET
+                        Active = 0
+                    WHERE   AddressID = @0 AND PositionID = @1
+                ELSE BEGIN
+
+                    -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
+                    DELETE FROM Address
+                    WHERE AddressID = @0 AND
+                        (SELECT TOP 1 A.UniquePerUser FROM AddressType As A WHERE 
+                         A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0)
+                        ) = 0
+
+                    -- If is not possible, maybe is linked, do nothing (but read @@ERROR to not throw the error)
+                    SELECT @@ERROR As ErrorNumber
+                END
+
+
             END
         ";
         using (var db = Database.Open("sqlloco")) {
-            db.Execute(sqlRemoveLoc, locationID, p.PositionID);
+            db.Execute(sqlRemoveLoc, locationID, p.PositionID, Request["use"]);
             
             LcHelpers.ReturnJsonResult(0, "Location removed succesfully");
         }
