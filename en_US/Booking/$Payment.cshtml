@@ -119,9 +119,19 @@
                     }
                     
                     if (paymentNickName != null) {
+                        // Check if there is already a 'billing' address (only can exists one) and get its AddressID
+                        // to update it with the new data - or inserts one new if AddressID=0
+                        int billingAddressID = db.QueryValue(@"
+                            SELECT  AddressID
+                            FROM    Address
+                            WHERE   AddressTypeID = 13 -- 'billing' type
+                                     AND
+                                    UserID = @0
+                        ", c.UserID) ?? 0;
+                        
                         // Save location as service location
                         db.Execute(LcData.sqlSetAddress,
-                            0, // AddressID:0, ever inserts a new one
+                            billingAddressID,
                             c.UserID,
                             Request["street-address-line-1"],
                             Request["street-address-line-2"],

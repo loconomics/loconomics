@@ -394,6 +394,7 @@ public static partial class LcData
                 ,GoogleMapsURL = @12
                 ,UpdatedDate = getdate()
                 ,ModifiedBy = 'sys'
+                ,Active = 1
             WHERE
                 AddressID = @AddressID AND UserID = @1
 
@@ -428,6 +429,7 @@ public static partial class LcData
             ,PreferredAddress = @18
             ,UpdatedDate = getdate()
             ,ModifiedBy = 'sys'
+            ,Active = 1
         WHERE
             AddressID = @AddressID
              AND
