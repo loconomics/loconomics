@@ -84,7 +84,21 @@
             var postalCodeID = LcData.GetPostalCodeID(Request["postalcode"], state);
             if (postalCodeID == 0) {
                 ModelState.AddFormError("Postal Code not valid");
-            } else {
+            }
+            
+            // Validate that 'travel from location' is unique
+            // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
+            if (Request["itravel"].AsBool() &&
+                db.QueryValue(@"
+                    SELECT count(*) FROM ServiceAddress
+                    WHERE UserID = @0 AND PositionID = @1
+                            AND TravelFromLocation = 1 -- Only travel from addresses
+                            AND AddressID <> @2 --Don't count this address!
+                ", u.UserID, p.PositionID, locationID) > 0) {
+                ModelState.AddFormError("You already have a 'travel from location' address (can be only one).");
+            }
+
+            if (ModelState.IsValid) {
                 db.Execute(LcData.sqlSetServiceAddress,
                     locationID,
                     u.UserID,

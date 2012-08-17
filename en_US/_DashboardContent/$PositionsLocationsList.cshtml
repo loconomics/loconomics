@@ -90,7 +90,11 @@
                     <label>Yes<input type="radio" @LcHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
                     <label>No<input type="radio" @LcHelpers.IsChecked(false, itravelActive) name="positionlocations-itravel" value="False"/></label>
                 </div>
+                @* Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones *@
+                @if (travelLocations.Count == 0)
+                {
                 <a href="#" class="addlocation" data-extra-query="itravel=True">Add location</a>
+                }
                 <fieldset class="positionlocations-itravelfrom">
                     <legend>I travel to clients from this location:</legend>
                     <ul class="travel-locations">
