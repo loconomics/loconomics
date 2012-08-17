@@ -322,7 +322,7 @@
                         @LcHelpers.StateProvinceOptions(Request["state"])
                     </select></label></li>
             <li class="zip">
-                <label>Zip Code:<input type="text" name="zip" value="@Request["zip"]" @Validation.GetHtml("zip")/></label>
+                <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="card-number">
                 <label>Card number:<input type="text" name="card-number" value="@Request["card-number"]" @Validation.GetHtml("card-number")/></label>

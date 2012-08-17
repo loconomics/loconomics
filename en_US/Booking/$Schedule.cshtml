@@ -301,7 +301,7 @@
                         @LcHelpers.StateProvinceOptions(Request["state"].AsInt())
                     </select></label></li>
             <li class="zip">
-                <label>Zip Code:<input type="text" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
+                <label>Zip Code:<input type="text" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="save-to-my-locations">
                 <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
