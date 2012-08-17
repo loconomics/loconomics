@@ -438,6 +438,10 @@ $(document).ready(function () {
             smoothBoxBlock(null, c);
         });
         var lres = c.find('.my-account-ressources');
+        c.on('ajaxSuccessPostMessageClosed', '.ajax-box', function () {
+            smoothBoxBlock(null, c);
+            window.location.reload();
+        });
         var b;
         switch ($(this).attr('href')) {
             case '#delete-my-account':
