@@ -155,7 +155,7 @@ public static partial class LcData
                                  LEFT JOIN
                                 Address As L
                                   ON L.UserID = A.UserID
-                                    AND L.AddressID = 1 -- EVER 1 for Personal User address (Home, as AddressTypeID:1 too)
+                                    AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
                                  LEFT JOIN
                                 StateProvince As SP
                                   ON SP.StateProvinceID = L.StateProvinceID
