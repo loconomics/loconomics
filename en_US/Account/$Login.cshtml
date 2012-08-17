@@ -77,7 +77,7 @@
         } else if (WebSecurity.GetUserId(username) > -1 && !WebSecurity.IsConfirmed(username)) {
             // Resend confirmation mail, like in register
             var token = Database.Open("sqlloco").QueryValue("SELECT ConfirmationToken FROM webpages_Membership WHERE UserID=@0", WebSecurity.GetUserId(username));
-            var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);      
+            var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");      
             
             LcMessaging.SendWelcomeCustomer(WebSecurity.GetUserId(username), username, confirmationUrl, token);
             

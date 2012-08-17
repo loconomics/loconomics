@@ -1,12 +1,20 @@
-﻿@{
+﻿@using WebMatrix.WebData;
+@{
     // Log out of the current user context
     WebSecurity.Logout();
 
-    // Redirect back to the homepage or return URL
-    var returnUrl = Request.QueryString["ReturnUrl"];
-    if (returnUrl.IsEmpty()) {
-        Response.Redirect(UrlUtil.LangPath);
-    } else {
-        Context.RedirectLocal(returnUrl);
+    if (UrlData.Count == 0 || UrlData[0] != "Deleted") {
+        // Redirect back to the homepage or return URL
+        var returnUrl = Request.QueryString["ReturnUrl"];
+        if (returnUrl.IsEmpty()) {
+            Response.Redirect(UrlUtil.LangPath);
+        } else {
+            Context.RedirectLocal(returnUrl);
+        }
     }
+    
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
 }
+<div id="container">
+    <h1>Your account was succesfully deleted.</h1>
+</div>

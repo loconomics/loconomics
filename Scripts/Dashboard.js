@@ -428,6 +428,29 @@ $(document).ready(function () {
             smoothBoxBlock(ps2, cont, 'background-check');
         }
     });
+
+    /**==============
+    * Preferences
+    */
+    $('.preferences').on('click', '.my-account a', function () {
+        var c = $(this).closest('.tab-body');
+        c.on('click', '.cancel-action', function () {
+            smoothBoxBlock(null, c);
+        });
+        var lres = c.find('.my-account-ressources');
+        switch ($(this).attr('href')) {
+            case '#delete-my-account':
+                smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
+                break;
+            case '#deactivate-my-account':
+                smoothBoxBlock(lres.children('.deactivate-message-confirm').clone(), c);
+                break;
+            case '#reactivate-my-account':
+                smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
+                break;
+        }
+        return false;
+    });
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

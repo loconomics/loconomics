@@ -1,0 +1,20 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    if (IsPost){
+        using (var db = Database.Open("sqlloco")){
+            db.Execute("UPDATE Users SET AccountStatusID = 0, Active = 0 WHERE UserID = @0", WebSecurity.CurrentUserId);
+            db.Execute("UPDATE UserProfile SET Email = 'DELETED: ' + Email WHERE UserID = @0", WebSecurity.CurrentUserId);
+        }
+    
+        var redirect = UrlUtil.LangPath + "Account/Logout/Deleted/";
+    
+        if (Request.IsAjaxRequest()) {
+            LcHelpers.ReturnJsonResult(1, redirect);
+        } else {
+            Response.Redirect(redirect);
+        }
+    }
+}
