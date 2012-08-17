@@ -8,11 +8,13 @@
             db.Execute("UPDATE Users SET AccountStatusID = 0, Active = 0 WHERE UserID = @0", WebSecurity.CurrentUserId);
             db.Execute("UPDATE UserProfile SET Email = 'DELETED: ' + Email WHERE UserID = @0", WebSecurity.CurrentUserId);
         }
+        WebSecurity.Logout();
     
         var redirect = UrlUtil.LangPath + "Account/Logout/Deleted/";
     
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(1, redirect);
+            //LcHelpers.ReturnJsonResult(1, redirect);
+            LcHelpers.ReturnJsonResult(0, "Your account was successfully deleted.");
         } else {
             Response.Redirect(redirect);
         }

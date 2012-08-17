@@ -439,7 +439,6 @@ $(document).ready(function () {
         });
         var lres = c.find('.my-account-ressources');
         c.on('ajaxSuccessPostMessageClosed', '.ajax-box', function () {
-            smoothBoxBlock(null, c);
             window.location.reload();
         });
         var b;
