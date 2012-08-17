@@ -323,6 +323,9 @@ public static partial class LcData
                 ,TT.TransportTypeID
                 ,TT.TransportTypeName
                 ,L.Active
+
+                ,AT.AddressType
+                ,AT.UniquePerUser
         FROM    Address As L
                  INNER JOIN
                 ServiceAddress As SA
@@ -337,6 +340,9 @@ public static partial class LcData
                  LEFT JOIN
                 TransportType As TT
                   ON TT.TransportTypeID = SA.TransportType
+                 INNER JOIN
+                AddressType As AT
+                  ON AT.AddressTypeID = L.AddressTypeID
         WHERE   L.UserID = @0
                  AND SA.PositionID = @1
                  -- We get all location, not only active: -- AND L.Active = 1
@@ -373,9 +379,10 @@ public static partial class LcData
             SET @AddressID = @@Identity
 
         END ELSE BEGIN
+            /* Two steps update: normal fields first and then conditional update for the AddressTypeID field */
             UPDATE Address SET
-                AddressTypeId = @9
-                ,AddressName = @8
+                --AddressTypeId = @9
+                AddressName = @8
                 ,AddressLine1 = @2
                 ,AddressLine2 = @3
                 ,City = @4
@@ -388,8 +395,16 @@ public static partial class LcData
                 ,UpdatedDate = getdate()
                 ,ModifiedBy = 'sys'
             WHERE
-                AddressID = @AddressID
-                 AND UserID = @1
+                AddressID = @AddressID AND UserID = @1
+
+            /* Update AddressTypeID: only if previous AddressTypeID assigned is not one of the types 'UniquePerUser', that can be write on on insert -our rules- */
+            IF (SELECT TOP 1 UniquePerUser FROM AddressType WHERE 
+                AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @AddressID)
+               ) = 0
+                UPDATE Address SET
+                    AddressTypeID = @9
+                WHERE
+                    AddressID = @AddressID AND UserID = @1
         END
     ";
     public const string sqlSetServiceAddress = @"

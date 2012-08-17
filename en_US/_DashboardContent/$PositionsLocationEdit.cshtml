@@ -88,7 +88,7 @@
     var sqlGetAddressTypes = @"
         SELECT  AddressTypeID, AddressType
         FROM    AddressType
-        WHERE   Active = 1
+        WHERE   Active = 1 AND UniquePerUser = 0
     ";
     dynamic transports = null, location = null, types = null;
     using (var db = Database.Open("sqlloco")) {
@@ -143,13 +143,20 @@
                     <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null ? location.PreferredAddress : null)) /> This is my prefered address</label>
                 </li>
                 <li class="location-type">
-                    <label>Address Type: 
+                    <label>Address Type:
+                        @if (location != null && location.UniquePerUser)
+                        {
+                            <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
+                        }
+                        else
+                        {
                         <select name="type" @Validation.GetHtml("type")>
                             @foreach (var t in types)
                             {
                                 <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
                             }
                         </select>
+                        }
                     </label>
                 </li>
             </ul>
