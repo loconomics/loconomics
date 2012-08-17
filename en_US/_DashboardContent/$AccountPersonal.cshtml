@@ -17,7 +17,6 @@
     var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
     string Zip = Request["zipcode"] ?? u.PostalCode;
     var Bio = Request["publicbio"] ?? u.PublicBio;
-    string BirthYear = (Request["birthyear"] ?? u.BirthYear ?? "").ToString();
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
     var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification ?? false);
     var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation ?? false);
@@ -26,11 +25,6 @@
     Validation.RequireField("firstname", "First Name is required");
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
-    Validation.Add("birthyear", Validator.Integer("Birth year is not valid"));
-    // Age bump error message must not (TRUSTe says) identify the real problem (age limit), because of this field validation is removed
-    // to avoid field identification of the error message. Age is checked on server validation (ModelState errors) with generic error message.
-    int adultLimit = 13; // 16, 18, 19, 21 !!?
-    //Validation.Add("birthyear", Validator.Range(1900, DateTime.Today.Year - adultLimit, "Sorry we are not able to accept your registration at this time."));
     
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
@@ -39,9 +33,6 @@
             if (zipID == 0) {
                 ModelState.AddError("zipcode", "Zip code is not valid");
             }
-        }
-        if (Request["birthyear"].AsInt() < 1900 || Request["birthyear"].AsInt() > DateTime.Today.Year - adultLimit) {
-            ModelState.AddFormError("Sorry we are not able to accept your registration at this time.");
         }
         
         if (ModelState.IsValid) {
@@ -63,7 +54,6 @@
                     ,@PostalCodeID int
                     ,@CountryID int
                     ,@PublicBio varchar(500)
-                    ,@BirthYear int
                     ,@GenderID int
                     ,@IAuthZumigoVerification bit
                     ,@IAuthZumigoLocation bit
@@ -73,7 +63,7 @@
                     SET @FirstName = @1
                     SET @MiddleIn = @2
                     SET @LastName = @3
-                    SET @SecondLastName = @16
+                    SET @SecondLastName = @15
                     SET @MobilePhone = @4
                     SET @AlternatePhone = @5
                     SET @AddressLine1 = @6
@@ -81,13 +71,12 @@
                     SET @City = @8
                     SET @StateProvinceID = @9
                     SET @PostalCodeID = @10
-                    SET @CountryID = @17
+                    SET @CountryID = @16
                     SET @PublicBio = @11
-                    SET @BirthYear = @12
-                    SET @GenderID = @13
-                    SET @IAuthZumigoVerification = @14
-                    SET @IAuthZumigoLocation = @15
-                    SET @LanguageID = @18
+                    SET @GenderID = @12
+                    SET @IAuthZumigoVerification = @13
+                    SET @IAuthZumigoLocation = @14
+                    SET @LanguageID = @17
 
                     BEGIN TRAN
 
@@ -201,7 +190,6 @@
 		                    ,AlternatePhone = @AlternatePhone
 
 		                    ,PublicBio = @PublicBio
-		                    ,BirthYear = @BirthYear
 		                    ,GenderID = @GenderID
 		                    ,IAuthZumigoVerification = @IAuthZumigoVerification
 		                    ,IAuthZumigoLocation = @IAuthZumigoLocation
@@ -220,7 +208,7 @@
 
                     COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
-                 State, zipID, Bio, BirthYear.AsInt() == 0 ? null : BirthYear,
+                 State, zipID, Bio,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, 
                  LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
             }
@@ -364,10 +352,6 @@ Please complete the information below as accurately as possible.  Only your firs
     <fieldset id="@idprefix-fs-personaldata">
         <legend>Personal Data:</legend>
         <ul>
-            <li><label for="@idprefix-birthyear">Birth Year:</label>
-                <input type="text" id="@idprefix-birthyear" name="birthyear" value="@BirthYear" @Validation.GetHtml("birthyear") />
-                @Html.ValidationMessage("birthyear")
-            </li>
             <li><label>Gender Identity:</label>
                 @foreach (var gender in genders)
                 {

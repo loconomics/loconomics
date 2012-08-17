@@ -66,7 +66,6 @@ public static partial class LcData
                             
                                 -- Personal data
                                 ,PublicBio
-                                ,BirthYear
                                 ,GenderID
 
                                 -- Some preferences
@@ -141,7 +140,6 @@ public static partial class LcData
 
                                 -- Personal data
                                 ,PublicBio
-                                ,BirthYear
                                 ,GenderID
                             
                                 -- Some preferences

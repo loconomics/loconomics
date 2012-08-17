@@ -1,7 +1,7 @@
 ﻿@helper GetFacebookInitializationScripts() {
     var urlsection = PageData["Section"] ?? "Callback"; // Possible values: Callback, Verify, Callback/Provider
     var result = PageData["Result"] ?? "redirect"; // Possible values: redirect, json
-    var facebookPermissions = "email,user_birthday,user_about_me";
+    var facebookPermissions = "email,user_about_me";
     var redirectUrl = PageData["Redirect"] ?? Request["Redirect"];
     
     <div id="fb-root" style="display: none"></div>
