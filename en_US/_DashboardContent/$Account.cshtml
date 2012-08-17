@@ -10,10 +10,10 @@
             @if (u.IsProvider){
 			<li><a href="#account-payments">Payments</a></li>
             <li><a href="#account-taxes">Taxes</a></li>
-                if (!u.IsActiveProvider)
-                {
+                @*if (!u.IsActiveProvider)
+                {*@
                 <li><a href="#account-terms">Terms &amp; Privacy</a></li>
-                }
+                @*}*@
             }
         </ul>
 
@@ -40,10 +40,10 @@
             @RenderPage("$AccountTaxes.cshtml")
 		</div><!-- #account-taxes -->
         
-        if (!u.IsActiveProvider)
-        {
+        @*if (!u.IsActiveProvider)
+        {*@
         <div id="account-terms" class="tab-body fancy">
             @RenderPage("$AccountTerms.cshtml")
         </div><!-- #account-terms -->
-        }
+        @*}*@
     }
