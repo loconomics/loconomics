@@ -39,7 +39,7 @@ ul.attributes-list li {
     padding-bottom: 60px;
 }
 #highlights, #dashboard-help {
-    border: 1px solid #747474;
+    border: 2px solid #747474;
     margin-top: 0;
     margin-bottom: 0;
     background: white;
@@ -210,9 +210,39 @@ ul.attributes-list li {
 
 /*** dashboard-alerts ***/
 #dashboard-alerts {
-    border: 1px solid #00989a;
+    border: 2px solid #00989a;
     border-radius: 4px;
-    padding: 5px 20px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    padding: 0;
+}
+#dashboard-alerts > ul > li {
+    border-top: 1px solid #dfdfdf;
+    padding: 2px 15px;
+}
+#dashboard-alerts > ul > li:first-child {
+    border-top-width: 0;
+}
+#dashboard-alerts li.group > h2 {
+    margin: 10px 0 4px 0;
+}
+#dashboard-alerts li.item {
+    list-style: url('../img/theme/alert-icon.png') inside;
+    line-height: 1em;
+}
+#dashboard-alerts li.item > .alert-info {
+    color: #747474;
+    line-height: normal;
+    text-decoration: none;
+    vertical-align: top;
+}
+#dashboard-alerts li.item > a.alert-info:hover {
+    text-decoration: underline;
+}
+#dashboard-alerts li.item > .alert-info > .more {
+    color: #eb6e42;
+    font-weight: bold;
 }
 
 /*** Dashboard forms ***/

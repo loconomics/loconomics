@@ -16,7 +16,8 @@
                     A.PositionSpecific,
                     UA.PositionID,
                     AT.AlertTypeName,
-                    AT.AlertTypeDescription
+                    AT.AlertTypeDescription,
+                    P.PositionSingular
             FROM    Alert As A
                      INNER JOIN
                     UserAlert As UA
@@ -24,34 +25,68 @@
                      INNER JOIN
                     AlertType As AT
                       ON AT.AlertTypeID = A.AlertTypeID
-            WHERE   UA.UserID = @0
+                     LEFT JOIN
+                    Positions As P
+                      ON P.PositionID = UA.PositionID
+                         AND P.LanguageID = A.LanguageID
+                         AND P.CountryID = A.CountryID
+            WHERE   UA.Active = 1 AND UA.UserID = @0
+                     AND A.LanguageID = @1 AND A.CountryID = @2
             ORDER BY AT.AlertTypeName, A.AlertName
-        ", WebSecurity.CurrentUserId);
+        ", WebSecurity.CurrentUserId,
+         LcData.GetCurrentLanguageID(),
+         LcData.GetCurrentCountryID());
     }
 }
 <div id="dashboard-alerts" class="dashboard-alerts">
     <ul>
-        @foreach (var alert in alerts)
-        {
-            string completeUrl = N.W(alert.AlertPageURL);
-            if (completeUrl != null)
+        @{
+            // We need show the results in groups based on AlerType fields
+            // We already get the data sorted by AlertTypeName, we implement
+            // the group-by here in the view generation instead of do a 
+            // database call for groups and other for each group alerts.
+            // Simply remember last AlertTypeName and compare, when changed the new
+            // group header must be showed
+            var lastAlertType = "";
+            foreach (var alert in alerts)
             {
-                if (alert.PositionSpecific)
-                {
-                    completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
+                // Check AlerType for grouping
+                if (lastAlertType != alert.AlertTypeName) {
+                    <li class="group">
+                        <h2>@alert.AlertTypeName</h2>
+                        <span class="description">@alert.AlertTypeDescription</span>
+                    </li>
                 }
-                if (!completeUrl.StartsWith("javascript:"))
+                lastAlertType = alert.AlertTypeName;
+            
+                string completeUrl = N.W(alert.AlertPageURL);
+                if (completeUrl != null)
                 {
-                    completeUrl = UrlUtil.LangPath + completeUrl;
+                    if (alert.PositionSpecific)
+                    {
+                        completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
+                    }
+                    if (!completeUrl.StartsWith("javascript:"))
+                    {
+                        completeUrl = UrlUtil.LangPath + completeUrl;
+                    }
                 }
+                <li class="item">
+                    @if (completeUrl != null)
+                    {
+                        <a class="alert-info" href="@completeUrl">@alert.AlertHeadlineDisplay 
+                        @if (alert.PositionSpecific)
+                        {
+                            <span class="alert-position">(@alert.PositionSingular)</span>
+                        }
+                        <span class="more">&gt;&gt;</span></a>
+                    }
+                    else
+                    {
+                        <span class="alert-info">@alert.AlertHeadlineDisplay</span>
+                    }
+                </li>
             }
-            <li>
-                <h5>@alert.AlertHeadlineDisplay</h5>
-                <p>@alert.AlertTextDisplay</p>
-                @if (completeUrl != null){
-                    <a class="more" href="@completeUrl">Complete &gt;&gt;</a>
-                }
-            </li>
         }
     </ul>
 </div>
