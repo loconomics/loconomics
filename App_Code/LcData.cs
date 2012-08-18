@@ -645,4 +645,23 @@ public static partial class LcData
     }
     #endregion
     #endregion
+
+    #region Alerts
+    public static int GetActiveUserAlertsCount(int userID)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            return (int)db.QueryValue(@"
+                SELECT  count(*)
+                FROM    Alert As A
+                         INNER JOIN
+                        UserAlert As UA
+                          ON A.AlertID = UA.AlertID
+                WHERE   UA.Active = 1 AND UA.UserID = @0
+                         AND A.LanguageID = @1 AND A.CountryID = @2
+            ", userID,
+             LcData.GetCurrentLanguageID(),
+             LcData.GetCurrentCountryID());
+        }
+    }
+    #endregion
 }

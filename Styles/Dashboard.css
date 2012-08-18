@@ -150,6 +150,7 @@ ul.attributes-list li {
     width: 186px;
     overflow: hidden;
 }
+/*** Profile Menu ***/
 .dashboard #profile-menu li.admin {
     background: #8B2143 !important;
 }
@@ -185,22 +186,18 @@ ul.attributes-list li {
 .dashboard #profile-menu li a:hover{
     background-color: #ccfeff;
 }
-
-.dashboard #profile-menu ul{
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.dashboard #profile-menu > li > a > .warning-note {
+    color: White;
+    background: #eb6e42;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    display: inline-block;
+    float: right;
+    padding: 1px 5px;
 }
-.dashboard #profile-menu ul li a{
-    border: none;
-    padding: 0 15px 0 30px;
-    margin: 0;
-    height: auto;
-}
-.dashboard #profile-menu ul a.current{
-    font-weight: bold;
-}
-
+/** Dashboard tabs **/
 .dashboard .tab-body > p {
     margin: 0 0 15px 0;
 }
