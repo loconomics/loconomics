@@ -197,6 +197,21 @@ ul.attributes-list li {
     float: right;
     padding: 1px 5px;
 }
+/* Sub-menu */
+.dashboard #profile-menu ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.dashboard #profile-menu ul li a{
+    border: none;
+    padding: 0 15px 0 30px;
+    margin: 0;
+    height: auto;
+}
+.dashboard #profile-menu ul a.current{
+    font-weight: bold;
+}
 /** Dashboard tabs **/
 .dashboard .tab-body > p {
     margin: 0 0 15px 0;
