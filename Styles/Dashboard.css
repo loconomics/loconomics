@@ -214,6 +214,10 @@ ul.attributes-list li {
     -o-border-radius: 4px;
     padding: 0;
 }
+#dashboard-alerts > .empty {
+    padding: 20px;
+    text-align: center;
+}
 #dashboard-alerts > ul > li {
     border-top: 1px solid #dfdfdf;
     padding: 2px 15px;
