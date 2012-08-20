@@ -1,0 +1,28 @@
+﻿@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+       
+    Validation.RequireField("message", "You must describe the problem");
+    
+    if (IsPost && Validation.IsValid()) {
+        LcMessaging.SendReportUnauthorizedUse(WebSecurity.CurrentUserId, Request["ReportedUserID"].AsInt(), Request["message"]);
+        
+        LcHelpers.ReturnJsonResult(0, "Unauthorized use reported");
+    }
+    
+    var userReported = LcData.UserInfo.GetUserRow(Request["ReportedUserID"].AsInt());
+}
+<form class="report-unauthorized-use ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Messaging/$ReportUnauthorizedUse/">
+    <input type="hidden" name="ReportedUserID" value="@Request["ReportedUserID"]" />
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <fieldset>
+        <legend>Report Unauthorized Use:</legend>
+        <div class="user-reported">
+            About <strong>@LcHelpers.GetUserDisplayName(userReported)</strong>
+        </div>
+        <textarea @Validation.GetHtml("message") name="message" rows="16" cols="80"></textarea>
+    </fieldset>
+    <fieldset class="actions">
+        <button type="submit" class="main-action button">Send</button>
+    </fieldset>
+</form>

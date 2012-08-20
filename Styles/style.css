@@ -935,6 +935,14 @@ form fieldset.actions{
     -o-box-shadow: 0 0 5px 2px #8B2143;
     -webkit-box-shadow: 0 0 5px 2px #8B2143;
 }
+.report-action {
+    color: #747474;
+    text-decoration: none;
+    margin: 0 5px;
+}
+.report-action:hover {
+    text-decoration: underline;
+}
 .warning {
     font-weight: bold;
     color: #FF8300;

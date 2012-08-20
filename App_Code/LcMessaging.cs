@@ -481,6 +481,20 @@ public class LcMessaging
     }
     #endregion
 
+    #region Type:ReportAbuse
+    public static void SendReportUnauthorizedUse(int reportedByUserID, int reportedUserID, string message)
+    {
+        SendMail("legal@loconomics.com", "Report of Unauthorized Use",
+            ApplyTemplate(UrlUtil.LangPath + "Email/EmailReportUnauthorizedUse/",
+            new Dictionary<string,object> {
+                { "ReportedByUserID", reportedByUserID },
+                { "ReportedUserID", reportedUserID },
+                { "Message", message },
+                { "EmailTo", "legal@loconomics.com" }
+         }));
+    }
+    #endregion
+
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {

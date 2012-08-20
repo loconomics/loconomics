@@ -87,6 +87,7 @@
                     <text>It's strongly recommended for all users to write a public bio.</text>
                 }
             </p>
+            <a href="#report-unauthorized-use" class="report-action report-unauthorized-use" data-reported-userid="@u["UserID"]">report unauthorized use</a>
             @RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })
             @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
             @*

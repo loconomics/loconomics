@@ -50,6 +50,18 @@ h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color:
     margin-top: 20px;
     min-height: 155px;
 }
+#profileHeader .report-action.report-unauthorized-use {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+form.report-unauthorized-use {
+    overflow: auto;
+    text-align: left;
+}
+form.report-unauthorized-use textarea {
+    width: 460px;
+}
 #verifications {
     position: absolute;
     top: 40px;

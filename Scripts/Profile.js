@@ -24,6 +24,16 @@ $(function () {
         }
         return false;
     });
+
+    /* Report unauthorized use */
+    $('.report-action').click(function () {
+        switch (this.getAttribute('href')) {
+            case '#report-unauthorized-use':
+                var reportedUserID = $(this).data('reported-userid');
+                popup(UrlUtil.LangPath + 'Messaging/$ReportUnauthorizedUse/?ReportedUserID=' + reportedUserID, 'medium');
+                return false;
+        }
+    });
 });
 
 /* Google Map */
