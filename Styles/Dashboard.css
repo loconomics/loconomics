@@ -95,6 +95,7 @@ ul.attributes-list li {
     padding: 0 15px;
     position: absolute;
     text-decoration: none;
+    text-align: center;
 }
 .dashboard #changephoto:hover {
     background-color: White;
