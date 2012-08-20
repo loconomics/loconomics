@@ -67,28 +67,36 @@ ul.attributes-list li {
     color: #00989A;
     margin: 0;
 }
-.dashboard #avatar{
+.dashboard #dashboard-avatar {
     width: 186px;
     height: 186px;
     overflow: hidden;
-    
     position: absolute;
     top: 155px;
     left: 0;
 }
-.dashboard #changephoto{
-    background-color: rgba(255, 255, 255, 0.9);
+.dashboard #avatar {
+    width: 186px;
+    height: 186px;
+}
+.dashboard #changephoto {
+    background-color: rgba(255, 255, 255, 0.65);
     border-radius: 25px 25px 25px 25px;
+    -moz-border-radius: 25px 25px 25px 25px;
+    -o-border-radius: 25px 25px 25px 25px;
+    -webkit-border-radius: 25px 25px 25px 25px;
     color: black;
     display: block;
     font-size: 0.8em;
-    left: 60px;
+    left: 10px;
+    right: 10px;
+    bottom: 15px;
+    top: 149px;
     padding: 0 15px;
     position: absolute;
     text-decoration: none;
-    top: 305px;
 }
-.dashboard #changephoto:hover{
+.dashboard #changephoto:hover {
     background-color: White;
 }
 .dashboard-help-widget {

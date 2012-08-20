@@ -1,4 +1,5 @@
 ﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
 @functions{
     void SaveUserPhotoName(string fileName, int userId){
         using (var db = Database.Open("sqlloco")){
@@ -32,9 +33,17 @@
 }
 @{
     LcHelpers.SecurePage();
-    var u = LcData.UserInfo.GetUserRow();
-    var userId = u["UserID"];
+    var userId = WebSecurity.CurrentUserId;
     var ajaxEnabled = true;
+    
+    // Delete file support:
+    if (Request["delete"].AsBool()) {
+        // We don't need the upload staff here, simply update database removing all file, both
+        // managed by next common function:
+        SaveUserPhotoName(null, userId);
+        
+        LcHelpers.ReturnJsonResult(0, "Photo was removed");
+    }
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
@@ -129,15 +138,24 @@
         <script type="text/javascript">
             @Html.Raw(UrlUtil.ToJsVar())
         </script>
+        <style type="text/css">
+            body {
+                font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
+            }
+            .qq-upload-button {
+                width: 100%;
+                border: none;
+                display: block;
+                font-size: 1em;
+            }
+            .qq-upload-list {
+                margin: 15px 0 !important;
+                max-height: 120px !important;
+                overflow: auto;
+            }
+        </style>
 
         <script type="text/javascript">
-            function reloadUserPhoto() {
-                // Force image reload, in the parent document! (this is an iframe)
-                var src = window.parent.document.getElementById('avatar').getAttribute('src');
-                // avoid cache this time
-                src = src + "?v" + new Date();
-                window.parent.document.getElementById('avatar').setAttribute('src', src);
-            }
             @if (ajaxEnabled)
             {
             <text>
@@ -149,7 +167,7 @@
                     action: UrlUtil.LangPath + 'Dashboard/ChangePhoto/',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
-                        reloadUserPhoto();
+                        window.parent.reloadUserPhoto();
                     }
                 });
             });
@@ -174,6 +192,19 @@
                     <button class="button main-action" type="submit">Upload!</button>
                 </form>
                 }
+            </div>
+            <div id="delete-photo">
+                <button type="button" class="qq-upload-button">Remove photo</button>
+                <script type="text/javascript">
+                    jQuery('#delete-photo > button').click(function () {
+                        window.parent.deleteUserPhoto();
+                    })
+                    .hover(function () {
+                        jQuery(this).addClass('qq-upload-button-hover');
+                    }, function () {
+                        jQuery(this).removeClass('qq-upload-button-hover');
+                    });
+                </script>
             </div>
         </div>
     </body>

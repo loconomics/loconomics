@@ -23,7 +23,7 @@ $(document).ready(function () {
     * Change Photo
     */
     $('#changephoto').click(function () {
-        popup(UrlUtil.LangPath + 'Dashboard/ChangePhoto/', 'small');
+        popup(UrlUtil.LangPath + 'Dashboard/ChangePhoto/', { width: 240, height: 240 });
         return false;
     });
     /*
@@ -607,4 +607,31 @@ function openChangeBookingStateForm(bookingID, button) {
     var url = editPanel.data('source-url').replace('BookingID=0', 'BookingID=' + bookingID);
     editPanel.reload(url);
     editPanel.show();
+}
+/* User Photo */
+function reloadUserPhoto() {
+    // Force image reload, in the parent document! (this is an iframe)
+    var av = document.getElementById('avatar');
+    var src = av.getAttribute('src');
+    // avoid cache this time
+    src = src + "?v" + new Date();
+    av.setAttribute('src', src);
+}
+function deleteUserPhoto() {
+    $.blockUI(loadingBlock);
+    jQuery.ajax({
+        url: UrlUtil.LangUrl + "Dashboard/ChangePhoto/?delete=true",
+        method: "GET",
+        cache: false,
+        dataType: "json",
+        success: function (data) {
+            if (data.Code == 0)
+                $.blockUI(infoBlock(data.Result));
+            else
+                $.blockUI(errorBlock(data.Result.ErrorMessage));
+            $('.blockUI .close-popup').click(function () { $.unblockUI() });
+            reloadUserPhoto();
+        },
+        error: ajaxErrorPopupHandler
+    });
 }
