@@ -921,9 +921,18 @@ function popupStyle(size) {
         'background-clip': 'padding-box'
     };
 }
-function popup(url, size, complete, loadingText){
+function popup(url, size, complete, loadingText, options){
     // Native popup
     //window.open(url);
+    
+    // Load options overwriting defaults
+    options = $.extend({
+        closable: {
+            onLoad: false,
+            afterLoad: true,
+            onError: true
+        }
+    }, options);
 
     // Smart popup
     loadingText = loadingText || '';
@@ -934,8 +943,9 @@ function popup(url, size, complete, loadingText){
         swh = popupSize(size);        
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
-    $.blockUI({ 
-       message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
+    $.blockUI({
+       message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
+       '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
        centerY: false,
        css: popupStyle(swh),
        overlayCSS: { cursor: 'default' }
@@ -944,18 +954,21 @@ function popup(url, size, complete, loadingText){
     // Loading Url with Ajax and place content inside the blocked-box
     $.ajax({ url: url,
         success: function (data) {
+            // Add close button if requires it or empty message content to append then more
+            $('.blockMsg').html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
+
             if (typeof (data) === 'object') {
                 if (data.Code && data.Code == 2) {
                     $.unblockUI();
                     popup(data.Result, { width: 410, height: 320 });
                 } else {
                     // Unexpected code, show result
-                    $('.blockMsg').html(data.Result);
+                    $('.blockMsg').append(data.Result);
                 }
             } else {
                 // Page content got, paste into the popup if is partial html (url starts with$)
                 if (/((^\$)|(\/\$))/.test(url)) {
-                    $('.blockMsg').html(data);
+                    $('.blockMsg').append(data);
                 } else {
                     // Else, if url is a full html page (normal page), put content into an iframe
                     var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
@@ -969,16 +982,16 @@ function popup(url, size, complete, loadingText){
                         }
                     };
                     // replace blocking element content (the loading) with the iframe:
-                    $('.blockMsg').html(iframe);
+                    $('.blockMsg').append(iframe);
                 }
             }
-        }, error: function (j, textStatus) {
-            $('div.blockMsg').text('Page not found');
+        }, error: function (j, t, ex) {
+            $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div>Page not found</div>');
+            if (console && console.info) console.info("Popup-ajax error: " + ex);
         }, complete: complete
     });
 
-    
-    $('.blockOverlay').attr('title','Click to unblock').click($.unblockUI);
+    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false });
 }
 function ajaxFormsCompleteHandler() {
     // Disable loading
