@@ -5,6 +5,7 @@
     var n = p.PositionID;
     // Current user data record:
     var u = LcData.UserInfo.GetUserRow();
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
     var idprefix = "position#" + n + "-reviews";
     
@@ -32,7 +33,12 @@
                 db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 1);
             }
             
-            LcHelpers.ReturnJsonResult(0, "Message was sent!");
+            string success = "Message was sent!";
+            if (!String.IsNullOrEmpty(redirectURL)) {
+                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+            } else {
+                LcHelpers.ReturnJsonResult(0, success);
+            }
         }
     }
 }
@@ -43,6 +49,7 @@ to write you a reference. Invite as many as you’d like, and we’ll post the f
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="references">

@@ -3,6 +3,7 @@
     // Current position data record:
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
     string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
 
@@ -83,6 +84,12 @@
                     }
                 }
             }
+            string success = "Changes applied!";
+            if (!String.IsNullOrEmpty(redirectURL)) {
+                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+            } else {
+                LcHelpers.ReturnJsonResult(0, success);
+            }
         }
     }
     
@@ -106,6 +113,7 @@ Showcasing photos of your work can help clients get a better picture of the serv
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="gallery-order" value=""/>
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <div id="position[@n]photos-no-photos" class="no-photos">
         <span class="positionphotos-tools-upload">Start by <a href="#">uploading</a> a photo!</span>
