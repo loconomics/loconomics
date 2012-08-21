@@ -355,7 +355,7 @@ var TabbedUX = {
 /* Init code */
 $(document).ready(function () {
 
-    if (!hasPlaceholderSupport) {
+    if (!hasPlaceholderSupport()) {
         $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
             if (this.value == this.getAttribute('placeholder'))
                 this.value = "";
