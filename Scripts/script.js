@@ -408,9 +408,11 @@ $(document).ready(function () {
     * This is needed for other behaviors to work. */
     if ($.fn.hashchange)
         $(window).hashchange(function () {
-            var thereIsTab = TabbedUX.getTab(location.hash);
-            if (thereIsTab)
-                TabbedUX.focusTab(thereIsTab);
+            if (!/^#!/.test(location.hash)) {
+                var thereIsTab = TabbedUX.getTab(location.hash);
+                if (thereIsTab)
+                    TabbedUX.focusTab(thereIsTab);
+            }
         });
 
     $('#launchHowItWorks').click(function (e) {

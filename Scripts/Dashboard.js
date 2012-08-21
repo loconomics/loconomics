@@ -19,6 +19,23 @@ $(document).bind('loadHashBang', function (event, hashbangvalue) {
 });
 
 $(document).ready(function () {
+    /* Special urls */
+    function checkSpecialURIs() {
+        if (location.hash == '#!pricing') {
+            // go to the first position pricing tab
+            if (/\/Dashboard\/Positions\//i.test(location.pathname)) {
+                // Find first position, pricing tab
+                var u = $('#main.tabbed > .tabs > li:eq(0) > a').attr('href') + '-pricing';
+                window.location = u;
+            } else {
+                // Redirect to positions page
+                window.location = UrlUtil.LangPath + 'Dashboard/Positions/#!pricing';
+            }
+        }
+    }
+    checkSpecialURIs();
+    if ($.fn.hashchange)
+        $(window).hashchange(checkSpecialURIs);
     /*
     * Change Photo
     */
