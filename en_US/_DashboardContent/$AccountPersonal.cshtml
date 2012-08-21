@@ -4,6 +4,10 @@
     
     var u = LcData.UserInfo.GetUserRowWithContactData();
     
+    var redirectURL = Request["RedirectURL"] ?? 
+        (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf("/alerts", StringComparison.InvariantCultureIgnoreCase) > 0 ? 
+        Request.UrlReferrer.PathAndQuery : "" );
+
     // Initializing local data:
     var FirstName = Request["firstname"] ?? u.FirstName;
     var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
@@ -25,7 +29,7 @@
     Validation.RequireField("firstname", "First Name is required");
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
-    
+
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
         if (!Zip.IsEmpty()) {
@@ -212,7 +216,12 @@
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, 
                  LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
             }
-            LcHelpers.ReturnJsonResult(0, "Personal data updated!");
+            string success = "Personal data updated!";
+            if (!String.IsNullOrEmpty(redirectURL)) {
+                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+            } else {
+                LcHelpers.ReturnJsonResult(0, success);
+            }
         }
     }
     dynamic genders = null, verifications = null;
@@ -278,6 +287,7 @@ Please complete the information below as accurately as possible.  Only your firs
 </p>
 <div>
 <form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {

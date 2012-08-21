@@ -1011,12 +1011,11 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        if (data.Code == 0) {
-            // Special Code 0: general success code, show message saying that 'all was fine'
+        function showSuccessMessage(message) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
-            var message = data.Result || ctx.form.data('success-post-message') || 'Done!';
+            var message = message || ctx.form.data('success-post-message') || 'Done!';
             ctx.box.block(infoBlock(message, {
                 css: popupStyle(popupSize('small'))
             }))
@@ -1026,7 +1025,10 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
             // Clean previous validation errors
             setValidationSummaryAsValid(ctx.box);
-
+        }
+        if (data.Code == 0) {
+            // Special Code 0: general success code, show message saying that 'all was fine'
+            showSuccessMessage(data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         // Special Code 1: do a redirect
         } else if (data.Code == 1) {
@@ -1042,6 +1044,12 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             //container.unblock(); is blocked and unblocked againg by the reload method:
             ctx.autoUnblockLoading = false;
             ctx.box.reload(data.Result);
+        } else if (data.Code == 4) {
+            // Show SuccessMessage, attaching and event handler to go to RedirectURL
+            ctx.box.on('ajaxSuccessPostMessageClosed', function () {
+                lcRedirectTo(data.Result.RedirectURL);
+            });
+            showSuccessMessage(data.Result.SuccessMessage);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
