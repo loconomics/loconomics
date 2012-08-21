@@ -4,9 +4,7 @@
     
     var u = LcData.UserInfo.GetUserRowWithContactData();
     
-    var redirectURL = Request["RedirectURL"] ?? 
-        (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf("/alerts", StringComparison.InvariantCultureIgnoreCase) > 0 ? 
-        Request.UrlReferrer.PathAndQuery : "" );
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
 
     // Initializing local data:
     var FirstName = Request["firstname"] ?? u.FirstName;

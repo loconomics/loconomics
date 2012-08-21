@@ -133,6 +133,13 @@
         @("current")
     }
 }
+@functions{
+    static public string GetRedirectURLFromReferrer(string filter = ""){
+        return Request["RedirectURL"] ?? 
+                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ? 
+                Request.UrlReferrer.PathAndQuery : "" );
+    }
+}
 @*=================
  * JavaScript
  *@
