@@ -309,6 +309,10 @@ ul.attributes-list li {
 .dashboard .preferences .personal-data-info .note a:visited {
     color: #8b2143;
 }
+#preferences-privacy-policy h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
 .dashboard form li select,

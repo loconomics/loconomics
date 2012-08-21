@@ -6,13 +6,15 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-            <li class="current"><a href="#preferences-preferences">Privacy Settings</a></li>
-			@*<li class="current"><a class="current" href="#preferences-communication">Communication</a></li>
-			<li><a href="#preferences-privacy">Privacy</a></li>*@
+            <li class="current"><a href="#preferences-privacy-settings">Privacy Settings</a></li>
+            <li><a href="#preferences-privacy-policy">Privacy Policy</a></li>
         </ul>
 
         <div id="preferences-privacy-settings" class="tab-body fancy current">
             @RenderPage("$PreferencesPrivacySettings.cshtml")
+        </div>
+        <div id="preferences-privacy-policy" class="tab-body fancy">
+            @RenderPage(UrlUtil.LangPath + "HelpCenter/$PrivacyPolicy.cshtml")
         </div>
 
         @*
