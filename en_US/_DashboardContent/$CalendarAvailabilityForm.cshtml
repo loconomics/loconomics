@@ -4,6 +4,8 @@
     var u = LcData.UserInfo.GetUserRow();
     var idprefix = "availability-form";
     
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    
     // From 0 (sunday) to 6 (saturday), true: is available. ON DATABASE use base-1; base-zero only arrays on this page
     bool[] availDates = new bool[7];
     // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
@@ -92,7 +94,12 @@
                 db.Execute("EXEC TestAlertAvailability @0", u.UserID);
 
                 // All was fine, AJAX-JSON response
-                LcHelpers.ReturnJsonResult(0, "Availability data was succesful saved!");
+                string success = "Availability data was succesful saved!";
+                if (!String.IsNullOrEmpty(redirectURL)) {
+                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+                } else {
+                    LcHelpers.ReturnJsonResult(0, success);
+                }
             }
         }
     }
@@ -263,6 +270,7 @@ Please enter your availability below.  This should be the hours you generally ke
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">

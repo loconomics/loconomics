@@ -3,6 +3,7 @@
     // Current position data record:
     var pos = LcData.UserInfo.GetUserCurrentPos();
     var n = pos.PositionID;
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
     var idprefix = "position#" + n + "-services";
     
@@ -175,7 +176,12 @@
             db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
         }
         
-        LcHelpers.ReturnJsonResult(0, LcRessources.DataSaved);
+        string success = LcRessources.DataSaved;
+        if (!String.IsNullOrEmpty(redirectURL)) {
+            LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+        } else {
+            LcHelpers.ReturnJsonResult(0, success);
+        }
     }
     
     /* Language Levels */
@@ -219,8 +225,8 @@ Let clients know about the services you provide.  It helps you both work better 
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
-    <input type="hidden" name="position-number" value="@n"/>
-    <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    <input type="hidden" name="PositionID" value="@pos.PositionID"/>
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="position-intro">
         <legend>Position introduction (optional):</legend>

@@ -3,6 +3,8 @@
     var u = LcData.UserInfo.GetUserRow();
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
+    
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
 
     if (IsPost){
         
@@ -22,6 +24,13 @@
                          AND PositionID = @1
                          AND ServicesPerformedAtLocation = 1
             ", u.UserID, p.PositionID, Request["positionlocations-iworkon"].AsBool());
+            
+            string success = "Locations preferences saved!";
+            if (!String.IsNullOrEmpty(redirectURL)) {
+                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
+            } else {
+                LcHelpers.ReturnJsonResult(0, success);
+            }
         }
     }
     
@@ -81,6 +90,7 @@
 
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="ajax ajax-box" id="position#@(n)-locations">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
+        <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <div class="col col-2 col-2-1">

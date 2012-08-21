@@ -3,6 +3,7 @@
     var u = LcData.UserInfo.GetUserRow();
     var p = LcData.UserInfo.GetUserCurrentPos();
     var idprefix = PageData["idprefix"] ?? "position" + p.PositionID.ToString() + "-locations";
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
 }
 <p class="setting-instructions">
     Let clients know where you'll perform services. We won't disclose the exact address until after you accept a booking to ensure you and your client's safety.
@@ -12,7 +13,7 @@
         @*@RenderPage("$PositionsLocationEdit.cshtml", new { PositionID = p.PositionID })*@
     </div>
 
-    <div class="locations-list view-panel" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsLocationsList/?PositionID=@(p.PositionID)">
+    <div class="locations-list view-panel" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsLocationsList/?PositionID=@(p.PositionID)&RedirectURL=@(redirectURL)">
         @RenderPage("$PositionsLocationsList.cshtml")
     </div>
 </div>
