@@ -304,9 +304,10 @@ ul.attributes-list li {
     color: #8b2143;
     margin-left: 10px;
 }
-.dashboard .preferences .personal-data-info .note em {
-    text-decoration: underline;
-    font-style: normal;
+.dashboard .preferences .personal-data-info .note a,
+.dashboard .preferences .personal-data-info .note a:link,
+.dashboard .preferences .personal-data-info .note a:visited {
+    color: #8b2143;
 }
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],

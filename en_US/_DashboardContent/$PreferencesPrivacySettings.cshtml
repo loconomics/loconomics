@@ -87,7 +87,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
                 <li>Personal website (if listed)</li>
                 <li>Professional license or certifcation information (if applicable)</li>
             </ul>
-            <span class="note">*If you are not comfortable sharing this information, you are free to <em>delete your account</em>.</span>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a>.</span>
         </fieldset>
     }
     @if (u.IsCustomer)
@@ -100,7 +100,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
                 <li>Phone number(s)</li>
                 <li>Address where service is to be performed</li>
             </ul>
-            <span class="note">*If you are not comfortable sharing this information, you are free to <em>delete your account</em>.</span>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a>.</span>
         </fieldset>
     }
     <fieldset id="@idprefix-fs-bookingscommunication">
@@ -152,7 +152,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
         <ul>
             @if (u.AccountStatusID > 0)
             {            
-            <li><a href="#delete-my-account">Delete my account</a></li>
+            <li id="preferences-privacysettings-delete-my-account"><a href="#delete-my-account">Delete my account</a></li>
             }
             @if (u.AccountStatusID == 1)
             {
