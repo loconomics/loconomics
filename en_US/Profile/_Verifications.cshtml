@@ -36,7 +36,7 @@
             WHERE
                 UV.UserID = @0
         ", p.UserID);
-        licenses = db.Query(LcData.sqlGetVerifiedUserLicenses, p.UserID);
+        licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
     }
     foreach(var vc in vCats) {
         var vCat = new {
@@ -66,7 +66,7 @@
                             <dt>Verification status:</dt>
                             <dd>@v.VerificationStatusName</dd>
                             <dt>Last verified:</dt>
-                            <dd>@v.LastVerifiedDate.ToShortDateString()</dd>
+                            <dd>@String.Format("{0:d}", v.LastVerifiedDate ?? "")</dd>
                             @if(!String.IsNullOrWhiteSpace(v.Comments)) {
                             <dt>Comments:</dt>
                             <dd>@v.Comments</dd>
@@ -84,29 +84,29 @@
         }
     </ul>
 }
-@helper printLicenses(List<dynamic> licenses){
+@helper printLicenses(dynamic licenses){
     <ul class="attributes-list licenses-list">    
         @foreach(var v in licenses){
             <li>
-                <a href="#details" class="view-details-action">@v.VerificationType</a>
+                <a href="#details" class="view-details-action">@v.LicenseCertificationType</a>
                 <div class="popups view-details-popup">
                     <dl>
                         <dt>License/Certification:</dt>
-                        <dd>@v.VerificationType</dd>
+                        <dd>@v.LicenseCertificationType</dd>
                         <dt>Status:</dt>
-                        <dd>@v.VerificationStatusName</dd>
-                        <dt>Expiration</dt>
-                        <dd>@v.ExpirationDate</dd>
+                        <dd>@v.LicenseStatus</dd>
+                        <dt>Expiration:</dt>
+                        <dd>@String.Format("{0:d}", v.ExpirationDate ?? "")</dd>
                         <dt>Last verified:</dt>
-                        <dd>@v.LastVerifiedDate.ToShortDateString()</dd>
+                        <dd>@String.Format("{0:d}", v.LastVerifiedDate ?? "")</dd>
                         @if(!String.IsNullOrWhiteSpace(v.Comments)) {
                         <dt>Comments:</dt>
                         <dd>@v.Comments</dd>
                         }
                         <dt>Certification Authority:</dt>
-                        <dd>@v.CertificationAuthority</dd>
+                        <dd>@v.LicenseCertificationAuthority</dd>
                         <dt>Description:</dt>
-                        <dd>@v.VerificationDescription</dd>
+                        <dd>@v.LicenseCertificationTypeDescription</dd>
                     </dl>
                 </div>
             </li>
@@ -117,7 +117,8 @@
     <div class="user-verifications-licenses">
         @foreach (dynamic cat in vs)
         {
-            if (cat.Verifications.Count > 0)
+            if (cat.Verifications.Count > 0 || (
+                cat.CatID == 5 && licenses.Count > 0 ))
             {
                 <div class="have-view-more">
                     <h5 data-description="@cat.CatDesc" title="@cat.CatName">@cat.CatName:</h5>

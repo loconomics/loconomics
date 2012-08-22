@@ -676,7 +676,10 @@ public static partial class LcData
                     ,C.CountyName
                     ,UL.LicenseStatus
                     ,UL.ExpirationDate
+                    ,UL.LastVerifiedDate
                     ,L.LicenseCertificationAuthority
+                    ,L.LicenseCertificationTypeDescription
+                    ,UL.Comments
             FROM    UserLicenseVerification As UL
                      INNER JOIN
                     LicenseCertification As L
