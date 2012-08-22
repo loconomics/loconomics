@@ -11,9 +11,14 @@
         var sqlDelPackage = @"
             DELETE ProviderPackage
             WHERE ProviderPackageID = @0
+                    AND ProviderUserID = @1
+                    AND PositionID = @2
+
+            -- Test Alert
+            EXEC TestAlertPricingDetails @1, @2
         ";
         using (var db = Database.Open("sqlloco")) {
-            db.Execute(sqlDelPackage, packageID);
+            db.Execute(sqlDelPackage, packageID, p.UserID, positionID);
             
             LcHelpers.ReturnJsonResult(0, "Package removed succesfully");
         }
@@ -76,6 +81,10 @@
                         ,ModifiedBy = 'sys'
                         ,Active = 1
                     WHERE ProviderPackageID = @PackageID
+
+                -- Test Alert
+                EXEC TestAlertPricingDetails @1, @2
+
                 SELECT @PackageID As ProviderPackageID
             ";
             var sqlDelDetails = @"
