@@ -617,7 +617,7 @@ $(document).ready(function () {
                         currentStep.block(infoBlock('Error: ' + message, {
                             css: popupStyle(popupSize('small'))
                         }))
-                        .on('click', '.close-popup', function () { currentStep.unblock(); });
+                        .on('click', '.close-popup', function () { currentStep.unblock(); return false; });
 
                         // Do not unblock in complete function!
                         autoUnblockLoading = false;
@@ -1019,7 +1019,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.block(infoBlock(message, {
                 css: popupStyle(popupSize('small'))
             }))
-            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); });
+            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); return false; });
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;
 
@@ -1066,7 +1066,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
                 message: 'Error: ' + message,
                 css: popupStyle(popupSize('small'))
             })
-            .on('click', '.close-popup', function () { ctx.box.unblock(); });
+            .on('click', '.close-popup', function () { ctx.box.unblock(); return false; });
 
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;
@@ -1136,7 +1136,7 @@ function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
         $t.block(infoBlock(message, {
             css: popupStyle(popupSize('small'))
         }))
-        .on('click', '.close-popup', function () { $t.unblock(); });
+        .on('click', '.close-popup', function () { $t.unblock(); return false; });
     }
 }
 /* Puts full html inside the iframe element passed in a secure and compliant mode */
