@@ -30,6 +30,9 @@
                     ,0
                 )
                 SELECT Cast(@@Identity as int)
+
+                -- Test Alert
+                EXECT TestAlertShowcaseWork @0, @1
             ", userId, positionId, fileName);
         }
     }

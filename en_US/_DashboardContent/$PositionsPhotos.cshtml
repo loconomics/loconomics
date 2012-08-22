@@ -26,17 +26,23 @@
                     SELECT  @address = PhotoAddress
                     FROM    ProviderServicePhoto
                     WHERE   ProviderServicePhotoID = @PhotoID
+                             AND UserID = @1 AND PositionID = @2
 
                     DELETE FROM ProviderServicePhoto WHERE ProviderServicePhotoID = @PhotoID
+                            AND UserID = @1 AND PositionID = @2
 
                     -- Checking if there are more records with the same file, or returning the address
                     IF 0 = (SELECT  count(*)
                             FROM    ProviderServicePhoto
-                            WHERE   PhotoAddress like @address)
+                            WHERE   PhotoAddress like @address
+                                    AND UserID = @1 AND PositionID = @2)
                         SELECT @address As PhotoAddress
                     ELSE
                         SELECT '' As PhotoAddress
-                ", photoID);
+
+                    -- Test Alert
+                    EXECT TestAlertShowcaseWork @1, @2
+                ", photoID, p.UserID, p.PositionID);
                 
                 if (!String.IsNullOrEmpty(photoAddress)) {
                     // Remove file from user folder
@@ -61,6 +67,9 @@
                         PhotoCaption = @1
                         ,IsPrimaryPhoto = @2
                     WHERE   ProviderServicePhotoID = @0 AND UserID = @3 AND PositionID = @4
+
+                    -- Test Alert
+                    EXECT TestAlertShowcaseWork @3, @4
                 ", photoID, caption, isPrimary, p.UserID, p.PositionID);
             }
             // Indiferent if we are on 'delete' task or 'update details', we try to save the photo gallery
