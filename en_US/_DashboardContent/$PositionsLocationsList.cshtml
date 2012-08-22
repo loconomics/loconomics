@@ -24,7 +24,9 @@
                          AND PositionID = @1
                          AND ServicesPerformedAtLocation = 1
             ", u.UserID, p.PositionID, Request["positionlocations-iworkon"].AsBool());
-            
+            // Test Alert
+            db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
+
             string success = "Locations preferences saved!";
             if (!String.IsNullOrEmpty(redirectURL)) {
                 LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );

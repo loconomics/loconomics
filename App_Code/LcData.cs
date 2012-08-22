@@ -491,6 +491,9 @@ public static partial class LcData
                 @14, @15, @16, @17, @18, getdate(), getdate(), 'sys', 1
             )
 
+        -- Test Alert
+        EXEC TestAlertLocation @1, @2
+
         COMMIT TRAN
 
         SELECT @AddressID As AddressID
