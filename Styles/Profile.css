@@ -483,6 +483,7 @@ ul.attributes-list li {
 .user-verifications-licenses > div {
     display: inline-block;
     margin: 15px;
+    vertical-align: top;
 }
 .view-details-popup dl {
     margin: 0;
