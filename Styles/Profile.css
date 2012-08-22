@@ -480,6 +480,10 @@ ul.attributes-list li {
 
 /*********************************/
 /******* Verifications ***********/
+.user-verifications-licenses > div {
+    display: inline-block;
+    margin: 15px;
+}
 .view-details-popup dl {
     margin: 0;
 }
