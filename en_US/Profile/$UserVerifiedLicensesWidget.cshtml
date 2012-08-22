@@ -10,29 +10,7 @@
 
     dynamic data;
     using (var db = Database.Open("sqlloco")) {
-        data = db.Query(@"
-            SELECT  
-                    L.LicenseCertificationType,
-                    SP.StateProvinceName,
-                    C.CountyName,
-                    UL.LicenseStatus,
-                    UL.ExpirationDate
-            FROM    UserLicenseVerification As UL
-                     INNER JOIN
-                    LicenseCertification As L
-                      ON UL.LicenseCertificationID = L.LicenseCertificationID
-                     INNER JOIN
-                    StateProvince As SP
-                      ON L.StateProvinceID = SP.StateProvinceID
-                     INNER JOIN
-                    County As C
-                      ON C.CountyID = UL.CountyID
-            WHERE   UL.ProviderUserID = @0
-                     AND
-                    L.Active = 1
-                     AND
-                    UL.StatusID = 2 -- Verified succesfully.
-        ", userID);
+        data = db.Query(LcData.sqlGetVerifiedUserLicenses, userID);
     }
 }
 @switch (size)

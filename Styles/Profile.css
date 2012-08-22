@@ -477,11 +477,12 @@ ul.attributes-list li {
 .profile .availability-calendar .calendar-info{
     text-align: left;
 }
-/* Only a bad-effect with full-relative: vertical size of hours need retouch their size :(*/
-/*.profile .availability-calendar .calendar ol.hours li {
-    height: 12em;
-}*/
-/* Text size are excesive with base 1.8, resize to: */
-/*.profile .availability-calendar .calendar h5{
-    font-size: 11pt;
-}*/
+
+/*********************************/
+/******* Verifications ***********/
+.view-details-popup dl {
+    margin: 0;
+}
+.view-details-popup dt {
+    font-weight: bold;
+}

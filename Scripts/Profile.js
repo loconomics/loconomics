@@ -34,6 +34,13 @@ $(function () {
                 return false;
         }
     });
+
+    /* User verifications and licenses */
+    $('.user-verifications-licenses').on('click', '.view-details-action', function () {
+        var $t = $(this);
+        smoothBoxBlock($t.siblings('.view-details-popup'), $t.closest('.tab-body'));
+        return false;
+    });
 });
 
 /* Google Map */

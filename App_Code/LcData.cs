@@ -667,4 +667,31 @@ public static partial class LcData
         }
     }
     #endregion
+
+    #region Licenses and Certifications
+    public const string sqlGetVerifiedUserLicenses = @"
+            SELECT  
+                    L.LicenseCertificationType
+                    ,SP.StateProvinceName
+                    ,C.CountyName
+                    ,UL.LicenseStatus
+                    ,UL.ExpirationDate
+                    ,L.LicenseCertificationAuthority
+            FROM    UserLicenseVerification As UL
+                     INNER JOIN
+                    LicenseCertification As L
+                      ON UL.LicenseCertificationID = L.LicenseCertificationID
+                     INNER JOIN
+                    StateProvince As SP
+                      ON L.StateProvinceID = SP.StateProvinceID
+                     INNER JOIN
+                    County As C
+                      ON C.CountyID = UL.CountyID
+            WHERE   UL.ProviderUserID = @0
+                     AND
+                    L.Active = 1
+                     AND
+                    UL.StatusID = 2 -- Verified succesfully.
+    ";
+    #endregion
 }

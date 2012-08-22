@@ -1,1 +1,133 @@
-﻿
+﻿@using WebMatrix.Data;
+@{
+    // Provider
+    var p = LcData.UserInfo.GetRequestedUserRow();
+    // Current position data record:
+    var pos = PageData["position"];
+    
+    dynamic vCats = null, verifications = null, licenses = null;
+    var vs = new List<object>();
+    using (var db = Database.Open("sqlloco")) {
+        vCats = db.Query(@"
+            SELECT VerificationCategoryID
+                  ,VerificationCategoryName
+                  ,VerificationCategoryDescription
+              FROM VerificationCategory
+              WHERE LanguageID = @0 AND CountryID = @1 AND Active = 1
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        verifications = db.Query(@"
+            SELECT
+                V.VerificationType
+                ,V.VerificationDescription
+                ,V.VerificationCategoryID
+                ,UV.VerificationStatusID
+                ,VS.VerificationStatusName
+                ,UV.DateVerified As ExpirationDate
+                ,UV.LastVerifiedDate
+                ,UV.Comments
+            FROM
+                Verification As V
+                 INNER JOIN
+                UserVerification As UV
+                  ON V.VerificationID = UV.VerificationID
+                 INNER JOIN
+                VerificationStatus As VS
+                  ON VS.VerificationStatusID = UV.VerificationStatusID
+            WHERE
+                UV.UserID = @0
+        ", p.UserID);
+        licenses = db.Query(LcData.sqlGetVerifiedUserLicenses, p.UserID);
+    }
+    foreach(var vc in vCats) {
+        var vCat = new {
+            CatID = vc.VerificationCategoryID
+            ,CatName = vc.VerificationCategoryName
+            ,CatDesc = vc.VerificationCategoryDescription
+            ,Verifications = new List<dynamic>()
+        };
+        vs.Add(vCat);
+        foreach (var v in verifications) {
+            if (v.VerificationCategoryID == vc.VerificationCategoryID) {
+                vCat.Verifications.Add(v);
+            }
+        }
+    }
+}
+@helper printVerifications(int catId, List<dynamic> verifications){
+    <ul class="attributes-list verifications-list">
+        @if(catId != 4) {
+            foreach(var v in verifications){
+                <li>
+                    <a href="#details" class="view-details-action">@v.VerificationType</a>
+                    <div class="popups view-details-popup">
+                        <dl>
+                            <dt>Verification type:</dt>
+                            <dd>@v.VerificationType</dd>
+                            <dt>Verification status:</dt>
+                            <dd>@v.VerificationStatusName</dd>
+                            <dt>Last verified:</dt>
+                            <dd>@v.LastVerifiedDate.ToShortDateString()</dd>
+                            @if(!String.IsNullOrWhiteSpace(v.Comments)) {
+                            <dt>Comments:</dt>
+                            <dd>@v.Comments</dd>
+                            }
+                            <dt>Description:</dt>
+                            <dd>@v.VerificationDescription</dd>
+                        </dl>
+                    </div>
+                </li>
+            }
+        } else {
+            foreach(var v in verifications){
+                <li title="@v.VerificationType" data-description="@v.VerificationDescription">@v.VerificationType</li>
+            }
+        }
+    </ul>
+}
+@helper printLicenses(List<dynamic> licenses){
+    <ul class="attributes-list licenses-list">    
+        @foreach(var v in licenses){
+            <li>
+                <a href="#details" class="view-details-action">@v.VerificationType</a>
+                <div class="popups view-details-popup">
+                    <dl>
+                        <dt>License/Certification:</dt>
+                        <dd>@v.VerificationType</dd>
+                        <dt>Status:</dt>
+                        <dd>@v.VerificationStatusName</dd>
+                        <dt>Expiration</dt>
+                        <dd>@v.ExpirationDate</dd>
+                        <dt>Last verified:</dt>
+                        <dd>@v.LastVerifiedDate.ToShortDateString()</dd>
+                        @if(!String.IsNullOrWhiteSpace(v.Comments)) {
+                        <dt>Comments:</dt>
+                        <dd>@v.Comments</dd>
+                        }
+                        <dt>Certification Authority:</dt>
+                        <dd>@v.CertificationAuthority</dd>
+                        <dt>Description:</dt>
+                        <dd>@v.VerificationDescription</dd>
+                    </dl>
+                </div>
+            </li>
+        }
+    </ul>
+}
+<p></p>
+    <div class="user-verifications-licenses">
+        @foreach (dynamic cat in vs)
+        {
+            if (cat.Verifications.Count > 0)
+            {
+                <div class="have-view-more">
+                    <h5 data-description="@cat.CatDesc" title="@cat.CatName">@cat.CatName:</h5>
+                    @if(!String.IsNullOrEmpty(cat.CatDesc)){<a class="tooltip-button button view-more" href="#" data-description="@cat.CatDesc" title="@cat.CatName">More</a>}
+                    @printVerifications(cat.CatID, cat.Verifications)
+                    @if(cat.CatID == 5) {
+                        @printLicenses(licenses);
+                    }
+                    <!--<a class="view-more" href="#">View more</a>-->
+                </div>
+            }
+        }
+    </div>

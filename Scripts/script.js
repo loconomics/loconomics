@@ -1355,7 +1355,7 @@ function smoothBoxBlock(contentBox, blocked, addclass) {
     return box;
 }
 function smoothBoxBlockCloseAll(container) {
-    $(container).find('.smooth-box-block-overlay').hide();
+    $(container || document).find('.smooth-box-block-overlay').hide();
 }
 function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
