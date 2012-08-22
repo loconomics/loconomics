@@ -5,7 +5,7 @@
     // Current position data record:
     var pos = PageData["position"];
     
-    dynamic vCats = null, verifications = null, licenses = null;
+    dynamic vCats = null, verifications = null, licenses = null, education = null;
     var vs = new List<object>();
     using (var db = Database.Open("sqlloco")) {
         vCats = db.Query(@"
@@ -39,6 +39,27 @@
                 UV.VerificationStatusID = 1 -- Confirmed
         ", p.UserID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
+        education = db.Query(@"
+            SELECT
+                UE.DegreeCertificate
+                ,UE.FieldOfStudy
+                ,UE.FromYearAttended
+                ,UE.ToYearAttended
+                ,I.InstitutionName
+                ,I.InstitutionCity
+                ,I.InstitutionState
+            FROM
+                UserEducation As UE
+                 INNER JOIN
+                Institution As I
+                  ON UE.InstitutionID = I.InstitutionID
+            WHERE
+                UE.Active = 1
+                 AND
+                UE.UserID = @0
+                 AND
+                UE.VerifiedDate is not null
+        ", p.UserID);
     }
     foreach(var vc in vCats) {
         var vCat = new {
@@ -55,7 +76,7 @@
         }
     }
 }
-@helper printVerifications(int catId, List<dynamic> verifications){
+@helper printVerifications(int catId, List<dynamic> verifications) {
     <ul class="attributes-list verifications-list">
         @if(catId != 4) {
             foreach(var v in verifications){
@@ -86,7 +107,7 @@
         }
     </ul>
 }
-@helper printLicenses(dynamic licenses){
+@helper printLicenses(dynamic licenses) {
     <ul class="attributes-list licenses-list">    
         @foreach(var v in licenses){
             <li>
@@ -115,19 +136,31 @@
         }
     </ul>
 }
+@helper printEducation(dynamic education) {
+    <ul class="attributes-list licenses-list">    
+        @foreach(var v in education){
+            <li>
+                @(v.DegreeCertificate), @(v.FieldOfStudy), @(v.InstitutionName), @(v.InstitutionCity), @(v.InstitutionState) (@(v.FromYearAttended) - @(v.ToYearAttended))
+            </li>
+        }
+    </ul>
+}
 <p></p>
     <div class="user-verifications-licenses">
         @foreach (dynamic cat in vs)
         {
             if (cat.Verifications.Count > 0 || (
-                cat.CatID == 5 && licenses.Count > 0 ))
+                cat.CatID == 5 && licenses.Count > 0 ) || (
+                cat.CatID == 4 && education.Count > 0))
             {
                 <div class="have-view-more">
                     <h5 data-description="@cat.CatDesc" title="@cat.CatName">@cat.CatName:</h5>
                     @if(!String.IsNullOrEmpty(cat.CatDesc)){<a class="tooltip-button button view-more" href="#" data-description="@cat.CatDesc" title="@cat.CatName">More</a>}
                     @printVerifications(cat.CatID, cat.Verifications)
                     @if(cat.CatID == 5) {
-                        @printLicenses(licenses);
+                        @printLicenses(licenses)
+                    } else if (cat.CatID == 4) {
+                        @printEducation(education)
                     }
                     <!--<a class="view-more" href="#">View more</a>-->
                 </div>
