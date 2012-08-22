@@ -35,6 +35,8 @@
                   ON VS.VerificationStatusID = UV.VerificationStatusID
             WHERE
                 UV.UserID = @0
+                 AND
+                UV.VerificationStatusID = 1 -- Confirmed
         ", p.UserID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
     }
