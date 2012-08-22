@@ -1311,7 +1311,12 @@ function configureTooltip() {
     .on('mouseleave focusout', '[title]', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
-function smoothBoxBlock(contentBox, blocked, addclass) {
+function smoothBoxBlock(contentBox, blocked, addclass, options) {
+    // Load options overwriting defaults
+    options = $.extend({
+        closable: false
+    }, options);
+    
     contentBox = $(contentBox);
     blocked = $(blocked);
     var bID = blocked.data('smooth-box-block-id');
@@ -1340,6 +1345,11 @@ function smoothBoxBlock(contentBox, blocked, addclass) {
     }
     box.hide();
     boxc.children().remove();
+    if (options.closable) {
+        var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
+        closeButton.click(function () { smoothBoxBlock(null, blocked); return false; });
+        boxc.append(closeButton);
+    }
     boxc.append(contentBox);
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());

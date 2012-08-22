@@ -38,7 +38,7 @@ $(function () {
     /* User verifications and licenses */
     $('.user-verifications-licenses').on('click', '.view-details-action', function () {
         var $t = $(this);
-        smoothBoxBlock($t.siblings('.view-details-popup'), $t.closest('.tab-body'));
+        smoothBoxBlock($t.siblings('.view-details-popup').clone(), $t.closest('.tab-body'), null, { closable: true });
         return false;
     });
 });

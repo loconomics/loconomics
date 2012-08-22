@@ -486,3 +486,15 @@ ul.attributes-list li {
 .view-details-popup dt {
     font-weight: bold;
 }
+
+.profile .smooth-box-block-element > .close-popup {
+    border-color: #4e2c69;
+    color: #4e2c69;
+}
+.profile .smooth-box-block-element > .close-popup:hover {
+    border-color: #A190AF;
+    color: #A190AF;
+}
+.profile .smooth-box-block-element {
+    border: 3px solid #4e2c69;
+}

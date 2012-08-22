@@ -1489,7 +1489,8 @@ table .number{
     overflow: visible !important;
     cursor: inherit !important;
 }
-.blockUI .close-popup {
+.blockUI .close-popup,
+.smooth-box-block-element .close-popup {
     background: none repeat scroll 0 0 white;
     border: 3px solid #B5E1E2;
     border-radius: 100px 100px 100px 100px;
@@ -1500,10 +1501,20 @@ table .number{
     text-decoration: none;
     top: -20px;
 }
-.blockUI .close-popup:hover {
+.blockUI .close-popup:hover,
+.smooth-box-block-element .close-popup:hover {
     border-color: #00989A;
 }
-
+.smooth-box-block-element > .close-popup {
+    right: 5px;
+    top: 5px;
+    border-color: #ccc;
+    color: #ccc;
+}
+.smooth-box-block-element > .close-popup:hover {
+    border-color: #000;
+    color: #000;
+}
 
 /****************************
  * Validation, errors styles
