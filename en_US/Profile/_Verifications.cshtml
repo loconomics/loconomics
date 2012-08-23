@@ -14,7 +14,7 @@
                   ,VerificationCategoryDescription
             FROM VerificationCategory
             WHERE LanguageID = @0 AND CountryID = @1 AND Active = 1
-            ORDER BY VerificationCategoryName
+            ORDER BY RankPosition, VerificationCategoryName
         ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         verifications = db.Query(@"
             SELECT
@@ -38,7 +38,7 @@
                 UV.UserID = @0
                  AND
                 UV.VerificationStatusID = 1 -- Confirmed
-            ORDER BY V.VerificationType
+            ORDER BY V.RankPosition, V.VerificationType
         ", p.UserID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
         education = db.Query(@"
@@ -139,7 +139,7 @@
     </ul>
 }
 @helper printEducation(dynamic education) {
-    <ul class="attributes-list licenses-list">    
+    <ul class="attributes-list education-list">    
         @foreach(var v in education){
             <li>
                 @(v.DegreeCertificate), @(v.FieldOfStudy), @(v.InstitutionName), @(v.InstitutionCity), @(v.InstitutionState) (@(v.FromYearAttended) - @(v.ToYearAttended))
@@ -155,7 +155,7 @@
                 cat.CatID == 5 && licenses.Count > 0 ) || (
                 cat.CatID == 4 && education.Count > 0))
             {
-                <div class="have-view-more">
+                <div class="have-view-more @(cat.CatID == 4 ? "education-cat" : "")">
                     <h5 data-description="@cat.CatDesc" title="@cat.CatName">@cat.CatName:</h5>
                     @if(!String.IsNullOrEmpty(cat.CatDesc)){<a class="tooltip-button button view-more" href="#" data-description="@cat.CatDesc" title="@cat.CatName">More</a>}
                     @printVerifications(cat.CatID, cat.Verifications)

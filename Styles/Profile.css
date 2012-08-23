@@ -491,6 +491,9 @@ ul.attributes-list li {
 .view-details-popup dt {
     font-weight: bold;
 }
+.user-verifications-licenses .education-cat {
+    display: block !important;
+}
 
 .profile .smooth-box-block-element > .close-popup {
     border-color: #4e2c69;
