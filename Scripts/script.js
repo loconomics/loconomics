@@ -993,7 +993,7 @@ function popup(url, size, complete, loadingText, options){
         }, complete: complete
     });
 
-    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false });
+    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
 }
 function ajaxFormsCompleteHandler() {
     // Disable loading
@@ -1127,7 +1127,7 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     $.blockUI(errorBlock(m, null, popupStyle(size)));
     if (iframe)
         $('.blockMsg').append(iframe);
-    $('.blockUI .close-popup').click(function () { $.unblockUI() });
+    $('.blockUI .close-popup').click(function () { $.unblockUI(); return false; });
 }
 function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
     var $t = $(form);
