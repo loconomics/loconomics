@@ -7,6 +7,7 @@
 @using WebMatrix.Data;
 @using System.Security.Cryptography;
 @using System.Web.WebPages.Scope;
+@using System.Text.RegularExpressions;
 
 @functions{
     /*=========================
@@ -272,6 +273,33 @@
             return str.Substring(str.Length - number, number);
         }
         return str;
+    }
+    /*
+     * Convert given string into a string with only the characters
+     * valid for Braintree, replacing all invalid chars to underscore (_)
+     * and tilded characters to non tilded equivalent
+     */
+    public static string ConvertToBraintreeToken(string str) {
+        string r = str ?? "_";
+        
+        Regex replace_a_Accents = new Regex("[á|à|ä|â]", RegexOptions.Compiled);
+        Regex replace_e_Accents = new Regex("[é|è|ë|ê]", RegexOptions.Compiled);
+        Regex replace_i_Accents = new Regex("[í|ì|ï|î]", RegexOptions.Compiled);
+        Regex replace_o_Accents = new Regex("[ó|ò|ö|ô]", RegexOptions.Compiled);
+        Regex replace_u_Accents = new Regex("[ú|ù|ü|û]", RegexOptions.Compiled);
+        r = replace_a_Accents.Replace(r, "a");
+        r = replace_e_Accents.Replace(r, "e");
+        r = replace_i_Accents.Replace(r, "i");
+        r = replace_o_Accents.Replace(r, "o");
+        r = replace_u_Accents.Replace(r, "u");
+        
+        Regex n_tilde = new Regex("[ñ]", RegexOptions.Compiled);
+        r = n_tilde.Replace(r, "n");
+        
+        Regex all_non_valid = new Regex("[^a-zA-Z0-9-_]", RegexOptions.Compiled);
+        r = all_non_valid.Replace(r, "_");
+
+        return r;
     }
     /*
      * Return the Display or abbreviated name of the user, 

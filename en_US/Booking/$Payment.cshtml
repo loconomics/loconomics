@@ -159,7 +159,7 @@
                             Amount = TotalPrice,
                             CreditCard = new TransactionCreditCardRequest
                             {
-                                Token = paymentNickName,
+                                Token = LcHelpers.ConvertToBraintreeToken(paymentNickName),
                                 CardholderName = Request["name-on-card"],
                                 Number = Request["card-number"],
                                 ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
