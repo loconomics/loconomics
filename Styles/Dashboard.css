@@ -996,6 +996,20 @@ form#personal li > label.gender {
     display: block;
 }
 
+/**** Form: Billing Address ****/
+.billing-address-form .location-data {
+    width: 500px;
+}
+.billing-address-form .location-data label {
+    display: block;
+    width: auto;
+}
+.billing-address-form .location-data input,
+.billing-address-form .location-data select {
+    width: 300px !important;
+    float: right;
+}
+
 /**** Form: Account Taxes ****/
 #account-taxes fieldset span.info{
     margin-left: 10px;
