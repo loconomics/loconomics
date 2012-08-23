@@ -492,7 +492,7 @@ public static partial class LcData
             )
 
         -- Test Alert
-        EXEC TestAlertLocation @1, @2
+        EXEC TestAlertLocation @1, @13
 
         COMMIT TRAN
 
