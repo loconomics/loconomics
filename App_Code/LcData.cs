@@ -400,6 +400,7 @@ public static partial class LcData
                 ,[StateProvinceID]
                 ,[PostalCodeID]
                 ,[CountryID]
+                ,[SpecialInstructions]
                 ,[Latitude]
                 ,[Longitude]
                 ,[GoogleMapsURL]
@@ -410,7 +411,9 @@ public static partial class LcData
             ) VALUES (
                 @1, @9,
                 @8, @2, @3, @4, @5, @6, @7, 
-                @10, @11, @12, getdate(), getdate(), 'sys', 1
+                @10,
+                @11, @12, @13,
+                getdate(), getdate(), 'sys', 1
             )
 
             SET @AddressID = @@Identity
@@ -426,9 +429,10 @@ public static partial class LcData
                 ,StateProvinceID = @5
                 ,PostalCodeID = @6
                 ,CountryID = @7
-                ,Latitude = @10
-                ,Longitude = @11
-                ,GoogleMapsURL = @12
+                ,SpecialInstructions = coalesce(@10, SpecialInstructions)
+                ,Latitude = coalesce(@11, Latitude)
+                ,Longitude = coalesce(@12, Longitude)
+                ,GoogleMapsURL = coalesce(@13, GoogleMapsURL)
                 ,UpdatedDate = getdate()
                 ,ModifiedBy = 'sys'
                 ,Active = 1
@@ -455,22 +459,22 @@ public static partial class LcData
             UPDATE ServiceAddress SET
                 PreferredAddress = 0
             WHERE
-                UserID = @1 AND PositionID = @13
+                UserID = @1 AND PositionID = @14
 
         -- First, try to update, if nothing updated (rowcount=0), try to insert
         UPDATE ServiceAddress SET
-            ServicesPerformedAtLocation = @14
-            ,TravelFromLocation = @15
-            ,ServiceRadiusFromLocation = @16
-            ,TransportType = @17
-            ,PreferredAddress = @18
+            ServicesPerformedAtLocation = @15
+            ,TravelFromLocation = @16
+            ,ServiceRadiusFromLocation = @17
+            ,TransportType = @18
+            ,PreferredAddress = @19
             ,UpdatedDate = getdate()
             ,ModifiedBy = 'sys'
             ,Active = 1
         WHERE
             AddressID = @AddressID
              AND
-            UserID = @1 AND PositionID = @13
+            UserID = @1 AND PositionID = @14
 
         IF @@rowcount = 0
             INSERT INTO [ServiceAddress] (
@@ -487,8 +491,8 @@ public static partial class LcData
                 ,[ModifiedBy]
                 ,[Active]
             ) VALUES (
-                @1, @AddressId, @13,
-                @14, @15, @16, @17, @18, getdate(), getdate(), 'sys', 1
+                @1, @AddressId, @14,
+                @15, @16, @17, @18, @19, getdate(), getdate(), 'sys', 1
             )
 
         -- Test Alert
