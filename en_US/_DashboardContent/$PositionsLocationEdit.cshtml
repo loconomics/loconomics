@@ -1,5 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
+    LcHelpers.SecurePage();
+    
     var u = LcData.UserInfo.GetUserRow();
     var locationID = Request["LocationID"].AsInt();
     // Current position data record:
@@ -46,7 +48,7 @@
                     DELETE FROM Address
                     WHERE AddressID = @0 AND
                         (SELECT TOP 1 A.UniquePerUser FROM AddressType As A WHERE 
-                         A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0 AND UserID = @1 AND PositionID = @2)
+                         A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0 AND UserID = @1)
                         ) = 0
 
                     -- If is not possible, maybe is linked, do nothing (but read @@ERROR to not throw the error)
