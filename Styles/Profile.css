@@ -517,6 +517,11 @@ ul.attributes-list li {
 .user-verifications-licenses .education-cat {
     display: block !important;
 }
+.user-verifications-licenses ul li a,
+.user-verifications-licenses ul li a:link,
+.user-verifications-licenses ul li a:hover {
+    color: #461864;
+}
 
 .profile .smooth-box-block-element > .close-popup {
     border-color: #4e2c69;
