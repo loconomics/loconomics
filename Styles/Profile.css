@@ -155,6 +155,29 @@ form.report-unauthorized-use textarea {
 }
 #verifications {
     font-weight: bold;
+    max-height: 200px;
+    overflow: hidden;
+}
+#verifications:hover {
+    background: none repeat scroll 0 0 white;
+    box-shadow: 0 0 5px 3px #CCCCCC;
+    -o-box-shadow: 0 0 5px 3px #CCCCCC;
+    -moz-box-shadow: 0 0 5px 3px #CCCCCC;
+    -webkit-box-shadow: 0 0 5px 3px #CCCCCC;
+    max-height: none;
+    z-index: 200;
+}
+#verifications .more-verifications {
+    background: url("../img/plus.png") no-repeat scroll 8px center white;
+    top: 175px;
+    box-shadow: 5px -1px 5px 0 black;
+    left: 10px;
+    margin: 0;
+    position: absolute;
+    right: 0;
+}
+#verifications:hover .more-verifications {
+    display: none;
 }
 #verifications li{
     background: no-repeat center left;
