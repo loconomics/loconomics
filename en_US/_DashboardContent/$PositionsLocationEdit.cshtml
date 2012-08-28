@@ -117,7 +117,7 @@
                     Request["special-instructions"],
                     Request["latitude"].AsDecimal(),
                     Request["longitude"].AsDecimal(),
-                    Request["google-map-url"],
+                    null, //Request["google-map-url"],
                     p.PositionID,
                     Request["iworkon"].AsBool(),
                     Request["itravel"].AsBool(),
@@ -222,7 +222,8 @@
                 </li>
                 <li><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
                 <li><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
-                <li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>
+                <li class="map-selector"><div class="google-map"></div></li>
+                @*<li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>*@
             </ul>
             <ul class="location-travel">
                 <li class="input-option">
@@ -270,4 +271,58 @@
             <button class="button cancel-action" type="button">Cancel</button>
             <button class="button main-action" type="submit">Save</button>
         </fieldset>
+        <script type="text/javascript">
+            Modernizr.load({
+                load: { googlemaps: "https://www.google.com/jsapi" },
+                complete: function () {
+                    google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
+                        var l = $('.edit-location .location-map');
+                        var m = l.find('.map-selector > .google-map').get(0);
+                        var $lat = l.find('[name=latitude]');
+                        var $lng = l.find('[name=longitude]');
+
+                        // Creating position and map
+                        var myLatlng = new google.maps.LatLng($lat.val(), $lng.val());
+                        var mapOptions = {
+                            zoom: (myLatlng.lat() != 0 && myLatlng.lng() != 0 ? 16 : 1),
+                            center: myLatlng,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        var map = new google.maps.Map(m, mapOptions);
+                        // Create the position marker
+                        var marker = new google.maps.Marker({
+                            position: myLatlng,
+                            map: map,
+                            draggable: true,
+                            animation: google.maps.Animation.DROP
+                        });
+                        // Listen when user clicks map or move the marker to move marker or set position in the form
+                        google.maps.event.addListener(marker, 'dragend', saveCoordinates);
+                        google.maps.event.addListener(map, 'click', function (event) {
+                            placeMarker(event.latLng);
+                        });
+                        function placeMarker(latlng) {
+                            marker.setPosition(latlng);
+                            saveCoordinates();
+                        }
+                        function saveCoordinates() {
+                            var latlng = marker.getPosition();
+                            $lat.val(latlng.lat()); //marker.position.Xa
+                            $lng.val(latlng.lng()); //marker.position.Ya
+                        }
+                        // Listen when user changes form coordinates values to update the map
+                        $lat.change(updateMapMarker);
+                        $lng.change(updateMapMarker);
+                        function updateMapMarker() {
+                            var newPos = new google.maps.LatLng($lat.val(), $lng.val());
+                            // Move marker
+                            marker.setPosition(newPos);
+                            // Move map
+                            map.panTo(newPos);
+                        }
+                    }
+                    });
+                }
+            });
+        </script>
     </form>

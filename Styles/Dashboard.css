@@ -740,6 +740,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     display: block;
     clear: both;
 }
+.edit-location ul.location-map .map-selector > .google-map {
+    height: 300px;
+    width: 100%;
+}
 .edit-location ul.location-data input,
 .edit-location ul.location-data select,
 .edit-location ul.location-data textarea,
