@@ -20,6 +20,13 @@ var infoBlock = function (message, options) {
 }
 var gLoadingRetard = 300;
 
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function (from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};
+
 /*
  * Our jQuery additions (small plugins)
  */
@@ -1388,4 +1395,13 @@ function lcSetupCalculateTableItemsTotals() {
         $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
         $(this).find('tr').each(calculateRow);
     });
+}
+function convertMilesKm(q, unit) {
+    var MILES_TO_KM = 1.609;
+    if (unit == 'miles')
+        return MILES_TO_KM * q;
+    else if (unit == 'km')
+        return q / MILES_TO_KM;
+    if (console) console.log('convertMilesKm: Unrecognized unit ' + unit);
+    return 0;
 }

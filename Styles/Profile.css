@@ -487,6 +487,12 @@ ul.attributes-list li {
 .gallery-content li.selected a{
     outline: 3px solid #461864 ;
 }
+/**********************************/
+/****** Map ***********************/
+.user-addresses-map {
+    width: auto;
+    height: 500px;
+}
 
 /**********************************/
 /****** Availability **************/

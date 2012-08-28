@@ -1,29 +1,106 @@
-﻿@{
+﻿@using WebMatrix.Data;
+@{
     // Provider
     var p = LcData.UserInfo.GetRequestedUserRow();
     // Current position data record:
     var pos = PageData["position"];
-}
-@helper oldPrintMap(){
-    // TODO Review old code:
-    /*
-    <div id="mapp_address"  style="width:400px; background-color: #E0E0E0; height: 290px; border: 1px solid black">
-        <div id="map_canvas" style="width:100%; height:100%"></div>
-    </div>
-    */
+    
+    var sqlGetMappedAddresses = @"
+        SELECT  L.AddressID
+                ,L.UserID
+                ,SA.PositionID
+                ,L.Latitude
+                ,L.Longitude
+
+                ,SA.ServicesPerformedAtLocation
+                ,SA.TravelFromLocation
+                ,SA.ServiceRadiusFromLocation
+                ,SA.PreferredAddress
+        FROM    Address As L
+                 INNER JOIN
+                ServiceAddress As SA
+                  ON L.AddressID = SA.AddressID
+                      AND L.UserID = SA.UserID
+        WHERE   L.UserID = @0
+                 AND SA.PositionID = @1
+                 AND L.Active = 1
+                 AND L.AddressName is not null AND L.AddressName not like ''
+                 AND L.Latitude is not null AND L.Latitude != 0
+                 AND L.Longitude is not null AND L.Longitude != 0
+    ";
+    dynamic addresses = null;
+    using (var db = Database.Open("sqlloco")) {
+        addresses = db.Query(sqlGetMappedAddresses,
+            p.UserID,
+            pos.PositionID);
+    }
 }
 <p class="map-description">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
-<div class="highlighted-map gallery-highlighted">
+<div id="user-addresses-map-position-@pos.PositionID" class="user-addresses-map"></div>
+
+<script type="text/javascript">
+    Modernizr.load({
+        load: { googleapi: "https://www.google.com/jsapi" },
+        complete: function () {
+            google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
+                // Register if user selects or writes a position (to not overwrite it with automatic positioning)
+                var positionedByUser = false;
+                // Some confs
+                var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
+                var generalZoomLevel = 11;
+                var addresses = [null
+                @foreach (var add in addresses) {
+                    <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : .5) }</text>
+                }
+                ];
+
+                // First address position is null, delete
+                addresses.remove(0);
+
+                // If there is no address, nothing!
+                if (addresses.length == 0) return;
+
+                // Map element
+                var m = $('#user-addresses-map-position-@pos.PositionID').get(0);
+                // Creating position coordinates, from one of the addresses
+                var myLatlng = new google.maps.LatLng(addresses[0].lat, addresses[0].lng);
+                // Create map
+                var mapOptions = {
+                    zoom: (generalZoomLevel),
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                var map = new google.maps.Map(m, mapOptions);
+                console.dir(addresses);
+                // Create circles per address
+                for (var i = 0; i < addresses.length; i++) {                  
+                    addresses[0].circle = new google.maps.Circle({
+                        center: new google.maps.LatLng(addresses[0].lat, addresses[0].lng),
+                        map: map,
+                        clickable: false,
+                        radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[0].radius, radiusUnit) : addresses[0].radius) * 1000, // in meters
+                        fillColor: '#00989A',
+                        fillOpacity: .3,
+                        strokeWeight: 0
+                    });
+                }
+            } 
+            });
+        }
+    });
+</script>
+
+@*<div class="highlighted-map gallery-highlighted">
     <img class="large-map" alt="Highlighted map" src="@Href(UrlUtil.AppPath + "img/map.png")" />
     <h5 class="map-desc">According to your IP address, you are within Fernando’s service radius.</h5>
-</div>
+</div>*@
 
-<ol class="maps gallery-content">
+@*<ol class="maps gallery-content">
     <li class="selected"><a href="#"><img alt="Map photo" src="@Href(UrlUtil.AppPath + "img/map.png")"/></a></li>
     <li><a href="#"><img alt="Map photo" src="@Href(UrlUtil.AppPath + "img/map.png")"/></a></li>
     <li><a href="#"><img alt="Map photo" src="@Href(UrlUtil.AppPath + "img/map.png")"/></a></li>
     <li><a href="#"><img alt="Map photo" src="@Href(UrlUtil.AppPath + "img/map.png")"/></a></li>
-</ol>
+</ol>*@
