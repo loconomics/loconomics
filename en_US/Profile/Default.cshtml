@@ -159,8 +159,8 @@
                     <div id="@("position"+ip)-mywork" class="tab-body mywork">
                         @RenderPage("_MyWork.cshtml")
                     </div><!-- #@("position"+ip)-mywork -->
-                    <div id="@("position"+ip)-map" class="tab-body map">
-                        @RenderPage("_Map.cshtml")
+                    <div id="@("position"+ip)-map" class="tab-body map" data-source-url="@(UrlUtil.LangPath + "Profile/$Map/?UserID=" + userid + "&PositionID=" + ip)">
+                        @*RenderPage("$Map.cshtml")*@
                     </div><!-- #@("position"+ip)-map -->
                     <div id="@("position"+ip)-availability" class="tab-body availability">
                         @RenderPage("_Availability.cshtml")

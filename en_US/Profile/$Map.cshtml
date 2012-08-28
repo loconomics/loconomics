@@ -3,7 +3,7 @@
     // Provider
     var p = LcData.UserInfo.GetRequestedUserRow();
     // Current position data record:
-    var pos = PageData["position"];
+    var pos = PageData["position"] ?? LcData.UserInfo.GetUserPos(p.UserID, Request["PositionID"].AsInt());
     
     var sqlGetMappedAddresses = @"
         SELECT  L.AddressID

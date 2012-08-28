@@ -372,6 +372,13 @@ $(document).ready(function () {
         });
     }
 
+    /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
+    $('.tab-body').on('tabFocused', function () {
+        var $t = $(this);
+        if ($t.children().length == 0)
+            $t.reload();
+    });
+
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
         popup(UrlUtil.LangPath + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location),
