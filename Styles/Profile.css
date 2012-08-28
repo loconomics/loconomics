@@ -409,7 +409,7 @@ ul.attributes-list li {
     width: 210px;
     height: 95px;
 }
-.reviews-list > .no-reviews {
+.reviews-list > .no-reviews, .no-locations {
     margin: 40px 0;
     text-align: center;
     font-size: 1.3em;
@@ -492,6 +492,7 @@ ul.attributes-list li {
 .user-addresses-map {
     width: auto;
     height: 500px;
+    text-align: center;
 }
 
 /**********************************/

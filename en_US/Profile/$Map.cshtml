@@ -25,8 +25,9 @@
                  AND SA.PositionID = @1
                  AND L.Active = 1
                  AND L.AddressName is not null AND L.AddressName not like ''
-                 AND L.Latitude is not null AND L.Latitude != 0
-                 AND L.Longitude is not null AND L.Longitude != 0
+                 AND L.Latitude is not null
+                 AND L.Longitude is not null
+                 AND (L.Latitude != 0 OR L.Longitude != 0)
     ";
     dynamic addresses = null;
     using (var db = Database.Open("sqlloco")) {
@@ -39,8 +40,18 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
 </p>
 
-<div id="user-addresses-map-position-@pos.PositionID" class="user-addresses-map"></div>
-
+<div id="user-addresses-map-position-@pos.PositionID" class="user-addresses-map">
+    @if (addresses.Count == 0)
+    {
+        <div class="no-items no-locations">There is no locations</div>
+    }
+    else
+    {
+        <h3>Loading map</h3>
+    }
+</div>
+@if (addresses.Count > 0)
+{
 <script type="text/javascript">
     Modernizr.load({
         load: { googleapi: "https://www.google.com/jsapi" },
@@ -52,7 +63,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
                 var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
                 var generalZoomLevel = 11;
                 var addresses = [null
-                @foreach (var add in addresses) {
+                @foreach (var add in addresses)
+                {
                     <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : .5) }</text>
                 }
                 ];
@@ -92,6 +104,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
         }
     });
 </script>
+}
 
 @*<div class="highlighted-map gallery-highlighted">
     <img class="large-map" alt="Highlighted map" src="@Href(UrlUtil.AppPath + "img/map.png")" />
