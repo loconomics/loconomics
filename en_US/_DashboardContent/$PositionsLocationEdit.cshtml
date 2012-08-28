@@ -276,15 +276,24 @@
                 load: { googlemaps: "https://www.google.com/jsapi" },
                 complete: function () {
                     google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
+                        // Register if user selects or writes a position (to not overwrite it with automatic positioning)
+                        var positionedByUser = false;
+                        // Some confs
+                        var detailedZoomLevel = 16;
+                        var generalZoomLevel = 1;
+
                         var l = $('.edit-location .location-map');
                         var m = l.find('.map-selector > .google-map').get(0);
                         var $lat = l.find('[name=latitude]');
                         var $lng = l.find('[name=longitude]');
 
-                        // Creating position and map
+                        // Creating position coordinates
                         var myLatlng = new google.maps.LatLng($lat.val(), $lng.val());
+                        // We consider as 'positioned by user' when there was a saved value for the position coordinates (we are editing a location)
+                        positionedByUser = (myLatlng.lat() != 0 && myLatlng.lng() != 0);
+                        // Create map
                         var mapOptions = {
-                            zoom: (myLatlng.lat() != 0 && myLatlng.lng() != 0 ? 16 : 1),
+                            zoom: (positionedByUser ? detailedZoomLevel : generalZoomLevel), // Best detail when we already had a location
                             center: myLatlng,
                             mapTypeId: google.maps.MapTypeId.ROADMAP
                         }
@@ -300,26 +309,116 @@
                         google.maps.event.addListener(marker, 'dragend', saveCoordinates);
                         google.maps.event.addListener(map, 'click', function (event) {
                             placeMarker(event.latLng);
+                            positionedByUser = true;
                         });
                         function placeMarker(latlng) {
                             marker.setPosition(latlng);
+                            // Move map
+                            map.panTo(latlng);
                             saveCoordinates();
+                            return marker;
                         }
                         function saveCoordinates() {
                             var latlng = marker.getPosition();
                             $lat.val(latlng.lat()); //marker.position.Xa
                             $lng.val(latlng.lng()); //marker.position.Ya
+                            positionedByUser = true;
                         }
                         // Listen when user changes form coordinates values to update the map
                         $lat.change(updateMapMarker);
                         $lng.change(updateMapMarker);
                         function updateMapMarker() {
+                            positionedByUser = true;
                             var newPos = new google.maps.LatLng($lat.val(), $lng.val());
                             // Move marker
                             marker.setPosition(newPos);
                             // Move map
                             map.panTo(newPos);
                         }
+
+                        // Use browser geolocation support to get an automatic location if there is no a location selected by user
+                        // Check to see if this browser supports geolocation.
+                        if (!positionedByUser && navigator.geolocation) {
+
+                            // This is the location marker that we will be using
+                            // on the map. Let's store a reference to it here so
+                            // that it can be updated in several places.
+                            var locationMarker = null;
+
+                            // Get the location of the user's browser using the
+                            // native geolocation service. When we invoke this method
+                            // only the first callback is requied. The second
+                            // callback - the error handler - and the third
+                            // argument - our configuration options - are optional.
+                            navigator.geolocation.getCurrentPosition(
+                                function (position) {
+                                    // Check to see if there is already a location.
+                                    // There is a bug in FireFox where this gets
+                                    // invoked more than once with a cached result.
+                                    if (locationMarker) {
+                                        return;
+                                    }
+
+                                    // Move marker to the map using the position, only if user doesn't set a position
+                                    if (!positionedByUser) {
+                                        locationMarker = placeMarker(
+                                            new google.maps.LatLng(
+                                                position.coords.latitude,
+                                                position.coords.longitude
+                                            )
+                                        );
+                                        // Set zoom to something more detailed
+                                        map.setZoom(detailedZoomLevel);
+                                    }
+                                },
+                                function (error) {
+                                    console.log("Something went wrong: ", error);
+                                },
+                                {
+                                    timeout: (5 * 1000),
+                                    maximumAge: (1000 * 60 * 15),
+                                    enableHighAccuracy: true
+                                }
+                            );
+
+
+                            // Now tha twe have asked for the position of the user,
+                            // let's watch the position to see if it updates. This
+                            // can happen if the user physically moves, of if more
+                            // accurate location information has been found (ex.
+                            // GPS vs. IP address).
+                            //
+                            // NOTE: This acts much like the native setInterval(),
+                            // invoking the given callback a number of times to
+                            // monitor the position. As such, it returns a "timer ID"
+                            // that can be used to later stop the monitoring.
+                            var positionTimer = navigator.geolocation.watchPosition(
+                                function (position) {
+                                    // Move again to the new or accurated position, if user doesn't set a position
+                                    if (!positionedByUser) {
+                                        locationMarker = placeMarker(
+                                            new google.maps.LatLng(
+                                                position.coords.latitude,
+                                                position.coords.longitude
+                                            )
+                                        );
+                                        // Set zoom to something more detailed
+                                        map.setZoom(detailedZoomLevel);
+                                    }  else
+                                        navigator.geolocation.clearWatch(positionTimer);
+                                }
+                            );
+
+                            // If the position hasn't updated within 5 minutes, stop
+                            // monitoring the position for changes.
+                            setTimeout(
+                                function () {
+                                    // Clear the position watcher.
+                                    navigator.geolocation.clearWatch(positionTimer);
+                                },
+                                (1000 * 60 * 5)
+                            );
+                        } // Ends geolocation position
                     }
                     });
                 }
