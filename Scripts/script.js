@@ -553,15 +553,19 @@ $(document).ready(function () {
 
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = form.data('unobtrusiveValidation');
-        if (valobject && valobject.validate() == false)
-        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+        if (valobject && valobject.validate() == false) {
+            goToSummaryErrors(form);
+            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return false;
+        }
 
         // If custom validation is enabled, validate
         var cusval = form.data('customValidation');
-        if (cusval && cusval.validate && cusval.validate() == false)
-        // custom validation not passed, out!
+        if (cusval && cusval.validate && cusval.validate() == false) {
+            goToSummaryErrors(form);
+            // custom validation not passed, out!
             return false;
+        }
 
         // Raise event
         currentStep.trigger('beginSubmitWizardStep');
@@ -687,15 +691,19 @@ $(document).ready(function () {
 
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = ctx.form.data('unobtrusiveValidation');
-        if (valobject && valobject.validate() == false)
-        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+        if (valobject && valobject.validate() == false) {
+            goToSummaryErrors(ctx.form);
+            // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return;
+        }
 
         // If custom validation is enabled, validate
         var cusval = ctx.form.data('customValidation');
-        if (cusval && cusval.validate && cusval.validate() == false)
-        // custom validation not passed, out!
+        if (cusval && cusval.validate && cusval.validate() == false) {
+            goToSummaryErrors(ctx.form);
+            // custom validation not passed, out!
             return false;
+        }
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
@@ -1417,4 +1425,8 @@ function convertMilesKm(q, unit) {
         return q / MILES_TO_KM;
     if (console) console.log('convertMilesKm: Unrecognized unit ' + unit);
     return 0;
+}
+function goToSummaryErrors(form) {
+    var off = form.find('.validation-summary-errors').offset();
+    $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
 }

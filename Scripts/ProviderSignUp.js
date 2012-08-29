@@ -66,15 +66,13 @@ var ProviderSignUp = {
                     // Validate terms of use
                     var agree = this.form.find('[name=termsofuse]');
                     var ok = agree.is(':checked');
+                    // summary errors, remove previous errors
+                    var sum = this.form.find('.validation-summary-errors, .validation-summary-valid');
+                    sum.children('ul').children().remove();
                     if (!ok) {
                         (function (f) {
                             var errmsg = agree.data('customval-requirechecked');
-                            var sum = f.find('.validation-summary-errors, .validation-summary-valid');
-                            if (sum.is('.validation-summary-valid')) {
-                                sum.removeClass('validation-summary-valid');
-                                sum.children('ul').children().remove();
-                            }
-                            sum.addClass('validation-summary-errors');
+                            sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
                             // Add if not exist (to avoid repeat it)
                             if (sum.find('>ul>li').filter(function(){ return (errmsg == $(this).text()) }).length == 0)
                                 sum.children('ul').append('<li>' + errmsg + '</li>');
@@ -88,12 +86,7 @@ var ProviderSignUp = {
                         ok = false;
                         (function (f) {
                             var errmsg = f.find('.lc-ressources > .positions-required').text();
-                            var sum = f.find('.validation-summary-errors, .validation-summary-valid');
-                            if (sum.is('.validation-summary-valid')) {
-                                sum.removeClass('validation-summary-valid');
-                                sum.children('ul').children().remove();
-                            }
-                            sum.addClass('validation-summary-errors');
+                            sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
                             if (sum.find('>ul>li').filter(function () { return (errmsg == $(this).text()) }).length == 0)
                                 sum.children('ul').append('<li>' + errmsg + '</li>');
                         })(this.form);
