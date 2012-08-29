@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
-    var u = LcData.UserInfo.GetUserRow();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     if (u != null && u.IsProvider) {
         // It's already a provider!
         Response.Redirect(UrlUtil.LangPath);
