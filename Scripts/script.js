@@ -691,6 +691,12 @@ $(document).ready(function () {
         // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return;
 
+        // If custom validation is enabled, validate
+        var cusval = ctx.form.data('customValidation');
+        if (cusval && cusval.validate && cusval.validate() == false)
+        // custom validation not passed, out!
+            return false;
+
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
             ctx.box.block(loadingBlock);
