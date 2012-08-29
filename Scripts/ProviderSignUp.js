@@ -44,6 +44,12 @@ var ProviderSignUp = {
                 return false;
             }
         });
+        // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
+        $.getJSON(UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
+            function (data) {
+                positionsAutocomplete.autocomplete('option', 'source', data);
+            }
+        );
         // Show autocomplete on 'plus' button
         $('.provider-sign-up .select-position .add-action').click(function () {
             positionsAutocomplete.autocomplete('search', '');
@@ -74,7 +80,7 @@ var ProviderSignUp = {
                             var errmsg = agree.data('customval-requirechecked');
                             sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
                             // Add if not exist (to avoid repeat it)
-                            if (sum.find('>ul>li').filter(function(){ return (errmsg == $(this).text()) }).length == 0)
+                            if (sum.find('>ul>li').filter(function () { return (errmsg == $(this).text()) }).length == 0)
                                 sum.children('ul').append('<li>' + errmsg + '</li>');
                             agree.addClass('input-validation-error');
                             f.find('[data-valmsg-for=termsofuse]').text(errmsg).show().addClass('field-validation-error');
