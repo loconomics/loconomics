@@ -214,6 +214,30 @@
         }
     }
     
+    // Recover positions after postback error to re-populate form:
+    dynamic positions = null;
+    if (IsPost) {
+        // @iagosrl: We need a comma separated list of positionIDs for build the SQL to retrieve names for later, but
+        // WE CANNOT use directly the Reques["position"] value because can have SQL-inject - XSS attacks.
+        // We parse every value as integer, strictly!
+        string positionIDList = "";
+        bool first = true;
+        foreach (string sPosID in Request.Form.GetValues("position")) {
+            if (!first) {
+                positionIDList += ",";
+            }
+            positionIDList += sPosID.AsInt().ToString();
+            first = false;
+        }
+        if (positionIDList != "") {
+            using (var db = Database.Open("sqlloco")) {
+                positions = db.Query(@"SELECT PositionID, PositionSingular FROM Positions WHERE PositionID IN (" + positionIDList + ")" + 
+                    " AND LanguageID=@0 AND CountryID=@1", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+    }
+    
+    // load ressources (at when, just when we know we need it and it was not an ajax response:
     Styles.Add(UrlUtil.AppPath + "Styles/ProviderSignUp.css");
     Scripts.Add(UrlUtil.AppPath + "Scripts/ProviderSignUp.js");
 }
@@ -296,6 +320,13 @@
                             <h3>Positions</h3>
                             <ul>
                                 <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
+                                @if (IsPost && positions != null)
+                                {
+                                    foreach (var pos in positions)
+                                    {
+                                        <li data-position-id="@pos.PositionID"><span class="name">@pos.PositionSingular</span><a href="#remove-position">remove</a><input type="hidden" name="position" value="@pos.PositionID" /></li>
+                                    }
+                                }
                             </ul>
                         </div>
                     </fieldset>
