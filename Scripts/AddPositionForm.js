@@ -234,5 +234,3 @@ function initYourWork(){
     jSelectPosition.change(loadAttributes);
 };
 
-$("#your-work").bind('endLoadWizardStep', initYourWork)
-    .bind('endSubmitWizardStep', function (event, ok) { if (!ok) initYourWork(); });

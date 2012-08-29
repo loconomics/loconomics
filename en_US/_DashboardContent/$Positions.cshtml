@@ -7,7 +7,7 @@
     
     // Number of maximum positions displayed:
     var maxPositions = 5;
-    Scripts.Add(UrlUtil.AppPath + "Scripts/Provider-sign-up.js");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/AddPositionForm.js");
 }
 
         @{
@@ -77,6 +77,6 @@
         @if (n < maxPositions)
         {
             <div id="position-new" class="tab-body fancy positionservices @(n == 0 ? "current" : "")">
-                @RenderPage(UrlUtil.LangPath + "Provider-sign-up/$Your-work.cshtml")
+                @RenderPage(UrlUtil.LangPath + "ProviderSignUp/$Your-work.cshtml")
             </div><!-- position-new -->
         }

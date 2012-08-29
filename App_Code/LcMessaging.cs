@@ -450,7 +450,7 @@ public class LcMessaging
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
         SendMail(providerEmail, "Welcome to Loconomics.com",
-            ApplyTemplate(UrlUtil.LangPath + "Provider-sign-up/EmailWelcomeProvider/",
+            ApplyTemplate(UrlUtil.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
                 { "EmailTo", providerEmail },

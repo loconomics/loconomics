@@ -180,7 +180,7 @@ and test on both.
    Let's get started creating your profile.  First, select a position from the menu below; don't worry, you can add more positions later.  Select "Localista" if for general tasks.  You will also be able to edit and enhance your profile after sign-up.
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Provider-sign-up/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box positionservices")">
+<form action="@(UrlUtil.LangPath)ProviderSignUp/$Your-work/" method="post" id="provider-sign-up-your-work" class="your-work @(insideWizard ? "" : "ajax ajax-box positionservices")">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <input type="hidden" name="InsideWizard" value="@insideWizard" />

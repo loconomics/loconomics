@@ -149,7 +149,7 @@
     if (UrlData.Count > 1 && 
         UrlData[0] == "Callback" && 
         UrlData[1] == "Provider") {
-        redirectUrl = UrlUtil.LangPath + "Provider-sign-up/";
+        redirectUrl = UrlUtil.LangPath + "ProviderSignUp/";
     } else {
         // Redirect to the desired page or to home:
         redirectUrl = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
