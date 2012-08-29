@@ -220,7 +220,7 @@
                             </li>
                             <li class="email">
                                 <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email Address</label>
-                                <input placeholder="E-mail address" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
+                                <input placeholder="E-mail Address" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
                                 @* Write any email validation errors to the page *@
                                 @Html.ValidationMessage("email")
                             </li>
@@ -253,7 +253,25 @@
                 <li class="step-2">
                     <div class="step-number">2</div>
                     <h2>About your work</h2>
-
+                    <fieldset class="positions">
+                        <div class="select-position">
+                            <div class="position-search">
+                                <label for="providersignup-position-search">I am a...</label>
+                                <input type="text" id="providersignup-position-search" />
+                                @*<button type="button" class="action button add-action">+</button>*@
+                            </div>
+                            <div class="position-description">
+                                <label for="providersignup-position-desc"></label>
+                                <textarea disabled="disabled" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="positions-list">
+                            <h3>Positions</h3>
+                            <ul>
+                                <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
+                            </ul>
+                        </div>
+                    </fieldset>
                 </li>
                 <li class="step-3">
                     <div class="step-number">3</div>

@@ -6,7 +6,7 @@
         languageID
         countryID
 *@
-
+@using WebMatrix.Data;
 @{
     // Prepare result struct
     var result = new Dictionary<string, object>();
@@ -14,7 +14,7 @@
  
     try{
         // Input data
-        var term = "%" + Request["serviceType"] + "%";
+        var term = "%" + (Request["serviceType"] ?? Request["term"]) + "%";
     
         // Process data
         var db = Database.Open("sqlloco");
@@ -24,7 +24,7 @@
         // Result format is different to feed the Autocomplete jQueryUI feature:
         if (UrlData.Count > 0 && UrlData[0].ToLower() == "autocomplete") {
             LcHelpers.ReturnJson(
-                data.Select(p => new{label = p.PositionSingular, value = p.PositionID})
+                data.Select(p => new{label = p.PositionSingular, value = p.PositionID, description = p.PositionDescription})
             );
         }
         

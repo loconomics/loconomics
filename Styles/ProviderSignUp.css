@@ -96,6 +96,38 @@
     padding: 1px 0;
     width: 50%;
 }
+/* Step 2 */
+.provider-sign-up .step-2 .positions-list,
+.provider-sign-up .step-2 .select-position {
+    float: left;
+    width: 50%;
+   -moz-box-sizing:    border-box;
+    box-sizing:        border-box;
+}
+.provider-sign-up .step-2 .positions-list {
+    padding-left: 30px;
+}
+.provider-sign-up .step-2 .positions-list > h3 {
+    font-size: 1.4em;
+    margin: 0 0 10px;
+}
+.provider-sign-up .step-2 label {
+    display: block;
+}
+.provider-sign-up .step-2 .position-description textarea {
+    width: 80%;
+}
+.provider-sign-up .step-2 .positions-list li {
+    list-style: disc inside;
+    margin: 3px 0;
+    padding: 0;
+}
+.provider-sign-up .step-2 .positions-list li > a,
+.provider-sign-up .step-2 .positions-list li > a:visited {
+    color: #00989b;
+    margin-left: 20px;
+    text-transform: lowercase;
+}
 /* Step 3 */
 .legal-agreement-terms > li {
     list-style: disc inside none;

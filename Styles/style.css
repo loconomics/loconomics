@@ -935,6 +935,23 @@ form fieldset.actions{
     -o-box-shadow: 0 0 5px 2px #8B2143;
     -webkit-box-shadow: 0 0 5px 2px #8B2143;
 }
+.add-action {
+    color: White;
+    background: #00989a;
+    font-size: 0.8em;
+    padding: 0.193em 0.8em;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+.add-action:hover {
+    background: #00989a;
+    box-shadow: 0 0 5px 2px #00989a;
+    -moz-box-shadow: 0 0 5px 2px #00989a;
+    -o-box-shadow: 0 0 5px 2px #00989a;
+    -webkit-box-shadow: 0 0 5px 2px #00989a;
+}
 .report-action {
     color: #747474;
     text-decoration: none;
@@ -1985,7 +2002,7 @@ html.boxshadow #loginBox .field-validation-error{
     width: 50px;
     margin: 20px auto;
 }
-.lc-ressources, .popups {
+.lc-ressources, .popups, .template, .templates {
     display: none;
 }
 
