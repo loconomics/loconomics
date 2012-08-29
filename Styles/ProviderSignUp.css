@@ -48,20 +48,20 @@
 }
 .provider-sign-up .wizard-steps > li .step-number {
     border: 3px solid #00989A;
-    border-radius: 100px;
-    -moz-border-radius: 100px;
-    -o-border-radius: 100px;
-    -webkit-border-radius: 100px;
+    border-radius: 100px 100px 100px 100px;
     color: #00989A;
     font-size: 2.5em;
     height: 45px;
     left: 0;
     line-height: normal;
+    padding-left: 2px;
     position: absolute;
     text-align: center;
     top: 0;
-    width: 45px;
-    border-radius: 100px;
+    width: 43px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    -webkit-border-radius: 100px;
 }
 /* Step 1 */
 .provider-sign-up .step-1 .choice-option {
@@ -83,6 +83,7 @@
 }
 .facebook-connect p.info {
     margin: 4px 0 0;
+    text-align: justify;
 }
 .facebook-connect p.footnote {
     margin: 5px 0;
