@@ -4,9 +4,10 @@
 $(function () {
     // Autocomplete positions and add to the list
     var positionsList = null, tpl = null;
-    $('#providersignup-position-search').autocomplete({
+    var positionsAutocomplete = $('#providersignup-position-search').autocomplete({
         source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
         autoFocus: true,
+        minLength: 0,
         select: function (event, ui) {
             var c = $(this).closest('.positions');
             positionsList = positionsList || c.find('.positions-list > ul');
@@ -39,6 +40,10 @@ $(function () {
             $(this).val(ui.item.label);
             return false;
         }
+    });
+    // Show autocomplete on 'plus' button
+    $('.provider-sign-up .select-position .add-action').click(function () {
+        positionsAutocomplete.autocomplete('search', '');
     });
     // Remove positions from the list
     $('.provider-sign-up .positions-list > ul').on('click', 'li > a', function () {

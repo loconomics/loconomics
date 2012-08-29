@@ -12,7 +12,7 @@
         Response.Redirect(UrlUtil.LangPath);
     }
     // Initialize general page variables
-    var userid = 99999;
+    var userid = 0;
     var email = "";
     var password = "";
     var confirmPassword = "";
@@ -40,6 +40,8 @@
     Validation.RequireField("firstname", "You must specify your first name.");
     Validation.RequireField("lastname", "You must specify your last name.");
     Validation.RequireField("termsofuse", "You must agree the terms of use.");
+    // Position selection:
+    Validation.RequireField("position", "You must select almost one position.");
     
     /** Get request with customer user: fill user data **/
     if (u != null) {
@@ -146,8 +148,9 @@
             if (ModelState.IsValid) {
                 // Insert provider details                        
                 if (u != null) {
+                    userid = u.UserID;
                     db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14",
-                        u.UserID,
+                        userid,
                         firstname,
                         lastname,
                         (object)(zipcode == 0 ? null : (object)zipcode),
@@ -184,9 +187,31 @@
                     (u != null ? u.UserID : userid), 
                     (u != null ? u.Email : email),
                     confirmationUrl ?? "");
-
-                // We return a json with result OK (=0), and response end just after this:
-                LcHelpers.ReturnJsonResult(0, null);
+            }
+            
+            /** Add selected positions to the provider **/
+            if (ModelState.IsValid) {      
+                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+                foreach (string sPosID in Request.Form.GetValues("position")) {
+                    if (sPosID.IsInt()) {
+                        // Link the user with the selected position:
+                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 0);
+                        if (Results.Result != "Success") {
+                            ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                        }
+                    }
+                }
+            }
+            
+            /*** All finished, it was ok? ***/
+            if (ModelState.IsValid) {
+                //LcHelpers.ReturnJsonResult(0, null);
+                var red = UrlUtil.LangPath + "Dashboard/";
+                if (Request.IsAjaxRequest()) {
+                    LcHelpers.ReturnJsonResult(1, red);
+                } else {
+                    Response.Redirect(red);
+                }
             }
         }
     }
@@ -195,7 +220,8 @@
     <div id="main">
         <h1 class="withsub"><em>Welcome</em> to a new kind of Marketplace</h1>
         <p class="subh1">We’re glad you’re here!  You’re about to create a profile that will act as your portal to new and exisiting clients.  We’ve put some extra special thought into helping you market and differentiate yourself in the marketplace and hope you like it.  We’re always open to suggestions as we want you to make this your home.  E-mail us at <a href="mailto:providerhelp@loconomics.com">providerhelp@loconomics.com</a> with anything.</p>
-        <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)ProviderSignUp/">
+        <div>
+        <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)ProviderSignUp/" class="ajax ajax-box">
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
             <ol class="wizard-steps">
                 <li class="step-1">
@@ -258,7 +284,7 @@
                             <div class="position-search">
                                 <label for="providersignup-position-search">I am a...</label>
                                 <input type="text" id="providersignup-position-search" />
-                                @*<button type="button" class="action button add-action">+</button>*@
+                                <button type="button" class="action button add-action">+</button>
                             </div>
                             <div class="position-description">
                                 <label for="providersignup-position-desc"></label>
@@ -327,5 +353,6 @@
                 })();
             </script>
         </form>
+        </div>
     </div>
 </div>

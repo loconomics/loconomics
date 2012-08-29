@@ -936,14 +936,14 @@ form fieldset.actions{
     -webkit-box-shadow: 0 0 5px 2px #8B2143;
 }
 .add-action {
+    background: none repeat scroll 0 0 #00989A;
+    border-radius: 4px 4px 4px 4px;
     color: White;
-    background: #00989a;
-    font-size: 0.8em;
-    padding: 0.193em 0.8em;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -o-border-radius: 4px;
-    -webkit-border-radius: 4px;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: normal;
+    padding: 0 0.3em;
+    vertical-align: bottom;
 }
 .add-action:hover {
     background: #00989a;
