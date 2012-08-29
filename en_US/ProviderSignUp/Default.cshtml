@@ -1,0 +1,313 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Welcome to Loconomics";
+    Styles.Add(UrlUtil.AppPath + "Styles/ProviderSignUp.css");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/ProviderSignUp.js");
+    
+    var u = LcData.UserInfo.GetUserRow();
+    if (u != null && u.IsProvider) {
+        // It's already a provider!
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    // Initialize general page variables
+    var userid = 99999;
+    var email = "";
+    var password = "";
+    var confirmPassword = "";
+    var firstname  ="";
+    var lastname  = "";
+    var formzipcode = "";
+    var zipcode   = 0;
+    var state = 0;
+    var lang = LcData.GetCurrentLanguageID();
+    var countryId = LcData.GetCurrentCountryID();
+    var termsofuse = "0";
+    var emailcontact = "0";
+
+    /** Validations **/
+    if (u == null) {
+	    // Validate the user's email address
+        Validation.RequireField("email", "You must specify an email address.");
+        // Validate the user's password and password confirmation
+        Validation.Add("email",
+            Validator.Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*","The email is not valid."));
+	    Validation.RequireField("password", "The password cannot be left blank.");
+        Validation.Add("confirmPassword", 
+            Validator.EqualsTo("password", "The new password and confirmation password do not match."));
+    }
+    Validation.RequireField("firstname", "You must specify your first name.");
+    Validation.RequireField("lastname", "You must specify your last name.");
+    Validation.RequireField("termsofuse", "You must agree the terms of use.");
+    
+    /** Get request with customer user: fill user data **/
+    if (u != null) {
+        firstname = u.FirstName;
+        lastname = u.LastName;
+        email = u.Email;
+        formzipcode = u.PostalCode;
+        state = u.StateProvinceID ?? 0;
+    }
+    
+    /** Set Form input values **/
+    email = Request.Form["email"];
+    password = Request.Form["password"];
+    confirmPassword = Request.Form["confirmPassword"];
+    firstname = Request.Form["firstname"];
+    lastname =   Request.Form["lastname"];
+    formzipcode = Request.Form["zipcode"];
+    state = Request["state"].AsInt();
+    termsofuse = Request.Form["termsofuse"];
+    emailcontact = Request.Form["emailcontact"];
+    
+    // If this is a POST request, validate and process data
+    if (IsPost && Validation.IsValid()) {
+        
+        /** Server side validations **/
+        // Validate the user's captcha answer
+        // if (!ReCaptcha.Validate("PRIVATE_KEY")) {
+        //     ModelState.AddError("recaptcha", "Captcha response was not correct");
+        // }
+        state = LcData.GetStateFromZipCode(formzipcode);
+        int auxZip = LcData.GetPostalCodeID(formzipcode, state);
+        if (auxZip == 0) {
+            ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
+        } else {
+            zipcode = auxZip;
+        }
+        if (!termsofuse.AsBool()){
+            ModelState.AddError("termsofuse", "You must agree to the Terms of Use and Privacy Policy");
+        }
+
+        // If all information is valid, create a new account
+        if (ModelState.IsValid) { 
+            string confirmationUrl = null;
+            // Insert a new user into the database
+            var db = Database.Open("sqlloco");
+
+            /** Create user profile (general creation - no provider still) **/
+            if (u == null) {
+                // Check if user already exists
+                var useremail = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
+
+                if (useremail == null) {
+                    // Insert email into the profile table
+                    db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
+                    // Create and associate a new entry in the membership database.
+                    // If successful, continue processing the request
+                    try {
+                        bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
+                        var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
+                        if (requireEmailConfirmation) {
+                            confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+
+                            // Verification code is sent along with the Welcome email, commenting the other email sent:
+                            /*LcMessaging.SendMail(
+                                to: email,
+                                subject: "Please confirm your account", 
+                                body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to confirm your account."
+                            );*/
+                        }
+
+                        if (requireEmailConfirmation) {
+                            //LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                            Session["RegisteredUserID"] = WebSecurity.GetUserId(email);
+                            // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
+                            // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
+                            // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
+                            // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
+                            // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
+                            // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
+                            db.Execute(@"
+                                UPDATE webpages_Membership SET
+                                    IsConfirmed = 1
+                                WHERE UserId = @0
+                            ", Session["RegisteredUserID"]);
+                            // Now, we do the auto-login, is in non-require-confirmation step
+                            WebSecurity.Login(email, password);
+                            Session["OAuthLoggedIn"] = false;
+                        } else {
+                            // Auto login user with just created credentials:
+                            WebSecurity.Login(email, password);
+                            // mark the user as logged in via a normal account,
+                            // as opposed to via an OAuth or OpenID provider.
+                            Session["OAuthLoggedIn"] = false;
+                        }
+                    } catch (System.Web.Security.MembershipCreateUserException e) {
+                        ModelState.AddFormError(e.Message);
+                    }
+                } else {
+                    // User already exists
+                    ModelState.AddFormError("Email address is already in use.");
+                }
+            }
+            /** Convert created/existed user into a provider **/
+            if (ModelState.IsValid) {
+                // Insert provider details                        
+                if (u != null) {
+                    db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14",
+                        u.UserID,
+                        firstname,
+                        lastname,
+                        (object)(zipcode == 0 ? null : (object)zipcode),
+                        (object)(state == 0 ? null : (object)state),
+                        lang,
+                        countryId,
+                        termsofuse.AsBool() ? 1 : 0,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        emailcontact.AsBool() ? 1 : 0);
+                } else {
+                    userid = WebSecurity.GetUserId(email);
+                    db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14",userid,firstname,lastname,
+                        (object)(zipcode == 0 ? null : (object)zipcode),
+                        (object)(state == 0 ? null : (object)state),
+                        lang,
+                        countryId,
+                        termsofuse.AsBool() ? 1 : 0,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        emailcontact.AsBool() ? 1 : 0);
+                }
+                
+                // All ok, send welcome email
+                LcMessaging.SendWelcomeProvider(
+                    (u != null ? u.UserID : userid), 
+                    (u != null ? u.Email : email),
+                    confirmationUrl ?? "");
+
+                // We return a json with result OK (=0), and response end just after this:
+                LcHelpers.ReturnJsonResult(0, null);
+            }
+        }
+    }
+}
+<div id="container" class="clearfix provider-sign-up">
+    <div id="main">
+        <h1 class="withsub"><em>Welcome</em> to a new kind of Marketplace</h1>
+        <p class="subh1">We’re glad you’re here!  You’re about to create a profile that will act as your portal to new and exisiting clients.  We’ve put some extra special thought into helping you market and differentiate yourself in the marketplace and hope you like it.  We’re always open to suggestions as we want you to make this your home.  E-mail us at <a href="mailto:providerhelp@loconomics.com">providerhelp@loconomics.com</a> with anything.</p>
+        <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)ProviderSignUp/">
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+            <ol class="wizard-steps">
+                <li class="step-1">
+                    <div class="step-number">1</div>
+                    <h2>About you</h2>
+                    <fieldset class="login-data">
+                        <div class="facebook-connect choice-option">
+                            @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" } )
+                            <p class="info">By clicking "Connect with Facebook" you confirm that you accept the
+                            <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/#termsofuse">Terms of Service</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/#privacypolicy">Privacy Policy</a></p>
+                            <p class="footnote">*we don't post anything without your permission</p>
+                        </div>
+                        <p class="choice-or">or</p>
+                        <ul class="signup-data choice-option">
+                            <li class="first-name">
+                                <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name</label>
+                                <input placeholder="First Name" type="text" id="firstname" name="firstname" title="First Name" value="@firstname" @Validation.GetHtml("firstname") />
+                                @* Write any email validation errors to the page *@
+                                @Html.ValidationMessage("firstname")
+
+                                @* need to have the error label class show up  *@   
+                            </li>
+                            <li class="email">
+                                <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email Address</label>
+                                <input placeholder="E-mail address" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
+                                @* Write any email validation errors to the page *@
+                                @Html.ValidationMessage("email")
+                            </li>
+                            <li class="last-name">
+                              <label for="lastname" @if(!ModelState.IsValidField("lastname")){<text>class="error-label"</text>}>Last Name</label>
+                                <input placeholder="Last Name" type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
+                                @* Write any email validation errors to the page *@
+                                @Html.ValidationMessage("lastname")
+                             </li>
+                            <li class="password">
+                                <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password</label>
+                                <input placeholder="Password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
+                                @* Write any password validation errors to the page *@
+                                @Html.ValidationMessage("password")
+                             </li>
+                            <li class="zip-code">
+                                <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code</label>
+                                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" data-val-postalcode="@LcRessources.GetText("postal-code-validation-error")" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
+                                @Html.ValidationMessage("zipcode")
+                            </li>
+                            <li class="confirm-password">
+                                <label for="confirmPassword" @if(!ModelState.IsValidField("confirmPassword")) {<text>class="error-label"</text>} >Re-enter Password</label>
+                                <input placeholder="Re-enter password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
+                                @* Write any password validation errors to the page *@
+                                @Html.ValidationMessage("confirmPassword")
+                            </li>
+                        </ul>
+                    </fieldset>
+                </li>
+                <li class="step-2">
+                    <div class="step-number">2</div>
+                    <h2>About your work</h2>
+
+                </li>
+                <li class="step-3">
+                    <div class="step-number">3</div>
+                    <h2>About how we’ll work together</h2>
+                    <fieldset class="legal-agreement">
+                        <ol class="legal-agreement-terms">
+                            <li>I am at least 18 years old and will personally provide the services listed on my profile.</li>
+                            <li>I am not acting on behalf of an agency or employer for services booked using my profile</li>
+                            <li>I am legally authorized to perform the services listed on my profile and possess any 
+                    licenses required to perform those services.</li>
+                            <li>I will not engage in any unlawful or innapropriate activity while performing services for Customers.</li>
+                            <li>I will take the necessary safety precautions when meeting Customers to assure both their and 
+                   my own safety.</li>
+                        </ol>
+                        <ul>
+                             <li>
+                                <label><input type="checkbox" data-customval-requirechecked="You must agree terms of use" @Validation.GetHtml("termsofuse") @LcHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Service</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
+                                @Html.ValidationMessage("termsofuse")
+                             </li>
+                             <li>
+                                <label><input type="checkbox" @Validation.GetHtml("emailcontact") @LcHelpers.IsChecked(Request["emailcontact"].AsBool(), true) name="emailcontact" id="emailcontact" value="True"/>I don't mind having you e-mail me important news.</label>
+                                @Html.ValidationMessage("emailcontact")
+                             </li>
+                         </ul>
+                     </fieldset>
+                </li>
+            </ol>
+            <fieldset class="actions">
+                <button class="main-action">Create my account</button>
+            </fieldset>
+            @LcHelpers.GetValidationScripts()
+            <script type="text/javascript">
+                // custom client-side validation for agree termsofuse
+                (function () {
+                    var f = $('#provider-sign-up-create-a-login');
+                    f.data('customValidation', {
+                        form: f,
+                        validate: function () {
+                            var agree = this.form.find('[name=termsofuse]');
+                            var ok = agree.is(':checked');
+                            if (!ok) {
+                                var errmsg = agree.data('customval-requirechecked');
+                                var sum = this.form.find('.validation-summary-errors, .validation-summary-valid');
+                                sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
+                                sum.children('ul').children().remove();
+                                sum.children('ul').append('<li>' + errmsg + '</li>');
+                                agree.addClass('input-validation-error');
+                                this.form.find('[data-valmsg-for=termsofuse]').text(errmsg).show().addClass('field-validation-error');
+                            }
+                            return ok;
+                        }
+                    });
+                })();
+            </script>
+        </form>
+    </div>
+</div>

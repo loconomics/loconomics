@@ -1,0 +1,114 @@
+﻿/*******************
+ * ProviderSignUp styles 
+ */
+.provider-sign-up #main {
+    width: auto;
+    float: none;
+}
+/* Header */
+.provider-sign-up h1 {
+    font-size: 2em;
+    text-transform: lowercase;
+}
+.provider-sign-up h1 > em {
+    font-style: normal;
+    color: #00989b;
+}
+.provider-sign-up .subh1 {
+    font-size: 1em;
+    line-height: normal;
+    color: #747474;
+    font-weight: normal;
+}
+/* Form */
+.provider-sign-up form {
+    border: 2px solid #595959;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 20px;
+}
+.provider-sign-up form h2 {
+    font-size: 1.5em;
+    margin: 15px 0;
+}
+/* Steps */
+.provider-sign-up .wizard-steps > li {
+    border-bottom: 1px solid #d6d2d2;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    padding-left: 68px;
+    position: relative;
+    /* 1px padding force h1 margin-top not increase out-of-the-box */
+    padding-top: 1px;
+}
+.provider-sign-up .wizard-steps > li.step-3 {
+    border-bottom: none;
+}
+.provider-sign-up .wizard-steps > li .step-number {
+    border: 3px solid #00989A;
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -o-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    color: #00989A;
+    font-size: 2.5em;
+    height: 45px;
+    left: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 45px;
+    border-radius: 100px;
+}
+/* Step 1 */
+.provider-sign-up .step-1 .choice-option {
+    display: inline-block;
+    vertical-align: middle;
+}
+.provider-sign-up .step-1 .choice-or {
+    display: inline-block;
+    width: 60px;
+}
+.provider-sign-up .step-1 .facebook-connect {
+    width: 300px;
+}
+.provider-sign-up .step-1 .signup-data {
+    width: 470px;
+}
+.facebook-connect p {
+    font-size: .8em;
+}
+.facebook-connect p.info {
+    margin: 4px 0 0;
+}
+.facebook-connect p.footnote {
+    margin: 5px 0;
+}
+.facebook-connect img {
+    width: 100%;
+}
+.provider-sign-up .step-1 .signup-data > li {
+    float: left;
+    padding: 1px 0;
+    width: 50%;
+}
+
+/** Form elements design **/
+.provider-sign-up form input[type="text"], .provider-sign-up form input[type="password"], .provider-sign-up form textarea {
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 4px 6px;
+    height: auto;
+    color: #747474;
+    background: #f5f5f5;
+}
+.provider-sign-up form label {
+    font-weight: bold;
+    padding: 4px;
+}
