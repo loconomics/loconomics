@@ -96,6 +96,18 @@
     padding: 1px 0;
     width: 50%;
 }
+/* Step 3 */
+.legal-agreement-terms > li {
+    list-style: disc inside none;
+    margin: 12px 0;
+}
+.legal-agreement input {
+    margin-right: 12px;
+}
+.legal-agreement a,
+.legal-agreement a:visited {
+    color: #009A9D;
+}
 
 /** Form elements design **/
 .provider-sign-up form input[type="text"], .provider-sign-up form input[type="password"], .provider-sign-up form textarea {
@@ -112,4 +124,10 @@
 .provider-sign-up form label {
     font-weight: bold;
     padding: 4px;
+}
+.provider-sign-up .actions .main-action {
+    border-radius: 10px 4px 10px 4px;
+    -moz-border-radius: 10px 4px 10px 4px;
+    -o-border-radius: 10px 4px 10px 4px;
+    -webkit-border-radius: 10px 4px 10px 4px;
 }
