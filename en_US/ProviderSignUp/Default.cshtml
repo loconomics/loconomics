@@ -3,8 +3,6 @@
 @{
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Welcome to Loconomics";
-    Styles.Add(UrlUtil.AppPath + "Styles/ProviderSignUp.css");
-    Scripts.Add(UrlUtil.AppPath + "Scripts/ProviderSignUp.js");
     
     var u = LcData.UserInfo.GetUserRow();
     if (u != null && u.IsProvider) {
@@ -215,6 +213,9 @@
             }
         }
     }
+    
+    Styles.Add(UrlUtil.AppPath + "Styles/ProviderSignUp.css");
+    Scripts.Add(UrlUtil.AppPath + "Scripts/ProviderSignUp.js");
 }
 <div id="container" class="clearfix provider-sign-up">
     <div id="main">
@@ -329,29 +330,13 @@
                 <button class="main-action">Create my account</button>
             </fieldset>
             @LcHelpers.GetValidationScripts()
+            @if (IsPost)
+            {
             <script type="text/javascript">
-                // custom client-side validation for agree termsofuse
-                (function () {
-                    var f = $('#provider-sign-up-create-a-login');
-                    f.data('customValidation', {
-                        form: f,
-                        validate: function () {
-                            var agree = this.form.find('[name=termsofuse]');
-                            var ok = agree.is(':checked');
-                            if (!ok) {
-                                var errmsg = agree.data('customval-requirechecked');
-                                var sum = this.form.find('.validation-summary-errors, .validation-summary-valid');
-                                sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
-                                sum.children('ul').children().remove();
-                                sum.children('ul').append('<li>' + errmsg + '</li>');
-                                agree.addClass('input-validation-error');
-                                this.form.find('[data-valmsg-for=termsofuse]').text(errmsg).show().addClass('field-validation-error');
-                            }
-                            return ok;
-                        }
-                    });
-                })();
+                @* Reapply initialization *@
+                ProviderSignUp.init();
             </script>
+            }
         </form>
         </div>
     </div>
