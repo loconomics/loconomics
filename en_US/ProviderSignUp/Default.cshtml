@@ -270,29 +270,29 @@
 
                                 @* need to have the error label class show up  *@   
                             </li>
-                            <li class="email">
-                                <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email Address</label>
-                                <input placeholder="E-mail Address" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
-                                @* Write any email validation errors to the page *@
-                                @Html.ValidationMessage("email")
-                            </li>
                             <li class="last-name">
                               <label for="lastname" @if(!ModelState.IsValidField("lastname")){<text>class="error-label"</text>}>Last Name</label>
                                 <input placeholder="Last Name" type="text" id="lastname" name="lastname" title="Last Name" value="@lastname" @Validation.GetHtml("lastname") />
                                 @* Write any email validation errors to the page *@
                                 @Html.ValidationMessage("lastname")
                              </li>
+                            <li class="email">
+                                <label for="email" @if(!ModelState.IsValidField("email")){<text>class="error-label"</text>}>Email Address</label>
+                                <input placeholder="E-mail Address" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="text" id="email" name="email" title="Email address" value="@email" @Validation.GetHtml("email") />
+                                @* Write any email validation errors to the page *@
+                                @Html.ValidationMessage("email")
+                            </li>
+                            <li class="zip-code">
+                                <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code</label>
+                                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" data-val-postalcode="@LcRessources.GetText("postal-code-validation-error")" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
+                                @Html.ValidationMessage("zipcode")
+                            </li>
                             <li class="password">
                                 <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password</label>
                                 <input placeholder="Password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
                                 @* Write any password validation errors to the page *@
                                 @Html.ValidationMessage("password")
                              </li>
-                            <li class="zip-code">
-                                <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip Code</label>
-                                <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" data-val-postalcode="@LcRessources.GetText("postal-code-validation-error")" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
-                                @Html.ValidationMessage("zipcode")
-                            </li>
                             <li class="confirm-password">
                                 <label for="confirmPassword" @if(!ModelState.IsValidField("confirmPassword")) {<text>class="error-label"</text>} >Re-enter Password</label>
                                 <input placeholder="Re-enter password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
