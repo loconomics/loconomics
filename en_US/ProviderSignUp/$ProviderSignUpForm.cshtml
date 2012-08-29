@@ -278,18 +278,23 @@
                                 <input placeholder="Zip Code" type="text" id="zipcode" name="zipcode" title="Zip Code" data-val-postalcode="@LcRessources.GetText("postal-code-validation-error")" value="@(formzipcode)" @(IsPost ? ModelState.ContainsKey("zipcode") ? new HtmlString("class='input-validation-error'") : new HtmlString("") : Validation.GetHtml("zipcode")) />
                                 @Html.ValidationMessage("zipcode")
                             </li>
+                            @if (u == null)
+                            {
                             <li class="password">
-                                <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password</label>
+                                <label for="password" @if (!ModelState.IsValidField("password"))
+                                                      {<text>class="error-label"</text>}>Password</label>
                                 <input placeholder="Password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="password" name="password" title="Password" @Validation.GetHtml("password") />
                                 @* Write any password validation errors to the page *@
                                 @Html.ValidationMessage("password")
                              </li>
                             <li class="confirm-password">
-                                <label for="confirmPassword" @if(!ModelState.IsValidField("confirmPassword")) {<text>class="error-label"</text>} >Re-enter Password</label>
+                                <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword"))
+                                                             {<text>class="error-label"</text>} >Re-enter Password</label>
                                 <input placeholder="Re-enter password" @(Html.Raw(u != null ? "disabled='disabled'" : "")) type="password" id="confirmPassword" name="confirmPassword" title="Confirm password" @Validation.GetHtml("confirmPassword") />
                                 @* Write any password validation errors to the page *@
                                 @Html.ValidationMessage("confirmPassword")
                             </li>
+                            }
                         </ul>
                     </fieldset>
                 </li>
