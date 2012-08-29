@@ -1542,6 +1542,12 @@ table .number{
 .field-validation-error{
     color: Red;
 }
+.validation-summary-errors {
+    padding: 10px 0;
+}
+.validation-summary-errors li {
+    padding: 4px 0;
+}
 html.no-boxshadow .input-validation-error{
     border-color: Red;
 }

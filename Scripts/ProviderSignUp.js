@@ -3,6 +3,8 @@
  */
 var ProviderSignUp = {
     init: function () {
+        // Template position item value must be reset on init (because some form-recovering browser features that put on it bad values)
+        $('.positions .positions-list > ul > li.template > [name=position]').val('');
         // Autocomplete positions and add to the list
         var positionsList = null, tpl = null;
         var positionsAutocomplete = $('#providersignup-position-search').autocomplete({
@@ -61,17 +63,42 @@ var ProviderSignUp = {
             f.data('customValidation', {
                 form: f,
                 validate: function () {
+                    // Validate terms of use
                     var agree = this.form.find('[name=termsofuse]');
                     var ok = agree.is(':checked');
                     if (!ok) {
-                        var errmsg = agree.data('customval-requirechecked');
-                        var sum = this.form.find('.validation-summary-errors, .validation-summary-valid');
-                        sum.removeClass('validation-summary-valid').addClass('validation-summary-errors');
-                        sum.children('ul').children().remove();
-                        sum.children('ul').append('<li>' + errmsg + '</li>');
-                        agree.addClass('input-validation-error');
-                        this.form.find('[data-valmsg-for=termsofuse]').text(errmsg).show().addClass('field-validation-error');
+                        (function (f) {
+                            var errmsg = agree.data('customval-requirechecked');
+                            var sum = f.find('.validation-summary-errors, .validation-summary-valid');
+                            if (sum.is('.validation-summary-valid')) {
+                                sum.removeClass('validation-summary-valid');
+                                sum.children('ul').children().remove();
+                            }
+                            sum.addClass('validation-summary-errors');
+                            // Add if not exist (to avoid repeat it)
+                            if (sum.find('>ul>li').filter(function(){ return (errmsg == $(this).text()) }).length == 0)
+                                sum.children('ul').append('<li>' + errmsg + '</li>');
+                            agree.addClass('input-validation-error');
+                            f.find('[data-valmsg-for=termsofuse]').text(errmsg).show().addClass('field-validation-error');
+                        })(this.form);
                     }
+                    // Validate positions (is required almost one)
+                    var positions = this.form.find('[name=position]');
+                    if (positions.length == 1) {
+                        ok = false;
+                        (function (f) {
+                            var errmsg = f.find('.lc-ressources > .positions-required').text();
+                            var sum = f.find('.validation-summary-errors, .validation-summary-valid');
+                            if (sum.is('.validation-summary-valid')) {
+                                sum.removeClass('validation-summary-valid');
+                                sum.children('ul').children().remove();
+                            }
+                            sum.addClass('validation-summary-errors');
+                            if (sum.find('>ul>li').filter(function () { return (errmsg == $(this).text()) }).length == 0)
+                                sum.children('ul').append('<li>' + errmsg + '</li>');
+                        })(this.form);
+                    }
+                    // Return global result
                     return ok;
                 }
             });
