@@ -28,10 +28,16 @@
     -o-border-radius: 4px;
     -webkit-border-radius: 4px;
     padding: 20px;
+    position: relative;
 }
 .provider-sign-up form h2 {
     font-size: 1.8em;
     margin: 15px 0;
+}
+#provider-sign-up-truste-seal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 /* Steps */
 .provider-sign-up .wizard-steps > li {
