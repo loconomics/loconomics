@@ -38,26 +38,26 @@
     Validation.RequireField("zipcode", "You must enter your Zip code.");
     // Position selection:
     Validation.RequireField("position", "You must select almost one position.");
-    
-    /** Get request with customer user: fill user data **/
-    if (u != null) {
-        firstname = u.FirstName;
-        lastname = u.LastName;
-        email = u.Email;
-        formzipcode = u.PostalCode;
-        state = u.StateProvinceID ?? 0;
-    }
-    
+        
     /** Set Form input values **/
     email = Request.Form["email"];
     password = Request.Form["password"];
     confirmPassword = Request.Form["confirmPassword"];
     firstname = Request.Form["firstname"];
-    lastname =   Request.Form["lastname"];
+    lastname = Request.Form["lastname"];
     formzipcode = Request.Form["zipcode"];
     state = Request["state"].AsInt();
     termsofuse = Request.Form["termsofuse"];
     emailcontact = Request.Form["emailcontact"];
+    
+    /** Get request with customer user: fill user data **/
+    if (u != null) {
+        firstname = Request.Form["firstname"] ?? u.FirstName;
+        lastname = Request.Form["lastname"] ?? u.LastName;
+        email = u.Email;
+        formzipcode = Request.Form["zipcode"] ?? u.PostalCode;
+        state = u.StateProvinceID ?? 0;
+    }
     
     // If this is a POST request, validate and process data
     if (IsPost && Validation.IsValid()) {
