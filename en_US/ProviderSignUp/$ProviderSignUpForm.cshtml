@@ -202,7 +202,7 @@
             /*** All finished, it was ok? ***/
             if (ModelState.IsValid) {
                 //LcHelpers.ReturnJsonResult(0, null);
-                var red = UrlUtil.LangPath + "Dashboard/";
+                var red = UrlUtil.LangPath + "Dashboard/Alerts/";
                 if (Request.IsAjaxRequest()) {
                     LcHelpers.ReturnJsonResult(1, red);
                 } else {
@@ -245,13 +245,16 @@
                     <div class="step-number">1</div>
                     <h2>About you</h2>
                     <fieldset class="login-data">
+                        @if (u == null)
+                        {
                         <div class="facebook-connect choice-option">
-                            @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" } )
+                            @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" })
                             <p class="info">By clicking "Connect with Facebook" you confirm that you accept the
                             <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/#termsofuse">Terms of Service</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/#privacypolicy">Privacy Policy</a></p>
                             <p class="footnote">*we don't post anything without your permission</p>
                         </div>
                         <p class="choice-or">or</p>
+                        }
                         <ul class="signup-data choice-option">
                             <li class="first-name">
                                 <label for="firstname" @if(!ModelState.IsValidField("firstname")){<text>class="error-label"</text>}>First Name</label>
