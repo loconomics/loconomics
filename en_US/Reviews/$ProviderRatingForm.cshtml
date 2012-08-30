@@ -39,16 +39,16 @@
 
     if (ModelState.IsValid) {
         if (!pastReference){
-            Validation.RequireField("question1", "Please response to section 1 question");
+            Validation.RequireField("question1", "Please respond to all questions in Section 1");
             Validation.RequireField("private-review", "Please write a private review");
         }
-        Validation.RequireField("question2", "Please response to section 3 question");
-        Validation.RequireField("rating1", "Please rate its quality of work");
-        Validation.RequireField("rating2", "Please rate its efficiency");
-        Validation.RequireField("rating3", "Please rate its professionalism");
+        Validation.RequireField("question2", "Please respond to all questions in Section 2");
+        Validation.RequireField("rating1", "Please rate the quality of work");
+        Validation.RequireField("rating2", "Please rate the efficiency");
+        Validation.RequireField("rating3", "Please rate the professionalism");
         Validation.RequireField("public-review", "Please write a public review");
         if (pastReference) {
-            Validation.Add("serviceHours", Validator.Decimal("Service Hours must be a valid number"));
+            Validation.Add("serviceHours", Validator.Decimal("The number of hours worked must be a valid number"));
         }
 
         if(IsPost && Validation.IsValid()){
@@ -182,7 +182,11 @@
                 }
                 if(ModelState.IsValid){
                     if (pastReference) {
+<<<<<<< HEAD
                         LcHelpers.ReturnJsonResult(0, "Thanks for rating! Press on the Loconomics logo to continue.", false);
+=======
+                        CommonHelpers.ReturnJsonResult(0, "Thanks for your review!", false);
+>>>>>>> Review/References Content changes
                     } else {
                         LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
                     }
@@ -262,13 +266,13 @@
             {
                 @printProviderRating3(provider)
             <li class="serviceHours">
-                <label>Please, let us know how many hours (approximately) took the work done by @provider.FirstName:
+                <label>Please let us know approximately how many hours @provider.FirstName has worked for you:
                     <input type="text" name="serviceHours" @Validation.GetHtml("serviceHours") value="@(Request["serviceHours"])" />
                 </label>
             </li>
             }
             <li class="publicreview">
-                <label for="public-review">Write a brief review for other Loconomics members to view 
+                <label for="public-review">Write a brief review for other Loconomics members to see: 
                 (please be respectful and constructive)</label>
                 <textarea rows="4" id="public-review" name="public-review" placeholder="(250 or fewer characters)">@Request["public-review"]</textarea>
             </li>
@@ -282,7 +286,7 @@
             @printProviderRating3(provider)
             <li class="private-review">
                 <label for="private-review">Please give @provider.FirstName any constructive criticism to help
-                    him do a better job (only @provider.FirstName will see this):</label>
+                    @provider.FirstName do a better job (only @provider.FirstName will see this):</label>
                 <textarea rows="10" id="private-review" name="private-review" placeholder="(1000 or fewer characters)">@Request["private-review"]</textarea>
             </li>               
         </ul>
@@ -297,10 +301,8 @@
                 <label>No<input type="radio" name="question2" @LcHelpers.IsChecked("false", Request["question2"]) value="false" /></label>
             </li>
             <li class="share-social">
-                Please share @(provider.FirstName)'s profile with your family and friends 
-                @if (!pastReference){ 
-                    <text> and earn a $5 credit when they make a purchase:</text> 
-                }
+                Please share @(provider.FirstName)'s profile with your family and friends: 
+                // (commented out referral credit for now)  @if (!pastReference){  <text> and earn a $5 credit when they make a purchase:</text> }
                 @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml",
                     new
                     {

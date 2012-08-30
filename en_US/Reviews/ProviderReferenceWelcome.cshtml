@@ -12,13 +12,13 @@
 <div id="container" class="provider-review clearfix">
     <div id="main" class="provider-reference-welcome">
         @if (provider == null || position == null) {
-            <h1>Ups! There is a problem</h1>
-            <div>We're sorry, there is a problem with your request and cannot be processed. If you did click on an email link, try to copy and paste that link instead of clicking on it.
+            <h1>Our apologies</h1>
+            <div>We're sorry, there is a problem with your request. Try copying the link from the e-mail and pasting it directly into the browser.
                 Contact <a href="mailto:support@@loconomics.com">support@@loconomics.com</a> for more help.
             </div>
         } else {
             <h1>Welcome! Help @provider.FirstName build his reputation</h1>
-            <p><strong>You are here because @provider.FirstName ask you to write a reference about it.</strong> It's quick and easy!</p>
+            <p><strong>@provider.FirstName has asked you to write a reference for a profile on Loconomics.</strong> It should only take a minute or two.</p>
             
             if (WebSecurity.IsAuthenticated)
             {
@@ -26,7 +26,7 @@
             }
             else
             {
-                <p>But first you need Log-in or create an account (it's free!)</p>
+                <p>You'll need to login or create an account for free.</p>
             
                 @RenderPage(UrlUtil.LangPath + "Account/$Login.cshtml", new
                    {
