@@ -116,9 +116,10 @@ ul.attributes-list li {
     background-color: White;
 }
 #profile-activation-message {
-    margin: 5px;
-    padding: 10px 24px;
-    background: url('../img/theme/alert-icon.png') no-repeat left center;
+    color: #8B2143;
+    position: absolute;
+    top: 390px;
+    z-index: 500;
 }
 .dashboard-help-widget {
     overflow: hidden;
