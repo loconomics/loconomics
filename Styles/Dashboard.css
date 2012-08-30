@@ -44,10 +44,11 @@ ul.attributes-list li {
     margin-top: 0;
     margin-bottom: 0;
     background: white;
-    padding: 14px 20px;
+    padding: 6px 20px;
     width: 691px;
 }
 #highlights {
+    height: 29px;
     padding-bottom: 1px;
     border-bottom-width: 0;
     border-radius: 4px 4px 0 0;
@@ -62,6 +63,11 @@ ul.attributes-list li {
     -moz-border-radius: 0 0 4px 4px;
     -o-border-radius: 0 0 4px 4px;
     -webkit-border-radius: 0 0 4px 4px;
+    height: 150px;
+    -moz-box-shadow: 0 5px 5px -2px #bbb;
+    -o-box-shadow: 0 5px 5px -2px #bbb;
+    -webkit-box-shadow: 0 5px 5px -2px #bbb;
+    box-shadow: 0 5px 5px -2px #bbb;
 }
 .dashboard #highlights h1 {
     font-size: 2em;
@@ -110,7 +116,7 @@ ul.attributes-list li {
     background-color: White;
 }
 #profile-activation-message {
-    margin: 10px;
+    margin: 5px;
     padding: 10px 24px;
     background: url('../img/theme/alert-icon.png') no-repeat left center;
 }
@@ -151,9 +157,11 @@ ul.attributes-list li {
 .dashboard-help-widget a,
 .dashboard-help-widget a:link,
 .dashboard-help-widget a:visited {
-    color: #eb6e42;
+    color: #EB6E42;
+    display: block;
+    font-size: 0.9em;
+    line-height: normal;
     text-decoration: none;
-    font-size: .9em;
 }
 .dashboard-help-widget a:hover {
     text-decoration: underline;
@@ -162,7 +170,7 @@ ul.attributes-list li {
     display: none;
 }
 #dashboard-help p{
-    margin: 2px 0;
+    margin: 0;
     font-size: .9em;
 }
 
