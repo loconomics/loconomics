@@ -426,7 +426,10 @@ fieldset.required-attribute-category > legend:after {
     font-size: 1.2em;
     height: 8em;
     padding: 6px 12px;
-    width: 692px;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 /* Fixing the buggy browsers implementation of legend element */
@@ -566,10 +569,10 @@ form.positionavailability input{
     width: 390px;
 }
 .positionphotos-gallery {
-    width: 160px;
+    width: 23%;
 }
 .positionphotos-tools{
-    width: 116px;
+    width: 14%;
 }
 .positionphotos-gallery,
 .positionphotos-edit{
@@ -869,8 +872,14 @@ html.js .user-verified-licenses h5 {
     padding: 10px;
 }
 .positionreviews .references li textarea{
-    width: 660px;
     height: 14em;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.positionreviews .references li {
+    padding: 0;
 }
 .positionreviews .references li textarea[name="clientsemails"]{
     height: 7em;
@@ -1086,7 +1095,10 @@ form#personal li > label.gender {
     margin-bottom: 10px;
 }
 .dashboard #main .col-2{
-    width: 340px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 50%;
 }
 .dashboard #main .col-2-1{
     border-right: 1px solid #DADADA;
