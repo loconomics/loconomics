@@ -172,7 +172,7 @@ $(document).ready(function () {
     /*===============
     * Admin bookings
     */
-    $('body').on('click', '.change-booking-status .set-status, .change-booking-status .see-payment-data', function () {
+    $('#admin-bookings').on('click', '.change-booking-status .set-status, .change-booking-status .see-payment-data', function () {
         var $t = $(this);
         var form = $t.closest('form');
         var h = form.find('.change-booking-state-action');
@@ -182,8 +182,8 @@ $(document).ready(function () {
         else if ($t.hasClass('see-payment-data'))
             h.attr('name', 'see-payment-data');
         form.submit();
-    });
-    $('#admin-bookings').on('ajaxSuccessPostMessageClosed', '.change-booking-status-form', function (e, data) {
+    })
+    .on('ajaxSuccessPostMessageClosed', '.change-booking-status-form', function (e, data) {
         if (data.Code == 0) $(this).closest('.tab-body').reload();
     }).on('ajaxSuccessPost', '.change-booking-status-form', function (e, data) {
         if (data.Code == 0)
@@ -624,6 +624,9 @@ function openChangeBookingStateForm(bookingID, button) {
     var url = editPanel.data('source-url').replace('BookingID=0', 'BookingID=' + bookingID);
     editPanel.reload(url);
     editPanel.show();
+    editPanel.on('click', '.close-edit-popup', function () {
+        editPanel.hide();
+    });
 }
 /* User Photo */
 function reloadUserPhoto() {

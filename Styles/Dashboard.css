@@ -1425,10 +1425,13 @@ form#personal li > label.gender {
     display: inline;
 }
 #admin-bookings .items-list > li > .item-summary {
-    width: 660px;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #admin-bookings .items-list > li > .actions {
-    width: 250px;
+    width: 210px;
 }
 #admin-bookings .change-booking-status {
     display: none;
