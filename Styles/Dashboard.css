@@ -188,17 +188,20 @@ ul.attributes-list li {
 .dashboard #profile-menu li a,
 .dashboard #profile-menu li a:link,
 .dashboard #profile-menu li a:visited{
-    color: #00989a;
+    color: #747474;
     text-decoration: none;
 }
 .dashboard #profile-menu > li.current{
-    background-color: #b5e1e2;
+    background-color: white;
+}
+.dashboard #profile-menu > li.current a{
+    color: #00989a;
 }
 .dashboard #profile-menu > li.current > a{
     font-weight: bold;
 }
 .dashboard #profile-menu li a:hover{
-    background-color: #ccfeff;
+    background-color: #ebc0b1;
 }
 .dashboard #profile-menu > li > a > .warning-note {
     color: White;
@@ -213,9 +216,10 @@ ul.attributes-list li {
 }
 /* Sub-menu */
 .dashboard #profile-menu ul{
-    list-style: none;
-    padding: 0;
+    border-top: 1px solid #D4D4D4;
+    list-style: none outside none;
     margin: 0;
+    padding: 8px 0;
 }
 .dashboard #profile-menu ul li a{
     border: none;
@@ -225,6 +229,7 @@ ul.attributes-list li {
 }
 .dashboard #profile-menu ul a.current{
     font-weight: bold;
+    color: #00989a;
 }
 /** Dashboard tabs **/
 .dashboard .tab-body > p {
