@@ -187,7 +187,7 @@ var TabbedUX = {
         if (tabOrSelector) {
             tab = $(tabOrSelector);
             if (tab.length == 1) {
-                tabContainer = tab.parent();
+                tabContainer = tab.parents('.tabbed:eq(0)');
                 ma = tabContainer.find('> .tabs > li > a[href=#' + tab.get(0).id + ']');
                 mi = ma.parent();
             }
@@ -198,8 +198,8 @@ var TabbedUX = {
                 ma = mi.children('a:eq(0)');
             } else
                 mi = ma.parent();
-            tabContainer = mi.parent().parent();
-            tab = tabContainer.find('>.tab-body#' + ma.attr('href'));
+            tabContainer = mi.closest('.tabbed');
+            tab = tabContainer.find('>.tab-body#@0, >.tab-body-list>.tab-body#@0'.replace(/@0/g, ma.attr('href')));
         }
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
@@ -371,6 +371,18 @@ $(document).ready(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
+
+    /* slider-tabs */
+    $('.tabbed.slider-tabs').each(function () {
+        var $t = $(this);
+        var $tabs = $t.children('.tab-body');
+        var c = $tabs
+            .wrapAll('<div class="tab-body-list"/>')
+            .end().children('.tab-body-list');
+        $tabs.on('tabFocused', function () {
+            c.stop(true, false).animate({ scrollLeft: c.scrollLeft() + $(this).position().left }, 1000);
+        });
+    });
 
     /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
     $('.tab-body').on('tabFocused', function () {

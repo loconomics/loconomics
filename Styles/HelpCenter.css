@@ -54,6 +54,9 @@
 /* tabs */
 .tabbed.slider-tabs > .tab-body {
     display: none;
+}
+.tabbed.slider-tabs > .tab-body,
+.tabbed.slider-tabs > .tab-body-list > .tab-body {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
@@ -62,6 +65,17 @@
 }
 .tabbed.slider-tabs > .tab-body.current {
     display: block;
+}
+.tabbed.slider-tabs > .tab-body-list {
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+.tabbed.slider-tabs > .tab-body-list > .tab-body {
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal;
+    margin-right: 50px;
 }
 
 /** Specific howitworks tab-content styles **/
