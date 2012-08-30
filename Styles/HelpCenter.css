@@ -35,16 +35,21 @@
 }
 .tabbed.slider-tabs > .tabs > li {
     float: left;
-    height: 100px;
+    height: 82px;
     position: relative;
-    width: 100px;
+    width: 98px;
 }
 .tabbed.slider-tabs > .tabs > li > a {
-    bottom: 0;
+    color: #747474;
     display: block;
-    position: absolute;
+    font-size: 0.8em;
+    height: 100%;
+    padding-top: 60px;
     text-align: center;
-    width: 100%;
+    text-decoration: none;
+}
+.tabbed.slider-tabs > .tabs > li.current > a {
+    color: #00989a;
 }
 /* tabs */
 .tabbed.slider-tabs > .tab-body {
@@ -60,21 +65,51 @@
 }
 
 /** Specific howitworks tab-content styles **/
+.howitworks .tabs {
+    background: url('../img/theme/howitworks/howitworks-tabs.png') no-repeat;
+    height: 105px;
+}
 .howitworks .tab-body > h2 {
     display: none;
 }
-.howitworks .tab-body > ol {
-
+.howitworks .tab-body p {
+    text-align: justify;
 }
 .howitworks .tab-body > ol > li {
     border-top: 1px solid #c9c9c9;
     padding: 20px 25px;
+    background: 791px center no-repeat;
+    padding-right: 320px;
 }
 .howitworks .tab-body > ol > li:first-child {
     border-top: none;
 }
+.howitworks .tab-body > ol > li:nth-child(even) {
+    background: 25px center no-repeat;
+    padding-left: 320px;
+    padding-right: 25px;
+}
 .howitworks .tab-body > ol > li > h3 {
     margin: 0 0 15px;
+}
+/* Specific content images */
+#howitworks-customers li.find-provider {
+    background-image: url('../img/theme/howitworks/howitworks-customer-find-provider.png');
+}
+#howitworks-customers li.book-provider {
+    background-image: url('../img/theme/howitworks/howitworks-customer-book-provider.png');
+}
+#howitworks-customers li.review-provider {
+    background-image: url('../img/theme/howitworks/howitworks-customer-review-provider.png');
+}
+#howitworks-providers li.create-profile {
+    background-image: url('../img/theme/howitworks/howitworks-provider-create-profile.png');
+}
+#howitworks-providers li.perform-services {
+    background-image: url('../img/theme/howitworks/howitworks-provider-perform-services.png');
+}
+#howitworks-providers li.get-paid {
+    background-image: url('../img/theme/howitworks/howitworks-provider-get-paid.png');
 }
 
 #howitworks-faqs {
