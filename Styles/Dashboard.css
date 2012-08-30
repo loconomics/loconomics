@@ -28,7 +28,7 @@ ul.attributes-list li {
     width: 735px;
 }
 .dashboard #main {
-    margin-top: 12px;
+    margin-top: 10px;
     /* next padding-bottom can be' not needed', but
        remember us that there is an extra space because
        the relatives tab-page inside #main and help us
