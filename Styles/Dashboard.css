@@ -2,6 +2,13 @@
    ====== IagoSRL for Loconomics S.L. ============
  */
 @import url('Pricing.css');
+
+/* debug */
+#container 
+{
+    outline: red dashed 1px;
+}
+
 ul.attributes-list li {
     list-style: disc inside url("../img/bullet-editable.png") !important;
 }
@@ -21,10 +28,10 @@ ul.attributes-list li {
 .dashboard #highlights,
 .dashboard #dashboard-help,
 .dashboard #main{
-    margin: 0 0 0 200px;
+    margin: 0 0 0 225px;
 }
 .dashboard #main{
-    width: 760px;
+    width: 735px;
 }
 .dashboard #main {
     margin-top: 12px;
@@ -44,7 +51,7 @@ ul.attributes-list li {
     margin-bottom: 0;
     background: white;
     padding: 14px 20px;
-    width: 720px;
+    width: 691px;
 }
 #highlights {
     padding-bottom: 1px;
@@ -68,16 +75,25 @@ ul.attributes-list li {
     margin: 0;
 }
 .dashboard #dashboard-avatar {
-    width: 186px;
-    height: 186px;
+    border: 1px solid #CCC9C9;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    left: 0;
     overflow: hidden;
+    padding: 10px;
     position: absolute;
     top: 155px;
-    left: 0;
 }
 .dashboard #avatar {
-    width: 186px;
-    height: 186px;
+    border: 1px solid #CCC9C9;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    height: 184px;
+    width: 176px;
 }
 .dashboard #changephoto {
     background-color: rgba(255, 255, 255, 0.65);
@@ -88,10 +104,9 @@ ul.attributes-list li {
     color: black;
     display: block;
     font-size: 0.8em;
-    left: 10px;
-    right: 10px;
-    bottom: 15px;
-    top: 149px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
     padding: 0 15px;
     position: absolute;
     text-decoration: none;
@@ -160,8 +175,8 @@ ul.attributes-list li {
 .dashboard #nav {
     left: 0;
     position: absolute;
-    top: 341px;
-    width: 186px;
+    top: 362px;
+    width: 200px;
     overflow: hidden;
 }
 /*** Profile Menu ***/
