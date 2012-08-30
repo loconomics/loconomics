@@ -50,6 +50,7 @@
 }
 .tabbed.slider-tabs > .tabs > li.current > a {
     color: #00989a;
+    background: url("../img/theme/howitworks/slider-tabs-selector.png") no-repeat scroll 41px 82px transparent;
 }
 /* tabs */
 .tabbed.slider-tabs > .tab-body {
@@ -92,7 +93,7 @@
 .howitworks .tab-body > ol > li {
     border-top: 1px solid #c9c9c9;
     padding: 20px 25px;
-    background: 791px center no-repeat;
+    background: 745px center no-repeat;
     padding-right: 320px;
 }
 .howitworks .tab-body > ol > li:first-child {

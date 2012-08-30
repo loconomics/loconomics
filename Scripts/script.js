@@ -380,7 +380,7 @@ $(document).ready(function () {
             .wrapAll('<div class="tab-body-list"/>')
             .end().children('.tab-body-list');
         $tabs.on('tabFocused', function () {
-            c.stop(true, false).animate({ scrollLeft: c.scrollLeft() + $(this).position().left }, 1000);
+            c.stop(true, false).animate({ scrollLeft: c.scrollLeft() + $(this).position().left }, 1400);
         });
     });
 
