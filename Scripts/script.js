@@ -441,11 +441,6 @@ $(document).ready(function () {
             }
         });
 
-    $('#launchHowItWorks').click(function (e) {
-        popup(UrlUtil.LangPath + 'HelpCenter/$HowItWorksWidget/', { width: 400, height: 500 });
-        return false;
-    });
-
     $('div.progress-bar').each(function () {
         var pd = $(this).find('.text .percent-done').text();
         $(this).find('.total .percent-done').css('width', pd);
