@@ -289,16 +289,16 @@ Please complete the information below as accurately as possible.  Only your firs
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
     <div class="warning warning-large">
-        <h6>Be carefull:</h6>
+        <h6>Friendly reminder:</h6>
         <ul>
         @if (hasNameVerifications) {
-        <li>If you change your <strong>name</strong>, your <strong><em>Social, Name and Background Check verifications</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>name</strong>, any <strong><em>social media accounts and background checks</em></strong> will need to be verified again.</li>
         }
         @if (hasAddressVerifications) {
-        <li>If you change your <strong>address</strong>, your <strong><em>Address verification</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>address</strong>, it will need to be verified again.</li>
         }
         @if (hasPhoneVerifications) {
-        <li>If you change your <strong>phone numbers</strong>, your <strong><em>Phone verification</em></strong> will be revoked and you will need to verify it again after save the changes.</li>
+        <li>If you change your <strong>phone number(s)</strong>, it will need to be verified again.</li>
         }
         </ul>
     </div>
@@ -371,7 +371,7 @@ Please complete the information below as accurately as possible.  Only your firs
     <fieldset id="@idprefix-fs-publicbio">
         <legend>Public Bio:</legend>
         <ul>
-            <li><label for="@idprefix-publicbio">Public Bio:</label><textarea id="@idprefix-publicbio" name="publicbio" rows="7" @Validation.GetHtml("publicbio")>@Bio</textarea>
+            <li><textarea id="@idprefix-publicbio" name="publicbio" rows="7" @Validation.GetHtml("publicbio")>@Bio</textarea>
                 @Html.ValidationMessage("publicbio")
             </li>
         </ul>
@@ -395,10 +395,10 @@ Please complete the information below as accurately as possible.  Only your firs
                     @*if (facebookVerification != null)
                     {
                         <div class="verification-details">
-                            Facebook verification status: @facebookVerification.VerificationStatusName since @facebookVerification.LastVerifiedDate
+                            Facebook verification status: @facebookVerification.VerificationStatusName on @facebookVerification.LastVerifiedDate
                             @if (facebookVerification.VerificationStatusID == 1)
                             {
-                            <div class="warning">If you change your name, your Facebook verification will be revoked and you will need to verify again after save the changes.</div>
+                            <div class="warning">If you change your name, your Facebook account will need to be verified again.</div>
                             }
                         </div>
                     }*@
@@ -412,7 +412,7 @@ Please complete the information below as accurately as possible.  Only your firs
             <ul>
                 @foreach (var v in verifications)
                 {
-                    <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> since @v.LastVerifiedDate</li>
+                    <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> on @v.LastVerifiedDate</li>
                 }
             </ul>
         </fieldset>
