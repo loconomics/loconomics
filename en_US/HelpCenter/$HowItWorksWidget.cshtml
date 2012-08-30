@@ -1,20 +1,55 @@
-﻿	<div id="howItWorksModal" class="modal">
-		<h2 class="cushycms">How It Works</h2>
-		<ol id="howItWorks">
-			<li class="find clearfix">
-				<img class="num" src="@Href(UrlUtil.AppPath + "img/icon-01.png")" alt="1" />
-				<img class="icon" src="@Href(UrlUtil.AppPath + "img/icon-cart-new.png")" alt="" />
-				<h3 class="cushycms"><a href="@Href(UrlUtil.LangPath)">Find, book, &amp; pay for a service.</a></h3>
-			</li>
-			<li class="performed clearfix">
-				<img class="num" src="@Href(UrlUtil.AppPath + "img/icon-02.png")" alt="1" />
-				<img class="icon" src="@Href(UrlUtil.AppPath + "img/icon-home-new.png")" alt="" />
-				<h3 class="cushycms"><a href="@Href(UrlUtil.LangPath)">Service performed.</a></h3>
-			</li>
-			<li class="share clearfix">
-				<img class="num" src="@Href(UrlUtil.AppPath + "img/icon-03.png")" alt="1" />
-				<img class="icon" src="@Href(UrlUtil.AppPath + "img/icon-share.png")" alt="" />
-				<h3 class="cushycms"><a href="@Href(UrlUtil.LangPath)">Write a review &amp; tell your friends.</a></h3>
-			</li>
-		</ol>
+﻿
+    <h1 class="withsub cushycms"><em>Welcome</em> to a new kind of Marketplace</h1>
+    <p class="subh1 cushycms">Loconomics supports local economies by matching customers with independent service providers. Bypassing large agencies and corporations means saving customers money while allowing the provider to earn more. Here at Loconomics, we think small acts add up to big changes, and we’d like to thank you for choosing a local, independent service provider.</p>
+
+	<div class="tabbed slider-tabs">
+		<p class="tabs-header cushycms">Find out how it works</p>
+        <ul class="tabs" role="navigation">
+            <li class="customers current"><a href="#howitworks-customers">Customers</a></li>
+            <li class="providers"><a href="#howitworks-providers">Service Providers</a></li>
+            <li class="faqs"><a href="#howitworks-faqs">FAQs</a></li>
+        </ul>
+		<div id="howitworks-customers" class="tab-body current" role="content">
+            <h2>How it works for Customers</h2>
+            <ol>
+			    <li class="find-provider">
+				    <h3>Find a provider</h3>
+                    <p>Loconomics makes it easy to find an independent service provider in your area. Review profiles, read reviews and recommendations, and choose the provider that best fits your needs.</p>
+			    </li>
+			    <li class="book-provider">
+				    <h3>Book a provider</h3>
+                    <p>Follow our simple, three-step process to complete your booking. Our user-friendly booking system eliminates the need for multiple phone calls, emails, and scheduling hassles, and takes care of everything from confirmations to payment for services.</p>
+			    </li>
+                <li class="review-provider">
+				    <h3>Review a provider</h3>
+                    <p>You chose a provider partially based on customer reviews, so why not help others looking to hire for the same service? All we ask is that you are fair and honest, and we’re always here to help with any disputes that may arise.</p>
+			    </li>
+		    </ol>
+            <div class="actions">
+                <button type="button" class="main-action">Get Started!</button>
+            </div>
+        </div>
+		<div id="howitworks-providers" class="tab-body" role="content">
+            <h2>How it works for Providers</h2>
+            <ol>
+			    <li class="create-profile">
+				    <h3>Create Your Profile</h3>
+                    <p>Loconomics will help you create and maintain a stylish online presence that tells clients who you are, what you do, and why they should choose your services. You’ll have the option of building your reputation by adding photos, professional licenses, background checks, references and more.</p>
+			    </li>
+			    <li class="perform-services">
+				    <h3>Manage Clients, Perform Services</h3>
+                    <p>You decide when you’re available and how much to charge, and clients hire your services using a simple, three-step booking process. You will be notified immediately of new bookings through an email or text message. You have 18 hours to confirm, deny, or reschedule the booking.</p>
+			    </li>
+                <li class="get-paid">
+				    <h3>Get Paid</h3>
+                    <p>After you successfully complete a booking, Loconomics will deposit your pay directly into your bank account. This takes care of any risk of non-payment and eliminates phone tag and awkward conversations. We’ll also help with any disputes or issues that may arise.</p>
+			    </li>
+		    </ol>
+            <div class="actions">
+                <button type="button" class="main-action">Get Started!</button>
+            </div>
+        </div>
+        <div id="howitworks-faqs" class="tab-body" role="content">
+            @RenderPage("$FAQS.cshtml", true, true, true)
+        </div>
 	</div>

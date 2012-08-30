@@ -1,0 +1,88 @@
+﻿/**********************
+ ** Help Center styles
+ */
+.howitworks #main {
+    float: none;
+    width: auto;
+}
+/* Header */
+.howitworks h1 {
+    font-size: 2em;
+    text-transform: lowercase;
+}
+.howitworks h1 > em {
+    font-style: normal;
+    color: #00989b;
+}
+.howitworks .subh1 {
+    font-size: 1em;
+    line-height: normal;
+    color: #747474;
+    font-weight: normal;
+}
+/*= Special tabbbed interface 
+ * created for howitworks: .slider-tabs
+ */
+/* tab header */
+.tabbed.slider-tabs > .tabs-header {
+    margin: 5px 0 0;
+    font-size: .9em;
+}
+/* tab index */
+.tabbed.slider-tabs > .tabs {
+    overflow: hidden;
+    margin: 0 0 15px 0;
+}
+.tabbed.slider-tabs > .tabs > li {
+    float: left;
+    height: 100px;
+    position: relative;
+    width: 100px;
+}
+.tabbed.slider-tabs > .tabs > li > a {
+    bottom: 0;
+    display: block;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+/* tabs */
+.tabbed.slider-tabs > .tab-body {
+    display: none;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border: 2px solid #c9c9c9;
+}
+.tabbed.slider-tabs > .tab-body.current {
+    display: block;
+}
+
+/** Specific howitworks tab-content styles **/
+.howitworks .tab-body > h2 {
+    display: none;
+}
+.howitworks .tab-body > ol {
+
+}
+.howitworks .tab-body > ol > li {
+    border-top: 1px solid #c9c9c9;
+    padding: 20px 25px;
+}
+.howitworks .tab-body > ol > li:first-child {
+    border-top: none;
+}
+.howitworks .tab-body > ol > li > h3 {
+    margin: 0 0 15px;
+}
+
+#howitworks-faqs {
+    padding: 20px 25px;
+}
+
+/* Button */
+.howitworks .actions {
+    text-align: center !important;
+    padding: 10px 0 25px;
+}

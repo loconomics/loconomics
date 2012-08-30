@@ -1,8 +1,9 @@
 ﻿@{
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Page.Title = "How it works";
+    Styles.Add(UrlUtil.AppPath + "Styles/HelpCenter.css");
 }
-<div id="container" class="home clearfix">
+<div id="container" class="howitworks clearfix">
     <div id="main">
         @RenderPage("$HowItWorksWidget.cshtml")
     </div>

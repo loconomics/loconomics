@@ -881,19 +881,18 @@ form fieldset.actions{
 }
 /* .main-action, inside .actions container: bigger, more important button */
 .actions .main-action{
-    text-transform: lowercase;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    background: #99C027 !important;
+    background: none repeat scroll 0 0 #99C027 !important;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
     color: White;
+    display: inline-block;
     font-size: 1.1em;
     line-height: 150%;
-    padding: 0 1em;
-    line-height: 150%;
-    display: inline-block;
+    padding: 0.4em 1.4em;
     text-decoration: none;
+    /*text-transform: lowercase;*/
 }
 .actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
