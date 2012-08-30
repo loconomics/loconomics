@@ -334,9 +334,14 @@ ul.attributes-list li {
 }
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
-.dashboard form li select,
-.dashboard form li textarea{
+.dashboard form li select{
     width: 120px;
+}
+.dashboard form textarea {
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .dashboard form li select{
     /*margin: 0 1.4em;*/
@@ -360,8 +365,8 @@ ul.attributes-list li {
 #personal li input[type="text"]{
     width: 160px;
 }
-#personal li textarea{
-    width: 300px;
+#personal #account-personal-fs-publicbio label {
+    display: none;
 }
 #personal li select{
     width: 187px;
@@ -1027,16 +1032,13 @@ form#personal li > label.gender {
 }
 
 /**** Form: Billing Address ****/
-.billing-address-form .location-data {
-    width: 500px;
-}
 .billing-address-form .location-data label {
     display: block;
     width: auto;
 }
 .billing-address-form .location-data input,
 .billing-address-form .location-data select {
-    width: 300px !important;
+    width: 70% !important;
     float: right;
 }
 
@@ -1410,7 +1412,6 @@ form#personal li > label.gender {
     float: right;
 }
 .conversation-messages > li.new-message form > textarea {
-    width: 288px;
     height: 80px;
 }
 .conversation-messages > li.new-message form > fieldset.actions {

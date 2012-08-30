@@ -1035,7 +1035,7 @@ fieldset.box legend{
 /** Widget class (used in FAQ's, refine search,... **/
 .widget{
     font-size: .9em;
-    width: 185px;
+    width: 174px;
     padding: 15px;
     float: right;
     margin: 0 0 20px 0;
@@ -1679,7 +1679,7 @@ html.boxshadow #loginBox .field-validation-error{
     overflow: hidden;
     height: 22px;
 }
-.user-rating-summary-widget.provider {
+.user-rating-summary-widget.user-rating-detailed.provider {
     min-height: 6.5em;
 }
 .user-rating-summary-widget > ul {
