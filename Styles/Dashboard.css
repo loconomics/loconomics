@@ -3,12 +3,6 @@
  */
 @import url('Pricing.css');
 
-/* debug */
-#container 
-{
-    outline: red dashed 1px;
-}
-
 ul.attributes-list li {
     list-style: disc inside url("../img/bullet-editable.png") !important;
 }
@@ -136,8 +130,8 @@ ul.attributes-list li {
 }
 .dashboard-help-widget article {
     float: left;
-    margin: 0 10px;
-    width: 220px;
+    margin: 0 1%;
+    width: 31%;
 }
 .dashboard-help-widget article ul {
     border: 1px solid #c9c9c9;
@@ -392,8 +386,11 @@ form#personal li label{
 
 /** Form: Positions - Services **/
 .dashboard .position-intro textarea {
-    width: 660px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     height: 6em;
+    width: 100%;
 }
 .dashboard .positionservices div.service-attribute-categories {
     border-right: 1px solid #DADADA;
@@ -401,11 +398,11 @@ form#personal li label{
     /*margin: 20px 10px 10px 0 !important;
     padding: 0 10px 0 0 !important;*/
     min-height: 350px;
-    width: 460px;
+    width: 66%;
 }
 fieldset.positionservices-attributes{
     display: inline-block;
-    width: 205px;
+    width: 40%;
     overflow: hidden;
     /*border-right: solid 1px #dadada;*/
     margin: 0 10px 10px 0 !important;
@@ -452,7 +449,7 @@ form.positionservices input{
 }
 .positionservices-sidebar{
     display: inline-block;
-    width: 230px;
+    width: 33%;
     vertical-align: top;
 }
 .positionservices-sidebar fieldset{
@@ -540,7 +537,7 @@ form.positionavailability input{
     position: absolute;
     right: 0;
     top: 0;
-    width: 280px;
+    width: 266px;
 }
 .positionavailability-booking label{
     display: block;
@@ -883,7 +880,7 @@ html.js .user-verified-licenses h5 {
     width: auto;
 }
 .dashboard form.positionpricing table.pricing-vars {
-    width: 490px;
+    width: 460px;
 }
 .dashboard form.positionpricing table.pricing-vars label {
     padding: 0;
@@ -1154,11 +1151,11 @@ form#personal li > label.gender {
 }
 .items-list > li > .item-summary {
     width: 390px;
-    margin: 0 14px;
+    margin: 0 10px;
 }
 .items-list > li > .actions {
     text-align: center !important;
-    width: 110px;
+    width: 96px;
 }
 .items-list > li > .actions > .item-extra-info {
     line-height: 1.1em;
