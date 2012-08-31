@@ -84,7 +84,7 @@ ul.attributes-list li {
     overflow: hidden;
     padding: 10px;
     position: absolute;
-    top: 155px;
+    top: 124px;
 }
 .dashboard #avatar {
     border: 1px solid #CCC9C9;
@@ -177,7 +177,7 @@ ul.attributes-list li {
 .dashboard #nav {
     left: 0;
     position: absolute;
-    top: 362px;
+    top: 331px;
     width: 200px;
     overflow: hidden;
 }

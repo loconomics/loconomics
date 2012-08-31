@@ -201,7 +201,7 @@ Orange 	#E95D0F
 Yellow 	#F0B600
 */
 
-body { color: #666; font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
+body { color: #747474; font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif; font-size: .9em; line-height: 150%; text-align: center; }
 
 h1, h2, h3, h4, h5, h6 { margin: 1em 0; font-weight: 600; color: #00989A; }
 h1 { color: #b5e1e2; font-size: 3em; line-height: 100%; }
@@ -555,32 +555,53 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 /* Page Structure */
 div.scripts { display: none; }
 #container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
-#container { position: relative; padding: 155px 0 100px 0; }
+#container { position: relative; padding: 124px 0 100px; }
 
 #main { float: left; width: 670px; }
 #secondary { margin-left: 712px; }
 
 .sign-up #main { float: none; width: auto; }
 
-header { position: absolute; top: 30px; right: 0; width: 100%; text-align: center; font-size: .9em; }
+header {    
+    font-size: 0.9em;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 17px;
+    width: 100%;
+}
 header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
 header a, header a:link, header a:visited { color: #00989a; text-decoration: none; font-weight: bold; }
 header a.button { color: #fff; }
 header .new-user a { margin: 0 .5em; }
 header .new-user a:hover { color: #99C027; }
-header #logo.replace { position: absolute; top: 0; left: 0; width: 269px; padding-top: 103px; background-image: url('../img/loconomics-logo.png'); }
+header #logo.replace {
+    background-image: url("../img/theme/logo-loconomics-normal.png");
+    left: 0;
+    padding-top: 78px;
+    position: absolute;
+    top: 0;
+    width: 201px;
+}
 .es header #logo.replace { background-image: url('../img/loconomics-logo-espanol.png'); }
 header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
-header ul li { display: inline-block; margin: 0 0 0 1em; color: #00989a; }
+header ul li { display: inline-block; margin: 0 0 0 1em; vertical-align: top; }
+header ul li a,
+header ul li a:visited {
+    color: #747474;
+}
 header dl { position: relative; font-size: .9em; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
-header dl dt { position: relative; z-index: 2; display: block; background: #def2f2; padding: 0 15px; width: 120px; text-align: left; }
+header dl dt { position: relative; z-index: 2; display: block; padding: 0 15px; width: 120px; text-align: left; }
 header dl.lang-country dt,
 header dl.lang-country dd{
     width: 80px;
 }
 header dl dd { 
-   display: block; padding: 10px 15px 0 15px; display: none; text-align: left; background: #def2f2; 
+   background: none repeat scroll 0 0 #F5F5F5;
+   border: 1px solid #747474;
+   margin-top: 20px;
+   display: block; padding: 10px 15px 0 15px; display: none; text-align: left;
    position: absolute; top: 15px; z-index: 1; width: 120px;
    -moz-border-bottom-right-radius: 12px; /* FF1-3.6 */
    -webkit-border-bottom-right-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
@@ -590,11 +611,18 @@ header dl dd {
    border-bottom-left-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */ 
    -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; }
 header dl.user-nav dt, header dl.user-nav dd {
-    width: 170px;
+    background: none repeat scroll 0 0 #F5F5F5;
+    border: 1px solid #747474;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    width: auto;
 }
+header dl:hover { padding-bottom: 30px; }
 header dl:hover dd { display: block; }
 header dl dd a { display: block; }
 header dl dd a:hover { text-decoration: underline; }

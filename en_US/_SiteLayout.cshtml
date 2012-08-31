@@ -37,18 +37,17 @@
 		    <div class="wrap">
 			    <a id="logo" class="replace" href="@Href(UrlUtil.LangPath)">Loconomics, at your service.</a>
 			    <ul>
-				    <li><a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a></li>
                     @if (WebSecurity.IsAuthenticated) {
 			            <li>
 					        <dl class="user-nav">
                                 @{
-                                    var usermenuGreeting = "Hi, {0}!";
-                                    if (N.W(u.FullName) == null) {
-                                        usermenuGreeting = "Hello!";
+                                    var usermenuGreeting = "Welcome, {0}!";
+                                    if (N.W(u.FirstName) == null) {
+                                        usermenuGreeting = "Welcome!";
                                     } else {
-                                        usermenuGreeting = String.Format(usermenuGreeting, u.FullName);
+                                        usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
                                     }
-						        <dt class="fancy">@(usermenuGreeting) &#x25BC;</dt>
+						        <dt>@(usermenuGreeting) &#x25BC;</dt>
                                 }
 						        <dd>
                                     <a href="@Href(UrlUtil.LangPath + "Dashboard/")" title="Dashboard">Dashboard</a>
@@ -61,7 +60,7 @@
 					        </dl>
 				        </li>
                         if (!u.IsProvider){
-			            <li><a class="button fancy" href="@Href(UrlUtil.LangPath + "ProviderSignUp/")">Become a provider</a></li>
+			            <li><a class="button" href="@Href(UrlUtil.LangPath + "ProviderSignUp/")">Become a provider</a></li>
                         }
                     } else {
                         <li class="new-user">
@@ -69,11 +68,11 @@
                             <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> | 
                             <a id="launchHowItWorks" href="@(UrlUtil.LangPath)HelpCenter/HowItWorks/">How it works</a>
                         </li>
-                        <li><a class="button fancy" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
+                        <li><a class="button" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
                     }
 				    <li>
 					    <dl class="lang-country">
-						    <dt class="fancy"><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
+						    <dt><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
 						    <dd>
 							    <a class="us" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />English</a>
 							    <a class="es" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/es.png")" alt="Spain" />Español</a>
@@ -87,7 +86,10 @@
 			    </ul>
 		    </div>
         </header>
-        <footer><a href="@(UrlUtil.LangPath)About/">About</a> | <a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> | <a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a> | <a href="/Blog/">Blog</a></footer>
+        <footer>
+            <a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a>
+            <a href="@(UrlUtil.LangPath)About/">About</a> | <a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> | <a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a> | <a href="/Blog/">Blog</a>
+        </footer>
 		@* Study if can be removed the 'modals' element -check scripts- *@<div id="modals"></div><!-- #modals -->
         <div class="scripts">
             <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
