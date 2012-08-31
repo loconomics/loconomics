@@ -551,7 +551,6 @@ table.ratings td img { float: left; }
 table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 
-
 /* Page Structure */
 div.scripts { display: none; }
 #container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
@@ -570,8 +569,7 @@ header {
     top: 17px;
     width: 100%;
 }
-header .wrap { position: relative; width: 960px; margin: 0 auto; text-align: right; }
-header a, header a:link, header a:visited { color: #00989a; text-decoration: none; font-weight: bold; }
+header .wrap { position: relative; width: 960px; margin: 0 auto; }
 header a.button { color: #fff; }
 header .new-user a { margin: 0 .5em; }
 header .new-user a:hover { color: #99C027; }
@@ -585,47 +583,81 @@ header #logo.replace {
 }
 .es header #logo.replace { background-image: url('../img/loconomics-logo-espanol.png'); }
 header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
-header ul li { display: inline-block; margin: 0 0 0 1em; vertical-align: top; }
+header ul li { display: inline-block; vertical-align: top; font-weight: bold; }
+header ul li ul li  {
+    display: block;
+    margin: .2em 0;
+    padding: 0 0.8em;
+}
 header ul li a,
+header ul li a:link,
 header ul li a:visited {
     color: #747474;
+    text-decoration: none;
+    border-right: 1px solid #747474;
+    padding: 0 0.5em;
+}
+header ul li:last-child a,
+header dd ul li a,
+header dd ul li a:link,
+header dd ul li a:visited {
+    border-right: none;
+}
+header .anonymous-tools {
+    position: absolute;
+    left: 215px;
+    top: 18px;
+}
+header .user-tools {
+    float: right;
+    margin-top: 18px;
 }
 header dl { position: relative; font-size: .9em; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
-header dl dt { position: relative; z-index: 2; display: block; padding: 0 15px; width: 120px; text-align: left; }
-header dl.lang-country dt,
-header dl.lang-country dd{
-    width: 80px;
+header dl dt { display: block; text-align: left; }
+header dl dd ul {
+    position: absolute;
+    right: 0;
+    text-align: left;
+    white-space: nowrap;
+    width: auto;
+    z-index: 100;
+    overflow: hidden;
+    background: white;
 }
-header dl dd { 
-   background: none repeat scroll 0 0 #F5F5F5;
-   border: 1px solid #747474;
-   margin-top: 20px;
-   display: block; padding: 10px 15px 0 15px; display: none; text-align: left;
-   position: absolute; top: 15px; z-index: 1; width: 120px;
-   -moz-border-bottom-right-radius: 12px; /* FF1-3.6 */
-   -webkit-border-bottom-right-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
-   border-bottom-right-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
-   -moz-border-bottom-left-radius: 12px; /* FF1-3.6 */
-   -webkit-border-bottom-left-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
-   border-bottom-left-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */ 
-   -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; }
-header dl.user-nav dt, header dl.user-nav dd {
-    background: none repeat scroll 0 0 #F5F5F5;
+header dl dd ul,
+header dl.user-nav dt {
     border: 1px solid #747474;
     border-radius: 4px;
     -moz-border-radius: 4px;
-    -o-border-radius: 4px;
     -webkit-border-radius: 4px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: auto;
+    -o-border-radius: 4px;
 }
-header dl:hover { padding-bottom: 30px; }
-header dl:hover dd { display: block; }
+header dl.user-nav dt {
+    padding: 0 .8em;
+}
+header dl dd {
+    display: none;
+}
+header dl.user-nav dt,
+header dl dd li.current {
+    background-color: #F5F5F5;
+}
+header dl dd a.current {
+    font-weight: bold;
+}
+/* Showing sub-menu */
+header dl:hover {
+    padding-bottom: 10px;
+    position: relative;
+}
+header dl:hover dd {
+    display: block;
+    background: url('../img/theme/menu-arrow-up.png') no-repeat center top;
+    padding-top: 14px;
+}
 header dl dd a { display: block; }
-header dl dd a:hover { text-decoration: underline; }
+header dl dd li:hover { background-color: #F5F5F5; }
 
 footer { margin: 25px auto; font-size: 1.3em; color: #a1a1a1; text-align: center; }
 footer a{

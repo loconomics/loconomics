@@ -6,18 +6,18 @@
     var isHomePage = PageData["IsHomePage"] ?? false;
 }
 <!doctype html>
-    <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="en"> <![endif]-->
-    <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="en"> <![endif]-->
-    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="en"> <![endif]-->
-    <!--[if gt IE 8]> <html class="no-js ie" lang="en"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="@UrlUtil.LangId"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="@UrlUtil.LangId"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@UrlUtil.LangId"> <![endif]-->
+    <!--[if gt IE 8]> <html class="no-js ie" lang="@UrlUtil.LangId"> <![endif]-->
+    <!--[if !IE]><!--> <html class="no-js" lang="@UrlUtil.LangId"> <!--<![endif]-->
      <head>
           <meta charset="utf-8"/>
           <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
           <title>Loconomics - @Page.Title</title>
-          <meta name="description" content=""/>
-          <meta name="author" content=""/>
-          <meta name="viewport" content="width=device-width,initial-scale=1"/><!-- Mobile viewport optimized: j.mp/bplateviewport -->
+          <meta name="description" content="Find service providers to do the job right. At your service!"/>
+          <meta name="author" content="Loconomics Inc."/>
+          @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
           <link rel="shortcut icon" href="@Href(UrlUtil.AppPath + "favicon.ico")" type="image/x-icon" />
           <link rel="stylesheet" href="@Href(UrlUtil.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
            @* Our styles *@
@@ -30,13 +30,19 @@
                 @Html.Raw(UrlUtil.ToJsVar())
             </script>
     </head>
-
     <body class="@PageData["BodyClass"]">
         @RenderBody()
         <header>
 		    <div class="wrap">
 			    <a id="logo" class="replace" href="@Href(UrlUtil.LangPath)">Loconomics, at your service.</a>
-			    <ul>
+                @if (!WebSecurity.IsAuthenticated) {
+                <ul class="anonymous-tools">
+                        <li><a id="launchHowItWorks" href="@(UrlUtil.LangPath)HelpCenter/HowItWorks/">How it works</a></li>
+                        <li><a class="register" href="@(UrlUtil.LangPath)Account/Register/">Sign Up</a></li>
+                        <li><a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a></li>
+                </ul>
+                }
+			    <ul class="user-tools">
                     @if (WebSecurity.IsAuthenticated) {
 			            <li>
 					        <dl class="user-nav">
@@ -50,39 +56,48 @@
 						        <dt>@(usermenuGreeting) &#x25BC;</dt>
                                 }
 						        <dd>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/")" title="Dashboard">Dashboard</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Bookings/")">Your bookings</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Positions/")">Your positions</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">Public profile</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Dashboard/Account/")">Account</a>
-                                    <a href="@Href(UrlUtil.LangPath + "Account/Logout/")">Logout</a>
+                                    <ul>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Alerts/")">Alerts</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Inbox/")">Inbox</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Bookings/")">Bookings</a></li>
+                                        @if (u.IsProvider)
+                                        {
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Calendar/")">Calendar</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Positions/")">Positions</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Tools/")">Tools</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/My Clients/")">My Clients</a></li>
+                                        }
+                                        @if (u.IsCustomer)
+                                        {
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/My Providers/")">My Providers</a></li>
+                                        }
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Preferences/")">Preferences</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Dashboard/Account/")">Account</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId)">Public Profile</a></li>
+                                        <li><a href="@Href(UrlUtil.LangPath + "Account/Logout/")">Logout</a></li>
+                                    </ul>
 						        </dd>
 					        </dl>
 				        </li>
-                        if (!u.IsProvider){
-			            <li><a class="button" href="@Href(UrlUtil.LangPath + "ProviderSignUp/")">Become a provider</a></li>
-                        }
-                    } else {
-                        <li class="new-user">
-                            <a class="register" href="@(UrlUtil.LangPath)Account/Register/">Sign Up</a> | 
-                            <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> | 
-                            <a id="launchHowItWorks" href="@(UrlUtil.LangPath)HelpCenter/HowItWorks/">How it works</a>
-                        </li>
-                        <li><a class="button" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
+                        <li><a id="launchHowItWorks" href="@(UrlUtil.LangPath)HelpCenter/HowItWorks/">How it works</a></li>
                     }
 				    <li>
 					    <dl class="lang-country">
-						    <dt><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />English &#x25BC;</dt>
+						    <dt class="current-lang-country @UrlUtil.LangId">English (US) &#x25BC;</dt>
 						    <dd>
-							    <a class="us" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />English</a>
-							    <a class="es" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/es.png")" alt="Spain" />Español</a>
-							    <a class="es" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/es.png")" alt="Spain" />English</a>
-							    <a class="us" href="@Href(UrlUtil.LangPath)"><img src="@Href(UrlUtil.AppPath + "Styles/images/us.png")" alt="US" />Español</a>
+                                <ul>
+							        <li class="current"><a href="@Href(UrlUtil.AppPath)en_US/">English (US)</a></li>
+							        <li><a href="@Href(UrlUtil.AppPath)es_US/">Español (US)</a></li>
+							        <li><a href="@Href(UrlUtil.AppPath)en_ES/">English (ES)</a></li>
+							        <li><a href="@Href(UrlUtil.AppPath)es_ES/">Español (ES)</a></li>
+                                </ul>
 						    </dd>
 					    </dl>
 				    </li>
-				
-				    @{/*<li><a class="replace icon cart" href="#">Cart</a></li>*/}
+                    @if (WebSecurity.IsAuthenticated && !u.IsProvider)
+                    {
+			            <li><a class="main-action" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
+                    }
 			    </ul>
 		    </div>
         </header>
@@ -90,7 +105,6 @@
             <a class="replace icon twitter" href="#">Twitter</a> <a class="replace icon facebook" href="#">Facebook</a>
             <a href="@(UrlUtil.LangPath)About/">About</a> | <a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> | <a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a> | <a href="/Blog/">Blog</a>
         </footer>
-		@* Study if can be removed the 'modals' element -check scripts- *@<div id="modals"></div><!-- #modals -->
         <div class="scripts">
             <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
             @if (LcData.GetCurrentLanguageID() == 2)
