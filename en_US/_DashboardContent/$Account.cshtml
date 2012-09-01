@@ -21,7 +21,7 @@
             @RenderPage("$AccountPersonal.cshtml")
 		</div><!-- #account-personal -->
         
-		<div id="account-payments" class="tab-body fancy tabbed buttons" data-help-point="$FAQS">
+		<div id="account-payments" class="tab-body fancy tabbed buttons">
             <ul class="tabs">
                 @if (u.IsProvider)
                 {
@@ -36,7 +36,7 @@
             
             @if (u.IsProvider)
             {
-            <div id="account-payments-bankinfo" class="tab-body" data-help-point="#payments-bankinfo">
+            <div id="account-payments-bankinfo" class="tab-body">
                 @RenderPage("$AccountPaymentsBankInfo.cshtml")
             </div><!-- #account-payments-bankinfo -->
             }

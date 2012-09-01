@@ -763,47 +763,8 @@ $(document).ready(function () {
     // Perform initialization of fieldset.has-confirm:
     $('fieldset.has-confirm > .confirm input').change();
 
-    /* Generic script for help-point button, that will open the help-center at
-    index or at specific page depending on the context
-    ('.current' classes asigned and data-help-point="section" attribute or
-    element id)
-    */
-    $(".help-point > a").click(function () {
-        // We get the last 'current' element, that will be the deepest child with
-        // .current setted.
-        var c = $(".current:visible:last");
-        // We save the path like an array
-        var path = [];
-        var dat = c.data('help-point');
-        if (dat)
-            path.push(dat);
-        // We look for parents with 'current' assigned, to get the full path
-        c.parents('.current').each(function () {
-            dat = $(this).data('help-point');
-            if (dat)
-                path.push(dat);
-        });
-        // Building the relative url for help-center
-        var rurl;
-        var first = true;
-        for (var ir = path.length - 1; ir >= 0; ir--) {
-            if (first) {
-                first = false;
-                rurl = path[ir] + '#';
-            } else
-                rurl += path[ir];
-        }
-
-        // If there is not 'data-help-point' values, we use the current element id to search,
-        // or nothing (that means help center FAQs index page)
-        if (!rurl) rurl = (c.attr('id') ? '?s=' + encodeURIComponent(c.attr('id')) : '');
-        // Opening the help center
-        popup(UrlUtil.LangPath + 'HelpCenter/$FAQs' + rurl, 'large');
-        // Do not allow browser to open the link url:
-        return false;
-    });
     // Generic script for to FAQs links, used by the FAQs widget
-    $(document).delegate('a[href|="#FAQs"]', 'click', function () {
+    $(document).on('click', 'a[href|="#FAQs"]', function () {
         var href = $(this).attr('href');
         var urlparts = href.split('-');
         var urlsection = '';

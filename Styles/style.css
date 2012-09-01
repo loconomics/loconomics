@@ -1204,24 +1204,6 @@ fieldset.box legend{
     margin-top: 10px;
 }
 
-/** help-point>a class for link button to open the help-center **/
-.help-point a,
-.help-point a:link,
-.help-point a:visited{
-    background: none repeat scroll 0 0 #8B2143;
-    border-radius: 10px 10px 10px 10px;
-    color: White;
-    display: inline-block;
-    font-size: 1.5em;
-    font-weight: bold;
-    padding: 2px 10px;
-    text-decoration: none;
-}
-.help-point a:hover{
-    color: White;
-    box-shadow: 0 0 5px 2px #8B2143;
-}
-
 /** 
   * Generic confirm class for
   * fieldsets that require

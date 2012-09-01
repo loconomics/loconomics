@@ -6,14 +6,14 @@
 ul.attributes-list li {
     list-style: disc inside url("../img/bullet-editable.png") !important;
 }
-/* Extra padding to avoid collision with .help-point */
+/* Extra padding to avoid collision with possible upper message and upper-right utility button */
 .dashboard .folders > .tab-body {
     padding-top: 35px;
 }
 .dashboard .folders > .tab-body > .tabs {
     margin-top: 0;
 }
-/* Extra right magin to avoid collision with .help-point */
+/* Extra right magin to avoid collision with possible upper-right utility button */
 .dashboard .folders > .tab-body > .tabs,
 .dashboard .folders > .tab-body > p:first-child{
     margin-right: 30px;
@@ -1137,16 +1137,6 @@ form#personal li > label.gender {
 
 /** Dashboard date picker **/
 .dashboard img.ui-datepicker-trigger{
-}
-
-/** Generic help-point class with specific
-  * position for dashboard pages
-  */
-.dashboard .help-point{
-    position: absolute;
-    right: 10px;
-    top: 30px;
-    z-index: 1000;
 }
 
 /*
