@@ -645,6 +645,7 @@ header dl dd {
     position: absolute;
     right: 0;
     padding-top: 10px;
+    z-index: 1000;
 }
 header dl dd ul {
     text-align: left;
