@@ -981,20 +981,23 @@ div.dp-popup td.disabled{cursor:default;}
 form fieldset.actions{
     margin: 10px 0 !important;
 }
-/* .main-action, inside .actions container: bigger, more important button */
-.actions .main-action{
-    background: none repeat scroll 0 0 #99C027 !important;
+/* Common styles for action buttons */
+.action, .main-action, .cancel-action, .item-action, .add-action {
     border-radius: 4px 4px 4px 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
     -webkit-border-radius: 4px;
     color: White;
     display: inline-block;
+    padding: 0 1em;
+}
+/* .main-action, inside .actions container: bigger, more important button */
+.actions .main-action{
+    background: none repeat scroll 0 0 #99C027 !important;
     font-size: 1.1em;
     line-height: 150%;
     padding: 0.4em 1.4em;
     text-decoration: none;
-    /*text-transform: lowercase;*/
 }
 .actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
@@ -1005,14 +1008,8 @@ form fieldset.actions{
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
     text-transform: lowercase;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
     background: #8b2143 !important;
-    color: White;
     font-size: 1em;
-    padding: 0 1em;
 }
 .actions .item-action:hover{
     box-shadow: 0 0 5px 2px #8b2143;
@@ -1023,11 +1020,8 @@ form fieldset.actions{
 /* .cancel-action for cancel buttons */
 .actions .cancel-action {
     background: none repeat scroll 0 0 #8B2143 !important;
-    border-radius: 20px 20px 20px 20px;
-    color: White;
     font-size: 1.1em;
     line-height: 150%;
-    padding: 0 1em;
     text-transform: lowercase;
 }
 .actions .cancel-action:hover{
@@ -1038,8 +1032,6 @@ form fieldset.actions{
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
-    border-radius: 4px 4px 4px 4px;
-    color: White;
     font-size: 1.5em;
     font-weight: bold;
     line-height: normal;
