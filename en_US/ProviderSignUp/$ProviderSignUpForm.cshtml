@@ -238,7 +238,7 @@
         <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)ProviderSignUp/$ProviderSignUpForm/" class="ajax ajax-box">
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
             <div id="provider-sign-up-truste-seal">
-                <div id="6ab4bfb6-247f-4d1e-949b-35630c06b073"> <script type="text/javascript" src="//privacy-policy.truste.com/privacy-seal/Loconomics,-Inc-/asc?rid=6ab4bfb6-247f-4d1e-949b-35630c06b073"></script><a href="//privacy.truste.com/privacy-seal/Loconomics,-Inc-/validation?rid=1045ee84-2424-4e89-86b5-cc28466d5d4c" title="TRUSTe European Safe Harbor certification" target="_blank"><img style="border: none" src="//privacy-policy.truste.com/privacy-seal/Loconomics,-Inc-/seal?rid=1045ee84-2424-4e89-86b5-cc28466d5d4c" alt="TRUSTe European Safe Harbor certification"/></a></div>
+                @RenderPage(UrlUtil.LangPath + "HelpCenter/_TrusteSealWidget.cshtml")
             </div>
             <ol class="wizard-steps">
                 <li class="step-1">

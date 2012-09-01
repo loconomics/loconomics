@@ -695,14 +695,18 @@ header dl dd:before {
 header dl dd a { display: block; }
 header dl dd li:hover { background-color: #F5F5F5; }
 
-footer { margin: 25px auto; font-size: 1.3em; color: #a1a1a1; text-align: center; }
+footer { margin: 25px auto; font-size: 1.2em; color: #747474; text-align: center; }
 footer a{
-    color: #A1A1A1;
+    color: #747474;
     font-weight: bold;
     margin: 0 10px;
     text-decoration: none;    
 }
-footer a:hover { text-decoration: underline; color: #a1a1a1; }
+footer a:hover { text-decoration: underline; color: inherit; }
+footer .truste-seal {
+    display: inline-block;
+    vertical-align: middle;
+}
 
 /* Super-Specific */
 
