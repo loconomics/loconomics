@@ -225,15 +225,20 @@ ul.attributes-list li {
     background-color: #ebc0b1;
 }
 .dashboard #profile-menu > li > a > .warning-note {
-    color: White;
     background: #eb6e42;
     border-radius: 20px;
     -moz-border-radius: 20px;
     -o-border-radius: 20px;
     -webkit-border-radius: 20px;
+    color: White;
     display: inline-block;
     float: right;
-    padding: 1px 5px;
+    font-size: 1em;
+    height: 2em;
+    line-height: 2em;
+    padding: 0;
+    text-align: center;
+    width: 2em;
 }
 /* Sub-menu */
 .dashboard #profile-menu ul{
