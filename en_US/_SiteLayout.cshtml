@@ -112,11 +112,9 @@
 		    </div>
         </header>
         <footer>
-            <div class="truste-seal">
-                @RenderPage(UrlUtil.LangPath + "HelpCenter/_TrusteSealWidget.cshtml")
-            </div>
-            <a class="replace icon facebook" target="_blank" href="#">Facebook</a><a class="replace icon twitter" target="_blank" href="#">Twitter</a>
-            <a href="@(UrlUtil.LangPath)About/">About</a> | <a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> | <a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a> | <a href="/Blog/">Blog</a>
+            <div class="truste-seal">@RenderPage(UrlUtil.LangPath + "HelpCenter/_TrusteSealWidget.cshtml")</div>
+            <div class="social-links"><a class="replace icon facebook" target="_blank" href="#">Facebook</a><a class="replace icon twitter" target="_blank" href="#">Twitter</a></div>
+            <div class="site-links"><a href="@(UrlUtil.LangPath)About/">About</a>|<a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a>|<a href="/Blog/">Blog</a></div>
         </footer>
         <div class="scripts">
             <script src="@Href(UrlUtil.AppPath + "Scripts/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
