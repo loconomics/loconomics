@@ -620,24 +620,6 @@ header li.actions {
 header dl { position: relative; font-size: .9em; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
 header dl dt { display: block; text-align: left; }
-header dl dd ul {
-    position: absolute;
-    right: 0;
-    text-align: left;
-    white-space: nowrap;
-    width: auto;
-    z-index: 100;
-    overflow: hidden;
-    background: white;
-}
-header dl dd ul,
-header dl.user-nav dt {
-    border: 1px solid #747474;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
-}
 header dl.user-nav dt,
 header dl.lang-country dt {
     cursor: pointer;
@@ -653,16 +635,61 @@ header dl dd li.current {
 header dl dd a.current {
     font-weight: bold;
 }
-/* Showing sub-menu */
-header dl:hover {
-    padding-bottom: 10px;
+/* Submenu */
+header dl {
     position: relative;
+}
+header dl dd {
+    position: absolute;
+    right: 0;
+    padding-top: 10px;
+    /*background: url('../img/theme/menu-arrow-up.png') no-repeat center top;*/
+}
+header dl dd ul {
+    text-align: left;
+    white-space: nowrap;
+    width: auto;
+    z-index: 100;
+    overflow: hidden;
+    background: white;
+}
+header dl dd ul,
+header dl.user-nav dt {
+    border: 1px solid #747474;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
 }
 header dl:hover dd {
     display: block;
-    background: url('../img/theme/menu-arrow-up.png') no-repeat center top;
-    padding-top: 14px;
 }
+/* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
+header dl dd:after {
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #fff;
+    right: 15px;
+    top: 5px;
+}
+header dl dd:before {
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #747474;
+    right: 14px;
+    top: 4px;
+}
+
 header dl dd a { display: block; }
 header dl dd li:hover { background-color: #F5F5F5; }
 
