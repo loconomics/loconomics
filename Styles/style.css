@@ -556,7 +556,7 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 /* Page Structure */
 div.scripts { display: none; }
 #container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
-#container { position: relative; padding: 124px 0 100px; }
+#container { position: relative; padding: 124px 0 0; }
 
 #main { float: left; width: 670px; }
 #secondary { margin-left: 712px; }

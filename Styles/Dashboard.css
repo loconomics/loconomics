@@ -29,15 +29,12 @@ ul.attributes-list li {
 }
 .dashboard #main {
     margin-top: 10px;
-    /* next padding-bottom can be' not needed', but
+    /* next padding-bottom can be 'not wanted', but
        remember us that there is an extra space because
        the relatives tab-page inside #main and help us
        when we set space between main and container without
        overlap the content */
-    padding-bottom: 20px;
-}
-.dashboard #container {
-    padding-bottom: 60px;
+    padding-bottom: 1px;
 }
 #highlights, #dashboard-help {
     border: 2px solid #747474;
