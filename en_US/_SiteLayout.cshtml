@@ -94,9 +94,9 @@
 						    </dd>
 					    </dl>
 				    </li>
-                    @if (WebSecurity.IsAuthenticated && !u.IsProvider)
+                    @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
                     {
-			            <li><a class="main-action" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
+			            <li class="actions"><a class="main-action" href="@(UrlUtil.LangPath)ProviderSignUp/">Become a provider</a></li>
                     }
 			    </ul>
 		    </div>

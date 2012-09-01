@@ -612,6 +612,11 @@ header .user-tools {
     float: right;
     margin-top: 18px;
 }
+header li.actions {
+    float: right;
+    margin-left: 20px;
+    margin-top: -6px;
+}
 header dl { position: relative; font-size: .9em; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
 header dl dt { display: block; text-align: left; }
@@ -633,8 +638,10 @@ header dl.user-nav dt {
     -webkit-border-radius: 4px;
     -o-border-radius: 4px;
 }
-header dl.user-nav dt {
-    padding: 0 .8em;
+header dl.user-nav dt,
+header dl.lang-country dt {
+    cursor: pointer;
+    padding: 0 0.5em;
 }
 header dl dd {
     display: none;
