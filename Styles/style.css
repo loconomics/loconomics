@@ -188,6 +188,7 @@ td { vertical-align: top; }
 
 /* ==|== primary styles =====================================================
    Author: Jordyn Bonds for Loconomics, Inc.
+   Author: Iago Lorenzo Salgueiro for Loconomics, Inc.
    ========================================================================== */
 
 /* Color Guide
@@ -225,63 +226,27 @@ h1.withsub {
 
 dd { margin: 0; }
 
+/*-----------------------------
+ * All about forms
+ */
 form fieldset, table.form td { padding: .5em .5em .5em 0; }
-
-/** IagoSRL: psd like form styles **/
-form.psd input,
-form.psd select,
-form.psd textarea{
-    font-size: 0.9em;
-    color: black;
-}
-form.psd input[type="text"],
-form.psd input[type="password"],
-form.psd textarea { 
-    background-color: White;
-    border: 1px solid #62bdbe;
-    border-bottom-width: 2px;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -o-border-radius: 20px;
-    display: inline-block;
-    line-height: 185%;
-    padding: 0 1.4em;
-    width: 200px;
-}
-form.psd input[type="text"]:focus,
-form.psd input[type="password"]:focus,
-form.psd textarea:focus { 
-    background: #b5e1e2;
-    outline: none;
-    border-color: #b5e1e2;
-}
-form.psd select:focus,
-form.psd input[type="checkbox"]:focus,
-form.psd input[type="radio"]:focus {
-    outline: #b5e1e2 solid 2px;
-}
-/**Z psd like **/
 
 form input[type="text"],
 form input[type="password"],
 form textarea {
-    border: none;
-    background: #b5e1e2;
-    color: #00989a;
-    font-size: .9em;
-    
-    /* line-height is bad in form elements to set the full height (only webkit do it), height is cross-browser */
-    /*line-height: 185%;*/
-    height: 1.6em;
-    
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
     display: inline-block;
-    padding: 0 1.4em;
+    padding: 0.31em 0.47em;
+    color: #747474;
+    background: #f5f5f5;
+    font-size: .9em;
+    height: auto;
+    /* TODO: textboxes must not have a fixed generic width, review all specific styles and uses to avoid it an remove it! */
     width: 200px;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -o-border-radius: 20px;
 }
 form input[disabled],
 form textarea[disabled] {
@@ -294,36 +259,23 @@ form textarea{
 form input[type="text"]:focus,
 form input[type="password"]:focus,
 form textarea:focus{
-    background: #99C027;
-    color: #fff;
-    border: none;
-    outline: none;
+    border-color: #747474;
 }
-form input[type="text"].error, form input[type="password"].error { 
+form input[type="text"].error, form input[type="password"].error {
     background: #8B2143;
     color: #fff;
 }
-
-form.stepped input[type="submit"] {
-	background : url("../img/button-next.gif") no-repeat 0 0;
-	width : 133px;
-	height :48px;
-	border : none;
-	color : transparent;
-	font-size: 0;
-}
-form.stepped input[type="submit"]:hover { background-position: 0 -48px; }
-
 form select:focus,
 form input[type="checkbox"]:focus,
 form input[type="radio"]:focus {
-    outline: #99c027 solid 2px;
+    box-shadow: 0 0 0 1px #747474;
+    -moz-box-shadow: 0 0 0 1px #747474;
+    -o-box-shadow: 0 0 0 1px #747474;
+    -webkit-box-shadow: 0 0 0 1px #747474;
 }
 
 form input.time { width: 40px; }
 form input.date-pick { width: 90px; }
-
-form.stepped fieldset.number-values input { width: 20px; padding: 0 6px; }
 
 form ul{
     list-style: none;
@@ -334,17 +286,6 @@ form ul li{
 form label{
     padding: 0 10px;
 }
-
-.replace { display: inline-block; height: 0; overflow: hidden; background: no-repeat 0 0; }
-a.icon { width: 32px; padding-top: 32px; }
-a.icon:hover { background-position: 0 -27px; }
-.replace.icon { background: url('../img/theme/gray-social-icons-32px.png') 0 0 no-repeat; vertical-align: middle; }
-.replace.icon.facebook { background-position: 0 0; }
-.replace.icon.twitter { background-position: 0 -32px; }
-footer .icon { margin: 0 2px }
-a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
-a.cart:hover { background-position: 10px -25px; }
-
 input.button, button, a.button { 
 	display: inline-block; padding: 0 1.8em; 
 	background: #00989a; color: #fff; border: none;
@@ -359,21 +300,19 @@ input.button:focus, button.next:focus { background: #00989a; color: #fff; }
 
 input.button{ padding-top: 2px; padding-bottom: 2px;}
 
-/*input[type="button"], button {
-    background: #b5e1e2;
-    border: 1px solid #00989A;
-    border-radius: 22px;
-    -moz-border-radius: 22px;
-    -webkit-border-radius: 22px;
-    -o-border-radius: 22px;
-    padding: 2px 23px;
-    color: #00989A;
-    font-size: 0.8em;
-}
-input[type="button"]:hover, button:hover {
-    background-color: #00989A;
-    color: White;
-}*/
+/*------------------------------
+ * About icons and social links
+ */
+.replace { display: inline-block; height: 0; overflow: hidden; background: no-repeat 0 0; }
+a.icon { width: 32px; padding-top: 32px; }
+a.icon:hover { background-position: 0 -27px; }
+.replace.icon { background: url('../img/theme/gray-social-icons-32px.png') 0 0 no-repeat; vertical-align: middle; }
+.replace.icon.facebook { background-position: 0 0; }
+.replace.icon.twitter { background-position: 0 -32px; }
+footer .icon { margin: 0 2px }
+a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
+a.cart:hover { background-position: 10px -25px; }
+
 
 a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
@@ -384,32 +323,7 @@ button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; }
 li.current > a.profile, a.profile:hover, a.profile:focus, a.profile.current:focus,
 button.search-again, a.view { background: #461864; color: #fff; }
 
-#modals { display: none; }
 .inset { float: right; margin: 1em 0 1em 1em; }
-
-form.stepped { position: relative; min-height: 500px; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #ccc; color: #999; }
-form.stepped h1 { margin-bottom: .4em; }
-form.stepped legend { font-weight: bold; }
-form.stepped fieldset { margin-bottom: 1em; }
-form.stepped fieldset.buttons { display: block; margin-top: 20px; text-align: right; }
-form.stepped fieldset.add { text-align: left; }
-form.stepped table.form tr td:first-child { width: 40%; }
-form.stepped fieldset.checklist { float: left; width: 40%; padding: 5px 5% 5px 0; }
-form.stepped .checklist fieldset { margin: 0; padding: 0; }
-form.stepped .checklist label, form.stepped .radiolist label { font-size: .9em; }
-form.stepped #theCalendar { float: right; width: 300px; margin-left: 1em; }
-form.stepped #theCalendar dl dt { position: relative; }
-form.stepped #theCalendar dl dt a { position: absolute; right: 0; }
-form.stepped table td { padding: 5px 0; }
-form.stepped table td h4 { margin-bottom: 0; }
-
-form.book { border-bottom: none; }
-form.book ul { margin: 0; }
-form.book table.form { width: 450px; }
-form.book table.form td { width: 30%; padding: .3em 3% .3em 0; }
-form.book fieldset.checkboxes table.form tr td { width: 43%; }
-form.book fieldset.checkboxes table.form tr td:first-child { width: 4%; }
-form.book fieldset.checkboxes table.form tr td:first-child input { width: auto; }
 
 ul.collection { margin: 0; padding: 0; }
 ul.collection.empty { border: 1px dashed #ccc; }

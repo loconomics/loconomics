@@ -34,6 +34,10 @@
     font-size: 1.8em;
     margin: 15px 0;
 }
+.provider-sign-up form label {
+    font-weight: bold;
+    padding: 4px;
+}
 #provider-sign-up-truste-seal {
     position: absolute;
     top: 20px;
@@ -145,27 +149,4 @@
 .legal-agreement a,
 .legal-agreement a:visited {
     color: #009A9D;
-}
-
-/** Form elements design **/
-.provider-sign-up form input[type="text"], .provider-sign-up form input[type="password"], .provider-sign-up form textarea {
-    border: 1px solid #c9c9c9;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -o-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    padding: 4px 6px;
-    height: auto;
-    color: #747474;
-    background: #f5f5f5;
-}
-.provider-sign-up form label {
-    font-weight: bold;
-    padding: 4px;
-}
-.provider-sign-up .actions .main-action {
-    border-radius: 10px 4px 10px 4px;
-    -moz-border-radius: 10px 4px 10px 4px;
-    -o-border-radius: 10px 4px 10px 4px;
-    -webkit-border-radius: 10px 4px 10px 4px;
 }
