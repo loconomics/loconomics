@@ -405,7 +405,12 @@ form#personal li label{
     height: 8em;
     margin: 0 10px;
 }
-
+/** Section: Positions **/
+.position-state {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
 /** Form: Positions - Services **/
 .dashboard .position-intro textarea {
     -moz-box-sizing: border-box;

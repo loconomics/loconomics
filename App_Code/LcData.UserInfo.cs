@@ -220,7 +220,7 @@ public static partial class LcData
             if (poss == null) {
                 using (var db = Database.Open("sqlloco")) {
                     var sqlpositions = @"
-                        SELECT a.UserID, a.PositionID, 
+                        SELECT a.UserID, a.PositionID, a.Active,
                             case when a.Active = 0 then 'not active' else 'active' end as active,
                             PositionSingular, a.UpdatedDate, a.PositionIntro
                         FROM dbo.userprofilepositions a join
@@ -253,7 +253,7 @@ public static partial class LcData
             if (u == null){
                 using (var db = Database.Open("sqlloco")){
                     var sqlpositions = @"
-                        SELECT  a.UserID, a.PositionID, case when a.Active = 0 then 'not active' else 'active' end as active, 
+                        SELECT  a.UserID, a.PositionID, a.Active, case when a.Active = 0 then 'not active' else 'active' end as active, 
                                 PositionSingular, a.UpdatedDate, a.PositionIntro
                         FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
                         WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = 1 and c.CountryID = 1";

@@ -47,7 +47,16 @@
                 <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
                 <li class="volatile"><a class="button profile fanciful" href="@("#position"+pid)-backgroundcheck">Background Check</a></li>
             </ul>
-            
+            @if (position.Active)
+            {
+                <div class="position-state on-off-switch on">
+                  <div>ON</div>
+                </div>
+            } else {
+                <div class="position-state on-off-switch off">
+                      <div>OFF</div>
+                </div>
+            }
             <div id="@("position"+pid)-services" class="tab-body current">
                 @RenderPage("$PositionsServices.cshtml")
             </div><!-- #@("position"+pid)-services -->
