@@ -335,11 +335,13 @@ form label{
     padding: 0 10px;
 }
 
-.replace { display: inline-block; height: 0; overflow: hidden; background-repeat: no-repeat; background-position: 0 0; }
-a.icon { width: 27px; padding-top: 27px; }
+.replace { display: inline-block; height: 0; overflow: hidden; background: no-repeat 0 0; }
+a.icon { width: 32px; padding-top: 32px; }
 a.icon:hover { background-position: 0 -27px; }
-a.facebook { background-image: url('../img/icon-facebook.png'); }
-a.twitter { background-image: url('../img/icon-twitter.png'); }
+.replace.icon { background: url('../img/theme/gray-social-icons-32px.png') 0 0 no-repeat; vertical-align: middle; }
+.replace.icon.facebook { background-position: 0 0; }
+.replace.icon.twitter { background-position: 0 -32px; }
+footer .icon { margin: 0 2px }
 a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
 a.cart:hover { background-position: 10px -25px; }
 
