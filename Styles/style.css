@@ -1096,17 +1096,6 @@ fieldset.box legend{
     padding: 0 10px;
     float: left;
 }
-.have-boxes .folders > .tab-body {
-    background: white;
-}
-.have-boxes > .tabbed.folders > .tabs > li{
-    background-image: url('../img/tab-editable-right-white.png') !important;
-}
-.have-boxes.editable .folders > ul.tabs li.current a,
-.have-boxes.editable .folders > ul.tabs li.current:hover a{
-    background-color: white;
-    border-bottom-color: white;
-}
 
 /** Generic: container .provider-features-lists (used at profile/summary, booking/payment..) **/
 .provider-features-lists ul {
@@ -1243,7 +1232,7 @@ fieldset.has-confirm.confirmed-no > legend{
     background: white;
 }
 .editable .folders > ul.tabs li {
-    background: url('../img/tab-editable-right-white.png') no-repeat top right; 
+    background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
     background-position: 0 right;
@@ -1289,17 +1278,13 @@ fieldset.has-confirm.confirmed-no > legend{
     background-color: #eff8f9;
 }
 
-/* Different colors for dashboard and profile tabs */
-.dashboard.editable .folders > .tab-body,
+/* Different colors for profile tabs */
 .profile.editable .folders > .tab-body {
     background: #F5F5F5;
 }
-.dashboard.editable .folders > ul.tabs li,
 .profile.editable .folders > ul.tabs li {
     background-image: url('../img/theme/tab-editable-right-gray.png');
 }
-.dashboard.editable .folders > ul.tabs li.current a,
-.dashboard.editable .folders > ul.tabs li.current:hover a,
 .profile.editable .folders > ul.tabs li.current a,
 .profile.editable .folders > ul.tabs li.current:hover a{
     background-color: #f5f5f5;
