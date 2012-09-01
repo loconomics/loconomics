@@ -368,7 +368,7 @@ ul.reviews > li div.wrap p { margin-top: 0; }
     position: relative; 
     z-index: 2; 
     padding: 0; 
-    margin: 0 0 0 10px;
+    margin: 0 0 0 20px;
     max-height: 22px;
     overflow: hidden;
 }
@@ -1750,7 +1750,7 @@ html.boxshadow #loginBox .field-validation-error{
     cursor: e-resize;
 }
 .tabbed > .tabs-slider-limit-left {
-    left: 10px;
+    left: 20px;
     background-position: left top;
 }
 .tabbed > ul.tabs {
