@@ -1,18 +1,23 @@
-﻿@{
-    bool showTitle = (bool)PageData[0];
-    // Page[1]: selected category internal-name
-    PageData["selected"] = (PageData.Keys.Contains(1) ? PageData[1] : "");
+﻿@*
+    Print a list of search categories (aka position main categories)
+    Params (via PageData):
+        string CategoriesTitle = null : optional string to show a h3 header element as list title.
+        string SelectedCategory = null : optional string identifying the category that must be marked as 'selected item'
+*@
+@{
+    string title = PageData["CategoriesTitle"];
 }
 @functions{
     string sel(string name){
-        return (name == PageData["selected"].ToLower()) ? "selected" : "";
+        return (name == (PageData["SelectedCategory"] ?? "").ToLower()) ? "selected" : "";
     }
 }
+<div class="search-categories">
+    @if (!String.IsNullOrEmpty(title))
+    {
+         <h3 class="cat-list-title">@title</h3>
+    }
     <ul>
-        @if (showTitle)
-        {
-            <li class="cat-list-title"><h3>Or browse by category</h3></li>
-        }
 		<li class="cat-home @sel("home")">
 			<a href="@Href(UrlUtil.LangPath + "Search/?Service=Home")">Home</a>
             <div class="description">
@@ -70,3 +75,4 @@
             </div>
 		</li>
 	</ul>
+</div>

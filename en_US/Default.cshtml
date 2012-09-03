@@ -13,7 +13,6 @@
             });
     ";
 }
-
   <div id="container" class="home clearfix"> 
     <div id="main" class="">
 		<h1>@Page.Title</h1>
@@ -39,8 +38,6 @@
                 </ul>
             </fieldset>
 		</form>
-        <div class="categories search-categories">
-            @RenderPage("Search/_CategoriesList.cshtml", true)
-	    </div>
+        @RenderPage("Search/_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category" })
     </div><!-- #main -->
    </div><!-- #container -->

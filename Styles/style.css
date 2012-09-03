@@ -711,17 +711,18 @@ footer a:hover { text-decoration: underline; color: inherit; }
 
 .home .search-categories {
     height: 260px;
+    margin: 40px 0 16px;
 }
 .home .search-categories > ul {
-    height: auto;
+    height: 230px;
     text-align: center;
-    margin: 40px 0;
+    margin: 0;
     overflow: visible;
+    position: relative;
 }
 .home .search-categories h3 { text-align: center; }
 .home .search-categories li {
     text-indent: 0;
-    position: relative;
 }
 .home .search-categories li > a {
     font-size: .8em;
@@ -740,13 +741,7 @@ footer a:hover { text-decoration: underline; color: inherit; }
 .search-categories > ul { margin: 0; }
 .search-categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
 .search-categories ul > li { float: left; margin-right: 3px; }
-.search-categories ul > li.cat-list-title {
-    display: block;
-    float: none;
-    width: auto;
-    height: auto;
-}
-.search-categories ul > li.cat-list-title h3 {
+.search-categories h3.cat-list-title {
     font-size: 1em;
     text-align: left;
     margin: 0 0 0 .6em;
@@ -762,14 +757,18 @@ footer a:hover { text-decoration: underline; color: inherit; }
 .search-categories ul > li:hover > .description {
     display: block;
     left: 0;
+    right: 0;
     position: absolute;
     top: 115px;
-    width: 690px;
     text-align: left;
     
     border-radius: 4px;
     border: 2px solid #747474;
     padding: 10px;
+    box-shadow: 0 5px 7px -3px #747474;
+    -moz-box-shadow: 0 5px 7px -3px #747474;
+    -o-box-shadow: 0 5px 7px -3px #747474;
+    -webkit-box-shadow: 0 5px 7px -3px #747474;
 }
 .search-categories ul > li:hover > .description > h5 {
     margin: 0;
@@ -793,7 +792,7 @@ footer a:hover { text-decoration: underline; color: inherit; }
     position: absolute;
 
     border-bottom-color: #fff;
-    left: 20px;
+    left: 34px;
     top: -4px;
 }
 .search-categories .description:before {
@@ -805,18 +804,24 @@ footer a:hover { text-decoration: underline; color: inherit; }
     position: absolute;
 
     border-bottom-color: #747474;
-    left: 19px;
+    left: 33px;
     top: -7px;
 }
-/* customized arrow position per category */
-header .anonymous-tools dl dd:after {
-    left: 15px;
-    right: auto;
-}
-header .anonymous-tools dl dd:before {
-    left: 14px;
-    right: auto;
-}
+/* customized arrow position per category (cat-home default) */
+.search-categories li.cat-child     .description:after { left: 123px; }
+.search-categories li.cat-child     .description:before { left: 122px; }
+.search-categories li.cat-pets      .description:after { left: 209px; }
+.search-categories li.cat-pets      .description:before { left: 208px; }
+.search-categories li.cat-people    .description:after { left: 298px; }
+.search-categories li.cat-people    .description:before { left: 297px; }
+.search-categories li.cat-transport .description:after { left: 382px; }
+.search-categories li.cat-transport .description:before { left: 381px; }
+.search-categories li.cat-business  .description:after { left: 468px; }
+.search-categories li.cat-business  .description:before { left: 467px; }
+.search-categories li.cat-elderly   .description:after { left: 556px; }
+.search-categories li.cat-elderly   .description:before { left: 555px; }
+.search-categories li.cat-celebrations  .description:after { left: 638px; }
+.search-categories li.cat-celebrations  .description:before { left: 637px; }
 
 /* JB: My own personal "non-semantic helper classes" */
 .tabby {
@@ -2072,7 +2077,6 @@ html.boxshadow #loginBox .field-validation-error{
     height: 84px;
     display: block;
 }
-.search-categories li.cat-list-title {      background: none;}
 .search-categories li.cat-home{             background-position: -336px 0}
 .search-categories li.cat-child{            background-position: -168px 0}
 .search-categories li.cat-pets{             background-position: -504px 0}
