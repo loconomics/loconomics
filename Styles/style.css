@@ -784,44 +784,44 @@ footer a:hover { text-decoration: underline; color: inherit; }
 }
 /* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
 .search-categories .description:after {
-    border-bottom: 6px solid transparent;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
     content: "";
     display: inline-block;
     position: absolute;
 
     border-bottom-color: #fff;
     left: 34px;
-    top: -4px;
+    top: -8px;
 }
 .search-categories .description:before {
-    border-bottom: 7px solid transparent;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
     content: "";
     display: inline-block;
     position: absolute;
 
     border-bottom-color: #747474;
     left: 33px;
-    top: -7px;
+    top: -11px;
 }
 /* customized arrow position per category (cat-home default) */
-.search-categories li.cat-child     .description:after { left: 123px; }
-.search-categories li.cat-child     .description:before { left: 122px; }
-.search-categories li.cat-pets      .description:after { left: 209px; }
-.search-categories li.cat-pets      .description:before { left: 208px; }
-.search-categories li.cat-people    .description:after { left: 298px; }
-.search-categories li.cat-people    .description:before { left: 297px; }
-.search-categories li.cat-transport .description:after { left: 382px; }
-.search-categories li.cat-transport .description:before { left: 381px; }
-.search-categories li.cat-business  .description:after { left: 468px; }
-.search-categories li.cat-business  .description:before { left: 467px; }
-.search-categories li.cat-elderly   .description:after { left: 556px; }
-.search-categories li.cat-elderly   .description:before { left: 555px; }
-.search-categories li.cat-celebrations  .description:after { left: 638px; }
-.search-categories li.cat-celebrations  .description:before { left: 637px; }
+.search-categories li.cat-child     .description:after { left: 122px; }
+.search-categories li.cat-child     .description:before { left: 121px; }
+.search-categories li.cat-pets      .description:after { left: 205px; }
+.search-categories li.cat-pets      .description:before { left: 204px; }
+.search-categories li.cat-people    .description:after { left: 294px; }
+.search-categories li.cat-people    .description:before { left: 293px; }
+.search-categories li.cat-transport .description:after { left: 376px; }
+.search-categories li.cat-transport .description:before { left: 375px; }
+.search-categories li.cat-business  .description:after { left: 464px; }
+.search-categories li.cat-business  .description:before { left: 463px; }
+.search-categories li.cat-elderly   .description:after { left: 552px; }
+.search-categories li.cat-elderly   .description:before { left: 551px; }
+.search-categories li.cat-celebrations  .description:after { left: 634px; }
+.search-categories li.cat-celebrations  .description:before { left: 633px; }
 
 /* JB: My own personal "non-semantic helper classes" */
 .tabby {
