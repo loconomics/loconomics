@@ -1,4 +1,6 @@
 /* Author: Loconomics */
+// OUR namespace (abbreviated Loconomics), same as 'var LC' with caution
+window['LC'] = window['LC'] || {};
 
 /* Generic blockUI options sets */
 var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
@@ -374,13 +376,19 @@ $(function () {
         });
     }
 
-    /*= Home Page
+    /*= Home Page (moved to _SiteLayout, loading without this script for minor footprint and faster load)
     */
-    (function () {
+    /*(function () {
+        // Datepicker (dupe date initialization here, but to document, just next code is copied to _SiteLayout)
+        $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+        $('.date-pick', document).datepicker({
+            showAnim: 'blind'
+        });
+        // Location js-dropdown
         var s = $('#search-location');
         s.prop('readonly', true);
         s.autocomplete({
-            source: ['San Francisco, CA', 'Other locations coming soon'] // TODO: Hardcoded just now, will be changed by server load on inline page-script or lazy load with ajax
+            source: LC.searchLocations
             , autoFocus: true
             , minLength: 0
             , select: function () {
@@ -388,7 +396,7 @@ $(function () {
             }
         });
         s.on('focus click', function () { s.autocomplete('search', '') });
-    })();
+    })();*/
 
     /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
     $('.tab-body').on('tabFocused', function () {

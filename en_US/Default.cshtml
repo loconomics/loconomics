@@ -4,13 +4,14 @@
 
     PageData["BodyClass"] = "home";
     PageData["IsHomePage"] = true;
+    // We will return an array for the search-location autocomplete script
+    string locationsCSV = "'San Francisco, CA', 'Other locations coming soon'";
+    if (LcData.GetCurrentCountryID() == 2){
+        locationsCSV = "'Barcelona', 'Other locations coming soon'";
+    }
     PageData["InlineScript"] = @"
-        $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-        $('.date-pick', document)
-            //.val(new Date().asString($.datepicker._defaults.dateFormat))
-            .datepicker({
-                showAnim: 'blind'
-            });
+        window['LC'] = window['LC'] || {};
+        LC.searchLocations = [ " + locationsCSV + @" ];
     ";
 }
   <div id="container" class="home clearfix"> 
