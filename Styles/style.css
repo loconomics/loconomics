@@ -517,14 +517,7 @@ header ul li a:link,
 header ul li a:visited {
     color: #747474;
     text-decoration: none;
-    border-right: 1px solid #747474;
     padding: 0 0.5em;
-}
-header ul li:last-child a,
-header dd ul li a,
-header dd ul li a:link,
-header dd ul li a:visited {
-    border-right: none;
 }
 header .anonymous-tools {
     position: absolute;
@@ -537,10 +530,10 @@ header .user-tools {
 }
 header li.actions {
     display: inline-block !important;
-    margin-left: 20px;
+    margin-left: 15px;
     margin-top: -6px;
 }
-header dl { position: relative; font-size: .9em; }
+header dl { position: relative; }
 header dl img { position: relative; top: -2px; padding-right: 5px; }
 header dl dt { display: block; text-align: left; }
 header dl.user-nav dt,
@@ -551,12 +544,34 @@ header dl.lang-country dt {
 header dl dd {
     display: none;
 }
-header dl.user-nav dt,
+header dl dd a.current {
+    font-weight: bold;
+}
+header > .wrap > ul > li > a,
+header dl > dt {
+    border: 1px solid white;
+    border-right-color: #747474;
+}
+header ul > li:last-child > a,
+header ul > li:last-child > dl > dt,
+header ul > li > dl.lang-country > dt {
+    border-right-color: transparent;
+}
+header > .wrap > ul > li > a {
+    display: block;
+}
+/* Menu and submenu shared-related styles */
+header dl:hover dt,
 header dl dd li.current {
     background-color: #F5F5F5;
 }
-header dl dd a.current {
-    font-weight: bold;
+header dl dd ul,
+header dl:hover dt {
+    border: 1px solid #747474 !important;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
 }
 /* Submenu */
 header dl {
@@ -570,6 +585,11 @@ header dl dd {
     padding-top: 10px;
     z-index: 1000;
 }
+/* anonymous menu is on left */
+header .anonymous-tools dl dd {
+    left: 0;
+    right: auto;
+}
 header dl dd ul {
     text-align: left;
     white-space: nowrap;
@@ -577,14 +597,6 @@ header dl dd ul {
     z-index: 100;
     overflow: hidden;
     background: white;
-}
-header dl dd ul,
-header dl.user-nav dt {
-    border: 1px solid #747474;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
 }
 header dl:hover dd {
     display: block;
@@ -613,6 +625,15 @@ header dl dd:before {
     border-bottom-color: #747474;
     right: 14px;
     top: 4px;
+}
+/* anonymous menu is on left */
+header .anonymous-tools dl dd:after {
+    left: 15px;
+    right: auto;
+}
+header .anonymous-tools dl dd:before {
+    left: 14px;
+    right: auto;
 }
 
 header dl dd a { display: block; }
@@ -908,7 +929,8 @@ form fieldset.actions{
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
     -webkit-border-radius: 4px;
-    color: White;
+    border: none !important;
+    color: White !important;
     display: inline-block;
     padding: 0 1em;
 }
