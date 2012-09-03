@@ -374,6 +374,22 @@ $(function () {
         });
     }
 
+    /*= Home Page
+    */
+    (function () {
+        var s = $('#search-location');
+        s.prop('readonly', true);
+        s.autocomplete({
+            source: ['San Francisco, CA', 'Other locations coming soon'] // TODO: Hardcoded just now, will be changed by server load on inline page-script or lazy load with ajax
+            , autoFocus: true
+            , minLength: 0
+            , select: function () {
+                return false;
+            }
+        });
+        s.on('focus click', function () { s.autocomplete('search', '') });
+    })();
+
     /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
     $('.tab-body').on('tabFocused', function () {
         var $t = $(this);
@@ -434,11 +450,6 @@ $(function () {
     $('div.progress-bar').each(function () {
         var pd = $(this).find('.text .percent-done').text();
         $(this).find('.total .percent-done').css('width', pd);
-    });
-
-    // Trigger whole list
-    $('#seeAllTitles').click(function () {
-        $('#titleSearch').autocomplete({ source: 'button.supply' });
     });
 
     // Date Picker
