@@ -72,10 +72,9 @@ var TabbedUX = {
         $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
             var $t = $(this);
             if (TabbedUX.focusTab($t.attr('href'))) {
-                // We want to see the hash value in location bar, but without the ugly default scroll!
                 var st = $(document).scrollTop();
                 location.hash = $t.attr('href');
-                $(document).scrollTop(st);
+                $('html,body').scrollTop(st);
             }
             return false;
         })
@@ -360,8 +359,11 @@ var TabbedUX = {
 };
 
 /* Init code */
-$(document).ready(function () {
-
+$(window).load(function () {
+    // Disable browser behavior to auto-scroll to url fragment/hash element position:
+    setTimeout(function () { $('html,body').scrollTop(0); }, 1);
+});
+$(function () {
     if (!hasPlaceholderSupport()) {
         $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
             if (this.value == this.getAttribute('placeholder'))
@@ -371,18 +373,6 @@ $(document).ready(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
-
-    /* slider-tabs */
-    $('.tabbed.slider-tabs').each(function () {
-        var $t = $(this);
-        var $tabs = $t.children('.tab-body');
-        var c = $tabs
-            .wrapAll('<div class="tab-body-list"/>')
-            .end().children('.tab-body-list');
-        $tabs.on('tabFocused', function () {
-            c.stop(true, false).animate({ scrollLeft: c.scrollLeft() + $(this).position().left }, 1400);
-        });
-    });
 
     /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
     $('.tab-body').on('tabFocused', function () {
@@ -507,6 +497,22 @@ $(document).ready(function () {
         if (tab && ($(tab).children().length == 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length)) {
             TabbedUX.removeTab(tab);
         }
+    });
+    /*= slider-tabs 
+    * (after TabbedUX.init to avoid launch animation on page load)
+    */
+    $('.tabbed.slider-tabs').each(function () {
+        var $t = $(this);
+        var $tabs = $t.children('.tab-body');
+        var c = $tabs
+            .wrapAll('<div class="tab-body-list"/>')
+            .end().children('.tab-body-list');
+        $tabs.on('tabFocused', function () {
+            c.stop(true, false).animate({ scrollLeft: c.scrollLeft() + $(this).position().left }, 1400);
+        });
+        // Set horizontal scroll to the position of current showed tab, without animation (for page-init):
+        var currentTab = $($t.find('>.tabs>li.current>a').attr('href'));
+        c.scrollLeft(c.scrollLeft() + currentTab.position().left);
     });
 
     /** Auto-fill menu sub-items using tabbed pages -only works for current page items- **/
