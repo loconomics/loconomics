@@ -657,7 +657,7 @@ footer a:hover { text-decoration: underline; color: inherit; }
 .home #main {
     float: none;
     text-align: center;
-    width: auto;
+    width: 690px;
     margin: auto;
     font-size: 1.2em;
 }
@@ -665,22 +665,43 @@ footer a:hover { text-decoration: underline; color: inherit; }
 .home #main h1 + p { margin-top: 0; font-size: 1.1em; }
 #homeSearch label {
     color: #00989A;
-    display: inline-block;
+    display: block;
+    font-size: 0.8em;
+    padding: 0;
+    text-align: left;
 }
 #homeSearch input {
     display: block;
+    width: 96%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    
+    padding: 0.4em 0.47em;
+    font-size: 1.1em;
 }
 #homeSearch ul li {
-    display: inline-block;
+    float: left
 }
 .search-service {
-    width: 35%;
+    width: 270px;
 }
 .search-location {
-    width: 35%;
+    width: 203px;
 }
 .search-date {
-    width: 20%;
+    width: 120px;
+}
+#homeSearch .actions {
+    clear: none;
+    height: 63px;
+    position: relative;
+}
+#homeSearch .actions .main-action {
+    bottom: 10px;
+    position: absolute;
+    line-height: normal;
+    border: 1px solid transparent !important;
 }
 
 /* jQuery-UI date-picker specific home style */
@@ -688,17 +709,26 @@ footer a:hover { text-decoration: underline; color: inherit; }
     display: none;
 }
 
-.home .categories { height: 184px; text-align: center; margin-bottom: 40px; }
+.home .categories { height: auto; text-align: center; margin: 40px 0; }
 .home .categories ul { overflow: hidden; display: inline-block; }
 .home .categories h3 { text-align: center; }
 
 .categories { margin: 0 auto; height: 250px; }
 .categories ul { margin: 0; padding: 0; }
-.categories > ul { margin: 100px 0 0 0; }
+.categories > ul { margin: 0; }
 .categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
-.categories ul:first-child > li { float: left; margin-right: 3px; }
-.categories ul:first-child > li:first-child { width: 140px; text-align: right; }
-.categories ul:first-child > li:first-child h3 { margin: 14px 14px 14px 0; font-size: 24px; }
+.categories ul > li { float: left; margin-right: 3px; }
+.categories ul > li.cat-list-title {
+    display: block;
+    float: none;
+    width: auto;
+    height: auto;
+}
+.categories ul > li.cat-list-title h3 {
+    font-size: 1em;
+    text-align: left;
+    margin: 0 0 0 .6em;
+}
 .categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
 .categories ul ul li { padding: .6em 0 0 0; }
 .categories ul ul a { text-decoration: none; }

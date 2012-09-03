@@ -19,7 +19,7 @@
 		<h1>@Page.Title</h1>
         <p>book safely and easily local, indepedent service providers</p>
 		<form id="homeSearch" action="@Href(UrlUtil.LangPath + "Search/")" method="get">
-			<fieldset>
+			<fieldset class="search-options">
                 <ul>
                     <li class="search-service">
                         <label for="search-service">Search for a (e.g. Gardener, Tutor...)</label>
@@ -33,15 +33,14 @@
                         <label for="search-date">When:</label>
                         <input id="search-date" class="date-pick" type="text" name="serviceDate" value="@(DateTime.Today.ToShortDateString())" />
                     </li>
+                    <li class="actions">
+                        <button class="main-action" type="submit">GO!</button>
+                    </li>
                 </ul>
             </fieldset>
-            <fieldset class="actions">
-                <button class="main-action" type="submit">Find Services</button>
-			</fieldset>
 		</form>
-    </div><!-- #main -->
-
-    <div class="categories search-categories">
+        <div class="categories search-categories">
             @RenderPage("Search/_CategoriesList.cshtml", true)
-	</div>
+	    </div>
+    </div><!-- #main -->
    </div><!-- #container -->
