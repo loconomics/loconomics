@@ -436,40 +436,9 @@ $(function () {
         $(this).find('.total .percent-done').css('width', pd);
     });
 
-    // Autocomplete on User Supplied data
-    $('#titleSearch').autocomplete({ source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
-        // dataSupply: [
-        // 	{value: 'housekeeper', display: 'housekeeper'}, 
-        // 	{value: 'plumber', display: 'plumber'}, 
-        // 	{value: 'carpenter', display: 'carpenter'}, 
-        // 	{value: 'landscaper', display: 'landscaper'}, 
-        // 	{value: 'babysitter', display: 'babysitter'}, 
-        // 	{value: 'french', display: 'french tutor'}, 
-        // 	{value: 'math', display: 'math tutor'}, 
-        // 	{value: 'guitar', display: 'guitar lessons'}
-        // ],
-        /*width: '230px',*/
-        select: function (event, ui) {
-            if ($('#selectedTitles option').length < 5) {
-                if ($('#selectedTitles option:contains(' + ui.data.display + ')').length < 1) {
-                    $('#selectedTitles').append('<option value="' + ui.data.value + '">' + ui.data.display + '</option>').removeClass('empty');
-                }
-                else { return false }
-            }
-            else { return false }
-            $('#titleSearch').val('');
-        }
-    });
-
     // Trigger whole list
     $('#seeAllTitles').click(function () {
         $('#titleSearch').autocomplete({ source: 'button.supply' });
-    });
-
-    // Remove selected item
-    $('#selectedTitles li').live('click', function () {
-        $(this).remove();
-        $('#titleSearch').focus();
     });
 
     // Date Picker
@@ -1195,9 +1164,6 @@ function applyDatePicker(element) {
     $(".date-pick", element || document)
         //.val(new Date().asString($.datepicker._defaults.dateFormat))
         .datepicker({
-            showOn: "button",
-            buttonImage: "",
-            buttonImageOnly: true,
             showAnim: "blind"
         });
 }

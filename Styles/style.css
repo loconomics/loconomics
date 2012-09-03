@@ -281,8 +281,8 @@ form input[type="radio"]:focus {
     outline: none;
 }
 
-form input.time { width: 40px; }
-form input.date-pick { width: 90px; }
+form input.time { width: 3em }
+form input.date-pick { width: 5.4em }
 
 form ul{
     list-style: none;
@@ -652,13 +652,8 @@ footer .site-links a{
 }
 footer a:hover { text-decoration: underline; color: inherit; }
 
-/* Super-Specific */
-
-#createLogin2 fieldset, #createLogin2 label { display: block; margin-bottom: 1em; }
-
-#selectedTitles { width: 450px; min-height: 5em; }
-
-/*.home #main { float: none; width: auto; text-align: center; }*/
+/*= Home page, main search
+ */
 .home #main {
     float: none;
     text-align: center;
@@ -666,61 +661,33 @@ footer a:hover { text-decoration: underline; color: inherit; }
     margin: auto;
     font-size: 1.2em;
 }
-.home #main h1 { margin-bottom: 20px; padding-right: 15px; margin-top: 100px; }
-.home form fieldset { margin: .5em 0; color: #00989A; }
-.home form fieldset #serviceDate { width: 90px; }
-.home form fieldset label.serviceDate { padding-left: 0; }
-.home button { font-weight: bold; }
-.home input {
-    height: 1.9em;
+.home #main h1 { margin-bottom: 5px; margin-top: 30px; }
+.home #main h1 + p { margin-top: 0; font-size: 1.1em; }
+#homeSearch label {
+    color: #00989A;
+    display: inline-block;
+}
+#homeSearch input {
+    display: block;
+}
+#homeSearch ul li {
+    display: inline-block;
+}
+.search-service {
+    width: 35%;
+}
+.search-location {
+    width: 35%;
+}
+.search-date {
+    width: 20%;
 }
 
-.home #secondary { position: relative; margin: 0 25px 0 600px; text-align: left; }
-.home #secondary h2 { z-index: 2; position: absolute; top: -28px; right: 25px; margin: 0; padding: 2px 15px; /*width: 114px;*/ font-size: 14px; font-weight: normal; /*color: #461864; background: url('../img/feat-provider-tab.gif') no-repeat top left;*/ border: 3px solid #46aeba; background: #FFF; border-bottom: none; }
-
-/* Unused spotligh class, TODO: review */
-/*
-.home #secondary .spotlight { z-index: 1; position: relative; padding: 20px; border: 3px solid #46aeba; background: #FFF; }
-.home #secondary .spotlight .rating { top: 25px; right: 20px; width: 68px; height: 16px; line-height: 0; font-size: 0; background: url('../img/star-off.png') repeat-x top left; }
-.home #secondary .spotlight .id { float: left; }
-.home #secondary .spotlight .id img { width: 113px; }
-.home #secondary .spotlight .lang { margin-left: 124px; min-height: 113px; }
-.home #secondary .spotlight .lang h3 { margin: 4px 0; font: 22px normal "Casual","Bradley Hand ITC Bold","Comic Sans","Comic Sans MS",cursive; }
-.home #secondary .spotlight .lang h3 a { text-decoration: none; color: #461864; }
-.home #secondary .spotlight .lang p { margin: 0; color: #00989A; }
-.home #secondary .spotlight .lang th { font-size: 12px; font-weight: normal; color: #00989A; }
-.home #secondary .spotlight .review { font-size: 12px; }
-.home #secondary .spotlight .review blockquote { color: #8B2143; font-style: italic; line-height: 150%; }
-.home #secondary .spotlight .review img { float: left; width: 30px; }
-.home #secondary .spotlight .review a { font-style: normal; }
-.home #secondary .spotlight .buttons { text-align: right; }
-.home #secondary .spotlight p.creds { margin: 8px 0; font-size: 12px; vertical-align: bottom; }
-.home #secondary .spotlight a.fanciful { font-size: 10px; }
-*/
-
-.home #secondary .video { margin-top: 40px; padding-top: 0; background: url('../img/feature-border.gif') no-repeat top right; }
-.home #secondary .video h3 { margin: 0 0 12px 0; padding-right: 12px; background: #fff; font-size: 16px; display: inline-block; color: #99C027; }
-.home #secondary .video img { width: 352px; }
-
-/*.home footer {
-    font-size: 1.4em;
-}*/
-.home #container {
-    padding-bottom: 0;
-}
+/* jQuery-UI date-picker specific home style */
 .home img.ui-datepicker-trigger {
-    /* Moving image inside the textbox -ever in his left- */
-    left: -30px;
-    position: relative;
-    /* vertical centering the image: 'middle' don't work well cross-browser, we use 'bottom' and an bottom offset */
-    vertical-align: bottom;
-    bottom: 4px;
-    /* we substract the image width to empty the horizontal reserved space */
-    margin-right: -24px;
+    display: none;
 }
-.home .serviceDate {
-    color: #5ebebf;
-}
+
 .home .categories { height: 184px; text-align: center; margin-bottom: 40px; }
 .home .categories ul { overflow: hidden; display: inline-block; }
 .home .categories h3 { text-align: center; }
@@ -738,84 +705,7 @@ footer a:hover { text-decoration: underline; color: inherit; }
 .categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
 .categories ul:first-child > li:hover div.menu { display: block; } 
 
-/** Modals **/
-#howItWorksModal { margin: 0 auto; }
-#howItWorks { margin: 60px auto 0; padding: 0; width: 400px; text-align: left; }
-#howItWorks li { margin: 0 0 30px 0; padding: 0 0 30px 0; height: 66px; list-style-type: none; border-bottom: 2px dashed #b5e1e2; }
-#howItWorks li img.num { float: left; }
-#howItWorks li img.icon { float: right; }
-#howItWorks li h3 { margin: 0 95px 0 65px; font-size: 26px; font-weight: normal; line-height: 125%; }
-#howItWorks li.performed h3 { margin-top: .8em; }
-#howItWorks li h3 a { text-decoration: none; color: #00989A; }
-
-/**
- * Auto Complete 5.1
- * April 13, 2010
- * Corey Hart @ http://www.codenothing.com
- */ 
-
-ul.auto-complete-list{list-style-type:none;margin:0;padding:0;position:absolute;z-index:100;max-height:250px;overflow:auto;width:75%;}
-ul.auto-complete-list li{list-style-type:none;margin:0 1em;padding:1px 5px;background-color:white;border:1px solid #ccc;border-top:none;cursor:pointer;background:#fff;color:#00989a;font-size:.9em;line-height:185%;text-align:left;}
-ul.auto-complete-list li.auto-complete-list-rollover{background-color:#efefef;}
-ul.auto-complete-list .auto-complete-striped{background-color:#D7EEF9;}
-
-
-/*	Date Picker
-	I compressed these - JB
-*/
-
-table.jCalendar{border:1px solid #999;background:#fff;border-collapse:separate;border-spacing:2px;}
-table.jCalendar th{background:#B5E1E2;color:#fff;font-weight:bold;padding:3px 5px;}
-table.jCalendar td{background:#eee;color:#000;padding:3px 5px;text-align:center;}
-table.jCalendar td.other-month{background:#ddd;color:#aaa;}
-table.jCalendar td.today{background:#666;color:#fff;}
-table.jCalendar td.selected{background:#f66;color:#fff;}
-table.jCalendar td.selected.dp-hover{background:#f33;color:#fff;}
-table.jCalendar td.dp-hover,
-table.jCalendar tr.activeWeekHover td{background:#fff;color:#000;}
-table.jCalendar tr.selectedWeek td{background:#f66;color:#fff;}
-table.jCalendar td.disabled,table.jCalendar td.disabled.dp-hover{background:#efefef;color:#888;}
-table.jCalendar td.unselectable,
-table.jCalendar td.unselectable:hover,
-table.jCalendar td.unselectable.dp-hover{background:#bbb;color:#888;}
-
-/* For the date-picker popup */
-
-img.ui-datepicker-trigger
-{
-    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;
-}
-img.ui-datepicker-trigger{
-    bottom: 0;
-    left: -30px;
-    margin-right: -24px;
-    position: relative;
-    vertical-align: bottom;
-}
-#ui-datepicker-div
-{
-    font-size: .9em;
-}
-
-div.dp-popup{position:relative;background:#efefef;font-size:10px;font-family:arial,sans-serif;padding:2px;width:171px;line-height:1.2em;}
-div#dp-popup{position:absolute;z-index:199;}
-div.dp-popup h2{font-size:12px;text-align:center;margin:2px 0;padding:0;}
-a#dp-close{font-size:11px;padding:4px 0;text-align:center;display:block;}
-a#dp-close:hover{text-decoration:underline;}
-div.dp-popup a{color:#000;text-decoration:none;padding:3px 2px 0;}
-div.dp-popup div.dp-nav-prev{position:absolute;top:2px;left:4px;width:100px;}
-div.dp-popup div.dp-nav-prev a{float:left;}
-/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
-div.dp-popup div.dp-nav-prev a,div.dp-popup div.dp-nav-next a{cursor:pointer;}
-div.dp-popup div.dp-nav-prev a.disabled,div.dp-popup div.dp-nav-next a.disabled{cursor:default;}
-div.dp-popup div.dp-nav-next{position:absolute;top:2px;right:4px;width:100px;}
-div.dp-popup div.dp-nav-next a{float:right;}
-div.dp-popup a.disabled{cursor:default;color:#aaa;}
-div.dp-popup td{cursor:pointer;}
-div.dp-popup td.disabled{cursor:default;}
-
-/* My own personal "non-semantic helper classes" */
-
+/* JB: My own personal "non-semantic helper classes" */
 .tabby {
 	-moz-border-radius-topleft: 12px; /* FF1-3.6 */
 	-webkit-border-top-left-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
@@ -825,25 +715,21 @@ div.dp-popup td.disabled{cursor:default;}
     border-top-right-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
     -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;	
 }
-
 .fancy {
 	-moz-border-radius: 12px; /* FF1-3.6 */
 	-webkit-border-radius: 12px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
     border-radius: 12px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
     -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;	
 }
-
 .fanciful { 
 	-moz-border-radius: 22px; /* FF1-3.6 */
 	-webkit-border-radius: 22px; /* Saf3-4, iOS 1-3.2, Android <1.6 */
     border-radius: 22px; /* Opera 10.5, IE9, Saf5, Chrome, FF4, iOS 4, Android 2.1+ */
     -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box;	
 }
-
 .stronger {
     font-weight: bold;
 }
-
 
 /* ==|== non-semantic helper classes ========================================
    Please define your styles before this section.
@@ -871,7 +757,6 @@ div.dp-popup td.disabled{cursor:default;}
 .clearfix { zoom: 1; }
 
 
-
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles
@@ -889,12 +774,10 @@ div.dp-popup td.disabled{cursor:default;}
 }
 
 
-
 /* ==|== print styles =======================================================
    Print styles.
    Inlined to avoid required HTTP connection: h5bp.com/r
    ========================================================================== */
-
 @media print {
   * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
   a, a:visited { text-decoration: underline; }
@@ -914,6 +797,22 @@ div.dp-popup td.disabled{cursor:default;}
 /* ============ Some general classes =============
    ====== IagoSRL for Loconomics S.L. ============
  */
+/* jQuery-UI date-picker and popup, generic styles */
+img.ui-datepicker-trigger
+{
+    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;
+}
+img.ui-datepicker-trigger{
+    bottom: 0;
+    left: -30px;
+    margin-right: -24px;
+    position: relative;
+    vertical-align: bottom;
+}
+#ui-datepicker-div
+{
+    font-size: .9em;
+}
 /* .actions: container for buttons -actions, tasks, calculations, etc- */
 .actions {
     text-align: right !important;

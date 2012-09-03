@@ -9,9 +9,6 @@
         $('.date-pick', document)
             //.val(new Date().asString($.datepicker._defaults.dateFormat))
             .datepicker({
-                showOn: 'button',
-                buttonImage: '',
-                buttonImageOnly: true,
                 showAnim: 'blind'
             });
     ";
@@ -20,32 +17,29 @@
   <div id="container" class="home clearfix"> 
     <div id="main" class="">
 		<h1>@Page.Title</h1>
+        <p>book safely and easily local, indepedent service providers</p>
 		<form id="homeSearch" action="@Href(UrlUtil.LangPath + "Search/")" method="get">
 			<fieldset>
-				<!-- <label for="serviceType">Enter Service </label> -->
-            <input class="fanciful" type="text" name="serviceType" id="serviceType" placeholder="e.g. Cleaner, Tutor..." /> in 
-            <input class="fanciful" type="text" name="serviceLocation" id="serviceLocation" placeholder="San Francisco, CA" />
-            @*<!-- <input class="go" type="submit" value="Find Services"/> -->
-				<!-- <select id="serviceLocation" name="serviceLocation">
-					<option value="" selected>Select a location</option>
-					<option value="madrid">Madrid</option>
-					<option value="minneapolis">Minneapolis</option>
-					<option value="new-york">NYC</option>
-				</select> -->*@
-			</fieldset>
-			<fieldset>
-				<label class="serviceDate" for="serviceDate">Preferred date:</label> <input class="fanciful date-pick" type="text" id="serviceDate" name="serviceDate" value="@(DateTime.Today.ToShortDateString())" /> <button class="fancy" type="submit">Find Services</button>
+                <ul>
+                    <li class="search-service">
+                        <label for="search-service">Search for a (e.g. Gardener, Tutor...)</label>
+                        <input id="search-service" type="text" name="serviceType" placeholder="Dog Walker" />
+                    </li>
+                    <li class="search-location">
+                        <label for="search-location">Where</label>
+                        <input id="search-location" type="text" name="serviceLocation" placeholder="San Francisco, CA" />
+                    </li>
+                    <li class="search-date">
+                        <label for="search-date">When:</label>
+                        <input id="search-date" class="date-pick" type="text" name="serviceDate" value="@(DateTime.Today.ToShortDateString())" />
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset class="actions">
+                <button class="main-action" type="submit">Find Services</button>
 			</fieldset>
 		</form>
     </div><!-- #main -->
-
-	 <div id="secondary">
-        @{/*RenderPage("_FeaturedProvider.cshtml")*/}
-		<!--<div class="video">
-			<h3>How it works</h3>
-			<img src="../img/home-video-placeholder.jpg" alt="" />
-		</div> .video -->
-	 </div><!-- #secondary -->
 
     <div class="categories search-categories">
             @RenderPage("Search/_CategoriesList.cshtml", true)
