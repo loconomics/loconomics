@@ -709,31 +709,114 @@ footer a:hover { text-decoration: underline; color: inherit; }
     display: none;
 }
 
-.home .categories { height: auto; text-align: center; margin: 40px 0; }
-.home .categories ul { overflow: hidden; display: inline-block; }
-.home .categories h3 { text-align: center; }
+.home .search-categories {
+    height: 260px;
+}
+.home .search-categories > ul {
+    height: auto;
+    text-align: center;
+    margin: 40px 0;
+    overflow: visible;
+}
+.home .search-categories h3 { text-align: center; }
+.home .search-categories li {
+    text-indent: 0;
+    position: relative;
+}
+.home .search-categories li > a {
+    font-size: .8em;
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    padding-top: 84px;
+    height: 34px;
+}
+.home .search-categories li > a:visited {
+    color: #00989A;
+}
 
-.categories { margin: 0 auto; height: 250px; }
-.categories ul { margin: 0; padding: 0; }
-.categories > ul { margin: 0; }
-.categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
-.categories ul > li { float: left; margin-right: 3px; }
-.categories ul > li.cat-list-title {
+.search-categories { margin: 0 auto; height: 250px; }
+.search-categories ul { margin: 0; padding: 0; }
+.search-categories > ul { margin: 0; }
+.search-categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
+.search-categories ul > li { float: left; margin-right: 3px; }
+.search-categories ul > li.cat-list-title {
     display: block;
     float: none;
     width: auto;
     height: auto;
 }
-.categories ul > li.cat-list-title h3 {
+.search-categories ul > li.cat-list-title h3 {
     font-size: 1em;
     text-align: left;
     margin: 0 0 0 .6em;
 }
-.categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
-.categories ul ul li { padding: .6em 0 0 0; }
-.categories ul ul a { text-decoration: none; }
-.categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
-.categories ul:first-child > li:hover div.menu { display: block; } 
+.search-categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
+.search-categories ul ul li { padding: .6em 0 0 0; }
+.search-categories ul ul a { text-decoration: none; }
+.search-categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
+/* On Hover */
+.search-categories ul > li:hover > a {
+    text-indent: -9999px;
+}
+.search-categories ul > li:hover > .description {
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 115px;
+    width: 690px;
+    text-align: left;
+    
+    border-radius: 4px;
+    border: 2px solid #747474;
+    padding: 10px;
+}
+.search-categories ul > li:hover > .description > h5 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #b5e1e2;
+}
+.search-categories ul > li:hover > .description > h5 > strong {
+    color: #00989b;
+}
+.search-categories ul > li:hover > .description > p {
+    font-size: .8em;
+    margin: 0;
+}
+/* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
+.search-categories .description:after {
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #fff;
+    left: 20px;
+    top: -4px;
+}
+.search-categories .description:before {
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #747474;
+    left: 19px;
+    top: -7px;
+}
+/* customized arrow position per category */
+header .anonymous-tools dl dd:after {
+    left: 15px;
+    right: auto;
+}
+header .anonymous-tools dl dd:before {
+    left: 14px;
+    right: auto;
+}
 
 /* JB: My own personal "non-semantic helper classes" */
 .tabby {
@@ -2015,6 +2098,9 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories li.cat-elderly:hover{          background-position: -252px -84px}
 .search-categories li.selected.cat-celebrations,
 .search-categories li.cat-celebrations:hover{     background-position: -84px -84px}
+.search-categories li > .description {
+    display: none;
+}
 
 /*==================
  * Social networking
