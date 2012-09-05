@@ -557,17 +557,24 @@ header ul > li:last-child > dl > dt,
 header ul > li > dl.lang-country > dt {
     border-right-color: transparent;
 }
+header ul > li:hover:last-child > a,
+header ul > li:hover:last-child > dl > dt,
+header ul > li:hover > dl.lang-country > dt {
+    border-right-color: inherit;
+}
 header > .wrap > ul > li > a {
     display: block;
 }
 /* Menu and submenu shared-related styles */
 header dl:hover dt,
-header dl dd li.current {
+header dl dd li.current,
+header > .wrap > ul > li:hover > a {
     background-color: #F5F5F5;
 }
 header dl dd ul,
-header dl:hover dt {
-    border: 1px solid #747474 !important;
+header dl:hover dt,
+header > .wrap > ul > li:hover > a {
+    border: 1px solid #747474;
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -647,10 +654,19 @@ footer > div {
 footer .site-links a{
     color: #747474;
     font-weight: bold;
-    margin: 0 10px;
-    text-decoration: none;    
+    padding: 0 0.5em;
+    text-decoration: none;
+    border: 1px solid transparent;
 }
-footer a:hover { text-decoration: underline; color: inherit; }
+footer .site-links a:hover {
+    color: inherit;
+    background-color: #F5F5F5;
+    border: 1px solid #747474;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
 
 /*= Home page, main search
  */
@@ -958,6 +974,7 @@ form fieldset.actions{
     line-height: 150%;
     padding: 0.4em 1.4em;
     text-decoration: none;
+    border: none !important;
 }
 .actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
