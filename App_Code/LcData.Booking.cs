@@ -474,6 +474,8 @@ public static partial class LcData
         /// table.
         /// The desired new BookingStatusID must be provided, but is filtered and
         /// if is not a valid ID an exception is throw.
+        /// If there is a TransactionID related to the BookingRequest, that transaction
+        /// is refunded if needed.
         /// List of BookingRequestStatusID:
         /// BookingRequestStatusID	BookingRequestStatusName
         /// 3	timed out
@@ -489,7 +491,12 @@ public static partial class LcData
                     "BookingRequestStatusID '{0}' is not valid to invalidate the booking request", 
                     BookingRequestStatusID));
             }
-        
+
+            var sqlGetTransactionID = @"
+                SELECT  PaymentTransactionID
+                FROM    BookingRequest
+                WHERE   BookingRequestID = @0
+            ";   
             var sqlInvalidateBookingRequest = @"
                 -- Parameters
                 DECLARE @BookingRequestID int, @BookingRequestStatusID int
@@ -553,6 +560,15 @@ public static partial class LcData
                 END CATCH
             ";
             using (var db = Database.Open("sqlloco")) {
+                // First: get booking request TransactionID (if there is -or is not a virtual testing id-) to do a refund
+                string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
+                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")) {
+                    var result = LcPayment.RefundTransaction(tranID);
+                    if (result != null)
+                        return (dynamic) new { Error = -9999, ErrorMessage = result  };
+                }
+
+                // Invalidate in database the booking request:    
                 return db.QuerySingle(sqlInvalidateBookingRequest, 
                     BookingRequestID,
                     BookingRequestStatusID);

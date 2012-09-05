@@ -34,4 +34,50 @@ public static class LcPayment
         }
         return gateway;
     }
+    /// <summary>
+    /// Full refund a transaction ensuring that will be no charge to the customer
+    /// or will be refunded if there was.
+    /// If the transaction is invalid, was not accepted or another state that says that
+    /// no charge happens, 'null' will be returned, just the same as if the refund operation
+    /// was success.
+    /// If there is an error, the error message will be returned.
+    /// </summary>
+    /// <param name="transactionID"></param>
+    /// <returns></returns>
+    public static string RefundTransaction(string transactionID)
+    {
+        Result<Transaction> r = null;
+
+        var gateway = NewBraintreeGateway();
+
+        // Check if the transaction has something to refund (was not refunded yet)
+        Transaction transaction = gateway.Transaction.Find(transactionID);
+        if (transaction != null)
+            // It doesn't exists, 'refunded' ;)
+            return null;
+        if (transaction.Amount > 0)
+        {
+            // There is something to refund:
+            if (transaction.Status == TransactionStatus.SETTLED ||
+                transaction.Status == TransactionStatus.SETTLING)
+            {
+                // Full refund transaction.
+                r = gateway.Transaction.Refund(transactionID);
+            }
+            else if (transaction.Status == TransactionStatus.AUTHORIZED ||
+                transaction.Status == TransactionStatus.AUTHORIZING ||
+                transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+            {
+                // Void transaction:
+                r = gateway.Transaction.Void(transactionID);
+            }
+            else
+            {
+                // No transaction, no accepted, no charge, nothing to refund
+                return null;
+            }
+        }
+
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
 }
