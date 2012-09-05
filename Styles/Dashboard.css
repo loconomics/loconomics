@@ -429,12 +429,24 @@ form#personal li label{
 }
 fieldset.positionservices-attributes{
     display: inline-block;
-    width: 40%;
     overflow: hidden;
     /*border-right: solid 1px #dadada;*/
     margin: 0 10px 10px 0 !important;
-    padding: 0 10px 0 0 !important;
     vertical-align: top;
+}
+fieldset.positionservices-attributes,
+fieldset.positionservices-attributes > ul
+{
+    width: 215px;
+}
+fieldset.positionservices-attributes > ul {
+    clear: both;
+}
+fieldset.positionservices-attributes * {
+    overflow: hidden;
+}
+fieldset.positionservices-attributes li {
+    margin: 0 0 2px;
 }
 fieldset.required-attribute-category > legend:after {
     content: '*';
@@ -464,7 +476,7 @@ fieldset.positionservices-attributes > legend {
     clear: both;
     float: left;
     overflow: hidden;
-    width: 205px;
+    width: auto;
     margin: 0 0 5px;
 }
 form.positionservices label{
@@ -472,7 +484,6 @@ form.positionservices label{
 }
 .dashboard form.positionservices li label{
     width: auto;
-    white-space: nowrap;
 }
 form.positionservices input{
     margin-right: .4em;

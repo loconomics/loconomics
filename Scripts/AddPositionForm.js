@@ -74,7 +74,7 @@ function initYourWork(){
         @1 CategoryName
         @2 CategoryDescription
         */
-        var tplCategory = '<fieldset class="service-attribute-category" id="service-attribute-category-@0"><legend title="@1" data-description="@2">@1:</legend></fieldset>';
+        var tplCategory = '<fieldset class="service-attribute-category positionservices-attributes" id="service-attribute-category-@0"><legend title="@1" data-description="@2">@1:</legend></fieldset>';
         /* Template to create a label with checkbox, markers:
         @0 CategoryId
         @1 AttributeId
