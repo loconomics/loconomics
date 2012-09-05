@@ -679,6 +679,9 @@ footer .site-links a:hover {
 }
 .home #main h1 { margin-bottom: 5px; margin-top: 30px; }
 .home #main h1 + p { margin-top: 0; font-size: 1.1em; }
+#homeSearch fieldset {
+    padding: 0;
+}
 #homeSearch label {
     color: #00989A;
     display: block;
@@ -703,19 +706,15 @@ footer .site-links a:hover {
     width: 270px;
 }
 .search-location {
-    width: 203px;
+    width: 208px;
 }
 .search-date {
     width: 120px;
 }
 #homeSearch .actions {
     clear: none;
-    height: 63px;
-    position: relative;
 }
 #homeSearch .actions .main-action {
-    bottom: 10px;
-    position: absolute;
     line-height: normal;
     border: 1px solid transparent !important;
 }
