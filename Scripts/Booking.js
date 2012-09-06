@@ -64,7 +64,14 @@ $(document).ready(function () {
             var selHour = new lcTime(7 + (row / 2), (row % 2 == 1 ? 30 : 0), 0);
             //console.log('Selected date-time: ' + selDay.getFullYear() + '/' + (selDay.getMonth() + 1) + '/' + selDay.getDate() + " " + selHour);
             // Setting in the form the date and time
-            var fields = getSelectDateTimeFieldsFor('preferred-option', $t.closest('form.schedule'));
+            var $f = $t.closest('form.schedule');
+            var fields = preferredF = getSelectDateTimeFieldsFor('preferred-option', $f);
+            if (fields.date.val())
+                fields = getSelectDateTimeFieldsFor('alternative-option-1', $f);
+            if (fields.date.val())
+                fields = getSelectDateTimeFieldsFor('alternative-option-2', $f);
+            if (fields.date.val())
+                fields = preferredF;
             fields.date.val($.datepicker.formatDate($.datepicker._defaults.dateFormat, selDay));
             fields.startTime.val(selHour.toString())
                 .change(); // Force change event to auto-update endTime
