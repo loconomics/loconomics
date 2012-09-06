@@ -25,6 +25,35 @@ function lcTime (hour, minute, second) {
             s = '0' + s;
         return h + lcTime.delimiter + m + lcTime.delimiter + s;
     };
+    /* Print only hours and minutes in the common time of the day format
+        (AM/PM in US, 24h on ES)
+    */
+    this.toDayTimeString = function () {
+        switch ($('html').attr('lang')) {
+            case 'es':
+                var h = this.hour.toString();
+                if (h.length == 1)
+                    h = '0' + h;
+                var m = this.minute.toString();
+                if (m.length == 1)
+                    m = '0' + m;
+                return h + lcTime.delimiter + m;
+            case 'en':
+            default:
+                var h = this.hour.toString();
+                var sufix = ' AM';
+                if (h >= 12 && h < 24)
+                    sufix = ' PM';
+                if (h > 12)
+                    h = h % 12;
+                if (h == 0)
+                    h = 12;
+                var m = this.minute.toString();
+                if (m.length == 1)
+                    m = '0' + m;
+                return h + lcTime.delimiter + m + sufix;
+        }
+    };
     this.addHours = function (hours) {
         this.addMinutes(hours * 60);
         return this;
@@ -93,7 +122,7 @@ $(document).ready(function () {
                 serviceDurationHours = serviceDurationHours + 0.5 - rest;
             var $t = $(this);
             var starttime = lcTime.parse($t.val());
-            $t.closest('fieldset').find('.end-time :input').val(starttime.addHours(serviceDurationHours).toString());
+            $t.closest('fieldset').find('.end-time :input').val(starttime.addHours(serviceDurationHours).toDayTimeString());
         }
     })
     .on('change', '.select-location', bookingChangeLocation)

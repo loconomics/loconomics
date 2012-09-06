@@ -9,7 +9,6 @@
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    //var customerid = c.UserID;
     DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
     dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = DateTime.MinValue;
     

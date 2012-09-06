@@ -4,7 +4,8 @@
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    //var customerid = c.UserID;
+    DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = DateTime.MinValue;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -79,7 +80,6 @@
             ModelState.AddError("save-location-as", "To save the location is required a name");
         }
         
-        DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
         /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
         if (!DateTime.TryParse(
                 Request["preferred-date"] + " " + Request["preferred-start-time"], out dt1Start)) {
@@ -245,6 +245,7 @@
     var firstHour = new TimeSpan(7, 0, 0);
     var lastHour = new TimeSpan(22, 30, 0);
     var interval = new TimeSpan(0, 30, 0);
+    <option @LcHelpers.IsSelected(selectedHour, "") value=""></option>
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
         string thisvalue = hour.ToString("c");
@@ -325,7 +326,7 @@
                     <label>Start time:<select name="preferred-start-time" @Validation.GetHtml("preferred-start-time")>@printOptionsHours(Request["preferred-start-time"])</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select disabled="disabled" name="preferred-end-time" @Validation.GetHtml("preferred-end-time")>@printOptionsHours(Request["preferred-end-time"])</select></label>
+                    <label>End time:<input type="text" readonly="readonly" value="@(IsPost ? dt1End.ToShortTimeString() : "")" /></label>
                 </li>
             </ul>
         </fieldset>
@@ -339,7 +340,7 @@
                     <label>Start time:<select name="alternative-1-start-time" @Validation.GetHtml("alternative-1-start-time")>@printOptionsHours(Request["alternative-1-start-time"])</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select disabled="disabled" name="alternative-1-end-time" @Validation.GetHtml("alternative-1-end-time")>@printOptionsHours(Request["alternative-1-end-time"])</select></label>
+                    <label>End time:<input type="text" readonly="readonly" value="@(IsPost ? dt2End.ToShortTimeString() : "")" /></label>
                 </li>
             </ul>
         </fieldset>
@@ -353,7 +354,7 @@
                     <label>Start time:<select name="alternative-2-start-time" @Validation.GetHtml("alternative-2-start-time")>@printOptionsHours(Request["alternative-2-start-time"])</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select disabled="disabled" name="alternative-2-end-time" @Validation.GetHtml("alternative-2-end-time")>@printOptionsHours(Request["alternative-2-end-time"])</select></label>
+                    <label>End time:<input type="text" readonly="readonly" value="@(IsPost ? dt3End.ToShortTimeString() : "")" /></label>
                 </li>
             </ul>
         </fieldset>
