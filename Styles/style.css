@@ -971,6 +971,16 @@ form fieldset.actions{
     color: White !important;
     display: inline-block;
     padding: 0 1em;
+    text-decoration: none;
+}
+.action {
+    background-color: #00989A;
+}
+.action:hover {
+    box-shadow: 0 0 5px 2px #00989A;
+    -moz-box-shadow: 0 0 5px 2px #00989A;
+    -o-box-shadow: 0 0 5px 2px #00989A;
+    -webkit-box-shadow: 0 0 5px 2px #00989A;
 }
 /* .main-action, inside .actions container: bigger, more important button */
 .actions .main-action{
@@ -1567,8 +1577,8 @@ table .number{
     border-color: #00989A;
 }
 .smooth-box-block-element > .close-popup {
-    right: 5px;
-    top: 5px;
+    right: -18px;
+    top: -15px;
     border-color: #ccc;
     color: #ccc;
 }
@@ -2042,11 +2052,14 @@ html.boxshadow #loginBox .field-validation-error{
 
 .smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
+    z-index: 1;
 }
 .smooth-box-block-element {
     background: white;
     margin: 20px;
     padding: 20px;
+    position: relative;
+    z-index: 9000;
 }
 .smooth-box-block-overlay.loading .smooth-box-block-element {
     width: 50px;

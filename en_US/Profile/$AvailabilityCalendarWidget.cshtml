@@ -5,13 +5,14 @@
     required css class 'availability-calendar', to allo css styles work fine).
 *@
 @{
-    bool hasWrapper = true, hasLegend = true, hasControls = true, onlyData = false;
+    bool hasWrapper = true, hasLegend = true, hasControls = true, onlyData = false, hasZoom;
     int userID = 0;
     
     userID = PageData["AvailabilityCalendar.UserID"] ?? Request["UserID"].AsInt();
     hasWrapper = PageData["AvailabilityCalendar.HasWrapper"] ?? (N.W(Request["HasWrapper"]) ?? "true").AsBool();
     hasLegend = PageData["AvailabilityCalendar.HasLegend"] ?? (N.W(Request["HasLegend"]) ?? "true").AsBool();
     hasControls = PageData["AvailabilityCalendar.HasControls"] ?? (N.W(Request["HasControls"]) ?? "true").AsBool();
+    hasZoom = PageData["AvailabilityCalendar.HasZoom"] ?? (N.W(Request["HasZoom"]) ?? "false").AsBool();
 
     var sqlGetAvailability = "exec dbo.GetProviderAvailabilityFullSet @0, @1";
     
@@ -88,8 +89,10 @@
             </div>
             @if (hasControls) {
             <div class="calendar-controls">
-                <a href="#" class="button fancy previous-week">previous week</a>
-                <a href="#" class="button fancy next-week">next week</a>
+                <a href="#" class="action previous-week-action">previous week</a>
+                <a href="#" class="action next-week-action">next week</a>
+                @if (hasZoom)
+                {<a href="#" class="action zoom-action">Zoom</a>}
             </div>
             }
         </div>

@@ -379,23 +379,23 @@ $(function () {
     /*= Home Page (moved to _SiteLayout, loading without this script for minor footprint and faster load)
     */
     /*(function () {
-        // Datepicker (dupe date initialization here, but to document, just next code is copied to _SiteLayout)
-        $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-        $('.date-pick', document).datepicker({
-            showAnim: 'blind'
-        });
-        // Location js-dropdown
-        var s = $('#search-location');
-        s.prop('readonly', true);
-        s.autocomplete({
-            source: LC.searchLocations
-            , autoFocus: true
-            , minLength: 0
-            , select: function () {
-                return false;
-            }
-        });
-        s.on('focus click', function () { s.autocomplete('search', '') });
+    // Datepicker (dupe date initialization here, but to document, just next code is copied to _SiteLayout)
+    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+    $('.date-pick', document).datepicker({
+    showAnim: 'blind'
+    });
+    // Location js-dropdown
+    var s = $('#search-location');
+    s.prop('readonly', true);
+    s.autocomplete({
+    source: LC.searchLocations
+    , autoFocus: true
+    , minLength: 0
+    , select: function () {
+    return false;
+    }
+    });
+    s.on('focus click', function () { s.autocomplete('search', '') });
     })();*/
 
     /** General auto-load support for tabs: if no content on focused, they use 'reload' to load its content if they are configured with data-source-url attribute **/
@@ -795,9 +795,21 @@ $(function () {
     });*/
 
     /***** AVAILABILITY CALENDAR WIDGET *****/
-    $(document).delegate('.calendar-controls .button', 'click', function () {
-        var next = $(this).hasClass('next-week');
-        var cont = $(this).closest('.availability-calendar');
+    $(document).delegate('.calendar-controls .action', 'click', function () {
+        var $t = $(this);
+        if ($t.hasClass('zoom-action')) {
+            // Do zoom
+            var c = $t.closest('.availability-calendar').find('.calendar').clone();
+            c.css('font-size', '2px');
+            var tab = $t.closest('.tab-body');
+            c.data('popup-container', tab);
+            smoothBoxBlock(c, tab, 'availability-calendar', { closable: true });
+            // Nothing more
+            return;
+        }
+        // Navigate calendar
+        var next = $t.hasClass('next-week-action');
+        var cont = $t.closest('.availability-calendar');
         var calcont = cont.children('.calendar-container');
         var cal = calcont.children('.calendar');
         var calinfo = cont.find('.calendar-info');

@@ -64,7 +64,7 @@ $(document).ready(function () {
             var selHour = new lcTime(7 + (row / 2), (row % 2 == 1 ? 30 : 0), 0);
             //console.log('Selected date-time: ' + selDay.getFullYear() + '/' + (selDay.getMonth() + 1) + '/' + selDay.getDate() + " " + selHour);
             // Setting in the form the date and time
-            var $f = $t.closest('form.schedule');
+            var $f = $t.closest('.tab-body').find('form.schedule');
             var fields = preferredF = getSelectDateTimeFieldsFor('preferred-option', $f);
             if (fields.date.val())
                 fields = getSelectDateTimeFieldsFor('alternative-option-1', $f);
@@ -75,6 +75,11 @@ $(document).ready(function () {
             fields.date.val($.datepicker.formatDate($.datepicker._defaults.dateFormat, selDay));
             fields.startTime.val(selHour.toString())
                 .change(); // Force change event to auto-update endTime
+
+            // If is in a popup:
+            var popupContainer = $t.closest('.calendar').data('popup-container'); console.log(popupContainer);
+            if (popupContainer)
+                smoothBoxBlock(null, popupContainer);
         }
 
         // dateSet can be: preferred-option, alternative-option-1, alternative-option-2

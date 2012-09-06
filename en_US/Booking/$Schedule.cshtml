@@ -265,7 +265,7 @@
     </script>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
-        @RenderPage(UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID }, { "AvailabilityCalendar.HasWrapper", false} } )
+        @RenderPage(UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID }, { "AvailabilityCalendar.HasWrapper", false}, { "AvailabilityCalendar.HasZoom", true } } )
     </fieldset>
     <fieldset class="location box">
         <legend>Location where services are to be performed:</legend>
