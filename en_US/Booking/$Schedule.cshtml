@@ -276,6 +276,9 @@
     <script type="text/javascript">
         if (!serviceDurationHours) var serviceDurationHours = 0;
         serviceDurationHours = @(serviceDurationHours);
+        @if (IsPost) {
+            <text>applyDatePicker();</text>
+        }
     </script>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
