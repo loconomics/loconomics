@@ -15,15 +15,16 @@
         }
     }
     
+    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
     Validation.RequireField("preferred-date", "Must specify a preferred date");
     Validation.RequireField("preferred-start-time", "Must specify a preferred start time");
-    Validation.RequireField("preferred-end-time", "Must specify a preferred end time");
+    //Validation.RequireField("preferred-end-time", "Must specify a preferred end time");
     Validation.RequireField("alternative-1-date", "Must specify a second date");
     Validation.RequireField("alternative-1-start-time", "Must specify a second start time");
-    Validation.RequireField("alternative-1-end-time", "Must specify a second end time");
+    //Validation.RequireField("alternative-1-end-time", "Must specify a second end time");
     Validation.RequireField("alternative-2-date", "Must specify a third date");
     Validation.RequireField("alternative-2-start-time", "Must specify a third start time");
-    Validation.RequireField("alternative-2-end-time", "Must specify a third end time");
+    //Validation.RequireField("alternative-2-end-time", "Must specify a third end time");
     Validation.Add("preferred-date", Validator.DateTime("Preferred date format is invalid"));
     Validation.Add("alternative-1-date", Validator.DateTime("Alternative 1 format is invalid"));
     Validation.Add("alternative-2-date", Validator.DateTime("Alternative 2 format is invalid"));
@@ -79,34 +80,40 @@
         }
         
         DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+        /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
         if (!DateTime.TryParse(
                 Request["preferred-date"] + " " + Request["preferred-start-time"], out dt1Start)) {
             ModelState.AddFormError("Preferred Date and Start Time are not correct");
         }
-        if (!DateTime.TryParse(
+        /*if (!DateTime.TryParse(
                 Request["preferred-date"] + " " + Request["preferred-end-time"], out dt1End)) {
             ModelState.AddFormError("Preferred Date and End Time are not correct");
-        }
+        }*/
         if (!DateTime.TryParse(
                 Request["alternative-1-date"] + " " + Request["alternative-1-start-time"], out dt2Start)) {
             ModelState.AddFormError("Second best Date and Start Time are not correct");
         }
-        if (!DateTime.TryParse(
+        /*if (!DateTime.TryParse(
                 Request["alternative-1-date"] + " " + Request["alternative-1-end-time"], out dt2End)) {
             ModelState.AddFormError("Second best Date and End Time are not correct");
-        }
+        }*/
         if (!DateTime.TryParse(
                 Request["alternative-2-date"] + " " + Request["alternative-2-start-time"], out dt3Start)) {
             ModelState.AddFormError("Third best Date and Start Time are not correct");
         }
-        if (!DateTime.TryParse(
+        /*if (!DateTime.TryParse(
                 Request["alternative-2-date"] + " " + Request["alternative-2-end-time"], out dt3End)) {
             ModelState.AddFormError("Third best Date and End Time are not correct");
-        }
+        }*/
         
         // Validate provider availability with requested dates
         var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
         using (var db = Database.Open("sqlloco")) {
+            decimal durationHours = getServiceDurationHours(db, bookingRequestID);
+            dt1End = dt1Start.AddHours((double)durationHours);
+            dt2End = dt2Start.AddHours((double)durationHours);
+            dt3End = dt3Start.AddHours((double)durationHours);
+            
             if (dt1Start != null) {
                 if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End) == 1) {
                     ModelState.AddFormError("The provider is not availaible for the Prefered Date");
@@ -230,7 +237,12 @@
             WHERE   L.UserId = @0
                      AND L.AddressName IS NOT NULL
         ", c.UserID);
-        serviceDurationHours = (decimal)db.QueryValue(@"
+        serviceDurationHours = getServiceDurationHours(db, bookingRequestID);
+    }
+}
+@functions { 
+    decimal getServiceDurationHours(Database db, int bookingRequestID) {
+        decimal serviceDurationHours = (decimal)db.QueryValue(@"
             SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
             FROM    BookingRequest As R
                      INNER JOIN
@@ -238,6 +250,8 @@
                       ON R.PricingEstimateID = P.PricingEstimateID
             WHERE   R.BookingRequestID = @0
         ", bookingRequestID);
+        // Default duration 4 hours, if there is no info about it
+        return (serviceDurationHours == 0M ? 4M : serviceDurationHours);
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -261,7 +275,7 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <script type="text/javascript">
         if (!serviceDurationHours) var serviceDurationHours = 0;
-        serviceDurationHours = @(serviceDurationHours == 0M ? 4M : serviceDurationHours);
+        serviceDurationHours = @(serviceDurationHours);
     </script>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
