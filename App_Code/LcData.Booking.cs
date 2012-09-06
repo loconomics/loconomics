@@ -513,18 +513,6 @@ public static partial class LcData
                     FROM    BookingRequest
                     WHERE   BookingRequestID = @BookingRequestID
 
-                    /*
-                     * Updating Booking Request status, and removing references to the 
-                     * user selected dates.
-                     */
-                    UPDATE  BookingRequest
-                    SET     BookingRequestStatusID = @BookingRequestStatusID,
-                            PreferredDateID = null,
-                            AlternativeDate1ID = null,
-                            AlternativeDate2ID = null,
-                            AddressID = null
-                    WHERE   BookingRequestID = @BookingRequestID
-
                     -- Removing CalendarEvents:
                     DELETE FROM CalendarEvents
                     WHERE ID IN (
@@ -537,6 +525,18 @@ public static partial class LcData
                         SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
                         WHERE BookingRequestID = @BookingRequestID
                     )
+
+                    /*
+                     * Updating Booking Request status, and removing references to the 
+                     * user selected dates.
+                     */
+                    UPDATE  BookingRequest
+                    SET     BookingRequestStatusID = @BookingRequestStatusID,
+                            PreferredDateID = null,
+                            AlternativeDate1ID = null,
+                            AlternativeDate2ID = null,
+                            AddressID = null
+                    WHERE   BookingRequestID = @BookingRequestID
 
                     -- Removing Service Address, if is not an user saved location (it has not AddressName)
                     DELETE FROM ServiceAddress

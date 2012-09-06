@@ -38,11 +38,7 @@
 }
 .booking .button{
     text-transform: lowercase;
-    font-size: 1.0em;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
+    font-size: 1em;
 }
 .booking .button.next{
     background: #99C027;

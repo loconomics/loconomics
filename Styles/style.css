@@ -299,7 +299,7 @@ input.button, button, a.button {
 	font-size: .8em; line-height: 180%; text-decoration: none;
 }
 input.button:hover, button:hover, a.button:hover,
-input.button:focus, button:focus, a.button:focus { background-color: #99C027; border: none; outline: none; }
+input.button:focus, button:focus, a.button:focus { background-color: #00989A; border: none; outline: none; }
 
 input.button.next, button.next { display: inline-block; padding: 0 1em; border: none; background: #b5e1e2; color: #00989a; font-size: 1.6em; line-height: 185%; }
 input.button.next:hover, button.next:hover,

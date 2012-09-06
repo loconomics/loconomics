@@ -131,31 +131,29 @@
             }
         }
         
-        // TODO: Add validation for: End Time cannot be lower than Start Time --- END TIME MUST BE AUTO, using the ServiceDuration field
-        
         if (ModelState.IsValid){
-            var sqlInsCalendarEvent = @"
-                INSERT INTO [CalendarEvents]
-                           ([UserId]
-                           ,[CalendarAvailabilityTypeID]
-                           ,[CalendarEventLocationId]
-                           ,[StartTime]
-                           ,[IcsSrcName]
-                           ,[UID]
-                           ,[TimeZone]
-                           ,[EndTime]
-                           ,[RecurringRules]
-                           ,[JobCategoryId]
-                           ,[JobDescription])
-                     VALUES (@0, @1, null, @2, null, null, null, @3, null, null, null)
-                SELECT Cast(@@Identity As int) As CalendarEventID
-            ";
+            
+            // NOTE: as of 20120906 issue #117, events are not created on database on form-post else are saved in memory until the
+            // booking process finish it, to avoid 'dead tentative events' exist in the database.
+            // Save calculated datetimes in session to last step
+            Dictionary<int, Dictionary<string, DateTime>> brs = null;
+            if (Session["BookingRequests"] == null) {
+                Session["BookingRequests"] = brs = new Dictionary<int, Dictionary<string, DateTime>>();
+            } else {
+                brs = (Dictionary<int, Dictionary<string, DateTime>>)Session["BookingRequests"];
+            }
+            brs[bookingRequestID] = new Dictionary<string, DateTime> {
+                { "dt1Start", dt1Start }
+                ,{ "dt1End", dt1End }
+                ,{ "dt2Start", dt2Start }
+                ,{ "dt2End", dt2End }
+                ,{ "dt3Start", dt3Start }
+                ,{ "dt3End", dt3End }
+            };
+            
             var sqlUpdBookingRequest = @"
                 UPDATE  BookingRequest SET
-                        AddressID = @1,
-                        PreferredDateID = @2,
-                        AlternativeDate1ID = @3,
-                        AlternativeDate2ID = @4
+                        AddressID = @1
                 WHERE   BookingRequestID = @0
             ";
             
@@ -192,20 +190,9 @@
                         false);
                 }
                 
-                // Save date-times as 'tentative' provider Events
-                var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                    3, // Availability is 'Tentative'
-                    dt1Start, dt1End);
-                var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                    3, // Availability is 'Tentative'
-                    dt2Start, dt2End);
-                var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                    3, // Availability is 'Tentative'
-                    dt3Start, dt3End);
-                
                 // Updating BookingRequest with location and date-times
                 db.Execute(sqlUpdBookingRequest, bookingRequestID,
-                    locationID, dt1ID, dt2ID, dt3ID);
+                    locationID);
             }
             
             // Return OK result

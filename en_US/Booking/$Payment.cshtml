@@ -10,6 +10,8 @@
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
     //var customerid = c.UserID;
+    DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = DateTime.MinValue;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -20,9 +22,23 @@
         }
     }
     
-    // Check if is a valid booking process (session not expired or erro at first step)
+    // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
-    if (bookingRequestID <= 0) {
+    bool validBookingSession = false;
+    if (bookingRequestID > 0) {
+        try{
+            var brdates = ((Dictionary<int, Dictionary<string, DateTime>>)Session["BookingRequests"])[bookingRequestID];
+            dt1Start = brdates["dt1Start"];
+            dt1End = brdates["dt1End"];
+            dt2Start = brdates["dt2Start"];
+            dt2End = brdates["dt2End"];
+            dt3Start = brdates["dt3Start"];
+            dt3End = brdates["dt3End"];
+            
+            validBookingSession = true;
+        } catch {}
+    }
+    if (!validBookingSession) {
         /* Several options to do here
             * - Show error (strange message for user, need restart again introducing first his login)
             * X Silently redirect to start booking again
@@ -74,10 +90,7 @@
                     // Get data from the BookingRequest
                     var sqlGetBookingPrice = @"
                         SELECT  TOP 1
-                                P.TotalPrice,
-                                B.PreferredDateID,
-                                B.AlternativeDate1ID,
-                                B.AlternativeDate2ID
+                                P.TotalPrice
                         FROM    BookingRequest As B
                                  INNER JOIN
                                 PricingEstimate As P
@@ -85,27 +98,7 @@
                         WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
                                  AND B.PositionID = @2 AND B.BookingRequestID = @3
                     ";
-                    var BookingRequest = db.QuerySingle(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
-                    var TotalPrice = BookingRequest.TotalPrice;
-                    
-                    /*
-                     * Updating events created by the user for this Booking setting the Time Zone we found 
-                     * looking in our Postal Codes table.
-                     */
-                    var sqlGetTimeZone = @"
-                        SELECT  TimeZone
-                        FROM    PostalCode
-                        WHERE   PostalCodeID = @0
-                    ";
-                    var sqlUpdCalendarEvent = @"
-                        UPDATE  CalendarEvents
-                        SET     TimeZone = @1
-                        WHERE   Id = @0
-                    ";
-                    var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
-                    db.Execute(sqlUpdCalendarEvent, BookingRequest.PreferredDateID, timeZone.ToString());
-                    db.Execute(sqlUpdCalendarEvent, BookingRequest.AlternativeDate1ID, timeZone.ToString());
-                    db.Execute(sqlUpdCalendarEvent, BookingRequest.AlternativeDate2ID, timeZone.ToString());
+                    var TotalPrice = db.QueryValue(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     
                     /*
                      * Send customer payment data to Braintree, 
@@ -206,17 +199,53 @@
                     
                     if (ModelState.IsValid) {
                         /*
+                         * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
+                         * looking in our Postal Codes table.
+                         */
+                        var sqlGetTimeZone = @"
+                            SELECT  TimeZone
+                            FROM    PostalCode
+                            WHERE   PostalCodeID = @0
+                        ";
+                        var sqlInsCalendarEvent = @"
+                            INSERT INTO [CalendarEvents]
+                                       ([UserId]
+                                       ,[CalendarAvailabilityTypeID]
+                                       ,[StartTime]
+                                       ,[EndTime]
+                                       ,[TimeZone])
+                                 VALUES (@0, @1, @2, @3, @4)
+                            SELECT Cast(@@Identity As int) As CalendarEventID
+                        ";
+                        var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+                        // Save date-times as 'tentative' provider Events
+                        var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt1Start, dt1End, timeZone);
+                        var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt2Start, dt2End, timeZone);
+                        var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt3Start, dt3End, timeZone);
+
+                        /*
                          * Save Braintree Transaction ID in the Booking Request,
+                         * saving event IDs,
                          * and updating State to 'Booking Request Completed'
                          */
                         db.Execute(@"
                             UPDATE  BookingRequest
-                            SET     PaymentTransactionID = @1,
-                                    PaymentLastFourCardNumberDigits = @2,
-                                    BookingRequestStatusID = 2 -- Completed
+                            SET     PaymentTransactionID = @1
+                                    ,PaymentLastFourCardNumberDigits = @2
+                                    ,BookingRequestStatusID = 2 -- Completed
+                                    ,PreferredDateID = @3
+                                    ,AlternativeDate1ID = @4
+                                    ,AlternativeDate2ID = @5
                             WHERE   BookingRequestID = @0
                         ", bookingRequestID, transactionID, 
-                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)));
+                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)),
+                         dt1ID, dt2ID, dt3ID);
                     }
                     
                 } catch (Exception ex) {
@@ -426,19 +455,19 @@
             <h6>Ranked in order of preference:</h6>
             <ol>
                 <li class="preferred-option">@*Monday, April 15th, 2012, 11:00am to 2:00pm*@
-                    @(summary.PreferredDateStart.ToLongDateString()),
-                    @summary.PreferredDateStart.ToShortTimeString() to
-                    @summary.PreferredDateEnd.ToShortTimeString()
+                    @(dt1Start.ToLongDateString()),
+                    @dt1Start.ToShortTimeString() to
+                    @dt1End.ToShortTimeString()
                 </li>
                 <li class="alternative-option-1">
-                    @(summary.AlternativeDate1Start.ToLongDateString()),
-                    @summary.AlternativeDate1Start.ToShortTimeString() to
-                    @summary.AlternativeDate1End.ToShortTimeString()
+                    @(dt2Start.ToLongDateString()),
+                    @dt2Start.ToShortTimeString() to
+                    @dt2End.ToShortTimeString()
                 </li>
                 <li class="alternative-option-2">
-                    @(summary.AlternativeDate2Start.ToLongDateString()),
-                    @summary.AlternativeDate2Start.ToShortTimeString() to
-                    @summary.AlternativeDate2End.ToShortTimeString()
+                    @(dt3Start.ToLongDateString()),
+                    @dt3Start.ToShortTimeString() to
+                    @dt3End.ToShortTimeString()
                 </li>
             </ol>
         </div>
