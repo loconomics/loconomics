@@ -1512,6 +1512,9 @@ table .number{
 .availability-calendar .calendar-legend li.unavailable .color{
     background-color: white;
 }
+.availability-calendar .action {
+    margin: 3px;
+}
 
 /*************************************
  * Classes: choice, 
