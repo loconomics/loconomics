@@ -48,8 +48,54 @@ lcTime.parse = function (strtime) {
 };
 
 $(document).ready(function () {
-    // Check when location changes:
-    $('body')
+    // Setup Schedule step:
+    $('#schedule').on('endLoadWizardStep', function () {
+        // Getting the tab content for payment that is not loaded at the start
+        var tab = $('#schedule');
+
+        // Loading, with retard
+        var loadingtimer = setTimeout(function () {
+            tab.block(loadingBlock);
+        }, gLoadingRetard);
+
+
+        $.ajax({
+            // Request $Payment partial page, with all the original url parameters
+            url: UrlUtil.LangPath + "Booking/$Schedule/" + location.search,
+            type: 'GET',
+            success: function (data, text, jx) {
+                // load tab content
+                tab.html(data);
+
+                // Execute first time when showing the step
+                $.proxy(bookingChangeLocation, $('.select-location'))();
+
+                applyDatePicker(tab);
+            },
+            error: ajaxErrorPopupHandler,
+            complete: function () {
+                // Disable loading
+                clearTimeout(loadingtimer);
+                // Unblock
+                tab.unblock();
+            }
+        });
+    }).on('reloadedHtmlWizardStep', function () {
+        // Execute after reloading html of this step
+        $.proxy(bookingChangeLocation, $('.select-location'))();
+    });
+    $('body').on('change', '.start-time :input', function () {
+        // a var serviceDurationHours must be created by the $Schedule page
+        if (typeof (serviceDurationHours) != 'undefined') {
+            // our minimum time interval is half hours, .5, round upper to that
+            var rest = serviceDurationHours % .5;
+            if (rest > 0)
+                serviceDurationHours = serviceDurationHours + 0.5 - rest;
+            var $t = $(this);
+            var starttime = lcTime.parse($t.val());
+            $t.closest('fieldset').find('.end-time :input').val(starttime.addHours(serviceDurationHours).toString());
+        }
+    })
     .on('change', '.select-location', bookingChangeLocation)
     .on('click', '.availability-calendar .datetimes > li', function () {
         var $t = $(this);
@@ -93,55 +139,8 @@ $(document).ready(function () {
         }
     });
 
-    $('#booking-schedule').on('endLoadWizardStep', function () {
-        // Getting the tab content for payment that is not loaded at the start
-        var tab = $('#schedule');
-
-        // Loading, with retard
-        var loadingtimer = setTimeout(function () {
-            tab.block(loadingBlock);
-        }, gLoadingRetard);
-
-
-        $.ajax({
-            // Request $Payment partial page, with all the original url parameters
-            url: UrlUtil.LangPath + "Booking/$Schedule/" + location.search,
-            type: 'GET',
-            success: function (data, text, jx) {
-                // load tab content
-                tab.html(data);
-
-                // Execute first time when showing the step
-                $.proxy(bookingChangeLocation, $('.select-location'))();
-
-                applyDatePicker(tab);
-            },
-            error: ajaxErrorPopupHandler,
-            complete: function () {
-                // Disable loading
-                clearTimeout(loadingtimer);
-                // Unblock
-                tab.unblock();
-            }
-        });
-    }).on('reloadedHtmlWizardStep', function () {
-        // Execute after reloading html of this step
-        $.proxy(bookingChangeLocation, $('.select-location'))();
-    }).on('change', '.start-time :input', function () {
-        // a var serviceDurationHours must be created by the $Schedule page
-        if (typeof (serviceDurationHours) != 'undefined') {
-            // our minimum time interval is half hours, .5, round upper to that
-            var rest = serviceDurationHours % .5;
-            if (rest > 0)
-                serviceDurationHours = serviceDurationHours + 0.5 - rest;
-            var $t = $(this);
-            var starttime = lcTime.parse($t.val());
-            $t.closest('fieldset').find('.end-time :input').val(starttime.addHours(serviceDurationHours).toString());
-        }
-    });
-
     // Load payment content on step change:
-    $('#booking-payment').bind('endLoadWizardStep', function () {
+    $('#payment').bind('endLoadWizardStep', function () {
         // Getting the tab content for payment that is not loaded at the start
         var paymentTab = $('#payment');
 
