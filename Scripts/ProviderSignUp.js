@@ -9,7 +9,7 @@ var ProviderSignUp = {
         var positionsList = null, tpl = null;
         var positionsAutocomplete = $('#providersignup-position-search').autocomplete({
             source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
-            autoFocus: true,
+            autoFocus: false,
             minLength: 0,
             select: function (event, ui) {
                 var c = $(this).closest('.positions');
