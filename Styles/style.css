@@ -1433,7 +1433,8 @@ table .number{
     height: 5em;
     outline: 1px solid #A99FB8;
 }
-.availability-calendar .calendar ol.datetimes li:hover{
+.availability-calendar .calendar ol.datetimes li.tentative:hover, 
+.availability-calendar .calendar ol.datetimes li.free:hover {
     box-shadow: 0 0 2em 2em #00989A;
     -moz-box-shadow: 0 0 2em 2em #00989A;
     -o-box-shadow: 0 0 2em 2em #00989A;
@@ -1441,6 +1442,7 @@ table .number{
     z-index: 9000;
     position: relative;
     outline: none;
+    cursor: pointer;
 }
 .availability-calendar .calendar ol.datetimes li.half{
     margin-top: 0;
