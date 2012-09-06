@@ -241,8 +241,8 @@
     }
 }
 @helper printOptionsHours(string selectedHour){
-    var firstHour = new TimeSpan(9, 0, 0);
-    var lastHour = new TimeSpan(18, 30, 0);
+    var firstHour = new TimeSpan(7, 0, 0);
+    var lastHour = new TimeSpan(22, 30, 0);
     var interval = new TimeSpan(0, 30, 0);
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
@@ -261,7 +261,7 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <script type="text/javascript">
         if (!serviceDurationHours) var serviceDurationHours = 0;
-        serviceDurationHours = @(serviceDurationHours);
+        serviceDurationHours = @(serviceDurationHours == 0M ? 4M : serviceDurationHours);
     </script>
     <fieldset class="availability availability-calendar box">
         <legend>@(p.FirstName)'s availability:</legend>
@@ -321,7 +321,7 @@
                     <label>Start time:<select name="preferred-start-time" @Validation.GetHtml("preferred-start-time")>@printOptionsHours(Request["preferred-start-time"])</select></label>
                 </li>
                 <li class="end-time">
-                    <label>End time:<select name="preferred-end-time" @Validation.GetHtml("preferred-end-time")>@printOptionsHours(Request["preferred-end-time"])</select></label>
+                    <label>End time:<select disabled="disabled" name="preferred-end-time" @Validation.GetHtml("preferred-end-time")>@printOptionsHours(Request["preferred-end-time"])</select></label>
                 </li>
             </ul>
         </fieldset>

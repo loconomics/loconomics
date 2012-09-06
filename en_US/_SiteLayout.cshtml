@@ -4,6 +4,7 @@
     Response.ContentEncoding = System.Text.Encoding.UTF8;
     var u = LcData.UserInfo.GetUserRow();
     var isHomePage = PageData["IsHomePage"] ?? false;
+    var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 @helper howItWorksLi(){
                         <li>
@@ -19,11 +20,11 @@
                         </li>
 }
 <!doctype html>
-    <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="@UrlUtil.LangId"> <![endif]-->
-    <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="@UrlUtil.LangId"> <![endif]-->
-    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@UrlUtil.LangId"> <![endif]-->
-    <!--[if gt IE 8]> <html class="no-js ie" lang="@UrlUtil.LangId"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="@UrlUtil.LangId"> <!--<![endif]-->
+    <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="@abbrLangCode"> <![endif]-->
+    <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode"> <![endif]-->
+    <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode"> <![endif]-->
+    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode"> <!--<![endif]-->
      <head>
           <meta charset="utf-8"/>
           <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>

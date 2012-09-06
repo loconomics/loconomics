@@ -47,12 +47,41 @@ lcTime.parse = function (strtime) {
     return null;
 };
 
-
 $(document).ready(function () {
     // Check when location changes:
-    $('body').delegate('.select-location', 'change', bookingChangeLocation);
+    $('body')
+    .on('change', '.select-location', bookingChangeLocation)
+    .on('click', '.availability-calendar .datetimes > li', function () {
+        var $t = $(this);
+        if ($t.hasClass('free') || $t.hasClass('tentative')) {
+            // Recognizing selected day and time
+            var pos = $t.index() + 1; // base 1
+            var row = Math.ceil(pos / 7) - 1; // base 0
+            var col = (pos % 7) - 1; // base 0
+            // For selDay, first we get the first-week-day from calendar and then calculate the selected:
+            var selDay = new Date($t.closest('.calendar').data('showed-date'));
+            selDay.setDate(selDay.getDate() + col);
+            var selHour = new lcTime(7 + (row / 2), (row % 2 == 1 ? 30 : 0), 0);
+            //console.log('Selected date-time: ' + selDay.getFullYear() + '/' + (selDay.getMonth() + 1) + '/' + selDay.getDate() + " " + selHour);
+            // Setting in the form the date and time
+            var fields = getSelectDateTimeFieldsFor('preferred-option', $t.closest('form.schedule'));
+            fields.date.val($.datepicker.formatDate($.datepicker._defaults.dateFormat, selDay));
+            fields.startTime.val(selHour.toString())
+                .change(); // Force change event to auto-update endTime
+        }
 
-    $('#schedule').bind('endLoadWizardStep', function () {
+        // dateSet can be: preferred-option, alternative-option-1, alternative-option-2
+        function getSelectDateTimeFieldsFor(dateSet, $container) {
+            $container = $container.find('.select-date-time.' + dateSet);
+            return {
+                date: $container.find('.date :input'),
+                startTime: $container.find('.start-time :input'),
+                endTime: $container.find('.end-time :input')
+            };
+        }
+    });
+
+    $('#booking-schedule').on('endLoadWizardStep', function () {
         // Getting the tab content for payment that is not loaded at the start
         var tab = $('#schedule');
 
@@ -83,10 +112,10 @@ $(document).ready(function () {
                 tab.unblock();
             }
         });
-    }).bind('reloadedHtmlWizardStep', function () {
+    }).on('reloadedHtmlWizardStep', function () {
         // Execute after reloading html of this step
         $.proxy(bookingChangeLocation, $('.select-location'))();
-    }).delegate('.start-time :input', 'change', function () {
+    }).on('change', '.start-time :input', function () {
         // a var serviceDurationHours must be created by the $Schedule page
         if (typeof (serviceDurationHours) != 'undefined') {
             // our minimum time interval is half hours, .5, round upper to that
@@ -100,7 +129,7 @@ $(document).ready(function () {
     });
 
     // Load payment content on step change:
-    $('#payment').bind('endLoadWizardStep', function () {
+    $('#booking-payment').bind('endLoadWizardStep', function () {
         // Getting the tab content for payment that is not loaded at the start
         var paymentTab = $('#payment');
 

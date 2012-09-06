@@ -3,7 +3,6 @@
     
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Let's get this booked";
-    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
     
     PageData["customerrow"] = LcData.UserInfo.GetUserRow();
 
@@ -21,6 +20,7 @@
         Response.Redirect(UrlUtil.LangPath);
     }
     Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
+    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
 }
 
   <div id="container" class="clearfix booking editable have-sidebar">
