@@ -654,6 +654,42 @@ public static partial class LcData
     #endregion
 
     #region Alerts
+    public static dynamic GetActiveUserAlerts(int userID)
+    {
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query(@"
+            SELECT  A.AlertID,
+                    A.AlertTypeID,
+                    A.AlertName,
+                    A.AlertHeadlineDisplay,
+                    A.AlertTextDisplay,
+                    A.AlertDescription,
+                    A.AlertPageURL,
+                    A.PositionSpecific,
+                    UA.PositionID,
+                    AT.AlertTypeName,
+                    AT.AlertTypeDescription,
+                    P.PositionSingular
+            FROM    Alert As A
+                     INNER JOIN
+                    UserAlert As UA
+                      ON A.AlertID = UA.AlertID
+                     INNER JOIN
+                    AlertType As AT
+                      ON AT.AlertTypeID = A.AlertTypeID
+                     LEFT JOIN
+                    Positions As P
+                      ON P.PositionID = UA.PositionID
+                         AND P.LanguageID = A.LanguageID
+                         AND P.CountryID = A.CountryID
+            WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
+                     AND A.LanguageID = @1 AND A.CountryID = @2
+            ORDER BY AT.AlertTypeName, A.AlertName
+            ", userID,
+             LcData.GetCurrentLanguageID(),
+             LcData.GetCurrentCountryID());
+        }
+    }
     public static int GetActiveUserAlertsCount(int userID)
     {
         using (var db = Database.Open("sqlloco")) {
@@ -663,7 +699,7 @@ public static partial class LcData
                          INNER JOIN
                         UserAlert As UA
                           ON A.AlertID = UA.AlertID
-                WHERE   UA.Active = 1 AND UA.UserID = @0
+                WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
                          AND A.LanguageID = @1 AND A.CountryID = @2
             ", userID,
              LcData.GetCurrentLanguageID(),
