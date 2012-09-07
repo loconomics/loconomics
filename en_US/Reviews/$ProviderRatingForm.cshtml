@@ -178,6 +178,11 @@
                         
                         // Set VerificationID:11 for reviewed user as confirmed just with only receive a review(see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651)
                         db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", providerUserID, 11, DateTime.Now, 1);
+                        // If is an old client, bookingID=0, set VerificationID:12 for 'references from former clients' as status 'confirmed', and test again related alert
+                        // See previuos github link, complemented with next and followings: https://github.com/djorgensen/Loconomics/issues/92#issuecomment-8167333
+                        if (bookingID == 0) {
+                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", providerUserID, 12, DateTime.Now, 1);
+                        }
                     }
                 }
                 if(ModelState.IsValid){
