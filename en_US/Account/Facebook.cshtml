@@ -71,15 +71,9 @@
                             db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);
                             
                             // Add Facebook verification as confirmed
-                            db.Execute(@"
-                                INSERT INTO UserVerification (
-                                    UserID, VerificationID, DateVerified, CreatedDate, 
-                                    UpdatedDate, VerifiedBy, LastVerifiedDate, Active, VerificationStatusID,
-                                    UserVerificationID
-                                ) VALUES (
-                                    @0, @1, @2, getdate(), getdate(), 'sys', getdate(), 1, @3
-                                )
-                            ", userid, 8, DateTime.Now, 1);
+                            db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userid, 8, DateTime.Now, 1);
+                            // Test social media alert
+                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userid);
                             
                             //transaction.Commit();
                         } catch (Exception ex) {
@@ -116,6 +110,8 @@
                         if (c == 1) {
                             // Verified, save verification record
                             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
+                            // Test social media alert
+                            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
                             LcHelpers.ReturnJsonResult(0, "Account successfully verified through Facebook!");
                         } else {
                             // Verification failed
