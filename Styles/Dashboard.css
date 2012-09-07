@@ -29,6 +29,7 @@ ul.attributes-list li {
 }
 .dashboard #main {
     margin-top: 10px;
+    margin-left: 25px;
     /* next padding-bottom can be 'not wanted', but
        remember us that there is an extra space because
        the relatives tab-page inside #main and help us
@@ -172,18 +173,10 @@ ul.attributes-list li {
     font-size: .9em;
 }
 .dashboard #nav {
-    left: 0;
-    position: absolute;
-    top: 331px;
-    width: 200px;
+    float: left;
+    margin-top: 10px;
     overflow: hidden;
-}
-/* Avoiding left menu sidebar being greater than content */
-.dashboard .tab-body {
-    min-height: 415px;
-}
-.dashboard .tab-body .tab-body {
-    min-height: 390px;
+    width: 200px;
 }
 /*** Profile Menu ***/
 .dashboard #profile-menu li.admin {

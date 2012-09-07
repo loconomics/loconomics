@@ -450,8 +450,8 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 .buttons ul.tabs li { display: inline-block; list-style-type: none; }
 
 .buttons .tab-body { display:none; padding: 0; 
-    min-height: 400px;
-    /*min-height: 100px;*/
+    /*min-height: 400px;
+    min-height: 100px;*/
 }
 .buttons .tab-body.current { display: block; }
 
