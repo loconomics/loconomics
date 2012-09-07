@@ -1,5 +1,6 @@
 ﻿@using WebMatrix.Data;
 @{
+    LcHelpers.ProviderPage();
     var u = LcData.UserInfo.GetUserRow();
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
