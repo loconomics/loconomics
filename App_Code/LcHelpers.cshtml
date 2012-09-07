@@ -226,6 +226,10 @@
         if (!WebSecurity.IsAuthenticated)
             RedirectToLogin();
     }
+    public static void ProviderPage() {
+        if (!WebSecurity.IsAuthenticated || LcData.UserInfo.GetUserRow().IsProvider == false)
+            RedirectToLogin();
+    }
     public static void AdminPage() {
         if (!WebSecurity.IsAuthenticated || LcData.UserInfo.GetUserRow().IsAdmin == false)
             RedirectToLogin();
