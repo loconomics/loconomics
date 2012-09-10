@@ -116,7 +116,7 @@ ul.attributes-list li {
 #profile-activation-message {
     color: #8B2143;
     position: absolute;
-    top: 390px;
+    top: 315px;
     z-index: 500;
 }
 .dashboard-help-widget {
