@@ -775,25 +775,6 @@ $(function () {
     // Generic script for enhanced tooltips and element descriptions
     configureTooltip();
 
-    /*Modernizr.load({
-    load: [
-    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.bgiframe.js',
-    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.dimensions.js',
-    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.delegate.js',
-    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.tooltip.css',
-    UrlUtil.AppPath + 'Scripts/jquerytooltip/jquery.tooltip.js'
-    ],
-    complete: function () {
-    $('[title]').tooltip({
-    delay: 0,
-    showURL: false,
-    bodyHandler: function () {
-    return $(this).attr("title");
-    }
-    });
-    }
-    });*/
-
     /***** AVAILABILITY CALENDAR WIDGET *****/
     $(document).delegate('.calendar-controls .action', 'click', function () {
         var $t = $(this);

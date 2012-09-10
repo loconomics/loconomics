@@ -167,8 +167,8 @@
         if (!jqueryValidateUnobtrusiveLoaded) {
             jqueryValidateUnobtrusiveLoaded = true;
             Modernizr.load([
-                { load: UrlUtil.AppPath + "Scripts/jquery.validate.min.js" },
-                { load: UrlUtil.AppPath + "Scripts/jquery.validate.unobtrusive.min.js" }
+                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.min.js" },
+                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.unobtrusive.min.js" }
             ]);
         } else {
             // Check first if validation is enabled (can happen that twice includes of
