@@ -39,8 +39,9 @@
                 }
             }
             
-            // NOTE: TestAlertLocation is already tested per 'delete address' task, no need repeat here
-            // db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
+            // NOTE: TestAlertLocation is already tested per 'delete address' task, when a 'no' is selected, but for
+            // completeness (will be executed too when selecting 'yes') and testing (manual db changes), still repeat the alert test:
+            db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
 
             string success = "Locations preferences saved!";
             if (!String.IsNullOrEmpty(redirectURL)) {
