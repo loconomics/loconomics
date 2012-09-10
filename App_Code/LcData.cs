@@ -502,6 +502,60 @@ public static partial class LcData
 
         SELECT @AddressID As AddressID
     ";
+    /// <summary>
+    /// Delete an address as service address, but depending on context can only remove the [ServiceAddress] record, uncheck its
+    /// 'address used as work or travel from', or remove both [ServiceAddress] and [Address] records.
+    /// Param @3 (@Type) must has one value from: 'work', 'travel' EVER (will break if nothing and address has both uses)
+    /// </summary>
+    public const string sqlDelServiceAddress = @"
+        /* Be carefull with removing an address, if exists both as 'travel' and 'work' addresses, only
+            uncheck the type, don't delete */
+        DECLARE @Type varchar(10)
+        SET @Type = @3
+
+        IF EXISTS (SELECT AddressID FROM ServiceAddress
+                    WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+                            AND ServicesPerformedAtLocation = 1
+                            AND TravelFromLocation = 1)
+        BEGIN
+
+            IF @Type like 'work'
+                UPDATE ServiceAddress SET
+                    ServicesPerformedAtLocation = 0
+                WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+            ELSE IF @Type like 'travel'
+                UPDATE ServiceAddress SET
+                    TravelFromLocation = 0
+                WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+
+        END ELSE BEGIN
+
+            DELETE FROM ServiceAddress
+            WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
+
+            IF @@ERROR <> 0
+                -- Non deletable serviceaddress, because is linked, simply 'unactive'
+                UPDATE ServiceAddress SET
+                    Active = 0
+                WHERE   AddressID = @0 AND UserID = @1 AND PositionID = @2
+            ELSE BEGIN
+
+                -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
+                DELETE FROM Address
+                WHERE AddressID = @0 AND
+                    (SELECT TOP 1 A.UniquePerUser FROM AddressType As A WHERE 
+                        A.AddressTypeID = (SELECT B.AddressTypeID FROM Address As B WHERE B.AddressID = @0 AND UserID = @1)
+                    ) = 0
+
+                -- If is not possible, maybe is linked, do nothing (but read @@ERROR to not throw the error)
+                SELECT @@ERROR As ErrorNumber
+            END
+
+        END
+
+        -- Test Alert
+        EXEC TestAlertLocation @1, @2
+    ";
     #endregion
 
     #region Pricing Wizard
