@@ -533,12 +533,24 @@ public static partial class LcData
             DELETE FROM ServiceAddress
             WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
 
-            IF @@ERROR <> 0
-                -- Non deletable serviceaddress, because is linked, simply 'unactive'
+            IF @@ERROR <> 0 BEGIN
+                -- Non deletable serviceaddress, because is linked, simply 'unactive' and remove its use (as work or travel)
+                DECLARE @bitWork bit, @bitTravel bit
+                IF @Type like 'work'
+                    SET @bitWork = cast(1 as bit)
+                ELSE
+                    SET @bitWork = cast(0 as bit)
+                IF @Type like 'travel'
+                    SET @bitTravel = cast(1 as bit)
+                ELSE
+                    SET @bitTravel = cast(0 as bit)
+
                 UPDATE ServiceAddress SET
                     Active = 0
+                    ,ServicesPerformedAtLocation = @bitWork
+                    ,TravelFromLocation = @bitTravel
                 WHERE   AddressID = @0 AND UserID = @1 AND PositionID = @2
-            ELSE BEGIN
+            END ELSE BEGIN
 
                 -- Try to remove the Address record too, if is not 'special' ([UniquePerUser]).
                 DELETE FROM Address

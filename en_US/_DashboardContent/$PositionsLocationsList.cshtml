@@ -6,27 +6,41 @@
     var n = p.PositionID;
     
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    
+    // We need load locations both in Post and Get requests:
+    dynamic workLocations = null, travelLocations = null;
+
+    var sqlcondWorkLocations = " AND ServicesPerformedAtLocation = 1";
+    var sqlcondTravelLocations = " AND TravelFromLocation = 1";
+
+    using (var db = Database.Open("sqlloco")) {
+        workLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondWorkLocations, u.UserID, p.PositionID);
+        travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, p.PositionID);
+    }
 
     if (IsPost){
         
         using (var db = Database.Open("sqlloco")) {
-            // Set addresses as Active or not depending on the yes/no buttons
-            db.Execute(@"
-                UPDATE  ServiceAddress
-                SET     Active = @2
-                WHERE   UserID = @0
-                         AND PositionID = @1
-                         AND TravelFromLocation = 1
-            ", u.UserID, p.PositionID, Request["positionlocations-itravel"].AsBool());
-            db.Execute(@"
-                UPDATE  ServiceAddress
-                SET     Active = @2
-                WHERE   UserID = @0
-                         AND PositionID = @1
-                         AND ServicesPerformedAtLocation = 1
-            ", u.UserID, p.PositionID, Request["positionlocations-iworkon"].AsBool());
-            // Test Alert
-            db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
+            // If the yes/no button are yes, do nothing, but if 'no', remove addresses from that use (travel or work)
+            if (Request["positionlocations-itravel"].AsBool() == false){
+                // List every 'travel' address and remove it (will be removed as 'travel' address only if is used too
+                // as 'work', or removed at all if is only 'travel' address, and removed too the [Address] record
+                // if is not used on other places or is not a 'special' address (UniquePerUser).
+                foreach(var l in travelLocations) {
+                    db.Execute(LcData.sqlDelServiceAddress, l.AddressID, p.UserID, p.PositionID, "travel");
+                }
+            }
+            if (Request["positionlocations-iworkon"].AsBool() == false){
+                // List every 'travel' address and remove it (will be removed as 'work' address only if is used too
+                // as 'travel', or removed at all if is only 'work' address, and removed too the [Address] record
+                // if is not used on other places or is not a 'special' address (UniquePerUser).
+                foreach(var l in workLocations) {
+                    db.Execute(LcData.sqlDelServiceAddress, l.AddressID, p.UserID, p.PositionID, "work");
+                }
+            }
+            
+            // NOTE: TestAlertLocation is already tested per 'delete address' task, no need repeat here
+            // db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
 
             string success = "Locations preferences saved!";
             if (!String.IsNullOrEmpty(redirectURL)) {
@@ -37,16 +51,7 @@
         }
     }
     
-    dynamic workLocations = null, travelLocations = null;
-
-    var sqlcondWorkLocations = " AND ServicesPerformedAtLocation = 1";
-    var sqlcondTravelLocations = " AND TravelFromLocation = 1";
-
-    using (var db = Database.Open("sqlloco")) {
-        workLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondWorkLocations, u.UserID, p.PositionID);
-        travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, p.PositionID);
-    }
-    
+    // Checking is yes/no buttons of each type must be 'yes' or 'no'
     bool itravelActive = false, iworkonActive = false;
     foreach (var l in travelLocations){
         if (l.Active) {
