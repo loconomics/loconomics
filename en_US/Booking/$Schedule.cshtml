@@ -115,17 +115,17 @@
             dt3End = dt3Start.AddHours((double)durationHours);
             
             if (dt1Start != null) {
-                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End) == 1) {
+                if (!(bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
                     ModelState.AddFormError("The provider is not availaible for the Prefered Date");
                 }
             }
             if (dt2Start != null) {
-                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End) == 1) {
+                if (!(bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
                     ModelState.AddFormError("The provider is not availaible for the Second best Date");
                 }
             }
             if (dt3Start != null) {
-                if ((int)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End) == 1) {
+                if (!(bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
                     ModelState.AddFormError("The provider is not availaible for the Third best Date");
                 }
             }
