@@ -224,11 +224,11 @@
             WHERE   L.UserId = @0
                      AND L.AddressName IS NOT NULL
         ", c.UserID);
-        serviceDurationHours = getServiceDurationHours(db, bookingRequestID);
+        serviceDurationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
     }
 }
 @functions { 
-    decimal getServiceDurationHours(Database db, int bookingRequestID) {
+    decimal getServiceDurationHours(Database db, int bookingRequestID, int providerID) {
         decimal serviceDurationHours = (decimal)db.QueryValue(@"
             SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
             FROM    BookingRequest As R
@@ -238,10 +238,10 @@
             WHERE   R.BookingRequestID = @0
         ", bookingRequestID);
         decimal minHours = (decimal)db.QueryValue(@"
-            SELECT  TOP 1 MinTime
+            SELECT  TOP 1 coalesce(max(MinTime), 0)
             FROM    CalendarProviderAttributes
             WHERE   UserID = @0
-        ");
+        ", providerID);
         // Never be lower than minimum
         serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
         // Default duration 4 hours, if there is no info about it
