@@ -237,6 +237,13 @@
                       ON R.PricingEstimateID = P.PricingEstimateID
             WHERE   R.BookingRequestID = @0
         ", bookingRequestID);
+        decimal minHours = (decimal)db.QueryValue(@"
+            SELECT  TOP 1 MinTime
+            FROM    CalendarProviderAttributes
+            WHERE   UserID = @0
+        ");
+        // Never be lower than minimum
+        serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
         // Default duration 4 hours, if there is no info about it
         return (serviceDurationHours == 0M ? 4M : serviceDurationHours);
     }
