@@ -109,7 +109,7 @@
         // Validate provider availability with requested dates
         var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
         using (var db = Database.Open("sqlloco")) {
-            decimal durationHours = getServiceDurationHours(db, bookingRequestID);
+            decimal durationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
             dt1End = dt1Start.AddHours((double)durationHours);
             dt2End = dt2Start.AddHours((double)durationHours);
             dt3End = dt3Start.AddHours((double)durationHours);
