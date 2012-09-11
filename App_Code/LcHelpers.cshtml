@@ -227,12 +227,16 @@
             RedirectToLogin();
     }
     public static void ProviderPage() {
-        if (!WebSecurity.IsAuthenticated || LcData.UserInfo.GetUserRow().IsProvider == false)
-            RedirectToLogin();
+        SecurePage();
+        if (LcData.UserInfo.GetUserRow().IsProvider == false) {
+            throw new HttpException(404, "Not Found");
+        }
     }
     public static void AdminPage() {
-        if (!WebSecurity.IsAuthenticated || LcData.UserInfo.GetUserRow().IsAdmin == false)
-            RedirectToLogin();
+        SecurePage();
+        if (LcData.UserInfo.GetUserRow().IsAdmin == false) {
+            throw new HttpException(404, "Not Found");
+        }
     }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
