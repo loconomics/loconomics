@@ -8,7 +8,7 @@
 }
 @helper hrefProfile(){
     var p = PageData["item"];
-    @Href(UrlUtil.LangPath + "Profile/?providerid=" + p.ProfileID + "&positionid=" + p.PositionID);
+    @Href(UrlUtil.LangPath + "Profile/?providerid=" + p.UserID + "&positionid=" + p.PositionID);
 }
 @helper printName(dynamic p){
     string l = (string)p["LastName"];
@@ -17,7 +17,7 @@
 }
 
         <h6 class="provider-name"><a href="@hrefProfile()">@printName(p)</a></h6>
-        <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href(UrlUtil.AppPath + p.Photo)"/>
+        <img alt="Provider photo" class="provider-photo avatar" width="50px" height="50px" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + p.UserID)"/>
         
         <div class="overview">
             <div class="positions">Positions:  Housekeeper, Gardener, and <a href="#" class="view-more">2 more</a></div>
@@ -25,7 +25,7 @@
                 making, sweeping, vacuuming, and <a href="#" class="view-more">14 more</a></div>
         </div>
         
-        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.ProfileID, PositionID = p.PositionID, RatingWithNote = false })
+        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = p.PositionID, RatingWithNote = false })
         
         <ul class="verifications-summary">
             <li class="license">2 licenses</li>

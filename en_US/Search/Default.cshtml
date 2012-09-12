@@ -18,7 +18,7 @@
     // Performing search:
     var db = Database.Open("sqlloco");
     var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
-    var posrow = db.Query(searchsql, 1, 1, LC_Term, LC_Cat);
+    var posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
     
     bool categorizedResults = (String.IsNullOrEmpty(serviceCat) ? false : true);
     
