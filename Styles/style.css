@@ -1639,6 +1639,36 @@ html.boxshadow #loginBox .field-validation-error{
     height: 18px;
     line-height: normal;
 }
+.user-rating-summary-widget .rating-image {
+    float: left;
+    margin-right: 3px;
+}
+.user-rating-summary-widget span.rating-image {
+    background: url('../img/theme/star-rating-gray-red.png') no-repeat top left;
+    text-indent: -9999px;
+    display: inline-block;
+    width: 85px;
+    height: 16px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-0 {
+    background-position: 0 0;
+}
+.user-rating-summary-widget span.rating-image.rating-value-1 {
+    background-position: 0 -16px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-2 {
+    background-position: 0 -32px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-3 {
+    background-position: 0 -48px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-4 {
+    background-position: 0 -64px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-5 {
+    background-position: 0 -80px;
+}
+
 .user-rating-summary-widget.static .rate{
     background: url('../img/star-on.gif') repeat-x center left;
     /* 17*quantity: 17*5=85 */

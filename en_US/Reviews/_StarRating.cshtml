@@ -34,58 +34,70 @@ Use Example:
         Boolean.TryParse(PageData[2], out disabled);
     }
     
+    var defaultType = "jquery.rating"; // Available Types: jquery.rating, image (image only valid for read-only and not suitable to enable it converting in editable on forms)
+    var widgetType = disabled ? PageData[3] ?? PageData["Type"] ?? defaultType : defaultType;
+    
     var checks = new Dictionary<string, string>();
-    var hc = "checked='checked'";
     
-    if (active4split) {
-        checks.Add("025",   (value >= 0m && value <= 0.25m) ? hc : "");
-        checks.Add("05",    (value > 0.25m && value <= 0.5m) ? hc : "");
-        checks.Add("075",   (value > 0.5m && value <= 0.75m) ? hc : "");
-        checks.Add("1",     (value > 0.75m && value <= 1) ? hc : "");
+    if (widgetType == "jquery.rating") {
+        var hc = "checked='checked'";
     
-        checks.Add("125",   (value > 1m && value <= 1.25m) ? hc : "");
-        checks.Add("15",    (value > 1.25m && value <= 1.5m) ? hc : "");
-        checks.Add("175",   (value > 1.5m && value <= 1.75m) ? hc : "");
-        checks.Add("2",     (value > 1.75m && value <= 2m) ? hc : "");
+        if (active4split) {
+            checks.Add("025",   (value >= 0m && value <= 0.25m) ? hc : "");
+            checks.Add("05",    (value > 0.25m && value <= 0.5m) ? hc : "");
+            checks.Add("075",   (value > 0.5m && value <= 0.75m) ? hc : "");
+            checks.Add("1",     (value > 0.75m && value <= 1) ? hc : "");
+    
+            checks.Add("125",   (value > 1m && value <= 1.25m) ? hc : "");
+            checks.Add("15",    (value > 1.25m && value <= 1.5m) ? hc : "");
+            checks.Add("175",   (value > 1.5m && value <= 1.75m) ? hc : "");
+            checks.Add("2",     (value > 1.75m && value <= 2m) ? hc : "");
 
-        checks.Add("225",   (value > 2m && value <= 2.25m) ? hc : "");
-        checks.Add("25",    (value > 2.25m && value <= 2.5m) ? hc : "");
-        checks.Add("275",   (value > 2.5m && value <= 2.75m) ? hc : "");
-        checks.Add("3",     (value > 2.75m && value <= 3) ? hc : "");
+            checks.Add("225",   (value > 2m && value <= 2.25m) ? hc : "");
+            checks.Add("25",    (value > 2.25m && value <= 2.5m) ? hc : "");
+            checks.Add("275",   (value > 2.5m && value <= 2.75m) ? hc : "");
+            checks.Add("3",     (value > 2.75m && value <= 3) ? hc : "");
     
-        checks.Add("325",   (value > 3m && value <= 3.25m) ? hc : "");
-        checks.Add("35",    (value > 3.25m && value <= 3.5m) ? hc : "");
-        checks.Add("375",   (value > 3.5m && value <= 3.75m) ? hc : "");
-        checks.Add("4",     (value > 3.75m && value <= 4) ? hc : "");
+            checks.Add("325",   (value > 3m && value <= 3.25m) ? hc : "");
+            checks.Add("35",    (value > 3.25m && value <= 3.5m) ? hc : "");
+            checks.Add("375",   (value > 3.5m && value <= 3.75m) ? hc : "");
+            checks.Add("4",     (value > 3.75m && value <= 4) ? hc : "");
     
-        checks.Add("425",   (value > 4m && value <= 4.25m) ? hc : "");
-        checks.Add("45",    (value > 4.25m && value <= 4.5m) ? hc : "");
-        checks.Add("475",   (value > 4.5m && value <= 4.75m) ? hc : "");
-        checks.Add("5",     (value > 4.75m && value <= 5) ? hc : "");
-    } else {
-        value = Math.Round(value);
-        checks.Add("1",     (value > 0m && value <= 1) ? hc : "");
-        checks.Add("2",     (value > 1m && value <= 2) ? hc : "");
-        checks.Add("3",     (value > 2m && value <= 3) ? hc : "");
-        checks.Add("4",     (value > 3m && value <= 4) ? hc : "");
-        checks.Add("5",     (value > 4m && value <= 5) ? hc : "");
+            checks.Add("425",   (value > 4m && value <= 4.25m) ? hc : "");
+            checks.Add("45",    (value > 4.25m && value <= 4.5m) ? hc : "");
+            checks.Add("475",   (value > 4.5m && value <= 4.75m) ? hc : "");
+            checks.Add("5",     (value > 4.75m && value <= 5) ? hc : "");
+        } else {
+            value = Math.Round(value);
+            checks.Add("1",     (value > 0m && value <= 1) ? hc : "");
+            checks.Add("2",     (value > 1m && value <= 2) ? hc : "");
+            checks.Add("3",     (value > 2m && value <= 3) ? hc : "");
+            checks.Add("4",     (value > 3m && value <= 4) ? hc : "");
+            checks.Add("5",     (value > 4m && value <= 5) ? hc : "");
+        }
     }
  }
 
-
- @if (!disabled) {
+ @if (widgetType == "jquery.rating")
+ {
+     if (!disabled)
+     {
     <input name="@name" type="radio" class="star" value="1" @Html.Raw(checks["1"])/>
     <input name="@name" type="radio" class="star" value="2" @Html.Raw(checks["2"])/>
     <input name="@name" type="radio" class="star" value="3" @Html.Raw(checks["3"])/>
     <input name="@name" type="radio" class="star" value="4" @Html.Raw(checks["4"])/>
     <input name="@name" type="radio" class="star" value="5" @Html.Raw(checks["5"])/>
- } else if (!active4split) {
+     }
+     else if (!active4split)
+     {
     <input name="@name" type="radio" class="star" @Html.Raw(checks["1"]) disabled="disabled"/>
     <input name="@name" type="radio" class="star" @Html.Raw(checks["2"]) disabled="disabled"/>
     <input name="@name" type="radio" class="star" @Html.Raw(checks["3"]) disabled="disabled"/>
     <input name="@name" type="radio" class="star" @Html.Raw(checks["4"]) disabled="disabled"/>
     <input name="@name" type="radio" class="star" @Html.Raw(checks["5"]) disabled="disabled"/>
- } else {
+     }
+     else
+     {
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["025"]) disabled="disabled"/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["05"])/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["075"])/>
@@ -110,4 +122,21 @@ Use Example:
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["45"])/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["475"])/>
     <input name="@name" type="radio" class="star {split:4}" @Html.Raw(checks["5"])/>
+     }
+ }
+ else if (widgetType == "image")
+ {
+     /* This new type 'image' is based on the initially created form email templates */
+    var inText = "";
+    var globalRate = Decimal.Round(value);
+    for (decimal n = 0; n < 5; n++) {
+        if (globalRate > n) {
+            inText += "X ";
+        } else {
+            inText += "O ";
+        }
+    }
+    inText += "(" + globalRate.ToString() + "/ 5)";
+    @*<img class="rating-image" alt="@inText" src="@(UrlUtil.AppUrl)img/email/star-rating-@(globalRate).png" />*@
+    <span class="rating-image rating-value-@globalRate">@inText</span>
  }

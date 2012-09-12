@@ -110,7 +110,7 @@
             <label>Efficiency</label>
             break;
     }
-    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" });
+    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
 }
 <div class="user-rating-summary-widget user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
     @switch(mode) {
@@ -129,7 +129,7 @@
                         var rate = reviewRecord["Rating1"].ToString();
                         <li>
                         <label>Customer</label>
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true" })
+                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" })
                         </li>
                     }
                 }
@@ -145,7 +145,7 @@
             } else {
                 globalRate = reviewRecord.Rating1;
             }
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true" })
+            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true", "image" })
             if (withNote) {
                 <span class="note">@note</span>
             }
