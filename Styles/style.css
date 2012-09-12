@@ -730,120 +730,6 @@ footer .site-links a:hover {
     display: none;
 }
 
-.home .search-categories {
-    height: 260px;
-    margin: 40px 0 16px;
-}
-.home .search-categories > ul {
-    height: 230px;
-    text-align: center;
-    margin: 0;
-    overflow: visible;
-    position: relative;
-}
-.home .search-categories h3 { text-align: center; }
-.home .search-categories li {
-    text-indent: 0;
-}
-.home .search-categories li > a {
-    font-size: .8em;
-    text-decoration: none;
-    position: absolute;
-    top: 0;
-    padding-top: 84px;
-    height: 34px;
-}
-.home .search-categories li > a:visited {
-    color: #00989A;
-}
-
-.search-categories { margin: 0 auto; height: 250px; }
-.search-categories ul { margin: 0; padding: 0; }
-.search-categories > ul { margin: 0; }
-.search-categories ul li { list-style-type: none; margin: 0; padding: 0; width: 84px; line-height: normal; }
-.search-categories ul > li { float: left; margin-right: 3px; }
-.search-categories h3.cat-list-title {
-    font-size: 1em;
-    text-align: left;
-    margin: 0 0 0 .6em;
-}
-.search-categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
-.search-categories ul ul li { padding: .6em 0 0 0; }
-.search-categories ul ul a { text-decoration: none; }
-.search-categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
-/* On Hover */
-.search-categories ul > li:hover > a {
-    text-indent: -9999px;
-}
-.search-categories ul > li:hover > .description {
-    display: block;
-    left: 0;
-    right: 0;
-    position: absolute;
-    top: 115px;
-    text-align: left;
-    
-    border-radius: 4px;
-    border: 2px solid #747474;
-    padding: 10px;
-    box-shadow: 0 5px 7px -3px #747474;
-    -moz-box-shadow: 0 5px 7px -3px #747474;
-    -o-box-shadow: 0 5px 7px -3px #747474;
-    -webkit-box-shadow: 0 5px 7px -3px #747474;
-}
-.search-categories ul > li:hover > .description > h5 {
-    margin: 0;
-    font-size: 1.2em;
-    color: #b5e1e2;
-}
-.search-categories ul > li:hover > .description > h5 > strong {
-    color: #00989b;
-}
-.search-categories ul > li:hover > .description > p {
-    font-size: .8em;
-    margin: 0;
-}
-/* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
-.search-categories .description:after {
-    border-bottom: 8px solid transparent;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-
-    border-bottom-color: #fff;
-    left: 34px;
-    top: -8px;
-}
-.search-categories .description:before {
-    border-bottom: 9px solid transparent;
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-
-    border-bottom-color: #747474;
-    left: 33px;
-    top: -11px;
-}
-/* customized arrow position per category (cat-home default) */
-.search-categories li.cat-child     .description:after { left: 122px; }
-.search-categories li.cat-child     .description:before { left: 121px; }
-.search-categories li.cat-pets      .description:after { left: 205px; }
-.search-categories li.cat-pets      .description:before { left: 204px; }
-.search-categories li.cat-people    .description:after { left: 294px; }
-.search-categories li.cat-people    .description:before { left: 293px; }
-.search-categories li.cat-transport .description:after { left: 376px; }
-.search-categories li.cat-transport .description:before { left: 375px; }
-.search-categories li.cat-business  .description:after { left: 464px; }
-.search-categories li.cat-business  .description:before { left: 463px; }
-.search-categories li.cat-elderly   .description:after { left: 552px; }
-.search-categories li.cat-elderly   .description:before { left: 551px; }
-.search-categories li.cat-celebrations  .description:after { left: 634px; }
-.search-categories li.cat-celebrations  .description:before { left: 633px; }
-
 /* JB: My own personal "non-semantic helper classes" */
 .tabby {
 	-moz-border-radius-topleft: 12px; /* FF1-3.6 */
@@ -2072,14 +1958,135 @@ html.boxshadow #loginBox .field-validation-error{
     display: none;
 }
 
-/*** Home and search pages categories ***/
-/***********************/
-/*** search categories */
-.search .search-categories{
-    margin-bottom: 10px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #999;
+/* Home and search pages categories: 
+   common code and specific home code here,
+   for specific 'search results page' styles see search.css
+ */
+.home .search-categories {
+    margin: 40px 0 16px;
 }
+.search-categories > ul {
+    height: 245px;
+    text-align: center;
+    margin: 0;
+    overflow: visible;
+    position: relative;
+}
+.search-categories li > a {
+    font-size: .8em;
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    padding-top: 84px;
+    height: 34px;
+    color: #00989A;
+}
+.search-categories li > a:visited {
+    color: #00989A;
+}
+
+.search-categories { margin: 0 auto; }
+.search-categories ul { margin: 0; padding: 0; }
+.search-categories > ul { margin: 0; }
+.search-categories h3.cat-list-title {
+    font-size: 1em;
+    text-align: left;
+    margin: 0 0 0 .6em;
+}
+.search-categories ul div.menu { display: none; margin: 0 10px; font-size: 12px; width: 64px; text-align: left; }
+.search-categories ul ul li { padding: .6em 0 0 0; }
+.search-categories ul ul a { text-decoration: none; }
+.search-categories ul div.menu strong { display: block; margin-top: .6em; color: #00989A; text-align: center; }
+
+/* On Hover */
+.search-categories ul:hover > li:hover > a,
+.search-categories ul > li.selected > a {
+    text-indent: -9999px;
+}
+.search-categories ul:hover > li:hover > .details,
+.search-categories ul > li.selected > .details {
+    display: block;
+}
+.search-categories li > .details,
+.search-categories ul:hover > li > .details {
+    display: none;
+}
+.search-categories ul:hover > li > a {
+    text-indent: 0;
+}
+/* Cateogory details and description styles */
+.search-categories ul > li > .details {
+    left: 0;
+    right: 0;
+    position: absolute;
+    z-index: 1;
+    top: 115px;
+    text-align: left;
+    /* To avoid state 'hover' affects ul without being apply li -creating flickering effects- */
+    padding-bottom: 30px;
+}
+.search-categories ul > li > .details > .description {
+    border-radius: 4px;
+    border: 2px solid #747474;
+    padding: 10px;
+    box-shadow: 0 5px 7px -3px #747474;
+    -moz-box-shadow: 0 5px 7px -3px #747474;
+    -o-box-shadow: 0 5px 7px -3px #747474;
+    -webkit-box-shadow: 0 5px 7px -3px #747474;
+}
+.search-categories ul > li > .details > .description > h5 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #b5e1e2;
+}
+.search-categories ul > li > .details > .description > h5 > strong {
+    color: #00989b;
+}
+.search-categories ul > li > .details > .description > p {
+    font-size: .8em;
+    margin: 0;
+}
+/* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
+.search-categories .description:after {
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #fff;
+    left: 34px;
+    top: -5px;
+}
+.search-categories .description:before {
+    border-bottom: 9px solid transparent;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: #747474;
+    left: 33px;
+    top: -8px;
+}
+/* customized arrow position per category (cat-home default) */
+.search-categories li.cat-child     .description:after { left: 122px; }
+.search-categories li.cat-child     .description:before { left: 121px; }
+.search-categories li.cat-pets      .description:after { left: 205px; }
+.search-categories li.cat-pets      .description:before { left: 204px; }
+.search-categories li.cat-people    .description:after { left: 294px; }
+.search-categories li.cat-people    .description:before { left: 293px; }
+.search-categories li.cat-transport .description:after { left: 376px; }
+.search-categories li.cat-transport .description:before { left: 375px; }
+.search-categories li.cat-business  .description:after { left: 464px; }
+.search-categories li.cat-business  .description:before { left: 463px; }
+.search-categories li.cat-elderly   .description:after { left: 552px; }
+.search-categories li.cat-elderly   .description:before { left: 551px; }
+.search-categories li.cat-celebrations  .description:after { left: 634px; }
+.search-categories li.cat-celebrations  .description:before { left: 633px; }
+
 .search-categories h1 {
     color: #bde1e1;
     font-size: 2.4em;
@@ -2101,13 +2108,17 @@ html.boxshadow #loginBox .field-validation-error{
     overflow: hidden;
 }
 .search-categories ul li{
-    text-indent: -9999px;
     /* Using an sprite, mantain width and height exactly as image fragment */
     background: url('../img/theme/search-categories.png') no-repeat 0 0;
     width: 84px;
     height: 84px;
     float: left;
-    margin: 0 1px;
+    margin: 0 2px 0 0;
+    line-height: normal;
+    padding: 0
+}
+.search-categories ul li:last-child {
+    margin-right: 0;
 }
 .search-categories ul li h3{
     text-indent: 0;
@@ -2142,9 +2153,6 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories li.cat-elderly:hover{          background-position: -252px -84px}
 .search-categories li.selected.cat-celebrations,
 .search-categories li.cat-celebrations:hover{     background-position: -84px -84px}
-.search-categories li > .description {
-    display: none;
-}
 
 /*==================
  * Social networking

@@ -1,6 +1,22 @@
 /* ============== Search page ==================
    ====== IagoSRL for Loconomics S.L. ============
  */
+ 
+/*
+  Search categories:
+  Modifying common styles shared with Home page in styles.css
+ */
+.search .search-categories{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #999;
+}
+.search .search-categories > ul {
+    height: 230px;
+}
+.search .search-categories-with-subcategories {
+    margin-bottom: 10px;
+}
 
 ul.search-results li { position: relative; list-style-type: none; padding: 0 0 20px 0; margin: 0 0 20px 0; border-bottom: 1px dashed #ccc; }
 ul.search-results li .col { float: left; padding-right: 20px; }
@@ -24,7 +40,6 @@ ul.search-results table td { padding-right: 16px; }*/
 .search h1 { font-size: 2em; margin: .1em 0 .4em 0; }
 .search .cat-icon { float: left; margin-right: 1em; }
 .search ul.tabs { margin-top: 40px; }
-
 
 
 /** Generics **/
