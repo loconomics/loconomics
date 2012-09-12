@@ -4,28 +4,48 @@
     string size = PageData["Size"] ?? "medium"; // mini
     string contID = PageData["ContainerID"] ?? "verifications";
     
-    dynamic data;
+    dynamic data = null;
     using (var db = Database.Open("sqlloco")) {
-        data = db.Query(@"
-            SELECT  V.VerificationType, V.Icon
-            FROM    UserVerification As UV
-                     INNER JOIN
-                    Verification As V
-                      ON UV.VerificationID = V.VerificationID
-            WHERE   UV.UserID = @0
-                     AND
-                    UV.Active = 1
-                     AND
-                    V.Active = 1
-                     AND
-                    UV.VerificationStatusID = 1 -- Confirmed
-        ", userID);
+        if (size == "medium") {
+            data = db.Query(@"
+                SELECT  V.VerificationType, V.Icon
+                FROM    UserVerification As UV
+                         INNER JOIN
+                        Verification As V
+                          ON UV.VerificationID = V.VerificationID
+                WHERE   UV.UserID = @0
+                         AND
+                        UV.Active = 1
+                         AND
+                        V.Active = 1
+                         AND
+                        UV.VerificationStatusID = 1 -- Confirmed
+            ", userID);
+        } else if (size == "mini") {
+            data = db.Query(@"
+                SELECT  count(*) As Quantity, V.SummaryGroup, V.Icon
+                FROM    UserVerification As UV
+                         INNER JOIN
+                        Verification As V
+                          ON UV.VerificationID = V.VerificationID
+                WHERE   UV.UserID = @0
+                         AND
+                        UV.Active = 1
+                         AND
+                        V.Active = 1
+                         AND
+                        UV.VerificationStatusID = 1 -- Confirmed
+                GROUP BY V.SummaryGroup, V.Icon
+                HAVING V.SummaryGroup is not null AND V.Icon is not null
+                    AND count(*) > 0
+            ", userID);
+        }
     }
 }
 @switch (size)
 {
     case "medium":
-        <ul id="@contID">
+        <ul @if(!String.IsNullOrEmpty(contID)){ Html.Raw("id='" + contID + "'"); } >
             @foreach (var v in data)
             {
             <li class="@v.Icon">@v.VerificationType</li>
@@ -34,5 +54,14 @@
         </ul>
         break;
     case "mini":
+        <ul @if(!String.IsNullOrEmpty(contID)){ Html.Raw("id='" + contID + "'"); } class="verifications-summary">
+            @foreach (var v in data)
+            {
+                <li class="@v.Icon">@v.Quantity @v.SummaryGroup</li>
+            }
+            @*<li class="license">2 licenses</li>
+            <li class="verification">4 verifications</li>
+            <li class="total-reviews">22 reviews</li>*@
+        </ul>
         break;
 }

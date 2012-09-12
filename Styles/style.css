@@ -1845,6 +1845,7 @@ html.boxshadow #loginBox .field-validation-error{
     overflow: hidden;
     text-overflow: ellipsis;
     width: 400px;
+    margin: 0;
 }
 .medium-user-info .user-contact-data {
     display: inline-block;
@@ -1859,6 +1860,11 @@ html.boxshadow #loginBox .field-validation-error{
     line-height: 1em;
     display: inline;
     /*color: #6C6C6C;*/
+}
+.medium-user-info h5.user-public-name > a,
+.medium-user-info h5.user-public-name > a:link {
+    color: inherit;
+    text-decoration: none;
 }
 .medium-user-info .user-rating {
     /*width: 360px;*/

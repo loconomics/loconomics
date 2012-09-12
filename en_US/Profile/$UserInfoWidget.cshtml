@@ -13,6 +13,7 @@
     var positionData = PageData["PositionData"];
     var urlBase = useAbsoluteUrls ? UrlUtil.SiteUrl : "";
     var withFullRating = PageData["WithFullRating"] ?? false;
+    var linkInName = PageData["WithLinkInName"] ?? false;
 
     if (positionData != null) {
         // Preserve integrity of position-related parameters:
@@ -46,12 +47,33 @@
     string getLocationForGoogleMaps(dynamic data){
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
+    string getNamePosition(dynamic data, string dataPrefix, dynamic positionData) {
+        return LcHelpers.GetUserDisplayName(data, dataPrefix) + (positionData == null ? "" : " - " + positionData.PositionSingular);
+    }
+}
+@helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
+    @(urlBase + UrlUtil.LangPath + "Profile/?UserID=" + data[dataPrefix + "UserID"])
+}
+@helper printProfileLink(dynamic data, string dataPrefix, string urlBase, string label = "View profile") {
+    <a target="_blank" class="view-profile" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@label</a>
+}
+@helper printUserName(dynamic data, string dataPrefix, string urlBase, dynamic positionData, bool linkInName) {
+    <h5 class="user-public-name">
+        @if (linkInName)
+        {
+            <a target="_blank" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@getNamePosition(data, dataPrefix, positionData)</a>
+        }
+        else
+        {
+            @getNamePosition(data, dataPrefix, positionData)
+        }
+    </h5>
 }
 @if (size == "medium")
 {
     <div class="@userType medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <div class="user-micro-summary">
-            <h5 class="user-public-name">@LcHelpers.GetUserDisplayName(data, dataPrefix) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
+            @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
@@ -116,18 +138,18 @@
             }
         }
 
-        <a target="_blank" class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
+        @printProfileLink(data, dataPrefix, urlBase, "View full profile")
     </div>
 }
 @* Mini size is the same for all userType's *@
 else if (size == "mini") {
     <div class="@userType mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
-        <h5 class="user-public-name">@data[dataPrefix + "FirstName"] @(LcHelpers.GetInitialLetter(data[dataPrefix + "LastName"])) @(positionData == null ? "" : " - " + positionData.PositionSingular)</h5>
+        @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div class="extra-info">@extraInfo</div>
         } else {
-            <a target="_blank" class="view-profile" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+            @printProfileLink(data, dataPrefix, urlBase, "View profile")
         }
         @if (withFullRating)
         {

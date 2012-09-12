@@ -1,0 +1,78 @@
+﻿@using WebMatrix.Data;
+@{
+    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Page.Title = "Search Results...";
+    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+    
+    /* Getting search parameters */
+    var serviceType = PageData["serviceType"] = Request["serviceType"];
+    var serviceCat = PageData["serviceCat"] = Request["service"];
+    var serviceLocation = PageData["serviceLocation"] = Request["serviceLocation"];
+    var serviceDate = PageData["serviceDate"] = Request["serviceDate"];
+
+    /* Model Code: accesing database to perform search */
+    // Building sql parameters:
+    var LC_Term  = "%" + serviceType + "%";
+    var LC_Cat = serviceCat;
+    // Performing search:
+    var db = Database.Open("sqlloco");
+    var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
+    var posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
+    
+    bool categorizedResults = (String.IsNullOrEmpty(serviceCat) ? false : true);
+    
+    /* Simulating categorized search */
+    var searchedCategories = new string[]{ "Housekeepers", "Handymen", "Gardeners", "Electricians", "Plumbers", "Painters" };
+}
+<div id="container" class="search clearfix alternate1">
+    <div id="main">
+
+        <div class="search-categories-with-subcategories">
+	        @RenderPage("_CategoriesList.cshtml", new { SelectedCategory = "home" } )
+        </div>
+        
+        @RenderPage("_Pager.cshtml")
+        
+        <div class="search-results">
+            @if(categorizedResults){
+                // hacking the results to emulate a search
+                var n = 0;
+            <ol class="search-results-categories">
+                @foreach(var scat in searchedCategories){
+                    // hacking the results to emulate a search
+                    n++;
+                    var i = 0;
+                <li>
+                    <h3>@scat</h3>
+                    <a class="view-more" href="?Service=@scat">View all @scat</a>
+                    <ol class="search-results-items">
+                        @foreach(var item in posrow){
+                            // hacking the results to emulate a search
+                            i++;
+                            if(n!=i){continue;}
+                        <li>
+                            @RenderPage("_Alternate1Item.cshtml")
+                        </li>
+                        }
+                    </ol>
+                </li>
+                }
+            </ol>
+            }else{
+            <ol class="search-results-items">
+                @foreach(var item in posrow){
+                <li>
+                    @RenderPage("_Alternate1Item.cshtml", new { Item = item })
+                </li>
+                }
+            </ol>
+            }
+
+        </div>
+        
+        @RenderPage("_Pager.cshtml")
+    </div>
+    <div id="secondary">
+        @RenderPage("../HelpCenter/$FAQs.cshtml")
+    </div>
+</div>

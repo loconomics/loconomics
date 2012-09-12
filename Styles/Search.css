@@ -230,6 +230,7 @@ ul.search-results table td { padding-right: 16px; }*/
 .search-results-items > li .verifications-summary,
 .search-results-items > li .user-rating-summary-widget{
     margin: 0 0 0 10px;
+    min-height: 0 !important;
 }
 .search-results-items > li .verifications-summary > li{
     background: no-repeat center left;
@@ -295,3 +296,34 @@ ul.search-results table td { padding-right: 16px; }*/
 #searchAgain fieldset.search-params { padding-bottom: 0; }
 #searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
 #searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
+
+/********************
+ **** Alternate1 ***/
+.search.alternate1 .search-results-items .user-micro-summary > h5 {
+    font-size: 1.5em;
+    color: #52276e;
+}
+.search.alternate1 .search-results-items > li .overview {
+    height: auto;
+}
+.search.alternate1 .search-results-items > li .overview {
+    width: auto;
+}
+.search.alternate1 .search-results-items .medium-user-info .user-text {
+    width: 310px;
+}
+.search.alternate1 .search-results-items > li .overview, 
+.search.alternate1 .search-results-items > li .user-rating-summary-widget,
+.search.alternate1 .search-results-items > li .verifications-summary {
+    font-size: 1em;
+}
+.search.alternate1 .search-results-items .medium-user-info a.view-profile {
+    display: none;
+}
+.search.alternate1 .search-results-items .member-since {
+    float: right;
+}
+.search.alternate1 .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
+    height: auto;
+    min-height: inherit;
+}
