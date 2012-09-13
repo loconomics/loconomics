@@ -49,26 +49,21 @@
         ";
     }
 }
-<div id="container" class="clearfix alternate1">
-    <div id="main">
-     @if (!performSearch)
-     {
-		<h1>@Page.Title</h1>
-        <p>book safely and easily local, indepedent service providers</p>
+@helper searchForm(){
 		<form id="homeSearch" method="get">
 			<fieldset class="search-options">
                 <ul>
                     <li class="search-service">
                         <label for="search-service">Search for a (e.g. Gardener, Tutor...)</label>
-                        <input id="search-service" type="text" name="s" placeholder="Dog Walker" />
+                        <input id="search-service" type="text" name="s" placeholder="Dog Walker" value="@Request["s"]" />
                     </li>
                     <li class="search-location">
                         <label for="search-location">Where</label>
-                        <input id="search-location" type="text" name="location" placeholder="San Francisco, CA" />
+                        <input id="search-location" type="text" name="location" placeholder="San Francisco, CA" value="@Request["location"]" />
                     </li>
                     <li class="search-date">
                         <label for="search-date">When:</label>
-                        <input id="search-date" class="date-pick" type="text" name="date" value="@(DateTime.Today.ToShortDateString())" />
+                        <input id="search-date" class="date-pick" type="text" name="date" value="@(DateTime.Today.ToShortDateString())" value="@Request["date"]" />
                     </li>
                     <li class="actions">
                         <label>&nbsp;</label>
@@ -77,61 +72,75 @@
                 </ul>
             </fieldset>
 		</form>
-        @RenderPage("_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category", SelectedCategory = "home" })
+}
+<div id="container" class="clearfix alternate1">
+    <div id="main">
+     @if (!performSearch)
+     {
+		<h1>@Page.Title</h1>
+        <p>book safely and easily local, indepedent service providers</p>
+         
+        @searchForm()
 
+        @RenderPage("_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category", SelectedCategory = "home", UrlBase = "" })
      }
      else
      {
-            <div class="search-categories-with-subcategories">
-	            @RenderPage("_CategoriesList.cshtml", new { SelectedCategory = "home" })
-            </div>
+         if (!String.IsNullOrWhiteSpace(serviceType))
+         {
+            @searchForm()
+         }
+         else
+         {
+             @RenderPage("_CategoriesList.cshtml", new { SelectedCategory = serviceCat, UrlBase = "a" })
+         }
+
+        @RenderPage("_Pager.cshtml")
         
-            @RenderPage("_Pager.cshtml")
-        
-            <div class="search-results">
-                @if (categorizedResults)
+        <div class="search-results">
+            @if (categorizedResults)
+            {
+                // hacking the results to emulate a search
+                var n = 0;
+            <ol class="search-results-categories">
+                @foreach (var scat in searchedCategories)
                 {
                     // hacking the results to emulate a search
-                    var n = 0;
-                <ol class="search-results-categories">
-                    @foreach (var scat in searchedCategories)
-                    {
-                        // hacking the results to emulate a search
-                        n++;
-                        var i = 0;
-                    <li>
-                        <h3>@scat</h3>
-                        <a class="view-more" href="?Service=@scat">View all @scat</a>
-                        <ol class="search-results-items">
-                            @foreach (var item in posrow)
-                            {
-                                // hacking the results to emulate a search
-                                i++;
-                                if (n != i) { continue; }
-                            <li>
-                                @RenderPage("_Alternate1Item.cshtml")
-                            </li>
-                            }
-                        </ol>
-                    </li>
-                    }
-                </ol>
+                    n++;
+                    var i = 0;
+                <li>
+                    <h3>@scat</h3>
+                    <a class="view-more" href="?Service=@scat">View all @scat</a>
+                    <ol class="search-results-items">
+                        @foreach (var item in posrow)
+                        {
+                            // hacking the results to emulate a search
+                            i++;
+                            if (n != i) { continue; }
+                        <li>
+                            @RenderPage("_Alternate1Item.cshtml", new { Item = item })
+                        </li>
+                        }
+                    </ol>
+                </li>
                 }
-                else
+            </ol>
+            }
+            else
+            {
+            <ol class="search-results-items">
+                @foreach (var item in posrow)
                 {
-                <ol class="search-results-items">
-                    @foreach (var item in posrow)
-                    {
-                    <li>
-                        @RenderPage("_Alternate1Item.cshtml", new { Item = item })
-                    </li>
-                    }
-                </ol>
+                <li>
+                    @RenderPage("_Alternate1Item.cshtml", new { Item = item })
+                </li>
                 }
+            </ol>
+            }
 
-            </div>
+        </div>
         
-            @RenderPage("_Pager.cshtml")
+        @RenderPage("_Pager.cshtml")
      }
     </div>
     @if (performSearch)
