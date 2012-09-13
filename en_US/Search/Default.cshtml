@@ -6,10 +6,10 @@
     Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
     
     /* Getting search parameters */
-    var serviceType = PageData["serviceType"] = Request["serviceType"];
-    var serviceCat = PageData["serviceCat"] = Request["service"];
-    var serviceLocation = PageData["serviceLocation"] = Request["serviceLocation"];
-    var serviceDate = PageData["serviceDate"] = Request["serviceDate"];
+    var serviceType = PageData["s"] = Request["s"];
+    var serviceCat = PageData["c"] = Request["c"];
+    var serviceLocation = PageData["location"] = Request["location"];
+    var serviceDate = PageData["date"] = Request["date"];
 
     /* Model Code: accesing database to perform search */
     // Building sql parameters:
