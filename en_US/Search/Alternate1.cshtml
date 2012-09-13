@@ -108,7 +108,7 @@
                     // hacking the results to emulate a search
                     n++;
                     var i = 0;
-                <li>
+                <li class="clearfix">
                     <h3>@scat</h3>
                     <a class="view-more" href="?Service=@scat">View all @scat</a>
                     <ol class="search-results-items">
@@ -131,7 +131,7 @@
             <ol class="search-results-items">
                 @foreach (var item in posrow)
                 {
-                <li>
+                <li class="clearfix">
                     @RenderPage("_Alternate1Item.cshtml", new { Item = item })
                 </li>
                 }

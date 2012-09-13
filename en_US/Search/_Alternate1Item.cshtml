@@ -2,7 +2,7 @@
     var item = PageData["Item"];
 }
 @helper hrefProfile(dynamic p){
-    @Href(UrlUtil.LangPath + "Profile/?providerid=" + p.UserID + "&positionid=" + p.PositionID);
+    @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
 }
         <div class="overview">
             @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 

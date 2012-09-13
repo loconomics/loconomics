@@ -292,10 +292,10 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search .alternate1 .search-results-items > li .overview {
     height: auto;
-    width: 550px;
+    width: 540px;
 }
 .search .alternate1 .search-results-items .medium-user-info .user-text {
-    width: 305px;
+    width: 295px;
 }
 .search .alternate1 .search-results-items > li .overview, 
 .search .alternate1 .search-results-items > li .user-rating-summary-widget,
@@ -304,6 +304,7 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search .alternate1 .search-results-items > li .verifications-summary {
     margin-top: 20px;
+    width: 110px;
 }
 .search .alternate1 .search-results-items .medium-user-info a.view-profile {
     display: none;
