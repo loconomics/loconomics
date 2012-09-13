@@ -2002,7 +2002,7 @@ html.boxshadow #loginBox .field-validation-error{
     margin: 40px 0 16px;
 }
 .search-categories > ul {
-    height: 245px;
+    height: 260px;
     text-align: center;
     margin: 0;
     overflow: visible;
@@ -2081,6 +2081,7 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories ul > li > .details > .description > p {
     font-size: .8em;
     margin: 0;
+    line-height: 1.1em;
 }
 /* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
 .search-categories .description:after {
