@@ -2165,31 +2165,31 @@ html.boxshadow #loginBox .field-validation-error{
     height: 84px;
     display: block;
 }
-.search-categories li.cat-home{             background-position: -324px 0}
-.search-categories li.cat-child{            background-position: -162px 0}
-.search-categories li.cat-pets{             background-position: -486px 0}
-.search-categories li.cat-people{           background-position: -405px 0}
-.search-categories li.cat-transport{        background-position: -567px 0}
+.search-categories li.cat-home{             background-position: -340px  0}
+.search-categories li.cat-child{            background-position: -170px 0}
+.search-categories li.cat-pets{             background-position: -510px 0}
+.search-categories li.cat-people{           background-position: -425px 0}
+.search-categories li.cat-transport{        background-position: -595px 0}
 .search-categories li.cat-business{         background-position: 0 0}
-.search-categories li.cat-elderly{          background-position: -243px 0}
-.search-categories li.cat-celebrations{     background-position: -81px 0}
+.search-categories li.cat-elderly{          background-position: -255px 0}
+.search-categories li.cat-celebrations{     background-position: -85px 0}
 /* Selected image */
 .search-categories li.selected.cat-home,
-.search-categories li.cat-home:hover{             background-position: -324px -81px}
+.search-categories li.cat-home:hover{             background-position: -340px -85px}
 .search-categories li.selected.cat-child,
-.search-categories li.cat-child:hover{            background-position: -162px -81px}
+.search-categories li.cat-child:hover{            background-position: -170px -85px}
 .search-categories li.selected.cat-pets,
-.search-categories li.cat-pets:hover{             background-position: -486px -81px}
+.search-categories li.cat-pets:hover{             background-position: -510px -85px}
 .search-categories li.selected.cat-people,
-.search-categories li.cat-people:hover{           background-position: -405px -81px}
+.search-categories li.cat-people:hover{           background-position: -425px -85px}
 .search-categories li.selected.cat-transport,
-.search-categories li.cat-transport:hover{        background-position: -567px -81px}
+.search-categories li.cat-transport:hover{        background-position: -595px -85px}
 .search-categories li.selected.cat-business,
-.search-categories li.cat-business:hover{         background-position: 0 -81px}
+.search-categories li.cat-business:hover{         background-position: 0 -85px}
 .search-categories li.selected.cat-elderly,
-.search-categories li.cat-elderly:hover{          background-position: -243px -81px}
+.search-categories li.cat-elderly:hover{          background-position: -255px -85px}
 .search-categories li.selected.cat-celebrations,
-.search-categories li.cat-celebrations:hover{     background-position: -81px -81px}
+.search-categories li.cat-celebrations:hover{     background-position: -85px -85px}
 
 /*==================
  * Social networking
