@@ -17,7 +17,7 @@
         if (pricingtypeid == 2 || pricingtypeid == 1) {
             // Get hourly rate
             hourlyRate = db.QueryValue(@"
-                SELECT  HourlyRate
+                SELECT  coalesce(HourlyRate, 0)
                 FROM    ProviderHourlyRate
                 WHERE   UserID = @0
                             AND
@@ -27,7 +27,7 @@
             ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
         } else if (pricingtypeid == 3) {
             hourlyRate = db.QueryValue(@"
-                SELECT  min(ProviderPackagePrice)
+                SELECT  coalesce(min(ProviderPackagePrice), 0)
                 FROM    ProviderPackage
                 WHERE   ProviderUserID = @0
                          AND PositionID = @1
