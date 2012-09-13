@@ -19,7 +19,7 @@
 
     if (performSearch) {
         PageData["BodyClass"] = "search";
-        PageData["IsHomePage"] = false;
+        PageData["IsHomePage"] = true; // consider true for now just all home script are shared
         Page.Title = "Search Results...";
         Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
         
@@ -38,6 +38,9 @@
         PageData["BodyClass"] = "home";
         PageData["IsHomePage"] = true;
         Page.Title = "Make your life better.";
+    }
+}
+@helper searchForm(){
         // We will return an array for the search-location autocomplete script
         string locationsCSV = "'San Francisco, CA', 'Other locations coming soon'";
         if (LcData.GetCurrentCountryID() == 2){
@@ -47,10 +50,7 @@
             window['LC'] = window['LC'] || {};
             LC.searchLocations = [ " + locationsCSV + @" ];
         ";
-    }
-}
-@helper searchForm(){
-		<form id="homeSearch" method="get">
+        <form id="homeSearch" method="get">
 			<fieldset class="search-options">
                 <ul>
                     <li class="search-service">
