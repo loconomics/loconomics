@@ -2,7 +2,7 @@
 @{
     var userID = PageData["UserID"] ?? Request["UserID"];
     string size = PageData["Size"] ?? "medium"; // mini
-    string contID = PageData["ContainerID"] ?? "verifications";
+    string contID = PageData["ContainerID"];
     
     dynamic data = null;
     using (var db = Database.Open("sqlloco")) {
@@ -45,7 +45,7 @@
 @switch (size)
 {
     case "medium":
-        <ul @if(!String.IsNullOrEmpty(contID)){ Html.Raw("id='" + contID + "'"); } >
+        <ul class="verifications-list" @if(!String.IsNullOrEmpty(contID)){ @Html.Raw("id='" + contID + "'"); } >
             @foreach (var v in data)
             {
             <li class="@v.Icon">@v.VerificationType</li>

@@ -62,7 +62,7 @@ form.report-unauthorized-use {
 form.report-unauthorized-use textarea {
     width: 460px;
 }
-#verifications {
+#profileHeader .verifications-list {
     position: absolute;
     top: 40px;
     right: 80px;
@@ -72,7 +72,7 @@ form.report-unauthorized-use textarea {
     list-style: none;
     width: 180px;
 }
-#verifications li{
+#profileHeader .verifications-list li{
     padding: 0 0 0 30px;
     margin: 3px 0;
     min-height: 25px;
@@ -153,12 +153,12 @@ form.report-unauthorized-use textarea {
     height: 186px;
     outline: 1px solid #461864;
 }
-#verifications {
+#profileHeader > .verifications-list {
     font-weight: bold;
     max-height: 200px;
     overflow: hidden;
 }
-#verifications:hover {
+#profileHeader > .verifications-list:hover {
     background: none repeat scroll 0 0 white;
     box-shadow: 0 0 5px 3px #CCCCCC;
     -o-box-shadow: 0 0 5px 3px #CCCCCC;
@@ -167,7 +167,7 @@ form.report-unauthorized-use textarea {
     max-height: none;
     z-index: 200;
 }
-#verifications .more-verifications {
+#profileHeader > .verifications-list .more-verifications {
     background: url("../img/plus.png") no-repeat scroll 8px center white;
     top: 175px;
     box-shadow: 5px -1px 5px 0 black;
@@ -176,19 +176,19 @@ form.report-unauthorized-use textarea {
     position: absolute;
     right: 0;
 }
-#verifications:hover .more-verifications {
+#profileHeader > .verifications-list:hover .more-verifications {
     display: none;
 }
-#verifications li{
+#profileHeader > .verifications-list li{
     background: no-repeat center left;
 }
-#verifications li.license{
+#profileHeader > .verifications-list li.license{
     background-image: url('../img/icon-licenses.png');
 }
-#verifications li.verification{
+#profileHeader > .verifications-list li.verification{
     background-image: url('../img/icon-verifications.png');
 }
-#verifications li.share{
+#profileHeader > .verifications-list li.share{
     background-image: url('../img/icon-share-medium.png');
 }
 .profile h3 {
