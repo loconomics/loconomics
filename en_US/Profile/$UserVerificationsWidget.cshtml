@@ -23,21 +23,18 @@
             ", userID);
         } else if (size == "mini") {
             data = db.Query(@"
-                SELECT  count(*) As Quantity, V.SummaryGroup, V.Icon
+                SELECT  count(UV.UserID) As Quantity, V.SummaryGroup, V.Icon
                 FROM    UserVerification As UV
-                         INNER JOIN
+                         RIGHT JOIN
                         Verification As V
                           ON UV.VerificationID = V.VerificationID
-                WHERE   UV.UserID = @0
-                         AND
-                        UV.Active = 1
-                         AND
-                        V.Active = 1
-                         AND
-                        UV.VerificationStatusID = 1 -- Confirmed
+                            AND UV.UserID = @0
+                            AND UV.Active = 1
+                            AND V.Active = 1
+                            AND UV.VerificationStatusID = 1 -- Confirmed
                 GROUP BY V.SummaryGroup, V.Icon
                 HAVING V.SummaryGroup is not null AND V.Icon is not null
-                    AND count(*) > 0
+                    -- AND count(*) > 0
             ", userID);
         }
     }

@@ -307,17 +307,18 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search.alternate1 .search-results-items > li .overview {
     height: auto;
-}
-.search.alternate1 .search-results-items > li .overview {
-    width: auto;
+    width: 550px;
 }
 .search.alternate1 .search-results-items .medium-user-info .user-text {
-    width: 310px;
+    width: 305px;
 }
 .search.alternate1 .search-results-items > li .overview, 
 .search.alternate1 .search-results-items > li .user-rating-summary-widget,
 .search.alternate1 .search-results-items > li .verifications-summary {
     font-size: 1em;
+}
+.search.alternate1 .search-results-items > li .verifications-summary {
+    margin-top: 20px;
 }
 .search.alternate1 .search-results-items .medium-user-info a.view-profile {
     display: none;
@@ -328,4 +329,7 @@ ul.search-results table td { padding-right: 16px; }*/
 .search.alternate1 .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
     height: auto;
     min-height: inherit;
+}
+.search.alternate1 .search-results-items > li .button.book {
+    float: right;
 }
