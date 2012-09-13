@@ -42,15 +42,6 @@ ul.search-results table td { padding-right: 16px; }*/
 .search ul.tabs { margin-top: 40px; }
 
 
-/** Generics **/
-.search ul,
-.search ol,
-.search li{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
 /* Page Structure */
 .search #main {
     display: inline-block;
@@ -65,13 +56,13 @@ ul.search-results table td { padding-right: 16px; }*/
     margin: 0 10px;
 }
 /* #main Structure */
-.search .categories {
+.search #main .categories {
     height: auto;
     width: auto;
 }
 
 /* Colors, fonts, etc. */
-.search {
+.search #main {
     color: #6c6c6c;
     font-size: 1em;
 }
@@ -165,9 +156,6 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /*************************/
 /**** results items ******/
-.search-results-items{
-    margin: 8px 0;
-}
 .search-results-items > li{
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -301,35 +289,35 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /********************
  **** Alternate1 ***/
-.search.alternate1 .search-results-items .user-micro-summary > h5 {
+.search .alternate1 .search-results-items .user-micro-summary > h5 {
     font-size: 1.5em;
     color: #52276e;
 }
-.search.alternate1 .search-results-items > li .overview {
+.search .alternate1 .search-results-items > li .overview {
     height: auto;
     width: 550px;
 }
-.search.alternate1 .search-results-items .medium-user-info .user-text {
+.search .alternate1 .search-results-items .medium-user-info .user-text {
     width: 305px;
 }
-.search.alternate1 .search-results-items > li .overview, 
-.search.alternate1 .search-results-items > li .user-rating-summary-widget,
-.search.alternate1 .search-results-items > li .verifications-summary {
+.search .alternate1 .search-results-items > li .overview, 
+.search .alternate1 .search-results-items > li .user-rating-summary-widget,
+.search .alternate1 .search-results-items > li .verifications-summary {
     font-size: 1em;
 }
-.search.alternate1 .search-results-items > li .verifications-summary {
+.search .alternate1 .search-results-items > li .verifications-summary {
     margin-top: 20px;
 }
-.search.alternate1 .search-results-items .medium-user-info a.view-profile {
+.search .alternate1 .search-results-items .medium-user-info a.view-profile {
     display: none;
 }
-.search.alternate1 .search-results-items .member-since {
+.search .alternate1 .search-results-items .member-since {
     float: right;
 }
-.search.alternate1 .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
+.search .alternate1 .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
     height: auto;
     min-height: inherit;
 }
-.search.alternate1 .search-results-items > li .button.book {
+.search .alternate1 .search-results-items > li .button.book {
     float: right;
 }

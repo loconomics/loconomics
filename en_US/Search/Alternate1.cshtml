@@ -1,78 +1,143 @@
 ﻿@using WebMatrix.Data;
 @{
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-    Page.Title = "Search Results...";
-    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+    bool performSearch = false;
     
     /* Getting search parameters */
     var serviceType = PageData["s"] = Request["s"];
     var serviceCat = PageData["c"] = Request["c"];
     var serviceLocation = PageData["location"] = Request["location"];
     var serviceDate = PageData["date"] = Request["date"];
-
-    /* Model Code: accesing database to perform search */
-    // Building sql parameters:
-    var LC_Term  = "%" + serviceType + "%";
-    var LC_Cat = serviceCat;
-    // Performing search:
-    var db = Database.Open("sqlloco");
-    var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
-    var posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
     
+    if (!String.IsNullOrWhiteSpace(serviceType) ||
+        !String.IsNullOrWhiteSpace(serviceCat)) {
+        performSearch = true;
+    }
     bool categorizedResults = (String.IsNullOrEmpty(serviceCat) ? false : true);
+    string[] searchedCategories = null;
+    dynamic posrow = null;
+
+    if (performSearch) {
+        PageData["BodyClass"] = "search";
+        PageData["IsHomePage"] = false;
+        Page.Title = "Search Results...";
+        Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+        
+        // Building sql parameters:
+        var LC_Term  = "%" + serviceType + "%";
+        var LC_Cat = serviceCat;
+        // Performing search:
+        using (var db = Database.Open("sqlloco")) {
+            var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
+            posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
+        }
     
-    /* Simulating categorized search */
-    var searchedCategories = new string[]{ "Housekeepers", "Handymen", "Gardeners", "Electricians", "Plumbers", "Painters" };
+        /* Simulating categorized search */
+        searchedCategories = new string[]{ "Housekeepers", "Handymen", "Gardeners", "Electricians", "Plumbers", "Painters" };
+    } else {
+        PageData["BodyClass"] = "home";
+        PageData["IsHomePage"] = true;
+        Page.Title = "Make your life better.";
+        // We will return an array for the search-location autocomplete script
+        string locationsCSV = "'San Francisco, CA', 'Other locations coming soon'";
+        if (LcData.GetCurrentCountryID() == 2){
+            locationsCSV = "'Barcelona', 'Other locations coming soon'";
+        }
+        PageData["InlineScript"] = @"
+            window['LC'] = window['LC'] || {};
+            LC.searchLocations = [ " + locationsCSV + @" ];
+        ";
+    }
 }
-<div id="container" class="search clearfix alternate1">
+<div id="container" class="clearfix alternate1">
     <div id="main">
+     @if (!performSearch)
+     {
+		<h1>@Page.Title</h1>
+        <p>book safely and easily local, indepedent service providers</p>
+		<form id="homeSearch" method="get">
+			<fieldset class="search-options">
+                <ul>
+                    <li class="search-service">
+                        <label for="search-service">Search for a (e.g. Gardener, Tutor...)</label>
+                        <input id="search-service" type="text" name="s" placeholder="Dog Walker" />
+                    </li>
+                    <li class="search-location">
+                        <label for="search-location">Where</label>
+                        <input id="search-location" type="text" name="location" placeholder="San Francisco, CA" />
+                    </li>
+                    <li class="search-date">
+                        <label for="search-date">When:</label>
+                        <input id="search-date" class="date-pick" type="text" name="date" value="@(DateTime.Today.ToShortDateString())" />
+                    </li>
+                    <li class="actions">
+                        <label>&nbsp;</label>
+                        <button class="main-action" type="submit">GO!</button>
+                    </li>
+                </ul>
+            </fieldset>
+		</form>
+        @RenderPage("_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category", SelectedCategory = "home" })
 
-        <div class="search-categories-with-subcategories">
-	        @RenderPage("_CategoriesList.cshtml", new { SelectedCategory = "home" } )
-        </div>
+     }
+     else
+     {
+            <div class="search-categories-with-subcategories">
+	            @RenderPage("_CategoriesList.cshtml", new { SelectedCategory = "home" })
+            </div>
         
-        @RenderPage("_Pager.cshtml")
+            @RenderPage("_Pager.cshtml")
         
-        <div class="search-results">
-            @if(categorizedResults){
-                // hacking the results to emulate a search
-                var n = 0;
-            <ol class="search-results-categories">
-                @foreach(var scat in searchedCategories){
+            <div class="search-results">
+                @if (categorizedResults)
+                {
                     // hacking the results to emulate a search
-                    n++;
-                    var i = 0;
-                <li>
-                    <h3>@scat</h3>
-                    <a class="view-more" href="?Service=@scat">View all @scat</a>
-                    <ol class="search-results-items">
-                        @foreach(var item in posrow){
-                            // hacking the results to emulate a search
-                            i++;
-                            if(n!=i){continue;}
-                        <li>
-                            @RenderPage("_Alternate1Item.cshtml")
-                        </li>
-                        }
-                    </ol>
-                </li>
+                    var n = 0;
+                <ol class="search-results-categories">
+                    @foreach (var scat in searchedCategories)
+                    {
+                        // hacking the results to emulate a search
+                        n++;
+                        var i = 0;
+                    <li>
+                        <h3>@scat</h3>
+                        <a class="view-more" href="?Service=@scat">View all @scat</a>
+                        <ol class="search-results-items">
+                            @foreach (var item in posrow)
+                            {
+                                // hacking the results to emulate a search
+                                i++;
+                                if (n != i) { continue; }
+                            <li>
+                                @RenderPage("_Alternate1Item.cshtml")
+                            </li>
+                            }
+                        </ol>
+                    </li>
+                    }
+                </ol>
                 }
-            </ol>
-            }else{
-            <ol class="search-results-items">
-                @foreach(var item in posrow){
-                <li>
-                    @RenderPage("_Alternate1Item.cshtml", new { Item = item })
-                </li>
+                else
+                {
+                <ol class="search-results-items">
+                    @foreach (var item in posrow)
+                    {
+                    <li>
+                        @RenderPage("_Alternate1Item.cshtml", new { Item = item })
+                    </li>
+                    }
+                </ol>
                 }
-            </ol>
-            }
 
-        </div>
+            </div>
         
-        @RenderPage("_Pager.cshtml")
+            @RenderPage("_Pager.cshtml")
+     }
     </div>
-    <div id="secondary">
-        @RenderPage("../HelpCenter/$FAQs.cshtml")
-    </div>
+    @if (performSearch)
+    {
+        <div id="secondary">
+            @RenderPage("../HelpCenter/$FAQs.cshtml")
+        </div>
+    }
 </div>
