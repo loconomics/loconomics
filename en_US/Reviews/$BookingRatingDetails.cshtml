@@ -53,7 +53,7 @@
     @if (!ModelState.IsValid) {
         @Html.ValidationSummary()
     } else {
-        @LcHelpers.SetupStarRatingPlugin()
+        @*LcHelpers.SetupStarRatingPlugin()*@
         if (thisUserType == "customer") {
             @* Customer view: provider review by customer *@
             <section class="section-1">
@@ -74,13 +74,13 @@
                     <li class="rating1">
                         <span>Quality of work @provider.FirstName performed:</span>
                         <div class="rate-user">
-                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true" })
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true", "image" })
                         </div>
                     </li>
                     <li class="rating2">
                         <span>Efficience in which @provider.FirstName performed the work:</span>
                         <div class="rate-user">
-                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", review.Rating2.ToString(), "true" })
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", review.Rating2.ToString(), "true", "image" })
                         </div>
                     </li>
                     <li class="publicreview">
@@ -97,7 +97,7 @@
                     <li class="rating3">
                         <span>@(provider.FirstName)'s professionalism</span>
                         <div class="rate-user">
-                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", review.Rating3.ToString(), "true" })
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", review.Rating3.ToString(), "true", "image" })
                         </div>
                     </li>
                     <li class="private-review">
@@ -135,7 +135,7 @@
                     <li class="rating1">
                         <span>@customer.FirstName rated as customer:</span>
                         <div class="rate-user">
-                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true" })
+                            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true", "image" })
                         </div>
                     </li>
                     <li class="publicreview">

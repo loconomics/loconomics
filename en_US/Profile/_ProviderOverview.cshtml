@@ -34,7 +34,7 @@
 <p class="profile-intro">
     @LcHelpers.PrintTextAsHtml(pos.PositionIntro)
 </p>
-@LcHelpers.SetupStarRatingPlugin()
+@*LcHelpers.SetupStarRatingPlugin()*@
 @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 @RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 
