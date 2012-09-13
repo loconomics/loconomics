@@ -4,7 +4,7 @@
 *.gif
 !userphotos/u0/*.*
 !theme/*.*
+!theme/*/*.*
 !theme/howitworks/*.*
 !email/*.*
-theme/edit/*.*
-email/edit/*.*
+!email/*/*.*
