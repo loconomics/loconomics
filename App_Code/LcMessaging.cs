@@ -588,6 +588,17 @@ public class LcMessaging
             string from = emaildata["emailfrom"];
 
             WebMail.Send(emailto, subject, body, from, contentEncoding: "utf-8");
+            // TODO: Test using the normal API for email sending, trying to solve current problem with
+            // emails not being sent by this way:
+            /*
+                SmtpClient client = new SmtpClient("mail.loconomics.com", 25);
+                client.EnableSsl = false;
+                client.Credentials = new NetworkCredential("automated@loconomics.com", "Loconomic$2011");
+                MailAddress from = new MailAddress(from);
+                MailAddress to = new MailAddress(mail);
+                MailMessage message = new MailMessage(from, to);
+                client.SendAsync(message,"testing");
+             */
         }
         catch (Exception ex)
         {
