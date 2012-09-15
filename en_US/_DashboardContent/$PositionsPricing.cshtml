@@ -8,7 +8,7 @@
     var n = pos.PositionID;
     
     if (p == null || pos == null){
-        var inputdataerrormessage = "No enought input data to show results";
+        var inputdataerrormessage = "Please correct any errors and click save";
         if (IsPost){
             LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
@@ -45,7 +45,7 @@
     var idprefix = PageData["idprefix"] = "position#" + n + "-pricing";
 }
 <p class="setting-instructions">
-Transparent pricing is the key to a successful job.  We’re here to help you and your clients determine an accurate price and time estimate.  Do your best to input on average for each of the questions asked below.  Let us know if you need help or have feedback.  
+Transparent pricing is the key to a successful job.  We’re here to help you and your clients determine an accurate price and time estimate.  Please <a href="mailto:providerhelp@loconomics.com">e-mail us</a> if you need help or have feedback.  
 </p>
 
 @*

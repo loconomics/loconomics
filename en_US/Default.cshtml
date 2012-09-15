@@ -17,7 +17,7 @@
   <div id="container" class="clearfix"> 
     <div id="main">
 		<h1>@Page.Title</h1>
-        <p>book safely and easily local, indepedent service providers</p>
+        <p>Book local, indepedent service providers safely and easily</p>
 		<form id="homeSearch" action="@Href(UrlUtil.LangPath + "Search/")" method="get">
 			<fieldset class="search-options">
                 <ul>
@@ -30,7 +30,7 @@
                         <input id="search-location" type="text" name="location" placeholder="San Francisco, CA" />
                     </li>
                     <li class="search-date">
-                        <label for="search-date">When:</label>
+                        <label for="search-date">When</label>
                         <input id="search-date" class="date-pick" type="text" name="date" value="@(DateTime.Today.ToShortDateString())" />
                     </li>
                     <li class="actions">

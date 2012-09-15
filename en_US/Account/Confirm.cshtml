@@ -39,7 +39,7 @@
                 message = "Your email was verified successfully! Please login to go to your dashboard:";
                 showLogin = true;
             } else {
-                message = "Could not confirm your registration info";
+                message = "Could not verify your registration info";
             }
         }
     }
@@ -53,11 +53,11 @@
     }
     else
     {
-        <h1>Your account is not verified</h1>
+        <h1>Your account has not yet been verified</h1>
     }
     @if (confirmationToken.IsEmpty())
     {
-    <h2>Use the form below to confirm your account.</h2>
+    <h2>Use the form below to verify your account.</h2>
     }
 </hgroup>
 

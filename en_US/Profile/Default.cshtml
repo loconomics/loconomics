@@ -82,12 +82,10 @@
                 @if (!String.IsNullOrWhiteSpace(u["PublicBio"])) {
                     @u["PublicBio"]
                 } else {
-                    <text>User doesn't provide information about itself.</text>
-                    <br />
-                    <text>It's strongly recommended for all users to write a public bio.</text>
-                }
+                  <text></text>
+                  }
             </p>
-            <a href="#report-unauthorized-use" class="report-action report-unauthorized-use" data-reported-userid="@u["UserID"]">report unauthorized use</a>
+     <!--<a href="#report-unauthorized-use" class="report-action report-unauthorized-use" data-reported-userid="@u["UserID"]">report unauthorized use</a> -->
             @RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })
             @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
             @*

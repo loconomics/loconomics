@@ -37,13 +37,12 @@
     }
 }
 <p class="map-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
-</p>
+Below you can find out if you're within this provider's service radius and/or at what locations he/she performs services.  The exact address of the service will be shown after the provider confirms your booking.</p>
 
 <div id="user-addresses-map-position-@pos.PositionID" class="user-addresses-map">
     @if (addresses.Count == 0)
     {
-        <div class="no-items no-locations">There is no locations</div>
+        <div class="no-items no-locations">This provider has not entered any locations.  Please contact him/her for more information.</div>
     }
     else
     {
@@ -108,7 +107,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
 
 @*<div class="highlighted-map gallery-highlighted">
     <img class="large-map" alt="Highlighted map" src="@Href(UrlUtil.AppPath + "img/map.png")" />
-    <h5 class="map-desc">According to your IP address, you are within Fernando’s service radius.</h5>
+    <h5 class="map-desc">According to your IP address, you are within this provider’s service radius.</h5>
 </div>*@
 
 @*<ol class="maps gallery-content">
