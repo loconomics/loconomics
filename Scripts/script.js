@@ -544,11 +544,11 @@ $(function () {
     /* Wizard Tabbed Forms: ajax submit and next-step loading  */
     $("body").delegate(".tabbed.wizard .next", "click", function () {
         // getting the form
-        var form = $(this).parents('form').eq(0);
+        var form = $(this).closest('form');
         // getting the current wizard step-tab
-        var currentStep = form.parents('.tab-body').eq(0);
+        var currentStep = form.closest('.tab-body');
         // getting the wizard container
-        var wizard = form.parents('.tabbed.wizard').eq(0);
+        var wizard = form.closest('.tabbed.wizard');
         // getting the wizard-next-step
         var nextStep = $(this).data('wizard-next-step');
 
@@ -580,7 +580,7 @@ $(function () {
         var ok = false;
 
         // Mark as saved:
-        gNotSavedData = false;
+        var changedElements = LC.ChangesNotification.registerSave(form.get(0));
 
         // Do the Ajax post
         $.ajax({
@@ -627,7 +627,7 @@ $(function () {
                         // There is an error code.
 
                         // Data not saved:
-                        gNotSavedData = true;
+                        LC.ChangesNotification.registerChange(form.get(0), changedElements);
 
                         // Unblock loading:
                         currentStep.unblock();
@@ -642,13 +642,18 @@ $(function () {
                         autoUnblockLoading = false;
                     }
                 } else {
-                    // Data not saved:
-                    gNotSavedData = true;
                     // Post was wrong, html was returned to replace current form:
                     var newhtml = $(data);
-                    currentStep.html(newhtml);
                     // Reading original scripts tags to be able to execute later
                     var responseScript = newhtml.filter("script");
+                    // Data not saved:
+                    var newForm = newhtml.find('form:eq(0)').get(0);
+                    LC.ChangesNotification.registerChange(
+                        newForm,
+                        LC.ChangesNotification.renewElements(changedElements, newForm)
+                    );
+                    // Showing new html:
+                    currentStep.html(newhtml);
                     // Executing scripts returned by the page
                     jQuery.each(responseScript, function (idx, val) { eval(val.text); });
 
@@ -706,6 +711,9 @@ $(function () {
             return false;
         }
 
+        // Data saved:
+        ctx.changedElements = (event.data ? event.data.changedElements : null) || LC.ChangesNotification.registerSave(ctx.form.get(0));
+
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
             ctx.box.block(loadingBlock);
@@ -735,10 +743,10 @@ $(function () {
             event.data = {
                 form: form,
                 box: form.closest('.ajax-box'),
-                action: form.data('ajax-fieldset-action')
+                action: form.data('ajax-fieldset-action'),
+                // Data saved:
+                changedElements: LC.ChangesNotification.registerSave(form.get(0), form.find(':input[name]'))
             };
-            // Avoid generic warning message:
-            gNotSavedData = false;
             return ajaxFormsSubmitHandler(event);
         }
     );
@@ -860,26 +868,73 @@ $(function () {
     });
 
     /***** Don't lost data! warning message ******/
-    window.onbeforeunload = function () {
-        // Check a variable that forms can create to recognize unsaved changes made
-        if (typeof (gNotSavedData) != 'undefined' && gNotSavedData === true) {
-            return $('#lcres-quit-without-save').text() || '';
-        }
-    }
-    // Generic control: check form field changes
-    $(document).on('change', 'form :input', function () {
-        gNotSavedData = true;
-    })
-    // Generic control: set data as saved when a submit happens to avoid the not saved message
-    .on('submit', 'form', function () {
-        gNotSavedData = false;
-    });
+    LC.ChangesNotification.init(false);
 });
 
-/*******************
- * Popup related 
- * functions
+/*= ChangesNotification class
+ * to notify user about changes in forms,
+ * tabs, that will be lost if go away from
+ * the page. It knows when a form is submitted
+ * and saved to disable notification, and gives
+ * methods for other scripts to notify changes
+ * or saving.
  */
+LC.ChangesNotification = {
+    changesList: {},
+    init: function (withGenericSupport) {
+        // User notification to prevent lost changes done
+        window.onbeforeunload = function () {
+            if (changesList.length > 0)
+                return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
+        };
+        $(document).on('change', 'form :input[name]', function () {
+            LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
+        })
+        // Generic support for forms (special cases require external use of this API)
+        // Use only if Not conflicts happens with special cases, as ajax forms with state recovering.
+        if (withGenericSupport) {
+            $(document).on('submit', 'form', function () {
+                LC.ChangesNotification.registerSave(this);
+            });
+        }
+    },
+    registerChange: function (f, e) {
+        var fl = this.changesList[f] = this.changesList[f] || [];
+        if ($.isArray(e))
+            $.merge(fl, e);
+        else if (!(e in fl))
+            fl.push(e);
+    },
+    registerSave: function (f, els) {
+        if (!this.changesList[f]) return;
+        var prevEls = $.extend([], this.changesList[f]);
+        if (!els)
+            delete this.changesList[f];
+        else {
+            this.changesList[f] = $.grep(this.changesList[f], function (el) { return !(el in els); });
+            // If 'f' list is empty, remove from changesList
+            for (var el in this.changesList[f]) {
+                delete this.changesList[f];
+                break;
+            }
+        }
+        return prevEls;
+    },
+    renewElements: function (oldElements, newForm) {
+        var newElements = [];
+        for (var i = 0; i < oldElements.length; i++) {
+            var n = oldElements[i]['name'] || null;
+            if (n)
+                newElements.push($('[name=' + n + ']').get(0));
+        }
+        return newElements;
+    }
+};
+
+/*******************
+* Popup related 
+* functions
+*/
 function popupSize(size) {
     var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
     return {
@@ -1038,8 +1093,9 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else { // data.Code < 0
             // There is an error code.
-            // Data not saved
-            gNotSavedData = true;
+
+            // Data not saved:
+            LC.ChangesNotification.registerChange(ctx.form.get(0), ctx.changedElements);
 
             // Unblock loading:
             ctx.box.unblock();
@@ -1057,12 +1113,17 @@ function ajaxFormsSuccessHandler(data, text, jx) {
     } else {
         // Post 'maybe' was wrong, html was returned to replace current 
         // form container: the ajax-box.
-        // Most times this means data not saved (if was, page script must set to false next global var:)
-        gNotSavedData = true;
 
         var newhtml = $(data);
         // Reading original scripts tags to be able to execute later
         var responseScript = newhtml.filter("script");
+
+        // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
+        var newForm = newhtml.find('form:eq(0)').get(0);
+        LC.ChangesNotification.registerChange(
+            newForm,
+            LC.ChangesNotification.renewElements(ctx.changedElements, newForm)
+        );
 
         // Check if the returned element is the ajax-box, if not, find
         // the element in the newhtml:
