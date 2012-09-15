@@ -140,7 +140,7 @@
             }
         }
     }
-@*// Try to get the data from this customer, if was previosly saved or user exist at Braintree
+@*// Try to get the data from this customer, if was previously saved or user exist at Braintree
 try {
     customer = gateway.Customer.Find(user.UserID.ToString());
     PageData["customer"] = customer;

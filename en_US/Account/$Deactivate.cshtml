@@ -8,6 +8,6 @@
             db.Execute("UPDATE Users SET AccountStatusID = 2 WHERE UserID = @0", WebSecurity.CurrentUserId);
         }
     
-        LcHelpers.ReturnJsonResult(0, "Your account was deactivated");
+        LcHelpers.ReturnJsonResult(0, "Your account has been deactivated");
     }
 }

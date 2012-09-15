@@ -82,7 +82,7 @@
             @if (address.TravelFromLocation) {
             <div class="travel-options">
                 <span class="travel-radius-label">Transport radius: <span class="travel-radius">@address.ServiceRadiusFromLocation</span></span>
-                <span class="travel-transport-label">I travel using primarly: <span class="travel-transport">@address.TransportTypeName</span></span>
+                <span class="travel-transport-label">I travel using primarily: <span class="travel-transport">@address.TransportTypeName</span></span>
             </div>
             }
             <div class="tools">
@@ -94,7 +94,7 @@
 }
 <div class="lc-ressources">
     <div class="confirm-delete-location-message">Are you sure do you want to remove this location?</div>
-    <div class="delete-location-loading-message">The location is being removed...</div>
+    <div class="delete-location-loading-message">The location is now removed</div>
 </div>
 
     <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="ajax ajax-box" id="position#@(n)-locations">
@@ -115,7 +115,7 @@
                 <a href="#" class="addlocation" data-extra-query="itravel=True">Add location</a>
                 }
                 <fieldset class="positionlocations-itravelfrom">
-                    <legend>I travel to clients from this location:</legend>
+           <!--REDUNDANT <legend>I travel to clients from this location:</legend> -->
                     <ul class="travel-locations">
                     @foreach (var location in travelLocations)
                     {

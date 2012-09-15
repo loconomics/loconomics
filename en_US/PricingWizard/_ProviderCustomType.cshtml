@@ -171,7 +171,7 @@
             <table class="pricing-vars">
                 <thead>
                     <tr>
-                        <th>Please enter a time estimate for each vairable below:</th>
+                        <th>Please enter an estimate for each variable below (don't worry, these can be updated at any time):</th>
                         <th>Average Time</th>
                     </tr>
                 </thead>
@@ -214,7 +214,7 @@
            </table>
         } else {
             <div class="no-pricing-wizard">
-                There is not variables to customize the pricing wizard for your position.
+                We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>. 
             </div>
         }
         @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = 2 } )

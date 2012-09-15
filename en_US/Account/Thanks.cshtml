@@ -1,31 +1,27 @@
 ﻿@{
     // Set the layout page and page title
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
-    Page.Title = "Thanks for registering";
+    Page.Title = "Welcome to Loconomics";
 }
 
 @if (!WebSecurity.IsAuthenticated) {
     
   <div id="container" class="clearfix">
     <hgroup class="title">
-        <h1>Thanks.</h1>
-        <h2>But you're not done yet!</h2>
+        <h1>Welcome to Loconomics!</h1>
     </hgroup>
     <p>
-       An email with instructions on how to activate your account is on its way 
-       to you.
+       An email with instructions on how to activate your account is on its way to you.
     </p>
   </div>
 }else {
 
  <div id="container" class="clearfix">
    <hgroup class="title">
-        <h1>Thanks.</h1>
-        <h2>You are all set.</h2>
+        <h1>Welcome to Loconomics!</h1>
    </hgroup>
    <p>
-        It looks like you've already confirmed your account and are 
-        good to go.
+        It looks like you've already confirmed your account and are good to go.
     </p>
    </div>
 }

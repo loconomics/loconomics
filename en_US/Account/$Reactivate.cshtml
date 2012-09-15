@@ -8,6 +8,6 @@
             db.Execute("UPDATE Users SET AccountStatusID = 1 WHERE UserID = @0", WebSecurity.CurrentUserId);
         }
     
-        LcHelpers.ReturnJsonResult(0, "Your account has been reactivated! Please update your profile with any changes");
+        LcHelpers.ReturnJsonResult(0, "Your account has been reactivated! Please update your profile with any changes.");
     }
 }

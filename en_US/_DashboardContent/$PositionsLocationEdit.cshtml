@@ -172,7 +172,7 @@
             </ul>
             <ul class="location-map">
                 <li>
-                    <strong>GPS Coordenates</strong>
+                    <strong>GPS Coordinates</strong>
                 </li>
                 <li><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
                 <li><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
@@ -187,7 +187,7 @@
                 </li>
                 <li class="input-option">
                     <fieldset class="has-confirm">
-                        <legend>I travel to clients from this location</legend>
+                     <legend>I travel to clients from this location</legend> 
                         <div class="confirm positionlocations-itravel-confirm">
                             <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["itravel"] ?? (location != null ? location.TravelFromLocation : null)) name="itravel" value="True"/></label>
                             <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["itravel"] ?? (location != null ? location.TravelFromLocation : false)) name="itravel" value="False"/></label>
@@ -336,7 +336,7 @@
                             );
 
 
-                            // Now tha twe have asked for the position of the user,
+                            // Now that we have asked for the position of the user,
                             // let's watch the position to see if it updates. This
                             // can happen if the user physically moves, of if more
                             // accurate location information has been found (ex.

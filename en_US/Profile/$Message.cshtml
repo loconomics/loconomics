@@ -28,8 +28,7 @@
     }
 }
 <p class="message-description">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. 
-</p>
+Have a question for for this provider?  Send a message below. </p>
 @if (WebSecurity.IsAuthenticated) {
     var u = LcData.UserInfo.GetUserRow();
     <form action="@(UrlUtil.LangPath)Profile/$Message/" method="post" class="message send-message-form ajax ajax-box" id="position#@(n)-message">
@@ -49,13 +48,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, vol
             <textarea name="message-body" placeholder="Write your message to @LcHelpers.GetUserDisplayName(p)"></textarea>
         </div>
         <fieldset class="actions">
-            <button class="main-action" type="submit">Send message</button>
+            <button class="main-action" type="submit">Send</button>
         </fieldset>
     </form>
 }
 else
 {
     <div class="require-login">
-        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a message</h2>
+        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a message.</h2>
     </div>
 }
