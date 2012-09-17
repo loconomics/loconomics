@@ -110,21 +110,33 @@
 /* Specific content images */
 #howitworks-customers li.find-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-find-provider.png');
+    background-size: contain;
+    position: relative;
 }
 #howitworks-customers li.book-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-book-provider.png');
+    background-size: contain;
+    position: relative;
 }
 #howitworks-customers li.review-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-review-provider.png');
+    background-size: contain;
+    position: relative;
 }
 #howitworks-providers li.create-profile {
     background-image: url('../img/theme/howitworks/howitworks-provider-create-profile.png');
+    background-size: contain;
+    position: relative;
 }
 #howitworks-providers li.perform-services {
     background-image: url('../img/theme/howitworks/howitworks-provider-perform-services.png');
+    background-size: contain;
+    position: relative;
 }
 #howitworks-providers li.get-paid {
     background-image: url('../img/theme/howitworks/howitworks-provider-get-paid.png');
+    background-size: contain;
+    position: relative;
 }
 
 #howitworks-faqs {
