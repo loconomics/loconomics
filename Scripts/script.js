@@ -936,7 +936,10 @@ LC.ChangesNotification = {
         if (typeof (e) !== 'string') {
             n = e.name;
             // Check if really there was a change checking default element value
-            if (e.value == e.defaultValue) {
+            if (typeof (e.defaultValue) != 'undefined'
+                 && typeof (e.checked) == 'undefined'
+                 && typeof (e.selected) == 'undefined'
+                 && e.value == e.defaultValue) {
                 // There was no change, no continue
                 // and maybe is a regression from a change and now the original value again
                 // try to remove from changes list doing registerSave
