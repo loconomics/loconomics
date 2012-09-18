@@ -2316,6 +2316,16 @@ html.boxshadow #loginBox .field-validation-error{
     float:right;
 }
 
+/* Form extras (body in selector to be a bit more specific, but not excessive especific) */
+/*form.has-changes,*/
+body form .changed {
+    box-shadow: 0 0 1px 0 #FF8300;
+    -moz-box-shadow: 0 0 1px 0 #FF8300;
+    -o-box-shadow: 0 0 1px 0 #FF8300;
+    -webkit-box-shadow: 0 0 1px 0 #FF8300;
+}
+
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles

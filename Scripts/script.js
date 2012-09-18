@@ -650,7 +650,7 @@ $(function () {
                     var newForm = newhtml.find('form:eq(0)').get(0);
                     LC.ChangesNotification.registerChange(
                         newForm,
-                        LC.ChangesNotification.renewElements(changedElements, newForm)
+                        changedElements
                     );
                     // Showing new html:
                     currentStep.html(newhtml);
@@ -868,7 +868,7 @@ $(function () {
     });
 
     /***** Don't lost data! warning message ******/
-    LC.ChangesNotification.init(false);
+    LC.ChangesNotification.init();
 });
 
 /*= ChangesNotification class
@@ -881,45 +881,80 @@ $(function () {
  */
 LC.ChangesNotification = {
     changesList: {},
-    init: function (withGenericSupport) {
+    defaults: {
+        genericChangeSupport: true,
+        genericSubmitSupport: false,
+        changedFormClass: 'has-changes',
+        changedElementClass: 'changed'
+    },
+    init: function (options) {
         // User notification to prevent lost changes done
-        window.onbeforeunload = function () {
-            if (changesList.length > 0)
-                return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
-        };
-        $(document).on('change', 'form :input[name]', function () {
-            LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
-        })
-        // Generic support for forms (special cases require external use of this API)
-        // Use only if Not conflicts happens with special cases, as ajax forms with state recovering.
-        if (withGenericSupport) {
+        $(window).on('beforeunload', function () {
+            return LC.ChangesNotification.notify();
+        });
+        options = $.extend(this.defaults, options);
+        if (options.genericChangeSupport)
+            $(document).on('change', 'form :input[name]', function () {
+                LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
+            })
+        if (options.genericSubmitSupport)
             $(document).on('submit', 'form', function () {
                 LC.ChangesNotification.registerSave(this);
             });
-        }
+    },
+    notify: function () {
+        // Check if there is almost one change in the property list returning the message:
+        for (var c in this.changesList)
+            return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
     },
     registerChange: function (f, e) {
-        var fl = this.changesList[f] = this.changesList[f] || [];
-        if ($.isArray(e))
-            $.merge(fl, e);
-        else if (!(e in fl))
-            fl.push(e);
+        var fname = LC.getXPath(f);
+        var fl = this.changesList[fname] = this.changesList[fname] || [];
+        if ($.isArray(e)) {
+            for (var i = 0; i < e.length; i++)
+                this.registerChange(f, e[i]);
+            return;
+        }
+        var n = e;
+        if (typeof (e) !== 'string') {
+            n = e.name;
+            // Check if really there was a change checking default element value
+            if (e.value == e.defaultValue) {
+                // There was no change, no continue
+                // and maybe is a regression from a change and now the original value again
+                // try to remove from changes list doing registerSave
+                this.registerSave(f, [n]);
+                return;
+            }
+            $(e).addClass(this.defaults.changedElementClass);
+        }
+        if (!(n in fl))
+            fl.push(n);
+        $(f)
+        .addClass(this.defaults.changedFormClass)
+        .trigger('lcChangesNotificationChangeRegistered', [f, n, e]);
     },
     registerSave: function (f, els) {
-        if (!this.changesList[f]) return;
-        var prevEls = $.extend([], this.changesList[f]);
-        if (!els)
-            delete this.changesList[f];
-        else {
-            this.changesList[f] = $.grep(this.changesList[f], function (el) { return !(el in els); });
-            // If 'f' list is empty, remove from changesList
-            for (var el in this.changesList[f]) {
-                delete this.changesList[f];
-                break;
-            }
+        var fname = LC.getXPath(f);
+        if (!this.changesList[fname]) return;
+        var prevEls = $.extend([], this.changesList[fname]);
+        var r = true;
+        if (els) {
+            this.changesList[fname] = $.grep(this.changesList[fname], function (el) { return ($.inArray(el, els) == -1); });
+            // Don't remove 'f' list if is not empty
+            r = this.changesList[fname].length == 0;
         }
+        if (r) {
+            $(f).removeClass(this.defaults.changedFormClass);
+            delete this.changesList[fname];
+            // link elements from els to clean-up its classes
+            els = prevEls;
+        }
+        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els]);
+        var lchn = this;
+        if (els) $.each(els, function () { $('[name=' + this + ']').removeClass(lchn.defaults.changedElementClass) });
         return prevEls;
-    },
+    } /*,
     renewElements: function (oldElements, newForm) {
         var newElements = [];
         for (var i = 0; i < oldElements.length; i++) {
@@ -928,7 +963,18 @@ LC.ChangesNotification = {
                 newElements.push($('[name=' + n + ']').get(0));
         }
         return newElements;
+    }*/
+};
+LC.getXPath = function (element) {
+    if (element && element.id)
+        return '//*[@id="' + element.id + '"]';
+    var xpath = '';
+    for (; element && element.nodeType == 1; element = element.parentNode) {
+        var id = $(element.parentNode).children(element.tagName).index(element) + 1;
+        id > 1 ? (id = '[' + id + ']') : (id = '');
+        xpath = '/' + element.tagName.toLowerCase() + id + xpath;
     }
+    return xpath;
 };
 
 /*******************
@@ -1043,7 +1089,7 @@ function ajaxFormsCompleteHandler() {
 }
 function ajaxFormsSuccessHandler(data, text, jx) {
     var ctx = this;
-    if (!ctx.form) ctx.form = this;
+    if (!ctx.form) ctx.form = $(this);
     if (!ctx.box) ctx.box = ctx.form;
     ctx.autoUnblockLoading = true;
 
@@ -1122,7 +1168,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         var newForm = newhtml.find('form:eq(0)').get(0);
         LC.ChangesNotification.registerChange(
             newForm,
-            LC.ChangesNotification.renewElements(ctx.changedElements, newForm)
+            ctx.changedElements
         );
 
         // Check if the returned element is the ajax-box, if not, find
@@ -1148,8 +1194,11 @@ function ajaxFormsSuccessHandler(data, text, jx) {
     }
 }
 function ajaxErrorPopupHandler(jx, message, ex) {
-    // data not saved
-    gNotSavedData = true;
+    var ctx = this;
+    if (!ctx.form) ctx.form = $(this);
+    // Data not saved:
+    LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
+
     var m = message;
     var iframe = null;
     size = popupSize('large');
