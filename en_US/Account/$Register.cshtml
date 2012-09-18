@@ -110,7 +110,7 @@
         <div class="subh1">Do you want to provide services? <a href="@(UrlUtil.LangPath)ProviderSignUp/">Click here</a></div>
     </hgroup>
     <section>
-        <form method="post" action="@(UrlUtil.LangPath)Account/$Register/@(Request.Url.Query)" class="choice-option ajax" data-success-post-message="Register successfully!">
+        <form method="post" action="@(UrlUtil.LangPath)Account/$Register/@(Request.Url.Query)" class="choice-option ajax changes-notification-disabled" data-success-post-message="Register successfully!">
             @* If at least one validation error exists, notify the user *@
             @Html.ValidationSummary("Please correct the errors and try again.")
 

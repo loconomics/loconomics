@@ -911,11 +911,11 @@ LC.ChangesNotification = {
         });
         options = $.extend(this.defaults, options);
         if (options.genericChangeSupport)
-            $(document).on('change', 'form :input[name]', function () {
+            $(document).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
                 LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
             })
         if (options.genericSubmitSupport)
-            $(document).on('submit', 'form', function () {
+            $(document).on('submit', 'form:not(.changes-notification-disabled)', function () {
                 LC.ChangesNotification.registerSave(this);
             });
     },

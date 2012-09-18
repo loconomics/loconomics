@@ -94,7 +94,7 @@
     </hgroup>
     }
     <section>
-        <form class="choice-option ajax ajax-box login" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
+        <form class="choice-option ajax ajax-box login changes-notification-disabled" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
             @Html.ValidationSummary(null, true, null)
             <input type="hidden" name="Redirect" value="@redirect" />
