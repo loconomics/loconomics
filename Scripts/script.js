@@ -869,6 +869,23 @@ $(function () {
 
     /***** Don't lost data! warning message ******/
     LC.ChangesNotification.init();
+    // Adding change notification to tab-body divs
+    // (outside the LC.ChangesNotification class to leave it as generic and simple as possible)
+    $(document).on('lcChangesNotificationChangeRegistered', 'form', function () {
+        $(this).parents('.tab-body').addClass('has-changes')
+        .each(function () {
+            // Adding class to the menu item (tab title)
+            TabbedUX.getTabContext(this).menuitem.addClass('has-changes');
+        });
+    })
+    .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
+        if (full)
+            $(this).closest('.tab-body').removeClass('has-changes')
+            .each(function () {
+                // Adding class to the menu item (tab title)
+                TabbedUX.getTabContext(this).menuitem.removeClass('has-changes');
+            });
+    });
 });
 
 /*= ChangesNotification class
@@ -932,6 +949,7 @@ LC.ChangesNotification = {
             fl.push(n);
         $(f)
         .addClass(this.defaults.changedFormClass)
+        // pass data: form, element name changed, form element changed (this can be null)
         .trigger('lcChangesNotificationChangeRegistered', [f, n, e]);
     },
     registerSave: function (f, els) {
@@ -950,20 +968,12 @@ LC.ChangesNotification = {
             // link elements from els to clean-up its classes
             els = prevEls;
         }
-        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els]);
+        // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
+        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
         var lchn = this;
         if (els) $.each(els, function () { $('[name=' + this + ']').removeClass(lchn.defaults.changedElementClass) });
         return prevEls;
-    } /*,
-    renewElements: function (oldElements, newForm) {
-        var newElements = [];
-        for (var i = 0; i < oldElements.length; i++) {
-            var n = oldElements[i]['name'] || null;
-            if (n)
-                newElements.push($('[name=' + n + ']').get(0));
-        }
-        return newElements;
-    }*/
+    }
 };
 LC.getXPath = function (element) {
     if (element && element.id)
@@ -1166,10 +1176,11 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
         var newForm = newhtml.find('form:eq(0)').get(0);
-        LC.ChangesNotification.registerChange(
-            newForm,
-            ctx.changedElements
-        );
+        if (ctx.changedElements)
+            LC.ChangesNotification.registerChange(
+                newForm,
+                ctx.changedElements
+            );
 
         // Check if the returned element is the ajax-box, if not, find
         // the element in the newhtml:
