@@ -45,6 +45,7 @@
     // This is only for Post uploads
     var uploadedFileURI = "";
     var photoID = 0;
+    bool processed = false;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
@@ -56,84 +57,87 @@
             if (!Directory.Exists(Server.MapPath(virtualPath))) {
                 Directory.CreateDirectory(Server.MapPath(virtualPath));
             }
+            uploadedFileURI = virtualPath + fileName;
             byte[] content = new byte[Request.InputStream.Length];
             Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
-            File.WriteAllBytes(Server.MapPath(virtualPath + fileName), content);
+            File.WriteAllBytes(Server.MapPath(uploadedFileURI), content);
             Request.InputStream.Dispose();
         } catch(Exception ex) {
-            LcHelpers.ReturnJson(
-                new Dictionary<string, object>(){
-                    { "error", "There was an error: " + ex.Message }
-                }
-            );
+            ModelState.AddFormError("There was an error: " + ex.Message);
         }
         
         // File saved, register it on the database:
         photoID = RegisterUserPhoto(fileName, userId, positionId);
-        
-        LcHelpers.ReturnJson(
-            new Dictionary<string, object>(){
-                { "success", "File was saved" }
-                ,{ "fileURI", virtualPath + fileName }
-                ,{ "photoID", photoID }
-            }
-        );
-    } else {
-        if (IsPost){
+  
+        processed = true;
+    } else if (IsPost){
+
+        var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
             
-            var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];
+        if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
+            ModelState.AddFormError("Please, select an image");
+        }
             
-            if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
-                ModelState.AddFormError("Please, select an image");
-            }
+        if (ModelState.IsValid) {
+            System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
             
-            if (ModelState.IsValid) {
-                System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
+            string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
+            string virtualPath = UrlUtil.AppPath + filePathInApp;
             
-                string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
-                string virtualPath = UrlUtil.AppPath + filePathInApp;
-            
-                try{
-                    if (!Directory.Exists(Server.MapPath(virtualPath))) {
-                        Directory.CreateDirectory(Server.MapPath(virtualPath));
-                    }
-                    fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
-                    uploadedFileURI = virtualPath + fileinfo.Name;
-                    fileuploaded.InputStream.Dispose();
-                } catch(Exception ex) {
-                    if (ajaxEnabled) {
-                    // NOTE: IE problems with contentype=json, use JsonHelper directly:
-                    //LcHelpers.ReturnJson(
-                    Json.Write(
-                        new Dictionary<string, object>(){
-                            { "error", "There was an error: " + ex.Message }
-                        },
-                    Response.Output);
-                    Response.End();
-                    } else {
-                        ModelState.AddFormError("There was an error: " + ex.Message);
-                    }
+            try{
+                if (!Directory.Exists(Server.MapPath(virtualPath))) {
+                    Directory.CreateDirectory(Server.MapPath(virtualPath));
                 }
+                fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
+                uploadedFileURI = virtualPath + fileinfo.Name;
+                fileuploaded.InputStream.Dispose();
+            } catch(Exception ex) {
+                ModelState.AddFormError("There was an error: " + ex.Message);
+            }
                 
-                // File saved, register it on the database:
-                photoID = RegisterUserPhoto(fileinfo.Name, userId, positionId);
+            // File saved, register it on the database:
+            photoID = RegisterUserPhoto(fileinfo.Name, userId, positionId);
+        }
             
-                if (ajaxEnabled) {
-                    // NOTE: There is some issues with IE managing this result with contenttype=json
-                    // because of this, here we use directly the Json helper instead our helper
-                    //LcHelpers.ReturnJson(
-                    Json.Write(
-                        new Dictionary<string, object>(){
-                            { "success", "File was saved" }
-                            ,{ "fileURI", uploadedFileURI }
-                            ,{ "photoID", photoID }
-                        },
-                    Response.Output);
-                    Response.End();
-                }
+        processed = true;
+    } else {
+        // Manage normal GET
+    }
+    
+    if (processed) {
+        if (ModelState.IsValid) {
+            if (ajaxEnabled) {
+                // NOTE: There is some issues with IE managing this result with contenttype=json
+                // because of this, here we use directly the Json helper instead our helper
+                //LcHelpers.ReturnJson(
+                Json.Write(
+                    new Dictionary<string, object>(){
+                        { "success", "File was saved" }
+                        ,{ "fileURI", uploadedFileURI }
+                        ,{ "photoID", photoID }
+                    },
+                Response.Output);
+                Response.End();
+                
+               /*LcHelpers.ReturnJson(
+                    new Dictionary<string, object>(){
+                        { "success", "File was saved" }
+                        ,{ "fileURI", virtualPath + fileName }
+                        ,{ "photoID", photoID }
+                    }
+                );*/
             }
         } else {
-            // Manage normal GET
+            if (ajaxEnabled) {
+                // NOTE: IE problems with contentype=json, use JsonHelper directly:
+                //LcHelpers.ReturnJson(
+                Json.Write(
+                    new Dictionary<string, object>(){
+                        { "error", ModelState.Values.First() }
+                    },
+                    Response.Output);
+                Response.End();
+            }
         }
     }
 }

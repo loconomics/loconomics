@@ -32,8 +32,6 @@
         userId = 0;
         path = Server.MapPath(UrlUtil.AppPath + "img/userphotos/u0/avatar.png");
     }
-    //var fffff = File.ReadAllBytes(path);
-    //Response.OutputStream.Write(fffff, 0, fffff.Length);
     
     try{
         if (userId == 0){
@@ -41,7 +39,8 @@
         } else {
             // Transform image to Grayscale
             // Is inside a using block because ensure close the image ressources and the file
-            using (var img = ImageUtility.ConvertGrayscale(path)){ 
+            
+            using (var img = LcImaging.Resize(LcImaging.Grayscale(path), 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)){
                 // Telling to the browser that this is a JPG image
                 Response.ContentType = "image/jpg";
                 // Send the transformed image to the browser
