@@ -2359,9 +2359,9 @@ body form .changed {
    Modify as content requires.
    ========================================================================== */
    
-@media screen and (-webkit-max-device-pixel-ratio: 2),  /* Webkit-based browsers */
-    screen and (max--moz-device-pixel-ratio: 2),    /* Older Firefox browsers (prior to Firefox 16) */
-    screen and (max-resolution: 2dppx)  /* The standard way */
+@media screen and (-webkit-min-device-pixel-ratio: 2),  /* Webkit-based browsers */
+    screen and (min--moz-device-pixel-ratio: 2),    /* Older Firefox browsers (prior to Firefox 16) */
+    screen and (min-resolution: 2dppx)  /* The standard way */
 {
     background-image: url("../img/theme/logo-loconomics-header-2x.png");
     background-size: contain;
