@@ -70,7 +70,7 @@
         try{
             SaveAvatar(Request.InputStream, virtualPath);
         } catch(Exception ex) {
-            ModelState.AddFormError("There was an error: " + ex.Message);
+            ModelState.AddFormError(ex.Message);
         }
         
         // File saved, change the user preference at the database:
@@ -91,7 +91,7 @@
             try{
                 SaveAvatar(fileuploaded.InputStream, virtualPath);
             } catch(Exception ex) {
-                ModelState.AddFormError("There was an error: " + ex.Message);
+                ModelState.AddFormError(ex.Message);
             }
             
             // File saved, change the user preference at the database:

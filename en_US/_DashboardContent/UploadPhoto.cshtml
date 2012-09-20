@@ -36,6 +36,23 @@
             ", userId, positionId, fileName);
         }
     }
+    void SavePhoto(Stream photo, string virtualPath, string fileName){       
+        // Check folder or create
+        var folder = Server.MapPath(virtualPath);
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+                
+        // Save file on disk
+        byte[] content = new byte[photo.Length];
+        photo.Read(content, 0, (int)photo.Length);
+        File.WriteAllBytes(folder + fileName, content);
+        photo.Dispose();
+    }
+    string GetValidFileName(string fileName){
+        // Names starting with $ are considered special for us, no allow user to upload a file with that character as prefix:
+        return fileName.TrimStart('$');
+    }
 }
 @{
     LcHelpers.SecurePage();
@@ -47,23 +64,18 @@
     var photoID = 0;
     bool processed = false;
     
+    string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
+    string virtualPath = UrlUtil.AppPath + filePathInApp;
+    
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
-        string fileName = (string)Request["qqfile"];
-        string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
-        string virtualPath = UrlUtil.AppPath + filePathInApp;
+        string fileName = GetValidFileName((string)Request["qqfile"]);
 
         try{
-            if (!Directory.Exists(Server.MapPath(virtualPath))) {
-                Directory.CreateDirectory(Server.MapPath(virtualPath));
-            }
             uploadedFileURI = virtualPath + fileName;
-            byte[] content = new byte[Request.InputStream.Length];
-            Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
-            File.WriteAllBytes(Server.MapPath(uploadedFileURI), content);
-            Request.InputStream.Dispose();
+            SavePhoto(Request.InputStream, virtualPath, fileName);
         } catch(Exception ex) {
-            ModelState.AddFormError("There was an error: " + ex.Message);
+            ModelState.AddFormError(ex.Message);
         }
         
         // File saved, register it on the database:
@@ -79,24 +91,17 @@
         }
             
         if (ModelState.IsValid) {
-            System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
-            
-            string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
-            string virtualPath = UrlUtil.AppPath + filePathInApp;
+            string fileName = GetValidFileName(fileuploaded.FileName);
             
             try{
-                if (!Directory.Exists(Server.MapPath(virtualPath))) {
-                    Directory.CreateDirectory(Server.MapPath(virtualPath));
-                }
-                fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
-                uploadedFileURI = virtualPath + fileinfo.Name;
-                fileuploaded.InputStream.Dispose();
+                uploadedFileURI = virtualPath + fileName;
+                SavePhoto(fileuploaded.InputStream, virtualPath, fileName);
             } catch(Exception ex) {
-                ModelState.AddFormError("There was an error: " + ex.Message);
+                ModelState.AddFormError(ex.Message);
             }
                 
             // File saved, register it on the database:
-            photoID = RegisterUserPhoto(fileinfo.Name, userId, positionId);
+            photoID = RegisterUserPhoto(fileName, userId, positionId);
         }
             
         processed = true;
@@ -196,7 +201,7 @@
             <div id="change-photo-file-uploader">
                 @if(!ajaxEnabled) {
                 <form id="uploadPhotoForm" action="@(UrlUtil.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
-                    @Html.ValidationSummary()
+                    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                     <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
                     <button class="button main-action" type="submit">Upload!</button>
                 </form>
