@@ -23,21 +23,30 @@
         userId = 0;
     }
     
+    bool imageAdapted = false;
+    
+    if (userPhoto == "$avatar") {
+        // Standard name of pre-adapted image, implementation uncomplete but basic, just
+        // serve ever the profile adapted photo for now instead the big colored original:
+        userPhoto = "$avatar-176x184-gray.jpg";
+        imageAdapted = true;
+    }
+    
     string userFolder = "img/userphotos/u" + userId.ToString() + "/";
 
     // Retrieving image path
     string path = HttpContext.Current.Request.MapPath(UrlUtil.AppPath + userFolder + userPhoto);
 
     if (!System.IO.File.Exists(path)){
-        userId = 0;
+        imageAdapted = true;
         path = Server.MapPath(UrlUtil.AppPath + "img/userphotos/u0/avatar.png");
     }
     
     try{
-        if (userId == 0){
+        if (imageAdapted){
             new WebImage(path).Write();
         } else {
-            // Transform image to Grayscale
+            // Transform image to Grayscale and profile photo size to avoid big images:
             // Is inside a using block because ensure close the image ressources and the file
             
             using (var img = LcImaging.Resize(LcImaging.Grayscale(path), 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)){

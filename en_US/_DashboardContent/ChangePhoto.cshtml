@@ -1,33 +1,49 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @functions{
-    void SaveUserPhotoName(string fileName, int userId){
+    void UpdateDb(int userId, bool hasPhoto){
         using (var db = Database.Open("sqlloco")){
-            // First, get current photo name at databse
-            var photo = db.QueryValue(@"
-                SELECT  TOP 1 photo
-                FROM    users
-                WHERE   UserID=@0
-            ", userId);
+            // We set the name, now ever fixed as '$avatar', without extension, to allow TestAlertPhoto validate this,
+            // no more because is not need.
+            db.Execute(@"
+                UPDATE  users
+                SET     photo=@0
+                WHERE   UserID=@1
+                -- Check Alerts:
+                EXEC TestAlertPhoto @1
+            ", hasPhoto ? "$avatar" : null, userId);
+        }
+    }
+    void SaveAvatar(Stream photo, string virtualPath){
+        var avatarNamePrefix = "$avatar";
+        
+        // Check folder or create
+        var folder = Server.MapPath(virtualPath);
+        if (!Directory.Exists(folder)) {
+            Directory.CreateDirectory(folder);
+        }
+        
+        // Remove previous photos, original and sized/adapted, all start with avatarNamePrefix
+        // File.Delete doesn't allow wildcards, find and delete each one
+        foreach (var f in Directory.GetFiles(folder, avatarNamePrefix + "*", SearchOption.TopDirectoryOnly))
+            File.Delete(f);
+
+        // Save original photo as avatarNamePrefix in jpg format
+        using (var img = System.Drawing.Image.FromStream(photo)) {
+            img.Save(folder + avatarNamePrefix + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            /*byte[] content = new byte[photo.Length];
+            Request.InputStream.Read(content, 0, (int)photo.Length);
+            File.WriteAllBytes(folder + avatarNamePrefix, content);*/
+            photo.Dispose();
+        
+            // Save image with profile size (-176x184) and grayscale (-gray)
+            using (var modImg = LcImaging.Resize(LcImaging.Grayscale(img), 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+                modImg.Save(folder + avatarNamePrefix + "-176x184-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
             
-            // If current photo is different than new photo filename,
-            if (!(photo is System.DBNull) && (string)photo != fileName) {
-                // we remove current photo file
-                string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/" + photo;
-                try{
-                    File.Delete(Server.MapPath(virtualPath));
-                }catch{}
-            }
-            if (photo is System.DBNull || (string)photo != fileName) {
-                // we update the new photo name
-                db.Execute(@"
-                    UPDATE  users
-                    SET     photo=@0
-                    WHERE   UserID=@1
-                    -- Check Alerts:
-                    EXEC TestAlertPhoto @1
-                ", fileName, userId);
-            }
+            // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
+
+            // NOTE Future support for hi-res user images creation goes here, resizing original input image with '-2x' size. Other problem is how apply it from css media query..
         }
     }
 }
@@ -36,12 +52,13 @@
     var userId = WebSecurity.CurrentUserId;
     var ajaxEnabled = true;
     bool processed = false;
+    string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
     
     // Delete file support:
     if (Request["delete"].AsBool()) {
         // We don't need the upload staff here, simply update database removing all file, both
         // managed by next common function:
-        SaveUserPhotoName(null, userId);
+        UpdateDb(userId, false);
         
         LcHelpers.ReturnJsonResult(0, "Photo was removed");
     }
@@ -49,22 +66,15 @@
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
         string fileName = (string)Request["qqfile"];
-        string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
-
+        
         try{
-            if (!Directory.Exists(Server.MapPath(virtualPath))) {
-                Directory.CreateDirectory(Server.MapPath(virtualPath));
-            }
-            byte[] content = new byte[Request.InputStream.Length];
-            Request.InputStream.Read(content, 0, (int)Request.InputStream.Length);
-            File.WriteAllBytes(Server.MapPath(virtualPath + fileName), content);
-            Request.InputStream.Dispose();
+            SaveAvatar(Request.InputStream, virtualPath);
         } catch(Exception ex) {
             ModelState.AddFormError("There was an error: " + ex.Message);
         }
         
-        // File saved, change the user preference at the database and remove previous photo:
-        SaveUserPhotoName(fileName, userId);
+        // File saved, change the user preference at the database:
+        UpdateDb(userId, true);
         
         processed = true;
     } else if (IsPost){
@@ -74,24 +84,18 @@
         if (fileuploaded == null || String.IsNullOrEmpty(fileuploaded.FileName)) {
             ModelState.AddFormError("Please, select an image");
         }
-            
+
         if (ModelState.IsValid) {
             System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
             
-            string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
-            
             try{
-                if (!Directory.Exists(Server.MapPath(virtualPath))) {
-                    Directory.CreateDirectory(Server.MapPath(virtualPath));
-                }
-                fileuploaded.SaveAs(Server.MapPath(virtualPath + fileinfo.Name));
-                fileuploaded.InputStream.Dispose();
+                SaveAvatar(fileuploaded.InputStream, virtualPath);
             } catch(Exception ex) {
                 ModelState.AddFormError("There was an error: " + ex.Message);
             }
             
             // File saved, change the user preference at the database:
-            SaveUserPhotoName(fileinfo.Name, userId);
+            UpdateDb(userId, true);
         }
         
         processed = true;
