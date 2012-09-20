@@ -34,10 +34,10 @@
     }
     Validation.RequireField("firstname", "You must specify your first name.");
     Validation.RequireField("lastname", "You must specify your last name.");
-    Validation.RequireField("termsofuse", "You must agree the terms of use.");
+    Validation.RequireField("termsofuse", "You must agree to the terms of use and privacy policy.");
     Validation.RequireField("zipcode", "You must enter your Zip code.");
     // Position selection:
-    Validation.RequireField("position", "You must select almost one position.");
+    Validation.RequireField("position", "You must add at least one position.");
         
     /** Set Form input values **/
     email = Request.Form["email"];
@@ -317,7 +317,7 @@
                             </div>
                         </div>
                         <div class="positions-list">
-                            <h3>Positions</h3>
+                            <h3>You can add up to five positions</h3>
                             <ul>
                                 <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
                                 @if (IsPost && positions != null)
@@ -329,7 +329,7 @@
                                 }
                             </ul>
                             <div class="lc-ressources">
-                                <span class="positions-required">You must select almost one position</span>
+                                <span class="positions-required">You must select at least one position</span>
                             </div>
                         </div>
                     </fieldset>
