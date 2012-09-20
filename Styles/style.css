@@ -2358,14 +2358,25 @@ body form .changed {
    These override the primary ('mobile first') styles
    Modify as content requires.
    ========================================================================== */
+
+/* Some default styles affected by media queries when apply */
+.image-2dppx {
+    display: none !important;
+}
    
 @media screen and (-webkit-min-device-pixel-ratio: 1.2),  /* Webkit-based browsers */
     screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
     screen and (min-resolution: 1.2dppx)  /* The standard way */
 {
     header #logo.replace {
-        background-image: url("../img/theme/logo-loconomics-header-2x.png");
+        background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: contain;
+    }
+    .image-2dppx {
+        display: inherit !important;
+    }
+    .image-1dppx {
+        display: none !important;
     }
 }
 

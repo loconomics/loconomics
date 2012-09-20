@@ -146,12 +146,18 @@ form.report-unauthorized-use textarea {
 #profileHeader p{
     color: #999;
 }
-#profileHeader .profile-pic {
+#profile-avatar {
     float: left;
     margin: 0 20px 0 0;
-    width: 186px;
-    height: 186px;
-    outline: 1px solid #461864;
+}
+#profile-avatar .avatar {
+    height: 184px;
+    width: 176px;
+    border: 1px solid #461864;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
 #profileHeader > .verifications-list {
     font-weight: bold;

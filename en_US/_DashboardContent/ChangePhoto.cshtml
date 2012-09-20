@@ -40,10 +40,12 @@
             using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
                 modImg.Save(folder + avatarNamePrefix + "-176x184-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
+            // Same as previous but for hi-res 2x devices: (real pixel sizes is double, 352x368, but preserve the original size name to recognize it better adding the @2x suffix
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 352, 368, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
+                modImg.Save(folder + avatarNamePrefix + "-176x184-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
             
             // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
-
-            // NOTE Future support for hi-res user images creation goes here, resizing original input image with '-2x' size. Other problem is how apply it from css media query..
         }
     }
 }

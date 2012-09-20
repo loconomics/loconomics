@@ -75,7 +75,10 @@
     <div id="main" class="tabbed folders">
 
 	    <div id="profileHeader" class="clearfix">
-            <img id="avatar" class="profile-pic" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"])" alt="User Photo" />
+            <div id="profile-avatar">
+                <img class="avatar image-1dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"] + "/")" alt="User Photo" />
+                <img class="avatar image-2dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"] + "/2x/")" alt="User Photo" />
+            </div>
             <h1 class="profile-name">@printName(u)</h1>
 		    
 		    <p class="profile-desc">
