@@ -631,11 +631,12 @@ function openChangeBookingStateForm(bookingID, button) {
 /* User Photo */
 function reloadUserPhoto() {
     // Force image reload, in the parent document! (this is an iframe)
-    var av = document.getElementById('avatar');
-    var src = av.getAttribute('src');
-    // avoid cache this time
-    src = src + "?v" + new Date();
-    av.setAttribute('src', src);
+    $('#dashboard-avatar > .avatar').each(function () {
+        var src = this.getAttribute('src');
+        // avoid cache this time
+        src = src + "?v" + new Date();
+        this.setAttribute('src', src);
+    });
 }
 function deleteUserPhoto() {
     $.blockUI(loadingBlock);
