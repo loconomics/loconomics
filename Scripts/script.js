@@ -880,7 +880,7 @@ $(function () {
     })
     .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
         if (full)
-            $(this).closest('.tab-body').removeClass('has-changes')
+            $(this).parents('.tab-body').removeClass('has-changes')
             .each(function () {
                 // Adding class to the menu item (tab title)
                 TabbedUX.getTabContext(this).menuitem.removeClass('has-changes');
