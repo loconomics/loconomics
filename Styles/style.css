@@ -2327,7 +2327,8 @@ body form .changed {
     -webkit-box-shadow: 0 0 1px 0 #FF8300;
 }
 /* .tabbed .tab-body.has-changes */
-.tabbed ul.tabs li.has-changes:before {
+html.notify-changes .tabbed ul.tabs li.has-changes:before,
+.tabbed ul.tabs li.has-changes.notify-changes:before {
     background-color: #FF8300;
     border-radius: 10px 0 0 0;
     box-shadow: 2px 0 2px 0 #FF8300;
@@ -2338,8 +2339,10 @@ body form .changed {
     position: absolute;
     top: 0;
     width: 6px;
+    cursor: pointer;
 }
-.tabbed.buttons ul.tabs li.has-changes:before {
+html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
+.tabbed.buttons ul.tabs li.has-changes.notify-changes:before {
     background-color: #FF8300;
     border-radius: 22px 0 0 22px;
     box-shadow: 2px 0 2px 0 #FF8300;
@@ -2350,6 +2353,7 @@ body form .changed {
     position: absolute;
     top: 0;
     width: 10px;
+    cursor: pointer;
 }
 
 

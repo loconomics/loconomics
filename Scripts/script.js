@@ -875,16 +875,26 @@ $(function () {
         $(this).parents('.tab-body').addClass('has-changes')
         .each(function () {
             // Adding class to the menu item (tab title)
-            TabbedUX.getTabContext(this).menuitem.addClass('has-changes');
+            TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
+                .attr('title', $('#lcres-changes-not-saved').text());
         });
     })
     .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
         if (full)
-            $(this).parents('.tab-body').removeClass('has-changes')
+            $(this).parents('.tab-body:not(:has(form.has-changes))').removeClass('has-changes')
             .each(function () {
-                // Adding class to the menu item (tab title)
-                TabbedUX.getTabContext(this).menuitem.removeClass('has-changes');
+                // Removing class from the menu item (tab title)
+                TabbedUX.getTabContext(this).menuitem.removeClass('has-changes')
+                    .attr('title', null);
             });
+    });
+    // To avoid user be notified of changes all time with tab marks, we added a 'notify' class
+    // on tabs when a change of tab happens
+    $('.tab-body').on('tabUnfocused', function () {
+        TabbedUX.getTabContext(this).menuitem.addClass('notify-changes has-tooltip');
+    })
+    .on('tabFocused', function () {
+        TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes has-tooltip');
     });
 });
 
@@ -902,7 +912,8 @@ LC.ChangesNotification = {
         genericChangeSupport: true,
         genericSubmitSupport: false,
         changedFormClass: 'has-changes',
-        changedElementClass: 'changed'
+        changedElementClass: 'changed',
+        notifyClass: 'notify-changes'
     },
     init: function (options) {
         // User notification to prevent lost changes done
@@ -920,6 +931,8 @@ LC.ChangesNotification = {
             });
     },
     notify: function () {
+        // Add notification class to the document
+        $('html').addClass(this.defaults.notifyClass);
         // Check if there is almost one change in the property list returning the message:
         for (var c in this.changesList)
             return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
@@ -1369,13 +1382,13 @@ function configureTooltip() {
             var d = (l.data('description') || '').replace(/\s/g, ' ');
             if (d)
                 c = '<h4>' + h + '</h4><p>' + d + '</p>';
-            /*else {
+            else {
                 // Only create tooltip content if element content is different
                 // from title value, or element content is not full visible
                 if ($.trim(l.html()) != h ||
                     l.outerWidth() < l[0].scrollWidth)
                     c = h;
-            }*/
+            }
             if (c) {
                 l.data('tooltip-content', c);
                 l.attr('title', '');
@@ -1411,8 +1424,8 @@ function configureTooltip() {
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
     }
-    $('body').on('mousemove focusin', '[title][data-description]', showTooltip)
-    .on('mouseleave focusout', '[title]', hideTooltip)
+    $('body').on('mousemove focusin', '[title][data-description!=""], [title].has-tooltip', showTooltip)
+    .on('mouseleave focusout', '[title][data-description!=""], [title].has-tooltip', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
 function smoothBoxBlock(contentBox, blocked, addclass, options) {

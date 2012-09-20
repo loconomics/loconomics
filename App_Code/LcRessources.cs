@@ -31,6 +31,7 @@ public static class LcRessources
         ,{ "postal-code-validation-error", "Postal Code is not valid" }
         ,{ "quit-without-save", "You will lost changes if continue, are you sure?" }
         ,{ "an-error", "There was an error: {0}" }
+        ,{ "changes-not-saved", "There are changes not saved" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))
