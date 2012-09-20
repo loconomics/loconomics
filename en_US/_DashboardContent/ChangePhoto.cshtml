@@ -37,7 +37,7 @@
             photo.Dispose();
         
             // Save image with profile size (-176x184) and grayscale (-gray)
-            using (var modImg = LcImaging.Resize(LcImaging.Grayscale(img), 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+            using (var modImg = LcImaging.Grayscale(LcImaging.Resize(img, 176, 184, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center))) {
                 modImg.Save(folder + avatarNamePrefix + "-176x184-gray.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             
@@ -128,7 +128,7 @@
                 //LcHelpers.ReturnJson(
                 Json.Write(
                     new Dictionary<string, object>(){
-                        { "error", ModelState.Values.First() }
+                        { "error", LcRessources.GetText("an-error", String.Join("; ", ModelState.Values.First().Errors)) }
                     },
                     Response.Output);
                 Response.End();

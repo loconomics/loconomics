@@ -133,7 +133,7 @@
                 //LcHelpers.ReturnJson(
                 Json.Write(
                     new Dictionary<string, object>(){
-                        { "error", ModelState.Values.First() }
+                        { "error", LcRessources.GetText("an-error", String.Join("; ", ModelState.Values.First().Errors)) }
                     },
                     Response.Output);
                 Response.End();

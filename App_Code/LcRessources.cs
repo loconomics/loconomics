@@ -30,11 +30,15 @@ public static class LcRessources
 
         ,{ "postal-code-validation-error", "Postal Code is not valid" }
         ,{ "quit-without-save", "You will lost changes if continue, are you sure?" }
+        ,{ "an-error", "There was an error: {0}" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))
             return textress[key];
         return key;
+    }
+    public static string GetText(string key, params object[] values) {
+        return String.Format(GetText(key), values);
     }
     public static string RequiredField(string fieldLabel) {
         var l = fieldLabel != null ? fieldLabel.Length > 1 ? 
