@@ -689,7 +689,8 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     var ctx = this;
     if (!ctx.form) ctx.form = $(this);
     // Data not saved:
-    LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
+    if (ctx.changedElements)
+        LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
 
     var m = message;
     var iframe = null;

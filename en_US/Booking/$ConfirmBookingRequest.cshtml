@@ -118,19 +118,16 @@
             var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
             if (result.Error == 0) {
-                if (Request.IsAjaxRequest()) {
-                    // A redirect is performed to return the BookingDetails html to the user
-                    /*Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), true);*/
-                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
-                        "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ), false);
-                } else {
-                    Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ), false);
-                }
                 // Send message
                 LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID, true);
-                Response.End();
+                
+                if (Request.IsAjaxRequest()) {
+                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                        "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
+                } else {
+                    Response.Redirect(UrlUtil.LangPath + String.Format(
+                        "Dashboard/Bookings/$!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
+                }
             } else {
                 if (Request.IsAjaxRequest()) {
                     // Return JSON result:

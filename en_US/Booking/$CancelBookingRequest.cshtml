@@ -22,17 +22,16 @@
             var result = LcData.Booking.InvalidateBookingRequest(brID, 4); // 4:Cancelled
 
             if (result.Error == 0) {
-                if (Request.IsAjaxRequest()){
-                    // An ajax redirect is performed to return the updated BookingRequestDetails html to the user
-                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
-                        "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ), false);
-                } else {
-                    Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}", brID), false);
-                }
                 // Send message
                 LcMessaging.SendBookingRequestDenegation(brID, false);
-                Response.End();
+                
+                if (Request.IsAjaxRequest()){
+                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                        "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ));
+                } else {
+                    Response.Redirect(UrlUtil.LangPath + String.Format(
+                        "Dashboard/Bookings/$!BookingRequest-{0}", brID));
+                }
             } else {
                 if (Request.IsAjaxRequest()){
                     // Return JSON result:
