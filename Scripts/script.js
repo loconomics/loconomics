@@ -893,9 +893,10 @@ function configureTooltip() {
 function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
     options = $.extend({
-        closable: false
+        closable: false,
+        center: false
     }, options);
-    
+
     contentBox = $(contentBox);
     blocked = $(blocked);
     var bID = blocked.data('smooth-box-block-id');
@@ -936,10 +937,15 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     box.css('position', 'absolute');
     if (!blocked.css('position') || blocked.css('position') == 'static')
         blocked.css('position', 'relative');
-    offs = blocked.position();
+    //offs = blocked.position();
     box.css('top', 0);
     box.css('left', 0);
     box.show();
+    if (options.center) {
+        boxc.css('position', 'absolute');
+        boxc.css('top', box.outerHeight(true) / 2 - boxc.outerHeight(true) / 2);
+        boxc.css('left', box.outerWidth(true) / 2 - boxc.outerWidth(true) / 2);
+    }
     contentBox.show();
     return box;
 }
@@ -1513,9 +1519,15 @@ $(function () {
     // To avoid user be notified of changes all time with tab marks, we added a 'notify' class
     // on tabs when a change of tab happens
     $('.tab-body').on('tabUnfocused', function () {
-        TabbedUX.getTabContext(this).menuitem.addClass('notify-changes has-tooltip');
+        var mi = TabbedUX.getTabContext(this).menuitem;
+        if (mi.is('.has-changes')) {
+            mi.addClass('notify-changes'); //has-tooltip
+            // Show notification popup
+            //$.blockUI(infoBlock($('#lcres-changes-not-saved').text()));
+            smoothBoxBlock($('#lcres-changes-not-saved').clone(), $('body'), null, { closable: true, center: true });
+        }
     })
     .on('tabFocused', function () {
-        TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes has-tooltip');
+        TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes'); //has-tooltip
     });
 });

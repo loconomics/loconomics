@@ -1942,7 +1942,7 @@ html.boxshadow #loginBox .field-validation-error{
 
 .smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
-    z-index: 1;
+    z-index: 8000;
 }
 .smooth-box-block-element {
     background: white;
