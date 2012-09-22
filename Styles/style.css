@@ -2326,7 +2326,7 @@ body form .changed {
     -o-box-shadow: 0 0 1px 0 #FF8300;
     -webkit-box-shadow: 0 0 1px 0 #FF8300;
 }
-/* .tabbed .tab-body.has-changes */
+/* .tabbed .tab-body.has-changes *//*
 html.notify-changes .tabbed ul.tabs li.has-changes:before,
 .tabbed ul.tabs li.has-changes.notify-changes:before {
     background-color: #FF8300;
@@ -2354,7 +2354,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     top: 0;
     width: 10px;
     cursor: pointer;
-}
+}*/
 
 
 /* ==|== media queries ======================================================

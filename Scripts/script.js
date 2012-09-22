@@ -360,6 +360,628 @@ var TabbedUX = {
     }
 };
 
+/*= ChangesNotification class
+ * to notify user about changes in forms,
+ * tabs, that will be lost if go away from
+ * the page. It knows when a form is submitted
+ * and saved to disable notification, and gives
+ * methods for other scripts to notify changes
+ * or saving.
+ */
+LC.ChangesNotification = {
+    changesList: {},
+    defaults: {
+        genericChangeSupport: true,
+        genericSubmitSupport: false,
+        changedFormClass: 'has-changes',
+        changedElementClass: 'changed',
+        notifyClass: 'notify-changes'
+    },
+    init: function (options) {
+        // User notification to prevent lost changes done
+        $(window).on('beforeunload', function () {
+            return LC.ChangesNotification.notify();
+        });
+        options = $.extend(this.defaults, options);
+        if (options.genericChangeSupport)
+            $(document).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
+                LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
+            })
+        if (options.genericSubmitSupport)
+            $(document).on('submit', 'form:not(.changes-notification-disabled)', function () {
+                LC.ChangesNotification.registerSave(this);
+            });
+    },
+    notify: function () {
+        // Add notification class to the document
+        $('html').addClass(this.defaults.notifyClass);
+        // Check if there is almost one change in the property list returning the message:
+        for (var c in this.changesList)
+            return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
+    },
+    registerChange: function (f, e) {
+        var fname = LC.getXPath(f);
+        var fl = this.changesList[fname] = this.changesList[fname] || [];
+        if ($.isArray(e)) {
+            for (var i = 0; i < e.length; i++)
+                this.registerChange(f, e[i]);
+            return;
+        }
+        var n = e;
+        if (typeof (e) !== 'string') {
+            n = e.name;
+            // Check if really there was a change checking default element value
+            if (typeof (e.defaultValue) != 'undefined'
+                 && typeof (e.checked) == 'undefined'
+                 && typeof (e.selected) == 'undefined'
+                 && e.value == e.defaultValue) {
+                // There was no change, no continue
+                // and maybe is a regression from a change and now the original value again
+                // try to remove from changes list doing registerSave
+                this.registerSave(f, [n]);
+                return;
+            }
+            $(e).addClass(this.defaults.changedElementClass);
+        }
+        if (!(n in fl))
+            fl.push(n);
+        $(f)
+        .addClass(this.defaults.changedFormClass)
+        // pass data: form, element name changed, form element changed (this can be null)
+        .trigger('lcChangesNotificationChangeRegistered', [f, n, e]);
+    },
+    registerSave: function (f, els) {
+        var fname = LC.getXPath(f);
+        if (!this.changesList[fname]) return;
+        var prevEls = $.extend([], this.changesList[fname]);
+        var r = true;
+        if (els) {
+            this.changesList[fname] = $.grep(this.changesList[fname], function (el) { return ($.inArray(el, els) == -1); });
+            // Don't remove 'f' list if is not empty
+            r = this.changesList[fname].length == 0;
+        }
+        if (r) {
+            $(f).removeClass(this.defaults.changedFormClass);
+            delete this.changesList[fname];
+            // link elements from els to clean-up its classes
+            els = prevEls;
+        }
+        // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
+        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
+        var lchn = this;
+        if (els) $.each(els, function () { $('[name=' + this + ']').removeClass(lchn.defaults.changedElementClass) });
+        return prevEls;
+    }
+};
+LC.getXPath = function (element) {
+    if (element && element.id)
+        return '//*[@id="' + element.id + '"]';
+    var xpath = '';
+    for (; element && element.nodeType == 1; element = element.parentNode) {
+        var id = $(element.parentNode).children(element.tagName).index(element) + 1;
+        id > 1 ? (id = '[' + id + ']') : (id = '');
+        xpath = '/' + element.tagName.toLowerCase() + id + xpath;
+    }
+    return xpath;
+};
+
+/*******************
+* Popup related 
+* functions
+*/
+function popupSize(size) {
+    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
+    return {
+        width: Math.round($(window).width() * s),
+        height: Math.round($(window).height() * s),
+        sizeFactor: s
+    }
+}
+function popupStyle(size) {
+    return {
+        cursor: 'default',
+        width: size.width + 'px',
+        left: Math.round(($(window).width() - size.width) / 2) - 30 + 'px',
+        height: size.height + 'px',
+        top: Math.round(($(window).height() - size.height) / 2) - 30 + 'px',
+        padding: '25px',
+        overflow: 'auto',
+        border: '5px solid #b5e1e2',
+        '-moz-border-radius': '12px',
+        '-webkit-border-radius': '12px',
+        'border-radius': '12px',
+        '-moz-background-clip': 'padding',
+        '-webkit-background-clip': 'padding-box',
+        'background-clip': 'padding-box'
+    };
+}
+function popup(url, size, complete, loadingText, options){
+    // Native popup
+    //window.open(url);
+    
+    // Load options overwriting defaults
+    options = $.extend({
+        closable: {
+            onLoad: false,
+            afterLoad: true,
+            onError: true
+        }
+    }, options);
+
+    // Smart popup
+    loadingText = loadingText || '';
+    var swh;
+    if (size && size.width)
+        swh = size;
+    else
+        swh = popupSize(size);        
+    
+    $('div.blockUI.blockMsg.blockPage').addClass('fancy');
+    $.blockUI({
+       message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
+       '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
+       centerY: false,
+       css: popupStyle(swh),
+       overlayCSS: { cursor: 'default' }
+    });
+
+    // Loading Url with Ajax and place content inside the blocked-box
+    $.ajax({ url: url,
+        success: function (data) {
+            // Add close button if requires it or empty message content to append then more
+            $('.blockMsg').html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
+
+            if (typeof (data) === 'object') {
+                if (data.Code && data.Code == 2) {
+                    $.unblockUI();
+                    popup(data.Result, { width: 410, height: 320 });
+                } else {
+                    // Unexpected code, show result
+                    $('.blockMsg').append(data.Result);
+                }
+            } else {
+                // Page content got, paste into the popup if is partial html (url starts with$)
+                if (/((^\$)|(\/\$))/.test(url)) {
+                    $('.blockMsg').append(data);
+                } else {
+                    // Else, if url is a full html page (normal page), put content into an iframe
+                    var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
+                    // When the iframe is ready
+                    var iframeloaded = false;
+                    iframe.onload = function () {
+                        // Using iframeloaded to avoid infinite loops
+                        if (!iframeloaded) {
+                            iframeloaded = true;
+                            injectIframeHtml(iframe, data);
+                        }
+                    };
+                    // replace blocking element content (the loading) with the iframe:
+                    $('.blockMsg').append(iframe);
+                }
+            }
+        }, error: function (j, t, ex) {
+            $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div>Page not found</div>');
+            if (console && console.info) console.info("Popup-ajax error: " + ex);
+        }, complete: complete
+    });
+
+    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
+}
+function ajaxFormsCompleteHandler() {
+    // Disable loading
+    clearTimeout(this.loadingtimer);
+    // Unblock
+    if (this.autoUnblockLoading) {
+        this.box.unblock();
+    }
+}
+function ajaxFormsSuccessHandler(data, text, jx) {
+    var ctx = this;
+    if (!ctx.form) ctx.form = $(this);
+    if (!ctx.box) ctx.box = ctx.form;
+    ctx.autoUnblockLoading = true;
+
+    // If is a JSON result:
+    if (typeof (data) === 'object') {
+        function showSuccessMessage(message) {
+            // Unblock loading:
+            ctx.box.unblock();
+            // Block with message:
+            var message = message || ctx.form.data('success-post-message') || 'Done!';
+            ctx.box.block(infoBlock(message, {
+                css: popupStyle(popupSize('small'))
+            }))
+            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); return false; });
+            // Do not unblock in complete function!
+            ctx.autoUnblockLoading = false;
+
+            // Clean previous validation errors
+            setValidationSummaryAsValid(ctx.box);
+        }
+        if (data.Code == 0) {
+            // Special Code 0: general success code, show message saying that 'all was fine'
+            showSuccessMessage(data.Result);
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        // Special Code 1: do a redirect
+        } else if (data.Code == 1) {
+            lcRedirectTo(data.Result);
+        } else if (data.Code == 2) {
+            // Special Code 2: show login popup (with the given url at data.Result)
+            ctx.box.unblock();
+            popup(data.Result, { width: 410, height: 320 });
+        } else if (data.Code == 3) {
+            // Special Code 3: reload current page content to the given url at data.Result)
+            // Note: to reload same url page content, is better return the html directly from
+            // this ajax server request.
+            //container.unblock(); is blocked and unblocked againg by the reload method:
+            ctx.autoUnblockLoading = false;
+            ctx.box.reload(data.Result);
+        } else if (data.Code == 4) {
+            // Show SuccessMessage, attaching and event handler to go to RedirectURL
+            ctx.box.on('ajaxSuccessPostMessageClosed', function () {
+                lcRedirectTo(data.Result.RedirectURL);
+            });
+            showSuccessMessage(data.Result.SuccessMessage);
+        } else if (data.Code > 100) {
+            // User Code: trigger custom event to manage results:
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        } else { // data.Code < 0
+            // There is an error code.
+
+            // Data not saved:
+            LC.ChangesNotification.registerChange(ctx.form.get(0), ctx.changedElements);
+
+            // Unblock loading:
+            ctx.box.unblock();
+            // Block with message:
+            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+            ctx.box.block({
+                message: 'Error: ' + message,
+                css: popupStyle(popupSize('small'))
+            })
+            .on('click', '.close-popup', function () { ctx.box.unblock(); return false; });
+
+            // Do not unblock in complete function!
+            ctx.autoUnblockLoading = false;
+        }
+    } else {
+        // Post 'maybe' was wrong, html was returned to replace current 
+        // form container: the ajax-box.
+
+        var newhtml = $(data);
+        // Reading original scripts tags to be able to execute later
+        var responseScript = newhtml.filter("script");
+
+        // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
+        var newForm = newhtml.find('form:eq(0)').get(0);
+        if (ctx.changedElements)
+            LC.ChangesNotification.registerChange(
+                newForm,
+                ctx.changedElements
+            );
+
+        // Check if the returned element is the ajax-box, if not, find
+        // the element in the newhtml:
+        var jb = newhtml;
+        if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
+            jb = newhtml.find('.ajax-box:eq(0)');
+        if (!jb || jb.length == 0) {
+            // There is no ajax-box, use all element returned:
+            jb = newhtml;
+        }
+        if (ctx.boxIsContainer)
+            // jb is content of the box container:
+            ctx.box.html(jb);
+        else
+            // box is content that must be replaced by the new content:
+            ctx.box.replaceWith(jb);
+
+        // Executing scripts returned by the page
+        jQuery.each(responseScript, function (idx, val) { eval(val.text); });
+
+        newhtml.trigger('ajaxFormReturnedHtml');
+    }
+}
+function ajaxErrorPopupHandler(jx, message, ex) {
+    var ctx = this;
+    if (!ctx.form) ctx.form = $(this);
+    // Data not saved:
+    LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
+
+    var m = message;
+    var iframe = null;
+    size = popupSize('large');
+    if (m == 'error') {
+        iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 34) + '"></iframe>').get(0);
+        var iframeloaded = false;
+        iframe.onload = function () {
+            // Using iframeloaded to avoid infinite loops
+            if (!iframeloaded) {
+                iframeloaded = true;
+                injectIframeHtml(iframe, jx.responseText);
+            }
+        };
+        m = null;
+    }  else
+        m = m + "; " + ex;
+
+    // Block all window, not only current element
+    $.blockUI(errorBlock(m, null, popupStyle(size)));
+    if (iframe)
+        $('.blockMsg').append(iframe);
+    $('.blockUI .close-popup').click(function () { $.unblockUI(); return false; });
+}
+function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
+    var $t = $(form);
+    // If there is no form errors, show a successful message
+    if ($t.find('.validation-summary-errors').length == 0) {
+        $t.block(infoBlock(message, {
+            css: popupStyle(popupSize('small'))
+        }))
+        .on('click', '.close-popup', function () { $t.unblock(); return false; });
+    }
+}
+/* Puts full html inside the iframe element passed in a secure and compliant mode */
+function injectIframeHtml(iframe, html) {
+    // put ajax data inside iframe replacing all their html in secure 
+    // compliant mode ($.html don't works to inject <html><head> content)
+
+    /* document API version (problems with IE, don't execute iframe-html scripts) */
+    /*var iframeDoc =
+        // W3C compliant: ns, firefox-gecko, chrome/safari-webkit, opera, ie9
+        iframe.contentDocument ||
+        // old IE (5.5+)
+        (iframe.contentWindow ? iframe.contentWindow.document : null) ||
+        // fallback (very old IE?)
+        document.frames[iframe.id].document;
+    iframeDoc.open();
+    iframeDoc.write(html);
+    iframeDoc.close();*/
+
+    /* javascript URI version (works fine everywhere!) */
+    iframe.contentWindow.contents = html;
+    iframe.src = 'javascript:window["contents"]';
+
+    // About this technique, this http://sparecycles.wordpress.com/2012/03/08/inject-content-into-a-new-iframe/
+}
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
+}
+function hasPlaceholderSupport() {
+    var input = document.createElement('input');
+    return ('placeholder' in input);
+}
+function getHashBangParameters(hashbangvalue) {
+    // Hashbangvalue is something like: Thread-1_Message-2
+    // Where '1' is the ThreadID and '2' the optional MessageID, or other parameters
+    var pars = hashbangvalue.split('_');
+    var urlParameters = {};
+    for (var i = 0; i < pars.length; i++) {
+        var parsvalues = pars[i].split('-');
+        if (parsvalues.length == 2)
+            urlParameters[parsvalues[0]] = parsvalues[1];
+        else
+            urlParameters[parsvalues[0]] = true;
+    }
+    return urlParameters;
+}
+function setupDatePicker() {
+    // Date Picker
+    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+    applyDatePicker();
+}
+function applyDatePicker(element) {
+    $(".date-pick", element || document)
+        //.val(new Date().asString($.datepicker._defaults.dateFormat))
+        .datepicker({
+            showAnim: "blind"
+        });
+}
+/* Returns true when str is
+   - null
+   - empty string
+   - only white spaces string
+*/
+function isEmptyString(str) {
+    return !(/\S/g.test(str||""));
+}
+/* Clean previous validation errors of the validation summary
+    included in 'container' and set as valid the summary
+ */
+function setValidationSummaryAsValid(container) {
+    container = container || document;
+    $('.validation-summary-errors', container)
+    .removeClass('validation-summary-errors')
+    .addClass('validation-summary-valid')
+    .find('>ul>li').remove();
+}
+function guidGenerator() {
+    var S4 = function () {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+function lcRedirectTo(url) {
+    var ihash = url.indexOf('#');
+    var rurl = url.substring(0, (ihash == -1 ? null : ihash));
+    window.location.hash = '';
+    if (window.location.pathname == rurl) {
+        window.location = url;
+        window.location.reload();
+    } else
+        window.location = url;
+    // If the new url is the same current page but with a hash, page will not be reloaded as
+    // wanted, do a refresh.
+    //if (/#/.test(window.location))
+    //    window.location.reload();
+}
+/* Currently only applies to elements with title and data-description attributes */
+function configureTooltip() {
+    var posoffset = { x: 16, y: 8 };
+    function pos(t, e) {
+        var x, y;
+        if (e.pageX && e.pageY) {
+            x = e.pageX;
+            y = e.pageY;
+        } else if (e.target) {
+            var $et = $(e.target);
+            x = $et.outerWidth() + $et.offset().left;
+            y = $et.outerHeight() + $et.offset().top;
+        }
+        t.css('left', x + posoffset.x);
+        t.css('top', y + posoffset.y);
+        // Adjust width to visible viewport
+        var tdif = t.outerWidth() - t.width();
+        t.css('max-width', $(window).width() - x - posoffset.x - tdif);
+        //t.height($(document).height() - y - posoffset.y);
+    }
+    function con(t, l) {
+        if (t.length == 0 || l.length == 0) return;
+        var c = l.data('tooltip-content');
+        if (!c) {
+            var h = (l.attr('title') || '').replace(/\s/g, ' ');
+            var d = (l.data('description') || '').replace(/\s/g, ' ');
+            if (d)
+                c = '<h4>' + h + '</h4><p>' + d + '</p>';
+            else {
+                // Only create tooltip content if element content is different
+                // from title value, or element content is not full visible
+                if ($.trim(l.html()) != h ||
+                    l.outerWidth() < l[0].scrollWidth)
+                    c = h;
+            }
+            if (c) {
+                l.data('tooltip-content', c);
+                l.attr('title', '');
+            }
+        }
+        t.html(c);
+        // Adjust content elements
+        t.children().css('max-width', t.css('max-width'));
+        // Return the content added:
+        return c;
+    }
+    function showTooltip(e) {
+        var $t = $(this);
+        var t = $('body > .tooltip-singleton-layer:eq(0)');
+        if (t.length == 0) {
+            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer fancy"></div>');
+            t.hide();
+            $('body').append(t);
+        }
+        //if (!$t.data('tooltip-owner-id')) $t.data('tooltip-owner-id', guidGenerator());
+        //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
+        // Create content, and only if non-null, non-empty content was added, continue executing:
+        if (con(t, $t)) {
+            pos(t, e);
+            t.stop(true, true);
+            if (!t.is(':visible'))
+                t.fadeIn();
+        }
+        return false;
+    }
+    function hideTooltip(e) {
+        var t = $('body > .tooltip-singleton-layer:eq(0)');
+        if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
+            t.stop(true, true).fadeOut();
+    }
+    $('body').on('mousemove focusin', '[title][data-description][data-description!=""], [title].has-tooltip', showTooltip)
+    .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip', hideTooltip)
+    .on('click', '.tooltip-button', function () { return false });
+}
+function smoothBoxBlock(contentBox, blocked, addclass, options) {
+    // Load options overwriting defaults
+    options = $.extend({
+        closable: false
+    }, options);
+    
+    contentBox = $(contentBox);
+    blocked = $(blocked);
+    var bID = blocked.data('smooth-box-block-id');
+    if (!bID)
+        bID = (contentBox.attr('id') || '') + (blocked.attr('id') || '') + '-smoothBoxBlock';
+    if (bID == '-smoothBoxBlock') {
+        bID = 'id-' + guidGenerator() + '-smoothBoxBlock';
+        //if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
+        //return;
+    }
+    blocked.data('smooth-box-block-id', bID);
+    var box = $('#' + escapeJQuerySelectorValue(bID));
+    if (contentBox.length == 0) {
+        box.hide();
+        return;
+    }
+    if (box.length == 0) {
+        var boxc = $('<div class="smooth-box-block-element fancy"/>');
+        box = $('<div class="smooth-box-block-overlay fancy"></div>');
+        box.addClass(addclass);
+        box.append(boxc);
+        box.attr('id', bID);
+        blocked.append(box);
+    } else {
+        var boxc = box.children('.smooth-box-block-element');
+    }
+    box.hide();
+    boxc.children().remove();
+    if (options.closable) {
+        var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
+        closeButton.click(function () { smoothBoxBlock(null, blocked); return false; });
+        boxc.append(closeButton);
+    }
+    boxc.append(contentBox);
+    box.width(blocked.outerWidth());
+    box.height(blocked.outerHeight());
+    box.css('z-index', blocked.css('z-index') + 10);
+    box.css('position', 'absolute');
+    if (!blocked.css('position') || blocked.css('position') == 'static')
+        blocked.css('position', 'relative');
+    offs = blocked.position();
+    box.css('top', 0);
+    box.css('left', 0);
+    box.show();
+    contentBox.show();
+    return box;
+}
+function smoothBoxBlockCloseAll(container) {
+    $(container || document).find('.smooth-box-block-overlay').hide();
+}
+function escapeJQuerySelectorValue(str) {
+    return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
+}
+function lcSetupCalculateTableItemsTotals() {
+    $('table.calculate-items-totals').each(function () {
+        if ($(this).data('calculate-items-totals-initializated'))
+            return;
+        function getNumber(v) {
+            return parseFloat((v || '0').replace(/[$€]/g, ''));
+        }
+        function calculateRow() {
+            var $t = $(this);
+            var tr = $t.closest('tr');
+            var ip = tr.find('.calculate-item-price');
+            var iq = tr.find('.calculate-item-quantity');
+            var it = tr.find('.calculate-item-total');
+            it.text(Math.round((getNumber(ip.val() || ip.text()) * getNumber(iq.val() || iq.text())) * 100) / 100);
+        }
+        $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
+        $(this).find('tr').each(calculateRow);
+    });
+}
+function convertMilesKm(q, unit) {
+    var MILES_TO_KM = 1.609;
+    if (unit == 'miles')
+        return MILES_TO_KM * q;
+    else if (unit == 'km')
+        return q / MILES_TO_KM;
+    if (console) console.log('convertMilesKm: Unrecognized unit ' + unit);
+    return 0;
+}
+function goToSummaryErrors(form) {
+    var off = form.find('.validation-summary-errors').offset();
+    $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
+}
+
 /* Init code */
 $(window).load(function () {
     // Disable browser behavior to auto-scroll to url fragment/hash element position:
@@ -897,625 +1519,3 @@ $(function () {
         TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes has-tooltip');
     });
 });
-
-/*= ChangesNotification class
- * to notify user about changes in forms,
- * tabs, that will be lost if go away from
- * the page. It knows when a form is submitted
- * and saved to disable notification, and gives
- * methods for other scripts to notify changes
- * or saving.
- */
-LC.ChangesNotification = {
-    changesList: {},
-    defaults: {
-        genericChangeSupport: true,
-        genericSubmitSupport: false,
-        changedFormClass: 'has-changes',
-        changedElementClass: 'changed',
-        notifyClass: 'notify-changes'
-    },
-    init: function (options) {
-        // User notification to prevent lost changes done
-        $(window).on('beforeunload', function () {
-            return LC.ChangesNotification.notify();
-        });
-        options = $.extend(this.defaults, options);
-        if (options.genericChangeSupport)
-            $(document).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
-                LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
-            })
-        if (options.genericSubmitSupport)
-            $(document).on('submit', 'form:not(.changes-notification-disabled)', function () {
-                LC.ChangesNotification.registerSave(this);
-            });
-    },
-    notify: function () {
-        // Add notification class to the document
-        $('html').addClass(this.defaults.notifyClass);
-        // Check if there is almost one change in the property list returning the message:
-        for (var c in this.changesList)
-            return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
-    },
-    registerChange: function (f, e) {
-        var fname = LC.getXPath(f);
-        var fl = this.changesList[fname] = this.changesList[fname] || [];
-        if ($.isArray(e)) {
-            for (var i = 0; i < e.length; i++)
-                this.registerChange(f, e[i]);
-            return;
-        }
-        var n = e;
-        if (typeof (e) !== 'string') {
-            n = e.name;
-            // Check if really there was a change checking default element value
-            if (typeof (e.defaultValue) != 'undefined'
-                 && typeof (e.checked) == 'undefined'
-                 && typeof (e.selected) == 'undefined'
-                 && e.value == e.defaultValue) {
-                // There was no change, no continue
-                // and maybe is a regression from a change and now the original value again
-                // try to remove from changes list doing registerSave
-                this.registerSave(f, [n]);
-                return;
-            }
-            $(e).addClass(this.defaults.changedElementClass);
-        }
-        if (!(n in fl))
-            fl.push(n);
-        $(f)
-        .addClass(this.defaults.changedFormClass)
-        // pass data: form, element name changed, form element changed (this can be null)
-        .trigger('lcChangesNotificationChangeRegistered', [f, n, e]);
-    },
-    registerSave: function (f, els) {
-        var fname = LC.getXPath(f);
-        if (!this.changesList[fname]) return;
-        var prevEls = $.extend([], this.changesList[fname]);
-        var r = true;
-        if (els) {
-            this.changesList[fname] = $.grep(this.changesList[fname], function (el) { return ($.inArray(el, els) == -1); });
-            // Don't remove 'f' list if is not empty
-            r = this.changesList[fname].length == 0;
-        }
-        if (r) {
-            $(f).removeClass(this.defaults.changedFormClass);
-            delete this.changesList[fname];
-            // link elements from els to clean-up its classes
-            els = prevEls;
-        }
-        // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
-        $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
-        var lchn = this;
-        if (els) $.each(els, function () { $('[name=' + this + ']').removeClass(lchn.defaults.changedElementClass) });
-        return prevEls;
-    }
-};
-LC.getXPath = function (element) {
-    if (element && element.id)
-        return '//*[@id="' + element.id + '"]';
-    var xpath = '';
-    for (; element && element.nodeType == 1; element = element.parentNode) {
-        var id = $(element.parentNode).children(element.tagName).index(element) + 1;
-        id > 1 ? (id = '[' + id + ']') : (id = '');
-        xpath = '/' + element.tagName.toLowerCase() + id + xpath;
-    }
-    return xpath;
-};
-
-/*******************
-* Popup related 
-* functions
-*/
-function popupSize(size) {
-    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
-    return {
-        width: Math.round($(window).width() * s),
-        height: Math.round($(window).height() * s),
-        sizeFactor: s
-    }
-}
-function popupStyle(size) {
-    return {
-        cursor: 'default',
-        width: size.width + 'px',
-        left: Math.round(($(window).width() - size.width) / 2) - 30 + 'px',
-        height: size.height + 'px',
-        top: Math.round(($(window).height() - size.height) / 2) - 30 + 'px',
-        padding: '25px',
-        overflow: 'auto',
-        border: '5px solid #b5e1e2',
-        '-moz-border-radius': '12px',
-        '-webkit-border-radius': '12px',
-        'border-radius': '12px',
-        '-moz-background-clip': 'padding',
-        '-webkit-background-clip': 'padding-box',
-        'background-clip': 'padding-box'
-    };
-}
-function popup(url, size, complete, loadingText, options){
-    // Native popup
-    //window.open(url);
-    
-    // Load options overwriting defaults
-    options = $.extend({
-        closable: {
-            onLoad: false,
-            afterLoad: true,
-            onError: true
-        }
-    }, options);
-
-    // Smart popup
-    loadingText = loadingText || '';
-    var swh;
-    if (size && size.width)
-        swh = size;
-    else
-        swh = popupSize(size);        
-    
-    $('div.blockUI.blockMsg.blockPage').addClass('fancy');
-    $.blockUI({
-       message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
-       '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
-       centerY: false,
-       css: popupStyle(swh),
-       overlayCSS: { cursor: 'default' }
-    });
-
-    // Loading Url with Ajax and place content inside the blocked-box
-    $.ajax({ url: url,
-        success: function (data) {
-            // Add close button if requires it or empty message content to append then more
-            $('.blockMsg').html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
-
-            if (typeof (data) === 'object') {
-                if (data.Code && data.Code == 2) {
-                    $.unblockUI();
-                    popup(data.Result, { width: 410, height: 320 });
-                } else {
-                    // Unexpected code, show result
-                    $('.blockMsg').append(data.Result);
-                }
-            } else {
-                // Page content got, paste into the popup if is partial html (url starts with$)
-                if (/((^\$)|(\/\$))/.test(url)) {
-                    $('.blockMsg').append(data);
-                } else {
-                    // Else, if url is a full html page (normal page), put content into an iframe
-                    var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
-                    // When the iframe is ready
-                    var iframeloaded = false;
-                    iframe.onload = function () {
-                        // Using iframeloaded to avoid infinite loops
-                        if (!iframeloaded) {
-                            iframeloaded = true;
-                            injectIframeHtml(iframe, data);
-                        }
-                    };
-                    // replace blocking element content (the loading) with the iframe:
-                    $('.blockMsg').append(iframe);
-                }
-            }
-        }, error: function (j, t, ex) {
-            $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div>Page not found</div>');
-            if (console && console.info) console.info("Popup-ajax error: " + ex);
-        }, complete: complete
-    });
-
-    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
-}
-function ajaxFormsCompleteHandler() {
-    // Disable loading
-    clearTimeout(this.loadingtimer);
-    // Unblock
-    if (this.autoUnblockLoading) {
-        this.box.unblock();
-    }
-}
-function ajaxFormsSuccessHandler(data, text, jx) {
-    var ctx = this;
-    if (!ctx.form) ctx.form = $(this);
-    if (!ctx.box) ctx.box = ctx.form;
-    ctx.autoUnblockLoading = true;
-
-    // If is a JSON result:
-    if (typeof (data) === 'object') {
-        function showSuccessMessage(message) {
-            // Unblock loading:
-            ctx.box.unblock();
-            // Block with message:
-            var message = message || ctx.form.data('success-post-message') || 'Done!';
-            ctx.box.block(infoBlock(message, {
-                css: popupStyle(popupSize('small'))
-            }))
-            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); return false; });
-            // Do not unblock in complete function!
-            ctx.autoUnblockLoading = false;
-
-            // Clean previous validation errors
-            setValidationSummaryAsValid(ctx.box);
-        }
-        if (data.Code == 0) {
-            // Special Code 0: general success code, show message saying that 'all was fine'
-            showSuccessMessage(data.Result);
-            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
-        // Special Code 1: do a redirect
-        } else if (data.Code == 1) {
-            lcRedirectTo(data.Result);
-        } else if (data.Code == 2) {
-            // Special Code 2: show login popup (with the given url at data.Result)
-            ctx.box.unblock();
-            popup(data.Result, { width: 410, height: 320 });
-        } else if (data.Code == 3) {
-            // Special Code 3: reload current page content to the given url at data.Result)
-            // Note: to reload same url page content, is better return the html directly from
-            // this ajax server request.
-            //container.unblock(); is blocked and unblocked againg by the reload method:
-            ctx.autoUnblockLoading = false;
-            ctx.box.reload(data.Result);
-        } else if (data.Code == 4) {
-            // Show SuccessMessage, attaching and event handler to go to RedirectURL
-            ctx.box.on('ajaxSuccessPostMessageClosed', function () {
-                lcRedirectTo(data.Result.RedirectURL);
-            });
-            showSuccessMessage(data.Result.SuccessMessage);
-        } else if (data.Code > 100) {
-            // User Code: trigger custom event to manage results:
-            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
-        } else { // data.Code < 0
-            // There is an error code.
-
-            // Data not saved:
-            LC.ChangesNotification.registerChange(ctx.form.get(0), ctx.changedElements);
-
-            // Unblock loading:
-            ctx.box.unblock();
-            // Block with message:
-            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
-            ctx.box.block({
-                message: 'Error: ' + message,
-                css: popupStyle(popupSize('small'))
-            })
-            .on('click', '.close-popup', function () { ctx.box.unblock(); return false; });
-
-            // Do not unblock in complete function!
-            ctx.autoUnblockLoading = false;
-        }
-    } else {
-        // Post 'maybe' was wrong, html was returned to replace current 
-        // form container: the ajax-box.
-
-        var newhtml = $(data);
-        // Reading original scripts tags to be able to execute later
-        var responseScript = newhtml.filter("script");
-
-        // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
-        var newForm = newhtml.find('form:eq(0)').get(0);
-        if (ctx.changedElements)
-            LC.ChangesNotification.registerChange(
-                newForm,
-                ctx.changedElements
-            );
-
-        // Check if the returned element is the ajax-box, if not, find
-        // the element in the newhtml:
-        var jb = newhtml;
-        if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
-            jb = newhtml.find('.ajax-box:eq(0)');
-        if (!jb || jb.length == 0) {
-            // There is no ajax-box, use all element returned:
-            jb = newhtml;
-        }
-        if (ctx.boxIsContainer)
-            // jb is content of the box container:
-            ctx.box.html(jb);
-        else
-            // box is content that must be replaced by the new content:
-            ctx.box.replaceWith(jb);
-
-        // Executing scripts returned by the page
-        jQuery.each(responseScript, function (idx, val) { eval(val.text); });
-
-        newhtml.trigger('ajaxFormReturnedHtml');
-    }
-}
-function ajaxErrorPopupHandler(jx, message, ex) {
-    var ctx = this;
-    if (!ctx.form) ctx.form = $(this);
-    // Data not saved:
-    LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
-
-    var m = message;
-    var iframe = null;
-    size = popupSize('large');
-    if (m == 'error') {
-        iframe = $('<iframe id="blockUIIframe" width="' + size.width + '" height="' + (size.height - 34) + '"></iframe>').get(0);
-        var iframeloaded = false;
-        iframe.onload = function () {
-            // Using iframeloaded to avoid infinite loops
-            if (!iframeloaded) {
-                iframeloaded = true;
-                injectIframeHtml(iframe, jx.responseText);
-            }
-        };
-        m = null;
-    }  else
-        m = m + "; " + ex;
-
-    // Block all window, not only current element
-    $.blockUI(errorBlock(m, null, popupStyle(size)));
-    if (iframe)
-        $('.blockMsg').append(iframe);
-    $('.blockUI .close-popup').click(function () { $.unblockUI(); return false; });
-}
-function ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(form, message) {
-    var $t = $(form);
-    // If there is no form errors, show a successful message
-    if ($t.find('.validation-summary-errors').length == 0) {
-        $t.block(infoBlock(message, {
-            css: popupStyle(popupSize('small'))
-        }))
-        .on('click', '.close-popup', function () { $t.unblock(); return false; });
-    }
-}
-/* Puts full html inside the iframe element passed in a secure and compliant mode */
-function injectIframeHtml(iframe, html) {
-    // put ajax data inside iframe replacing all their html in secure 
-    // compliant mode ($.html don't works to inject <html><head> content)
-
-    /* document API version (problems with IE, don't execute iframe-html scripts) */
-    /*var iframeDoc =
-        // W3C compliant: ns, firefox-gecko, chrome/safari-webkit, opera, ie9
-        iframe.contentDocument ||
-        // old IE (5.5+)
-        (iframe.contentWindow ? iframe.contentWindow.document : null) ||
-        // fallback (very old IE?)
-        document.frames[iframe.id].document;
-    iframeDoc.open();
-    iframeDoc.write(html);
-    iframeDoc.close();*/
-
-    /* javascript URI version (works fine everywhere!) */
-    iframe.contentWindow.contents = html;
-    iframe.src = 'javascript:window["contents"]';
-
-    // About this technique, this http://sparecycles.wordpress.com/2012/03/08/inject-content-into-a-new-iframe/
-}
-function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
-}
-function hasPlaceholderSupport() {
-    var input = document.createElement('input');
-    return ('placeholder' in input);
-}
-function getHashBangParameters(hashbangvalue) {
-    // Hashbangvalue is something like: Thread-1_Message-2
-    // Where '1' is the ThreadID and '2' the optional MessageID, or other parameters
-    var pars = hashbangvalue.split('_');
-    var urlParameters = {};
-    for (var i = 0; i < pars.length; i++) {
-        var parsvalues = pars[i].split('-');
-        if (parsvalues.length == 2)
-            urlParameters[parsvalues[0]] = parsvalues[1];
-        else
-            urlParameters[parsvalues[0]] = true;
-    }
-    return urlParameters;
-}
-function setupDatePicker() {
-    // Date Picker
-    $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-    applyDatePicker();
-}
-function applyDatePicker(element) {
-    $(".date-pick", element || document)
-        //.val(new Date().asString($.datepicker._defaults.dateFormat))
-        .datepicker({
-            showAnim: "blind"
-        });
-}
-/* Returns true when str is
-   - null
-   - empty string
-   - only white spaces string
-*/
-function isEmptyString(str) {
-    return !(/\S/g.test(str||""));
-}
-/* Clean previous validation errors of the validation summary
-    included in 'container' and set as valid the summary
- */
-function setValidationSummaryAsValid(container) {
-    container = container || document;
-    $('.validation-summary-errors', container)
-    .removeClass('validation-summary-errors')
-    .addClass('validation-summary-valid')
-    .find('>ul>li').remove();
-}
-function guidGenerator() {
-    var S4 = function () {
-        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    };
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-}
-function lcRedirectTo(url) {
-    var ihash = url.indexOf('#');
-    var rurl = url.substring(0, (ihash == -1 ? null : ihash));
-    window.location.hash = '';
-    if (window.location.pathname == rurl) {
-        window.location = url;
-        window.location.reload();
-    } else
-        window.location = url;
-    // If the new url is the same current page but with a hash, page will not be reloaded as
-    // wanted, do a refresh.
-    //if (/#/.test(window.location))
-    //    window.location.reload();
-}
-/* Currently only applies to elements with title and data-description attributes */
-function configureTooltip() {
-    var posoffset = { x: 16, y: 8 };
-    function pos(t, e) {
-        var x, y;
-        if (e.pageX && e.pageY) {
-            x = e.pageX;
-            y = e.pageY;
-        } else if (e.target) {
-            var $et = $(e.target);
-            x = $et.outerWidth() + $et.offset().left;
-            y = $et.outerHeight() + $et.offset().top;
-        }
-        t.css('left', x + posoffset.x);
-        t.css('top', y + posoffset.y);
-        // Adjust width to visible viewport
-        var tdif = t.outerWidth() - t.width();
-        t.css('max-width', $(window).width() - x - posoffset.x - tdif);
-        //t.height($(document).height() - y - posoffset.y);
-    }
-    function con(t, l) {
-        if (t.length == 0 || l.length == 0) return;
-        var c = l.data('tooltip-content');
-        if (!c) {
-            var h = (l.attr('title') || '').replace(/\s/g, ' ');
-            var d = (l.data('description') || '').replace(/\s/g, ' ');
-            if (d)
-                c = '<h4>' + h + '</h4><p>' + d + '</p>';
-            else {
-                // Only create tooltip content if element content is different
-                // from title value, or element content is not full visible
-                if ($.trim(l.html()) != h ||
-                    l.outerWidth() < l[0].scrollWidth)
-                    c = h;
-            }
-            if (c) {
-                l.data('tooltip-content', c);
-                l.attr('title', '');
-            }
-        }
-        t.html(c);
-        // Adjust content elements
-        t.children().css('max-width', t.css('max-width'));
-        // Return the content added:
-        return c;
-    }
-    function showTooltip(e) {
-        var $t = $(this);
-        var t = $('body > .tooltip-singleton-layer:eq(0)');
-        if (t.length == 0) {
-            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer fancy"></div>');
-            t.hide();
-            $('body').append(t);
-        }
-        //if (!$t.data('tooltip-owner-id')) $t.data('tooltip-owner-id', guidGenerator());
-        //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
-        // Create content, and only if non-null, non-empty content was added, continue executing:
-        if (con(t, $t)) {
-            pos(t, e);
-            t.stop(true, true);
-            if (!t.is(':visible'))
-                t.fadeIn();
-        }
-        return false;
-    }
-    function hideTooltip(e) {
-        var t = $('body > .tooltip-singleton-layer:eq(0)');
-        if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
-            t.stop(true, true).fadeOut();
-    }
-    $('body').on('mousemove focusin', '[title][data-description!=""], [title].has-tooltip', showTooltip)
-    .on('mouseleave focusout', '[title][data-description!=""], [title].has-tooltip', hideTooltip)
-    .on('click', '.tooltip-button', function () { return false });
-}
-function smoothBoxBlock(contentBox, blocked, addclass, options) {
-    // Load options overwriting defaults
-    options = $.extend({
-        closable: false
-    }, options);
-    
-    contentBox = $(contentBox);
-    blocked = $(blocked);
-    var bID = blocked.data('smooth-box-block-id');
-    if (!bID)
-        bID = (contentBox.attr('id') || '') + (blocked.attr('id') || '') + '-smoothBoxBlock';
-    if (bID == '-smoothBoxBlock') {
-        bID = 'id-' + guidGenerator() + '-smoothBoxBlock';
-        //if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
-        //return;
-    }
-    blocked.data('smooth-box-block-id', bID);
-    var box = $('#' + escapeJQuerySelectorValue(bID));
-    if (contentBox.length == 0) {
-        box.hide();
-        return;
-    }
-    if (box.length == 0) {
-        var boxc = $('<div class="smooth-box-block-element fancy"/>');
-        box = $('<div class="smooth-box-block-overlay fancy"></div>');
-        box.addClass(addclass);
-        box.append(boxc);
-        box.attr('id', bID);
-        blocked.append(box);
-    } else {
-        var boxc = box.children('.smooth-box-block-element');
-    }
-    box.hide();
-    boxc.children().remove();
-    if (options.closable) {
-        var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
-        closeButton.click(function () { smoothBoxBlock(null, blocked); return false; });
-        boxc.append(closeButton);
-    }
-    boxc.append(contentBox);
-    box.width(blocked.outerWidth());
-    box.height(blocked.outerHeight());
-    box.css('z-index', blocked.css('z-index') + 10);
-    box.css('position', 'absolute');
-    if (!blocked.css('position') || blocked.css('position') == 'static')
-        blocked.css('position', 'relative');
-    offs = blocked.position();
-    box.css('top', 0);
-    box.css('left', 0);
-    box.show();
-    contentBox.show();
-    return box;
-}
-function smoothBoxBlockCloseAll(container) {
-    $(container || document).find('.smooth-box-block-overlay').hide();
-}
-function escapeJQuerySelectorValue(str) {
-    return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
-}
-function lcSetupCalculateTableItemsTotals() {
-    $('table.calculate-items-totals').each(function () {
-        if ($(this).data('calculate-items-totals-initializated'))
-            return;
-        function getNumber(v) {
-            return parseFloat((v || '0').replace(/[$€]/g, ''));
-        }
-        function calculateRow() {
-            var $t = $(this);
-            var tr = $t.closest('tr');
-            var ip = tr.find('.calculate-item-price');
-            var iq = tr.find('.calculate-item-quantity');
-            var it = tr.find('.calculate-item-total');
-            it.text(Math.round((getNumber(ip.val() || ip.text()) * getNumber(iq.val() || iq.text())) * 100) / 100);
-        }
-        $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
-        $(this).find('tr').each(calculateRow);
-    });
-}
-function convertMilesKm(q, unit) {
-    var MILES_TO_KM = 1.609;
-    if (unit == 'miles')
-        return MILES_TO_KM * q;
-    else if (unit == 'km')
-        return q / MILES_TO_KM;
-    if (console) console.log('convertMilesKm: Unrecognized unit ' + unit);
-    return 0;
-}
-function goToSummaryErrors(form) {
-    var off = form.find('.validation-summary-errors').offset();
-    $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
-}
