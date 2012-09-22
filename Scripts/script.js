@@ -371,6 +371,7 @@ var TabbedUX = {
 LC.ChangesNotification = {
     changesList: {},
     defaults: {
+        target: null,
         genericChangeSupport: true,
         genericSubmitSupport: false,
         changedFormClass: 'has-changes',
@@ -383,12 +384,14 @@ LC.ChangesNotification = {
             return LC.ChangesNotification.notify();
         });
         options = $.extend(this.defaults, options);
+        if (!options.target)
+            options.target = document;
         if (options.genericChangeSupport)
-            $(document).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
+            $(options.target).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
                 LC.ChangesNotification.registerChange($(this).closest('form').get(0), this);
             })
         if (options.genericSubmitSupport)
-            $(document).on('submit', 'form:not(.changes-notification-disabled)', function () {
+            $(options.target).on('submit', 'form:not(.changes-notification-disabled)', function () {
                 LC.ChangesNotification.registerSave(this);
             });
     },
@@ -1496,38 +1499,41 @@ $(function () {
     });
 
     /***** Don't lost data! warning message ******/
-    LC.ChangesNotification.init();
-    // Adding change notification to tab-body divs
-    // (outside the LC.ChangesNotification class to leave it as generic and simple as possible)
-    $(document).on('lcChangesNotificationChangeRegistered', 'form', function () {
-        $(this).parents('.tab-body').addClass('has-changes')
+    (function () {
+        var target = $('.changes-notification-enabled');
+        LC.ChangesNotification.init({ target: target });
+        // Adding change notification to tab-body divs
+        // (outside the LC.ChangesNotification class to leave it as generic and simple as possible)
+        $(target).on('lcChangesNotificationChangeRegistered', 'form', function () {
+            $(this).parents('.tab-body').addClass('has-changes')
         .each(function () {
             // Adding class to the menu item (tab title)
             TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
                 .attr('title', $('#lcres-changes-not-saved').text());
         });
-    })
-    .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
-        if (full)
-            $(this).parents('.tab-body:not(:has(form.has-changes))').removeClass('has-changes')
-            .each(function () {
-                // Removing class from the menu item (tab title)
-                TabbedUX.getTabContext(this).menuitem.removeClass('has-changes')
-                    .attr('title', null);
-            });
-    });
-    // To avoid user be notified of changes all time with tab marks, we added a 'notify' class
-    // on tabs when a change of tab happens
-    $('.tab-body').on('tabUnfocused', function () {
-        var mi = TabbedUX.getTabContext(this).menuitem;
-        if (mi.is('.has-changes')) {
-            mi.addClass('notify-changes'); //has-tooltip
-            // Show notification popup
-            //$.blockUI(infoBlock($('#lcres-changes-not-saved').text()));
-            smoothBoxBlock($('#lcres-changes-not-saved').clone(), $('body'), null, { closable: true, center: true });
-        }
-    })
-    .on('tabFocused', function () {
-        TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes'); //has-tooltip
-    });
+        })
+        .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
+            if (full)
+                $(this).parents('.tab-body:not(:has(form.has-changes))').removeClass('has-changes')
+                .each(function () {
+                    // Removing class from the menu item (tab title)
+                    TabbedUX.getTabContext(this).menuitem.removeClass('has-changes')
+                        .attr('title', null);
+                });
+        })
+        // To avoid user be notified of changes all time with tab marks, we added a 'notify' class
+        // on tabs when a change of tab happens
+        .find('.tab-body').on('tabUnfocused', function () {
+            var mi = TabbedUX.getTabContext(this).menuitem;
+            if (mi.is('.has-changes')) {
+                mi.addClass('notify-changes'); //has-tooltip
+                // Show notification popup
+                //$.blockUI(infoBlock($('#lcres-changes-not-saved').text()));
+                smoothBoxBlock($('#lcres-changes-not-saved').clone(), $('body'), null, { closable: true, center: true });
+            }
+        })
+        .on('tabFocused', function () {
+            TabbedUX.getTabContext(this).menuitem.removeClass('notify-changes'); //has-tooltip
+        });
+    })();
 });
