@@ -570,14 +570,6 @@ function popup(url, size, complete, loadingText, options){
 
     $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
 }
-function ajaxFormsCompleteHandler() {
-    // Disable loading
-    clearTimeout(this.loadingtimer);
-    // Unblock
-    if (this.autoUnblockLoading) {
-        this.box.unblock();
-    }
-}
 function ajaxFormsSuccessHandler(data, text, jx) {
     var ctx = this;
     if (!ctx.form) ctx.form = $(this);
@@ -685,12 +677,22 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         newhtml.trigger('ajaxFormReturnedHtml');
     }
 }
+function ajaxFormsCompleteHandler() {
+    // Disable loading
+    clearTimeout(this.loadingtimer);
+    // Unblock
+    if (this.autoUnblockLoading) {
+        this.box.unblock();
+    }
+}
 function ajaxErrorPopupHandler(jx, message, ex) {
     var ctx = this;
     if (!ctx.form) ctx.form = $(this);
     // Data not saved:
     if (ctx.changedElements)
         LC.ChangesNotification.registerChange(ctx.form, ctx.changedElements);
+
+    ctx.autoUnblockLoading = true;
 
     var m = message;
     var iframe = null;

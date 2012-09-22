@@ -122,7 +122,7 @@ $(document).ready(function () {
             // Bad handler:
             return;
         }
-        var ctx = { form: $tab, boxIsContainer: true };
+        var ctx = { form: $tab, box: $tab, boxIsContainer: true };
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
