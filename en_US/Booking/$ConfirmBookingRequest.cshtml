@@ -104,13 +104,19 @@
         if (dates != null) {
             switch (dateType.ToUpper()) {
                 case "PREFERRED":
-                    dateID = dates.PreferredDateID;
+                    if (dates.PreferredDateID != null) {
+                        dateID = dates.PreferredDateID;
+                    }
                     break;
                 case "ALTERNATIVE1":
-                    dateID = dates.AlternativeDate1ID;
+                    if (dates.AlternativeDate1ID != null) {
+                        dateID = dates.AlternativeDate1ID;
+                    }
                     break;
                 case "ALTERNATIVE2":
-                    dateID = dates.AlternativeDate2ID;
+                    if (dates.AlternativeDate2ID != null) {
+                        dateID = dates.AlternativeDate2ID;
+                    }
                     break;
             }
         }
@@ -126,7 +132,7 @@
                         "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
                 } else {
                     Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
+                        "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
                 }
             } else {
                 if (Request.IsAjaxRequest()) {
@@ -144,9 +150,9 @@
                  * - ConfirmedDateType is not correct?
                  * - BookingRequest is already confirmed?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Is already confirmed?");
+                LcHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Maybe is already confirmed or was cancelled.");
             } else {
-                throw new HttpException(500, "Impossible to confirm that Booking Request and date. Is already confirmed?");
+                throw new HttpException(500, "Impossible to confirm that Booking Request and date. Maybe is already confirmed or was cancelled.");
             }
         }
     }
