@@ -30,28 +30,43 @@
 }
 /* tab index */
 .tabbed.slider-tabs > .tabs {
-    overflow: hidden;
-    margin: 0 0 15px 0;
+    overflow: visible;
+    margin: 0 0 24px 0;
+    border: 1px solid #747474;
+    border-radius: 4px;
+    height: 85px;
+    padding: 4px 0;
+    display: inline-block;
 }
 .tabbed.slider-tabs > .tabs > li {
     float: left;
-    height: 82px;
     position: relative;
-    width: 98px;
+    width: 100px;
+    height: 105px;
 }
 .tabbed.slider-tabs > .tabs > li > a {
     color: #747474;
     display: block;
     font-size: 0.8em;
-    height: 100%;
-    padding-top: 60px;
+    padding-top: 64px;
     text-align: center;
     text-decoration: none;
 }
-.tabbed.slider-tabs > .tabs > li.current > a {
+.tabbed.slider-tabs > .tabs > li.current {
     color: #00989a;
-    background: url("../img/theme/howitworks/slider-tabs-selector.png") no-repeat scroll 41px 82px transparent;
+    background: url("../img/theme/howitworks/slider-tabs-selector.png") no-repeat scroll center bottom transparent;
 }
+.tabbed.slider-tabs > .tabs > li:before {
+    border-right: 1px solid #E0E0E0;
+    content: "";
+    height: 50%;
+    position: absolute;
+    top: 10px;
+}
+.tabbed.slider-tabs > .tabs > li:first-child:before {
+    border: none !important;
+}
+
 /* tabs */
 .tabbed.slider-tabs > .tab-body {
     display: none;
@@ -81,9 +96,45 @@
 
 /** Specific howitworks tab-content styles **/
 .howitworks .tabs {
-    background: url('../img/theme/howitworks/howitworks-tabs.png') no-repeat;
-    height: 105px;
+ /*   height: 105px;*/
 }
+.howitworks .tabs li a:before {
+    background: url('../img/theme/howitworks/howitworks-tabs.png') no-repeat;
+    width: 64px;
+    height: 64px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18px;
+}
+.howitworks .tabs li.customers a:before{
+    background-position: 0 0;
+}
+.howitworks .tabs li.providers a:before{
+    background-position: -67px 0;
+}
+.howitworks .tabs li.faqs a:before{
+    background-position: -134px 0;
+}
+.howitworks .tabs li.customers:hover a:before{
+    background-position: 0 -67px;
+}
+.howitworks .tabs li.providers:hover a:before{
+    background-position: -67px -67px;
+}
+.howitworks .tabs li.faqs:hover a:before{
+    background-position: -134px -67px;
+}
+.howitworks .tabs li.customers.current a:before{
+    background-position: 0 -134px;
+}
+.howitworks .tabs li.providers.current a:before{
+    background-position: -67px -134px;
+}
+.howitworks .tabs li.faqs.current a:before{
+    background-position: -134px -134px;
+}
+
 .howitworks .tab-body > h2 {
     display: none;
 }
