@@ -9,7 +9,7 @@ using System.Web;
 public static class LcRessources
 {
     public const string ValidationSummaryTitle = "Please correct the errors and try again:";
-    public const string DataSaved = "Data was successfully saved";
+    public const string DataSaved = "Saved successfully!";
     public const string FieldXIsRequired = "{0} is required";
 
     private static Dictionary<string, string> textress = new Dictionary<string,string>(){
@@ -28,12 +28,12 @@ public static class LcRessources
         ,{ "Language Level", "Language Level" }
         ,{ "Language Level Description", "" }
 
-        ,{ "postal-code-validation-error", "Postal Code is not valid" }
-        ,{ "quit-without-save", "You will lost changes if continue, are you sure?" }
+        ,{ "postal-code-validation-error", "Zip code is not valid" }
+        ,{ "quit-without-save", "You will lose changes if you continue, are you sure?" }
         ,{ "an-error", "There was an error: {0}" }
-        ,{ "changes-not-saved", "There are changes not saved" }
-        ,{ "tab-has-changes-stay-on", "Stay on this tab" }
-        ,{ "tab-has-changes-continue-without-change", "Continue without save" }
+        ,{ "changes-not-saved", "You made changes but forgot to save!" }
+        ,{ "tab-has-changes-stay-on", "Go back" }
+        ,{ "tab-has-changes-continue-without-change", "Continue anyway" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

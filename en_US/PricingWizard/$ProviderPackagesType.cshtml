@@ -14,7 +14,7 @@
     <div class="add-package"><a href="#add-package">Add another package</a></div>
     <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0&PositionID=@pos.PositionID">
         @if (data.Packages.Count == 0){
-            <div class="empty">You have not packages, start adding one!</div>
+            <div class="empty">Please add a package</div>
             @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID })
         }
     </div>
