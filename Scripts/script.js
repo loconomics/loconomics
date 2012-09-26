@@ -38,8 +38,8 @@ $.fn.hasScrollBar = function () {
     //scrollHeight= we have content till this height
     var t = this.get(0);
     return {
-        vertical: t.clientHeight < t.scrollHeight,
-        horizontal: t.clientWidth < t.scrollWidth
+        vertical: this.outerHeight() < t.scrollHeight,
+        horizontal: this.outerWidth() < t.scrollWidth
     };
 }
 $.fn.reload = function (newurl, onload) {
