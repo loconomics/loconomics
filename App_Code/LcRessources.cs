@@ -32,6 +32,8 @@ public static class LcRessources
         ,{ "quit-without-save", "You will lost changes if continue, are you sure?" }
         ,{ "an-error", "There was an error: {0}" }
         ,{ "changes-not-saved", "There are changes not saved" }
+        ,{ "tab-has-changes-stay-on", "Stay on this tab" }
+        ,{ "tab-has-changes-continue-without-change", "Continue without save" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

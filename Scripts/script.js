@@ -222,6 +222,12 @@ var TabbedUX = {
         var ctx = this.getTabContextByArgs(arguments);
         if (!this.checkTabContext(ctx, 'focusTab', arguments)) return;
 
+        // Get previous focused tab, trigger 'tabUnfocused' handler that can
+        // stop this focus (returning explicity 'false')
+        var prevTab = ctx.tab.siblings('.current');
+        if (prevTab.triggerHandler('tabUnfocused', [ctx]) === false)
+            return;
+
         // Check (first!) if there is a parent tab and focus it too (will be recursive calling this same function)
         var parTab = ctx.tab.parents('.tab-body:eq(0)');
         if (parTab.length == 1) this.focusTab(parTab);
@@ -237,9 +243,8 @@ var TabbedUX = {
         ctx.menuitem.addClass('current');
         ctx.menuanchor.addClass('current');
 
-        // Hide current tab-body and trigger event
-        ctx.tab.siblings('.current').removeClass('current')
-            .triggerHandler('tabUnfocused');
+        // Hide current tab-body
+        prevTab.removeClass('current');
         // Show current tab-body and trigger event
         ctx.tab.addClass('current')
             .triggerHandler('tabFocused');
@@ -466,6 +471,20 @@ LC.getXPath = function (element) {
         xpath = '/' + element.tagName.toLowerCase() + id + xpath;
     }
     return xpath;
+};
+LC.getText = function () {
+    var args = arguments;
+    // Get key and translate it
+    var formatted = args[0];
+    var text = $('#lcres-' + escapeJQuerySelectorValue(formatted)).text();
+    if (text)
+        formatted = text;
+    // Apply format to the text with additional parameters
+    for (var i = 0; i < args.length; i++) {
+        var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+        formatted = formatted.replace(regexp, args[i + 1]);
+    }
+    return formatted;
 };
 
 /*******************
@@ -904,7 +923,13 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     }, options);
 
     contentBox = $(contentBox);
-    blocked = $(blocked);
+    var full = false;
+    if (blocked == document || blocked == window) {
+        blocked = $('body');
+        full = true;
+    } else
+        blocked = $(blocked);
+
     var bID = blocked.data('smooth-box-block-id');
     if (!bID)
         bID = (contentBox.attr('id') || '') + (blocked.attr('id') || '') + '-smoothBoxBlock';
@@ -949,8 +974,16 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     box.show();
     if (options.center) {
         boxc.css('position', 'absolute');
-        boxc.css('top', box.outerHeight(true) / 2 - boxc.outerHeight(true) / 2);
-        boxc.css('left', box.outerWidth(true) / 2 - boxc.outerWidth(true) / 2);
+        var cl, ct;
+        if (full) {
+            ct = screen.height / 2;
+            cl = screen.width / 2;
+        } else {
+            ct = box.outerHeight(true) / 2;
+            cl = box.outerWidth(true) / 2;
+        }
+        boxc.css('top', ct - boxc.outerHeight(true) / 2);
+        boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
     contentBox.show();
     return box;
@@ -1526,13 +1559,28 @@ $(function () {
         })
         // To avoid user be notified of changes all time with tab marks, we added a 'notify' class
         // on tabs when a change of tab happens
-        .find('.tab-body').on('tabUnfocused', function () {
+        .find('.tab-body').on('tabUnfocused', function (event, focusedCtx) {
             var mi = TabbedUX.getTabContext(this).menuitem;
             if (mi.is('.has-changes')) {
                 mi.addClass('notify-changes'); //has-tooltip
                 // Show notification popup
-                //$.blockUI(infoBlock($('#lcres-changes-not-saved').text()));
-                smoothBoxBlock($('#lcres-changes-not-saved').clone(), $('body'), null, { closable: true, center: true });
+                var d = $('<div class="warning">@0</div><div class="actions"><input type="button" class="action continue" value="@2"/><input type="button" class="action stop" value="@1"/></div>'
+                    .replace(/@0/g, LC.getText('changes-not-saved'))
+                    .replace(/@1/g, LC.getText('tab-has-changes-stay-on'))
+                    .replace(/@2/g, LC.getText('tab-has-changes-continue-without-change')));
+                d.on('click', '.stop', function () {
+                    smoothBoxBlock(null, window);
+                })
+                .on('click', '.continue', function () {
+                    smoothBoxBlock(null, window);
+                    // Remove 'has-changes' to avoid future blocks (until new changes happens of course ;-)
+                    mi.removeClass('has-changes');
+                    TabbedUX.focusTab(focusedCtx.tab.get(0));
+                });
+                smoothBoxBlock(d, window, 'not-saved-popup', { closable: false, center: true });
+
+                // Ever return false to stop current tab focus
+                return false;
             }
         })
         .on('tabFocused', function () {

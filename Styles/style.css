@@ -2356,6 +2356,13 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     cursor: pointer;
 }*/
 
+.not-saved-popup .warning {
+    border: none !important;
+}
+.not-saved-popup .actions .action {
+    margin: 1em;
+    padding: 0.6em 1em;
+}
 
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
