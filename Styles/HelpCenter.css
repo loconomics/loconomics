@@ -93,8 +93,9 @@
 .howitworks .tab-body > ol > li {
     border-top: 1px solid #c9c9c9;
     padding: 20px 25px;
-    background: 745px center no-repeat;
+    background: 605px center no-repeat;
     padding-right: 320px;
+    position: relative;
 }
 .howitworks .tab-body > ol > li:first-child {
     border-top: none;
@@ -110,33 +111,47 @@
 /* Specific content images */
 #howitworks-customers li.find-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-find-provider.png');
-    background-size: contain;
-    position: relative;
 }
 #howitworks-customers li.book-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-book-provider.png');
-    background-size: contain;
-    position: relative;
 }
 #howitworks-customers li.review-provider {
     background-image: url('../img/theme/howitworks/howitworks-customer-review-provider.png');
-    background-size: contain;
-    position: relative;
 }
 #howitworks-providers li.create-profile {
     background-image: url('../img/theme/howitworks/howitworks-provider-create-profile.png');
-    background-size: contain;
-    position: relative;
 }
 #howitworks-providers li.perform-services {
     background-image: url('../img/theme/howitworks/howitworks-provider-perform-services.png');
-    background-size: contain;
-    position: relative;
 }
 #howitworks-providers li.get-paid {
     background-image: url('../img/theme/howitworks/howitworks-provider-get-paid.png');
-    background-size: contain;
-    position: relative;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 1.2),  /* Webkit-based browsers */
+    screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
+    screen and (min-resolution: 1.2dppx)  /* The standard way */
+{
+    #howitworks-customers li {
+        background-size: 285px 100px;
+    }
+    #howitworks-customers li.find-provider {
+        background-image: url('../img/theme/howitworks/howitworks-customer-find-provider@2x.png');
+    }
+    #howitworks-customers li.book-provider {
+        background-image: url('../img/theme/howitworks/howitworks-customer-book-provider@2x.png');
+    }
+    #howitworks-customers li.review-provider {
+        background-image: url('../img/theme/howitworks/howitworks-customer-review-provider@2x.png');
+    }
+    #howitworks-providers li.create-profile {
+        background-image: url('../img/theme/howitworks/howitworks-provider-create-profile@2x.png');
+    }
+    #howitworks-providers li.perform-services {
+        background-image: url('../img/theme/howitworks/howitworks-provider-perform-services@2x.png');
+    }
+    #howitworks-providers li.get-paid {
+        background-image: url('../img/theme/howitworks/howitworks-provider-get-paid@2x.png');
+    }
 }
 
 #howitworks-faqs {
