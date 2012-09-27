@@ -316,7 +316,7 @@ a.icon:hover { background-position: 0 -27px; }
 .replace.icon { background: url('../img/theme/gray-social-icons-32px.png') 0 0 no-repeat; vertical-align: middle; }
 .replace.icon.facebook { background-position: 0 0; }
 .replace.icon.twitter { background-position: 0 -32px; }
-footer .icon { margin: 0 2px }
+#site-footer .icon { margin: 0 2px }
 a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
 a.cart:hover { background-position: 10px -25px; }
 
@@ -477,7 +477,7 @@ table.ratings th { padding: 0 0 0 1em; color: #461864; font-weight: normal; }
 
 /* Page Structure */
 div.scripts { display: none; }
-#container, footer, header .wrap { width: 960px; margin: 0 auto; text-align: left; }
+#container, #site-footer, #site-header .wrap { width: 960px; margin: 0 auto; text-align: left; }
 #container { position: relative; padding: 124px 0 0; }
 
 #main { float: left; width: 670px; }
@@ -485,7 +485,7 @@ div.scripts { display: none; }
 
 .sign-up #main { float: none; width: auto; }
 
-header {    
+#site-header {    
     font-size: 0.9em;
     position: absolute;
     right: 0;
@@ -493,11 +493,11 @@ header {
     top: 17px;
     width: 100%;
 }
-header .wrap { position: relative; width: 960px; margin: 0 auto; }
-header a.button { color: #fff; }
-header .new-user a { margin: 0 .5em; }
-header .new-user a:hover { color: #99C027; }
-header #logo.replace {
+#site-header .wrap { position: relative; width: 960px; margin: 0 auto; }
+#site-header a.button { color: #fff; }
+#site-header .new-user a { margin: 0 .5em; }
+#site-header .new-user a:hover { color: #99C027; }
+#site-header #logo.replace {
     background-image: url("../img/theme/logo-loconomics-header.png");
     left: 0;
     padding-top: 78px;
@@ -505,10 +505,10 @@ header #logo.replace {
     top: 0;
     width: 201px;
 }
-.es header #logo.replace { background-image: url('../img/loconomics-logo-espanol.png'); }
-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
-header ul li { display: inline-block; vertical-align: top; font-weight: bold; }
-header ul li ul li  {
+.es #site-header #logo.replace { background-image: url('../img/loconomics-logo-espanol.png'); }
+#site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
+#site-header ul li { display: inline-block; vertical-align: top; font-weight: bold; }
+#site-header ul li ul li  {
     display: block;
     margin: 0 0 .2em 0;
     padding: 0 0.8em;
@@ -516,71 +516,71 @@ header ul li ul li  {
     background: white;
     position: relative;
 }
-header ul li ul li:first-child {
+#site-header ul li ul li:first-child {
     padding-top: .2em;
 }
-header ul li a,
-header ul li a:link,
-header ul li a:visited {
+#site-header ul li a,
+#site-header ul li a:link,
+#site-header ul li a:visited {
     color: #747474;
     text-decoration: none;
     padding: 0 0.5em;
 }
-header .anonymous-tools {
+#site-header .anonymous-tools {
     position: absolute;
     left: 215px;
     top: 18px;
 }
-header .user-tools {
+#site-header .user-tools {
     float: right;
     margin-top: 18px;
 }
-header li.actions {
+#site-header li.actions {
     display: inline-block !important;
     margin-left: 15px;
     margin-top: -6px;
 }
-header dl { position: relative; }
-header dl img { position: relative; top: -2px; padding-right: 5px; }
-header dl dt { display: block; text-align: left; }
-header dl.user-nav dt,
-header dl.lang-country dt {
+#site-header dl { position: relative; }
+#site-header dl img { position: relative; top: -2px; padding-right: 5px; }
+#site-header dl dt { display: block; text-align: left; }
+#site-header dl.user-nav dt,
+#site-header dl.lang-country dt {
     cursor: pointer;
     padding: 0 0.5em;
 }
-header dl dd {
+#site-header dl dd {
     display: none;
 }
-header dl dd a.current {
+#site-header dl dd a.current {
     font-weight: bold;
 }
-header > .wrap > ul > li > a,
-header dl > dt {
+#site-header > .wrap > ul > li > a,
+#site-header dl > dt {
     border: 1px solid white;
     border-right-color: #747474;
 }
-header ul > li:last-child > a,
-header ul > li:last-child > dl > dt,
-header ul > li > dl.lang-country > dt {
+#site-header ul > li:last-child > a,
+#site-header ul > li:last-child > dl > dt,
+#site-header ul > li > dl.lang-country > dt {
     border-right-color: transparent;
 }
-header ul > li:hover:last-child > a,
-header ul > li:hover:last-child > dl > dt,
-header ul > li:hover > dl.lang-country > dt {
+#site-header ul > li:hover:last-child > a,
+#site-header ul > li:hover:last-child > dl > dt,
+#site-header ul > li:hover > dl.lang-country > dt {
     border-right-color: inherit;
 }
-header > .wrap > ul > li > a {
+#site-header > .wrap > ul > li > a {
     display: block;
 }
 /* Menu and submenu shared-related styles */
-header dl:hover dt,
-header dl dd li.current,
-header > .wrap > ul > li:hover > a {
+#site-header dl:hover dt,
+#site-header dl dd li.current,
+#site-header > .wrap > ul > li:hover > a {
     background-color: #F5F5F5;
 }
-header dl dd ul,
-header dl:hover dt,
-header > .wrap > ul > li:hover > a {
+#site-header dl dd ul,
+#site-header dl:hover dt,
+#site-header > .wrap > ul > li:hover > a {
     border: 1px solid #747474;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -588,23 +588,23 @@ header > .wrap > ul > li:hover > a {
     -o-border-radius: 4px;
 }
 /* Submenu */
-header dl {
+#site-header dl {
     position: relative;
     margin: 0;
     padding: 0;
 }
-header dl dd {
+#site-header dl dd {
     position: absolute;
     right: 0;
     padding-top: 10px;
     z-index: 1000;
 }
 /* anonymous menu is on left */
-header .anonymous-tools dl dd {
+#site-header .anonymous-tools dl dd {
     left: 0;
     right: auto;
 }
-header dl dd ul {
+#site-header dl dd ul {
     text-align: left;
     white-space: nowrap;
     width: auto;
@@ -612,11 +612,11 @@ header dl dd ul {
     overflow: hidden;
     background: white;
 }
-header dl:hover dd {
+#site-header dl:hover dd {
     display: block;
 }
 /* Submenu CSS arrow (positioning note: we had a padding-top of 10px on dd) */
-header dl dd:after {
+#site-header dl dd:after {
     border-bottom: 7px solid transparent;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
@@ -628,7 +628,7 @@ header dl dd:after {
     right: 15px;
     top: 5px;
 }
-header dl dd:before {
+#site-header dl dd:before {
     border-bottom: 8px solid transparent;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
@@ -641,31 +641,31 @@ header dl dd:before {
     top: 4px;
 }
 /* anonymous menu is on left */
-header .anonymous-tools dl dd:after {
+#site-header .anonymous-tools dl dd:after {
     left: 15px;
     right: auto;
 }
-header .anonymous-tools dl dd:before {
+#site-header .anonymous-tools dl dd:before {
     left: 14px;
     right: auto;
 }
 
-header dl dd a { display: block; }
-header dl dd li:hover { background-color: #F5F5F5; }
+#site-header dl dd a { display: block; }
+#site-header dl dd li:hover { background-color: #F5F5F5; }
 
-footer { margin: 25px auto; font-size: 1.2em; color: #747474; text-align: center; }
-footer > div {
+#site-footer { margin: 25px auto; font-size: 1.2em; color: #747474; text-align: center; }
+#site-footer > div {
     display: inline-block;
     vertical-align: middle;
 }
-footer .site-links a{
+#site-footer .site-links a{
     color: #747474;
     font-weight: bold;
     padding: 0 0.5em;
     text-decoration: none;
     border: 1px solid transparent;
 }
-footer .site-links a:hover {
+#site-footer .site-links a:hover {
     color: inherit;
     background-color: #F5F5F5;
     border: 1px solid #747474;
@@ -2379,7 +2379,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
     screen and (min-resolution: 1.2dppx)  /* The standard way */
 {
-    header #logo.replace {
+    #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: contain;
     }

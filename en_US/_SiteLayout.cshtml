@@ -49,7 +49,7 @@
     </head>
     <body class="@PageData["BodyClass"]">
         @RenderBody()
-        <header>
+        <header id="site-header">
 		    <div class="wrap">
 			    <a id="logo" class="replace" href="@Href(UrlUtil.LangPath)">Loconomics, at your service.</a>
                 @if (!WebSecurity.IsAuthenticated) {
@@ -118,7 +118,7 @@
 			    </ul>
 		    </div>
         </header>
-        <footer>
+        <footer id="site-footer">
             <div class="truste-seal">@RenderPage(UrlUtil.LangPath + "HelpCenter/_TrusteSealWidget.cshtml")</div>
             <div class="social-links"><a class="replace icon facebook" target="_blank" href="#">Facebook</a><a class="replace icon twitter" target="_blank" href="#">Twitter</a></div>
             <div class="site-links"><a href="@(UrlUtil.LangPath)About/">About</a>|<a href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(UrlUtil.LangPath + "HelpCenter/")">Help</a>|<a href="/Blog/">Blog</a></div>
