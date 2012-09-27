@@ -2367,6 +2367,14 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     padding: 0.6em 1em;
 }
 
+.legal table,
+.legal table td,
+.legal table th {
+    border: 1px solid #00000a;
+    border-collapse: collapse;
+    padding: .5em;
+}
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles
