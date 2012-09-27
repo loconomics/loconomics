@@ -24,8 +24,8 @@
                 SELECT UserId FROM webpages_Membership
                 WHERE ConfirmationToken = @0
             ", confirmationToken);
-        
-            // The standard WebSecurity.ConfirmAccount code DON'T let use do the auto-login on provider-sign-up without previuos confirmation (with an alert for the email
+       
+            // The standard WebSecurity.ConfirmAccount code DON'T let use do the auto-login on provider-sign-up without previous confirmation (with an alert for the email
             // confirmation instead a lock login), because of this a hack is done on provider-sign-up login over the IsConfirmed field, and this becomes the ConfirmAccount
             // standard method unuseful (do nothing, really, because it checks IsConfirmed field previuosly and ever is true, doing nothing -we need set to null 
             // ConfirmationToken to off the alert-). On success, ConfirmationToken is set to null and IsConfirmed to 1 (true), supporting both cases, when IsConfirmed is
@@ -36,6 +36,20 @@
                 db.Execute("UPDATE webpages_Membership SET ConfirmationToken = null, IsConfirmed = 1 WHERE ConfirmationToken like @0 AND UserID = @1", confirmationToken, confirmatedUserID);
                 //message = "Registration Confirmed! Please login to begin.";
                 db.Execute("EXEC TestAlertVerifyEmail @0", confirmatedUserID);
+                
+                
+                // IMPORTANT: Since 2012-09-27, issue #134, Auto-login is done on succesful confirmation;
+                // some code after next lines (comented as 'starndard logic' will not be executed, and some html, but preserved as documentation)
+                // Confirmation sucess, we need user name (email) to auto-login:
+                var confirmatedUserEmail = db.QueryValue(@"
+                    SELECT TOP 1 email FROM UserProfile WHERE UserID = @0
+                ", confirmatedUserID);
+                FormsAuthentication.SetAuthCookie(confirmatedUserEmail, false);
+                // Redirect to dashboard
+                Response.Redirect(UrlUtil.LangPath + "Dashboard/");
+
+
+                // Standard logic (previous 2012-09-27, issue #134):
                 message = "Your email was verified successfully! Please login to go to your dashboard:";
                 showLogin = true;
             } else {
