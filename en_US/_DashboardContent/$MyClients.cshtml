@@ -6,10 +6,15 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-			<li class="current"><a class="current" href="#myclients-current">Current</a></li>
-			<li><a href="#myclients-past">Past</a></li>
+			<li class="current"><a class="current" href="#coming">Current</a></li>
+            @*<li class="current"><a class="current" href="#myclients-current">Current</a></li>
+			<li><a href="#myclients-past">Past</a></li>*@
         </ul>
 
+        <div id="coming" class="tab-body current fancy">
+            @RenderPage("$ComingSoon.cshtml")
+        </div>
+        @*
 		<div id="myclients-current" class="tab-body fancy tabbed buttons current">
             <ul class="tabs">
                 <li class="current"><a class="button profile fanciful" href="#myclients-current-list">List</a></li>
@@ -33,4 +38,4 @@
 		<div id="myclients-past" class="tab-body fancy">
              <!-- TODO here must be the back-end content -->
 		</div><!-- #myclients-past -->
-	
+	*@

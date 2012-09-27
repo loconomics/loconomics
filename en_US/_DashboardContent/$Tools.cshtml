@@ -6,12 +6,18 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-			<li class="current"><a class="current" href="#tools-marketing">Marketing</a></li>
+			<li class="current"><a class="current" href="#tools-coming">Tools</a></li>
+            @*<li class="current"><a class="current" href="#tools-marketing">Marketing</a></li>
 			<li><a href="#tools-promotions">Promotions</a></li>
             <li><a href="#tools-reporting">Reporting</a></li>
-            <li><a href="#tools-taxes">Taxes</a></li>
+            <li><a href="#tools-taxes">Taxes</a></li>*@
         </ul>
 
+        <div id="tools-coming" class="tab-body current fancy">
+            @RenderPage("$ComingSoon.cshtml")
+        </div>
+
+@*
 	<div id="tools-marketing" class="tab-body fancy tabbed buttons current">
             <ul class="tabs">
                 <li class="current"><a class="button profile fanciful" href="#tools-marketing-referrals">Referrals</a></li>
@@ -68,4 +74,4 @@
                 Button Name 2 <!-- TODO here must be the back-end content -->
             </div><!-- #tools-taxes-option2 -->
 		</div><!-- #tools-taxes -->
-	
+	*@
