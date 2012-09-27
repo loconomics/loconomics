@@ -526,6 +526,9 @@ div.scripts { display: none; }
     text-decoration: none;
     padding: 0 0.5em;
 }
+#site-header ul li a.main-action {
+    padding: 0.4em 1.4em
+}
 #site-header .anonymous-tools {
     position: absolute;
     left: 215px;
