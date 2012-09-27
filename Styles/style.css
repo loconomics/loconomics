@@ -66,9 +66,9 @@ body { margin: 0; font-size: 13px; line-height: 1.231; }
 
 body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 
-::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
-::selection { background: #fe57a1; color: #fff; text-shadow: none; }
-
+/*::-moz-selection { background: #ebc0b1; color: #fff; text-shadow: none; }
+::selection { background: #ebc0b1; color: #fff; text-shadow: none; }
+*/
 
 /* =============================================================================
    Links
