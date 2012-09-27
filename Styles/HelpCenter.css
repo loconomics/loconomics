@@ -107,6 +107,12 @@
     top: 0;
     left: 18px;
 }
+.howitworks .tabs li:hover a {
+    color: #e95d0f;
+}
+.howitworks .tabs li.current a {
+    color: #00989a;
+}
 .howitworks .tabs li.customers a:before{
     background-position: 0 0;
 }
