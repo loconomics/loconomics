@@ -4,11 +4,20 @@
 .howitworks #main {
     float: none;
     width: auto;
+    position: relative;
 }
 /* Header */
+.howitworks #main > header {
+    left: 320px;
+    position: absolute;
+    right: 0;
+    top: 1em;
+    z-index: 10;
+}
 .howitworks h1 {
     font-size: 2em;
     text-transform: lowercase;
+    margin: 0;
 }
 .howitworks h1 > em {
     font-style: normal;
@@ -91,7 +100,6 @@
     display: inline-block;
     vertical-align: top;
     white-space: normal;
-    margin-right: 50px;
 }
 
 /** Specific howitworks tab-content styles **/
