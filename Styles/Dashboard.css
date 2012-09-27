@@ -338,7 +338,8 @@ ul.attributes-list li {
 .dashboard .preferences .personal-data-info .note a:visited {
     color: #8b2143;
 }
-#preferences-privacy-policy h1 {
+#preferences-privacy-policy h1,
+#account-terms h1 {
     margin: 0;
     font-size: 1.5em;
 }
