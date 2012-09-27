@@ -182,7 +182,8 @@
     screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
     screen and (min-resolution: 1.2dppx)  /* The standard way */
 {
-    #howitworks-customers li {
+    #howitworks-customers li,
+    #howitworks-providers li {
         background-size: 285px 100px;
     }
     #howitworks-customers li.find-provider {
