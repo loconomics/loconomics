@@ -104,7 +104,10 @@
 
 /** Specific howitworks tab-content styles **/
 .howitworks .tabs {
- /*   height: 105px;*/
+    box-shadow: 0 7px 6px -1px #BBBBBB;
+    -moz-box-shadow: 0 7px 6px -1px #BBBBBB;
+    -o-box-shadow: 0 7px 6px -1px #BBBBBB;
+    -webkit-box-shadow: 0 7px 6px -1px #BBBBBB;
 }
 .howitworks .tabs li a:before {
     background: url('../img/theme/howitworks/howitworks-tabs.png') no-repeat;
@@ -159,7 +162,7 @@
     border-top: 1px solid #c9c9c9;
     padding: 20px 25px;
     background: 605px center no-repeat;
-    padding-right: 320px;
+    padding-right: 375px;
     position: relative;
 }
 .howitworks .tab-body > ol > li:first-child {
