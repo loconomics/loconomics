@@ -145,7 +145,7 @@
                 // Insert provider details                        
                 if (u != null) {
                     userid = u.UserID;
-                    db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14",
+                    db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7",
                         userid,
                         firstname,
                         lastname,
@@ -153,28 +153,14 @@
                         (object)(state == 0 ? null : (object)state),
                         lang,
                         countryId,
-                        termsofuse.AsBool() ? 1 : 0,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
                         emailcontact.AsBool() ? 1 : 0);
                 } else {
                     userid = WebSecurity.GetUserId(email);
-                    db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14",userid,firstname,lastname,
+                    db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7",userid,firstname,lastname,
                         (object)(zipcode == 0 ? null : (object)zipcode),
                         (object)(state == 0 ? null : (object)state),
                         lang,
                         countryId,
-                        termsofuse.AsBool() ? 1 : 0,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
                         emailcontact.AsBool() ? 1 : 0);
                 }
                 

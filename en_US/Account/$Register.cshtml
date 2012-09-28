@@ -55,8 +55,8 @@
                 // Create Loconomics Customer user
                 int userid = WebSecurity.GetUserId(email);
                 //string firstname = email.Substring(0, email.IndexOf('@'));
-                db.Execute("exec CreateCustomer @0,@1,@2,1,1",
-                    userid, "", "");
+                db.Execute("exec CreateCustomer @0,@1,@2,@3,@4",
+                    userid, "", "", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 
                 string confirmationUrl = null;
 
