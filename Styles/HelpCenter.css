@@ -221,6 +221,14 @@
     #howitworks-providers li.get-paid {
         background-image: url('../img/theme/howitworks/howitworks-provider-get-paid@2x.png');
     }
+    .howitworks .tabs li a:before {
+        background-image: url('../img/theme/howitworks/howitworks-tabs@2x.png');
+        background-size: 201px 201px;
+    }
+    .tabbed.slider-tabs > .tabs > li.current {
+        background-image: url("../img/theme/howitworks/slider-tabs-selector@2x.png");
+        background-size: 20px 16px;
+    }
 }
 
 #howitworks-faqs {
