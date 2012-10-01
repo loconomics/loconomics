@@ -170,16 +170,28 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /*************************/
 /**** results items ******/
+.search-results-items {
+    margin: 0 -10px;
+}
 .search-results-items > li{
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -o-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border: 1px solid #849a9a;
-    margin: 5px 0;
-    padding: 4px 10px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border: 1px solid #CCC9C9;
     background-color: white;
     overflow: hidden;
+    
+    display: block;
+    float: left;
+    width: 231px;
+    margin: 0 9px;
+    padding: 11px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
 }
 .search-results-items > li h6,
 .search-results-items > li h6 a,
@@ -188,36 +200,9 @@ ul.search-results table td { padding-right: 16px; }*/
     margin: 0;
     text-decoration: none;
 }
-.search-results-items > li h6 a:hover{
-    color: #99C027;
-}
-.search-results-items > li img.avatar{
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    margin: 0 5px 0 0;
-    vertical-align: top;
-}
-.search-results-items > li .overview,
-.search-results-items > li .user-rating-summary-widget,
-.search-results-items > li .verifications-summary{
-    vertical-align: top;
-    height: 60px;
-}
-.search-results-items > li .overview, 
 .search-results-items > li .user-rating-summary-widget,
 .search-results-items > li .verifications-summary {
     font-size: 1em;
-}
-.search-results-items > li .overview{
-    display: inline-block;
-    line-height: normal;
-    height: auto;
-    width: 540px;
-}
-.search-results-items > li .overview .view-more{
-    display: inline;
-    float: none;
 }
 .search-results-items > li .user-rating-summary-widget ul {
     color: #6c6c6c;
@@ -233,7 +218,7 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search-results-items > li .verifications-summary,
 .search-results-items > li .user-rating-summary-widget{
-    margin: 0 0 0 10px;
+    margin: 0;
     min-height: 0 !important;
 }
 .search-results-items > li .verifications-summary > li{
@@ -298,24 +283,55 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /**********************************************/
 /**** provider info widget in search item *****/
-.search .search-results-items .user-micro-summary > h5 {
-    font-size: 1.5em;
-    color: #52276e;
+.search-user-info {
+    line-height: 1em;
+    height: 66px;
+    overflow: hidden;
 }
-.search .search-results-items .medium-user-info .user-text {
-    width: 295px;
+.search-user-info .user-micro-summary {
+    display: inline-block;
+    width: 130px;
+    overflow: hidden;
 }
-.search .search-results-items .medium-user-info a.view-profile {
-    display: none;
+.search-user-info h5 {
+    font-size: 1.1em;
+    display: inline;
 }
-.search .search-results-items .member-since {
-    float: right;
+.search-user-info h5 a {
+    text-decoration: none;
+    color: black;
 }
-.search .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
+.search-user-info .avatar {
+    float: left;
+    width: 66px;
+    height: 66px;
+    margin: 0 10px 0 0;
+    vertical-align: top;
+}
+.search-user-info .user-text {
+    font-size: 0.8em;
+    line-height: normal;
+    margin: 0;
+    height: 30px;
+    overflow: hidden;
+}
+.search-user-info .user-rating-summary-widget.user-rating-summary .note {
+    color: Black !important;
+    font-size: 1em;
+    line-height: 1em;
+    vertical-align: top;
+    font-weight: normal;
+}
+.search-user-info .user-rating-summary-widget {
+    line-height: .9em;
     height: auto;
-    min-height: inherit;
 }
-
+.search-user-info .user-rating-summary-widget .rating-image {
+    float: none;
+}
+.search-user-info .user-rating.global-rating {
+    line-height: 1em;
+}
 
 /************
  * sidebar **/

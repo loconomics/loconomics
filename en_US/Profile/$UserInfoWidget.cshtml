@@ -1,5 +1,5 @@
 ﻿@{
-    var size = PageData["Size"] ?? "mini"; // medium, large
+    var size = PageData["Size"] ?? "mini"; // medium, large, search
     var withContactData = PageData["WithContactData"] ?? false;
     var userID = PageData["UserID"] ?? 0;
     var data = PageData["Data"];
@@ -24,16 +24,15 @@
     }
     
     if (data == null) {
-        // TODO: review how works GetUserRowWithContactData and why GetUserRow returns contact data too but from different table:
-        //if (withContactData) {
-        //    data = LcData.UserInfo.GetUserRowWithContactData(userID);
-        //} else {
+        if (withContactData) {
+            data = LcData.UserInfo.GetUserRowWithContactData(userID);
+        } else {
             data = LcData.UserInfo.GetUserRow(userID);
-        //}
+        }
         dataPrefix = "";
     }
     
-    if (Array.IndexOf<string>(new string[] { "mini", "medium", "large" }, size) == -1) {
+    if (Array.IndexOf<string>(new string[] { "mini", "medium", "large", "search" }, size) == -1) {
         throw new Exception("Size is not valid: " + size);
     }
     if (Array.IndexOf<string>(new string[] { "user", "customer", "provider" }, userType) == -1) {
@@ -149,6 +148,60 @@ else if (size == "mini") {
         } else {
             @printProfileLink(data, dataPrefix, urlBase, "View profile")
         }
+        @if (withFullRating)
+        {
+            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+        }
+    </div>
+} else if (size == "search") {
+    <div class="@userType search-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
+        <div class="user-micro-summary">
+            @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
+
+            <p class="user-text">
+                @if (userType == "customer")
+                {
+                    @data[dataPrefix + "PublicBio"]
+                }
+                else if (userType == "provider")
+                {
+                    @data[dataPrefix + "Positions"]
+                }
+            </p>
+
+            @if (!withFullRating) {
+                if (userType == "customer")
+                {
+                    <div class="user-rating global-rating">
+                        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                           {
+                               ReviewedID = data[dataPrefix + "UserID"],
+                               PositionID = 0,
+                               ReviewedData = data,
+                               ReviewedDataPrefix = dataPrefix,
+                               RatingSummaryMode = "summary",
+                               ShowReviewsCountAsNote = true
+                           })
+                    </div>
+                }
+                else if (userType == "provider")
+                {
+                    <div class="user-rating global-rating">
+                        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                           {
+                               ReviewedID = data[dataPrefix + "UserID"],
+                               PositionID = positionID,
+                               ReviewedData = data,
+                               ReviewedDataPrefix = dataPrefix,
+                               RatingSummaryMode = "summary",
+                               ShowReviewsCountAsNote = true
+                           })
+                    </div>
+                }
+            }
+        </div>
+
         @if (withFullRating)
         {
             @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })

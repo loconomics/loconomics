@@ -4,21 +4,16 @@
 @helper hrefProfile(dynamic p){
     @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
 }
-        <div class="overview">
-            @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 
-                Size = "medium", 
-                UserID = item.UserID,
-                PositionID = item.PositionID,
-                UserType = "provider", 
-                WithGooglemap = false,
-                WithFullRating = true,
-                WithLinkInName = true
-            })
-            @*
-            <div class="positions">Positions:  Housekeeper, Gardener, and <a href="#" class="view-more">2 more</a></div>
-            <div class="services">Services offered:  ironing, mopping, dusting, bed-
-                making, sweeping, vacuuming, and <a href="#" class="view-more">14 more</a></div>*@
-        </div>
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 
+            Size = "search", 
+            Data = item,
+            UserID = item.UserID,
+            PositionID = item.PositionID,
+            UserType = "provider", 
+            WithGooglemap = false,
+            WithFullRating = false,
+            WithLinkInName = true
+        })
         
         @RenderPage(UrlUtil.LangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "" })
         

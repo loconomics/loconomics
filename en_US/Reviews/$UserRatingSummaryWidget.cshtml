@@ -3,6 +3,7 @@
     //PageData["UserRatingSummaryWidget"];
     dynamic reviewRecord = PageData["ReviewRecord"];
     bool withNote = PageData["RatingWithNote"] ?? true;
+    bool showReviewsCount = PageData["ShowReviewsCountAsNote"] ?? false;
     int reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     int reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
@@ -69,7 +70,10 @@
             }
             break;
         case "summary":
-            if (reviewRecord.TotalRatings > 0) {
+            if (showReviewsCount) {
+                note = "(" + reviewRecord.TotalRatings.ToString() + ")";
+            } else {
+                if (reviewRecord.TotalRatings > 0) {
                 string notetpl = "";
                 var percentage = reviewRecord.Answer2 / (reviewRecord.TotalRatings == 0 ? 1 : reviewRecord.TotalRatings);
                 if (positionID > 0) {
@@ -81,8 +85,9 @@
                         percentage,
                         LcHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
                         reviewRecord.TotalRatings);
-            } else {
-                note = "There are not enougth reviews still to show an average rating";
+                } else {
+                    note = "There are not enougth reviews still to show an average rating";
+                }
             }
             break;
     }
