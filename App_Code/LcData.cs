@@ -571,6 +571,49 @@ public static partial class LcData
     #endregion
 
     #region Pricing Wizard
+    #region Provider Price
+    public class ProviderPrice
+    {
+        public bool IsHourly;
+        public decimal Price;
+    }
+    public static ProviderPrice GetProviderPrice(int userID, int positionID, int clienttypeid)
+    {       
+        // Get our Pricing Type ID:
+        int pricingtypeid = LcData.GetPositionPricingTypeID(positionID, clienttypeid);
+
+        var providerPrice = new ProviderPrice();
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            if (pricingtypeid == 2 || pricingtypeid == 1)
+            {
+                providerPrice.IsHourly = true;
+                // Get hourly rate
+                providerPrice.Price = db.QueryValue(@"
+                    SELECT  coalesce(HourlyRate, 0)
+                    FROM    ProviderHourlyRate
+                    WHERE   UserID = @0
+                                AND
+                            PositionID = @1
+                                AND
+                            ClientTypeID = @2
+                ", userID, positionID, clienttypeid) ?? 0;
+            }
+            else if (pricingtypeid == 3)
+            {
+                providerPrice.Price = db.QueryValue(@"
+                    SELECT  coalesce(min(ProviderPackagePrice), 0)
+                    FROM    ProviderPackage
+                    WHERE   ProviderUserID = @0
+                             AND PositionID = @1
+                             AND LanguageID = @2 AND CountryID = @3
+                ", userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+            }
+        }
+        return providerPrice;
+    }
+    #endregion
     #region Common Pricing
     public static int GetPositionPricingTypeID(int positionID, int clientTypeID)
     {

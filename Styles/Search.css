@@ -172,8 +172,11 @@ ul.search-results table td { padding-right: 16px; }*/
 /**** results items ******/
 .search-results-items {
     margin: 0 -10px;
+    overflow: hidden;
 }
 .search-results-items > li{
+    position: relative;
+
     border-radius: 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
@@ -185,7 +188,7 @@ ul.search-results table td { padding-right: 16px; }*/
     display: block;
     float: left;
     width: 231px;
-    margin: 0 9px;
+    margin: 9px;
     padding: 11px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -225,14 +228,10 @@ ul.search-results table td { padding-right: 16px; }*/
     background: no-repeat center left;
     margin: 0;
     padding: 0 0 0 15px;
-    font-size: 0.9em;
     line-height: 1.7em;
 }
 .search-results-items > li .verifications-summary {
-    display: inline-block;
     text-transform: lowercase;
-    margin-top: 20px;
-    width: 110px;
 }
 .search-results-items > li .verifications-summary > li.license{
     background-image: url('../img/icon-licenses-mini.png');
@@ -273,12 +272,17 @@ ul.search-results table td { padding-right: 16px; }*/
     vertical-align: middle;
 }
 
-.search-results-items > li .button.book {
-    background-color: #461864;
-    float: right;
-}
-.search-results-items > li .button.book:hover {
+.search-results-items > li .book {
     background-color: #99C027;
+    bottom: 45px;
+    position: absolute;
+    right: 11px;
+}
+.search-results-items > li .book:hover {
+    box-shadow: 0 0 5px 2px #99C027;
+    -moz-box-shadow: 0 0 5px 2px #99C027;
+    -o-box-shadow: 0 0 5px 2px #99C027;
+    -webkit-box-shadow: 0 0 5px 2px #99C027;
 }
 
 /**********************************************/
@@ -331,6 +335,21 @@ ul.search-results table td { padding-right: 16px; }*/
 }
 .search-user-info .user-rating.global-rating {
     line-height: 1em;
+}
+
+/*****************
+ * provider-data */
+.provider-data {
+    background: none repeat scroll 0 0 #EEEEEE;
+    font-size: 0.8em;
+    margin: 20px -7px -7px;
+    padding: 5px 10px;
+}
+.provider-data .price {
+    bottom: 11px;
+    color: black;
+    position: absolute;
+    right: 11px;
 }
 
 /************

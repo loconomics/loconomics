@@ -1,5 +1,7 @@
 ﻿@{
     var item = PageData["Item"];
+    
+    var providerPrice = LcData.GetProviderPrice(item.UserID, item.PositionID, 1);
 }
 @helper hrefProfile(dynamic p){
     @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
@@ -15,19 +17,33 @@
             WithLinkInName = true
         })
         
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "" })
+        <div class="provider-services">
         
-        <div class="hightlighted-review">
+        </div>
+        
+        <div class="provider-data">
+            @RenderPage(UrlUtil.LangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "", OnlyIconType = "verification" })
+            <div class="response-time">
+                <em>Response time</em> <strong>N/A</strong>
+            </div>
+            <div class="price">
+                From <strong>@String.Format("{0:C}", providerPrice.Price)
+                @if (providerPrice.IsHourly)
+                {
+                    <text>/h</text>
+                }
+                </strong>
+            </div>
+        </div>
 
-            @*@RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = item.UserID, PositionID = item.PositionID })*@
-            @*
+        @*<div class="hightlighted-review">
+            @RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = item.UserID, PositionID = item.PositionID })
+            
             <img alt="Reviewer photo" class="reviewer-photo" src="@Href(UrlUtil.AppPath + "img/generic-friend-avatar.png")"/>
             <p>
                 @item.FirstName is really great at what he does. He was pleasant, communica...
                 <a href="#" class="view-more">view more</a>
-            </p>*@
-        </div>
+            </p>
+        </div>*@
 
-       <a class="button fanciful book" href="@hrefProfile(item)">
-        view and book for <span class="hour-price">$17/hr.</span>
-       </a>
+       <a class="action book" href="@hrefProfile(item)">view</a>

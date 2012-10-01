@@ -8,33 +8,10 @@
     // TODO: Get Customer Type Id   
     var clienttypeid = PageData["ClientTypeID"] = 1;
         
-    // Get our Pricing Type ID:
-    int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);    
+    var providerPrice = LcData.GetProviderPrice(p.UserID, pos.PositionID, clienttypeid);
     
-    var hourlyRate = 0M;
     var minimumBookingTime = 0M;
-    using (var db = Database.Open("sqlloco")){
-        if (pricingtypeid == 2 || pricingtypeid == 1) {
-            // Get hourly rate
-            hourlyRate = db.QueryValue(@"
-                SELECT  coalesce(HourlyRate, 0)
-                FROM    ProviderHourlyRate
-                WHERE   UserID = @0
-                            AND
-                        PositionID = @1
-                            AND
-                        ClientTypeID = @2
-            ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
-        } else if (pricingtypeid == 3) {
-            hourlyRate = db.QueryValue(@"
-                SELECT  coalesce(min(ProviderPackagePrice), 0)
-                FROM    ProviderPackage
-                WHERE   ProviderUserID = @0
-                         AND PositionID = @1
-                         AND LanguageID = @2 AND CountryID = @3
-            ", p.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
-        }
-        
+    using (var db = Database.Open("sqlloco")){       
         minimumBookingTime = db.QueryValue(@"
             SELECT  MinTime
             FROM    CalendarProviderAttributes
@@ -77,10 +54,15 @@
                     <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
                 <span class="hour-price">
-                    <span class="price">
-                        @if (pricingtypeid == 3) { <span class="price-since">from:</span> }
-                        $@hourlyRate</span>@if (pricingtypeid != 3) { <text>/h</text> }
-                    </span>
+                        @if (providerPrice.IsHourly)
+                        {
+                            <span class="price">@String.Format("{0:C}", providerPrice.Price)</span> <text>/h</text>
+                        }
+                        else
+                        {
+                            <span class="price-since">from:</span> <span class="price">@String.Format("{0:C}", providerPrice.Price)</span>
+                        }
+                </span>
                 <a class="calculate-price" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">

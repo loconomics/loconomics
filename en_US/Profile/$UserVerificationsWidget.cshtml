@@ -3,6 +3,7 @@
     var userID = PageData["UserID"] ?? Request["UserID"];
     string size = PageData["Size"] ?? "medium"; // mini
     string contID = PageData["ContainerID"];
+    string onlyIconType = PageData["OnlyIconType"]; // Verifications.Icon: verification, share, license
     
     dynamic data = null;
     using (var db = Database.Open("sqlloco")) {
@@ -45,7 +46,10 @@
         <ul class="verifications-list" @if(!String.IsNullOrEmpty(contID)){ @Html.Raw("id='" + contID + "'"); } >
             @foreach (var v in data)
             {
-            <li class="@v.Icon">@v.VerificationType</li>
+                if (onlyIconType == null || onlyIconType == v.Icon)
+                {
+                    <li class="@v.Icon">@v.VerificationType</li>
+                }
             }
             <li class="more-verifications">more</li>
         </ul>
@@ -54,7 +58,10 @@
         <ul @if(!String.IsNullOrEmpty(contID)){ Html.Raw("id='" + contID + "'"); } class="verifications-summary">
             @foreach (var v in data)
             {
+                if (onlyIconType == null || onlyIconType == v.Icon)
+                {
                 <li class="@v.Icon">@v.Quantity @v.SummaryGroup</li>
+                }
             }
             @*<li class="license">2 licenses</li>
             <li class="verification">4 verifications</li>
