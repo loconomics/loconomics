@@ -352,6 +352,21 @@ ul.search-results table td { padding-right: 16px; }*/
     right: 11px;
 }
 
+/*********************
+ * provider-services */
+.provider-services {
+    margin: 5px 0;
+    font-size: .9em;
+    line-height: 1.3em;
+    height: 50px;
+    overflow: hidden;
+}
+.provider-services h5 {
+    font-size: 1em;
+    color: #5a5b5b;
+    margin: 0;
+}
+
 /************
  * sidebar **/
 .refine-search-results {

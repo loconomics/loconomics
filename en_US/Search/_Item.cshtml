@@ -2,6 +2,8 @@
     var item = PageData["Item"];
     
     var providerPrice = LcData.GetProviderPrice(item.UserID, item.PositionID, 1);
+    
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(item.PositionID, "without-special-cats only-user-checked", item.UserID);
 }
 @helper hrefProfile(dynamic p){
     @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
@@ -18,7 +20,23 @@
         })
         
         <div class="provider-services">
-        
+            @foreach (var cat in dataCats)
+            {
+                if (cat.Value["ServiceAttributes"].Count > 0)
+                {
+                    <div>
+                        <h5>@cat.Value["ServiceAttributeCategoryName"]</h5>
+                        @{
+                            var attrs = new List<string>();
+                        
+                            foreach(var att in cat.Value["ServiceAttributes"]){
+                                attrs.Add(att.ServiceAttribute);
+                            }
+                        }
+                        @LcHelpers.JoinNotEmptyStrings(", ", attrs)
+                    </div>
+                }
+            }
         </div>
         
         <div class="provider-data">
