@@ -712,6 +712,9 @@ div.scripts { display: none; }
 #homeSearch ul li {
     float: left
 }
+.search-options > ul {
+    overflow: hidden;
+}
 .search-service {
     width: 270px;
 }

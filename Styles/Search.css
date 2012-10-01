@@ -65,6 +65,11 @@ ul.search-results table td { padding-right: 16px; }*/
     float: right;
 }
 
+/* specific (results) search form */
+.searched .search-service {
+    width: 330px;
+}
+
 
 /********************************************/
 /*** generic buttons-list class *************/
