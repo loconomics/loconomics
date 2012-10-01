@@ -69,6 +69,17 @@ ul.search-results table td { padding-right: 16px; }*/
 .searched .search-service {
     width: 330px;
 }
+.searched .search-options ul li {
+    padding: 0;
+}
+.searched #homeSearch label {
+    line-height: 1em;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+.searched #homeSearch {
+    margin-bottom: 20px;
+}
 
 
 /********************************************/
