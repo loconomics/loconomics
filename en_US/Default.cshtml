@@ -145,6 +145,10 @@
             <div class="refine-search-results">
                 <h2>Refine Results</h2>
             </div>
+            @if (!categorizedResults)
+            {
+                @RenderPage(UrlUtil.LangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
+            }
         </div>
     }
 </div>

@@ -336,3 +336,100 @@ ul.search-results table td { padding-right: 16px; }*/
     background: url('../img/theme/search-icon.png') no-repeat center 50px white;
     background-size: 96px 104px;
 }
+
+/************
+ * sidebar
+ * cagories */
+#secondary .search-categories {
+    border: 1px solid #CCC9C9;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    
+    margin-top: 10px;
+}
+#secondary .search-categories .cat-list-title {
+    color: #5a5b5b;
+    padding: 10px 0 10px 20px;
+    margin: 0 0 10px;
+    border-bottom: 1px solid #dfdfdf;
+    
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    
+    background: #f5f5f5;
+    box-shadow: 0 0 4px 2px white inset;
+    -moz-box-shadow: 0 0 4px 2px white inset;
+    -o-box-shadow: 0 0 4px 2px white inset;
+    -webkit-box-shadow: 0 0 4px 2px white inset;
+}
+#secondary .search-categories ul {
+    height: auto;
+    text-align: left;
+}
+#secondary .search-categories ul li {
+    background: none;
+    float: none;
+    display: block;
+    height: auto;
+    width: auto;
+    padding: 0;
+    margin: 0 0 5px 20px;
+}
+#secondary .search-categories ul li a {
+    height: 24px;
+    width: auto;
+    display: block;
+    float: none;
+    position: static;
+    width: 24px;
+    text-indent: 35px;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    font-size: .9em;
+    font-weight: bold;
+    line-height: 24px;
+    text-transform: lowercase;
+    
+    background: url('../img/theme/search-categories-24px.png') no-repeat left top;
+}
+#secondary .search-categories ul li:hover .details {
+    display: none;
+}
+#secondary .search-categories li.cat-home a,
+#secondary .search-categories ul:hover li.cat-home a  {           background-position: -104px  0}
+#secondary .search-categories li.cat-child a,
+#secondary .search-categories ul:hover li.cat-child a{            background-position: -52px 0}
+#secondary .search-categories li.cat-pets a,
+#secondary .search-categories ul:hover li.cat-pets a{             background-position: -156px 0}
+#secondary .search-categories li.cat-people a,
+#secondary .search-categories ul:hover li.cat-people a{           background-position: -130px 0}
+#secondary .search-categories li.cat-transport a,
+#secondary .search-categories ul:hover li.cat-transport a{        background-position: -182px 0}
+#secondary .search-categories li.cat-business a,
+#secondary .search-categories ul:hover li.cat-business a{         background-position: 0 0}
+#secondary .search-categories li.cat-elderly a,
+#secondary .search-categories ul:hover li.cat-elderly a{          background-position: -78px 0}
+#secondary .search-categories li.cat-celebrations a,
+#secondary .search-categories ul:hover li.cat-celebrations a{     background-position: -26px 0}
+/* Selected image */
+#secondary .search-categories li.selected.cat-home a,
+#secondary .search-categories ul:hover li.cat-home:hover a{             background-position: -104px -26px}
+#secondary .search-categories li.selected.cat-child a,
+#secondary .search-categories ul:hover li.cat-child:hover a{            background-position: -52px -26px}
+#secondary .search-categories li.selected.cat-pets a,
+#secondary .search-categories ul:hover li.cat-pets:hover a{             background-position: -156px -26px}
+#secondary .search-categories li.selected.cat-people a,
+#secondary .search-categories ul:hover li.cat-people:hover a{           background-position: -130px -26px}
+#secondary .search-categories li.selected.cat-transport a,
+#secondary .search-categories ul:hover li.cat-transport:hover a{        background-position: -182px -26px}
+#secondary .search-categories li.selected.cat-business a,
+#secondary .search-categories ul:hover li.cat-business:hover a{         background-position: 0 -26px}
+#secondary .search-categories li.selected.cat-elderly a,
+#secondary .search-categories ul:hover li.cat-elderly:hover a{          background-position: -78px -26px}
+#secondary .search-categories li.selected.cat-celebrations a,
+#secondary .search-categories ul:hover li.cat-celebrations:hover a{     background-position: -26px -26px}
