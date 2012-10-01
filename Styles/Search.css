@@ -366,6 +366,28 @@ ul.search-results table td { padding-right: 16px; }*/
     -o-box-shadow: 0 0 4px 2px white inset;
     -webkit-box-shadow: 0 0 4px 2px white inset;
 }
+#secondary .refine-search-groups {
+    border: 1px solid #CCC9C9;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+#secondary .refine-search-group {
+    border-bottom: 1px solid #CCC9C9;
+}
+#secondary .refine-search-group:last-child {
+    border-bottom: none;
+}
+#secondary .refine-search-group h3 {
+    font-size: 1em;
+    color: #747474;
+    margin: 0;
+    padding: 10px 10px 10px 20px;
+    font-weight: normal;
+}
+
 #secondary .search-categories ul {
     height: auto;
     text-align: left;
