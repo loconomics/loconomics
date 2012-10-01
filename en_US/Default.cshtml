@@ -142,7 +142,9 @@
     @if (performSearch)
     {
         <div id="secondary">
-            @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQs.cshtml")
+            <div class="refine-search-results">
+                <h2>Refine Results</h2>
+            </div>
         </div>
     }
 </div>
