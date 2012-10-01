@@ -62,6 +62,7 @@ ul.search-results table td { padding-right: 16px; }*/
 .search #main {
     color: #6c6c6c;
     font-size: 1em;
+    float: right;
 }
 
 
@@ -162,6 +163,7 @@ ul.search-results table td { padding-right: 16px; }*/
     margin: 5px 0;
     padding: 4px 10px;
     background-color: white;
+    overflow: hidden;
 }
 .search-results-items > li h6,
 .search-results-items > li h6 a,
@@ -186,15 +188,16 @@ ul.search-results table td { padding-right: 16px; }*/
     vertical-align: top;
     height: 60px;
 }
-.search-results-items > li .overview,
+.search-results-items > li .overview, 
 .search-results-items > li .user-rating-summary-widget,
-.search-results-items > li .verifications-summary{
-    font-size: 0.9em;
+.search-results-items > li .verifications-summary {
+    font-size: 1em;
 }
 .search-results-items > li .overview{
     display: inline-block;
     line-height: normal;
-    width: 310px;
+    height: auto;
+    width: 540px;
 }
 .search-results-items > li .overview .view-more{
     display: inline;
@@ -227,6 +230,8 @@ ul.search-results table td { padding-right: 16px; }*/
 .search-results-items > li .verifications-summary {
     display: inline-block;
     text-transform: lowercase;
+    margin-top: 20px;
+    width: 110px;
 }
 .search-results-items > li .verifications-summary > li.license{
     background-image: url('../img/icon-licenses-mini.png');
@@ -269,53 +274,28 @@ ul.search-results table td { padding-right: 16px; }*/
 
 .search-results-items > li .button.book {
     background-color: #461864;
+    float: right;
 }
 .search-results-items > li .button.book:hover {
     background-color: #99C027;
 }
 
-/***********************/
-/**** search again *****/
-
-#searchAgain { padding: 14px; background: #F5F5F5; color: #3B3B3B; }
-#searchAgain legend { padding: 6px 6px 14px 6px; font-weight: bold; }
-#searchAgain > fieldset { padding: 14px 6px; border-top: 1px solid #C1C1C1; font-size: .9em; line-height: 120%; }
-#searchAgain fieldset.search-params { padding-bottom: 0; }
-#searchAgain fieldset.search-params fieldset { padding: 0 0 14px 0; }
-#searchAgain fieldset.search-params label { display: block; padding-bottom: 7px; }
-
-/********************
- **** Alternate1 ***/
-.search .alternate1 .search-results-items .user-micro-summary > h5 {
+/**********************************************/
+/**** provider info widget in search item *****/
+.search .search-results-items .user-micro-summary > h5 {
     font-size: 1.5em;
     color: #52276e;
 }
-.search .alternate1 .search-results-items > li .overview {
-    height: auto;
-    width: 540px;
-}
-.search .alternate1 .search-results-items .medium-user-info .user-text {
+.search .search-results-items .medium-user-info .user-text {
     width: 295px;
 }
-.search .alternate1 .search-results-items > li .overview, 
-.search .alternate1 .search-results-items > li .user-rating-summary-widget,
-.search .alternate1 .search-results-items > li .verifications-summary {
-    font-size: 1em;
-}
-.search .alternate1 .search-results-items > li .verifications-summary {
-    margin-top: 20px;
-    width: 110px;
-}
-.search .alternate1 .search-results-items .medium-user-info a.view-profile {
+.search .search-results-items .medium-user-info a.view-profile {
     display: none;
 }
-.search .alternate1 .search-results-items .member-since {
+.search .search-results-items .member-since {
     float: right;
 }
-.search .alternate1 .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
+.search .search-results-items .user-rating-summary-widget.user-rating-detailed.provider {
     height: auto;
     min-height: inherit;
-}
-.search .alternate1 .search-results-items > li .button.book {
-    float: right;
 }
