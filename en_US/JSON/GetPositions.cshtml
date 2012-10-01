@@ -14,17 +14,17 @@
  
     try{
         // Input data
-        var term = "%" + (Request["serviceType"] ?? Request["term"]) + "%";
+        var term = Request["serviceType"] ?? Request["term"];
     
         // Process data
         var db = Database.Open("sqlloco");
-        var sql = "EXEC GetPositions @0,1,1";
-        var data = db.Query(sql, term);
+        var sql = "EXEC SearchPositions @0,@1,@2";
+        var data = db.Query(sql, "%" + term + "%", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
 
         // Result format is different to feed the Autocomplete jQueryUI feature:
         if (UrlData.Count > 0 && UrlData[0].ToLower() == "autocomplete") {
             LcHelpers.ReturnJson(
-                data.Select(p => new{label = p.PositionSingular, value = p.PositionID, description = p.PositionDescription})
+                data.Select(p => new{label = term + " (" + p.PositionSingular + ")", value = p.PositionID, positionSingular = p.PositionSingular, description = p.PositionDescription})
             );
         }
         
@@ -38,10 +38,6 @@
     } catch(Exception ex){
         result["ErrorMessage"] = ex.Message;
     }
-    
-    // Testing loading block:
-    //System.Threading.Thread.Sleep(2000);
-    //throw new Exception("Test error");
     
     // Output data
     LcHelpers.ReturnJsonResult(resultCode, result);

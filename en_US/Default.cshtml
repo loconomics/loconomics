@@ -28,8 +28,13 @@
         var LC_Cat = serviceCat;
         // Performing search:
         using (var db = Database.Open("sqlloco")) {
-            var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
-            posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
+            if (String.IsNullOrEmpty(LC_Term)) {
+                var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
+                posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
+            } else {
+                var searchsql = "EXEC dbo.SearchProvidersByPositionSingular @0,@1,@2";
+                posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term);
+            }
         }
     
         /* Simulating categorized search */
