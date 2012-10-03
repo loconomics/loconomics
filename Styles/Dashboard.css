@@ -787,6 +787,15 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .edit-location ul > li label {
     width: auto;
 }
+.edit-location .copy-location {
+    margin: 10px 0 30px;
+    font-weight: bold;
+    text-align: center;
+}
+.edit-location .copy-location select {
+    font-weight: normal;
+    text-align: left;
+}
 .edit-location ul.location-data label,
 .edit-location ul.location-map label {
     display: block;
