@@ -105,8 +105,10 @@
     ";
     dynamic transports = null, location = null, types = null, userAddresses = null;
     using (var db = Database.Open("sqlloco")) {
-        location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID,
-            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
+        if (locationID > 0) {
+            location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID,
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
+        }
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes);
         userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
@@ -206,6 +208,12 @@
                 <li>
                     <strong>GPS Coordinates</strong>
                 </li>
+                <li class="options">
+                    <div>Click on the map or move the marker icon to set manually the address coordinates of this address accurately, or use some of next tools:</div>
+                    <a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>
+                    <a href="#geocode" class="has-tooltip" title="Use Google Maps Geocoding to translate address into coordenates">Get positioning using my address</a>
+                    <a href="#editcoordinates" class="has-tooltip" title="Edit coordinates manually (be careful!)">Edit coordinates</a>
+                </li>
                 <li class="gps-lat"><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
                 <li class="gps-lng"><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
                 <li class="map-selector"><div class="google-map"></div></li>
@@ -275,6 +283,11 @@
                         // Some confs
                         var detailedZoomLevel = 16;
                         var generalZoomLevel = 1;
+                        var foundLocations = {
+                            byUser: null,
+                            byGeolocation: null,
+                            byGeocode: null
+                        };
 
                         var l = $('.edit-location .location-map');
                         var m = l.find('.map-selector > .google-map').get(0);
@@ -304,6 +317,7 @@
                         google.maps.event.addListener(map, 'click', function (event) {
                             placeMarker(event.latLng);
                             positionedByUser = true;
+                            foundLocations.byUser = event.latLng;
                         });
                         function placeMarker(latlng) {
                             marker.setPosition(latlng);
@@ -313,10 +327,11 @@
                             return marker;
                         }
                         function saveCoordinates() {
-                            var latlng = marker.getPosition();
-                            $lat.val(latlng.lat()); //marker.position.Xa
-                            $lng.val(latlng.lng()); //marker.position.Ya
+                            var latLng = marker.getPosition();
+                            $lat.val(latLng.lat()); //marker.position.Xa
+                            $lng.val(latLng.lng()); //marker.position.Ya
                             positionedByUser = true;
+                            foundLocations.byUser = latLng;
                         }
                         // Listen when user changes form coordinates values to update the map
                         $lat.change(updateMapMarker);
@@ -330,89 +345,171 @@
                             map.panTo(newPos);
                         }
 
-                        // Use browser geolocation support to get an automatic location if there is no a location selected by user
-                        // Check to see if this browser supports geolocation.
-                        if (!positionedByUser && navigator.geolocation) {
+                        /*===================
+                        * AUTO POSITIONING
+                        */
+                        function useGeolocation(force) {
+                            var override = force || !positionedByUser;
+                            // Use browser geolocation support to get an automatic location if there is no a location selected by user
+                            // Check to see if this browser supports geolocation.
+                            if (override && navigator.geolocation) {
 
-                            // This is the location marker that we will be using
-                            // on the map. Let's store a reference to it here so
-                            // that it can be updated in several places.
-                            var locationMarker = null;
+                                // This is the location marker that we will be using
+                                // on the map. Let's store a reference to it here so
+                                // that it can be updated in several places.
+                                var locationMarker = null;
 
-                            // Get the location of the user's browser using the
-                            // native geolocation service. When we invoke this method
-                            // only the first callback is requied. The second
-                            // callback - the error handler - and the third
-                            // argument - our configuration options - are optional.
-                            navigator.geolocation.getCurrentPosition(
-                                function (position) {
-                                    // Check to see if there is already a location.
-                                    // There is a bug in FireFox where this gets
-                                    // invoked more than once with a cached result.
-                                    if (locationMarker) {
-                                        return;
-                                    }
+                                // Get the location of the user's browser using the
+                                // native geolocation service. When we invoke this method
+                                // only the first callback is requied. The second
+                                // callback - the error handler - and the third
+                                // argument - our configuration options - are optional.
+                                navigator.geolocation.getCurrentPosition(
+                                    function (position) {
+                                        // Check to see if there is already a location.
+                                        // There is a bug in FireFox where this gets
+                                        // invoked more than once with a cached result.
+                                        if (locationMarker) {
+                                            return;
+                                        }
 
-                                    // Move marker to the map using the position, only if user doesn't set a position
-                                    if (!positionedByUser) {
-                                        locationMarker = placeMarker(
-                                            new google.maps.LatLng(
+                                        // Move marker to the map using the position, only if user doesn't set a position
+                                        if (override) {
+                                            var latLng = new google.maps.LatLng(
                                                 position.coords.latitude,
                                                 position.coords.longitude
-                                            )
-                                        );
-                                        // Set zoom to something more detailed
-                                        map.setZoom(detailedZoomLevel);
+                                            );
+                                            locationMarker = placeMarker(latLng);
+                                            foundLocations.byGeolocation = latLng;
+                                            // Set zoom to something more detailed
+                                            map.setZoom(detailedZoomLevel);
+                                        }
+                                    },
+                                    function (error) {
+                                        console.log("Something went wrong: ", error);
+                                    },
+                                    {
+                                        timeout: (5 * 1000),
+                                        maximumAge: (1000 * 60 * 15),
+                                        enableHighAccuracy: true
                                     }
-                                },
-                                function (error) {
-                                    console.log("Something went wrong: ", error);
-                                },
-                                {
-                                    timeout: (5 * 1000),
-                                    maximumAge: (1000 * 60 * 15),
-                                    enableHighAccuracy: true
-                                }
-                            );
+                                );
 
 
-                            // Now that we have asked for the position of the user,
-                            // let's watch the position to see if it updates. This
-                            // can happen if the user physically moves, of if more
-                            // accurate location information has been found (ex.
-                            // GPS vs. IP address).
-                            //
-                            // NOTE: This acts much like the native setInterval(),
-                            // invoking the given callback a number of times to
-                            // monitor the position. As such, it returns a "timer ID"
-                            // that can be used to later stop the monitoring.
-                            var positionTimer = navigator.geolocation.watchPosition(
-                                function (position) {
-                                    // Move again to the new or accurated position, if user doesn't set a position
-                                    if (!positionedByUser) {
-                                        locationMarker = placeMarker(
-                                            new google.maps.LatLng(
+                                // Now that we have asked for the position of the user,
+                                // let's watch the position to see if it updates. This
+                                // can happen if the user physically moves, of if more
+                                // accurate location information has been found (ex.
+                                // GPS vs. IP address).
+                                //
+                                // NOTE: This acts much like the native setInterval(),
+                                // invoking the given callback a number of times to
+                                // monitor the position. As such, it returns a "timer ID"
+                                // that can be used to later stop the monitoring.
+                                var positionTimer = navigator.geolocation.watchPosition(
+                                    function (position) {
+                                        // Move again to the new or accurated position, if user doesn't set a position
+                                        if (override) {
+                                            var latLng = new google.maps.LatLng(
                                                 position.coords.latitude,
                                                 position.coords.longitude
-                                            )
-                                        );
-                                        // Set zoom to something more detailed
-                                        map.setZoom(detailedZoomLevel);
-                                    }  else
+                                            );
+                                            locationMarker = placeMarker(latLng);
+                                            foundLocations.byGeolocation = latLng;
+                                            // Set zoom to something more detailed
+                                            map.setZoom(detailedZoomLevel);
+                                        } else
+                                            navigator.geolocation.clearWatch(positionTimer);
+                                    }
+                                );
+
+                                // If the position hasn't updated within 5 minutes, stop
+                                // monitoring the position for changes.
+                                setTimeout(
+                                    function () {
+                                        // Clear the position watcher.
                                         navigator.geolocation.clearWatch(positionTimer);
-                                }
-                            );
+                                    },
+                                    (1000 * 60 * 5)
+                                );
+                            } // Ends geolocation position
+                        }
+                        function useGmapsGeocode(force) {
+                            var override = force || !positionedByUser;
+                            if (!override) return;
+                            var geocoder = new google.maps.Geocoder();
 
-                            // If the position hasn't updated within 5 minutes, stop
-                            // monitoring the position for changes.
-                            setTimeout(
-                                function () {
-                                    // Clear the position watcher.
-                                    navigator.geolocation.clearWatch(positionTimer);
-                                },
-                                (1000 * 60 * 5)
-                            );
-                        } // Ends geolocation position
+                            // lookup on address fields changes with complete information
+                            var $form = $('.edit-location'), form = $form.get(0);
+                            function getFormAddress() {
+                                var ad = [];
+                                function add(field) {
+                                    if (form.elements[field].value) ad.push(form.elements[field].value);
+                                }
+                                add('addressline1');
+                                add('addressline2');
+                                add('city');
+                                var s = form.elements['state'];
+                                if (s.value) ad.push(s.options[s.selectedIndex].label);
+                                ad.push('USA');
+                                // Minimum for valid address: 4 fields filled out
+                                return ad.length >= 4 ? ad.join(', ') : null;
+                            }
+                            $form.on('change', '[name=addressline1], [name=addressline2], [name=city], [name=state]', function () {
+                                var address = getFormAddress();
+                                if (address)
+                                    geocodeLookup(address, false);
+                            });
+
+                            var address = getFormAddress();
+                            if (address)
+                                geocodeLookup(address, true);
+
+                            function geocodeLookup(address, override) {
+                                geocoder.geocode({ 'address': address }, function (results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+                                        var latLng = results[0].geometry.location;
+                                        console.info('Geocode retrieved: ' + latLng + ' for address "' + address + '"');
+                                        foundLocations.byGeocode = latLng;
+
+                                        if (!override) return;
+                                        placeMarker(latLng);
+                                        // Set zoom to something more detailed
+                                        map.setZoom(detailedZoomLevel);
+                                    } else {
+                                        console.error('Geocode was not successful for the following reason: ' + status + ' on address "' + address + '"');
+                                    }
+                                });
+                            }
+                        }
+
+                        // Executing auto positioning:
+                        //useGeolocation();
+                        useGmapsGeocode();
+
+                        // Link options links:
+                        l.on('click', '.options a', function () {
+                            var target = $(this).attr('href').substr(1);
+                            switch (target) {
+                                case 'geolocation':
+                                    if (foundLocations.byGeolocation)
+                                        placeMarker(foundLocations.byGeolocation);
+                                    else
+                                        useGeolocation(true);
+                                    break;
+                                case 'geocode':
+                                    if (foundLocations.byGeocode)
+                                        placeMarker(foundLocations.byGeocode);
+                                    else
+                                        useGmapsGeocode(true);
+                                    break;
+                                case 'editcoordinates':
+                                    l.find('.gps-lat, .gps-lng').toggle('fast');
+                                    break;
+                            }
+
+                            return false;
+                        });
                     }
                     });
                 }
