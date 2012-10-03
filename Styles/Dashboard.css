@@ -796,6 +796,10 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     height: 300px;
     width: 100%;
 }
+.edit-location .location-map .gps-lat,
+.edit-location .location-map .gps-lng {
+    display: none;
+}
 .edit-location ul.location-data input,
 .edit-location ul.location-data select,
 .edit-location ul.location-data textarea,

@@ -174,8 +174,8 @@
                 <li>
                     <strong>GPS Coordinates</strong>
                 </li>
-                <li><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
-                <li><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
+                <li class="gps-lat"><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
+                <li class="gps-lng"><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
                 <li class="map-selector"><div class="google-map"></div></li>
                 @*<li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>*@
             </ul>
