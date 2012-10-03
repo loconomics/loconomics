@@ -349,6 +349,8 @@ public static partial class LcData
                 ,L.GoogleMapsURL
                 ,L.SpecialInstructions
 
+                ,CAST((CASE WHEN SA.AddressID is null THEN 0 ELSE 1 END) As bit) As IsServiceAddress
+
                 ,SA.ServicesPerformedAtLocation
                 ,SA.TravelFromLocation
                 ,SA.ServiceRadiusFromLocation
@@ -364,10 +366,11 @@ public static partial class LcData
                 ,AT.AddressType
                 ,AT.UniquePerUser
         FROM    Address As L
-                 INNER JOIN
+                 LEFT JOIN
                 ServiceAddress As SA
                   ON L.AddressID = SA.AddressID
                       AND L.UserID = SA.UserID
+                      AND SA.PositionID = @1
                  INNER JOIN
                 StateProvince As SP
                   ON L.StateProvinceID = SP.StateProvinceID
@@ -381,7 +384,6 @@ public static partial class LcData
                 AddressType As AT
                   ON AT.AddressTypeID = L.AddressTypeID
         WHERE   L.UserID = @0
-                 AND SA.PositionID = @1
                  -- We get all location, not only active: -- AND L.Active = 1
                  AND L.AddressName is not null AND L.AddressName not like ''
     ";

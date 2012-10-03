@@ -20,7 +20,7 @@
             LcHelpers.ReturnJsonResult(0, "Location removed succesfully");
         }
     }
-    
+
     Validation.RequireField("name", LcRessources.RequiredField("Name"));
     Validation.RequireField("addressline1", LcRessources.RequiredField("Address Line 1"));
     Validation.RequireField("city", LcRessources.RequiredField("City"));
@@ -86,7 +86,7 @@
             LcHelpers.ReturnJsonResult(0, "Location saved");
         }
     }
-    
+
     var sqlGetTransports = @"
         SELECT *
         FROM    TransportType
@@ -100,11 +100,17 @@
         FROM    AddressType
         WHERE   Active = 1 AND UniquePerUser = 0
     ";
-    dynamic transports = null, location = null, types = null;
+    var sqlGetUserAddresses = @"
+        SELECT  AddressID, AddressName
+        FROM    Address
+        WHERE   UserID = @0 AND AddressName is not null AND AddressName not like ''
+    ";
+    dynamic transports = null, location = null, types = null, userAddresses = null;
     using (var db = Database.Open("sqlloco")) {
         location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID, locationID);
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes);
+        userAddresses = db.Query(sqlGetUserAddresses, u.UserID);
     }
 }
 @helper printDistanceOptions(string selected){
@@ -117,6 +123,22 @@
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset>
+            @if (locationID == 0)
+            {
+            <ul class="copy-location">
+                <li>
+                    <label>You can specify a full new address or use one of yours addresses from the list:
+                        <select class="copy-location">
+                            <option value=""></option>
+                            @foreach (var add in userAddresses)
+                            {
+                                <option @LcHelpers.IsSelected(Request["select-address"], add.AddressID) value="@add.AddressID">@add.AddressName</option>
+                            }
+                        </select>
+                    </label>
+                </li>
+            </ul>
+            }
             <ul class="location-data">
                 <li class="location-name">
                     <label>Name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
@@ -150,7 +172,7 @@
                     @Html.ValidationMessage("special-instructions")
                 </li>
                 <li class="location-preferredaddress input-option">
-                    <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null ? location.PreferredAddress : null)) /> This is my prefered address</label>
+                    <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null && location.IsServiceAddress ? location.PreferredAddress : null)) /> This is my prefered address</label>
                 </li>
                 <li class="location-type">
                     <label>Address Type:
@@ -182,20 +204,20 @@
             <ul class="location-travel">
                 <li class="input-option">
                     I perform services at this location:
-                    <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["iworkon"] ?? (location != null ? location.ServicesPerformedAtLocation : null)) name="iworkon" value="True"/></label>
-                    <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["iworkon"] ?? (location != null ? location.ServicesPerformedAtLocation : false)) name="iworkon" value="False"/></label>
+                    <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["iworkon"] ?? (location != null && location.IsServiceAddress ? location.ServicesPerformedAtLocation : null)) name="iworkon" value="True"/></label>
+                    <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["iworkon"] ?? (location != null && location.IsServiceAddress ? location.ServicesPerformedAtLocation : false)) name="iworkon" value="False"/></label>
                 </li>
                 <li class="input-option">
                     <fieldset class="has-confirm">
                      <legend>I travel to clients from this location</legend> 
                         <div class="confirm positionlocations-itravel-confirm">
-                            <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["itravel"] ?? (location != null ? location.TravelFromLocation : null)) name="itravel" value="True"/></label>
-                            <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["itravel"] ?? (location != null ? location.TravelFromLocation : false)) name="itravel" value="False"/></label>
+                            <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["itravel"] ?? (location != null && location.IsServiceAddress ? location.TravelFromLocation : null)) name="itravel" value="True"/></label>
+                            <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["itravel"] ?? (location != null && location.IsServiceAddress ? location.TravelFromLocation : false)) name="itravel" value="False"/></label>
                         </div>
                         <ul class="travel-options">
                             <li><label>I will travel up to 
                                 <select name="travel-radius" @Validation.GetHtml("travel-radius")>
-                                    @printDistanceOptions(Request["travel-radius"] ?? (location != null ? location.ServiceRadiusFromLocation : null))
+                                    @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
                                 </select>
                                 from this location.</label>
                                 @Html.ValidationMessage("travel-radius")
@@ -206,7 +228,7 @@
                                 @foreach (var t in transports)
                                 {
                                     <li>
-                                        <label><input type="radio" @LcHelpers.IsChecked(t.TransportTypeID, Request["travel-transport"] ?? (location != null ? location.TransportTypeID : null)) name="travel-transport" value="@t.TransportTypeID" @Validation.GetHtml("travel-transport") />@t.TransportTypeName</label>
+                                        <label><input type="radio" @LcHelpers.IsChecked(t.TransportTypeID, Request["travel-transport"] ?? (location != null && location.IsServiceAddress ? location.TransportTypeID : null)) name="travel-transport" value="@t.TransportTypeID" @Validation.GetHtml("travel-transport") />@t.TransportTypeName</label>
                                     </li>
                                 }
                                 </ul>
@@ -226,6 +248,14 @@
             <button class="button main-action" type="submit">Save</button>
         </fieldset>
         <script type="text/javascript">
+            $(function () {
+                $('select.copy-location').change(function () {
+                    var $t = $(this);
+                    $t.closest('.edit-panel').reload(function (currentUrl, defaultUrl) {
+                        return defaultUrl.replace(/LocationID=\d+/gi, 'LocationID=' + $t.val());
+                    });
+                });
+            });
             Modernizr.load({
                 load: { googleapi: "https://www.google.com/jsapi" },
                 complete: function () {

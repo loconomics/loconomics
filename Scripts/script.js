@@ -46,7 +46,11 @@ $.fn.reload = function (newurl, onload) {
     this.each(function () {
         var $t = $(this);
         if (newurl)
-            $t.data('source-url', newurl);
+            if ($.isFunction(newurl))
+                // Function params: currentReloadUrl, defaultReloadUrl
+                $t.data('source-url', $.proxy(newurl, this)($t.data('source-url'), $t.attr('data-source-url')));
+            else
+                $t.data('source-url', newurl);
         var url = $t.data('source-url');
         if (url) {
             // TODO ADD auto cancelation of previous requests (use .ajax instead .load)
