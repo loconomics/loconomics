@@ -335,7 +335,7 @@ public static partial class LcData
     public const string sqlGetServiceAddresses = @"
         SELECT  L.AddressID
                 ,L.UserID
-                ,SA.PositionID
+                ,coalesce(SA.PositionID, 0) As PositionID
                 ,L.AddressTypeID
                 ,L.AddressName
                 ,L.AddressLine1
@@ -349,6 +349,7 @@ public static partial class LcData
                 ,L.GoogleMapsURL
                 ,L.SpecialInstructions
 
+                ,(CASE WHEN @1 = -1 THEN (SELECT TOP 1 PositionSingular FROM Positions As PZ WHERE PZ.PositionID = SA.PositionID AND PZ.LanguageID = @2 AND PZ.CountryID = @3) ELSE null END) As PositionSingular
                 ,CAST((CASE WHEN SA.AddressID is null THEN 0 ELSE 1 END) As bit) As IsServiceAddress
 
                 ,SA.ServicesPerformedAtLocation
@@ -370,7 +371,7 @@ public static partial class LcData
                 ServiceAddress As SA
                   ON L.AddressID = SA.AddressID
                       AND L.UserID = SA.UserID
-                      AND SA.PositionID = @1
+                      AND (@1 = -1 OR SA.PositionID = @1)
                  INNER JOIN
                 StateProvince As SP
                   ON L.StateProvinceID = SP.StateProvinceID
@@ -383,6 +384,7 @@ public static partial class LcData
                  INNER JOIN
                 AddressType As AT
                   ON AT.AddressTypeID = L.AddressTypeID
+                    AND AT.LanguageID = @2 AND AT.CountryID = @3
         WHERE   L.UserID = @0
                  -- We get all location, not only active: -- AND L.Active = 1
                  AND L.AddressName is not null AND L.AddressName not like ''

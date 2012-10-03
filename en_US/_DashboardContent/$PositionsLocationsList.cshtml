@@ -14,8 +14,10 @@
     var sqlcondTravelLocations = " AND TravelFromLocation = 1";
 
     using (var db = Database.Open("sqlloco")) {
-        workLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondWorkLocations, u.UserID, p.PositionID);
-        travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, p.PositionID);
+        workLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondWorkLocations, u.UserID, p.PositionID,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, p.PositionID,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
 
     if (IsPost){

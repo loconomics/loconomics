@@ -100,17 +100,17 @@
         FROM    AddressType
         WHERE   Active = 1 AND UniquePerUser = 0
     ";
-    var sqlGetUserAddresses = @"
-        SELECT  AddressID, AddressName
-        FROM    Address
-        WHERE   UserID = @0 AND AddressName is not null AND AddressName not like ''
+    var sqlOrderAddressesByPosition = @"
+        ORDER BY PositionID ASC, AddressName ASC
     ";
     dynamic transports = null, location = null, types = null, userAddresses = null;
     using (var db = Database.Open("sqlloco")) {
-        location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID, locationID);
+        location = db.QuerySingle(LcData.sqlGetServiceAddresses + sqlCondAddressID, p.UserID, p.PositionID,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes);
-        userAddresses = db.Query(sqlGetUserAddresses, u.UserID);
+        userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
 }
 @helper printDistanceOptions(string selected){
@@ -123,8 +123,9 @@
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset>
-            @if (locationID == 0)
+            @if (locationID == 0 && userAddresses.Count > 0)
             {
+                var lastPositionID = 0;
             <ul class="copy-location">
                 <li>
                     <label>You can specify a full new address or use one of yours addresses from the list:
@@ -132,7 +133,16 @@
                             <option value=""></option>
                             @foreach (var add in userAddresses)
                             {
+                                if (lastPositionID != add.PositionID)
+                                {
+                                    lastPositionID = add.PositionID;
+                                    @Html.Raw("<optgroup label='Addresses in " + (add.PositionSingular) + "'>");
+                                }
                                 <option @LcHelpers.IsSelected(Request["select-address"], add.AddressID) value="@add.AddressID">@add.AddressName</option>
+                            }
+                            @if (lastPositionID != 0)
+                            {
+                                @Html.Raw("</optgroup>")
                             }
                         </select>
                     </label>
