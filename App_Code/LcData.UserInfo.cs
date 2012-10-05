@@ -226,7 +226,7 @@ public static partial class LcData
                             positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID
                         WHERE a.UserID = @0 and c.LanguageID = @2 and c.CountryID = @3
                             AND c.Active = 1
-                            AND a.Active = 1 AND (@1 = 0 OR a.StatusID = 1)
+                            AND a.Active = 1 AND ((@1 = 0 AND a.StatusID > 0) OR a.StatusID = 1)
                     ";
                     poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
