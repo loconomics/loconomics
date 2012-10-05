@@ -31,6 +31,7 @@ and test on both.
                 BEGIN CATCH
                     UPDATE UserProfileServiceAttributes SET
                         Active = 1
+                        ,UpdatedDate = getdate()
                     WHERE
                         UserID = @0
                         AND PositionID = @1
@@ -49,7 +50,7 @@ and test on both.
                 END TRY
                 BEGIN CATCH
                     UPDATE ServiceAttributeExperienceLevel SET
-                        Active = 1
+                        UpdatedDate = getdate()
                     WHERE
                         UserID = @0
                         AND PositionID = @1
@@ -67,7 +68,7 @@ and test on both.
                 END TRY
                 BEGIN CATCH
                     UPDATE ServiceAttributeLanguageLevel SET
-                        Active = 1
+                        UpdatedDate = getdate()
                     WHERE
                         UserID = @0
                         AND PositionID = @1
