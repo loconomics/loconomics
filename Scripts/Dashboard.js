@@ -59,20 +59,20 @@ $(document).ready(function () {
     * Change position state
     */
     /*$('.position-state > div').click(function () {
-        var $t = $(this);
-        var posID = $t.closest('.position-tab').data('position-id');
-        $t = $t.parent();
-        if ($t.hasClass('on')) {
-            if (confirm('Are you sure you want deactivate your position?')) {
-                window.location = UrlUtil.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
-            }
-        }
-        else if ($t.hasClass('off')) {
-            if (confirm('Are you sure you want reactivate your position?')) {
-                window.location = UrlUtil.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
-            }
-        }
-        return false;
+    var $t = $(this);
+    var posID = $t.closest('.position-tab').data('position-id');
+    $t = $t.parent();
+    if ($t.hasClass('on')) {
+    if (confirm('Are you sure you want deactivate your position?')) {
+    window.location = UrlUtil.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
+    }
+    }
+    else if ($t.hasClass('off')) {
+    if (confirm('Are you sure you want reactivate your position?')) {
+    window.location = UrlUtil.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
+    }
+    }
+    return false;
     });*/
 
     /*
@@ -399,7 +399,7 @@ $(document).ready(function () {
             // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:
             editPanel.show().reload(editPanel.attr('data-source-url'));
             // Hide packages list and other pricing options and main actions
-            editPanel.closest('.pricingwizard').find('.your-packages, h3, .package-pricing-options').hide('slow');
+            editPanel.closest('.pricingwizard').find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
             $(this).hide('slow');
             return false;
         });
@@ -409,7 +409,7 @@ $(document).ready(function () {
             // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
             editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
             // Hide packages list and other pricing options and main actions
-            editPanel.closest('.pricingwizard').find('.your-packages, h3, .package-pricing-options').hide('slow');
+            editPanel.closest('.pricingwizard').find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
             return false;
         }).on('click', '.provider-package .delete', function () {
             var pak = $(this).closest('.provider-package');
@@ -418,8 +418,8 @@ $(document).ready(function () {
                 smoothBoxBlock(res.children('.delete-package-loading-message'), pak);
                 $.ajax({
                     url: UrlUtil.LangPath + 'PricingWizard/$ProviderPackageEdit/',
-                    data: { 
-                        action: 'delete', 
+                    data: {
+                        action: 'delete',
                         ProviderPackageID: $(this).data('provider-package-id'),
                         PositionID: $(this).closest('.position-tab').data('position-id')
                     },
@@ -441,11 +441,12 @@ $(document).ready(function () {
             var pw = editPanel.closest('.pricingwizard');
             var hasEdit = editPanel.children().length == 0;
             pw.find('.add-package').toggle(hasEdit);
+            pw.find('.packages-list-title').toggle(hasEdit);
             editPanel.toggle(!hasEdit)
                     .on('click', '.cancel-action', function () {
                         editPanel.hide('slow', function () {
                             // Show again elements
-                            pw.find('.your-packages, h3, .package-pricing-options').show('slow');
+                            pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').show('slow');
                             $(this).closest('.pricingwizard').find('.add-package').show('fast');
                             $(this).children().remove();
                         });
