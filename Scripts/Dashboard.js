@@ -410,6 +410,20 @@ $(document).ready(function () {
                 $(this).closest('.pricingwizard').find('.add-package').show('fast');
                 $(this).children().remove()
             });
+        })
+        // Handler for 'show-more-attributes' button on edit a package
+        .on('click', '.show-more-attributes', function () {
+            var $t = $(this);
+            var atts = $t.siblings('.services-not-checked');
+            if (atts.is(':visible')) {
+                $t.text($t.data('show-text'));
+                atts.stop().hide('fast');
+            } else {
+                $t.data('show-text', $t.text());
+                $t.text($t.data('hide-text'));
+                atts.stop().show('fast');
+            }
+            return false;
         });
     })($('.pricingwizard.package-pricing-type'));
 

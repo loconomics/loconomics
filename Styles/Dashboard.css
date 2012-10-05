@@ -987,7 +987,7 @@ html.js .user-verified-licenses h5 {
     text-decoration: underline;
 }
 .package-pricing-type .edit-panel .provider-package-services {
-    max-height: 300px;
+    max-height: 160px;
     overflow: auto;
 }
 .package-pricing-type .edit-panel .provider-package-services li {
@@ -997,6 +997,13 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type .edit-panel .provider-package-services li > label {
     width: 200px !important;
     text-overflow: ellipsis;
+}
+.package-pricing-type .edit-panel .provider-package-services.services-not-checked {
+    display: none;
+}
+.package-pricing-type .edit-panel .show-more-attributes {
+    margin: 10px 0 0 13px;
+    color: #747474;
 }
 .package-pricing-type .edit-panel .package-data label {
     display: block;
