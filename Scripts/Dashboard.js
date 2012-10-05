@@ -443,14 +443,18 @@ $(document).ready(function () {
             pw.find('.add-package').toggle(hasEdit);
             pw.find('.packages-list-title').toggle(hasEdit);
             editPanel.toggle(!hasEdit)
-                    .on('click', '.cancel-action', function () {
-                        editPanel.hide('slow', function () {
-                            // Show again elements
-                            pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').show('slow');
-                            $(this).closest('.pricingwizard').find('.add-package').show('fast');
-                            $(this).children().remove();
-                        });
-                    });
+            .on('click', '.cancel-action', function () {
+                editPanel.hide('slow', function () {
+                    // Show again elements
+                    pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').show('slow');
+                    $(this).closest('.pricingwizard').find('.add-package').show('fast');
+                    $(this).children().remove();
+                });
+            });
+            // Hide pricing options section if there are not options:
+            var options = pw.find('.package-pricing-options');
+            if (options.is(':has(.no-pricing-wizard)'))
+                options.remove();
         });
         $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
             if (data.Code == 0) {
