@@ -413,6 +413,8 @@ $(document).ready(function () {
                 pw.find('.your-packages').show('slow').reload();
                 // Show other elements too:
                 pw.find('h3, .package-pricing-options').show('slow');
+                // Reload services tab of this position too:
+                pw.closest('.tabbed').find('.services-tab').reload();
             }
         }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
             $(this).closest('.edit-panel').hide('slow', function () {

@@ -57,7 +57,7 @@
                       <div>OFF</div>
                 </div>
             }
-            <div id="@("position"+pid)-services" class="tab-body current">
+            <div id="@("position"+pid)-services" class="tab-body current services-tab" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsServices/?PositionID=@(pid)">
                 @RenderPage("$PositionsServices.cshtml")
             </div><!-- #@("position"+pid)-services -->
             <div id="@("position"+pid)-pricing" class="tab-body">
