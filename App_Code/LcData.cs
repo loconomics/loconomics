@@ -627,7 +627,7 @@ public static partial class LcData
                 SELECT  pricingtypeid
                 FROM    positionpricingtype
                 WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
-            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 2);
+            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 0);
         }
     }
 

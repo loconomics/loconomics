@@ -44,19 +44,16 @@
     
     var idprefix = PageData["idprefix"] = "position#" + n + "-pricing";
 }
+@if (!String.IsNullOrEmpty(pageToLoad))
+{
 <p class="setting-instructions">
 Transparent pricing is the key to a successful job.  We’re here to help you and your clients determine an accurate price and time estimate.  Please <a href="mailto:providerhelp@loconomics.com">e-mail us</a> if you need help or have feedback.  
 </p>
-
-@*
-<script type="text/javascript">
-    if (!pricingWizardProviderSetupLoaded) var pricingWizardProviderSetupLoaded;
-    if (!pricingWizardProviderSetupLoaded)
-        Modernizr.load(UrlUtil.AppPath + 'Scripts/PricingWizard.ProviderSetup.js');
-    else
-        if (InitPricingWizardProviderSetup)
-            InitPricingWizardProviderSetup();
-</script>*@
 <div>
     @RenderPage(UrlUtil.LangPath + "PricingWizard/" + pageToLoad, new { PricingWizardClasses = "positionpricing" })
 </div>
+}
+else
+{
+    <p>We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>.</p>
+}

@@ -41,7 +41,9 @@
         }
     }
 }
+@if (!String.IsNullOrEmpty(pageToLoad)) {
     <fieldset class="pricing-wizard ajax ajax-box" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$BookingFieldset/Calculate/?providerid=@(p.UserID)&amp;positionid=@(pos.PositionID)">
         <legend>Pricing estimate:</legend>
         @RenderPage(pageToLoad)
     </fieldset>
+}
