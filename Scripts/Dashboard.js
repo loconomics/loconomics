@@ -416,7 +416,13 @@ $(document).ready(function () {
             var res = pak.closest('.view-panel').find('.lc-ressources');
             if (confirm(res.children('.confirm-delete-package-message').text())) {
                 smoothBoxBlock(res.children('.delete-package-loading-message'), pak);
-                $.ajax({ url: UrlUtil.LangPath + 'PricingWizard/$ProviderPackageEdit/?action=delete&ProviderPackageID=' + $(this).data('provider-package-id'),
+                $.ajax({
+                    url: UrlUtil.LangPath + 'PricingWizard/$ProviderPackageEdit/',
+                    data: { 
+                        action: 'delete', 
+                        ProviderPackageID: $(this).data('provider-package-id'),
+                        PositionID: $(this).closest('.position-tab').data('position-id')
+                    },
                     success: function (data) {
                         if (data && data.Code == 0) {
                             smoothBoxBlock('<div>' + data.Result + '</div>', pak);
