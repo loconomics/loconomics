@@ -6,7 +6,7 @@
 
     if (positionID > 0) {
         using (var db = Database.Open("sqlloco")) {
-            db.Execute("UPDATE UserProfilePositions SET StatusID = 0, Active = 0 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+            db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
         }
     }
     if (Request.IsAjaxRequest()) {
