@@ -36,6 +36,45 @@ $(document).ready(function () {
     checkSpecialURIs();
     if ($.fn.hashchange)
         $(window).hashchange(checkSpecialURIs);
+
+    /*
+    * Delete position
+    */
+    $('.delete-position a').click(function () {
+        var c = $(this).closest('.tab-body');
+        c.on('click', '.cancel-action', function () {
+            smoothBoxBlock(null, c);
+        });
+        var lres = c.find('.position-ressources');
+        c.on('ajaxSuccessPostMessageClosed', '.ajax-box', function () {
+            window.location.reload();
+        });
+        var b = smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
+        if (b) {
+            $('html,body').stop(true, true).animate({ scrollTop: b.offset().top }, 500, null);
+        }
+        return false;
+    });
+    /*
+    * Change position state
+    */
+    /*$('.position-state > div').click(function () {
+        var $t = $(this);
+        var posID = $t.closest('.position-tab').data('position-id');
+        $t = $t.parent();
+        if ($t.hasClass('on')) {
+            if (confirm('Are you sure you want deactivate your position?')) {
+                window.location = UrlUtil.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
+            }
+        }
+        else if ($t.hasClass('off')) {
+            if (confirm('Are you sure you want reactivate your position?')) {
+                window.location = UrlUtil.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
+            }
+        }
+        return false;
+    });*/
+
     /*
     * Change Photo
     */

@@ -405,6 +405,19 @@ form#personal li label{
     right: 20px;
     top: 10px;
 }
+/*.position-state div {
+    cursor: pointer;
+}*/
+.delete-position {
+    position: absolute;
+    right: 91px;
+    top: 10px;
+}
+.delete-position a {
+    text-decoration: none;
+    color: #AE637B;
+    font-size: 0.9em;
+}
 /** Form: Positions - Services **/
 .dashboard .position-intro textarea {
     -moz-box-sizing: border-box;

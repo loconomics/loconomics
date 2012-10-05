@@ -220,15 +220,15 @@ public static partial class LcData
             if (poss == null) {
                 using (var db = Database.Open("sqlloco")) {
                     var sqlpositions = @"
-                        SELECT a.UserID, a.PositionID, a.Active,
-                            case when a.Active = 0 then 'not active' else 'active' end as active,
+                        SELECT a.UserID, a.PositionID, a.Active, a.StatusID,
                             PositionSingular, a.UpdatedDate, a.PositionIntro
                         FROM dbo.userprofilepositions a join
                             positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID
-                        WHERE a.UserID = @0 and c.LanguageID = 1 and c.CountryID = 1
-                            AND (@1 = 0 OR a.Active = 1)
+                        WHERE a.UserID = @0 and c.LanguageID = @2 and c.CountryID = @3
+                            AND c.Active = 1
+                            AND a.Active = 1 AND (@1 = 0 OR a.StatusID = 1)
                     ";
-                    poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0);
+                    poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
                 HelperPage.PageData["userposrows:" + userId.ToString()] = poss;
             }
@@ -253,11 +253,12 @@ public static partial class LcData
             if (u == null){
                 using (var db = Database.Open("sqlloco")){
                     var sqlpositions = @"
-                        SELECT  a.UserID, a.PositionID, a.Active, case when a.Active = 0 then 'not active' else 'active' end as active, 
+                        SELECT  a.UserID, a.PositionID, a.Active, a.StatusID, 
                                 PositionSingular, a.UpdatedDate, a.PositionIntro
                         FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
-                        WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = 1 and c.CountryID = 1";
-                    u = db.QuerySingle(sqlpositions, userId, posId);
+                        WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = @2 and c.CountryID = @3
+                                AND c.Active = 1 AND a.Active = 1 AND a.StatusID > 0";
+                    u = db.QuerySingle(sqlpositions, userId, posId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
                 HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = u;
             }

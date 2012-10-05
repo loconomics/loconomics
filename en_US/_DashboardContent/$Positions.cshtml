@@ -37,7 +37,7 @@
                 // Setting the current pos (returned with GetUserCurrentPos) in PageData:
                 PageData["position"] = position;
                 pid = position.PositionID;
-        <div id="@("position"+pid)" class="tab-body fancy tabbed buttons @cls">
+        <div id="@("position"+pid)" data-position-id="@pid" class="position-tab tab-body fancy tabbed buttons @cls">
             <ul class="tabs">
                 <li class="current"><a class="button profile fanciful" href="@("#position"+pid)-services">Services</a></li>
                 <li><a class="button profile fanciful" href="@("#position"+pid)-pricing">Pricing</a></li>
@@ -47,16 +47,31 @@
                 <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
                 <li class="volatile"><a class="button profile fanciful" href="@("#position"+pid)-backgroundcheck">Background Check</a></li>
             </ul>
-            @if (position.Active)
+            @if (position.StatusID == 1)
             {
                 <div class="position-state on-off-switch on">
-                  <div>ON</div>
+                    <div>ON</div>
                 </div>
             } else {
                 <div class="position-state on-off-switch off">
-                      <div>OFF</div>
+                    <div>OFF</div>
                 </div>
             }
+            <div class="delete-position">
+                <a href="#delete-position">Delete position</a>
+                <div class="lc-ressources position-ressources">
+                    <div class="delete-message-confirm">
+                        <p>Are you really sure you want to delete this position?</p>
+                        <p>Lorem ipsum, lorem ipsum, lorem ipsum</p>
+                        <form action="@(UrlUtil.LangPath)Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
+                            <input type="hidden" name="PositionID" value="@pid" />
+                            <button type="button" class="cancel-action">No</button>
+                            <button type="submit" class="main-action">Yes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div id="@("position"+pid)-services" class="tab-body current services-tab" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsServices/?PositionID=@(pid)">
                 @RenderPage("$PositionsServices.cshtml")
             </div><!-- #@("position"+pid)-services -->
