@@ -359,6 +359,8 @@ $(document).ready(function () {
             var editPanel = $(this).siblings('.edit-panel');
             // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:
             editPanel.show().reload(editPanel.attr('data-source-url'));
+            // Hide packages list and other pricing options and main actions
+            editPanel.closest('.pricingwizard').find('.your-packages, h3, .package-pricing-options').hide('slow');
             $(this).hide('slow');
             return false;
         });
@@ -367,6 +369,8 @@ $(document).ready(function () {
             editPanel.closest('.pricingwizard').find('.add-package').hide('slow');
             // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
             editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
+            // Hide packages list and other pricing options and main actions
+            editPanel.closest('.pricingwizard').find('.your-packages, h3, .package-pricing-options').hide('slow');
             return false;
         }).on('click', '.provider-package .delete', function () {
             var pak = $(this).closest('.provider-package');
@@ -395,6 +399,8 @@ $(document).ready(function () {
             editPanel.toggle(!hasEdit)
                     .on('click', '.cancel-action', function () {
                         editPanel.hide('slow', function () {
+                            // Show again elements
+                            pw.find('.your-packages, h3, .package-pricing-options').show('slow');
                             $(this).closest('.pricingwizard').find('.add-package').show('fast');
                             $(this).children().remove();
                         });
@@ -403,7 +409,10 @@ $(document).ready(function () {
         $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
             if (data.Code == 0) {
                 var pw = $(this).closest('.pricingwizard');
+                // Reload packages list and show it
                 pw.find('.your-packages').show('slow').reload();
+                // Show other elements too:
+                pw.find('h3, .package-pricing-options').show('slow');
             }
         }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
             $(this).closest('.edit-panel').hide('slow', function () {
