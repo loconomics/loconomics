@@ -109,6 +109,46 @@
                     END
                 COMMIT TRAN
             ";
+            var sqlSetServiceAttribute = @"
+                /* Difference of this SQL to the used in 'Services' tab is that there a specific
+                   categoryID is passed, here we don't know that category, we assign the first
+                   found (enough to show attribute in services tab as checked) in a EligibleForPackages
+                   category in that the attribute is */
+                BEGIN TRAN
+                    UPDATE  userprofileserviceattributes WITH (serializable)
+                    SET     Active = 1,
+                            UpdatedDate = getdate(),
+                            ModifiedBy = 'sys'
+                    WHERE   UserId = @0 AND PositionID = @1
+                             -- NO filter by category on update here: AND ServiceAttributeCategoryID = @--2
+                             AND ServiceAttributeID = @2
+                             AND LanguageID = @3 AND CountryID = @4
+
+                    IF @@rowcount = 0
+                    BEGIN
+                        INSERT INTO userprofileserviceattributes (UserID,
+                            PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                            ModifiedBy, Active)
+                        VALUES (@0, @1, 
+                            /* category select first for attribute */
+                            (SELECT TOP 1 a.ServiceAttributeCategoryID FROM 
+                                servicecategorypositionattribute as a
+                                 INNER JOIN
+                                serviceattributecategory As sc
+                                  ON a.ServiceAttributeCategoryID = sc.ServiceAttributeCategoryID
+                                    AND a.LanguageID = sc.LanguageID AND a.CountryID = sc.CountryID
+                             WHERE a.PositionID = @1
+                                AND sc.EligibleForPackages = 1
+                                AND a.Active = 1
+                                AND sc.Active = 1
+                                AND a.LanguageID = @3
+                                AND a.CountryID = @3
+                                -- THIS ATTRIBUTE IS IN!
+                                AND a.ServiceAttributeID = @2),
+                            @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                    END
+                COMMIT TRAN
+            ";
             using (var db = Database.Open("sqlloco")) {
                 packageID = db.QueryValue(sqlSetPackage, packageID,
                     p.UserID, positionID, 
@@ -122,9 +162,17 @@
                 );
                 db.Execute(sqlDelDetails, packageID);
                 foreach(var att in attributesInPackage) {
+                    // Add to the package
                     db.Execute(sqlSetDetail,
                         packageID,
                         att
+                    );
+                    // Add to the list of 'service tab' selected attributes (on one of the categories in that the attribute is)
+                    db.Execute(sqlSetServiceAttribute,
+                        p.UserID, positionID,
+                        att,
+                        LcData.GetCurrentLanguageID(),
+                        LcData.GetCurrentCountryID()
                     );
                 }
             }
