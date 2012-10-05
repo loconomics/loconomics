@@ -410,9 +410,9 @@ $(document).ready(function () {
             if (data.Code == 0) {
                 var pw = $(this).closest('.pricingwizard');
                 // Reload packages list and show it
-                pw.find('.your-packages').show('slow').reload();
+                pw.find('.your-packages').show('fast', function () { $(this).reload() });
                 // Show other elements too:
-                pw.find('h3, .package-pricing-options').show('slow');
+                pw.find('h3, .package-pricing-options').show('fast');
                 // Reload services tab of this position too:
                 pw.closest('.tabbed').find('.services-tab').reload();
             }
