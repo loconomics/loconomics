@@ -21,18 +21,61 @@ and test on both.
             var PositionID = PageData["PositionID"] = Request.Form["select-position"].AsInt();
         
             var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
-            var sqlInsertAttribute = "insert into userprofileserviceattributes values(@0,@1,@2,@3,@4,@5,@6,@7,'Sys',1)";
-            var sqlInsertExpLevel = @"
+            var sqlSetAttribute = @"
+                BEGIN TRY
+                    INSERT INTO UserProfileServiceAttributes (
+                        UserID, PositionID, ServiceAttributeCategoryID, ServiceAttributeID, 
+                        LanguageID, CountryID, CreateDate, UpdatedDate, ModifiedBy, Active
+                    ) VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys', 1)
+                END TRY
+                BEGIN CATCH
+                    UPDATE UserProfileServiceAttributes SET
+                        Active = 1
+                    WHERE
+                        UserID = @0
+                        AND PositionID = @1
+                        AND ServiceAttributeCategoryID = @2
+                        AND ServiceAttributeID = @3
+                        AND LanguageID = @4
+                        AND CountryID = @5
+                END CATCH
+            ";
+            var sqlSetExpLevel = @"
+                BEGIN TRY
                     INSERT INTO ServiceAttributeExperienceLevel (UserID,
                         PositionID, LanguageID, CountryID, ExperienceLevelID,
                         CreatedDate, UpdatedDate, ModifiedBy)
                     VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+                END TRY
+                BEGIN CATCH
+                    UPDATE ServiceAttributeExperienceLevel SET
+                        Active = 1
+                    WHERE
+                        UserID = @0
+                        AND PositionID = @1
+                        AND LanguageID = @2
+                        AND CountryID = @3
+                        AND ExperienceLevelID = @4
+                END CATCH
             ";
-            var sqlInsertLangLevel = @"
+            var sqlSetLangLevel = @"
+                BEGIN TRY
                     INSERT INTO ServiceAttributeLanguageLevel (UserID,
                         PositionID, ServiceAttributeID, LanguageID, CountryID, LanguageLevelID,
                         CreatedDate, UpdatedDate, ModifiedBy)
                     VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
+                END TRY
+                BEGIN CATCH
+                    UPDATE ServiceAttributeLanguageLevel SET
+                        Active = 1
+                    WHERE
+                        UserID = @0
+                        AND PositionID = @1
+                        AND ServiceAttributeID = @2
+                        AND LanguageID = @3
+                        AND CountryID = @4
+                        AND LanguageLevelID = @5
+                END CATCH
             ";
             
             // Link the user with the selected position:
@@ -97,16 +140,16 @@ and test on both.
                                 
                                 break;
                             case LcData.ServiceAttCatIDExperienceLevel:
-                                db.Execute(sqlInsertExpLevel, UserID, PositionID,
+                                db.Execute(sqlSetExpLevel, UserID, PositionID,
                                     LanguageID, CountryID,
                                     // Here, serviceAttributeID contains the form value that is
                                     // the ExperienceLevelID on this case
                                     serviceAttributeID);
                                 break;
                             default:
-                                db.Execute(sqlInsertAttribute, UserID, PositionID,
+                                db.Execute(sqlSetAttribute, UserID, PositionID,
                                     serviceAttributeCategoryID, serviceAttributeID,
-                                    LanguageID, CountryID, theDate, theDate);
+                                    LanguageID, CountryID);
                                 
                                 // If is Language category, read and save the Level option:
                                 if (serviceAttributeCategoryID.AsInt() == LcData.ServiceAttCatIDLanguages) {
@@ -115,7 +158,7 @@ and test on both.
                                         , "category[" + LcData.ServiceAttCatIDLanguageLevel.ToString() + "]")
                                         + "-level"];
                                     if (languageLevelID.IsInt()) {
-                                        db.Execute(sqlInsertLangLevel, UserID, PositionID,
+                                        db.Execute(sqlSetLangLevel, UserID, PositionID,
                                             serviceAttributeID, LanguageID, CountryID,
                                             languageLevelID);
                                     }
