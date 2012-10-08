@@ -176,8 +176,8 @@
                 var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
                 foreach (string sPosID in Request.Form.GetValues("position")) {
                     if (sPosID.IsInt()) {
-                        // Link the user with the selected position:
-                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 0);
+                        // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
+                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 1);
                         if (Results.Result != "Success") {
                             ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
                         }

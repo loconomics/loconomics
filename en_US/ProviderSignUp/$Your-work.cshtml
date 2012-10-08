@@ -79,8 +79,8 @@ and test on both.
                 END CATCH
             ";
             
-            // Link the user with the selected position:
-            var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 0);
+            // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
+            var Results = db.QuerySingle(sqlinsertPosition, UserID, PositionID, LanguageID, CountryID, theDate, theDate, "sys", 1);
 
             if (Results.Result != "Success") {
                 LcHelpers.ReturnJsonError(-1, Results.Result);
