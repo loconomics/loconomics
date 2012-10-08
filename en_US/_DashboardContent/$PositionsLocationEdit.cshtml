@@ -93,7 +93,7 @@
         WHERE   Active = 1
     ";
     var sqlCondAddressID = @"
-        AND L.AddressID = @2
+        AND L.AddressID = @4
     ";
     var sqlGetAddressTypes = @"
         SELECT  AddressTypeID, AddressType
@@ -111,8 +111,10 @@
         }
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes);
-        userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
-            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        if (locationID == 0){
+            userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
+                LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
     }
 }
 @helper printDistanceOptions(string selected){
