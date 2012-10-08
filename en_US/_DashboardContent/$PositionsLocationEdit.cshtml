@@ -210,7 +210,7 @@
                 </li>
                 <li class="options">
                     <div>Click on the map or move the marker icon to set manually the address coordinates of this address accurately, or use some of next tools:</div>
-                    <a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>
+                    @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
                     <a href="#geocode" class="has-tooltip" title="Use Google Maps Geocoding to translate address into coordenates">Get positioning using my address</a>
                     <a href="#editcoordinates" class="has-tooltip" title="Edit coordinates manually (be careful!)">Edit coordinates</a>
                 </li>
@@ -319,11 +319,14 @@
                             positionedByUser = true;
                             foundLocations.byUser = event.latLng;
                         });
-                        function placeMarker(latlng) {
+                        function placeMarker(latlng, dozoom) {
                             marker.setPosition(latlng);
                             // Move map
                             map.panTo(latlng);
                             saveCoordinates();
+                            if (dozoom)
+                                // Set zoom to something more detailed
+                                map.setZoom(detailedZoomLevel);
                             return marker;
                         }
                         function saveCoordinates() {
@@ -379,10 +382,8 @@
                                                 position.coords.latitude,
                                                 position.coords.longitude
                                             );
-                                            locationMarker = placeMarker(latLng);
+                                            locationMarker = placeMarker(latLng, true);
                                             foundLocations.byGeolocation = latLng;
-                                            // Set zoom to something more detailed
-                                            map.setZoom(detailedZoomLevel);
                                         }
                                     },
                                     function (error) {
@@ -414,10 +415,8 @@
                                                 position.coords.latitude,
                                                 position.coords.longitude
                                             );
-                                            locationMarker = placeMarker(latLng);
+                                            locationMarker = placeMarker(latLng, true);
                                             foundLocations.byGeolocation = latLng;
-                                            // Set zoom to something more detailed
-                                            map.setZoom(detailedZoomLevel);
                                         } else
                                             navigator.geolocation.clearWatch(positionTimer);
                                     }
@@ -449,13 +448,14 @@
                                 add('addressline1');
                                 add('addressline2');
                                 add('city');
+                                add('postalcode');
                                 var s = form.elements['state'];
                                 if (s.value) ad.push(s.options[s.selectedIndex].label);
                                 ad.push('USA');
                                 // Minimum for valid address: 4 fields filled out
-                                return ad.length >= 4 ? ad.join(', ') : null;
+                                return ad.length >= 5 ? ad.join(', ') : null;
                             }
-                            $form.on('change', '[name=addressline1], [name=addressline2], [name=city], [name=state]', function () {
+                            $form.on('change', '[name=addressline1], [name=addressline2], [name=city], [name=postalcode], [name=state]', function () {
                                 var address = getFormAddress();
                                 if (address)
                                     geocodeLookup(address, false);
@@ -473,9 +473,7 @@
                                         foundLocations.byGeocode = latLng;
 
                                         if (!override) return;
-                                        placeMarker(latLng);
-                                        // Set zoom to something more detailed
-                                        map.setZoom(detailedZoomLevel);
+                                        placeMarker(latLng, true);
                                     } else {
                                         console.error('Geocode was not successful for the following reason: ' + status + ' on address "' + address + '"');
                                     }
@@ -493,13 +491,13 @@
                             switch (target) {
                                 case 'geolocation':
                                     if (foundLocations.byGeolocation)
-                                        placeMarker(foundLocations.byGeolocation);
+                                        placeMarker(foundLocations.byGeolocation, true);
                                     else
                                         useGeolocation(true);
                                     break;
                                 case 'geocode':
                                     if (foundLocations.byGeocode)
-                                        placeMarker(foundLocations.byGeocode);
+                                        placeMarker(foundLocations.byGeocode, true);
                                     else
                                         useGmapsGeocode(true);
                                     break;
