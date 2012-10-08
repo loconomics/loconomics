@@ -814,6 +814,13 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
     display: block;
     clear: both;
 }
+.edit-location ul.location-map {
+    margin: 0 0 25px 0;
+}
+.edit-location ul.location-map .advice,
+.edit-location ul.location-map .find-address-geocode {
+    display: none;
+}
 .edit-location ul.location-map .map-selector > .google-map {
     height: 300px;
     width: 100%;

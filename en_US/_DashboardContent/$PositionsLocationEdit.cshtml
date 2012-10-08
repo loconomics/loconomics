@@ -207,16 +207,17 @@
             <ul class="location-map">
                 <li>
                     <strong>GPS Coordinates</strong>
+                    <div class="advice warning">Move the pin to the exact address and click confirm</div>
                 </li>
+                <li class="map-selector"><div class="google-map"></div></li>
                 <li class="options">
-                    <div>Click on the map or move the marker icon to set manually the address coordinates of this address accurately, or use some of next tools:</div>
                     @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
-                    <a href="#geocode" class="has-tooltip" title="Use Google Maps Geocoding to translate address into coordenates">Get positioning using my address</a>
-                    <a href="#editcoordinates" class="has-tooltip" title="Edit coordinates manually (be careful!)">Edit coordinates</a>
+                    <a href="#confirm" class="has-tooltip action" title="Save map marker coordinates with your address">Confirm</a>
+                    <a href="#editcoordinates" class="has-tooltip action edit-action" title="Move the pin to the exact address and click confirm, or edit coordinates manually (be careful!)" data-cancel-label="Cancel">Edit</a>
+                    <a href="#geocode" class="has-tooltip find-address-geocode" title="Using Google Maps Geocoding, we translate your address into coordenates automatically">Find my address in the map</a>
                 </li>
                 <li class="gps-lat"><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
                 <li class="gps-lng"><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
-                <li class="map-selector"><div class="google-map"></div></li>
                 @*<li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>*@
             </ul>
             <ul class="location-travel">
@@ -281,12 +282,13 @@
                         // Register if user selects or writes a position (to not overwrite it with automatic positioning)
                         var positionedByUser = false;
                         // Some confs
-                        var detailedZoomLevel = 16;
+                        var detailedZoomLevel = 17;
                         var generalZoomLevel = 1;
                         var foundLocations = {
                             byUser: null,
                             byGeolocation: null,
-                            byGeocode: null
+                            byGeocode: null,
+                            original: null
                         };
 
                         var l = $('.edit-location .location-map');
@@ -296,6 +298,8 @@
 
                         // Creating position coordinates
                         var myLatlng = new google.maps.LatLng($lat.val(), $lng.val());
+                        // Remember original form location
+                        foundLocations.original = foundLocations.confirmed = myLatlng;
                         // We consider as 'positioned by user' when there was a saved value for the position coordinates (we are editing a location)
                         positionedByUser = (myLatlng.lat() != 0 && myLatlng.lng() != 0);
                         // Create map
@@ -309,32 +313,35 @@
                         var marker = new google.maps.Marker({
                             position: myLatlng,
                             map: map,
-                            draggable: true,
+                            draggable: false,
                             animation: google.maps.Animation.DROP
                         });
                         // Listen when user clicks map or move the marker to move marker or set position in the form
                         google.maps.event.addListener(marker, 'dragend', saveCoordinates);
                         google.maps.event.addListener(map, 'click', function (event) {
+                            if (!marker.getDraggable()) return;
                             placeMarker(event.latLng);
                             positionedByUser = true;
                             foundLocations.byUser = event.latLng;
                         });
-                        function placeMarker(latlng, dozoom) {
+                        function placeMarker(latlng, dozoom, autosave) {
                             marker.setPosition(latlng);
                             // Move map
                             map.panTo(latlng);
-                            saveCoordinates();
+                            saveCoordinates(autosave);
                             if (dozoom)
-                                // Set zoom to something more detailed
+                            // Set zoom to something more detailed
                                 map.setZoom(detailedZoomLevel);
                             return marker;
                         }
-                        function saveCoordinates() {
+                        function saveCoordinates(inForm) {
                             var latLng = marker.getPosition();
-                            $lat.val(latLng.lat()); //marker.position.Xa
-                            $lng.val(latLng.lng()); //marker.position.Ya
                             positionedByUser = true;
                             foundLocations.byUser = latLng;
+                            if (inForm === true) {
+                                $lat.val(latLng.lat()); //marker.position.Xa
+                                $lng.val(latLng.lng()); //marker.position.Ya
+                            }
                         }
                         // Listen when user changes form coordinates values to update the map
                         $lat.change(updateMapMarker);
@@ -351,7 +358,7 @@
                         /*===================
                         * AUTO POSITIONING
                         */
-                        function useGeolocation(force) {
+                        function useGeolocation(force, autosave) {
                             var override = force || !positionedByUser;
                             // Use browser geolocation support to get an automatic location if there is no a location selected by user
                             // Check to see if this browser supports geolocation.
@@ -382,7 +389,7 @@
                                                 position.coords.latitude,
                                                 position.coords.longitude
                                             );
-                                            locationMarker = placeMarker(latLng, true);
+                                            locationMarker = placeMarker(latLng, true, autosave);
                                             foundLocations.byGeolocation = latLng;
                                         }
                                     },
@@ -415,7 +422,7 @@
                                                 position.coords.latitude,
                                                 position.coords.longitude
                                             );
-                                            locationMarker = placeMarker(latLng, true);
+                                            locationMarker = placeMarker(latLng, true, autosave);
                                             foundLocations.byGeolocation = latLng;
                                         } else
                                             navigator.geolocation.clearWatch(positionTimer);
@@ -433,9 +440,7 @@
                                 );
                             } // Ends geolocation position
                         }
-                        function useGmapsGeocode(force) {
-                            var override = force || !positionedByUser;
-                            if (!override) return;
+                        function useGmapsGeocode(initialLookup, autosave) {
                             var geocoder = new google.maps.Geocoder();
 
                             // lookup on address fields changes with complete information
@@ -461,9 +466,12 @@
                                     geocodeLookup(address, false);
                             });
 
-                            var address = getFormAddress();
-                            if (address)
-                                geocodeLookup(address, true);
+                            // Initial lookup
+                            if (initialLookup) {
+                                var address = getFormAddress();
+                                if (address)
+                                    geocodeLookup(address, true);
+                            }
 
                             function geocodeLookup(address, override) {
                                 geocoder.geocode({ 'address': address }, function (results, status) {
@@ -472,8 +480,7 @@
                                         console.info('Geocode retrieved: ' + latLng + ' for address "' + address + '"');
                                         foundLocations.byGeocode = latLng;
 
-                                        if (!override) return;
-                                        placeMarker(latLng, true);
+                                        placeMarker(latLng, true, autosave);
                                     } else {
                                         console.error('Geocode was not successful for the following reason: ' + status + ' on address "' + address + '"');
                                     }
@@ -482,8 +489,8 @@
                         }
 
                         // Executing auto positioning:
-                        //useGeolocation();
-                        useGmapsGeocode();
+                        //useGeolocation(true, false);
+                        useGmapsGeocode(false, false);
 
                         // Link options links:
                         l.on('click', '.options a', function () {
@@ -491,18 +498,38 @@
                             switch (target) {
                                 case 'geolocation':
                                     if (foundLocations.byGeolocation)
-                                        placeMarker(foundLocations.byGeolocation, true);
+                                        placeMarker(foundLocations.byGeolocation, true, true);
                                     else
-                                        useGeolocation(true);
+                                        useGeolocation(true, true);
                                     break;
                                 case 'geocode':
                                     if (foundLocations.byGeocode)
-                                        placeMarker(foundLocations.byGeocode, true);
+                                        placeMarker(foundLocations.byGeocode, true, true);
                                     else
-                                        useGmapsGeocode(true);
+                                        useGmapsGeocode(true, true);
+                                    break;
+                                case 'confirm':
+                                    saveCoordinates(true);
+                                    marker.setDraggable(false);
+                                    foundLocations.confirmed = marker.getPosition();
+                                    l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode').hide('fast');
+                                    var edit = l.find('.edit-action');
+                                    edit.text(edit.data('edit-label'));
                                     break;
                                 case 'editcoordinates':
-                                    l.find('.gps-lat, .gps-lng').toggle('fast');
+                                    var a = l.find('.gps-lat, .gps-lng, .advice, .find-address-geocode');
+                                    var b = !a.is(':visible');
+                                    marker.setDraggable(b);
+                                    var $t = $(this);
+                                    if (b) {
+                                        $t.data('edit-label', $t.text());
+                                        $t.text($t.data('cancel-label'));
+                                    } else {
+                                        $t.text($t.data('edit-label'));
+                                        // Restore location:
+                                        placeMarker(foundLocations.confirmed, true, true);
+                                    }
+                                    a.toggle('fast');
                                     break;
                             }
 
