@@ -144,7 +144,7 @@ $(document).ready(function () {
                         lastValid = !!(fs.find('option:selected').val());
                     else
                         // Otherwise, look for 'almost one' checked values:
-                        lastValid = (fs.find(':checked').length > 0);
+                        lastValid = (fs.find('input:checked').length > 0);
 
                     if (!lastValid) {
                         valid = false;
