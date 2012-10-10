@@ -277,11 +277,15 @@ $(document).ready(function () {
             vp.on('click', '.addlocation', function () {
                 // We read the data-source-url attribute to get the Default value, with LocationID=0, instead the last reload value:
                 ep.show().reload(ep.attr('data-source-url') + '&' + $(this).data('extra-query'));
+                // Hide view panel on edit
+                vp.hide('fast');
                 return false;
             })
             .on('click', '.address .edit', function () {
                 // We read the data-source-url attribute to get the Default value, and we replace LocationID=0 with the clicked location-id data:
                 ep.show().reload(ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + $(this).closest('.address').data('location-id')));
+                // Hide view panel on edit
+                vp.hide('fast');
                 return false;
             }).on('click', '.address .delete', function () {
                 var res = vp.find('.lc-ressources');
@@ -316,6 +320,8 @@ $(document).ready(function () {
                     // Remove form to avoid a 'flickering cached data' effect next time is showed:
                     ep.children().remove()
                 });
+                // Show again view panel after edit
+                vp.show('fast');
                 return false;
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
