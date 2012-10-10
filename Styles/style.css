@@ -1948,14 +1948,14 @@ html.boxshadow #loginBox .field-validation-error{
 
 .smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
-    z-index: 8000;
+    z-index: 1000;
 }
 .smooth-box-block-element {
     background: white;
     margin: 20px;
     padding: 20px;
     position: relative;
-    z-index: 9000;
+    z-index: 1000;
 }
 .smooth-box-block-overlay.loading .smooth-box-block-element {
     width: 50px;

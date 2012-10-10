@@ -6,16 +6,6 @@
     Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
     
     var u = LcData.UserInfo.GetUserRow();
-    // Check and remember the value of IsActiveProvider to notify the user if it's profile was enable after previous changes (filled forms that off a required alert)
-    var providerProfileWasActived = false;
-    if (Session["PreviousIsActiveProvider"] != null) {
-        // Check value to decide if show the message
-        if (u.IsActiveProvider && (bool)Session["PreviousIsActiveProvider"] == false) {
-            providerProfileWasActived = true;
-        }
-    }
-    // Firts time set or Updating 'previous' value:
-    Session["PreviousIsActiveProvider"] = u.IsActiveProvider;
     
     /*
      * Selecting page to render dynamically
@@ -87,12 +77,6 @@
                     </p>
                     }
                     @RenderPage(UrlUtil.LangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
-
-                    @if (providerProfileWasActived) {
-                        <div id="profile-activation-message">
-                            Your profile is now active and available publicly! <a href="@(UrlUtil.LangPath)Profile/?UserID=@(u.UserID)">View my public profile</a>.
-                        </div>
-                    }
                 </div><!-- dashboard-help -->
 
                 <div id="nav">

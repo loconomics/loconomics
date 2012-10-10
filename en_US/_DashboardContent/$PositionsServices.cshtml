@@ -5,6 +5,8 @@
     var pos = LcData.UserInfo.GetUserCurrentPos();
     var n = pos.PositionID;
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    var positionEnabled = false;
+    var positionStatus = pos.StatusID;
     
     var idprefix = "position#" + n + "-services";
     
@@ -177,7 +179,11 @@
             db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
         }
         
-        string success = LcRessources.DataSaved;
+        int newStatus = LcData.UserInfo.GetUserPositionStatus(pos.UserID, pos.PositionID);
+        positionEnabled = (newStatus == 1 && newStatus != positionStatus);
+        string success = positionEnabled
+            ? LcRessources.GetText("DataSavedAndPositionEnabled", pos.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
+            : LcRessources.DataSaved;
         if (!String.IsNullOrEmpty(redirectURL)) {
             LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
         } else {

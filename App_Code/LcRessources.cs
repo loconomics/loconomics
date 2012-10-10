@@ -10,6 +10,8 @@ public static class LcRessources
 {
     public const string ValidationSummaryTitle = "Please correct the errors and try again:";
     public const string DataSaved = "Saved successfully!";
+    public const string RequestSent = "Request sent!";
+    public const string MessageSent = "Message was sent";
     public const string FieldXIsRequired = "{0} is required";
 
     private static Dictionary<string, string> textress = new Dictionary<string,string>(){
@@ -34,6 +36,8 @@ public static class LcRessources
         ,{ "changes-not-saved", "You made changes but forgot to save!" }
         ,{ "tab-has-changes-stay-on", "Go back" }
         ,{ "tab-has-changes-continue-without-change", "Continue anyway" }
+
+        ,{ "DataSavedAndPositionEnabled", "Congratulations, your {0} profile is now active and can be viewed publicly! <a href='{1}'>View it here</a>" }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

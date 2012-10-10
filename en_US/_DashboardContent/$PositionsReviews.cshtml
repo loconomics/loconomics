@@ -7,6 +7,8 @@
     // Current user data record:
     var u = LcData.UserInfo.GetUserRow();
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    var positionEnabled = false;
+    var positionStatus = p.StatusID;
     
     var idprefix = "position#" + n + "-reviews";
     
@@ -35,7 +37,9 @@
                 db.Execute("EXEC TestAlertReferenceRequests @0, @1", p.UserID, p.PositionID);
             }
             
-            string success = "Message was sent!";
+            string success = positionEnabled
+                ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
+                : LcRessources.MessageSent;
             if (!String.IsNullOrEmpty(redirectURL)) {
                 LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
             } else {

@@ -113,12 +113,6 @@ ul.attributes-list li {
 .dashboard #changephoto:hover {
     background-color: White;
 }
-#profile-activation-message {
-    color: #8B2143;
-    position: absolute;
-    top: 315px;
-    z-index: 500;
-}
 .dashboard-help-widget {
     overflow: hidden;
     margin-top: 10px;

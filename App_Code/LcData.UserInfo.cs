@@ -278,5 +278,18 @@ public static partial class LcData
             }
             return HelperPage.PageData["position"];
         }
+        public static int GetUserPositionStatus(int userID, int positionID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return (int)db.QueryValue("SELECT StatusID FROM UserProfilePositions WHERE UserID = @0 AND PositionID = @1 AND LanguageID = @2 AND LanguageID = @3",
+                    userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+
+        public static string GetMyPublicURL()
+        {
+            return UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
+        }
 	}
 }

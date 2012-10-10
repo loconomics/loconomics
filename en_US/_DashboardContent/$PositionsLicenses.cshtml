@@ -7,6 +7,8 @@
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    var positionEnabled = false;
+    var positionStatus = p.StatusID;
     
     var idprefix = "position" + n + "-licenses";
     
@@ -171,7 +173,12 @@
                                 { "LicenseCertificationID", Request["license-type"] }
                     }));
                     
-                    string success = "Request sent!";
+                    int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
+                    positionEnabled = (newStatus == 1 && newStatus != positionStatus);
+                    
+                    string success = positionEnabled
+                        ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
+                        : LcRessources.RequestSent;
                     if (!String.IsNullOrEmpty(redirectURL)) {
                         LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
                     } else {

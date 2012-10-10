@@ -7,6 +7,8 @@
     // Current position data record:
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
+    var positionEnabled = false;
+    var positionStatus = p.StatusID;
     var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
 
     if (action == "delete") {
@@ -83,7 +85,12 @@
         }
         
         if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(0, "Location saved");
+            int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
+            positionEnabled = (newStatus == 1 && newStatus != positionStatus);
+            string success = positionEnabled
+                ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
+                : LcRessources.DataSaved;
+            LcHelpers.ReturnJsonResult(0, success);
         }
     }
 
