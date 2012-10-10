@@ -295,7 +295,12 @@ $(document).ready(function () {
                         success: function (data) {
                             if (data && data.Code == 0) {
                                 smoothBoxBlock('<div>' + data.Result + '</div>', loc);
-                                loc.click(function () { smoothBoxBlock(null, loc); loc.hide('slow', function () { loc.remove() }) });
+                                loc.click(function () {
+                                    smoothBoxBlock(null, loc);
+                                    loc.hide('slow', function () { loc.remove() });
+                                    // Show again addlocation button (only is hide on travel locations)
+                                    vp.find('.positionlocations-itravel .addlocation').removeClass('hidden');
+                                });
                             }
                         },
                         error: function (jx, message, ex) {

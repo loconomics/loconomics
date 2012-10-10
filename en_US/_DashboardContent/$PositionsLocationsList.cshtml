@@ -19,55 +19,6 @@
         travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, p.PositionID,
             LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
-
-    if (IsPost){
-        
-        using (var db = Database.Open("sqlloco")) {
-            // If the yes/no button are yes, do nothing, but if 'no', remove addresses from that use (travel or work)
-            if (Request["positionlocations-itravel"].AsBool() == false){
-                // List every 'travel' address and remove it (will be removed as 'travel' address only if is used too
-                // as 'work', or removed at all if is only 'travel' address, and removed too the [Address] record
-                // if is not used on other places or is not a 'special' address (UniquePerUser).
-                foreach(var l in travelLocations) {
-                    db.Execute(LcData.sqlDelServiceAddress, l.AddressID, p.UserID, p.PositionID, "travel");
-                }
-            }
-            if (Request["positionlocations-iworkon"].AsBool() == false){
-                // List every 'travel' address and remove it (will be removed as 'work' address only if is used too
-                // as 'travel', or removed at all if is only 'work' address, and removed too the [Address] record
-                // if is not used on other places or is not a 'special' address (UniquePerUser).
-                foreach(var l in workLocations) {
-                    db.Execute(LcData.sqlDelServiceAddress, l.AddressID, p.UserID, p.PositionID, "work");
-                }
-            }
-            
-            // NOTE: TestAlertLocation is already tested per 'delete address' task, when a 'no' is selected, but for
-            // completeness (will be executed too when selecting 'yes') and testing (manual db changes), still repeat the alert test:
-            db.Execute("EXEC TestAlertLocation @0, @1", u.UserID, p.PositionID);
-
-            string success = "Locations preferences saved!";
-            if (!String.IsNullOrEmpty(redirectURL)) {
-                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-            } else {
-                LcHelpers.ReturnJsonResult(0, success);
-            }
-        }
-    }
-    
-    // Checking is yes/no buttons of each type must be 'yes' or 'no'
-    bool itravelActive = false, iworkonActive = false;
-    foreach (var l in travelLocations){
-        if (l.Active) {
-            itravelActive = true;
-            break;
-        }
-    }
-    foreach (var l in workLocations){
-        if (l.Active) {
-            iworkonActive = true;
-            break;
-        }
-    }
 }
 @helper printAddress(string contId, dynamic address){
     var cid = String.IsNullOrWhiteSpace(contId) ? "" : "id='" + contId + "'";
@@ -89,7 +40,6 @@
             }
             <div class="tools">
                 <a href="#" class="edit">Edit</a>
-                @*<a href="#" class="map">Map</a>*@
                 <a href="#" class="delete">Remove</a>
             </div>
         </div>
@@ -98,56 +48,52 @@
     <div class="confirm-delete-location-message">Are you sure do you want to remove this location?</div>
     <div class="delete-location-loading-message">The location is now removed</div>
 </div>
-
-    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLocations/" method="post" class="ajax ajax-box" id="position#@(n)-locations">
-        <input type="hidden" name="PositionID" value="@p.PositionID"/>
-        <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
-        @LcHelpers.GetValidationScripts()
-        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+<div class="clearfix">
         <div class="col col-2 col-2-1">
-            <fieldset class="positionlocations-itravel has-confirm locations-set" data-location-use="travel">
-                <legend>I travel to clients:</legend>
-                <div class="confirm positionlocations-itravel-confirm">
-                    <label>Yes<input type="radio" @LcHelpers.IsChecked(true, itravelActive) name="positionlocations-itravel" value="True"/></label>
-                    <label>No<input type="radio" @LcHelpers.IsChecked(false, itravelActive) name="positionlocations-itravel" value="False"/></label>
-                </div>
+            <div class="positionlocations-itravel locations-set" data-location-use="travel">
+                <h4>I travel to clients:</h4>
                 @* Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones *@
+                <div class="actions">
+                    <a href="#" class="addlocation @(travelLocations.Count > 0 ? "hidden" : "") action main-action" data-extra-query="itravel=True">Add location</a>
+                </div>
+                <ul class="travel-locations positionlocations-itravelfrom">
                 @if (travelLocations.Count == 0)
                 {
-                <a href="#" class="addlocation" data-extra-query="itravel=True">Add location</a>
+                    <li class="empty no-items">Please enter at least one location that you travel from</li>
                 }
-                <fieldset class="positionlocations-itravelfrom">
-           <!--REDUNDANT <legend>I travel to clients from this location:</legend> -->
-                    <ul class="travel-locations">
-                    @foreach (var location in travelLocations)
+                else
+                {
+                    foreach (var location in travelLocations)
                     {
-                        <li>
-                            @printAddress(null, location)
-                        </li>
+                    <li>
+                        @printAddress(null, location)
+                    </li>
                     }
-                    </ul>
-                </fieldset>
-            </fieldset>
+                }
+                </ul>
+            </div>
         </div>
         <div class="col col-2 col-2-2">
-            <fieldset class="positionlocations-servicelocations has-confirm locations-set" data-location-use="work">
-                <legend>I perform services at specific locations:</legend>
-                <div class="positionlocations-servicelocations-confirm confirm">
-                    <label>Yes<input @LcHelpers.IsChecked(true, iworkonActive) type="radio" name="positionlocations-iworkon" value="True"/></label>
-                    <label>No<input @LcHelpers.IsChecked(false, iworkonActive) type="radio" name="positionlocations-iworkon" value="False"/></label>
+            <div class="positionlocations-servicelocations locations-set" data-location-use="work">
+                <h4>I perform services at specific locations:</h4>
+                <div class="actions">
+                    <a href="#" class="addlocation action main-action" data-extra-query="iworkon=True">Add location</a>
                 </div>
-                <a href="#" class="addlocation" data-extra-query="iworkon=True">Add location</a>
                 <ul class="work-locations">
-                    @foreach (var location in workLocations)
+                    @if (workLocations.Count == 0)
                     {
+                        <li class="empty no-items">Please enter at least one location at which you perform services</li>
+                    }
+                    else
+                    {
+                        foreach (var location in workLocations)
+                        {
                         <li>
                             @printAddress(null, location)
                         </li>
+                        }
                     }
                 </ul>
-            </fieldset>
+            </div>
         </div>
-        <fieldset class="actions">
-            <button class="save main-action" type="submit">Save</button>
-        </fieldset>
-    </form>
+</div>

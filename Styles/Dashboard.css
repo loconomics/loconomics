@@ -725,7 +725,7 @@ form.positionavailability input{
     top: 0;
     width: 350px;
 }*/
-fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
+.positionlocations-itravel .positionlocations-itravelfrom {
     margin-top: 10px !important;
 }
 .positionlocations-itravel .addlocation{
@@ -746,9 +746,14 @@ fieldset.positionlocations-itravel fieldset.positionlocations-itravelfrom {
 .positionlocations-servicelocations ul li{
     margin: 16px 0;
 }
-.positionlocations-servicelocations a.addlocation{
-    display: block;
-    margin: 10px 25px;
+.positionlocations-servicelocations .actions,
+.positionlocations-itravel .actions {
+    text-align: center !important;
+}
+.positionlocations-servicelocations a.addlocation,
+.positionlocations-itravel a.addlocation{
+    margin: 5px auto 0;
+    padding: 0.1em 1em;
 }
 .positionlocations-itravelusing label{
     display: block;
@@ -895,6 +900,12 @@ html.js .user-verified-licenses .verified-license-details {
 html.js .user-verified-licenses h5 {
     cursor: hand;
     cursor: pointer;
+}
+.dashboard .tab-body h4 {
+    font-weight: bold;
+    color: #747474;
+    margin: 0;
+    font-size: 1.1em;
 }
 /** Form: Positions Background Checks **/
 .background-check {
