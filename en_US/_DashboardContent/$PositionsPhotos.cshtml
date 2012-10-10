@@ -99,6 +99,9 @@
             
             int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
             positionEnabled = (newStatus == 1 && newStatus != positionStatus);
+            if (positionEnabled) {
+                redirectURL = null;
+            }
             string success = positionEnabled
                 ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
                 : LcRessources.DataSaved;
