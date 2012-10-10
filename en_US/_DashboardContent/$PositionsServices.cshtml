@@ -212,7 +212,9 @@
     <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
 @helper printAttSelect(dynamic cat){
-    <select title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]">
+    <select title="@cat["ServiceAttributeCategoryName"]" 
+    data-description="@cat["ServiceAttributeCategoryDescription"]" 
+    name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]">
         @foreach (var att in cat["ServiceAttributes"]){
         <option @getChecked(att) title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" value="@att["ServiceAttributeID"]">@att["ServiceAttribute"]</option>
         }
@@ -278,11 +280,11 @@ Let clients know about the services you provide.  It helps you both work better 
             </select>
         </fieldset>
         }
-        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+        @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDExperience];
         <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? "required-attribute-category" : "")">
-            @*<legend>Years Experience</legend>*@
+            @*<legend>Years Experience</legend>* @
             @printCatLegend(cat)
             @printAttSelect(cat["ServiceAttributes"])
             @*
@@ -292,9 +294,9 @@ Let clients know about the services you provide.  It helps you both work better 
                 <option>1.5 years</option>
                 <option>1 year</option>
                 <option>-1 year</option>
-            </select>*@
+            </select>* @
         </fieldset>
-        }
+        }*@
         @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
         {
             var cat = dataCats[LcData.ServiceAttCatIDLanguages];
