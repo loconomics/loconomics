@@ -132,27 +132,38 @@ $(document).ready(function () {
         var f = $(this);
         f.data('customValidation', {
             validate: function () {
-                var s = true;
+                var valid = true, lastValid = true;
                 var v = f.find('.validation-summary-errors, .validation-summary-valid');
                 f.find('.required-attribute-category').each(function () {
-                    var cat = $(this).children('legend').text();
-                    if ($(this).find(':checked').length == 0) {
-                        s = false;
-                        $(this).addClass('group-validation-error');
+                    var fs = $(this);
+                    var cat = fs.children('legend').text();
+                    // What type of validation apply?
+                    if (fs.is('.validation-select-one'))
+                        // if the cat is a 'validation-select-one', a 'select' element with a 'positive'
+                        // :selected value must be checked
+                        lastValid = !!(fs.find('option:selected').val());
+                    else
+                        // Otherwise, look for 'almost one' checked values:
+                        lastValid = (fs.find(':checked').length > 0);
+
+                    if (!lastValid) {
+                        valid = false;
+                        fs.addClass('group-validation-error');
                         var err = LC.getText('required-attribute-category-error', cat);
-                        v.children('ul').append('<li/>').text(err).attr('title', cat);
+                        if (v.find('li[title="' + escapeJQuerySelectorValue(cat) + '"]').length == 0)
+                            v.children('ul').append($('<li/>').text(err).attr('title', cat));
                     } else {
-                        $(this).removeClass('group-validation-error');
-                        v.find('li[title=' + cat + ']').remove();
+                        fs.removeClass('group-validation-error');
+                        v.find('li[title="' + escapeJQuerySelectorValue(cat) + '"]').remove();
                     }
                 });
 
-                if (s) {
+                if (valid) {
                     v.removeClass('validation-summary-errors').addClass('validation-summary-valid');
                 } else {
                     v.addClass('validation-summary-errors').removeClass('validation-summary-valid');
                 }
-                return s;
+                return valid;
             }
         });
     });

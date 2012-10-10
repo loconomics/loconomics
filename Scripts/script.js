@@ -471,7 +471,7 @@ LC.ChangesNotification = {
         // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
         $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
         var lchn = this;
-        if (els) $.each(els, function () { $('[name=' + this + ']').removeClass(lchn.defaults.changedElementClass) });
+        if (els) $.each(els, function () { $('[name="' + escapeJQuerySelectorValue(this) + '"]').removeClass(lchn.defaults.changedElementClass) });
         return prevEls;
     }
 };
