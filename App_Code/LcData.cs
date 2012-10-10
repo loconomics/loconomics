@@ -790,13 +790,23 @@ public static partial class LcData
                      INNER JOIN
                     AlertType As AT
                       ON AT.AlertTypeID = A.AlertTypeID
-                     LEFT JOIN
+                     LEFT JOIN (
                     Positions As P
+                     INNER JOIN
+                    UserProfilePositions As UP
+                      ON UP.PositionID = P.PositionID
+                         AND UP.Active = 1
+                         AND UP.StatusID > 0
+                         AND UP.LanguageID = P.LanguageID
+                         AND UP.CountryID = P.CountryID
+                    )
                       ON P.PositionID = UA.PositionID
                          AND P.LanguageID = A.LanguageID
                          AND P.CountryID = A.CountryID
+                         AND UP.UserID = UA.UserID
             WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
                      AND A.LanguageID = @1 AND A.CountryID = @2
+                     AND (UA.PositionID = 0 OR P.PositionID is not null)
             ORDER BY AT.AlertTypeName, A.AlertName
             ", userID,
              LcData.GetCurrentLanguageID(),
@@ -805,7 +815,7 @@ public static partial class LcData
     }
     public static int GetActiveUserAlertsCount(int userID)
     {
-        using (var db = Database.Open("sqlloco")) {
+        /*using (var db = Database.Open("sqlloco")) {
             return (int)db.QueryValue(@"
                 SELECT  count(*)
                 FROM    Alert As A
@@ -817,7 +827,8 @@ public static partial class LcData
             ", userID,
              LcData.GetCurrentLanguageID(),
              LcData.GetCurrentCountryID());
-        }
+        }*/
+        return GetActiveUserAlerts(userID).Count;
     }
     #endregion
 
