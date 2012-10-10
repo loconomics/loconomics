@@ -455,10 +455,8 @@ fieldset.positionservices-attributes * {
 fieldset.positionservices-attributes li {
     margin: 0 0 2px;
 }
-fieldset.required-attribute-category > legend:after {
-    content: '*';
-    color: #dd3333;
-    margin-left: 5px;
+fieldset.required-attribute-category.group-validation-error legend {
+    outline: #dd3333 1px solid;
 }
 .required-attribute-category-footnote {
     color: #dd3333;

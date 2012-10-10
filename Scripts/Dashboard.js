@@ -126,6 +126,38 @@ $(document).ready(function () {
     });
 
     /*
+    * Position Services
+    */
+    $('.positionservices').each(function () {
+        var f = $(this);
+        f.data('customValidation', {
+            validate: function () {
+                var s = true;
+                var v = f.find('.validation-summary-errors, .validation-summary-valid');
+                f.find('.required-attribute-category').each(function () {
+                    var cat = $(this).children('legend').text();
+                    if ($(this).find(':checked').length == 0) {
+                        s = false;
+                        $(this).addClass('group-validation-error');
+                        var err = LC.getText('required-attribute-category-error', cat);
+                        v.children('ul').append('<li/>').text(err).attr('title', cat);
+                    } else {
+                        $(this).removeClass('group-validation-error');
+                        v.find('li[title=' + cat + ']').remove();
+                    }
+                });
+
+                if (s) {
+                    v.removeClass('validation-summary-errors').addClass('validation-summary-valid');
+                } else {
+                    v.addClass('validation-summary-errors').removeClass('validation-summary-valid');
+                }
+                return s;
+            }
+        });
+    });
+
+    /*
     * Booking list actions
     */
     $('body').delegate('.bookings-list .actions .item-action', 'click', function () {
@@ -326,7 +358,7 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0) vp.show('fast', function() { vp.reload() });
+                if (data.Code == 0) vp.show('fast', function () { vp.reload() });
             })
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', closeAndClearEditPanel);
         });

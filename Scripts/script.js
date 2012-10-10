@@ -1038,7 +1038,10 @@ function convertMilesKm(q, unit) {
 }
 function goToSummaryErrors(form) {
     var off = form.find('.validation-summary-errors').offset();
-    $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
+    if (off)
+        $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
+    else
+        console.error('goToSummaryErrors: no summary to focus');
 }
 
 /* Init code */
