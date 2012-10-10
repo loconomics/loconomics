@@ -326,7 +326,7 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0) vp.show('slow').reload();
+                if (data.Code == 0) vp.show('fast', function() { vp.reload() });
             })
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', closeAndClearEditPanel);
         });
