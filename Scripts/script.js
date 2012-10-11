@@ -500,6 +500,17 @@ LC.getText = function () {
     }
     return formatted;
 };
+LC.redirectTo = function (url) {
+    $.blockUI({ message: '' }); //loadingBlock);
+    var ihash = url.indexOf('#');
+    var rurl = url.substring(0, (ihash == -1 ? null : ihash)) || '';
+    window.location.hash = '';
+    if (window.location.pathname.toUpperCase() == rurl.toUpperCase()) {
+        window.location = url;
+        window.location.reload();
+    } else
+        window.location = url;
+};
 
 /*******************
 * Popup related 
@@ -632,7 +643,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         // Special Code 1: do a redirect
         } else if (data.Code == 1) {
-            lcRedirectTo(data.Result);
+            LC.redirectTo(data.Result);
         } else if (data.Code == 2) {
             // Special Code 2: show login popup (with the given url at data.Result)
             ctx.box.unblock();
@@ -647,7 +658,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         } else if (data.Code == 4) {
             // Show SuccessMessage, attaching and event handler to go to RedirectURL
             ctx.box.on('ajaxSuccessPostMessageClosed', function () {
-                lcRedirectTo(data.Result.RedirectURL);
+                LC.redirectTo(data.Result.RedirectURL);
             });
             showSuccessMessage(data.Result.SuccessMessage);
         } else if (data.Code > 100) {
@@ -840,20 +851,6 @@ function guidGenerator() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-}
-function lcRedirectTo(url) {
-    var ihash = url.indexOf('#');
-    var rurl = url.substring(0, (ihash == -1 ? null : ihash));
-    window.location.hash = '';
-    if (window.location.pathname == rurl) {
-        window.location = url;
-        window.location.reload();
-    } else
-        window.location = url;
-    // If the new url is the same current page but with a hash, page will not be reloaded as
-    // wanted, do a refresh.
-    //if (/#/.test(window.location))
-    //    window.location.reload();
 }
 /* Currently only applies to elements with title and data-description attributes */
 function configureTooltip() {
@@ -1292,7 +1289,7 @@ $(function () {
                         }
                     } else if (data.Code == 1) {
                         // Just like in normal form.ajax, Code=1 means a client Redirect to the URL at data.Result
-                        lcRedirectTo(data.Result);
+                        LC.redirectTo(data.Result);
                     } else if (data.Code == 2) {
                         // Special Code 2: show login popup (with the given url at data.Result)
                         container.unblock();
