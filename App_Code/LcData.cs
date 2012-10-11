@@ -632,6 +632,24 @@ public static partial class LcData
         }
     }
 
+    public static dynamic GetPositionRatings(int positionID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QuerySingle(@"
+                SELECT  TOP 1
+                        Rating1, Rating2, Rating3
+                FROM    PositionRatings
+                WHERE   (PositionID = @0 OR PositionID = 0)
+                        AND LanguageID = @1
+                        AND CountryID = @2
+                -- First, the specific ID, then the default PositionID=0. 
+                -- If there is no specific, with TOP 1 we get the default
+                ORDER BY PositionID DESC
+            ", positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+
     /// <summary>
     ///        /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
     ///            BEGIN TRAN

@@ -37,7 +37,8 @@
         // but are needed to get default values when there are a record for the user and avoid
         // exceptions because the null record:
         var getRatingScores = @"
-            SELECT  @0 As ReviewedUserID, @1 As PositionID, 0 As ReviewerUserID,
+            SELECT  TOP 1
+                    @0 As ReviewedUserID, @1 As PositionID, 0 As ReviewerUserID,
                     coalesce(avg(Rating1), 0) As Rating1,
 		            coalesce(avg(Rating2), 0) As Rating2,
 		            coalesce(avg(Rating3), 0) As Rating3,
@@ -92,7 +93,7 @@
             break;
     }
 }
-@helper printProviderStartRating(dynamic posrow, string index, string rate){
+@helper printProviderStartRating(dynamic posrow, string index, string rate, dynamic ratTexts){
     var id = "UserRatingSummaryWidget:" + index;
     var bid = (posrow.Columns.Contains("BookingID") ? posrow["BookingID"] : 0).ToString();
     id += 
@@ -105,14 +106,10 @@
         default:
             <label>@n</label>
             break;
-        case "3":
-            <label>Proffesionalism</label>
-            break;
         case "1":
-            <label>Quality-of-work</label>
-            break;
         case "2":
-            <label>Efficiency</label>
+        case "3":
+            <label>@ratTexts["Rating" + index]</label>
             break;
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
@@ -120,13 +117,14 @@
 <div class="user-rating-summary-widget user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
     @switch(mode) {
         case "detailed":
+            var ratTexts = LcData.GetPositionRatings(positionID);
             <ul>
                 @{
                     if (positionID > 0) {
                         for(var s=1; s < 4; s++){
                             var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
                             <li>
-                                @printProviderStartRating(reviewRecord, s.ToString(), rate.ToString())
+                                @printProviderStartRating(reviewRecord, s.ToString(), rate.ToString(), ratTexts)
                             </li>
                         }
                     } else {
