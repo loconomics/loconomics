@@ -75,7 +75,7 @@
                             @printAttList(cat)
                         </div>
                     }
-                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+                    @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDExperience];
                         <div class="years-experience">
@@ -83,7 +83,7 @@
                             <!--<a class="button view-more" href="#">More</a>-->
                             @printAttList(cat)
                         </div>
-                    }
+                    }*@
                     @if (minimumBookingTime > 0)
                     {
                     <div class="min-booing-time">
@@ -94,7 +94,7 @@
                             </li></ul>
                     </div>
                     }
-                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
+                    @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
                         <div class="client-types">
@@ -102,7 +102,7 @@
                             <!--<a class="button view-more" href="#">More</a>-->
                             @printAttList(cat)
                         </div>
-                    }
+                    }*@
                     @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDLanguages];
