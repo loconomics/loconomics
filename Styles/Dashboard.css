@@ -423,22 +423,15 @@ form#personal li label{
 .dashboard .positionservices div.service-attribute-categories {
     border-right: 1px solid #DADADA;
     display: inline-block;
-    /*margin: 20px 10px 10px 0 !important;
-    padding: 0 10px 0 0 !important;*/
     min-height: 350px;
     width: 66%;
-}
-fieldset.positionservices-attributes{
-    display: inline-block;
-    overflow: hidden;
-    /*border-right: solid 1px #dadada;*/
-    margin: 0 10px 10px 0 !important;
     vertical-align: top;
 }
-fieldset.positionservices-attributes,
-fieldset.positionservices-attributes > ul
-{
-    width: 215px;
+fieldset.positionservices-attributes{
+    border-bottom: 1px solid #DADADA;
+    margin: 10px 0 0 !important;
+    overflow: hidden;
+    padding-right: 10px !important;
 }
 fieldset.positionservices-attributes > ul {
     clear: both;
@@ -448,6 +441,9 @@ fieldset.positionservices-attributes * {
 }
 fieldset.positionservices-attributes li {
     margin: 0 0 2px;
+    padding: 0;
+    width: 50%;
+    float: left;
 }
 fieldset.required-attribute-category.group-validation-error legend {
     box-shadow: 0 0 5px 1px #dd3333;
@@ -494,7 +490,7 @@ form.positionservices input{
     vertical-align: top;
 }
 .positionservices-sidebar fieldset{
-    margin: 0 0 15px !important;
+    margin: 10px 0 0 !important;
 }
 .positionservices-languagesspoken ul li label{
     display: inline-block !important;
