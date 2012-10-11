@@ -668,7 +668,8 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // There is an error code.
 
             // Data not saved:
-            LC.ChangesNotification.registerChange(ctx.form.get(0), ctx.changedElements);
+            if (ctx.changedElements)
+                LC.ChangesNotification.registerChange(ctx.form.get(0), ctx.changedElements);
 
             // Unblock loading:
             ctx.box.unblock();
