@@ -126,17 +126,17 @@ Use Example:
  }
  else if (widgetType == "image")
  {
-     /* This new type 'image' is based on the initially created form email templates */
+     /* This new type 'image' is based on the initially created for email templates */
     var inText = "";
-    var globalRate = Decimal.Round(value);
-    for (decimal n = 0; n < 5; n++) {
+    var globalRate = Decimal.Round(value * 10);
+    @*for (decimal n = 0; n < 50; n += 5) {
         if (globalRate > n) {
             inText += "X ";
         } else {
             inText += "O ";
         }
-    }
-    inText += "(" + globalRate.ToString() + "/ 5)";
+    }*@
+    inText += "(" + (globalRate / 10).ToString() + " / 5)";
     @*<img class="rating-image" alt="@inText" src="@(UrlUtil.AppUrl)img/email/star-rating-@(globalRate).png" />*@
     <span class="rating-image rating-value-@globalRate">@inText</span>
  }

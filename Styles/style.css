@@ -1614,29 +1614,44 @@ html.boxshadow #loginBox .field-validation-error{
     margin-right: 3px;
 }
 .user-rating-summary-widget span.rating-image {
-    background: url('../img/theme/star-rating-gray-red.png') no-repeat top left;
+    background: url('../img/theme/star-rating-gray-orange.png') no-repeat top left;
     text-indent: -9999px;
     display: inline-block;
     width: 85px;
     height: 16px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-0 {
+.user-rating-summary-widget span.rating-image.rating-value-00 {
     background-position: 0 0;
 }
-.user-rating-summary-widget span.rating-image.rating-value-1 {
+.user-rating-summary-widget span.rating-image.rating-value-05 {
     background-position: 0 -16px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-2 {
+.user-rating-summary-widget span.rating-image.rating-value-10 {
     background-position: 0 -32px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-3 {
+.user-rating-summary-widget span.rating-image.rating-value-15 {
     background-position: 0 -48px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-4 {
+.user-rating-summary-widget span.rating-image.rating-value-20 {
     background-position: 0 -64px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-5 {
+.user-rating-summary-widget span.rating-image.rating-value-25 {
     background-position: 0 -80px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-30 {
+    background-position: 0 -96px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-35 {
+    background-position: 0 -112px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-40 {
+    background-position: 0 -128px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-45 {
+    background-position: 0 -144px;
+}
+.user-rating-summary-widget span.rating-image.rating-value-50 {
+    background-position: 0 -160px;
 }
 
 .user-rating-summary-widget.static .rate{
@@ -2388,7 +2403,9 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 .image-2dppx {
     display: none !important;
 }
-   
+/* Media query only for hi-resolution, 2dppx, 2dpi (as apple retina), displays:
+    We start counting from 1.2 to give hi-res to all devices with higher from
+    default and for browsers that emulate resolution on zooming (as Firefox) */
 @media screen and (-webkit-min-device-pixel-ratio: 1.2),  /* Webkit-based browsers */
     screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
     screen and (min-resolution: 1.2dppx)  /* The standard way */
@@ -2396,6 +2413,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: contain;
+    }
+    .user-rating-summary-widget span.rating-image {
+        background-image: url('../img/theme/star-rating-gray-orange@2x.png');
+        background-size: 85px 176px;
     }
     .image-2dppx {
         display: inherit !important;
