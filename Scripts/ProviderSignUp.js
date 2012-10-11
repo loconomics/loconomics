@@ -45,11 +45,11 @@ var ProviderSignUp = {
             }
         });
         // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
-        $.getJSON(UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
+        /*$.getJSON(UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
             function (data) {
                 positionsAutocomplete.autocomplete('option', 'source', data);
             }
-        );
+        );*/
         // Show autocomplete on 'plus' button
         $('.select-position .add-action').click(function () {
             positionsAutocomplete.autocomplete('search', '');
