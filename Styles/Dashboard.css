@@ -423,7 +423,6 @@ form#personal li label{
 .dashboard .positionservices div.service-attribute-categories {
     border-right: 1px solid #DADADA;
     display: inline-block;
-    min-height: 350px;
     width: 66%;
     vertical-align: top;
 }

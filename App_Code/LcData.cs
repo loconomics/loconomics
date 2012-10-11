@@ -70,7 +70,8 @@ public static partial class LcData
                     { "ServiceAttributeCategoryID", cat.ServiceAttributeCategoryID },
                     { "ServiceAttributeCategoryName", cat.ServiceCat },
                     { "ServiceAttributeCategoryDescription", cat.ServiceAttributeCategoryDescription },
-                    { "RequiredInput", cat.RequiredInput }
+                    { "RequiredInput", cat.RequiredInput },
+                    { "SideBarCategory", cat.SideBarCategory }
                 };
                 // Getting attributes of the category
                 rcat["ServiceAttributes"] = db.Query(sqlattribute, 
@@ -94,7 +95,8 @@ public static partial class LcData
                     { "ServiceAttributeCategoryID", ServiceAttCatIDLanguageLevel },
                     { "ServiceAttributeCategoryName", LcRessources.GetText("Language Level") },
                     { "ServiceAttributeCategoryDescription", LcRessources.GetText("Language Level Description") },
-                    { "RequiredInput", false }
+                    { "RequiredInput", false },
+                    { "SideBarCategory", true }
                 };
                 var levelsIndex = new Dictionary<int, int>();
                 var langlevels = new List<object>();
@@ -119,7 +121,8 @@ public static partial class LcData
                     { "ServiceAttributeCategoryID", ServiceAttCatIDExperienceLevel },
                     { "ServiceAttributeCategoryName", LcRessources.GetText("Experience Level") },
                     { "ServiceAttributeCategoryDescription", LcRessources.GetText("Experience Level Description") },
-                    { "RequiredInput", false }
+                    { "RequiredInput", false },
+                    { "SideBarCategory", true }
                 };
                 var explevels = new List<object>();
                 foreach (var level in GetExperienceLevels(userId, positionId))
@@ -143,17 +146,15 @@ public static partial class LcData
     /// treatment (languages, experience, ...)
     /// </summary>
     public static List<int> SpecialServicesAttCats = new List<int> { 
-        ServiceAttCatIDExperience
-        ,ServiceAttCatIDExperienceLevel
+        ServiceAttCatIDExperienceLevel
         ,ServiceAttCatIDLanguages
         ,ServiceAttCatIDLanguageLevel
-        ,ServiceAttCatIDClientTypes
     };
-    public const int ServiceAttCatIDExperience = 1;
+    //public const int ServiceAttCatIDExperience = 1;
     public const int ServiceAttCatIDExperienceLevel = 4;
     public const int ServiceAttCatIDLanguages = 5;
     public const int ServiceAttCatIDLanguageLevel = -5; // Virtual cat, doesn't exist
-    public const int ServiceAttCatIDClientTypes = 7;
+    //public const int ServiceAttCatIDClientTypes = 7;
 
     #region Extra tables for Service attributes (Languages&Experience Levels)
     public static dynamic GetExperienceLevels(int UserID = 0, int PositionID = 0)
