@@ -1609,48 +1609,48 @@ html.boxshadow #loginBox .field-validation-error{
     height: 18px;
     line-height: normal;
 }
-.user-rating-summary-widget .rating-image {
+.user-rating .rating-image {
     float: left;
     margin-right: 3px;
 }
-.user-rating-summary-widget span.rating-image {
+.user-rating span.rating-image {
     background: url('../img/theme/star-rating-gray-orange.png') no-repeat top left;
     text-indent: -9999px;
     display: inline-block;
     width: 85px;
     height: 16px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-00 {
+.user-rating span.rating-image.rating-value-00 {
     background-position: 0 0;
 }
-.user-rating-summary-widget span.rating-image.rating-value-05 {
+.user-rating span.rating-image.rating-value-05 {
     background-position: 0 -16px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-10 {
+.user-rating span.rating-image.rating-value-10 {
     background-position: 0 -32px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-15 {
+.user-rating span.rating-image.rating-value-15 {
     background-position: 0 -48px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-20 {
+.user-rating span.rating-image.rating-value-20 {
     background-position: 0 -64px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-25 {
+.user-rating span.rating-image.rating-value-25 {
     background-position: 0 -80px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-30 {
+.user-rating span.rating-image.rating-value-30 {
     background-position: 0 -96px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-35 {
+.user-rating span.rating-image.rating-value-35 {
     background-position: 0 -112px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-40 {
+.user-rating span.rating-image.rating-value-40 {
     background-position: 0 -128px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-45 {
+.user-rating span.rating-image.rating-value-45 {
     background-position: 0 -144px;
 }
-.user-rating-summary-widget span.rating-image.rating-value-50 {
+.user-rating span.rating-image.rating-value-50 {
     background-position: 0 -160px;
 }
 

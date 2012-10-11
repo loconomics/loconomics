@@ -225,7 +225,7 @@
 @helper printProviderRating3(dynamic provider){
             <li class="rating3">
                 <span>Rate @(provider.FirstName)'s professionalism</span>
-                <div class="rate-user">
+                <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
                 </div>
             </li>
@@ -253,13 +253,13 @@
             }
             <li class="rating1">
                 <span>Rate the quality of work @provider.FirstName performed:</span>
-                <div class="rate-user">
+                <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                 </div>
             </li>
             <li class="rating2">
                 <span>Rate the efficience in which @provider.FirstName performed the work:</span>
-                <div class="rate-user">
+                <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                 </div>
             </li>

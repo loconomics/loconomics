@@ -114,7 +114,7 @@
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
 }
-<div class="user-rating-summary-widget user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
+<div class="user-rating-summary-widget user-rating user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
     @switch(mode) {
         case "detailed":
             var ratTexts = LcData.GetPositionRatings(positionID);

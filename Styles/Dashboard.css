@@ -908,7 +908,7 @@ html.js .user-verified-licenses h5 {
 .dashboard .tab-body h4 {
     font-weight: bold;
     color: #747474;
-    margin: 0;
+    margin: 6px 0 0;
     font-size: 1.1em;
 }
 /** Form: Positions Background Checks **/
@@ -1391,7 +1391,7 @@ form#personal li > label.gender {
 }
 .booking > div.actions > .main-action {
     padding: 0 1em;
-    display: block;
+    /*display: block;*/
     margin: 0 auto 4px;
 }
 
@@ -1422,7 +1422,7 @@ form#personal li > label.gender {
 .booking-review form li textarea {
     width: 460px;
 }
-.booking-review .rate-user {
+.booking-review .user-rating {
     float: right;
 }
 .booking-review > form > fieldset {
@@ -1433,7 +1433,7 @@ form#personal li > label.gender {
 }
 
 /* Rate user: star-rating editable */
-.rate-user {
+.user-rating {
     display: inline-block;
     overflow: hidden;
 }
