@@ -51,16 +51,18 @@ var ProviderSignUp = {
             }
         );
         // Show autocomplete on 'plus' button
-        $('.provider-sign-up .select-position .add-action').click(function () {
+        $('.select-position .add-action').click(function () {
             positionsAutocomplete.autocomplete('search', '');
+            return false;
         });
         // Remove positions from the list
-        $('.provider-sign-up .positions-list > ul').on('click', 'li > a', function () {
+        $('.positions-list > ul').on('click', 'li > a', function () {
             var $t = $(this);
             if ($t.attr('href') == '#remove-position') {
                 // Remove complete element from the list (label and hidden form value)
                 $t.parent().remove();
             }
+            return false;
         });
 
         // custom client-side validation for agree termsofuse

@@ -451,7 +451,7 @@ fieldset.required-attribute-category.group-validation-error legend {
 .required-attribute-category-footnote {
     color: #dd3333;
 }
-/* Your-work - more attributes */
+/* Services, request more attributes */
 .dashboard .request-more-attributes{
     padding: 6px 0;
 }
@@ -464,6 +464,22 @@ fieldset.required-attribute-category.group-validation-error legend {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+}
+/* Add position */
+.add-positions .positions-list, .add-positions .select-position {
+    float: left;
+    width: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.add-positions .positions-list {
+    padding-left: 30px;
+}
+.add-positions h4 {
+    margin-bottom: 15px !important;
+}
+.add-positions .position-description {
+    height: 180px;
 }
 
 /* Fixing the buggy browsers implementation of legend element */

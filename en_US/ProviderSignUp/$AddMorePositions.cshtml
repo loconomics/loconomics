@@ -1,0 +1,100 @@
+﻿@using WebMatrix.Data;
+@{
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    var userid = u.UserID;
+    var lang = LcData.GetCurrentLanguageID();
+    var countryId = LcData.GetCurrentCountryID();
+    
+    // Position selection:
+    Validation.RequireField("position", "You must add at least one position.");
+    
+    // If this is a POST request, validate and process data
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco")) {
+            /** Add selected positions to the provider **/
+            if (ModelState.IsValid) {      
+                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+                foreach (string sPosID in Request.Form.GetValues("position")) {
+                    if (sPosID.IsInt()) {
+                        // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
+                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 1);
+                        if (Results.Result != "Success") {
+                            ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                        }
+                    }
+                }
+            }
+        }
+        if (ModelState.IsValid) {
+            LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Dashboard/Positions/");
+        }
+    }
+    
+    // Recover positions after postback error to re-populate form:
+    dynamic positions = null;
+    if (IsPost) {
+        // @iagosrl: We need a comma separated list of positionIDs for build the SQL to retrieve names for later, but
+        // WE CANNOT use directly the Request["position"] value because can have SQL-inject - XSS attacks.
+        // We parse every value as integer, strictly!
+        string positionIDList = "";
+        bool first = true;
+        foreach (string sPosID in Request.Form.GetValues("position")) {
+            if (!first) {
+                positionIDList += ",";
+            }
+            positionIDList += sPosID.AsInt().ToString();
+            first = false;
+        }
+        if (positionIDList != "") {
+            using (var db = Database.Open("sqlloco")) {
+                positions = db.Query(@"SELECT PositionID, PositionSingular FROM Positions WHERE PositionID IN (" + positionIDList + ")" + 
+                    " AND LanguageID=@0 AND CountryID=@1", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+    }
+}
+
+    <form method="post" action="@(UrlUtil.LangPath)ProviderSignUp/$Step2/" class="ajax ajax-box">
+        <h4>Add more position to your profile</h4>
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        <fieldset class="positions">
+            <div class="select-position">
+                <div class="position-search">
+                    <label for="providersignup-position-search">I am a...</label>
+                    <input type="text" id="providersignup-position-search" />
+                    <button type="button" class="action button add-action">+</button>
+                </div>
+                <div class="position-description">
+                    <label for="providersignup-position-desc"></label>
+                    <textarea disabled="disabled" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="positions-list">
+                <h4>You can add up to five positions</h4>
+                <ul>
+                    <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
+                    @if (IsPost && positions != null)
+                    {
+                        foreach (var pos in positions)
+                        {
+                            <li data-position-id="@pos.PositionID"><span class="name">@pos.PositionSingular</span><a href="#remove-position">remove</a><input type="hidden" name="position" value="@pos.PositionID" /></li>
+                        }
+                    }
+                </ul>
+                <div class="lc-ressources">
+                    <span class="positions-required">You must select at least one position</span>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="actions">
+            <button class="main-action">Add positions</button>
+        </fieldset>
+        @LcHelpers.GetValidationScripts()
+        @if (IsPost)
+        {
+            <script type="text/javascript">
+                // Reapply initialization
+                ProviderSignUp.init();
+            </script>
+        }
+    </form>

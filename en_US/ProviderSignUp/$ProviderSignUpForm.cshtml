@@ -202,7 +202,7 @@
     dynamic positions = null;
     if (IsPost) {
         // @iagosrl: We need a comma separated list of positionIDs for build the SQL to retrieve names for later, but
-        // WE CANNOT use directly the Reques["position"] value because can have SQL-inject - XSS attacks.
+        // WE CANNOT use directly the Request["position"] value because can have SQL-inject - XSS attacks.
         // We parse every value as integer, strictly!
         string positionIDList = "";
         bool first = true;
