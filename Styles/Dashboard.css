@@ -452,10 +452,10 @@ fieldset.required-attribute-category.group-validation-error legend {
     color: #dd3333;
 }
 /* Your-work - more attributes */
-.dashboard .your-work .request-more-attributes{
+.dashboard .request-more-attributes{
     padding: 6px 0;
 }
-.dashboard .your-work .request-more-attributes textarea {
+.dashboard .request-more-attributes textarea {
     color: black;
     font-size: 1.2em;
     height: 8em;
