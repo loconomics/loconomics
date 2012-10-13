@@ -481,6 +481,17 @@ fieldset.required-attribute-category.group-validation-error legend {
 .add-positions .position-description {
     height: 180px;
 }
+.add-positions .positions-list li {
+    list-style: disc inside;
+    margin: 3px 0;
+    padding: 0;
+}
+.add-positions .positions-list li > a,
+.add-positions .positions-list li > a:visited {
+    color: #00989b;
+    margin-left: 20px;
+    text-transform: lowercase;
+}
 
 /* Fixing the buggy browsers implementation of legend element */
 fieldset.positionservices-attributes > legend {
