@@ -640,7 +640,7 @@ public static partial class LcData
                 SELECT  TOP 1
                         Rating1, Rating2, Rating3
                 FROM    PositionRatings
-                WHERE   (PositionID = @0 OR PositionID = 0)
+                WHERE   (PositionID = @0 OR PositionID = -1)
                         AND LanguageID = @1
                         AND CountryID = @2
                 -- First, the specific ID, then the default PositionID=0. 
