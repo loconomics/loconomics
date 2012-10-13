@@ -45,6 +45,7 @@
             review = db.QuerySingle(sqlGetBookingReview, bookingID, reviewPositionID);
         }
     }
+    var rateTexts = LcData.GetPositionRatings(reviewPositionID);
 }
 @helper printAsHtml(string text){
     @Html.Raw(text.Replace("\n", "<br/>"))
@@ -72,13 +73,13 @@
                     </li>
                     }
                     <li class="rating1">
-                        <span>Quality of work @provider.FirstName performed:</span>
+                        <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1ProfileDescription) ? "" : " - " + rateTexts.Rating1ProfileDescription): @*Quality of work @provider.FirstName performed:*@</span>
                         <div class="user-rating">
                             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true", "image" })
                         </div>
                     </li>
                     <li class="rating2">
-                        <span>Efficience in which @provider.FirstName performed the work:</span>
+                        <span>@(rateTexts.Rating2)@(String.IsNullOrEmpty(rateTexts.Rating2ProfileDescription) ? "" : " - " + rateTexts.Rating2ProfileDescription): @*Efficience in which @provider.FirstName performed the work:*@</span>
                         <div class="user-rating">
                             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", review.Rating2.ToString(), "true", "image" })
                         </div>
@@ -95,7 +96,7 @@
                 <h4>Section 2: Help @provider.FirstName grow professionally</h4>
                 <ul>
                     <li class="rating3">
-                        <span>@(provider.FirstName)'s professionalism</span>
+                        <span>@(rateTexts.Rating3)@(String.IsNullOrEmpty(rateTexts.Rating3ProfileDescription) ? "" : " - " + rateTexts.Rating3ProfileDescription): @*@(provider.FirstName)'s professionalism*@</span>
                         <div class="user-rating">
                             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", review.Rating3.ToString(), "true", "image" })
                         </div>
@@ -133,7 +134,7 @@
                 <h4>Section 1: @customer.FirstName rated as customer</h4>
                 <ul>
                     <li class="rating1">
-                        <span>@customer.FirstName rated as customer:</span>
+                        <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1ProfileDescription) ? "" : " - " + rateTexts.Rating1ProfileDescription): @*@customer.FirstName rated as customer:*@</span>
                         <div class="user-rating">
                             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", review.Rating1.ToString(), "true", "image" })
                         </div>

@@ -148,6 +148,8 @@
             }
         }
     }
+    
+    var rateTexts = LcData.GetPositionRatings(0);
 }
 <form class="customer-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$CustomerRatingForm/">
     @LcHelpers.SetupStarRatingPlugin()
@@ -159,7 +161,7 @@
             <legend>Section 1: Rate @customer.FirstName as customer</legend>
             <ul>
                 <li class="rating1">
-                    <span>Rate @customer.FirstName as customer:</span>
+                    <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate @customer.FirstName as customer:*@</span>
                     <div class="user-rating">
                         @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                     </div>

@@ -639,6 +639,8 @@ public static partial class LcData
             return db.QuerySingle(@"
                 SELECT  TOP 1
                         Rating1, Rating2, Rating3
+                        ,Rating1FormDescription, Rating2FormDescription, Rating3FormDescription
+                        ,Rating1ProfileDescription, Rating2ProfileDescription, Rating3ProfileDescription
                 FROM    PositionRatings
                 WHERE   (PositionID = @0 OR PositionID = -1)
                         AND LanguageID = @1

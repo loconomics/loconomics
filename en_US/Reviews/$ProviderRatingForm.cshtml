@@ -221,10 +221,12 @@
             }
         }
     }
+    
+    var rateTexts = LcData.GetPositionRatings(positionID);
 }
-@helper printProviderRating3(dynamic provider){
+@helper printProviderRating3(dynamic provider, dynamic rateTexts){
             <li class="rating3">
-                <span>Rate @(provider.FirstName)'s professionalism</span>
+                <span>@(rateTexts.Rating3)@(String.IsNullOrEmpty(rateTexts.Rating3FormDescription) ? "" : " - " + rateTexts.Rating3FormDescription): @*Rate @(provider.FirstName)'s professionalism*@</span>
                 <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
                 </div>
@@ -252,20 +254,20 @@
             </li>
             }
             <li class="rating1">
-                <span>Rate the quality of work @provider.FirstName performed:</span>
+                <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate the quality of work @provider.FirstName performed:*@</span>
                 <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                 </div>
             </li>
             <li class="rating2">
-                <span>Rate the efficience in which @provider.FirstName performed the work:</span>
+                <span>@(rateTexts.Rating2)@(String.IsNullOrEmpty(rateTexts.Rating2FormDescription) ? "" : " - " + rateTexts.Rating2FormDescription): @*Rate the efficience in which @provider.FirstName performed the work:*@</span>
                 <div class="user-rating">
                     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                 </div>
             </li>
             @if (pastReference)
             {
-                @printProviderRating3(provider)
+                @printProviderRating3(provider, rateTexts)
             <li class="serviceHours">
                 <label>Please let us know approximately how many hours @provider.FirstName has worked for you:
                     <input type="text" name="serviceHours" @Validation.GetHtml("serviceHours") value="@(Request["serviceHours"])" />
@@ -284,7 +286,7 @@
     <fieldset class="section-2">
         <legend>Section 2: Help @provider.FirstName grow professionally</legend>
         <ul>
-            @printProviderRating3(provider)
+            @printProviderRating3(provider, rateTexts)
             <li class="private-review">
                 <label for="private-review">Please give @provider.FirstName any constructive criticism to help
                     @provider.FirstName do a better job (only @provider.FirstName will see this):</label>

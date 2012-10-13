@@ -109,7 +109,7 @@
         case "1":
         case "2":
         case "3":
-            <label>@ratTexts["Rating" + index]</label>
+            <label title="@ratTexts["Rating" + index]" data-description="@ratTexts["Rating" + index + "ProfileDescription"]">@ratTexts["Rating" + index]</label>
             break;
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
@@ -131,7 +131,7 @@
                         var id = "UserRatingSummaryWidget:" + reviewedID.ToString();
                         var rate = reviewRecord["Rating1"].ToString();
                         <li>
-                        <label>Customer</label>
+                        <label><label title="@ratTexts["Rating1"]" data-description="@ratTexts["Rating1ProfileDescription"]">@ratTexts["Rating1"]</label></label>
                         @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" })
                         </li>
                     }
