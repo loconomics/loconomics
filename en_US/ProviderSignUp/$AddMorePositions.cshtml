@@ -5,6 +5,18 @@
     var lang = LcData.GetCurrentLanguageID();
     var countryId = LcData.GetCurrentCountryID();
     
+    // Retrieving number of possitions that can be added, from a total of 5, difference with current available positions
+    var positionsRemaining = 1;
+    using (var db = Database.Open("sqlloco")) {
+        positionsRemaining = db.QueryValue(@"
+            SELECT 5 - count(*)
+            FROM userprofilepositions
+            WHERE   UserID = @0
+                    AND Active = 1
+                    AND StatusID > 0
+        ", userid);
+    }
+    
     // Position selection:
     Validation.RequireField("position", "You must add at least one position.");
     
@@ -14,6 +26,7 @@
             /** Add selected positions to the provider **/
             if (ModelState.IsValid) {      
                 var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+                var nadded = 0;
                 foreach (string sPosID in Request.Form.GetValues("position")) {
                     if (sPosID.IsInt()) {
                         // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
@@ -21,6 +34,10 @@
                         if (Results.Result != "Success") {
                             ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
                         }
+                        nadded++;
+                    }
+                    if (nadded >= positionsRemaining) {
+                        break;
                     }
                 }
             }
@@ -52,6 +69,7 @@
             }
         }
     }
+   
 }
 
     <form method="post" action="@(UrlUtil.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
@@ -70,7 +88,7 @@
                 </div>
             </div>
             <div class="positions-list">
-                <h4>You can add up to five positions</h4>
+                <h4>You can add up to @positionsRemaining positions</h4>
                 <ul>
                     <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
                     @if (IsPost && positions != null)
