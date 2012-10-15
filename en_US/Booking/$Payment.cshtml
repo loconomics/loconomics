@@ -81,7 +81,7 @@
             }
         
             if (ModelState.IsValid){
-                //try {
+                try {
                     /*
                      * Get data from our database about BookingRequest in order to
                      * do further operations -braintree, timezones-
@@ -269,12 +269,12 @@
                          dt1ID, dt2ID, dt3ID);
                     }
                     
-                /*} catch (Exception ex) {
+                } catch (Exception ex) {
                     if (Context.IsDebuggingEnabled) {
                         throw ex;
                     }
                     LcHelpers.ReturnJsonError(-1, ex.Message);
-                }*/
+                }
             }
             if (ModelState.IsValid) {
                 /*
