@@ -3,7 +3,7 @@
     var p = LcData.UserInfo.GetRequestedUserRow();
     var pos = PageData["position"];
     
-    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services", pos.UserID);
     
     // TODO: Get Customer Type Id   
     var clienttypeid = PageData["ClientTypeID"] = 1;
