@@ -261,29 +261,26 @@
     }
 }
 @helper printLanguagesCat(dynamic cat, dynamic langLevels, dynamic userLangLevels, string tplAttName){
-    if (cat["ServiceAttributes"].Count > 0)
-    {
-        <fieldset class="positionservices-languagesspoken @(cat["RequiredInput"] ? "required-attribute-category" : "")">
-            @printCatLegend(cat)
-            <ul>
-                @foreach (var att in cat["ServiceAttributes"])
-                {
-                    string selLangLevel = 
-                        Request[String.Format(tplAttName, LcData.ServiceAttCatIDLanguages, att.ServiceAttributeID) + "-level"] ??
-                        (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
+    <fieldset class="positionservices-languagesspoken @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+        @printCatLegend(cat)
+        <ul>
+            @foreach (var att in cat["ServiceAttributes"])
+            {
+                string selLangLevel = 
+                    Request[String.Format(tplAttName, LcData.ServiceAttCatIDLanguages, att.ServiceAttributeID) + "-level"] ??
+                    (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
                         
-                <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
-                    <select title="@LcRessources.GetText("Language Level")" data-description="@LcRessources.GetText("Language Level Description")" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
-                        @foreach (var level in langLevels)
-                        {
-                            <option @LcHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
-                        }
-                    </select>
-                </li>
-                }
-            </ul>
-        </fieldset>
-    }
+            <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
+                <select title="@LcRessources.GetText("Language Level")" data-description="@LcRessources.GetText("Language Level Description")" name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
+                    @foreach (var level in langLevels)
+                    {
+                        <option @LcHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
+                    }
+                </select>
+            </li>
+            }
+        </ul>
+    </fieldset>
 }
 <p class="setting-instructions">
 Let clients know about the services you provide.  It helps you both work better together by clearly defining what can be done.  If we've missed something, <a href="mailto:providerhelp@loconomics.com">let us know.</a>
@@ -325,7 +322,8 @@ Let clients know about the services you provide.  It helps you both work better 
 
         @foreach (var cat in dataCats)
         {
-            if (specialCatIDs.Contains(cat.Key) || cat.Value["SideBarCategory"] == true)
+            if ((specialCatIDs.Contains(cat.Key) || cat.Value["SideBarCategory"] == true) &&
+                cat.Value["ServiceAttributes"].Count > 0)
             {
                 switch ((int)cat.Key)
                 {
@@ -336,13 +334,10 @@ Let clients know about the services you provide.  It helps you both work better 
                         @printLanguagesCat(cat.Value, langLevels, userLangLevels, tplAttName)
                         break;
                     default:
-                        if (cat.Value["ServiceAttributes"].Count > 0)
-                        {
-                            <fieldset class=" @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
-                                @printCatLegend(cat.Value)
-                                @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
-                            </fieldset>
-                        }
+                        <fieldset class=" @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                            @printCatLegend(cat.Value)
+                            @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
+                        </fieldset>
                         break;
                 }
             }

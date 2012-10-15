@@ -66,6 +66,18 @@
                 <a class="calculate-price" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
+                    @if (minimumBookingTime > 0)
+                    {
+                        <div class="min-booing-time">
+                            <h5>Minimum booking time:</h5>
+                            <!--<a class="button view-more" href="#">More</a>-->
+                            <ul class="attributes-list"><li>
+                                @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
+                                </li></ul>
+                        </div>
+                    }
+                    
+                    @* Experience Level special treatment: just like in Dashboard/Services, is on the top, because "doesn't understand DisplayRank" *@
                     @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
@@ -75,6 +87,55 @@
                             @printAttList(cat)
                         </div>
                     }
+                    
+                    @foreach (var cat in dataCats)
+                    {
+                        // Select:
+                        // - Special cats or cats selected for sidebar
+                        // - Cats with content (checked by user attributes)
+                        // - Real cats, with ID greater than zero (zero is not valid, negative is for virtual cats, as LanguageLevels)
+                        if ((LcData.SpecialServicesAttCats.Contains(cat.Key) || cat.Value["SideBarCategory"] == true) &&
+                            cat.Value["ServiceAttributes"].Count > 0 &&
+                            cat.Key > 0)
+                        {
+                            <div>
+                                @printCatTitle(cat.Value)
+                                <!--<a class="button view-more" href="#">More</a>-->
+                                @switch ((int)cat.Key)
+                                {
+                                    case LcData.ServiceAttCatIDLanguages:
+                                        @printAttListLangs(cat.Value, dataCats[LcData.ServiceAttCatIDLanguageLevel])
+                                        break;
+                                    case LcData.ServiceAttCatIDExperienceLevel:
+                                        // Do nothing, experience level was printed first already, not duplicate!
+                                        break;
+                                    default:
+                                        @printAttList(cat.Value)
+                                        break;
+                                }
+                            </div>
+                        }
+                    }
+
+                    @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
+                        <div class="experience-level">
+                            @printCatTitle(cat)
+                            <!--<a class="button view-more" href="#">More</a>-->
+                            @printAttList(cat)
+                        </div>
+                    }*@
+                    @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
+                    {
+                        var cat = dataCats[LcData.ServiceAttCatIDLanguages];
+                        <div class="languages-spoken">
+                            @printCatTitle(cat)
+                            <!--<a class="button view-more" href="#">More</a>-->
+                            @printAttListLangs(cat, dataCats[LcData.ServiceAttCatIDLanguageLevel])
+                        </div>
+                    }*@
+
                     @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDExperience];
@@ -84,16 +145,6 @@
                             @printAttList(cat)
                         </div>
                     }*@
-                    @if (minimumBookingTime > 0)
-                    {
-                    <div class="min-booing-time">
-                        <h5>Minimum booking time:</h5>
-                        <!--<a class="button view-more" href="#">More</a>-->
-                        <ul class="attributes-list"><li>
-                            @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
-                            </li></ul>
-                    </div>
-                    }
                     @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
                     {
                         var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
@@ -103,14 +154,5 @@
                             @printAttList(cat)
                         </div>
                     }*@
-                    @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages) && dataCats[LcData.ServiceAttCatIDLanguages]["ServiceAttributes"].Count > 0)
-                    {
-                        var cat = dataCats[LcData.ServiceAttCatIDLanguages];
-                        <div class="languages-spoken">
-                            @printCatTitle(cat)
-                            <!--<a class="button view-more" href="#">More</a>-->
-                            @printAttListLangs(cat, dataCats[LcData.ServiceAttCatIDLanguageLevel])
-                        </div>
-                    }
                 </div>
             </div>
