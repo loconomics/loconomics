@@ -81,7 +81,7 @@
             }
         
             if (ModelState.IsValid){
-                try {
+                //try {
                     /*
                      * Get data from our database about BookingRequest in order to
                      * do further operations -braintree, timezones-
@@ -201,13 +201,19 @@
                             // Checking results:
                             if (result == null) {
                                 ModelState.AddFormError("Unexpected error during credit card verification");
-                            } else if (!result.IsSuccess()) {
-                                ModelState.AddFormError(result.Message);
-                                foreach (var error in result.Errors.All()) {
-                                    ModelState.AddFormError(error.Message);
-                                }
+                            } else if (result.IsSuccess()
+                                && result.Target != null
+                                && !String.IsNullOrEmpty(result.Target.Id)) {
+                                transactionID = result.Target.Id;
                             } else {
-                                transactionID = result.Transaction.Id;
+                                if (result.IsSuccess()) {
+                                    ModelState.AddFormError("Impossible to know transaction details, please contact support");
+                                } else {
+                                    ModelState.AddFormError(result.Message);
+                                    foreach (var error in result.Errors.All()) {
+                                        ModelState.AddFormError(error.Message);
+                                    }
+                                }
                             }
                         }
                     }
@@ -263,12 +269,12 @@
                          dt1ID, dt2ID, dt3ID);
                     }
                     
-                } catch (Exception ex) {
-                    LcHelpers.ReturnJsonError(-1, ex.Message);
-                    //if (Context.IsDebuggingEnabled) {
+                /*} catch (Exception ex) {
+                    if (Context.IsDebuggingEnabled) {
                         throw ex;
-                    //}
-                }
+                    }
+                    LcHelpers.ReturnJsonError(-1, ex.Message);
+                }*/
             }
             if (ModelState.IsValid) {
                 /*
