@@ -152,7 +152,7 @@ $(document).ready(function () {
                 .change(); // Force change event to auto-update endTime
 
             // If is in a popup:
-            var popupContainer = $t.closest('.calendar').data('popup-container'); console.log(popupContainer);
+            var popupContainer = $t.closest('.calendar').data('popup-container');
             if (popupContainer)
                 smoothBoxBlock(null, popupContainer);
         }

@@ -426,6 +426,7 @@ LC.ChangesNotification = {
             return this.quitMessage || (this.quitMessage = $('#lcres-quit-without-save').text()) || '';
     },
     registerChange: function (f, e) {
+        if (!e) return;
         var fname = LC.getXPath(f);
         var fl = this.changesList[fname] = this.changesList[fname] || [];
         if ($.isArray(e)) {
