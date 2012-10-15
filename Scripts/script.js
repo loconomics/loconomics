@@ -30,6 +30,10 @@ var infoBlock = function (message, options) {
         ,overlayCSS: { cursor: 'default' }
     }, options);
 }
+$.blockUI.defaults.onBlock = function () {
+    // Scroll to block-message to don't lost in large pages:
+    $('html,body').stop(true, true).animate({ scrollTop: $(this).offset().top - 30 }, 500, null);
+};
 var gLoadingRetard = 300;
 
 // Array Remove - By John Resig (MIT Licensed)
@@ -569,7 +573,8 @@ function popup(url, size, complete, loadingText, options){
        '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
        centerY: false,
        css: popupStyle(swh),
-       overlayCSS: { cursor: 'default' }
+       overlayCSS: { cursor: 'default' },
+       focusInput: true
     });
 
     // Loading Url with Ajax and place content inside the blocked-box
