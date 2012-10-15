@@ -145,54 +145,70 @@
                         transactionID = "TEST:" + Guid.NewGuid().ToString();
                     } else {
                         // REAL Braintree Code
-                        //TODO: check for existing user id or credit card
                         BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
-                        TransactionRequest request = new TransactionRequest
-                        {
-                            Amount = TotalPrice,
-                            CreditCard = new TransactionCreditCardRequest
-                            {
-                                Token = LcHelpers.ConvertToBraintreeToken(paymentNickName),
-                                CardholderName = Request["name-on-card"],
-                                Number = Request["card-number"],
-                                ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
-                                CVV = Request["cvv"]
-                            },
-                            Customer = new CustomerRequest
-                            {
+                        
+                        //string credidtCardToken = c.UserID.ToString() + ":creditcard:" + LcHelpers.ConvertToBraintreeToken(paymentNickName);
+                        
+                        // Find or create Customer on Braintree
+                        Customer gc = gateway.Customer.Find(c.UserID.ToString());
+                        if (gc == null) {
+                            var gcr = new CustomerRequest{
                                 Id = c.UserID.ToString()
-                            },
-                            BillingAddress = new AddressRequest
-                            {
-                                StreetAddress = Request["street-address-line-1"],
-                                ExtendedAddress = Request["street-address-line-2"],
-                                Locality = Request["city"],
-                                Region = Request["state"],
-                                PostalCode = Request["zip"],
-                                CountryCodeAlpha2 = "US"
-                            },
-                            Options = new TransactionOptionsRequest
-                            {
-                                StoreInVaultOnSuccess = true,
-                                AddBillingAddressToPaymentMethod = true
+                            };
+                            var r = gateway.Customer.Create(gcr);
+                            if (!r.IsSuccess()) {
+                                ModelState.AddFormError(r.Message);
+                                foreach (var error in r.Errors.All()) {
+                                    ModelState.AddFormError(error.Message);
+                                }
                             }
-                        };
+                        }
+                        
+                        if (ModelState.IsValid) {
+                            TransactionRequest request = new TransactionRequest
+                            {
+                                Amount = TotalPrice,
+                                CustomerId = c.UserID.ToString(),
+                                CreditCard = new TransactionCreditCardRequest
+                                {
+                                    //Token = credidtCardToken,
+                                    CardholderName = Request["name-on-card"],
+                                    Number = Request["card-number"],
+                                    ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
+                                    CVV = Request["cvv"]
+                                },
+                                BillingAddress = new AddressRequest
+                                {
+                                    StreetAddress = Request["street-address-line-1"],
+                                    ExtendedAddress = Request["street-address-line-2"],
+                                    Locality = Request["city"],
+                                    Region = Request["state"],
+                                    PostalCode = Request["zip"],
+                                    CountryCodeAlpha2 = "US"
+                                },
+                                Options = new TransactionOptionsRequest
+                                {
+                                    StoreInVaultOnSuccess = true,
+                                    AddBillingAddressToPaymentMethod = true
+                                }
+                            };
                     
-                        Result<Transaction> result = null;
-                        try{
-                            result = gateway.Transaction.Sale(request);
-                        } catch{}
+                            Result<Transaction> result = null;
+                            try{
+                                result = gateway.Transaction.Sale(request);
+                            } catch{}
                     
-                        // Checking results:
-                        if (result == null) {
-                            ModelState.AddFormError("Unexpected error during credit card verification");
-                        } else if (!result.IsSuccess()) {
-                            ModelState.AddFormError(result.Message);
-                            foreach (var error in result.Errors.All()) {
-                                ModelState.AddFormError(error.Message);
+                            // Checking results:
+                            if (result == null) {
+                                ModelState.AddFormError("Unexpected error during credit card verification");
+                            } else if (!result.IsSuccess()) {
+                                ModelState.AddFormError(result.Message);
+                                foreach (var error in result.Errors.All()) {
+                                    ModelState.AddFormError(error.Message);
+                                }
+                            } else {
+                                transactionID = result.Transaction.Id;
                             }
-                        } else {
-                            transactionID = result.Transaction.Id;
                         }
                     }
                     
@@ -249,9 +265,9 @@
                     
                 } catch (Exception ex) {
                     LcHelpers.ReturnJsonError(-1, ex.Message);
-                    if (Context.IsDebuggingEnabled) {
+                    //if (Context.IsDebuggingEnabled) {
                         throw ex;
-                    }
+                    //}
                 }
             }
             if (ModelState.IsValid) {
