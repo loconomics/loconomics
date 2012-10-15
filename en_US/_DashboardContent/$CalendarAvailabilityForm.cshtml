@@ -23,6 +23,11 @@
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
+    //Validation.RequireField("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
+    //Validation.RequireField("min-time", LcRessources.RequiredField("Minimum booking time"));
+    //Validation.RequireField("max-time", LcRessources.RequiredField("Maximum booking time"));
+    //Validation.RequireField("between-time", LcRessources.RequiredField("Minimum time between bookings"));
+    
     if (!IsPost) {
         dynamic hoursData = null, atts = null;
         using (var db = Database.Open("sqlloco")) {
@@ -61,7 +66,20 @@
         maxTime                 = Request["max-time"].AsDecimal();
         betweenTime             = Request["between-time"].AsDecimal();
         
-        if (Validation.IsValid()) {
+        if (Request["advance-time"].IsEmpty()) {
+            ModelState.AddError("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
+        }
+        if (Request["min-time"].IsEmpty()) {
+            ModelState.AddError("min-time", LcRessources.RequiredField("Minimum booking time"));
+        }
+        if (Request["max-time"].IsEmpty()) {
+            ModelState.AddError("max-time", LcRessources.RequiredField("Maximum booking time"));
+        }
+        if (Request["between-time"].IsEmpty()) {
+            ModelState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
+        }
+
+        if (Validation.IsValid() && ModelState.IsValid) {
             
             var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
             var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
@@ -193,6 +211,7 @@
         TimeSpan.FromDays(14)
     });*@
     <select name="advance-time">
+        <option value=""></option>
         @printOption(selected, "1",     "1 hour")
         @printOption(selected, "1.5",   "1.5 hours")
         @printOption(selected, "2",     "2 hours")
@@ -218,6 +237,7 @@
 @helper printHoursMinBookingTime(string selected){
     // Minimum booking time: 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day
     <select name="min-time">
+        <option value=""></option>
         @printOption(selected, "0.25",  "15 minutes")
         @printOption(selected, "0.5",   "30 minutes")
         @printOption(selected, "0.75",  "45 minutes")
@@ -237,6 +257,7 @@
 @helper printHoursMaxBookingTime(string selected){
     // Maximum booking time: 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours, 7 hours, 8 hours, 12 hours, 18 hours, 1 day
     <select name="max-time">
+        <option value=""></option>
         @printOption(selected, "1",     "1 hour")
         @printOption(selected, "2",     "2 hours")
         @printOption(selected, "3",     "3 hours")
@@ -253,6 +274,7 @@
 @helper printHoursBetweenBookingTime(string selected){
     // Minimum time between bookings: 5 minutes, 10 minutes, 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours
     <select name="between-time">
+        <option value=""></option>
         @printOption(selected, "0.08",  "5 minutes")
         @printOption(selected, "0.16",  "10 minutes")
         @printOption(selected, "0.25",  "15 minutes")
