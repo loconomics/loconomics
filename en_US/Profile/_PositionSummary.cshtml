@@ -94,9 +94,11 @@
                         // - Special cats or cats selected for sidebar
                         // - Cats with content (checked by user attributes)
                         // - Real cats, with ID greater than zero (zero is not valid, negative is for virtual cats, as LanguageLevels)
+                        // - On Experience Level category, do nothing, experience level was printed previous this iteration already, not duplicate!
                         if ((LcData.SpecialServicesAttCats.Contains(cat.Key) || cat.Value["SideBarCategory"] == true) &&
                             cat.Value["ServiceAttributes"].Count > 0 &&
-                            cat.Key > 0)
+                            cat.Key > 0 &&
+                            cat.Key != LcData.ServiceAttCatIDExperienceLevel)
                         {
                             <div>
                                 @printCatTitle(cat.Value)
@@ -105,9 +107,6 @@
                                 {
                                     case LcData.ServiceAttCatIDLanguages:
                                         @printAttListLangs(cat.Value, dataCats[LcData.ServiceAttCatIDLanguageLevel])
-                                        break;
-                                    case LcData.ServiceAttCatIDExperienceLevel:
-                                        // Do nothing, experience level was printed first already, not duplicate!
                                         break;
                                     default:
                                         @printAttList(cat.Value)
