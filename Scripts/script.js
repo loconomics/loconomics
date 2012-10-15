@@ -1290,7 +1290,7 @@ $(function () {
                                 $(nextStep).trigger('endLoadWizardStep');
                             } else {
                                 // If there is a next-step URI that is not internal link, we load it
-                                window.location = nextStep;
+                                LC.redirectTo(nextStep);
                             }
                         }
                     } else if (data.Code == 1) {
