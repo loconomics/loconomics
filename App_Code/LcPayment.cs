@@ -52,9 +52,10 @@ public static class LcPayment
 
         // Check if the transaction has something to refund (was not refunded yet)
         Transaction transaction = gateway.Transaction.Find(transactionID);
-        if (transaction != null)
+        if (transaction == null)
             // It doesn't exists, 'refunded' ;)
             return null;
+
         if (transaction.Amount > 0)
         {
             // There is something to refund:
