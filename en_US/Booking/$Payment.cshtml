@@ -99,17 +99,15 @@
                     ";
                     var TotalPrice = db.QueryValue(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     
+
                     /*
-                     * Send customer payment data to Braintree, 
-                     * using our UserID as identifier.
+                     * User wants to save as 'my location'?
                      */
-                    // User wants to save as 'my location'?
                     string paymentNickName = null;
                     if (Request["save-payment"] == "true" &&
                         !String.IsNullOrWhiteSpace(Request["save-payment-as"])) {
                         paymentNickName = Request["save-payment-as"];
                     }
-                    
                     if (paymentNickName != null) {
                         // Check if there is already a 'billing' address (only can exists one) and get its AddressID
                         // to update it with the new data - or inserts one new if AddressID=0
@@ -137,8 +135,69 @@
                             null, null, null /* coordinates and googlemaps */);
                     }
                     
+                    /*
+                     * Saving booking data from form and previous lookups.
+                     * State will still be '1:created' and not '2:complete' because
+                     * payment transaction need be done still, but to ensure avoid
+                     * problems with most saving errors, save some data now and let
+                     * to after payment only transaction data and state changes, minifying
+                     * possible errors after payment that can break the booking request:
+                     */
+                    if (ModelState.IsValid) {
+                        /*
+                         * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
+                         * looking in our Postal Codes table.
+                         */
+                        var sqlGetTimeZone = @"
+                            SELECT  TimeZone
+                            FROM    PostalCode
+                            WHERE   PostalCodeID = @0
+                        ";
+                        var sqlInsCalendarEvent = @"
+                            INSERT INTO [CalendarEvents]
+                                       ([UserId]
+                                       ,[CalendarAvailabilityTypeID]
+                                       ,[StartTime]
+                                       ,[EndTime]
+                                       ,[TimeZone])
+                                 VALUES (@0, @1, @2, @3, @4)
+                            SELECT Cast(@@Identity As int) As CalendarEventID
+                        ";
+                        var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+                        // Save date-times as 'tentative' provider Events
+                        var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt1Start, dt1End, timeZone);
+                        var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt2Start, dt2End, timeZone);
+                        var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                            3, // Availability is 'Tentative'
+                            dt3Start, dt3End, timeZone);
+
+                        /*
+                         * Save last card number digits encrypted,
+                         * and saving event IDs.
+                         * State is still 1:created
+                         */
+                        db.Execute(@"
+                            UPDATE  BookingRequest
+                            SET     
+                                    PaymentLastFourCardNumberDigits = @1
+                                    ,PreferredDateID = @2
+                                    ,AlternativeDate1ID = @3
+                                    ,AlternativeDate2ID = @4
+                            WHERE   BookingRequestID = @0
+                        ", bookingRequestID, 
+                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)),
+                         dt1ID, dt2ID, dt3ID);
+                    }
+
+
+                    /*
+                     * Payment transaction
+                     */                    
                     var transactionID = "";
-                    
                     if (TESTING_EMULATEBRAINTREE) {
                         // TESTING, emulate Braintree generating false transactionID,
                         // avoiding comunicate with them.
@@ -148,6 +207,11 @@
                         BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
                         
                         //string credidtCardToken = c.UserID.ToString() + ":creditcard:" + LcHelpers.ConvertToBraintreeToken(paymentNickName);
+                        
+                        /*
+                         * Send customer payment data to Braintree, 
+                         * using our UserID as identifier.
+                         */
                         
                         // Find or create Customer on Braintree
                         Customer gc = gateway.Customer.Find(c.UserID.ToString());
@@ -218,56 +282,18 @@
                         }
                     }
                     
-                    if (ModelState.IsValid) {
-                        /*
-                         * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
-                         * looking in our Postal Codes table.
-                         */
-                        var sqlGetTimeZone = @"
-                            SELECT  TimeZone
-                            FROM    PostalCode
-                            WHERE   PostalCodeID = @0
-                        ";
-                        var sqlInsCalendarEvent = @"
-                            INSERT INTO [CalendarEvents]
-                                       ([UserId]
-                                       ,[CalendarAvailabilityTypeID]
-                                       ,[StartTime]
-                                       ,[EndTime]
-                                       ,[TimeZone])
-                                 VALUES (@0, @1, @2, @3, @4)
-                            SELECT Cast(@@Identity As int) As CalendarEventID
-                        ";
-                        var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
-                        // Save date-times as 'tentative' provider Events
-                        var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt1Start, dt1End, timeZone);
-                        var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt2Start, dt2End, timeZone);
-                        var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt3Start, dt3End, timeZone);
-
-                        /*
-                         * Save Braintree Transaction ID in the Booking Request,
-                         * saving event IDs,
-                         * and updating State to 'Booking Request Completed'
-                         */
-                        db.Execute(@"
-                            UPDATE  BookingRequest
-                            SET     PaymentTransactionID = @1
-                                    ,PaymentLastFourCardNumberDigits = @2
-                                    ,BookingRequestStatusID = 2 -- Completed
-                                    ,PreferredDateID = @3
-                                    ,AlternativeDate1ID = @4
-                                    ,AlternativeDate2ID = @5
-                            WHERE   BookingRequestID = @0
-                        ", bookingRequestID, transactionID, 
-                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)),
-                         dt1ID, dt2ID, dt3ID);
-                    }
+                    
+                    /*
+                     * Save Braintree Transaction ID in the Booking Request and card digits
+                     * and updating State to 'Booking Request Completed' (2:completed)
+                     */
+                    db.Execute(@"
+                        UPDATE  BookingRequest
+                        SET     PaymentTransactionID = @1
+                                ,BookingRequestStatusID = 2 -- Completed
+                        WHERE   BookingRequestID = @0
+                    ", bookingRequestID, transactionID);
+                    
                     
                 } catch (Exception ex) {
                     if (Context.IsDebuggingEnabled) {
