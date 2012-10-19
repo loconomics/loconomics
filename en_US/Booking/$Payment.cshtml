@@ -144,53 +144,75 @@
                      * possible errors after payment that can break the booking request:
                      */
                     if (ModelState.IsValid) {
+                        
                         /*
-                         * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
-                         * looking in our Postal Codes table.
+                         * Check if there are not events on the booking request, because this is
+                         * the first attempt and not a save-after-error 
                          */
-                        var sqlGetTimeZone = @"
-                            SELECT  TimeZone
-                            FROM    PostalCode
-                            WHERE   PostalCodeID = @0
-                        ";
-                        var sqlInsCalendarEvent = @"
-                            INSERT INTO [CalendarEvents]
-                                       ([UserId]
-                                       ,[CalendarAvailabilityTypeID]
-                                       ,[StartTime]
-                                       ,[EndTime]
-                                       ,[TimeZone])
-                                 VALUES (@0, @1, @2, @3, @4)
-                            SELECT Cast(@@Identity As int) As CalendarEventID
-                        ";
-                        var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
-                        // Save date-times as 'tentative' provider Events
-                        var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt1Start, dt1End, timeZone);
-                        var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt2Start, dt2End, timeZone);
-                        var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                            3, // Availability is 'Tentative'
-                            dt3Start, dt3End, timeZone);
+                        if (0 == (int)db.QueryValue(@"
+                                SELECT  count(*)
+                                FROM    BookingRequest
+                                WHERE   BookingRequestID = @0
+                                        AND PreferredDateID is not null
+                            ", bookingRequestID)) {
+                        
+                            /*
+                             * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
+                             * looking in our Postal Codes table.
+                             */
+                            var sqlGetTimeZone = @"
+                                SELECT  TimeZone
+                                FROM    PostalCode
+                                WHERE   PostalCodeID = @0
+                            ";
+                            var sqlInsCalendarEvent = @"
+                                INSERT INTO [CalendarEvents]
+                                           ([UserId]
+                                           ,[CalendarAvailabilityTypeID]
+                                           ,[StartTime]
+                                           ,[EndTime]
+                                           ,[TimeZone])
+                                     VALUES (@0, @1, @2, @3, @4)
+                                SELECT Cast(@@Identity As int) As CalendarEventID
+                            ";
+                            var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+                            // Save date-times as 'tentative' provider Events
+                            var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                3, // Availability is 'Tentative'
+                                dt1Start, dt1End, timeZone);
+                            var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                3, // Availability is 'Tentative'
+                                dt2Start, dt2End, timeZone);
+                            var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                3, // Availability is 'Tentative'
+                                dt3Start, dt3End, timeZone);
 
+                            /*
+                             * Save event IDs.
+                             * State is still 1:created
+                             */
+                            db.Execute(@"
+                                UPDATE  BookingRequest
+                                SET     
+                                        PreferredDateID = @1
+                                        ,AlternativeDate1ID = @2
+                                        ,AlternativeDate2ID = @3
+                                WHERE   BookingRequestID = @0
+                            ", bookingRequestID, 
+                             dt1ID, dt2ID, dt3ID);
+                        }
+                        
                         /*
-                         * Save last card number digits encrypted,
-                         * and saving event IDs.
+                         * Save last card number digits encrypted
                          * State is still 1:created
                          */
                         db.Execute(@"
                             UPDATE  BookingRequest
                             SET     
                                     PaymentLastFourCardNumberDigits = @1
-                                    ,PreferredDateID = @2
-                                    ,AlternativeDate1ID = @3
-                                    ,AlternativeDate2ID = @4
                             WHERE   BookingRequestID = @0
                         ", bookingRequestID, 
-                         LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)),
-                         dt1ID, dt2ID, dt3ID);
+                            LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)));
                     }
 
 
