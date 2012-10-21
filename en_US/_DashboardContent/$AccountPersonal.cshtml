@@ -119,7 +119,7 @@
                     SELECT  @c = count(*)
                     FROM    Address
                     WHERE   UserID = @UserID
-                            AND AddressID = 1 -- Must be the number 1, its personal address
+                            AND AddressTypeID = 1 -- Must be the type 1, its personal-home address
                             AND AddressLine1 = @AddressLine1
                             AND AddressLine2 = @AddressLine2
                             AND City = @City
@@ -172,6 +172,7 @@
                         FROM AddressType
                         WHERE AddressTypeID = 1 -- Home
                                AND LanguageID = @LanguageID
+                               AND CountryID = @CountryID
 
                         INSERT INTO Address (UserID, AddressTypeID, AddressName,
                             AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
