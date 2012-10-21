@@ -223,39 +223,6 @@
                 <li class="location-preferredaddress input-option">
                     <label><input type="checkbox" name="preferred-address" value="true" @LcHelpers.IsChecked(true, Request["preferred-address"] ?? (location != null && location.IsServiceAddress ? location.PreferredAddress : null)) /> This is my prefered address</label>
                 </li>
-                <li class="location-type">
-                    <label>Address Type:
-                        @if (location != null && location.UniquePerUser)
-                        {
-                            <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
-                        }
-                        else
-                        {
-                        <select name="type" @Validation.GetHtml("type")>
-                            @foreach (var t in types)
-                            {
-                                <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
-                            }
-                        </select>
-                        }
-                    </label>
-                </li>
-            </ul>
-            <ul class="location-map">
-                <li>
-                    <strong>GPS Coordinates</strong>
-                    <div class="advice warning">Move the pin to the exact address and click confirm</div>
-                </li>
-                <li class="map-selector"><div class="google-map"></div></li>
-                <li class="options">
-                    @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
-                    <a href="#confirm" class="has-tooltip action" title="Save map marker coordinates with your address">Confirm</a>
-                    <a href="#editcoordinates" class="has-tooltip action edit-action" title="Move the pin to the exact address and click confirm, or edit coordinates manually (be careful!)" data-cancel-label="Cancel">Edit</a>
-                    <a href="#geocode" class="has-tooltip find-address-geocode" title="Using Google Maps Geocoding, we translate your address into coordenates automatically">Find my address in the map</a>
-                </li>
-                <li class="gps-lat"><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
-                <li class="gps-lng"><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
-                @*<li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>*@
             </ul>
             <ul class="location-travel">
                 <li class="input-option">
@@ -293,6 +260,41 @@
                         </ul>
                     </fieldset>
                 </li>
+            </ul>
+            <ul class="location-type">
+                <li class="location-type">
+                    <label>Address Type:
+                        @if (location != null && location.UniquePerUser)
+                        {
+                            <input type="text" disabled="disabled" value="@location.AddressType" /> <span>(this type of address cannot be changed)</span>
+                        }
+                        else
+                        {
+                        <select name="type" @Validation.GetHtml("type")>
+                            @foreach (var t in types)
+                            {
+                                <option @LcHelpers.IsSelected(t.AddressTypeID, Request["type"] ?? (location != null ? location.AddressTypeID : null)) value="@t.AddressTypeID">@t.AddressType</option>
+                            }
+                        </select>
+                        }
+                    </label>
+                </li>
+            </ul>
+            <ul class="location-map">
+                <li>
+                    <strong>GPS Coordinates</strong>
+                    <div class="advice warning">Move the pin to the exact address and click confirm</div>
+                </li>
+                <li class="map-selector"><div class="google-map"></div></li>
+                <li class="options">
+                    @*<a href="#geolocation" class="has-tooltip" title="Use HTML5 Geolocation, best result on devices as tablets and smartphones with GPS">Get my device positioning</a>*@
+                    <a href="#confirm" class="has-tooltip action" title="Save map marker coordinates with your address">Confirm</a>
+                    <a href="#editcoordinates" class="has-tooltip action edit-action" title="Move the pin to the exact address and click confirm, or edit coordinates manually (be careful!)" data-cancel-label="Cancel">Edit</a>
+                    <a href="#geocode" class="has-tooltip find-address-geocode" title="Using Google Maps Geocoding, we translate your address into coordenates automatically">Find my address in the map</a>
+                </li>
+                <li class="gps-lat"><label>Latitude: <input type="text" name="latitude" value="@(Request["latitude"] ?? (location != null ? location.Latitude : null) )" @Validation.GetHtml("latitude") /></label></li>
+                <li class="gps-lng"><label>Longitude: <input type="text" name="longitude" value="@(Request["longitude"] ?? (location != null ? location.longitude : null))" @Validation.GetHtml("longitude") /></label></li>
+                @*<li><label>Google Maps URL: <input type="text" name="google-map-url" value="@(Request["google-map-url"] ?? (location != null ? location.GoogleMapsURL : null))" @Validation.GetHtml("google-map-url") /></label></li>*@
             </ul>
             <script type="text/javascript">
                 @* Force execution of the 'has-confirm' script *@
