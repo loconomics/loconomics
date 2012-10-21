@@ -48,6 +48,9 @@
     <div class="confirm-delete-location-message">Are you sure do you want to remove this location?</div>
     <div class="delete-location-loading-message">The location is now removed</div>
 </div>
+@if (travelLocations.Count == 0 && workLocations.Count == 0) {
+    <p class="warning">Please enter at least one location that you travel from or at which you perform services</p>
+}
 <div class="clearfix">
         <div class="col col-2 col-2-1">
             <div class="positionlocations-itravel locations-set" data-location-use="travel">
@@ -57,18 +60,11 @@
                     <a href="#" class="addlocation @(travelLocations.Count > 0 ? "hidden" : "") action main-action" data-extra-query="itravel=True">Add location</a>
                 </div>
                 <ul class="travel-locations positionlocations-itravelfrom">
-                @if (travelLocations.Count == 0)
+                @foreach (var location in travelLocations)
                 {
-                    <li class="empty no-items">Please enter at least one location that you travel from</li>
-                }
-                else
-                {
-                    foreach (var location in travelLocations)
-                    {
                     <li>
                         @printAddress(null, location)
                     </li>
-                    }
                 }
                 </ul>
             </div>
@@ -80,18 +76,11 @@
                     <a href="#" class="addlocation action main-action" data-extra-query="iworkon=True">Add location</a>
                 </div>
                 <ul class="work-locations">
-                    @if (workLocations.Count == 0)
+                    @foreach (var location in workLocations)
                     {
-                        <li class="empty no-items">Please enter at least one location at which you perform services</li>
-                    }
-                    else
-                    {
-                        foreach (var location in workLocations)
-                        {
                         <li>
                             @printAddress(null, location)
                         </li>
-                        }
                     }
                 </ul>
             </div>
