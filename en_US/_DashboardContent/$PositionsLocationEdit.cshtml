@@ -292,7 +292,7 @@
                         var positionedByUser = false;
                         // Some confs
                         var detailedZoomLevel = 17;
-                        var generalZoomLevel = 1;
+                        var generalZoomLevel = 9;
                         var foundLocations = {
                             byUser: null,
                             byGeolocation: null,
@@ -306,11 +306,21 @@
                         var $lng = l.find('[name=longitude]');
 
                         // Creating position coordinates
-                        var myLatlng = new google.maps.LatLng($lat.val(), $lng.val());
+                        var myLatlng;
+                        (function () {
+                            var _lat_value = $lat.val(), _lng_value = $lng.val();
+                            if (_lat_value && _lng_value) {
+                                myLatlng = new google.maps.LatLng($lat.val(), $lng.val());
+                                // We consider as 'positioned by user' when there was a saved value for the position coordinates (we are editing a location)
+                                positionedByUser = (myLatlng.lat() != 0 && myLatlng.lng() != 0);
+                            } else {
+                                // Default position when there are not one (San Francisco just now):
+                                myLatlng = new google.maps.LatLng(37.75334439226298, -122.4254606035156);
+                            }
+                        })();
                         // Remember original form location
                         foundLocations.original = foundLocations.confirmed = myLatlng;
-                        // We consider as 'positioned by user' when there was a saved value for the position coordinates (we are editing a location)
-                        positionedByUser = (myLatlng.lat() != 0 && myLatlng.lng() != 0);
+
                         // Create map
                         var mapOptions = {
                             zoom: (positionedByUser ? detailedZoomLevel : generalZoomLevel), // Best detail when we already had a location
@@ -339,7 +349,7 @@
                             map.panTo(latlng);
                             saveCoordinates(autosave);
                             if (dozoom)
-                            // Set zoom to something more detailed
+                                // Set zoom to something more detailed
                                 map.setZoom(detailedZoomLevel);
                             return marker;
                         }
