@@ -57,6 +57,27 @@
                 ", u.UserID, p.PositionID, locationID) > 0) {
                 ModelState.AddFormError("You already have a 'travel from location' address (can be only one).");
             }
+            
+            // Validate the AddressTypeID, for that types with UniquePerUser=1 must be checked that we don't add 
+            // a repeated address for that type on this user (indifferent from the PositionID)
+            var dupeUniqueAddress = db.QueryValue(@"
+                SELECT count(*)
+                FROM    Address As A
+                         INNER JOIN
+                        AddressType As AT
+                          ON A.AddressTypeID = AT.AddressTypeID
+                WHERE   A.UserID = @0
+                         AND
+                        A.AddressTypeID = @1
+                         AND
+                        AT.UniquePerUser = 1
+                         AND
+                        -- Don't count this address!
+                        A.AddressID <> @2
+            ", u.UserID, Request["type"].AsInt(), locationID);
+            if (dupeUniqueAddress > 0) {
+                ModelState.AddFormError("You cannot add more than one address of the selected type (only applies to some special types)");
+            }
 
             if (ModelState.IsValid) {
                 db.Execute(LcData.sqlSetServiceAddress,
@@ -105,7 +126,14 @@
     var sqlGetAddressTypes = @"
         SELECT  AddressTypeID, AddressType
         FROM    AddressType
-        WHERE   Active = 1 AND UniquePerUser = 0
+        WHERE   Active = 1
+                AND ( 
+                 UniquePerUser = 0
+                  OR
+                 0 = (SELECT count(*) FROM Address As A1 WHERE A1.AddressTypeID = AddressType.AddressTypeID
+                    AND A1.UserID = @0)
+                )
+        ORDER BY AddressType.AddressType
     ";
     var sqlOrderAddressesByPosition = @"
         ORDER BY PositionID ASC, AddressName ASC
@@ -117,7 +145,7 @@
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), locationID);
         }
         transports = db.Query(sqlGetTransports);
-        types = db.Query(sqlGetAddressTypes);
+        types = db.Query(sqlGetAddressTypes, u.UserID);
         if (locationID == 0){
             userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
