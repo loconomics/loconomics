@@ -3,8 +3,6 @@
  */
 @import url('Pricing.css');
 
-.profile h3 { font-size: 1.4em; color: #461864; font-weight: normal; }
-
 #profileHeader .wrap { margin-left: 145px; }
 #profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
 #profileHeader .buttons a { margin-right: 5px; }
@@ -138,7 +136,7 @@ form.report-unauthorized-use textarea {
     background: url('../img/profile-background.png') repeat-x top left;
 }
 #profileHeader h1.profile-name {
-    color: #461864;
+    color: #00989A;
     margin: 0;
     font-size: 1.4em;
     font-family: Hand Of Sean, Arial, sans-serif;
@@ -200,7 +198,6 @@ form.report-unauthorized-use textarea {
 .profile h3 {
     font-size: 1.4em;
     margin: 0;
-    color: #461864;
     font-weight: bold;
 }
 .profile h4 {
@@ -217,7 +214,7 @@ form.report-unauthorized-use textarea {
 .profile a.view-more{
     font-style: italic;
     text-decoration: underline;
-    color: #66487d;
+    color: #00989a;
     
     position: absolute;
     bottom: 0;
@@ -248,7 +245,7 @@ form.report-unauthorized-use textarea {
     margin: 0 0 20px;
 }
 .position-summary .hour-price {
-    border: 6px solid #461864;
+    border: 6px solid #00989A;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -o-border-radius: 10px;
@@ -258,7 +255,7 @@ form.report-unauthorized-use textarea {
     display: block;
     font-size: 2.5em;
     line-height: normal;
-    color: #461864;
+    color: #5a5b5b;
     text-align: center;
 }
 .position-summary .hour-price .price {
@@ -272,7 +269,7 @@ form.report-unauthorized-use textarea {
 .position-summary a.calculate-price,
 .position-summary a.calculate-price:link,
 .position-summary a.calculate-price:visited{
-    color: #461864;
+    color: #00989A;
     text-decoration: underline;
     text-align: center;
     margin-bottom: 20px;
@@ -289,7 +286,7 @@ form.report-unauthorized-use textarea {
     display: inline-block;
     padding: 5px 10px 25px;
     vertical-align: top;
-    border: 6px solid #DED7E3;
+    border: 6px solid #cfecec;
     border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px;
     -o-border-radius: 10px;
@@ -298,7 +295,7 @@ form.report-unauthorized-use textarea {
 }
 .featured-review .review-micro-summary > h5 {
     clear: left;
-    color: #461864;
+    color: #00989a;
     font-size: 0.9em;
     font-style: italic;
     font-weight: bold;
@@ -354,7 +351,7 @@ form.report-unauthorized-use textarea {
 }
 ul.attributes-list li {
     list-style-position: inside;
-    list-style-image: url('../img/bullet.png');
+    list-style-image: url('../img/theme/bullet.png');
 }
 
 /**********************************/
@@ -369,7 +366,7 @@ ul.attributes-list li {
     min-height: 85px;
     overflow: hidden;
     position: relative;
-    border: 6px solid #ded7e3;
+    border: 6px solid #CFECEC;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -o-border-radius: 10px;
@@ -386,7 +383,6 @@ ul.attributes-list li {
     font-weight: normal;
     clear: left;
     font-style: italic;
-    color: #461864;
     font-size: .9em;
     line-height: normal;
     margin: 5px 0;
@@ -405,14 +401,14 @@ ul.attributes-list li {
 .reviews-list > ul > li .helpful-review a,
 .reviews-list > ul > li .helpful-review a:link,
 .reviews-list > ul > li .helpful-review a:visited{
-    color: #836b96;
+    color: #00989a;
     font-style: italic;
 }
 .reviews-list > ul > li .user-rating-summary-widget{
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 210px;
+    width: 225px;
     height: 95px;
 }
 .reviews-list > .no-reviews, .no-locations {
@@ -439,9 +435,8 @@ ul.attributes-list li {
     vertical-align: top;
 }
 .reviews-list > ul > li .review-content {
-    margin-right: 210px; /* user-rating-summary in the margin */
+    margin-right: 240px; /* user-rating-summary in the margin */
 }
-
 
 /**********************************/
 /****** Gallery *******************/
@@ -491,7 +486,7 @@ ul.attributes-list li {
     min-height: 111px;
 }
 .gallery-content li.selected a{
-    outline: 3px solid #461864 ;
+    outline: 3px solid #00989a ;
 }
 /**********************************/
 /****** Map ***********************/
@@ -530,20 +525,15 @@ ul.attributes-list li {
 .user-verifications-licenses .education-cat {
     display: block !important;
 }
-.user-verifications-licenses ul li a,
-.user-verifications-licenses ul li a:link,
-.user-verifications-licenses ul li a:hover {
-    color: #461864;
-}
 
 .profile .smooth-box-block-element > .close-popup {
-    border-color: #4e2c69;
-    color: #4e2c69;
+    border-color: #00989A;
+    color: #00989A;
 }
 .profile .smooth-box-block-element > .close-popup:hover {
-    border-color: #A190AF;
-    color: #A190AF;
+    border-color: #CFECEC;
+    color: #CFECEC;
 }
 .profile .smooth-box-block-element {
-    border: 3px solid #4e2c69;
+    border: 3px solid #00989A;
 }
