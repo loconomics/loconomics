@@ -506,15 +506,18 @@ LC.getText = function () {
     return formatted;
 };
 LC.redirectTo = function (url) {
+    // Block to avoid more user interactions:
     $.blockUI({ message: '' }); //loadingBlock);
-    var ihash = url.indexOf('#');
-    var rurl = url.substring(0, (ihash == -1 ? null : ihash)) || '';
-    window.location.hash = '';
-    if (window.location.pathname.toUpperCase() == rurl.toUpperCase()) {
-        window.location = url;
+    // Checking if is being redirecting or not
+    var redirected = false;
+    $(window).on('beforeunload', function checkRedirect() {
+        redirected = true;
+    });
+    // Navigate to new location:
+    window.location = url;
+    // If page not changed (same url or internal link), refresh:
+    if (!redirected)
         window.location.reload();
-    } else
-        window.location = url;
 };
 
 /*******************
