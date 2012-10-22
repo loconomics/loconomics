@@ -912,7 +912,7 @@ function configureTooltip() {
         var $t = $(this);
         var t = $('body > .tooltip-singleton-layer:eq(0)');
         if (t.length == 0) {
-            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer fancy"></div>');
+            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer"></div>');
             t.hide();
             $('body').append(t);
         }
