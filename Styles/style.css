@@ -325,10 +325,17 @@ a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
 
 a.profile,
-button.search-again:hover, a.view:hover { background: #A190AF; color: #fff; } 
+button.search-again:hover,
+a.view:hover {
+    background: #b5e1e2;
+    color: #00989A;
+}
 
 li.current > a.profile, a.profile:hover, a.profile:focus, a.profile.current:focus,
-button.search-again, a.view { background: #461864; color: #fff; }
+button.search-again, a.view {
+    background: #00989a;
+    color: White;
+}
 
 .inset { float: right; margin: 1em 0 1em 1em; }
 
@@ -372,20 +379,10 @@ ul.reviews > li div.wrap p { margin-top: 0; }
     max-height: 22px;
     overflow: hidden;
 }
-.folders > ul.tabs li { float: left; list-style-type: none; }
-.folders > .tab-body { 
-	display:none; position: relative; z-index: 1; 
-	top: -2px; 
-	padding: 20px; 
-    min-height: 150px;
-	border: 2px solid #00989A;
-	background: #F5F5F5;
-}
-.folders > .tab-body.current { display: block; }
-
-/* Normal ('not editable') folders tabs */
 .folders > ul.tabs li {
-    background: url('../img/tab-right.png') no-repeat top right; 
+    float: left;
+    list-style-type: none;
+    background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
     background-position: 0 right;
@@ -398,17 +395,17 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 	line-height: 15px;
     font-size: 12px;
     text-decoration: none;
-    color: #461864;
+    color: #00989a;
     font-weight: bold;
 	padding-top: 3px;
     padding-left: 10px;
     text-align: center;
 
-    border-color: #461864;
+    border-color: #00989a;
     border-style: solid;
     border-width: 2px 0 3px 2px;
     border-radius: 10px 0 0 0;
-    background-color: #e9e0f0;
+    background-color: #def2f2;
 }
 .folders > ul.tabs li.current,
 .folders > ul.tabs li.current:hover {
@@ -416,15 +413,15 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 }
 .folders > ul.tabs li.current a,
 .folders > ul.tabs li.current:hover a {
-    background-color: #f5f5f5;
+    background-color: white;
     padding-top: 3px;
-    border-bottom-color: #f5f5f5;
+    border-bottom-color: white;
 }
 .folders > ul.tabs li:hover {
     background-position: right -44px !important;
 }
 .folders > ul.tabs li:hover a{
-    background-color: #f5f0f8;
+    background-color: #eff8f9;
 }
 /* Removable style for generic .tabbed */
 .tabbed > ul.tabs > li.removable {
@@ -441,9 +438,19 @@ ul.reviews > li div.wrap p { margin-top: 0; }
 .tabbed > ul.tabs > li.removable > a {
     padding-right: 5px;
 }
+.folders > .tab-body { 
+	display:none;
+	position: relative;
+	z-index: 1; 
+	top: -2px; 
+	padding: 20px; 
+    min-height: 150px;
+	border: 2px solid #00989a;
+	background: white;
+}
+.folders > .tab-body.current { display: block; }
 
 .buttons ul.tabs { 
-    /*height: 40px;*/
     padding: 0;
 }
 .buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
@@ -1072,75 +1079,6 @@ fieldset.has-confirm.confirmed-no > legend{
     #461864 -> #00989a
     #DBD5E0 -> #daf0f1
  ***/
-   
-/** tabs **/
-.editable .folders > .tab-body {
-    border-color: #00989a;
-    background: white;
-}
-.editable .folders > ul.tabs li {
-    background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
-    padding-right: 22px;
-    padding-top: 0;
-    background-position: 0 right;
-}
-.editable .folders > ul.tabs li a {
-	display: block;
-/*    width: 118px;*/
-    width: auto;
-    height: auto; 
-	background-image: none !important;
-	line-height: 15px;
-    font-size: 12px;
-    text-decoration: none;
-    color: #00989a;
-    font-weight: bold;
-	padding-top: 3px;
-    padding-left: 10px;
-    text-align: center;
-    
-    border-color: #00989A;
-    border-style: solid;
-    border-width: 2px 0 3px 2px;
-    border-radius: 10px 0 0 0;
-    background-color: #def2f2;
-}
-.editable .folders > ul.tabs li a{
-    background-color: #def2f2;
-}
-/*.editable .folders > ul.tabs li.current,
-.editable .folders > ul.tabs li.current:hover {
-    background-position: right -22px !important;
-}*/
-.editable .folders > ul.tabs li.current a,
-.editable .folders > ul.tabs li.current:hover a {
-    background-color: white;
-    padding-top: 3px;
-    border-bottom-color: white;
-}
-/*.editable .folders > ul.tabs li:hover {
-    background-position: right -44px !important;
-}*/
-.editable .folders > ul.tabs li:hover a{
-    background-color: #eff8f9;
-}
-
-/** buttons **/
-.editable a.profile,
-.editable button.search-again:focus,
-.editable button.search-again:hover,
-.editable a.view:hover {
-    background-color: #b5e1e2;
-    color: #00989A;
-}
-.editable li.current > a.profile,
-.editable a.profile:hover,
-.editable a.profile:focus,
-.editable button.search-again,
-.editable a.view {
-    background: #00989a;
-    color: White;
-}
 
 /** decoration **/
 .editable .profile #main div.rate p.rate {
@@ -1883,7 +1821,7 @@ html.boxshadow #loginBox .field-validation-error{
     -o-border-radius: 20px;
     -webkit-border-radius: 20px;
     
-    border: 4px solid #dad3df;
+    border: 4px solid #CFECEC;
     margin: 4px 0;
 }
 .editable .send-message-form div {
