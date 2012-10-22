@@ -127,6 +127,7 @@
         SELECT  AddressTypeID, AddressType
         FROM    AddressType
         WHERE   Active = 1
+                AND Selectable = 1
                 AND ( 
                  UniquePerUser = 0
                   OR
