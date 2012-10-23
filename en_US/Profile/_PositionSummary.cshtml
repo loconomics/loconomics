@@ -51,7 +51,7 @@
 }
             <div class="position-summary">
                 <div class="actions book">
-                    <a class="button book" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
+                    <a class="book-action main-action" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
                 <span class="hour-price">
                         @if (providerPrice.IsHourly)

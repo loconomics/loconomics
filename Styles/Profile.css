@@ -120,7 +120,7 @@ form.report-unauthorized-use textarea {
     width: 200px;
     padding: 0 0 0 10px;
     border-left: 1px solid #dadada;
-    margin: 16px 0 0 5px;
+    margin: 33px 0 0 5px;
     float: right;
 }
 .profile .position-tab .tab-body > p{
@@ -226,23 +226,13 @@ form.report-unauthorized-use textarea {
 .profile .have-view-more{
     position: relative;
 }
-.profile a.button.book{
-    background-color: #99c027;
-    color: White;
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    display: inline-block;
-    text-align: right;
+.profile .book-action.main-action {
+    padding: .3em .5em;
     font-weight: bold;
-    font-size: .9em;
-}
-.profile a.button.book:hover{
-    box-shadow: 0 0 5px 2px #99C027;
 }
 .profile .actions.book{
-    margin: 0 0 20px;
+    margin: 0 auto 10px;
+    text-align: center !important;
 }
 .position-summary .hour-price {
     border: 6px solid #00989A;
