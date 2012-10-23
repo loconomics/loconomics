@@ -266,6 +266,18 @@ form.report-unauthorized-use textarea {
     display: block;
 }
 
+.profile .message-tab-marker {
+    background: none;
+    border: none;
+}
+.profile .message-tab-marker a {
+    text-indent: -9999px;
+    background: url('../img/theme/mailbox-profile.png') no-repeat center !important;
+    width: 28px;
+    height: 21px;
+    padding: 0 .5em;
+}
+
 /**********************************/
 /****** SPECIFIC PAGES/SECTIONS ***/
 /**********************************/
@@ -526,4 +538,17 @@ ul.attributes-list li {
 }
 .profile .smooth-box-block-element {
     border: 3px solid #00989A;
+}
+
+/* Media query only for hi-resolution, 2dppx, 2dpi (as apple retina), displays:
+    We start counting from 1.2 to give hi-res to all devices with higher from
+    default and for browsers that emulate resolution on zooming (as Firefox) */
+@media screen and (-webkit-min-device-pixel-ratio: 1.2),  /* Webkit-based browsers */
+    screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
+    screen and (min-resolution: 1.2dppx)  /* The standard way */
+{
+    .profile .message-tab-marker a {
+        background-image: url('../img/theme/mailbox-profile@2x.png') !important;
+        background-size: 28px 21px !important;
+    }
 }
