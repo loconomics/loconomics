@@ -136,6 +136,10 @@ Use Example:
             inText += "O ";
         }
     }*@
+    // Round to .5 or .0
+    var rest = globalRate % 5m;
+    globalRate += (rest > .25m ? 5 - rest : -rest);
+
     inText += "(" + (globalRate / 10).ToString() + " / 5)";
     @*<img class="rating-image" alt="@inText" src="@(UrlUtil.AppUrl)img/email/star-rating-@(globalRate).png" />*@
     <span class="rating-image rating-value-@globalRate">@inText</span>
