@@ -5,9 +5,6 @@
     padding: 15px;
     margin: 0 0 10px 0;
 }
-.profile .provider-package {
-    border-color: #461864;
-}
 .profile .pricing h3 {
     margin: 10px 0;
 }
@@ -19,7 +16,7 @@
     font-size: 1.1em;
     margin: 8px 0 0;
 }
-.profile .provider-package a.button.book {
+.profile .provider-package a.button.book-action {
     font-size: 0.6em;
 }
 .view-panel .provider-package-services li.empty {
@@ -46,9 +43,6 @@
 }
 .profile .view-panel .provider-package .provider-package-service-summary {
     position: static;
-}
-.profile .view-panel .provider-package .provider-package-service-summary {
-    color: #461864;
 }
 .view-panel .provider-package .provider-package-service-summary .provider-package-price {
     position: absolute;

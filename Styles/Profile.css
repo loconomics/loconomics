@@ -6,12 +6,12 @@
 #profileHeader .wrap { margin-left: 145px; }
 #profileHeader .buttons { position: absolute; top: 0; right: 0; text-align: right; }
 #profileHeader .buttons a { margin-right: 5px; }
-h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color: #461864; margin: 0; }
+/*h2.job-titles { font-size: 14px; font-style: italic; font-weight: normal; color: #461864; margin: 0; }*/
 
 .profile #main div.rate { float: right; width: 180px; padding: 14px 0 14px 14px; border-left: 1px solid #ccc; text-align: center; }
-.profile #main div.rate p.rate { padding: 1em 0; margin: 0 0 16px 0; 
+/*.profile #main div.rate p.rate { padding: 1em 0; margin: 0 0 16px 0; 
 	font-size: 38px; font-weight: bold; border: 5px solid #461864; color: #461864; 	
-}
+}*/
 .profile #main div.rate table { width: 50%; }
 
 .profile #main div.work { margin-right: 209px; }
@@ -226,7 +226,6 @@ form.report-unauthorized-use textarea {
 }
 .profile h4 {
     font-size: 1.3em;
-    color: #461864;
     font-weight: bold;
 }
 .profile h5 {
