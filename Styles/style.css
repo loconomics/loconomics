@@ -1816,13 +1816,14 @@ html.boxshadow #loginBox .field-validation-error{
 /***************************************/
 /********** Message ********************/
 .send-message-form div {
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
     
-    border: 4px solid #CFECEC;
     margin: 4px 0;
+    background: none repeat scroll 0 0 #F5F5F5;
+    border: 1px solid #C9C9C9;
 }
 .editable .send-message-form div {
     border: 4px solid #B5E1E2;
@@ -1831,6 +1832,9 @@ html.boxshadow #loginBox .field-validation-error{
 .send-message-form .from{
     color: #00989A;
     font-size: 1.3em;
+}
+.send-message-form .from-line {
+    background: white;
 }
 .send-message-form .user-pic{
     width: 56px;
@@ -1841,17 +1845,19 @@ html.boxshadow #loginBox .field-validation-error{
     border: none;
     background: none;
     color: #666666 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 .profile .send-message-form .subject input{
     width: 530px;
 }
-.send-message-form .message-body textarea{
-    width: 630px;
+.send-message-form .message-body textarea
+{
+    -moz-box-sizing: border-box;
     height: 20em;
-    border: none;
-    background: none;
-    color: #666666 !important;
-    padding: 15px;
+    width: 100%;
 }
 .send-message-form .message-body textarea:active,
 .send-message-form .message-body textarea:focus,
