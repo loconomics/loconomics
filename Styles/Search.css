@@ -319,23 +319,6 @@ ul.search-results table td { padding-right: 16px; }*/
     height: 30px;
     overflow: hidden;
 }
-.search-user-info .user-rating-summary-widget.user-rating-summary .note {
-    color: Black !important;
-    font-size: 1em;
-    line-height: 1em;
-    vertical-align: top;
-    font-weight: normal;
-}
-.search-user-info .user-rating-summary-widget {
-    line-height: .9em;
-    height: auto;
-}
-.search-user-info .user-rating-summary-widget .rating-image {
-    float: none;
-}
-.search-user-info .user-rating.global-rating {
-    line-height: 1em;
-}
 
 /*****************
  * provider-data */

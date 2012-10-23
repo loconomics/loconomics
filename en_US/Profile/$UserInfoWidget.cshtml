@@ -109,29 +109,29 @@
         {
             if (userType == "customer")
             {
-            <div class="user-rating global-rating">
-                @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
-           {
-               ReviewedID = data[dataPrefix + "UserID"],
-               PositionID = 0,
-               ReviewedData = data,
-               ReviewedDataPrefix = dataPrefix,
-               RatingSummaryMode = "summary"
-           })
-            </div>
+                <div class="user-rating global-rating">
+                    @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    {
+                        ReviewedID = data[dataPrefix + "UserID"],
+                        PositionID = 0,
+                        ReviewedData = data,
+                        ReviewedDataPrefix = dataPrefix,
+                        RatingSummaryMode = "summary"
+                    })
+                </div>
             }
             else if (userType == "provider")
             {
-            <div class="user-rating global-rating">
-                @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
-           {
-               ReviewedID = data[dataPrefix + "UserID"],
-               PositionID = positionID,
-               ReviewedData = data,
-               ReviewedDataPrefix = dataPrefix,
-               RatingSummaryMode = "summary"
-           })
-            </div>
+                <div class="user-rating global-rating">
+                    @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    {
+                        ReviewedID = data[dataPrefix + "UserID"],
+                        PositionID = positionID,
+                        ReviewedData = data,
+                        ReviewedDataPrefix = dataPrefix,
+                        RatingSummaryMode = "summary"
+                    })
+                </div>
             }
         }
 

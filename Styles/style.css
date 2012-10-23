@@ -1594,8 +1594,25 @@ html.boxshadow #loginBox .field-validation-error{
 .user-rating-summary-widget.user-rating-summary .note {
     font-size: 1.1em;
     font-style: normal;
-    color: #461864;
     font-weight: bold;
+}
+/* global-rating, on search and profile header */
+.global-rating .user-rating-summary-widget.user-rating-summary .note {
+    color: Black !important;
+    font-size: 1em;
+    line-height: 1em;
+    vertical-align: top;
+    font-weight: normal;
+}
+.global-rating .user-rating-summary-widget {
+    line-height: .9em;
+    height: auto;
+}
+.global-rating .user-rating-summary-widget .rating-image {
+    float: none;
+}
+.user-rating.global-rating {
+    line-height: 1em;
 }
 
 /*
@@ -2133,7 +2150,7 @@ html.boxshadow #loginBox .field-validation-error{
 .social-networking.custom-icons a {
     text-indent: -9999px;
     display: block;
-    margin: 0 20px;
+    margin: 0 2px;
     background: no-repeat 0 0;
 }
 .social-networking.custom-icons.size-32x32 a {
