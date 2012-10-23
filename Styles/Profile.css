@@ -65,11 +65,11 @@ form.report-unauthorized-use textarea {
 #profileHeader aside {
     position: absolute;
     top: 30px;
-    right: 80px;
+    left: 670px;
+    right: 30px;
     border-left: 2px solid #dadada;
     padding: 0 0 0 20px;
     margin: 0;
-    width: 180px;
     height: 120px;
 }
 

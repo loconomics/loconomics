@@ -21,6 +21,7 @@
         Response.Redirect(UrlUtil.LangPath);
     }
     userid = u.UserID;
+    var ustats = LcData.UserInfo.GetUserStats(userid);
 
     string view = Request["PositionID"] == "0" ? "customer" : ""; // possible values: "customer"
     // If is customer view, positionid is not relevant:
@@ -52,6 +53,12 @@
         positionid = 0;
     }
     
+    // Stats display setup
+    var responseTime = "N/A";
+    if (ustats != null) {
+        responseTime = LcData.UserInfo.GetFormatedUserResponseTime(ustats.ResponseTimeMinutes);
+    }
+
     // Number of maximum positions displayed:
     var maxPositions = 5;
     
@@ -106,7 +113,7 @@
                 </div>
                 @RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid, Size = "mini", ContainerID = "", OnlyIconType = "verification" })
                 <div class="response-time">
-                    <em>Response time</em> <strong>N/A</strong>
+                    <em>Response time</em> <strong>@responseTime</strong>
                 </div>
                 @*
                 @if (u.IsProvider) {

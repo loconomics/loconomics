@@ -4,6 +4,13 @@
     var providerPrice = LcData.GetProviderPrice(item.UserID, item.PositionID, 1);
     
     var dataCats = LcData.GetServiceCatsAndItsAttributes(item.PositionID, "without-special-cats only-user-checked", item.UserID);
+    
+    // Stats display setup
+    var ustats = LcData.UserInfo.GetUserStats(item.UserID);
+    var responseTime = "N/A";
+    if (ustats != null) {
+        responseTime = LcData.UserInfo.GetFormatedUserResponseTime(ustats.ResponseTimeMinutes);
+    }
 }
 @helper hrefProfile(dynamic p){
     @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
@@ -42,7 +49,7 @@
         <div class="provider-data">
             @RenderPage(UrlUtil.LangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "", OnlyIconType = "verification" })
             <div class="response-time">
-                <em>Response time</em> <strong>N/A</strong>
+                <em>Response time</em> <strong>@responseTime</strong>
             </div>
             <div class="price">
                 From <strong>@String.Format("{0:C}", providerPrice.Price)

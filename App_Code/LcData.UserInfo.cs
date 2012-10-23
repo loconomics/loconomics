@@ -291,5 +291,22 @@ public static partial class LcData
         {
             return UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
         }
+
+        public static dynamic GetUserStats(int userId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle("SELECT UserID, ResponseTimeMinutes FROM UserStats WHERE UserID = @0", userId);
+            }
+        }
+        public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
+        {
+            var responseTime = "N/A";
+            if (ResponseTimeMinutes != null) {
+                var ts = TimeSpan.FromMinutes((double)ResponseTimeMinutes);
+                responseTime = (ts.Days > 0 ? ts.Days.ToString() + "d " : "") + ts.Hours.ToString() + "hr " + ts.Minutes.ToString() + "min";
+            }
+            return responseTime;
+        }
 	}
 }
