@@ -5,6 +5,12 @@
     bool withNote = PageData["RatingWithNote"] ?? true;
     bool showReviewsCount = PageData["ShowReviewsCountAsNote"] ?? false;
     int reviewedID = PageData["ReviewedID"] ?? Request["ReviewedID"].AsInt();
+    /* PositionID special values:
+     * > 0 : normal value, a position gived
+     * = 0 : no position, get user rated as a customer
+     * = -1: no position, get user global rating as customer and provider (average combined)
+     * = -2: no position, get user global rating only as provider (for all its positions)
+     */
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     int reviewerID = PageData["ReviewerID"] ?? Request["ReviewerID"].AsInt();
     string mode = PageData["RatingSummaryMode"] ?? "detailed"; // values: detailed, summary
@@ -29,12 +35,15 @@
                 FROM	UserReviews
                 WHERE	ProviderUserID = @0
 		                 AND
-		                PositionID = @1
+		                (PositionID = @1 
+                         OR @1 = -1
+                         OR (@1 = -2 AND PositionID > 0))
                          AND
                         CustomerUserID = @2
         ";
-        // SQL NOTE: really, to get results the aggregated operations are not needed in the sql
-        // but are needed to get default values when there are a record for the user and avoid
+        // SQL NOTE: the aggregated operations are needed to this sql mainly for the PositionID=-1 option
+        // and in other cases is useful too, although results are unique per user and position, with aggregation
+        // we can get default values when there are not a record for the user and avoid
         // exceptions because the null record:
         var getRatingScores = @"
             SELECT  TOP 1
@@ -49,7 +58,9 @@
             FROM    UserReviewScores
             WHERE   UserID = @0
                      AND
-                    PositionID = @1
+		            (PositionID = @1 
+                        OR @1 = -1
+                        OR (@1 = -2 AND PositionID > 0))
         ";
         using (var db = Database.Open("sqlloco")) {
             if (reviewerID > 0) {
@@ -75,17 +86,19 @@
                 note = "(" + reviewRecord.TotalRatings.ToString() + ")";
             } else {
                 if (reviewRecord.TotalRatings > 0) {
-                string notetpl = "";
-                var percentage = reviewRecord.Answer2 / (reviewRecord.TotalRatings == 0 ? 1 : reviewRecord.TotalRatings);
-                if (positionID > 0) {
-                    notetpl = "{0:##0%} of customers would work with {1} again (based on {2} reviews).";
-                } else {
-                    notetpl = "{0:##0%} of providers would work for {1} again (based on {2} reviews).";
-                }
-                note = String.Format(notetpl,
-                        percentage,
-                        LcHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
-                        reviewRecord.TotalRatings);
+                    string notetpl = "";
+                    var percentage = reviewRecord.Answer2 / (reviewRecord.TotalRatings == 0 ? 1 : reviewRecord.TotalRatings);
+                    if (positionID > 0 || positionID == -2) {
+                        notetpl = "{0:##0%} of customers would work with {1} again (based on {2} reviews).";
+                    } else if (positionID == 0) {
+                        notetpl = "{0:##0%} of providers would work for {1} again (based on {2} reviews).";
+                    } else if (positionID == -1) {
+                        notetpl = "{0:##0%} of loconomics users would work for {1} again (based on {2} reviews).";
+                    }
+                    note = String.Format(notetpl,
+                            percentage,
+                            LcHelpers.GetUserDisplayName(reviewedData, reviewedDataPrefix),
+                            reviewRecord.TotalRatings);
                 } else {
                     note = "There are not enougth reviews still to show an average rating";
                 }
@@ -114,13 +127,13 @@
     }
     @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
 }
-<div class="user-rating-summary-widget user-rating user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : "provider")">
+<div class="user-rating-summary-widget user-rating user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : positionID == -1 ? "user" : "provider")">
     @switch(mode) {
         case "detailed":
-            var ratTexts = LcData.GetPositionRatings(positionID);
+            var ratTexts = LcData.GetPositionRatings(positionID == -1 ? 0 : positionID);
             <ul>
                 @{
-                    if (positionID > 0) {
+                    if (positionID > 0 || positionID == -2) {
                         for(var s=1; s < 4; s++){
                             var rate = reviewRecord["Rating" + s.ToString()] ?? 0;
                             <li>
@@ -143,10 +156,26 @@
         break;
         case "summary":
             var globalRate = 0m;
-            if (positionID > 0) {
+            if (positionID > 0 || positionID == -2) {
                 globalRate = (reviewRecord.Rating1 + reviewRecord.Rating2 + reviewRecord.Rating3) / 3m;
-            } else {
+            } else if (positionID == 0) {
                 globalRate = reviewRecord.Rating1;
+            } else if (positionID == -1) {
+                /* average combined between Ratings fields with values: consider that value 0 is returned
+                 as a default/fallback when no values, because 1 is the minimum valid value on rating
+                 form in all cases, checking if RatingX field is equal 0 let us to know that there was
+                 not values introduced there, we must avoid that fields:
+                */
+                // First as 1, because we don't check Rating1, ever must exist almost one rating, maybe with value 0
+                var fieldsNumber = 1m;
+                if (reviewRecord.Rating2 > 0) {
+                    fieldsNumber++;
+                }
+                if (reviewRecord.Rating3 > 0) {
+                    fieldsNumber++;
+                }
+                // Sum all (including that with zero, no problem), but divide by the number of the with value:
+                globalRate = (reviewRecord.Rating1 + reviewRecord.Rating2 + reviewRecord.Rating3) / fieldsNumber;
             }
             @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true", "image" })
             if (withNote) {

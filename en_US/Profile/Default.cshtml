@@ -95,7 +95,10 @@
                     @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = userid,
-                        PositionID = 0,
+                        // global rating of the user, as all positions when provider (-2) without include 
+                        // its customer rating (for that, use -1),
+                        // or as customer (0)
+                        PositionID = (u.IsProvider ? -2 : 0),
                         ReviewedData = u,
                         RatingSummaryMode = "summary",
                         ShowReviewsCountAsNote = true
