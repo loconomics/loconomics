@@ -1842,6 +1842,9 @@ html.boxshadow #loginBox .field-validation-error{
     background: none repeat scroll 0 0 #F5F5F5;
     border: 1px solid #C9C9C9;
 }
+.send-message-form .message-body {
+    border: none;
+}
 .editable .send-message-form div {
     border: 4px solid #B5E1E2;
 }
