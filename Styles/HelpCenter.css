@@ -46,6 +46,7 @@
     height: 85px;
     padding: 4px 0;
     display: inline-block;
+    background-color: white;
 }
 .tabbed.slider-tabs > .tabs > li {
     float: left;
@@ -100,6 +101,7 @@
     display: inline-block;
     vertical-align: top;
     white-space: normal;
+    background-color: White;
 }
 
 /** Specific howitworks tab-content styles **/
