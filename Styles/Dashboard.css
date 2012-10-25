@@ -379,6 +379,9 @@ ul.attributes-list li {
 form#personal li label{
     min-width: 120px;
 }
+#personal .customurl input {
+    width: 140px !important;
+}
 #personal-fs-contactinformation,
 #personal-fs-homeaddress{
     display: inline-block;

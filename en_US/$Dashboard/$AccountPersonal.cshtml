@@ -391,11 +391,11 @@ Please complete the information below as accurately as possible.  Only your firs
     </fieldset>
     @if (u.IsProvider)
     {
-        <fieldset id="@idprefix-fs-customurl">
+        <fieldset id="@idprefix-fs-customurl" class="customurl">
             <legend>Website URL:</legend>
             <ul>
                 <li>
-                    <input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
+                    https://loconomics.com/<input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
                     @Html.ValidationMessage("website-url")
                 </li>
             </ul>
