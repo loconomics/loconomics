@@ -24,12 +24,14 @@
     var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification ?? false);
     var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation ?? false);
     var ProfileUrl = Request["profile-url"] ?? u.ProviderProfileURL;
+    var WebsiteUrl = Request["website-url"] ?? u.ProviderWebsiteURL;
 
     // Initializing Validation rules
     Validation.RequireField("firstname", "First Name is required");
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
-    Validation.Add("profile-url", Validator.Regex(@"\w*", "Website URL has a bad format"));
+    Validation.Add("profile-url", Validator.Regex(@"\w*", "Custom URL has a bad format"));
+    Validation.Add("website-url", Validator.Url("Website URL has a bad format"));
 
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
@@ -75,6 +77,7 @@
                     ,@IAuthZumigoLocation bit
                     ,@LanguageID int
                     ,@ProfileUrl varchar(2078)
+                    ,@WebsiteUrl varchar(2078)
 
                     SET @UserID = @0
                     SET @FirstName = @1
@@ -95,6 +98,7 @@
                     SET @IAuthZumigoLocation = @14
                     SET @LanguageID = @16
                     SET @ProfileUrl = @18
+                    SET @WebsiteUrl = @19
 
                     BEGIN TRAN
 
@@ -214,6 +218,7 @@
 		                    ,IAuthZumigoLocation = @IAuthZumigoLocation
 
                             ,ProviderProfileURL = @ProfileUrl
+                            ,ProviderWebsiteURL = @WebsiteUrl
 
                             ,UpdatedDate = getdate()
                             ,ModifiedBy = 'sys'
@@ -231,7 +236,8 @@
                  State, zipID, Bio,
                  GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName,
                  LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                 (u.IsProvider ? ProfileUrl : null));
+                 (u.IsProvider ? ProfileUrl : null),
+                 (u.IsProvider ? WebsiteUrl : null));
                 string success = "Personal data updated!";
                 if (!String.IsNullOrEmpty(redirectURL))
                 {
@@ -394,11 +400,26 @@ Please complete the information below as accurately as possible.  Only your firs
     @if (u.IsProvider)
     {
         <fieldset id="@idprefix-fs-customurl" class="customurl">
-            <legend>Website URL:</legend>
+            <legend><a href="#aboutCustomUrlPopup" class="popup-action">Custom Loconomics URL</a>:</legend>
+            <div class="popup" id="aboutCustomUrlPopup">
+                About Custom URL: Lorem Ipsum...
+            </div>
             <ul>
                 <li>
                     https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
                     @Html.ValidationMessage("profile-url")
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset id="@idprefix-fs-websiteurl" class="websiteurl">
+            <legend><a href="#aboutWebsiteUrlPopup" class="popup-action">Personal website URL</a>:</legend>
+            <div class="popup" id="aboutWebsiteUrlPopup">
+                About Website URL: Lorem Ipsum...
+            </div>
+            <ul>
+                <li>
+                    <input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
+                    @Html.ValidationMessage("website-url")
                 </li>
             </ul>
         </fieldset>

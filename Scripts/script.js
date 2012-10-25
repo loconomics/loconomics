@@ -30,9 +30,15 @@ var infoBlock = function (message, options) {
         ,overlayCSS: { cursor: 'default' }
     }, options);
 }
+LC.moveFocusTo = function (el, options) {
+    options = $.extend({
+        marginTop: 30
+    }, options);
+    $('html,body').stop(true, true).animate({ scrollTop: $(el).offset().top - options.marginTop }, 500, null);
+};
 $.blockUI.defaults.onBlock = function () {
     // Scroll to block-message to don't lost in large pages:
-    $('html,body').stop(true, true).animate({ scrollTop: $(this).offset().top - 30 }, 500, null);
+    LC.moveFocusTo(this);
 };
 var gLoadingRetard = 300;
 
@@ -519,6 +525,13 @@ LC.redirectTo = function (url) {
     if (!redirected)
         window.location.reload();
 };
+LC.autoPopups = function () {
+    $(document).on('click', '.popup-action', function () {
+        var c = $($(this).attr('href')).clone();
+        smoothBoxBlock(c, document, null, { closable: true, center: true });
+        return false;
+    });
+}
 
 /*******************
 * Popup related 
@@ -1007,6 +1020,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
     contentBox.show();
+    LC.moveFocusTo(contentBox, { marginTop: 60 });
     return box;
 }
 function smoothBoxBlockCloseAll(container) {
@@ -1066,6 +1080,8 @@ $(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
+
+    LC.autoPopups();
 
     /*= Home Page (moved to _SiteLayout, loading without this script for minor footprint and faster load)
     */

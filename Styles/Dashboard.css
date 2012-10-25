@@ -389,6 +389,11 @@ form#personal li label{
 #personal .customurl input {
     width: 140px !important;
 }
+#personal .websiteurl input {
+    width: 100% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
 #personal-fs-contactinformation,
 #personal-fs-homeaddress{
     display: inline-block;
