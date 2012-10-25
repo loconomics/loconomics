@@ -66,6 +66,7 @@ public static partial class LcData
                                 END) As IsActiveProvider
                                 
                                 ,ProviderWebsiteURL
+                                ,ProviderProfileURL
                             
                                 -- Personal data
                                 ,PublicBio
@@ -128,6 +129,7 @@ public static partial class LcData
                                 END) As IsActiveProvider
 
                                 ,ProviderWebsiteURL
+                                ,ProviderProfileURL
 
                                 -- Contact data
                                 ,MobilePhone
