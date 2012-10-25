@@ -2,6 +2,8 @@
 @using WebMatrix.Data;
 @using System.Text.RegularExpressions;
 @{
+    LcHelpers.SecurePage();
+    
     var idprefix = "account-payments-bankinfo";
     var user = LcData.UserInfo.GetUserRow();
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");

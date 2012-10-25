@@ -1,6 +1,8 @@
 ﻿@using Braintree;
 @using WebMatrix.Data;
 @{
+    LcHelpers.SecurePage();
+    
     var idprefix = "account-taxes";
     var user = LcData.UserInfo.GetUserRow();
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");

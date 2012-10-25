@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.Data;
 @using WebMatrix.WebData;
 @{
+    LcHelpers.SecurePage();
+
     int points = 0;
     using (var db = Database.Open("sqlloco")) {
         points = (int)db.QueryValue(@"

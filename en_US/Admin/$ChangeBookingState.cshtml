@@ -1,5 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
+    LcHelpers.AdminPage();
+
     if (!Request["BookingID"].IsInt()){
         ModelState.AddError("BookingID", "There is an error on the form: BookingID value is required (url param)");
     }

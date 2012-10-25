@@ -1,5 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
+    LcHelpers.SecurePage();
+    
     var p = PageData["providerrow"] ?? LcData.UserInfo.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
