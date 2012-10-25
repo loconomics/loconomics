@@ -1673,6 +1673,8 @@ html.boxshadow #loginBox .field-validation-error{
 }
 .tabbed > ul.tabs {
     white-space: nowrap !important;
+    /* To avoid white space between times */
+    letter-spacing: -9999px;
 }
 .tabbed > ul.tabs > li  {
     white-space: nowrap !important;
@@ -1680,6 +1682,8 @@ html.boxshadow #loginBox .field-validation-error{
     display: inline-block;
     height: 22px;
     position: relative;
+    /* Restoring spacing */
+    letter-spacing: normal;
 }
 .tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
