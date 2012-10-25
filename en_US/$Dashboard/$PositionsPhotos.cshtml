@@ -130,7 +130,7 @@
 Showcasing photos of your work can help clients get a better picture of the services you provide.  We're working on other creative tools to display your work.  <a href="mailto:providerhelp@loconomics.com">Let us know</a> if you have any suggestions as we'd love to hear them.
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
+<form action="@(UrlUtil.LangPath)$Dashboard/$PositionsPhotos/" method="post" class="positionphotos ajax ajax-box" id="position#@(n)-photos">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="gallery-order" value=""/>
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />

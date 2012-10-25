@@ -293,7 +293,7 @@
 Please enter your availability below.  This should be the hours you generally keep including current clients.  We are continually working on tools to make this easy for you to manage.  
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
+<form action="@(UrlUtil.LangPath)$Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -58,7 +58,7 @@ To let customers know you’ve done some great work in the past, we’ll start b
 to write you a reference. Invite as many as you’d like, and we’ll post the first five to your profile.
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
+<form action="@(UrlUtil.LangPath)$Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()

@@ -22,11 +22,11 @@
         "ressources", "tools", "bookings", "admin", "alerts"
     };
     if (pages.Contains(page)) {
-        fileToRender = UrlUtil.LangPath + "_DashboardContent/$" + page + ".cshtml";
+        fileToRender = UrlUtil.LangPath + "$Dashboard/$" + page + ".cshtml";
         // Set menu option selected
         PageData["menu-item"] = page;
     } else {
-        string folder = "_DashboardContent/";
+        string folder = "$Dashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(UrlUtil.LangPath + folder + file))) {
             if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {

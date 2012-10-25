@@ -286,7 +286,7 @@
 Let clients know about the services you provide.  It helps you both work better together by clearly defining what can be done.  If we've missed something, <a href="mailto:providerhelp@loconomics.com">let us know.</a>
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
+<form action="@(UrlUtil.LangPath)$Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
     <input type="hidden" name="PositionID" value="@pos.PositionID"/>
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

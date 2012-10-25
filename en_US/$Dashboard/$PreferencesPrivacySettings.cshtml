@@ -72,7 +72,7 @@
 Your privacy is of our upmost concern.  Please indicate your preferences below, and <a href="mailto:providerhelp@loconomics.com">e-mail us</a> with any questions.  
 </p>
 <div class="preferences">
-<form method="post" action="@(UrlUtil.LangPath)Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box">
+<form method="post" action="@(UrlUtil.LangPath)$Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (u.IsProvider)

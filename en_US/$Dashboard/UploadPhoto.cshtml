@@ -200,7 +200,7 @@
         <div class="change-photo">
             <div id="change-photo-file-uploader">
                 @if(!ajaxEnabled) {
-                <form id="uploadPhotoForm" action="@(UrlUtil.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
+                <form id="uploadPhotoForm" action="@(UrlUtil.LangPath)$Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
                     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                     <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
                     <button class="button main-action" type="submit">Upload!</button>

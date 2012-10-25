@@ -304,7 +304,7 @@
 Please complete the information below as accurately as possible.  Only your first name, last initial, and public bio will be displayed on your profile.  Customers will receive your full name, e-mail address, and phone number once you've confirmed a booking.  Rest assured your data is stored securely. 
 </p>
 <div>
-<form method="post" action="@(UrlUtil.LangPath)Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
+<form method="post" action="@(UrlUtil.LangPath)$Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

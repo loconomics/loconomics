@@ -231,7 +231,7 @@ else
             UserID = u.UserID,
             Title = "Your verified licenses:"
         })
-    <form action="@(UrlUtil.LangPath)Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
+    <form action="@(UrlUtil.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

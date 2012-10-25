@@ -173,7 +173,7 @@
 <p class="setting-instructions">
 Federal law requires us to issue you a 1099 form at the end of the year.  In order to do this, we need you to complete the information below.  Rest assured all your data is stored securely and used strictly for tax purposes.  
 </p>
-<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)Dashboard/$AccountTaxes/" class="ajax ajax-box">
+<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)$Dashboard/$AccountTaxes/" class="ajax ajax-box">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
