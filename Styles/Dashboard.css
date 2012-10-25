@@ -83,6 +83,12 @@ ul.attributes-list li {
     padding: 10px;
     position: absolute;
     top: 124px;
+    
+    background-color: #f5f5f5;
+    box-shadow: 0 0 4px 2px white inset;
+    -moz-box-shadow: 0 0 4px 2px white inset;
+    -o-box-shadow: 0 0 4px 2px white inset;
+    -webkit-box-shadow: 0 0 4px 2px white inset;
 }
 #dashboard-avatar .avatar {
     border: 1px solid #CCC9C9;
@@ -254,6 +260,7 @@ ul.attributes-list li {
 
 /*** dashboard-alerts ***/
 #dashboard-alerts {
+    background-color: White;
     border: 2px solid #00989a;
     border-radius: 4px;
     -moz-border-radius: 4px;

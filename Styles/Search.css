@@ -397,6 +397,7 @@ ul.search-results table td { padding-right: 16px; }*/
     -webkit-border-radius: 4px 4px 0 0;
     
     margin-top: 10px;
+    background-color: white;
 }
 #secondary .search-categories .cat-list-title {
     color: #5a5b5b;
@@ -435,6 +436,8 @@ ul.search-results table td { padding-right: 16px; }*/
     margin: 0;
     padding: 10px 10px 10px 20px;
     font-weight: normal;
+    
+    background-color: #FDFDFD;
 }
 
 #secondary .search-categories ul {
