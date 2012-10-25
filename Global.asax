@@ -71,6 +71,20 @@
             + HttpContext.Current.Request.RawUrl);
         }
         
+        
+        // Redirect to subdomains folders
+        var h = HttpContext.Current.Request.Url.Host;
+        // Request.ServerVariables[“SERVER_NAME”]
+        var ih = h.IndexOf('.');
+        if (ih > -1) {
+            h = h.Substring(0, ih);
+        }
+        if (h != "loconomics" && h != "localhost")
+        {
+            //Server.Transfer(@"~/" + h + "/", true);
+            HttpContext.Current.RewritePath(@"~/" + h + "/");
+        }
+        
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
