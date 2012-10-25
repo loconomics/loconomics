@@ -21,11 +21,13 @@
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
     var IAuthZumigoVerification = (IsPost ? Request["auth-zumigo-verification"].AsBool() : u.IAuthZumigoVerification ?? false);
     var IAuthZumigoLocation = (IsPost ? Request["auth-zumigo-location"].AsBool() : u.IAuthZumigoLocation ?? false);
+    var WebsiteUrl = Request["website-url"] ?? u.ProviderWebsiteURL;
 
     // Initializing Validation rules
     Validation.RequireField("firstname", "First Name is required");
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
+    Validation.Add("website-url", Validator.Regex(@"\w*", "Website URL has a bad format"));
 
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
@@ -36,8 +38,19 @@
             }
         }
         
-        if (ModelState.IsValid) {
-            using (var db = Database.Open("sqlloco")){
+        using (var db = Database.Open("sqlloco")){
+            // Check that website-url is not in use by other provider, but discarding in the check the own provider
+            if (db.QueryValue(@"
+                SELECT  count(*)
+                FROM    users
+                WHERE   UserID <> @0
+                        AND ProviderWebsiteURL like @1
+            ", u.UserID, Request["website-url"]) > 0) {
+                ModelState.AddError("website-url", "We're sorry, that website URL is not available, choose other.");
+            }
+
+            if (ModelState.IsValid)
+            {
                 // Check what data changes to revoke verifications and update data:
                 db.Execute(@"
                     DECLARE 
@@ -59,6 +72,7 @@
                     ,@IAuthZumigoVerification bit
                     ,@IAuthZumigoLocation bit
                     ,@LanguageID int
+                    ,@WebsiteURL varchar(2078)
 
                     SET @UserID = @0
                     SET @FirstName = @1
@@ -72,12 +86,13 @@
                     SET @City = @8
                     SET @StateProvinceID = @9
                     SET @PostalCodeID = @10
-                    SET @CountryID = @16
+                    SET @CountryID = @17
                     SET @PublicBio = @11
                     SET @GenderID = @12
                     SET @IAuthZumigoVerification = @13
                     SET @IAuthZumigoLocation = @14
-                    SET @LanguageID = @17
+                    SET @LanguageID = @16
+                    SET @WebsiteURL = @18
 
                     BEGIN TRAN
 
@@ -196,6 +211,8 @@
 		                    ,IAuthZumigoVerification = @IAuthZumigoVerification
 		                    ,IAuthZumigoLocation = @IAuthZumigoLocation
 
+                            ,ProviderWebsiteURL = @WebsiteURL
+
                             ,UpdatedDate = getdate()
                             ,ModifiedBy = 'sys'
                     WHERE   UserId = @UserID
@@ -210,14 +227,18 @@
                     COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, zipID, Bio,
-                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName, 
-                 LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
-            }
-            string success = "Personal data updated!";
-            if (!String.IsNullOrEmpty(redirectURL)) {
-                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-            } else {
-                LcHelpers.ReturnJsonResult(0, success);
+                 GenderID, IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName,
+                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                 (u.IsProvider ? WebsiteUrl : null));
+                string success = "Personal data updated!";
+                if (!String.IsNullOrEmpty(redirectURL))
+                {
+                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL });
+                }
+                else
+                {
+                    LcHelpers.ReturnJsonResult(0, success);
+                }
             }
         }
     }
@@ -368,6 +389,18 @@ Please complete the information below as accurately as possible.  Only your firs
             </li>
         </ul>
     </fieldset>
+    @if (u.IsProvider)
+    {
+        <fieldset id="@idprefix-fs-customurl">
+            <legend>Website URL:</legend>
+            <ul>
+                <li>
+                    <input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
+                    @Html.ValidationMessage("website-url")
+                </li>
+            </ul>
+        </fieldset>
+    }
     <fieldset id="@idprefix-fs-publicbio">
         <legend>Public Bio:</legend>
         <ul>
