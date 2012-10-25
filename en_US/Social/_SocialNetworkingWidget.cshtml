@@ -4,6 +4,17 @@
     string title = (string)PageData["Title"];
     string view = (string)PageData["View"] ?? "custom-icons"; // Possible values: custom-icons, network-widgets
     string size = PageData["Size"] ?? "32x32"; // Possible values: 32x32 (only one for now)
+    
+    string photourl = url.Replace("Profile/?UserID=", "Photo/");
+    var iaux = photourl.IndexOf('#');
+    if (iaux > -1) {
+        photourl = photourl.Substring(0, iaux);
+    }
+    iaux = photourl.IndexOf('&');
+    if (iaux > -1) {
+        photourl = photourl.Substring(0, iaux);
+    }
+    photourl += "/";
 }
     @* network-widgets: widgets provided by the social network, 'originals', with its own scripts and images *@
     @if (view == "network-widgets")
@@ -65,5 +76,6 @@
             <li class="linkedin"><a target="_blank" href="http://www.linkedin.com/shareArticle?mini=true&url=@Uri.EscapeUriString(url)&title=@Uri.EscapeDataString(title)&source=Loconomics&summary=@Uri.EscapeDataString(title)" title="Share on LinkedIN">Share on LinkedIN</a></li>
             <li class="googleplus"><a target="_blank" href="https://plus.google.com/share?url=@Uri.EscapeUriString(url)" title="Share on Google+">Share on Google+</a></li>
             <li class="twitter"><a target="_blank" href="http://twitter.com/intent/tweet?text=@Uri.EscapeDataString(title)-@Uri.EscapeUriString(url)" title="Share on Twitter+">Share on Twitter</a></li>
+            <li class="pinterest"><a target="_blank" href="http://pinterest.com/pin/create/button/?url=@Uri.EscapeUriString(url)&media=@Uri.EscapeUriString(photourl)&description=@Uri.EscapeDataString(title)">Share on Pinterest</a></li>
         </ul>
     }

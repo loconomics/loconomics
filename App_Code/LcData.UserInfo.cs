@@ -291,6 +291,10 @@ public static partial class LcData
         {
             return UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
         }
+        public static string GetUserPublicURL(int userid)
+        {
+            return UrlUtil.LangPath + "Profile/?UserID=" + userid;
+        }
 
         public static dynamic GetUserStats(int userId)
         {

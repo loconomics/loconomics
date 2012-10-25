@@ -2178,6 +2178,9 @@ html.boxshadow #loginBox .field-validation-error{
 .social-networking.custom-icons.size-32x32 li.twitter > a {
     background-position: 0 -96px;
 }
+.social-networking.custom-icons.size-32x32 li.pinterest > a {
+    background-position: 0 -128px;
+}
 /* on-off swich */
 .on-off-switch {
     width: 60px;
