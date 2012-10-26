@@ -157,7 +157,7 @@ else if (size == "mini") {
     <div class="@userType search-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
-            @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
+            @printUserName(data, dataPrefix, urlBase, null, linkInName)
 
             <p class="user-text">
                 @if (userType == "customer")
@@ -166,7 +166,14 @@ else if (size == "mini") {
                 }
                 else if (userType == "provider")
                 {
-                    @data[dataPrefix + "Positions"]
+                    if (data.Columns.Contains(dataPrefix + "Positions"))
+                    {
+                        @data[dataPrefix + "Positions"]
+                    }
+                    else if (positionData != null)
+                    {
+                        @positionData.PositionSingular
+                    }
                 }
             </p>
 

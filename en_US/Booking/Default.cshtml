@@ -21,12 +21,23 @@
     }
     Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
     Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
+    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
 }
 
-  <div id="container" class="clearfix booking editable have-sidebar changes-notification-enabled">
+  <div id="container" class="clearfix booking editable changes-notification-enabled">
     <div id="main" class="tabbed folders wizard">
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We'll make it easy for you and @PageData["providerrow"].FirstName</p>
+
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"Data", PageData["providerrow"]},
+            {"DataPrefix", ""},
+            {"Size", "search"},
+            {"UserType", "provider"},
+            {"WithContactData", false},
+            {"WithLinkInName", true},
+            {"PositionData", PageData["positionrow"]}
+        })
         
 		<ul class="tabs autofill-submenu-items">
 			<li class="current"><a href="#services">Services</a></li>
@@ -54,6 +65,5 @@
 		</div><!-- #payment -->
         
     </div><!-- #main -->
-    @RenderPage("../HelpCenter/$FAQs.cshtml")
     
   </div><!-- #container -->

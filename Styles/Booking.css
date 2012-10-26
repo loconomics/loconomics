@@ -1,14 +1,6 @@
 /* ============== Booking pages ==================
    ====== IagoSRL for Loconomics S.L. ============
  */
-.booking #main h1{
-    margin-top: 0;
-}
-.booking p.info{
-    font-weight: bold;
-    margin: 0;
-    font-size: .9em;
-}
 .booking form {
     margin: 20px 0 0;
     font-size: .9em;
@@ -352,4 +344,42 @@ html.ie #booking-services .special-instructions legend{
 }
 #booking-payment .billing-info .card-cvv input{
     width: 100px;
+}
+
+/* redesign */
+/* page */
+.booking #main {
+    border: 2px solid #00989A;
+    border-radius: 12px;
+    background-color: White;
+    width: auto;
+    padding: 50px; 
+}
+
+/* title */
+.booking #main h1, 
+.booking #main .subh1 {
+    margin-top: 0;
+    width: 500px;
+    text-align: justify;
+}
+
+/* provider info */
+.booking .provider.search-user-info {
+    display: inline-block;
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    
+    border: 1px solid #b3b4b4;
+    border-radius: 4px;
+    padding: 8px;
+}
+.booking .provider .avatar {
+    float: right;
+    margin: 0 0 0 10px;
+}
+.booking .provider .user-text {
+    font-size: 1em;
+    line-height: 30px;
 }
