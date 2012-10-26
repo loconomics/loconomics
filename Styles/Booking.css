@@ -350,10 +350,10 @@ html.ie #booking-services .special-instructions legend{
 /* page */
 .booking #main {
     border: 2px solid #00989A;
-    border-radius: 12px;
     background-color: White;
     width: auto;
-    padding: 50px; 
+    float: none;
+    padding: 50px;
 }
 
 /* title */

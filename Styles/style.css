@@ -410,97 +410,6 @@ ul.reviews > li div.author { float: left; }
 ul.reviews > li div.wrap { margin-left: 100px; }
 ul.reviews > li div.wrap p { margin-top: 0; }
 
-.folders > ul.tabs  {
-    position: relative; 
-    z-index: 2; 
-    padding: 0; 
-    margin: 0 0 0 20px;
-    max-height: 22px;
-    overflow: hidden;
-}
-.folders > ul.tabs li {
-    float: left;
-    list-style-type: none;
-    background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
-    padding-right: 22px;
-    padding-top: 0;
-    background-position: 0 right;
-}
-.folders > ul.tabs li a {
-	display: block;
-    width: auto;
-    height: auto;
-	background-image: none !important;
-	line-height: 15px;
-    font-size: 12px;
-    text-decoration: none;
-    color: #00989a;
-    font-weight: bold;
-	padding-top: 3px;
-    padding-left: 10px;
-    text-align: center;
-
-    border-color: #00989a;
-    border-style: solid;
-    border-width: 2px 0 3px 2px;
-    border-radius: 10px 0 0 0;
-    background-color: #def2f2;
-}
-.folders > ul.tabs li.current,
-.folders > ul.tabs li.current:hover {
-    background-position: right -22px !important;
-}
-.folders > ul.tabs li.current a,
-.folders > ul.tabs li.current:hover a {
-    background-color: white;
-    padding-top: 3px;
-    border-bottom-color: white;
-}
-.folders > ul.tabs li:hover {
-    background-position: right -44px !important;
-}
-.folders > ul.tabs li:hover a{
-    background-color: #eff8f9;
-}
-/* Removable style for generic .tabbed */
-.tabbed > ul.tabs > li.removable {
-    background-position: right -66px !important;
-    cursor: pointer;
-}
-.tabbed > ul.tabs > li.removable.current,
-.tabbed > ul.tabs > li.removable.current:hover {
-    background-position: right -88px !important;
-}
-.tabbed > ul.tabs > li.removable:hover {
-    background-position: right -110px !important;
-}
-.tabbed > ul.tabs > li.removable > a {
-    padding-right: 5px;
-}
-.folders > .tab-body { 
-	display:none;
-	position: relative;
-	z-index: 1; 
-	top: -2px; 
-	padding: 20px; 
-    min-height: 150px;
-	border: 2px solid #00989a;
-	background: white;
-}
-.folders > .tab-body.current { display: block; }
-
-.buttons ul.tabs { 
-    padding: 0;
-}
-.buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
-.buttons ul.tabs li a.button { font-size: inherit; line-height: 22px; }
-
-.buttons .tab-body { display:none; padding: 0; 
-    /*min-height: 400px;
-    min-height: 100px;*/
-}
-.buttons .tab-body.current { display: block; }
-
 .mini-form { margin-bottom: 24px; }
 .mini-form label { display: block; }
 .mini-form textarea { margin: 12px 0; width: 400px; height: 170px; padding: 8px; display: block; font-size: 12px; }
@@ -1655,12 +1564,36 @@ html.boxshadow #loginBox .field-validation-error{
 }
 
 /*
- * TabbedUX
+ * TabbedUX: generic operational styles
  */
 .tabbed 
 {
     position: relative;
 }
+.tabbed > .tab-body {
+	display: none;
+	position: relative;
+	z-index: 1;
+}
+.tabbed > .tab-body.current { display: block; }
+
+/* Removable style for generic .tabbed */
+.tabbed > ul.tabs > li.removable {
+    background-position: right -66px !important;
+    cursor: pointer;
+}
+.tabbed > ul.tabs > li.removable.current,
+.tabbed > ul.tabs > li.removable.current:hover {
+    background-position: right -88px !important;
+}
+.tabbed > ul.tabs > li.removable:hover {
+    background-position: right -110px !important;
+}
+.tabbed > ul.tabs > li.removable > a {
+    padding-right: 5px;
+}
+
+/* tabs-slider */
 .tabbed.has-tabs-slider > .tabs
 {
     margin-right: 60px;
@@ -1729,6 +1662,92 @@ html.boxshadow #loginBox .field-validation-error{
 }
 .tabbed > ul.tabs > li.new-tab > a {
     color: #AE637B;
+}
+
+/*= Tabbed style: .folders */
+.folders > ul.tabs  {
+    position: relative; 
+    z-index: 2; 
+    padding: 0; 
+    margin: 0 0 0 20px;
+    max-height: 22px;
+    overflow: hidden;
+}
+.folders > ul.tabs li {
+    float: left;
+    list-style-type: none;
+    background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
+    padding-right: 22px;
+    padding-top: 0;
+    background-position: 0 right;
+}
+.folders > ul.tabs li a {
+	display: block;
+    width: auto;
+    height: auto;
+	background-image: none !important;
+	line-height: 15px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #00989a;
+    font-weight: bold;
+	padding-top: 3px;
+    padding-left: 10px;
+    text-align: center;
+
+    border-color: #00989a;
+    border-style: solid;
+    border-width: 2px 0 3px 2px;
+    border-radius: 10px 0 0 0;
+    background-color: #def2f2;
+}
+.folders > ul.tabs li.current,
+.folders > ul.tabs li.current:hover {
+    background-position: right -22px !important;
+}
+.folders > ul.tabs li.current a,
+.folders > ul.tabs li.current:hover a {
+    background-color: white;
+    padding-top: 3px;
+    border-bottom-color: white;
+}
+.folders > ul.tabs li:hover {
+    background-position: right -44px !important;
+}
+.folders > ul.tabs li:hover a{
+    background-color: #eff8f9;
+}
+.folders > .tab-body {
+	top: -2px; 
+	padding: 20px; 
+    min-height: 150px;
+	border: 2px solid #00989a;
+	background: white;
+}
+
+/*= Tabbed style: .buttons */
+.buttons ul.tabs { 
+    padding: 0;
+}
+.buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
+.buttons ul.tabs li a.button { font-size: inherit; line-height: 22px; }
+
+.buttons .tab-body { display:none; padding: 0; 
+    /*min-height: 400px;
+    min-height: 100px;*/
+}
+.buttons .tab-body.current { display: block; }
+
+/*= Tabbed style: .wizard */
+.tabbed.wizard .tabs {
+
+}
+.tabbed.wizard .tabs li {
+    list-style-type: decimal;
+    margin: 20px 30px 0;
+}
+.tabbed.wizard .tabs li a {
+    text-decoration: none;
 }
 
 /*
