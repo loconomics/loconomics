@@ -355,11 +355,21 @@ html.ie #booking-services .special-instructions legend{
     float: none;
     padding: 50px;
 }
+.booking .tabbed.wizard .tabs {
+    width: 500px;
+}
 
 /* title */
+.booking #main h1 {
+    font-size: 3.4em;
+    margin-top: 0;
+}
+.booking #main .subh1 {
+    font-size: 1.8em;
+    margin-top: 10px;
+}
 .booking #main h1, 
 .booking #main .subh1 {
-    margin-top: 0;
     width: 500px;
     text-align: justify;
 }
@@ -373,7 +383,7 @@ html.ie #booking-services .special-instructions legend{
     
     border: 1px solid #b3b4b4;
     border-radius: 4px;
-    padding: 8px;
+    padding: 12px;
 }
 .booking .provider .avatar {
     float: right;

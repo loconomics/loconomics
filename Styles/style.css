@@ -1644,18 +1644,18 @@ html.boxshadow #loginBox .field-validation-error{
     background-position: left top;
 }
 .tabbed > ul.tabs {
+    position: relative;
     white-space: nowrap !important;
     /* To avoid white space between times */
     letter-spacing: -9999px;
 }
 .tabbed > ul.tabs > li  {
     white-space: nowrap !important;
-    float: none !important;
     display: inline-block;
-    height: 22px;
     position: relative;
     /* Restoring spacing */
     letter-spacing: normal;
+    list-style-type: none;
 }
 .tabbed.buttons > ul.tabs > li {
     margin-right: 4px;
@@ -1674,8 +1674,7 @@ html.boxshadow #loginBox .field-validation-error{
     overflow: hidden;
 }
 .folders > ul.tabs li {
-    float: left;
-    list-style-type: none;
+    height: 22px;
     background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
@@ -1739,15 +1738,47 @@ html.boxshadow #loginBox .field-validation-error{
 .buttons .tab-body.current { display: block; }
 
 /*= Tabbed style: .wizard */
-.tabbed.wizard .tabs {
-
+.tabbed.wizard > .tabs:before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 10px;
+    height: 8px;
+    left: 0;
+    right: 0;
+    background-color: #9d9d9d;
+    border-radius: 10px;
 }
-.tabbed.wizard .tabs li {
-    list-style-type: decimal;
-    margin: 20px 30px 0;
+.tabbed.wizard > .tabs li {
+    margin: 0;
+    padding: 0;
+    width: 33%;
 }
-.tabbed.wizard .tabs li a {
+.tabbed.wizard > .tabs li a {
     text-decoration: none;
+    text-align: center;
+    display: block;
+}
+.tabbed.wizard > .tabs li a .point {
+    display: inline-block;
+    line-height: 1.8em;
+    width: 1.8em;
+    color: White;
+    background: #cbe4e4;
+    border-radius: 60px;
+    -moz-border-radius: 60px;
+    -o-border-radius: 60px;
+    -webkit-border-radius: 60px;
+}
+.tabbed.wizard > .tabs li a .label {
+    display: block;
+    color: #b7b7b7;
+}
+.tabbed.wizard > .tabs li.current a .point {
+    background: #88cfd0;
+}
+.tabbed.wizard > .tabs li.current a .label {
+    color: #747474;
 }
 
 /*
