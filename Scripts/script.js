@@ -525,10 +525,12 @@ LC.redirectTo = function (url) {
     if (!redirected)
         window.location.reload();
 };
-LC.autoPopups = function () {
-    $(document).on('click', '.popup-action', function () {
+LC.connectPopupAction = function (applyToSelector) {
+    applyToSelector = applyToSelector || '.popup-action';
+    $(document).on('click', applyToSelector, function () {
         var c = $($(this).attr('href')).clone();
-        smoothBoxBlock(c, document, null, { closable: true, center: true });
+        if (c.length == 1)
+            smoothBoxBlock(c, document, null, { closable: true, center: true });
         return false;
     });
 }
@@ -875,7 +877,8 @@ function guidGenerator() {
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
-/* Currently only applies to elements with title and data-description attributes */
+/* Currently only applies to elements with title and data-description attributes or 
+    with css-class has-tooltip and title attribute */
 function configureTooltip() {
     var posoffset = { x: 16, y: 8 };
     function pos(t, e) {
@@ -1081,7 +1084,7 @@ $(function () {
         });
     }
 
-    LC.autoPopups();
+    LC.connectPopupAction();
 
     /*= Home Page (moved to _SiteLayout, loading without this script for minor footprint and faster load)
     */
