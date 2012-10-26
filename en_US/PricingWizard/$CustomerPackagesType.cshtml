@@ -250,4 +250,8 @@
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
     </fieldset>
+    @if (IsPost)
+    {
+        <script type="text/javascript">lcSetupCalculateTableItemsTotals();</script>
+    }
 </form>
