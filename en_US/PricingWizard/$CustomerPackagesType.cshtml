@@ -16,162 +16,144 @@
     var idprefix = "booking-services-package-pricing";
     var pricingtypeid = 3;
     var preSelectedPackage = Request["PackageID"];
+    var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
     
     decimal timeRequired = 0, timeFirstSession = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0,
         packagesQuantity = 0, totalPackagesPrice = 0;
-    // Collection to save time and price for each package item
-    // Key will be PackageID, first decimal is time required for first session only (what affects first booking time calculation)
-    // , second is total time of package (all sessions, all quantities)
-    // and third is calculated price for this item (total, package price * quantity of packages)
-    var pricingPackagesNumbers = new Dictionary<int,decimal[]>();
     
-    var packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
-
     if (IsPost){
         /* DO CALCULATION: (not only on /calculate url, is need to save data too)
          */
-        // Calculate time required per selected Packages
-        foreach (var pak in packages.Packages){
+        
+        if (!selectedPackage.IsInt()) {
+            ModelState.AddFormError("Package selected is not valid");
+        }
+        
+        if (ModelState.IsValid) {
             
-            if (!Request["provider-package-" + (string)pak.ProviderPackageID.ToString()].AsBool()) {
-                // not checked, skip:
-                continue;
-            }
-            
+            // Get database data for selected package
+            var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
+            var thePackage = paksAndDetails.Packages[0];
+
+            // Calculate time required for selecte package
+
             // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
-            decimal sessionTimeInHours = Math.Round((decimal)pak.ServiceDuration / 60, 2);
+            decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
             timeFirstSession += sessionTimeInHours;
             
-            int customerPackageQuantity = Request["provider-package-" + (string)pak.ProviderPackageID.ToString() + "-quantity"].AsInt();
-            packagesQuantity += customerPackageQuantity;
-
-            decimal totalTimeInHours = Math.Round(sessionTimeInHours * pak.NumberOfSessions * customerPackageQuantity, 2);
-            timeRequired += totalTimeInHours;
+            decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
+            timeRequired += packageTimeInHours;
             
-            decimal pakPrice = Math.Round(customerPackageQuantity * pak.Price, 2);
+            decimal pakPrice = Math.Round(thePackage.Price, 2);
             totalPackagesPrice += pakPrice;
             subtotalPrice += pakPrice;
 
-            pricingPackagesNumbers[pak.ProviderPackageID] = new decimal[]{
-                sessionTimeInHours,
-                totalTimeInHours,
-                pakPrice};
-        }
-
-        // Calculating the price for Pricing Options
-        @RenderPage("$CustomerPricingOptions.cshtml", new { 
-            EmbeddedMode = "calculate",
-            PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
-        } );
-        var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
-        timeRequired += optionsCalculation["TimeRequired"];
-        timeFirstSession += optionsCalculation["TimeRequired"];
-        optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
-        subtotalPrice += optionalServicesTotalPrice;
+            // Calculating the price for Pricing Options
+            @RenderPage("$CustomerPricingOptions.cshtml", new { 
+                EmbeddedMode = "calculate",
+                PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+            } );
+            var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
+            timeRequired += optionsCalculation["TimeRequired"];
+            timeFirstSession += optionsCalculation["TimeRequired"];
+            optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
+            subtotalPrice += optionalServicesTotalPrice;
         
-        feePrice = Math.Round(.1M * subtotalPrice, 2);
-        totalPrice = subtotalPrice + feePrice;
+            feePrice = Math.Round(.1M * subtotalPrice, 2);
+            totalPrice = subtotalPrice + feePrice;
 
-        /* SAVE DATA 
-         */ 
-        // If request post is not only for calculate, save data
-        if (UrlData[0].ToLower() != "calculate"){       
-            using (var db = Database.Open("sqlloco")){
+            /* SAVE DATA 
+             */ 
+            // If request post is not only for calculate, save data
+            if (UrlData[0].ToLower() != "calculate"){       
+                using (var db = Database.Open("sqlloco")){
                 
-                /* Save data into the pricingestimate tables
-                 */
-                /*var revisionID = 1;
-                var estimateID = 0;
-                if (PageData["PricingEstimateData"] != null){
-                    try{
-                        estimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
-                        revisionID = (int)PageData["PricingEstimateData"]["PricingEstimateRevision"];
-                    }catch{}
-                }*/
+                    /* Save data into the pricingestimate tables
+                     */
+                    /*var revisionID = 1;
+                    var estimateID = 0;
+                    if (PageData["PricingEstimateData"] != null){
+                        try{
+                            estimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
+                            revisionID = (int)PageData["PricingEstimateData"]["PricingEstimateRevision"];
+                        }catch{}
+                    }*/
 
-                // Inserting Estimate with calculated details
-                var insreturned = db.QuerySingle(LcData.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
-                    pricingtypeid, 
-                    // We use first-session time only because is what affects the schedule of this booking; 
-                    // timeRequired' has the accumulative time of all sessions that will happen on different days
-                    timeFirstSession,
-                    hourPrice, subtotalPrice, feePrice, totalPrice);
-                pricingEstimateID = insreturned.PricingEstimateID;
-                pricingEstimateRevision = insreturned.PricingEstimateRevision;
+                    // Inserting Estimate with calculated details
+                    var insreturned = db.QuerySingle(LcData.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
+                        pricingtypeid, 
+                        // We use first-session time only because is what affects the schedule of this booking; 
+                        // timeRequired' has the accumulative time of all sessions that will happen on different days
+                        timeFirstSession,
+                        hourPrice, subtotalPrice, feePrice, totalPrice);
+                    pricingEstimateID = insreturned.PricingEstimateID;
+                    pricingEstimateRevision = insreturned.PricingEstimateRevision;
 
-                // Inserting details: every package checked by the customer
-                foreach (var pak in packages.Packages) {
-                    
-                    if (!Request["provider-package-" + (string)pak.ProviderPackageID.ToString()].AsBool()) {
-                        // not checked, skip:
-                        continue;
-                    }
-                    
-                    // Get tripla unit-time, total-time and price
-                    decimal[] timeprice = pricingPackagesNumbers[pak.ProviderPackageID];
-                    // Insert data:
+                    // Inserting details of package selected by customer
                     db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
                         0, 0, 0, 0, 
-                        pak.ProviderPackageID,
+                        selectedPackage.AsInt(),
                         null, // there is no provider value
-                        Request["provider-package-" + (string)pak.ProviderPackageID.ToString() + "-quantity"].AsInt(),
+                        1, // ever quantity 1
                         0, // systemPricingDataInput
                         hourPrice,
-                        timeprice[0], timeprice[2]);
-                }
+                        packageTimeInHours, pakPrice);
 
-                // Execute 'save' code of Pricing Options page
-                @RenderPage("$CustomerPricingOptions.cshtml", new { 
-                    EmbeddedMode = "back-end", 
-                    EstimateID = pricingEstimateID, RevisionID = pricingEstimateRevision,
-                    PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
-                } );
-                if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
-                    ModelState.AddFormError("Options not saved");
-                }
-                
-                /*
-                // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
-                if (PageData["PricingEstimateData"] == null){
-                    PageData["PricingEstimateData"] = new Dictionary<string, object> { 
-                        { "PricingEstimateID", estimateID }, 
-                        { "PricingEstimateRevision", revisionID },
-                        { "PricingEstimateErrorMessage", "" } };
-                } else {
-                    PageData["PricingEstimateData"]["PricingEstimateID"] = estimateID;
-                    PageData["PricingEstimateData"]["PricingEstimateRevision"] = revisionID;
-                }
-                // We can return a negative data in PageData["PricingEstimateData"]["PricingEstimateID"] to set error code and add
-                // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
-                */
-                
-
-                /*=========================================================================
-                 * NOW: CREATE BOOKING REQUEST AS IN Booking/$Services.cshtml (most next code is cloned from that) */
-                /*
-                * Create Booking Request
-                */
-                try {
-                    var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
-                        c.UserID, p.UserID, pos.PositionID,
-                        pricingEstimateID,
-                        Request["booking-services-special-instructions"]
-                    );
+                    // Execute 'save' code of Pricing Options page
+                    @RenderPage("$CustomerPricingOptions.cshtml", new { 
+                        EmbeddedMode = "back-end", 
+                        EstimateID = pricingEstimateID, RevisionID = pricingEstimateRevision,
+                        PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+                    } );
+                    if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
+                        ModelState.AddFormError("Options not saved");
+                    }
                 
                     /*
-                     * Do BookingRequestID available for next wizard steps
-                     */
-                    // Saving it at user Session
-                    Session["BookingRequestID"] = (int)bookingRequestID;
+                    // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
+                    if (PageData["PricingEstimateData"] == null){
+                        PageData["PricingEstimateData"] = new Dictionary<string, object> { 
+                            { "PricingEstimateID", estimateID }, 
+                            { "PricingEstimateRevision", revisionID },
+                            { "PricingEstimateErrorMessage", "" } };
+                    } else {
+                        PageData["PricingEstimateData"]["PricingEstimateID"] = estimateID;
+                        PageData["PricingEstimateData"]["PricingEstimateRevision"] = revisionID;
+                    }
+                    // We can return a negative data in PageData["PricingEstimateData"]["PricingEstimateID"] to set error code and add
+                    // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
+                    */
+                
 
-                } catch (Exception ex) {
-                    LcHelpers.ReturnJsonError(-1, ex.Message);
+                    /*=========================================================================
+                     * NOW: CREATE BOOKING REQUEST AS IN Booking/$Services.cshtml (most next code is cloned from that) */
+                    /*
+                    * Create Booking Request
+                    */
+                    try {
+                        var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
+                            c.UserID, p.UserID, pos.PositionID,
+                            pricingEstimateID,
+                            Request["booking-services-special-instructions"]
+                        );
+                
+                        /*
+                         * Do BookingRequestID available for next wizard steps
+                         */
+                        // Saving it at user Session
+                        Session["BookingRequestID"] = (int)bookingRequestID;
+
+                    } catch (Exception ex) {
+                        LcHelpers.ReturnJsonError(-1, ex.Message);
+                    }
                 }
+                // All fine, continue wizard next step:
+                LcHelpers.ReturnJsonResult(0, null);
             }
-            // All fine, continue wizard next step:
-            LcHelpers.ReturnJsonResult(0, null);
         }
     }
+    
+    var packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
 }
 @helper printQuantities(int q)
 {
@@ -187,29 +169,24 @@
 
     <fieldset class="ajax ajax-box" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/Calculate/?providerid=@(p.UserID)&amp;positionid=@(pos.PositionID)">
         <fieldset class="select-packages">
+            <legend>Please select a package</legend>
             <table class="packages-list calculate-items-totals">
                 <tr>
-                    <th class="package-name">Please select a package:</th>
-                    <th class="package-price number">Item Price</th>
-                    <th class="package-quantity number">Quantity</th>
-                    <th class="package-total-price number">Total Price</th>
+                    <th class="package-name">Name</th>
+                    <th class="package-sessions number">Included sessions</th>
+                    <th class="package-duration number">Duration</th>
+                    <th class="package-total-price number">Price</th>
                 </tr>
                 @foreach (var pak in packages.Packages)
                 {
-                    var paknumbers = pricingPackagesNumbers.ContainsKey(pak.ProviderPackageID) ? pricingPackagesNumbers[pak.ProviderPackageID] : null;
                 <tr>
                     <td>
-                        <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @LcHelpers.IsChecked(pak.ProviderPackageID, (paknumbers != null ? pak.ProviderPackageID : preSelectedPackage)) name="provider-package-@pak.ProviderPackageID" value="True" />
-                        <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)</label>
+                        <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, Request["provider-package"]) name="provider-package" value="@pak.ProviderPackageID" />
+                        <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                     </td>
-                    <td class="package-price number">$<span class="calculate-item-price">@pak.Price</span></td>
-                    <td class="number">
-                        @*<input class="package-quantity" type="text" name="provider-package-quantity" value="1" />*@
-                        <select name="provider-package-@pak.ProviderPackageID-quantity" class="calculate-item-quantity">
-                            @printQuantities((Request.Form["provider-package-" + (string)pak.ProviderPackageID.ToString() + "-quantity"] ?? "0").AsInt())
-                        </select>
-                    </td>
-                    <td class="package-total-price number">$<span class="calculate-item-total">@(paknumbers == null ? pak.Price : paknumbers[2])</span></td>
+                    <td class="package-sessions number">@pak.NumberOfSessions</td>
+                    <td class="package-duration number">@pak.ServiceDuration minutes</td>
+                    <td class="package-total-price number">@(String.Format("{0:c}", pak.Price))</td>
                 </tr>
                 }
             </table>

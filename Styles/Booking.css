@@ -355,8 +355,12 @@ html.ie #booking-services .special-instructions legend{
     float: none;
     padding: 50px;
 }
+.booking h2 {
+    color: #5a5b5b;
+}
 .booking .tabbed.wizard .tabs {
     width: 500px;
+    margin-bottom: 50px;
 }
 
 /* title */

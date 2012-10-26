@@ -46,6 +46,7 @@
         </ul>
         
 		<div id="services" class="tab-body fancy current">
+            <h2>Select services</h2>
         @{
             int pricingType = PageData["PricingTypeID"] = LcData.GetPositionPricingTypeID(PageData["positionrow"].PositionID, 1 /*TODO implement clientTypeID*/ );
             if (pricingType == 3) {
