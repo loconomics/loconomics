@@ -163,25 +163,10 @@
 }
 @helper GetValidationScripts(){
     <script type="text/javascript">
-        if (!jqueryValidateUnobtrusiveLoaded) var jqueryValidateUnobtrusiveLoaded = false;
-        if (!jqueryValidateUnobtrusiveLoaded) {
-            jqueryValidateUnobtrusiveLoaded = true;
-            Modernizr.load([
-                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.min.js" },
-                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.unobtrusive.min.js" }
-            ]);
-        } else {
-            // Check first if validation is enabled (can happen that twice includes of
-            // this code happen at same page, being executed this code after first appearance
-            // with the switch jqueryValidateUnobtrusiveLoaded changed
-            // but without validation being already loaded and enabled)
-            if ($ && $.validator && $.validator.unobtrusive) {
-                // Apply the validation rules to the new elements
-                $(document).removeData('validator');
-                $(document).removeData('unobtrusiveValidation');
-                $.validator.unobtrusive.parse(document);
-            }
-        }
+        if (window['LC'] && LC['setupValidation'])
+            LC.setupValidation();
+        else
+            $(document).on('lcLibReady', function () { LC.setupValidation() });
     </script>
 }
 @helper GetGoogleMapsScripts(){
