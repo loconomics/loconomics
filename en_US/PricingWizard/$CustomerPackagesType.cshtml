@@ -172,7 +172,8 @@
             <legend>Please select a package</legend>
             <table class="packages-list calculate-items-totals">
                 <tr>
-                    <th class="package-name">Name</th>
+                    <th></th>
+                    <th class="package-name name">Name</th>
                     <th class="package-sessions number">Included sessions</th>
                     <th class="package-duration number">Duration</th>
                     <th class="package-total-price number">Price</th>
@@ -182,6 +183,8 @@
                 <tr>
                     <td>
                         <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, Request["provider-package"]) name="provider-package" value="@pak.ProviderPackageID" />
+                    </td>
+                    <td class="package-name name">
                         <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                     </td>
                     <td class="package-sessions number">@pak.NumberOfSessions</td>
@@ -192,58 +195,59 @@
             </table>
         </fieldset>
         <fieldset class="package-pricing-options">
+            <legend>Select add-on services</legend>
             @RenderPage("$CustomerPricingOptions.cshtml", new { EmbeddedMode = "front-end", idprefix = idprefix, PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid,
                TableTitle = "Please add any additional options you’d like:" } )
         </fieldset>
         <fieldset class="special-instructions">
-            <legend>Let @c.FirstName know of any special instructions or requests:</legend>
+            <legend>Any details that might help @c.FirstName perform the service better?</legend>
             <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
         </fieldset>
 
-    @if (LcHelpers.RenderPageReturns["OptionsCount"] == 0 && packages.Packages.Count == 0)
-    {
-        <div class="no-pricing-wizard">
-        Currently we're unable to provide a pricing estimate for this provider.  Please proceed to book a free estimate with the provider to determine a fair price together.
-        </div>
-    }
-    else
-    {
-        <div class="calculate-price-button actions">
-            <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
-        </div>
-        <div class="calculation">
-            <table class="calculation">
-                <tr><th>Time required - first session:</th><td class="time-required">@timeFirstSession.ToString("#,##0.00") hour(s)</td></tr>
-                <tr><th>Time required - all sessions:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>
-                <tr>
-                    <th>@packagesQuantity package/s:</th>
-                    <td class="packages-price">$@totalPackagesPrice.ToString("#,##0.00")</td>
-                </tr>
-                <tr>
-                    <th>Optional Services</th>
-                    <td class="optional-services">$@optionalServicesTotalPrice.ToString("#,##0.00")</td>
-                </tr>
-                <tr>
-                    <th>Subtotal:</th>
-                    <td class="subtotal-price">$@subtotalPrice.ToString("#,##0.00")</td>
-                </tr>
-                <tr>
-                    <th>Loconomics service fee:</th>
-                    <td class="fee-price">$@feePrice.ToString("#,##0.00")</td>
-                </tr>
-                <tr>
-                    <th>Total price:</th>
-                    <td class="total-price">$@totalPrice.ToString("#,##0.00")</td>
-                </tr>
-            </table>
-        </div>    
-    }
+        <fieldset>
+            <legend>Pricing summary</legend>
+
+            @if (LcHelpers.RenderPageReturns["OptionsCount"] == 0 && packages.Packages.Count == 0)
+            {
+                <div class="no-pricing-wizard">
+                Currently we're unable to provide a pricing estimate for this provider. Please proceed to book a free estimate with the provider to determine a fair price together.
+                </div>
+            }
+            else
+            {
+                <div class="calculate-price-button actions">
+                    <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
+                </div>
+                <div class="calculation">
+                    <table class="calculation">
+                        <tr><th>Time required - first session:</th><td class="time-required">@timeFirstSession.ToString("#,##0.00") hour(s)</td></tr>
+                        <tr><th>Time required - all sessions:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>
+                        <tr>
+                            <th>@packagesQuantity package/s:</th>
+                            <td class="packages-price">$@totalPackagesPrice.ToString("#,##0.00")</td>
+                        </tr>
+                        <tr>
+                            <th>Optional Services</th>
+                            <td class="optional-services">$@optionalServicesTotalPrice.ToString("#,##0.00")</td>
+                        </tr>
+                        <tr>
+                            <th>Subtotal:</th>
+                            <td class="subtotal-price">$@subtotalPrice.ToString("#,##0.00")</td>
+                        </tr>
+                        <tr>
+                            <th>Loconomics service fee:</th>
+                            <td class="fee-price">$@feePrice.ToString("#,##0.00")</td>
+                        </tr>
+                        <tr>
+                            <th>Total price:</th>
+                            <td class="total-price">$@totalPrice.ToString("#,##0.00")</td>
+                        </tr>
+                    </table>
+                </div>
+            }
+    </fieldset>
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
     </fieldset>
-    @if (IsPost)
-    {
-        <script type="text/javascript">lcSetupCalculateTableItemsTotals();</script>
-    }
 </form>

@@ -205,7 +205,8 @@
         <table class="pricing-options calculate-items-totals">
             <thead>
                 <tr>
-                    <th>@(PageData["TableTitle"] ?? "Services upon request")</th>
+                    <th></th>
+                    <th class="name">@(PageData["TableTitle"] ?? "Services upon request")</th>
                     <th class="number">Item Price</th>
                     <th class="number">Quantity</th>
                     <th class="number">Total Price</th>
@@ -215,8 +216,8 @@
             @foreach (var popt in poptions)
             {
                 <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
-                    <td class="pricing-option-check">
-                        <input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" />
+                    <td><input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" /></td>
+                    <td class="pricing-option-check name">
                         <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                     </td>
                     <td class="pricing-option-item-price number money calculate-item-price">@popt.ProviderDataInputValue</td>

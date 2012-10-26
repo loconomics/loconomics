@@ -74,16 +74,25 @@
 #booking-services .special-instructions legend{
     font-size: 1em;
 }
-#booking-services .special-instructions{
-    width: 295px;
-}
 /* Fix a bug in IE */
 html.ie #booking-services .special-instructions legend{
     display: inline-block;
 }
-#booking-services .special-instructions textarea{
-    width: 265px;
+#booking-services .special-instructions,
+#booking-services .special-instructions textarea {
+    width: auto;
+    display: block;
+}
+#booking-services .special-instructions textarea {
     height: 8em;
+    width: 100%;
+    height: 100%; 
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+#booking-services .special-instructions {
+    padding: 0 !important;
 }
 #booking-services .pricing-wizard{
     width: 670px;
@@ -111,20 +120,26 @@ html.ie #booking-services .special-instructions legend{
 #booking-services.package-pricing {
     margin: 0;
 }
-#booking-services.package-pricing .special-instructions,
-#booking-services.package-pricing .special-instructions textarea {
-    width: auto;
+#booking-services.package-pricing .ajax-box {
     display: block;
 }
-#booking-services.package-pricing .special-instructions textarea {
-    width:100%;
-    height:100%; 
-    box-sizing: border-box;         /* For IE and modern versions of Chrome */
-    -moz-box-sizing: border-box;    /* For Firefox                          */
-    -webkit-box-sizing: border-box; /* For Safari                           */
-}
-#booking-services.package-pricing fieldset {
+#booking-services.package-pricing .ajax-box fieldset {
     display: block;
+    background-color: #fdfbfb;
+    position: relative;
+    margin-top: 60px;
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 30px 22px;
+}
+#booking-services.package-pricing .ajax-box fieldset legend {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    font-size: 1.2em;
 }
 #booking-services.package-pricing table {
     width: 100%;
@@ -357,10 +372,30 @@ html.ie #booking-services .special-instructions legend{
 }
 .booking h2 {
     color: #5a5b5b;
+    margin-bottom: 0;
 }
 .booking .tabbed.wizard .tabs {
     width: 500px;
     margin-bottom: 50px;
+}
+
+/* tables */
+.booking table th {
+    text-align: center;
+    padding: 5px 0;
+}
+.booking table td {
+    text-align: center;
+}
+.booking table .name {
+    text-align: left;
+}
+.booking table td.name label {
+    padding: 0;
+}
+.booking table .package-duration,
+.booking table .package-total-price {
+    text-align: right;
 }
 
 /* title */
