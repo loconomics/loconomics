@@ -1958,6 +1958,9 @@ html.boxshadow #loginBox .field-validation-error{
     white-space: normal;
     overflow: hidden;
 }
+.has-tooltip {
+    text-decoration: underline;
+}
 
 .smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
