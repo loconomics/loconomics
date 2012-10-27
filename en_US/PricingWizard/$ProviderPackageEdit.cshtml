@@ -61,12 +61,13 @@
                         ,ProviderPackageServiceDuration
                         ,FirstTimeClientsOnly
                         ,NumberOfSessions
+                        ,IsAddOn
                         ,CreatedDate
                         ,UpdatedDate
                         ,ModifiedBy
                         ,Active
                     ) VALUES (
-                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, getdate(), getdate(), 'sys', 1
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', 1
                     )
                     SET @PackageID = @@Identity
                 END ELSE
@@ -77,6 +78,7 @@
                         ,ProviderPackageServiceDuration = @8
                         ,FirstTimeClientsOnly = @9
                         ,NumberOfSessions = @10
+                        ,IsAddOn = @11
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
                         ,Active = 1
@@ -158,7 +160,8 @@
                     Request["price"].AsDecimal(),
                     Request["minutes"].AsDecimal(),
                     Request["first-time-clients-only"].AsBool(),
-                    Request["sessions-number"].AsInt()
+                    Request["sessions-number"].AsInt(),
+                    Request["is-addon"].AsBool()
                 );
                 db.Execute(sqlDelDetails, packageID);
                 foreach(var att in attributesInPackage) {
@@ -192,6 +195,7 @@
                         ,p.ProviderPackageServiceDuration As ServiceDuration
                         ,p.FirstTimeClientsOnly
                         ,p.NumberOfSessions
+                        ,p.IsAddOn
                         ,p.ProviderUserID
                         ,p.PositionID
                 FROM    providerpackage As p
@@ -238,6 +242,10 @@
         <label class="only-first-time-clients">
             <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
             This package is only available to first-time clients
+        </label>
+        <label class="isaddon">
+            <input type="checkbox" name="is-addon" value="True" @LcHelpers.IsChecked(true, Request["is-addon"] ?? (package == null ? false : package.IsAddOn)) />
+            This package is an Add-On
         </label>
         <label class="package-description">
             <textarea name="package-description" placeholder="Describe in full detail what the client will receive.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
