@@ -17,6 +17,7 @@
     var pricingtypeid = 3;
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
+    var selectedAddons = Request.Form.GetValues("provider-package-addons");
     
     decimal timeRequired = 0, timeFirstSession = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0,
         packagesQuantity = 0, totalPackagesPrice = 0;
@@ -35,7 +36,7 @@
             var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
             var thePackage = paksAndDetails.Packages[0];
 
-            // Calculate time required for selecte package
+            // Calculate time and price required for selected package
 
             // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
             decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
@@ -47,6 +48,35 @@
             decimal pakPrice = Math.Round(thePackage.Price, 2);
             totalPackagesPrice += pakPrice;
             subtotalPrice += pakPrice;
+            
+            // Calculate time and price for selected addons packages
+            var selectedAddonsData = new List<dynamic>();
+            if (selectedAddons != null && selectedAddons.Length > 0) {
+                foreach (var addon in selectedAddons) {
+                    var addonID = addon.AsInt();
+                    if (addonID > 0) {
+                        var addonData = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, addonID).Packages[0];
+
+                        decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
+                        timeFirstSession += sesHours;
+            
+                        decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
+                        timeRequired += pakHours;
+            
+                        decimal addonPrice = Math.Round(addonData.Price, 2);
+                        totalPackagesPrice += addonPrice;
+                        subtotalPrice += addonPrice;
+                        
+                        selectedAddonsData.Add(new {
+                            addonID = addonID
+                            ,sesHours = sesHours
+                            ,pakHours = pakHours
+                            ,addonPrice = addonPrice
+                        });
+                    }
+                }
+            }
+            
 
             // Calculating the price for Pricing Options
             @RenderPage("$CustomerPricingOptions.cshtml", new { 
@@ -98,6 +128,19 @@
                         0, // systemPricingDataInput
                         hourPrice,
                         packageTimeInHours, pakPrice);
+                    
+                    // Inserting details of addons packages selected by customer
+                    foreach (var addon in selectedAddonsData)
+                    {
+                        db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
+                            0, 0, 0, 0, 
+                            addon.addonID,
+                            null, // there is no provider value
+                            1, // ever quantity 1
+                            0, // systemPricingDataInput
+                            hourPrice,
+                            addon.pakHours, addon.addonPrice);
+                    }
 
                     // Execute 'save' code of Pricing Options page
                     @RenderPage("$CustomerPricingOptions.cshtml", new { 
