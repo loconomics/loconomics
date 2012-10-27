@@ -380,15 +380,16 @@ html.ie #booking-services .special-instructions legend{
 }
 
 /* tables */
-.booking table th {
-    text-align: center;
-    padding: 5px 0;
-}
+.booking table th,
 .booking table td {
     text-align: center;
+    padding: 5px 8px;
+    text-align: center;
+    white-space: nowrap;
 }
 .booking table .name {
     text-align: left;
+    width: 100%;
 }
 .booking table td.name label {
     padding: 0;
