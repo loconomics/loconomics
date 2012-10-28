@@ -18,6 +18,9 @@
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
     var selectedAddons = Request.Form.GetValues("provider-package-addons");
+    if (selectedAddons == null) {
+        selectedAddons = new string[0];
+    }
     
     decimal timeRequired = 0, timeFirstSession = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0,
         packagesQuantity = 0, totalPackagesPrice = 0;
@@ -267,7 +270,7 @@
                     {
                     <tr>
                         <td>
-                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @LcHelpers.IsChecked(pak.ProviderPackageID, Request["provider-package"]) name="provider-package-addons" value="@pak.ProviderPackageID" />
+                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
                         </td>
                         <td class="package-name name">
                             <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
