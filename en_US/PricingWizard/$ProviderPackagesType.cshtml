@@ -12,15 +12,20 @@
 }
 <div class="@PageData["PricingWizardClasses"] pricingwizard package-pricing-type">
     <div class="add-package"><a href="#add-package">Add another package</a></div>
-    <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0&PositionID=@pos.PositionID">
+    <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=0&PositionID=@pos.PositionID&Type=">
         @if (data.Packages.Count == 0){
             <div class="empty">Please add a package</div>
-            @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID })
+            @RenderPage("$ProviderPackageEdit.cshtml", new { PositionID = pos.PositionID, Type = "package" })
         }
     </div>
     <h3 class="packages-list-title">Your Packages:</h3>
-    <div class="your-packages view-panel" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@(pos.PositionID)&Editable=true">
-        @RenderPage("$ProviderPackagesList.cshtml", new { Data = data, Editable = true})
+    <div class="your-packages view-panel type-packages" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@(pos.PositionID)&Editable=true&Type=packages">
+        @RenderPage("$ProviderPackagesList.cshtml", new { Data = data, Editable = true, Type = "packages"})
+    </div>
+    <div class="add-package add-addon"><a href="#add-addon">Add another add-on</a></div>
+    <h3 class="packages-list-title">Your Add-ons:</h3>
+    <div class="your-packages view-panel type-addons" data-source-url="@(UrlUtil.LangPath)PricingWizard/$ProviderPackagesList/?PositionID=@(pos.PositionID)&Editable=true&Type=addons">
+        @RenderPage("$ProviderPackagesList.cshtml", new { Data = data, Editable = true, Type = "addons"})
     </div>
     <div class="package-pricing-options">
         <h3>Your Pricing Options:</h3>

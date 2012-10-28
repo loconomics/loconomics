@@ -139,11 +139,11 @@ $(document).ready(function () {
                     var cat = fs.children('legend').text();
                     // What type of validation apply?
                     if (fs.is('.validation-select-one'))
-                        // if the cat is a 'validation-select-one', a 'select' element with a 'positive'
-                        // :selected value must be checked
+                    // if the cat is a 'validation-select-one', a 'select' element with a 'positive'
+                    // :selected value must be checked
                         lastValid = !!(fs.find('option:selected').val());
                     else
-                        // Otherwise, look for 'almost one' checked values:
+                    // Otherwise, look for 'almost one' checked values:
                         lastValid = (fs.find('input:checked').length > 0);
 
                     if (!lastValid) {
@@ -449,19 +449,29 @@ $(document).ready(function () {
         if ($pricingPackage.length == 0) return;
 
         $pricingPackage.find('.add-package').click(function () {
-            var editPanel = $(this).siblings('.edit-panel');
+            var pw = $(this).closest('.pricingwizard');
+            var editPanel = pw.find('.edit-panel');
+            var type = $(this).attr('href') == '#add-addon' ? "addon" : "package";
             // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:
-            editPanel.show().reload(editPanel.attr('data-source-url'));
+            editPanel.show().reload(function (sourceUrl, defaultSourceUrl) {
+                return defaultSourceUrl.replace('Type=', 'Type=' + type);
+            });
             // Hide packages list and other pricing options and main actions
-            editPanel.closest('.pricingwizard').find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
-            $(this).hide('slow');
+            pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
+            pw.find('.add-package').hide('slow');
             return false;
         });
         $pricingPackage.find('.view-panel').on('click', '.provider-package .edit', function () {
             var editPanel = $(this).closest('.package-pricing-type').find('.edit-panel');
+            var type = $(this).closest('.view-panel').hasClass('type-addons') ? "addon" : "package";
+            var pakID = $(this).data('provider-package-id');
             editPanel.closest('.pricingwizard').find('.add-package').hide('slow');
             // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
-            editPanel.show().reload(editPanel.attr('data-source-url').replace('ProviderPackageID=0', 'ProviderPackageID=' + $(this).data('provider-package-id')));
+            editPanel.show().reload(function (sourceUrl, defaultSourceUrl) {
+                return defaultSourceUrl
+                    .replace('ProviderPackageID=0', 'ProviderPackageID=' + pakID)
+                    .replace('Type=', 'Type=' + type);
+            });
             // Hide packages list and other pricing options and main actions
             editPanel.closest('.pricingwizard').find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
             return false;

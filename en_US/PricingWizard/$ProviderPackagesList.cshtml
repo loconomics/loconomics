@@ -1,6 +1,8 @@
 ﻿@{
     dynamic data = PageData["data"];
     dynamic editable = PageData["editable"] ?? Request["editable"].AsBool();
+    string type = PageData["Type"] ?? Request["Type"] ?? "packages";
+
     var pos = LcData.UserInfo.GetUserCurrentPos();
     if (data == null) {
         data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
@@ -15,11 +17,40 @@
         <ul>
             @foreach (var pak in data.Packages)
             {
+                switch (type) {
+                    case "packages":
+                    default:
+                        if (pak.IsAddOn)
+                        {
+                            continue;
+                        }
+                        break;
+                    case "addons":
+                        if (!pak.isAddOn)
+                        {
+                            continue;
+                        }
+                        break;
+                }
+
                 var withDetails = false;
             <li class="provider-package">
                 <h4>@pak.Name</h4>
                 <div class="provider-package-service-summary">
-                    @pak.NumberOfSessions sessions - @pak.ServiceDuration minutes each
+                    @{
+                        var summaryFormat = "";
+                    }
+                    @switch (type)
+                    {
+                        case "packages":
+                        default:
+                            summaryFormat = "{0} sessions - {1} minutes each";
+                            break;
+                        case "addons":
+                            summaryFormat = "Duration of add-on service: {1} minutes";
+                            break;
+                    }
+                    @String.Format(summaryFormat, pak.NumberOfSessions, pak.ServiceDuration)
                     <div class="provider-package-price">
                         @if (editable)
                         {

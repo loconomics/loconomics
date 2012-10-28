@@ -6,6 +6,7 @@
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var attributesInPackage = new List<int>();
     var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
+    string type = PageData["Type"] ?? Request["Type"] ?? "package";
     
     if (action == "delete") {
         var sqlDelPackage = @"
