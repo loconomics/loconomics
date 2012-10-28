@@ -448,7 +448,7 @@ $(document).ready(function () {
         // Fast quick
         if ($pricingPackage.length == 0) return;
 
-        $pricingPackage.find('.add-package').click(function () {
+        $pricingPackage.find('.add-package a').click(function () {
             var pw = $(this).closest('.pricingwizard');
             var editPanel = pw.find('.edit-panel');
             var type = $(this).attr('href') == '#add-addon' ? "addon" : "package";

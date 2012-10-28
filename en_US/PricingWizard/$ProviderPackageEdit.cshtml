@@ -6,7 +6,9 @@
     var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var attributesInPackage = new List<int>();
     var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
-    string type = PageData["Type"] ?? Request["Type"] ?? "package";
+    string type = PageData["Type"] ?? Request["Type"] ?? "package"; // values: package, addon
+    
+    var isAddon = type == "addon";
     
     if (action == "delete") {
         var sqlDelPackage = @"
@@ -29,11 +31,13 @@
     Validation.RequireField("package-description", LcRessources.RequiredField("Description"));
     Validation.RequireField("price", LcRessources.RequiredField("Price"));
     Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
-    Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of sessions"));
     Validation.Add("price", Validator.Decimal("Price must be a number"));
     Validation.Add("minutes", Validator.Integer("Session duration in minutes must be a number without decimals"));
-    Validation.Add("sessions-number", Validator.Integer("Number of sessions must be a number without decimals"));
-    
+    if (!isAddon) {
+        Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of sessions"));
+        Validation.Add("sessions-number", Validator.Integer("Number of sessions must be a number without decimals"));
+    }
+
     if (IsPost) {
         var checkedAtts = Request.Form.GetValues("package-service-attribute");
         if (checkedAtts != null && checkedAtts.Length > 0) {
@@ -79,7 +83,7 @@
                         ,ProviderPackageServiceDuration = @8
                         ,FirstTimeClientsOnly = @9
                         ,NumberOfSessions = @10
-                        ,IsAddOn = @11
+                        --,IsAddOn = @11
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
                         ,Active = 1
@@ -160,9 +164,9 @@
                     Request["package-description"],
                     Request["price"].AsDecimal(),
                     Request["minutes"].AsDecimal(),
-                    Request["first-time-clients-only"].AsBool(),
-                    Request["sessions-number"].AsInt(),
-                    Request["is-addon"].AsBool()
+                    isAddon ? false : Request["first-time-clients-only"].AsBool(),
+                    isAddon ? 1 : Request["sessions-number"].AsInt(),
+                    isAddon
                 );
                 db.Execute(sqlDelDetails, packageID);
                 foreach(var att in attributesInPackage) {
@@ -230,24 +234,32 @@
             positionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box provider-package" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)">
+<form method="post" class="ajax ajax-box provider-package" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)&Type=@(type)">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
-        <input class="package-name" type="text" name="package-name" placeholder="Type the name of the package; e.g., Introductory Special" value="@(Request["package-name"] ?? (package == null ? "" : package.Name))" />
+        @{
+            var nameHolder = "Type the name of the package; e.g., Introductory Special";
+            if (isAddon) {
+                nameHolder = "Type the name of the add-on";
+            }
+        }
+        <input class="package-name" type="text" name="package-name" placeholder="@nameHolder" value="@(Request["package-name"] ?? (package == null ? "" : package.Name))" />
+        @if (!isAddon)
+        {
         <label class="package-sessions">Number of sessions included in this package: 
             <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "" : package.NumberOfSessions))" /></label>
-        <label class="package-price">Total price for package: 
+        }
+        <label class="package-price">Total price for @(!isAddon ? "package" : "add-on"): 
             <input type="text" name="price" value="@(Request["price"] ?? (package == null ? "" : package.Price))" /></label>
-        <label class="package-duration">Duration of each session: 
+        <label class="package-duration">@(!isAddon ? "Duration of each session:" : "Duration of add-on service:")
             <input type="text" name="minutes" value="@(Request["minutes"] ?? (package == null ? "" : package.ServiceDuration))" /> minutes</label>
+        @if (!isAddon)
+        {
         <label class="only-first-time-clients">
             <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
             This package is only available to first-time clients
         </label>
-        <label class="isaddon">
-            <input type="checkbox" name="is-addon" value="True" @LcHelpers.IsChecked(true, Request["is-addon"] ?? (package == null ? false : package.IsAddOn)) />
-            This package is an Add-On
-        </label>
+        }
         <label class="package-description">
             <textarea name="package-description" placeholder="Describe in full detail what the client will receive.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
         </label>

@@ -1,7 +1,7 @@
 ﻿@{
     dynamic data = PageData["data"];
     dynamic editable = PageData["editable"] ?? Request["editable"].AsBool();
-    string type = PageData["Type"] ?? Request["Type"] ?? "packages";
+    string type = PageData["Type"] ?? Request["Type"] ?? "packages"; // values: packages, addons
 
     var pos = LcData.UserInfo.GetUserCurrentPos();
     if (data == null) {
