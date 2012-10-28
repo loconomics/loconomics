@@ -34,164 +34,167 @@
             
             // Get database data for selected package
             var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
-            var thePackage = paksAndDetails.Packages[0];
+            if (paksAndDetails.Packages.Count == 0) {
+                ModelState.AddFormError("Package selected is not valid");
+            } else {
+                var thePackage = paksAndDetails.Packages[0];
 
-            // Calculate time and price required for selected package
+                // Calculate time and price required for selected package
 
-            // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
-            decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
-            timeFirstSession += sessionTimeInHours;
+                // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
+                decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
+                timeFirstSession += sessionTimeInHours;
             
-            decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
-            timeRequired += packageTimeInHours;
+                decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
+                timeRequired += packageTimeInHours;
             
-            decimal pakPrice = Math.Round(thePackage.Price, 2);
-            totalPackagesPrice += pakPrice;
-            subtotalPrice += pakPrice;
+                decimal pakPrice = Math.Round(thePackage.Price, 2);
+                totalPackagesPrice += pakPrice;
+                subtotalPrice += pakPrice;
             
-            // Calculate time and price for selected addons packages
-            var selectedAddonsData = new List<dynamic>();
-            if (selectedAddons != null && selectedAddons.Length > 0) {
-                foreach (var addon in selectedAddons) {
-                    var addonID = addon.AsInt();
-                    if (addonID > 0) {
-                        var addonData = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, addonID).Packages[0];
+                // Calculate time and price for selected addons packages
+                var selectedAddonsData = new List<dynamic>();
+                if (selectedAddons != null && selectedAddons.Length > 0) {
+                    foreach (var addon in selectedAddons) {
+                        var addonID = addon.AsInt();
+                        if (addonID > 0) {
+                            var addonData = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, addonID).Packages[0];
 
-                        decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
-                        timeFirstSession += sesHours;
+                            decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
+                            timeFirstSession += sesHours;
             
-                        decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
-                        timeRequired += pakHours;
+                            decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
+                            timeRequired += pakHours;
             
-                        decimal addonPrice = Math.Round(addonData.Price, 2);
-                        totalPackagesPrice += addonPrice;
-                        subtotalPrice += addonPrice;
+                            decimal addonPrice = Math.Round(addonData.Price, 2);
+                            totalPackagesPrice += addonPrice;
+                            subtotalPrice += addonPrice;
                         
-                        selectedAddonsData.Add(new {
-                            addonID = addonID
-                            ,sesHours = sesHours
-                            ,pakHours = pakHours
-                            ,addonPrice = addonPrice
-                        });
+                            selectedAddonsData.Add(new {
+                                addonID = addonID
+                                ,sesHours = sesHours
+                                ,pakHours = pakHours
+                                ,addonPrice = addonPrice
+                            });
+                        }
                     }
                 }
-            }
-            
 
-            // Calculating the price for Pricing Options
-            @RenderPage("$CustomerPricingOptions.cshtml", new { 
-                EmbeddedMode = "calculate",
-                PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
-            } );
-            var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
-            timeRequired += optionsCalculation["TimeRequired"];
-            timeFirstSession += optionsCalculation["TimeRequired"];
-            optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
-            subtotalPrice += optionalServicesTotalPrice;
+                // Calculating the price for Pricing Options
+                @RenderPage("$CustomerPricingOptions.cshtml", new { 
+                    EmbeddedMode = "calculate",
+                    PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+                } );
+                var optionsCalculation = LcHelpers.RenderPageReturns["CalculatedData"];
+                timeRequired += optionsCalculation["TimeRequired"];
+                timeFirstSession += optionsCalculation["TimeRequired"];
+                optionalServicesTotalPrice = optionsCalculation["OptionalServicesTotalPrice"];
+                subtotalPrice += optionalServicesTotalPrice;
         
-            feePrice = Math.Round(.1M * subtotalPrice, 2);
-            totalPrice = subtotalPrice + feePrice;
+                feePrice = Math.Round(.1M * subtotalPrice, 2);
+                totalPrice = subtotalPrice + feePrice;
 
-            /* SAVE DATA 
-             */
-            // If request post is not only for calculate, save data
-            if (UrlData[0].ToLower() != "calculate"){       
-                using (var db = Database.Open("sqlloco")){
+                /* SAVE DATA 
+                 */
+                // If request post is not only for calculate, save data
+                if (UrlData[0].ToLower() != "calculate"){       
+                    using (var db = Database.Open("sqlloco")){
                 
-                    /* Save data into the pricingestimate tables
-                     */
-                    /*var revisionID = 1;
-                    var estimateID = 0;
-                    if (PageData["PricingEstimateData"] != null){
-                        try{
-                            estimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
-                            revisionID = (int)PageData["PricingEstimateData"]["PricingEstimateRevision"];
-                        }catch{}
-                    }*/
+                        /* Save data into the pricingestimate tables
+                         */
+                        /*var revisionID = 1;
+                        var estimateID = 0;
+                        if (PageData["PricingEstimateData"] != null){
+                            try{
+                                estimateID = (int)PageData["PricingEstimateData"]["PricingEstimateID"];
+                                revisionID = (int)PageData["PricingEstimateData"]["PricingEstimateRevision"];
+                            }catch{}
+                        }*/
 
-                    // Inserting Estimate with calculated details
-                    var insreturned = db.QuerySingle(LcData.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
-                        pricingtypeid, 
-                        // We use first-session time only because is what affects the schedule of this booking; 
-                        // timeRequired' has the accumulative time of all sessions that will happen on different days
-                        timeFirstSession,
-                        hourPrice, subtotalPrice, feePrice, totalPrice);
-                    pricingEstimateID = insreturned.PricingEstimateID;
-                    pricingEstimateRevision = insreturned.PricingEstimateRevision;
+                        // Inserting Estimate with calculated details
+                        var insreturned = db.QuerySingle(LcData.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
+                            pricingtypeid, 
+                            // We use first-session time only because is what affects the schedule of this booking; 
+                            // timeRequired' has the accumulative time of all sessions that will happen on different days
+                            timeFirstSession,
+                            hourPrice, subtotalPrice, feePrice, totalPrice);
+                        pricingEstimateID = insreturned.PricingEstimateID;
+                        pricingEstimateRevision = insreturned.PricingEstimateRevision;
 
-                    // Inserting details of package selected by customer
-                    db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
-                        0, 0, 0, 0, 
-                        selectedPackage.AsInt(),
-                        null, // there is no provider value
-                        1, // ever quantity 1
-                        0, // systemPricingDataInput
-                        hourPrice,
-                        packageTimeInHours, pakPrice);
-                    
-                    // Inserting details of addons packages selected by customer
-                    foreach (var addon in selectedAddonsData)
-                    {
+                        // Inserting details of package selected by customer
                         db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
                             0, 0, 0, 0, 
-                            addon.addonID,
+                            selectedPackage.AsInt(),
                             null, // there is no provider value
                             1, // ever quantity 1
                             0, // systemPricingDataInput
                             hourPrice,
-                            addon.pakHours, addon.addonPrice);
-                    }
+                            packageTimeInHours, pakPrice);
+                    
+                        // Inserting details of addons packages selected by customer
+                        foreach (var addon in selectedAddonsData)
+                        {
+                            db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
+                                0, 0, 0, 0, 
+                                addon.addonID,
+                                null, // there is no provider value
+                                1, // ever quantity 1
+                                0, // systemPricingDataInput
+                                hourPrice,
+                                addon.pakHours, addon.addonPrice);
+                        }
 
-                    // Execute 'save' code of Pricing Options page
-                    @RenderPage("$CustomerPricingOptions.cshtml", new { 
-                        EmbeddedMode = "back-end", 
-                        EstimateID = pricingEstimateID, RevisionID = pricingEstimateRevision,
-                        PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
-                    } );
-                    if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
-                        ModelState.AddFormError("Options not saved");
-                    }
-                
-                    /*
-                    // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
-                    if (PageData["PricingEstimateData"] == null){
-                        PageData["PricingEstimateData"] = new Dictionary<string, object> { 
-                            { "PricingEstimateID", estimateID }, 
-                            { "PricingEstimateRevision", revisionID },
-                            { "PricingEstimateErrorMessage", "" } };
-                    } else {
-                        PageData["PricingEstimateData"]["PricingEstimateID"] = estimateID;
-                        PageData["PricingEstimateData"]["PricingEstimateRevision"] = revisionID;
-                    }
-                    // We can return a negative data in PageData["PricingEstimateData"]["PricingEstimateID"] to set error code and add
-                    // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
-                    */
-                
-
-                    /*=========================================================================
-                     * NOW: CREATE BOOKING REQUEST AS IN Booking/$Services.cshtml (most next code is cloned from that) */
-                    /*
-                    * Create Booking Request
-                    */
-                    try {
-                        var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
-                            c.UserID, p.UserID, pos.PositionID,
-                            pricingEstimateID,
-                            Request["booking-services-special-instructions"]
-                        );
+                        // Execute 'save' code of Pricing Options page
+                        @RenderPage("$CustomerPricingOptions.cshtml", new { 
+                            EmbeddedMode = "back-end", 
+                            EstimateID = pricingEstimateID, RevisionID = pricingEstimateRevision,
+                            PricingTypeID = pricingtypeid, ClientTypeID = clienttypeid
+                        } );
+                        if (LcHelpers.RenderPageReturns["SavedCode"] != 0) {
+                            ModelState.AddFormError("Options not saved");
+                        }
                 
                         /*
-                         * Do BookingRequestID available for next wizard steps
-                         */
-                        // Saving it at user Session
-                        Session["BookingRequestID"] = (int)bookingRequestID;
+                        // If we have valid IDs, all is OK: instead of return a JSON, we left IDs in PageData
+                        if (PageData["PricingEstimateData"] == null){
+                            PageData["PricingEstimateData"] = new Dictionary<string, object> { 
+                                { "PricingEstimateID", estimateID }, 
+                                { "PricingEstimateRevision", revisionID },
+                                { "PricingEstimateErrorMessage", "" } };
+                        } else {
+                            PageData["PricingEstimateData"]["PricingEstimateID"] = estimateID;
+                            PageData["PricingEstimateData"]["PricingEstimateRevision"] = revisionID;
+                        }
+                        // We can return a negative data in PageData["PricingEstimateData"]["PricingEstimateID"] to set error code and add
+                        // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
+                        */
+                
 
-                    } catch (Exception ex) {
-                        LcHelpers.ReturnJsonError(-1, ex.Message);
+                        /*=========================================================================
+                         * NOW: CREATE BOOKING REQUEST AS IN Booking/$Services.cshtml (most next code is cloned from that) */
+                        /*
+                        * Create Booking Request
+                        */
+                        try {
+                            var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
+                                c.UserID, p.UserID, pos.PositionID,
+                                pricingEstimateID,
+                                Request["booking-services-special-instructions"]
+                            );
+                
+                            /*
+                             * Do BookingRequestID available for next wizard steps
+                             */
+                            // Saving it at user Session
+                            Session["BookingRequestID"] = (int)bookingRequestID;
+
+                        } catch (Exception ex) {
+                            LcHelpers.ReturnJsonError(-1, ex.Message);
+                        }
                     }
+                    // All fine, continue wizard next step:
+                    LcHelpers.ReturnJsonResult(0, null);
                 }
-                // All fine, continue wizard next step:
-                LcHelpers.ReturnJsonResult(0, null);
             }
         }
     }
