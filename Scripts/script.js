@@ -1098,10 +1098,10 @@ function lcSetupCalculateTableItemsTotals() {
         $(this).data('calculate-items-totals-initializated', true);
     });
 }
-LC.setupCalculateSummary = function () {
+LC.setupCalculateSummary = function (force) {
     $('.calculate-summary').each(function () {
         var c = $(this);
-        if (c.data('calculate-summary-initializated'))
+        if (!force && c.data('calculate-summary-initializated'))
             return;
         var s = c.find('.calculation-summary');
         var d = c.find('table.calculate-summary-group');

@@ -348,13 +348,16 @@
                     </table>
                 </div>
             }
-    </fieldset>
+        </fieldset>
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Save & continue</button>
     </fieldset>
     @if (IsPost)
     {
-        <script type="text/javascript">lcSetupCalculateTableItemsTotals();</script>
+        <script type="text/javascript">
+            lcSetupCalculateTableItemsTotals();
+            LC.setupCalculateSummary(true);
+        </script>
     }
 </form>
