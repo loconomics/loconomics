@@ -57,7 +57,23 @@
     text-align: right;
     height: auto;
     margin: 0;
-    padding: 0 0 0 20px;
+}
+.booking table.calculation th {
+    text-align: left;
+}
+.booking table.calculation tr.total > * {
+    padding-top: 16px;
+}
+.booking table.calculation tr.separator td.separator {
+    border-bottom: 1px solid #d8d7d7;
+    height: 0;
+    padding: 4px !important;
+}
+.booking table.calculation .main-item th {
+    font-weight: bold;
+}
+.booking table.calculation .fees {
+    font-size: .9em;
 }
 
 /** Form: Services **/
@@ -395,7 +411,8 @@ html.ie #booking-services .special-instructions legend{
     padding: 0;
 }
 .booking table .package-duration,
-.booking table .package-total-price {
+.booking table .package-total-price,
+.booking table .number {
     text-align: right;
 }
 

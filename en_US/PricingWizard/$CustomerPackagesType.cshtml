@@ -21,9 +21,10 @@
     if (selectedAddons == null) {
         selectedAddons = new string[0];
     }
+    dynamic thePackage = null;
     
     decimal timeRequired = 0, timeFirstSession = 0, hourPrice = 0, feePrice = 0, subtotalPrice = 0, totalPrice = 0, optionalServicesTotalPrice = 0,
-        packagesQuantity = 0, totalPackagesPrice = 0;
+        packagesQuantity = 0, totalPackagesPrice = 0, totalAddonsPrice = 0;
     
     if (IsPost){
         /* DO CALCULATION: (not only on /calculate url, is need to save data too)
@@ -40,7 +41,7 @@
             if (paksAndDetails.Packages.Count == 0) {
                 ModelState.AddFormError("Package selected is not valid");
             } else {
-                var thePackage = paksAndDetails.Packages[0];
+                thePackage = paksAndDetails.Packages[0];
 
                 // Calculate time and price required for selected package
 
@@ -70,7 +71,7 @@
                             timeRequired += pakHours;
             
                             decimal addonPrice = Math.Round(addonData.Price, 2);
-                            totalPackagesPrice += addonPrice;
+                            totalAddonsPrice += addonPrice;
                             subtotalPrice += addonPrice;
                         
                             selectedAddonsData.Add(new {
@@ -308,32 +309,41 @@
             }
             else
             {
-                <div class="calculate-price-button actions">
-                    <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
-                </div>
+
+                    <div class="calculate-price-button actions">
+                        <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
+                    </div>
+
                 <div class="calculation">
                     <table class="calculation">
-                        <tr><th>Time required - first session:</th><td class="time-required">@timeFirstSession.ToString("#,##0.00") hour(s)</td></tr>
-                        <tr><th>Time required - all sessions:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>
-                        <tr>
-                            <th>@packagesQuantity package/s:</th>
-                            <td class="packages-price">$@totalPackagesPrice.ToString("#,##0.00")</td>
+                        @*<tr><td></td><th>Time required - first session:</th><td class="time-required">@timeFirstSession.ToString("#,##0.00") hour(s)</td></tr>
+                        <tr><td></td><th>Time required - all sessions:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>*@
+                        <tr class="main-item">
+                            <td></td><th>@(thePackage == null ? "No package selected" : thePackage.Name)</th>
+                            <td class="packages-price">@totalPackagesPrice.ToString("c")</td>
                         </tr>
                         <tr>
-                            <th>Optional Services</th>
-                            <td class="optional-services">$@optionalServicesTotalPrice.ToString("#,##0.00")</td>
+                            <td></td><th>Add-on services</th>
+                            <td>@totalAddonsPrice.ToString("c")</td>
                         </tr>
                         <tr>
-                            <th>Subtotal:</th>
+                            <td></td><th>Optional Services</th>
+                            <td class="optional-services">@optionalServicesTotalPrice.ToString("c")</td>
+                        </tr>
+                        @*<tr>
+                            <td></td><th>Subtotal</th>
                             <td class="subtotal-price">$@subtotalPrice.ToString("#,##0.00")</td>
+                        </tr>*@
+                        <tr class="separator">
+                            <td></td><td class="separator" colspan="2"></td>
                         </tr>
-                        <tr>
-                            <th>Loconomics service fee:</th>
-                            <td class="fee-price">$@feePrice.ToString("#,##0.00")</td>
+                        <tr class="total">
+                            <td><input type="checkbox" disabled="disabled" style="position:relative;right:99999px"/></td><th class="name">Total price*</th>
+                            <td class="total-price">@totalPrice.ToString("c")</td>
                         </tr>
-                        <tr>
-                            <th>Total price:</th>
-                            <td class="total-price">$@totalPrice.ToString("#,##0.00")</td>
+                        <tr class="fees">
+                            <td></td>
+                            <th>*includes a @feePrice.ToString("c") Loconomics service fee</th>
                         </tr>
                     </table>
                 </div>
@@ -341,7 +351,7 @@
     </fieldset>
     </fieldset>
     <fieldset class="actions">
-        <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Schedule service</button>
+        <button data-wizard-next-step="#schedule" class="button schedule-service-button next main-action">Save & continue</button>
     </fieldset>
     @if (IsPost)
     {
