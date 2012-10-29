@@ -31,41 +31,39 @@
     <legend data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 
-<p class="info">
-    Please review the items below and be as accurate as possible to help your provider do a great job.
-    The price and time require are estimates only and may change depending on actual work performed.   
-</p>
 <form action="@(UrlUtil.LangPath)Booking/$Services/" method="post" class="services" id="booking-services">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <fieldset class="select-services">
-        <legend>Select the services you'd like performed:</legend>
-        @foreach (var cat in dataCats)
-        {
-            if (cat.Value["ServiceAttributes"].Count > 0)
+    <fieldset class="step-blocks">
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        <fieldset class="select-services">
+            <legend>Select the services you'd like performed (some may require an additional fee):</legend>
+            @foreach (var cat in dataCats)
             {
-                <fieldset class="attribute-category @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
-                    @printCatLegend(cat.Value)
-                    <ul>
-                        @foreach(var att in cat.Value["ServiceAttributes"]){
-                            if(att.UserChecked) {
-                                <li>
-                                    <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @LcHelpers.IsChecked(true, (attributes == null ? false : attributes.Contains(((int)att["ServiceAttributeID"]).ToString()))) value="@att["ServiceAttributeID"]" name="positionservices-attributes"/>@att["ServiceAttribute"]</label>
-                                </li>
+                if (cat.Value["ServiceAttributes"].Count > 0)
+                {
+                    <fieldset class="attribute-category @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                        @printCatLegend(cat.Value)
+                        <ul>
+                            @foreach(var att in cat.Value["ServiceAttributes"]){
+                                if(att.UserChecked) {
+                                    <li>
+                                        <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @LcHelpers.IsChecked(true, (attributes == null ? false : attributes.Contains(((int)att["ServiceAttributeID"]).ToString()))) value="@att["ServiceAttributeID"]" name="positionservices-attributes"/>@att["ServiceAttribute"]</label>
+                                    </li>
+                                }
                             }
-                        }
-                    </ul>
-                </fieldset>
+                        </ul>
+                    </fieldset>
+                }
             }
-        }
+        </fieldset>
+        <fieldset class="special-instructions">
+            <legend>Please include any special instructions to help your provider do a great job:</legend>
+            <textarea rows="7" name="booking-services-special-instructions"></textarea>
+        </fieldset>
+        @*RenderPage("_ExamplePricingWizard.cshtml")*@
+        @RenderPage(UrlUtil.LangPath + "PricingWizard/$BookingFieldset.cshtml")
     </fieldset>
-    <fieldset class="special-instructions">
-        <legend>Please include any special instructions to help your provider do a great job:</legend>
-        <textarea rows="7" name="booking-services-special-instructions"></textarea>
-    </fieldset>
-    @*RenderPage("_ExamplePricingWizard.cshtml")*@
-    @RenderPage(UrlUtil.LangPath + "PricingWizard/$BookingFieldset.cshtml")
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
     </fieldset>

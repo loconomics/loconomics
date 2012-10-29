@@ -222,7 +222,7 @@
 <form action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/" method="post" class="services package-pricing calculate-summary" id="booking-services">
     <input type="hidden" name="providerid" value="@pos.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
-    <fieldset class="ajax ajax-box" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/Calculate/?providerid=@(p.UserID)&amp;positionid=@(pos.PositionID)">
+    <fieldset class="ajax ajax-box step-blocks" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/Calculate/?providerid=@(p.UserID)&amp;positionid=@(pos.PositionID)">
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
         <fieldset class="select-packages">

@@ -76,70 +76,15 @@
     font-size: .9em;
 }
 
-/** Form: Services **/
-#booking-services{
-    position: relative;
-}
-#booking-services fieldset.select-services{
-    width: 358px;
-}
-#booking-services .attribute-category{
-    width: 176px;
-}
-#booking-services .attribute-category legend,
-#booking-services .special-instructions legend{
-    font-size: 1em;
-}
-/* Fix a bug in IE */
-html.ie #booking-services .special-instructions legend{
-    display: inline-block;
-}
-#booking-services .special-instructions,
-#booking-services .special-instructions textarea {
-    width: auto;
-    display: block;
-}
-#booking-services .special-instructions textarea {
-    height: 8em;
-    width: 100%;
-    height: 100%; 
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-#booking-services .special-instructions {
-    padding: 0 !important;
-}
-#booking-services .pricing-wizard{
-    width: 670px;
-}
-#booking-services .pricing-wizard li{
-    margin: 2px 0;
-    position: relative;
-}
-#booking-services .pricing-wizard li label{
-    display: inline-block;
-    width: 205px;
-}
-#booking-services .pricing-wizard .pricing-vars select{
-    position: absolute;
-    right: 0;
-    width: 100px;
-}
-#booking-services .pricing-wizard table.pricing-options{
-    width: 100%;
-}
-#booking-services div.calculate-price-button{
-    margin: 7px 0;
-}
-/** Form: Services package pricing **/
-#booking-services.package-pricing {
+/** Form: Shared **/
+#booking-services {
     margin: 0;
+    position: relative;
 }
-#booking-services.package-pricing .ajax-box {
+#booking-services .step-blocks {
     display: block;
 }
-#booking-services.package-pricing .ajax-box fieldset {
+#booking-services .step-blocks fieldset {
     display: block;
     background-color: #fdfbfb;
     position: relative;
@@ -151,12 +96,40 @@ html.ie #booking-services .special-instructions legend{
     -webkit-border-radius: 4px;
     padding: 30px 22px;
 }
-#booking-services.package-pricing .ajax-box fieldset legend {
+#booking-services .step-blocks fieldset legend {
     position: absolute;
     top: -30px;
     left: 0;
     font-size: 1.2em;
 }
+#booking-services .special-instructions {
+    padding: 0 !important;
+}
+#booking-services .special-instructions textarea {
+    height: 8em;
+    width: 100%;
+    height: 100%; 
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+/** Form: Services **/
+#booking-services .pricing-wizard li{
+    margin: 2px 0;
+    position: relative;
+}
+#booking-services .pricing-wizard .pricing-vars select{
+    position: absolute;
+    right: 0;
+    width: 100px;
+}
+#booking-services div.calculate-price-button{
+    margin: 7px 0;
+}
+
+/** Form: Services package pricing **/
+
 #booking-services.package-pricing table {
     width: 100%;
 }
