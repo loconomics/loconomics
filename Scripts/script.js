@@ -1065,25 +1065,74 @@ function smoothBoxBlockCloseAll(container) {
 function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
 }
+LC.getMoneyNumber = function (v) {
+    if (v instanceof jQuery)
+        v = v.val() || v.text();
+    return parseFloat((v || '0').replace(/[$€]/g, ''));
+};
+LC.setMoneyNumber = function (v, el) {
+    v = Math.round(v * 100) / 100;
+    v = '$' + v;
+    if (el instanceof jQuery)
+        if (el.is(':input'))
+            el.val(v);
+        else
+            el.text(v);
+    return v;
+};
 function lcSetupCalculateTableItemsTotals() {
     $('table.calculate-items-totals').each(function () {
         if ($(this).data('calculate-items-totals-initializated'))
             return;
-        function getNumber(v) {
-            return parseFloat((v || '0').replace(/[$€]/g, ''));
-        }
         function calculateRow() {
             var $t = $(this);
             var tr = $t.closest('tr');
             var ip = tr.find('.calculate-item-price');
             var iq = tr.find('.calculate-item-quantity');
             var it = tr.find('.calculate-item-total');
-            it.text(Math.round((getNumber(ip.val() || ip.text()) * getNumber(iq.val() || iq.text())) * 100) / 100);
+            LC.setMoneyNumber(LC.getMoneyNumber(ip) * LC.getMoneyNumber(iq), it);
+            tr.trigger('lcCalculatedItemTotal', tr);
         }
         $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
         $(this).find('tr').each(calculateRow);
+        $(this).data('calculate-items-totals-initializated', true);
     });
 }
+LC.setupCalculateSummary = function () {
+    $('.calculate-summary').each(function () {
+        var c = $(this);
+        if (c.data('calculate-summary-initializated'))
+            return;
+        var s = c.find('.calculation-summary');
+        var d = c.find('table.calculate-summary-group');
+        function calc() {
+            var total = 0;
+            var groups = {};
+            d.each(function () {
+                var groupTotal = 0;
+                $(this).find('tr').each(function () {
+                    var item = $(this);
+                    if (item.find('.calculate-item-checked').is(':checked')) {
+                        groupTotal += LC.getMoneyNumber(item.find('.calculate-item-total:eq(0)'));
+                    }
+                });
+                total += groupTotal;
+                groups[$(this).data('calculation-summary-group')] = groupTotal;
+            });
+
+            // Set summary total value
+            LC.setMoneyNumber(total, s.find('.calculation-summary-total'));
+            // And every group total value
+            for (var g in groups) {
+                LC.setMoneyNumber(groups[g], s.find('.calculation-summary-group-' + g));
+            }
+        }
+        d.find('.calculate-item-checked').change(calc);
+        d.on('lcCalculatedItemTotal', calc);
+        calc();
+        c.data('calculate-summary-initializated', true);
+    });
+};
 function convertMilesKm(q, unit) {
     var MILES_TO_KM = 1.609;
     if (unit == 'miles')
@@ -1280,6 +1329,7 @@ $(function () {
 
     /* Auto calculate table items total (quantity*unitprice=item-total) script */
     lcSetupCalculateTableItemsTotals();
+    LC.setupCalculateSummary();
 
     /* Active/Desactive search filters */
     $(".buttons-list .button").click(function () { $(this).toggleClass('selected'); return false; });
@@ -1666,10 +1716,10 @@ $(function () {
 
 
     /*
-     * Communicate that script.js is ready to be used
-     * and the common LC lib too.
-     * Both are ensure to be raised ever after page is ready too.
-     */
+    * Communicate that script.js is ready to be used
+    * and the common LC lib too.
+    * Both are ensure to be raised ever after page is ready too.
+    */
     $(document)
     .trigger('lcScriptReady')
     .trigger('lcLibReady');

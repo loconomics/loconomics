@@ -212,7 +212,7 @@
         { "OptionsCount", poptions.Count }
     };
     if (poptions.Count > 0) {
-        <table class="pricing-options calculate-items-totals">
+        <table class="pricing-options calculate-items-totals calculate-summary-group" data-calculation-summary-group="options">
             <thead>
                 <tr>
                     <th></th>
@@ -227,7 +227,7 @@
             @foreach (var popt in poptions)
             {
                 <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
-                    <td><input type="checkbox" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" /></td>
+                    <td><input type="checkbox" class="calculate-item-checked" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" /></td>
                     <td class="pricing-option-check name">
                         <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                     </td>
@@ -261,7 +261,7 @@
                     }
                     </td>
                     <td class="pricing-option-total-price calculated number money">
-                        $<span class="calculate-item-total">@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("#,##0.00"))</span>
+                        <span class="calculate-item-total">@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("c"))</span>
                     </td>
                 </tr>
             }

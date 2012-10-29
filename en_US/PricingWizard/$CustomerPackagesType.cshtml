@@ -219,7 +219,7 @@
     }
 }
 
-<form action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/" method="post" class="services package-pricing" id="booking-services">
+<form action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/" method="post" class="services package-pricing calculate-summary" id="booking-services">
     <input type="hidden" name="providerid" value="@pos.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     <fieldset class="ajax ajax-box" data-ajax-fieldset-action="@(UrlUtil.LangPath)PricingWizard/$CustomerPackagesType/Calculate/?providerid=@(p.UserID)&amp;positionid=@(pos.PositionID)">
@@ -227,7 +227,7 @@
 
         <fieldset class="select-packages">
             <legend>Please select a package</legend>
-            <table class="packages-list">
+            <table class="packages-list calculate-summary-group" data-calculation-summary-group="packages">
                 <tr>
                     <th></th>
                     <th class="package-name name">Name</th>
@@ -241,14 +241,14 @@
                     {
                     <tr>
                         <td>
-                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, Request["provider-package"]) name="provider-package" value="@pak.ProviderPackageID" />
+                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, Request["provider-package"]) name="provider-package" value="@pak.ProviderPackageID" />
                         </td>
                         <td class="package-name name">
                             <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                         </td>
                         <td class="package-sessions number">@pak.NumberOfSessions</td>
                         <td class="package-duration number">@pak.ServiceDuration minutes</td>
-                        <td class="package-total-price number">@(String.Format("{0:c}", pak.Price))</td>
+                        <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
                     </tr>
                     }
                 }
@@ -258,7 +258,7 @@
         {
         <fieldset class="packages-list packages-add-ons">
             <legend>Select add-on services</legend>
-            <table class="packages-list">
+            <table class="packages-list calculate-summary-group" data-calculation-summary-group="addons">
                 <tr>
                     <th></th>
                     <th class="package-name name">Name</th>
@@ -271,13 +271,13 @@
                     {
                     <tr>
                         <td>
-                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
+                            <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
                         </td>
                         <td class="package-name name">
                             <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                         </td>
                         <td class="package-duration number">@pak.ServiceDuration minutes</td>
-                        <td class="package-total-price number">@(String.Format("{0:c}", pak.Price))</td>
+                        <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
                     </tr>
                     }
                 }
@@ -315,20 +315,20 @@
                     </div>
 
                 <div class="calculation">
-                    <table class="calculation">
+                    <table class="calculation calculation-summary">
                         @*<tr><td></td><th>Time required - first session:</th><td class="time-required">@timeFirstSession.ToString("#,##0.00") hour(s)</td></tr>
                         <tr><td></td><th>Time required - all sessions:</th><td class="time-required">@timeRequired.ToString("#,##0.00") hour(s)</td></tr>*@
                         <tr class="main-item">
-                            <td></td><th>@(thePackage == null ? "No package selected" : thePackage.Name)</th>
-                            <td class="packages-price">@totalPackagesPrice.ToString("c")</td>
+                            <td></td><th>@(thePackage == null ? "Package" : thePackage.Name)</th>
+                            <td class="packages-price calculation-summary-group-packages">@totalPackagesPrice.ToString("c")</td>
                         </tr>
                         <tr>
                             <td></td><th>Add-on services</th>
-                            <td>@totalAddonsPrice.ToString("c")</td>
+                            <td class="calculation-summary-group-addons">@totalAddonsPrice.ToString("c")</td>
                         </tr>
                         <tr>
                             <td></td><th>Optional Services</th>
-                            <td class="optional-services">@optionalServicesTotalPrice.ToString("c")</td>
+                            <td class="optional-services calculation-summary-group-options">@optionalServicesTotalPrice.ToString("c")</td>
                         </tr>
                         @*<tr>
                             <td></td><th>Subtotal</th>
@@ -339,7 +339,7 @@
                         </tr>
                         <tr class="total">
                             <td><input type="checkbox" disabled="disabled" style="position:relative;right:99999px"/></td><th class="name">Total price*</th>
-                            <td class="total-price">@totalPrice.ToString("c")</td>
+                            <td class="calculation-summary-total total-price">@totalPrice.ToString("c")</td>
                         </tr>
                         <tr class="fees">
                             <td></td>
