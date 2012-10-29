@@ -26,7 +26,7 @@ var ProviderSignUp = {
                     positionsList.append(tpl.clone()
                     .removeClass('template')
                     .data('position-id', ui.item.value)
-                    .children('.name').text(ui.item.label)
+                    .children('.name').text(ui.item.positionSingular) // .label
                     .end().children('[name=position]').val(ui.item.value)
                     .end());
                 }
@@ -34,13 +34,13 @@ var ProviderSignUp = {
                 c.find('.position-description > textarea').val(ui.item.description);
 
                 // We want show the label (position name) in the textbox, not the id-value
-                $(this).val(ui.item.label);
+                $(this).val(ui.item.positionSingular);
                 return false;
             },
             focus: function (event, ui) {
-                if (!ui || !ui.item || !ui.item.label);
+                if (!ui || !ui.item || !ui.item.positionSingular);
                 // We want the label in textbox, not the value
-                $(this).val(ui.item.label);
+                $(this).val(ui.item.positionSingular);
                 return false;
             }
         });
