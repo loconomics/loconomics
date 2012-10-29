@@ -19,6 +19,7 @@ public static partial class LcData
         bool excludeCats = false;
         // This bool config set that only attributes related to the userId must be returned (query field 'UserChecked' == True)
         bool onlyUserChecked = false;
+        bool onlyBookingServices = false;
 
         List<string> filterList = new List<string>();
         // Reading filters:
@@ -44,14 +45,17 @@ public static partial class LcData
                 case "only-user-checked":
                     onlyUserChecked = true;
                     break;
+                case "booking-services":
+                    onlyBookingServices = true;
+                    break;
             }
 
-        var sqlcat = "exec GetServiceAttributeCategories @0, @1, @2";
+        var sqlcat = "exec GetServiceAttributeCategories @0, @1, @2, @3";
         var sqlattribute = "exec GetServiceAttributes @0, @1, @2, @3, @4, @5";
 
         using (var db = Database.Open("sqlloco"))
         {
-            var catrow = db.Query(sqlcat, positionId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            var catrow = db.Query(sqlcat, positionId, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), onlyBookingServices);
 
             // Iterate the categories
             foreach (var cat in catrow)

@@ -13,16 +13,7 @@
             throw new Exception(inputdataerrormessage);
         }
     }
-  
-    var sqlattribute = "exec GetServiceAttributes @0,@1,1,1,@2";
-    
-    dynamic services;
-    int servicesId = 2;
-    
-    using (var db = Database.Open("sqlloco")){
-        // Getting the 'Services routinely included' (cat=2)
-        services = db.Query(sqlattribute, pos.PositionID, servicesId, p.UserID);
-    }
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
    
     /*
      * DATA PROCESSING IS DID AT THE END OF FILE, TO ALLOW WORK PRICING WIZARD PAGES
@@ -33,6 +24,11 @@
         { "PricingEstimateID", 0 }, 
         { "PricingEstimateRevision", 0 },
         { "PricingEstimateErrorMessage", "" } };
+        
+    var attributes = Request.Form.GetValues("positionservices-attributes");       
+}
+@helper printCatLegend(dynamic cat){
+    <legend data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 
 <p class="info">
@@ -45,17 +41,24 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="select-services">
         <legend>Select the services you'd like performed:</legend>
-        <fieldset class="attribute-category attribute-category-1">
-            <legend>Services regularly included:</legend>
-            <ul>
-                @foreach(var att in services){
-                    // Only provider checked attributes
-                    if (att.UserChecked) {
-                    <li><label><input type="checkbox" name="positionservices-category[@(servicesId)]-attribute[@(att.ServiceAttributeID)]"/>@att.ServiceAttribute</label></li>
-                    }
-                }
-            </ul>
-        </fieldset>
+        @foreach (var cat in dataCats)
+        {
+            if (cat.Value["ServiceAttributes"].Count > 0)
+            {
+                <fieldset class="attribute-category @(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                    @printCatLegend(cat.Value)
+                    <ul>
+                        @foreach(var att in cat.Value["ServiceAttributes"]){
+                            if(att.UserChecked) {
+                                <li>
+                                    <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @LcHelpers.IsChecked(true, (attributes == null ? false : attributes.Contains(((int)att["ServiceAttributeID"]).ToString()))) value="@att["ServiceAttributeID"]" name="positionservices-attributes"/>@att["ServiceAttribute"]</label>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </fieldset>
+            }
+        }
     </fieldset>
     <fieldset class="special-instructions">
         <legend>Please include any special instructions to help your provider do a great job:</legend>
@@ -67,18 +70,9 @@
         <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
     </fieldset>
 </form>
-
 @{
     if (IsPost && Validation.IsValid()){
 
-        var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
-        
-        // Iterate categories and attributes, save what are checked and remove what not
-        var cats = new Dictionary<int, dynamic>();
-        cats.Add(servicesId, services);
-        //cats.Add(serviceswithfeesId, serviceswithfees);
-        
-        
         // Only if we have a PricingEstimateID all is fine
         // and we can create the Booking Request.
         // ID is returned by the Pricing Wizard, that already save his data.
@@ -102,19 +96,15 @@
                     /*
                     * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
                     */
-                    foreach (var cat in cats) {
-                        foreach (var att in cat.Value) {
-                            // Check if selection changes
-                            bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
-                            if (wasChecked) {
-                                // Set record (insert or update)
-                                db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, 
-                                    1, // Revision: Must be 1 ever at Booking Request
-                                    0, 0, 0,
-                                    att.ServiceAttributeID,
-                                    0, null, null, // There is no input data
-                                    0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
-                            }
+                    if (attributes != null) {
+                        foreach (var att in attributes) {
+                            // Set record (insert or update)
+                            db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, 
+                                1, // Revision: Must be 1 ever at Booking Request
+                                0, 0, 0,
+                                att.AsInt(),
+                                0, null, null, // There is no input data
+                                0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
                         }
                     }
                     
