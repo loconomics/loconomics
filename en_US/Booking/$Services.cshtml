@@ -62,12 +62,13 @@
                 }
             </fieldset>
         }
+
+        @RenderPage(UrlUtil.LangPath + "PricingWizard/$BookingFieldset.cshtml")
+
         <fieldset class="special-instructions">
             <legend>Please include any special instructions to help your provider do a great job:</legend>
             <textarea rows="7" name="booking-services-special-instructions"></textarea>
         </fieldset>
-        @*RenderPage("_ExamplePricingWizard.cshtml")*@
-        @RenderPage(UrlUtil.LangPath + "PricingWizard/$BookingFieldset.cshtml")
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Schedule service</button>
