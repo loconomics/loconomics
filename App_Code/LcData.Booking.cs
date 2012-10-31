@@ -765,6 +765,28 @@ public static partial class LcData
 
             return bookingRequestID;
         }
+
+        public static dynamic GetFeeFor(int customerUserID, int providerUserID, int pricingTypeID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT 
+                        ServiceFeeAmount
+                        ,ServiceFeeCurrency
+                        ,ServiceFeePercentage
+                        ,PaymentProcessingFee
+                    FROM BookingType
+                    WHERE BookingTypeID = (
+                        SELECT TOP 1 CASE
+                            WHEN EXISTS (SELECT * FROM BookingRequest As B 
+                                WHERE B.BookingRequestStatusID = 7 AND B.CustomerUserID = @0 AND B.ProviderUserID = @1)
+                            THEN 2
+                            ELSE 1 END
+                    )
+                ", customerUserID, providerUserID, pricingTypeID);
+            }
+        }
         #endregion
     }
 }

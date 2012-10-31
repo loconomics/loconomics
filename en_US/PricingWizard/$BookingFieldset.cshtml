@@ -19,8 +19,8 @@
     
     using (var db = Database.Open("sqlloco")){
         
-        // TODO: Get Customer Type Id   
-        var clienttypeid = PageData["ClientTypeID"] = 1;     
+        // TODO: Get Customer Type Id
+        var clienttypeid = PageData["ClientTypeID"] = 1;
         
         // Get our Pricing Type ID:
         int pricingtypeid = PageData["PricingTypeID"] ?? LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);

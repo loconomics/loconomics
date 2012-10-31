@@ -168,11 +168,18 @@
     }
 }
 @helper getChecked(string name, string value, dynamic poptvar){
-    // Get checked if was setted by form of is was previously setted at database
-    @Html.Raw((Request[name] == value || poptvar.CustomerDataInputValue != null) ? "checked='checked'" : "")
+    if (IsPost) {
+        @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+    } else {
+        @Html.Raw(poptvar.CustomerDataInputValue != null ? "checked='checked'" : "")
+    }
 }
 @helper getSelected(string name, string value, dynamic poptvar){
-    @Html.Raw((Request[name] == value || poptvar.CustomerDataInputValue == value) ? "selected='selected'" : "")
+    if (IsPost) {
+        @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+    } else {
+        @Html.Raw(poptvar.CustomerDataInputValue == value ? "selected='selected'" : "")
+    }
 }
 @if (pvars.Count > 0)
 {

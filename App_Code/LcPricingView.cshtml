@@ -1,0 +1,93 @@
+﻿
+@* 
+ * View Helpers
+ *@
+@helper getChecked(string name, string value, dynamic poptvar){
+    if (IsPost) {
+        @Html.Raw(Request[name] == value ? "checked='checked'" : "")
+    } else {
+        @Html.Raw(poptvar.CustomerDataInputValue != null ? "checked='checked'" : "")
+    }
+}
+@helper getSelected(string name, string value, dynamic poptvar){
+    if (IsPost) {
+        @Html.Raw(Request[name] == value ? "selected='selected'" : "")
+    } else {
+        @Html.Raw(poptvar.CustomerDataInputValue == value ? "selected='selected'" : "")
+    }
+}
+
+@*
+ * VIEWS, implemented as helpers
+ *@
+
+@helper Services(dynamic viewData, dynamic services) {
+
+}
+
+@helper Variables(dynamic viewData, dynamic pvars) {
+    var idprefix = "pricingwizard";
+
+    <ul class="pricing-vars">
+    @foreach (var pvar in pvars)
+    {
+        <li class="@pvar.PricingVariableName data-type-@pvar.CustomerDataInputType">
+            <label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label>
+            @switch ((string)@pvar.CustomerDataInputType)
+            {
+                case "dropdown":
+                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
+                        @{
+                            var optvalues = LcHelpers.GetValuesFromCSVLine(pvar.CustomerDataValues);
+                            foreach (string optv in optvalues)
+                            {
+                                var v = optv.Trim();
+                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
+                            }
+                        }
+                    </select>
+                    break;
+                case "number":
+                case "text":
+                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.CustomerDataInputValue)"/>
+                    break;
+                case "":
+                    break;
+                default:
+                    <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
+                    break;
+            }
+        </li>
+    }
+    </ul>
+}
+
+@helper PricingSummary(dynamic viewData, LcPricingModel.PricingModelData summary, decimal hourPrice) {
+    // TODO: re-do with summary-groups on rows instead current timerequired and optionalservices, groups
+    // per variables, options, packages, addons like in current packages summary
+
+    <div class="calculate-price-button actions">
+        <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
+    </div>
+    <div class="calculation">
+        <table class="calculation">
+            <tr><th>Time required:</th><td class="time-required">@(summary.ServiceDuration.ToString("c")) hour(s)</td></tr>
+            <tr>
+                <th><span class="time-required">@summary.ServiceDuration.ToString("c") hour(s)</span> @@ <span class="hour-price">@hourPrice.ToString("c")</span></th>
+                <td class="subtotal-price">@summary.SubtotalPrice.ToString("c")</td>
+            </tr>
+            @*<tr>
+                <th>Optional Services</th>
+                <td class="optional-services">@summary.optionalServicesTotalPrice.ToString("c")</td>
+            </tr>*@
+            <tr>
+                <th>Loconomics service fee:</th>
+                <td class="fee-price">@summary.FeePrice.ToString("c")</td>
+            </tr>
+            <tr>
+                <th>Total price:</th>
+                <td class="total-price">@summary.TotalPrice.ToString("c")</td>
+            </tr>
+        </table>
+    </div>
+}

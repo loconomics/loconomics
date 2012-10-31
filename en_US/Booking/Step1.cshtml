@@ -1,0 +1,178 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var customer = PageData["customerrow"] ?? (PageData["customerrow"] = LcData.UserInfo.GetUserRow());
+    var provider = PageData["providerrow"] ?? (PageData["providerrow"] = LcData.UserInfo.GetUserRow(Request["providerid"].AsInt()));
+    var position = PageData["positionrow"] ?? (PageData["positionrow"] = LcData.UserInfo.GetUserPos(
+        Request["providerid"].AsInt(),
+        Request["positionid"].AsInt()));
+    
+    var data = getData(customer, provider, position);
+    
+    var summary = new LcPricingModel.PricingModelData();
+    
+    if (IsPost) {
+        processData(customer, provider, position, data, summary);
+    }
+    
+    var viewData = new {
+        Success = false
+    };
+}
+@functions{
+    dynamic getData(dynamic c, dynamic p, dynamic pos) {
+        
+        // General Data
+        // TODO: Get Customer Type Id
+        var clienttypeid = 1;
+        
+        // Get our Pricing Type ID:
+        int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
+        
+        // Get provider hour price
+        var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
+
+        // Services: categories and attributes
+        var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
+        var thereAreAttributes = false;
+        foreach (var cat in dataCats) {
+            if (thereAreAttributes) {
+                break;
+            }
+            foreach (var att in cat.Value["ServiceAttributes"]) {
+                thereAreAttributes = true;
+                break;
+            }
+        }
+        
+        // Booking type with fees policy
+        var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
+        
+        // Variables
+        // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
+        // previously values for a variable, that variable will not be returned.
+        var pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+        
+        // Options
+        
+        // Packages
+        
+        // Add-ons
+        
+        return new {
+            ContainsServices = thereAreAttributes,
+            Services = dataCats,
+            ContainsVariables = pvars.Count > 0,
+            Variables = pvars,
+            ContainsOptions = false,
+            Options = (dynamic)null,
+            Fee = fee,
+            HourPrice = hourPrice,
+            PricingTypeID = pricingtypeid,
+            ClientTypeID = clienttypeid
+        };
+    }
+    
+    void processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingModelData summary) {
+
+        var mustSave = UrlData[0].ToLower() != "calculate";
+
+        // Calculate & Save
+        if (data.ContainsVariables) {
+            
+            /* Calculate summary
+             */
+            var mdVariables = LcPricingModel.CalculateVariables(data.Variables, data.HourPrice, data.Fee);
+            addCalculationsToSummary(mdVariables, summary);
+
+            /* Save all data?
+             */
+            if (mustSave) {
+                // Create Pricing Estimate with calculated summary
+                // We ever create a new estimate with revision 1 here
+                int estimateID = 0, revisionID = 1;
+                var estimate = LcData.Booking.CreatePricingEstimate(
+                    estimateID,
+                    revisionID,
+                    data.PricingTypeID,
+                    /*calculationSummary.timeRequired,
+                    calculationSummary.hourPrice,
+                    calculationSummary.subtotalPrice,
+                    calculationSummary.feePrice,
+                    calculationSummary.totalPrice);*/
+                    summary.ServiceDuration,
+                    data.HourPrice,
+                    summary.SubtotalPrice,
+                    summary.FeePrice,
+                    summary.TotalPrice);
+                // IDs created:
+                estimateID = estimate.PricingEstimateID;
+                revisionID = estimate.PricingEstimateRevision;
+            
+                /* Save every detail 
+                 */
+                if (data.ContainsVariables) {
+                    LcPricingModel.SaveVariables(estimateID, revisionID, data.Variables, c.UserID, data.HourPrice, mdVariables.Data.PricingVariablesNumbers);
+                }
+            }
+        }
+    }
+    
+    void addCalculationsToSummary(LcPricingModel.PricingModelData calc, LcPricingModel.PricingModelData summary) {
+        summary.ServiceDuration += calc.ServiceDuration;
+        summary.SubtotalPrice += calc.SubtotalPrice;
+        summary.FeePrice += calc.FeePrice;
+        summary.TotalPrice += calc.TotalPrice;
+    }
+}
+
+<form id="booking-services" action="@(UrlUtil.LangPath)Booking/Step1/" method="post" class="services package-pricing calculate-summary">
+    <input type="hidden" name="providerid" value="@provider.UserID"/>
+    <input type="hidden" name="positionid" value="@position.PositionID"/>
+    <fieldset class="pricing-wizard ajax ajax-box step-blocks" data-ajax-fieldset-action="@(UrlUtil.LangPath)Booking/Step1/Calculate/?providerid=@(provider.UserID)&amp;positionid=@(position.PositionID)">
+        @if (data.ContainsServices)
+        {
+            <fieldset>
+                <legend>Select Services</legend>
+                @LcPricingView.Services(viewData, data.Services)
+            </fieldset>
+        }
+
+        @if (data.ContainsVariables)
+        {
+            <fieldset>
+                <legend>Variables</legend>
+                @LcPricingView.Variables(viewData, data.Variables)
+            </fieldset>
+        }
+    
+        @if (!data.ContainsServices && !data.ContainsVariables && !data.ContainsOptions)
+        {
+            <div class="no-pricing-wizard">
+                Currently we're unable to provide a pricing estimate for this provider. Please proceed to book a free estimate with the provider to determine a fair price together.
+            </div>
+        }
+        else
+        {
+            <fieldset>
+                <legend>Pricing summary</legend>
+                @LcPricingView.PricingSummary(viewData, summary, data.HourPrice)
+            </fieldset>
+        }
+
+        <fieldset class="special-instructions">
+            <legend>Any details that might help @provider.FirstName perform the service better?</legend>
+            <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
+        </fieldset>
+    </fieldset>
+    <fieldset class="actions">
+        <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Save & continue</button>
+    </fieldset>
+    @if (IsPost)
+    {
+        <script type="text/javascript">
+            lcSetupCalculateTableItemsTotals();
+            LC.setupCalculateSummary(true);
+        </script>
+    }
+</form>
