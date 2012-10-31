@@ -306,4 +306,32 @@ public static class LcPricingModel
         }
     }
     #endregion
+
+    #region Packages
+    public static PricingModelData CalculatePackages(dynamic packages, dynamic feeData)
+    {
+        var modelData = new PricingModelData();
+        return modelData;
+    }
+    public static void SavePackages(
+        int estimateID,
+        int revisionID,
+        dynamic packages)
+    {
+    }
+    #endregion
+
+    #region Addons
+    public static PricingModelData CalculateAddons(dynamic addons, dynamic feeData)
+    {
+        var modelData = new PricingModelData();
+        return modelData;
+    }
+    public static void SaveAddons(
+        int estimateID,
+        int revisionID,
+        dynamic addons)
+    {
+    }
+    #endregion
 }

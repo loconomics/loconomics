@@ -17,6 +17,8 @@
         modelsData = processData(customer, provider, position, data, summary);
     }
     
+    // TODO I believe that finally is not need, is not being used, and is not reset
+    // between view calls
     var viewData = new {
         Success = false
     };
@@ -61,8 +63,10 @@
         var poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
         
         // Packages
+        var packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
         
         // Add-ons
+        var addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
         
         // Return struct with all data and availability information (Contains* properties)
         return new {
@@ -72,6 +76,10 @@
             Variables = pvars,
             ContainsOptions = poptions.Count > 0,
             Options = poptions,
+            ContainsPackages = packages.Packages.Count > 0,
+            Packages = packages,
+            ContainsAddons = addons.Packages.Count > 0,
+            Addons = addons,
             Fee = fee,
             HourPrice = hourPrice,
             PricingTypeID = pricingtypeid,
@@ -86,7 +94,7 @@
         var mustSave = UrlData[0].ToLower() != "calculate";
 
         // Calculate & Save
-        LcPricingModel.PricingModelData mdVariables = null, mdOptions = null, mdPackages = null;
+        LcPricingModel.PricingModelData mdVariables = null, mdOptions = null, mdPackages = null, mdAddons = null;
 
         try {
                 
@@ -94,13 +102,23 @@
              */
             if (data.ContainsVariables) {
                 mdVariables = LcPricingModel.CalculateVariables(data.Variables, data.HourPrice, data.Fee);
-                rtn.Add("variables", mdVariables);
+                //rtn.Add("variables", mdVariables);
                 addCalculationsToSummary(mdVariables, summary);
             }
             if (data.ContainsOptions) {
                 mdOptions = LcPricingModel.CalculateOptions(data.Options, data.Fee);
                 rtn.Add("options", mdOptions);
                 addCalculationsToSummary(mdOptions, summary);
+            }
+            if (data.ContainsPackages) {
+                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee);
+                //rtn.Add("packages", mdPackages);
+                addCalculationsToSummary(mdPackages, summary);
+            }
+            if (data.ContainsAddons) {
+                mdAddons = LcPricingModel.CalculatePackages(data.Addons, data.Fee);
+                //rtn.Add("addons", mdAddons);
+                addCalculationsToSummary(mdAddons, summary);
             }
 
             /* Save all data?
@@ -133,7 +151,13 @@
                 if (data.ContainsOptions) {
                     LcPricingModel.SaveOptions(estimateID, revisionID, data.Options, c.UserID, mdOptions.Data["PricingOptionsNumbers"]);
                 }
-                
+                if (data.ContainsPackages) {
+                    LcPricingModel.SavePackages(estimateID, revisionID, data.Packages);
+                }
+                if (data.ContainsAddons) {
+                    LcPricingModel.SaveAddons(estimateID, revisionID, data.Addons);
+                }
+
                 /*
                 * Create Booking Request
                 */
@@ -185,6 +209,22 @@
             <fieldset>
                 <legend>Select Services</legend>
                 @LcPricingView.Services(viewData, data.Services)
+            </fieldset>
+        }
+        
+        @if (data.ContainsPackages)
+        {
+            <fieldset>
+                <legend>Please select a package</legend>
+                @LcPricingView.Packages(viewData, data.Packages)
+            </fieldset>
+        }
+        
+        @if (data.ContainsAddons)
+        {
+            <fieldset>
+                <legend>Select add-on services</legend>
+                @LcPricingView.Packages(viewData, data.Addons)
             </fieldset>
         }
 

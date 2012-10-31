@@ -820,7 +820,7 @@ public static partial class LcData
         public dynamic Packages;
         public dynamic PackagesDetails;
     }
-    public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1)
+    public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1, int type = -1)
     {
         dynamic packages, details;
         using (var db = Database.Open("sqlloco")){
@@ -841,7 +841,8 @@ public static partial class LcData
                          AND 
                         p.Active = 1
                          AND (@4 = -1 OR ProviderPackageID = @4)
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID);
+                         AND (@5 = -1 OR p.IsAddOn = @5)
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
             details = db.Query(@"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -859,8 +860,9 @@ public static partial class LcData
                          AND P.LanguageID = @2 AND P.CountryID = @3
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
+                         AND (@5 = -1 OR P.IsAddOn = @5)
                 ORDER BY A.Name ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID);
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
         }
         return new ProviderPackagesView { Packages = packages, PackagesDetails = details };
     }

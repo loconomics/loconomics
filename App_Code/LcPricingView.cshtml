@@ -143,6 +143,66 @@
     </table>
 }
 
+@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages) {
+    var idprefix = "pricingwizard";
+    var preSelectedPackage = Request["PackageID"];
+    var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
+
+    <table class="packages-list calculate-summary-group" data-calculation-summary-group="packages">
+        <tr>
+            <th></th>
+            <th class="package-name name">Name</th>
+            <th class="package-sessions number">Included sessions</th>
+            <th class="package-duration number">Duration</th>
+            <th class="package-total-price number">Price</th>
+        </tr>
+        @foreach (var pak in packages.Packages)
+        {
+            <tr>
+                <td>
+                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
+                </td>
+                <td class="package-name name">
+                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+                </td>
+                <td class="package-sessions number">@pak.NumberOfSessions</td>
+                <td class="package-duration number">@pak.ServiceDuration minutes</td>
+                <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
+            </tr>
+        }
+    </table>
+}
+
+@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons) {
+    var idprefix = "pricingwizard";
+    var selectedAddons = Request.Form.GetValues("provider-package-addons");
+    if (selectedAddons == null) {
+        selectedAddons = new string[0];
+    }
+
+    <table class="packages-list calculate-summary-group" data-calculation-summary-group="addons">
+        <tr>
+            <th></th>
+            <th class="package-name name">Name</th>
+            <th class="package-duration number">Duration</th>
+            <th class="package-total-price number">Price</th>
+        </tr>
+        @foreach (var pak in addons.Packages)
+        {
+            <tr>
+                <td>
+                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
+                </td>
+                <td class="package-name name">
+                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+                </td>
+                <td class="package-duration number">@pak.ServiceDuration minutes</td>
+                <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
+            </tr>
+        }
+    </table>
+}
+
 @helper PricingSummary(dynamic viewData, LcPricingModel.PricingModelData summary, decimal hourPrice) {
     // TODO: re-do with summary-groups on rows instead current timerequired and optionalservices, groups
     // per variables, options, packages, addons like in current packages summary
