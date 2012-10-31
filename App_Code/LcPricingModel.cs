@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WebMatrix.Data;
 using System.Web;
+using System.Web.WebPages;
 
 /// <summary>
 /// Models for LcPricingView views
@@ -25,6 +26,31 @@ public static class LcPricingModel
         public dynamic Data = null;
     }
 
+    /// <summary>
+    /// Small utility, convert database scheme data about
+    /// fee to apply into an easy struct with Percentage
+    /// and Currency fee to be applied, with default to 0
+    /// when no apply one of them
+    /// </summary>
+    /// <param name="feeData"></param>
+    /// <returns></returns>
+    static dynamic GetFee(dynamic feeData)
+    {
+        decimal feePercentage = 0M, feeCurrency = 0M;
+        if (feeData.ServiceFeeCurrency)
+        {
+            feeCurrency = feeData.ServiceFeeAmount;
+        }
+        if (feeData.ServiceFeePercentage)
+        {
+            feePercentage = feeData.ServiceFeeAmount;
+        }
+        return new {
+            Percentage = feePercentage,
+            Currency = feeCurrency
+        };
+    }
+
     #region Variables
     /// <summary>
     /// Calculate fees and summary for pricing variables, returning it
@@ -35,7 +61,6 @@ public static class LcPricingModel
     /// <returns></returns>
     public static PricingModelData CalculateVariables(dynamic pvars, decimal hourPrice, dynamic feeData)
     {
-
         var modelData = new PricingModelData();
 
         // Collection to save time and price for each pricing variable item
@@ -91,18 +116,10 @@ public static class LcPricingModel
             pricingVariablesNumbers[pvar.PricingVariableID] = new decimal[] { timeInHours, Math.Round(hourPrice * timeInHours, 2) };
         }
 
-        decimal feePercentage = 0M, feeCurrency = 0M;
-        if (feeData.ServiceFeeCurrency)
-        {
-            feeCurrency = feeData.ServiceFeeAmount;
-        }
-        if (feeData.ServiceFeePercentage)
-        {
-            feePercentage = feeData.ServiceFeeAmount;
-        }
-
+        var fee = GetFee(feeData);
+        // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
         modelData.SubtotalPrice = Math.Round(modelData.ServiceDuration * hourPrice, 2);
-        modelData.FeePrice = Math.Round((feePercentage * modelData.SubtotalPrice) + feeCurrency, 2);
+        modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
         modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
 
         // Success:
@@ -133,10 +150,7 @@ public static class LcPricingModel
 
         using (var db = Database.Open("sqlloco"))
         {
-
-            /* Save data into pricingwizard tables to remember customer preferences
-            */
-            // Iterate all variables and save into customerpricingvariableinputs
+            // Save data into pricingwizard tables to remember customer preferences
             foreach (var pvar in pvars)
             {
                 db.Execute(LcData.sqlSetCustomerPricingVariable, Request[pvar.PricingVariableName], customerUserID, pvar.PricingVariableID);
@@ -164,22 +178,130 @@ public static class LcPricingModel
     #region Services (attributes)
     public static void SaveServices(
         int estimateID,
+        int revisionID)
+    {
+        var attributes = Request.Form.GetValues("positionservices-attributes");
+        if (attributes != null)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                /*
+                * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
+                */
+                foreach (var att in attributes)
+                {
+                    // Set record (insert or update)
+                    db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID,
+                        revisionID,
+                        0, 0, 0,
+                        att.AsInt(),
+                        0, null, null, // There is no input data
+                        0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Options
+    public static PricingModelData CalculateOptions(dynamic poptions, dynamic feeData)
+    {
+        var modelData = new PricingModelData();
+        // Collection of prices per option to use when restoring the view with post data
+        var optionalServicesPrices = new Dictionary<int,decimal>();
+        // Collection to save time and price for each pricing option item to be used on Save.
+        // Key will be OptionID, first decimal is time required for the item
+        // and second is calculated price for this item
+        var pricingOptionsNumbers = new Dictionary<int,decimal[]>();
+
+        foreach (var popt in poptions){
+            decimal optPrice = 0;
+                
+            if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
+                // TODO Must replace € simbol too, better as an utility function (in file or LcHelper)
+                string strprice = popt.ProviderDataInputValue.Replace("$", "");
+                decimal unitprice = 0;
+                decimal.TryParse(strprice, out unitprice);
+                decimal quantity = 0;
+                switch ((string)popt.CustomerDataInputUnit) {
+                    case "number":
+                    case "times":
+                    case "quantity":
+                        quantity = Request[(string)popt.PricingOptionName].AsDecimal();
+                        break;
+                    case "":
+                    default:
+                        quantity = 1;
+                        break;
+                }
+                optPrice = Math.Round(quantity * unitprice, 2);
+                // Get the equivalent time required from table
+                decimal timeVar = 0;
+                if (popt.ProviderTimeRequired is decimal) {
+                    timeVar = (decimal)popt.ProviderTimeRequired;
+                }
+                // Add pricing option estimate time to the total time,
+                // it's in minutes, we use hours for timeRequired:
+                modelData.ServiceDuration += Math.Round(timeVar / 60, 2);
+                pricingOptionsNumbers[popt.PricingOptionID] = new decimal[]{timeVar, optPrice};
+            }
+            optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
+            modelData.SubtotalPrice += optPrice;
+        }
+
+        var fee = GetFee(feeData);
+        // TODO: apply new calculation of fee per element, with optionPrice+fee on optionalServicesPrices instead optionSubtotal
+        modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
+        modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
+
+        // Success:
+        modelData.Success = true;
+        modelData.Data = new Dictionary<string, object>(){
+            { "OptionalServicesPrices", optionalServicesPrices }
+            ,{ "PricingOptionsNumbers", pricingOptionsNumbers }
+        };
+        return modelData;
+    }
+
+    public static void SaveOptions(
+        int estimateID,
         int revisionID,
-        dynamic services)
+        dynamic poptions,
+        int customerUserID,
+        Dictionary<int,decimal[]> pricingOptionsNumbers)
     {
         using (var db = Database.Open("sqlloco"))
         {
-            /*
-            * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
-            */
-            foreach (var att in services) {
-                // Set record (insert or update)
-                db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, 
-                    revisionID,
-                    0, 0, 0,
-                    att.AsInt(),
-                    0, null, null, // There is no input data
-                    0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
+            // Iterate all options and save into customerpricingoptioninputs
+            foreach (var popt in poptions) {
+                if (Request[popt.PricingOptionName + "-check"] == "true") {
+                    // Value to set can be null for options without quantity/value (only check), that cases
+                    // we set value '1'
+                    db.Execute(LcData.sqlSetCustomerPricingOption, Request[popt.PricingOptionName] ?? 1, customerUserID, popt.PricingOptionID);
+                } else {
+                    db.Execute(LcData.sqlDelCustomerPricingOption, customerUserID, popt.PricingOptionID);
+                }
+            }
+
+            // Creating Estimate details: every option checked
+            foreach (var popt in poptions) {
+                if (Request[popt.PricingOptionName + "-check"] == "true") {
+                    // Get pair time and price
+                    decimal[] timeprice = pricingOptionsNumbers[popt.PricingOptionID];
+                    // Insert data:
+                    db.Execute(LcData.Booking.sqlInsEstimateDetails, 
+                        estimateID,
+                        revisionID,
+                        0, 0,
+                        popt.PricingOptionID,
+                        popt.ServiceAttributeID,
+                        0,
+                        popt.ProviderDataInputValue,
+                        Request[popt.PricingOptionName] ?? 1,
+                        0, // systemPricingDataInput
+                        0, // hourlyRate (options are not calculated based on a hourly rate, save 0)
+                        timeprice[0], timeprice[1]);
+                }
             }
         }
     }

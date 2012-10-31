@@ -63,48 +63,6 @@
         
         if (embMode != "calculate") {
             // Save data
-            var sqlSetOpt = @"
-                BEGIN TRAN
-                    UPDATE  customerpricingoptioninputs WITH (serializable)
-                    SET     PricingDataInput = @0,
-                            UpdatedDate = getdate(),  
-                            ModifiedBy = 'sys',
-                            Active = 1
-                    WHERE   UserId = @1 AND PricingOptionID = @2
-
-                   IF @@rowcount = 0
-                   BEGIN
-                        INSERT INTO customerpricingoptioninputs (PricingDataInput,
-                            UserID, PricingOptionID, CreatedDate, UpdatedDate, 
-                            ModifiedBy, Active)
-                        VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
-                   END
-                COMMIT TRAN
-            ";
-            var sqlDelOpt = @"
-                DELETE FROM customerpricingoptioninputs
-                WHERE       UserId = @0 AND PricingOptionID = @1
-            ";
-            var sqlInsEstimateDetails = @"
-                INSERT INTO [pricingestimatedetail]
-                           ([PricingEstimateID]
-                           ,[PricingEstimateRevision]
-                           ,[PricingVariableID]
-                           ,[PricingSurchargeID]
-                           ,[PricingOptionID]
-                           ,[ServiceAttributeID]
-                           ,[ProviderPackageID]
-                           ,[ProviderPricingDataInput]
-                           ,[CustomerPricingDataInput]
-                           ,[SystemPricingDataInput]
-                           ,[ProviderHourlyRate]
-                           ,[TimeEstimate]
-                           ,[PriceEstimate]
-                           ,[CreatedDate]
-                           ,[UpdatedDate]
-                           ,[ModifiedBy])
-                     VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
-            ";
             using (var db = Database.Open("sqlloco")){
                 /* Save data into pricingwizard tables to remember customer preferences
                 */
@@ -113,9 +71,9 @@
                     if (Request[popt.PricingOptionName + "-check"] == "true") {
                         // Value to set can be null for options without quantity/value (only check), that cases
                         // we set value '1'
-                        db.Execute(sqlSetOpt, Request[popt.PricingOptionName] ?? 1, c.UserID, popt.PricingOptionID);
+                        db.Execute(LcData.sqlSetCustomerPricingOption, Request[popt.PricingOptionName] ?? 1, c.UserID, popt.PricingOptionID);
                     } else {
-                        db.Execute(sqlDelOpt, c.UserID, popt.PricingOptionID);
+                        db.Execute(LcData.sqlDelCustomerPricingOption, c.UserID, popt.PricingOptionID);
                     }
                 }
                 
@@ -126,7 +84,7 @@
                         // Get pair time and price
                         decimal[] timeprice = pricingOptionsNumbers[popt.PricingOptionID];
                         // Insert data:
-                        db.Execute(sqlInsEstimateDetails, 
+                        db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                             PageData["EstimateID"], PageData["RevisionID"],
                             0, 0,
                             popt.PricingOptionID,

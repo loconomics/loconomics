@@ -693,6 +693,28 @@ public static partial class LcData
             END
         COMMIT TRAN
     ";
+    public static string sqlSetCustomerPricingOption = @"
+        BEGIN TRAN
+            UPDATE  customerpricingoptioninputs WITH (serializable)
+            SET     PricingDataInput = @0,
+                    UpdatedDate = getdate(),  
+                    ModifiedBy = 'sys',
+                    Active = 1
+            WHERE   UserId = @1 AND PricingOptionID = @2
+
+            IF @@rowcount = 0
+            BEGIN
+                INSERT INTO customerpricingoptioninputs (PricingDataInput,
+                    UserID, PricingOptionID, CreatedDate, UpdatedDate, 
+                    ModifiedBy, Active)
+                VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+            END
+        COMMIT TRAN
+    ";
+    public static string sqlDelCustomerPricingOption = @"
+        DELETE FROM customerpricingoptioninputs
+        WHERE       UserId = @0 AND PricingOptionID = @1
+    ";
     #endregion
 
     public static dynamic GetPricingVariables(

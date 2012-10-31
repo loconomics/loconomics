@@ -52,12 +52,12 @@
 		<div id="services" class="tab-body fancy current">
         @{
             int pricingType = PageData["PricingTypeID"] = LcData.GetPositionPricingTypeID(PageData["positionrow"].PositionID, 1 /*TODO implement clientTypeID*/ );
-            @RenderPage("Step1.cshtml")
-            @*if (pricingType == 3) {
+
+            if (pricingType == 3) {
                 @RenderPage(UrlUtil.LangPath + "PricingWizard/$CustomerPackagesType.cshtml")
             } else {
-                @RenderPage("$Services.cshtml")
-            }*@
+                @RenderPage("Step1.cshtml")
+            }
         }
 		</div><!-- #services -->
 

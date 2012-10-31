@@ -75,6 +75,74 @@
     </ul>
 }
 
+@helper Options(dynamic viewData, dynamic poptions, LcPricingModel.PricingModelData modelData) {
+    var idprefix = "pricingwizard";
+    Dictionary<int, decimal> optionalServicesPrices = null;
+    if (modelData != null) {
+        optionalServicesPrices = modelData.Data["OptionalServicesPrices"];
+    }
+    if (optionalServicesPrices ==  null) {
+        // Create empty dictionary to avoid additional checks in the view
+        optionalServicesPrices = new Dictionary<int, decimal>();
+    }
+
+    <table class="pricing-options calculate-items-totals calculate-summary-group" data-calculation-summary-group="options">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="name">Name</th>
+                <th class="duration number">Duration</th>
+                <th class="number">Item Price</th>
+                <th class="number">Quantity</th>
+                <th class="number">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var popt in poptions)
+        {
+            <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
+                <td><input type="checkbox" class="calculate-item-checked" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" /></td>
+                <td class="pricing-option-check name">
+                    <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
+                </td>
+                <td class="pricint-option-duration duration">@popt.ProviderTimeRequired minutes</td>
+                <td class="pricing-option-item-price number money calculate-item-price">@popt.ProviderDataInputValue</td>
+                <td class="pricing-option-quantity number">
+                @switch ((string)@popt.CustomerDataInputType)
+                {
+                    case "dropdown":
+                        <select id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" class="calculate-item-quantity">
+                            @{
+                                var optvalues = LcHelpers.GetValuesFromCSVLine(popt.CustomerDataValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(popt.PricingOptionName, v, popt)>@v</option>
+                                }
+                                }
+                        </select>
+                        break;
+                    case "number":
+                    case "text":
+                        <input type="text" class="calculate-item-quantity" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
+                        break;
+                    case "":
+                        <text>N/A</text>
+                        break;
+                    default:
+                        <text>Unknown CustomerDataInputType: @popt.CustomerDataInputType</text>
+                        break;
+                }
+                </td>
+                <td class="pricing-option-total-price calculated number money">
+                    <span class="calculate-item-total">@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("c"))</span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
 @helper PricingSummary(dynamic viewData, LcPricingModel.PricingModelData summary, decimal hourPrice) {
     // TODO: re-do with summary-groups on rows instead current timerequired and optionalservices, groups
     // per variables, options, packages, addons like in current packages summary

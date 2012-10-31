@@ -11,13 +11,17 @@
     
     var summary = new LcPricingModel.PricingModelData();
     
+    Dictionary<string, LcPricingModel.PricingModelData> modelsData = null;
+
     if (IsPost) {
-        processData(customer, provider, position, data, summary);
+        modelsData = processData(customer, provider, position, data, summary);
     }
     
     var viewData = new {
         Success = false
     };
+    
+    var hasPricingSummary = data.ContainsServices || data.ContainsVariables || data.ContainsOptions;
 }
 @functions{
     dynamic getData(dynamic c, dynamic p, dynamic pos) {
@@ -31,6 +35,9 @@
         
         // Get provider hour price
         var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
+        
+        // Booking type with fees policy
+        var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
 
         // Services: categories and attributes
         var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
@@ -45,27 +52,26 @@
             }
         }
         
-        // Booking type with fees policy
-        var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
-        
         // Variables
         // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
         // previously values for a variable, that variable will not be returned.
         var pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
         
         // Options
+        var poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
         
         // Packages
         
         // Add-ons
         
+        // Return struct with all data and availability information (Contains* properties)
         return new {
             ContainsServices = thereAreAttributes,
             Services = dataCats,
             ContainsVariables = pvars.Count > 0,
             Variables = pvars,
-            ContainsOptions = false,
-            Options = (dynamic)null,
+            ContainsOptions = poptions.Count > 0,
+            Options = poptions,
             Fee = fee,
             HourPrice = hourPrice,
             PricingTypeID = pricingtypeid,
@@ -73,8 +79,10 @@
         };
     }
     
-    void processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingModelData summary) {
+    Dictionary<string, LcPricingModel.PricingModelData> processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingModelData summary) {
 
+        var rtn = new Dictionary<string, LcPricingModel.PricingModelData>();
+        
         var mustSave = UrlData[0].ToLower() != "calculate";
 
         // Calculate & Save
@@ -86,7 +94,13 @@
              */
             if (data.ContainsVariables) {
                 mdVariables = LcPricingModel.CalculateVariables(data.Variables, data.HourPrice, data.Fee);
+                rtn.Add("variables", mdVariables);
                 addCalculationsToSummary(mdVariables, summary);
+            }
+            if (data.ContainsOptions) {
+                mdOptions = LcPricingModel.CalculateOptions(data.Options, data.Fee);
+                rtn.Add("options", mdOptions);
+                addCalculationsToSummary(mdOptions, summary);
             }
 
             /* Save all data?
@@ -110,16 +124,22 @@
             
                 /* Save every detail 
                     */
+                if (data.ContainsServices) {
+                    LcPricingModel.SaveServices(estimateID, revisionID);
+                }
                 if (data.ContainsVariables) {
                     LcPricingModel.SaveVariables(estimateID, revisionID, data.Variables, c.UserID, data.HourPrice, mdVariables.Data["PricingVariablesNumbers"]);
+                }
+                if (data.ContainsOptions) {
+                    LcPricingModel.SaveOptions(estimateID, revisionID, data.Options, c.UserID, mdOptions.Data["PricingOptionsNumbers"]);
                 }
                 
                 /*
                 * Create Booking Request
                 */
                 var bookingRequestID = LcData.Booking.CreateRequest(
-                    c.UserID, 
-                    p.UserID, 
+                    c.UserID,
+                    p.UserID,
                     pos.PositionID,
                     estimateID,
                     Request["booking-services-special-instructions"]
@@ -134,6 +154,8 @@
             // All fine, continue wizard next step:
             LcHelpers.ReturnJsonResult(0, null);
         }
+        
+        return rtn;
     }
     
     void addCalculationsToSummary(LcPricingModel.PricingModelData calc, LcPricingModel.PricingModelData summary) {
@@ -141,6 +163,14 @@
         summary.SubtotalPrice += calc.SubtotalPrice;
         summary.FeePrice += calc.FeePrice;
         summary.TotalPrice += calc.TotalPrice;
+    }
+    
+    LcPricingModel.PricingModelData GetModelDataForView(string viewName, Dictionary<string, LcPricingModel.PricingModelData> modelsData) {
+        if (modelsData != null && modelsData.ContainsKey(viewName)) {
+            return modelsData[viewName];
+        } else {
+            return null;
+        }
     }
 }
 
@@ -165,8 +195,16 @@
                 @LcPricingView.Variables(viewData, data.Variables)
             </fieldset>
         }
-    
-        @if (!data.ContainsServices && !data.ContainsVariables && !data.ContainsOptions)
+        
+        @if (data.ContainsOptions)
+        {
+            <fieldset>
+                <legend>Please add any additional options you’d like</legend>
+                @LcPricingView.Options(viewData, data.Options, GetModelDataForView("options", modelsData))
+            </fieldset>
+        }
+
+        @if (!hasPricingSummary)
         {
             <div class="no-pricing-wizard">
                 Currently we're unable to provide a pricing estimate for this provider. Please proceed to book a free estimate with the provider to determine a fair price together.
