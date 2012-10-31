@@ -16,56 +16,15 @@
     // and second is calculated price for this item
     var pricingVariablesNumbers = new Dictionary<int,decimal[]>();
 
-    using (var db = Database.Open("sqlloco")){
-        // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
-        // previously values for a variable, that variable will not be returned.
-        pvars = db.Query(@"
-            SELECT  pv.PricingVariableID, pv.PricingVariableName, 
-                    pv.CustomerInputDataRequired, pv.CustomerDataInputType,
-                    pv.CustomerDataValues, pv.CustomerPricingVariableDisplayText,
-                    pv.ProviderDataInputUnit, pv.CustomerDataInputUnit,
-                    pi.PricingDataInput As ProviderDataInputValue,
-                    pc.PricingDataInput As CustomerDataInputValue
-            FROM    pricingvariable As pv
-                     LEFT JOIN
-                    providerpricingvariableinputs as pi
-                      ON pv.PricingVariableID = pi.PricingVariableID
-                     LEFT JOIN
-                    customerpricingvariableinputs as pc
-                      ON pv.PricingVariableID = pc.PricingVariableID
-                        AND pc.Active = 1 AND pc.UserID = @6
-            WHERE   pv.CountryID=@0 AND pv.LanguageID=@1
-                     AND 
-                    pv.ClientTypeID=@2 AND pv.PositionID=@3
-                     AND 
-                    pv.CustomerInputDataRequired = 1
-                     AND
-                    pv.Active = 1 AND pv.PricingTypeID = @4
-                     AND
-                    (
-                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
-                     --  no needs relationed record at providerpricingvariableinputs (pi) table
-                     pv.ProviderInputDataRequired = 0
-                      OR
-                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
-                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
-                     --  relationship at providerpricingvariableinputs (pi) and proper conditional values
-                     pi.PricingDataInput is not null
-                      AND
-                     pi.Active = 1 AND pi.ProviderUserID = @5
-                    )
-        ", 1, 1, clienttypeid, pos.PositionID, pricingtypeid, p.UserID, c.UserID);
-        
-        // Get provider hour price
-        hourPrice = db.QueryValue(@"
-            SELECT  TOP 1 HourlyRate
-            FROM    providerhourlyrate
-            WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
-        ", p.UserID, pos.PositionID, clienttypeid) ?? 0;
-        
-        // Get the Pricing Options
-        // TODO embed pricingotpions
-    }
+    // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
+    // previously values for a variable, that variable will not be returned.
+    pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+
+    // Get provider hour price
+    hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
+
+    // Get the Pricing Options
+    // TODO embed pricingotpions
     
     if (IsPost){
         /* DO CALCULATION: (not only on /calculate url, is need to save data too)
@@ -132,28 +91,6 @@
          */
         // If request post is not only for calculate, save data
         if (UrlData[0].ToLower() != "calculate"){
-            var sqlSetVar = @"
-                BEGIN TRAN
-                    UPDATE  customerpricingvariableinputs WITH (serializable)
-                    SET     PricingDataInput = @0,
-                            UpdatedDate = getdate(),  
-                            ModifiedBy = 'sys',
-                            Active = 1
-                    WHERE   UserId = @1 AND PricingVariableID = @2
-
-                   IF @@rowcount = 0
-                   BEGIN
-                        INSERT INTO customerpricingvariableinputs (PricingDataInput,
-                            UserID, PricingVariableID, CreatedDate, UpdatedDate, 
-                            ModifiedBy, Active)
-                        VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
-                   END
-                COMMIT TRAN
-            ";
-            /*var sqlDelVar = @"
-                DELETE FROM customerpricingvariableinputs
-                WHERE       UserId = @0 AND PricingVariableID = @1
-            ";*/
         
             using (var db = Database.Open("sqlloco")){
                 
@@ -161,7 +98,7 @@
                 */
                 // Iterate all variables and save into customerpricingvariableinputs
                 foreach (var pvar in pvars) {
-                    db.Execute(sqlSetVar, Request[pvar.PricingVariableName], c.UserID, pvar.PricingVariableID);
+                    db.Execute(LcData.sqlSetCustomerPricingVariable, Request[pvar.PricingVariableName], c.UserID, pvar.PricingVariableID);
                 }
                 
                 /* Save data into the pricingestimate tables
@@ -177,7 +114,7 @@
                 }
 
                 // Inserting Estimate with calculated details
-                var insreturned = db.QuerySingle(LcData.sqlInsEstimate, estimateID, revisionID,
+                var insreturned = LcData.Booking.CreatePricingEstimate(estimateID, revisionID,
                     pricingtypeid, timeRequired, hourPrice, subtotalPrice, feePrice, totalPrice);
                 estimateID = insreturned.PricingEstimateID;
                 revisionID = insreturned.PricingEstimateRevision;
@@ -187,7 +124,7 @@
                     // Get pair time and price
                     decimal[] timeprice = pricingVariablesNumbers[pvar.PricingVariableID];
                     // Insert data:
-                    db.Execute(LcData.sqlInsEstimateDetails, estimateID, revisionID,
+                    db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                         pvar.PricingVariableID,
                         0, 0, 0, 0,
                         pvar.ProviderDataInputValue,

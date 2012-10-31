@@ -116,7 +116,7 @@
                         }*/
 
                         // Inserting Estimate with calculated details
-                        var insreturned = db.QuerySingle(LcData.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
+                        var insreturned = db.QuerySingle(LcData.Booking.sqlInsEstimate, pricingEstimateID, pricingEstimateRevision,
                             pricingtypeid, 
                             // We use first-session time only because is what affects the schedule of this booking; 
                             // timeRequired' has the accumulative time of all sessions that will happen on different days
@@ -126,7 +126,7 @@
                         pricingEstimateRevision = insreturned.PricingEstimateRevision;
 
                         // Inserting details of package selected by customer
-                        db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
+                        db.Execute(LcData.Booking.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
                             0, 0, 0, 0, 
                             selectedPackage.AsInt(),
                             null, // there is no provider value
@@ -138,7 +138,7 @@
                         // Inserting details of addons packages selected by customer
                         foreach (var addon in selectedAddonsData)
                         {
-                            db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
+                            db.Execute(LcData.Booking.sqlInsEstimateDetails, pricingEstimateID, pricingEstimateRevision,
                                 0, 0, 0, 0, 
                                 addon.addonID,
                                 null, // there is no provider value
@@ -173,24 +173,17 @@
                         // a PageData["PricingEstimateData"]["PricingEstimateErrorMessage"] for details.
                         */
                 
-
-                        /*=========================================================================
-                         * NOW: CREATE BOOKING REQUEST AS IN Booking/$Services.cshtml (most next code is cloned from that) */
                         /*
                         * Create Booking Request
                         */
                         try {
-                            var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
-                                c.UserID, p.UserID, pos.PositionID,
+                            var bookingRequestID = LcData.Booking.CreateRequest(
+                                c.UserID, 
+                                p.UserID, 
+                                pos.PositionID,
                                 pricingEstimateID,
                                 Request["booking-services-special-instructions"]
                             );
-                
-                            /*
-                             * Do BookingRequestID available for next wizard steps
-                             */
-                            // Saving it at user Session
-                            Session["BookingRequestID"] = (int)bookingRequestID;
 
                         } catch (Exception ex) {
                             LcHelpers.ReturnJsonError(-1, ex.Message);

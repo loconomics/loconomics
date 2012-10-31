@@ -11,6 +11,64 @@ public static partial class LcData
     /// </summary>
     public static class Booking
     {
+        #region Query bookings
+        #region SQLs
+        public const string sqlGetBookingRequestPricingEstimate = @"
+            SELECT  PricingEstimateID
+            FROM    BookingRequest
+            WHERE   BookingRequestID = @0
+        ";
+        public const string sqlGetPricingPackagesInPricingEstimate = @"
+            SELECT  PP.ProviderPackageID
+                    ,PP.ProviderPackageName As Name
+                    ,PP.ProviderPackageDescription As Description
+                    ,PP.ProviderPackagePrice As Price
+                    ,PP.ProviderPackageServiceDuration As ServiceDuration
+                    ,PP.FirstTimeClientsOnly
+                    ,PP.NumberOfSessions
+                    ,P.PriceEstimate
+                    ,P.CustomerPricingDataInput
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    ProviderPackage As PP
+                      ON PP.ProviderPackageID = P.ProviderPackageID
+            WHERE   P.PricingEstimateID = @0
+                        AND 
+                    PP.LanguageID = @1 AND PP.CountryID = @2
+        ";
+        public const string sqlGetPricingOptionsInPricingEstimate = @"
+            SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                    P.TimeEstimate As Time, P.PriceEstimate As Price
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    PricingOption As V
+                      ON V.PricingOptionID = P.PricingOptionID
+            WHERE   P.PricingEstimateID = @0
+                     AND V.LanguageID = @1 AND V.CountryId = @2
+        ";
+        public const string sqlGetPricingVarsInPricingEstimate = @"
+            SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
+                    P.TimeEstimate As Time, P.PriceEstimate As Price
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    PricingVariable As V
+                      ON V.PricingVariableID = P.PricingVariableID
+            WHERE   P.PricingEstimateID = @0
+                     AND V.LanguageID = @1 AND V.CountryId = @2
+        ";
+        public const string sqlGetServicesIncludedInPricingEstimate = @"
+            SELECT  S.Name
+            FROM    PricingEstimateDetail As P
+                     INNER JOIN
+                    ServiceAttribute As S
+                      ON S.ServiceAttributeID = P.ServiceAttributeID
+                        -- Avoid show service attributes related to options
+                        AND P.PricingOptionID = 0
+            WHERE   P.PricingEstimateID = @0
+                     AND S.LanguageID = @1 AND S.CountryId = @2
+        ";
+        #endregion
+
         /// <summary>
         /// Get a dynamic record with the most basic info from 
         /// a Booking: CustomerUserID, ProviderUserID, PositionID,
@@ -18,7 +76,8 @@ public static partial class LcData
         /// </summary>
         /// <param name="BookingID"></param>
         /// <returns></returns>
-        public static dynamic GetBookingBasicInfo(int BookingID){
+        public static dynamic GetBookingBasicInfo(int BookingID)
+        {
             var sqlGetBooking = @"
                 SELECT  R.CustomerUserID, R.ProviderUserID,
                         R.PositionID, B.BookingID, B.BookingStatusID,
@@ -29,11 +88,13 @@ public static partial class LcData
                           ON R.BookingRequestID = B.BookingRequestID
                 WHERE   BookingID = @0
             ";
-            using (var db = Database.Open("sqlloco")) {
+            using (var db = Database.Open("sqlloco"))
+            {
                 return db.QuerySingle(sqlGetBooking, BookingID);
             }
         }
-        public static dynamic GetBooking(int BookingID) {
+        public static dynamic GetBooking(int BookingID)
+        {
             var sqlGetBooking = @"
                 SELECT  R.BookingRequestID,
                         B.BookingID,
@@ -99,11 +160,13 @@ public static partial class LcData
 					        AND Pos.LanguageID = @1 AND Pos.CountryID = @2
                 WHERE   B.BookingID = @0
             ";
-            using (var db = Database.Open("sqlloco")) {
+            using (var db = Database.Open("sqlloco"))
+            {
                 return db.QuerySingle(sqlGetBooking, BookingID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
         }
-        public static dynamic GetBookingForUser(int BookingID, int UserID, bool IsAdmin) {
+        public static dynamic GetBookingForUser(int BookingID, int UserID, bool IsAdmin)
+        {
             var sqlGetBooking = @"
                 SELECT  R.BookingRequestID,
                         B.BookingID,
@@ -183,13 +246,15 @@ public static partial class LcData
                          AND
                         (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)
             ";
-            using (var db = Database.Open("sqlloco")) {
-                return db.QuerySingle(sqlGetBooking, BookingID, UserID, 
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), 
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(sqlGetBooking, BookingID, UserID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
                     IsAdmin);
             }
         }
-        public static dynamic GetBookingRequestForUser(int BookingRequestID, int UserID, bool IsAdmin) {
+        public static dynamic GetBookingRequestForUser(int BookingRequestID, int UserID, bool IsAdmin)
+        {
             var sqlGetBookingRequest = @"
                 SELECT  R.BookingRequestID,
                         0 As BookingID,
@@ -248,141 +313,107 @@ public static partial class LcData
                          AND
                         (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)
             ";
-            using (var db = Database.Open("sqlloco")) {
-                return db.QuerySingle(sqlGetBookingRequest, BookingRequestID, UserID, 
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), 
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(sqlGetBookingRequest, BookingRequestID, UserID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
                     IsAdmin);
             }
         }
-        public const string sqlGetBookingRequestPricingEstimate = @"
-            SELECT  PricingEstimateID
-            FROM    BookingRequest
-            WHERE   BookingRequestID = @0
-        ";
-        public const string sqlGetPricingPackagesInPricingEstimate = @"
-            SELECT  PP.ProviderPackageID
-                    ,PP.ProviderPackageName As Name
-                    ,PP.ProviderPackageDescription As Description
-                    ,PP.ProviderPackagePrice As Price
-                    ,PP.ProviderPackageServiceDuration As ServiceDuration
-                    ,PP.FirstTimeClientsOnly
-                    ,PP.NumberOfSessions
-                    ,P.PriceEstimate
-                    ,P.CustomerPricingDataInput
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    ProviderPackage As PP
-                      ON PP.ProviderPackageID = P.ProviderPackageID
-            WHERE   P.PricingEstimateID = @0
-                        AND 
-                    PP.LanguageID = @1 AND PP.CountryID = @2
-        ";
-        public const string sqlGetPricingOptionsInPricingEstimate = @"
-            SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.TimeEstimate As Time, P.PriceEstimate As Price
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingOption As V
-                      ON V.PricingOptionID = P.PricingOptionID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
-        public const string sqlGetPricingVarsInPricingEstimate = @"
-            SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.TimeEstimate As Time, P.PriceEstimate As Price
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingVariable As V
-                      ON V.PricingVariableID = P.PricingVariableID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
-        public const string sqlGetServicesIncludedInPricingEstimate = @"
-            SELECT  S.Name
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    ServiceAttribute As S
-                      ON S.ServiceAttributeID = P.ServiceAttributeID
-                        -- Avoid show service attributes related to options
-                        AND P.PricingOptionID = 0
-            WHERE   P.PricingEstimateID = @0
-                     AND S.LanguageID = @1 AND S.CountryId = @2
-        ";
-        public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0){
+
+        public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0)
+        {
             dynamic pvars, poptions;
-            using (var db = Database.Open("sqlloco")) {
-                if (pricingEstimateID == 0) {
+            using (var db = Database.Open("sqlloco"))
+            {
+                if (pricingEstimateID == 0)
+                {
                     pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, BookingRequestID);
                 }
-                pvars       = db.Query(sqlGetPricingVarsInPricingEstimate, pricingEstimateID, 
+                pvars = db.Query(sqlGetPricingVarsInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                poptions    = db.Query(sqlGetPricingOptionsInPricingEstimate, pricingEstimateID, 
+                poptions = db.Query(sqlGetPricingOptionsInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-        
+
             int i = 0;
             string iprint = "";
             string result = "";
-            foreach (var pitem in pvars) {
-                if (i > 0) {
+            foreach (var pitem in pvars)
+            {
+                if (i > 0)
+                {
                     iprint = "; ";
                 }
                 i++;
                 result += iprint + pitem.Name + " " + pitem.Quantity;
             }
             iprint = "";
-            if (pvars.Count > 0) {
+            if (pvars.Count > 0)
+            {
                 iprint = "; ";
             }
             i = 0;
-            foreach (var pitem in poptions) {
-                if (i > 0) {
+            foreach (var pitem in poptions)
+            {
+                if (i > 0)
+                {
                     iprint = "; ";
                 }
                 i++;
                 result += iprint + pitem.Name + "" + pitem.Quantity;
             }
-        
+
             return result;
         }
-        public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0){
+        public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0)
+        {
             dynamic services;
-            using (var db = Database.Open("sqlloco")) {
-                if (pricingEstimateID == 0){
+            using (var db = Database.Open("sqlloco"))
+            {
+                if (pricingEstimateID == 0)
+                {
                     pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
                 }
-                services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID, 
+                services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-        
+
             int i = 0;
             string iprint = "";
             string result = "";
-            foreach (var service in services) {
-                if (i > 0) {
+            foreach (var service in services)
+            {
+                if (i > 0)
+                {
                     iprint = ", ";
                 }
                 i++;
                 result += iprint + service.Name;
             }
-        
+
             return result;
         }
-        public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0){
+        public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0)
+        {
             dynamic packages;
-            using (var db = Database.Open("sqlloco")) {
-                if (pricingEstimateID == 0){
+            using (var db = Database.Open("sqlloco"))
+            {
+                if (pricingEstimateID == 0)
+                {
                     pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
                 }
-                packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID, 
+                packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-        
+
             int i = 0;
             string iprint = "";
             string result = "";
-            foreach (var pak in packages) {
-                if (i > 0) {
+            foreach (var pak in packages)
+            {
+                if (i > 0)
+                {
                     iprint = ", ";
                 }
                 i++;
@@ -391,7 +422,8 @@ public static partial class LcData
 
             return result;
         }
-        public static string GetBookingRequestSubject(int BookingRequestID){
+        public static string GetBookingRequestSubject(int BookingRequestID)
+        {
             var getBookingRequest = @"
                 SELECT  TOP 1
                         P.PositionSingular,
@@ -406,11 +438,13 @@ public static partial class LcData
                 WHERE   B.BookingRequestID = @0
             ";
             dynamic summary = null;
-            using (var db = Database.Open("sqlloco")){
+            using (var db = Database.Open("sqlloco"))
+            {
                 summary = db.QuerySingle(getBookingRequest, BookingRequestID);
             }
             string result = "";
-            if (summary != null) {
+            if (summary != null)
+            {
                 result = summary.PositionSingular + " " +
                     summary.PreferredDateStart.ToLongDateString() + ", " +
                     summary.PreferredDateStart.ToShortTimeString() + " to " +
@@ -418,7 +452,8 @@ public static partial class LcData
             }
             return result;
         }
-        public static string GetBookingSubject(int BookingID){
+        public static string GetBookingSubject(int BookingID)
+        {
             var getBookingRequest = @"
                 SELECT  TOP 1
                         P.PositionSingular,
@@ -436,11 +471,13 @@ public static partial class LcData
                 WHERE   B.BookingID = @0
             ";
             dynamic summary = null;
-            using (var db = Database.Open("sqlloco")){
+            using (var db = Database.Open("sqlloco"))
+            {
                 summary = db.QuerySingle(getBookingRequest, BookingID);
             }
             string result = "";
-            if (summary != null) {
+            if (summary != null)
+            {
                 result = summary.PositionSingular + " " +
                     summary.ConfirmedDateStart.ToLongDateString() + ", " +
                     summary.ConfirmedDateStart.ToShortTimeString() + " to " +
@@ -448,7 +485,8 @@ public static partial class LcData
             }
             return result;
         }
-        public static string GetBookingStatus(int BookingID){
+        public static string GetBookingStatus(int BookingID)
+        {
             var getBookingStatus = @"
                 SELECT  BookingStatusName, BookingStatusDescription
                 FROM    BookingStatus As BS
@@ -457,15 +495,19 @@ public static partial class LcData
                           ON B.BookingStatusID = BS.BookingStatusID
                 WHERE   B.BookingID = @0
             ";
-            using (var db = Database.Open("sqlloco")) {
+            using (var db = Database.Open("sqlloco"))
+            {
                 var b = db.QuerySingle(getBookingStatus, BookingID);
-                if (b != null){
+                if (b != null)
+                {
                     return b.BookingStatusDescription ?? b.BookingStatusName;
                 }
             }
             return "";
         }
-    
+        #endregion
+
+        #region Actions on bookings, modifications
         /// <summary>
         /// Invalide a Booking Request setting it as 'cancelled', 'declined',
         /// or 'expired', preserving the main data but removing some unneded
@@ -485,10 +527,12 @@ public static partial class LcData
         /// 8	denied with alternatives
         /// </summary>
         /// <param name="BookingRequestID"></param>
-        public static dynamic InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID){
-            if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID)){
+        public static dynamic InvalidateBookingRequest(int BookingRequestID, int BookingRequestStatusID)
+        {
+            if (!(new int[] { 3, 4, 5, 6, 8 }).Contains<int>(BookingRequestStatusID))
+            {
                 throw new Exception(String.Format(
-                    "BookingRequestStatusID '{0}' is not valid to invalidate the booking request", 
+                    "BookingRequestStatusID '{0}' is not valid to invalidate the booking request",
                     BookingRequestStatusID));
             }
 
@@ -496,7 +540,7 @@ public static partial class LcData
                 SELECT  PaymentTransactionID
                 FROM    BookingRequest
                 WHERE   BookingRequestID = @0
-            ";   
+            ";
             var sqlInvalidateBookingRequest = @"
                 -- Parameters
                 DECLARE @BookingRequestID int, @BookingRequestStatusID int
@@ -559,20 +603,168 @@ public static partial class LcData
                     SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
                 END CATCH
             ";
-            using (var db = Database.Open("sqlloco")) {
+            using (var db = Database.Open("sqlloco"))
+            {
                 // First: get booking request TransactionID (if there is -or is not a virtual testing id-) to do a refund
                 string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
-                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")) {
+                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                {
                     var result = LcPayment.RefundTransaction(tranID);
                     if (result != null)
-                        return (dynamic) new { Error = -9999, ErrorMessage = result  };
+                        return (dynamic)new { Error = -9999, ErrorMessage = result };
                 }
 
                 // Invalidate in database the booking request:    
-                return db.QuerySingle(sqlInvalidateBookingRequest, 
+                return db.QuerySingle(sqlInvalidateBookingRequest,
                     BookingRequestID,
                     BookingRequestStatusID);
             }
         }
+        #endregion
+
+        #region Create Booking Request (Wizard)
+
+        #region SQLs
+        /// <summary>
+        ///        /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
+        ///            BEGIN TRAN
+        ///                SELECT @id = MAX(id) + 1 FROM Table1 WITH (UPDLOCK, HOLDLOCK)
+        ///                INSERT INTO Table1(id, data_field)
+        ///                VALUES (@id ,'[blob of data]')
+        ///            COMMIT TRAN
+        ///         */
+        /// </summary>
+        public const string sqlInsEstimate = @"
+                    BEGIN TRAN
+
+                        -- Getting a new ID if was not provided one
+                        DECLARE @id int, @revision int
+                        SET @id = @0
+                        SET @revision = @1
+
+                        If @id <= 0 BEGIN
+                            SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
+                            SET @revision = 1
+                        END
+
+                        IF @id is null 
+                            SET @id = 1
+
+                        INSERT INTO [pricingestimate]
+                                   ([PricingEstimateID]
+                                   ,[PricingEstimateRevision]
+                                   ,[PricingTypeID]
+                                   ,[ServiceDuration]
+                                   ,[HourlyPrice]
+                                   ,[SubtotalPrice]
+                                   ,[FeePrice]
+                                   ,[TotalPrice]
+                                   ,[CreatedDate]
+                                   ,[UpdatedDate]
+                                   ,[ModifiedBy]
+                                   ,[Active])
+                             VALUES
+                                   (@id, @revision, @2, @3, @4, @5, @6, @7, getdate(), getdate(), 'sys', 1)
+
+                        SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
+                    COMMIT TRAN
+        ";
+        public const string sqlInsEstimateDetails = @"
+                    INSERT INTO [pricingestimatedetail]
+                               ([PricingEstimateID]
+                               ,[PricingEstimateRevision]
+                               ,[PricingVariableID]
+                               ,[PricingSurchargeID]
+                               ,[PricingOptionID]
+                               ,[ServiceAttributeID]
+                               ,[ProviderPackageID]
+                               ,[ProviderPricingDataInput]
+                               ,[CustomerPricingDataInput]
+                               ,[SystemPricingDataInput]
+                               ,[ProviderHourlyRate]
+                               ,[TimeEstimate]
+                               ,[PriceEstimate]
+                               ,[CreatedDate]
+                               ,[UpdatedDate]
+                               ,[ModifiedBy])
+                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
+        ";
+        public const string sqlInsBookingRequest = @"
+                INSERT INTO BookingRequest
+                           ([BookingTypeID]
+                           ,[CustomerUserID]
+                           ,[ProviderUserID]
+                           ,[PositionID]
+                           ,[PricingEstimateID]
+                           ,[BookingRequestStatusID]
+                           ,[SpecialRequests]
+                           ,[CreatedDate]
+                           ,[UpdatedDate]
+                           ,[ModifiedBy])
+                    VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+
+                -- Update customer user profile to be a customer (if is not still, maybe is only provider)
+                UPDATE Users SET IsCustomer = 1
+                WHERE UserID = @0 AND IsCustomer <> 1
+
+                SELECT Cast(@@Identity As int) As BookingRequestID
+        ";
+        #endregion
+
+        /// <summary>
+        /// Create an estimate or a revision of the
+        /// estimate given at estimateID (if is Zero, create one new).
+        /// Returning an object with properties
+        /// int:PricingEstimateID and int:PricingEstimateRevision
+        /// </summary>
+        /// <param name="estimateID"></param>
+        /// <param name="revisionID"></param>
+        /// <param name="pricingTypeID"></param>
+        /// <param name="timeRequired"></param>
+        /// <param name="hourPrice"></param>
+        /// <param name="subtotalPrice"></param>
+        /// <param name="feePrice"></param>
+        /// <param name="totalPrice"></param>
+        /// <returns></returns>
+        public static dynamic CreatePricingEstimate(
+            int estimateID,
+            int revisionID,
+            int pricingTypeID,
+            decimal timeRequired,
+            decimal hourPrice,
+            decimal subtotalPrice,
+            decimal feePrice,
+            decimal totalPrice)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(LcData.Booking.sqlInsEstimate, estimateID, revisionID,
+                    pricingTypeID, timeRequired, hourPrice, subtotalPrice, feePrice, totalPrice);
+            }
+        }
+
+        public static int CreateRequest(
+                int customerUserID,
+                int providerUserID,
+                int positionID,
+                int pricingEstimateID,
+                string specialRequests)
+        {
+            int bookingRequestID = 0;
+            using (var db = Database.Open("sqlloco"))
+            {
+                bookingRequestID = (int)db.QueryValue(sqlInsBookingRequest,
+                    customerUserID, providerUserID, positionID,
+                    pricingEstimateID,
+                    specialRequests
+                );
+            }
+
+            // Saving it at user Session, for other 
+            System.Web.HttpContext.Current.Session["BookingRequestID"] = bookingRequestID;
+
+            return bookingRequestID;
+        }
+        #endregion
     }
 }

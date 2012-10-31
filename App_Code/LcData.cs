@@ -656,90 +656,141 @@ public static partial class LcData
         }
     }
 
-    /// <summary>
-    ///        /* sql example to implement custom auto increment in a secure mode (but with possible deadlocks)
-    ///            BEGIN TRAN
-    ///                SELECT @id = MAX(id) + 1 FROM Table1 WITH (UPDLOCK, HOLDLOCK)
-    ///                INSERT INTO Table1(id, data_field)
-    ///                VALUES (@id ,'[blob of data]')
-    ///            COMMIT TRAN
-    ///         */
-    /// </summary>
-    public const string sqlInsEstimate = @"
-                BEGIN TRAN
+    public static decimal GetProviderHourlyRate(
+        int providerUserID,
+        int positionID,
+        int clientTypeID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return (decimal)(db.QueryValue(@"
+                SELECT  TOP 1 HourlyRate
+                FROM    providerhourlyrate
+                WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
+            ", providerUserID, positionID, clientTypeID) ?? 0);
+        }
+    }
 
-                    -- Getting a new ID if was not provided one
-                    DECLARE @id int, @revision int
-                    SET @id = @0
-                    SET @revision = @1
+    #endregion
+    #region Variables and options
 
-                    If @id <= 0 BEGIN
-                        SELECT @id = MAX(PricingEstimateID) + 1 FROM PricingEstimate WITH (UPDLOCK, HOLDLOCK)
-                        SET @revision = 1
-                    END
+    #region SQLs
+    public static string sqlSetCustomerPricingVariable = @"
+        BEGIN TRAN
+            UPDATE  customerpricingvariableinputs WITH (serializable)
+            SET     PricingDataInput = @0,
+                    UpdatedDate = getdate(),  
+                    ModifiedBy = 'sys',
+                    Active = 1
+            WHERE   UserId = @1 AND PricingVariableID = @2
 
-                    IF @id is null 
-                        SET @id = 1
-
-                    INSERT INTO [pricingestimate]
-                               ([PricingEstimateID]
-                               ,[PricingEstimateRevision]
-                               ,[PricingTypeID]
-                               ,[ServiceDuration]
-                               ,[HourlyPrice]
-                               ,[SubtotalPrice]
-                               ,[FeePrice]
-                               ,[TotalPrice]
-                               ,[CreatedDate]
-                               ,[UpdatedDate]
-                               ,[ModifiedBy]
-                               ,[Active])
-                         VALUES
-                               (@id, @revision, @2, @3, @4, @5, @6, @7, getdate(), getdate(), 'sys', 1)
-
-                    SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
-                COMMIT TRAN
+            IF @@rowcount = 0
+            BEGIN
+                INSERT INTO customerpricingvariableinputs (PricingDataInput,
+                    UserID, PricingVariableID, CreatedDate, UpdatedDate, 
+                    ModifiedBy, Active)
+                VALUES (@0, @1, @2, getdate(), getdate(), 'sys', 1)
+            END
+        COMMIT TRAN
     ";
-    public const string sqlInsEstimateDetails = @"
-                INSERT INTO [pricingestimatedetail]
-                           ([PricingEstimateID]
-                           ,[PricingEstimateRevision]
-                           ,[PricingVariableID]
-                           ,[PricingSurchargeID]
-                           ,[PricingOptionID]
-                           ,[ServiceAttributeID]
-                           ,[ProviderPackageID]
-                           ,[ProviderPricingDataInput]
-                           ,[CustomerPricingDataInput]
-                           ,[SystemPricingDataInput]
-                           ,[ProviderHourlyRate]
-                           ,[TimeEstimate]
-                           ,[PriceEstimate]
-                           ,[CreatedDate]
-                           ,[UpdatedDate]
-                           ,[ModifiedBy])
-                     VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
-    ";
-    public const string sqlInsBookingRequest = @"
-            INSERT INTO BookingRequest
-                       ([BookingTypeID]
-                       ,[CustomerUserID]
-                       ,[ProviderUserID]
-                       ,[PositionID]
-                       ,[PricingEstimateID]
-                       ,[BookingRequestStatusID]
-                       ,[SpecialRequests]
-                       ,[CreatedDate]
-                       ,[UpdatedDate]
-                       ,[ModifiedBy])
-                VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+    #endregion
 
-            -- Update customer user profile to be a customer (if is not still, maybe is only provider)
-            UPDATE Users SET IsCustomer = 1
-            WHERE UserID = @0 AND IsCustomer <> 1
-
-            SELECT Cast(@@Identity As int) As BookingRequestID
-    ";
+    public static dynamic GetPricingVariables(
+        int customerUserID,
+        int providerUserID,
+        int positionID,
+        int clientTypeID,
+        int pricingTypeID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+            SELECT  pv.PricingVariableID, pv.PricingVariableName, 
+                    pv.CustomerInputDataRequired, pv.CustomerDataInputType,
+                    pv.CustomerDataValues, pv.CustomerPricingVariableDisplayText,
+                    pv.ProviderDataInputUnit, pv.CustomerDataInputUnit,
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pc.PricingDataInput As CustomerDataInputValue
+            FROM    pricingvariable As pv
+                     LEFT JOIN
+                    providerpricingvariableinputs as pi
+                      ON pv.PricingVariableID = pi.PricingVariableID
+                     LEFT JOIN
+                    customerpricingvariableinputs as pc
+                      ON pv.PricingVariableID = pc.PricingVariableID
+                        AND pc.Active = 1 AND pc.UserID = @6
+            WHERE   pv.CountryID=@1 AND pv.LanguageID=@0
+                     AND 
+                    pv.ClientTypeID=@2 AND pv.PositionID=@3
+                     AND 
+                    pv.CustomerInputDataRequired = 1
+                     AND
+                    pv.Active = 1 AND pv.PricingTypeID = @4
+                     AND
+                    (
+                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
+                     --  no needs relationed record at providerpricingvariableinputs (pi) table
+                     pv.ProviderInputDataRequired = 0
+                      OR
+                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
+                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
+                     --  relationship at providerpricingvariableinputs (pi) and proper conditional values
+                     pi.PricingDataInput is not null
+                      AND
+                     pi.Active = 1 AND pi.ProviderUserID = @5
+                    )
+            ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), clientTypeID, positionID, pricingTypeID, providerUserID, customerUserID);
+        }
+    }
+    public static dynamic GetPricingOptions(
+        int customerUserID,
+        int providerUserID,
+        int positionID,
+        int clientTypeID,
+        int pricingTypeID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(@"
+            SELECT  pr.PricingOptionID, pr.PricingOptionName, 
+                    pr.CustomerInputDataRequired, pr.CustomerDataInputType,
+                    pr.CustomerDataValues, pr.CustomerPricingOptionDisplayText,
+                    pr.ProviderDataInputUnit, pr.CustomerDataInputUnit,
+                    pr.ServiceAttributeID,
+                    pi.PricingDataInput As ProviderDataInputValue,
+                    pi.ProviderTimeRequired,
+                    pc.PricingDataInput As CustomerDataInputValue
+            FROM    pricingoption As pr
+                     LEFT JOIN
+                    providerpricingoptioninputs as pi
+                      ON pr.PricingOptionID = pi.PricingOptionID
+                     LEFT JOIN
+                    customerpricingoptioninputs as pc
+                      ON pr.PricingOptionID = pc.PricingOptionID
+                        AND pc.Active = 1 AND pc.UserID = @6
+            WHERE   pr.LanguageID=@0 AND pr.CountryID=@1
+                     AND 
+                    pr.ClientTypeID=@2 AND pr.PositionID=@3
+                     AND 
+                    pr.CustomerInputDataRequired = 1
+                     AND
+                    pr.Active = 1 AND pr.PricingTypeID = @4
+                     AND
+                    (
+                     -- If Provider Input is not Required, it means is an informational variable -without calculation-,
+                     --  no needs relationed record at providerpricingoptioninputs (pi) table
+                     pr.ProviderInputDataRequired = 0
+                      OR
+                     -- Else, it means a Provider Input is Required in order to do calculations: because of this
+                     --  the variable record is only showed/returned if there is a Provider Input Value, with the
+                     --  relationship at providerpricingoptioninputs (pi) and proper conditional values
+                     pi.PricingDataInput is not null
+                      AND
+                     pi.Active = 1 AND pi.ProviderUserID = @5
+                    )
+            ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), clientTypeID, positionID, pricingTypeID, providerUserID, customerUserID);
+        }
+    }
     #endregion
     #region Package Type (Provider Packages)
     public class ProviderPackagesView

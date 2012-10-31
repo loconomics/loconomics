@@ -19,6 +19,10 @@
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
+    
+    // Get booking info, as booking type for this
+    
+    
     Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
     Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
     Styles.Add(UrlUtil.AppPath + "Styles/Search.css");

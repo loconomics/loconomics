@@ -87,23 +87,14 @@
             LcHelpers.ReturnJsonError(errorCode, PageData["PricingEstimateData"]["PricingEstimateErrorMessage"]);
         } else {
             using (var db = Database.Open("sqlloco")) {
-                try {
-                    /*
-                    * Create Booking Request
-                    */
-                    var bookingRequestID = db.QueryValue(LcData.sqlInsBookingRequest,
-                        c.UserID, p.UserID, pos.PositionID,
-                        pricingEstimateID,
-                        Request["booking-services-special-instructions"]
-                    );
-                
+                try {               
                     /*
                     * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
                     */
                     if (attributes != null) {
                         foreach (var att in attributes) {
                             // Set record (insert or update)
-                            db.Execute(LcData.sqlInsEstimateDetails, pricingEstimateID, 
+                            db.Execute(LcData.Booking.sqlInsEstimateDetails, pricingEstimateID, 
                                 1, // Revision: Must be 1 ever at Booking Request
                                 0, 0, 0,
                                 att.AsInt(),
@@ -113,10 +104,15 @@
                     }
                     
                     /*
-                     * Do BookingRequestID available for next wizard steps
-                     */
-                    // Saving it at user Session
-                    Session["BookingRequestID"] = (int)bookingRequestID;
+                    * Create Booking Request
+                    */
+                    var bookingRequestID = LcData.Booking.CreateRequest(
+                        c.UserID, 
+                        p.UserID, 
+                        pos.PositionID,
+                        pricingEstimateID,
+                        Request["booking-services-special-instructions"]
+                    );
                                         
                 } catch (Exception ex) {
                     LcHelpers.ReturnJsonError(-1, ex.Message);
