@@ -8,7 +8,13 @@ using System.Web;
 /// </summary>
 public static class LcPricingModel
 {
-    private static HttpRequest Request = HttpContext.Current.Request;
+    private static HttpRequest Request
+    {
+        get
+        {
+            return HttpContext.Current.Request;
+        }
+    }
 
     public class PricingModelData {
         public bool Success = false;
@@ -85,7 +91,7 @@ public static class LcPricingModel
             pricingVariablesNumbers[pvar.PricingVariableID] = new decimal[] { timeInHours, Math.Round(hourPrice * timeInHours, 2) };
         }
 
-        decimal feePercentage = 1M, feeCurrency = 0M;
+        decimal feePercentage = 0M, feeCurrency = 0M;
         if (feeData.ServiceFeeCurrency)
         {
             feeCurrency = feeData.ServiceFeeAmount;
@@ -101,9 +107,9 @@ public static class LcPricingModel
 
         // Success:
         modelData.Success = true;
-        modelData.Data = new
+        modelData.Data = new Dictionary<string, object>()
         {
-            PricingVariablesNumbers = pricingVariablesNumbers
+            { "PricingVariablesNumbers", pricingVariablesNumbers }
         };
         return modelData;
     }
@@ -150,6 +156,30 @@ public static class LcPricingModel
                     0, // systemPricingDataInput
                     hourPrice,
                     timeprice[0], timeprice[1]);
+            }
+        }
+    }
+    #endregion
+
+    #region Services (attributes)
+    public static void SaveServices(
+        int estimateID,
+        int revisionID,
+        dynamic services)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            /*
+            * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
+            */
+            foreach (var att in services) {
+                // Set record (insert or update)
+                db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, 
+                    revisionID,
+                    0, 0, 0,
+                    att.AsInt(),
+                    0, null, null, // There is no input data
+                    0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
             }
         }
     }

@@ -22,7 +22,20 @@
  *@
 
 @helper Services(dynamic viewData, dynamic services) {
-
+    var attributes = Request.Form.GetValues("positionservices-attributes");
+    
+    foreach (var cat in services)
+    {
+        <ul>
+            @foreach(var att in cat.Value["ServiceAttributes"]){
+                if(att.UserChecked) {
+                    <li>
+                        <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @LcHelpers.IsChecked(true, (attributes == null ? false : attributes.Contains(((int)att["ServiceAttributeID"]).ToString()))) value="@att["ServiceAttributeID"]" name="positionservices-attributes"/>@att["ServiceAttribute"]</label>
+                    </li>
+                }
+            }
+        </ul>
+    }
 }
 
 @helper Variables(dynamic viewData, dynamic pvars) {
