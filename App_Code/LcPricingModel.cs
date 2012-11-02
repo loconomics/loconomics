@@ -308,30 +308,158 @@ public static class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(dynamic packages, dynamic feeData)
+    public static PricingModelData CalculatePackages(dynamic packages, dynamic feeData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
+
+        var selectedPackage = Request["provider-package"];
+        if (!selectedPackage.IsInt()) {
+            ModelState.AddFormError("Package selected is not valid");
+        }
+
+        if (ModelState.IsValid)
+        {
+            dynamic thePackage = null;
+            decimal timeFirstSession = 0;
+            // Get database data for selected package
+            //var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
+            var packageID = selectedPackage.AsInt();
+
+            if (!packages.PackagesByID.ContainsKey(packageID))
+            {
+                ModelState.AddFormError("Package selected is not valid");
+            }
+            else
+            {
+                thePackage = packages.PackagesByID[selectedPackage.AsInt()];
+
+                // Calculate time and price required for selected package
+
+                // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
+                decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
+                timeFirstSession += sessionTimeInHours;
+
+                decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
+                modelData.ServiceDuration += packageTimeInHours;
+
+                var fee = GetFee(feeData);
+                // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
+                modelData.SubtotalPrice += Math.Round(thePackage.Price, 2);
+                modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
+                modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
+                // TODO TimeFirstSession in modelData?
+
+                modelData.Data = new Dictionary<string, object>(){
+                    { "SelectedPackageID", packageID }
+                };
+            }
+        }
+
         return modelData;
     }
     public static void SavePackages(
         int estimateID,
         int revisionID,
-        dynamic packages)
+        PricingModelData modelData,
+        System.Web.WebPages.Html.ModelStateDictionary ModelState,
+        decimal hourPrice)
     {
+        int packageID = (int)modelData.Data["SelectedPackageID"];
+        using (var db = Database.Open("sqlloco"))
+        {
+            // TODO Reimplement sqlInsEstimateDetails SQL AND DATA
+            // Inserting details of package selected by customer
+            db.Execute(LcData.Booking.sqlInsEstimateDetails, 
+                estimateID,
+                revisionID,
+                0, 0, 0, 0,
+                packageID,
+                null, // there is no provider value
+                1, // ever quantity 1
+                0, // systemPricingDataInput
+                hourPrice,
+                modelData.ServiceDuration,
+                modelData.TotalPrice);
+        }
     }
     #endregion
 
     #region Addons
-    public static PricingModelData CalculateAddons(dynamic addons, dynamic feeData)
+    public static PricingModelData CalculateAddons(dynamic addons, dynamic feeData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
+
+        // Calculate time and price for selected addons packages
+        var selectedAddonsData = new List<dynamic>();
+        var selectedAddons = Request.Form.GetValues("provider-package-addons");
+        if (selectedAddons == null) {
+            selectedAddons = new string[0];
+        }
+        decimal timeFirstSession = 0;
+        var fee = GetFee(feeData);
+
+        if (selectedAddons.Length > 0) {
+            foreach (var addon in selectedAddons) {
+                var addonID = addon.AsInt();
+                if (addonID > 0) {
+                    //var addonData = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, addonID).Packages[0];
+                    var addonData = addons.PackagesByID[addonID];
+
+                    decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
+                    timeFirstSession += sesHours;
+            
+                    decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
+                    modelData.ServiceDuration += pakHours;
+            
+                    decimal addonPrice = Math.Round(addonData.Price, 2);
+                    modelData.SubtotalPrice += addonPrice;
+
+                    decimal addonFee = Math.Round((fee.Percentage * addonPrice) + fee.Currency, 2);
+                    modelData.FeePrice += addonFee;
+                    modelData.TotalPrice += addonPrice + addonFee;
+
+                    // TODO TimeFirstSession in modelData?
+
+                    selectedAddonsData.Add(new {
+                        addonID = addonID
+                        ,sesHours = sesHours
+                        ,pakHours = pakHours
+                        ,subtotalPrice = addonPrice
+                        ,feePrice = addonFee
+                        ,addonPrice = addonPrice + addonFee //addonPrice
+                    });
+                }
+            }
+        }
+
+        modelData.Data = new Dictionary<string, object>(){
+            { "SelectedAddonsData", selectedAddonsData }
+        };
+
         return modelData;
     }
     public static void SaveAddons(
         int estimateID,
         int revisionID,
-        dynamic addons)
+        PricingModelData modelData,
+        System.Web.WebPages.Html.ModelStateDictionary ModelState,
+        decimal hourPrice)
     {
+        var selectedAddonsData = modelData.Data["SelectedAddonsData"];
+        using (var db = Database.Open("sqlloco")) { 
+            // Inserting details of addons packages selected by customer
+            foreach (var addon in selectedAddonsData)
+            {
+                db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
+                    0, 0, 0, 0,
+                    addon.addonID,
+                    null, // there is no provider value
+                    1, // ever quantity 1
+                    0, // systemPricingDataInput
+                    hourPrice,
+                    addon.pakHours, addon.addonPrice);
+            }
+        }
     }
     #endregion
 }

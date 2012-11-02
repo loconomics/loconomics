@@ -111,19 +111,19 @@
                 addCalculationsToSummary(mdOptions, summary);
             }
             if (data.ContainsPackages) {
-                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee);
+                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
                 //rtn.Add("packages", mdPackages);
                 addCalculationsToSummary(mdPackages, summary);
             }
             if (data.ContainsAddons) {
-                mdAddons = LcPricingModel.CalculatePackages(data.Addons, data.Fee);
+                mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
                 //rtn.Add("addons", mdAddons);
                 addCalculationsToSummary(mdAddons, summary);
             }
 
             /* Save all data?
                 */
-            if (mustSave) {
+            if (mustSave && ModelState.IsValid) {
                 // Create Pricing Estimate with calculated summary
                 // We ever create a new estimate with revision 1 here
                 int estimateID = 0, revisionID = 1;
@@ -139,8 +139,8 @@
                 // IDs created:
                 estimateID = estimate.PricingEstimateID;
                 revisionID = estimate.PricingEstimateRevision;
-            
-                /* Save every detail 
+
+                /* Save every detail
                     */
                 if (data.ContainsServices) {
                     LcPricingModel.SaveServices(estimateID, revisionID);
@@ -152,10 +152,10 @@
                     LcPricingModel.SaveOptions(estimateID, revisionID, data.Options, c.UserID, mdOptions.Data["PricingOptionsNumbers"]);
                 }
                 if (data.ContainsPackages) {
-                    LcPricingModel.SavePackages(estimateID, revisionID, data.Packages);
+                    LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState, data.HourPrice);
                 }
                 if (data.ContainsAddons) {
-                    LcPricingModel.SaveAddons(estimateID, revisionID, data.Addons);
+                    LcPricingModel.SaveAddons(estimateID, revisionID, mdAddons, ModelState, data.HourPrice);
                 }
 
                 /*
@@ -174,7 +174,7 @@
         }
         
         // Return data out of try-catch block to don't break the Thread
-        if (mustSave) {
+        if (mustSave && ModelState.IsValid) {
             // All fine, continue wizard next step:
             LcHelpers.ReturnJsonResult(0, null);
         }
@@ -224,7 +224,7 @@
         {
             <fieldset>
                 <legend>Select add-on services</legend>
-                @LcPricingView.Packages(viewData, data.Addons)
+                @LcPricingView.Addons(viewData, data.Addons)
             </fieldset>
         }
 

@@ -819,6 +819,7 @@ public static partial class LcData
     {
         public dynamic Packages;
         public dynamic PackagesDetails;
+        public Dictionary<int, dynamic> PackagesByID;
     }
     public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1, int type = -1)
     {
@@ -864,7 +865,13 @@ public static partial class LcData
                 ORDER BY A.Name ASC
             ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
         }
-        return new ProviderPackagesView { Packages = packages, PackagesDetails = details };
+        // Create index of packages, Key:ID, Value:Package record
+        var index = new Dictionary<int, dynamic>(packages.Count);
+        foreach (var pak in packages)
+        {
+            index.Add(pak.ProviderPackageID, pak);
+        }
+        return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index };
     }
     #endregion
     #endregion
