@@ -203,31 +203,33 @@
     </table>
 }
 
-@helper PricingSummary(dynamic viewData, LcPricingModel.PricingModelData summary, decimal hourPrice) {
+@helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
     // TODO: re-do with summary-groups on rows instead current timerequired and optionalservices, groups
     // per variables, options, packages, addons like in current packages summary
-
+ 
     <div class="calculate-price-button actions">
         <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
     </div>
     <div class="calculation">
         <table class="calculation">
-            <tr><th>Time required:</th><td class="time-required">@(summary.ServiceDuration.ToString("c")) hour(s)</td></tr>
-            <tr>
-                <th><span class="time-required">@summary.ServiceDuration.ToString("c") hour(s)</span> @@ <span class="hour-price">@hourPrice.ToString("c")</span></th>
-                <td class="subtotal-price">@summary.SubtotalPrice.ToString("c")</td>
+
+            @foreach(var line in summaryLines) {
+                <tr>
+                    <td></td><th>@Html.Raw(line.Value.Concept)</th>
+                    <td class="subtotal-price">@line.Value.TotalPrice.ToString("c")</td>
+                </tr>
+            }
+
+            <tr class="separator">
+                <td></td><td class="separator" colspan="2"></td>
             </tr>
-            @*<tr>
-                <th>Optional Services</th>
-                <td class="optional-services">@summary.optionalServicesTotalPrice.ToString("c")</td>
-            </tr>*@
-            <tr>
-                <th>Loconomics service fee:</th>
-                <td class="fee-price">@summary.FeePrice.ToString("c")</td>
+            <tr class="total">
+                <td><input type="checkbox" disabled="disabled" style="position:relative;right:99999px"/></td><th class="name">Total price*</th>
+                <td class="calculation-summary-total total-price">@summary.TotalPrice.ToString("c")</td>
             </tr>
-            <tr>
-                <th>Total price:</th>
-                <td class="total-price">@summary.TotalPrice.ToString("c")</td>
+            <tr class="fees">
+                <td></td>
+                <th colspan="2">*includes a @summary.FeePrice.ToString("c") Loconomics service fee</th>
             </tr>
         </table>
     </div>

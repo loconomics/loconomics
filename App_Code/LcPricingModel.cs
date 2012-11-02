@@ -19,11 +19,49 @@ public static class LcPricingModel
 
     public class PricingModelData {
         public bool Success = false;
+        public dynamic Data = null;
+        public PricingSummaryData SummaryTotal = new PricingSummaryData();
+    }
+
+    public class PricingSummaryData
+    {
         public decimal SubtotalPrice = 0M;
         public decimal FeePrice = 0M;
         public decimal TotalPrice = 0M;
         public decimal ServiceDuration = 0M;
-        public dynamic Data = null;
+        public string Concept = "";
+        public PricingSummaryData()
+        {
+        }
+        public PricingSummaryData(string concept)
+        {
+            this.Concept = concept;
+        }
+        public PricingSummaryData(decimal subtotalPrice, decimal feePrice, decimal totalPrice, decimal serviceDuration)
+        {
+            this.SubtotalPrice = subtotalPrice;
+            this.FeePrice = feePrice;
+            this.TotalPrice = totalPrice;
+            this.ServiceDuration = serviceDuration;
+        }
+        public static PricingSummaryData operator + (PricingSummaryData one, PricingSummaryData add)
+        {
+            return new PricingSummaryData(
+                one.ServiceDuration + add.ServiceDuration,
+                one.SubtotalPrice + add.SubtotalPrice,
+                one.FeePrice + add.FeePrice,
+                one.TotalPrice + add.TotalPrice
+            );
+        }
+        public void Add(PricingSummaryData add)
+        {
+            this.ServiceDuration += add.ServiceDuration;
+            this.SubtotalPrice += add.SubtotalPrice;
+            this.FeePrice += add.FeePrice;
+            this.TotalPrice += add.TotalPrice;
+            if (!String.IsNullOrEmpty(add.Concept))
+                this.Concept = add.Concept;
+        }
     }
 
     /// <summary>
@@ -112,15 +150,20 @@ public static class LcPricingModel
             }
 
             timeInHours = Math.Round(timeInHours, 2);
-            modelData.ServiceDuration += timeInHours;
+            modelData.SummaryTotal.ServiceDuration += timeInHours;
             pricingVariablesNumbers[pvar.PricingVariableID] = new decimal[] { timeInHours, Math.Round(hourPrice * timeInHours, 2) };
         }
 
         var fee = GetFee(feeData);
         // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
-        modelData.SubtotalPrice = Math.Round(modelData.ServiceDuration * hourPrice, 2);
-        modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
-        modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
+        modelData.SummaryTotal.SubtotalPrice = Math.Round(modelData.SummaryTotal.ServiceDuration * hourPrice, 2);
+        modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
+        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+        
+        // Concept, html text, for pricing summary detail:
+        modelData.SummaryTotal.Concept = "<span class='time-required'>" + 
+            modelData.SummaryTotal.ServiceDuration.ToString("c") +
+            " hour(s)</span> @ <span class='hour-price'>" + hourPrice.ToString("c") + "</span>";
 
         // Success:
         modelData.Success = true;
@@ -242,17 +285,20 @@ public static class LcPricingModel
                 }
                 // Add pricing option estimate time to the total time,
                 // it's in minutes, we use hours for timeRequired:
-                modelData.ServiceDuration += Math.Round(timeVar / 60, 2);
+                modelData.SummaryTotal.ServiceDuration += Math.Round(timeVar / 60, 2);
                 pricingOptionsNumbers[popt.PricingOptionID] = new decimal[]{timeVar, optPrice};
             }
             optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
-            modelData.SubtotalPrice += optPrice;
+            modelData.SummaryTotal.SubtotalPrice += optPrice;
         }
 
         var fee = GetFee(feeData);
         // TODO: apply new calculation of fee per element, with optionPrice+fee on optionalServicesPrices instead optionSubtotal
-        modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
-        modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
+        modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
+        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+
+        // Concept, html text for Pricing summary detail, update? (already set in controller page):
+        //modelData.SummaryTotal.Concept = "Optional Services";
 
         // Success:
         modelData.Success = true;
@@ -340,14 +386,17 @@ public static class LcPricingModel
                 timeFirstSession += sessionTimeInHours;
 
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
-                modelData.ServiceDuration += packageTimeInHours;
+                modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
                 var fee = GetFee(feeData);
                 // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
-                modelData.SubtotalPrice += Math.Round(thePackage.Price, 2);
-                modelData.FeePrice = Math.Round((fee.Percentage * modelData.SubtotalPrice) + fee.Currency, 2);
-                modelData.TotalPrice = modelData.SubtotalPrice + modelData.FeePrice;
+                modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
+                modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
+                modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
                 // TODO TimeFirstSession in modelData?
+
+                // Concept, html text for Pricing summary detail, update it with package name:
+                modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
 
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
@@ -378,8 +427,8 @@ public static class LcPricingModel
                 1, // ever quantity 1
                 0, // systemPricingDataInput
                 hourPrice,
-                modelData.ServiceDuration,
-                modelData.TotalPrice);
+                modelData.SummaryTotal.ServiceDuration,
+                modelData.SummaryTotal.TotalPrice);
         }
     }
     #endregion
@@ -409,14 +458,17 @@ public static class LcPricingModel
                     timeFirstSession += sesHours;
             
                     decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
-                    modelData.ServiceDuration += pakHours;
+                    modelData.SummaryTotal.ServiceDuration += pakHours;
             
                     decimal addonPrice = Math.Round(addonData.Price, 2);
-                    modelData.SubtotalPrice += addonPrice;
+                    modelData.SummaryTotal.SubtotalPrice += addonPrice;
 
                     decimal addonFee = Math.Round((fee.Percentage * addonPrice) + fee.Currency, 2);
-                    modelData.FeePrice += addonFee;
-                    modelData.TotalPrice += addonPrice + addonFee;
+                    modelData.SummaryTotal.FeePrice += addonFee;
+                    modelData.SummaryTotal.TotalPrice += addonPrice + addonFee;
+
+                    // Concept, html text for Pricing summary detail, update? (already set in controller page):
+                    //modelData.SummaryTotal.Concept = "Add-on services";
 
                     // TODO TimeFirstSession in modelData?
 

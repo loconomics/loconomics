@@ -9,7 +9,7 @@
     
     var data = getData(customer, provider, position);
     
-    var summary = new LcPricingModel.PricingModelData();
+    var summary = new LcPricingModel.PricingSummaryData();
     
     Dictionary<string, LcPricingModel.PricingModelData> modelsData = null;
 
@@ -42,6 +42,9 @@
         // Booking type with fees policy
         var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
         
+        // Collection of Summary numbers per group that will be a detail line of the result
+        var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
+
         // Configuring available data/groups depending on Pricing Type:
         bool hasServices = true, 
             hasVariables = true,
@@ -92,27 +95,43 @@
                 }
             }
         }
+
+        // Packages
+        if (hasPackages) {
+            packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
+            if (packages.Packages.Count > 0) {
+                // Add to summary
+                SummaryLines.Add("packages", new LcPricingModel.PricingSummaryData("Package"));
+            }
+        }
+
+        // Add-ons
+        if (hasAddons) {
+            addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+            if (addons.Packages.Count > 0) {
+                // Add to summary
+                SummaryLines.Add("addons", new LcPricingModel.PricingSummaryData("Add-on services"));
+            }
+        }
         
         // Variables
         if (hasVariables) {
             // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
             // previously values for a variable, that variable will not be returned.
             pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+            if (pvars.Count > 0) {
+                // Add to summary
+                SummaryLines.Add("variables", new LcPricingModel.PricingSummaryData("Estimated Cost"));
+            }
         }
-        
+
         // Options
         if (hasOptions) {
             poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
-        }
-        
-        // Packages
-        if (hasPackages) {
-            packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
-        }
-        
-        // Add-ons
-        if (hasAddons) {
-            addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+            if (poptions.Count > 0) {
+                // Add to summary
+                SummaryLines.Add("options", new LcPricingModel.PricingSummaryData("Optional Services"));
+            }
         }
         
         // Return struct with all data and availability information (Contains* properties)
@@ -132,11 +151,12 @@
             Fee = fee,
             HourPrice = hourPrice,
             PricingTypeID = pricingtypeid,
-            ClientTypeID = clienttypeid
+            ClientTypeID = clienttypeid,
+            SummaryLines = SummaryLines
         };
     }
     
-    Dictionary<string, LcPricingModel.PricingModelData> processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingModelData summary) {
+    Dictionary<string, LcPricingModel.PricingModelData> processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingSummaryData summary) {
 
         var rtn = new Dictionary<string, LcPricingModel.PricingModelData>();
         
@@ -152,22 +172,27 @@
             if (data.ContainsVariables) {
                 mdVariables = LcPricingModel.CalculateVariables(data.Variables, data.HourPrice, data.Fee);
                 //rtn.Add("variables", mdVariables);
-                addCalculationsToSummary(mdVariables, summary);
+                data.SummaryLines["variables"].Add(mdVariables.SummaryTotal);
             }
             if (data.ContainsOptions) {
                 mdOptions = LcPricingModel.CalculateOptions(data.Options, data.Fee);
                 rtn.Add("options", mdOptions);
-                addCalculationsToSummary(mdOptions, summary);
+                data.SummaryLines["options"].Add(mdOptions.SummaryTotal);
             }
             if (data.ContainsPackages) {
                 mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
                 //rtn.Add("packages", mdPackages);
-                addCalculationsToSummary(mdPackages, summary);
+                data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
             }
             if (data.ContainsAddons) {
                 mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
                 //rtn.Add("addons", mdAddons);
-                addCalculationsToSummary(mdAddons, summary);
+                data.SummaryLines["addons"].Add(mdAddons.SummaryTotal);
+            }
+            
+            // Calculate summary totals:
+            foreach(var line in data.SummaryLines) {
+                summary.Add(line.Value);
             }
 
             /* Save all data?
@@ -229,13 +254,6 @@
         }
         
         return rtn;
-    }
-    
-    void addCalculationsToSummary(LcPricingModel.PricingModelData calc, LcPricingModel.PricingModelData summary) {
-        summary.ServiceDuration += calc.ServiceDuration;
-        summary.SubtotalPrice += calc.SubtotalPrice;
-        summary.FeePrice += calc.FeePrice;
-        summary.TotalPrice += calc.TotalPrice;
     }
     
     LcPricingModel.PricingModelData GetModelDataForView(string viewName, Dictionary<string, LcPricingModel.PricingModelData> modelsData) {
@@ -303,7 +321,7 @@
         {
             <fieldset>
                 <legend>Pricing summary</legend>
-                @LcPricingView.PricingSummary(viewData, summary, data.HourPrice)
+                @LcPricingView.PricingSummary(viewData, summary, data.SummaryLines, data.HourPrice)
             </fieldset>
         }
 
