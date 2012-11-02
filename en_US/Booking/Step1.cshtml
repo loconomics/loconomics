@@ -23,7 +23,8 @@
         Success = false
     };
     
-    var hasPricingSummary = data.ContainsServices || data.ContainsVariables || data.ContainsOptions;
+    var hasPricingSummary = data.ContainsSummary && 
+        (data.ContainsServices || data.ContainsVariables || data.ContainsOptions || data.ContainsPackages || data.ContainsAddons);
 }
 @functions{
     dynamic getData(dynamic c, dynamic p, dynamic pos) {
@@ -40,46 +41,94 @@
         
         // Booking type with fees policy
         var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
+        
+        // Configuring available data/groups depending on Pricing Type:
+        bool hasServices = true, 
+            hasVariables = true,
+            hasOptions = true,
+            hasPackages = true,
+            hasAddons = true,
+            hasSummary = true,
+            hasInstructions = true;
+        /*
+         * If we need granulated control over what show and what not
+         * independing of database data, we can add exceptions like
+         * next here to avoid some 'elements groups'
+         * /
+        switch (pricingtypeid) {
+            // Packages
+            case 3:
+                hasVariables = false;
+                break;
+            // Custom
+            case 2:
+                hasPackages = false;
+                hasAddons = false;
+                break;
+        }
+         */
 
-        // Services: categories and attributes
-        var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
-        var thereAreAttributes = false;
-        foreach (var cat in dataCats) {
-            if (thereAreAttributes) {
-                break;
-            }
-            foreach (var att in cat.Value["ServiceAttributes"]) {
-                thereAreAttributes = true;
-                break;
+        /*
+         * Retrieving data of each group
+         */
+        dynamic dataCats = null, 
+            pvars = null, 
+            poptions = null, 
+            packages = null, 
+            addons = null;
+        bool thereAreAttributes = false;
+
+        // Services
+        if (hasServices) {        
+            // Services: categories and attributes
+            dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
+            foreach (var cat in dataCats) {
+                if (thereAreAttributes) {
+                    break;
+                }
+                foreach (var att in cat.Value["ServiceAttributes"]) {
+                    thereAreAttributes = true;
+                    break;
+                }
             }
         }
         
         // Variables
-        // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
-        // previously values for a variable, that variable will not be returned.
-        var pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+        if (hasVariables) {
+            // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
+            // previously values for a variable, that variable will not be returned.
+            pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+        }
         
         // Options
-        var poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+        if (hasOptions) {
+            poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
+        }
         
         // Packages
-        var packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
+        if (hasPackages) {
+            packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
+        }
         
         // Add-ons
-        var addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+        if (hasAddons) {
+            addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+        }
         
         // Return struct with all data and availability information (Contains* properties)
         return new {
-            ContainsServices = thereAreAttributes,
+            ContainsServices = hasServices && thereAreAttributes,
             Services = dataCats,
-            ContainsVariables = pvars.Count > 0,
+            ContainsVariables = hasVariables && pvars.Count > 0,
             Variables = pvars,
-            ContainsOptions = poptions.Count > 0,
+            ContainsOptions = hasOptions && poptions.Count > 0,
             Options = poptions,
-            ContainsPackages = packages.Packages.Count > 0,
+            ContainsPackages = hasPackages && packages.Packages.Count > 0,
             Packages = packages,
-            ContainsAddons = addons.Packages.Count > 0,
+            ContainsAddons = hasAddons && addons.Packages.Count > 0,
             Addons = addons,
+            ContainsSummary = hasSummary,
+            ContainsInstructions = hasInstructions,
             Fee = fee,
             HourPrice = hourPrice,
             PricingTypeID = pricingtypeid,
@@ -166,7 +215,7 @@
                     p.UserID,
                     pos.PositionID,
                     estimateID,
-                    Request["booking-services-special-instructions"]
+                    data.ContainsSummary ? Request["booking-services-special-instructions"] : null
                 );
             }
         } catch (Exception ex) {
@@ -258,10 +307,13 @@
             </fieldset>
         }
 
-        <fieldset class="special-instructions">
-            <legend>Any details that might help @provider.FirstName perform the service better?</legend>
-            <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
-        </fieldset>
+        @if (data.ContainsInstructions)
+        {
+            <fieldset class="special-instructions">
+                <legend>Any details that might help @provider.FirstName perform the service better?</legend>
+                <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
+            </fieldset>
+        }
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Save & continue</button>
