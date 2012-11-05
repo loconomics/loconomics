@@ -681,13 +681,17 @@ public static partial class LcData
                                ,[ProviderPricingDataInput]
                                ,[CustomerPricingDataInput]
                                ,[SystemPricingDataInput]
-                               ,[ProviderHourlyRate]
-                               ,[TimeEstimate]
-                               ,[PriceEstimate]
+
+                               ,[ServiceDuration]
+                               ,[HourlyPrice]
+                               ,[SubtotalPrice]
+                               ,[FeePrice]
+                               ,[TotalPrice]
+
                                ,[CreatedDate]
                                ,[UpdatedDate]
                                ,[ModifiedBy])
-                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, getdate(), getdate(), 'sys')
+                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys')
         ";
         public const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest

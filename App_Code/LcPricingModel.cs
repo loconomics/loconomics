@@ -247,9 +247,11 @@ public static class LcPricingModel
                     pvar.ProviderDataInputValue,
                     Request[pvar.PricingVariableName],
                     0, // systemPricingDataInput
-                    hourPrice,
                     itemNumbers.ServiceDuration,
-                    itemNumbers.SubtotalPrice);
+                    hourPrice,
+                    itemNumbers.SubtotalPrice,
+                    itemNumbers.FeePrice,
+                    itemNumbers.TotalPrice);
             }
         }
     }
@@ -275,8 +277,9 @@ public static class LcPricingModel
                         revisionID,
                         0, 0, 0,
                         att.AsInt(),
-                        0, null, null, // There is no input data
-                        0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
+                        0, 
+                        null, null, 0, // There is no input data
+                        0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
                 }
             }
         }
@@ -391,7 +394,7 @@ public static class LcPricingModel
             foreach (var popt in poptions) {
                 if (Request[popt.PricingOptionName + "-check"] == "true") {
                     // Get time and pricing numbers
-                    var timeprice = pricingOptionsNumbers[popt.PricingOptionID];
+                    var itemNumbers = pricingOptionsNumbers[popt.PricingOptionID];
                     // Insert data:
                     db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                         estimateID,
@@ -403,9 +406,11 @@ public static class LcPricingModel
                         popt.ProviderDataInputValue,
                         Request[popt.PricingOptionName] ?? 1,
                         0, // systemPricingDataInput
+                        itemNumbers.ServiceDuration,
                         0, // hourlyRate (options are not calculated based on a hourly rate, save 0)
-                        timeprice.ServiceDuration,
-                        timeprice.SubtotalPrice);
+                        itemNumbers.SubtotalPrice,
+                        itemNumbers.FeePrice,
+                        itemNumbers.TotalPrice);
                 }
             }
         }
@@ -484,8 +489,10 @@ public static class LcPricingModel
                 null, // there is no provider value
                 1, // ever quantity 1
                 0, // systemPricingDataInput
-                hourPrice,
                 modelData.SummaryTotal.ServiceDuration,
+                hourPrice,
+                modelData.SummaryTotal.SubtotalPrice,
+                modelData.SummaryTotal.FeePrice,
                 modelData.SummaryTotal.TotalPrice);
         }
     }
@@ -565,8 +572,11 @@ public static class LcPricingModel
                     null, // there is no provider value
                     1, // ever quantity 1
                     0, // systemPricingDataInput
+                    addon.pakHours,
                     hourPrice,
-                    addon.pakHours, addon.addonPrice);
+                    addon.subtotalPrice,
+                    addon.feePrice,
+                    addon.addonPrice);
             }
         }
     }
