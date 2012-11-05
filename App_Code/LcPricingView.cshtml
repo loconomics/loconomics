@@ -242,9 +242,11 @@
 
 @helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
  
-    <div class="calculate-price-button actions">
-        <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
-    </div>
+    <noscript>
+        <div class="calculate-price-button actions">
+            <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
+        </div>
+    </noscript>
     <div class="calculation">
         <table class="calculation calculation-summary">
 
