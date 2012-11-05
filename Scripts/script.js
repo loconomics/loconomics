@@ -1112,9 +1112,10 @@ LC.setupCalculateSummary = function (force) {
             var groups = {};
             d.each(function () {
                 var groupTotal = 0;
+                var allChecked = $(this).is('.calculate-all-items');
                 $(this).find('tr').each(function () {
                     var item = $(this);
-                    if (item.find('.calculate-item-checked').is(':checked')) {
+                    if (allChecked || item.find('.calculate-item-checked').is(':checked')) {
                         groupTotal += LC.getMoneyNumber(item.find('.calculate-item-total:eq(0)'));
                     }
                 });

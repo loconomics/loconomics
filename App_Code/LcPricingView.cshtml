@@ -41,7 +41,7 @@
 @helper Variables(dynamic viewData, dynamic pvars, decimal hourPrice, dynamic fee) {
     var idprefix = "pricingwizard";
 
-    <table class="pricing-vars calculate-items-totals calculate-summary-group" data-calculation-summary-group="variables">
+    <table class="pricing-vars calculate-items-totals calculate-all-items calculate-summary-group" data-calculation-summary-group="variables">
     @foreach (var pvar in pvars)
     {
         var itemNumbers = LcPricingModel.GetVariableItemNumbers(pvar, hourPrice, fee);
