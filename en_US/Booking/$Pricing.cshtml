@@ -40,7 +40,8 @@
         var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
         
         // Booking type with fees policy
-        var fee = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
+        var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
+        var fee = LcPricingModel.GetFee(feeData);
         
         // Collection of Summary numbers per group that will be a detail line of the result
         var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
@@ -283,7 +284,7 @@
         {
             <fieldset>
                 <legend>Please select a package</legend>
-                @LcPricingView.Packages(viewData, data.Packages)
+                @LcPricingView.Packages(viewData, data.Packages, data.Fee)
             </fieldset>
         }
         
@@ -291,7 +292,7 @@
         {
             <fieldset>
                 <legend>Select add-on services</legend>
-                @LcPricingView.Addons(viewData, data.Addons)
+                @LcPricingView.Addons(viewData, data.Addons, data.Fee)
             </fieldset>
         }
 
@@ -299,7 +300,7 @@
         {
             <fieldset>
                 <legend>Variables</legend>
-                @LcPricingView.Variables(viewData, data.Variables)
+                @LcPricingView.Variables(viewData, data.Variables, data.HourPrice, data.Fee)
             </fieldset>
         }
         
@@ -307,7 +308,7 @@
         {
             <fieldset>
                 <legend>Please add any additional options you’d like</legend>
-                @LcPricingView.Options(viewData, data.Options, GetModelDataForView("options", modelsData))
+                @LcPricingView.Options(viewData, data.Options, GetModelDataForView("options", modelsData), data.Fee)
             </fieldset>
         }
 
@@ -339,8 +340,8 @@
     @if (IsPost)
     {
         <script type="text/javascript">
-            lcSetupCalculateTableItemsTotals();
-            LC.setupCalculateSummary(true);
+            //lcSetupCalculateTableItemsTotals();
+            //LC.setupCalculateSummary(true);
         </script>
     }
 </form>

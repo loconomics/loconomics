@@ -24,6 +24,16 @@
             ScopeStorage.GlobalScope["_lcRenderPageReturns"] = value;
         }
     }
+    public static decimal GetMoneyNumber(string number){
+        if (String.IsNullOrEmpty(number)) {
+            return 0;
+        } else {
+            decimal m = 0;
+            number = number.Replace("$", "").Replace("€", "");
+            decimal.TryParse(number, out m);
+            return m;
+        }
+    }
     /*==============
      * Dates
      */

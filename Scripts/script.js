@@ -1065,10 +1065,12 @@ function smoothBoxBlockCloseAll(container) {
 function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
 }
-LC.getMoneyNumber = function (v) {
+LC.getMoneyNumber = function (v, alt) {
+    alt = alt || 0;
     if (v instanceof jQuery)
         v = v.val() || v.text();
-    return parseFloat((v || '0').replace(/[$€]/g, ''));
+    v = parseFloat(v.replace(/[$€]/g, ''));
+    return isNaN(v) ? alt : v;
 };
 LC.setMoneyNumber = function (v, el) {
     v = Math.round(v * 100) / 100;
@@ -1090,7 +1092,7 @@ function lcSetupCalculateTableItemsTotals() {
             var ip = tr.find('.calculate-item-price');
             var iq = tr.find('.calculate-item-quantity');
             var it = tr.find('.calculate-item-total');
-            LC.setMoneyNumber(LC.getMoneyNumber(ip) * LC.getMoneyNumber(iq), it);
+            LC.setMoneyNumber(LC.getMoneyNumber(ip) * LC.getMoneyNumber(iq, 1), it);
             tr.trigger('lcCalculatedItemTotal', tr);
         }
         $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);

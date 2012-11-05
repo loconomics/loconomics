@@ -59,6 +59,16 @@
 .row-selection {
     min-width: 16px;
 }
+.pricing-wizard .calculate-item-fee,
+.calculate-item-subtotal,
+.pricing-vars .calculate-item-total,
+.pricing-vars .calculate-item-price,
+.pricing-vars .calculate-item-total,
+.packages-list .calculate-item-quantity,
+.packages-list .calculate-item-price {
+    display: none;
+}
+
 .pricing-services label {
     padding: 0 20px 0 0;
 }

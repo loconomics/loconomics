@@ -38,55 +38,61 @@
     }
 }
 
-@helper Variables(dynamic viewData, dynamic pvars) {
+@helper Variables(dynamic viewData, dynamic pvars, decimal hourPrice, dynamic fee) {
     var idprefix = "pricingwizard";
 
-    <table class="pricing-vars calculate-summary-group" data-calculation-summary-group="variables">
+    <table class="pricing-vars calculate-items-totals calculate-summary-group" data-calculation-summary-group="variables">
     @foreach (var pvar in pvars)
     {
+        var itemNumbers = LcPricingModel.GetVariableItemNumbers(pvar, hourPrice, fee);
+        
         <tr class="@pvar.PricingVariableName data-type-@pvar.CustomerDataInputType">
             <td class="row-selection"></td>
             <td class="name"><label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label></td>
             <td class="var-values">
-            @switch ((string)@pvar.CustomerDataInputType)
-            {
-                case "dropdown":
-                    <select id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName">
-                        @{
-                            var optvalues = LcHelpers.GetValuesFromCSVLine(pvar.CustomerDataValues);
-                            foreach (string optv in optvalues)
-                            {
-                                var v = optv.Trim();
-                                <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
+                <span class="calculate-item-fee">@(String.Format("{0:c}", itemNumbers.FeePrice))</span>
+                <span class="calculate-item-price">@((itemNumbers.TotalPrice).ToString("c"))</span>
+                <span class="calculate-item-total">@((itemNumbers.TotalPrice).ToString("c"))</span>
+
+                @switch ((string)@pvar.CustomerDataInputType)
+                {
+                    case "dropdown":
+                        <select id="@idprefix-@pvar.PricingVariableName" class="calculate-item-quantity" name="@pvar.PricingVariableName">
+                            @{
+                                var optvalues = LcHelpers.GetValuesFromCSVLine(pvar.CustomerDataValues);
+                                foreach (string optv in optvalues)
+                                {
+                                    var v = optv.Trim();
+                                    <option value="@v" @getSelected(pvar.PricingVariableName, v, pvar)>@v</option>
+                                }
                             }
-                        }
-                    </select>
-                    break;
-                case "number":
-                case "text":
-                    <input type="text" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.CustomerDataInputValue)"/>
-                    break;
-                case "":
-                    break;
-                default:
-                    <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
-                    break;
-            }
+                        </select>
+                        break;
+                    case "number":
+                    case "text":
+                        <input type="text" class="calculate-item-quantity" id="@idprefix-@pvar.PricingVariableName" name="@pvar.PricingVariableName" value="@(Request[pvar.PricingVariableName] ?? pvar.CustomerDataInputValue)"/>
+                        break;
+                    case "":
+                        break;
+                    default:
+                        <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
+                        break;
+                }
             </td>
         </tr>
     }
     </table>
 }
 
-@helper Options(dynamic viewData, dynamic poptions, LcPricingModel.PricingModelData modelData) {
+@helper Options(dynamic viewData, dynamic poptions, LcPricingModel.PricingModelData modelData, dynamic fee) {
     var idprefix = "pricingwizard";
-    Dictionary<int, decimal> optionalServicesPrices = null;
+    Dictionary<int, LcPricingModel.PricingSummaryData> pricingOptionsNumbers = null;
     if (modelData != null) {
-        optionalServicesPrices = modelData.Data["OptionalServicesPrices"];
+        pricingOptionsNumbers = modelData.Data["PricingOptionsNumbers"];
     }
-    if (optionalServicesPrices ==  null) {
+    if (pricingOptionsNumbers ==  null) {
         // Create empty dictionary to avoid additional checks in the view
-        optionalServicesPrices = new Dictionary<int, decimal>();
+        pricingOptionsNumbers = new Dictionary<int, LcPricingModel.PricingSummaryData>();
     }
 
     <table class="pricing-options calculate-items-totals calculate-summary-group" data-calculation-summary-group="options">
@@ -103,13 +109,24 @@
         <tbody>
         @foreach (var popt in poptions)
         {
+            LcPricingModel.PricingSummaryData prices = null, unitPrices = null;
+            unitPrices = LcPricingModel.GetOptionItemNumbers(popt, fee);
+            if (pricingOptionsNumbers.ContainsKey(popt.PricingOptionID)) {
+                prices = pricingOptionsNumbers[popt.PricingOptionID];
+            } else {
+                prices = unitPrices;
+            }
+            
             <tr class="@popt.PricingOptionName data-type-@popt.CustomerDataInputType">
                 <td><input type="checkbox" class="calculate-item-checked" name="@popt.PricingOptionName-check" id="@idprefix-@popt.PricingOptionName-check" @getChecked(popt.PricingOptionName + "-check", "true", popt) value="true" /></td>
                 <td class="pricing-option-check name">
                     <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                 </td>
-                <td class="pricint-option-duration duration">@popt.ProviderTimeRequired minutes</td>
-                <td class="pricing-option-item-price number money calculate-item-price">@popt.ProviderDataInputValue</td>
+                <td class="pricint-option-duration duration">@(prices.ServiceDuration == 0 ? "" : Math.Round(unitPrices.ServiceDuration * 60, 0).ToString() + " minutes")</td>
+                <td class="pricing-option-item-price number money">
+                    <span class="calculate-item-fee">@(String.Format("{0:c}", unitPrices.FeePrice))</span>
+                    <span class="calculate-item-price">@(String.Format("{0:c}", unitPrices.TotalPrice))</span>
+                </td>
                 <td class="pricing-option-quantity number">
                 @switch ((string)@popt.CustomerDataInputType)
                 {
@@ -130,7 +147,7 @@
                         <input type="text" class="calculate-item-quantity" id="@idprefix-@popt.PricingOptionName" name="@popt.PricingOptionName" value="@(Request[popt.PricingOptionName] ?? popt.CustomerDataInputValue)"/>
                         break;
                     case "":
-                        <text>N/A</text>
+                        <span class="calculate-item-quantity">N/A</span>
                         break;
                     default:
                         <text>Unknown CustomerDataInputType: @popt.CustomerDataInputType</text>
@@ -138,7 +155,7 @@
                 }
                 </td>
                 <td class="pricing-option-total-price calculated number money">
-                    <span class="calculate-item-total">@((optionalServicesPrices.ContainsKey(popt.PricingOptionID) ? optionalServicesPrices[popt.PricingOptionID] : 0).ToString("c"))</span>
+                    <span class="calculate-item-total">@(prices.TotalPrice.ToString("c"))</span>
                 </td>
             </tr>
         }
@@ -146,7 +163,7 @@
     </table>
 }
 
-@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages) {
+@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages, dynamic fee) {
     var idprefix = "pricingwizard";
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
@@ -161,6 +178,7 @@
         </tr>
         @foreach (var pak in packages.Packages)
         {
+            var feePrice = LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
             <tr>
                 <td>
                     <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
@@ -170,13 +188,18 @@
                 </td>
                 <td class="package-sessions number">@pak.NumberOfSessions</td>
                 <td class="package-duration number">@pak.ServiceDuration minutes</td>
-                <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
+                <td class="package-total-price number">
+                    <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
+                    <span class="calculate-item-quantity">1</span>
+                    <span class="calculate-item-price">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                    <span class="calculate-item-total">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                </td>
             </tr>
         }
     </table>
 }
 
-@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons) {
+@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons, dynamic fee) {
     var idprefix = "pricingwizard";
     var selectedAddons = Request.Form.GetValues("provider-package-addons");
     if (selectedAddons == null) {
@@ -192,6 +215,7 @@
         </tr>
         @foreach (var pak in addons.Packages)
         {
+            var feePrice = LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
             <tr>
                 <td>
                     <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
@@ -200,7 +224,12 @@
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                 </td>
                 <td class="package-duration number">@pak.ServiceDuration minutes</td>
-                <td class="package-total-price calculate-item-total number">@(String.Format("{0:c}", pak.Price))</td>
+                <td class="package-total-price number">
+                    <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
+                    <span class="calculate-item-quantity">1</span>
+                    <span class="calculate-item-price">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                    <span class="calculate-item-total">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                </td>
             </tr>
         }
     </table>

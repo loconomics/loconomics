@@ -9,6 +9,7 @@ using System.Web.WebPages;
 /// </summary>
 public static class LcPricingModel
 {
+    #region Usefull properties, classes and methods
     private static HttpRequest Request
     {
         get
@@ -72,7 +73,7 @@ public static class LcPricingModel
     /// </summary>
     /// <param name="feeData"></param>
     /// <returns></returns>
-    static dynamic GetFee(dynamic feeData)
+    public static dynamic GetFee(dynamic feeData)
     {
         decimal feePercentage = 0M, feeCurrency = 0M;
         if (feeData.ServiceFeeCurrency)
@@ -89,7 +90,53 @@ public static class LcPricingModel
         };
     }
 
+    public static decimal ApplyFeeAndRound(dynamic fee, decimal price)
+    {
+        return Math.Round(ApplyFee(fee, price), 0);
+    }
+    public static decimal ApplyFee(dynamic fee, decimal price)
+    {
+        return Math.Round((fee.Percentage * price) + fee.Currency, 2);
+    }
+    #endregion
+
     #region Variables
+    public static PricingSummaryData GetVariableItemNumbers(dynamic pvar, decimal hourPrice, dynamic fee)
+    {
+        // Get provider value for this pricing variable
+        string providerValue = pvar.ProviderDataInputValue;
+        decimal timeInHours = 0;
+
+        decimal provValueAsDecimal = 0;
+        switch ((string)pvar.ProviderDataInputUnit)
+        {
+            case "minutes":
+                decimal.TryParse(providerValue, out provValueAsDecimal);
+                // Getting the provider Item Time in Hours
+                timeInHours = provValueAsDecimal / 60;
+                break;
+            case "hours":
+                decimal.TryParse(providerValue, out provValueAsDecimal);
+                // Provider value are just in hours:
+                timeInHours = provValueAsDecimal;
+                break;
+            default:
+                break;
+        }
+
+        timeInHours = Math.Round(timeInHours, 2);
+
+        // Numbers are per item:
+        var subtotal = timeInHours * hourPrice;
+        var feePrice = ApplyFee(fee, subtotal);
+
+        return new PricingSummaryData{
+            ServiceDuration = timeInHours,
+            SubtotalPrice = subtotal,
+            FeePrice = feePrice,
+            TotalPrice = subtotal + feePrice
+        };
+    }
     /// <summary>
     /// Calculate fees and summary for pricing variables, returning it
     /// </summary>
@@ -97,73 +144,62 @@ public static class LcPricingModel
     /// <param name="hourPrice"></param>
     /// <param name="feeData"></param>
     /// <returns></returns>
-    public static PricingModelData CalculateVariables(dynamic pvars, decimal hourPrice, dynamic feeData)
+    public static PricingModelData CalculateVariables(dynamic pvars, decimal hourPrice, dynamic fee)
     {
         var modelData = new PricingModelData();
 
         // Collection to save time and price for each pricing variable item
-        // Key will be VariableID, first decimal is time required for the item
-        // and second is calculated price for this item
-        var pricingVariablesNumbers = new Dictionary<int, decimal[]>();
+        // Key will be VariableID
+        var pricingVariablesNumbers = new Dictionary<int, PricingSummaryData>();
 
         // Calculate time required per Pricing Variables
         foreach (var pvar in pvars)
         {
-            string customerValue = Request[pvar.PricingVariableName];
+            var itemVarSummary = GetVariableItemNumbers(pvar, hourPrice, fee);
 
-            // Get provider value for this pricing variable
-            string providerValue = pvar.ProviderDataInputValue;
-            decimal timeInHours = 0;
-
-            // Analizing the provider value depending on the data-type ('unit' field in the database)
-            decimal provValueAsDecimal = 0;
-            switch ((string)pvar.ProviderDataInputUnit)
-            {
-                case "minutes":
-                    decimal.TryParse(providerValue, out provValueAsDecimal);
-                    // Getting the provider Item Time in Hours
-                    timeInHours = provValueAsDecimal / 60;
-                    break;
-                case "hours":
-                    decimal.TryParse(providerValue, out provValueAsDecimal);
-                    // Provider value are just in hours:
-                    timeInHours = provValueAsDecimal;
-                    break;
-                default:
-                    break;
-            }
             // Analizing the customer value depending on the data-type ('unit' field in the database)
-            decimal custValueAsDecimal = 0;
+            string customerValue = Request[pvar.PricingVariableName];
+            decimal customerQuantity = 0;
             switch ((string)pvar.CustomerDataInputUnit)
             {
                 case "number":
                 case "times":
                 case "quantity":
-                    decimal.TryParse(customerValue, out custValueAsDecimal);
                     // Customer value is the quantity of items or times item value is repeated.
                     // To get the final time value, multiply by item time in hours
                     // (no on timeInHours, reusing this local var to save total time after this:)
-                    timeInHours = timeInHours * custValueAsDecimal;
+                    decimal.TryParse(customerValue, out customerQuantity);
                     break;
                 default:
                     break;
             }
 
-            timeInHours = Math.Round(timeInHours, 2);
-            modelData.SummaryTotal.ServiceDuration += timeInHours;
-            pricingVariablesNumbers[pvar.PricingVariableID] = new decimal[] { timeInHours, Math.Round(hourPrice * timeInHours, 2) };
-        }
+            // Get calculated data for customer selection
+            var timeInHours = Math.Round(itemVarSummary.ServiceDuration * customerQuantity, 2);
+            var subtotal = Math.Round(itemVarSummary.SubtotalPrice * customerQuantity, 2);
+            var feePrice = Math.Round(itemVarSummary.FeePrice * customerQuantity, 2);
 
-        var fee = GetFee(feeData);
-        // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
-        modelData.SummaryTotal.SubtotalPrice = Math.Round(modelData.SummaryTotal.ServiceDuration * hourPrice, 2);
-        modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
-        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+            // Create summary object for calculated customer selection
+            var customerVarSummary = new PricingSummaryData{
+                ServiceDuration = timeInHours,
+                SubtotalPrice = subtotal,
+                FeePrice = feePrice,
+                TotalPrice = subtotal + feePrice
+            };
+
+            // Add calculations to Variables Summary:
+            modelData.SummaryTotal.Add(customerVarSummary);
+
+            // Add to the returned data collection for Save proccess:
+            pricingVariablesNumbers[pvar.PricingVariableID] = customerVarSummary;
+        }
         
         // Concept, html text, for pricing summary detail:
-        modelData.SummaryTotal.Concept = "<span class='time-required'>" + 
-            modelData.SummaryTotal.ServiceDuration.ToString("c") +
-            " hour(s)</span> @ <span class='hour-price'>" + hourPrice.ToString("c") + "</span>";
+        modelData.SummaryTotal.Concept = String.Format(
+            "<span class='time-required'>{0:c} hour(s)</span> @ <span class='hour-price'>{1:c}</span>",
+            modelData.SummaryTotal.ServiceDuration,
+            hourPrice
+        );
 
         // Success:
         modelData.Success = true;
@@ -188,7 +224,7 @@ public static class LcPricingModel
         dynamic pvars,
         int customerUserID,
         decimal hourPrice,
-        Dictionary<int, decimal[]> pricingVariablesNumbers)
+        Dictionary<int, PricingSummaryData> pricingVariablesNumbers)
     {
 
         using (var db = Database.Open("sqlloco"))
@@ -202,8 +238,8 @@ public static class LcPricingModel
             // Creating Estimate details: every variable
             foreach (var pvar in pvars)
             {
-                // Get pair time and price
-                decimal[] timeprice = pricingVariablesNumbers[pvar.PricingVariableID];
+                // Get numbers per item
+                var itemNumbers = pricingVariablesNumbers[pvar.PricingVariableID];
                 // Insert data:
                 db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                     pvar.PricingVariableID,
@@ -212,7 +248,8 @@ public static class LcPricingModel
                     Request[pvar.PricingVariableName],
                     0, // systemPricingDataInput
                     hourPrice,
-                    timeprice[0], timeprice[1]);
+                    itemNumbers.ServiceDuration,
+                    itemNumbers.SubtotalPrice);
             }
         }
     }
@@ -247,55 +284,77 @@ public static class LcPricingModel
     #endregion
 
     #region Options
-    public static PricingModelData CalculateOptions(dynamic poptions, dynamic feeData)
+    public static PricingSummaryData GetOptionItemNumbers(dynamic popt, dynamic fee)
+    {
+        // Get provider value for this pricing variable
+        decimal unitprice = ASP.LcHelpers.GetMoneyNumber(popt.ProviderDataInputValue);
+
+        // Get the equivalent time required from table
+        decimal timeInHours = 0;
+        if (popt.ProviderTimeRequired is int) {
+            timeInHours = (int)popt.ProviderTimeRequired;
+        }
+        // it's in minutes, we use hours:
+        timeInHours = Math.Round(timeInHours / 60, 2);
+
+        // Numbers are per item:
+        var subtotal = unitprice;
+        var feePrice = ApplyFee(fee, subtotal);
+
+        return new PricingSummaryData{
+            ServiceDuration = timeInHours,
+            SubtotalPrice = subtotal,
+            FeePrice = feePrice,
+            TotalPrice = subtotal + feePrice
+        };
+    }
+    public static PricingModelData CalculateOptions(dynamic poptions, dynamic fee)
     {
         var modelData = new PricingModelData();
-        // Collection of prices per option to use when restoring the view with post data
-        var optionalServicesPrices = new Dictionary<int,decimal>();
         // Collection to save time and price for each pricing option item to be used on Save.
-        // Key will be OptionID, first decimal is time required for the item
-        // and second is calculated price for this item
-        var pricingOptionsNumbers = new Dictionary<int,decimal[]>();
+        // Key will be OptionID
+        var pricingOptionsNumbers = new Dictionary<int, PricingSummaryData>();
 
         foreach (var popt in poptions){
-            decimal optPrice = 0;
-                
+   
             if (Request[(string)popt.PricingOptionName + "-check"] == "true") {
-                // TODO Must replace € simbol too, better as an utility function (in file or LcHelper)
-                string strprice = popt.ProviderDataInputValue.Replace("$", "");
-                decimal unitprice = 0;
-                decimal.TryParse(strprice, out unitprice);
-                decimal quantity = 0;
+
+                var unitNumbers = GetOptionItemNumbers(popt, fee);
+
+                // Get Customer input value: Quantity
+                decimal customerQuantity = 0;
                 switch ((string)popt.CustomerDataInputUnit) {
                     case "number":
                     case "times":
                     case "quantity":
-                        quantity = Request[(string)popt.PricingOptionName].AsDecimal();
+                        customerQuantity = Request[(string)popt.PricingOptionName].AsDecimal();
                         break;
                     case "":
                     default:
-                        quantity = 1;
+                        customerQuantity = 1;
                         break;
                 }
-                optPrice = Math.Round(quantity * unitprice, 2);
-                // Get the equivalent time required from table
-                decimal timeVar = 0;
-                if (popt.ProviderTimeRequired is decimal) {
-                    timeVar = (decimal)popt.ProviderTimeRequired;
-                }
-                // Add pricing option estimate time to the total time,
-                // it's in minutes, we use hours for timeRequired:
-                modelData.SummaryTotal.ServiceDuration += Math.Round(timeVar / 60, 2);
-                pricingOptionsNumbers[popt.PricingOptionID] = new decimal[]{timeVar, optPrice};
-            }
-            optionalServicesPrices.Add(popt.PricingOptionID, optPrice);
-            modelData.SummaryTotal.SubtotalPrice += optPrice;
-        }
 
-        var fee = GetFee(feeData);
-        // TODO: apply new calculation of fee per element, with optionPrice+fee on optionalServicesPrices instead optionSubtotal
-        modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
-        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+                // Get calculated data for customer selection
+                var timeInHours = Math.Round(unitNumbers.ServiceDuration * customerQuantity, 2);
+                var subtotal = Math.Round(unitNumbers.SubtotalPrice * customerQuantity, 2);
+                var feePrice = Math.Round(unitNumbers.FeePrice * customerQuantity, 2);
+
+                // Create summary object for calculated customer selection
+                var customerNumbers = new PricingSummaryData{
+                    ServiceDuration = timeInHours,
+                    SubtotalPrice = subtotal,
+                    FeePrice = feePrice,
+                    TotalPrice = subtotal + feePrice
+                };
+
+                // Add calculations to Options Summary:
+                modelData.SummaryTotal.Add(customerNumbers);
+
+                // Add to the returned data collection for Save proccess and View:
+                pricingOptionsNumbers[popt.PricingOptionID] = customerNumbers;
+            }
+        }
 
         // Concept, html text for Pricing summary detail, update? (already set in controller page):
         //modelData.SummaryTotal.Concept = "Optional Services";
@@ -303,8 +362,7 @@ public static class LcPricingModel
         // Success:
         modelData.Success = true;
         modelData.Data = new Dictionary<string, object>(){
-            { "OptionalServicesPrices", optionalServicesPrices }
-            ,{ "PricingOptionsNumbers", pricingOptionsNumbers }
+            { "PricingOptionsNumbers", pricingOptionsNumbers }
         };
         return modelData;
     }
@@ -314,7 +372,7 @@ public static class LcPricingModel
         int revisionID,
         dynamic poptions,
         int customerUserID,
-        Dictionary<int,decimal[]> pricingOptionsNumbers)
+        Dictionary<int, PricingSummaryData> pricingOptionsNumbers)
     {
         using (var db = Database.Open("sqlloco"))
         {
@@ -332,8 +390,8 @@ public static class LcPricingModel
             // Creating Estimate details: every option checked
             foreach (var popt in poptions) {
                 if (Request[popt.PricingOptionName + "-check"] == "true") {
-                    // Get pair time and price
-                    decimal[] timeprice = pricingOptionsNumbers[popt.PricingOptionID];
+                    // Get time and pricing numbers
+                    var timeprice = pricingOptionsNumbers[popt.PricingOptionID];
                     // Insert data:
                     db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                         estimateID,
@@ -346,7 +404,8 @@ public static class LcPricingModel
                         Request[popt.PricingOptionName] ?? 1,
                         0, // systemPricingDataInput
                         0, // hourlyRate (options are not calculated based on a hourly rate, save 0)
-                        timeprice[0], timeprice[1]);
+                        timeprice.ServiceDuration,
+                        timeprice.SubtotalPrice);
                 }
             }
         }
@@ -354,7 +413,7 @@ public static class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(dynamic packages, dynamic feeData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculatePackages(dynamic packages, dynamic fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -388,7 +447,6 @@ public static class LcPricingModel
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
                 modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
-                var fee = GetFee(feeData);
                 // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
                 modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
                 modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
@@ -434,7 +492,7 @@ public static class LcPricingModel
     #endregion
 
     #region Addons
-    public static PricingModelData CalculateAddons(dynamic addons, dynamic feeData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculateAddons(dynamic addons, dynamic fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -445,7 +503,6 @@ public static class LcPricingModel
             selectedAddons = new string[0];
         }
         decimal timeFirstSession = 0;
-        var fee = GetFee(feeData);
 
         if (selectedAddons.Length > 0) {
             foreach (var addon in selectedAddons) {
@@ -463,7 +520,7 @@ public static class LcPricingModel
                     decimal addonPrice = Math.Round(addonData.Price, 2);
                     modelData.SummaryTotal.SubtotalPrice += addonPrice;
 
-                    decimal addonFee = Math.Round((fee.Percentage * addonPrice) + fee.Currency, 2);
+                    decimal addonFee = ApplyFeeAndRound(fee, addonPrice);
                     modelData.SummaryTotal.FeePrice += addonFee;
                     modelData.SummaryTotal.TotalPrice += addonPrice + addonFee;
 
