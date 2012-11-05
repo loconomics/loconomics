@@ -19,10 +19,7 @@
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
         Response.Redirect(UrlUtil.LangPath);
     }
-    
-    // Get booking info, as booking type for this
-    
-    
+
     Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
     Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
     Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
@@ -51,13 +48,7 @@
         
 		<div id="services" class="tab-body fancy current">
         @{
-            int pricingType = PageData["PricingTypeID"] = LcData.GetPositionPricingTypeID(PageData["positionrow"].PositionID, 1 /*TODO implement clientTypeID*/ );
-            @RenderPage("Step1.cshtml")
-            @*if (pricingType == 3) {
-                @RenderPage(UrlUtil.LangPath + "PricingWizard/$CustomerPackagesType.cshtml")
-            } else {
-                @RenderPage("Step1.cshtml")
-            }*@
+            @RenderPage("$Pricing.cshtml")
         }
 		</div><!-- #services -->
 
