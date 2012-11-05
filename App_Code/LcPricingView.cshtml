@@ -52,6 +52,7 @@
             <td class="var-values">
                 <span class="calculate-item-fee">@(String.Format("{0:c}", itemNumbers.FeePrice))</span>
                 <span class="calculate-item-price">@((itemNumbers.TotalPrice).ToString("c"))</span>
+                <span class="calculate-item-duration">@((itemNumbers.ServiceDuration).ToString("#.##"))</span>
                 <span class="calculate-item-total">@((itemNumbers.TotalPrice).ToString("c"))</span>
 
                 @switch ((string)@pvar.CustomerDataInputType)
@@ -82,6 +83,10 @@
         </tr>
     }
     </table>
+    <div class="group-summary">
+        Your total <span class="has-tooltip" title="What is an estimated cost?" data-description="Your housekeeper has an estimate for each of the variables listed above. We work to create a final cost and time estimate from the services you want performed. Of course, it’s an estimate. You and your provider will review the price before the work begins.">estimated cost</span>
+         is <strong class="group-total-price">$0.00</strong> and the service will take approximately <strong class="group-total-duration">0.0</strong> hrs.
+    </div>
 }
 
 @helper Options(dynamic viewData, dynamic poptions, LcPricingModel.PricingModelData modelData, dynamic fee) {

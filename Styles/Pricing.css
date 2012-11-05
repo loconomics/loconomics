@@ -65,7 +65,8 @@
 .pricing-vars .calculate-item-price,
 .pricing-vars .calculate-item-total,
 .packages-list .calculate-item-quantity,
-.packages-list .calculate-item-price {
+.packages-list .calculate-item-price,
+.pricing-vars .calculate-item-duration {
     display: none;
 }
 
@@ -87,4 +88,12 @@
 .pricing-vars td.var-values select,
 .pricing-vars td.var-values input {
     width: 60%;
+}
+
+.pricing-wizard .group-summary {
+    margin: 26px 0 0 40px;
+}
+.pricing-wizard .group-summary strong {
+    font-weight: bold;
+    color: #eb6e42;
 }

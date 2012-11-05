@@ -266,6 +266,8 @@
     }
 }
 
+<h2>Select services</h2>
+
 <form id="booking-services" action="@(UrlUtil.LangPath)Booking/$Pricing/" method="post" class="services package-pricing calculate-summary">
     <input type="hidden" name="providerid" value="@provider.UserID"/>
     <input type="hidden" name="positionid" value="@position.PositionID"/>
@@ -275,7 +277,7 @@
         @if (data.ContainsServices)
         {
             <fieldset>
-                <legend>Select Services</legend>
+                <legend>Please select the services you’d like performed (some may require an additional fee)</legend>
                 @LcPricingView.Services(viewData, data.Services)
             </fieldset>
         }
@@ -299,7 +301,7 @@
         @if (data.ContainsVariables)
         {
             <fieldset>
-                <legend>Variables</legend>
+                <legend>Help us determine an accurate price</legend>
                 @LcPricingView.Variables(viewData, data.Variables, data.HourPrice, data.Fee)
             </fieldset>
         }
@@ -309,6 +311,14 @@
             <fieldset>
                 <legend>Please add any additional options you’d like</legend>
                 @LcPricingView.Options(viewData, data.Options, GetModelDataForView("options", modelsData), data.Fee)
+            </fieldset>
+        }
+        
+        @if (data.ContainsInstructions)
+        {
+            <fieldset class="special-instructions">
+                <legend>Any details that might help @provider.FirstName perform the service better?</legend>
+                <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
             </fieldset>
         }
 
@@ -326,13 +336,6 @@
             </fieldset>
         }
 
-        @if (data.ContainsInstructions)
-        {
-            <fieldset class="special-instructions">
-                <legend>Any details that might help @provider.FirstName perform the service better?</legend>
-                <textarea rows="7" name="booking-services-special-instructions">@Request["booking-services-special-instructions"]</textarea>
-            </fieldset>
-        }
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="#schedule" class="schedule-service-button next main-action">Save & continue</button>
@@ -340,8 +343,8 @@
     @if (IsPost)
     {
         <script type="text/javascript">
-            //lcSetupCalculateTableItemsTotals();
-            //LC.setupCalculateSummary(true);
+            lcSetupCalculateTableItemsTotals();
+            LC.setupCalculateSummary(true);
         </script>
     }
 </form>

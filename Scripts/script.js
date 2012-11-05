@@ -1108,7 +1108,7 @@ LC.setupCalculateSummary = function (force) {
         var s = c.find('.calculation-summary');
         var d = c.find('table.calculate-summary-group');
         function calc() {
-            var total = 0, fee = 0;
+            var total = 0, fee = 0, duration = 0;
             var groups = {};
             d.each(function () {
                 var groupTotal = 0;
@@ -1117,13 +1117,15 @@ LC.setupCalculateSummary = function (force) {
                     var item = $(this);
                     if (allChecked || item.find('.calculate-item-checked').is(':checked')) {
                         groupTotal += LC.getMoneyNumber(item.find('.calculate-item-total:eq(0)'));
-                        fee += 
-                            LC.getMoneyNumber(item.find('.calculate-item-fee:eq(0)')) * 
-                            LC.getMoneyNumber(item.find('.calculate-item-quantity:eq(0)s'), 1);
+                        var q = LC.getMoneyNumber(item.find('.calculate-item-quantity:eq(0)'), 1);
+                        fee += LC.getMoneyNumber(item.find('.calculate-item-fee:eq(0)')) * q;
+                        duration += LC.getMoneyNumber(item.find('.calculate-item-duration:eq(0)')) * q;
                     }
                 });
                 total += groupTotal;
                 groups[$(this).data('calculation-summary-group')] = groupTotal;
+                LC.setMoneyNumber(groupTotal, $(this).closest('fieldset').find('.group-total-price'));
+                LC.setMoneyNumber(duration, $(this).closest('fieldset').find('.group-total-duration'));
             });
 
             // Set summary total value
