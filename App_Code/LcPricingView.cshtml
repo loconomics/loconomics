@@ -26,7 +26,7 @@
     
     foreach (var cat in services)
     {
-        <ul>
+        <ul class="pricing-services">
             @foreach(var att in cat.Value["ServiceAttributes"]){
                 if(att.UserChecked) {
                     <li>
@@ -41,11 +41,13 @@
 @helper Variables(dynamic viewData, dynamic pvars) {
     var idprefix = "pricingwizard";
 
-    <ul class="pricing-vars">
+    <table class="pricing-vars calculate-summary-group" data-calculation-summary-group="variables">
     @foreach (var pvar in pvars)
     {
-        <li class="@pvar.PricingVariableName data-type-@pvar.CustomerDataInputType">
-            <label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label>
+        <tr class="@pvar.PricingVariableName data-type-@pvar.CustomerDataInputType">
+            <td class="row-selection"></td>
+            <td class="name"><label for="@idprefix-@pvar.PricingVariableName">@pvar.CustomerPricingVariableDisplayText</label></td>
+            <td class="var-values">
             @switch ((string)@pvar.CustomerDataInputType)
             {
                 case "dropdown":
@@ -70,9 +72,10 @@
                     <text>Unknowed CustomerDataInputType: @pvar.CustomerDataInputType</text>
                     break;
             }
-        </li>
+            </td>
+        </tr>
     }
-    </ul>
+    </table>
 }
 
 @helper Options(dynamic viewData, dynamic poptions, LcPricingModel.PricingModelData modelData) {
@@ -89,7 +92,7 @@
     <table class="pricing-options calculate-items-totals calculate-summary-group" data-calculation-summary-group="options">
         <thead>
             <tr>
-                <th></th>
+                <th class="row-selection"></th>
                 <th class="name">Name</th>
                 <th class="duration number">Duration</th>
                 <th class="number">Item Price</th>
@@ -150,7 +153,7 @@
 
     <table class="packages-list calculate-summary-group" data-calculation-summary-group="packages">
         <tr>
-            <th></th>
+            <th class="row-selection"></th>
             <th class="package-name name">Name</th>
             <th class="package-sessions number">Included sessions</th>
             <th class="package-duration number">Duration</th>
@@ -182,7 +185,7 @@
 
     <table class="packages-list calculate-summary-group" data-calculation-summary-group="addons">
         <tr>
-            <th></th>
+            <th class="row-selection"></th>
             <th class="package-name name">Name</th>
             <th class="package-duration number">Duration</th>
             <th class="package-total-price number">Price</th>
@@ -204,19 +207,17 @@
 }
 
 @helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
-    // TODO: re-do with summary-groups on rows instead current timerequired and optionalservices, groups
-    // per variables, options, packages, addons like in current packages summary
  
     <div class="calculate-price-button actions">
         <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
     </div>
     <div class="calculation">
-        <table class="calculation">
+        <table class="calculation calculation-summary">
 
             @foreach(var line in summaryLines) {
                 <tr>
                     <td></td><th>@Html.Raw(line.Value.Concept)</th>
-                    <td class="subtotal-price">@line.Value.TotalPrice.ToString("c")</td>
+                    <td class="subtotal-price calculation-summary-group-@(line.Key.ToLower())">@line.Value.TotalPrice.ToString("c")</td>
                 </tr>
             }
 
@@ -224,7 +225,7 @@
                 <td></td><td class="separator" colspan="2"></td>
             </tr>
             <tr class="total">
-                <td><input type="checkbox" disabled="disabled" style="position:relative;right:99999px"/></td><th class="name">Total price*</th>
+                <td class="row-selection"></td><th class="name">Total price*</th>
                 <td class="calculation-summary-total total-price">@summary.TotalPrice.ToString("c")</td>
             </tr>
             <tr class="fees">

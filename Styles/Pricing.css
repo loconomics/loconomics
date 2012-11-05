@@ -53,3 +53,28 @@
     right: 10px;
     top: 6px;
 }
+
+/* Pricing Wizard Views
+ */
+.row-selection {
+    min-width: 16px;
+}
+.pricing-services label {
+    padding: 0 20px 0 0;
+}
+.pricing-services label input {
+    min-width: 16px;
+    margin: auto 16px auto 8px !important;
+}
+
+.pricing-vars td.name {
+    width: 50% !important;
+}
+.pricing-vars td.var-values {
+    text-align: right;
+    width: 50%;
+}
+.pricing-vars td.var-values select,
+.pricing-vars td.var-values input {
+    width: 60%;
+}
