@@ -265,10 +265,10 @@
     }
 }
 
-<form id="booking-services" action="@(UrlUtil.LangPath)Booking/Step1/" method="post" class="services package-pricing calculate-summary">
+<form id="booking-services" action="@(UrlUtil.LangPath)Booking/$Pricing/" method="post" class="services package-pricing calculate-summary">
     <input type="hidden" name="providerid" value="@provider.UserID"/>
     <input type="hidden" name="positionid" value="@position.PositionID"/>
-    <fieldset class="pricing-wizard ajax ajax-box step-blocks" data-ajax-fieldset-action="@(UrlUtil.LangPath)Booking/Step1/Calculate/?providerid=@(provider.UserID)&amp;positionid=@(position.PositionID)">
+    <fieldset class="pricing-wizard ajax ajax-box step-blocks" data-ajax-fieldset-action="@(UrlUtil.LangPath)Booking/$Pricing/Calculate/?providerid=@(provider.UserID)&amp;positionid=@(position.PositionID)">
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
         @if (data.ContainsServices)
