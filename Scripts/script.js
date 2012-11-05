@@ -1108,7 +1108,7 @@ LC.setupCalculateSummary = function (force) {
         var s = c.find('.calculation-summary');
         var d = c.find('table.calculate-summary-group');
         function calc() {
-            var total = 0;
+            var total = 0, fee = 0;
             var groups = {};
             d.each(function () {
                 var groupTotal = 0;
@@ -1117,6 +1117,9 @@ LC.setupCalculateSummary = function (force) {
                     var item = $(this);
                     if (allChecked || item.find('.calculate-item-checked').is(':checked')) {
                         groupTotal += LC.getMoneyNumber(item.find('.calculate-item-total:eq(0)'));
+                        fee += 
+                            LC.getMoneyNumber(item.find('.calculate-item-fee:eq(0)')) * 
+                            LC.getMoneyNumber(item.find('.calculate-item-quantity'));
                     }
                 });
                 total += groupTotal;
@@ -1125,6 +1128,7 @@ LC.setupCalculateSummary = function (force) {
 
             // Set summary total value
             LC.setMoneyNumber(total, s.find('.calculation-summary-total'));
+            LC.setMoneyNumber(fee, s.find('.calculation-summary-fee'));
             // And every group total value
             for (var g in groups) {
                 LC.setMoneyNumber(groups[g], s.find('.calculation-summary-group-' + g));
