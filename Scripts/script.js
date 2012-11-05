@@ -1119,7 +1119,7 @@ LC.setupCalculateSummary = function (force) {
                         groupTotal += LC.getMoneyNumber(item.find('.calculate-item-total:eq(0)'));
                         fee += 
                             LC.getMoneyNumber(item.find('.calculate-item-fee:eq(0)')) * 
-                            LC.getMoneyNumber(item.find('.calculate-item-quantity'));
+                            LC.getMoneyNumber(item.find('.calculate-item-quantity:eq(0)s'), 1);
                     }
                 });
                 total += groupTotal;
