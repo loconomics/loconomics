@@ -1,7 +1,10 @@
-﻿@{
+﻿@using WebMatrix.Data;
+
+@{
     string element = PageData["Element"];
     DateTime? date = PageData["Date"];
     decimal? durationHours = PageData["DurationHours"];
+    int userID = PageData["UserID"] ?? 0;
     if ((String.IsNullOrEmpty(element) || !date.HasValue) && UrlData.Count > 1) {
         element = UrlData[0];
         date = LcHelpers.CreateDateTime(UrlData[1]);
@@ -11,6 +14,9 @@
     }
     if (!durationHours.HasValue && UrlData.Count > 2) {
         durationHours = LcHelpers.CreateDecimal(UrlData[2]);
+    }
+    if (userID == 0 && UrlData.Count > 3) {
+        userID = UrlData[3].AsInt();
     }
 }
 
@@ -22,10 +28,10 @@
                 @{
                     var dateWeek = date.Value.AddDays(7);
                     for(var idate = date; idate < dateWeek; idate = idate.Value.AddDays(1)) {
-                        <li><button class="action day-selection-action" type="button" data-date="@idate.Value.ToString("R")">
+                        <li><a href="#select-day" class="action day-selection-action" type="button" data-date="@idate.Value.ToString("R")">
                             <div>@idate.Value.ToString("ddd")</div>
                             <div>@idate.Value.ToShortDateString()</div>
-                        </button></li>
+                        </a></li>
                     }
                 }
             </ul>
@@ -33,7 +39,12 @@
         </div>
         break;
     case "DayHoursSelector":
-        <table id="dayHoursSelector" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)">
+        dynamic availData = null;
+        using (var db = Database.Open("sqlloco")) {
+            availData = db.Query("EXEC dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, date, date);
+        }
+    
+        <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
             <caption><h2>@(date.Value.ToString("dddd, MMM d"))</h2></caption>
             <tr>
                 <th>Start</th>
@@ -41,17 +52,12 @@
                 <th></th>
             </tr>
             @{
-                var blocks = new List<dynamic>();
-                for(var i = 0; i < 10; i++) {
-                    blocks.Add(new {
-                        Start = TimeSpan.FromMinutes(i * 30),
-                        End = TimeSpan.FromMinutes((double)i * 30 + ((double)(durationHours ?? 4) * 60.0))
-                    });
-                }
-                foreach(var h in blocks) {
+                foreach(var h in availData) {
+                    var start = h.TimeBlock;
+                    var end = start + TimeSpan.FromHours((double)(durationHours ?? 4));
                 <tr>
-                    <td class="start">@h.Start.ToString("hh':'mm")</td>
-                    <td class="end">@h.End.ToString("hh':'mm")</td>
+                    <td class="start">@start.ToString("hh':'mm")</td>
+                    <td class="end">@end.ToString("hh':'mm")</td>
                     <td class="selector"><select class="choice-selector">
                         <option value="">select</option>
                         <option value="first">first choice</option>

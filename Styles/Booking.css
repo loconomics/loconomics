@@ -177,10 +177,13 @@
     text-align: justify;
     width: 13%;
 }
-#weekDaySelector ul li button {
+#weekDaySelector ul li .day-selection-action {
     width: 100%;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    line-height: normal;
+    padding: 0.4em 1em;
+    text-align: center;
 }
 
 #booking-schedule .select-day-hours,

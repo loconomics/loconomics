@@ -297,7 +297,12 @@
 
     </fieldset>
     <fieldset class="select-day-hours">
-        @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "DayHoursSelector", Date = showDate, DurationHours = serviceDurationHours })
+        @RenderPage("$ScheduleCalendarElements.cshtml", new { 
+            Element = "DayHoursSelector", 
+            Date = showDate, 
+            DurationHours = serviceDurationHours,
+            UserID = p.UserID
+        })
     </fieldset>
     <fieldset class="selected-schedule">
         <h2>Your selected times for @pos.PositionSingular services are:</h2>
@@ -398,7 +403,7 @@
                             break;
                     }
                     var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" + 
+                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
                         encodeURIComponent(strdate) + '/');
                     $week.data('date', date);
                     return false;
@@ -406,8 +411,11 @@
                     var date = new Date($(this).data('date'));
                     var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
                     var hours = $day.data('duration-hours');
-                    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" + 
-                        encodeURIComponent(strdate) + '/' + hours + '/');
+                    var userid = $day.data('user-id');
+                    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+                        encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
+                    $day.data('date', date);
+                    return false;
                 });
                 $day.on('change', 'select.choice-selector', function () {
                     var $s = $(this), v = $s.val();
