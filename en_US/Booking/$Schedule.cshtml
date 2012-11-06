@@ -321,8 +321,8 @@
                     }
                     foreach(var h in blocks) {
                     <tr>
-                        <td class="start">@h.Start.ToString()</td>
-                        <td class="end">@h.End.ToString()</td>
+                        <td class="start">@h.Start.ToString("hh':'mm")</td>
+                        <td class="end">@h.End.ToString("hh':'mm")</td>
                         <td class="selector"><select class="choice-selector">
                             <option value="">select</option>
                             <option value="1">first choice</option>
