@@ -415,6 +415,7 @@
         <script type="text/javascript">
             $(function ($) {
                 var $week = $('#weekDaySelector');
+                var $day = $('#dayHoursSelector');
                 $week.on('click', '.week-slider', function () {
                     var date = new Date($week.data('date'));
                     switch (this.getAttribute('href')) {
@@ -426,9 +427,16 @@
                             break;
                     }
                     var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" + encodeURIComponent(strdate));
+                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" + 
+                        encodeURIComponent(strdate) + '/');
                     $week.data('date', date);
                     return false;
+                }).on('click', '.day-selection-action', function () {
+                    var date = new Date($(this).data('date'));
+                    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+                    var hours = $day.data('duration-hours');
+                    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" + 
+                        encodeURIComponent(strdate) + '/' + hours + '/');
                 });
             });
         </script>

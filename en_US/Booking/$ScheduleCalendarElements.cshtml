@@ -22,7 +22,7 @@
                 @{
                     var dateWeek = date.Value.AddDays(7);
                     for(var idate = date; idate < dateWeek; idate = idate.Value.AddDays(1)) {
-                        <li><button class="action" type="button" data-date="@idate.Value.ToString("R")">
+                        <li><button class="action day-selection-action" type="button" data-date="@idate.Value.ToString("R")">
                             <div>@idate.Value.ToString("ddd")</div>
                             <div>@idate.Value.ToShortDateString()</div>
                         </button></li>
@@ -33,7 +33,7 @@
         </div>
         break;
     case "DayHoursSelector":
-        <table data-date="@(date.Value.ToString("R"))" class="step-block" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)">
+        <table id="dayHoursSelector" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)">
             <caption><h2>@(date.Value.ToString("dddd, MMM d"))</h2></caption>
             <tr>
                 <th>Start</th>
