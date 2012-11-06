@@ -96,7 +96,8 @@
     -webkit-border-radius: 4px;
     padding: 30px 22px;
 }
-#booking-services .step-blocks fieldset legend {
+#booking-services .step-blocks fieldset legend,
+.step-block legend {
     position: absolute;
     top: -30px;
     left: 0;
@@ -179,12 +180,44 @@
 #weekDaySelector ul li button {
     width: 100%;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 #booking-schedule .select-day-hours,
 #booking-schedule .selected-schedule {
     display: inline-block;
-    width: 48%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#booking-schedule .select-day-hours {
+    width: 400px;
+}
+#booking-schedule .select-day-hours h2 {
+    margin: 20px;
+}
+#booking-schedule .select-day-hours .step-block {
+    margin-top: 20px;
+}
+#booking-schedule .selected-schedule {
+    line-height: normal;
+    position: absolute;
+    right: 0;
+    text-align: justify;
+    width: 300px;
+}
+#booking-schedule .selected-schedule h2 {
+    font-size: 2em;
+    font-weight: normal;
+    margin: 55px 0;
+}
+#booking-schedule .selected-schedule h3 {
+    color: #5a5b5b;
+    font-size: 1.2em;
+    font-weight: normal;
+}
+#booking-schedule .selected-schedule p {
+    min-height: 14px;
+    font-weight: bold;
 }
 
 /* Schedule.location */
@@ -193,18 +226,13 @@
 }
 #booking-schedule select.select-location {
     display: block;
-    margin: 15px auto;
-    text-align: center;
+    margin: 15px 20px;
 }
-#booking-schedule select.select-location option,
-#booking-schedule select.select-location optgroup {
-    text-align: left;
-}
-#booking-schedule .availability,
 #booking-schedule .location{
     margin-bottom: 20px;
     margin-top: 40px;
-    width: 500px;
+    width: auto;
+    display: block;
 }
 #booking-schedule .location li {
     margin: 2px 0;

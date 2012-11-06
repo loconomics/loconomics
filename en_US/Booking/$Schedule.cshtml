@@ -304,7 +304,7 @@
     </fieldset>
     <fieldset class="select-day-hours">
         <h2>Friday, Oct 5</h2>
-        <div class="step-box">
+        <div class="step-block">
             <table>
                 <tr>
                     <th>Start</th>
@@ -370,8 +370,8 @@
         </div>
     </fieldset>
 
-    <fieldset class="location box step-block">
-        <legend>Location where services are to be performed:</legend>
+    <fieldset class="location step-block">
+        <legend>Select the location where your service will be performed</legend>
         <select name="select-location" class="select-location">
             <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
             <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
