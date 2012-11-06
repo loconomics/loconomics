@@ -9,8 +9,8 @@
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
-    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = DateTime.MinValue;
+    DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -26,7 +26,7 @@
     bool validBookingSession = false;
     if (bookingRequestID > 0) {
         try{
-            var brdates = ((Dictionary<int, Dictionary<string, DateTime>>)Session["BookingRequests"])[bookingRequestID];
+            var brdates = ((Dictionary<int, Dictionary<string, DateTime?>>)Session["BookingRequests"])[bookingRequestID];
             dt1Start = brdates["dt1Start"];
             dt1End = brdates["dt1End"];
             dt2Start = brdates["dt2Start"];
@@ -177,15 +177,22 @@
                             ";
                             var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
                             // Save date-times as 'tentative' provider Events
-                            var dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                                3, // Availability is 'Tentative'
-                                dt1Start, dt1End, timeZone);
-                            var dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                                3, // Availability is 'Tentative'
-                                dt2Start, dt2End, timeZone);
-                            var dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
-                                3, // Availability is 'Tentative'
-                                dt3Start, dt3End, timeZone);
+                            int? dt1ID, dt2ID, dt3ID;
+                            if (dt1Start.HasValue && dt1End.HasValue) {
+                                dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                    3, // Availability is 'Tentative'
+                                    dt1Start, dt1End, timeZone);
+                            }
+                            if (dt2Start.HasValue && dt2End.HasValue) {
+                                dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                    3, // Availability is 'Tentative'
+                                    dt2Start, dt2End, timeZone);
+                            }
+                            if (dt3Start.HasValue && dt3End.HasValue) {
+                                dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                    3, // Availability is 'Tentative'
+                                    dt3Start, dt3End, timeZone);
+                            }
 
                             /*
                              * Save event IDs.

@@ -48,6 +48,13 @@
     public static DateTime GetLastWeekDay(DateTime date) {
         return date.AddDays(6 - (int)date.DayOfWeek);
     }
+    public static DateTime? CreateDateTime(string date, string time) {
+        DateTime aux;
+        if (DateTime.TryParse(date + " " + time, out aux))
+            return aux;
+        else
+            return null;
+    }
 }
 @*===============
  * Form Helpers

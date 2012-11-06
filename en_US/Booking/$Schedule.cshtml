@@ -6,8 +6,8 @@
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    DateTime dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
-    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = DateTime.MinValue;
+    DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -22,11 +22,11 @@
     Validation.RequireField("preferred-date", "Must specify a preferred date");
     Validation.RequireField("preferred-start-time", "Must specify a preferred start time");
     //Validation.RequireField("preferred-end-time", "Must specify a preferred end time");
-    Validation.RequireField("alternative-1-date", "Must specify a second date");
-    Validation.RequireField("alternative-1-start-time", "Must specify a second start time");
+    //Validation.RequireField("alternative-1-date", "Must specify a second date");
+    //Validation.RequireField("alternative-1-start-time", "Must specify a second start time");
     //Validation.RequireField("alternative-1-end-time", "Must specify a second end time");
-    Validation.RequireField("alternative-2-date", "Must specify a third date");
-    Validation.RequireField("alternative-2-start-time", "Must specify a third start time");
+    //Validation.RequireField("alternative-2-date", "Must specify a third date");
+    //Validation.RequireField("alternative-2-start-time", "Must specify a third start time");
     //Validation.RequireField("alternative-2-end-time", "Must specify a third end time");
     Validation.Add("preferred-date", Validator.DateTime("Preferred date format is invalid"));
     Validation.Add("alternative-1-date", Validator.DateTime("Alternative 1 format is invalid"));
@@ -83,50 +83,46 @@
         }
         
         /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
-        if (!DateTime.TryParse(
-                Request["preferred-date"] + " " + Request["preferred-start-time"], out dt1Start)) {
+        dt1Start = LcHelpers.CreateDateTime(Request["preferred-date"], Request["preferred-start-time"]);
+        if (!dt1Start.HasValue) {
             ModelState.AddFormError("Preferred Date and Start Time are not correct");
         }
-        /*if (!DateTime.TryParse(
-                Request["preferred-date"] + " " + Request["preferred-end-time"], out dt1End)) {
-            ModelState.AddFormError("Preferred Date and End Time are not correct");
-        }*/
-        if (!DateTime.TryParse(
-                Request["alternative-1-date"] + " " + Request["alternative-1-start-time"], out dt2Start)) {
-            ModelState.AddFormError("Second best Date and Start Time are not correct");
+        if (!Request["alternate-1-date"].IsEmpty()) {
+            dt2Start = LcHelpers.CreateDateTime(Request["alternative-1-date"], Request["alternative-1-start-time"]);
+            if (!dt2Start.HasValue) {
+                ModelState.AddFormError("Second best Date and Start Time are not correct");
+            }
         }
-        /*if (!DateTime.TryParse(
-                Request["alternative-1-date"] + " " + Request["alternative-1-end-time"], out dt2End)) {
-            ModelState.AddFormError("Second best Date and End Time are not correct");
-        }*/
-        if (!DateTime.TryParse(
-                Request["alternative-2-date"] + " " + Request["alternative-2-start-time"], out dt3Start)) {
-            ModelState.AddFormError("Third best Date and Start Time are not correct");
+        if (!Request["alternate-2-date"].IsEmpty()) {
+            dt3Start = LcHelpers.CreateDateTime(Request["alternative-2-date"], Request["alternative-2-start-time"]);
+            if (!dt3Start.HasValue) {
+                ModelState.AddFormError("Third best Date and Start Time are not correct");
+            }
         }
-        /*if (!DateTime.TryParse(
-                Request["alternative-2-date"] + " " + Request["alternative-2-end-time"], out dt3End)) {
-            ModelState.AddFormError("Third best Date and End Time are not correct");
-        }*/
         
         // Validate provider availability with requested dates
         var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
         using (var db = Database.Open("sqlloco")) {
             decimal durationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
-            dt1End = dt1Start.AddHours((double)durationHours);
-            dt2End = dt2Start.AddHours((double)durationHours);
-            dt3End = dt3Start.AddHours((double)durationHours);
+            dt1End = dt1Start.Value.AddHours((double)durationHours);
+            if (dt2Start.HasValue) {
+                dt2End = dt2Start.Value.AddHours((double)durationHours);
+            }
+            if (dt3Start.HasValue) {
+                dt3End = dt3Start.Value.AddHours((double)durationHours);
+            }
             
-            if (dt1Start != null) {
+            if (dt1Start.HasValue) {
                 if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
                     ModelState.AddFormError("The provider is not availaible for the Prefered Date");
                 }
             }
-            if (dt2Start != null) {
+            if (dt2Start.HasValue) {
                 if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
                     ModelState.AddFormError("The provider is not availaible for the Second best Date");
                 }
             }
-            if (dt3Start != null) {
+            if (dt3Start.HasValue) {
                 if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
                     ModelState.AddFormError("The provider is not availaible for the Third best Date");
                 }
@@ -138,13 +134,13 @@
             // NOTE: as of 20120906 issue #117, events are not created on database on form-post else are saved in memory until the
             // booking process finish it, to avoid 'dead tentative events' exist in the database.
             // Save calculated datetimes in session to last step
-            Dictionary<int, Dictionary<string, DateTime>> brs = null;
+            Dictionary<int, Dictionary<string, DateTime?>> brs = null;
             if (Session["BookingRequests"] == null) {
-                Session["BookingRequests"] = brs = new Dictionary<int, Dictionary<string, DateTime>>();
+                Session["BookingRequests"] = brs = new Dictionary<int, Dictionary<string, DateTime?>>();
             } else {
-                brs = (Dictionary<int, Dictionary<string, DateTime>>)Session["BookingRequests"];
+                brs = (Dictionary<int, Dictionary<string, DateTime?>>)Session["BookingRequests"];
             }
-            brs[bookingRequestID] = new Dictionary<string, DateTime> {
+            brs[bookingRequestID] = new Dictionary<string, DateTime?> {
                 { "dt1Start", dt1Start }
                 ,{ "dt1End", dt1End }
                 ,{ "dt2Start", dt2Start }
@@ -347,7 +343,7 @@
             <p>
                 <span class="day">@Request["preferred-date"]</span>
                 <span class="time start-time">@Request["preferred-start-time"]</span>
-                <span class="time end-time">@(IsPost ? dt1End.ToShortTimeString() : "")</span>
+                <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToShortTimeString() : "")</span>
             </p>
             <input type="hidden" value="@Request["preferred-date"]" name="preferred-date" />
             <input type="hidden" value="@Request["preferred-start-time"]" name="preferred-start-time" />
@@ -357,7 +353,7 @@
             <p>
                 <span class="day">@Request["alternative-1-date"]</span>
                 <span class="time start-time">@Request["alternative-1-start-time"]</span>
-                <span class="time end-time">@(IsPost ? dt2End.ToShortTimeString() : "")</span>
+                <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToShortTimeString() : "")</span>
             </p>
             <input type="hidden" value="@Request["alternative-1-date"]" name="alternative-1-date" />
             <input type="hidden" value="@Request["alternative-1-start-time"]" name="alternative-1-start-time" />
@@ -367,7 +363,7 @@
             <p>
                 <span class="day">@Request["alternative-2-date"]</span>
                 <span class="time start-time">@Request["alternative-2-start-time"]</span>
-                <span class="time end-time">@(IsPost ? dt3End.ToShortTimeString() : "")</span>
+                <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToShortTimeString() : "")</span>
             </p>
             <input type="hidden" value="@Request["alternative-2-date"]" name="alternative-2-date" />
             <input type="hidden" value="@Request["alternative-2-start-time"]" name="alternative-2-start-time" />
