@@ -52,7 +52,15 @@
                 <th></th>
             </tr>
             @{
+                var thereAreHours = false;
                 foreach(var h in availData) {
+                    // Only 'free' and 'tentative' states:
+                    if (h.CalendarAvailabilityTypeID != 1 &&
+                        h.CalendarAvailabilityTypeID != 3)
+                    {
+                        continue;
+                    }
+                    thereAreHours = true;
                     var start = h.TimeBlock;
                     var end = start + TimeSpan.FromHours((double)(durationHours ?? 4));
                 <tr>
@@ -65,6 +73,12 @@
                         <option value="third">third choice</option>
                     </select></td>
                 </tr>
+                }
+                if (!thereAreHours)
+                {
+                    <tr>
+                        <td rowspan="3">There are no available hours for this day</td>
+                    </tr>
                 }
             }
         </table>
