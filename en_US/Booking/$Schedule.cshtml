@@ -6,9 +6,13 @@
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
     var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
         Request["positionid"].AsInt());
-    DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
-    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
-    
+    DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End, showDate;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = showDate = null;
+    showDate = LcHelpers.CreateDateTime(Request["show-date"]);
+    if (!showDate.HasValue) {
+        showDate = DateTime.Today;
+    }
+
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
         if (IsPost){
@@ -288,50 +292,12 @@
     <fieldset class="select-week">
         <input id="showDate" class="date date-pick" type="text" value="@Request["show-date"]" name="show-date" />
         <div id="serviceDuration">Your booking will take <strong>@printLongTime(serviceDurationTime)</strong></div>
-        <div id="weekDaySelector">
-            <a href="#previous-week" class="week-slider" id="previousWeek">&lt;</a>
-            <ul>
-                <li><button class="action" type="button">Sun</button></li>
-                <li><button class="action" type="button">Mon</button></li>
-                <li><button class="action" type="button">Tue</button></li>
-                <li><button class="action" type="button">Wed</button></li>
-                <li><button class="action" type="button">Thur</button></li>
-                <li><button class="action" type="button">Fri</button></li>
-                <li><button class="action" type="button">Sat</button></li>
-            </ul>
-            <a href="#next-week" class="week-slider" id="nextWeek">&gt;</a>
-        </div>
+
+        @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "WeekDaySelector", Date = showDate })
+
     </fieldset>
     <fieldset class="select-day-hours">
-        <table data-date="10/05/2012" class="step-block">
-            <caption><h2>Friday, Oct 5</h2></caption>
-            <tr>
-                <th>Start</th>
-                <th>End</th>
-                <th></th>
-            </tr>
-            @{
-                var blocks = new List<dynamic>();
-                for(var i = 0; i < 10; i++) {
-                    blocks.Add(new {
-                        Start = TimeSpan.FromMinutes(i * 30),
-                        End = TimeSpan.FromMinutes((double)i * 30 + ((double)serviceDurationHours * 60.0))
-                    });
-                }
-                foreach(var h in blocks) {
-                <tr>
-                    <td class="start">@h.Start.ToString("hh':'mm")</td>
-                    <td class="end">@h.End.ToString("hh':'mm")</td>
-                    <td class="selector"><select class="choice-selector">
-                        <option value="">select</option>
-                        <option value="first">first choice</option>
-                        <option value="second">second choice</option>
-                        <option value="third">third choice</option>
-                    </select></td>
-                </tr>
-                }
-            }
-        </table>
+        @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "DayHoursSelector", Date = showDate, DurationHours = serviceDurationHours })
     </fieldset>
     <fieldset class="selected-schedule">
         <h2>Your selected times for @pos.PositionSingular services are:</h2>
@@ -445,4 +411,26 @@
             });
         });
     </script>
+    @if(!IsPost) {
+        <script type="text/javascript">
+            $(function ($) {
+                var $week = $('#weekDaySelector');
+                $week.on('click', '.week-slider', function () {
+                    var date = new Date($week.data('date'));
+                    switch (this.getAttribute('href')) {
+                        case '#previous-week':
+                            date.setDate(date.getDate() - 7);
+                            break;
+                        case '#next-week':
+                            date.setDate(date.getDate() + 7);
+                            break;
+                    }
+                    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" + encodeURIComponent(strdate));
+                    $week.data('date', date);
+                    return false;
+                });
+            });
+        </script>
+    }
 </form>

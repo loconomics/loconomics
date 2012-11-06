@@ -55,6 +55,20 @@
         else
             return null;
     }
+    public static DateTime? CreateDateTime(string datetime) {
+        DateTime aux;
+        if (DateTime.TryParse(datetime, out aux))
+            return aux;
+        else
+            return null;
+    }
+    public static decimal? CreateDecimal(string decimalString) {
+        decimal aux;
+        if (decimal.TryParse(decimalString, out aux))
+            return aux;
+        else
+            return null;
+    }
 }
 @*===============
  * Form Helpers
