@@ -382,35 +382,6 @@
         <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">save & continue</button>
     </fieldset>
 
-    <script type="text/javascript">
-        $(function ($) {
-            $('.select-day-hours').each(function () {
-                var $c = $(this);
-                var $show = $c.closest('form').find('.selected-schedule');
-                $c.find('select.choice-selector').change(function () {
-                    var $s = $(this), v = $s.val();
-                    if (v) {
-                        // Get row date and time
-                        var $row = $s.closest('tr');
-                        var $table = $row.closest('table');
-                        var start = $row.find('.start').text();
-                        var end = $row.find('.end').text();
-                        var date = $table.data('date');
-                        var dateshowed = $table.find('caption').text();
-
-                        // Show date and time
-                        var choice = $show.find('.' + v + '-choice');
-                        choice.find('.date').text(date);
-                        choice.find('.date-showed').text(dateshowed);
-                        choice.find('span.start-time').text(start);
-                        choice.find('span.end-time').text(end);
-                        choice.find('input.start-time').val(start);
-                        choice.find('input.end-time').val(end);
-                    }
-                });
-            });
-        });
-    </script>
     @if(!IsPost) {
         <script type="text/javascript">
             $(function ($) {
@@ -437,6 +408,27 @@
                     var hours = $day.data('duration-hours');
                     $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" + 
                         encodeURIComponent(strdate) + '/' + hours + '/');
+                });
+                $day.on('change', 'select.choice-selector', function () {
+                    var $s = $(this), v = $s.val();
+                    if (v) {
+                        // Get row date and time
+                        var $row = $s.closest('tr');
+                        var $table = $row.closest('table');
+                        var start = $row.find('.start').text();
+                        var end = $row.find('.end').text();
+                        var date = $table.data('date');
+                        var dateshowed = $table.find('caption').text();
+
+                        // Show date and time
+                        var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
+                        choice.find('.date').text(date);
+                        choice.find('.date-showed').text(dateshowed);
+                        choice.find('span.start-time').text(start);
+                        choice.find('span.end-time').text(end);
+                        choice.find('input.start-time').val(start);
+                        choice.find('input.end-time').val(end);
+                    }
                 });
             });
         </script>
