@@ -24,14 +24,12 @@
     Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
 }
 <script type="text/javascript" src="@(UrlUtil.AppPath)Scripts/Booking.js"></script>
-  <div id="container" class="clearfix booking editable have-sidebar">
-    <div id="main" class="tabbed folders wizard">
+  <div id="container" class="clearfix booking editable">
+    <div id="main" class="tabbed wizard fancy">
         
 		<div id="services" class="tab-body fancy current">
             @RenderPage("$" + UrlData[0] + ".cshtml")
 		</div><!-- #services -->
         
     </div><!-- #main -->
-    @RenderPage("../HelpCenter/$FAQs.cshtml")
-    
   </div><!-- #container -->
