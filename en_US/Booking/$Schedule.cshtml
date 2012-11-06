@@ -303,37 +303,35 @@
         </div>
     </fieldset>
     <fieldset class="select-day-hours">
-        <h2>Friday, Oct 5</h2>
-        <div class="step-block">
-            <table>
-                <tr>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th></th>
-                </tr>
-                @{
-                    var blocks = new List<dynamic>();
-                    for(var i = 0; i < 10; i++) {
-                        blocks.Add(new {
-                            Start = TimeSpan.FromMinutes(i * 30),
-                            End = TimeSpan.FromMinutes((double)i * 30 + ((double)serviceDurationHours / 60))
-                        });
-                    }
-                    foreach(var h in blocks) {
-                    <tr>
-                        <td class="start">@h.Start.ToString("hh':'mm")</td>
-                        <td class="end">@h.End.ToString("hh':'mm")</td>
-                        <td class="selector"><select class="choice-selector">
-                            <option value="">select</option>
-                            <option value="1">first choice</option>
-                            <option value="2">second choice</option>
-                            <option value="3">third choice</option>
-                        </select></td>
-                    </tr>
-                    }
+        <table data-date="10/05/2012" class="step-block">
+            <caption><h2>Friday, Oct 5</h2></caption>
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th></th>
+            </tr>
+            @{
+                var blocks = new List<dynamic>();
+                for(var i = 0; i < 10; i++) {
+                    blocks.Add(new {
+                        Start = TimeSpan.FromMinutes(i * 30),
+                        End = TimeSpan.FromMinutes((double)i * 30 + ((double)serviceDurationHours / 60))
+                    });
                 }
-            </table>
-        </div>
+                foreach(var h in blocks) {
+                <tr>
+                    <td class="start">@h.Start.ToString("hh':'mm")</td>
+                    <td class="end">@h.End.ToString("hh':'mm")</td>
+                    <td class="selector"><select class="choice-selector">
+                        <option value="">select</option>
+                        <option value="first">first choice</option>
+                        <option value="second">second choice</option>
+                        <option value="third">third choice</option>
+                    </select></td>
+                </tr>
+                }
+            }
+        </table>
     </fieldset>
     <fieldset class="selected-schedule">
         <h2>Your selected times for @pos.PositionSingular services are:</h2>
@@ -341,32 +339,32 @@
         <div class="first-choice">
             <h3>First Choice</h3>
             <p>
-                <span class="day">@Request["preferred-date"]</span>
+                <span class="date-showed">@Request["preferred-date"]</span>
                 <span class="time start-time">@Request["preferred-start-time"]</span>
                 <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToShortTimeString() : "")</span>
             </p>
-            <input type="hidden" value="@Request["preferred-date"]" name="preferred-date" />
-            <input type="hidden" value="@Request["preferred-start-time"]" name="preferred-start-time" />
+            <input type="hidden" class="date" value="@Request["preferred-date"]" name="preferred-date" />
+            <input type="hidden" class="start-time" value="@Request["preferred-start-time"]" name="preferred-start-time" />
         </div>
         <div class="second-choice">
             <h3>Second Choice</h3>
             <p>
-                <span class="day">@Request["alternative-1-date"]</span>
+                <span class="date-showed">@Request["alternative-1-date"]</span>
                 <span class="time start-time">@Request["alternative-1-start-time"]</span>
                 <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToShortTimeString() : "")</span>
             </p>
-            <input type="hidden" value="@Request["alternative-1-date"]" name="alternative-1-date" />
-            <input type="hidden" value="@Request["alternative-1-start-time"]" name="alternative-1-start-time" />
+            <input type="hidden" class="date" value="@Request["alternative-1-date"]" name="alternative-1-date" />
+            <input type="hidden" class="start-time" value="@Request["alternative-1-start-time"]" name="alternative-1-start-time" />
         </div>
-        <div class="second-choice">
+        <div class="third-choice">
             <h3>Third Choice</h3>
             <p>
-                <span class="day">@Request["alternative-2-date"]</span>
+                <span class="date-showed">@Request["alternative-2-date"]</span>
                 <span class="time start-time">@Request["alternative-2-start-time"]</span>
                 <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToShortTimeString() : "")</span>
             </p>
-            <input type="hidden" value="@Request["alternative-2-date"]" name="alternative-2-date" />
-            <input type="hidden" value="@Request["alternative-2-start-time"]" name="alternative-2-start-time" />
+            <input type="hidden" class="date" value="@Request["alternative-2-date"]" name="alternative-2-date" />
+            <input type="hidden" class="start-time" value="@Request["alternative-2-start-time"]" name="alternative-2-start-time" />
         </div>
     </fieldset>
 
@@ -417,4 +415,30 @@
     <fieldset class="actions">
         <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">save & continue</button>
     </fieldset>
+
+    <script type="text/javascript">
+        $(function ($) {
+            $('.select-day-hours').each(function () {
+                var $c = $(this);
+                var $show = $c.closest('form').find('.selected-schedule');
+                $c.find('select.choice-selector').change(function () {
+                    var $s = $(this), v = $s.val();
+                    if (v) {
+                        // Get row date and time
+                        var $row = $s.closest('tr');
+                        var $table = $row.closest('table');
+                        var start = $row.find('.start').text();
+                        var date = $table.data('date');
+                        var dateshowed = $table.find('caption').text();
+
+                        // Show date and time
+                        var choice = $show.find('.' + v + '-choice');
+                        choice.find('.date').text(date);
+                        choice.find('.date-showed').text(dateshowed);
+                        choice.find('.start-time').text(start);
+                    }
+                });
+            });
+        });
+    </script>
 </form>

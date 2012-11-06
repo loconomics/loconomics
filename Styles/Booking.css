@@ -191,9 +191,12 @@
 }
 #booking-schedule .select-day-hours {
     width: 400px;
+    margin-top: 35px;
 }
 #booking-schedule .select-day-hours h2 {
     margin: 20px;
+    position: absolute;
+    top: -50px;
 }
 #booking-schedule .select-day-hours .step-block {
     margin-top: 20px;
