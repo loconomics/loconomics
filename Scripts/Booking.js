@@ -80,34 +80,45 @@ lcTime.parse = function (strtime) {
     return null;
 };
 
+LC.showDateHours = function (date) {
+    var $day = $('#dayHoursSelector');
+    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+    var hours = $day.data('duration-hours');
+    var userid = $day.data('user-id');
+    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
+    $day.data('date', date);
+};
+LC.showWeek = function (date) {
+    var $week = $('#weekDaySelector');
+
+    if (/(previous|next)/.test(date.toString())) {
+        var x = date;
+        date = new Date($week.data('date'));
+        if (/previous/.test(x))
+            date.setDate(date.getDate() - 7);
+        else if (/next/.test(x))
+            date.setDate(date.getDate() + 7);
+    }
+
+    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
+            encodeURIComponent(strdate) + '/');
+    $week.data('date', date);
+};
 LC.setupScheduleCalendar = function () {
     var $scheduleStep = $('#booking-schedule')
     .on('click', '#weekDaySelector .week-slider', function () {
-        var $week = $('#weekDaySelector');
-        var date = new Date($week.data('date'));
-        switch (this.getAttribute('href')) {
-            case '#previous-week':
-                date.setDate(date.getDate() - 7);
-                break;
-            case '#next-week':
-                date.setDate(date.getDate() + 7);
-                break;
-        }
-        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-        $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
-            encodeURIComponent(strdate) + '/');
-        $week.data('date', date);
+
+        LC.showWeek(this.getAttribute('href').substring(1));
+
         return false;
     })
     .on('click', '#weekDaySelector .day-selection-action', function () {
-        var $day = $('#dayHoursSelector');
         var date = new Date($(this).data('date'));
-        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-        var hours = $day.data('duration-hours');
-        var userid = $day.data('user-id');
-        $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
-        $day.data('date', date);
+
+        LC.showDateHours(date);
+
         return false;
     })
     .on('change', '#dayHoursSelector select.choice-selector', function () {
@@ -149,7 +160,12 @@ LC.initScheduleStep = function () {
     .datepicker('option', 'dateFormat', 'DD, M d, yy')
     .datepicker('option', 'altField', $('#hideDate'))
     .datepicker('option', 'altFormat', $.datepicker._defaults.dateFormat)
-    .datepicker('option', 'numberOfMonths', 2);
+    .datepicker('option', 'numberOfMonths', 2)
+    .datepicker('option', 'onSelect', function () {
+        var date = new Date($('#hideDate').val());
+        LC.showDateHours(date);
+        LC.showWeek(date);
+    });
 
     LC.setupScheduleCalendar();
 };
