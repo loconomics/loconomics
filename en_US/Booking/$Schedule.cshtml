@@ -387,58 +387,58 @@
         <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">save & continue</button>
     </fieldset>
 
-    @if(!IsPost) {
-        <script type="text/javascript">
-            $(function ($) {
+    <script type="text/javascript">
+        $(function ($) {
+            var $scheduleStep = $('#booking-schedule')
+            .on('click', '#weekDaySelector .week-slider', function () {
                 var $week = $('#weekDaySelector');
+                var date = new Date($week.data('date'));
+                switch (this.getAttribute('href')) {
+                    case '#previous-week':
+                        date.setDate(date.getDate() - 7);
+                        break;
+                    case '#next-week':
+                        date.setDate(date.getDate() + 7);
+                        break;
+                }
+                var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+                $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
+                    encodeURIComponent(strdate) + '/');
+                $week.data('date', date);
+                return false;
+            })
+            .on('click', '#weekDaySelector .day-selection-action', function () {
                 var $day = $('#dayHoursSelector');
-                $week.on('click', '.week-slider', function () {
-                    var date = new Date($week.data('date'));
-                    switch (this.getAttribute('href')) {
-                        case '#previous-week':
-                            date.setDate(date.getDate() - 7);
-                            break;
-                        case '#next-week':
-                            date.setDate(date.getDate() + 7);
-                            break;
-                    }
-                    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-                    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
-                        encodeURIComponent(strdate) + '/');
-                    $week.data('date', date);
-                    return false;
-                }).on('click', '.day-selection-action', function () {
-                    var date = new Date($(this).data('date'));
-                    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
-                    var hours = $day.data('duration-hours');
-                    var userid = $day.data('user-id');
-                    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-                        encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
-                    $day.data('date', date);
-                    return false;
-                });
-                $day.on('change', 'select.choice-selector', function () {
-                    var $s = $(this), v = $s.val();
-                    if (v) {
-                        // Get row date and time
-                        var $row = $s.closest('tr');
-                        var $table = $row.closest('table');
-                        var start = $row.find('.start').text();
-                        var end = $row.find('.end').text();
-                        var date = $table.data('date');
-                        var dateshowed = $table.find('caption').text();
+                var date = new Date($(this).data('date'));
+                var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+                var hours = $day.data('duration-hours');
+                var userid = $day.data('user-id');
+                $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+                    encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
+                $day.data('date', date);
+                return false;
+            })
+            .on('change', '#dayHoursSelector select.choice-selector', function () {
+                var $s = $(this), v = $s.val();
+                if (v) {
+                    // Get row date and time
+                    var $row = $s.closest('tr');
+                    var $table = $row.closest('table');
+                    var start = $row.find('.start').text();
+                    var end = $row.find('.end').text();
+                    var date = $table.data('date');
+                    var dateshowed = $table.find('caption').text();
 
-                        // Show date and time
-                        var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
-                        choice.find('.date').text(date);
-                        choice.find('.date-showed').text(dateshowed);
-                        choice.find('span.start-time').text(start);
-                        choice.find('span.end-time').text(end);
-                        choice.find('input.start-time').val(start);
-                        choice.find('input.end-time').val(end);
-                    }
-                });
+                    // Show date and time
+                    var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
+                    choice.find('.date').text(date);
+                    choice.find('.date-showed').text(dateshowed);
+                    choice.find('span.start-time').text(start);
+                    choice.find('span.end-time').text(end);
+                    choice.find('input.start-time').val(start);
+                    choice.find('input.end-time').val(end);
+                }
             });
-        </script>
-    }
+        });
+    </script>
 </form>

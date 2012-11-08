@@ -85,8 +85,6 @@ $.fn.reload = function (newurl, onload) {
         var reloadMode = $t.data('reload-mode');
 
         if (url) {
-            // TODO ADD auto cancelation of previous requests (use .ajax instead .load)
-            // TODO Add lcJSON code interpreter (.ajax instead .load), and errors
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
                 smoothBoxBlock(loadingBlock.message, $t, 'loading');
