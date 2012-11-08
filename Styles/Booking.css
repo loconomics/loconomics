@@ -150,6 +150,10 @@
 }
 .select-week #serviceDuration {
     display: inline-block;
+    margin-left: 12px;
+}
+#serviceDuration strong {
+    color: #e95d0f;
 }
 
 #weekDaySelector {

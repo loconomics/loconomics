@@ -269,7 +269,12 @@
     } else if (duration.Days == 1) {
         @("1 day, ")
     }
-    @(duration.Hours + " hours, " + duration.Minutes + " minutes.")
+    if (duration.Hours > 1) {
+        @(duration.Hours + " hours, ")
+    } else if (duration.Hours == 1) {
+        @("1 hour, ")
+    }
+    @(duration.Minutes + " minutes.")
 }
 
 <h2>Schedule</h2>
