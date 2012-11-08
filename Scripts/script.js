@@ -1052,8 +1052,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         return;
     }
     if (box.length == 0) {
-        var boxc = $('<div class="smooth-box-block-element fancy"/>');
-        box = $('<div class="smooth-box-block-overlay fancy"></div>');
+        var boxc = $('<div class="smooth-box-block-element"/>');
+        box = $('<div class="smooth-box-block-overlay"></div>');
         box.addClass(addclass);
         box.append(boxc);
         box.attr('id', bID);

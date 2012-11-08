@@ -2012,6 +2012,13 @@ html.boxshadow #loginBox .field-validation-error{
     text-decoration: underline;
 }
 
+.smooth-box-block-overlay,
+.smooth-box-block-element {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
 .smooth-box-block-overlay {
     background: url('../img/theme/trans-b-60.png');
     z-index: 1000;
