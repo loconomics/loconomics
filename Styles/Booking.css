@@ -163,6 +163,16 @@
     color: #e95d0f;
 }
 
+#booking-schedule .time-selection-note {
+    border: 1px solid #9fa0a0;
+    padding: 15px;
+    margin-top: 20px;
+}
+#booking-schedule .time-selection-note p {
+    font-weight: normal !important;
+    margin-bottom: 0;
+}
+
 #weekDaySelector {
     position: relative;
     margin: 12px 0;
@@ -224,13 +234,13 @@
 #booking-schedule .selected-schedule {
     line-height: normal;
     text-align: justify;
-    width: 300px;
+    width: 350px;
     float: right;
 }
 #booking-schedule .selected-schedule h2 {
     font-size: 2em;
     font-weight: normal;
-    margin: 55px 0;
+    margin: 55px 0 25px;
 }
 #booking-schedule .selected-schedule h3 {
     color: #5a5b5b;
