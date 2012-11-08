@@ -231,6 +231,9 @@
 #booking-schedule .select-day-hours .step-block {
     margin-top: 20px;
 }
+#booking-schedule .select-day-hours table td {
+    width: 33%;
+}
 #booking-schedule .selected-schedule {
     line-height: normal;
     text-align: justify;
@@ -248,7 +251,7 @@
     font-weight: normal;
 }
 #booking-schedule .selected-schedule p {
-    min-height: 14px;
+    min-height: 20px;
     font-weight: bold;
 }
 
