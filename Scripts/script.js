@@ -818,6 +818,10 @@ function ajaxErrorPopupHandler(jx, message, ex) {
 
     ctx.autoUnblockLoading = true;
 
+    // If is a connection aborted, no show message:
+    if (message == 'abort')
+        return;
+
     var m = message;
     var iframe = null;
     size = popupSize('large');
