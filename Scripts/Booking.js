@@ -1,4 +1,8 @@
-﻿function bookingChangeLocation() {
+﻿/* Author: Loconomics */
+// OUR namespace (abbreviated Loconomics)
+var LC = window['LC'] || {};
+
+function bookingChangeLocation() {
     var sel = $(this);
     // :hidden selectors is a hack because jQuery doesn't
     // hide elements that are inside a hidden parent.
@@ -76,6 +80,59 @@ lcTime.parse = function (strtime) {
     return null;
 };
 
+LC.setupScheduleCalendar = function () {
+    var $scheduleStep = $('#booking-schedule')
+    .on('click', '#weekDaySelector .week-slider', function () {
+        var $week = $('#weekDaySelector');
+        var date = new Date($week.data('date'));
+        switch (this.getAttribute('href')) {
+            case '#previous-week':
+                date.setDate(date.getDate() - 7);
+                break;
+            case '#next-week':
+                date.setDate(date.getDate() + 7);
+                break;
+        }
+        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+        $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
+            encodeURIComponent(strdate) + '/');
+        $week.data('date', date);
+        return false;
+    })
+    .on('click', '#weekDaySelector .day-selection-action', function () {
+        var $day = $('#dayHoursSelector');
+        var date = new Date($(this).data('date'));
+        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+        var hours = $day.data('duration-hours');
+        var userid = $day.data('user-id');
+        $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
+        $day.data('date', date);
+        return false;
+    })
+    .on('change', '#dayHoursSelector select.choice-selector', function () {
+        var $s = $(this), v = $s.val();
+        if (v) {
+            // Get row date and time
+            var $row = $s.closest('tr');
+            var $table = $row.closest('table');
+            var start = $row.find('.start').text();
+            var end = $row.find('.end').text();
+            var date = $table.data('date');
+            var dateshowed = $table.find('caption').text();
+
+            // Show date and time
+            var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
+            choice.find('.date').text(date);
+            choice.find('.date-showed').text(dateshowed);
+            choice.find('span.start-time').text(start);
+            choice.find('span.end-time').text(end);
+            choice.find('input.start-time').val(start);
+            choice.find('input.end-time').val(end);
+        }
+    });
+};
+
 $(document).ready(function () {
     // Setup Schedule step:
     $('#schedule').on('endLoadWizardStep', function () {
@@ -86,7 +143,6 @@ $(document).ready(function () {
         var loadingtimer = setTimeout(function () {
             tab.block(loadingBlock);
         }, gLoadingRetard);
-
 
         $.ajax({
             // Request $Payment partial page, with all the original url parameters
@@ -100,6 +156,8 @@ $(document).ready(function () {
                 $.proxy(bookingChangeLocation, $('.select-location'))();
 
                 applyDatePicker(tab);
+
+                LC.setupScheduleCalendar();
             },
             error: ajaxErrorPopupHandler,
             complete: function () {
@@ -112,6 +170,7 @@ $(document).ready(function () {
     }).on('reloadedHtmlWizardStep', function () {
         // Execute after reloading html of this step
         $.proxy(bookingChangeLocation, $('.select-location'))();
+        LC.setupScheduleCalendar();
     });
     $('body').on('change', '.start-time :input', function () {
         // a var serviceDurationHours must be created by the $Schedule page

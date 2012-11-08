@@ -1,6 +1,6 @@
 /* Author: Loconomics */
-// OUR namespace (abbreviated Loconomics), same as 'var LC' with caution
-window['LC'] = window['LC'] || {};
+// OUR namespace (abbreviated Loconomics)
+var LC = window['LC'] || {};
 
 /* ===============
 Console Wrapper

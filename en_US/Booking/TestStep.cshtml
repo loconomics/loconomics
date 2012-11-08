@@ -27,9 +27,16 @@
   <div id="container" class="clearfix booking editable">
     <div id="main" class="tabbed wizard fancy">
         
-		<div id="services" class="tab-body fancy current">
+		<div id="@(UrlData[0].ToLower())" class="tab-body fancy current">
             @RenderPage("$" + UrlData[0] + ".cshtml")
 		</div><!-- #services -->
+
+        <script type="text/javascript">
+            $(function () {
+                $('#schedule').trigger('endLoadWizardStep');
+                $('#payment').trigger('endLoadWizardStep');
+            });
+        </script>
         
     </div><!-- #main -->
   </div><!-- #container -->
