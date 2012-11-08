@@ -141,15 +141,15 @@ LC.setupScheduleCalendar = function () {
             var $table = $row.closest('table');
             var start = $row.find('.start').text();
             var end = $row.find('.end').text();
-            var date = $table.data('date');
+            var date = new Date($table.data('date'));
             var dateshowed = $table.find('caption').text();
 
             // Show date and time
             var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
-            choice.find('.date').text(date);
-            choice.find('.date-showed').text(dateshowed);
+            choice.find('span.date-showed').text(dateshowed);
             choice.find('span.start-time').text(start);
             choice.find('span.end-time').text(end);
+            choice.find('input.date').val($.datepicker.formatDate('yy-mm-dd', date));
             choice.find('input.start-time').val(start);
             choice.find('input.end-time').val(end);
         }

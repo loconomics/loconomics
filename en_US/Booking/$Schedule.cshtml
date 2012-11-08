@@ -21,22 +21,14 @@
             throw new Exception(inputdataerrormessage);
         }
     }
-    
+   
     /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
-    Validation.RequireField("preferred-date", "Must specify a preferred date");
-    Validation.RequireField("preferred-start-time", "Must specify a preferred start time");
-    //Validation.RequireField("preferred-end-time", "Must specify a preferred end time");
-    //Validation.RequireField("alternative-1-date", "Must specify a second date");
-    //Validation.RequireField("alternative-1-start-time", "Must specify a second start time");
-    //Validation.RequireField("alternative-1-end-time", "Must specify a second end time");
-    //Validation.RequireField("alternative-2-date", "Must specify a third date");
-    //Validation.RequireField("alternative-2-start-time", "Must specify a third start time");
-    //Validation.RequireField("alternative-2-end-time", "Must specify a third end time");
-    Validation.Add("preferred-date", Validator.DateTime("Preferred date format is invalid"));
-    Validation.Add("alternative-1-date", Validator.DateTime("Alternative 1 format is invalid"));
-    Validation.Add("alternative-2-date", Validator.DateTime("Alternative 2 format is invalid"));
+    Validation.RequireField("preferred-date", "Must specify almost a first choice");
+    Validation.RequireField("preferred-start-time", "Must specify almost a first choice");
+    //Validation.Add("preferred-date", Validator.DateTime("First choice date format is invalid"));
+    //Validation.Add("alternative-1-date", Validator.DateTime("Second choice date format is invalid"));
+    //Validation.Add("alternative-2-date", Validator.DateTime("Third choice date format is invalid"));
     Validation.Add("select-location", Validator.Integer("Invalid selected location"));
-    // TODO: create validators for only dates and only time and add for start-time, end-time and dates
 
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
@@ -89,46 +81,48 @@
         /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
         dt1Start = LcHelpers.CreateDateTime(Request["preferred-date"], Request["preferred-start-time"]);
         if (!dt1Start.HasValue) {
-            ModelState.AddFormError("Preferred Date and Start Time are not correct");
+            ModelState.AddFormError("First choice Date and Time are not correct");
         }
         if (!Request["alternate-1-date"].IsEmpty()) {
             dt2Start = LcHelpers.CreateDateTime(Request["alternative-1-date"], Request["alternative-1-start-time"]);
             if (!dt2Start.HasValue) {
-                ModelState.AddFormError("Second best Date and Start Time are not correct");
+                ModelState.AddFormError("Second choice Date and Time are not correct");
             }
         }
         if (!Request["alternate-2-date"].IsEmpty()) {
             dt3Start = LcHelpers.CreateDateTime(Request["alternative-2-date"], Request["alternative-2-start-time"]);
             if (!dt3Start.HasValue) {
-                ModelState.AddFormError("Third best Date and Start Time are not correct");
+                ModelState.AddFormError("Third choice Date and Time are not correct");
             }
         }
         
-        // Validate provider availability with requested dates
-        var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
-        using (var db = Database.Open("sqlloco")) {
-            decimal durationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
-            dt1End = dt1Start.Value.AddHours((double)durationHours);
-            if (dt2Start.HasValue) {
-                dt2End = dt2Start.Value.AddHours((double)durationHours);
-            }
-            if (dt3Start.HasValue) {
-                dt3End = dt3Start.Value.AddHours((double)durationHours);
-            }
+        if (ModelState.IsValid) {
+            // Validate provider availability with requested dates
+            var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
+            using (var db = Database.Open("sqlloco")) {
+                decimal durationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
+                dt1End = dt1Start.Value.AddHours((double)durationHours);
+                if (dt2Start.HasValue) {
+                    dt2End = dt2Start.Value.AddHours((double)durationHours);
+                }
+                if (dt3Start.HasValue) {
+                    dt3End = dt3Start.Value.AddHours((double)durationHours);
+                }
             
-            if (dt1Start.HasValue) {
-                if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
-                    ModelState.AddFormError("The provider is not availaible for the Prefered Date");
+                if (dt1Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
+                        ModelState.AddFormError("The provider is not availaible for the First Choice Date and Time");
+                    }
                 }
-            }
-            if (dt2Start.HasValue) {
-                if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
-                    ModelState.AddFormError("The provider is not availaible for the Second best Date");
+                if (dt2Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
+                        ModelState.AddFormError("The provider is not availaible for the Second Choice Date and Time");
+                    }
                 }
-            }
-            if (dt3Start.HasValue) {
-                if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
-                    ModelState.AddFormError("The provider is not availaible for the Third best Date");
+                if (dt3Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
+                        ModelState.AddFormError("The provider is not availaible for the Third Choice Date and Time");
+                    }
                 }
             }
         }
