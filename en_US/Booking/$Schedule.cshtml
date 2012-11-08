@@ -284,13 +284,11 @@
     <script type="text/javascript">
         if (!serviceDurationHours) var serviceDurationHours = 0;
         serviceDurationHours = @(serviceDurationHours);
-        @if (IsPost) {
-            <text>applyDatePicker();</text>
-        }
     </script>
 
     <fieldset class="select-week">
-        <input id="showDate" class="date date-pick" type="text" value="@Request["show-date"]" name="show-date" />
+        <input id="showDate" class="date-pick" type="text" />
+        <input id="hideDate" type="hidden" value="@showDate.Value.ToShortDateString()" name="show-date" />
         <div id="serviceDuration">Your booking will take <strong>@printLongTime(serviceDurationTime)</strong></div>
 
         @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "WeekDaySelector", Date = showDate })

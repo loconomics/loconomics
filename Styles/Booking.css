@@ -280,11 +280,11 @@
     width: 174px;
 }
 
-#booking-schedule img.ui-datepicker-trigger{
-    bottom: 2px;
-    position: absolute;
-    right: 29px;
-    left: auto;
+#booking-schedule #showDate {
+    background: url('../img/theme/icon-calendar.png') 202px center no-repeat;
+    width: 233px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 /** Form: Payment **/
