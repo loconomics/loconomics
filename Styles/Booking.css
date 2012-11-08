@@ -159,13 +159,19 @@
 #weekDaySelector .week-slider {
     position: absolute;
     top: 0;
+    bottom: 0;
     text-decoration: none;
+    background: url('../img/theme/slider-arrows.png') left center no-repeat;
+    min-height: 12px;
+    width: 12px;
+    text-indent: -9999px;
 }
 #previousWeek {
     left: -16px;
 }
 #nextWeek {
     right: -16px;
+    background-position: right center !important;
 }
 #weekDaySelector ul {
     letter-spacing: 9px;
@@ -206,10 +212,9 @@
 }
 #booking-schedule .selected-schedule {
     line-height: normal;
-    position: absolute;
-    right: 0;
     text-align: justify;
     width: 300px;
+    float: right;
 }
 #booking-schedule .selected-schedule h2 {
     font-size: 2em;
@@ -239,6 +244,7 @@
     margin-top: 40px;
     width: auto;
     display: block;
+    clear: both;
 }
 #booking-schedule .location li {
     margin: 2px 0;
