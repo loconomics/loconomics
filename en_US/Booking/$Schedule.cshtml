@@ -24,10 +24,6 @@
    
     /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
     Validation.RequireField("preferred-date", "Must specify almost a first choice");
-    Validation.RequireField("preferred-start-time", "Must specify almost a first choice");
-    //Validation.Add("preferred-date", Validator.DateTime("First choice date format is invalid"));
-    //Validation.Add("alternative-1-date", Validator.DateTime("Second choice date format is invalid"));
-    //Validation.Add("alternative-2-date", Validator.DateTime("Third choice date format is invalid"));
     Validation.Add("select-location", Validator.Integer("Invalid selected location"));
 
     // Check if is a valid booking process (session not expired or error at first step)

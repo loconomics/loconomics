@@ -164,6 +164,7 @@ LC.initScheduleStep = function () {
 
     // Execute first time when showing the step
     $.proxy(bookingChangeLocation, $('.select-location'))();
+    $('.select-location').change(bookingChangeLocation);
 
     applyDatePicker(tab);
 
