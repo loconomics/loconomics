@@ -81,6 +81,7 @@ lcTime.parse = function (strtime) {
 };
 
 LC.showDateHours = function (date) {
+    // Load date hours:
     var $day = $('#dayHoursSelector');
     var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
     var hours = $day.data('duration-hours');
@@ -103,8 +104,18 @@ LC.showWeek = function (date) {
 
     var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
     $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
-            encodeURIComponent(strdate) + '/');
+        encodeURIComponent(strdate) + '/',
+        function () { LC.selectWeekDay(date); });
     $week.data('date', date);
+};
+LC.selectWeekDay = function (date) {
+    var $week = $('#weekDaySelector');
+    // Mark selected day in calendar
+    $week.find('.day-selection-action').removeClass('current')
+    .filter(function () {
+        var elDate = new Date($(this).data('date'));
+        return (elDate.toDateString() == date.toDateString());
+    }).addClass('current');
 };
 LC.setupScheduleCalendar = function () {
     var $scheduleStep = $('#booking-schedule')
@@ -118,6 +129,7 @@ LC.setupScheduleCalendar = function () {
         var date = new Date($(this).data('date'));
 
         LC.showDateHours(date);
+        LC.selectWeekDay(date);
 
         return false;
     })
@@ -142,6 +154,9 @@ LC.setupScheduleCalendar = function () {
             choice.find('input.end-time').val(end);
         }
     });
+
+    // Select current day in week selector
+    LC.selectWeekDay(new Date($('#dayHoursSelector').data('date')));
 };
 
 LC.initScheduleStep = function () {

@@ -148,6 +148,13 @@
 #booking-schedule .select-week {
     display: block;
 }
+#weekDaySelector .day-selection-action {
+    background-color: #b2e0e1;
+}
+#weekDaySelector .day-selection-action:hover,
+#weekDaySelector .day-selection-action.current {
+    background-color: #00989A;
+}
 .select-week #serviceDuration {
     display: inline-block;
     margin-left: 12px;
