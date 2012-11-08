@@ -152,6 +152,9 @@ LC.setupScheduleCalendar = function () {
             choice.find('input.date').val($.datepicker.formatDate('yy-mm-dd', date));
             choice.find('input.start-time').val(start);
             choice.find('input.end-time').val(end);
+
+            // Others Select with this same option selected must be reset:
+            $s.closest('tr').siblings().find('option[value=' + v + ']:selected').closest('select').val('');
         }
     });
 
