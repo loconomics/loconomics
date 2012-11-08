@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.Data;
 
-@{
+@{   
     string element = PageData["Element"];
     DateTime? date = PageData["Date"];
     decimal? durationHours = PageData["DurationHours"];
@@ -22,7 +22,7 @@
 
 @switch (element) {
     case "WeekDaySelector":
-        <div id="weekDaySelector" data-date="@(date.Value.ToString("R"))" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/">
+        <div id="weekDaySelector" data-date="@(date.Value.ToString("R"))" data-reload-mode="replace-me" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/">
             <a href="#previous-week" class="week-slider" id="previousWeek">&lt;</a>
             <ul>
                 @{
@@ -44,7 +44,7 @@
             availData = db.Query("EXEC dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, date, date);
         }
     
-        <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
+        <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-reload-mode="replace-me" data-source-url="@(UrlUtil.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
             <caption><h2>@(date.Value.ToString("dddd, MMM d"))</h2></caption>
             <tr>
                 <th>Start</th>

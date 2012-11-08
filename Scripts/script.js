@@ -65,13 +65,25 @@ $.fn.hasScrollBar = function () {
 $.fn.reload = function (newurl, onload) {
     this.each(function () {
         var $t = $(this);
+
+        // Check if there is already being reloaded, to cancel previous attempt
+        var jq = $t.data('isReloading');
+        if (jq)
+            jq.abort();
+
         if (newurl)
             if ($.isFunction(newurl))
-                // Function params: currentReloadUrl, defaultReloadUrl
+            // Function params: currentReloadUrl, defaultReloadUrl
                 $t.data('source-url', $.proxy(newurl, this)($t.data('source-url'), $t.attr('data-source-url')));
             else
                 $t.data('source-url', newurl);
         var url = $t.data('source-url');
+
+        // Optional data parameter 'reload-mode' accepts values: 
+        // - 'replace-me': Use html returned to replace current reloaded element (aka: replaceWith())
+        // - 'replace-content': (default) Html returned replace current element content (aka: html())
+        var reloadMode = $t.data('reload-mode');
+
         if (url) {
             // TODO ADD auto cancelation of previous requests (use .ajax instead .load)
             // TODO Add lcJSON code interpreter (.ajax instead .load), and errors
@@ -80,12 +92,35 @@ $.fn.reload = function (newurl, onload) {
                 smoothBoxBlock(loadingBlock.message, $t, 'loading');
                 //$t.block(loadingBlock);
             }, gLoadingRetard);
-            $t.load(url, function () {
-                clearTimeout(loadingtimer);
-                if (onload) $.proxy(onload, this)();
-                //smoothBoxBlock(null, $t, true);
-                //$t.unblock();
+            /*$t.load(url, function () {
+            clearTimeout(loadingtimer);
+            if (onload) $.proxy(onload, this)();
+            //smoothBoxBlock(null, $t, true);
+            //$t.unblock();
+            });*/
+            var ctx = {
+                form: $t,
+                box: $t,
+                loadingtimer: loadingtimer,
+                boxIsContainer: (reloadMode != 'replace-me')
+            };
+            // Do the Ajax post
+            jq = $.ajax({
+                url: url,
+                type: 'GET',
+                context: ctx,
+                success: ajaxFormsSuccessHandler,
+                error: ajaxErrorPopupHandler,
+                complete: ajaxFormsCompleteHandler
             });
+            jq.done(function () {
+                $t.data('isReloading', null);
+            });
+            if (onload)
+                jq.done(onload);
+            // Mark element as is being reloaded, to avoid multiple attemps at same time, saving
+            // current ajax object to allow be cancelled
+            $t.data('isReloading', jq);
         }
     });
 }
