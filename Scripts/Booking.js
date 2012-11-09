@@ -83,7 +83,7 @@ lcTime.parse = function (strtime) {
 LC.showDateHours = function (date) {
     // Load date hours:
     var $day = $('#dayHoursSelector');
-    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+    var strdate = LC.dateToInterchangleString(date);
     var hours = $day.data('duration-hours');
     var userid = $day.data('user-id');
     $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
@@ -102,7 +102,7 @@ LC.showWeek = function (date) {
             date.setDate(date.getDate() + 7);
     }
 
-    var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+    var strdate = LC.dateToInterchangleString(date);
     $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
         encodeURIComponent(strdate) + '/',
         function () { LC.selectWeekDay(date); });

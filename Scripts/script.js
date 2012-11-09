@@ -589,6 +589,10 @@ LC.setupValidation = function (reapplyOnlyTo) {
         }
     }
 }
+// TODO: look better name, better working
+LC.dateToInterchangleString = function (date) {
+    return date.getUTCFullYear().toString() + '-' + (date.getUTCMonth() + 1).toString() + '-' + date.getUTCDate().toString();
+};
 
 /*******************
 * Popup related 
@@ -1647,7 +1651,7 @@ $(function () {
             date.setDate(date.getDate() + 7);
         else
             date.setDate(date.getDate() - 7);
-        var strdate = date.getFullYear().toString() + '-' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+        var strdate = LC.dateToInterchangleString(date);
         var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "/?UserID=" + userId;
         calcont.reload(url, function () {
             // get the new object:
