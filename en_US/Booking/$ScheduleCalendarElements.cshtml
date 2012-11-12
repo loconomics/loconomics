@@ -12,11 +12,129 @@
     if (!date.HasValue) {
         date = DateTime.Today;
     }
-    if (!durationHours.HasValue && UrlData.Count > 2) {
-        durationHours = LcHelpers.CreateDecimal(UrlData[2]);
+    if (!durationHours.HasValue){
+        if (UrlData.Count > 2) {
+            durationHours = LcHelpers.CreateDecimal(UrlData[2]);
+        } else {
+            durationHours = 4M;
+        }
     }
     if (userID == 0 && UrlData.Count > 3) {
         userID = UrlData[3].AsInt();
+    }
+}
+@functions{
+    List<dynamic> createBlocks0(dynamic availData, decimal durationHours){
+        var availHours = new List<dynamic>();
+        foreach(var h in availData) {
+            // Only 'free' and 'tentative' states:
+            if (h.CalendarAvailabilityTypeID != 1 &&
+                h.CalendarAvailabilityTypeID != 3)
+            {
+                continue;
+            }
+            var start = h.TimeBlock;
+            var end = start + TimeSpan.FromHours((double)durationHours);
+            availHours.Add(new{
+                Start = start,
+                End = end
+            });
+        }
+        return availHours;
+    }
+    List<dynamic> createBlocks1(dynamic availData, decimal durationHours){
+        var availHours = new List<dynamic>();
+        // Creating time blocks and checking its availability in blocks with same duration
+        // as service duration (durationHours), instead of standard 30 minutes
+        {
+            var ah = TimeSpan.MinValue;
+            var c = 1;
+            var f = Math.Ceiling((decimal) durationHours / .5M);
+            foreach (var h in availData)
+            {
+                // Only 'free' and 'tentative' states:
+                if (h.CalendarAvailabilityTypeID != 1 &&
+                    h.CalendarAvailabilityTypeID != 3)
+                {
+                    c = 1;
+                    ah = TimeSpan.MinValue;
+                    continue;
+                }
+                // They must be consecutives:
+                if (ah.Add(TimeSpan.FromHours(.5 * c)) != h.TimeBlock)
+                {
+                    c = 1;
+                    ah = h.TimeBlock;
+                    continue;
+                }
+                //var test = ah.Add(TimeSpan.FromHours((double)durationHours));
+                var test = ah.Add(TimeSpan.FromHours((double)(.5M * c * f)));
+                if (h.TimeBlock < test)
+                {
+                    c++;
+                }
+                else if (test == h.TimeBlock)
+                {
+                    availHours.Add(new
+                    {
+    
+                        Start = ah,
+                        End = test
+                    });
+                    ah = ah.Add(TimeSpan.FromMinutes(30));
+                }
+                else
+                {
+                    c = 1;
+                    ah = h.TimeBlock;
+                    continue;
+                }
+            }
+        }
+        return availHours;
+    }
+    List<dynamic> createBlocks2(dynamic availData, decimal durationHours){
+        var availHours = new List<dynamic>();
+        // Creating time blocks and checking its availability in blocks with same duration
+        // as service duration (durationHours), instead of standard 30 minutes
+        {
+            var f = Math.Ceiling((decimal) durationHours / .5M);
+            for (int ih = 0; ih < availData.Count; ih++)
+            {
+                var h = availData[ih];
+                // Only 'free' and 'tentative' states:
+                if (h.CalendarAvailabilityTypeID != 1 &&
+                    h.CalendarAvailabilityTypeID != 3)
+                {
+                    continue;
+                }
+                
+                var serviceEnd = h.TimeBlock.Add(TimeSpan.FromHours((double)durationHours));
+                for (int jh = ih; jh < availData.Count; jh++)
+                {
+                    var j = availData[jh];
+                    // Only 'free' and 'tentative' states:
+                    if (j.CalendarAvailabilityTypeID != 1 &&
+                        j.CalendarAvailabilityTypeID != 3)
+                    {
+                        break;
+                    }
+                    // Blocks retrieved from database are EVER consecutive, because of that
+                    // there is no need to check if there are time-blocks lost between checks
+
+                    // Get the end time of current 'j' block (half hour blocks ever)
+                    var blockEnd = j.TimeBlock.Add(TimeSpan.FromHours(.5));
+                    if (serviceEnd <= blockEnd) {
+                        availHours.Add(new {
+                            Start = h.TimeBlock,
+                            End = serviceEnd
+                        });
+                        break;
+                    }
+                }
+            }
+        }
+        return availHours;
     }
 }
 
@@ -50,66 +168,16 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th></th>
+                <th>@durationHours</th>
             </tr>
             @{
-                var availHours = new List<dynamic>();
-                // Creating time blocks and checking its availability in blocks with same duration
-                // as service duration (durationHours), instead of standard 30 minutes
-                {
-                    var ah = TimeSpan.MinValue;
-                    var c = 1;
-                    var f = Math.Round((decimal)durationHours / .5M);
-                    foreach (var h in availData)
-                    {
-                        // Only 'free' and 'tentative' states:
-                        if (h.CalendarAvailabilityTypeID != 1 &&
-                            h.CalendarAvailabilityTypeID != 3)
-                        {
-                            c = 1;
-                            ah = TimeSpan.MinValue;
-                            continue;
-                        }
-                        // They must be consecutives:
-                        if (ah.Add(TimeSpan.FromHours(.5 * c)) != h.TimeBlock)
-                        {
-                            c = 1;
-                            ah = h.TimeBlock;
-                            continue;
-                        }
-                        var test = ah.Add(TimeSpan.FromHours((double)durationHours));
-                        if (h.TimeBlock < test)
-                        {
-                            c++;
-                        }
-                        else if (test == h.TimeBlock)
-                        {
-                            availHours.Add(new
-                            {
-    
-                                Start = ah,
-                                End = test
-                            });
-                            ah = ah.Add(TimeSpan.FromMinutes(30));
-                        }
-                        else
-                        {
-                            c = 1;
-                            ah = h.TimeBlock;
-                            continue;
-                        }
-                    }
-                }
+                var availHours = createBlocks2(availData, (decimal)durationHours);
 
-                var thereAreHours = false;
                 foreach (var h in availHours)
                 {
-                    thereAreHours = true;
-                    var start = h.Start;
-                    var end = h.End;
                     <tr>
-                        <td class="start">@start.ToString("hh':'mm")</td>
-                        <td class="end">@end.ToString("hh':'mm")</td>
+                        <td class="start">@h.Start.ToString("hh':'mm")</td>
+                        <td class="end">@h.End.ToString("hh':'mm")</td>
                         <td class="selector"><select class="choice-selector">
                             <option value="">select</option>
                             <option value="first">first choice</option>
@@ -118,7 +186,7 @@
                         </select></td>
                     </tr>
                 }
-                if (!thereAreHours)
+                if (availHours.Count == 0)
                 {
                     <tr>
                         <td colspan="3">There are no available hours for this day</td>
