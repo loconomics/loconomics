@@ -24,76 +24,7 @@
     }
 }
 @functions{
-    List<dynamic> createBlocks0(dynamic availData, decimal durationHours){
-        var availHours = new List<dynamic>();
-        foreach(var h in availData) {
-            // Only 'free' and 'tentative' states:
-            if (h.CalendarAvailabilityTypeID != 1 &&
-                h.CalendarAvailabilityTypeID != 3)
-            {
-                continue;
-            }
-            var start = h.TimeBlock;
-            var end = start + TimeSpan.FromHours((double)durationHours);
-            availHours.Add(new{
-                Start = start,
-                End = end
-            });
-        }
-        return availHours;
-    }
-    List<dynamic> createBlocks1(dynamic availData, decimal durationHours){
-        var availHours = new List<dynamic>();
-        // Creating time blocks and checking its availability in blocks with same duration
-        // as service duration (durationHours), instead of standard 30 minutes
-        {
-            var ah = TimeSpan.MinValue;
-            var c = 1;
-            var f = Math.Ceiling((decimal) durationHours / .5M);
-            foreach (var h in availData)
-            {
-                // Only 'free' and 'tentative' states:
-                if (h.CalendarAvailabilityTypeID != 1 &&
-                    h.CalendarAvailabilityTypeID != 3)
-                {
-                    c = 1;
-                    ah = TimeSpan.MinValue;
-                    continue;
-                }
-                // They must be consecutives:
-                if (ah.Add(TimeSpan.FromHours(.5 * c)) != h.TimeBlock)
-                {
-                    c = 1;
-                    ah = h.TimeBlock;
-                    continue;
-                }
-                //var test = ah.Add(TimeSpan.FromHours((double)durationHours));
-                var test = ah.Add(TimeSpan.FromHours((double)(.5M * c * f)));
-                if (h.TimeBlock < test)
-                {
-                    c++;
-                }
-                else if (test == h.TimeBlock)
-                {
-                    availHours.Add(new
-                    {
-    
-                        Start = ah,
-                        End = test
-                    });
-                    ah = ah.Add(TimeSpan.FromMinutes(30));
-                }
-                else
-                {
-                    c = 1;
-                    ah = h.TimeBlock;
-                    continue;
-                }
-            }
-        }
-        return availHours;
-    }
-    List<dynamic> createBlocks2(dynamic availData, decimal durationHours){
+    List<dynamic> createBlocks(dynamic availData, decimal durationHours){
         var availHours = new List<dynamic>();
         // Creating time blocks and checking its availability in blocks with same duration
         // as service duration (durationHours), instead of standard 30 minutes
@@ -168,10 +99,10 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>@durationHours</th>
+                <th></th>
             </tr>
             @{
-                var availHours = createBlocks2(availData, (decimal)durationHours);
+                var availHours = createBlocks(availData, (decimal)durationHours);
 
                 foreach (var h in availHours)
                 {
