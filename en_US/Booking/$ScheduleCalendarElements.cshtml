@@ -40,7 +40,8 @@
         break;
     case "DayHoursSelector":
         dynamic availData = null;
-        using (var db = Database.Open("sqlloco")) {
+        using (var db = Database.Open("sqlloco"))
+        {
             availData = db.Query("EXEC dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, date, date);
         }
     
@@ -52,32 +53,75 @@
                 <th></th>
             </tr>
             @{
-                var thereAreHours = false;
-                foreach(var h in availData) {
-                    // Only 'free' and 'tentative' states:
-                    if (h.CalendarAvailabilityTypeID != 1 &&
-                        h.CalendarAvailabilityTypeID != 3)
+                var availHours = new List<dynamic>();
+                // Creating time blocks and checking its availability in blocks with same duration
+                // as service duration (durationHours), instead of standard 30 minutes
+                {
+                    var ah = TimeSpan.MinValue;
+                    var c = 1;
+                    var f = Math.Round((decimal)durationHours / .5M);
+                    foreach (var h in availData)
                     {
-                        continue;
+                        // Only 'free' and 'tentative' states:
+                        if (h.CalendarAvailabilityTypeID != 1 &&
+                            h.CalendarAvailabilityTypeID != 3)
+                        {
+                            c = 1;
+                            ah = TimeSpan.MinValue;
+                            continue;
+                        }
+                        // They must be consecutives:
+                        if (ah.Add(TimeSpan.FromHours(.5 * c)) != h.TimeBlock)
+                        {
+                            c = 1;
+                            ah = h.TimeBlock;
+                            continue;
+                        }
+                        var test = ah.Add(TimeSpan.FromHours((double)durationHours));
+                        if (h.TimeBlock < test)
+                        {
+                            c++;
+                        }
+                        else if (test == h.TimeBlock)
+                        {
+                            availHours.Add(new
+                            {
+    
+                                Start = ah,
+                                End = test
+                            });
+                            ah = ah.Add(TimeSpan.FromMinutes(30));
+                        }
+                        else
+                        {
+                            c = 1;
+                            ah = h.TimeBlock;
+                            continue;
+                        }
                     }
+                }
+
+                var thereAreHours = false;
+                foreach (var h in availHours)
+                {
                     thereAreHours = true;
-                    var start = h.TimeBlock;
-                    var end = start + TimeSpan.FromHours((double)(durationHours ?? 4));
-                <tr>
-                    <td class="start">@start.ToString("hh':'mm")</td>
-                    <td class="end">@end.ToString("hh':'mm")</td>
-                    <td class="selector"><select class="choice-selector">
-                        <option value="">select</option>
-                        <option value="first">first choice</option>
-                        <option value="second">second choice</option>
-                        <option value="third">third choice</option>
-                    </select></td>
-                </tr>
+                    var start = h.Start;
+                    var end = h.End;
+                    <tr>
+                        <td class="start">@start.ToString("hh':'mm")</td>
+                        <td class="end">@end.ToString("hh':'mm")</td>
+                        <td class="selector"><select class="choice-selector">
+                            <option value="">select</option>
+                            <option value="first">first choice</option>
+                            <option value="second">second choice</option>
+                            <option value="third">third choice</option>
+                        </select></td>
+                    </tr>
                 }
                 if (!thereAreHours)
                 {
                     <tr>
-                        <td rowspan="3">There are no available hours for this day</td>
+                        <td colspan="3">There are no available hours for this day</td>
                     </tr>
                 }
             }
