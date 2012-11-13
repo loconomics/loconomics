@@ -66,18 +66,24 @@ $.fn.reload = function (newurl, onload) {
     this.each(function () {
         var $t = $(this);
 
-        // Check if there is already being reloaded, to cancel previous attempt
-        var jq = $t.data('isReloading');
-        if (jq)
-            jq.abort();
-
-        if (newurl)
+        if (newurl) {
             if ($.isFunction(newurl))
             // Function params: currentReloadUrl, defaultReloadUrl
                 $t.data('source-url', $.proxy(newurl, this)($t.data('source-url'), $t.attr('data-source-url')));
             else
                 $t.data('source-url', newurl);
+        }
         var url = $t.data('source-url');
+
+        // Check if there is already being reloaded, to cancel previous attempt
+        var jq = $t.data('isReloading');
+        if (jq) {
+            if (jq.url == url)
+            // Is the same url, do not abort because is the same result being retrieved
+                return;
+            else
+                jq.abort();
+        }
 
         // Optional data parameter 'reload-mode' accepts values: 
         // - 'replace-me': Use html returned to replace current reloaded element (aka: replaceWith())
@@ -90,12 +96,6 @@ $.fn.reload = function (newurl, onload) {
                 smoothBoxBlock(loadingBlock.message, $t, 'loading');
                 //$t.block(loadingBlock);
             }, gLoadingRetard);
-            /*$t.load(url, function () {
-            clearTimeout(loadingtimer);
-            if (onload) $.proxy(onload, this)();
-            //smoothBoxBlock(null, $t, true);
-            //$t.unblock();
-            });*/
             var ctx = {
                 form: $t,
                 box: $t,
@@ -118,9 +118,11 @@ $.fn.reload = function (newurl, onload) {
                 jq.done(onload);
             // Mark element as is being reloaded, to avoid multiple attemps at same time, saving
             // current ajax object to allow be cancelled
+            jq.url = url;
             $t.data('isReloading', jq);
         }
     });
+    return this;
 }
 
 /*
