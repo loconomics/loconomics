@@ -211,7 +211,9 @@ LC.initScheduleStep = function () {
     .datepicker('option', 'altFormat', $.datepicker._defaults.dateFormat)
     .datepicker('option', 'numberOfMonths', 2)
     .datepicker('option', 'onSelect', function () {
-        var date = new Date($('#hideDate').val());
+        // Hour is added with GMT (+0000) to avoid problems on getting date because by
+        // default javascript adds the local time zone
+        var date = new Date($('#hideDate').val() + ' 00:00:00 GMT');
         LC.showDateHours(date);
         LC.showWeek(date);
     });
