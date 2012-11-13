@@ -29,7 +29,7 @@
         // Creating time blocks and checking its availability in blocks with same duration
         // as service duration (durationHours), instead of standard 30 minutes
         {
-            var f = Math.Ceiling((decimal) durationHours / .5M);
+            var f = Math.Ceiling((decimal) durationHours / .25M);
             for (int ih = 0; ih < availData.Count; ih++)
             {
                 var h = availData[ih];
@@ -54,7 +54,7 @@
                     // there is no need to check if there are time-blocks lost between checks
 
                     // Get the end time of current 'j' block (half hour blocks ever)
-                    var blockEnd = j.TimeBlock.Add(TimeSpan.FromHours(.5));
+                    var blockEnd = j.TimeBlock.Add(TimeSpan.FromHours(.25));
                     if (serviceEnd <= blockEnd) {
                         availHours.Add(new {
                             Start = h.TimeBlock,
