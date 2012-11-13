@@ -105,7 +105,7 @@ LC.showWeek = function (date) {
     var strdate = LC.dateToInterchangleString(date);
     $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
         encodeURIComponent(strdate) + '/',
-        function () { LC.selectWeekDay(date); });
+        function () { LC.selectWeekDay(date); LC.showDateHours(date); });
     $week.data('date', date);
 };
 LC.selectWeekDay = function (date) {
