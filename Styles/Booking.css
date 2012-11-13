@@ -197,6 +197,7 @@
 #weekDaySelector ul {
     letter-spacing: 9px;
     line-height: 100%;
+    white-space: nowrap;
 }
 #weekDaySelector ul li {
     display: inline-block;
