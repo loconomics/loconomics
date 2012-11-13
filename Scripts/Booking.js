@@ -87,7 +87,7 @@ LC.showDateHours = function (date) {
     var hours = $day.data('duration-hours');
     var userid = $day.data('user-id');
     $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/', LC.markSelectdDates);
+            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/', LC.markSelectedDates);
     $day.data('date', date);
 };
 LC.showWeek = function (date) {
@@ -156,6 +156,16 @@ LC.setupScheduleCalendar = function () {
             // Others Select with this same option selected must be reset:
             $s.closest('tr').siblings().find('option[value=' + v + ']:selected').closest('select').val('');
         }
+    })
+    .on('click', '.unselect-action', function () {
+        // Remove values from view-selection panel and form
+        $(this).siblings('span').text('')
+        .closest('.has-values').removeClass('has-values')
+        .find('input').val('');
+        // Remove selection from day-hours panel
+        var v = $(this).closest('.choice').data('choice');
+        $('#dayHoursSelector').find('.selector option[value=' + v + ']').prop('selected', false);
+        return false;
     });
 
     // Select current day in week selector
@@ -172,12 +182,12 @@ LC.getSelectedDates = function (filterDate) {
     }
     return selected;
 };
-LC.markSelectdDates = function () {
+LC.markSelectedDates = function () {
     var $day = $('#dayHoursSelector');
     var selected = LC.getSelectedDates(LC.dateToInterchangleString(new Date($day.data('date'))));
     $day.find('tr > .start').each(function () {
         for (var v in selected)
-            if (selected[v] && $(this).text() == selected[v].Time) 
+            if (selected[v] && $(this).text() == selected[v].Time)
                 $(this).siblings('.selector').find('option[value=' + v + ']').prop('selected', true);
     });
 };

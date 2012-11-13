@@ -317,7 +317,7 @@
     <fieldset class="selected-schedule">
         <h2>Your selected times for @pos.PositionSingular services are:</h2>
 
-        <div class="first-choice @(dt1Start.HasValue ? "has-values" : "")">
+        <div class="choice first-choice @(dt1Start.HasValue ? "has-values" : "")" data-choice="first">
             <h3>First Choice</h3>
             <p>
                 <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
@@ -327,22 +327,24 @@
             <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
             <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
         </div>
-        <div class="second-choice @(dt2Start.HasValue ? "has-values" : "")">
+        <div class="choice second-choice @(dt2Start.HasValue ? "has-values" : "")" data-choice="second">
             <h3>Second Choice</h3>
             <p>
                 <span class="date-showed">@(dt2Start.HasValue ? dt2Start.Value.ToString(dateFormat) : "")</span>
                 <span class="time start-time">@(dt2Start.HasValue ? dt2Start.Value.ToString(timeFormat) : "")</span>
                 <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToString(timeFormat) : "")</span>
+                <a class="unselect-action" href="#unselect">X</a>
             </p>
             <input type="hidden" class="date" value="@Request["second-date"]" name="second-date" />
             <input type="hidden" class="start-time" value="@Request["second-start-time"]" name="second-start-time" />
         </div>
-        <div class="third-choice @(dt3Start.HasValue ? "has-values" : "")">
+        <div class="choice third-choice @(dt3Start.HasValue ? "has-values" : "")" data-choice="third">
             <h3>Third Choice</h3>
             <p>
                 <span class="date-showed">@(dt3Start.HasValue ? dt3Start.Value.ToString(dateFormat) : "")</span>
                 <span class="time start-time">@(dt3Start.HasValue ? dt3Start.Value.ToString(timeFormat) : "")</span>
                 <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToString(timeFormat) : "")</span>
+                <a class="unselect-action" href="#unselect">X</a>
             </p>
             <input type="hidden" class="date" value="@Request["third-date"]" name="third-date" />
             <input type="hidden" class="start-time" value="@Request["third-start-time"]" name="third-start-time" />

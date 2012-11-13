@@ -263,6 +263,20 @@
     content: ' - ';
     position: relative;
 }
+#booking-schedule .unselect-action {
+    display: none;
+}
+#booking-schedule .has-values .unselect-action {
+    display: inline-block;
+    color: #E95D0F;
+    border: 1px solid #E95D0F;
+    border-radius: 100px;
+    margin-left: 40px;
+    text-decoration: none;
+    width: 16px;
+    line-height: 16px;
+    text-align: center;
+}
 
 /* Schedule.location */
 #booking-schedule .validation-summary-errors {
