@@ -87,7 +87,7 @@ LC.showDateHours = function (date) {
     var hours = $day.data('duration-hours');
     var userid = $day.data('user-id');
     $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/');
+            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/', LC.markSelectdDates);
     $day.data('date', date);
 };
 LC.showWeek = function (date) {
@@ -150,9 +150,8 @@ LC.setupScheduleCalendar = function () {
             choice.find('span.date-showed').text(dateshowed);
             choice.find('span.start-time').text(start);
             choice.find('span.end-time').text(end);
-            choice.find('input.date').val($.datepicker.formatDate('yy-mm-dd', date));
+            choice.find('input.date').val(LC.dateToInterchangleString(date));
             choice.find('input.start-time').val(start);
-            choice.find('input.end-time').val(end);
 
             // Others Select with this same option selected must be reset:
             $s.closest('tr').siblings().find('option[value=' + v + ']:selected').closest('select').val('');
@@ -161,6 +160,26 @@ LC.setupScheduleCalendar = function () {
 
     // Select current day in week selector
     LC.selectWeekDay(new Date($('#dayHoursSelector').data('date')));
+};
+LC.getSelectedDates = function (filterDate) {
+    var selected = { first: 0, second: 0, third: 0 };
+    for (var v in selected) {
+        var choice = $('.selected-schedule').find('.' + v + '-choice');
+        var d = choice.find('input.date').val();
+        var t = choice.find('input.start-time').val();
+        if (filterDate == d)
+            selected[v] = { Date: d, Time: t };
+    }
+    return selected;
+};
+LC.markSelectdDates = function () {
+    var $day = $('#dayHoursSelector');
+    var selected = LC.getSelectedDates(LC.dateToInterchangleString(new Date($day.data('date'))));
+    $day.find('tr > .start').each(function () {
+        for (var v in selected)
+            if (selected[v] && $(this).text() == selected[v].Time) 
+                $(this).siblings('.selector').find('option[value=' + v + ']').prop('selected', true);
+    });
 };
 
 LC.initScheduleStep = function () {
