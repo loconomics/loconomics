@@ -271,7 +271,7 @@
     color: #E95D0F;
     border: 1px solid #E95D0F;
     border-radius: 100px;
-    margin-left: 40px;
+    float: right;
     text-decoration: none;
     width: 16px;
     line-height: 16px;
