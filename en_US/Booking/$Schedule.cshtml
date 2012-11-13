@@ -42,8 +42,39 @@
             "&PositionID=" + pos.PositionID.ToString());
     }
     
-    if (IsPost && Validation.IsValid()){
-        
+    // Date-times are checked and generated ever on postback, not only on valid request (to properly
+    // recover post values)
+    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
+    dt1Start = LcHelpers.CreateDateTime(Request["first-date"], Request["first-start-time"]);
+    if (!dt1Start.HasValue) {
+        ModelState.AddFormError("First choice Date and Time are not correct");
+    }
+    if (!Request["second-date"].IsEmpty()) {
+        dt2Start = LcHelpers.CreateDateTime(Request["second-date"], Request["second-start-time"]);
+        if (!dt2Start.HasValue) {
+            ModelState.AddFormError("Second choice Date and Time are not correct");
+        }
+    }
+    if (!Request["third-date"].IsEmpty()) {
+        dt3Start = LcHelpers.CreateDateTime(Request["third-date"], Request["third-start-time"]);
+        if (!dt3Start.HasValue) {
+            ModelState.AddFormError("Third choice Date and Time are not correct");
+        }
+    }
+    decimal durationHours = getServiceDurationHours(null, bookingRequestID, p.UserID);
+    if (dt1Start.HasValue) {
+        dt1End = dt1Start.Value.AddHours((double)durationHours);
+    }
+    if (dt2Start.HasValue) {
+        dt2End = dt2Start.Value.AddHours((double)durationHours);
+    }
+    if (dt3Start.HasValue) {
+        dt3End = dt3Start.Value.AddHours((double)durationHours);
+    }
+    
+    
+    if (IsPost && Validation.IsValid() && ModelState.IsValid){
+
         var zipcodeID = 0;
         // Check if a location was selected or new location must be validated:
         int locationID = Request["select-location"].AsInt();
@@ -74,37 +105,11 @@
             ModelState.AddError("save-location-as", "To save the location is required a name");
         }
         
-        /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
-        dt1Start = LcHelpers.CreateDateTime(Request["preferred-date"], Request["preferred-start-time"]);
-        if (!dt1Start.HasValue) {
-            ModelState.AddFormError("First choice Date and Time are not correct");
-        }
-        if (!Request["alternate-1-date"].IsEmpty()) {
-            dt2Start = LcHelpers.CreateDateTime(Request["alternative-1-date"], Request["alternative-1-start-time"]);
-            if (!dt2Start.HasValue) {
-                ModelState.AddFormError("Second choice Date and Time are not correct");
-            }
-        }
-        if (!Request["alternate-2-date"].IsEmpty()) {
-            dt3Start = LcHelpers.CreateDateTime(Request["alternative-2-date"], Request["alternative-2-start-time"]);
-            if (!dt3Start.HasValue) {
-                ModelState.AddFormError("Third choice Date and Time are not correct");
-            }
-        }
-        
         if (ModelState.IsValid) {
             // Validate provider availability with requested dates
             var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
             using (var db = Database.Open("sqlloco")) {
-                decimal durationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
-                dt1End = dt1Start.Value.AddHours((double)durationHours);
-                if (dt2Start.HasValue) {
-                    dt2End = dt2Start.Value.AddHours((double)durationHours);
-                }
-                if (dt3Start.HasValue) {
-                    dt3End = dt3Start.Value.AddHours((double)durationHours);
-                }
-            
+
                 if (dt1Start.HasValue) {
                     if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
                         ModelState.AddFormError("The provider is not availaible for the First Choice Date and Time");
@@ -223,6 +228,11 @@
 }
 @functions { 
     decimal getServiceDurationHours(Database db, int bookingRequestID, int providerID) {
+        var dbclose = false;
+        if (db == null) {
+            db = Database.Open("sqlloco");
+            dbclose = true;
+        }
         decimal serviceDurationHours = (decimal)db.QueryValue(@"
             SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
             FROM    BookingRequest As R
@@ -236,6 +246,9 @@
             FROM    CalendarProviderAttributes
             WHERE   UserID = @0
         ", providerID);
+        if (dbclose) {
+            db.Dispose();
+        }
         // Never be lower than minimum
         serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
         // Default duration 4 hours, if there is no info about it
@@ -297,38 +310,42 @@
             UserID = p.UserID
         })
     </fieldset>
+    @{
+        var dateFormat = "dddd, MMM d";
+        var timeFormat = "t";
+    }
     <fieldset class="selected-schedule">
         <h2>Your selected times for @pos.PositionSingular services are:</h2>
 
-        <div class="first-choice">
+        <div class="first-choice @(dt1Start.HasValue ? "has-values" : "")">
             <h3>First Choice</h3>
             <p>
-                <span class="date-showed">@Request["preferred-date"]</span>
-                <span class="time start-time">@Request["preferred-start-time"]</span>
-                <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToShortTimeString() : "")</span>
+                <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt1Start.HasValue ? dt1Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToString(timeFormat) : "")</span>
             </p>
-            <input type="hidden" class="date" value="@Request["preferred-date"]" name="preferred-date" />
-            <input type="hidden" class="start-time" value="@Request["preferred-start-time"]" name="preferred-start-time" />
+            <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
+            <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
         </div>
-        <div class="second-choice">
+        <div class="second-choice @(dt2Start.HasValue ? "has-values" : "")">
             <h3>Second Choice</h3>
             <p>
-                <span class="date-showed">@Request["alternative-1-date"]</span>
-                <span class="time start-time">@Request["alternative-1-start-time"]</span>
-                <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToShortTimeString() : "")</span>
+                <span class="date-showed">@(dt2Start.HasValue ? dt2Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt2Start.HasValue ? dt2Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToString(timeFormat) : "")</span>
             </p>
-            <input type="hidden" class="date" value="@Request["alternative-1-date"]" name="alternative-1-date" />
-            <input type="hidden" class="start-time" value="@Request["alternative-1-start-time"]" name="alternative-1-start-time" />
+            <input type="hidden" class="date" value="@Request["second-date"]" name="second-date" />
+            <input type="hidden" class="start-time" value="@Request["second-start-time"]" name="second-start-time" />
         </div>
-        <div class="third-choice">
+        <div class="third-choice @(dt3Start.HasValue ? "has-values" : "")">
             <h3>Third Choice</h3>
             <p>
-                <span class="date-showed">@Request["alternative-2-date"]</span>
-                <span class="time start-time">@Request["alternative-2-start-time"]</span>
-                <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToShortTimeString() : "")</span>
+                <span class="date-showed">@(dt3Start.HasValue ? dt3Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt3Start.HasValue ? dt3Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToString(timeFormat) : "")</span>
             </p>
-            <input type="hidden" class="date" value="@Request["alternative-2-date"]" name="alternative-2-date" />
-            <input type="hidden" class="start-time" value="@Request["alternative-2-start-time"]" name="alternative-2-start-time" />
+            <input type="hidden" class="date" value="@Request["third-date"]" name="third-date" />
+            <input type="hidden" class="start-time" value="@Request["third-start-time"]" name="third-start-time" />
         </div>
 
         <div class="time-selection-note">

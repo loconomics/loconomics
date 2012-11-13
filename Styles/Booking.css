@@ -255,6 +255,14 @@
     min-height: 20px;
     font-weight: bold;
 }
+#booking-schedule .selected-schedule .date-showed {
+    min-width: 160px;
+    display: inline-block;
+}
+#booking-schedule .selected-schedule .has-values .end-time:before {
+    content: ' - ';
+    position: relative;
+}
 
 /* Schedule.location */
 #booking-schedule .validation-summary-errors {

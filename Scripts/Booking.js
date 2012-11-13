@@ -146,6 +146,7 @@ LC.setupScheduleCalendar = function () {
 
             // Show date and time
             var choice = $(this).closest('form').find('.selected-schedule').find('.' + v + '-choice');
+            choice.addClass('has-values');
             choice.find('span.date-showed').text(dateshowed);
             choice.find('span.start-time').text(start);
             choice.find('span.end-time').text(end);

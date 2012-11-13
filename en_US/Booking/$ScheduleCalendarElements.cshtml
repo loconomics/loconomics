@@ -67,6 +67,14 @@
         }
         return availHours;
     }
+    /// <summary>
+    /// Convert from TimeSpan to DateTime object
+    /// </summary>
+    /// <param name="ts"></param>
+    /// <returns></returns>
+    DateTime TsToDt(TimeSpan ts) {
+        return new DateTime(ts.Ticks);
+    }
 }
 
 @switch (element) {
@@ -107,8 +115,8 @@
                 foreach (var h in availHours)
                 {
                     <tr>
-                        <td class="start">@h.Start.ToString("hh':'mm")</td>
-                        <td class="end">@h.End.ToString("hh':'mm")</td>
+                        <td class="start">@(TsToDt(h.Start).ToString("t"))</td>
+                        <td class="end">@(TsToDt(h.End).ToString("t"))</td>
                         <td class="selector"><select class="choice-selector">
                             <option value="">select</option>
                             <option value="first">first choice</option>
