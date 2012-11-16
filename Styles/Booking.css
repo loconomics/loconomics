@@ -361,29 +361,58 @@
     font-weight: bold !important;
 }
 #booking-payment h6 {
-    color: #3B3B3B;
+    color: #747474;
     font-size: 1em;
     margin: 5px 0;
+    font-weight: normal;
 }
-#booking-payment .billing-info,
-#booking-payment .services-summary{
-    width: 377px;
+#booking-payment .billing-info {
     float: left;
+    margin-top: 0;
 }
-#booking-payment .your-provider,
-#booking-payment .appt-time-price{
+#booking-payment .order-summary{
     float: right;
     margin-left: 5px;
-    width: 270px;
+    width: 330px;
+    padding: 20px;
+    border: 1px solid #ADADAD;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
-#booking-payment .appt-time-price .schedule{
-    margin-bottom: 5px;
-}
-#booking-payment .appt-time-price .schedule h6{
+#booking-payment .order-summary h4 {
+    font-size: 1.2em;
+    color: #747474;
+    font-weight: normal;
     margin-bottom: 0;
 }
-#booking-payment .appt-time-price .schedule ol{
-    list-style-position:  inside;
+#booking-payment .order-summary h3 {
+    color: #747474;
+    margin: .5em 0;
+    font-weight: normal;
+}
+#booking-payment .order-summary .provider {
+    margin: 1em 0;
+}
+#booking-payment .order-summary .provider strong {
+    display: block;
+}
+#booking-payment .order-summary .schedule {
+    margin: 1em 0;
+}
+#booking-payment .order-summary .schedule .hours {
+    float: right;
+}
+#booking-payment .order-summary .schedule ol{
+    font-weight: bold;
+}
+#booking-payment .order-summary .schedule ol li {
+    list-style-position: inside;
+    list-style-type: decimal;
+}
+#booking-payment .order-summary .calculation {
+    width: 100%;
 }
 #booking-payment .user-rating-summary-widget > ul > li{
     line-height: normal;
@@ -411,34 +440,42 @@
 #booking-payment .services-summary ul li{
     margin: 10px 0;
 }
+#booking-payment .billing-info {
+    width: 394px;
+}
 #booking-payment .billing-info li{
-    margin: 2px 0;
+    margin: 0;
+    padding: 6px 0;
 }
-#booking-payment .billing-info .name-on-card input{
-    width: 219px;
-}
+#booking-payment .billing-info .name-on-card input,
 #booking-payment .billing-info .street-address-line-1 input,
-#booking-payment .billing-info .street-address-line-2 input{
-    width: 200px;
+#booking-payment .billing-info .street-address-line-2 input {
+    width: 220px;
+    float: right;
 }
 #booking-payment .billing-info .city input{
-    width: 287px;
+    float: right;
+    width: 310px;
 }
 .ie #booking-payment .billing-info .city input{
     width: 288px;
 }
 #booking-payment .billing-info .state select{
-    width: 145px;
+    width: 188px;
+    margin-left: 8px;
 }
 .ie #booking-payment .billing-info .state select{
     width: 147px;
 }
-#booking-payment .billing-info .zip input{
-    width: 60px;
-}
 #booking-payment .billing-info .state,
-#booking-payment .billing-info .zip{
+#booking-payment .billing-info .zip {
     display: inline-block;
+}
+#booking-payment .billing-info .zip label {
+    padding-right: 0;
+}
+#booking-payment .billing-info .zip input{
+    width: 50px;
 }
 #booking-payment .billing-info .save-to-my-payments label{
     display: inline-block;
@@ -448,14 +485,24 @@
     width: 167px;
 }
 #booking-payment .billing-info .card-number input{
-    width: 238px;
+    float: right;
+    width: 250px;
 }
 #booking-payment .billing-info .card-cvv,
 #booking-payment .billing-info .card-exp{
     display: inline-block;
 }
+#booking-payment .billing-info .card-exp select {
+    margin-left: 8px;
+}
+#booking-payment .billing-info .card-cvv {
+    float: right;
+}
+#booking-payment .billing-info .card-cvv label {
+    padding-right: 0;
+}
 #booking-payment .billing-info .card-cvv input{
-    width: 100px;
+    width: 35px;
 }
 
 /* redesign */

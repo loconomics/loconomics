@@ -354,17 +354,21 @@
     }
 }
 
-@helper printDate(DateTime? date) {
+@helper printDate(DateTime? date, DateTime? end) {
     if (date.HasValue) {
-        @(date.Value.ToLongDateString())<text>, </text>
-        @(date.Value.ToShortTimeString())<text> to </text>
-        @(date.Value.ToShortTimeString())
+        <span class="date">
+        @(date.Value.ToString("dddd, MMM d"))
+        </span>
+        <span class="hours">
+        @(date.Value.ToShortTimeString()) - 
+        @(end.Value.ToShortTimeString())
+        </span>
     }
 }
 
 <h2>Payment</h2>
 <p class="info">
-    Please review the summary and provide your payment details below. You will be charged immediately.  We withhold payment to your provider until after the services are performed for your safety.
+    <srong>Visa, Mastercard, or American Express will do nicely, thank you</srong>
 </p>
 <form action="@(UrlUtil.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
@@ -372,8 +376,7 @@
     @LcHelpers.GetValidationScripts()
     @*LcHelpers.SetupStarRatingPlugin()*@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <fieldset class="billing-info box">
-        <legend>Billing information:</legend>
+    <fieldset class="billing-info step-block">
         <ul>
             <li class="name-on-card">
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
@@ -398,13 +401,13 @@
                 <label>Card number:<input type="text" name="card-number" value="@Request["card-number"]" @Validation.GetHtml("card-number")/></label>
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
-            <li class="card-exp"><label>Exp:<select name="card-exp-month" @Validation.GetHtml("card-exp-month")>
+            <li class="card-exp"><label>Expiration Date<select name="card-exp-month" @Validation.GetHtml("card-exp-month")>
                         @LcHelpers.MonthOptions(Request["card-exp-month"])
                     </select></label><select name="card-exp-year">
                         @LcHelpers.CardYearOptions(Request["card-exp-year"])
                     </select></li>
             <li class="card-cvv">
-                <label>CVV Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
+                <label>Security Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
                 <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save</label>
@@ -414,26 +417,36 @@
     </fieldset>
 
 
-    <fieldset class="appt-time-price box">
-        <legend>Order Summary:</legend>
+    <fieldset class="order-summary">
+        <h3>Order Summary</h3>
         <div class="provider">
-            Your provider is
+            <h4>Your provider is</h4>
             <strong>@LcHelpers.GetUserDisplayName(p) (@pos.PositionSingular)</strong>
         </div>
         <div class="schedule">
-            <h6>Time Preferences are</h6>
+            <h4>Time Preferences are</h4>
             <ol>
-                <li class="preferred-option">@*Monday, April 15th, 2012, 11:00am to 2:00pm*@
-                    @printDate(dt1Start)
+                @if (dt1Start.HasValue)
+                {
+                <li class="preferred-option">
+                    @printDate(dt1Start, dt1End)
                 </li>
+                }
+                @if (dt2Start.HasValue)
+                {
                 <li class="alternative-option-1">
-                    @printDate(dt2Start)
+                    @printDate(dt2Start, dt2End)
                 </li>
+                }
+                @if (dt3Start.HasValue)
+                {
                 <li class="alternative-option-2">
-                    @printDate(dt3Start)
+                    @printDate(dt3Start, dt3End)
                 </li>
+                }
             </ol>
         </div>
+        <h4>Services Requested</h4>
         <table class="calculation">
             <tr><th>Estimated time required:</th><td class="time-required">@summary.ServiceDuration hours</td></tr>
             <tr>
