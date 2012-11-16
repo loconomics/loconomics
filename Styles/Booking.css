@@ -350,6 +350,13 @@
 }
 
 /** Form: Payment **/
+#payment .info {
+    margin: 30px 0 5px;
+    font-size: 1.1em;
+}
+#booking-payment {
+    margin-top: 0;
+}
 #booking-payment .box{
     font-size: .9em;
 }
@@ -413,6 +420,7 @@
 }
 #booking-payment .order-summary .calculation {
     width: 100%;
+    float: none;
 }
 #booking-payment .user-rating-summary-widget > ul > li{
     line-height: normal;
@@ -503,6 +511,14 @@
 }
 #booking-payment .billing-info .card-cvv input{
     width: 35px;
+}
+#booking-payment .payment-info {
+    color: Black;
+    background: #fcfcca;
+    padding: 4px;
+    font-size: .9em;
+    margin-top: 20px;
+    font-weight: bold;
 }
 
 /* redesign */
