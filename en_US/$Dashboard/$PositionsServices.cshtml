@@ -283,7 +283,7 @@
     </fieldset>
 }
 <p class="setting-instructions">
-Let clients know about the services you provide.  It helps you both work better together by clearly defining what can be done.  If we've missed something, <a href="mailto:providerhelp@loconomics.com">let us know.</a>
+Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want. Make sure to be clear about what tasks future clients can expect you to perform. If we've missed something, <a href="mailto:providerhelp@loconomics.com">let us know</a>.
 </p>
 <div>
 <form action="@(UrlUtil.LangPath)$Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
@@ -295,7 +295,7 @@ Let clients know about the services you provide.  It helps you both work better 
     </ul>
     <fieldset class="position-intro">
         <legend>Position introduction (optional):</legend>
-        <textarea name="position-intro" @Validation.GetHtml("position-intro") placeholder="Write a couple sentences about how your @pos.PositionSingular services are unique. Avoid repeating the information you fill out below.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
+        <textarea name="position-intro" @Validation.GetHtml("position-intro") placeholder="What makes your @pos.PositionSingular services special? Avoid mentioning information you’ll fill out below.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
     </fieldset>
     <div class="service-attribute-categories">
         @foreach (var cat in dataCats)

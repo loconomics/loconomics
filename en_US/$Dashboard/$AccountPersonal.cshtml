@@ -309,7 +309,7 @@
     }
 }
 <p class="setting-instructions">
-Please complete the information below as accurately as possible.  Only your first name, last initial, and public bio will be displayed on your profile.  Customers will receive your full name, e-mail address, and phone number once you've confirmed a booking.  Rest assured your data is stored securely. 
+This is the bare-bones run down of who you are outside of your job. Please fill out the information below as accurately as possible. Only your first name, last initial, and public bio are visible on your profile. Eventual customers receive your full name, email, and phone number upon a confirmed booking. As always, all your data is safe with us.
 </p>
 <div>
 <form method="post" action="@(UrlUtil.LangPath)$Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
@@ -363,7 +363,7 @@ Please complete the information below as accurately as possible.  Only your firs
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-homeaddress">
-        <legend>Home Address:</legend>
+        <legend>Home address:</legend>
         <ul>
             <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" @Validation.GetHtml("streetaddress1")/>
                 @Html.ValidationMessage("streetaddress1")
@@ -386,7 +386,7 @@ Please complete the information below as accurately as possible.  Only your firs
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-personaldata">
-        <legend>Personal Data:</legend>
+        <legend>Personal data:</legend>
         <ul>
             <li><label>Gender Identity:</label>
                 @foreach (var gender in genders)
@@ -400,7 +400,7 @@ Please complete the information below as accurately as possible.  Only your firs
     @if (u.IsProvider)
     {
         <fieldset id="@idprefix-fs-customurl" class="customurl">
-            <legend title="About Custom URL: Lorem Ipsum..." class="has-tooltip">Custom Loconomics URL:</legend>
+            <legend title="Create your own personal brand by customizing your profile's URL. Be orginal!" class="has-tooltip">Custom Loconomics URL:</legend>
             <ul>
                 <li>
                     https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
@@ -409,7 +409,7 @@ Please complete the information below as accurately as possible.  Only your firs
             </ul>
         </fieldset>
         <fieldset id="@idprefix-fs-websiteurl" class="websiteurl">
-            <legend title="About Website URL: Lorem Ipsum..." class="has-tooltip popup-action">Personal website URL:</legend>
+            <legend title="After you accept a booking, we'll send your personal website to clients to let them do some more research before their appointmnet.  This is completely optional." class="has-tooltip popup-action">Personal website URL:</legend>
             <ul>
                 <li>
                     <input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
@@ -419,9 +419,9 @@ Please complete the information below as accurately as possible.  Only your firs
         </fieldset>
     }
     <fieldset id="@idprefix-fs-publicbio">
-        <legend>Public Bio:</legend>
+        <legend>Public bio:</legend>
         <ul>
-            <li><textarea id="@idprefix-publicbio" name="publicbio" rows="7" placeholder="Tell potential clients something interesting about yourself not related to your work." @Validation.GetHtml("publicbio")>@Bio</textarea>
+            <li><textarea id="@idprefix-publicbio" name="publicbio" rows="7" placeholder="Who are you, anyway? Tell potential clients a little something about you, e.g. “I am a San Francisco native,” or “I can whistle through my teeth.” " @Validation.GetHtml("publicbio")>@Bio</textarea>
                 @Html.ValidationMessage("publicbio")
             </li>
         </ul>

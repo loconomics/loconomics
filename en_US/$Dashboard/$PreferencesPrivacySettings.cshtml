@@ -69,7 +69,7 @@
     <span class="choice-label">@fieldLabel</span>
 }
 <p class="setting-instructions">
-Your privacy is of our upmost concern.  Please indicate your preferences below, and <a href="mailto:providerhelp@loconomics.com">e-mail us</a> with any questions.  
+Yep, privacy is pretty important. Let us know what you’re thinking below, and <a href="mailto:providerhelp@loconomics.com">e-mail us</a> with any concerns or questions.
 </p>
 <div class="preferences">
 <form method="post" action="@(UrlUtil.LangPath)$Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box">
@@ -87,7 +87,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
                 <li>Personal website (if listed)</li>
                 <li>Professional license or certification information (if applicable)</li>
             </ul>
-            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a>.</span>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a> or <a href="mailto:help@loconomics.com">e-mail us</a>.</span>
         </fieldset>
     }
     @if (u.IsCustomer)
@@ -100,49 +100,49 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
                 <li>Phone number(s)</li>
                 <li>Address where service is to be performed</li>
             </ul>
-            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a>.</span>
+            <span class="note">*If you are not comfortable sharing this information, you are free to <a href="#preferences-privacysettings-delete-my-account">delete your account</a> or <a href="mailto:help@loconomics.com">e-mail us</a>.</span>
         </fieldset>
     }
     <fieldset id="@idprefix-fs-bookingscommunication">
-        <legend>Communication about bookings</legend>
+        <legend>Bookings:</legend>
         <ul>
             <li>
-                @printChoiceOptions("SMSBookingCommunication", "It’s okay to contact me via SMS/text message about bookings or booking-related questions")
+                @printChoiceOptions("SMSBookingCommunication", "It’s OK to send me text messages about bookings")
             </li>
             <li>
-                @printChoiceOptions("PhoneBookingCommunication", "It’s okay to phone me about bookings or booking-related questions")
+                @printChoiceOptions("PhoneBookingCommunication", "It’s OK to call me about bookings")
             </li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-loconomicscommunication">
-        <legend>Communication about Loconomics</legend>
+        <legend>Loconomics:</legend>
         <ul>
             <li>
-                @printChoiceOptions("LoconomicsCommunityCommunication", "It’s okay to e-mail me updates about the Loconomics community")
+                @printChoiceOptions("LoconomicsCommunityCommunication", "It’s OK to send me updates about the Loconomics community")
             </li>
             <li>
-                @printChoiceOptions("LoconomicsDBMCampaigns", "It's okay to e-mail me marketing e-mails about Loconomics Service Providers")
+                @printChoiceOptions("LoconomicsDBMCampaigns", "It’s OK to email me marketing efforts about other service providers within Loconomics")
             </li>
         </ul>
     </fieldset>
     @if (u.IsProvider)
     {
     <fieldset id="@idprefix-fs-marketingcommunication">
-        <legend>Marketing communications</legend>
+        <legend>Marketing:</legend>
         <ul>
             <li>
-                @printChoiceOptions("ProfileSEOPermission", "It’s okay to include me in search engine listings (e.g. Google, Bing, Yahoo)")
+                @printChoiceOptions("ProfileSEOPermission", "It’s OK to include me in search engine listings like Google and Bing")
             </li>
             <li>
-                @printChoiceOptions("LoconomicsMarketingCampaigns", "It’s okay to include my profile in marketing done by Loconomics")
+                @printChoiceOptions("LoconomicsMarketingCampaigns", "It’s OK to include my profile in Loconomics marketing")
             </li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-cobrandingpartners">
-        <legend>Co-branding partners</legend>
+        <legend>Co-branding partners:</legend>
         <ul>
             <li>
-                @printChoiceOptions("CoBrandedPartnerPermissions", "It’s okay to share my user data for co-branded promotions with select partners")
+                @printChoiceOptions("CoBrandedPartnerPermissions", "It’s OK to share my user data for co-branded promotions with our partners")
             </li>
         </ul>
     </fieldset>
@@ -172,8 +172,8 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
     @if (u.AccountStatusID > 0)
     {
     <div class="delete-message-confirm">
-        <p>Are you really sure you want to delete your account?</p>
-        <p>Lorem ipsum, lorem ipsum, lorem ipsum</p>
+        <p>Are you sure you want to delete your account?</p>
+        <p>We hate to see you go! Please reconsider and contact us with any concerns. We want you to stay.</p>
         <form action="@(UrlUtil.LangPath)Account/$Delete/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>
@@ -183,7 +183,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
     @if (u.AccountStatusID == 1)
     {
     <div class="deactivate-message-confirm">
-        <p>Are you really sure you want to deactivate your account?</p>
+        <p>Are you sure you want to deactivate your account?</p>
         <form action="@(UrlUtil.LangPath)Account/$Deactivate/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>
@@ -193,7 +193,7 @@ Your privacy is of our upmost concern.  Please indicate your preferences below, 
     @if (u.AccountStatusID == 2)
     {
     <div class="reactivate-message-confirm">
-        <p>Are you really sure you want to reactivate your account?</p>
+        <p>Are you sure you want to reactivate your account?</p>
         <form action="@(UrlUtil.LangPath)Account/$Reactivate/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>

@@ -191,7 +191,7 @@
             }
             <ul class="location-data">
                 <li class="location-name">
-                    <label>Name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
+                    <label>Location name: <input type="text" name="name" value="@(Request["name"] ?? (location != null ? location.AddressName : null))" @Validation.GetHtml("name") /></label>
                     @Html.ValidationMessage("name")
                 </li>
                 <li class="location-addressline location-addressline1">
@@ -227,13 +227,13 @@
             </ul>
             <ul class="location-travel">
                 <li class="input-option">
-                    I perform services at this location:
+                    I perform services here: 
                     <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["iworkon"] ?? (location != null && location.IsServiceAddress ? location.ServicesPerformedAtLocation : null)) name="iworkon" value="True"/></label>
                     <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["iworkon"] ?? (location != null && location.IsServiceAddress ? location.ServicesPerformedAtLocation : false)) name="iworkon" value="False"/></label>
                 </li>
                 <li class="input-option">
                     <fieldset class="has-confirm">
-                     <legend>I travel to clients from this location</legend> 
+                     <legend>I travel to clients from here: </legend> 
                         <div class="confirm positionlocations-itravel-confirm">
                             <label>Yes<input type="radio" @LcHelpers.IsChecked(true, Request["itravel"] ?? (location != null && location.IsServiceAddress ? location.TravelFromLocation : null)) name="itravel" value="True"/></label>
                             <label>No<input type="radio" @LcHelpers.IsChecked(false, Request["itravel"] ?? (location != null && location.IsServiceAddress ? location.TravelFromLocation : false)) name="itravel" value="False"/></label>
@@ -243,11 +243,11 @@
                                 <select name="travel-radius" @Validation.GetHtml("travel-radius")>
                                     @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
                                 </select>
-                                from this location.</label>
+                                mile(s) from here.</label>
                                 @Html.ValidationMessage("travel-radius")
                                 </li>
                             <li>
-                                <span>I travel to jobs using primarily:</span>
+                                <span>I travel by:</span>
                                 <ul class="transport-type">
                                 @foreach (var t in transports)
                                 {

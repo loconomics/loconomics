@@ -59,7 +59,7 @@
 			<fieldset class="search-options">
                 <ul>
                     <li class="search-service">
-                        <label for="search-service">Search for a (e.g. Gardener, Tutor...)</label>
+                        <label for="search-service">Search for a (e.g. Tutor, Massage Therapist...)</label>
                         <input id="search-service" type="text" name="s" placeholder="Dog Walker" value="@Request["s"]" />
                     </li>
                     <li class="search-location">
@@ -67,7 +67,7 @@
                         <input id="search-location" type="text" name="location" placeholder="San Francisco, CA" value="@Request["location"]" />
                     </li>
                     <li class="search-date">
-                        <label for="search-date">When:</label>
+                        <label for="search-date">When</label>
                         <input id="search-date" class="date-pick" type="text" name="date" value="@(DateTime.Today.ToShortDateString())" value="@Request["date"]" />
                     </li>
                     <li class="actions">
@@ -83,7 +83,7 @@
      @if (!performSearch)
      {
 		<h1>@Page.Title</h1>
-        <p>book safely and easily local, indepedent service providers</p>
+        <p>Easily book local and independent service providers here.</p>
          
         @searchForm()
 
