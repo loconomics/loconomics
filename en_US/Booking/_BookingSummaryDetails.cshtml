@@ -1,0 +1,142 @@
+﻿@* DEPRECATED. Here is some old code from $Payment.cshtml that with the redesign (applied on 2012/11/16)
+    was removed, but preserved for a while here, maybe is need in a future ;-)
+*@
+@{
+    
+    var p = PageData["providerrow"] ?? LcData.UserInfo.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
+    var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt());
+        
+    var bookingRequestID = PageData["BookingRequestID"];
+    
+    dynamic summary = PageData["Summary"] ?? LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
+    string strDetails = LcData.Booking.GetBookingRequestDetails(0, summary.PricingEstimateID);
+    string strServices = LcData.Booking.GetBookingRequestServices(0, summary.PricingEstimateID);
+    string strPackages = LcData.Booking.GetBookingRequestPackages(0, summary.PricingEstimateID);
+}
+
+@* From Profile/_PositionSummary *@
+@helper printCatTitle(dynamic cat){
+    <h5 title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]">
+        @cat["ServiceAttributeCategoryName"]
+    </h5>
+}
+@* From Profile/_PositionSummary *@
+@helper printAttList(dynamic cat){
+    <ul class="attributes-list">
+        @foreach (var att in cat["ServiceAttributes"]) {
+            if (att["UserChecked"]) {
+            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
+            }
+        }
+    </ul>
+}
+
+@* Portion from Profile/_PositionSummary *@
+@helper printProviderFeaturedInfo(dynamic pos){
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "only-special-cats", pos.UserID);
+    <div class="provider-features-lists">
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperienceLevel) && dataCats[LcData.ServiceAttCatIDExperienceLevel]["ServiceAttributes"].Count > 0)
+        {
+            var cat = dataCats[LcData.ServiceAttCatIDExperienceLevel];
+            <div class="experience-level">
+                @printCatTitle(cat)
+                <!--<a class="button view-more" href="#">More</a>-->
+                @printAttList(cat)
+            </div>
+        }
+        
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+            UserID = pos.UserID,
+            ContainerClasses = "licenses",
+            Size = "mini",
+            Title = "Licenses"
+        })
+
+        @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+        {
+            var cat = dataCats[LcData.ServiceAttCatIDExperience];
+            <div class="years-experience">
+                @printCatTitle(cat)
+                <!--<a class="button view-more" href="#">More</a>-->
+                @printAttList(cat)
+            </div>
+        }*@
+    </div>
+}
+
+    <fieldset class="your-provider box">
+        <legend>Your provider:</legend>
+
+                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new
+                   {
+                       Data = p,
+                       Size = "mini",
+                       WithGoogleMap = false,
+                       UserType = "provider",
+                       PositionData = pos,
+                       WithFullRating = true
+                   })
+
+                @printProviderFeaturedInfo(pos)
+
+        @*
+        <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">@pos.PositionSingular</span></h6>
+        <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
+        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
+        <a target="_blank" href="@(UrlUtil.LangPath)Profile/?UserID=@(p.UserID)">View profile</a>*@
+        @*<div class="provider-features-lists">
+            <div class="years-experience">
+                <h5>Years experience:</h5>
+                <ul><li>0.5 years</li></ul>
+            </div>
+            <div class="licenses">
+                <h5>Licenses:</h5>
+                <ul><li>CA License</li><li>HSA certified</li></ul>
+            </div>
+            <div class="experience-level">
+                <h5>Experience level:</h5>
+                <ul><li>Expert</li></ul>
+            </div>
+        </div>*@
+    </fieldset>
+
+
+    <fieldset class="services-summary box">
+        <legend>Summary of services to be performed:</legend>
+        <ul>
+            @if (!String.IsNullOrEmpty(strServices))
+            {
+            <li class="services-list">
+                <strong>Services:</strong>
+                @*Sweeping, mopping, vacuuming, dusting, bed-making, dishes, trash emptying, toilets*@
+                @strServices
+            </li>
+            }
+            @if (!String.IsNullOrEmpty(strPackages))
+            {
+            <li class="packages-list">
+                <strong>Packages:</strong>
+                @strPackages
+            </li>
+            }
+            <li class="special-instructions">
+                <strong>Special instructions:</strong>
+                @summary.SpecialRequests
+            </li>
+            <li class="location">
+                <strong>Location:</strong>
+                @*187 Bocana St., San Francisco, CA 94110*@
+                @summary.AddressLine1 @(summary.AddressLine2), @(summary.City), @summary.StateProvinceCode @summary.PostalCodeID
+            </li>
+            <li class="details">
+                <strong>Details:</strong>
+                @*Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.*@
+                @strDetails
+            </li>
+        </ul>
+        @*<div class="actions">
+            <button class="button edit">Edit</button>
+        </div>*@
+    </fieldset>
