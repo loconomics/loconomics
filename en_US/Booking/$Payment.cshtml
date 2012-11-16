@@ -178,6 +178,7 @@
                             var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
                             // Save date-times as 'tentative' provider Events
                             int? dt1ID, dt2ID, dt3ID;
+                            dt1ID = dt2ID = dt3ID = null;
                             if (dt1Start.HasValue && dt1End.HasValue) {
                                 dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
                                     3, // Availability is 'Tentative'
@@ -403,6 +404,13 @@
         }*@
     </div>
 }
+@helper printDate(DateTime? date) {
+    if (date.HasValue) {
+        @(date.Value.ToLongDateString())<text>, </text>
+        @(date.Value.ToShortTimeString())<text> to </text>
+        @(date.Value.ToShortTimeString())
+    }
+}
 
 <h2>Payment</h2>
 <p class="info">
@@ -533,19 +541,13 @@
             <h6>Ranked in order of preference:</h6>
             <ol>
                 <li class="preferred-option">@*Monday, April 15th, 2012, 11:00am to 2:00pm*@
-                    @(dt1Start.ToLongDateString()),
-                    @dt1Start.ToShortTimeString() to
-                    @dt1End.ToShortTimeString()
+                    @printDate(dt1Start)
                 </li>
                 <li class="alternative-option-1">
-                    @(dt2Start.ToLongDateString()),
-                    @dt2Start.ToShortTimeString() to
-                    @dt2End.ToShortTimeString()
+                    @printDate(dt2Start)
                 </li>
                 <li class="alternative-option-2">
-                    @(dt3Start.ToLongDateString()),
-                    @dt3Start.ToShortTimeString() to
-                    @dt3End.ToShortTimeString()
+                    @printDate(dt3Start)
                 </li>
             </ol>
         </div>
