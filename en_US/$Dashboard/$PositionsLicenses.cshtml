@@ -220,8 +220,8 @@ else
             @foreach (var ul in userLicenses)
             {
                 <li>
-                    <strong>@(ul.LicenseCertificationType)</strong><text>,
-                    status: </text><em>@ul.StatusName</em> <text>@ul.StatusDescription</text>
+                    <strong>@(ul.LicenseCertificationType)</strong>, status: 
+                    <em>@ul.StatusName</em> @ul.StatusDescription
                 </li>
             }
             </ul>

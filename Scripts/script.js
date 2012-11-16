@@ -596,6 +596,42 @@ LC.dateToInterchangleString = function (date) {
     return date.getUTCFullYear().toString() + '-' + (date.getUTCMonth() + 1).toString() + '-' + date.getUTCDate().toString();
 };
 
+// TODO Convert as general function and use everywhere:
+// It executes the given 'ready' function as parameter when
+// map environment is ready (when google maps api and script is 
+// loaded and ready to use, or inmediately if is already loaded).
+LC.mapReady = function (ready) {
+    var mapIsReady = LC['_mapIsReady'] || false;
+    if (mapIsReady)
+        ready();
+    else
+        Modernizr.load({
+            load: { googleapi: "https://www.google.com/jsapi" },
+            complete: function () {
+                google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
+                    LC._mapIsReady = true;
+                    ready();
+                }
+                });
+            }
+        });
+};
+
+/* Localization */
+LC.distanceUnits = {
+    'ES': 'km',
+    'US': 'miles'
+};
+LC.getCurrentCulture = function () {
+    var c = $('html').data('culture');
+    var s = c.split('-');
+    return {
+        culture: c,
+        language: s[0],
+        country: s[1]
+    };
+};
+
 /*******************
 * Popup related 
 * functions

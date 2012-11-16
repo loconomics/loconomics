@@ -282,9 +282,16 @@
 #booking-schedule .validation-summary-errors {
     margin-bottom: 20px;
 }
-#booking-schedule select.select-location {
-    display: block;
+#booking-schedule .available-locations {
+    display: inline-block;
     margin: 15px 20px;
+    width: 380px;
+}
+#booking-schedule .select-location {
+    width: 95%;
+}
+#booking-schedule .enter-new-location {
+    margin-top: 10px;
 }
 #booking-schedule .location{
     margin-bottom: 20px;
@@ -325,6 +332,11 @@
 }
 #booking-schedule .location .save-to-my-locations input[type="text"]{
     width: 174px;
+}
+#booking-schedule .serviceRadiusMap {
+    width: 370px;
+    height: 300px;
+    float: right;
 }
 
 #booking-schedule #showDate {

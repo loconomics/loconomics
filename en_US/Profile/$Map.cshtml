@@ -52,53 +52,46 @@ Below you can find out if you're within this provider's service radius and/or at
 @if (addresses.Count > 0)
 {
 <script type="text/javascript">
-    Modernizr.load({
-        load: { googleapi: "https://www.google.com/jsapi" },
-        complete: function () {
-            google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
-                // Register if user selects or writes a position (to not overwrite it with automatic positioning)
-                var positionedByUser = false;
-                // Some confs
-                var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
-                var generalZoomLevel = 11;
-                var addresses = [null
-                @foreach (var add in addresses)
-                {
-                    <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : .5) }</text>
-                }
-                ];
+    LC.mapReady( function () {
+        // Register if user selects or writes a position (to not overwrite it with automatic positioning)
+        var positionedByUser = false;
+        // Some confs
+        var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
+        var generalZoomLevel = 11;
+        var addresses = [null
+        @foreach (var add in addresses)
+        {
+            <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : .5) }</text>
+        }
+        ];
 
-                // First address position is null, delete
-                addresses.remove(0);
+        // First address position is null, delete
+        addresses.remove(0);
 
-                // If there is no address, nothing!
-                if (addresses.length == 0) return;
+        // If there is no address, nothing!
+        if (addresses.length == 0) return;
 
-                // Map element
-                var m = $('#user-addresses-map-position-@pos.PositionID').get(0);
-                // Creating position coordinates, from one of the addresses
-                var myLatlng = new google.maps.LatLng(addresses[0].lat, addresses[0].lng);
-                // Create map
-                var mapOptions = {
-                    zoom: (generalZoomLevel),
-                    center: myLatlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                }
-                var map = new google.maps.Map(m, mapOptions);
-                console.dir(addresses);
-                // Create circles per address
-                for (var i = 0; i < addresses.length; i++) {                  
-                    addresses[0].circle = new google.maps.Circle({
-                        center: new google.maps.LatLng(addresses[0].lat, addresses[0].lng),
-                        map: map,
-                        clickable: false,
-                        radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[0].radius, radiusUnit) : addresses[0].radius) * 1000, // in meters
-                        fillColor: '#00989A',
-                        fillOpacity: .3,
-                        strokeWeight: 0
-                    });
-                }
-            } 
+        // Map element
+        var m = $('#user-addresses-map-position-@pos.PositionID').get(0);
+        // Creating position coordinates, from one of the addresses
+        var myLatlng = new google.maps.LatLng(addresses[0].lat, addresses[0].lng);
+        // Create map
+        var mapOptions = {
+            zoom: (generalZoomLevel),
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(m, mapOptions);
+        // Create circles per address
+        for (var i = 0; i < addresses.length; i++) {                  
+            addresses[0].circle = new google.maps.Circle({
+                center: new google.maps.LatLng(addresses[0].lat, addresses[0].lng),
+                map: map,
+                clickable: false,
+                radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[0].radius, radiusUnit) : addresses[0].radius) * 1000, // in meters
+                fillColor: '#00989A',
+                fillOpacity: .3,
+                strokeWeight: 0
             });
         }
     });

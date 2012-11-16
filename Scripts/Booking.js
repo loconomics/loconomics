@@ -191,6 +191,32 @@ LC.markSelectedDates = function () {
                 $(this).siblings('.selector').find('option[value=' + v + ']').prop('selected', true);
     });
 };
+LC.setupServiceMap = function () {
+    LC.mapReady(function () {
+        $('.serviceRadiusMap').each(function () {
+            var m = $(this);
+            var radius = m.data('service-radius');
+            var latlng = new google.maps.LatLng(parseFloat(m.data('latitude')), parseFloat(m.data('longitude')));
+            //latlng = new google.maps.LatLng(37.75334439226298, -122.4254606035156);
+            var mapOptions = {
+                zoom: 10,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(m.get(0), mapOptions);
+            var radiusUnit = LC.distanceUnits[LC.getCurrentCulture().country];
+            var circle = new google.maps.Circle({
+                center: latlng,
+                map: map,
+                clickable: false,
+                radius: (radiusUnit == 'miles' ? convertMilesKm(radius, radiusUnit) : radius) * 1000, // in meters
+                fillColor: '#00989A',
+                fillOpacity: .3,
+                strokeWeight: 0
+            });
+        });
+    });
+};
 
 LC.initScheduleStep = function () {
     var tab = $('#schedule');
@@ -219,6 +245,8 @@ LC.initScheduleStep = function () {
     });
 
     LC.setupScheduleCalendar();
+
+    LC.setupServiceMap();
 };
 
 $(document).ready(function () {
