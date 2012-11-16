@@ -284,7 +284,7 @@
 }
 #booking-schedule .available-locations {
     display: inline-block;
-    margin: 15px 20px;
+    margin: 0 20px;
     width: 380px;
 }
 #booking-schedule .select-location {
@@ -333,10 +333,13 @@
 #booking-schedule .location .save-to-my-locations input[type="text"]{
     width: 174px;
 }
-#booking-schedule .serviceRadiusMap {
+#booking-schedule .service-radius {
     width: 370px;
-    height: 300px;
     float: right;
+}
+#booking-schedule .service-radius strong {
+    text-align: center;
+    display: block;
 }
 
 #booking-schedule #showDate {
