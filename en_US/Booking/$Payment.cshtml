@@ -11,6 +11,8 @@
         Request["positionid"].AsInt());
     DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
     dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
+    // TODO: get IsEstimate from booking/pricingtype/session
+    bool isEstimate = true;
     
     if (p == null || c == null || pos == null){
         var inputdataerrormessage = "No enought input data to show results";
@@ -64,6 +66,11 @@
     Validation.RequireField("card-exp-month", "Card expiration month is required");
     Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
+    
+    if (isEstimate) {
+        Validation.RequireField("agree-estimate", "You must agree the pricing estimate");
+    }
+    Validation.RequireField("agree-cancellation-policy", "You must agree the cancellation policy");
     
     if (IsPost && Validation.IsValid()){
         /*
@@ -196,7 +203,7 @@
                             }
 
                             /*
-                             * Save event IDs.
+                             * Save event IDs and preferences
                              * State is still 1:created
                              */
                             db.Execute(@"
@@ -205,9 +212,13 @@
                                         PreferredDateID = @1
                                         ,AlternativeDate1ID = @2
                                         ,AlternativeDate2ID = @3
+                                        ,SendReminder = @4
+                                        ,SendPromotional = @5
                                 WHERE   BookingRequestID = @0
                             ", bookingRequestID, 
-                             dt1ID, dt2ID, dt3ID);
+                             dt1ID, dt2ID, dt3ID,
+                             Request["send-reminder"].AsBool(),
+                             Request["send-promotional"].AsBool());
                         }
                         
                         /*
@@ -463,6 +474,17 @@
             </tr>
         </table>
         <div class="payment-info">Your card will be authorized immediately and charged when your provider accepts the booking, typically within 18 hr.</div>
+    </fieldset>
+    <fieldset class="agreement">
+        <ul>
+            @if (isEstimate)
+            {
+            <li><input id="agree-estimate" type="checkbox" name="agree-estimate" @LcHelpers.IsChecked("true", Request["agree-estimate"]) value="true" /><label for="agree-estimate"> I understand this pricing is only an estimate and will be confirmed within 18 hrs</label></li>
+            }
+            <li><input id="agree-cancellation-policy" type="checkbox" name="agree-cancellation-policy" @LcHelpers.IsChecked("true", Request["agree-cancellation-policy"]) value="true" /><label for="agree-cancellation-policy"> I have read and agree to Fernando’s <a href="#cancellation-policy">cancellation policy</a></label></li>
+            <li><input id="send-reminder" type="checkbox" name="send-reminder" @LcHelpers.IsChecked("true", Request["send-reminder"]) value="true" /><label for="send-reminder"> Send an SMS appointment reminder</label></li>
+            <li><input id="send-promotionals" type="checkbox" name="send-promotionals" @LcHelpers.IsChecked("true", Request["send-promotionals"]) value="true" /><label for="send-promotionals"> Send me promotional emails</label></li>
+        </ul>
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Dashboard/Mailbox/")" class="complete-booking next finish main-action">Complete booking</button>

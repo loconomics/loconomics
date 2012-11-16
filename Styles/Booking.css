@@ -520,6 +520,25 @@
     margin-top: 20px;
     font-weight: bold;
 }
+#booking-payment .agreement {
+    width: 330px;
+    float: right;
+    clear: both;
+    padding: 20px;
+}
+#booking-payment .agreement label {
+    display: inline-block;
+    padding: 0;
+    vertical-align: middle;
+    width: 300px;
+}
+#booking-payment .agreement input {
+    margin: 0 12px 0 0;
+    vertical-align: middle;
+}
+#booking-payment .agreement a {
+    color: #eb6e42;
+}
 
 /* redesign */
 /* page */
