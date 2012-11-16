@@ -423,7 +423,7 @@
                 </li>
             </ul>
         </div>
-        @if (providerTravelLocation != null)
+        @if (providerTravelLocation != null && providerTravelLocation.Latitude != 0 && providerTravelLocation.Longitude != 0)
         {
             <div class="serviceRadiusMap" style="width: 370px; height: 300px" data-latitude="@providerTravelLocation.Latitude" data-longitude="@providerTravelLocation.Longitude" data-service-radius="@providerTravelLocation.ServiceRadiusFromLocation"></div>
         }
