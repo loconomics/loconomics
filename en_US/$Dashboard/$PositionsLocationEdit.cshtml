@@ -243,7 +243,7 @@
                                 <select name="travel-radius" @Validation.GetHtml("travel-radius")>
                                     @printDistanceOptions(Request["travel-radius"] ?? (location != null && location.IsServiceAddress ? location.ServiceRadiusFromLocation : null))
                                 </select>
-                                mile(s) from here.</label>
+                                from here.</label>
                                 @Html.ValidationMessage("travel-radius")
                                 </li>
                             <li>
