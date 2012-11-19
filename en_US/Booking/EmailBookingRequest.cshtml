@@ -138,13 +138,22 @@ else
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
                 Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
             </a>
+            @if (booking.AlternativeDate1Start is bool || booking.AlternativeDate2Start is bool)
+            {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
+            }
+            @if (booking.AlternativeDate1Start is bool)
+            {
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </a>
+            }
+            @if (booking.AlternativeDate2Start is bool)
+            {
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
             </a>
+            }
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
             <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(UrlUtil.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(booking.BookingRequestID)">
                 Decline booking (you can offer alternative times to the customer)

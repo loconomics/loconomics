@@ -22,8 +22,12 @@ public static partial class LcData
             SELECT  PP.ProviderPackageID
                     ,PP.ProviderPackageName As Name
                     ,PP.ProviderPackageDescription As Description
-                    ,PP.ProviderPackagePrice As Price
-                    ,PP.ProviderPackageServiceDuration As ServiceDuration
+
+                    --,PP.ProviderPackagePrice As Price
+                    --,PP.ProviderPackageServiceDuration As ServiceDuration
+                    ,P.ServiceDuration
+                    ,P.TotalPrice As Price
+
                     ,PP.FirstTimeClientsOnly
                     ,PP.NumberOfSessions
                     ,P.PriceEstimate
@@ -38,7 +42,7 @@ public static partial class LcData
         ";
         public const string sqlGetPricingOptionsInPricingEstimate = @"
             SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.TimeEstimate As Time, P.PriceEstimate As Price
+                    P.ServiceDuration As Time, P.TotalPrice As Price
             FROM    PricingEstimateDetail As P
                      INNER JOIN
                     PricingOption As V
@@ -48,7 +52,7 @@ public static partial class LcData
         ";
         public const string sqlGetPricingVarsInPricingEstimate = @"
             SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.TimeEstimate As Time, P.PriceEstimate As Price
+                    P.ServiceDuration As Time, P.TotalPrice As Price
             FROM    PricingEstimateDetail As P
                      INNER JOIN
                     PricingVariable As V

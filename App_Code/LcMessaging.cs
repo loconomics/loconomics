@@ -529,6 +529,8 @@ public class LcMessaging
     #region Send Mail wrapper function
     public static void SendMail(string to, string subject, string body, string from = null)
     {
+        if (HttpContext.Current.Request.Url.Host == "localhost")
+            return;
         WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
         //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
