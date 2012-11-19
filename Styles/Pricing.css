@@ -97,3 +97,47 @@
     font-weight: bold;
     color: #eb6e42;
 }
+
+/* Calculation summary */
+.booking li.calculation{
+    overflow: hidden;
+}
+.booking table.calculation{
+    border-collapse: collapse;
+    float: right;
+}
+.booking table.calculation th,
+.booking table.calculation td{
+    font-weight: normal;
+    text-align: right;
+    height: auto;
+    margin: 0;
+}
+.booking table.calculation th {
+    text-align: left;
+}
+.booking table.calculation tr.total > * {
+    padding-top: 16px;
+}
+.booking table.calculation tr.separator td.separator {
+    border-bottom: 1px solid #d8d7d7;
+    height: 0;
+    padding: 4px !important;
+}
+.booking table.calculation .fees {
+    font-size: .9em;
+}
+
+#booking-payment table.calculation td.separator {
+    border-bottom: none;
+}
+#booking-payment table.calculation td.price {
+    font-weight: bold !important;
+}
+#booking-payment table.calculation td.total-price {
+    color: #eb6e42;
+}
+#booking-payment .order-summary .calculation {
+    width: 100%;
+    float: none;
+}

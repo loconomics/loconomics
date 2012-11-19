@@ -46,34 +46,6 @@
     -o-box-shadow: 0 0 5px 2px #99C027;
     -webkit-box-shadow: 0 0 5px 2px #99C027;
 }
-.booking li.calculation{
-    overflow: hidden;
-}
-.booking table.calculation{
-    border-collapse: collapse;
-    float: right;
-}
-.booking table.calculation th,
-.booking table.calculation td{
-    font-weight: normal;
-    text-align: right;
-    height: auto;
-    margin: 0;
-}
-.booking table.calculation th {
-    text-align: left;
-}
-.booking table.calculation tr.total > * {
-    padding-top: 16px;
-}
-.booking table.calculation tr.separator td.separator {
-    border-bottom: 1px solid #d8d7d7;
-    height: 0;
-    padding: 4px !important;
-}
-.booking table.calculation .fees {
-    font-size: .9em;
-}
 
 /** Form: Shared **/
 #booking-services {
@@ -363,10 +335,6 @@
 #booking-payment fieldset.actions{
     margin-bottom: 0;
 }
-#booking-payment table.calculation th,
-#booking-payment table.calculation td{
-    font-weight: bold !important;
-}
 #booking-payment h6 {
     color: #747474;
     font-size: 1em;
@@ -417,10 +385,6 @@
 #booking-payment .order-summary .schedule ol li {
     list-style-position: inside;
     list-style-type: decimal;
-}
-#booking-payment .order-summary .calculation {
-    width: 100%;
-    float: none;
 }
 #booking-payment .user-rating-summary-widget > ul > li{
     line-height: normal;

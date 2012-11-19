@@ -240,7 +240,7 @@
     </table>
 }
 
-@helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+@helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
  
     <noscript>
         <div class="calculate-price-button actions">
@@ -252,20 +252,23 @@
 
             @foreach(var line in summaryLines) {
                 <tr>
-                    <td></td><th>@Html.Raw(line.Value.Concept)</th>
-                    <td class="subtotal-price calculation-summary-group-@(line.Key.ToLower())">@line.Value.TotalPrice.ToString("c")</td>
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th>@Html.Raw(line.Value.Concept)</th>
+                    <td class="subtotal-price price calculation-summary-group-@(line.Key.ToLower())">@line.Value.TotalPrice.ToString("c")</td>
                 </tr>
             }
 
             <tr class="separator">
-                <td></td><td class="separator" colspan="2"></td>
+                @if (withRowSelectionColumn) { <td></td> }
+                <td class="separator" colspan="2"></td>
             </tr>
             <tr class="total">
-                <td class="row-selection"></td><th class="name">Total price*</th>
-                <td class="calculation-summary-total total-price">@summary.TotalPrice.ToString("c")</td>
+                @if (withRowSelectionColumn) { <td class="row-selection"></td> }
+                <th class="name">Total price*</th>
+                <td class="calculation-summary-total price total-price">@summary.TotalPrice.ToString("c")</td>
             </tr>
             <tr class="fees">
-                <td></td>
+                @if (withRowSelectionColumn) { <td></td> }
                 <th colspan="2">*includes a <span class="calculation-summary-fee">@summary.FeePrice.ToString("c")</span> Loconomics service fee</th>
             </tr>
         </table>
