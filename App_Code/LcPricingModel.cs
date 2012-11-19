@@ -242,6 +242,7 @@ public static class LcPricingModel
                 var itemNumbers = pricingVariablesNumbers[pvar.PricingVariableID];
                 // Insert data:
                 db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
+                    2, // PricingGroupID:2 for variables
                     pvar.PricingVariableID,
                     0, 0, 0, 0,
                     pvar.ProviderDataInputValue,
@@ -274,6 +275,7 @@ public static class LcPricingModel
                 {
                     // Set record (insert or update)
                     db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID,
+                        1, // PricingGroupID:1 for services
                         revisionID,
                         0, 0, 0,
                         att.AsInt(),
@@ -399,6 +401,7 @@ public static class LcPricingModel
                     db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                         estimateID,
                         revisionID,
+                        3, // PricingGroupID:3 for options
                         0, 0,
                         popt.PricingOptionID,
                         popt.ServiceAttributeID,
@@ -484,6 +487,7 @@ public static class LcPricingModel
             db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                 estimateID,
                 revisionID,
+                4, // PricingGroupID:4 for packages
                 0, 0, 0, 0,
                 packageID,
                 null, // there is no provider value
@@ -567,6 +571,7 @@ public static class LcPricingModel
             foreach (var addon in selectedAddonsData)
             {
                 db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
+                    5, // PricingGroupID:5 for addons
                     0, 0, 0, 0,
                     addon.addonID,
                     null, // there is no provider value
