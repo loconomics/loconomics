@@ -1,0 +1,62 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    Layout = "../_SiteLayout.cshtml";
+    Page.Title = "Congratulations!";
+    
+    var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
+    if (bookingRequestID <= 0) {
+        Response.Redirect(UrlUtil.LangPath);
+    }
+    
+    // Destroy booking session
+    Session["BookingRequestID"] = null;
+    try{
+        ((Dictionary<int, object>)Session["BookingRequests"]).Remove(bookingRequestID);
+    } catch { }
+
+    // Get booking data
+    var booking = LcData.Booking.GetBookingRequestForUser(bookingRequestID, u.UserID, u.IsAdmin);
+    var provider = LcData.UserInfo.GetUserRow(booking.ProviderUserID);
+    
+    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
+    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+}
+
+  <div id="container" class="clearfix booking editable">
+    <div id="main" class="tabbed wizard fancy">
+		<h1 class="withsub">@Page.Title</h1>
+        <p class="subh1">Your appointment is in the works.</p>
+
+        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"Data", provider},
+            {"DataPrefix", ""},
+            {"Size", "search"},
+            {"UserType", "provider"},
+            {"WithContactData", false},
+            {"WithLinkInName", true},
+            {"PositionData", LcData.UserInfo.GetUserPos(booking.ProviderUserID, booking.PositionID)}
+        })
+
+        <article class="booking-confirmation">
+            <section class="payment">
+                <h3>Payment</h3>
+                <p>Your card ending in @LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits) has been authorized for @booking.TotalPrice.ToString("c").
+                You will be charged this amount after @provider.FirstName accepts one of your time preferences (within 18 hours).
+                If he’s unable to accept one of these times, your card will not be charged.
+                We’ll withhold payment to @provider.FirstName until after the service is completed.</p>
+            </section>
+            <section class="last-note">
+                <p>You’re probably wondering what’s next. <strong>@provider.FirstName</strong> has 18 hours to confirm one of your three appointment times.                We’ll then follow-up with his contact information.                </p>                <p>                At your service,<br />                <span class="sign">The Loconomics Team</span>
+                </p>
+            </section>
+            <section class="help">
+                <h3>Need Help?</h3>                <p>If you have a question or need to report a problem, e-mail us at <a href="mailto:help@loconomics.com">help@loconomics.com</a> or call us at 1 (415) 735-6025. 
+                </p>
+            </section>
+        </article>
+
+    </div>
+  </div>

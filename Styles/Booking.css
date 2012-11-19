@@ -513,9 +513,13 @@
     float: none;
     padding: 50px;
 }
-.booking h2 {
+.booking h2,
+.booking h3 {
     color: #5a5b5b;
     margin-bottom: 0;
+}
+.booking h3 {
+    font-size: 1.3em;
 }
 .booking .tabbed.wizard .tabs {
     width: 500px;
@@ -576,4 +580,19 @@
 .booking .provider .user-text {
     font-size: 1em;
     line-height: 30px;
+}
+
+/* confirmation */
+.booking-confirmation {
+    margin-top: 60px;
+}
+.booking-confirmation .last-note {
+    font-size: 1.5em;
+}
+.booking-confirmation .last-note .sign {
+    font-size: .8em;
+}
+.booking-confirmation .help {
+    border-top: 1px solid #dcdcdc;
+    margin-top: 20px;
 }
