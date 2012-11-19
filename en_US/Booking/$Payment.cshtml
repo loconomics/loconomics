@@ -360,7 +360,7 @@
      */
     dynamic summary = LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
-    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID);
+    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     dynamic billingAddress = null;
     using (var db = Database.Open("sqlloco")) {
         billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);

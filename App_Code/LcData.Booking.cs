@@ -369,7 +369,7 @@ public static partial class LcData
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
         }
-        public static Dictionary<string, LcPricingModel.PricingSummaryData> GetPricingSummaryGroups(int PricingEstimateID)
+        public static Dictionary<string, LcPricingModel.PricingSummaryData> GetPricingSummaryGroups(int PricingEstimateID, dynamic bookingData = null)
         {
             dynamic pricingGroups = GetPricingDetailsGroups(PricingEstimateID);
             var pricingSummaryGroups = new Dictionary<string, LcPricingModel.PricingSummaryData>();
@@ -377,7 +377,21 @@ public static partial class LcData
                 foreach (var g in pricingGroups)
                 {
                     var s = new LcPricingModel.PricingSummaryData();
-                    s.Concept = g.SummaryTitle;
+                    var concept = g.SummaryTitle;
+                    switch ((int)g.PricingGroupID)
+                    {
+                        case 4: // packages
+                            concept = g.DynamicSummaryTitle.Replace("{package}", GetBookingRequestPackages(0, PricingEstimateID));
+                            break;
+                        case 2: // variables
+                            if (bookingData != null)
+                                concept = g.DynamicSummaryTitle.Replace("{position}", bookingData.PositionSingular);
+                            break;
+                        case 5: // addons
+                            concept = g.DynamicSummaryTitle;
+                            break;
+                    }
+                    s.Concept = concept;
                     s.ServiceDuration = g.ServiceDuration;
                     s.SubtotalPrice = g.SubtotalPrice;
                     s.FeePrice = g.FeePrice;
@@ -484,7 +498,7 @@ public static partial class LcData
                     iprint = ", ";
                 }
                 i++;
-                result += iprint + pak.Name + " (" + pak.CustomerPricingDataInput + ")";
+                result += iprint + pak.Name; // + " (" + pak.CustomerPricingDataInput + ")";
             }
 
             return result;
