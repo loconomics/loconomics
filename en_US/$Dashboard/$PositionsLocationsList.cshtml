@@ -34,8 +34,8 @@
             <span class="address-zipcode">@address.PostalCode</span>
             @if (address.TravelFromLocation) {
             <div class="travel-options">
-                <span class="travel-radius-label">Transport radius: <span class="travel-radius">@address.ServiceRadiusFromLocation</span> mile(s)</span>
-                <span class="travel-transport-label">I travel using primarily: <span class="travel-transport">@address.TransportTypeName</span></span>
+                <span class="travel-radius-label"> I will travel up to <span class="travel-radius">@address.ServiceRadiusFromLocation</span> from here</span>
+                <span class="travel-transport-label">I travel by: <span class="travel-transport">@address.TransportTypeName</span></span>
             </div>
             }
             <div class="tools">
@@ -46,7 +46,7 @@
 }
 <div class="lc-ressources">
     <div class="confirm-delete-location-message">Are you sure do you want to remove this location?</div>
-    <div class="delete-location-loading-message">The location is now removed</div>
+    <div class="delete-location-loading-message">The location has been removed</div>
 </div>
 @if (travelLocations.Count == 0 && workLocations.Count == 0) {
     <p class="warning">Please enter at least one location that you travel from or at which you perform services</p>
