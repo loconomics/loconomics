@@ -281,8 +281,11 @@ public static partial class LcData
                         E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
                         E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
 
-                        P.ServiceDuration, coalesce(P.HourlyPrice, 0) As HourlyPrice,
-                        P.SubtotalPrice, P.FeePrice, P.TotalPrice
+                        coalesce(P.ServiceDuration, 0) As ServiceDuration,
+                        coalesce(P.HourlyPrice, 0) As HourlyPrice,
+                        coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
+                        coalesce(P.FeePrice, 0) As FeePrice,
+                        coalesce(P.TotalPrice, 0) As TotalPrice
                 FROM    BookingRequest As R
                          INNER JOIN
                         PricingEstimate As P
@@ -320,6 +323,70 @@ public static partial class LcData
                     IsAdmin);
             }
         }
+
+        #region Pricing Summary
+        public static dynamic GetPricingSummary(dynamic summaryData)
+        {
+            var pricingSummary = new LcPricingModel.PricingSummaryData();
+            pricingSummary.ServiceDuration = summaryData.ServiceDuration;
+            pricingSummary.SubtotalPrice = summaryData.SubtotalPrice;
+            pricingSummary.FeePrice = summaryData.FeePrice;
+            pricingSummary.TotalPrice = summaryData.TotalPrice;
+            return pricingSummary;
+        }
+        public static dynamic GetPricingDetailsGroups(int PricingEstimateID)
+        {
+            var sql = @"
+                SELECT  S.*
+                        ,G.InternalGroupName
+                        ,G.SelectionTitle
+                        ,G.SummaryTitle
+                        ,G.DynamicSummaryTitle
+                FROM (
+                SELECT
+                        P.PricingGroupID
+                        ,sum(P.ServiceDuration) As ServiceDuration
+                        ,sum(P.HourlyPrice) As HourlyPrice
+                        ,sum(P.SubtotalPrice) As SubtotalPrice
+                        ,sum(P.FeePrice) As FeePrice
+                        ,sum(P.TotalPrice) As TotalPrice
+                FROM
+                    PricingEstimateDetail As P
+                WHERE   p.PricingEstimateID = @0
+                GROUP BY P.PricingGroupID
+                HAVING sum(P.TotalPrice) <> 0
+                ) As S
+                 INNER JOIN
+                PricingGroups As G
+                  ON S.PricingGroupID = G.PricingGroupID
+                WHERE
+                    G.LanguageID = @1
+                    AND G.CountryID = @2
+            ";
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(sql, PricingEstimateID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+        public static Dictionary<string, LcPricingModel.PricingSummaryData> GetPricingSummaryGroups(int PricingEstimateID)
+        {
+            dynamic pricingGroups = GetPricingDetailsGroups(PricingEstimateID);
+            var pricingSummaryGroups = new Dictionary<string, LcPricingModel.PricingSummaryData>();
+            if (pricingGroups != null)
+                foreach (var g in pricingGroups)
+                {
+                    var s = new LcPricingModel.PricingSummaryData();
+                    s.Concept = g.SummaryTitle;
+                    s.ServiceDuration = g.ServiceDuration;
+                    s.SubtotalPrice = g.SubtotalPrice;
+                    s.FeePrice = g.FeePrice;
+                    s.TotalPrice = g.TotalPrice;
+                    pricingSummaryGroups.Add(g.InternalGroupName, s);
+                }
+            return pricingSummaryGroups;
+        }
+        #endregion
 
         public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0)
         {
