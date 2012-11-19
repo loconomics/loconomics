@@ -30,7 +30,6 @@ public static partial class LcData
 
                     ,PP.FirstTimeClientsOnly
                     ,PP.NumberOfSessions
-                    ,P.PriceEstimate
                     ,P.CustomerPricingDataInput
             FROM    PricingEstimateDetail As P
                      INNER JOIN
