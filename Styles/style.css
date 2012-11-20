@@ -2455,6 +2455,17 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     padding: .5em;
 }
 
+.cancellation-policy-info {
+    text-align: left;
+}
+.cancellation-policy-info em {
+    font-style: normal;
+    color: #e95d0f;
+}
+.cancellation-policy-info ul li {
+    list-style: disc inside;
+}
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles

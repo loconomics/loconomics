@@ -1,0 +1,38 @@
+﻿@using WebMatrix.Data;
+@{
+    var policyID = PageData["CancellationPolicyID"] ?? 1;
+    if (Request["CancellationPolicyID"].IsInt()) {
+        policyID = Request["CancellationPolicyID"].AsInt();
+    }
+    
+    dynamic policy = null;
+    using (var db = Database.Open("sqlloco")) {
+        policy = db.QuerySingle(@"
+            SELECT *
+            FROM CancellationPolicy
+            WHERE CancellationPolicyID = @0
+                AND LanguageID = @1 AND CountryID = @2
+        ", policyID,
+         LcData.GetCurrentLanguageID(),
+         LcData.GetCurrentCountryID());
+    }
+}
+
+@if (policy != null)
+{
+    DateTime refundLimitDate = DateTime.Now.AddDays(7).AddHours(- policy.HoursRequired);
+    <div class="cancellation-policy-info">
+        <strong>@policy.CancellationPolicyName:</strong>
+        <em><strong>@policy.CancellationPolicyDescription</strong>
+            If you make this booking for one week from now, you would need to cancel by 
+            <strong>@(refundLimitDate.ToShortTimeString()) @refundLimitDate.ToLongDateString()</strong>
+            to receive a <strong>@(policy.RefundIfCancelledBefore.ToString("0.##%")) refund</strong>
+        </em>
+        <ul>
+            <li>The Loconomics service fee is non-refundable.</li>
+            <li>Loconomics must be notified of any no-shows or complaints by either party within 24 hours after a booking is scheduled to end.</li>
+            <li>Loconomics will help faciliate dispute resolution but has the final say should a dispute not be resolved between parties.</li>
+            <li>A booking is officially canceled when the client clicks the cancellation button on the cancellation confirmation page, which they can find in Dashboard > Bookings > Change or Cancel</li>
+        </ul>
+    </div>
+}

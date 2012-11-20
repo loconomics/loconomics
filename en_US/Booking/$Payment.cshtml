@@ -469,10 +469,15 @@
             {
             <li><input id="agree-estimate" type="checkbox" name="agree-estimate" @LcHelpers.IsChecked("true", Request["agree-estimate"]) value="true" /><label for="agree-estimate"> I understand this pricing is only an estimate and will be confirmed within 18 hrs</label></li>
             }
-            <li><input id="agree-cancellation-policy" type="checkbox" name="agree-cancellation-policy" @LcHelpers.IsChecked("true", Request["agree-cancellation-policy"]) value="true" /><label for="agree-cancellation-policy"> I have read and agree to Fernando’s <a href="#cancellation-policy">cancellation policy</a></label></li>
+            <li><input id="agree-cancellation-policy" type="checkbox" name="agree-cancellation-policy" @LcHelpers.IsChecked("true", Request["agree-cancellation-policy"]) value="true" /><label for="agree-cancellation-policy"> I have read and agree to Fernando’s <a href="#cancellation-policy" class="popup-action">cancellation policy</a></label></li>
             <li><input id="send-reminder" type="checkbox" name="send-reminder" @LcHelpers.IsChecked("true", Request["send-reminder"]) value="true" /><label for="send-reminder"> Send an SMS appointment reminder</label></li>
             <li><input id="send-promotionals" type="checkbox" name="send-promotionals" @LcHelpers.IsChecked("true", Request["send-promotionals"]) value="true" /><label for="send-promotionals"> Send me promotional emails</label></li>
         </ul>
+        <div class="popups">
+            <div id="cancellation-policy" class="popup">
+                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+            </div>
+        </div>
     </fieldset>
     <fieldset class="actions">
         <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Booking/Confirmation/")" class="complete-booking next finish main-action">book it!</button>
