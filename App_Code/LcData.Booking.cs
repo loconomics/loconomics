@@ -782,7 +782,7 @@ public static partial class LcData
                 {
                     PricingEstimateID = b.PricingEstimateID,
                     IsTotalRefund = true,
-                    SubotalRefunded = b.SubtotalPrice,
+                    SubtotalRefunded = b.SubtotalPrice,
                     FeeRefunded = b.FeePrice,
                     TotalRefunded = b.TotalPrice,
                     DateRefunded = DateTime.Now
@@ -809,7 +809,7 @@ public static partial class LcData
                     {
                         PricingEstimateID = b.PricingEstimateID,
                         IsTotalRefund = false,
-                        SubotalRefunded = subr,
+                        SubtotalRefunded = subr,
                         FeeRefunded = feer,
                         TotalRefunded = subr + feer,
                         DateRefunded = DateTime.Now
@@ -823,7 +823,7 @@ public static partial class LcData
                     {
                         PricingEstimateID = b.PricingEstimateID,
                         IsTotalRefund = false,
-                        SubotalRefunded = subr,
+                        SubtotalRefunded = subr,
                         // Fees never are refunded after limit date
                         FeeRefunded = 0,
                         TotalRefunded = subr,

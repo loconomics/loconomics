@@ -143,7 +143,7 @@
                 var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
                 var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
                 var pastLastDay = thisweekFirstDay.AddDays(-1);
-        
+
                 todayBookings = db.Query(sqlGetBookingsByDateRange, userID, today, today, 1, 1);
                 tomorrowBookings = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, 1, 1);
                 thisweekBookings = db.Query(sqlGetBookingsByDateRange, userID, thisweekFirstDay, thisweekLastDay, 1, 1);

@@ -10,7 +10,7 @@
     // TODO: Calculate location distance from provider to customer
     
     var booking = LcData.Booking.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
-
+    var prefix = "booking-" + bID;
 }
 @helper printDateTimeRange(DateTime start, DateTime end){
     @start.ToLongDateString()
@@ -126,30 +126,56 @@ else
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-    @if (DateTime.Now > booking.ConfirmedDateEnd)
-    {
     <div class="actions">
-        @if (myUserType == "customer") {
-            <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
-                @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
-            </button>
-            if (booking.ReviewedByProvider == true) {
-            <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
-                View provider revision
-            </button>
+        @if (DateTime.Now > booking.ConfirmedDateEnd)
+        {
+            if (myUserType == "customer")
+            {
+                <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                    @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
+                </button>
+                if (booking.ReviewedByProvider == true)
+                {
+                <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
+                    View provider revision
+                </button>
+                }
             }
-        } else if (myUserType == "provider") {
-            <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
-                @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
-            </button>
-            if (booking.ReviewedByCustomer == true) {
-            <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
-                View customer revision
-            </button>
+            else if (myUserType == "provider")
+            {
+                <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                    @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
+                </button>
+                if (booking.ReviewedByCustomer == true)
+                {
+                <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
+                    View customer revision
+                </button>
+                }
             }
         }
+        @* Allow customer to cancel booking if booking was confirmed by provider (7; in this case, cancellation policy
+            wil be applied and a warning message must be showed)
+        *@
+        @if (myUserType == "customer" && booking.BookingRequestStatusID == 7)
+        {
+            <button class="button item-action booking-request-action button-cancel-booking" type="button" data-booking-request-id="@booking.BookingRequestID" data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
+            <div class="popups">
+                <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                    If you continue cancelling this booking, next cancellation policy will be applied:
+
+                    @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+
+                    <strong>Are you sure do you want cancel this booking?</strong>
+                    <div class="actions">
+                        <a href="#confirm-no" class="cancel-action">No</a>
+                        <a href="#confirm-yes" class="main-action">Yes</a>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    }
 
     <h4>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 

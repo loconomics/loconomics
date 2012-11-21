@@ -16,6 +16,8 @@
     if (booking != null) {
         confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
     }
+    
+    var prefix = "booking-request-" + brID;
 }
 @helper printDateTimeRange(DateTime start, DateTime end){
     @start.ToLongDateString()
@@ -184,13 +186,22 @@ else
             <div class="selected-date preferred-date">
                 @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
             </div>
+            @if (booking.AlternativeDate1Start is bool || booking.AlternativeDate2Start is bool)
+            {
             <h5>Alternate times:</h5>
+            }
+            @if (booking.AlternativeDate1Start is bool)
+            {
             <div class="selected-date alternative-date alternative-date-1">
                 @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </div>
+            }
+            @if (booking.AlternativeDate2Start is bool)
+            {
             <div class="selected-date alternative-date alternative-date-2">
                 @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
             </div>
+            }
         </div>
         }
 
