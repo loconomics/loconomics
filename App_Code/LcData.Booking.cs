@@ -802,8 +802,8 @@ public static partial class LcData
                 if (DateTime.Now < confirmedDate.AddHours(0 - b.HoursRequired))
                 {
                     // BEFORE limit date
-                    decimal subr = b.SubtotalPrice * b.RefundIfCancelledBefore,
-                        feer = b.FeePrice * b.RefundOfLoconomicsFee;
+                    decimal subr = (decimal)b.SubtotalPrice * (decimal)b.RefundIfCancelledBefore,
+                        feer = (decimal)b.FeePrice * (decimal)b.RefundOfLoconomicsFee;
                     result = new
                     {
                         PricingEstimateID = b.PricingEstimateID,
@@ -817,7 +817,7 @@ public static partial class LcData
                 else
                 {
                     // AFTER limit date
-                    decimal subr = b.SubtotalPrice * b.RefundIfCancelledAfter;
+                    decimal subr = (decimal)b.SubtotalPrice * (decimal)b.RefundIfCancelledAfter;
                     result = new
                     {
                         PricingEstimateID = b.PricingEstimateID,

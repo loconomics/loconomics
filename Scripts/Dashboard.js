@@ -199,28 +199,29 @@ $(document).ready(function () {
         } else if ($t.hasClass('button-decline-booking')) {
             url = 'Booking/$DeclineBookingRequest/';
         } else if ($t.hasClass('button-cancel-booking')) {
-            // Check if need confirmation
-            var confirmbox = $($t.data('must-confirm'));
-            if (confirmbox.length == 1) {
-                confirmbox = confirmbox.clone();
-                if (confirmbox.length == 1)
-                    smoothBoxBlock(confirmbox, document, null, { closable: true, center: true });
+            if (!confirmed) {
+                // Check if need confirmation
+                var confirmbox = $($t.data('must-confirm'));
+                if (confirmbox.length == 1) {
+                    confirmbox = confirmbox.clone();
+                    if (confirmbox.length == 1)
+                        smoothBoxBlock(confirmbox, document, null, { closable: true, center: true });
 
-                confirmbox.on('click', 'a', function () {
-                    var l = $(this).attr('href');
-                    switch (l) {
-                        case '#confirm-yes':
-                            $.proxy(performBookingRequestAction, $t)(null, true);
-                            break;
-                    }
-                    smoothBoxBlock(null, document);
+                    confirmbox.on('click', 'a', function () {
+                        var l = $(this).attr('href');
+                        switch (l) {
+                            case '#confirm-yes':
+                                $.proxy(performBookingRequestAction, $t)(null, true);
+                                break;
+                        }
+                        smoothBoxBlock(null, document);
 
-                    return false;
-                });
-                // Wait for anwser:
-                return;
+                        return false;
+                    });
+                    // Wait for anwser:
+                    return;
+                }
             }
-
             url = 'Booking/$CancelBookingRequest/';
         } else {
             // Bad handler:
