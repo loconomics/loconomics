@@ -690,7 +690,7 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Check cancellation policy and get quantities to refund
-                var refund = GetCancellationAmountsFor(BookingRequestID, db);
+                var refund = GetCancellationAmountsFor(BookingRequestID, BookingRequestStatusID, db);
 
                 // Get booking request TransactionID
                 string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
@@ -741,7 +741,7 @@ public static partial class LcData
         #endregion
 
         #region Cancellation policy
-        public static dynamic GetCancellationAmountsFor(int bookingRequestID, Database db = null)
+        public static dynamic GetCancellationAmountsFor(int bookingRequestID, int changingToBookingRequestStatusID, Database db = null)
         {
             var ownDb = false;
             if (db == null)
@@ -771,9 +771,11 @@ public static partial class LcData
                 WHERE   BookingRequestID = @0
             ", bookingRequestID);
 
-            // If booking request is not confirmed (stateID different of 7)
+            // If booking request is not confirmed yet (stateID different of 7)
+            // OR new desired BookingRequestStatusID is not 'cancelled by customer' (different of 4)
             // a total refund is done, no cancellation policy applies
-            if (b.BookingRequestStatusID != 7)
+            if (b.BookingRequestStatusID != 7 ||
+                changingToBookingRequestStatusID != 4)
             {
                 // TOTAL REFUND
                 result = new
