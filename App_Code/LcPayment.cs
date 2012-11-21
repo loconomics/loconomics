@@ -81,4 +81,84 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+    /// <summary>
+    /// Partial refund a transaction ensuring that customer will be charged only for the
+    /// difference or will be refunded for that amount.
+    /// If transaction was not settled still (will happen most time), original transaction
+    /// will be cloned by the different of amount (total less refunded), voiding original transaction.
+    /// </summary>
+    /// <param name="transactionID"></param>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public static string RefundTransaction(string transactionID, decimal amount)
+    {
+        Result<Transaction> r = null;
+
+        var gateway = NewBraintreeGateway();
+
+        // Check if the transaction has something to refund (was not full refunded yet)
+        Transaction transaction = gateway.Transaction.Find(transactionID);
+        if (transaction == null)
+            // It doesn't exists, 'refunded' ;)
+            return null;
+
+        if (transaction.Amount > 0)
+        {
+            // There is something to refund:
+            if (transaction.Status == TransactionStatus.SETTLED ||
+                transaction.Status == TransactionStatus.SETTLING)
+            {
+                // Partial refund transaction.
+                r = gateway.Transaction.Refund(transactionID, amount);
+            }
+            else if (transaction.Status == TransactionStatus.AUTHORIZED ||
+                transaction.Status == TransactionStatus.AUTHORIZING ||
+                transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+            {
+                // Cannot be partial refunded if not settled, we
+                // clone the transaction to include (total - refunded) amount
+                // and void original transation
+
+                var request = new TransactionCloneRequest
+                {
+                    // Total original amount less refunded amount
+                    Amount = transaction.Amount.Value - amount
+                };
+                Result<Transaction> newResult = gateway.Transaction.
+                  CloneTransaction(transactionID, request);
+
+                // Check that all was fine in this subtask
+                if (newResult.IsSuccess()
+                    && newResult.Target != null
+                    && !String.IsNullOrEmpty(newResult.Target.Id))
+                {
+                    // A new transactionID is given, update it in database
+                    var newTransactionID = newResult.Target.Id;
+                    LcData.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
+
+                    // Void original transaction
+                    r = gateway.Transaction.Void(transactionID);
+
+                    // Check error on Void, because if failed it means that more money was charged
+                    // to customer instead of refunded!
+                    if (!r.IsSuccess())
+                    {
+                        // Try to void new transaction
+                        gateway.Transaction.Void(newTransactionID);
+                    }
+                }
+                else
+                {
+                    return newResult.Message;
+                }                
+            }
+            else
+            {
+                // No transaction, no accepted, no charge, nothing to refund
+                return null;
+            }
+        }
+
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
 }

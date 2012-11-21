@@ -689,20 +689,185 @@ public static partial class LcData
             ";
             using (var db = Database.Open("sqlloco"))
             {
-                // First: get booking request TransactionID (if there is -or is not a virtual testing id-) to do a refund
+                // Check cancellation policy and get quantities to refund
+                var refund = GetCancellationAmountsFor(BookingRequestID, db);
+
+                // Get booking request TransactionID
                 string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
+
+                // if there is a valid transactionID -or is not a virtual testing id-, do the refund
                 if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
                 {
-                    var result = LcPayment.RefundTransaction(tranID);
+                    string result = null;
+                    // Different calls for total and partial refunds
+                    if (refund.IsTotalRefund)
+                    {
+                        result = LcPayment.RefundTransaction(tranID);
+                    }
+                    else
+                    {
+                        // Partial refund could be given with zero amount to refund (because cancellation
+                        // policy sets no refund), execute payment partial refund only with no zero values
+                        if (refund.TotalRefunded != 0)
+                            result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+                    }
+
                     if (result != null)
                         return (dynamic)new { Error = -9999, ErrorMessage = result };
                 }
+
+                // All goes fine with payment proccessing, continue
+
+                // Save refund quantities in booking PricingEstimateID
+                SaveRefundAmounts(refund, db);
 
                 // Invalidate in database the booking request:    
                 return db.QuerySingle(sqlInvalidateBookingRequest,
                     BookingRequestID,
                     BookingRequestStatusID);
             }
+        }
+        public static void UpdateBookingTransactionID(string oldTranID, string newTranID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute(@"
+                    UPDATE  BookingRequest
+                    SET     TransactionID = @1
+                    WHERE   TransactionID = @0
+                ", oldTranID, newTranID);
+            }
+        }
+        #endregion
+
+        #region Cancellation policy
+        public static dynamic GetCancellationAmountsFor(int bookingRequestID, Database db = null)
+        {
+            var ownDb = false;
+            if (db == null)
+            {
+                ownDb = true;
+                db = Database.Open("sqlloco");
+            }
+
+            dynamic result = null;
+
+            var b = db.QuerySingle(@"
+                SELECT  R.PricingEstimateID
+                        ,R.BookingRequestStatusID
+                        ,R.CancellationPolicyID
+                        ,C.HoursRequired
+                        ,C.RefundIfCancelledBefore
+                        ,C.RefundIfCancelledAfter
+                        ,C.RefundOfLoconomicsFee
+                        ,P.SubtotalPrice
+                        ,P.TotalPrice
+                        ,P.FeePrice
+                FROM    BookingRequest As R
+                         INNER JOIN CancellationPolicy As C
+                          ON R.CancellationPolicyID = C.CAncellationPolicyID
+                         INNER JOIN PricingEstimate As P
+                          ON R.PricingEstimateID = P.PricingEstimateID
+                WHERE   BookingRequestID = @0
+            ", bookingRequestID);
+
+            // If booking request is not confirmed (stateID different of 7)
+            // a total refund is done, no cancellation policy applies
+            if (b.BookingRequestStatusID != 7)
+            {
+                // TOTAL REFUND
+                result = new
+                {
+                    PricingEstimateID = b.PricingEstimateID,
+                    IsTotalRefund = true,
+                    SubotalRefunded = b.SubtotalPrice,
+                    FeeRefunded = b.FeePrice,
+                    TotalRefunded = b.TotalPrice,
+                    DateRefunded = DateTime.Now
+                };
+            }
+            else
+            {
+                // PARTIAL REFUND OR NO REFUND, based Cancellation Policy
+                // Get confirmated booking date (start date and time):
+                var confirmedDate = (DateTime)db.QueryValue(@"
+                    SELECT  E.StartTime
+                    FROM    Booking As B
+                             INNER JOIN CalendarEvents As E
+                              ON B.ConfirmedDateID = E.Id
+                    WHERE   B.BookingRequestID = @0
+                ", bookingRequestID);
+
+                if (DateTime.Now < confirmedDate.AddHours(0 - b.HoursRequired))
+                {
+                    // BEFORE limit date
+                    decimal subr = b.SubtotalPrice * b.RefundIfCancelledBefore,
+                        feer = b.FeePrice * b.RefundOfLoconomicsFee;
+                    result = new
+                    {
+                        PricingEstimateID = b.PricingEstimateID,
+                        IsTotalRefund = false,
+                        SubotalRefunded = subr,
+                        FeeRefunded = feer,
+                        TotalRefunded = subr + feer,
+                        DateRefunded = DateTime.Now
+                    };
+                }
+                else
+                {
+                    // AFTER limit date
+                    decimal subr = b.SubtotalPrice * b.RefundIfCancelledAfter;
+                    result = new
+                    {
+                        PricingEstimateID = b.PricingEstimateID,
+                        IsTotalRefund = false,
+                        SubotalRefunded = subr,
+                        // Fees never are refunded after limit date
+                        FeeRefunded = 0,
+                        TotalRefunded = subr,
+                        DateRefunded = DateTime.Now
+                    };
+                }
+            }
+
+            if (ownDb)
+                db.Dispose();
+
+            return result;
+        }
+        /// <summary>
+        /// Update PricingEstimate with the data give at refunData, that contains
+        /// exactly the struct returned by GetCancellationAmountsFor method, with
+        /// PricingEstimateID, date and amounts refunded
+        /// </summary>
+        /// <param name="refundData"></param>
+        /// <param name="db"></param>
+        public static void SaveRefundAmounts(dynamic refundData, Database db = null)
+        {
+            var ownDb = false;
+            if (db == null)
+            {
+                ownDb = true;
+                db = Database.Open("sqlloco");
+            }
+
+            db.Execute(@"
+                UPDATE  PricingEstimate
+                SET     SubtotalRefunded = @1
+                        ,FeeRefunded = @2
+                        ,TotalRefunded = @3
+                        ,DateRefunded = @4
+                WHERE   PricingEstimateID = @0
+                ",
+                refundData.PricingEstimateID,
+                refundData.SubtotalRefunded,
+                refundData.FeeRefunded,
+                refundData.TotalRefunded,
+                refundData.DateRefunded
+            );
+
+            if (ownDb)
+                db.Dispose();
         }
         #endregion
 
