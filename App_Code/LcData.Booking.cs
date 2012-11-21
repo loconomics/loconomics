@@ -780,7 +780,7 @@ public static partial class LcData
                                ,[ModifiedBy])
                          VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, getdate(), getdate(), 'sys')
         ";
-        public const string sqlInsBookingRequest = @"
+        private const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest
                            ([BookingTypeID]
                            ,[CustomerUserID]
@@ -788,6 +788,7 @@ public static partial class LcData
                            ,[PositionID]
                            ,[PricingEstimateID]
                            ,[BookingRequestStatusID]
+                           ,[CancellationPolicyID]
                            ,[SpecialRequests]
                            ,[CreatedDate]
                            ,[UpdatedDate]
@@ -839,6 +840,7 @@ public static partial class LcData
                 int providerUserID,
                 int positionID,
                 int pricingEstimateID,
+                int cancellationPolicyID,
                 string specialRequests)
         {
             int bookingRequestID = 0;
@@ -847,6 +849,7 @@ public static partial class LcData
                 bookingRequestID = (int)db.QueryValue(sqlInsBookingRequest,
                     customerUserID, providerUserID, positionID,
                     pricingEstimateID,
+                    cancellationPolicyID,
                     specialRequests
                 );
             }

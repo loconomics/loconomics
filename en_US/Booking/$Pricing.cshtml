@@ -241,6 +241,7 @@
                     p.UserID,
                     pos.PositionID,
                     estimateID,
+                    1, // CancellationPolicyID: TODO Get from provider preference when implemented as preference
                     data.ContainsSummary ? Request["booking-services-special-instructions"] : null
                 );
             }
