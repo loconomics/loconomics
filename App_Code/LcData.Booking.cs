@@ -771,11 +771,10 @@ public static partial class LcData
                 WHERE   BookingRequestID = @0
             ", bookingRequestID);
 
-            // If booking request is not confirmed yet (stateID different of 7)
-            // OR new desired BookingRequestStatusID is not 'cancelled by customer' (different of 4)
-            // a total refund is done, no cancellation policy applies
-            if (b.BookingRequestStatusID != 7 ||
-                changingToBookingRequestStatusID != 4)
+            // If new desired BookingRequestStatusID is not 'cancelled by customer' (different of 4)
+            // a total refund is done, no cancellation policy applies (is
+            // cancelled by provider or system)
+            if (changingToBookingRequestStatusID != 4)
             {
                 // TOTAL REFUND
                 result = new

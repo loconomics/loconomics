@@ -118,7 +118,21 @@ else
         @if (myUserType == "customer" && booking.BookingRequestStatusID <= 3)
         {
         <div class="actions">
-            <button class="button item-action booking-request-action button-cancel-booking" type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
+            <button class="button item-action booking-request-action button-cancel-booking" type="button" data-booking-request-id="@booking.BookingRequestID" data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
+            <div class="popups">
+                <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                    If you continue cancelling this booking, next cancellation policy will be applied:
+
+                    @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+
+                    <strong>Are you sure do you want cancel this booking?</strong>
+                    <div class="actions">
+                        <a href="#confirm-no" class="cancel-action">No</a>
+                        <a href="#confirm-yes" class="main-action">Yes</a>
+                    </div>
+                </div>
+            </div>
         </div>
         }
         <h4>@itsUserLabel profile</h4>
