@@ -690,7 +690,7 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Check cancellation policy and get quantities to refund
-                var refund = GetCancellationAmountsFor(BookingRequestID, BookingRequestStatusID, db);
+                var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
 
                 // Get booking request TransactionID
                 string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
@@ -741,72 +741,113 @@ public static partial class LcData
         #endregion
 
         #region Cancellation policy
-        public static dynamic GetCancellationAmountsFor(int bookingRequestID, int changingToBookingRequestStatusID, Database db = null)
+        private const string sqlViewPricingAndPolicy = @"
+            SELECT  R.PricingEstimateID
+                    ,R.BookingRequestStatusID
+                    ,R.CancellationPolicyID
+                    ,C.HoursRequired
+                    ,C.RefundIfCancelledBefore
+                    ,C.RefundIfCancelledAfter
+                    ,C.RefundOfLoconomicsFee
+                    ,P.SubtotalPrice
+                    ,P.TotalPrice
+                    ,P.FeePrice
+            FROM    BookingRequest As R
+                        INNER JOIN CancellationPolicy As C
+                        ON R.CancellationPolicyID = C.CAncellationPolicyID
+                        INNER JOIN PricingEstimate As P
+                        ON R.PricingEstimateID = P.PricingEstimateID
+        ";
+        public static dynamic GetCancellationAmountsForBookingRequest(int bookingRequestID, int changingToBookingRequestStatusID, Database db)
         {
-            var ownDb = false;
-            if (db == null)
-            {
-                ownDb = true;
-                db = Database.Open("sqlloco");
-            }
-
-            dynamic result = null;
-
-            var b = db.QuerySingle(@"
-                SELECT  R.PricingEstimateID
-                        ,R.BookingRequestStatusID
-                        ,R.CancellationPolicyID
-                        ,C.HoursRequired
-                        ,C.RefundIfCancelledBefore
-                        ,C.RefundIfCancelledAfter
-                        ,C.RefundOfLoconomicsFee
-                        ,P.SubtotalPrice
-                        ,P.TotalPrice
-                        ,P.FeePrice
-                FROM    BookingRequest As R
-                         INNER JOIN CancellationPolicy As C
-                          ON R.CancellationPolicyID = C.CAncellationPolicyID
-                         INNER JOIN PricingEstimate As P
-                          ON R.PricingEstimateID = P.PricingEstimateID
-                WHERE   BookingRequestID = @0
-            ", bookingRequestID);
+            var fullRefund = false;
+            var confirmedDate = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
 
             // If new desired BookingRequestStatusID is not 'cancelled by customer' (different of 4)
             // a total refund is done, no cancellation policy applies (is
             // cancelled by provider or system)
             if (changingToBookingRequestStatusID != 4)
             {
+                fullRefund = true;
+            }
+            else
+            {
+                // Get confirmated booking date (start date and time):
+                confirmedDate = (DateTime)db.QueryValue(@"
+                    SELECT  E.StartTime
+                    FROM    Booking As B
+                                INNER JOIN CalendarEvents As E
+                                ON B.ConfirmedDateID = E.Id
+                    WHERE   B.BookingRequestID = @0
+                ", bookingRequestID);
+            }
+
+            var b = db.QuerySingle(sqlViewPricingAndPolicy + @"
+                WHERE   BookingRequestID = @0
+            ", bookingRequestID);
+
+            return GetCancellationAmountsFor(b, confirmedDate, fullRefund, db);
+        }
+        public static dynamic GetCancellationAmountsForBooking(int bookingID, int changingToBookingStatusID, Database db)
+        {
+            var fullRefund = false;
+            var confirmedDate = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+
+            // If new desired BookingStatusID is not 'cancelled by customer' (different of 6)
+            // a total refund is done, no cancellation policy applies (is
+            // cancelled by provider or system)
+            if (changingToBookingStatusID != 6)
+            {
+                fullRefund = true;
+            }
+            else
+            {
+                // Get confirmated booking date (start date and time):
+                confirmedDate = (DateTime)db.QueryValue(@"
+                    SELECT  E.StartTime
+                    FROM    Booking As B
+                                INNER JOIN CalendarEvents As E
+                                ON B.ConfirmedDateID = E.Id
+                    WHERE   B.BookingID = @0
+                ", bookingID);
+            }
+
+            var b = db.QuerySingle(sqlViewPricingAndPolicy + @"
+                     INNER JOIN Booking As B
+                      ON B.BookingRequestID = R.BookingRequestID
+                WHERE   BookingID = @0
+            ", bookingID);
+
+            return GetCancellationAmountsFor(b, confirmedDate, fullRefund, db);
+        }
+        public static dynamic GetCancellationAmountsFor(dynamic pricingAndPolicy, DateTime confirmedDate, bool fullRefund, Database db)
+        {
+            dynamic result = null;
+
+            if (fullRefund)
+            {
                 // TOTAL REFUND
                 result = new
                 {
-                    PricingEstimateID = b.PricingEstimateID,
+                    PricingEstimateID = pricingAndPolicy.PricingEstimateID,
                     IsTotalRefund = true,
-                    SubtotalRefunded = b.SubtotalPrice,
-                    FeeRefunded = b.FeePrice,
-                    TotalRefunded = b.TotalPrice,
+                    SubtotalRefunded = pricingAndPolicy.SubtotalPrice,
+                    FeeRefunded = pricingAndPolicy.FeePrice,
+                    TotalRefunded = pricingAndPolicy.TotalPrice,
                     DateRefunded = DateTime.Now
                 };
             }
             else
             {
                 // PARTIAL REFUND OR NO REFUND, based Cancellation Policy
-                // Get confirmated booking date (start date and time):
-                var confirmedDate = (DateTime)db.QueryValue(@"
-                    SELECT  E.StartTime
-                    FROM    Booking As B
-                             INNER JOIN CalendarEvents As E
-                              ON B.ConfirmedDateID = E.Id
-                    WHERE   B.BookingRequestID = @0
-                ", bookingRequestID);
-
-                if (DateTime.Now < confirmedDate.AddHours(0 - b.HoursRequired))
+                if (DateTime.Now < confirmedDate.AddHours(0 - pricingAndPolicy.HoursRequired))
                 {
                     // BEFORE limit date
-                    decimal subr = (decimal)b.SubtotalPrice * (decimal)b.RefundIfCancelledBefore,
-                        feer = (decimal)b.FeePrice * (decimal)b.RefundOfLoconomicsFee;
+                    decimal subr = (decimal)pricingAndPolicy.SubtotalPrice * (decimal)pricingAndPolicy.RefundIfCancelledBefore,
+                        feer = (decimal)pricingAndPolicy.FeePrice * (decimal)pricingAndPolicy.RefundOfLoconomicsFee;
                     result = new
                     {
-                        PricingEstimateID = b.PricingEstimateID,
+                        PricingEstimateID = pricingAndPolicy.PricingEstimateID,
                         IsTotalRefund = false,
                         SubtotalRefunded = subr,
                         FeeRefunded = feer,
@@ -817,10 +858,10 @@ public static partial class LcData
                 else
                 {
                     // AFTER limit date
-                    decimal subr = (decimal)b.SubtotalPrice * (decimal)b.RefundIfCancelledAfter;
+                    decimal subr = (decimal)pricingAndPolicy.SubtotalPrice * (decimal)pricingAndPolicy.RefundIfCancelledAfter;
                     result = new
                     {
-                        PricingEstimateID = b.PricingEstimateID,
+                        PricingEstimateID = pricingAndPolicy.PricingEstimateID,
                         IsTotalRefund = false,
                         SubtotalRefunded = subr,
                         // Fees never are refunded after limit date
@@ -830,9 +871,6 @@ public static partial class LcData
                     };
                 }
             }
-
-            if (ownDb)
-                db.Dispose();
 
             return result;
         }
