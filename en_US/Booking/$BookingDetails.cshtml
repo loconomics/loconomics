@@ -61,6 +61,9 @@
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
                     break;
+                case 6: // cancelled by customer
+                    statusTitle = "Booking cancelled by {0}";
+                    break;
             }
             break;
         case "provider":
@@ -80,6 +83,9 @@
                     break;
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
+                    break;
+                case 6: // cancelled by customer
+                    statusTitle = "Booking with {0} cancelled by me";
                     break;
             }
             break;
@@ -126,10 +132,12 @@ else
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-    @if (DateTime.Now > booking.ConfirmedDateEnd)
-    {
-        <div class="actions">
-            @if (myUserType == "customer")
+    <div class="actions">
+        @* When booking is not cancelled and service date is passed, show Review options:
+         *@
+        @if (booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
+        {
+            if (myUserType == "customer")
             {
                 <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
                     @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
@@ -153,8 +161,30 @@ else
                 </button>
                 }
             }
+        }
+        @* If is customer and booking is confirmed (status:1), but not other states that 
+            means 'finished' or 'already cancelled', allow customer to cancel it *@
+        @if (myUserType == "customer" && booking.BookingStatusID == 1)
+        {
+        <div class="actions">
+            <button class="button item-action booking-action button-cancel-booking" type="button" data-booking-id="@booking.BookingID" data-booking-request-id="@booking.BookingRequestID" data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
+            <div class="popups">
+                <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                    If you continue cancelling this booking, next cancellation policy will be applied:
+
+                    @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+
+                    <strong>Are you sure do you want cancel this booking?</strong>
+                    <div class="actions">
+                        <a href="#confirm-no" class="cancel-action">No</a>
+                        <a href="#confirm-yes" class="main-action">Yes</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
+        }
+    </div>
 
     <h4>@itsUserLabel information</h4>
     @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
@@ -173,9 +203,19 @@ else
         <span class="position">@booking.PositionSingular</span>
 
         <h5>Scheduled time: </h5>
+        @if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
+        {
         <span class="scheduled-time">@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+        }
+        else
+        {
+            // Null values:
+            <span>Date not available</span>
+        }
 
         <h5>Location: </h5>
+        @if (booking.StateProvinceCode != null)
+        {
         <div class="location">
             @printAddress(new Dictionary<string, object>() {
                 {"name", getLocationName(booking)}, 
@@ -191,6 +231,12 @@ else
             <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
             @printGoogleMap(getLocationForGoogleMaps(booking))
         </div>
+        }
+        else
+        {
+            // Null, no location
+            <div>Address not available</div>
+        }
     </div>
 
     <h4>Requested services and pricing estimate</h4>

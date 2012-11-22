@@ -122,9 +122,12 @@
                  R.ProviderUserID=@0
                 )
                  AND
-                Convert(date, E.StartTime) >= @1
-                 AND
-                Convert(date, E.StartTime) <= @2
+                (   @1 is null AND E.StartTime is null
+                    OR
+                    Convert(date, E.StartTime) >= @1
+                     AND
+                    Convert(date, E.StartTime) <= @2
+                )
         ORDER BY E.StartTime, B.UpdatedDate, R.UpdatedDate
     ";
     dynamic pendingBookingRequests = null, todayBookings = null, tomorrowBookings = null, thisweekBookings = null, 
@@ -141,14 +144,14 @@
                 var thisweekLastDay = thisweekFirstDay.AddDays(6);
                 var upcomingFirstDay = tomorrow.AddDays(1);
                 var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
-                var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
+                //var pastFirstDay = System.Data.SqlTypes.SqlDateTime.MinValue; // DateTime.MinValue (this is not valid at SQLServer!)
                 var pastLastDay = thisweekFirstDay.AddDays(-1);
 
                 todayBookings = db.Query(sqlGetBookingsByDateRange, userID, today, today, 1, 1);
                 tomorrowBookings = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, 1, 1);
                 thisweekBookings = db.Query(sqlGetBookingsByDateRange, userID, thisweekFirstDay, thisweekLastDay, 1, 1);
                 upcomingBookings = db.Query(sqlGetBookingsByDateRange, userID, upcomingFirstDay, upcomingLastDay, 1, 1);
-                pastBookings = db.Query(sqlGetBookingsByDateRange, userID, pastFirstDay, pastLastDay, 1, 1);
+                pastBookings = db.Query(sqlGetBookingsByDateRange, userID, null /*pastFirstDay*/, pastLastDay, 1, 1);
                 break;
             case "failed-requests":
                 failedRequests = db.Query(sqlGetFailedBookingRequest, userID, 1, 1);;

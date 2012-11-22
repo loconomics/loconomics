@@ -11,9 +11,9 @@
         WHERE   R.CustomerUserID = @0
                  AND
                 R.BookingRequestID = @1
-                -- Only incomplete or non accepted requests
+                -- Only incomplete requests
                  AND
-                R.BookingRequestStatusID <= 3
+                R.BookingRequestStatusID = 1
     ";
 
     using (var db = Database.Open("sqlloco")) {
@@ -30,7 +30,7 @@
                         "Booking/$BookingRequestDetails/?BookingRequestID={0}", brID ));
                 } else {
                     Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}", brID));
+                        "Dashboard/Bookings/#!BookingRequest-{0}", brID));
                 }
             } else {
                 if (Request.IsAjaxRequest()){
@@ -44,12 +44,12 @@
         } else {
             if (Request.IsAjaxRequest()){
                 /* What? 
-                 * - BookingRequestID and UserID (as ProviderUserID) don't match?
-                 * - BookingRequest is already confirmed?
+                 * - BookingRequestID and UserID (as CustomerUserID) don't match?
+                 * - BookingRequest is already cancelled?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to cancel that Booking Request. Is already confirmed?");
+                LcHelpers.ReturnJsonError(-1, "Impossible to cancel that Booking Request. Is already cancelled?");
             } else {
-                throw new HttpException(500, "Impossible to cancel that Booking Request. Is already confirmed?");
+                throw new HttpException(500, "Impossible to cancel that Booking Request. Is already cancelled?");
             }
         }
     }

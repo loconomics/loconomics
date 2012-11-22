@@ -182,16 +182,23 @@ $(document).ready(function () {
                 $t.closest('.bookings-list').find('.user-public-name:eq(0)').text()
             );
     });
-
     /*
-    * Booking Request confirmation
+    * Booking actions
+    */
+    $('body').delegate('.booking-action', 'click', performBookingRequestAction);
+    /*
+    * Booking Request actions
     */
     function performBookingRequestAction(e, confirmed) {
-        var brId = $(this).data('booking-request-id');
-        var $tab = $(this).closest('.tab-body');
+        var $t = $(this);
+        var brId = $t.data('booking-request-id');
+        var $tab = $t.closest('.tab-body');
         var options = { autoUnblockLoading: true };
         var data = { BookingRequestID: brId };
-        var $t = $(this);
+        var bID = $t.data('booking-id');
+        if (bID)
+            data.BookingID = bID;
+
         var url;
         if ($t.hasClass('button-confirm-datetime')) {
             data.ConfirmedDateType = $(this).data('date-type');
@@ -222,7 +229,10 @@ $(document).ready(function () {
                     return;
                 }
             }
-            url = 'Booking/$CancelBookingRequest/';
+            if (bID)
+                url = 'Booking/$CancelBooking/';    
+            else
+                url = 'Booking/$CancelBookingRequest/';
         } else {
             // Bad handler:
             return;

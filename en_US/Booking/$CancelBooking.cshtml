@@ -1,0 +1,58 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var bID = Request["BookingID"].AsInt();
+    
+    var sqlCheckBooking = @"
+        SELECT  TOP 1 B.BookingID
+        FROM    BookingRequest As R
+                 INNER JOIN Booking As B
+                  ON R.BookingRequestID = B.BookingRequestID
+        WHERE   R.CustomerUserID = @0
+                 AND
+                B.BookingID = @1
+                -- Only confirmed bookings, other states are finished, cancelled or locked in some way
+                 AND
+                B.BookingStatusID = 1
+    ";
+
+    using (var db = Database.Open("sqlloco")) {
+        var checkID = db.QueryValue(sqlCheckBooking, u.UserID, bID);
+        if (checkID != null && (int)checkID == bID) {
+            var result = LcData.Booking.InvalidateBooking(bID, 6); // 6:Cancelled
+
+            if (result.Error == 0) {
+                // Send message
+                LcMessaging.SendBookingUpdate(bID, 'c');
+                
+                if (Request.IsAjaxRequest()){
+                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                        "Booking/$BookingDetails/?BookingID={0}", bID ));
+                } else {
+                    Response.Redirect(UrlUtil.LangPath + String.Format(
+                        "Dashboard/Bookings/#!Booking-{0}", bID));
+                }
+            } else {
+                if (Request.IsAjaxRequest()){
+                    // Return JSON result:
+                    // We need negative numbers to indicate an error (is our convention for json 'Code')
+                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                } else {
+                    throw new HttpException(500, "Error cancelling the booking: " + result.ErrorMessage);
+                }
+            }
+        } else {
+            if (Request.IsAjaxRequest()){
+                /* What? 
+                 * - BookingID and UserID (as CustomerUserID) don't match?
+                 * - Booking is already cancelled?
+                 */
+                LcHelpers.ReturnJsonError(-1, "Impossible to cancel that Booking. Is already cancelled?");
+            } else {
+                throw new HttpException(500, "Impossible to cancel that Booking. Is already cancelled?");
+            }
+        }
+    }
+}

@@ -223,22 +223,22 @@ public static partial class LcData
                          INNER JOIN
                         PricingEstimate As P
                           ON P.PricingEstimateID = R.PricingEstimateID
-                         INNER JOIN
+                         LEFT JOIN
                         Address As L
                           ON R.AddressID = L.AddressID
-                         INNER JOIN
+                         LEFT JOIN
                         ServiceAddress As SA
                           ON L.AddressID = SA.AddressID
-                         INNER JOIN
+                         LEFT JOIN
                         Users As LU
                           ON L.UserID = LU.UserID
-                         INNER JOIN
+                         LEFT JOIN
                         StateProvince As SP
                           ON SP.StateProvinceID = L.StateProvinceID
-                         INNER JOIN
+                         LEFT JOIN
                         PostalCode As PC
                           ON PC.PostalCodeID = L.PostalCodeID
-                         INNER JOIN
+                         LEFT JOIN
                         CalendarEvents As E
                           ON E.ID = B.ConfirmedDateID
                          INNER JOIN
@@ -727,6 +727,130 @@ public static partial class LcData
                     BookingRequestStatusID);
             }
         }
+        public static dynamic InvalidateBooking(int BookingID, int BookingStatusID)
+        {
+            if (!(new int[] { 6, 7 }).Contains<int>(BookingStatusID))
+            {
+                throw new Exception(String.Format(
+                    "BookingStatusID '{0}' is not valid to invalidate the booking",
+                    BookingStatusID));
+            }
+
+            var sqlGetTransactionID = @"
+                SELECT  PaymentTransactionID
+                FROM    BookingRequest
+                         INNER JOIN
+                        Booking
+                          ON BookingRequest.BookingRequestID = Booking.BookingRequestID
+                WHERE   BookingID = @0
+            ";
+            var sqlInvalidateBooking = @"
+                -- Parameters
+                DECLARE @BookingID int, @BookingStatusID int
+                SET @BookingID = @0
+                SET @BookingStatusID = @1
+
+                DECLARE @AddressID int
+                DECLARE @BookingRequestID int
+
+                SELECT @BookingRequestID = BookingRequestID
+                FROM    Booking
+                WHERE   BookingID = @BookingID
+
+                BEGIN TRY
+                    BEGIN TRAN
+
+                    -- Get Service Address ID to be (maybe) removed later
+                    SELECT  @AddressID = AddressID
+                    FROM    BookingRequest
+                             INNER JOIN
+                            Booking
+                              ON BookingRequest.BookingRequestID = Booking.BookingRequestID
+                    WHERE   BookingID = @BookingID
+
+                    -- Removing CalendarEvents:
+                    DELETE FROM CalendarEvents
+                    WHERE ID IN (
+                        SELECT TOP 1 ConfirmedDateID FROM Booking
+                        WHERE BookingID = @BookingID
+                    )
+
+                    /*
+                     * Updating Booking status, and removing references to the 
+                     * user selected dates.
+                     */
+                    UPDATE  Booking
+                    SET     BookingStatusID = @BookingStatusID,
+                            ConfirmedDateID = null
+                    WHERE   BookingID = @BookingID
+                    /*
+                     * Updating Booking Request, removing reference to the address
+                     */
+                    UPDATE  BookingRequest
+                    SET     AddressID = null
+                    WHERE   BookingRequestID = @BookingRequestID
+
+                    -- Removing Service Address, if is not an user saved location (it has not AddressName)
+                    DELETE FROM ServiceAddress
+                    WHERE AddressID = @AddressID
+                          AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
+                    DELETE FROM Address
+                    WHERE AddressID = @AddressID
+                           AND
+                          AddressName is null
+
+                    COMMIT TRAN
+
+                    -- We return sucessful operation with Error=0
+                    SELECT 0 As Error
+                END TRY
+                BEGIN CATCH
+                    IF @@TRANCOUNT > 0
+                        ROLLBACK TRAN
+                    -- We return error number and message
+                    SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
+                END CATCH
+            ";
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Check cancellation policy and get quantities to refund
+                var refund = GetCancellationAmountsForBooking(BookingID, BookingStatusID, db);
+
+                // Get booking request TransactionID
+                string tranID = db.QueryValue(sqlGetTransactionID, BookingID);
+
+                // if there is a valid transactionID -or is not a virtual testing id-, do the refund
+                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                {
+                    string result = null;
+                    // Different calls for total and partial refunds
+                    if (refund.IsTotalRefund)
+                    {
+                        result = LcPayment.RefundTransaction(tranID);
+                    }
+                    else
+                    {
+                        // Partial refund could be given with zero amount to refund (because cancellation
+                        // policy sets no refund), execute payment partial refund only with no zero values
+                        if (refund.TotalRefunded != 0)
+                            result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+                    }
+
+                    if (result != null)
+                        return (dynamic)new { Error = -9999, ErrorMessage = result };
+                }
+
+                // All goes fine with payment proccessing, continue
+
+                // Save refund quantities in booking PricingEstimateID
+                SaveRefundAmounts(refund, db);
+
+                // Invalidate in database the booking:
+                return db.QuerySingle(sqlInvalidateBooking,
+                    BookingID,
+                    BookingStatusID);
+            }
+        }
         public static void UpdateBookingTransactionID(string oldTranID, string newTranID)
         {
             using (var db = Database.Open("sqlloco"))
@@ -761,7 +885,7 @@ public static partial class LcData
         public static dynamic GetCancellationAmountsForBookingRequest(int bookingRequestID, int changingToBookingRequestStatusID, Database db)
         {
             var fullRefund = false;
-            var confirmedDate = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+            var confirmedDate = System.Data.SqlTypes.SqlDateTime.MinValue;
 
             // If new desired BookingRequestStatusID is not 'cancelled by customer' (different of 4)
             // a total refund is done, no cancellation policy applies (is
@@ -773,20 +897,28 @@ public static partial class LcData
             else
             {
                 // Get confirmated booking date (start date and time):
-                confirmedDate = (DateTime)db.QueryValue(@"
+                confirmedDate = db.QueryValue(@"
                     SELECT  E.StartTime
                     FROM    Booking As B
                                 INNER JOIN CalendarEvents As E
                                 ON B.ConfirmedDateID = E.Id
                     WHERE   B.BookingRequestID = @0
                 ", bookingRequestID);
+                // TODO: Just now (issue #142, 20121122), a booking request cannot be
+                // cancelled by customer, this code will not execute, BUT if
+                // someday need be work, confirmedDate must be retrieve some valid
+                // date, because is not still confirmed, confirmedDate will be NULL
+                // get the nearest proposed date (in bookingrequest table)
+                // Next code is to avoid calls to null value:
+                if (confirmedDate.IsNull)
+                    confirmedDate = System.Data.SqlTypes.SqlDateTime.MinValue;
             }
 
             var b = db.QuerySingle(sqlViewPricingAndPolicy + @"
                 WHERE   BookingRequestID = @0
             ", bookingRequestID);
 
-            return GetCancellationAmountsFor(b, confirmedDate, fullRefund, db);
+            return GetCancellationAmountsFor(b, confirmedDate.Value, fullRefund, db);
         }
         public static dynamic GetCancellationAmountsForBooking(int bookingID, int changingToBookingStatusID, Database db)
         {

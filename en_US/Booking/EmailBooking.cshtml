@@ -58,6 +58,9 @@
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
                     break;
+                case 6: // cancelled by customer
+                    statusTitle = "Booking cancelled by {0}";
+                    break;
             }
             break;
         case "provider":
@@ -77,6 +80,9 @@
                     break;
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
+                    break;
+                case 6: // cancelled by customer
+                    statusTitle = "Booking with {0} cancelled by me";
                     break;
             }
             break;
@@ -122,7 +128,9 @@ else
     <h3 @LcEmailTemplateHelper.StyleH3()>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span>last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
-    @if (DateTime.Now > booking.ConfirmedDateEnd)
+    @* When booking is not cancelled and service date is passed, show Review options:
+     *@
+    @if (booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
     {
     <div style="float: right;">
         @if (myUserType == "customer") {
@@ -164,9 +172,19 @@ else
         <span>@booking.PositionSingular</span>
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Scheduled time: </h5>
+        @if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
+        {
         <span>@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+        }
+        else
+        {
+            // Null values:
+            <span>Date not available</span>
+        }
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location: </h5>
+        @if (booking.StateProvinceCode != null)
+        {
         <div>
             @printAddress(new Dictionary<string, object>() {
                 {"name", getLocationName(booking)}, 
@@ -181,6 +199,12 @@ else
             </div>*@
             <a target="_blank" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
         </div>
+        }
+        else
+        {
+            // Null, no location
+            <div>Address not available</div>
+        }
     </div>
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Requested services and pricing estimate</h4>
