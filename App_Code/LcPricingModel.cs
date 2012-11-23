@@ -274,12 +274,11 @@ public static class LcPricingModel
                 foreach (var att in attributes)
                 {
                     // Set record (insert or update)
-                    db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID,
+                    db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                         1, // PricingGroupID:1 for services
-                        revisionID,
                         0, 0, 0,
                         att.AsInt(),
-                        0, 
+                        0,
                         null, null, 0, // There is no input data
                         0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
                 }

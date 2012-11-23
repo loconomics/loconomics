@@ -1118,10 +1118,11 @@ public static partial class LcData
         ";
         private const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest
-                           ([BookingTypeID]
-                           ,[CustomerUserID]
+                           (
+                           [CustomerUserID]
                            ,[ProviderUserID]
                            ,[PositionID]
+                           ,[BookingTypeID]
                            ,[PricingEstimateID]
                            ,[BookingRequestStatusID]
                            ,[CancellationPolicyID]
@@ -1129,7 +1130,7 @@ public static partial class LcData
                            ,[CreatedDate]
                            ,[UpdatedDate]
                            ,[ModifiedBy])
-                    VALUES (1, @0, @1, @2, @3, 1, @4, getdate(), getdate(), 'sys')
+                    VALUES (@0, @1, @2, @3, @4, 1 /* created */, @5, @6, getdate(), getdate(), 'sys')
 
                 -- Update customer user profile to be a customer (if is not still, maybe is only provider)
                 UPDATE Users SET IsCustomer = 1
@@ -1175,6 +1176,7 @@ public static partial class LcData
                 int customerUserID,
                 int providerUserID,
                 int positionID,
+                int bookingTypeID,
                 int pricingEstimateID,
                 int cancellationPolicyID,
                 string specialRequests)
@@ -1184,6 +1186,7 @@ public static partial class LcData
             {
                 bookingRequestID = (int)db.QueryValue(sqlInsBookingRequest,
                     customerUserID, providerUserID, positionID,
+                    bookingTypeID,
                     pricingEstimateID,
                     cancellationPolicyID,
                     specialRequests
