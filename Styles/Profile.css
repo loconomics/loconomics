@@ -121,6 +121,11 @@ form.report-unauthorized-use textarea {
     margin: 33px 0 0 5px;
     float: right;
 }
+.provider-features-lists a,
+.provider-features-lists a:link,
+.provider-features-lists a:visited {
+    color: #747474;
+}
 .profile .position-tab .tab-body > p{
     margin: 20px 0;
 }

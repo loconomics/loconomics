@@ -11,13 +11,30 @@
     var providerPrice = LcData.GetProviderPrice(p.UserID, pos.PositionID, clienttypeid);
     
     var minimumBookingTime = 0M;
-    using (var db = Database.Open("sqlloco")){       
+    dynamic cancellationPolicy = null;
+    using (var db = Database.Open("sqlloco")){
         minimumBookingTime = db.QueryValue(@"
             SELECT  MinTime
             FROM    CalendarProviderAttributes
             WHERE   UserID = @0
         ", p.UserID) ?? 0;
+        cancellationPolicy = db.QuerySingle(@"
+            SELECT  U.CancellationPolicyID
+                    ,C.CancellationPolicyName
+            FROM    UserProfilePositions As U
+                     INNER JOIN
+                    CancellationPolicy As C
+                      ON U.CancellationPolicyID = C.CancellationPolicyID
+                         AND U.LanguageID = C.LanguageID
+                         AND U.CountryID = C.CountryID
+            WHERE   U.UserID = @0
+                     AND U.PositionID = @1
+                     AND U.LanguageID = @2
+                     AND U.CountryID = @3
+        ", p.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
     }
+    
+    var prefix = "profile-position-" + pos.PositionID;
 }
 @helper printAttList(dynamic cat){
     <ul class="attributes-list">
@@ -73,7 +90,22 @@
                             <!--<a class="button view-more" href="#">More</a>-->
                             <ul class="attributes-list"><li>
                                 @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
-                                </li></ul>
+                            </li></ul>
+                        </div>
+                    }
+                    
+                    @if (cancellationPolicy != null)
+                    {
+                        <div class="cancellation-policy">
+                            <h5>Cancellation policy:</h5>
+                            <ul class="attributes-list"><li>
+                                <a href="#@prefix-cancellation-policy" class="popup-action">@(cancellationPolicy.CancellationPolicyName)</a>
+                            </li></ul>
+                            <div class="popups">
+                                <div id="@prefix-cancellation-policy" class="popup">
+                                    @RenderPage(UrlUtil.LangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID })
+                                </div>
+                            </div>
                         </div>
                     }
                     
