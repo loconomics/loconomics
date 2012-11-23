@@ -586,10 +586,12 @@ public static partial class LcData
         public bool IsHourly;
         public decimal Price;
     }
-    public static ProviderPrice GetProviderPrice(int userID, int positionID, int clienttypeid)
+    public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
     {       
         // Get our Pricing Type ID:
         int pricingtypeid = LcData.GetPositionPricingTypeID(positionID, clienttypeid);
+        // Get Fees that apply to the provider and customer
+        var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingtypeid));
 
         var providerPrice = new ProviderPrice();
 
@@ -607,7 +609,10 @@ public static partial class LcData
                             PositionID = @1
                                 AND
                             ClientTypeID = @2
-                ", userID, positionID, clienttypeid) ?? 0;
+                ", providerUserID, positionID, clienttypeid) ?? 0;
+
+                // Apply fees
+                providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
             }
             else if (pricingtypeid == 3)
             {
@@ -617,7 +622,10 @@ public static partial class LcData
                     WHERE   ProviderUserID = @0
                              AND PositionID = @1
                              AND LanguageID = @2 AND CountryID = @3
-                ", userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+                ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+
+                // Apply fees
+                providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
             }
         }
         return providerPrice;

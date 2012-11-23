@@ -1,8 +1,13 @@
 ﻿@{
     var item = PageData["Item"];
     
-    var providerPrice = LcData.GetProviderPrice(item.UserID, item.PositionID, 1);
+    // TODO: implement ClientTypeID
+    int clientTypeID = 1;
     
+    dynamic customer = PageData["Customer"];
+
+    var providerPrice = LcData.GetProviderPrice(item.UserID, item.PositionID, clientTypeID, (customer == null ? 0 : customer.UserID));
+
     var dataCats = LcData.GetServiceCatsAndItsAttributes(item.PositionID, "without-special-cats only-user-checked", item.UserID);
     
     // Stats display setup

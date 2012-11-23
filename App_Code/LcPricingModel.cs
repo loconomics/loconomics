@@ -90,10 +90,24 @@ public static class LcPricingModel
         };
     }
 
+    /// <summary>
+    /// Calculate and returns the fee price for the given price and fee data,
+    /// rounded up to integer (no decimals)
+    /// </summary>
+    /// <param name="fee"></param>
+    /// <param name="price"></param>
+    /// <returns></returns>
     public static decimal ApplyFeeAndRound(dynamic fee, decimal price)
     {
-        return Math.Round(ApplyFee(fee, price), 0);
+        return Math.Ceiling(ApplyFee(fee, price));
     }
+    /// <summary>
+    /// Calculate and returns the fee price for the given price and fee data,
+    /// rounded to 2 decimals
+    /// </summary>
+    /// <param name="fee"></param>
+    /// <param name="price"></param>
+    /// <returns></returns>
     public static decimal ApplyFee(dynamic fee, decimal price)
     {
         return Math.Round((fee.Percentage * price) + fee.Currency, 2);

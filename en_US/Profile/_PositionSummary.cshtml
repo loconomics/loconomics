@@ -7,8 +7,10 @@
     
     // TODO: Get Customer Type Id   
     var clienttypeid = PageData["ClientTypeID"] = 1;
+    
+    dynamic customer = PageData["Customer"];
         
-    var providerPrice = LcData.GetProviderPrice(p.UserID, pos.PositionID, clienttypeid);
+    var providerPrice = LcData.GetProviderPrice(p.UserID, pos.PositionID, clienttypeid, (customer == null ? 0 : customer.UserID));
     
     var minimumBookingTime = 0M;
     dynamic cancellationPolicy = null;

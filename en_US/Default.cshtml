@@ -3,6 +3,8 @@
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     bool performSearch = false;
     
+    PageData["Customer"] = LcData.UserInfo.GetUserRow();
+    
     /* Getting search parameters */
     var serviceType = PageData["s"] = Request["s"];
     var serviceCat = PageData["c"] = Request["c"];

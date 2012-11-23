@@ -1,6 +1,8 @@
 ﻿@{     
     Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
     Styles.Add(UrlUtil.AppPath + "Styles/Profile.css");
+    
+    PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
     int userid = Request["userid"].AsInt();
     if (userid == 0) {
