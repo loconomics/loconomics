@@ -1205,7 +1205,8 @@ public static partial class LcData
             {
                 return db.QuerySingle(@"
                     SELECT 
-                        ServiceFeeAmount
+                        BookingTypeID
+                        ,ServiceFeeAmount
                         ,ServiceFeeCurrency
                         ,ServiceFeePercentage
                         ,PaymentProcessingFee

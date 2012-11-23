@@ -151,6 +151,7 @@
             ContainsInstructions = hasInstructions,
             Fee = fee,
             HourPrice = hourPrice,
+            BookingTypeID = feeData.BookingTypeID,
             PricingTypeID = pricingtypeid,
             ClientTypeID = clienttypeid,
             SummaryLines = SummaryLines
@@ -240,7 +241,7 @@
                     c.UserID,
                     p.UserID,
                     pos.PositionID,
-                    1, // TODO Calculate booking type; Booking type: first booking
+                    data.BookingTypeID,
                     estimateID,
                     1, // CancellationPolicyID: TODO Get from provider preference when implemented as preference
                     data.ContainsSummary ? Request["booking-services-special-instructions"] : null
