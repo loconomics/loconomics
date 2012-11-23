@@ -18,20 +18,10 @@
             FROM    CalendarProviderAttributes
             WHERE   UserID = @0
         ", p.UserID) ?? 0;
-        cancellationPolicy = db.QuerySingle(@"
-            SELECT  U.CancellationPolicyID
-                    ,C.CancellationPolicyName
-            FROM    UserProfilePositions As U
-                     INNER JOIN
-                    CancellationPolicy As C
-                      ON U.CancellationPolicyID = C.CancellationPolicyID
-                         AND U.LanguageID = C.LanguageID
-                         AND U.CountryID = C.CountryID
-            WHERE   U.UserID = @0
-                     AND U.PositionID = @1
-                     AND U.LanguageID = @2
-                     AND U.CountryID = @3
-        ", p.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+        cancellationPolicy = LcData.Booking.GetProviderCancellationPolicy(
+            p.UserID,
+            pos.PositionID,
+            db);
     }
     
     var prefix = "profile-position-" + pos.PositionID;
@@ -103,7 +93,7 @@
                             </li></ul>
                             <div class="popups">
                                 <div id="@prefix-cancellation-policy" class="popup">
-                                    @RenderPage(UrlUtil.LangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID })
+                                    @RenderPage(UrlUtil.LangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID, DisplayForUserType = "customer" })
                                 </div>
                             </div>
                         </div>

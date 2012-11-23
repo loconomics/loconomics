@@ -4,7 +4,9 @@
     if (Request["CancellationPolicyID"].IsInt()) {
         policyID = Request["CancellationPolicyID"].AsInt();
     }
-    
+    // possible values: customer, provider
+    var forUserType = PageData["DisplayForUserType"] ?? Request["DisplayForUserType"] ?? "customer";
+
     dynamic policy = null;
     using (var db = Database.Open("sqlloco")) {
         policy = db.QuerySingle(@"
@@ -33,6 +35,11 @@
             <li>Loconomics must be notified of any no-shows or complaints by either party within 24 hours after a booking is scheduled to end.</li>
             <li>Loconomics will help faciliate dispute resolution but has the final say should a dispute not be resolved between parties.</li>
             <li>A booking is officially canceled when the client clicks the cancellation button on the cancellation confirmation page, which they can find in Dashboard > Bookings > Change or Cancel</li>
+            @if (forUserType == "provider")
+            {
+                <li>You will have the option to waive a cancellation fee for a client on a case-by-case basis when cancellations occur.</li>
+                <li>Loconomics reserves the right to waive a cancellation fee under extenuating circumstances of which you’ll be notified.</li>
+            }
         </ul>
     </div>
 }

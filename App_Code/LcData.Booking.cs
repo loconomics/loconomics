@@ -1040,6 +1040,32 @@ public static partial class LcData
             if (ownDb)
                 db.Dispose();
         }
+
+        /// <summary>
+        /// Get a dynamic record with fields: CancellationPolicyID and CancellationPolicyName
+        /// from the provider preference, or null if it has none.
+        /// </summary>
+        /// <param name="providerUserID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static dynamic GetProviderCancellationPolicy(int providerUserID, int positionID, Database db)
+        {
+            return db.QuerySingle(@"
+                SELECT  U.CancellationPolicyID
+                        ,C.CancellationPolicyName
+                FROM    UserProfilePositions As U
+                         INNER JOIN
+                        CancellationPolicy As C
+                          ON U.CancellationPolicyID = C.CancellationPolicyID
+                             AND U.LanguageID = C.LanguageID
+                             AND U.CountryID = C.CountryID
+                WHERE   U.UserID = @0
+                         AND U.PositionID = @1
+                         AND U.LanguageID = @2
+                         AND U.CountryID = @3
+            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
         #endregion
 
         #region Create Booking Request (Wizard)

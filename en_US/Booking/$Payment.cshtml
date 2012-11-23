@@ -362,8 +362,13 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     dynamic billingAddress = null;
+    dynamic cancellationPolicy = null;
     using (var db = Database.Open("sqlloco")) {
         billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
+        cancellationPolicy = LcData.Booking.GetProviderCancellationPolicy(
+            p.UserID,
+            pos.PositionID,
+            db);
     }
 }
 
@@ -475,8 +480,9 @@
         </ul>
         <div class="popups">
             <div id="cancellation-policy" class="popup">
-                @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
-                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
+                    CancellationPolicyID = (cancellationPolicy == null ? 1 : cancellationPolicy.CancellationPolicyID),
+                    DisplayForUserType = "customer" })
             </div>
         </div>
     </fieldset>
