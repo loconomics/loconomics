@@ -7,6 +7,13 @@
     if (data == null) {
         data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
     }
+    
+    // Get Fees that apply to the provider and customer
+    dynamic customer = null, fee = null;
+    if (!editable) {
+        customer = PageData["Customer"] ?? LcData.UserInfo.GetUserRow();
+        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), pos.UserID, 3 /* we are in packages */));
+    }
 }
         @if (data.Packages != null && data.Packages.Count > 0)
         {
@@ -58,8 +65,11 @@
                         }
                         else
                         {
+                            // Non editable is a customer view, in search, profile, booking, communications,
+                            // show price with fees
+                            var priceWithFees = pak.Price + LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
                             <div class="actions book">
-                                <a class="button book-action main-action" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", pak.Price)</a>
+                                <a class="button book-action main-action" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
                             </div>
                         }
                     </div>

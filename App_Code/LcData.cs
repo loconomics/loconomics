@@ -612,7 +612,7 @@ public static partial class LcData
                 ", providerUserID, positionID, clienttypeid) ?? 0;
 
                 // Apply fees
-                providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
             }
             else if (pricingtypeid == 3)
             {
@@ -622,6 +622,7 @@ public static partial class LcData
                     WHERE   ProviderUserID = @0
                              AND PositionID = @1
                              AND LanguageID = @2 AND CountryID = @3
+                             AND IsAddOn = 0
                 ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
 
                 // Apply fees
