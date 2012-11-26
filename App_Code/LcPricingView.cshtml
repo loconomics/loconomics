@@ -240,14 +240,14 @@
     </table>
 }
 
-@helper PricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+@helper CustomerPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
  
     <noscript>
         <div class="calculate-price-button actions">
             <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
         </div>
     </noscript>
-    <div class="calculation">
+    <div class="calculation customer-pricing-summary pricing-summary">
         <table class="calculation calculation-summary">
 
             @foreach(var line in summaryLines) {
@@ -270,6 +270,40 @@
             <tr class="fees">
                 @if (withRowSelectionColumn) { <td></td> }
                 <th colspan="2">*includes a <span class="calculation-summary-fee">@summary.FeePrice.ToString("c")</span> Loconomics service fee</th>
+            </tr>
+        </table>
+    </div>
+}
+
+@helper ProviderPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+ 
+    <div class="calculation provider-pricing-summary pricing-summary">
+        <table class="calculation">
+
+            @foreach(var line in summaryLines) {
+                <tr>
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th>@Html.Raw(line.Value.Concept)</th>
+                    <td class="subtotal-price price">@line.Value.SubtotalPrice.ToString("c")</td>
+                </tr>
+            }
+
+            <tr class="fees">
+                @if (withRowSelectionColumn) { <td></td> }
+                <th>Loconomics service fee (includes credit card processing costs)</th>
+                @* As opposite to CustomerPricingSummary, here we show PFeePrice instead of FeePrice, and must be showed as a negative number,
+                    because is substracted from previous lines prices *@
+                <td>@((0 - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+
+            <tr class="separator">
+                @if (withRowSelectionColumn) { <td></td> }
+                <td class="separator" colspan="2"></td>
+            </tr>
+            <tr class="total">
+                @if (withRowSelectionColumn) { <td class="row-selection"></td> }
+                <th class="name">Total price*</th>
+                <td class="price total-price">@summary.SubtotalPrice.ToString("c")</td>
             </tr>
         </table>
     </div>

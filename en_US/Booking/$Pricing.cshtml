@@ -42,6 +42,7 @@
         // Booking type with fees policy
         var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
         var fee = LcPricingModel.GetFee(feeData);
+        var pfee = LcPricingModel.GetPFee(feeData);
         
         // Collection of Summary numbers per group that will be a detail line of the result
         var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
@@ -150,6 +151,7 @@
             ContainsSummary = hasSummary,
             ContainsInstructions = hasInstructions,
             Fee = fee,
+            PFee = pfee,
             HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypeID = pricingtypeid,
@@ -196,6 +198,8 @@
             foreach(var line in data.SummaryLines) {
                 summary.Add(line.Value);
             }
+            // and calculate summary payment-processing fees:
+            summary.PFeePrice = LcPricingModel.ApplyFee(data.PFee, summary.TotalPrice);
 
             /* Save all data?
                 */
@@ -211,7 +215,8 @@
                     data.HourPrice,
                     summary.SubtotalPrice,
                     summary.FeePrice,
-                    summary.TotalPrice);
+                    summary.TotalPrice,
+                    summary.PFeePrice);
                 // IDs created:
                 estimateID = estimate.PricingEstimateID;
                 revisionID = estimate.PricingEstimateRevision;
@@ -335,7 +340,7 @@
         {
             <fieldset>
                 <legend>Pricing summary</legend>
-                @LcPricingView.PricingSummary(viewData, summary, data.SummaryLines, data.HourPrice, true)
+                @LcPricingView.CustomerPricingSummary(viewData, summary, data.SummaryLines, data.HourPrice, true)
             </fieldset>
         }
 

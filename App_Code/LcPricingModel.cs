@@ -29,6 +29,7 @@ public static class LcPricingModel
         public decimal SubtotalPrice = 0M;
         public decimal FeePrice = 0M;
         public decimal TotalPrice = 0M;
+        public decimal PFeePrice = 0M;
         public decimal ServiceDuration = 0M;
         public string Concept = "";
         public PricingSummaryData()
@@ -38,20 +39,22 @@ public static class LcPricingModel
         {
             this.Concept = concept;
         }
-        public PricingSummaryData(decimal subtotalPrice, decimal feePrice, decimal totalPrice, decimal serviceDuration)
+        public PricingSummaryData(decimal subtotalPrice, decimal feePrice, decimal totalPrice, decimal serviceDuration, decimal pFeePrice = 0)
         {
             this.SubtotalPrice = subtotalPrice;
             this.FeePrice = feePrice;
             this.TotalPrice = totalPrice;
+            this.PFeePrice = pFeePrice;
             this.ServiceDuration = serviceDuration;
         }
         public static PricingSummaryData operator + (PricingSummaryData one, PricingSummaryData add)
         {
             return new PricingSummaryData(
-                one.ServiceDuration + add.ServiceDuration,
                 one.SubtotalPrice + add.SubtotalPrice,
                 one.FeePrice + add.FeePrice,
-                one.TotalPrice + add.TotalPrice
+                one.TotalPrice + add.TotalPrice,
+                one.ServiceDuration + add.ServiceDuration,
+                one.PFeePrice + add.PFeePrice
             );
         }
         public void Add(PricingSummaryData add)
@@ -60,6 +63,7 @@ public static class LcPricingModel
             this.SubtotalPrice += add.SubtotalPrice;
             this.FeePrice += add.FeePrice;
             this.TotalPrice += add.TotalPrice;
+            this.PFeePrice += add.PFeePrice;
             if (!String.IsNullOrEmpty(add.Concept))
                 this.Concept = add.Concept;
         }
@@ -87,6 +91,20 @@ public static class LcPricingModel
         return new {
             Percentage = feePercentage,
             Currency = feeCurrency
+        };
+    }
+    /// <summary>
+    /// As GetFee, returns the same structure for 
+    /// payment-processing fee percentage, with 
+    /// a fixed Currency of 0 for compatibility.
+    /// </summary>
+    /// <param name="feeData"></param>
+    /// <returns></returns>
+    public static dynamic GetPFee(dynamic feeData)
+    {
+        return new {
+            Percentage = feeData.PaymentProcessingFee,
+            Currency = 0
         };
     }
 
