@@ -181,6 +181,7 @@ public static partial class LcData
                         R.BookingRequestStatusID,
                         B.BookingStatusID,
                         R.PositionID,
+                        R.CancellationPolicyID,
 
                         DATEADD(day, 7, E.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference
@@ -268,6 +269,7 @@ public static partial class LcData
                         R.UpdatedDate,
                         R.BookingRequestStatusID,
                         R.PositionID,
+                        R.CancellationPolicyID,
 
                         DATEADD(day, 7, E1.EndTime) As PaymentDate,
                         (SELECT TOP 1 LastThreeAccountDigits FROM ProviderPaymentPreference

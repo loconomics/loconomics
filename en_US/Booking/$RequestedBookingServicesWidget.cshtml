@@ -2,22 +2,19 @@
 @{
     dynamic booking = PageData[0];
     string myUserType = PageData[1];
+    var u = LcData.UserInfo.GetUserRow();
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
     }
 
-    dynamic services = null, pvars = null, poptions = null, packages = null;
-    using (var db = Database.Open("sqlloco")) {         
-        services    = db.Query(LcData.Booking.sqlGetServicesIncludedInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        pvars       = db.Query(LcData.Booking.sqlGetPricingVarsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        poptions    = db.Query(LcData.Booking.sqlGetPricingOptionsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        packages    = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-    }
-     
-    // auxiliar vars in view generation
-    int i = 0;
-    string iprint = "";
+    dynamic summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
+    var pricingSummary = LcData.Booking.GetPricingSummary(summary);
+    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    
+    string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
+    string strVarsOpts = LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID, booking.PricingEstimateID);
+    string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
 }
 @helper printQuantityIfNeeded(string q){
     decimal quantity = 0;
@@ -26,107 +23,68 @@
         @("(" + quantity.ToString() + " items)")
     }
 }
+
     <div class="requested-booking-services message-section">
-        @if (services != null && services.Count > 0)
-        {
-        <h5>Services to be performed:</h5>
-        <ul class="services">
-            @foreach (var service in services)
-            {
-                <li>@service.Name</li>
+
+        <h5>Payment</h5>
+        <div class="payment">
+            @switch(myUserType) {
+                case "provider":
+                    <text>
+                    Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                    </text>
+                break;
+                case "customer":
+                    <text>
+                    Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                    </text>
+                break;
+                default:
+                    <text>
+                    Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    </text>
+                break;
             }
-        </ul>
-        }
-        @if (packages != null && packages.Count > 0)
+        </div>
+
+        <h5>Pricing estimate</h5>
+        @if (myUserType == "provider")
         {
-            <h5>Packages:</h5>
-            <table class="pricing-summary">
-                @foreach (var pak in packages)
-                {
-                <tr class="package">
-                    <td class="concept">
-                        @pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)
-                        @{
-                            var quantity = ((string)pak.CustomerPricingDataInput).AsInt();
-                        }
-                        @if (quantity > 1)
-                        {
-                            <span>(@quantity packages * @pak.Price.ToString("c") each)</span>
-                        }
-                    </td>
-                    <td class="price">
-                        @pak.PriceEstimate.ToString("c")
-                    </td>
-                </tr>
-                }
-            </table>
+            @LcPricingView.ProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+        }
+        else if (myUserType == "customer")
+        {
+            @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+        }
+
+        @if (!String.IsNullOrEmpty(strServices))
+        {
+            <h5>Services requested:</h5>
+            <div class="services">
+                @strServices
+            </div>
+        }
+        
+        @if (!String.IsNullOrEmpty(strVarsOpts))
+        {
+            <h5>Estimate for</h5>
+            <div class="estimate">
+                @strVarsOpts
+            </div>
+        }
+
+        @if (!String.IsNullOrEmpty(strPackAddons))
+        {
+            <h5>Packages and Add-Ons:</h5>
+            <div class="packages">
+                @strPackAddons
+            </div>
         }
         
         <h5>Special instructions:</h5>
         <p class="special-instructions">@booking.SpecialRequests</p>
-
-        <h5>Additional services and pricing summary:</h5>
-        <table class="pricing-summary">
-            @foreach (var pitem in poptions)
-            {
-            <tr class="option">
-                <td class="concept">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
-                <td class="price">@pitem.Price.ToString("c")</td>
-            </tr>
-            }
-            @if (pvars != null && pvars.Count > 0)
-            {
-            <tr class="vars">
-                <td class="concept">
-                    @{
-                i = 0;
-                iprint = "";
-                decimal varsTime = 0;
-                foreach (var pitem in pvars)
-                {
-                    if (i > 0)
-                    {
-                        iprint = "; ";
-                    }
-                    i++;
-                            @(iprint + pitem.Name + " " + @pitem.Quantity)
-                    varsTime += pitem.Time;
-                }
-                        @(" (" + booking.ServiceDuration.ToString() + " hours @ " + booking.HourlyPrice.ToString("c") + "/hr)")
-                    }
-                </td>
-                <td class="price">@((varsTime * booking.HourlyPrice).ToString("c"))</td>
-            </tr>
-            }
-            <tr class="fee">
-                <td class="concept">Locnomics service fee (includes credit card processing costs)</td>
-                <td class="price">@booking.FeePrice.ToString("c")</td>
-            </tr>
-            <tr class="total">
-                <td class="concept">
-                @switch(myUserType) {
-                    case "provider":
-                        <text>
-                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
-                        </text>
-                    break;
-                    case "customer":
-                        <text>
-                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
-                        </text>
-                    break;
-                    default:
-                        <text>
-                        Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        </text>
-                    break;
-                }
-                </td>
-                <td class="price">@booking.TotalPrice.ToString("c")</td>
-            </tr>
-        </table>
 
         <h5>Location and contact information:</h5>
         <div class="location">
@@ -136,5 +94,12 @@
             <p>
             Full location and contact information will be shown after you accept a time above.
             </p>
+        </div>
+
+        <h5>Cancellation policy</h5>
+        <div class="cancellation-policy">
+            @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
+                    CancellationPolicyID = booking.CancellationPolicyID,
+                    DisplayForUserType = myUserType })
         </div>
     </div>

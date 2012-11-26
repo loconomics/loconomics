@@ -302,8 +302,10 @@
             </tr>
             <tr class="total">
                 @if (withRowSelectionColumn) { <td class="row-selection"></td> }
-                <th class="name">Total price*</th>
-                <td class="price total-price">@summary.SubtotalPrice.ToString("c")</td>
+                <th class="name">Total price</th>
+                @* Provider price to be paid is subtotal less payment processing fees (pfees) 
+                *@
+                <td class="price total-price">@((summary.SubtotalPrice - summary.PFeePrice).ToString("c"))</td>
             </tr>
         </table>
     </div>
