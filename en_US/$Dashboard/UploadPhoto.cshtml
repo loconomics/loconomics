@@ -65,7 +65,7 @@
     bool processed = false;
     
     string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
-    string virtualPath = UrlUtil.AppPath + filePathInApp;
+    string virtualPath = UrlUtil.RenderAppPath + filePathInApp;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){

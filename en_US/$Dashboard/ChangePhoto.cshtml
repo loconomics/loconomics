@@ -54,7 +54,7 @@
     var userId = WebSecurity.CurrentUserId;
     var ajaxEnabled = true;
     bool processed = false;
-    string virtualPath = UrlUtil.AppPath + "img/userphotos/u" + userId.ToString() + "/";
+    string virtualPath = UrlUtil.RenderAppPath + "img/userphotos/u" + userId.ToString() + "/";
     
     // Delete file support:
     if (Request["delete"].AsBool()) {
