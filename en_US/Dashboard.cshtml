@@ -22,7 +22,7 @@
         "ressources", "tools", "bookings", "admin", "alerts"
     };
     if (pages.Contains(page)) {
-        fileToRender = UrlUtil.LangPath + "$Dashboard/$" + page + ".cshtml";
+        fileToRender = UrlUtil.RenderLangPath + "$Dashboard/$" + page + ".cshtml";
         // Set menu option selected
         PageData["menu-item"] = page;
     } else {
@@ -33,7 +33,7 @@
                 @RenderPage(UrlUtil.RenderLangPath + folder + file);
                 return;
             } else {
-                fileToRender = UrlUtil.LangPath + folder + file;
+                fileToRender = UrlUtil.RenderLangPath + folder + file;
             }
         } else {
             throw new HttpException(404, "Page not found");

@@ -45,11 +45,11 @@
     string userFolder = "img/userphotos/u" + userId.ToString() + "/";
 
     // Retrieving image path
-    string path = HttpContext.Current.Request.MapPath(UrlUtil.AppPath + userFolder + userPhoto);
+    string path = HttpContext.Current.Request.MapPath(UrlUtil.RenderAppPath + userFolder + userPhoto);
 
     if (!System.IO.File.Exists(path)){
         imageAdapted = true;
-        path = Server.MapPath(UrlUtil.AppPath + "img/userphotos/u0/avatar.png");
+        path = Server.MapPath(UrlUtil.RenderAppPath + "img/userphotos/u0/avatar.png");
     }
     
     try{
