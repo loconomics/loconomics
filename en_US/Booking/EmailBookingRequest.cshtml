@@ -200,7 +200,7 @@ else
         }
 
         <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>
-        @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", booking)
+        @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", booking, myUserType, true)
 
         <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
         @RenderPage("$EmailBookingRemindersWidget.cshtml", myUserType)

@@ -2,22 +2,21 @@
 @{
     dynamic booking = PageData[0];
     string myUserType = PageData[1];
+    bool isRequest = PageData[2] ?? false;
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
     }
-     
-    dynamic services = null, pvars = null, poptions = null, packages = null;
-    using (var db = Database.Open("sqlloco")) {         
-        services    = db.Query(LcData.Booking.sqlGetServicesIncludedInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        pvars       = db.Query(LcData.Booking.sqlGetPricingVarsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        poptions    = db.Query(LcData.Booking.sqlGetPricingOptionsInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        packages    = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, booking.PricingEstimateID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-    }
-     
-    // auxiliar vars in view generation
-    int i = 0;
-    string iprint = "";
+    
+    var myUserID = (myUserType == "customer" ? booking.CustomerUserID : myUserType == "provider" ? booking.ProviderUserID : 0);
+    
+    dynamic summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, myUserID, false);
+    var pricingSummary = LcData.Booking.GetPricingSummary(summary);
+    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    
+    string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
+    string strVarsOpts = LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID, booking.PricingEstimateID);
+    string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
 }
 @helper printQuantityIfNeeded(string q){
     decimal quantity = 0;
@@ -27,107 +26,69 @@
     }
 }
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-        @if (services != null && services.Count > 0)
-        {
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Services to be performed:</h5>
-        <ul  @LcEmailTemplateHelper.StyleUlOl()>
-            @foreach (var service in services)
-            {
-                <li style="margin-left: 20px;width: 205px;display: inline-block;">@service.Name</li>
+
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment</h5>
+        <div>
+            @switch(myUserType) {
+                case "provider":
+                    <text>
+                    Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                    </text>
+                break;
+                case "customer":
+                    <text>
+                    Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                    </text>
+                break;
+                default:
+                    <text>
+                    Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    </text>
+                break;
             }
-        </ul>
-        }
-        @if (packages != null && packages.Count > 0)
+        </div>
+
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing estimate</h5>
+        @if (myUserType == "provider")
         {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Packages:</h5>
-            <table border="0" style="border:none;width:100%">
-                @foreach (var pak in packages)
-                {
-                <tr>
-                    <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
-                        @pak.Name (@pak.NumberOfSessions session/s, @pak.ServiceDuration minutes each)
-                        @{
-                            var quantity = ((string)pak.CustomerPricingDataInput).AsInt();
-                        }
-                        @if (quantity > 1)
-                        {
-                            <span>(@quantity packages * @pak.Price.ToString("c") each)</span>
-                        }
-                    </td>
-                    <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">
-                        @pak.Price.ToString("c")
-                    </td>
-                </tr>
-                }
-            </table>
+            @LcPricingView.EmailProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+        }
+        else if (myUserType == "customer")
+        {
+            @LcPricingView.EmailCustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+        }
+        
+        @if (!String.IsNullOrEmpty(strServices))
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Services requested:</h5>
+            <div>
+                @strServices
+            </div>
+        }
+
+        @if (!String.IsNullOrEmpty(strVarsOpts))
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Estimate for</h5>
+            <div class="estimate">
+                @strVarsOpts
+            </div>
+        }
+
+        @if (!String.IsNullOrEmpty(strPackAddons))
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Packages and Add-Ons:</h5>
+            <div class="packages">
+                @strPackAddons
+            </div>
         }
         
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
         <p @LcEmailTemplateHelper.StyleResetP()>@booking.SpecialRequests</p>
 
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Additional services and pricing summary:</h5>
-        <table border="0" style="border:none;width:100%">
-            @foreach (var pitem in poptions)
-            {
-            <tr>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">@pitem.Name @printQuantityIfNeeded(pitem.Quantity)</td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@pitem.Price.ToString("c")</td>
-            </tr>
-            }
-            @if (pvars != null && pvars.Count > 0)
-            {
-            <tr>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
-                    @{
-                        i = 0;
-                        iprint = "";
-                        decimal varsTime = 0;
-                        foreach (var pitem in pvars)
-                        {
-                            if (i > 0)
-                            {
-                                iprint = "; ";
-                            }
-                            i++;
-                                        @(iprint + pitem.Name + " " + @pitem.Quantity)
-                            varsTime += pitem.Time;
-                        }
-                        @(" (" + booking.ServiceDuration.ToString() + " hours @ " + booking.HourlyPrice.ToString("c") + "/hr)")
-                    }
-                </td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((varsTime * booking.HourlyPrice).ToString("c"))</td>
-            </tr>
-            }
-            <tr>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Loconomics service fee (includes credit card processing costs)</td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@booking.FeePrice.ToString("c")</td>
-            </tr>
-            <tr style="@LcEmailTemplateHelper.StylePricingSummaryTotal()">
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">
-                @switch(myUserType) {
-                    case "provider":
-                        <text>
-                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
-                        </text>
-                    break;
-                    case "customer":
-                        <text>
-                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
-                        </text>
-                    break;
-                    default:
-                        <text>
-                        Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        </text>
-                    break;
-                }
-                </td>
-                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@booking.TotalPrice.ToString("c")</td>
-            </tr>
-        </table>
-
+        @if (isRequest)
+        {
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location and contact information:</h5>
         <div>
             @*<p>
@@ -137,4 +98,5 @@
             Full location and contact information will be shown after you accept a time above.
             </p>
         </div>
+        }
     </div>

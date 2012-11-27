@@ -2,6 +2,7 @@
 @{
     dynamic booking = PageData[0];
     string myUserType = PageData[1];
+    bool isRequest = PageData[2] ?? false;
     var u = LcData.UserInfo.GetUserRow();
     
     if (booking == null || booking["BookingRequestID"] == null) {
@@ -86,15 +87,18 @@
         <h5>Special instructions:</h5>
         <p class="special-instructions">@booking.SpecialRequests</p>
 
+        @if (isRequest)
+        {
         <h5>Location and contact information:</h5>
         <div class="location">
-            <p>
+            @*<p>
             x.y miles away (z1 minutes driving time, z2 minutes public tranport)
-            </p>
+            </p>*@
             <p>
             Full location and contact information will be shown after you accept a time above.
             </p>
         </div>
+        }
 
         <h5>Cancellation policy</h5>
         <div class="cancellation-policy">

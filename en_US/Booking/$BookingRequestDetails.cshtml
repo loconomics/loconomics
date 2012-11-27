@@ -206,7 +206,7 @@ else
         }
 
         <h4>Booing details</h4>
-        @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType)
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
 
         <h4>Reminders</h4>
         @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
