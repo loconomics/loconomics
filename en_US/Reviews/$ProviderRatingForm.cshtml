@@ -228,7 +228,7 @@
             <li class="rating3">
                 <span>@(rateTexts.Rating3)@(String.IsNullOrEmpty(rateTexts.Rating3FormDescription) ? "" : " - " + rateTexts.Rating3FormDescription): @*Rate @(provider.FirstName)'s professionalism*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
                 </div>
             </li>
 }
@@ -256,13 +256,13 @@
             <li class="rating1">
                 <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate the quality of work @provider.FirstName performed:*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                 </div>
             </li>
             <li class="rating2">
                 <span>@(rateTexts.Rating2)@(String.IsNullOrEmpty(rateTexts.Rating2FormDescription) ? "" : " - " + rateTexts.Rating2FormDescription): @*Rate the efficience in which @provider.FirstName performed the work:*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                 </div>
             </li>
             @if (pastReference)
@@ -306,7 +306,7 @@
             <li class="share-social">
                 Please share @(provider.FirstName)'s profile with your family and friends: 
                 // (commented out referral credit for now)  @if (!pastReference){  <text> and earn a $5 credit when they make a purchase:</text> }
-                @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml",
+                @RenderPage(UrlUtil.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml",
                     new
                     {
                         URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,

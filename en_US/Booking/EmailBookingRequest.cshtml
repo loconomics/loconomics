@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Booking Request";
 
     var thisUserID = Request["UserID"].AsInt();
@@ -117,7 +117,7 @@ else
         <span>Sent: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
         <h4 @LcEmailTemplateHelper.StyleH4()>@itsUserLabel profile</h4>
-        @RenderPage(UrlUtil.LangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},
             {"Data", itsUserData},
             {"DataPrefix", ""},

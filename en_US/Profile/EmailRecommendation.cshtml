@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Recommendation";
     
     var customerID = Request["CustomerUserID"].AsInt();
@@ -21,7 +21,7 @@
     as a @position.PositionSingular at <a href="@UrlUtil.LangUrl">Loconomics.com</a>
     <a href="@PageData["viewOnSiteUrl"]">View @provider.FirstName full profile</a>
 
-    @RenderPage(UrlUtil.LangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+    @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
         {"Data", provider},
         {"DataPrefix", ""},

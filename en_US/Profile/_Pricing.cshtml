@@ -14,9 +14,9 @@
     @if (pricingType == 3)
     {
         <h3>Select a package that meets your needs:</h3>
-        @RenderPage(UrlUtil.LangPath + "PricingWizard/$ProviderPackagesList.cshtml")
+        @RenderPage(UrlUtil.RenderLangPath + "PricingWizard/$ProviderPackagesList.cshtml")
         
         <h3>Additional options available during checkout:</h3>
-        @RenderPage(UrlUtil.LangPath + "PricingWizard/$ViewPricingOptions.cshtml", new { PricingTypeID = 3, ClientTypeID = clienttypeid } )
+        @RenderPage(UrlUtil.RenderLangPath + "PricingWizard/$ViewPricingOptions.cshtml", new { PricingTypeID = 3, ClientTypeID = clienttypeid } )
     }
 </div>

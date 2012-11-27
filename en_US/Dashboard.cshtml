@@ -30,7 +30,7 @@
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(UrlUtil.LangPath + folder + file))) {
             if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
-                @RenderPage(UrlUtil.LangPath + folder + file);
+                @RenderPage(UrlUtil.RenderLangPath + folder + file);
                 return;
             } else {
                 fileToRender = UrlUtil.LangPath + folder + file;
@@ -40,7 +40,7 @@
         }
     }
     // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
     Scripts.Add(UrlUtil.AppPath + "Scripts/Dashboard.js");
 }
 @helper menu(string item){
@@ -76,7 +76,7 @@
                         and <a href="@(UrlUtil.LangPath)Dashboard/Account/">account settings</a>.
                     </p>
                     }
-                    @RenderPage(UrlUtil.LangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
+                    @RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
                 </div><!-- dashboard-help -->
 
                 <div id="nav">

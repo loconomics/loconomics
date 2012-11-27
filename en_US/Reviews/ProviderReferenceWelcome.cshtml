@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.WebData;
 @{
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
     Styles.Add(UrlUtil.AppPath + "Styles/ProviderReview.css");
@@ -28,7 +28,7 @@
             {
                 <p>You'll need to login or create an account for free.</p>
             
-                @RenderPage(UrlUtil.LangPath + "Account/$Login.cshtml", new
+                @RenderPage(UrlUtil.RenderLangPath + "Account/$Login.cshtml", new
                    {
                        ShowHeader = false,
                        ShowTools = true,

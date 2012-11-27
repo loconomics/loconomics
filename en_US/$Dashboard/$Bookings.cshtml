@@ -14,7 +14,7 @@
             </ul>
             
             <div id="bookings-all" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Booking/$BookingsList/")">
-                @RenderPage(UrlUtil.LangPath + "Booking/$BookingsList.cshtml")
+                @RenderPage(UrlUtil.RenderLangPath + "Booking/$BookingsList.cshtml")
             </div><!-- #bookings-all -->
             <div id="bookings-failed-requests" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Booking/$BookingsList/?view=failed-requests")">
                 @*RenderPage(UrlUtil.LangPath + "Booking/$BookingsList.cshtml", new { view = "failed-requests" })*@

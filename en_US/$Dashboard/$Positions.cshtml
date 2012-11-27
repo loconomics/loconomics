@@ -102,6 +102,6 @@
         @if (n < maxPositions)
         {
             <div id="position-new" class="tab-body fancy add-positions positionservices @(n == 0 ? "current" : "")">
-                @RenderPage(UrlUtil.LangPath + "ProviderSignUp/$AddMorePositions.cshtml")
+                @RenderPage(UrlUtil.RenderLangPath + "ProviderSignUp/$AddMorePositions.cshtml")
             </div><!-- position-new -->
         }

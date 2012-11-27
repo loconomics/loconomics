@@ -18,16 +18,16 @@
             </ul>
             
             <div id="bookings-maybe-performed" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=maybe-performed")">
-                @RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "maybe-performed" })
+                @RenderPage(UrlUtil.RenderLangPath + "Admin/$AdminBookings.cshtml", new { view = "maybe-performed" })
             </div><!-- #bookings-maybe-performed -->
             <div id="bookings-dispute" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=dispute")">
-                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })*@
+                @*@RenderPage(UrlUtil.RenderLangPath + "Admin/$AdminBookings.cshtml", new { view = "dispute" })*@
             </div><!-- #bookings-dispute -->
             <div id="bookings-performed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=performed")">
-                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "performed" })*@
+                @*@RenderPage(UrlUtil.RenderLangPath + "Admin/$AdminBookings.cshtml", new { view = "performed" })*@
             </div><!-- #bookings-performed -->
             <div id="bookings-completed" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Admin/$AdminBookings/?view=completed")">
-                @*@RenderPage(UrlUtil.LangPath + "Admin/$AdminBookings.cshtml", new { view = "completed" })*@
+                @*@RenderPage(UrlUtil.RenderLangPath + "Admin/$AdminBookings.cshtml", new { view = "completed" })*@
             </div><!-- #bookings-completed -->
 		</div><!-- #admin-bookings -->
         @*<script type="text/javascript">

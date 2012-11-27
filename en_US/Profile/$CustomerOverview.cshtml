@@ -2,7 +2,7 @@
     var c = LcData.UserInfo.GetRequestedUserRow();
 }
 
-@RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
+@RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { 
     ReviewedID = c.UserID,
     PositionID = 0,
     ReviewedData = c,
@@ -10,4 +10,4 @@
 })
 
 <h3>Reviews from Loconomics providers</h3>
-@RenderPage(UrlUtil.LangPath + "Reviews/$ReviewsGrid.cshtml", c.UserID, 0, true, "There are no reviews yet")
+@RenderPage(UrlUtil.RenderLangPath + "Reviews/$ReviewsGrid.cshtml", c.UserID, 0, true, "There are no reviews yet")

@@ -33,7 +33,9 @@ public static class UrlUtil
         get
         {
             HttpContext context = HttpContext.Current;
-            string url = context.Request.ApplicationPath;
+            string url = "";
+            if (HttpContext.Current.Request.IsLocal)
+                url = context.Request.ApplicationPath;
             if (url.EndsWith("/"))
                 return url;
             else
@@ -131,5 +133,26 @@ public static class UrlUtil
     public static string ToJsVar()
     {
         return "var UrlUtil = " + ToJson() + ";";
+    }
+
+    /// <summary>
+    /// Only for use with RenderPage
+    /// </summary>
+    public static string RenderLangPath
+    {
+        get
+        {
+            return (HttpContext.Current.Request.IsLocal ? "" : "~") + LangPath;
+        }
+    }
+    /// <summary>
+    /// Only for use with RenderPage
+    /// </summary>
+    public static string RenderAppPath
+    {
+        get
+        {
+            return (HttpContext.Current.Request.IsLocal ? "" : "~") + AppPath;
+        }
     }
 }

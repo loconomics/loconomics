@@ -1,5 +1,5 @@
 ﻿@{     
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
     Styles.Add(UrlUtil.AppPath + "Styles/Profile.css");
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
@@ -101,7 +101,7 @@
             @*RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })*@
             <aside>
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = userid,
                         // global rating of the user, as all positions when provider (-2) without include 
@@ -131,7 +131,7 @@
                 </div>
                 }
                 *@
-                @RenderPage(UrlUtil.LangPath + "Social/_SocialNetworkingWidget.cshtml")
+                @RenderPage(UrlUtil.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml")
             </aside>
 	    </div><!-- #profileHeader -->
         

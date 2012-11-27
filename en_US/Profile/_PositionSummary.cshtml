@@ -95,7 +95,7 @@
                             </li></ul>
                             <div class="popups">
                                 <div id="@prefix-cancellation-policy" class="popup">
-                                    @RenderPage(UrlUtil.LangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID, DisplayForUserType = "customer" })
+                                    @RenderPage(UrlUtil.RenderLangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID, DisplayForUserType = "customer" })
                                 </div>
                             </div>
                         </div>

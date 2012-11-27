@@ -47,7 +47,7 @@
             </div>
         }
         
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
             UserID = pos.UserID,
             ContainerClasses = "licenses",
             Size = "mini",
@@ -69,7 +69,7 @@
     <fieldset class="your-provider box">
         <legend>Your provider:</legend>
 
-                @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new
+                @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new
                    {
                        Data = p,
                        Size = "mini",
@@ -84,7 +84,7 @@
         @*
         <h6 class="provider-and-position"><span class="provider-name">@p.FirstName</span>-<span class="provider-position">@pos.PositionSingular</span></h6>
         <img class="avatar provider-avatar" alt="Provider photo" src="@Href(UrlUtil.LangPath + "Profile/Photo/?UserID=" + p.UserID)"/>
-        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
+        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
         <a target="_blank" href="@(UrlUtil.LangPath)Profile/?UserID=@(p.UserID)">View profile</a>*@
         @*<div class="provider-features-lists">
             <div class="years-experience">

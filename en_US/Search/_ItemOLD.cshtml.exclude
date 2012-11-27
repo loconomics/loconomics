@@ -25,7 +25,7 @@
                 making, sweeping, vacuuming, and <a href="#" class="view-more">14 more</a></div>
         </div>
         
-        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = p.PositionID, RatingWithNote = false })
+        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = p.PositionID, RatingWithNote = false })
         
         <ul class="verifications-summary">
             <li class="license">2 licenses</li>

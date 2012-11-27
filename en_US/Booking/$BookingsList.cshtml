@@ -192,7 +192,7 @@
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     
   <li>
-    @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+    @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"Data", item},
         {"DataPrefix", itsUserPrefix},
         {"Size", "mini"},

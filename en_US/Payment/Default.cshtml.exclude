@@ -3,7 +3,7 @@
 @{
     LcHelpers.SecurePage();
 
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
     var UserID = WebSecurity.CurrentUserId;
 
     //TODO: check for existing user id or credit card

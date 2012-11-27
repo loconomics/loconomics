@@ -163,7 +163,7 @@
                 <li class="rating1">
                     <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate @customer.FirstName as customer:*@</span>
                     <div class="user-rating">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
+                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                     </div>
                 </li>
                 <li class="publicreview">

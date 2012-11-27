@@ -30,7 +30,7 @@
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">Your appointment is in the works.</p>
 
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", provider},
             {"DataPrefix", ""},
             {"Size", "search"},

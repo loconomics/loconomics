@@ -1,6 +1,6 @@
 ﻿@{
     LcHelpers.SecurePage();
-    Layout = UrlUtil.LangPath + "_SiteLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
     Styles.Add(UrlUtil.AppPath + "Styles/ProviderReview.css");
@@ -29,7 +29,7 @@
                     @RenderPage("$ProviderRatingForm.cshtml", new { BookingID = 0 } )
                 </div><!-- #provider-reference-form-tab -->
             </div>
-            @RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQs.cshtml")
+            @RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQs.cshtml")
         }
     </div>
 </div>

@@ -20,7 +20,7 @@
 @helper hrefProfile(dynamic p){
     @Href(UrlUtil.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
 }
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new { 
+        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new { 
             Size = "search", 
             Data = item,
             UserID = item.UserID,
@@ -52,7 +52,7 @@
         </div>
         
         <div class="provider-data">
-            @RenderPage(UrlUtil.LangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "", OnlyIconType = "verification" })
+            @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserVerificationsWidget.cshtml", new { UserID = item.UserID, Size = "mini", ContainerID = "", OnlyIconType = "verification" })
             <div class="response-time">
                 <em>Response time</em> <strong>@responseTime</strong>
             </div>
@@ -67,7 +67,7 @@
         </div>
 
         @*<div class="hightlighted-review">
-            @RenderPage(UrlUtil.LangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = item.UserID, PositionID = item.PositionID })
+            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = item.UserID, PositionID = item.PositionID })
             
             <img alt="Reviewer photo" class="reviewer-photo" src="@Href(UrlUtil.AppPath + "img/generic-friend-avatar.png")"/>
             <p>

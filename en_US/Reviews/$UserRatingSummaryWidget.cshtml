@@ -125,7 +125,7 @@
             <label title="@ratTexts["Rating" + index]" data-description="@ratTexts["Rating" + index + "ProfileDescription"]">@ratTexts["Rating" + index]</label>
             break;
     }
-    @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
+    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" });
 }
 <div class="user-rating-summary-widget user-rating user-rating-@mode @(withNote ? "has-note" : "") @(positionID == 0 ? "customer" : positionID == -1 ? "user" : "provider")">
     @switch(mode) {
@@ -145,7 +145,7 @@
                         var rate = reviewRecord["Rating1"].ToString();
                         <li>
                         <label><label title="@ratTexts["Rating1"]" data-description="@ratTexts["Rating1ProfileDescription"]">@ratTexts["Rating1"]</label></label>
-                        @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" })
+                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { id, rate, "true", "image" })
                         </li>
                     }
                 }
@@ -177,7 +177,7 @@
                 // Sum all (including that with zero, no problem), but divide by the number of the with value:
                 globalRate = (reviewRecord.Rating1 + reviewRecord.Rating2 + reviewRecord.Rating3) / fieldsNumber;
             }
-            @RenderPage(UrlUtil.LangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true", "image" })
+            @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "UserRatingSummaryWidget_Customer_" + reviewedID.ToString(), globalRate.ToString(), "true", "image" })
             if (withNote) {
                 <span class="note">@note</span>
             }

@@ -103,14 +103,14 @@
 
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
         else
         {
             if (userType == "customer")
             {
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = data[dataPrefix + "UserID"],
                         PositionID = 0,
@@ -123,7 +123,7 @@
             else if (userType == "provider")
             {
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = data[dataPrefix + "UserID"],
                         PositionID = positionID,
@@ -150,7 +150,7 @@ else if (size == "mini") {
         }
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
     </div>
 } else if (size == "search") {
@@ -181,7 +181,7 @@ else if (size == "mini") {
                 if (userType == "customer")
                 {
                     <div class="user-rating global-rating">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                            {
                                ReviewedID = data[dataPrefix + "UserID"],
                                PositionID = 0,
@@ -195,7 +195,7 @@ else if (size == "mini") {
                 else if (userType == "provider")
                 {
                     <div class="user-rating global-rating">
-                        @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                            {
                                ReviewedID = data[dataPrefix + "UserID"],
                                PositionID = positionID,
@@ -211,7 +211,7 @@ else if (size == "mini") {
 
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.LangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
     </div>
 } else {

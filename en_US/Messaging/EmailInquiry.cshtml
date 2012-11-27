@@ -3,7 +3,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.LangPath + "_EmailLayout.cshtml";
+    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Inquiry";
     var kind = Request["Kind"].AsInt();
     var threadID = Request["ThreadID"].AsInt();

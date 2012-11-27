@@ -72,7 +72,7 @@
         <div style="display: inline-block;">
         @if (userType == "customer")
         {
-            @RenderPage(UrlUtil.LangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+            @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
                 ReviewedID = data[dataPrefix + "UserID"],
                 PositionID = 0,
                 ReviewedData = data,
@@ -82,7 +82,7 @@
         }
         else if (userType == "provider")
         {
-            @RenderPage(UrlUtil.LangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+            @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
                 ReviewedID = data[dataPrefix + "UserID"],
                 PositionID = positionID,
                 ReviewedData = data,

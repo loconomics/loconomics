@@ -441,7 +441,7 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
             <legend>Social media verifications:</legend>
             <ul>
                 <li class="facebook">
-                    @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
+                    @RenderPage(UrlUtil.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
                     @*if (facebookVerification != null)
                     {
                         <div class="verification-details">

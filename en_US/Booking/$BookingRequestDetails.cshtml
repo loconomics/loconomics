@@ -122,7 +122,7 @@ else
         </div>
         }
         <h4>@itsUserLabel profile</h4>
-        @RenderPage(UrlUtil.LangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
             {"Data", itsUserData},
             {"DataPrefix", ""},
@@ -212,4 +212,4 @@ else
         @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
     </div>
 }
-@RenderPage(UrlUtil.LangPath + "HelpCenter/$FAQS.cshtml")
+@RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQS.cshtml")

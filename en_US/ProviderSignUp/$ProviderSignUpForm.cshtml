@@ -224,7 +224,7 @@
         <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)ProviderSignUp/$ProviderSignUpForm/" class="ajax ajax-box">
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
             <div id="provider-sign-up-truste-seal">
-                @RenderPage(UrlUtil.LangPath + "HelpCenter/_TrusteSealWidget.cshtml")
+                @RenderPage(UrlUtil.RenderLangPath + "HelpCenter/_TrusteSealWidget.cshtml")
             </div>
             <ol class="wizard-steps">
                 <li class="step-1">
@@ -234,7 +234,7 @@
                         @if (u == null)
                         {
                         <div class="facebook-connect choice-option">
-                            @RenderPage(UrlUtil.LangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" })
+                            @RenderPage(UrlUtil.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" })
                             <p class="info">By clicking "Connect with Facebook" you confirm that you accept the
                             <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/#termsofuse">Terms of Service</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/#privacypolicy">Privacy Policy</a></p>
                             <p class="footnote">*we don't post anything without your permission</p>
