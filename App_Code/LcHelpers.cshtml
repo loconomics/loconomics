@@ -247,9 +247,9 @@
     }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
-                ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(Request.UrlReferrer.PathAndQuery));
+                ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(UrlUtil.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
             else
-                Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(Request.Url.PathAndQuery));
+                Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(UrlUtil.GetTheGoodURL(Request.Url.PathAndQuery)));
     }
     
     /*========= STRINGS ==============*/

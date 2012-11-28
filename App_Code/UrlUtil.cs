@@ -155,4 +155,15 @@ public static class UrlUtil
             return (HttpContext.Current.Request.IsLocal ? "" : "~") + AppPath;
         }
     }
+
+    public static string GetTheGoodURL(string url)
+    {
+        if (HttpContext.Current.Request.IsLocal)
+            return url;
+        HttpContext context = HttpContext.Current;
+        var i = url.IndexOf(context.Request.ApplicationPath);
+        if (i > -1)
+            return url.Substring(i + context.Request.ApplicationPath.Length);
+        return url;
+    }
 }
