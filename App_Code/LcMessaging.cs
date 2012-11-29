@@ -501,6 +501,8 @@ public class LcMessaging
         if (!data.ContainsKey("RequestKey"))
             data["RequestKey"] = SecurityRequestKey;
 
+        string rtn = "";
+
         using (WebClient w = new WebClient())
         {
             w.Encoding = System.Text.Encoding.UTF8;
@@ -513,7 +515,21 @@ public class LcMessaging
             {
                 completeURL = completeURL.Replace("https:", "http:");
             }
-            return w.DownloadString(completeURL);
+            try
+            {
+                rtn = w.DownloadString(completeURL);
+            }
+            catch (Exception ex)
+            {
+                if (LcHelpers.Channel == "dev")
+                {
+                    throw new Exception(ex.Message + "::" + rtn);
+                }
+                else
+                {
+                    throw new Exception("Email could not be sent");
+                }
+            }
             // Next commented line are test for another tries to get web content processed,
             // can be usefull test if someone have best performance than others, when need.
             //HttpContext.Current.Response.Output = null;
@@ -521,6 +537,8 @@ public class LcMessaging
             //var r = new System.Web.Hosting.SimpleWorkerRequest(tplUrl, "", o);
             //Server.Execute()
         }
+
+        return rtn;
     }
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()

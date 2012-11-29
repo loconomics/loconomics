@@ -34,7 +34,10 @@ public static class UrlUtil
         {
             HttpContext context = HttpContext.Current;
             string url = "";
-            if (HttpContext.Current.Request.IsLocal)
+            // IsLocal doesn't work here: because in hosting for email templates returns true creating bad links
+            // We need this only for development channel
+            //if (HttpContext.Current.Request.IsLocal)
+            if (ASP.LcHelpers.Channel == "dev")
                 url = context.Request.ApplicationPath;
             if (url.EndsWith("/"))
                 return url;
