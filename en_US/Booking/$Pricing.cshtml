@@ -9,6 +9,8 @@
     
     var data = getData(customer, provider, position);
     
+    Session["PriceIsEstimated"] = data.PriceIsEstimated;
+    
     var summary = new LcPricingModel.PricingSummaryData();
     
     Dictionary<string, LcPricingModel.PricingModelData> modelsData = null;
@@ -36,6 +38,9 @@
         // Get our Pricing Type ID:
         int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
         
+        // Define that price selected and payed is estimated or not
+        bool priceIsEstimated = false;
+        
         // Get provider hour price
         var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
         
@@ -56,22 +61,24 @@
             hasSummary = true,
             hasInstructions = true;
         /*
-         * If we need granulated control over what show and what not
-         * independing of database data, we can add exceptions like
-         * next here to avoid some 'elements groups'
-         * /
+         * We need granulated control over what show and what not
+         * independing of database data, we add exceptions
+         * here to avoid some 'elements groups' or configurate
+         * some properties
+         */
         switch (pricingtypeid) {
             // Packages
             case 3:
                 hasVariables = false;
+                priceIsEstimated = false;
                 break;
             // Custom
             case 2:
                 hasPackages = false;
                 hasAddons = false;
+                priceIsEstimated = true;
                 break;
         }
-         */
 
         /*
          * Retrieving data of each group
@@ -150,6 +157,7 @@
             Addons = addons,
             ContainsSummary = hasSummary,
             ContainsInstructions = hasInstructions,
+            PriceIsEstimated = priceIsEstimated,
             Fee = fee,
             PFee = pfee,
             HourPrice = hourPrice,

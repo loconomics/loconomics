@@ -11,22 +11,13 @@
         Request["positionid"].AsInt());
     DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End;
     dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = null;
-    // TODO: get IsEstimate from booking/pricingtype/session
-    bool isEstimate = true;
-    
-    if (p == null || c == null || pos == null){
-        var inputdataerrormessage = "No enought input data to show results";
-        if (Request.IsAjaxRequest()){
-            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
-        }else{
-            throw new Exception(inputdataerrormessage);
-        }
-    }
+
+    bool priceIsEstimated = Session["PriceIsEstimated"] is bool ? (bool)Session["PriceIsEstimated"] : true;
     
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
     bool validBookingSession = false;
-    if (bookingRequestID > 0) {
+    if (p != null && c != null && pos != null && bookingRequestID > 0) {
         try{
             var brdates = ((Dictionary<int, Dictionary<string, DateTime?>>)Session["BookingRequests"])[bookingRequestID];
             dt1Start = brdates["dt1Start"];
@@ -67,7 +58,7 @@
     Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
     
-    if (isEstimate) {
+    if (priceIsEstimated) {
         Validation.RequireField("agree-estimate", "You must agree the pricing estimate");
     }
     Validation.RequireField("agree-cancellation-policy", "You must agree the cancellation policy");
@@ -470,7 +461,7 @@
     </fieldset>
     <fieldset class="agreement">
         <ul>
-            @if (isEstimate)
+            @if (priceIsEstimated)
             {
             <li><input id="agree-estimate" type="checkbox" name="agree-estimate" @LcHelpers.IsChecked("true", Request["agree-estimate"]) value="true" /><label for="agree-estimate"> I understand this pricing is only an estimate and will be confirmed within 18 hrs</label></li>
             }
