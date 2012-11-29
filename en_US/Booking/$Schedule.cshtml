@@ -103,7 +103,7 @@
             }
         }
         
-        if (Request["save-location"] == "true" && Request["save-location-as"].IsEmpty()){
+        if (Request["save-location"] == "true" && String.IsNullOrWhiteSpace(Request["save-location-as"])){
             ModelState.AddError("save-location-as", "To save the location is required a name");
         }
         
@@ -162,10 +162,10 @@
                 // that must be saved:
                 if (locationID == 0) {
                     // User wants to save as 'my location'?
-                    string locationNickName = null;
+                    string locationNickName = "";
                     if (Request["save-location"] == "true" &&
                         !String.IsNullOrWhiteSpace(Request["save-location-as"])) {
-                        locationNickName = Request["save-location-as"];
+                        locationNickName = Request["save-location-as"].Trim();
                     }
                     // Save location as service location
                     locationID = db.QueryValue(LcData.sqlSetServiceAddress,
@@ -228,7 +228,7 @@
                     Address As L
                       ON L.AddressID = SA.AddressID
             WHERE   L.UserId = @0 AND SA.PositionID = @1
-                     AND L.AddressName IS NOT NULL
+                     AND L.AddressName IS NOT NULL AND L.AddressName not like ''
                      AND SA.TravelFromLocation = 1
         ", p.UserID, pos.PositionID);
         // Customer locations
@@ -238,7 +238,7 @@
                 SELECT  DISTINCT L.AddressID, L.AddressName
                 FROM    Address As L
                 WHERE   L.UserId = @0
-                         AND L.AddressName IS NOT NULL
+                         AND L.AddressName IS NOT NULL AND L.AddressName not like ''
             ", c.UserID);
         }
         serviceDurationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
