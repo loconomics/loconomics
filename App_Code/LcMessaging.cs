@@ -508,7 +508,12 @@ public class LcMessaging
             {
                 w.QueryString.Add(d.Key, d.Value.ToString());
             }
-            return w.DownloadString(UrlUtil.SiteUrl + tplUrl);
+            string completeURL = UrlUtil.SiteUrl + tplUrl;
+            if (!LcHelpers.InProduction)
+            {
+                completeURL = completeURL.Replace("https:", "http:");
+            }
+            return w.DownloadString(completeURL);
             // Next commented line are test for another tries to get web content processed,
             // can be usefull test if someone have best performance than others, when need.
             //HttpContext.Current.Response.Output = null;

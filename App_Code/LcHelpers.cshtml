@@ -69,6 +69,20 @@
         else
             return null;
     }
+    
+    /*===========
+     * Application/development channels
+     */
+    public static string Channel{
+        get{
+            return (System.Configuration.ConfigurationManager.AppSettings["Channel"] ?? "dev").ToLower();
+        }
+    }
+    public static bool InProduction{
+        get{
+            return Channel == "production";
+        }
+    }
 }
 @*===============
  * Form Helpers

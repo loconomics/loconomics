@@ -64,15 +64,15 @@
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
         System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
 
-        if (HttpContext.Current.Request.IsSecureConnection == false && 
+        /*if (HttpContext.Current.Request.IsSecureConnection == false && 
             HttpContext.Current.Request.IsLocal == false)
         {
             Response.Redirect("https://" + Request.ServerVariables["HTTP_HOST"]
             + HttpContext.Current.Request.RawUrl);
-        }
+        }*/
         
         
-        // Redirect to subdomains folders
+        /*// Redirect to subdomains folders
         var h = HttpContext.Current.Request.Url.Host;
         // Request.ServerVariables[“SERVER_NAME”]
         var ih = h.IndexOf('.');
@@ -83,7 +83,7 @@
         {
             //Server.Transfer(@"~/" + h + "/", true);
             HttpContext.Current.RewritePath(@"~/" + h + "/");
-        }
+        }*/
         
     }
     void Application_EndRequest(object sender, EventArgs e)
