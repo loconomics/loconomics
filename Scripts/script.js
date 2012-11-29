@@ -591,9 +591,15 @@ LC.setupValidation = function (reapplyOnlyTo) {
         }
     }
 }
-// TODO: look better name, better working
+// TODO: look better name, better working (typo error: is interchangeable not interchangle :-S)
 LC.dateToInterchangleString = function (date) {
-    return date.getUTCFullYear().toString() + '-' + (date.getUTCMonth() + 1).toString() + '-' + date.getUTCDate().toString();
+    var m = (date.getUTCMonth() + 1).toString(),
+        d = date.getUTCDate().toString();
+    if (m.length == 1)
+        m = '0' + m;
+    if (d.length == 1)
+        d = '0' + d;
+    return date.getUTCFullYear().toString() + '-' + m + '-' + d;
 };
 
 // TODO Convert as general function and use everywhere:
