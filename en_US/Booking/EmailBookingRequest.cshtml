@@ -138,17 +138,17 @@ else
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
                 Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
             </a>
-            @if (booking.AlternativeDate1Start is bool || booking.AlternativeDate2Start is bool)
+            @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
             }
-            @if (booking.AlternativeDate1Start is bool)
+            @if (booking.AlternativeDate1Start is DateTime)
             {
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </a>
             }
-            @if (booking.AlternativeDate2Start is bool)
+            @if (booking.AlternativeDate2Start is DateTime)
             {
             <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
                 Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
@@ -180,17 +180,17 @@ else
             <div class="selected-date preferred-date">
                 @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
             </div>
-            @if (booking.AlternativeDate1Start is bool || booking.AlternativeDate2Start is bool)
+            @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
             }
-            @if (booking.AlternativeDate1Start is bool)
+            @if (booking.AlternativeDate1Start is DateTime)
             {
             <div class="selected-date alternative-date alternative-date-1">
                 @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </div>
             }
-            @if (booking.AlternativeDate2Start is bool)
+            @if (booking.AlternativeDate2Start is DateTime)
             {
             <div class="selected-date alternative-date alternative-date-2">
                 @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
