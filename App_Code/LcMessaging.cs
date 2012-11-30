@@ -521,6 +521,12 @@ public class LcMessaging
             }
             catch (Exception ex)
             {
+                string qs = "?";
+                foreach (var v in w.QueryString.AllKeys)
+                {
+                    qs += v + "=" + w.QueryString[v] + "&";
+                }
+                HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, ex);
                 if (LcHelpers.Channel == "dev")
                 {
                     throw new Exception(ex.Message + "::" + rtn);

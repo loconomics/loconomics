@@ -145,7 +145,7 @@ public static class UrlUtil
     {
         get
         {
-            return (HttpContext.Current.Request.IsLocal ? "" : "~") + LangPath;
+            return (ASP.LcHelpers.Channel == "dev" ? "" : "~") + LangPath;
         }
     }
     /// <summary>
@@ -155,7 +155,7 @@ public static class UrlUtil
     {
         get
         {
-            return (HttpContext.Current.Request.IsLocal ? "" : "~") + AppPath;
+            return (ASP.LcHelpers.Channel == "dev" ? "" : "~") + AppPath;
         }
     }
 
