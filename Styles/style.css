@@ -1284,12 +1284,16 @@ table .number{
     font-weight: bold;
     padding: 0;
 }
-.blockUI > article {
+.blockUI > .content > article {
     text-align: left;
 }
 .blockUI.blockMsg {
     overflow: visible !important;
     cursor: inherit !important;
+}
+.blockUI .content {
+    overflow: auto !important;
+    height: 100%;
 }
 .blockUI .close-popup,
 .smooth-box-block-element .close-popup {

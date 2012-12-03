@@ -704,6 +704,7 @@ function popup(url, size, complete, loadingText, options){
         success: function (data) {
             // Add close button if requires it or empty message content to append then more
             $('.blockMsg').html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
+            var contentHolder = $('.blockMsg').append('<div class="content"/>').children('.content');
 
             if (typeof (data) === 'object') {
                 if (data.Code && data.Code == 2) {
@@ -711,12 +712,12 @@ function popup(url, size, complete, loadingText, options){
                     popup(data.Result, { width: 410, height: 320 });
                 } else {
                     // Unexpected code, show result
-                    $('.blockMsg').append(data.Result);
+                    contentHolder.append(data.Result);
                 }
             } else {
                 // Page content got, paste into the popup if is partial html (url starts with$)
                 if (/((^\$)|(\/\$))/.test(url)) {
-                    $('.blockMsg').append(data);
+                    contentHolder.append(data);
                 } else {
                     // Else, if url is a full html page (normal page), put content into an iframe
                     var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
@@ -734,7 +735,7 @@ function popup(url, size, complete, loadingText, options){
                 }
             }
         }, error: function (j, t, ex) {
-            $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div>Page not found</div>');
+            $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div class="content">Page not found</div>');
             if (console && console.info) console.info("Popup-ajax error: " + ex);
         }, complete: complete
     });
