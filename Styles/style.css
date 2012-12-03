@@ -356,9 +356,6 @@ a.icon:hover { background-position: 0 -27px; }
 .replace.icon.facebook { background-position: 0 0; }
 .replace.icon.twitter { background-position: 0 -32px; }
 #site-footer .icon { margin: 0 2px }
-a.cart { padding-top: 25px; border-left: 2px solid #00989a; padding-left: 10px; background-image: url('../img/icon-cart.png'); background-position: 10px 0; }
-a.cart:hover { background-position: 10px -25px; }
-
 
 a.message { background: #E95D0F; color: #fff; }
 a.message:hover, a.message:focus { background: #F0B600; }
