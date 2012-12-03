@@ -73,15 +73,29 @@ Below you can find out if you're within this provider's service radius and/or at
 
         // Map element
         var m = $('#user-addresses-map-position-@pos.PositionID').get(0);
+        
         // Creating position coordinates, from one of the addresses
-        var myLatlng = new google.maps.LatLng(addresses[0].lat, addresses[0].lng);
+        var lat = addresses[0].lat,
+            lng = addresses[0].lng;
+        // Avoid put the map in the limits (array with top-left lat-lng, bottom-right lat-lng):
+        var mapLimits = [ 70, -168, 14, -56 ]; // USA limits
+        if (lat < mapLimits[0]) lat = mapLimits[0];
+        else if (lat > mapLimits[2]) lat = mapLimits[0];
+        if (lng < mapLimits[1]) lng = mapLimits[1];
+        else if (lng > mapLimits[3]) lng = mapLimits[3];
+
+        var myLatlng = new google.maps.LatLng(lat, lng);
+
         // Create map
         var mapOptions = {
-            zoom: (generalZoomLevel),
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
+            zoom: generalZoomLevel,
+            center: myLatlng
+            ,mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
         var map = new google.maps.Map(m, mapOptions);
+
+        @* Testing: google.maps.event.addListener(map, 'click', function (event) { console.info(event.latLng) }); *@
+
         // Create circles per address
         for (var i = 0; i < addresses.length; i++) {                  
             addresses[0].circle = new google.maps.Circle({

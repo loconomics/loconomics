@@ -612,6 +612,7 @@ LC.mapReady = function (ready) {
     var mapIsLoading = LC['_mapIsLoading'] || false;
     var mapCompleteStack = LC['_mapCompleteStack'] || [];
     mapCompleteStack.push(ready);
+    LC['_mapCompleteStack'] = mapCompleteStack;
     if (mapIsReady)
         ready();
     else if (!mapIsLoading) {
@@ -624,9 +625,9 @@ LC.mapReady = function (ready) {
                     LC._mapIsLoading = false;
 
                     for (var i = 0; i < mapCompleteStack.length; i++)
-                        try{
+                        try {
                             mapCompleteStack[i]();
-                        }catch(e){}
+                        } catch (e) { }
                 }
                 });
             }
