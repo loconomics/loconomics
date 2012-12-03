@@ -259,7 +259,7 @@ var TabbedUX = {
             } else
                 mi = ma.parent();
             tabContainer = mi.closest('.tabbed');
-            tab = tabContainer.find('>.tab-body#@0, >.tab-body-list>.tab-body#@0'.replace(/@0/g, ma.attr('href')));
+            tab = tabContainer.find('>.tab-body@0, >.tab-body-list>.tab-body@0'.replace(/@0/g, ma.attr('href')));
         }
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
@@ -607,20 +607,31 @@ LC.dateToInterchangleString = function (date) {
 // map environment is ready (when google maps api and script is 
 // loaded and ready to use, or inmediately if is already loaded).
 LC.mapReady = function (ready) {
+
     var mapIsReady = LC['_mapIsReady'] || false;
+    var mapIsLoading = LC['_mapIsLoading'] || false;
+    var mapCompleteStack = LC['_mapCompleteStack'] || [];
+    mapCompleteStack.push(ready);
     if (mapIsReady)
         ready();
-    else
+    else if (!mapIsLoading) {
+        LC._mapIsLoading = true;
         Modernizr.load({
             load: { googleapi: "https://www.google.com/jsapi" },
             complete: function () {
-                google.load("maps", "3.9", { other_params: "sensor=false", "callback": function () {
+                google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
                     LC._mapIsReady = true;
-                    ready();
+                    LC._mapIsLoading = false;
+
+                    for (var i = 0; i < mapCompleteStack.length; i++)
+                        try{
+                            mapCompleteStack[i]();
+                        }catch(e){}
                 }
                 });
             }
         });
+    }
 };
 
 /* Localization */
@@ -817,8 +828,6 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         // form container: the ajax-box.
 
         var newhtml = $(data);
-        // Reading original scripts tags to be able to execute later
-        var responseScript = newhtml.filter("script");
 
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
         var newForm = newhtml.find('form:eq(0)').get(0);
@@ -843,9 +852,6 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         else
             // box is content that must be replaced by the new content:
             ctx.box.replaceWith(jb);
-
-        // Executing scripts returned by the page
-        jQuery.each(responseScript, function (idx, val) { eval(val.text); });
 
         newhtml.trigger('ajaxFormReturnedHtml');
     }
@@ -1532,8 +1538,7 @@ $(function () {
                 } else {
                     // Post was wrong, html was returned to replace current form:
                     var newhtml = $(data);
-                    // Reading original scripts tags to be able to execute later
-                    var responseScript = newhtml.filter("script");
+
                     // Data not saved:
                     var newForm = newhtml.find('form:eq(0)').get(0);
                     LC.ChangesNotification.registerChange(
@@ -1542,8 +1547,6 @@ $(function () {
                     );
                     // Showing new html:
                     currentStep.html(newhtml);
-                    // Executing scripts returned by the page
-                    jQuery.each(responseScript, function (idx, val) { eval(val.text); });
 
                     currentStep.trigger('reloadedHtmlWizardStep');
                 }
