@@ -1118,13 +1118,13 @@ form#personal li > label.gender {
     padding: 0 0 0 30px;
 }
 .user-verifications  li.license{
-    background-image: url('../img/icon-licenses.png');
+    background-image: url('../img/theme/icon-licenses.png');
 }
 .user-verifications  li.verification{
-    background-image: url('../img/icon-verifications.png');
+    background-image: url('../img/theme/icon-verifications.png');
 }
 .user-verifications  li.share{
-    background-image: url('../img/icon-share-medium.png');
+    background-image: url('../img/theme/icon-share-medium.png');
 }
 .user-verifications li .status{
     color: Red;

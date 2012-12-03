@@ -456,7 +456,7 @@ div.scripts { display: none; }
     top: 0;
     width: 201px;
 }
-.es #site-header #logo.replace { background-image: url('../img/loconomics-logo-espanol.png'); }
+.es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
 #site-header ul li { display: inline-block; vertical-align: top; font-weight: bold; }
 #site-header ul li ul li  {
@@ -874,7 +874,7 @@ form fieldset.actions{
     width: 14px;
     height: 14px;
     padding: 0;
-    background: url('../img/plus.png') no-repeat;
+    background: url('../img/theme/plus.png') no-repeat;
     margin: 2px 5px;
     vertical-align: middle;
     position: static !important;

@@ -4,7 +4,7 @@
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/" + photo)"/></a></li>
+    <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/theme/" + photo)"/></a></li>
 }
 @helper hrefProfile(){
     var p = PageData["item"];
@@ -45,7 +45,7 @@
         </div>
         
         <div class="hightlighted-review">
-            <img alt="Reviewer photo" class="reviewer-photo" src="@Href(UrlUtil.AppPath + "img/generic-friend-avatar.png")"/>
+            <img alt="Reviewer photo" class="reviewer-photo" src="@Href(UrlUtil.AppPath + "img/theme/generic-friend-avatar.png")"/>
             <p>
                 @p.FirstName is really great at what he does. He was pleasant, communica...
                 <a href="#" class="view-more">view more</a>

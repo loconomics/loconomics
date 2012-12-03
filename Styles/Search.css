@@ -234,14 +234,14 @@ ul.search-results table td { padding-right: 16px; }*/
     text-transform: lowercase;
 }
 .search-results-items > li .verifications-summary > li.license{
-    background-image: url('../img/icon-licenses-mini.png');
+    background-image: url('../img/theme/icon-licenses-mini.png');
 }
 .search-results-items > li .verifications-summary > li.verification{
-    background-image: url('../img/icon-verifications-mini.png');
+    background-image: url('../img/theme/icon-verifications-mini.png');
 }
 .search-results-items > li .verifications-summary > li.total-reviews,
 .search-results-items > li .verifications-summary > li.share{
-    background-image: url('../img/icon-share-mini.png');
+    background-image: url('../img/theme/icon-share-mini.png');
 }
 
 .search-results-items > li .social-connections{

@@ -13,7 +13,7 @@ window.log = function f() { log.history = log.history || []; log.history.push(ar
 (function () { try { console.log(); return window.console; } catch (a) { return (window.console = {}); } } ());
 
 /* Generic blockUI options sets */
-var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' };
+var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/theme/loading.gif"/>' };
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
@@ -692,7 +692,7 @@ function popup(url, size, complete, loadingText, options){
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({
        message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
-       '<img src="' + UrlUtil.AppPath + 'img/loading.gif"/>' + loadingText,
+       '<img src="' + UrlUtil.AppPath + 'img/theme/loading.gif"/>' + loadingText,
        centerY: false,
        css: popupStyle(swh),
        overlayCSS: { cursor: 'default' },
