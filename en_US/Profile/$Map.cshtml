@@ -51,6 +51,7 @@ Below you can find out if you're within this provider's service radius and/or at
 </div>
 @if (addresses.Count > 0)
 {
+    var radiusForWorkplaces = .5;
 <script type="text/javascript">
     LC.mapReady( function () {
         // Register if user selects or writes a position (to not overwrite it with automatic positioning)
@@ -61,7 +62,12 @@ Below you can find out if you're within this provider's service radius and/or at
         var addresses = [null
         @foreach (var add in addresses)
         {
-            <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : .5) }</text>
+            <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @(add.TravelFromLocation ? add.ServiceRadiusFromLocation : radiusForWorkplaces), workplace: @(add.TravelFromLocation ? "false" : "true") }</text>
+            if (add.TravelFromLocation && add.ServicesPerformedAtLocation)
+            {
+                // This address is both, radius for travel and work place (service performed at location), add again to js as workplace
+                <text>,{ lat: @add.Latitude, lng: @add.Longitude, radius: @radiusForWorkplaces, workplace: true }</text>
+            }
         }
         ];
 
@@ -98,12 +104,12 @@ Below you can find out if you're within this provider's service radius and/or at
 
         // Create circles per address
         for (var i = 0; i < addresses.length; i++) {                  
-            addresses[0].circle = new google.maps.Circle({
-                center: new google.maps.LatLng(addresses[0].lat, addresses[0].lng),
+            addresses[i].circle = new google.maps.Circle({
+                center: new google.maps.LatLng(addresses[i].lat, addresses[i].lng),
                 map: map,
                 clickable: false,
-                radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[0].radius, radiusUnit) : addresses[0].radius) * 1000, // in meters
-                fillColor: '#00989A',
+                radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[i].radius, radiusUnit) : addresses[i].radius) * 1000, // in meters
+                fillColor: addresses[i].workplace ? '#5F2393' : '#00989A',
                 fillOpacity: .3,
                 strokeWeight: 0
             });
