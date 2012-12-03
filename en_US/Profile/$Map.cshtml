@@ -28,6 +28,7 @@
                  AND L.Latitude is not null
                  AND L.Longitude is not null
                  AND (L.Latitude != 0 OR L.Longitude != 0)
+                 AND (SA.TravelFromLocation = 1 OR SA.ServicesPerformedAtLocation = 1)
     ";
     dynamic addresses = null;
     using (var db = Database.Open("sqlloco")) {
