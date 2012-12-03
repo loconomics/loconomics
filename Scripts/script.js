@@ -743,6 +743,7 @@ function popup(url, size, complete, loadingText, options){
                         }
                     };
                     // replace blocking element content (the loading) with the iframe:
+                    contentHolder.remove();
                     $('.blockMsg').append(iframe);
                 }
             }
