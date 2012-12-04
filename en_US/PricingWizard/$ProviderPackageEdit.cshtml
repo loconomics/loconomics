@@ -264,56 +264,51 @@
             <textarea name="package-description" placeholder="Describe in detail what the client will receive by purchasing this package.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
         </label>
     </fieldset>
-    <fieldset class="package-details">
-        <h5>Services included in this package:</h5>
-        @{
-            var attPrintedCount = 0;
-            if (attributes != null)
-            {
-                <ul class="provider-package-services">
-                @{
-                    foreach (var att in attributes)
-                    {
-                        // Ever filter by EligibleForPackages
-                        // And this loop filter to by UserChecked:
-                        if (att.EligibleForPackages && att.UserChecked)
-                        {
-                            attPrintedCount++;
-                            <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
-                                <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
-                            </li>
-                        }
+
+    @{
+        // Splitting attributes in two blocks, checking if there are something
+        var preCheckedAttributes = new List<dynamic>();
+        var notCheckedAttributes = new List<dynamic>();
+        
+        if (attributes != null) {
+            foreach(var att in attributes) {
+                if (att.EligibleForPackages) {
+                    if (att.UserChecked) {
+                        preCheckedAttributes.Add(att);
+                    } else {
+                        notCheckedAttributes.Add(att);
                     }
                 }
-                </ul>
-                if (attributes.Count > attPrintedCount) {
-                    <a href="#show-more-attributes" class="show-more-attributes" data-hide-text="Show fewer service options">Show more service options</a>
-                    <ul class="provider-package-services services-not-checked">
-                    @{
-                        foreach (var att in attributes)
-                        {
-                            // Ever filter by EligibleForPackages
-                            // And this loop filter to by NOT UserChecked:
-                            if (att.EligibleForPackages && !att.UserChecked)
-                            {
-                                attPrintedCount++;
+            }
+        }
+    }
+    @if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
+    {
+        <fieldset class="package-details">
+            <h5>Services included in this package:</h5>
+            <ul class="provider-package-services">
+            @foreach (var att in (preCheckedAttributes.Count > 0 ? preCheckedAttributes : notCheckedAttributes))
+            {
+                <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
+                    <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
+                </li>
+            }
+            </ul>
+            @if (preCheckedAttributes.Count > 0 && notCheckedAttributes.Count > 0)
+            {
+                <a href="#show-more-attributes" class="show-more-attributes" data-hide-text="Show fewer service options">Show more service options</a>
+                <ul class="provider-package-services services-not-checked">
+
+                @foreach (var att in attributes)
+                {
                                 <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
                                     <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
                                 </li>
-                            }
-                        }
-                    }
-                    </ul>
                 }
+                </ul>
             }
-
-            if (attPrintedCount == 0)
-            {
-                <div class="empty">There are no service options defined for this service.</div>
-            }
-        }
-            
-    </fieldset>
+        </fieldset>
+    }
     <fieldset class="actions">
         <button type="button" class="button cancel-action">Cancel</button>
         <button class="button main-action">Save</button>
