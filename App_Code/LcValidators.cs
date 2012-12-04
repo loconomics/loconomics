@@ -12,13 +12,17 @@ using System.Text.RegularExpressions;
 /// </summary>
 public static class LcValidators
 {
-    public static bool IsEmailAdress(string sEmail){
-            if(sEmail!=""){
-                var sRegex = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-                return sRegex.IsMatch(sEmail) ?true:false ;
-        }else{
-                return false ;
-            }
+    public static bool IsEmailAdress(string sEmail)
+    {
+        if (sEmail != "")
+        {
+            var sRegex = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
+            return sRegex.IsMatch(sEmail) ? true : false;
+        }
+        else
+        {
+            return false;
+        }
     }
     /// <summary>
     /// Read a list of email addresses from emails param, returning
@@ -39,5 +43,10 @@ public static class LcValidators
                 return null;
         }
         return list.Count == 0 ? null : list.ToArray<string>();
+    }
+
+    public static bool IsUrl(string sUrl)
+    {
+        return System.Uri.IsWellFormedUriString(sUrl, UriKind.Absolute);
     }
 }
