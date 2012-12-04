@@ -390,7 +390,6 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
         <legend>Personal data:</legend>
         <ul>
             <li><label>Gender Identity:</label>
-                <label class="gender">Default <input @LcHelpers.IsChecked(@GenderID, null) type="radio" name="gender" value="" /></label>
                 @foreach (var gender in genders)
                 {
                     <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
