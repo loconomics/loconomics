@@ -258,7 +258,7 @@
         genders = db.Query(@"
             SELECT  GenderID, GenderSingular
             FROM    Gender
-            WHERE   LanguageID=@0 AND CountryID=@1
+            WHERE   LanguageID=@0 AND CountryID=@1 AND GenderID > 0
         ", 1, 1);
         /*var sqlGetVerification = @"
             SELECT  LastVerifiedDate,

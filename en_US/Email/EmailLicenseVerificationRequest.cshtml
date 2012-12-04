@@ -14,7 +14,7 @@
     PageData["messageTitle"] = "License Verification Request";
     // Create URL:
     PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
-    
+
     var sqlGetLicenseRequest = @"
         SELECT
             V.ProviderUserID,
