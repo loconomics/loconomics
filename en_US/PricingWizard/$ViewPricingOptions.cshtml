@@ -5,6 +5,7 @@
     var pos = LcData.UserInfo.GetCurrentRequestedUserPos();
     var idprefix = (PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard") + "-options";
     dynamic poptions;
+    var title = PageData["Title"];
     
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Options
@@ -46,16 +47,14 @@
 
 @if (poptions.Count > 0)
 {
+    if (!String.IsNullOrEmpty(title))
+    {
+        <h3>@title</h3>
+    }
     <ul class="pricing-options attributes-list">
         @foreach (var popt in poptions)
         {
             <li>@popt.CustomerPricingOptionDisplayText @(popt.ProviderDataInputValue != null ? "(" + popt.ProviderDataInputValue + ")" : "")</li>
         }
     </ul>
-}
-else
-{
-    <div class="no-pricing-wizard empty">
-        There is not options.
-    </div>
 }
