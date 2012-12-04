@@ -234,7 +234,7 @@
                     COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, MobilePhone, AlternatePhone, Street1, Street2, City,
                  State, zipID, Bio,
-                 String.IsNullOrEmpty(GenderID) ? null : GenderID,
+                 String.IsNullOrEmpty(GenderID) ? -1 : GenderID,
                  IAuthZumigoVerification, IAuthZumigoLocation, SecondLastName,
                  LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
                  (u.IsProvider ? ProfileUrl : null),
