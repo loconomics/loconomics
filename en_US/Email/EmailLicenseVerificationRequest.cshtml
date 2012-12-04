@@ -8,7 +8,7 @@
     var providerID = Request["ProviderUserID"].AsInt();
     var positionID = Request["PositionID"].AsInt();
     var licenseID = Request["LicenseCertificationID"].AsInt();
-    var provider = LcData.UserInfo.GetUserRow(providerID);
+    var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "License Verification Request";
