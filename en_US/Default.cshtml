@@ -30,10 +30,12 @@
         var LC_Cat = serviceCat;
         // Performing search:
         using (var db = Database.Open("sqlloco")) {
-            if (String.IsNullOrEmpty(LC_Term)) {
+            if (categorizedResults) {
+                // By category:
                 var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
                 posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
             } else {
+                // By PositionSingular
                 var searchsql = "EXEC dbo.SearchProvidersByPositionSingular @0,@1,@2";
                 posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term);
             }
@@ -103,7 +105,7 @@
          }
         
         <div class="search-results">
-            @if (categorizedResults)
+            @*if (categorizedResults)
             {
                 // hacking the results to emulate a search
                 var n = 0;
@@ -132,7 +134,7 @@
             </ol>
             }
             else
-            {
+            {*@
             <ol class="search-results-items">
                 @foreach (var item in posrow)
                 {
@@ -141,7 +143,7 @@
                 </li>
                 }
             </ol>
-            }
+            @*}*@
 
         </div>
      }
