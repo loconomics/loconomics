@@ -27,18 +27,18 @@
     var WebsiteUrl = Request["website-url"] ?? u.ProviderWebsiteURL;
 
     // Initializing Validation rules
-    Validation.RequireField("firstname", "First Name is required");
-    Validation.RequireField("lastname", "Last Name is required");
-    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
-    Validation.Add("profile-url", Validator.Regex(@"\w*", "Custom URL has a bad format"));
-    Validation.Add("publicbio", Validator.StringLength(500, 0, "Public Bio must be lower than 500 characters"));
+    Validation.RequireField("firstname", "First name is required");
+    Validation.RequireField("lastname", "Last name is required");
+    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a unique letter"));
+    Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
+    Validation.Add("publicbio", Validator.StringLength(500, 0, "Public bio must be fewer than 500 characters"));
     
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
         if (!Zip.IsEmpty()) {
             zipID = LcData.GetPostalCodeID(Zip, State);
             if (zipID == 0) {
-                ModelState.AddError("zipcode", "Zip code is not valid");
+                ModelState.AddError("zipcode", "Zip code is invalid");
             }
         }
         
@@ -48,7 +48,7 @@
                 WebsiteUrl = "http://" + WebsiteUrl;
             }
             if (!LcValidators.IsUrl(WebsiteUrl)) {
-                ModelState.AddError("website-url", "The Website URL format you entered is invalid");
+                ModelState.AddError("website-url", "The website URL you entered is invalid");
             }
         }
         
@@ -62,7 +62,7 @@
                     WHERE   UserID <> @0
                             AND ProviderProfileURL like @1
                 ", u.UserID, ProfileUrl) > 0) {
-                    ModelState.AddError("profile-url", "We're sorry, that Custom Loconomics URL is not available, choose other.");
+                    ModelState.AddError("profile-url", "We're sorry, that URL is unavailable, please choose other.");
                 }
 
                 if (ModelState.IsValid)

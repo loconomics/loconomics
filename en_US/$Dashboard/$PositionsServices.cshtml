@@ -17,7 +17,7 @@
     var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
     
     if (Validation.GetHtml("position-intro") == null) {
-        Validation.Add("position-intro", Validator.StringLength(400, 0, "Position Introduction must be lower than 400 characters"));
+        Validation.Add("position-intro", Validator.StringLength(400, 0, "Position introduction must be fewer than 400 characters"));
     }
     
     if (IsPost && Validation.IsValid()) {
