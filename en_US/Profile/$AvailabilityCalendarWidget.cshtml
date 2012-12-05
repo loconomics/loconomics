@@ -16,17 +16,56 @@
 
     var sqlGetAvailability = "exec dbo.GetProviderAvailabilityFullSet @0, @1";
     
-    DateTime date = LcHelpers.GetFirstWeekDay(DateTime.Today);
+    DateTime date = DateTime.Today;
     
     if (UrlData.Count > 1 && UrlData[0] == "Week") {
         var sd = UrlData[1];
         if (!string.IsNullOrWhiteSpace(sd)) {
             var sparts = sd.Split('-');
             if (sparts.Length == 3) {
-                date = LcHelpers.GetFirstWeekDay(new DateTime(sparts[0].AsInt(), sparts[1].AsInt(), sparts[2].AsInt()));
+                date = new DateTime(sparts[0].AsInt(), sparts[1].AsInt(), sparts[2].AsInt());
             }
         }
         onlyData = true;
+    }
+    
+    // We want show the week, start with the first date
+    date = LcHelpers.GetFirstWeekDay(date);
+    
+    // If onlyData is true let us know that 'date' is a date specified by user; if not, is current
+    // day automatically, let us try to discover when is the first available date to show that week:
+    if (!onlyData) {
+        using (var db = Database.Open("sqlloco")) {
+            // we limit the loops to avoid never ending code and excesive load time.
+            int loopsLimit = 4, iLoop = 1;
+            bool available = false;
+            DateTime endWeek = date;
+            while (!available) {
+                // endWeek is just the next first week day at 00:00 hours to just get the last week day full hours.
+                endWeek = date.AddDays(7);
+                available = (bool)db.QueryValue(@"
+                    -- Look for almost one timeblock available on the date-range (as opposite to CheckProviderAvailability):
+                    IF EXISTS (SELECT	*
+	                    FROM	dbo.GetProviderAvailabilityByDateRange( @0, Cast(@1 As date), Cast(@2 As date) ) As A
+	                    WHERE	
+			                    CalendarAvailabilityTypeID IN (1, 3) AND -- Is available for booking (free or tentative)
+			                    (   (DateSet + cast(TimeBlock as datetime)) >= @1
+			                    AND (DateSet + cast(TimeBlock as datetime)) < @2
+			                    )
+                    )
+	                    SELECT CAST(1 As bit)
+                    ELSE
+	                    SELECT CAST(0 As bit)
+                    ",
+                    userID, date, endWeek);
+                if (!available) {
+                    date = endWeek;
+                }
+                if (iLoop++ >= loopsLimit){
+                    break;
+                }
+            }
+        }
     }
     
     var availData = PageData["availData"] = new Dictionary<string,int>();
@@ -38,7 +77,7 @@
     
     // Classes for differents calendar availability states
     var stateClasses = new List<string>(){"unavailable", "free", "busy", "tentative"};
-    // states order/id's changed becuase the new sql-proc 'availabilityfullset', unavailable now is zero.
+    // states order/id's changed because the new sql-proc 'availabilityfullset', unavailable now is zero.
     //var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
     
