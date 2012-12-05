@@ -115,7 +115,7 @@ $.fn.reload = function (newurl, onload) {
                 $t.data('isReloading', null);
             });
             if (onload)
-                jq.done(onload);
+                jq.done($.proxy(onload, $t));
             // Mark element as is being reloaded, to avoid multiple attemps at same time, saving
             // current ajax object to allow be cancelled
             jq.url = url;
