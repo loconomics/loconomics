@@ -31,6 +31,7 @@
     Validation.RequireField("lastname", "Last Name is required");
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle Initial must be a unique letter"));
     Validation.Add("profile-url", Validator.Regex(@"\w*", "Custom URL has a bad format"));
+    Validation.Add("publicbio", Validator.StringLength(500, 0, "Public Bio must be lower than 500 characters"));
     
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
