@@ -1,5 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
+    System.Text.StringBuilder log = new System.Text.StringBuilder();
+
     using(var db = Database.Open("sqlloco")){
         /*
          * Checking timeouts booking requests and invalide.
@@ -12,8 +14,17 @@
                         -- is old enought to be considered not active
                         UpdatedDate < dateadd(d, -1, getdate())
             ")){
-            LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
+            try{
+                LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
+            }catch (Exception ex){
+                log.AppendFormat("{0} {1}: Exception {2}\n", DateTime.Now, "Requests Timeout", ex.Message);
+            }
         }
-
-    }   
+    }
+    
+    // Finishing: save log on disk
+    try {
+        System.IO.File.AppendAllText("_ScheduledTaskLog.txt", log.ToString());
+    }catch {
+    }
 }
