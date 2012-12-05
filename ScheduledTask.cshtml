@@ -1,0 +1,19 @@
+﻿@using WebMatrix.Data;
+@{
+    using(var db = Database.Open("sqlloco")){
+        /*
+         * Checking timeouts booking requests and invalide.
+         */
+        foreach (var br in db.Query(@"
+                SELECT  BookingRequestID
+                FROM    BookingRequest
+                WHERE   BookingRequestStatusID = 1 -- created but not completed
+                         AND
+                        -- is old enought to be considered not active
+                        UpdatedDate < dateadd(d, -1, getdate())
+            ")){
+            LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
+        }
+
+    }   
+}
