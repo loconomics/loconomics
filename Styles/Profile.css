@@ -42,14 +42,49 @@
 #profileHeader h1.profile-name {
     width: 486px;
 }
-#profileHeader p.profile-desc
-{
-    width: 600px;
-    margin: auto 20px;
+#profileHeader .profile-desc {
+    line-height: 1.4em;
+    margin: 0 20px;
+    max-height: 86px;
+    overflow: hidden;
+    padding-bottom: 22px;
+    position: relative;
+    width: 487px;
 }
-#profileHeader p.profile-desc{
-    height: 120px;
+#profileHeader .profile-desc p {
+    margin: 0;
+    max-height: 64px;
+    overflow: hidden;
 }
+#profileHeader > .profile-desc:hover {
+    background: none repeat scroll 0 0 white;
+    box-shadow: 0 0 5px 3px #CCCCCC;
+    -o-box-shadow: 0 0 5px 3px #CCCCCC;
+    -moz-box-shadow: 0 0 5px 3px #CCCCCC;
+    -webkit-box-shadow: 0 0 5px 3px #CCCCCC;
+    max-height: none;
+    z-index: 200;
+    padding-bottom: 0;
+}
+#profileHeader > .profile-desc:hover p {
+    max-height: none;
+}
+#profileHeader > .profile-desc .read-more {
+    background: url("../img/theme/plus.png") no-repeat scroll 2px center white;
+    color: black;
+    font-size: 0.8em;
+    margin: 0;
+    padding-left: 18px;
+    padding-right: 2px;
+    position: absolute;
+    right: 3px;
+    text-decoration: none;
+    top: 62px;
+}
+#profileHeader > .profile-desc:hover .read-more {
+    display: none;
+}
+
 #profileHeader .report-action.report-unauthorized-use {
     position: absolute;
     bottom: 10px;

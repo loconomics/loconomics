@@ -90,13 +90,16 @@
             </div>
             <h1 class="profile-name">@printName(u)</h1>
 		    
-		    <p class="profile-desc">
+		    <div class="profile-desc">
+                <p>
                 @if (!String.IsNullOrWhiteSpace(u["PublicBio"])) {
                     @u["PublicBio"]
                 } else {
                   <text></text>
-                  }
-            </p>
+                }
+                </p>
+                <a href="#read-more" class="read-more">read more</a>
+            </div>
         <!--<a href="#report-unauthorized-use" class="report-action report-unauthorized-use" data-reported-userid="@u["UserID"]">report unauthorized use</a> -->
             @*RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })*@
             <aside>
