@@ -208,11 +208,14 @@
     using (var db = Database.Open("sqlloco")) {
         // Provider locations
         providerLocations = db.Query(@"
-            SELECT  DISTINCT L.AddressID, L.AddressName
+            SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType
             FROM    ServiceAddress As SA
                      INNER JOIN
                     Address As L
                       ON L.AddressID = SA.AddressID
+                        INNER JOIN
+                    AddressType As AT
+                        ON L.AddressTypeID = AT.AddressTypeID
             WHERE   L.UserId = @0 AND SA.PositionID = @1
                      AND L.AddressName IS NOT NULL
                      AND SA.ServicesPerformedAtLocation = 1
@@ -388,7 +391,8 @@
                 @if (providerLocations != null && providerLocations.Count > 0) {
                     <optgroup label="Provider perform services at following locations">
                         @foreach (var ploc in providerLocations) {
-                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
+                            // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
+                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressType</option>
                         }
                     </optgroup>
                 }
