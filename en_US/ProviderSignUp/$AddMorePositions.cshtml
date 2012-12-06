@@ -73,7 +73,7 @@
 }
 
     <form method="post" action="@(UrlUtil.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
-        <h4>Add more position to your profile</h4>
+        <h4>Add a position to your profile</h4>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="positions">
             <div class="select-position">
@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="positions-list">
-                <h4>You can add up to @positionsRemaining positions</h4>
+                <h4>You can add up to @positionsRemaining more positions</h4>
                 <ul>
                     <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
                     @if (IsPost && positions != null)
@@ -105,7 +105,7 @@
             </div>
         </fieldset>
         <fieldset class="actions">
-            <button class="main-action">Add positions</button>
+            <button class="main-action">Add position(s)</button>
         </fieldset>
         @LcHelpers.GetValidationScripts()
         @if (IsPost)
