@@ -1,6 +1,8 @@
 ﻿@using WebMatrix.Data;
 @{
     System.Text.StringBuilder log = new System.Text.StringBuilder();
+    log.AppendLine("______________________");
+    log.AppendLine("_LOG DATE " + DateTime.Now.ToString("YYYMMDD") + "___");
 
     using(var db = Database.Open("sqlloco")){
         /*
@@ -24,7 +26,7 @@
     
     // Finishing: save log on disk
     try {
-        System.IO.File.AppendAllText("_ScheduledTaskLog.txt", log.ToString());
+        System.IO.File.AppendAllText(Server.MapPath(UrlUtil.AppPath + "_ScheduledTaskLog.txt"), log.ToString());
     }catch {
     }
 }
