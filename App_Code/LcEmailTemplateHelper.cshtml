@@ -11,22 +11,22 @@
 
 @*=== Elements/tags *@
 @helper StyleH1(string addCss = null) {
-    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
+    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
 }
 @helper StyleH2(string addCss = null) {
-    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
+    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
 }
 @helper StyleH3(string addCss = null) {
-    @PrintStyle("color: #8B2143 !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss)
+    @PrintStyle("color: #5a5b5b !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss)
 }
 @helper StyleH4(string addCss = null) {
-    @PrintStyle("color: #8B2143 !important;line-height:100%;margin:15px 0;font-size:17px;" + addCss)
+    @PrintStyle("color: #5a5b5b !important;line-height:100%;margin:15px 0;font-size:17px;" + addCss)
 }
 @helper StyleH5(string addCss = null) {
-    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
+    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
 }
 @helper StyleH6(string addCss = null) {
-    @PrintStyle("color:#8B2143 !important;line-height:100%;" + addCss)
+    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
 }
 @helper StyleUlOl(bool withListStyle = false, string addCss = null) {
     @PrintStyle((withListStyle ? "list-style-position:inside" : "list-style:none inside none") + ";margin:0;padding:0;" + addCss)
@@ -40,7 +40,7 @@
 @*=== Classes *@
 @functions{
     public static string StyleButton() {
-        return "background:none repeat scroll 0 0 #99C027;border-radius:20px 20px 20px 20px;-o-border-radius:20px 20px 20px 20px;-webkit-border-radius:20px 20px 20px 20px;-moz-border-radius:20px 20px 20px 20px;color:White;padding:.4em 1em;text-transform:lowercase;display:inline-block;text-decoration:none;";
+        return "background:none repeat scroll 0 0 #99C027;border-radius:4px 4px 4px 4px;-o-border-radius:4px 4px 4px 4px;-webkit-border-radius:4px 4px 4px 4px;-moz-border-radius:4px 4px 4px 4px;color:White;padding:.4em 1em;text-transform:lowercase;display:inline-block;text-decoration:none;";
     }
     public static string StyleRespondButton() {
         return StyleButton() + "margin:1em;";
@@ -52,7 +52,7 @@
         return "margin: 15px 0;";
     }
     public static string StyleMessageSection() {
-        return "background: none repeat scroll 0 0 white;border: 1px solid #6C6C6C;border-radius: 15px 15px 15px 15px;padding: 15px;";
+        return "background: none repeat scroll 0 0 white;border: 1px solid #747474;border-radius: 4px 4px 4px 4px;padding: 15px;";
     }
     public static string StyleHighlighted() {
         return "background-color: #9ACECE;";
@@ -64,14 +64,14 @@
         return "clear: both;display: inline-block !important;width: 150px;overflow: hidden;";
     }
     public static string StyleMiniUserInfoH5() {
-        return "font-size: 1em;color: #6c6c6c;display: inline;";
+        return "font-size: 1em;color: #747474;display: inline;";
     }
 
     public static string StyleMiniAvatar() {
         return "display: inline-block;height: 55px;margin: 2px 5px 5px 0;vertical-align: top;width: 55px;";
     }
     public static string StyleRatingNote() {
-        return "font-size: .8em;color: #6c6c6c;font-style: italic;";
+        return "font-size: .8em;color: #747474;font-style: italic;";
     }
 
     public static string StylePricingSummaryTotal() {

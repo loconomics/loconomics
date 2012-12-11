@@ -5,6 +5,7 @@
     var threadID = PageData["threadID"];
     var messageID = PageData["messageID"];
     var messageTitle = PageData["messageTitle"];
+    var messageSubtitle = PageData["messageSubtitle"];
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
         viewOnSiteUrl = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
@@ -60,52 +61,44 @@
             }*@
     </style>
 </head>
-<body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#6c6c6c" yahoo="fix" style="margin:0;padding:0">
-    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#6c6c6c;font-family:Arial,Helvetica,sans-serif;font-size:13px">
+<body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#747474" yahoo="fix" style="margin:0;padding:0">
+    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#747474;font-family:Arial,Helvetica,sans-serif;font-size:13px">
         @***table_layout*@<table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
             @***header*@<tr>
-                <td width="300" style="padding-bottom: 15px">
-		            <h1 style="font-size:1.4em"><a href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+                <td width="420" style="padding: 0">
+		            <h2 @LcEmailTemplateHelper.StyleH2(String.IsNullOrEmpty(messageSubtitle) ? "" : "margin:0;")>@messageTitle</h2>
+                    @if (!String.IsNullOrEmpty(messageSubtitle)) {
+                        <span>@messageSubtitle</span>
+                    }
                 </td>
-                <td width="300" style="padding-bottom: 15px;padding-right: 30px" align="right">
+                <td width="180" style="padding: 0;" align="right">
+                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                     <!--<a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">Click here if this message isn't displaying correctly.</a>-->
                 </td>
             </tr>
-            @***content*@<tr style="padding:0 0 15px 0">
-                <td colspan="2" style="padding:1px 1px 10px 1px">
+            @***content*@<tr style="padding:0 0 0 0">
+                <td colspan="2" style="padding:0 0 30px 0">
                     @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + UrlUtil.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
                         <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
                     </h2>*@
                     <table width="600" style="font-size:13px;border-collapse:collapse">
                         <tr>
-                            <td width="27" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:27px;height:33px;"><img border="none" width="27" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-left-border.png" /></td>
-                            <td width="1%" height="33" nowrap="nowrap" style="padding:0;white-space:nowrap;width:1%;height:33px;" valign="top">
-                                <h2 @LcEmailTemplateHelper.StyleH2("white-space:nowrap;font-size: 12px;font-weight: bold;line-height: 15px;margin:0;padding:0;padding-top:5px;border:solid 2px #00989A;border-width: 2px 0 0 0;vertical-align:top")>@messageTitle</h2>
-                            </td>
-                            <td width="26" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:26px;height:33px;"><img border="none" width="26" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-right-border.png" /></td>
-                            <td width="600" height="33" valign="top" nowrap="nowrap" style="white-space:nowrap;padding:0;width:600px;height:33px;"><div style="border:solid 2px #00989A;border-width: 0 0 2px 0;height:20px;vertical-align:top;">&nbsp;</div></td>
-                            <td width="12" height="33" valign="bottom" nowrap="nowrap" style="white-space:nowrap;padding:0;width:12px;height:33px;"><img border="none" width="12" height="33" style="vertical-align:bottom" src="@(UrlUtil.AppUrl)img/email/tab-row-right-border.png" /></td>
-                        </tr>
-                        <tr>
                             <td colspan="5" style="padding:0">
-                                <table width="600" style="font-size:13px;border:solid 2px #00989A;border-width:0 2px;"><tr><td style="padding:8px 20px;">
+                                <table width="600" style="font-size:13px;border-collapse:collapse"><tr><td style="padding:0;">
                                 @RenderBody()
                                 </td></tr></table>
                             </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" height="12" style="padding:0"><img height="12" width="600" style="vertical-align:bottom" border="none" src="@(UrlUtil.AppUrl)img/email/tab-bottom.png" /></td>
                         </tr>
                     </table>
                 </td>
             </tr>
             @***footer*@<tr height="60" align="center">
                 <td colspan="2">
-                    This message was sent to @emailTo <br />
+                    This message was sent to <a href="mailto:@(emailTo)">@emailTo</a><br />
                     @if (!isNotAUser) {
                     <text>Visit <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
                     }
-                    Please add automated@loconomics.com to your address book to ensure delivery of our emails to your in-box. <br />
+                    Please add automated@loconomics.com to your address book to ensure delivery of our emails. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
                     3150 18th Street, Suite 438, San Francisco, CA 94110 <br />
                     <a href="@(UrlUtil.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@(UrlUtil.LangUrl)About/TermsOfUse/">Terms of Use</a>

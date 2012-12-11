@@ -8,7 +8,7 @@
     var providerID = Request["ProviderUserID"].AsInt();
     var positionID = Request["PositionID"].AsInt();
     var reqatts = Request["RequestedAttributes"];
-    var provider = LcData.UserInfo.GetUserRow(providerID);
+    var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
     var position = LcData.UserInfo.GetUserPos(providerID, positionID);
     
     // Data for the EmailLayout:

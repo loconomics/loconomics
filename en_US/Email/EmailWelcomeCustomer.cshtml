@@ -12,13 +12,13 @@
     var confirmationToken = Request["ConfirmationToken"];
     
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "Welcome";
+    PageData["messageTitle"] = "We’re glad you’re here, " + thisUser.FirstName; //"Welcome";
     // Create URL:
     PageData["viewOnSiteUrl"] = confirmationURL;
 }
 
 <div>
-    <h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>
+    @*<h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>*@
     <p @LcEmailTemplateHelper.StyleResetP()>Welcome to the Loconomics community!</p>
 
     @if (!String.IsNullOrEmpty(confirmationURL))

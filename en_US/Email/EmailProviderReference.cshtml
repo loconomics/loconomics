@@ -5,19 +5,19 @@
     Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Reference";
     
-    var thisUserID = Request["ProviderUserID"].AsInt();
+    var thisUserID = (Request["ProviderUserID"] ?? Request["UserID"]).AsInt();
     var posID = Request["PositionID"].AsInt();
     var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
 
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "Reference";
+    PageData["messageTitle"] = "Hello!";// "Reference";
     // Create URL:
     PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Reviews/ProviderReferenceWelcome/?ProviderUserID=" + thisUserID.ToString() + "&PositionID=" + posID.ToString();
     PageData["isNotAUser"] = true;
 }
 
 <div>
-    <h3 @LcEmailTemplateHelper.StyleH3()>Hello!</h3>
+    @*<h3 @LcEmailTemplateHelper.StyleH3()>Hello!</h3>*@
 
     <div style="margin:20px 0;font-size:1.1em">
         <p @LcEmailTemplateHelper.StyleResetP()>@thisUser.FirstName @thisUser.LastName is building a reputation on Loconomics, a community
