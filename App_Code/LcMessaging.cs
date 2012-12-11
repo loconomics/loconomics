@@ -553,7 +553,7 @@ public class LcMessaging
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
     {
-        if (!HttpContext.Current.Request.IsLocal ||
+        if ((LcHelpers.InProduction && !HttpContext.Current.Request.IsLocal) ||
             HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
