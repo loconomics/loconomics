@@ -3,7 +3,7 @@
     LcMessaging.SecureTemplate();
     
     Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
-    Page.Title = "Welcome to Loconomics.com";
+    Page.Title = "Thanks For Signing Up To Loconomics!";
     
     var thisUserID = Request["UserID"].AsInt();
     var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
@@ -12,7 +12,7 @@
     var confirmationToken = Request["ConfirmationToken"];
     
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "Welcome";
+    PageData["messageTitle"] = "Welcome to a new kind of marketplace";
     
     if (String.IsNullOrEmpty(confirmationURL)) {
         // Create URL:
@@ -23,71 +23,72 @@
 }
 
 <div>
-    <h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>
-    <p @LcEmailTemplateHelper.StyleResetP()>Welcome to the Loconomics community!  Below you’ll find instructions on how to complete 
-    your profile and start marketing your services.</p>
+    <p @LcEmailTemplateHelper.StyleResetP()>Welcome in, @thisUser.FirstName!<br>We’re glad you’re a part of our ever-growing community. Check out the three simple steps below to start your profile off with a bang and begin marketing your services. </p>
 
-    <h4 @LcEmailTemplateHelper.StyleH4()>Step 1:  Activate your profile</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 1: Activate your profile</h4>
     <div>
         <p @LcEmailTemplateHelper.StyleResetP()>
-        To activate your profile, you’ll need to complete a few more things like:
+        This is basic stuff. You need to:
         </p>
         <ul @LcEmailTemplateHelper.StyleUlOl(true)>
-            <li>upload your photo and short descriptions of yourself and your work</li>
-            <li>complete your contact information, tell us when you're available, and verify work eligibility</li>
-            <li>ask for references</li>
+            <li>Upload your photo</li>
+            <li>Write a few descriptions of yourself and your work</li>
+            <li>Fill out basic contact info, tell us when you’re available to work, and verify your work eligibility</li>
+            <li>Ask previous clients for references</li>
+            <li>Verify your account by clicking the green button below:</li>
         </ul>
-    </div>
-
-    <h4 @LcEmailTemplateHelper.StyleH4()>Step 2:  Tell us how you’d like us to pay you</h4>
-    <div>
-        <p @LcEmailTemplateHelper.StyleResetP()>
-        Let’s be honest, that’s why you’re here.  You can be paid in two ways:
-        </p>
-        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
-            <li>direct deposit into your checking or savings account</li>
-            <li>paper check mailed to you (may take longer)</li>
-        </ul>
-    </div>
-
-    <h4 @LcEmailTemplateHelper.StyleH4()>Step 3:  Enhance your profile</h4>
-    <div>
-        <p @LcEmailTemplateHelper.StyleResetP()>This is the fun part where you can differentiate yourself from the competition by:</p>
-        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
-            <li>adding photos of your work </li>
-            <li>completing a background check and license verification (if applicable)</li>
-            <li>connecting your profile to your social media accounts</li>
-            <li>sharing with your profile with current clients, friends, and family</li>
-        </ul>
-    </div>
-
-    <div>
+    	<div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
-        <a href="@PageData["viewOnSiteUrl"]" target="_blank" class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()">Go to my dashboard</a>
+            <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Go to my dashboard</a>
         }
         else
         {
             <a href="@confirmationURL" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Verify my account</a>
-            <div style="font-size:.9em;margin:0 10px 20px;color:#666">
-                <p @LcEmailTemplateHelper.StyleResetP()>Alternatively you can copy and paste the following
-                link into your browser to verify your account: @confirmationURL</p>
-                @if (!String.IsNullOrEmpty(confirmationToken)) {
-                <p @LcEmailTemplateHelper.StyleResetP()>Or go to @(UrlUtil.LangUrl)Account/Confirm/ and input
-                the confirmation code: @confirmationToken </p>
-                }
-            </div>
+        }
+    	</div>
+    </div>
+
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 2: Decide how you want to be paid</h4>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>
+        This is important stuff. You can:
+        </p>
+        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
+            <li>Receive a direct deposit straight into your checking or savings account</li>
+            <li>Opt for a paper check in your mailbox instead. This might take a bit longer.</li>
+        </ul>
+    </div>
+
+    <h4 @LcEmailTemplateHelper.StyleH4()>Step 3: Enhance your profile</h4>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>This is the extra-fun stuff. You can:</p>
+        <ul @LcEmailTemplateHelper.StyleUlOl(true)>
+            <li>Add slick photos of your work</li>
+            <li>Show off your background checks and licenses, if applicable</li>
+            <li>Link to your social media accounts</li>
+            <li>Share your profile with favorite folks: present clients, friends, and family.<br><br></li>
+        </ul>
+    </div>
+
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
+        @if (!String.IsNullOrEmpty(confirmationToken)) {
+        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
+        the confirmation code: @confirmationToken </p>
         }
     </div>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>At your service,<br><br>The Loconomics Team</p>
+    </div>
+
     <h4 @LcEmailTemplateHelper.StyleH4()>Reminders:</h4>
 
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
         <ol @LcEmailTemplateHelper.StyleUlOl(true)>
-            <li>You must complete the steps above for your profile to become active.</li>
-            <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/#termsofuse">here</a> for your reference</li>
-            <li>We’re here to help you and welcome your feedback.  Please e-mail us at
-    providersupport@loconomics.com at any time with questions or comments.</li>
-            <li>Never share your Loconomics password with anyone via email, including us!</li>
+            <li>You have to complete the steps above to successfully activate your profile.</li>
+            <li>We’re always available at providersupport@loconomics.com to help answer any questions or address feedback.</li>
+            <li>Keep your Loconomics password private!</li>
         </ol>
     </div>
 </div>

@@ -24,7 +24,7 @@
     Validation.Add("confirmPassword", 
         Validator.EqualsTo("password", "The new password and confirmation password do not match."));
         
-	Validation.RequireField("iagree", "You must agree the Terms of Use.");
+	Validation.RequireField("iagree", "You must agree to the Terms of Use.");
 
     // Validate the user's captcha answer
     // if (!ReCaptcha.Validate("PRIVATE_KEY")) {

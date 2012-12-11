@@ -3,7 +3,7 @@
     LcMessaging.SecureTemplate();
     
     Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
-    Page.Title = "Welcome to Loconomics.com";
+    Page.Title = "Thanks For Signing Up To Loconomics!";
     
     var thisUserID = Request["UserID"].AsInt();
     var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
@@ -12,28 +12,21 @@
     var confirmationToken = Request["ConfirmationToken"];
     
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "We’re glad you’re here, " + thisUser.FirstName; //"Welcome";
+    PageData["messageTitle"] = "Welcome to a new kind of marketplace";
     // Create URL:
     PageData["viewOnSiteUrl"] = confirmationURL;
 }
 
 <div>
-    @*<h3 @LcEmailTemplateHelper.StyleH3()>We’re glad you’re here, @thisUser.FirstName</h3>*@
-    <p @LcEmailTemplateHelper.StyleResetP()>Welcome to the Loconomics community!</p>
+    @*<h3 @LcEmailTemplateHelper.StyleH3()>Welcome to a new kind of marketplace</h3>*@
+    <p @LcEmailTemplateHelper.StyleResetP()>Welcome in!<br><br></p>
 
     @if (!String.IsNullOrEmpty(confirmationURL))
     {
-    <h4 @LcEmailTemplateHelper.StyleH4()>Activate your account</h4>
     <div>
-        <p @LcEmailTemplateHelper.StyleResetP()>Click on 'Verify my account' to confirm your email!</p>
-        <p>If you have problems with the link or viewing this email, please copy and paste next
-        link on your browser: @confirmationURL</p>
-        @if (!String.IsNullOrEmpty(confirmationToken)) {
-        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
-        the confirmation code: @confirmationToken </p>
-        }
+        <p @LcEmailTemplateHelper.StyleResetP()>We’re glad you’re a part of our ever-growing community. To activate your profile, you'll need to verify your account by clicking the green button below:</p>
     </div>
-    }
+    } 
     <div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
@@ -44,15 +37,26 @@
             <a href="@confirmationURL" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Verify my account</a>
         }
     </div>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>We also welcome you to upload a photo and fill out a short bio on you profile to let service providers know who they're going to be working with. Only service providers you request bookings from will see this information.<br><br></p>
+    </div>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
+        @if (!String.IsNullOrEmpty(confirmationToken)) {
+        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
+        the confirmation code: @confirmationToken </p>
+        }
+    </div>
+    <div>
+        <p @LcEmailTemplateHelper.StyleResetP()>At your service,<br><br>The Loconomics Team</p>
+    </div>
 
     <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
 
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
         <ol @LcEmailTemplateHelper.StyleUlOl(true)>
-            <li>Our Privacy Policy and Terms of Use are located <a href="@(UrlUtil.LangUrl)About/">here</a> for your reference</li>
-            <li>We’re here to help you and welcome your feedback--please e-mail us at
-                support@loconomics.com at any time with questions or feedback.</li>
-            <li>Never share your Loconomics password with anyone via email, including us!</li>
+            <li>We’re always available at support@loconomics.com to help answer any questions or address feedback. </li>
+            <li>Keep your Loconomics password private!</li>
         </ol>
     </div>
 </div>

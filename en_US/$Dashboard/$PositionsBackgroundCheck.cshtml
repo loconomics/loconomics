@@ -10,11 +10,11 @@
     dynamic checks = null;
 
     /*if (Validation.GetHtml("agree") == null) {
-        Validation.RequireField("agree", "You must agree the terms and conditions");
+        Validation.RequireField("agree", "You must agree to the terms and conditions");
     }*/
     // Manual validation of 'agree' field because Validation.RequireField is failing
     if (IsPost && Request["agree"].IsEmpty()){
-        ModelState.AddError("agree", "You must agree the terms and conditions");
+        ModelState.AddError("agree", "You must agree to the terms and conditions");
     }
     
     if (IsPost && ModelState.IsValid) {
