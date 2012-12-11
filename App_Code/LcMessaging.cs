@@ -498,18 +498,22 @@ public class LcMessaging
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
-        if (!data.ContainsKey("RequestKey"))
-            data["RequestKey"] = SecurityRequestKey;
+        /*if (!data.ContainsKey("RequestKey"))
+            data["RequestKey"] = SecurityRequestKey;*/
 
         string rtn = "";
 
         using (WebClient w = new WebClient())
         {
             w.Encoding = System.Text.Encoding.UTF8;
+            if (data != null)
             foreach (var d in data)
             {
                 w.QueryString.Add(d.Key, d.Value.ToString());
             }
+            if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
+                w.QueryString["RequestKey"] = SecurityRequestKey;
+
             string completeURL = UrlUtil.SiteUrl + tplUrl;
             if (!LcHelpers.InProduction)
             {

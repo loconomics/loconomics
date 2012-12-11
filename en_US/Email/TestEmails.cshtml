@@ -1,6 +1,12 @@
 ﻿@{
     LcHelpers.AdminPage();
     
+    if (IsPost) {
+        var url = Request["url"].Replace(UrlUtil.SiteUrl, "");
+        LcMessaging.SendMail(Request["email"], "Testing Email " + url, 
+            LcMessaging.ApplyTemplate(url, null));
+    }
+    
     var list = new Dictionary<string, List<string>>{
         { "EmailWelcomeProvider", new List<string> { 
             "ProviderSignUp/EmailWelcomeProvider?UserID=141&ConfirmationURL=theurl&ConfirmationToken=sometoken&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
@@ -43,5 +49,12 @@
                 </li>
             }
         </ul>
+
+        <form action="" method="post">
+            <h2>Send a testing email:</h2>
+            <input type="text" name="url" placeholder="Email template URL" style="width:80%" />
+            <input type="text" name="email" placeholder="Email to..." style="width:80%" />
+            <input type="submit" value="Send email" style="display:block" />
+        </form>
     </body>
 </html>
