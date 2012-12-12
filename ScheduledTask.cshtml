@@ -4,7 +4,8 @@
     var logger = PageData["Logger"] = new StringBuilder();
     var elapsedTime = DateTime.Now;
 
-    var total = 0;
+    int messages = 0, items = 0;
+    int totalmessages = 0, totalitems = 0;
     using(var db = Database.Open("sqlloco")){
         /*
          * Checking timedouts booking requests and invalide.
@@ -12,7 +13,8 @@
          * If:: A not complete booking request exist without changes from more than 1 day
          * Action:: Set as timedout, invalidating the request and its data
          */
-        total = 0;
+        messages = 0;
+        items = 0;
         foreach (var br in db.Query(@"
                 SELECT  BookingRequestID
                 FROM    BookingRequest
@@ -24,12 +26,16 @@
             try {
                 // RequestStatusID:3:timed out
                 LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
-                total++;
+
+                items++;
+                messages += 2;
             } catch (Exception ex){
                 logEx("Requests Timed-out", ex);
             }
         }
-        log("Total invalidated as TimedOut Booking Requests: {0}", total);
+        log("Total invalidated as TimedOut Booking Requests: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
         
         /*
          * Check:: Booking Request expiration
@@ -37,7 +43,8 @@
          * If:: Request not updated/changed
          * Action:: Set as expired, un-authorize/return money to customer, notify
          */
-        total = 0;
+        messages = 0;
+        items = 0;
         foreach (var br in db.Query(@"
                 SELECT  BookingRequestID
                 FROM    BookingRequest
@@ -54,12 +61,15 @@
                     LcMessaging.SendBookingRequestInvalidation(br.BookingRequestID, 1, 19);
                 }
                 
-                total++;
+                items++;
+                messages += 2;
             } catch (Exception ex){
                 logEx("Requests Expired", ex);
             }
         }
-        log("Total invalidated as Expired Booking Requests: {0}", total);
+        log("Total invalidated as Expired Booking Requests: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
         
         /*
          * Check:: 24H Booking Reminder
@@ -67,7 +77,8 @@
          * If:: Current time is 24 hours before Confirmed Service DateTime
          * Action:: send a booking reminder email
          */
-        total = 0;
+        messages = 0;
+        items = 0;
         foreach (var b in db.Query(@"
                 SELECT  BookingID
                 FROM    Booking As B
@@ -87,55 +98,98 @@
                 // current booking state
                 LcMessaging.SendBookingUpdate(b.BookingID, 's');
 
-                total++;
+                items++;
+                messages += 2;
             } catch (Exception ex){
                 logEx("Booking 24H Reminders", ex);
             }
         }
-        log("Total of Booking 24H Reminders sent: {0}", total);
+        log("Total of Booking 24H Reminders: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
         
         /*
          * Check:: Booking Review Reminder
-         * If:: Confirmated bookings not cancelled
+         * If:: Confirmed bookings not cancelled
+         * If:: User 
          * If:: Current time is 8AM on the day after the Confirmed Service DateTime
          * Action:: send a booking review reminder email
          */
-        total = 0;
+        messages = 0;
+        items = 0;
         foreach (var b in db.Query(@"
-                SELECT  BookingID
-                FROM    Booking As B
+                SELECT  B.BookingID,
+                        CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
+                            WHERE URP.BookingID = B.BookingID
+                                AND
+                                URP.ProviderUserID = R.ProviderUserID
+                                AND 
+                                URP.PositionID = 0
+                        ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByProvider,
+                        CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URC
+                            WHERE URC.BookingID = B.BookingID
+                                AND
+                                URC.CustomerUserID = R.CustomerUserID
+                                AND 
+                                URC.PositionID = R.PositionID
+                        ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByCustomer
+                FROM    BookingRequest As R
+                         INNER JOIN
+                        Booking As B
+                          ON R.BookingRequestID = B.BookingRequestID
                          INNER JOIN
                         CalendarEvents As E
                           ON B.ConfirmedDateID = E.Id
-                WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
+                WHERE   B.BookingStatusID = 1 -- confirmed, not cancelled and not other changes
                          AND
                         -- at 8AM hours
-                        datepart(hh, getdate()) = 8
+                        datepart(hh, getdate()) = 12
                          AND
                         -- of the day after the service
                         Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.EndTime As Date)
             ")){
             try {
+                // We need check that there was not reviews already (why send a reminder for something
+                // already done? just we avoid that!).
+                // If both users did its reviews, nothing to send
+                if (b.ReviewedByProvider && b.ReviewedByCustomer) {
+                    // Next booking
+                    continue;
+                }
+                char messageFor = 
+                    b.ReviewedByProvider ? 'c' : 
+                    b.ReviewedByCustomer ? 'p' : 
+                    'b';
+
                 // Send message
                 // TODO: Send a more specific reminder message, instead a simple copy of
                 // current booking state (that at this moment must show the review button)
-                LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
 
-                total++;
+                items++;
+                if (messageFor == 'c' || messageFor == 'p') {
+                    messages++;
+                } else {
+                    messages+=2;
+                }
             } catch (Exception ex){
                 logEx("Booking Review Reminders", ex);
             }
         }
-        log("Total of Booking Review Reminders sent: {0}", total);
+        log("Total of Booking Review Reminders: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
     }
     
-    log("Elapsed time for this last tasks batch: {0}", DateTime.Now - elapsedTime);
-    
+    log("Elapsed time for this last tasks batch: {0}, for {1} items and {2} messages", DateTime.Now - elapsedTime, totalitems, totalmessages);
+
     // Finishing: save log on disk
     try {
         System.IO.File.AppendAllText(Server.MapPath(UrlUtil.RenderAppPath + "_logs/ScheduledTaskLog.txt"), logger.ToString());
     }catch {
     }
+    
+    // TODO: log file maintenance: daily/weekly? rotation and deletion of very old ones. Careful with total size.
 }
 @functions{
     void log(string format, params object[] pars){

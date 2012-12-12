@@ -298,7 +298,8 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="BookingID"></param>
     /// <param name="bySystemProviderOrCustomer"></param>
-    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer)
+    /// <param name="onlyTo">'p' for provider and 'c' for customer. Will send the email only to that, or 'b' both by default</param>
+    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b')
     {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
@@ -324,22 +325,28 @@ public class LcMessaging
             int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
             int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
 
-            SendMail(provider.Email, "Loconomics.com: Booking Update", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
-                new Dictionary<string, object> {
-                { "BookingID", BookingID }
-                ,{ "UserID", thread.ProviderUserID }
-                ,{ "RequestKey", SecurityRequestKey }
-                ,{ "EmailTo", provider.Email }
-            }));
-            SendMail(customer.Email, "Loconomics.com: Booking Update", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
-                new Dictionary<string, object> {
-                { "BookingID", BookingID }
-                ,{ "UserID", thread.CustomerUserID }
-                ,{ "RequestKey", SecurityRequestKey }
-                ,{ "EmailTo", customer.Email }
-            }));
+            if (onlyTo == 'b' || onlyTo == 'p')
+            {
+                SendMail(provider.Email, "Loconomics.com: Booking Update",
+                    ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                    new Dictionary<string, object> {
+                    { "BookingID", BookingID }
+                    ,{ "UserID", thread.ProviderUserID }
+                    ,{ "RequestKey", SecurityRequestKey }
+                    ,{ "EmailTo", provider.Email }
+                }));
+            }
+            if (onlyTo == 'b' || onlyTo == 'c')
+            {
+                SendMail(customer.Email, "Loconomics.com: Booking Update",
+                    ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                    new Dictionary<string, object> {
+                    { "BookingID", BookingID }
+                    ,{ "UserID", thread.CustomerUserID }
+                    ,{ "RequestKey", SecurityRequestKey }
+                    ,{ "EmailTo", customer.Email }
+                }));
+            }
         }
     }
     #endregion
