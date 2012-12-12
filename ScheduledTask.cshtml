@@ -36,6 +36,7 @@
          * If:: Request not updated/changed
          * Action:: Set as expired, un-authorize/return money to customer, notify
          */
+        total = 0;
         foreach (var br in db.Query(@"
                 SELECT  BookingRequestID
                 FROM    BookingRequest
@@ -57,7 +58,7 @@
                 logEx("Requests Expired", ex);
             }
         }
-        total = 0;
+        log("Total invalidated as Expired Booking Requests: {0}", total);
     }
     
     // Finishing: save log on disk
