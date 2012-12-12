@@ -1,13 +1,14 @@
 ﻿@using WebMatrix.Data;
+@using System.Text;
 @{
-    System.Text.StringBuilder log = new System.Text.StringBuilder();
-    log.AppendLine("______________________");
-    log.AppendLine("_LOG DATE " + DateTime.Now.ToString("YYYMMDD") + "___");
+    var logger = PageData["Logger"] = new StringBuilder();
 
+    var total = 0;
     using(var db = Database.Open("sqlloco")){
         /*
          * Checking timeouts booking requests and invalide.
          */
+        total = 0;
         foreach (var br in db.Query(@"
                 SELECT  BookingRequestID
                 FROM    BookingRequest
@@ -18,15 +19,36 @@
             ")){
             try{
                 LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
+                total++;
             }catch (Exception ex){
-                log.AppendFormat("{0} {1}: Exception {2}\n", DateTime.Now, "Requests Timeout", ex.Message);
+                log("{0} {1}: Exception {2}\n", DateTime.Now, "Requests Timeout", ex.Message);
             }
         }
+        log("Total invalidated as TimedOut Booking Requests: {0}", total);
+        
+        /*
+         * Next task
+         */
+        total = 0;
     }
     
     // Finishing: save log on disk
     try {
-        System.IO.File.AppendAllText(Server.MapPath(UrlUtil.RenderAppPath + "_logs/ScheduledTaskLog.txt"), log.ToString());
+        System.IO.File.AppendAllText(Server.MapPath(UrlUtil.RenderAppPath + "_logs/ScheduledTaskLog.txt"), logger.ToString());
     }catch {
     }
+}
+@functions{
+    void log(string format, params object[] pars){
+        StringBuilder logger = PageData["Logger"];
+        // Universal date-time, following ISO8601 format with Z identifier at the end
+        logger.AppendFormat("{0:s}Z ", DateTime.Now.ToUniversalTime());
+        logger.AppendFormat(format, pars);
+        logger.Append("\n");
+    }
+}
+@if (!LcHelpers.InProduction)
+{
+    Response.ContentType = "text/plain";
+    @logger.ToString()
 }

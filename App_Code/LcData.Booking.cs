@@ -695,10 +695,10 @@ public static partial class LcData
                 var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
 
                 // Get booking request TransactionID
-                string tranID = db.QueryValue(sqlGetTransactionID, BookingRequestID);
+                string tranID = N.DE(db.QueryValue(sqlGetTransactionID, BookingRequestID));
 
                 // if there is a valid transactionID -or is not a virtual testing id-, do the refund
-                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:"))
+                if (tranID != null && !tranID.StartsWith("TEST:"))
                 {
                     string result = null;
                     // Different calls for total and partial refunds
