@@ -46,7 +46,12 @@
             ")){
             try {
                 // RequestStatusID:6:expired
-                LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 6);
+                var result = LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 6);
+                if (result.Error == 0) {
+                    // Send message
+                    LcMessaging.SendBookingRequestInvalidation(br.BookingRequestID, 1, 19);
+                }
+                
                 total++;
             } catch (Exception ex){
                 logEx("Requests Expired", ex);

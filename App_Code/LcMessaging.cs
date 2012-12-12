@@ -239,6 +239,19 @@ public class LcMessaging
     }
     public static void SendBookingRequestDenegation(int BookingRequestID, bool sentByProvider)
     {
+        // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
+        SendBookingRequestInvalidation(BookingRequestID, 2, sentByProvider ? 13 : 14);
+    }
+    /// <summary>
+    /// Send and update of booking request that terminate it as 'invalid', normally after
+    /// a LcData.Booking.InvalidateBookingRequest.
+    /// Booking Request should had changed to some 'invalide' status, as 'cancelled', 'declined' or 'expired'
+    /// </summary>
+    /// <param name="BookingRequestID"></param>
+    /// <param name="threadStatusID">1 for unresponded, 2 for responded</param>
+    /// <param name="messageTypeID">Recommended types: 13 (provider declined), 14 (customer cancelled), 19 (booking updated)</param>
+    public static void SendBookingRequestInvalidation(int BookingRequestID, int threadStatusID, int messageTypeID)
+    {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
         {
@@ -257,8 +270,8 @@ public class LcMessaging
             // Create message body based on detailed booking data
             string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
 
-            // ThreadStatus=2, responded; MessageType=13-14 Booking Request denegation: 14 cancelled by customer, 13 declined by provider
-            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 13 : 14, message, BookingRequestID, "BookingRequest");
+            // ThreadStatus=2, responded;
+            int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, BookingRequestID, "BookingRequest");
 
             SendMail(provider.Email, "Loconomics.com: Booking Request", 
                 ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
