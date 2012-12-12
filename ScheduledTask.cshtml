@@ -113,7 +113,7 @@
                         datepart(hh, getdate()) = 8
                          AND
                         -- of the day after the service
-                        Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.StartTime As Date)
+                        Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.EndTime As Date)
             ")){
             try {
                 // Send message
