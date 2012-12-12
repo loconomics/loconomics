@@ -93,6 +93,40 @@
             }
         }
         log("Total of Booking 24H Reminders sent: {0}", total);
+        
+        /*
+         * Check:: Booking Review Reminder
+         * If:: Confirmated bookings not cancelled
+         * If:: Current time is 8AM on the day after the Confirmed Service DateTime
+         * Action:: send a booking review reminder email
+         */
+        total = 0;
+        foreach (var b in db.Query(@"
+                SELECT  BookingID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
+                         AND
+                        -- at 8AM hours
+                        datepart(hh, getdate()) = 11
+                         AND
+                        -- of the day after the service
+                        Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.StartTime As Date)
+            ")){
+            try {
+                // Send message
+                // TODO: Send a more specific reminder message, instead a simple copy of
+                // current booking state (that at this moment must show the review button)
+                LcMessaging.SendBookingUpdate(b.BookingID, 's');
+
+                total++;
+            } catch (Exception ex){
+                logEx("Booking Review Reminders", ex);
+            }
+        }
+        log("Total of Booking Review Reminders sent: {0}", total);
     }
     
     log("Elapsed time for this last tasks batch: {0}", DateTime.Now - elapsedTime);
