@@ -8,7 +8,6 @@
     int totalmessages = 0, totalitems = 0;
     using(var db = Database.Open("sqlloco")){
         /*
-         * Checking timedouts booking requests and invalide.
          * Check:: Booking Request timed out
          * If:: A not complete booking request exist without changes from more than 1 day
          * Action:: Set as timedout, invalidating the request and its data
