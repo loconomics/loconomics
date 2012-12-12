@@ -42,7 +42,7 @@
                 WHERE   BookingRequestStatusID = 2 -- request created and completed, without provider answer
                          AND
                         -- passed 18 hours from request or some change (some provider communication or customer change)
-                        UpdatedDate < dateadd(h, -18, getdate())
+                        UpdatedDate < dateadd(hh, -18, getdate())
             ")){
             try {
                 // RequestStatusID:6:expired
