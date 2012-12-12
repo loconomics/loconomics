@@ -161,4 +161,20 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+    /// <summary>
+    /// Submit to settlement a transaction to be full charged its authorized
+    /// amount.
+    /// </summary>
+    /// <param name="transactionID"></param>
+    /// <returns></returns>
+    public static string SettleTransaction(string transactionID)
+    {
+        Result<Transaction> r = null;
+
+        var gateway = NewBraintreeGateway();
+
+        r = gateway.Transaction.SubmitForSettlement(transactionID);
+
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
 }

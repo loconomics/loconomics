@@ -594,6 +594,13 @@ public static partial class LcData
         #endregion
 
         #region Actions on bookings, modifications
+        #region SQLs
+        public const string sqlGetTransactionIDFromBookingRequest = @"
+            SELECT  PaymentTransactionID
+            FROM    BookingRequest
+            WHERE   BookingRequestID = @0
+        ";
+        #endregion
         /// <summary>
         /// Invalide a Booking Request setting it as 'cancelled', 'declined',
         /// or 'expired', preserving the main data but removing some unneded
@@ -622,11 +629,6 @@ public static partial class LcData
                     BookingRequestStatusID));
             }
 
-            var sqlGetTransactionID = @"
-                SELECT  PaymentTransactionID
-                FROM    BookingRequest
-                WHERE   BookingRequestID = @0
-            ";
             var sqlInvalidateBookingRequest = @"
                 -- Parameters
                 DECLARE @BookingRequestID int, @BookingRequestStatusID int
@@ -695,7 +697,7 @@ public static partial class LcData
                 var refund = GetCancellationAmountsForBookingRequest(BookingRequestID, BookingRequestStatusID, db);
 
                 // Get booking request TransactionID
-                string tranID = N.DE(db.QueryValue(sqlGetTransactionID, BookingRequestID));
+                string tranID = N.DE(db.QueryValue(sqlGetTransactionIDFromBookingRequest, BookingRequestID));
 
                 // if there is a valid transactionID -or is not a virtual testing id-, do the refund
                 if (tranID != null && !tranID.StartsWith("TEST:"))

@@ -143,6 +143,21 @@
                     throw new HttpException(500, "Error confirming the booking request: " + result.ErrorMessage);
                 }
             }
+            
+            // Charge total amount of booking request to the customer (Submit to settlement the transaction)
+            // Get booking request TransactionID
+            string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
+            string paymentError = LcPayment.SettleTransaction(tranID);
+            if (paymentError != null) {
+                paymentError = "Booking was confirmed but some kind of problem happen when checking payment data, please contact support and provide next error information: " + paymentError;
+                if (Request.IsAjaxRequest()) {
+                    // Return JSON result:
+                    LcHelpers.ReturnJsonError(-99, paymentError);
+                } else {
+                    throw new HttpException(500, paymentError);
+                }
+            }
+
         } else {
             if (Request.IsAjaxRequest()){
                 /* What? 
