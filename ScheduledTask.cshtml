@@ -2,6 +2,7 @@
 @using System.Text;
 @{
     var logger = PageData["Logger"] = new StringBuilder();
+    var elapsedTime = DateTime.Now;
 
     var total = 0;
     using(var db = Database.Open("sqlloco")){
@@ -60,6 +61,8 @@
         }
         log("Total invalidated as Expired Booking Requests: {0}", total);
     }
+    
+    log("Elapsed time for this last tasks batch: {0}", DateTime.Now - elapsedTime);
     
     // Finishing: save log on disk
     try {
