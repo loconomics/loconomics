@@ -60,6 +60,39 @@
             }
         }
         log("Total invalidated as Expired Booking Requests: {0}", total);
+        
+        /*
+         * Check:: 24H Booking Reminder
+         * If:: Confirmated bookings not cancelled
+         * If:: Current time is 24 hours before Confirmed Service DateTime
+         * Action:: send a booking reminder email
+         */
+        total = 0;
+        foreach (var b in db.Query(@"
+                SELECT  BookingID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
+                         AND
+                        -- at 24 hours from request (between 25 and 24 hours)
+                        getdate() > dateadd(hh, -25, E.StartTime)
+                         AND
+                        getdate() <= dateadd(hh, -24, E.StartTime)
+            ")){
+            try {
+                // Send message
+                // TODO: Send a more specific reminder message, instead a simple copy of
+                // current booking state
+                LcMessaging.SendBookingUpdate(b.BookingID, 's');
+
+                total++;
+            } catch (Exception ex){
+                logEx("Booking 24H Reminders", ex);
+            }
+        }
+        log("Total of Booking 24H Reminders sent: {0}", total);
     }
     
     log("Elapsed time for this last tasks batch: {0}", DateTime.Now - elapsedTime);
