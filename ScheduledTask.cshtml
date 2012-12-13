@@ -218,9 +218,9 @@
                         )
                          AND
                         -- at 1 Week=168 hours, after service ended (between 168 and 169 hours)
-                        getdate() > dateadd(hh, 168, E.EndTime)
+                        getdate() >= dateadd(hh, 168, E.EndTime)
                          AND
-                        getdate() <= dateadd(hh, 169, E.EndTime)
+                        getdate() < dateadd(hh, 169, E.EndTime)
             ")){
             try {
                 // We need check that there was not reviews already (why send a reminder for something
@@ -255,16 +255,18 @@
         totalmessages += messages;
         
         /*
-         * Check:: 48H passed from Service => Provider Payment Request
-         * If:: Confirmated bookings not cancelled
+         * Check:: Service Performed: 48H passed from Service
+         * If:: Confirmated bookings only, not cancelled, not set as performed, complete or dispute
          * If:: Current time is 48 hours after Confirmed Service EndTime
-         * Action:: send a reminder to Loconomics Stuff Users requesting manual payment to provider
-         * Non-action:: set booking status as 'performed' and send email to provider and customer: this
-         * must be done by a Loconomics Stuff User after do the payment.
+         * Action:: set booking status as 'performed without pricing adjustment',
+         *          send a message to Loconomics Stuff Users requesting manual payment to provider,
+         *          and a message to customer and provider notifying that booking is set as 'performed'.
          */
         messages = 0;
         items = 0;
-        foreach (var b in db.Query(@"
+        {
+            // Get bookings affected by conditions
+            var sqlGet = @"
                 SELECT  BookingID
                 FROM    Booking As B
                          INNER JOIN
@@ -273,25 +275,40 @@
                 WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
                          AND
                         -- at 48 hours after service ended (between 48 and 49 hours)
-                        getdate() > dateadd(hh, 48, E.EndTime)
+                        getdate() >= dateadd(hh, 48, E.EndTime)
                          AND
-                        getdate() <= dateadd(hh, 49, E.EndTime)
-            ")){
-            try {
-                // Send message
-                // TODO: Implement some kind of automatic payment, set status to 'performed' and send specific
-                // email to provider and customer.
-                // RIGHT NOW is not possible do it automatically, notify Loconomics Staff Users requesting 
-                // the manual payment and other tasks:
-                LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
+                        getdate() < dateadd(hh, 49, E.EndTime)
+            ";
+            var bookings = db.Query(sqlGet);
+            // Update bookings affected by conditions to 
+            // StatusID:2, performed without pricing adjustment.
+            // We do this operation as a unique SQL operation because is faster than performs
+            // it per booking in the loop.
+            db.Execute(@"
+                UPDATE  Booking
+                SET     BookingStatusID = 2
+                WHERE   BookingID IN (
+            " + sqlGet + 
+            " ) ");
+            
+            foreach (var b in bookings){
+                try {               
+                    // Send messages
+                    // Notify Loconomics Staff Users requesting 
+                    // the manual payment and other tasks:
+                    LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
+                    
+                    // Notify customer and provider with an updated booking details:
+                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
 
-                items++;
-                messages += 2;
-            } catch (Exception ex){
-                logEx("Booking 48H Payment Request", ex);
+                    items++;
+                    messages += 3;
+                } catch (Exception ex){
+                    logEx("Booking 48H Service Performed", ex);
+                }
             }
         }
-        log("Total of Booking 48H Payment Requests: {0}, messages sent: {1}", items, messages);
+        log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
     }
