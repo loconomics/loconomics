@@ -108,9 +108,9 @@
         totalmessages += messages;
         
         /*
-         * Check:: Booking Review Reminder
+         * Check:: Booking Review Reminder Next 8AM
          * If:: Confirmed bookings not cancelled
-         * If:: User 
+         * If:: User did not the review still
          * If:: Current time is 8AM on the day after the Confirmed Service EndTime
          * Action:: send a booking review reminder email
          */
@@ -172,10 +172,85 @@
                     messages+=2;
                 }
             } catch (Exception ex){
-                logEx("Booking Review Reminders", ex);
+                logEx("Booking Review Reminders Next 8AM", ex);
             }
         }
-        log("Total of Booking Review Reminders: {0}, messages sent: {1}", items, messages);
+        log("Total of Booking Review Reminders Next 8AM: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
+        
+        /*
+         * Check:: Booking Review Reminder 1W
+         * If:: Confirmed bookings not cancelled, non stoped manully, maybe is set as performed already
+         * If:: User did not the review still
+         * If:: Past 1 Week from service
+         * Action:: send a booking review reminder email
+         */
+        messages = 0;
+        items = 0;
+        foreach (var b in db.Query(@"
+                SELECT  B.BookingID,
+                        CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
+                            WHERE URP.BookingID = B.BookingID
+                                AND
+                                URP.ProviderUserID = R.ProviderUserID
+                                AND 
+                                URP.PositionID = 0
+                        ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByProvider,
+                        CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URC
+                            WHERE URC.BookingID = B.BookingID
+                                AND
+                                URC.CustomerUserID = R.CustomerUserID
+                                AND 
+                                URC.PositionID = R.PositionID
+                        ) = 0 THEN 0 ELSE 1 END As bit) As ReviewedByCustomer
+                FROM    BookingRequest As R
+                         INNER JOIN
+                        Booking As B
+                          ON R.BookingRequestID = B.BookingRequestID
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                WHERE   B.BookingStatusID IN (
+                            1 -- confirmed, not cancelled and not other changes
+                            ,2, 3 -- service performed, with or without pricing adjustment
+                            ,4 -- completed, service and payment done
+                        )
+                         AND
+                        -- at 1 Week=168 hours, after service ended (between 168 and 169 hours)
+                        getdate() > dateadd(hh, 168, E.EndTime)
+                         AND
+                        getdate() <= dateadd(hh, 169, E.EndTime)
+            ")){
+            try {
+                // We need check that there was not reviews already (why send a reminder for something
+                // already done? just we avoid that!).
+                // If both users did its reviews, nothing to send
+                if (b.ReviewedByProvider && b.ReviewedByCustomer) {
+                    // Next booking
+                    continue;
+                }
+                char messageFor = 
+                    b.ReviewedByProvider ? 'c' : 
+                    b.ReviewedByCustomer ? 'p' : 
+                    'b';
+
+                // Send message
+                // TODO: Send a more specific reminder message, instead a simple copy of
+                // current booking state (that at this moment must show the review button)
+                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
+
+                items++;
+                if (messageFor == 'c' || messageFor == 'p') {
+                    messages++;
+                } else {
+                    messages+=2;
+                }
+            } catch (Exception ex){
+                logEx("Booking Review Reminders 1W", ex);
+            }
+        }
+        log("Total of Booking Review Reminders 1W: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
