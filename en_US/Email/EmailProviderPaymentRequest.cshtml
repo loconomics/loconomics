@@ -45,8 +45,15 @@
                 <li><strong>Booking - PricingEstimateID:</strong> @booking.PricingEstimateID</li>
                 <li><strong>Pricing - ServiceDuration:</strong> @booking.ServiceDuration</li>
                 <li><strong>Pricing - SubtotalPrice:</strong> @booking.SubtotalPrice.ToString("c")</li>
-                <li><strong>Pricing - FeePrice:</strong> @booking.FeePrice.ToString("c")</li>
-                <li><strong>Pricing - TotalPrice:</strong> @booking.TotalPrice.ToString("c")</li>
+                <li><strong>Pricing - FeePrice (customer fees):</strong> @booking.FeePrice.ToString("c")</li>
+                <li><strong>Pricing - PFeePrice (provider fees):</strong> @booking.PFeePrice.ToString("c")</li>
+                <li><strong>Pricing - TotalPrice for Customer (subtotal + feeprice):</strong> @booking.TotalPrice.ToString("c")</li>
+                <li><strong>Pricing - Total Price for Provider (subtotal - pfeeprice):</strong> @(((booking.SubtotalPrice ?? 0) - (booking.PFeePrice ?? 0)).ToString("c"))</li>
+                <li><strong>Refund - Date:</strong> @booking.DateRefunded</li>
+                <li><strong>Refund - SubtotalRefunded:</strong> @booking.SubtotalRefunded</li>
+                <li><strong>Refund - FeeRefunded:</strong> @booking.FeeRefunded</li>
+                <li><strong>Refund - TotalRefunded:</strong> @booking.TotalRefunded</li>
+                <li style="color:Red"><strong>Total to pay Provider (subtotalprice - pfeeprice - subtotalrefunded)</strong> @(((booking.SubtotalPrice ?? 0) - (booking.PFeePrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</li>
             }
         </ul>
     </div>

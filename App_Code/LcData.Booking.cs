@@ -201,7 +201,8 @@ public static partial class LcData
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
-                        P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice,
+                        P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice, P.PFeePrice,
+                        P.FeeRefunded, P.SubtotalRefunded, P.TotalRefunded, P.DateRefunded,
 
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
                             WHERE URP.BookingID = B.BookingID
