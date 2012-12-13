@@ -10,16 +10,17 @@
     var booking = LcData.Booking.GetBookingForUser(bookingID, 0, true);
 
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "Provider Payment Request (Service done)";
+    PageData["messageTitle"] = "Provider Payment Request (Service performed)";
     // Create URL:
     PageData["viewOnSiteUrl"] = "";
 }
 <div>
-    <p>The automatted task found a service ended 48 hours ago with no dispute,
+    <p>The automatted task found a service ended 48 hours ago with no dispute
+        and was set as 'performed without pricing adjustment',
         it's time to perform the payment to the provider.
     </p>
     <p>
-        <strong>Remember</strong>, after the payment, set Booking Status to 'Performed' and send
+        <strong>Remember</strong>, after the payment, set Booking Status to 'Complete' and send
         the informative email to provider and customer. This can be done from 
         Admin Dashboard.
     </p>
@@ -29,7 +30,7 @@
         <p>Please, enter the Admin Dashboard to double check the data before do the payment and <strong>to see
             the real amount to pay to the provider</strong>, following is the total prices from booking,
             without discount the payment processing fees. 
-        </p><p>Enter the provider payment preferences to know how do the payment, and if Bank Account is provided,
+        </p><p>Go the provider payment preferences to know how do the payment, and if Bank Account is provided,
             enter to Braintree control panel to see the full bank account number.</p>
         <ul>
             <li><strong>BookingID:</strong> @bookingID</li>
