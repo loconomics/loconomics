@@ -667,7 +667,8 @@ public static partial class LcData
                             PreferredDateID = null,
                             AlternativeDate1ID = null,
                             AlternativeDate2ID = null,
-                            AddressID = null
+                            AddressID = null,
+                            UpdatedDate = getdate()
                     WHERE   BookingRequestID = @BookingRequestID
 
                     -- Removing Service Address, if is not an user saved location (it has not AddressName)

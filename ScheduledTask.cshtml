@@ -27,7 +27,6 @@
                 LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 3);
 
                 items++;
-                messages += 2;
             } catch (Exception ex){
                 logEx("Requests Timed-out", ex);
             }
@@ -287,6 +286,7 @@
             db.Execute(@"
                 UPDATE  Booking
                 SET     BookingStatusID = 2
+                        ,UpdatedDate = getdate()
                 WHERE   BookingID IN (
             " + sqlGet + 
             " ) ");
