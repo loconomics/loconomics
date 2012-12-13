@@ -70,7 +70,12 @@ public static partial class LcData
                             
                                 -- Personal data
                                 ,PublicBio
-                                ,GenderID
+                                ,A.GenderID
+                                ,GenderSingular
+                                ,GenderPlural
+                                ,SubjectPronoun
+                                ,ObjectPronoun
+                                ,PossesivePronoun
 
                                 -- Some preferences
                                 ,PreferredLanguageID
@@ -82,6 +87,11 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
+                                 INNER JOIN
+                                Gender As G
+                                  ON G.GenderID = A.GenderID
+                                  	AND G.LanguageID = A.PreferredLanguageID  
+                                  	AND G.CountryID = A.PreferredCountryID                                         
                             WHERE A.UserID = @0
                         ";
                     u = db.QuerySingle(sqluser, userId);
@@ -148,8 +158,13 @@ public static partial class LcData
 
                                 -- Personal data
                                 ,PublicBio
-                                ,GenderID
-                            
+                                ,A.GenderID
+                                ,GenderSingular
+                                ,GenderPlural
+                                ,SubjectPronoun
+                                ,ObjectPronoun
+                                ,PossesivePronoun
+                                                            
                                 -- Some preferences
                                 ,PreferredLanguageID
                                 ,PreferredCountryID
@@ -160,6 +175,11 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
+                                 INNER JOIN
+                                Gender As G
+                                  ON G.GenderID = A.GenderID
+                                  	AND G.LanguageID = A.PreferredLanguageID  
+                                  	AND G.CountryID = A.PreferredCountryID                                
                                  LEFT JOIN
                                 Address As L
                                   ON L.UserID = A.UserID

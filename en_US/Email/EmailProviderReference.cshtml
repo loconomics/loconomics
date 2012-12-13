@@ -8,6 +8,7 @@
     var thisUserID = (Request["ProviderUserID"] ?? Request["UserID"]).AsInt();
     var posID = Request["PositionID"].AsInt();
     var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
+    var posInfo = LcData.UserInfo.GetUserPos(thisUserID, posID);
 
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Hello!";// "Reference";
@@ -17,19 +18,16 @@
 }
 
 <div>
-    @*<h3 @LcEmailTemplateHelper.StyleH3()>Hello!</h3>*@
-
     <div style="margin:20px 0;font-size:1.1em">
-        <p @LcEmailTemplateHelper.StyleResetP()>@thisUser.FirstName @thisUser.LastName is building a reputation on Loconomics, a community
-            marketplace for local services built on trust and reviews. @thisUser.FirstName has indicated
-            you as a past customer and is asking you to provide a reference to display publicly on
-            @thisUser.FirstName's Loconomics profile that will help @thisUser.FirstName:</p>
-        <ul @LcEmailTemplateHelper.StyleUlOl(true, "margin:8px 4px;")>
-            <li>build a reputation within the community</li>
-            <li>attract new customers</li>
-        </ul>
-        <p style="margin:15px 0">Let @thisUser.FirstName know if you have any questions.</p>
-        <p style="margin:10px 0">Your help is appreciated!</p>
+        <p @LcEmailTemplateHelper.StyleResetP()>Hi there!<br><br>@thisUser.FirstName @thisUser.LastName is building up @thisUser.PossesivePronoun business and reputation 
+        as a @posInfo.PositionSingular on Loconomics, an online community focused on connecting local, independent businesspeople with potential clients. @thisUser.FirstName is hoping that as a 
+        past customer you could help @thisUser.ObjectPronoun get into gear with a reference. @thisUser.FirstName will use your recommendation on @thisUser.PossesivePronoun Loconomics 
+        page to build @thisUser.PossesivePronoun stellar reputation and attract new customers.<br><br>
+		Let @thisUser.FirstName know if you have any questions, or if you’d prefer, shoot us an email at support@loconomics.com.<br><br>
+		Your thought and help are both greatly appreciated!<br><br>
+		At your service,<br><br>
+		The Loconomics team		
+		</p>
     </div>
     <div>
         <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Write @thisUser.FirstName a reference</a>
