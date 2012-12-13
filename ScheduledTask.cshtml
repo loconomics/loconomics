@@ -73,7 +73,7 @@
         /*
          * Check:: 24H Booking Reminder
          * If:: Confirmated bookings not cancelled
-         * If:: Current time is 24 hours before Confirmed Service DateTime
+         * If:: Current time is 24 hours before Confirmed Service StarTime
          * Action:: send a booking reminder email
          */
         messages = 0;
@@ -86,7 +86,7 @@
                           ON B.ConfirmedDateID = E.Id
                 WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
                          AND
-                        -- at 24 hours from request (between 25 and 24 hours)
+                        -- at 24 hours before service starts (between 25 and 24 hours)
                         getdate() > dateadd(hh, -25, E.StartTime)
                          AND
                         getdate() <= dateadd(hh, -24, E.StartTime)
@@ -111,7 +111,7 @@
          * Check:: Booking Review Reminder
          * If:: Confirmed bookings not cancelled
          * If:: User 
-         * If:: Current time is 8AM on the day after the Confirmed Service DateTime
+         * If:: Current time is 8AM on the day after the Confirmed Service EndTime
          * Action:: send a booking review reminder email
          */
         messages = 0;
@@ -142,7 +142,7 @@
                 WHERE   B.BookingStatusID = 1 -- confirmed, not cancelled and not other changes
                          AND
                         -- at 8AM hours
-                        datepart(hh, getdate()) = 12
+                        datepart(hh, getdate()) = 8
                          AND
                         -- of the day after the service
                         Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.EndTime As Date)
@@ -176,6 +176,47 @@
             }
         }
         log("Total of Booking Review Reminders: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
+        
+        /*
+         * Check:: 48H passed from Service => Provider Payment Request
+         * If:: Confirmated bookings not cancelled
+         * If:: Current time is 48 hours after Confirmed Service EndTime
+         * Action:: send a reminder to Loconomics Stuff Users requesting manual payment to provider
+         * Non-action:: set booking status as 'performed' and send email to provider and customer: this
+         * must be done by a Loconomics Stuff User after do the payment.
+         */
+        messages = 0;
+        items = 0;
+        foreach (var b in db.Query(@"
+                SELECT  BookingID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
+                         AND
+                        -- at 48 hours after service ended (between 48 and 49 hours)
+                        getdate() > dateadd(hh, 48, E.EndTime)
+                         AND
+                        getdate() <= dateadd(hh, 49, E.EndTime)
+            ")){
+            try {
+                // Send message
+                // TODO: Implement some kind of automatic payment, set status to 'performed' and send specific
+                // email to provider and customer.
+                // RIGHT NOW is not possible do it automatically, notify Loconomics Staff Users requesting 
+                // the manual payment and other tasks:
+                LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
+
+                items++;
+                messages += 2;
+            } catch (Exception ex){
+                logEx("Booking 48H Payment Request", ex);
+            }
+        }
+        log("Total of Booking 48H Payment Requests: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
     }

@@ -1,0 +1,52 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Provider Payment Request";
+
+    var bookingID = Request["BookingID"].AsInt();
+    
+    var booking = LcData.Booking.GetBookingForUser(bookingID, 0, true);
+
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Provider Payment Request (Service done)";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = "";
+}
+<div>
+    <p>The automatted task found a service ended 48 hours ago with no dispute,
+        it's time to perform the payment to the provider.
+    </p>
+    <p>
+        <strong>Remember</strong>, after the payment, set Booking Status to 'Performed' and send
+        the informative email to provider and customer. This can be done from 
+        Admin Dashboard.
+    </p>
+
+    <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+        <h2>Relevant booking data</h2>
+        <p>Please, enter the Admin Dashboard to double check the data before do the payment and <strong>to see
+            the real amount to pay to the provider</strong>, following is the total prices from booking,
+            without discount the payment processing fees. 
+        </p><p>Enter the provider payment preferences to know how do the payment, and if Bank Account is provided,
+            enter to Braintree control panel to see the full bank account number.</p>
+        <ul>
+            <li><strong>BookingID:</strong> @bookingID</li>
+            @if (booking != null)
+            {
+                <li><strong>Booking - ProviderUserID:</strong> @booking.ProviderUserID</li>
+                <li><strong>Booking - Service StartTime:</strong> @booking.ConfirmedDateStart</li>
+                <li><strong>Booking - Service EndTime:</strong> @booking.ConfirmedDateEnd</li>
+                <li><strong>Booking - PaymentDate:</strong> @booking.PaymentDate</li>
+                <li><strong>Booking - PaymentProviderAccountLastDigits:</strong> @booking.PaymentProviderAccountLastDigits</li>
+
+                <li><strong>Booking - PricingEstimateID:</strong> @booking.PricingEstimateID</li>
+                <li><strong>Pricing - ServiceDuration:</strong> @booking.ServiceDuration</li>
+                <li><strong>Pricing - SubtotalPrice:</strong> @booking.SubtotalPrice.ToString("c")</li>
+                <li><strong>Pricing - FeePrice:</strong> @booking.FeePrice.ToString("c")</li>
+                <li><strong>Pricing - TotalPrice:</strong> @booking.TotalPrice.ToString("c")</li>
+            }
+        </ul>
+    </div>
+</div>

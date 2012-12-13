@@ -515,6 +515,18 @@ public class LcMessaging
     }
     #endregion
 
+    #region Type:Request provider payment to Loconomics Stuff Users
+    public static void SendProviderPaymentRequestToLoconomics(int bookingID)
+    {
+        SendMail("support@loconomics.com", "Provider Payment Request",
+            ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderPaymentRequest/",
+            new Dictionary<string,object> {
+                { "BookingID", bookingID },
+                { "EmailTo", "support@loconomics.com" }
+         }));
+    }
+    #endregion
+
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
