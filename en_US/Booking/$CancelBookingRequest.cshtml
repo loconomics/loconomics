@@ -22,8 +22,14 @@
             var result = LcData.Booking.InvalidateBookingRequest(brID, 4); // 4:Cancelled
 
             if (result.Error == 0) {
-                // Send message
+                // Send message, to provider and customer copy
                 LcMessaging.SendBookingRequestDenegation(brID, false);
+                /* TODO If in the future can be cancelled a booking request by customer,
+                 * implement payment message for bookingRequest too (now only confirmed bookings)
+                // To system: notify Loconomics Staff Users requesting 
+                // the manual payment to provider by price less refunded:
+                LcMessaging.SendProviderPaymentRequestToLoconomics(bID);
+                 */
                 
                 if (Request.IsAjaxRequest()){
                     LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(

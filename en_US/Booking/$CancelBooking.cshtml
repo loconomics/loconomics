@@ -24,9 +24,12 @@
             var result = LcData.Booking.InvalidateBooking(bID, 6); // 6:Cancelled
 
             if (result.Error == 0) {
-                // Send message
+                // Send message: to notify provider and customer copy
                 LcMessaging.SendBookingUpdate(bID, 'c');
-                
+                // To system: notify Loconomics Staff Users requesting 
+                // the manual payment to provider by the price less refunded:
+                LcMessaging.SendProviderPaymentRequestToLoconomics(bID);
+
                 if (Request.IsAjaxRequest()){
                     LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
                         "Booking/$BookingDetails/?BookingID={0}", bID ));
