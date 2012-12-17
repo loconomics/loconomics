@@ -40,19 +40,19 @@
                     statusTitle = "Booking request from {0}";
                     break;
                 case 4: // cancelled by customer
-                    statusTitle = "Booking request cancelled by {0}";
+                    statusTitle = "Cancelled booking confirmation";
                     break;
                 case 5: // denied by provider
-                    statusTitle = "Declined booking request from {0}";
+                    statusTitle = "Declined booking request";
                     break;
                 case 6: // expired (not answered by provider in time)
-                    statusTitle = "Expired booking request from {0}";
+                    statusTitle = "Expired booking request";
                     break;
                 case 7: // accepted by provider (you must consider view the booking details!)
-                    statusTitle = "Accepted booking request from {0}";
+                    statusTitle = "Confirmed booking request";
                     break;
                 case 8: // denied with alternatives
-                    statusTitle = "Declined with alternatives booking request from {0}";
+                    statusTitle = "Declined booking request";
                     break;
             }
             break;
@@ -67,19 +67,19 @@
                     statusTitle = "Waiting for {0} to confirm request";
                     break;
                 case 4: // cancelled by customer
-                    statusTitle = "Booking request for {0} cancelled by me";
+                    statusTitle = "{0} cancelled their booking";
                     break;
                 case 5: // denied by provider
-                    statusTitle = "Declined booking request by {0}";
+                    statusTitle = "Declined booking request";
                     break;
                 case 6: // expired (not answered by provider in time)
-                    statusTitle = "Expired booking request for {0}";
+                    statusTitle = "Expired booking request";
                     break;
                 case 7: // accepted by provider (you must consider view the booking details!)
-                    statusTitle = "Accepted booking request for {0}";
+                    statusTitle = "Confirmed booking request";
                     break;
                 case 8: // denied with alternatives
-                    statusTitle = "Declined with alternatives booking request by {0}";
+                    statusTitle = "Declined booking request";
                     break;
             }
             break;
@@ -91,7 +91,7 @@
 @if (booking == null)
 {
     <div class="booking-request main-side">
-        Sorry, it could not be found the requested Booking Request.
+        Sorry, we could not find the requested booking.  
     </div>
 }
 else
@@ -132,11 +132,11 @@ else
         })
 
         @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer") {
-        <h4>Requested booking times</h4>
+        <h4>Requested booking time(s)</h4>
         <div class="requested-booking-times message-section">
             <p class="info">
             @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
-            the following times for you to provide the service. Please confirm one of these times 
+            the following time(s) for you to provide the service. Please confirm a time 
             <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
             to accept this booking.
             </p>
@@ -146,7 +146,7 @@ else
             </button>
             @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
-            <h5>Alternate times:</h5>
+            <h5>Alternate time(s):</h5>
             }
             @if (booking.AlternativeDate1Start is DateTime)
             {
@@ -168,18 +168,18 @@ else
         }
         else if (booking.PreferredDateStart != null)
         {
-        <h4>Requested booking times</h4>
+        <h4>Requested booking time(s)</h4>
         <div class="requested-booking-times message-section">
             <p class="info">
             @if (itsUserType == "customer")
             {
-                <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
-                the following times for you to provide the service.</text>
+                <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked your @booking.PositionSingular services and chosen
+                the following time(s) for you to provide the service:</text>
             }
             else
             {
-                <text>You have booked to @LcHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
-                the following times for it to provide the service.</text>
+                <text>You have booked @LcHelpers.GetUserDisplayName(itsUserData)'s @booking.PositionSingular services and chosen
+                the following time(s) for the service:</text>
             }
             </p>
             <h5>Preferred time:</h5>
@@ -188,7 +188,7 @@ else
             </div>
             @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
-            <h5>Alternate times:</h5>
+            <h5>Alternate time(s):</h5>
             }
             @if (booking.AlternativeDate1Start is DateTime)
             {
@@ -205,11 +205,10 @@ else
         </div>
         }
 
-        <h4>Booing details</h4>
+        <h4>Booking details</h4>
         @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
 
         <h4>Reminders</h4>
         @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
     </div>
 }
-@RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQS.cshtml")

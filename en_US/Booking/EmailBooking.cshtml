@@ -43,51 +43,51 @@
     string getTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
         var statusTitle = "Booking involving {0}. Unknown status";
         switch (itsUserType) {
-            case "customer":
-                statusTitle = "Booking from {0}. Unknown status";
-                switch ((int)booking.BookingStatusID) {
-                    case 1: // confirmed
-                        statusTitle = "Confirmed booking from {0}";
-                        break;
-                    case 2: // service performed no pricing adjustment
-                        statusTitle = "Service performed to {0}";
-                        break;
-                    case 3: // service performed pricing adjustment
-                        statusTitle = "Service performed to {0} with pricing adjustment";
-                        break;
-                    case 4: // service performed and paid full
-                        statusTitle = "Service paid by {0}";
-                        break;
-                    case 5: // service dispute
-                        statusTitle = "Service dispute with {0}";
-                        break;
-                    case 6: // cancelled by customer
-                        statusTitle = "Booking cancelled by {0}";
-                        break;
-                }
-                break;
-            case "provider":
-                statusTitle = "Booking to {0}. Unknown status";
-                switch ((int)booking.BookingStatusID) {
-                    case 1: // confirmed
-                        statusTitle = "Confirmed booking to {0}";
-                        break;
-                    case 2: // service performed no pricing adjustment
-                        statusTitle = "Service performed by {0}";
-                        break;
-                    case 3: // service performed pricing adjustment
-                        statusTitle = "Service performed by {0} with pricing adjustment";
-                        break;
-                    case 4: // service performed and paid full
-                        statusTitle = "Service paid to {0}";
-                        break;
-                    case 5: // service dispute
-                        statusTitle = "Service dispute with {0}";
-                        break;
-                    case 6: // cancelled by customer
-                        statusTitle = "Booking with {0} cancelled by me";
-                        break;
-                }
+			case "customer":
+				statusTitle = "Booking from {0}. Unknown status";
+				switch ((int)booking.BookingStatusID) {
+					case 1: // confirmed
+						statusTitle = "Confirmed booking from {0}";
+						break;
+					case 2: // service performed no pricing adjustment
+						statusTitle = "Service performed by {0}";
+						break;
+					case 3: // service performed pricing adjustment
+						statusTitle = "Service performed by {0} with pricing adjustment";
+						break;
+					case 4: // service performed and paid full
+						statusTitle = "Service completed by {0}";
+						break;
+					case 5: // service dispute
+						statusTitle = "Service dispute with {0}";
+						break;
+					case 6: // cancelled by customer
+						statusTitle = "Booking cancelled by {0}";
+						break;
+				}
+				break;
+			case "provider":
+				statusTitle = "Booking to {0}. Unknown status";
+				switch ((int)booking.BookingStatusID) {
+					case 1: // confirmed
+						statusTitle = "Confirmed booking for {0}";
+						break;
+					case 2: // service performed no pricing adjustment
+						statusTitle = "Service performed by {0}";
+						break;
+					case 3: // service performed pricing adjustment
+						statusTitle = "Service performed by {0} with pricing adjustment";
+						break;
+					case 4: // service performed and paid full
+						statusTitle = "Service completed by {0}";
+						break;
+					case 5: // service dispute
+						statusTitle = "Service dispute with {0}";
+						break;
+					case 6: // cancelled by customer
+						statusTitle = "Booking with {0} cancelled by me";
+						break;
+				}
                 break;
         }
         return String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData));
@@ -107,7 +107,7 @@
 @if (booking == null)
 {
     <div>
-        Sorry, it could not be found the requested Booking.
+        You have no bookings. Book one today!
     </div>
 }
 else
@@ -141,20 +141,20 @@ else
     <div style="float: right;">
         @if (myUserType == "customer") {
             <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
-                @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
+                @(booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
             </a>
             if (booking.ReviewedByProvider == true) {
             <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
-                View provider revision
+                View provider review
             </a>
             }
         } else if (myUserType == "provider") {
             <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
-                @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
+                @(booking.ReviewedByProvider == true ? "View my review" : "Review customer")
             </a>
             if (booking.ReviewedByCustomer == true) {
             <a class="respond" style="@LcEmailTemplateHelper.StyleRespondButton()" href="@PageData["viewOnSiteUrl"]" target="_blank">
-                View customer revision
+                View customer review
             </a>
             }
         }
@@ -200,9 +200,6 @@ else
                 {"zipcode", booking.PostalCode}
             })
 
-            @*<div>
-            (x minutes driving time, y minutes walk)
-            </div>*@
             <a target="_blank" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
         </div>
         }

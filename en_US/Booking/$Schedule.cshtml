@@ -14,7 +14,7 @@
     }
 
     if (p == null || c == null || pos == null){
-        var inputdataerrormessage = "No enought input data to show results";
+        var inputdataerrormessage = "This user has not been rated yet";
         if (IsPost){
             LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
         }else{
@@ -23,7 +23,7 @@
     }
    
     /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
-    Validation.RequireField("first-date", "Must specify almost a first choice");
+    Validation.RequireField("first-date", "You must specify a first choice");
     Validation.Add("select-location", Validator.Integer("Invalid selected location"));
 
     // Check if is a valid booking process (session not expired or error at first step)
@@ -48,18 +48,18 @@
     if (IsPost) {
         dt1Start = LcHelpers.CreateDateTime(Request["first-date"], Request["first-start-time"]);
         if (!dt1Start.HasValue) {
-            ModelState.AddFormError("First choice Date and Time are not correct");
+            ModelState.AddFormError("The first choice you've selected is unavailable, please select another");
         }
         if (!Request["second-date"].IsEmpty()) {
             dt2Start = LcHelpers.CreateDateTime(Request["second-date"], Request["second-start-time"]);
             if (!dt2Start.HasValue) {
-                ModelState.AddFormError("Second choice Date and Time are not correct");
+                ModelState.AddFormError("The second choice you've selected is unavailable, please select another");
             }
         }
         if (!Request["third-date"].IsEmpty()) {
             dt3Start = LcHelpers.CreateDateTime(Request["third-date"], Request["third-start-time"]);
             if (!dt3Start.HasValue) {
-                ModelState.AddFormError("Third choice Date and Time are not correct");
+                ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
             }
         }
         decimal durationHours = getServiceDurationHours(null, bookingRequestID, p.UserID);
@@ -93,18 +93,18 @@
                 ModelState.AddError("state", "The state is required");
             }
             if (Request["zip"].IsEmpty()) {
-                ModelState.AddError("zip", "The Zip Code is required");
+                ModelState.AddError("zip", "The zip code is required");
             } else if (!Request["zip"].IsInt()) {
-                ModelState.AddError("zip", "The Zip Code must be a number");
+                ModelState.AddError("zip", "The zip code must only contain numbers");
             }
             zipcodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
             if (zipcodeID == 0) {
-                ModelState.AddError("tin_zipcode", "Zip code is not valid");
+                ModelState.AddError("tin_zipcode", "The zip code does not exist in the state you've entered");
             }
         }
         
         if (Request["save-location"] == "true" && String.IsNullOrWhiteSpace(Request["save-location-as"])){
-            ModelState.AddError("save-location-as", "To save the location is required a name");
+            ModelState.AddError("save-location-as", "Please input a name for this location to save it");
         }
         
         if (ModelState.IsValid) {
@@ -114,17 +114,17 @@
 
                 if (dt1Start.HasValue) {
                     if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
-                        ModelState.AddFormError("The provider is not availaible for the First Choice Date and Time");
+                        ModelState.AddFormError("The first choice you've selected is unavailable, please select another");
                     }
                 }
                 if (dt2Start.HasValue) {
                     if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
-                        ModelState.AddFormError("The provider is not availaible for the Second Choice Date and Time");
+                        ModelState.AddFormError("The second choice you've selected is unavailable, please select another");
                     }
                 }
                 if (dt3Start.HasValue) {
                     if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
-                        ModelState.AddFormError("The provider is not availaible for the Third Choice Date and Time");
+                        ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
                     }
                 }
             }

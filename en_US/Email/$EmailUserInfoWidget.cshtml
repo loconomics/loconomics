@@ -48,8 +48,7 @@
         @if (withContactData) {
             <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
                 <div>Name: <span>@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
-                <div>Address: <span>@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
-                <div>@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</div>
+                <div>Address: <span>@LcHelpers.JoinNotEmptyStrings(", ", data[dataPrefix + "City"], @data[dataPrefix + "StateProvinceCode"], @data[dataPrefix + "PostalCode"])</span></div>
                 <div>Mobile phone: <span>@data[dataPrefix + "MobilePhone"]</span></div>
                 <div>Email address: <span>@data[dataPrefix + "Email"]</span></div>
             </div>
@@ -63,7 +62,7 @@
                 @data[dataPrefix + "PublicBio"]
             } else {
                 <text></text>
-                @*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lorem turpis, volutpat id adipiscing placerat, convallis sit amet orci. Donec quis enim nunc. Etiam iaculis porttitor sodales. Ut vel nisl vel augue cursus viverra vitae sed lectus. Nunc varius vehicula felis, in tincidunt lorem venenatis*@
+              
             }
         </p>
         }
@@ -106,5 +105,5 @@ else if (size == "mini") {
         }
     </div>
 } else {
-    <strong>User Info Widget: option not implemented!</strong>
+    <strong> </strong>
 }

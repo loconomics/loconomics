@@ -44,7 +44,7 @@
                 break;
                 default:
                     <text>
-                    Total to be payed on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                    Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
                     </text>
                 break;
             }
@@ -91,11 +91,8 @@
         {
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location and contact information:</h5>
         <div>
-            @*<p>
-            x.y miles away (z1 minutes driving time, z2 minutes public tranport)
-            </p>*@
             <p>
-            Full location and contact information will be shown after you accept a time above.
+            Full location and contact information will be shown after the appointment is confirmed.
             </p>
         </div>
         }

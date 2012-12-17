@@ -50,13 +50,13 @@
                     statusTitle = "Confirmed booking from {0}";
                     break;
                 case 2: // service performed no pricing adjustment
-                    statusTitle = "Service performed to {0}";
+                    statusTitle = "Service performed by {0}";
                     break;
                 case 3: // service performed pricing adjustment
-                    statusTitle = "Service performed to {0} with pricing adjustment";
+                    statusTitle = "Service performed by {0} with pricing adjustment";
                     break;
                 case 4: // service performed and paid full
-                    statusTitle = "Service paid by {0}";
+                    statusTitle = "Service completed by {0}";
                     break;
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
@@ -70,7 +70,7 @@
             statusTitle = "Booking to {0}. Unknown status";
             switch ((int)booking.BookingStatusID) {
                 case 1: // confirmed
-                    statusTitle = "Confirmed booking to {0}";
+                    statusTitle = "Confirmed booking for {0}";
                     break;
                 case 2: // service performed no pricing adjustment
                     statusTitle = "Service performed by {0}";
@@ -79,7 +79,7 @@
                     statusTitle = "Service performed by {0} with pricing adjustment";
                     break;
                 case 4: // service performed and paid full
-                    statusTitle = "Service paid to {0}";
+                    statusTitle = "Service completed by {0}";
                     break;
                 case 5: // service dispute
                     statusTitle = "Service dispute with {0}";
@@ -109,7 +109,7 @@
 @if (booking == null)
 {
     <div class="booking main-side">
-        Sorry, it could not be found the requested Booking.
+        You have no bookings. Book one today!
     </div>
 }
 else
@@ -140,24 +140,24 @@ else
             if (myUserType == "customer")
             {
                 <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
-                    @(booking.ReviewedByCustomer == true ? "View my revision" : "Review provider")
+                    @(booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
                 </button>
                 if (booking.ReviewedByProvider == true)
                 {
                 <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
-                    View provider revision
+                    View provider review
                 </button>
                 }
             }
             else if (myUserType == "provider")
             {
                 <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
-                    @(booking.ReviewedByProvider == true ? "View my revision" : "Review customer")
+                    @(booking.ReviewedByProvider == true ? "View my review" : "Review client")
                 </button>
                 if (booking.ReviewedByCustomer == true)
                 {
                 <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
-                    View customer revision
+                    View customer review
                 </button>
                 }
             }
@@ -170,12 +170,12 @@ else
             <button class="button item-action booking-action button-cancel-booking" type="button" data-booking-id="@booking.BookingID" data-booking-request-id="@booking.BookingRequestID" data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
             <div class="popups">
                 <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
-                    If you continue cancelling this booking, next cancellation policy will be applied:
+                    If you wish to cancel this booking, the following cancellation policy will apply:
 
                     @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
                     @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
 
-                    <strong>Are you sure do you want cancel this booking?</strong>
+                    <strong>Are you sure you want cancel this booking?</strong>
                     <div class="actions">
                         <a href="#confirm-no" class="cancel-action">No</a>
                         <a href="#confirm-yes" class="main-action">Yes</a>
@@ -199,7 +199,7 @@ else
 
     <h4>Booking time and location</h4>
     <div class="booking-time-location message-section">
-        <h5>Position: </h5>
+        <h5>Services: </h5>
         <span class="position">@booking.PositionSingular</span>
 
         <h5>Scheduled time: </h5>
@@ -225,17 +225,14 @@ else
                 {"zipcode", booking.PostalCode}
             }, false)
 
-            <div class="time-estimation">
-            (x minutes driving time, y minutes walk)
-            </div>
-            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View direction</a>
+            <a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View directions</a>
             @printGoogleMap(getLocationForGoogleMaps(booking))
         </div>
         }
         else
         {
             // Null, no location
-            <div>Address not available</div>
+            <div>Please contact your provider for location details.</div>
         }
     </div>
 
@@ -246,4 +243,3 @@ else
     @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
 </div>
 }
-@RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQS.cshtml")
