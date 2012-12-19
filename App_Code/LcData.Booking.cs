@@ -358,7 +358,6 @@ public static partial class LcData
                         ,sum(P.SubtotalPrice) As SubtotalPrice
                         ,sum(P.FeePrice) As FeePrice
                         ,sum(P.TotalPrice) As TotalPrice
-                        ,sum(P.PFeePrice) As PFeePrice
                 FROM
                     PricingEstimateDetail As P
                 WHERE   p.PricingEstimateID = @0
@@ -405,7 +404,6 @@ public static partial class LcData
                     s.SubtotalPrice = g.SubtotalPrice;
                     s.FeePrice = g.FeePrice;
                     s.TotalPrice = g.TotalPrice;
-                    s.PFeePrice = g.PFeePrice;
                     pricingSummaryGroups.Add(g.InternalGroupName, s);
                 }
             return pricingSummaryGroups;
