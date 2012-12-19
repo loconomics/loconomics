@@ -291,7 +291,8 @@ public static partial class LcData
                         coalesce(P.HourlyPrice, 0) As HourlyPrice,
                         coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
                         coalesce(P.FeePrice, 0) As FeePrice,
-                        coalesce(P.TotalPrice, 0) As TotalPrice
+                        coalesce(P.TotalPrice, 0) As TotalPrice,
+                        coalesce(P.PFeePrice, 0) As PFeePrice
                 FROM    BookingRequest As R
                          INNER JOIN
                         PricingEstimate As P
@@ -338,6 +339,7 @@ public static partial class LcData
             pricingSummary.SubtotalPrice = summaryData.SubtotalPrice;
             pricingSummary.FeePrice = summaryData.FeePrice;
             pricingSummary.TotalPrice = summaryData.TotalPrice;
+            pricingSummary.PFeePrice = summaryData.PFeePrice;
             return pricingSummary;
         }
         public static dynamic GetPricingDetailsGroups(int PricingEstimateID)
@@ -356,6 +358,7 @@ public static partial class LcData
                         ,sum(P.SubtotalPrice) As SubtotalPrice
                         ,sum(P.FeePrice) As FeePrice
                         ,sum(P.TotalPrice) As TotalPrice
+                        ,sum(P.PFeePrice) As PFeePrice
                 FROM
                     PricingEstimateDetail As P
                 WHERE   p.PricingEstimateID = @0
@@ -402,6 +405,7 @@ public static partial class LcData
                     s.SubtotalPrice = g.SubtotalPrice;
                     s.FeePrice = g.FeePrice;
                     s.TotalPrice = g.TotalPrice;
+                    s.PFeePrice = g.PFeePrice;
                     pricingSummaryGroups.Add(g.InternalGroupName, s);
                 }
             return pricingSummaryGroups;
@@ -886,6 +890,7 @@ public static partial class LcData
                     ,P.SubtotalPrice
                     ,P.TotalPrice
                     ,P.FeePrice
+                    ,P.PFeePrice
             FROM    BookingRequest As R
                         INNER JOIN CancellationPolicy As C
                         ON R.CancellationPolicyID = C.CAncellationPolicyID
@@ -1191,6 +1196,7 @@ public static partial class LcData
         /// <param name="subtotalPrice"></param>
         /// <param name="feePrice"></param>
         /// <param name="totalPrice"></param>
+        /// <param name="pfeePrice"></param>
         /// <returns></returns>
         public static dynamic CreatePricingEstimate(
             int estimateID,
