@@ -47,7 +47,7 @@
     margin: 0 20px;
     max-height: 86px;
     overflow: hidden;
-    padding-bottom: 22px;
+    padding: 10px;
     position: relative;
     width: 487px;
 }
@@ -179,6 +179,7 @@ form.report-unauthorized-use textarea {
     
     margin-bottom: 40px;
     background-color: #ffffff;
+    max-height: 120px;
 }
 #profileHeader h1.profile-name {
     color: #00989A;
