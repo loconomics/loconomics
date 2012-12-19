@@ -39,8 +39,13 @@
         throw new Exception("UserType is not valid: " + userType);
     }
 }
+@** Not used now because is too small, but preserved for future changes and addition
+ *@
 @helper printGoogleMap(string location){
     <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@helper printGoogleLink(string location){
+    <a class="google-map" href="http://maps.google.com/?q=@(location);z=16&amp;output=embed" target="_blank">See map location</a>
 }
 @functions{
     string getLocationForGoogleMaps(dynamic data){
@@ -87,7 +92,7 @@
                 <div class="user-email">Email address: <span class="value">@data[dataPrefix + "Email"]</span></div>
             </div>
             if (withGoogleMap) {
-                @printGoogleMap(getLocationForGoogleMaps(data))
+                @printGoogleLink(getLocationForGoogleMaps(data))
             }
         }
         else {
