@@ -486,9 +486,8 @@ public static class LcPricingModel
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
                 modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
-                // TODO Apply new calculation per element, retrieving on pricingVariablesNumbers the item price with fee included
                 modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
-                modelData.SummaryTotal.FeePrice = Math.Round((fee.Percentage * modelData.SummaryTotal.SubtotalPrice) + fee.Currency, 2);
+                modelData.SummaryTotal.FeePrice = LcPricingModel.ApplyFeeAndRound(fee, modelData.SummaryTotal.SubtotalPrice);
                 modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
                 // TODO TimeFirstSession in modelData?
 
