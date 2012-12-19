@@ -1314,7 +1314,6 @@ form#personal li > label.gender {
 .tab-body > .main-side,
 .tab-body > div > .main-side {
     float: left;
-    width: 500px;
 }
 
 /*==================
@@ -1439,7 +1438,6 @@ form#personal li > label.gender {
     width: auto;
 }
 .booking-review .booking-summary > .item-summary {
-    width: 400px;
     display: inline-block;
 }
 .booking-review .booking-summary > .actions {
@@ -1450,7 +1448,6 @@ form#personal li > label.gender {
     float: none;
 }
 .booking-review form li textarea {
-    width: 460px;
 }
 .booking-review .user-rating {
     float: right;
@@ -1473,10 +1470,10 @@ form#personal li > label.gender {
  */
 .message-section {
     border: 1px solid #6c6c6c;
-    border-radius: 15px;
-    -o-border-radius: 15px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
+    border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
     background: white;
     padding: 15px;
 }

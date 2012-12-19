@@ -40,7 +40,7 @@
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
                     LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
                 } else {
-                    throw new HttpException(500, "Error declining the booking request: " + result.ErrorMessage);
+                    throw new HttpException(500, "We're having problems completing your request.  Please e-mail support@loconomics.com and reference: " + result.ErrorMessage);
                 }
             }
         } else {
@@ -49,9 +49,9 @@
                  * - BookingRequestID and UserID (as ProviderUserID) don't match?
                  * - BookingRequest is already confirmed?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to decline that Booking Request. Is already confirmed?");
+                LcHelpers.ReturnJsonError(-1, "We're having problems completing your request.  Please e-mail support@loconomics.com.");
             } else {
-                throw new HttpException(500, "Impossible to decline that Booking Request. Is already confirmed?");
+                throw new HttpException(500, "We're having problems completing your request.  Please e-mail support@loconomics.com.");
             }
         }
     }

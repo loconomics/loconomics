@@ -31,7 +31,6 @@
     margin: 0 5px;
 }
 .booking .button{
-    text-transform: lowercase;
     font-size: 1em;
 }
 .booking .button.next{

@@ -135,10 +135,10 @@ else
         <h4>Requested booking time(s)</h4>
         <div class="requested-booking-times message-section">
             <p class="info">
-            @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
-            the following time(s) for you to provide the service. Please confirm a time 
-            <strong>within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
-            to accept this booking.
+            @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and has chosen
+            the following time(s) for you to meet up for an appointment. In order to accept the booking, choose one of these time slots
+            <strong>within @confirmationLimitHours hours from now (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+            .
             </p>
             <h5>Preferred time:</h5>
             <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
@@ -162,7 +162,7 @@ else
             }
             <h5>Decline booking request</h5>
             <button type="button" class="button booking-request-action button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
-                Decline booking (you can offer alternative times to the customer)
+                Decline booking request. You can offer alternative times, if you’d like.
             </button>
         </div>
         }

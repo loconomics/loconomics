@@ -154,10 +154,15 @@
     }
 }
 @helper printDistanceOptions(string selected){
+        <option @LcHelpers.IsSelected(selected, "0.5") value="0.5">0.5 mile</option>
         <option @LcHelpers.IsSelected(selected, "1") value="1">1 mile</option>
+        <option @LcHelpers.IsSelected(selected, "2") value="2">2 miles</option>
+        <option @LcHelpers.IsSelected(selected, "3") value="3">3 miles</option>
+        <option @LcHelpers.IsSelected(selected, "4") value="4">4 miles</option>
         <option @LcHelpers.IsSelected(selected, "5") value="5">5 miles</option>
         <option @LcHelpers.IsSelected(selected, "10") value="10">10 miles</option>
         <option @LcHelpers.IsSelected(selected, "25") value="25">25 miles</option>
+        <option @LcHelpers.IsSelected(selected, "50") value="25">50 miles</option>
 }
     <form action="@(UrlUtil.LangPath)$Dashboard/$PositionsLocationEdit/?LocationID=@(locationID)&PositionID=@(p.PositionID)" method="post" class="ajax ajax-box edit-location">
         @LcHelpers.GetValidationScripts()

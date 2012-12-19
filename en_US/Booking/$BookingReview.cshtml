@@ -27,12 +27,12 @@
 }
 @if (DateTime.Now <= booking.EndTime) {
     <div class="booking main-side">
-        This booking cannot be reviewed yet.
+        This booking has not yet been completed.
     </div>
 } else if (booking == null)
 {
     <div class="booking main-side">
-        Sorry, it could not be found the requested Booking.
+        We're having problems finding the booking.  Contact us at support@loconomics.com
     </div>
 }
 else
@@ -55,10 +55,10 @@ else
 
 <div class="booking-review booking-request booking main-side">
     @if (readView) {
-        <h3>@thisUserData.FirstName revision of <span class="user-public-name">@itsUserData.FirstName</span></h3>
+        <h3>@thisUserData.FirstName, please review <span class="user-public-name">@itsUserData.FirstName</span></h3>
     } else {
         <h3>Tell us how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
-        <span class="updateddate">This will only a few minutes and be a big help to @itsUserData.FirstName and the community</span>
+        <span class="updateddate">This will only take a couple minutes and will be a big help to @itsUserData.FirstName and the community</span>
     }
     <h4>Booking Summary</h4>
     <div class="booking-summary">
@@ -68,8 +68,8 @@ else
                 @printDateTimeRange(booking.StartTime, booking.EndTime)
             </li>
             <li class="position">
-                <h5>Position:</h5>
-                @booking.PositionSingular
+                <h5>Service:</h5>
+                @booking.PositionSingular services
             </li>
             <li class="details">
                 <h5>Details:</h5> @LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID)
@@ -95,4 +95,3 @@ else
     }
 </div>
 }
-@RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQS.cshtml")

@@ -150,7 +150,7 @@
             if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
                 string paymentError = LcPayment.SettleTransaction(tranID);
                 if (paymentError != null) {
-                    paymentError = "Booking was confirmed but some kind of problem happen when checking payment data, please contact support and provide next error information: " + paymentError;
+                    paymentError = "We're having issues with your payment.  Please contact us at support@loconomics.com and reference: " + paymentError;
                     if (Request.IsAjaxRequest()) {
                         // Return JSON result:
                         LcHelpers.ReturnJsonError(-99, paymentError);
@@ -167,9 +167,9 @@
                  * - ConfirmedDateType is not correct?
                  * - BookingRequest is already confirmed?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to confirm that Booking Request and date. Maybe is already confirmed or was cancelled.");
+                LcHelpers.ReturnJsonError(-1, "We're having issues finding your booking request.  Please contact us at support@loconomics.com.");
             } else {
-                throw new HttpException(500, "Impossible to confirm that Booking Request and date. Maybe is already confirmed or was cancelled.");
+                throw new HttpException(500, "We're having issues finding your booking request.  Please contact us at support@loconomics.com.");
             }
         }
     }

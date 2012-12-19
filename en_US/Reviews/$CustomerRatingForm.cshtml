@@ -158,23 +158,23 @@
     @if (booking != null && provider != null) {
         <input type="hidden" name="BookingID" value="@bookingID" />
         <fieldset class="section-1">
-            <legend>Section 1: Rate @customer.FirstName as customer</legend>
+            <legend>Section 1: Rate @customer.FirstName as a client</legend>
             <ul>
                 <li class="rating1">
-                    <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate @customer.FirstName as customer:*@</span>
+                    <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate @customer.FirstName as a client:*@</span>
                     <div class="user-rating">
                         @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                     </div>
                 </li>
                 <li class="publicreview">
-                    <label for="public-review">Write a brief review for other Loconomics members to view 
+                    <label for="public-review">Write a brief review for other Loconomics members wanting to work with @customer.FirstName:
                     (please be respectful and constructive)</label>
                     <textarea rows="4" id="public-review" name="public-review" placeholder="(250 or fewer characters)">@Request["public-review"]</textarea>
                 </li>
             </ul>
         </fieldset>
         <fieldset class="section-2">
-            <legend>Section 2: Help @customer.FirstName</legend>
+            <legend>Section 2: Help @customer.FirstName become a better client</legend>
             <ul>
                 <li class="private-review">
                     <label for="private-review">Please give @customer.FirstName any constructive criticism to help

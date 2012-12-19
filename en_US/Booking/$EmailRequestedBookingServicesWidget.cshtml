@@ -27,7 +27,7 @@
 }
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
 
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment</h5>
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment:</h5>
         <div>
             @switch(myUserType) {
                 case "provider":
@@ -50,7 +50,7 @@
             }
         </div>
 
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing estimate</h5>
+        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
         @if (myUserType == "provider")
         {
             @LcPricingView.EmailProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
@@ -70,23 +70,21 @@
 
         @if (!String.IsNullOrEmpty(strVarsOpts))
         {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Estimate for</h5>
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Estimate for:</h5>
             <div class="estimate">
                 @strVarsOpts
             </div>
         }
-
-        @if (!String.IsNullOrEmpty(strPackAddons))
+        @if (!String.IsNullOrEmpty(booking.SpecialRequests))
         {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Packages and Add-Ons:</h5>
-            <div class="packages">
-                @strPackAddons
-            </div>
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
+            <p @LcEmailTemplateHelper.StyleResetP()>@booking.SpecialRequests</p>
         }
-        
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
-        <p @LcEmailTemplateHelper.StyleResetP()>@booking.SpecialRequests</p>
-
+        else
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Special instructions:</h5>
+            <p @LcEmailTemplateHelper.StyleResetP()>None</p>
+        }
         @if (isRequest)
         {
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location and contact information:</h5>
