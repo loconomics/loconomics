@@ -871,6 +871,10 @@ public static partial class LcData
         #endregion
 
         #region Cancellation policy
+        /// <summary>
+        /// Currently, default cancellation policy is Flexible:3
+        /// </summary>
+        public const int DefaultCancellationPolicyID = 3;
         private const string sqlViewPricingAndPolicy = @"
             SELECT  R.PricingEstimateID
                     ,R.BookingRequestStatusID

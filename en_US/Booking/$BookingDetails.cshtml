@@ -173,7 +173,7 @@ else
                     If you wish to cancel this booking, the following cancellation policy will apply:
 
                     @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
-                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = 1 })
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID })
 
                     <strong>Are you sure you want cancel this booking?</strong>
                     <div class="actions">

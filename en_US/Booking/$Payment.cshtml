@@ -472,7 +472,7 @@
         <div class="popups">
             <div id="cancellation-policy" class="popup">
                 @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
-                    CancellationPolicyID = (cancellationPolicy == null ? 1 : cancellationPolicy.CancellationPolicyID),
+                    CancellationPolicyID = (cancellationPolicy == null ? LcData.Booking.DefaultCancellationPolicyID : cancellationPolicy.CancellationPolicyID),
                     DisplayForUserType = "customer" })
             </div>
         </div>
