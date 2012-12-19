@@ -47,7 +47,7 @@
     margin: 0 20px;
     max-height: 86px;
     overflow: hidden;
-    padding: 10px;
+    padding-bottom: 22px;
     position: relative;
     width: 487px;
 }
@@ -64,7 +64,7 @@
     -webkit-box-shadow: 0 0 5px 3px #CCCCCC;
     max-height: none;
     z-index: 200;
-    padding-bottom: 0;
+    padding: 10px;
 }
 #profileHeader > .profile-desc:hover p {
     max-height: none;
