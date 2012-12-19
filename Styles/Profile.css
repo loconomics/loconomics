@@ -65,6 +65,8 @@
     max-height: none;
     z-index: 200;
     padding: 10px;
+    top: -10px;
+    left: -10px;
 }
 #profileHeader > .profile-desc:hover p {
     max-height: none;
