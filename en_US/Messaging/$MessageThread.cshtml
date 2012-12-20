@@ -120,7 +120,7 @@ else
     
     <div class="not-faqs-duplication">
 
-    <div class="booking-request main-side ajax-box">
+    <div class="booking-request ajax-box">
         @*LcHelpers.SetupStarRatingPlugin()*@
         @LcHelpers.GetValidationScripts()
 
@@ -183,5 +183,4 @@ else
         @RenderPage(UrlUtil.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", myUserType)
     </div>
     </div>
-    @RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$FAQS.cshtml")
 }
