@@ -26,12 +26,12 @@
     }
 }
 @if (DateTime.Now <= booking.EndTime) {
-    <div class="booking main-side">
+    <div class="booking">
         This booking has not yet been completed.
     </div>
 } else if (booking == null)
 {
-    <div class="booking main-side">
+    <div class="booking">
         We're having problems finding the booking.  Contact us at support@loconomics.com
     </div>
 }
@@ -53,7 +53,7 @@ else
     
     var readView = (myUserType == "customer" && booking.ReviewedByCustomer) || (myUserType == "provider" && booking.ReviewedByProvider);
 
-<div class="booking-review booking-request booking main-side">
+<div class="booking-review booking-request booking">
     @if (readView) {
         <h3>@thisUserData.FirstName, please review <span class="user-public-name">@itsUserData.FirstName</span></h3>
     } else {

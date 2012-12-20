@@ -113,7 +113,7 @@
 
 @if (booking == null)
 {
-    <div class="booking main-side">
+    <div class="booking">
         You have no bookings. Book one today!
     </div>
 }
@@ -133,7 +133,7 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
-<div class="booking-request booking main-side">
+<div class="booking-request booking">
     <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 

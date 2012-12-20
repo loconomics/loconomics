@@ -337,10 +337,12 @@
      * The row object must contains the properties FirstName and LastName to work
      */
     public static string GetUserDisplayName(dynamic row){
-        return row.FirstName + " " + GetInitialLetter(row.LastName) + ".";
+        if (row == null) { return ""; }
+        return (row.FirstName ?? "") + " " + GetInitialLetter(row.LastName) + ".";
     }
     public static string GetUserDisplayName(dynamic row, string fieldPrefix){
-        return row[fieldPrefix + "FirstName"] + " " + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
+        if (row == null) { return ""; }
+        return (row[fieldPrefix + "FirstName"] ?? "") + " " + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
     }
 }
 @helper PrintTextAsHtml(string text){

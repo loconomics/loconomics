@@ -1314,6 +1314,7 @@ form#personal li > label.gender {
 .tab-body > .main-side,
 .tab-body > div > .main-side {
     float: left;
+    width: 500px;
 }
 
 /*==================

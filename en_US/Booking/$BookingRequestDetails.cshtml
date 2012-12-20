@@ -90,7 +90,7 @@
 
 @if (booking == null)
 {
-    <div class="booking-request main-side">
+    <div class="booking-request">
         Sorry, we could not find the requested booking.  
     </div>
 }
@@ -110,7 +110,7 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
 
-    <div class="booking-request main-side">
+    <div class="booking-request">
         <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
         <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
         @* If is customer and booking request is incomplete (status:1),
