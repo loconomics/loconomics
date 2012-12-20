@@ -15,9 +15,9 @@
         WHERE   R.ProviderUserID = @0
                  AND
                 R.BookingRequestID = @1
-                -- Not Confirmed Booking Request, to avoid repeated confirmations happen
+                -- Only bookings 'created', but not incomplete, confirmed, cancelled or any other one
                  AND
-                R.BookingRequestStatusID <> 7
+                R.BookingRequestStatusID = 2
     ";
     var sqlConfirmBooking = @"
         -- Parameters
@@ -135,13 +135,8 @@
                         "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
                 }
             } else {
-                if (Request.IsAjaxRequest()) {
-                    // Return JSON result:
-                    // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
-                } else {
-                    throw new HttpException(500, "Error confirming the booking request: " + result.ErrorMessage);
-                }
+                // We need negative numbers to indicate an error (is our convention for json 'Code')
+                @OnError(brID, "confirm", result.ErrorMessage, 0 - result.Error);
             }
             
             // Charge total amount of booking request to the customer (Submit to settlement the transaction)
@@ -150,27 +145,46 @@
             if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
                 string paymentError = LcPayment.SettleTransaction(tranID);
                 if (paymentError != null) {
-                    paymentError = "We're having issues with your payment.  Please contact us at support@loconomics.com and reference: " + paymentError;
-                    if (Request.IsAjaxRequest()) {
-                        // Return JSON result:
-                        LcHelpers.ReturnJsonError(-99, paymentError);
-                    } else {
-                        throw new HttpException(500, paymentError);
-                    }
+                    @OnError(brID, "payment", paymentError, -99);
                 }
             }
 
         } else {
-            if (Request.IsAjaxRequest()){
-                /* What? 
-                 * - BookingRequestID and UserID (as ProviderUserID) don't match?
-                 * - ConfirmedDateType is not correct?
-                 * - BookingRequest is already confirmed?
-                 */
-                LcHelpers.ReturnJsonError(-1, "We're having issues finding your booking request.  Please contact us at support@loconomics.com.");
-            } else {
-                throw new HttpException(500, "We're having issues finding your booking request.  Please contact us at support@loconomics.com.");
-            }
+            /* What? 
+            * - BookingRequestID and UserID (as ProviderUserID) don't match?
+            * - ConfirmedDateType is not correct?
+            * - BookingRequest is already confirmed?
+            */
+            @OnError(brID, "find", null, -1);
+        }
+    }
+}
+@** task must be: find, confirm, payment
+  *@
+@helper OnError(int brID, string task, string errorMessage, int errorCode) {  
+    string msg = "";
+    switch (task) {
+        case "payment":
+            msg = String.Format("We're having issues with your payment.  Please contact us at support@loconomics.com and reference: {0}", errorMessage);
+            break;
+        // NOT IN USE:
+        case "find":
+            msg = "We're having issues finding your booking request.  Please contact us at support@loconomics.com.";
+            break;
+        // NOT IN USE:
+        case "confirm":
+            msg = string.Format("Error confirming the booking request: {0}", errorMessage);
+            break;
+    }
+    if (Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonError(errorCode, errorMessage);
+    } else {
+        if (task != "payment") {
+            Response.Redirect(
+                UrlUtil.LangPath + 
+                String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID));
+        } else {
+            throw new HttpException(500, msg);
         }
     }
 }
