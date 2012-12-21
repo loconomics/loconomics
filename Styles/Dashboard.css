@@ -1502,7 +1502,7 @@ form#personal li > label.gender {
 .conversation-messages > li > .message-section {
     font-size: 0.9em;
     margin: 0 12px;
-    width: 320px;
+    width: 518px;
 }
 .conversation-messages > li.customer > .message-section {
     float: left;
