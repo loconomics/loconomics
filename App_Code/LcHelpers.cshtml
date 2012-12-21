@@ -63,10 +63,10 @@
             return null;
     }
     public static string DateTimeRangeToString(DateTime start, DateTime end){
-        return String.Format("{0} from {1} to {2}", 
-            start.ToLongDateString()
-            ,start.ToShortTimeString()
-            ,end.ToShortTimeString()
+        return String.Format("{0:dddd, MMM d} from {1:t} to {2:t}", 
+            start
+            ,start
+            ,end
         );
     }
     

@@ -6,6 +6,7 @@
     bool showPayment = PageData[3] ?? true;
     bool showPricing = PageData[4] ?? true;
     bool showCancellationPolicy = PageData[5] ?? true;
+    string cssClass = PageData[6] ?? "message-section";
     var u = LcData.UserInfo.GetUserRow();
     
     if (booking == null || booking["BookingRequestID"] == null) {
@@ -31,7 +32,7 @@
     }
 }
 
-    <div class="requested-booking-services message-section">
+    <div class="requested-booking-services @cssClass">
 
         @if (showPayment)
         {

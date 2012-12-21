@@ -512,13 +512,15 @@
     float: none;
     padding: 50px;
 }
-.booking h2,
-.booking h3 {
+.booking h2 {
     color: #5a5b5b;
     margin-bottom: 0;
 }
-.booking h3 {
+.booking h3,
+.booking h4,
+.booking h5 {
     font-size: 1.3em;
+    color: #5a5b5b;
 }
 .booking .tabbed.wizard .tabs {
     width: 500px;
@@ -594,4 +596,51 @@
 .booking-confirmation .help {
     border-top: 1px solid #dcdcdc;
     margin-top: 20px;
+}
+.booking-confirmation .step-block,
+.booking-confirmation .step-block > h5:first-child {
+    margin-top: 0;
+}
+.booking-confirmation h3 {
+    margin-bottom: 0;
+}
+.booking-confirmation h3 + p {
+    margin-top: 0;
+}
+.booking-confirmation h5 {
+    margin: 10px 0 0;
+}
+.booking-confirmation .scheduling h5 {
+    font-size: .9em;
+    color: #747474;
+    font-weight: normal;
+    margin: 4px 0 0;
+    line-height: 1em;
+}
+.booking-confirmation .scheduling .selected-date {
+    font-size: 1.1em;
+}
+.booking-confirmation table.calculation-summary {
+    float: none !important;
+}
+.booking-confirmation table.calculation td,
+.booking-confirmation table.calculation th {
+    padding-top: 0 !important;
+    padding-bottom: 0;
+}
+.booking-confirmation table.calculation tr.separator > td.separator {
+    padding: 1px 8px !important;
+}
+
+.booking-confirmation .pricing,
+.booking-confirmation .scheduling {
+    display: inline-block;
+    vertical-align: top;
+}
+.booking-confirmation .pricing {
+    width: 55%;
+    margin-right: 5%;
+}
+.booking-confirmation .scheduling {
+    width: 38%;
 }
