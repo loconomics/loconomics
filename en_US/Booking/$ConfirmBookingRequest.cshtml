@@ -121,45 +121,56 @@
             }
         }
         if (dateID > 0) {
-            var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
-            if (result.Error == 0) {
-                // Send message
-                LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID, true);
-                
-                if (Request.IsAjaxRequest()) {
-                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
-                        "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
-                } else {
-                    Response.Redirect(UrlUtil.LangPath + String.Format(
-                        "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
-                }
+            var dateInfo = db.QuerySingle(@"
+                SELECT  ID, StartTime, EndTime
+                FROM    CalendarEvents
+                WHERE   ID = @0
+            ", dateID);
+            var isNotAvailable = (bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", u.UserID, dateInfo.StartTime, dateInfo.EndTime);
+            
+            if (isNotAvailable) {
+                @OnError(brID, "availability", null, -91);
             } else {
-                // We need negative numbers to indicate an error (is our convention for json 'Code')
-                @OnError(brID, "confirm", result.ErrorMessage, 0 - result.Error);
-            }
+                var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
-            // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-            // Get booking request TransactionID
-            string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
-            if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
-                string paymentError = LcPayment.SettleTransaction(tranID);
-                if (paymentError != null) {
-                    @OnError(brID, "payment", paymentError, -99);
+                if (result.Error == 0) {
+                    // Send message
+                    LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID, true);
+                
+                    if (Request.IsAjaxRequest()) {
+                        LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                            "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
+                    } else {
+                        Response.Redirect(UrlUtil.LangPath + String.Format(
+                            "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
+                    }
+                } else {
+                    // We need negative numbers to indicate an error (is our convention for json 'Code')
+                    @OnError(brID, "confirm", result.ErrorMessage, 0 - result.Error);
+                }
+            
+                // Charge total amount of booking request to the customer (Submit to settlement the transaction)
+                // Get booking request TransactionID
+                string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
+                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
+                    string paymentError = LcPayment.SettleTransaction(tranID);
+                    if (paymentError != null) {
+                        @OnError(brID, "payment", paymentError, -92);
+                    }
                 }
             }
-
         } else {
             /* What? 
             * - BookingRequestID and UserID (as ProviderUserID) don't match?
             * - ConfirmedDateType is not correct?
             * - BookingRequest is already confirmed?
             */
-            @OnError(brID, "find", null, -1);
+            @OnError(brID, "find", null, -90);
         }
     }
 }
-@** task must be: find, confirm, payment
+@** task must be: find, confirm, payment, availability
   *@
 @helper OnError(int brID, string task, string errorMessage, int errorCode) {  
     string msg = "";
@@ -167,13 +178,14 @@
         case "payment":
             msg = String.Format("We're having issues with your payment.  Please contact us at support@loconomics.com and reference: {0}", errorMessage);
             break;
-        // NOT IN USE:
         case "find":
             msg = "We're having issues finding your booking request.  Please contact us at support@loconomics.com.";
             break;
-        // NOT IN USE:
         case "confirm":
             msg = string.Format("Error confirming the booking request: {0}", errorMessage);
+            break;
+        case "availability":
+            msg = "LJDI: You are already busy for that date-time! Please confirm another date.";
             break;
     }
     if (Request.IsAjaxRequest()) {
