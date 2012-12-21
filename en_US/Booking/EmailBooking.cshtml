@@ -21,13 +21,6 @@
     
     var booking = LcData.Booking.GetBookingForUser(bID, thisUserID, true);
 }
-@helper printDateTimeRange(DateTime start, DateTime end){
-    @start.ToLongDateString()
-    <text> from </text>
-    @start.ToShortTimeString()
-    <text> to </text>
-    @end.ToShortTimeString()
-}
 @helper printAddress(IDictionary<string, object> addressDetails){
         <div>
             @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
@@ -180,7 +173,7 @@ else
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Scheduled time: </h5>
         @if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
         {
-        <span>@printDateTimeRange(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+        <span>@LcHelpers.DateTimeRangeToString(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
         }
         else
         {

@@ -41,13 +41,6 @@
         @(section + " ex: " + ex.Message + "::" + ex.StackTrace)
     }
 }
-@helper printDateTimeRange(DateTime start, DateTime end){
-    @start.ToLongDateString()
-    <text> from </text>
-    @start.ToShortTimeString()
-    <text> to </text>
-    @end.ToShortTimeString()
-}
 @functions{
     string getTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
         var statusTitle = "Booking request involving {0}. Unknown status";
@@ -164,7 +157,7 @@ else
                 </p>
                 <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
                 <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
-                    Click here to confirm @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
                 </a>
                 @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
                 {
@@ -173,13 +166,13 @@ else
                 @if (booking.AlternativeDate1Start is DateTime)
                 {
                 <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
-                    Click here to confirm @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
                 </a>
                 }
                 @if (booking.AlternativeDate2Start is DateTime)
                 {
                 <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
-                    Click here to confirm @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
                 </a>
                 }
                 <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
@@ -206,7 +199,7 @@ else
                 </p>
                 <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
                 <div class="selected-date preferred-date">
-                    @printDateTimeRange(booking.PreferredDateStart, booking.PreferredDateEnd)
+                    @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
                 </div>
                 @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
                 {
@@ -215,13 +208,13 @@ else
                 @if (booking.AlternativeDate1Start is DateTime)
                 {
                 <div class="selected-date alternative-date alternative-date-1">
-                    @printDateTimeRange(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
                 </div>
                 }
                 @if (booking.AlternativeDate2Start is DateTime)
                 {
                 <div class="selected-date alternative-date alternative-date-2">
-                    @printDateTimeRange(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
                 </div>
                 }
             </div>
