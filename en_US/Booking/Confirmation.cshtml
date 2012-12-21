@@ -20,6 +20,9 @@
     // Get booking data
     var booking = LcData.Booking.GetBookingRequestForUser(bookingRequestID, u.UserID, u.IsAdmin);
     var provider = LcData.UserInfo.GetUserRow(booking.ProviderUserID);
+    var summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
+    var pricingSummary = LcData.Booking.GetPricingSummary(summary);
+    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     
     Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
     Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
@@ -41,12 +44,41 @@
         })
 
         <article class="booking-confirmation">
+            <section class="pricing">
+                <h3>Pricing estimate</h3>
+                @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            </section>
+            <section class="scheduling">
+                <h3>Time preferences</h3>
+                <h5>First choice:</h5>
+                <div class="selected-date preferred-date">
+                    @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
+                </div>
+                @if (booking.AlternativeDate1Start is DateTime)
+                {
+                    <h5>Second choice:</h5>
+                    <div class="selected-date alternative-date alternative-date-1">
+                        @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+                    </div>
+                }
+                @if (booking.AlternativeDate2Start is DateTime)
+                {
+                    <h5>Third choice:</h5>
+                    <div class="selected-date alternative-date alternative-date-2">
+                        @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+                    </div>
+                }
+            </section>
             <section class="payment">
                 <h3>Payment</h3>
                 <p>Your card ending in @LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits) has been authorized for @booking.TotalPrice.ToString("c").
                 You will be charged this amount after @provider.FirstName accepts one of your time preferences (within 18 hours).
                 If he’s unable to accept one of these times, your card will not be charged.
                 We’ll withhold payment to @provider.FirstName until after the service is completed.</p>
+            </section>
+            <section class="services">
+                <h3>Services</h3>
+                @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, "customer", false, false, false, false)
             </section>
             <section class="last-note">
                 <p>You’re probably wondering what’s next. <strong>@provider.FirstName</strong> has 18 hours to confirm one of your three appointment times.

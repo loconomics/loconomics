@@ -62,6 +62,14 @@
         else
             return null;
     }
+    public static string DateTimeRangeToString(DateTime start, DateTime end){
+        return String.Format("{0} from {1} to {2}", 
+            start.ToLongDateString()
+            ,start.ToShortTimeString()
+            ,end.ToShortTimeString()
+        );
+    }
+    
     public static decimal? CreateDecimal(string decimalString) {
         decimal aux;
         if (decimal.TryParse(decimalString, out aux))

@@ -1,0 +1,12 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    if (LcHelpers.InProduction && !u.IsAdmin) {
+        LcHelpers.RedirectToLogin();
+    }
+
+    Session["BookingRequestID"] = Request["BookingRequestID"].AsInt(172);
+}
+@RenderPage("Confirmation.cshtml")

@@ -3,15 +3,21 @@
     dynamic booking = PageData[0];
     string myUserType = PageData[1];
     bool isRequest = PageData[2] ?? false;
+    bool showPayment = PageData[3] ?? true;
+    bool showPricing = PageData[4] ?? true;
+    bool showCancellationPolicy = PageData[5] ?? true;
     var u = LcData.UserInfo.GetUserRow();
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
     }
 
-    dynamic summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
-    var pricingSummary = LcData.Booking.GetPricingSummary(summary);
-    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    dynamic pricingSummary = null, pricingSummaryGroups = null;
+    if (showPricing) {
+        var summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
+        pricingSummary = LcData.Booking.GetPricingSummary(summary);
+        pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    }
     
     string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
     string strVarsOpts = LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID, booking.PricingEstimateID);
@@ -27,37 +33,44 @@
 
     <div class="requested-booking-services message-section">
 
-        <h5>Payment</h5>
-        <div class="payment">
-            @switch(myUserType) {
-                case "provider":
-                    <text>
-                    Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
-                    </text>
-                break;
-                case "customer":
-                    <text>
-                    Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
-                    </text>
-                break;
-                default:
-                    <text>
-                    Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    </text>
-                break;
-            }
-        </div>
-
-        <h5>Pricing estimate</h5>
-        @if (myUserType == "provider")
+        @if (showPayment)
         {
-            @LcPricingView.ProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            <h5>Payment</h5>
+            <div class="payment">
+                @switch (myUserType)
+                {
+                    case "provider":
+                        <text>
+                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                        </text>
+                        break;
+                    case "customer":
+                        <text>
+                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                        </text>
+                        break;
+                    default:
+                        <text>
+                        Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        </text>
+                        break;
+                }
+            </div>
         }
-        else if (myUserType == "customer")
+
+        @if (showPricing)
         {
-            @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            <h5>Pricing estimate</h5>
+            if (myUserType == "provider")
+            {
+                @LcPricingView.ProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            }
+            else if (myUserType == "customer")
+            {
+                @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            }
         }
 
         @if (!String.IsNullOrEmpty(strServices))
@@ -97,10 +110,15 @@
         </div>
         }
 
-        <h5>Cancellation policy</h5>
-        <div class="cancellation-policy">
-            @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
-                    CancellationPolicyID = booking.CancellationPolicyID,
-                    DisplayForUserType = myUserType })
-        </div>
+        @if (showCancellationPolicy)
+        {
+            <h5>Cancellation policy</h5>
+            <div class="cancellation-policy">
+               @RenderPage("$CancellationPolicyInfoWidget.cshtml", new
+               {
+                   CancellationPolicyID = booking.CancellationPolicyID,
+                   DisplayForUserType = myUserType
+               })
+            </div>
+        }
     </div>
