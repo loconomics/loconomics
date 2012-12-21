@@ -322,11 +322,38 @@ public static partial class LcData
             return UrlUtil.LangPath + "Profile/?UserID=" + userid;
         }
 
+        /// <summary>
+        /// Get a dynamic row with the user statistics
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public static dynamic GetUserStats(int userId)
         {
             using (var db = Database.Open("sqlloco"))
             {
                 return db.QuerySingle("SELECT UserID, ResponseTimeMinutes FROM UserStats WHERE UserID = @0", userId);
+            }
+        }
+        /// <summary>
+        /// Get a dynamic row with the user preferences 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static dynamic GetUserPrefs(int userId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT  UserID
+                            ,SMSBookingCommunication
+                            ,PhoneBookingCommunication
+                            ,LoconomicsCommunityCommunication
+                            ,LoconomicsDBMCampaigns
+                            ,ProfileSEOPermission
+                            ,LoconomicsMarketingCampaigns
+                            ,CoBrandedPartnerPermissions
+                    FROM Users WHERE UserID = @0
+                    ", userId);
             }
         }
         public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
