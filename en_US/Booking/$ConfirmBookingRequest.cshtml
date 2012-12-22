@@ -185,7 +185,7 @@
             msg = string.Format("Error confirming the booking request: {0}", errorMessage);
             break;
         case "availability":
-            msg = "LJDI: You are already busy for that date-time! Please confirm another date.";
+            msg = "That time conflicts with another appointment you have--please choose another!";
             break;
     }
     if (Request.IsAjaxRequest()) {
