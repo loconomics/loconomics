@@ -12,7 +12,7 @@
     
     var userReported = LcData.UserInfo.GetUserRow(Request["ReportedUserID"].AsInt());
 }
-<form class="report-unauthorized-use ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Messaging/$ReportUnauthorizedUse/">
+<form class="report-unauthorized-use ajax ajax-box" method="post" action="@(LcUrl.LangPath)Messaging/$ReportUnauthorizedUse/">
     <input type="hidden" name="ReportedUserID" value="@Request["ReportedUserID"]" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset>

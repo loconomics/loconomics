@@ -7,13 +7,13 @@
         // Redirect back to the homepage or return URL
         var returnUrl = Request.QueryString["ReturnUrl"];
         if (returnUrl.IsEmpty()) {
-            Response.Redirect(UrlUtil.LangPath);
+            Response.Redirect(LcUrl.LangPath);
         } else {
             Context.RedirectLocal(returnUrl);
         }
     }
     
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
 }
 <div id="container">
     <h1>Your account has been succesfully deleted.</h1>

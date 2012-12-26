@@ -12,6 +12,6 @@
     if (Request.IsAjaxRequest()) {
         LcHelpers.ReturnJsonResult(0, "Position deleted");
     } else {
-        Response.Redirect(UrlUtil.LangPath + "Dashboard/");
+        Response.Redirect(LcUrl.LangPath + "Dashboard/");
     }
 }

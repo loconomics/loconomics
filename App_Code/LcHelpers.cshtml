@@ -203,9 +203,9 @@
         if (!jqueryStarRatingPluginLoaded) {
             jqueryStarRatingPluginLoaded = true;
             Modernizr.load([
-                UrlUtil.AppPath + "Scripts/star-rating/jquery.MetaData.js",
-                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
-                UrlUtil.AppPath + "Scripts/star-rating/jquery.rating.css"
+                LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
             ]);
         } else {
             if ($ && $().rating)
@@ -269,9 +269,9 @@
     }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
-                ReturnJsonResult(2, UrlUtil.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(UrlUtil.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
+                ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
             else
-                Response.Redirect(UrlUtil.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(UrlUtil.GetTheGoodURL(Request.Url.PathAndQuery)));
+                Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
     }
     
     /*========= STRINGS ==============*/

@@ -41,7 +41,7 @@
             // Send email to loconomics
             LcMessaging.SendMail("verifications@loconomics.com",
                 "Background check request",
-                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailBackgroundCheckRequest/",
+                LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailBackgroundCheckRequest/",
                     new Dictionary<string, object> { 
                         { "ProviderUserID", u.UserID },
                         { "PositionID", p.PositionID },
@@ -125,7 +125,7 @@
             <div class="popup buy-step-1 ajax-box">
                 <p>Use of background check services is voluntary. If you opt to use or access information provided by a background check service offered through the Marketplace, you agree that Loconomics offers this background check service as a convenience and does not have control over or assume any responsibility for the quality, accuracy, or reliability of the background check service or the information provided by the background check service. </p>
                 <p>If you are a Service Provider and you opt to purchase background check services in connection with your Services: (i) you affirm that all of the information you provide to Loconomics in connection with the background check services is correct, complete, and applicable; (ii) you understand that you will be required to complete and sign a disclosure and consent form, which will have additional terms applicable to the background check services; (iii) you agree that Loconomics may obtain a report from HireRight that may contain information on your criminal history, address history, character, general reputation, personal characteristics, and mode of living; (iv) you agree that Loconomics may release the results of this report in connection with transactions on the Marketplace; (v) you understand that the information in the report may factor into other parties’ decisions to engage your services; (vi) you agree that Loconomics may review the information provided by the background check service and retains the right to terminate your membership based on the information; (vii) if you disagree with the contents of the report, or wish to stop the release of the results of the report, you must delete your profile; and (viii) you agree to indemnify and hold harmless Loconomics from any loss or liability that may result from the creation or release of the report.</p>
-                <form class="ajax" action="@(UrlUtil.LangPath)$Dashboard/$PositionsBackgroundCheck/" method="post">
+                <form class="ajax" action="@(LcUrl.LangPath)$Dashboard/$PositionsBackgroundCheck/" method="post">
                     <input type="hidden" name="BackgroundCheckID" value="@Request["BackgroundCheckID"]" />
                     <input type="hidden" name="PositionID" value="@p.PositionID" />
                     <input type="hidden" class="main-action" name="main-action" value="@(Request["main-action"] ?? "Purchase for $$")" />

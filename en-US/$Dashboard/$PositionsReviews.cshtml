@@ -26,7 +26,7 @@
             foreach (string email in emails) {
                 LcMessaging.SendMail(email,
                     String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
-                    LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
+                    LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
                         { "ProviderUserID", u.UserID }
                         ,{ "PositionID", p.PositionID }
                 }));
@@ -57,7 +57,7 @@
 Here’s a chance to pull in some favors. We know you’ve done great work in the past – and your clients deserve to know too. Enter the email addresses of past clients and we’ll pass along a sweetly-worded reference request. Rest assured: no spamming will occur. We’ll post the first five to your profile. 
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)$Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
+<form action="@(LcUrl.LangPath)$Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
@@ -73,7 +73,7 @@ Here’s a chance to pull in some favors. We know you’ve done great work in th
     @*<fieldset>
         <legend>Testing the Reviews/ReviewsGrid</legend>
         <h3>Reviews</h3>
-        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$ReviewsGrid.cshtml", u.UserID, p.PositionID)
+        @RenderPage(LcUrl.RenderLangPath + "Reviews/$ReviewsGrid.cshtml", u.UserID, p.PositionID)
     </fieldset>*@
     <fieldset class="actions">
         <button class="save main-action" type="submit">Send</button>

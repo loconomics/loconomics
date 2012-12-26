@@ -1,6 +1,6 @@
 ﻿@{
     string url = (string)PageData["URL"];
-    url = UrlUtil.SiteUrl + (url ?? Request.Url.PathAndQuery);
+    url = LcUrl.SiteUrl + (url ?? Request.Url.PathAndQuery);
     string title = (string)PageData["Title"];
     string view = (string)PageData["View"] ?? "custom-icons"; // Possible values: custom-icons, network-widgets
     string size = PageData["Size"] ?? "32x32"; // Possible values: 32x32 (only one for now)

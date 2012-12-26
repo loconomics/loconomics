@@ -9,7 +9,7 @@
     DateTime confirmationLimitDate = DateTime.MaxValue;
 
     try{
-        Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+        Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
         Page.Title = "Loconomics.com - Booking Request";
 
         thisUserID = Request["UserID"].AsInt();
@@ -21,7 +21,7 @@
         PageData["messageTitle"] = "Booking Request";
         PageData["messageSubtitle"] = "";
         // Create URL:
-        PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
+        PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
     
         // TODO: Calculate location distance from provider to customer
     
@@ -137,7 +137,7 @@ else
             <span>Sent: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
 
             <h4 @LcEmailTemplateHelper.StyleH4()>@itsUserLabel profile</h4>
-            @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
                 {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},
                 {"Data", itsUserData},
                 {"DataPrefix", ""},
@@ -156,7 +156,7 @@ else
                 to accept this booking.
                 </p>
                 <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
+                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
                 </a>
                 @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
@@ -165,18 +165,18 @@ else
                 }
                 @if (booking.AlternativeDate1Start is DateTime)
                 {
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
+                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
                 </a>
                 }
                 @if (booking.AlternativeDate2Start is DateTime)
                 {
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(UrlUtil.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
+                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
                 </a>
                 }
                 <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
-                <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(UrlUtil.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(booking.BookingRequestID)">
+                <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(booking.BookingRequestID)">
                     Decline booking (you can offer alternative times to the customer)
                 </a>
             </div>

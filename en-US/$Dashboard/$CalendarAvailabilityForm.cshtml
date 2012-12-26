@@ -293,7 +293,7 @@
 What hours do you keep? We’d like to know when we can generally expect to schedule your appointments.   
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)$Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
+<form action="@(LcUrl.LangPath)$Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

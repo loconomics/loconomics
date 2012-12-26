@@ -27,7 +27,7 @@
                             if (response.authResponse) {
                                 //console.log('FacebookConnect: Welcome!');
                                 $.blockUI(loadingBlock);
-                                var url = UrlUtil.LangPath + "Account/Facebook/@urlsection/?Redirect=@Uri.EscapeDataString(redirectUrl ?? "")";
+                                var url = LcUrl.LangPath + "Account/Facebook/@urlsection/?Redirect=@Uri.EscapeDataString(redirectUrl ?? "")";
                                 @if (result == "redirect") {
                                 <text>
                                 window.location = url;
@@ -53,20 +53,20 @@
 }
 
     @*<a href="https://www.facebook.com/dialog/oauth?client_id=@Server.UrlEncode(facebookAppId)&redirect_uri=@Server.UrlEncode(facebookRedirectUri)&scope=@Server.UrlEncode(facebookPermissions)&state=@Server.UrlEncode((string)facebookState)">
-        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/connect-facebook.png">
+        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/connect-facebook.png">
     </a>*@
 
     <a href="javascript: facebookConnect();">
         @GetFacebookInitializationScripts()
-        <img alt="Facebook Connect" src="@(UrlUtil.AppPath)img/theme/connect-facebook.png"/>
+        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/connect-facebook.png"/>
     </a>
 
     @*
     @GetFacebookInitializationScripts()
     @Facebook.LoginButton(
-        registerUrl: UrlUtil.LangPath + "Account/Facebook/Register/",
-        returnUrl: UrlUtil.LangPath, 
-        callbackUrl: UrlUtil.LangPath + "Account/Facebook/Callback/",
+        registerUrl: LcUrl.LangPath + "Account/Facebook/Register/",
+        returnUrl: LcUrl.LangPath, 
+        callbackUrl: LcUrl.LangPath + "Account/Facebook/Callback/",
         buttonText: "Connect with Facebook",
         extendedPermissions: facebookPermissions)
         *@

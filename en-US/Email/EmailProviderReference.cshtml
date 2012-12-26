@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Reference";
     
     var thisUserID = (Request["ProviderUserID"] ?? Request["UserID"]).AsInt();
@@ -13,7 +13,7 @@
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Hello!";// "Reference";
     // Create URL:
-    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Reviews/ProviderReferenceWelcome/?ProviderUserID=" + thisUserID.ToString() + "&PositionID=" + posID.ToString();
+    PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Reviews/ProviderReferenceWelcome/?ProviderUserID=" + thisUserID.ToString() + "&PositionID=" + posID.ToString();
     PageData["isNotAUser"] = true;
 }
 

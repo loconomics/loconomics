@@ -43,7 +43,7 @@
             }
         }
         if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Dashboard/Positions/");
+            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Dashboard/Positions/");
         }
     }
     
@@ -72,7 +72,7 @@
    
 }
 
-    <form method="post" action="@(UrlUtil.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
+    <form method="post" action="@(LcUrl.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
         <h4>Add a position to your profile</h4>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="positions">

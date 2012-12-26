@@ -11,7 +11,7 @@
     var useAbsoluteUrls = PageData["UseAbsoluteUrls"] ?? false;
     var positionID = (int)(PageData["PositionID"] ?? -1);
     var positionData = PageData["PositionData"];
-    var urlBase = useAbsoluteUrls ? UrlUtil.SiteUrl : "";
+    var urlBase = useAbsoluteUrls ? LcUrl.SiteUrl : "";
     var withFullRating = PageData["WithFullRating"] ?? false;
     var linkInName = PageData["WithLinkInName"] ?? false;
 
@@ -56,7 +56,7 @@
     }
 }
 @helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
-    @(urlBase + UrlUtil.LangPath + "Profile/?UserID=" + data[dataPrefix + "UserID"])
+    @(urlBase + LcUrl.LangPath + "Profile/?UserID=" + data[dataPrefix + "UserID"])
 }
 @helper printProfileLink(dynamic data, string dataPrefix, string urlBase, string label = "View profile") {
     <a target="_blank" class="view-profile" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@label</a>
@@ -81,7 +81,7 @@
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
-        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         
         @if (withContactData) {
             <div class="user-contact-data">
@@ -108,14 +108,14 @@
 
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
         else
         {
             if (userType == "customer")
             {
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = data[dataPrefix + "UserID"],
                         PositionID = 0,
@@ -128,7 +128,7 @@
             else if (userType == "provider")
             {
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = data[dataPrefix + "UserID"],
                         PositionID = positionID,
@@ -146,7 +146,7 @@
 @* Mini size is the same for all userType's *@
 else if (size == "mini") {
     <div class="@userType mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
-        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div class="extra-info">@extraInfo</div>
@@ -155,12 +155,12 @@ else if (size == "mini") {
         }
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
     </div>
 } else if (size == "search") {
     <div class="@userType search-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
-        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
+        <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, null, linkInName)
 
@@ -186,7 +186,7 @@ else if (size == "mini") {
                 if (userType == "customer")
                 {
                     <div class="user-rating global-rating">
-                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                        @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                            {
                                ReviewedID = data[dataPrefix + "UserID"],
                                PositionID = 0,
@@ -200,7 +200,7 @@ else if (size == "mini") {
                 else if (userType == "provider")
                 {
                     <div class="user-rating global-rating">
-                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                        @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                            {
                                ReviewedID = data[dataPrefix + "UserID"],
                                PositionID = positionID,
@@ -216,7 +216,7 @@ else if (size == "mini") {
 
         @if (withFullRating)
         {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
     </div>
 } else {

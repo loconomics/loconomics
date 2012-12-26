@@ -180,7 +180,7 @@
                 if (!Request.Form["request-more-attributes"].IsEmpty()) {
                         LcMessaging.SendMail("providerhelp@loconomics.com",
                         "Loconomics.com: Provider request more service attributes",
-                        LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailRequestMoreServiceAttributes/",
+                        LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailRequestMoreServiceAttributes/",
                             new Dictionary<string, object> { 
                                 { "ProviderUserID", pos.UserID },
                                 { "PositionID", pos.PositionID },
@@ -286,7 +286,7 @@
 Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want. Make sure to be clear about what tasks future clients can expect you to perform. If we've missed something, <a href="mailto:providerhelp@loconomics.com">let us know</a>.
 </p>
 <div>
-<form action="@(UrlUtil.LangPath)$Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
+<form action="@(LcUrl.LangPath)$Dashboard/$PositionsServices/" method="post" class="positionservices ajax ajax-box" id="@idprefix">
     <input type="hidden" name="PositionID" value="@pos.PositionID"/>
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -59,7 +59,7 @@
             (<span class="reviewer-date">@review.LastRatingDate.ToShortDateString()</span>):
         </h5>
     </div>
-    <img class="reviewwer-avatar avatar mini-avatar" alt="@(review.ReviewerFirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@review.ReviewerUserID" width="55" height="55" />
+    <img class="reviewwer-avatar avatar mini-avatar" alt="@(review.ReviewerFirstName)'s Photo" src="@(LcUrl.LangPath)Profile/Photo/@review.ReviewerUserID" width="55" height="55" />
     <div class="public-review">@LcHelpers.PrintTextAsHtml(review.PublicReview)</div>
     <a href="#position@(positionID)-reviews" class="view-more">More reviews</a>
 </div>

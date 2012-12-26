@@ -1,9 +1,9 @@
 ﻿@using WebMatrix.WebData;
 @{
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
-    Styles.Add(UrlUtil.AppPath + "Styles/ProviderReview.css");
+    Styles.Add(LcUrl.AppPath + "Styles/ProviderReview.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);
@@ -22,17 +22,17 @@
             
             if (WebSecurity.IsAuthenticated)
             {
-                <a href="@(UrlUtil.LangPath)Reviews/ProviderReferenceForm/?ProviderUserID=@(providerID)&PositionID=@(position.PositionID)">Go! (to the review form)</a>
+                <a href="@(LcUrl.LangPath)Reviews/ProviderReferenceForm/?ProviderUserID=@(providerID)&PositionID=@(position.PositionID)">Go! (to the review form)</a>
             }
             else
             {
                 <p>You'll need to login or create an account for free.</p>
             
-                @RenderPage(UrlUtil.RenderLangPath + "Account/$Login.cshtml", new
+                @RenderPage(LcUrl.RenderLangPath + "Account/$Login.cshtml", new
                    {
                        ShowHeader = false,
                        ShowTools = true,
-                       Redirect = UrlUtil.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID
+                       Redirect = LcUrl.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID
                        ,
                        RegisterWaitConfirmation = false
                    })

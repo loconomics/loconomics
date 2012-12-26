@@ -8,7 +8,7 @@
     
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
     if (bookingRequestID <= 0) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
     
     // Destroy booking session
@@ -24,8 +24,8 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     
-    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
-    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Booking.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Search.css");
 }
 
   <div id="container" class="clearfix booking editable">
@@ -33,7 +33,7 @@
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">Your appointment is in the works.</p>
 
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", provider},
             {"DataPrefix", ""},
             {"Size", "search"},

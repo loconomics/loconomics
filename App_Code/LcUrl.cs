@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Web;
 
 /// <summary>
-/// Url Utilities
+/// The only recommended way to create URLs safety for all the
+/// site and communications.
+/// Use *Path Properties for pages and *Url for communications.
 /// </summary>
-public static class UrlUtil
+public static class LcUrl
 {
     /// <summary>
 	/// Get the Site Root URL of the current request.
@@ -135,7 +137,7 @@ public static class UrlUtil
     }
     public static string ToJsVar()
     {
-        return "var UrlUtil = " + ToJson() + ";";
+        return "var LcUrl = " + ToJson() + ";";
     }
 
     /// <summary>

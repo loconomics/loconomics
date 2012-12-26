@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Thanks For Signing Up To Loconomics!";
     
     var thisUserID = Request["UserID"].AsInt();
@@ -43,7 +43,7 @@
     <div>
         <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
-        <p>Or go to <a href="@(UrlUtil.LangUrl)Account/Confirm/">@(UrlUtil.LangUrl)Account/Confirm/</a> and input
+        <p>Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/">@(LcUrl.LangUrl)Account/Confirm/</a> and input
         the confirmation code: @confirmationToken </p>
         }
     </div>

@@ -13,10 +13,10 @@
         ", customurl);
 
         if (user is int) {
-            //@RenderPage(UrlUtil.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
-            Response.Redirect(UrlUtil.LangPath + "Profile/?UserID=" + user);
+            //@RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
+            Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + user);
         }
     }
     // Not found custom URL, this URL page doesn't exist, transfer to Not Found
-    @RenderPage(UrlUtil.RenderAppPath + "Errors/Error404.cshtml");
+    @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml");
 }

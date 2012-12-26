@@ -9,7 +9,7 @@
     DateTime confirmationLimitDate = DateTime.MaxValue;
 
     try{
-        Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+        Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
         Page.Title = "Your Booking Request has Expired";
 
         thisUserID = Request["UserID"].AsInt();
@@ -21,7 +21,7 @@
         PageData["messageTitle"] = "Your Booking Request has Expired";
         PageData["messageSubtitle"] = "";
         // Create URL:
-        PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
+        PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
     
         // TODO: Calculate location distance from provider to customer
     
@@ -102,7 +102,7 @@ else
             {
             <p @LcEmailTemplateHelper.StyleResetP()>Hello @LcHelpers.GetUserDisplayName(thisUserData), <br><br>
             You haven´t replied to the booking request from @LcHelpers.GetUserDisplayName(itsUserData) requesting your @booking.PositionSingular services, within the alloted 18 hours, and as a result it has now expired. We know life is busy, but we need our community members to be responsive to ensure the best possible experience for everybody.<br><br>  
-			@LcHelpers.GetUserDisplayName(itsUserData) has also been informed.  If you’d like to contact @itsUser.ObjectPronoun,  <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "itsUserID"]">click here</a>.<br><br>
+			@LcHelpers.GetUserDisplayName(itsUserData) has also been informed.  If you’d like to contact @itsUser.ObjectPronoun,  <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + LcUrl.LangPath)Profile/?UserID=@data[dataPrefix + "itsUserID"]">click here</a>.<br><br>
 			At your service,<br><br>
 			The Loconomics team</p>
             }
@@ -110,7 +110,7 @@ else
             {
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @LcHelpers.GetUserDisplayName(itsUserData)! <br><br>
             We’re really sorry to have to let you down. @LcHelpers.GetUserDisplayName(thisUserData) did not respond to your request within the alloted time.  Your credit card has not been charged, and your authorization will expire shortly.<br><br>  
-			<a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + UrlUtil.LangPath)">Click here</a>. to search for another provider. <br><br>
+			<a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + LcUrl.LangPath)">Click here</a>. to search for another provider. <br><br>
 			At your service,<br><br>
 			The Loconomics team</p>      
 			}

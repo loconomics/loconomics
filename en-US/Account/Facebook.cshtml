@@ -18,7 +18,7 @@
         if (UrlData.Count == 0 && Request["state"] != (string)Session["facebookState"])
         {
             // BAD request, return to home silently and stop request:
-            Response.Redirect(UrlUtil.LangPath, true);
+            Response.Redirect(LcUrl.LangPath, true);
         }
 
         // If there is not an error (error means that user don't grant our application, or cancel login or facebook login fails)
@@ -145,10 +145,10 @@
     if (UrlData.Count > 1 && 
         UrlData[0] == "Callback" && 
         UrlData[1] == "Provider") {
-        redirectUrl = UrlUtil.LangPath + "ProviderSignUp/";
+        redirectUrl = LcUrl.LangPath + "ProviderSignUp/";
     } else {
         // Redirect to the desired page or to home:
-        redirectUrl = N.W(Request.QueryString["Redirect"]) ?? UrlUtil.LangPath;
+        redirectUrl = N.W(Request.QueryString["Redirect"]) ?? LcUrl.LangPath;
     }
     if (Request.IsAjaxRequest()){
         LcHelpers.ReturnJsonResult(1, redirectUrl);
@@ -158,7 +158,7 @@
 
     // FACEBOOK LOGIN using the Microsoft Helper: EVER RETURN FALSE, doesn't work!
     /*if (!Facebook.IsFacebookUserAuthenticated) {
-        //Response.Redirect(UrlUtil.LangPath);
+        //Response.Redirect(LcUrl.LangPath);
         Response.Write("NO isfacebook user authen");
     } else if (Facebook.MembershipLogin()) {
         //Context.RedirectLocal(Request["returnUrl"]);
@@ -238,7 +238,7 @@
         var url =
             String.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&redirect_uri={1}&client_secret={2}&code={3}",
                 (Facebook.AppId),     // YOUR_APP_ID
-                HttpUtility.UrlEncode(UrlUtil.LangUrl),   // YOUR_REDIRECT_URI
+                HttpUtility.UrlEncode(LcUrl.LangUrl),   // YOUR_REDIRECT_URI
                 (Facebook.AppSecret), // YOUR_APP_SECRET
                 HttpUtility.UrlEncode(code));  // CODE_GENERATED_BY_FACEBOOK
 

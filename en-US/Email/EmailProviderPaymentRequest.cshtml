@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Provider Payment Request";
 
     var bookingID = Request["BookingID"].AsInt();

@@ -86,7 +86,7 @@ LC.showDateHours = function (date) {
     var strdate = LC.dateToInterchangleString(date);
     var hours = $day.data('duration-hours');
     var userid = $day.data('user-id');
-    $day.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+    $day.reload(LcUrl.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
             encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/', LC.markSelectedDates);
     $day.data('date', date);
 };
@@ -103,7 +103,7 @@ LC.showWeek = function (date) {
     }
 
     var strdate = LC.dateToInterchangleString(date);
-    $week.reload(UrlUtil.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
+    $week.reload(LcUrl.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
         encodeURIComponent(strdate) + '/',
         function () { LC.selectWeekDay(date); LC.showDateHours(date); });
     $week.data('date', date);
@@ -262,7 +262,7 @@ $(document).ready(function () {
 
         $.ajax({
             // Request $Payment partial page, with all the original url parameters
-            url: UrlUtil.LangPath + "Booking/$Schedule/" + location.search,
+            url: LcUrl.LangPath + "Booking/$Schedule/" + location.search,
             type: 'GET',
             success: function (data, text, jx) {
                 // load tab content
@@ -294,7 +294,7 @@ $(document).ready(function () {
 
         $.ajax({
             // Request $Payment partial page, with all the original url parameters
-            url: UrlUtil.LangPath + "Booking/$Payment/" + location.search,
+            url: LcUrl.LangPath + "Booking/$Payment/" + location.search,
             type: 'GET',
             success: function (data, text, jx) {
                 // load tab content

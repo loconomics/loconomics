@@ -164,7 +164,7 @@
         <option @LcHelpers.IsSelected(selected, "25") value="25">25 miles</option>
         <option @LcHelpers.IsSelected(selected, "50") value="25">50 miles</option>
 }
-    <form action="@(UrlUtil.LangPath)$Dashboard/$PositionsLocationEdit/?LocationID=@(locationID)&PositionID=@(p.PositionID)" method="post" class="ajax ajax-box edit-location">
+    <form action="@(LcUrl.LangPath)$Dashboard/$PositionsLocationEdit/?LocationID=@(locationID)&PositionID=@(p.PositionID)" method="post" class="ajax ajax-box edit-location">
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset>

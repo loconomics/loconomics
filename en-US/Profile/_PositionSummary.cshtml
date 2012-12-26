@@ -60,7 +60,7 @@
 }
             <div class="position-summary">
                 <div class="actions book">
-                    <a class="book-action main-action" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
+                    <a class="book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
                 <span class="hour-price">
                         @if (providerPrice.IsHourly)
@@ -72,7 +72,7 @@
                             <span class="price-since">from:</span> <span class="price">@String.Format("{0:C}", providerPrice.Price)</span>
                         }
                 </span>
-                <a class="calculate-price" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
+                <a class="calculate-price" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
                     @if (minimumBookingTime > 0)
@@ -95,7 +95,7 @@
                             </li></ul>
                             <div class="popups">
                                 <div id="@prefix-cancellation-policy" class="popup">
-                                    @RenderPage(UrlUtil.RenderLangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID, DisplayForUserType = "customer" })
+                                    @RenderPage(LcUrl.RenderLangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = cancellationPolicy.CancellationPolicyID, DisplayForUserType = "customer" })
                                 </div>
                             </div>
                         </div>

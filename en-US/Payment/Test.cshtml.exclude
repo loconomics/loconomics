@@ -2,7 +2,7 @@
 @{
     LcHelpers.SecurePage();
     
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     var UserID = WebSecurity.CurrentUserId;
 
     var gateway = new BraintreeGateway
@@ -19,7 +19,7 @@
     //TODO: VALIDATE AMOUNT
     var TransparentRedirectURLForCreate = gateway.TransparentRedirect.Url;
     var TrData = gateway.Transaction.SaleTrData(new TransactionRequest { Amount = Decimal.Parse(Amount)}, // key information about the transaction
-                                                UrlUtil.LangPath + "Payment/Confirmation/");  // the redirect destination, in this case, the Confirm action below
+                                                LcUrl.LangPath + "Payment/Confirmation/");  // the redirect destination, in this case, the Confirm action below
 }
 <div id="container" class="sign-up">
     

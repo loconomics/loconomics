@@ -35,8 +35,8 @@
     @LcHelpers.PrintTextAsHtml(pos.PositionIntro)
 </p>
 @*LcHelpers.SetupStarRatingPlugin()*@
-@RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
-@RenderPage(UrlUtil.RenderLangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
+@RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
+@RenderPage(LcUrl.RenderLangPath + "Reviews/$FeaturedReview.cshtml", new { ReviewedID = p.UserID, PositionID = pos.PositionID })
 
 <div class="service-attribute-category">
 

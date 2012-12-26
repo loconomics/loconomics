@@ -169,7 +169,7 @@ catch { }*@
 Doing the job is the tough part, getting paid is the easy part.  You can be paid via direct deposit, or we can mail you a paper check.  Please indicate your preference below.  Rest assured your data is stored securely.
 </p>
 <div>
-<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)$Dashboard/$AccountPaymentsBankInfo/" class="ajax ajax-box">
+<form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountPaymentsBankInfo/" class="ajax ajax-box">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

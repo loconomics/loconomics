@@ -326,7 +326,7 @@
 This is the bare-bones run down of who you are outside of your job. Please fill out the information below as accurately as possible. Only your first name, last initial, and public bio are visible on your profile. Eventual customers receive your full name, email, and phone number upon a confirmed booking. As always, all your data is safe with us.
 </p>
 <div>
-<form method="post" action="@(UrlUtil.LangPath)$Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
+<form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountPersonal/" id="personal" class="ajax ajax-box">
     <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
@@ -455,7 +455,7 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
             <legend>Social media verifications:</legend>
             <ul>
                 <li class="facebook">
-                    @RenderPage(UrlUtil.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
+                    @RenderPage(LcUrl.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
                     @*if (facebookVerification != null)
                     {
                         <div class="verification-details">
@@ -467,8 +467,8 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
                         </div>
                     }*@
                 </li>
-                @*<li class="twitter"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
-                <li class="linkedin"><a href="#"><img src="@Href(UrlUtil.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>*@
+                @*<li class="twitter"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
+                <li class="linkedin"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>*@
             </ul>
         </fieldset>
         <fieldset class="user-verifications">

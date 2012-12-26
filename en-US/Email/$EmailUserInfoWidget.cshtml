@@ -9,7 +9,7 @@
     var extraInfo = PageData["ExtraInfo"];
     var withGoogleMap = PageData["WithGoogleMap"] ?? true;
     var positionID = (int)(PageData["PositionID"] ?? -1);
-    var urlBase = UrlUtil.SiteUrl;
+    var urlBase = LcUrl.SiteUrl;
 
     if (data == null) {
         if (withContactData) {
@@ -43,7 +43,7 @@
             <span>Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
-        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         
         @if (withContactData) {
             <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
@@ -70,7 +70,7 @@
         <div style="display: inline-block;">
         @if (userType == "customer")
         {
-            @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+            @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
                 ReviewedID = data[dataPrefix + "UserID"],
                 PositionID = 0,
                 ReviewedData = data,
@@ -80,7 +80,7 @@
         }
         else if (userType == "provider")
         {
-            @RenderPage(UrlUtil.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
+            @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserRatingSummaryWidget.cshtml", new { 
                 ReviewedID = data[dataPrefix + "UserID"],
                 PositionID = positionID,
                 ReviewedData = data,
@@ -90,18 +90,18 @@
         }
         </div>
 
-        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
+        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + LcUrl.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
     </div>
 }
 @* Mini size is the same for all userType's *@
 else if (size == "mini") {
     <div style="@addContainerStyle">
-        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + UrlUtil.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()">@data[dataPrefix + "FirstName"] @(LcHelpers.GetInitialLetter(data[dataPrefix + "LastName"])).</h5>
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div>@extraInfo</div>
         } else {
-            <a href="@(urlBase + UrlUtil.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+            <a href="@(urlBase + LcUrl.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
         }
     </div>
 } else {

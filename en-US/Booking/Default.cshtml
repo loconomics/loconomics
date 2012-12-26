@@ -10,19 +10,19 @@
     int positionid = Request["PositionID"].AsInt();
     
     if (providerid == 0 || positionid == 0) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
         
     PageData["providerrow"] = LcData.UserInfo.GetUserRow(providerid);
     PageData["positionrow"] = LcData.UserInfo.GetUserPos(providerid, positionid);
     
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
 
-    Scripts.Add(UrlUtil.AppPath + "Scripts/Booking.js");
-    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
-    Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+    Scripts.Add(LcUrl.AppPath + "Scripts/Booking.js");
+    Styles.Add(LcUrl.AppPath + "Styles/Booking.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Search.css");
 }
 
   <div id="container" class="clearfix booking editable changes-notification-enabled">
@@ -30,7 +30,7 @@
 		<h1 class="withsub">@Page.Title</h1>
         <p class="subh1">We'll make it easy for you and @PageData["providerrow"].FirstName</p>
 
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", PageData["providerrow"]},
             {"DataPrefix", ""},
             {"Size", "search"},

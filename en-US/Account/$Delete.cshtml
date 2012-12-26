@@ -10,7 +10,7 @@
         }
         WebSecurity.Logout();
     
-        var redirect = UrlUtil.LangPath + "Account/Logout/Deleted/";
+        var redirect = LcUrl.LangPath + "Account/Logout/Deleted/";
     
         if (Request.IsAjaxRequest()) {
             //LcHelpers.ReturnJsonResult(1, redirect);

@@ -143,7 +143,7 @@
                 }
                 if(ModelState.IsValid){
                     //LcHelpers.ReturnJsonResult(0, "Thanks for rating");
-                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID);
+                    LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID);
                 }
             }
         }
@@ -151,7 +151,7 @@
     
     var rateTexts = LcData.GetPositionRatings(0);
 }
-<form class="customer-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$CustomerRatingForm/">
+<form class="customer-rating-form ajax ajax-box" method="post" action="@(LcUrl.LangPath)Reviews/$CustomerRatingForm/">
     @LcHelpers.SetupStarRatingPlugin()
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary()
@@ -163,7 +163,7 @@
                 <li class="rating1">
                     <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate @customer.FirstName as a client:*@</span>
                     <div class="user-rating">
-                        @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
+                        @RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                     </div>
                 </li>
                 <li class="publicreview">

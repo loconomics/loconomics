@@ -44,6 +44,6 @@ is activated.  We’ll try and make this as easy and painless as possible for yo
         </p>
     </div>
     <div class="actions">
-        <a href="@Href(UrlUtil.LangPath + "Dashboard/")" class="main-action">Go to my dashboard</a>
+        <a href="@Href(LcUrl.LangPath + "Dashboard/")" class="main-action">Go to my dashboard</a>
     </div>
 </div>

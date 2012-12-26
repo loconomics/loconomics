@@ -87,7 +87,7 @@
 }
 @helper printItem(dynamic thread, dynamic message, string userType, string userPrefix){
     <li class="@userType message-@message.MessageID">
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", thread},
             {"DataPrefix", userPrefix},
             {"Size", "mini"},
@@ -134,7 +134,7 @@ else
         <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 
         <h4>@itsUserLabel profile</h4>
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
             {"Data", itsUserData},
             {"DataPrefix", ""},
@@ -157,7 +157,7 @@ else
         }
         @{
             <li class="@myUserType new-message">
-                @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+                @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
                     {"AddCssClasses", "message-conversation" },
                     {"Data", thread},
                     {"DataPrefix", myUserPrefix},
@@ -166,7 +166,7 @@ else
                     {"ExtraInfo", DateTime.Now.ToShortDateString()}
                 })
                 <div class="message-section">
-                    <form action="@(UrlUtil.LangPath)Messaging/$MessageThread/" class="ajax">
+                    <form action="@(LcUrl.LangPath)Messaging/$MessageThread/" class="ajax">
                         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                         <input type="hidden" name="MessageThreadID" value="@threadID" />
                         <textarea rows="4" name="newmessage" placeholder="Reply"></textarea>
@@ -180,7 +180,7 @@ else
         </ul>
 
         <h4>Reminders</h4>
-        @RenderPage(UrlUtil.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", myUserType)
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", myUserType)
     </div>
     </div>
 }

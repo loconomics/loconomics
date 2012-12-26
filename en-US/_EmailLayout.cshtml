@@ -8,7 +8,7 @@
     var messageSubtitle = PageData["messageSubtitle"];
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
-        viewOnSiteUrl = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
+        viewOnSiteUrl = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
         if (messageID != null) {
             viewOnSiteUrl += "_Message-" + messageID;
         }
@@ -72,13 +72,13 @@
                     }
                 </td>
                 <td width="180" style="padding: 0;" align="right">
-                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@UrlUtil.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(UrlUtil.AppUrl)img/email/@(UrlUtil.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@LcUrl.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
                     <!--<a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">Click here if this message isn't displaying correctly.</a>-->
                 </td>
             </tr>
             @***content*@<tr style="padding:0 0 0 0">
                 <td colspan="2" style="padding:0 0 30px 0">
-                    @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + UrlUtil.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
+                    @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + LcUrl.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
                         <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
                     </h2>*@
                     <table width="600" style="font-size:13px;border-collapse:collapse">
@@ -96,12 +96,12 @@
                 <td colspan="2">
                     This message was sent to <a href="mailto:@(emailTo)">@emailTo</a><br />
                     @if (!isNotAUser) {
-                    <text>Visit <a href="@(UrlUtil.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
+                    <text>Visit <a href="@(LcUrl.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
                     }
                     Please add automated@loconomics.com to your address book to ensure delivery of our emails. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
                     3150 18th Street Suite 438, Mailbox 208, San Francisco, CA 94110 <br />
-                    <a href="@(UrlUtil.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@(UrlUtil.LangUrl)About/TermsOfUse/">Terms of Use</a>
+                    <a href="@(LcUrl.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@(LcUrl.LangUrl)About/TermsOfUse/">Terms of Use</a>
                 </td>
             </tr>
         </table>

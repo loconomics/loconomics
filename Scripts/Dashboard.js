@@ -29,7 +29,7 @@ $(document).ready(function () {
                 window.location = u;
             } else {
                 // Redirect to positions page
-                window.location = UrlUtil.LangPath + 'Dashboard/Positions/#!pricing';
+                window.location = LcUrl.LangPath + 'Dashboard/Positions/#!pricing';
             }
         }
     }
@@ -64,12 +64,12 @@ $(document).ready(function () {
     $t = $t.parent();
     if ($t.hasClass('on')) {
     if (confirm('Are you sure you want deactivate your position?')) {
-    window.location = UrlUtil.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
+    window.location = LcUrl.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
     }
     }
     else if ($t.hasClass('off')) {
     if (confirm('Are you sure you want reactivate your position?')) {
-    window.location = UrlUtil.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
+    window.location = LcUrl.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
     }
     }
     return false;
@@ -79,7 +79,7 @@ $(document).ready(function () {
     * Change Photo
     */
     $('#changephoto').click(function () {
-        popup(UrlUtil.LangPath + 'Dashboard/ChangePhoto/', { width: 240, height: 240 });
+        popup(LcUrl.LangPath + 'Dashboard/ChangePhoto/', { width: 240, height: 240 });
         return false;
     });
     /*
@@ -88,7 +88,7 @@ $(document).ready(function () {
     initPositionPhotos();
     $('.positionphotos').parent().on('click', '.positionphotos-tools-upload > a', function () {
         var posID = $(this).closest('form').find('input[name=PositionID]').val();
-        popup(UrlUtil.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
+        popup(LcUrl.LangPath + 'Dashboard/UploadPhoto/?PositionID=' + posID, 'small');
         return false;
     })
     .on('click', '.positionphotos-gallery li a', function () {
@@ -246,7 +246,7 @@ $(document).ready(function () {
 
         // Do the Ajax post
         $.ajax({
-            url: UrlUtil.LangPath + url,
+            url: LcUrl.LangPath + url,
             data: data,
             context: ctx,
             success: function (data, text, jx) {
@@ -372,7 +372,7 @@ $(document).ready(function () {
                     var luse = loc.closest('.locations-set').data('location-use');
                     $.ajax({
                         url: ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + loc.data('location-id')) + '&action=delete&use=' + luse,
-                        //UrlUtil.LangPath + 'Dashboard/$PositionsLocationEdit/?action=delete&LocationID=' + loc.data('location-id'),
+                        //LcUrl.LangPath + 'Dashboard/$PositionsLocationEdit/?action=delete&LocationID=' + loc.data('location-id'),
                         success: function (data) {
                             if (data && data.Code == 0) {
                                 smoothBoxBlock('<div>' + data.Result + '</div>', loc);
@@ -515,7 +515,7 @@ $(document).ready(function () {
             if (confirm(res.children('.confirm-delete-package-message').text())) {
                 smoothBoxBlock(res.children('.delete-package-loading-message'), pak);
                 $.ajax({
-                    url: UrlUtil.LangPath + 'PricingWizard/$ProviderPackageEdit/',
+                    url: LcUrl.LangPath + 'PricingWizard/$ProviderPackageEdit/',
                     data: {
                         action: 'delete',
                         ProviderPackageID: $(this).data('provider-package-id'),
@@ -607,7 +607,7 @@ $(document).ready(function () {
         var posID = cont.data('position-id');
         smoothBoxBlock(null, cont);
         if ($(this).closest('.popup').is('.buy-step-2'))
-            cont.closest('.tab-body').reload(UrlUtil.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
+            cont.closest('.tab-body').reload(LcUrl.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
         return false;
     })
     .on('ajaxSuccessPost', '.popup.buy-step-1 form', function (e, data) {
@@ -678,7 +678,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
         var $tab = $(tab);
 
         // Set the data-source-url of the new tab to the to be loaded url to enable jQuery.reload()
-        $tab.data('source-url', UrlUtil.LangPath + url);
+        $tab.data('source-url', LcUrl.LangPath + url);
 
         var ctx = { form: $tab, boxIsContainer: true };
 
@@ -689,7 +689,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
 
         // Do the Ajax post
         $.ajax({
-            url: UrlUtil.LangPath + url,
+            url: LcUrl.LangPath + url,
             data: data,
             context: ctx,
             success: ajaxFormsSuccessHandler,
@@ -726,7 +726,7 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
 
         // Do the Ajax post
         $.ajax({
-            url: UrlUtil.LangPath + url,
+            url: LcUrl.LangPath + url,
             data: data,
             context: ctx,
             success: ajaxFormsSuccessHandler,
@@ -814,7 +814,7 @@ function reloadUserPhoto() {
 function deleteUserPhoto() {
     $.blockUI(loadingBlock);
     jQuery.ajax({
-        url: UrlUtil.LangUrl + "Dashboard/ChangePhoto/?delete=true",
+        url: LcUrl.LangUrl + "Dashboard/ChangePhoto/?delete=true",
         method: "GET",
         cache: false,
         dataType: "json",

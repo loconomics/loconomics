@@ -82,7 +82,7 @@
         @foreach (var review in reviews)
         {
 	        <li>
-                @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new
+                @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new
                    {
                        AddCssClasses = "author",
                        Data = review,
@@ -100,7 +100,7 @@
                 <div class="helpful-review">@(review.HelpfulReviewCount ?? 0) people found this review helpful <a class="helpful-review-action" href="#">rate as helpful</a></div>
                 }
                 </div>
-                @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                    {
                        ReviewRecord = review,
                        ReviewerID = review.ReviewerUserID,

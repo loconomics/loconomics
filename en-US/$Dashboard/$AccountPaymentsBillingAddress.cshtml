@@ -54,7 +54,7 @@
     }
 }
 <p></p>
-<form method="post" id="@idprefix-form" action="@(UrlUtil.LangPath)$Dashboard/$AccountPaymentsBillingAddress/" class="ajax ajax-box billing-address-form">
+<form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountPaymentsBillingAddress/" class="ajax ajax-box billing-address-form">
     <input type="hidden" name="AddressID" value="@(location != null ? location.AddressID : null)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

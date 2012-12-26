@@ -69,7 +69,7 @@
                             // show price with fees
                             var priceWithFees = pak.Price + LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
                             <div class="actions book">
-                                <a class="button book-action main-action" href="@Href(UrlUtil.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
+                                <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + pos.UserID + "&positionid=" + pos.PositionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
                             </div>
                         }
                     </div>

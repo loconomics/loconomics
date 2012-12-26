@@ -18,7 +18,7 @@
     }
 }
 
-<form action="@(UrlUtil.LangPath)HelpCenter/$RequestHelp/" class="ajax ajax-box requesthelp send-message-form">
+<form action="@(LcUrl.LangPath)HelpCenter/$RequestHelp/" class="ajax ajax-box requesthelp send-message-form">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
@@ -31,7 +31,7 @@
     var u = LcData.UserInfo.GetUserRow();
         <div class="from-line">
             <label>From:</label>
-            <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(UrlUtil.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
+            <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(LcUrl.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
             <span class="from">@LcHelpers.GetUserDisplayName(u)</span>
         </div>
         <div class="subject">
@@ -47,7 +47,7 @@
 else
 {
     <div class="require-login">
-        <h2>Please <a class="login" href="@(UrlUtil.LangPath)Account/Login/">Login</a> to send a question</h2>
+        <h2>Please <a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a> to send a question</h2>
     </div>
 }
 </form>

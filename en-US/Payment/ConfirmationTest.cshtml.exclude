@@ -1,7 +1,7 @@
 ﻿
 @using Braintree
 @{  
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
 
     var gateway = new BraintreeGateway
     {
@@ -60,7 +60,7 @@
             }
         }
 
-        Response.Redirect(UrlUtil.LangPath + "Payment/Test/");
+        Response.Redirect(LcUrl.LangPath + "Payment/Test/");
 
     //TODO: Check that the form is populated correctly
     };

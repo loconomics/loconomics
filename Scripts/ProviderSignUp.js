@@ -8,7 +8,7 @@ var ProviderSignUp = {
         // Autocomplete positions and add to the list
         var positionsList = null, tpl = null;
         var positionsAutocomplete = $('#providersignup-position-search').autocomplete({
-            source: UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
+            source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
             autoFocus: false,
             minLength: 0,
             select: function (event, ui) {
@@ -45,7 +45,7 @@ var ProviderSignUp = {
             }
         });
         // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
-        /*$.getJSON(UrlUtil.JsonPath + 'GetPositions/Autocomplete/',
+        /*$.getJSON(LcUrl.JsonPath + 'GetPositions/Autocomplete/',
             function (data) {
                 positionsAutocomplete.autocomplete('option', 'source', data);
             }

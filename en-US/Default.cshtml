@@ -1,6 +1,6 @@
 ﻿@using WebMatrix.Data;
 @{
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     bool performSearch = false;
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
@@ -23,7 +23,7 @@
         PageData["BodyClass"] = "search";
         PageData["IsHomePage"] = true; // consider true for now just all home script are shared
         Page.Title = "Search Results...";
-        Styles.Add(UrlUtil.AppPath + "Styles/Search.css");
+        Styles.Add(LcUrl.AppPath + "Styles/Search.css");
         
         // Building sql parameters:
         var LC_Term  = "%" + serviceType + "%";
@@ -91,7 +91,7 @@
          
         @searchForm()
 
-        @RenderPage(UrlUtil.RenderLangPath + "/Search/_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category", UrlBase = "" })
+        @RenderPage(LcUrl.RenderLangPath + "/Search/_CategoriesList.cshtml", new { CategoriesTitle = "Or browse by category", UrlBase = "" })
      }
      else
      {
@@ -101,7 +101,7 @@
          }
          else
          {
-             @RenderPage(UrlUtil.RenderLangPath + "Search/_CategoriesList.cshtml", new { SelectedCategory = serviceCat, UrlBase = "" })
+             @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { SelectedCategory = serviceCat, UrlBase = "" })
          }
         
         <div class="search-results">
@@ -125,7 +125,7 @@
                             i++;
                             if (n != i) { continue; }
                         <li>
-                            @RenderPage(UrlUtil.RenderLangPath + "Search/_Item.cshtml", new { Item = item })
+                            @RenderPage(LcUrl.RenderLangPath + "Search/_Item.cshtml", new { Item = item })
                         </li>
                         }
                     </ol>
@@ -139,7 +139,7 @@
                 @foreach (var item in posrow)
                 {
                 <li class="clearfix">
-                    @RenderPage(UrlUtil.RenderLangPath + "Search/_Item.cshtml", new { Item = item })
+                    @RenderPage(LcUrl.RenderLangPath + "Search/_Item.cshtml", new { Item = item })
                 </li>
                 }
             </ol>
@@ -167,7 +167,7 @@
             </div>
             @if (!categorizedResults)
             {
-                @RenderPage(UrlUtil.RenderLangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
+                @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
             }
         </div>
     }

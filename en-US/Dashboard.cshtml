@@ -3,7 +3,7 @@
     LcHelpers.SecurePage();
     
     Page.Title = "Make your life better!";
-    Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Dashboard.css");
     
     var u = LcData.UserInfo.GetUserRow();
     
@@ -14,7 +14,7 @@
     var fileToRender = "";
     
     if (String.IsNullOrEmpty(page)) {
-        Response.Redirect(UrlUtil.LangPath + "Dashboard/Mailbox/");
+        Response.Redirect(LcUrl.LangPath + "Dashboard/Mailbox/");
     }
 
     var pages = new List<string> {
@@ -22,26 +22,26 @@
         "ressources", "tools", "bookings", "admin", "alerts"
     };
     if (pages.Contains(page)) {
-        fileToRender = UrlUtil.RenderLangPath + "$Dashboard/$" + page + ".cshtml";
+        fileToRender = LcUrl.RenderLangPath + "$Dashboard/$" + page + ".cshtml";
         // Set menu option selected
         PageData["menu-item"] = page;
     } else {
         string folder = "$Dashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
-        if (File.Exists(Server.MapPath(UrlUtil.RenderLangPath + folder + file))) {
+        if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
             if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
-                @RenderPage(UrlUtil.RenderLangPath + folder + file);
+                @RenderPage(LcUrl.RenderLangPath + folder + file);
                 return;
             } else {
-                fileToRender = UrlUtil.RenderLangPath + folder + file;
+                fileToRender = LcUrl.RenderLangPath + folder + file;
             }
         } else {
             throw new HttpException(404, "Page not found");
         }
     }
     // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
-    Scripts.Add(UrlUtil.AppPath + "Scripts/Dashboard.js");
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    Scripts.Add(LcUrl.AppPath + "Scripts/Dashboard.js");
 }
 @helper menu(string item){
     @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
@@ -53,8 +53,8 @@
                 <div id="highlights">
                     <h1>Dashboard</h1>
                     <div id="dashboard-avatar">
-                        <img class="avatar image-1dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/")" alt="User Photo" />
-                        <img class="avatar image-2dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
+                        <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
+                        <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
                         <a id="changephoto" href="#">Edit profile photo</a>
                     </div>
                 </div><!-- highlights -->
@@ -64,19 +64,19 @@
                     @if (u.IsProvider)
                     {
                     <p>It’s all here: everything you need to manage your 
-                        <a href="@(UrlUtil.LangPath)Dashboard/Positions/">profile</a>, 
-                        <a href="@(UrlUtil.LangPath)Dashboard/Bookings/">bookings</a>, 
-                        and <a href="@(UrlUtil.LangPath)Dashboard/Account/">account settings</a>.
+                        <a href="@(LcUrl.LangPath)Dashboard/Positions/">profile</a>, 
+                        <a href="@(LcUrl.LangPath)Dashboard/Bookings/">bookings</a>, 
+                        and <a href="@(LcUrl.LangPath)Dashboard/Account/">account settings</a>.
                     </p>
                     }
                     else if (u.IsCustomer)
                     {
                      <p>It’s all here: everything you need to manage your 
-                     	<a href="@(UrlUtil.LangPath)Dashboard/Bookings/">bookings</a> 
-                        and <a href="@(UrlUtil.LangPath)Dashboard/Account/">account settings</a>.
+                     	<a href="@(LcUrl.LangPath)Dashboard/Bookings/">bookings</a> 
+                        and <a href="@(LcUrl.LangPath)Dashboard/Account/">account settings</a>.
                     </p>
                     }
-                    @RenderPage(UrlUtil.RenderLangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
+                    @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
                 </div><!-- dashboard-help -->
 
                 <div id="nav">
@@ -84,22 +84,22 @@
                         @{
                             var userAlertsCount = LcData.GetActiveUserAlertsCount(u.UserID);
                         }
-                        <li class="@menu("alerts")"><a href="@(UrlUtil.LangPath)Dashboard/Alerts/">Alerts @if (userAlertsCount > 0) { <span class="warning-note">@userAlertsCount</span> }</a></li>
-                        <li class="@menu("mailbox")"><a href="@(UrlUtil.LangPath)Dashboard/Mailbox/">Inbox</a></li>
-                        <li class="@menu("bookings")"><a href="@(UrlUtil.LangPath)Dashboard/Bookings/">Bookings</a></li>
+                        <li class="@menu("alerts")"><a href="@(LcUrl.LangPath)Dashboard/Alerts/">Alerts @if (userAlertsCount > 0) { <span class="warning-note">@userAlertsCount</span> }</a></li>
+                        <li class="@menu("mailbox")"><a href="@(LcUrl.LangPath)Dashboard/Mailbox/">Inbox</a></li>
+                        <li class="@menu("bookings")"><a href="@(LcUrl.LangPath)Dashboard/Bookings/">Bookings</a></li>
                         @if (u.IsProvider){
-                        <li class="@menu("calendar")"><a href="@(UrlUtil.LangPath)Dashboard/Calendar/">Calendar</a></li>
-                        <li class="@menu("positions")"><a href="@(UrlUtil.LangPath)Dashboard/Positions/">My Profile</a></li>
-                        <li class="@menu("tools")"><a href="@(UrlUtil.LangPath)Dashboard/Tools/">Tools</a></li>
-                        <li class="@menu("myclients")"><a href="@(UrlUtil.LangPath)Dashboard/MyClients/">My Clients</a></li>
+                        <li class="@menu("calendar")"><a href="@(LcUrl.LangPath)Dashboard/Calendar/">Calendar</a></li>
+                        <li class="@menu("positions")"><a href="@(LcUrl.LangPath)Dashboard/Positions/">My Profile</a></li>
+                        <li class="@menu("tools")"><a href="@(LcUrl.LangPath)Dashboard/Tools/">Tools</a></li>
+                        <li class="@menu("myclients")"><a href="@(LcUrl.LangPath)Dashboard/MyClients/">My Clients</a></li>
                         }
                         @if (u.IsCustomer){
-                        <li class="@menu("myproviders")"><a href="@(UrlUtil.LangPath)Dashboard/MyProviders/">My Providers</a></li>
+                        <li class="@menu("myproviders")"><a href="@(LcUrl.LangPath)Dashboard/MyProviders/">My Providers</a></li>
                         }
-                        <li class="@menu("preferences")"><a href="@(UrlUtil.LangPath)Dashboard/Preferences/">Privacy Settings</a></li>
-                        <li class="@menu("account")"><a href="@(UrlUtil.LangPath)Dashboard/Account/">Account</a></li>
+                        <li class="@menu("preferences")"><a href="@(LcUrl.LangPath)Dashboard/Preferences/">Privacy Settings</a></li>
+                        <li class="@menu("account")"><a href="@(LcUrl.LangPath)Dashboard/Account/">Account</a></li>
                         @if (u.IsAdmin){
-                        <li class="@menu("admin") admin"><a href="@(UrlUtil.LangPath)Dashboard/Admin/">Admin</a></li>
+                        <li class="@menu("admin") admin"><a href="@(LcUrl.LangPath)Dashboard/Admin/">Admin</a></li>
                         }
                     </ul>
                 </div><!-- nav -->

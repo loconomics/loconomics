@@ -1,10 +1,10 @@
 ﻿@{
     LcHelpers.SecurePage();
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
-    Styles.Add(UrlUtil.AppPath + "Styles/ProviderReview.css");
-    Styles.Add(UrlUtil.AppPath + "Styles/Dashboard.css");
+    Styles.Add(LcUrl.AppPath + "Styles/ProviderReview.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Dashboard.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);

@@ -7,8 +7,8 @@
     
     // Number of maximum positions displayed:
     var maxPositions = 5;
-    //Scripts.Add(UrlUtil.AppPath + "Scripts/AddPositionForm.js");
-    Scripts.Add(UrlUtil.AppPath + "Scripts/ProviderSignUp.js");
+    //Scripts.Add(LcUrl.AppPath + "Scripts/AddPositionForm.js");
+    Scripts.Add(LcUrl.AppPath + "Scripts/ProviderSignUp.js");
 }
 
         @{
@@ -63,7 +63,7 @@
                 <div class="lc-ressources position-ressources">
                     <div class="delete-message-confirm">
                         <p>Are you really sure you want to delete this position?</p>
-                        <form action="@(UrlUtil.LangPath)$Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
+                        <form action="@(LcUrl.LangPath)$Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
                             <input type="hidden" name="PositionID" value="@pid" />
                             <button type="button" class="cancel-action">No</button>
                             <button type="submit" class="main-action">Yes</button>
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div id="@("position"+pid)-services" class="tab-body current services-tab" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsServices/?PositionID=@(pid)">
+            <div id="@("position"+pid)-services" class="tab-body current services-tab" data-source-url="@(LcUrl.LangPath)Dashboard/$PositionsServices/?PositionID=@(pid)">
                 @RenderPage("$PositionsServices.cshtml")
             </div><!-- #@("position"+pid)-services -->
             <div id="@("position"+pid)-pricing" class="tab-body">
@@ -101,6 +101,6 @@
         @if (n < maxPositions)
         {
             <div id="position-new" class="tab-body fancy add-positions positionservices @(n == 0 ? "current" : "")">
-                @RenderPage(UrlUtil.RenderLangPath + "ProviderSignUp/$AddMorePositions.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "ProviderSignUp/$AddMorePositions.cshtml")
             </div><!-- position-new -->
         }

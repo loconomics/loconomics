@@ -166,7 +166,7 @@
                     // Send email to loconomics
                     LcMessaging.SendMail("verifications@loconomics.com",
                         "License verification request",
-                        LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Email/EmailLicenseVerificationRequest",
+                        LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailLicenseVerificationRequest",
                             new Dictionary<string, object> { 
                                 { "ProviderUserID", u.UserID },
                                 { "PositionID", p.PositionID },
@@ -227,11 +227,11 @@ else
             </ul>
         </div>
         }
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
             UserID = u.UserID,
             Title = "Your verified licenses:"
         })
-    <form action="@(UrlUtil.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
+    <form action="@(LcUrl.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
         <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

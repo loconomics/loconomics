@@ -2,7 +2,7 @@
     LcHelpers.AdminPage();
     
     if (IsPost) {
-        var url = Request["url"].Replace(UrlUtil.SiteUrl, "");
+        var url = Request["url"].Replace(LcUrl.SiteUrl, "");
         LcMessaging.SendMail(Request["email"], "Testing Email " + url, 
             LcMessaging.ApplyTemplate(url, null));
     }
@@ -46,7 +46,7 @@
                     <ul>
                         @foreach (var l2 in l.Value)
                         {
-                            <li><a target="_blank" href="@(UrlUtil.LangPath + l2)">@l2</a></li>
+                            <li><a target="_blank" href="@(LcUrl.LangPath + l2)">@l2</a></li>
                         }
                     </ul>
                 </li>

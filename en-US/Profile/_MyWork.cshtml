@@ -5,7 +5,7 @@
     // Current position data record:
     var pos = PageData["position"];
     
-    string photosFolder = UrlUtil.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    string photosFolder = LcUrl.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
     
     dynamic photos = null;
     using (var db = Database.Open("sqlloco")) {
@@ -34,7 +34,7 @@ A picture's worth a thousand words.  Review the provider's photos of his/her wor
 </p>
 
 <div class="highlighted-photo-large gallery-highlighted">
-    <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? UrlUtil.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
+    <img alt="@(primaryPhoto == null ? "No primary photo" : primaryPhoto.PhotoCaption)" src="@(primaryPhoto == null ? LcUrl.AppPath + "img/theme/user-photo-no-selected.png" : photosFolder + primaryPhoto.PhotoAddress)" />
     <h5 class="photo-caption">@(primaryPhoto == null ? "" : primaryPhoto.PhotoCaption)</h5>
 </div>
 

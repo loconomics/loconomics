@@ -38,7 +38,7 @@
             */
         //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
         LcHelpers.ReturnJsonResult(1, 
-            UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+            LcUrl.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
     }
     
@@ -307,7 +307,7 @@
 <p class="info">
     Search the days below for up to three appointment times that will work with your schedule.
 </p>
-<form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
+<form action="@(LcUrl.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()

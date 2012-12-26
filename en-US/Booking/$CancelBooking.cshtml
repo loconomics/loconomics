@@ -31,10 +31,10 @@
                 LcMessaging.SendProviderPaymentRequestToLoconomics(bID);
 
                 if (Request.IsAjaxRequest()){
-                    LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + String.Format(
+                    LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
                         "Booking/$BookingDetails/?BookingID={0}", bID ));
                 } else {
-                    Response.Redirect(UrlUtil.LangPath + String.Format(
+                    Response.Redirect(LcUrl.LangPath + String.Format(
                         "Dashboard/Bookings/#!Booking-{0}", bID));
                 }
             } else {

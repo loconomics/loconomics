@@ -114,7 +114,7 @@ else
         </div>
         }
         <h4>@itsUserLabel profile</h4>
-        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddCssClasses", "message-section" },
             {"Data", itsUserData},
             {"DataPrefix", ""},

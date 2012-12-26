@@ -13,7 +13,7 @@ window.log = function f() { log.history = log.history || []; log.history.push(ar
 (function () { try { console.log(); return window.console; } catch (a) { return (window.console = {}); } } ());
 
 /* Generic blockUI options sets */
-var loadingBlock = { message: '<img src="' + UrlUtil.AppPath + 'img/theme/loading.gif"/>' };
+var loadingBlock = { message: '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
@@ -575,8 +575,8 @@ LC.setupValidation = function (reapplyOnlyTo) {
     if (!jqueryValidateUnobtrusiveLoaded) {
         jqueryValidateUnobtrusiveLoaded = true;
         Modernizr.load([
-                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.min.js" },
-                { load: UrlUtil.AppPath + "Scripts/jquery/jquery.validate.unobtrusive.min.js" }
+                { load: LcUrl.AppPath + "Scripts/jquery/jquery.validate.min.js" },
+                { load: LcUrl.AppPath + "Scripts/jquery/jquery.validate.unobtrusive.min.js" }
             ]);
     } else {
         // Check first if validation is enabled (can happen that twice includes of
@@ -704,7 +704,7 @@ function popup(url, size, complete, loadingText, options){
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({
        message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
-       '<img src="' + UrlUtil.AppPath + 'img/theme/loading.gif"/>' + loadingText,
+       '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' + loadingText,
        centerY: false,
        css: popupStyle(swh),
        overlayCSS: { cursor: 'default' },
@@ -1302,7 +1302,7 @@ $(function () {
 
     /** Account popups **/
     $(document).delegate('a.login', 'click', function () {
-        popup(UrlUtil.LangPath + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location),
+        popup(LcUrl.LangPath + 'Account/$Login/?ReturnUrl=' + encodeURIComponent(window.location),
          { width: 410, height: 320 });
         return false;
     })
@@ -1317,11 +1317,11 @@ $(function () {
         return false;
     })
     .delegate('.view-privacy-policy', 'click', function () {
-        popup(UrlUtil.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
+        popup(LcUrl.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
         return false;
     })
     .delegate('.view-terms-of-use', 'click', function () {
-        popup(UrlUtil.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
+        popup(LcUrl.LangPath + 'HelpCenter/$TermsOfUse/', 'large');
         return false;
     })
     .delegate('a.target-tab', 'click', function () {
@@ -1669,7 +1669,7 @@ $(function () {
         urlsection += '#' + href;
         var urlprefix = "HelpCenter/$FAQs";
         if (urlsection)
-            popup(UrlUtil.LangPath + urlprefix + urlsection, 'large');
+            popup(LcUrl.LangPath + urlprefix + urlsection, 'large');
         return false;
     });
 
@@ -1702,7 +1702,7 @@ $(function () {
         else
             date.setDate(date.getDate() - 7);
         var strdate = LC.dateToInterchangleString(date);
-        var url = UrlUtil.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "/?UserID=" + userId;
+        var url = LcUrl.LangPath + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "/?UserID=" + userId;
         calcont.reload(url, function () {
             // get the new object:
             var cal = $(this).children('.calendar');
@@ -1722,7 +1722,7 @@ $(function () {
         var msg = $t.data('val-postalcode');
         if (pc && msg) {
             $.ajax({
-                url: UrlUtil.LangPath + "JSON/ValidatePostalCode/",
+                url: LcUrl.LangPath + "JSON/ValidatePostalCode/",
                 data: { PostalCode: pc },
                 cache: true,
                 dataType: 'JSON',

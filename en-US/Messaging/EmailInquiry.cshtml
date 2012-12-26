@@ -3,7 +3,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Inquiry";
     var kind = Request["Kind"].AsInt();
     var threadID = Request["ThreadID"].AsInt();
@@ -16,7 +16,7 @@
         PageData["messageTitle"] = "Customer Inquiry";
     }
     // Create URL:
-    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() + "_Message-" + messageID.ToString();
+    PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID.ToString() + "_Message-" + messageID.ToString();
     
     /* SQLs similar to Messaging/MessageThread but without user check */
     var sqlGetMessageThread = @"

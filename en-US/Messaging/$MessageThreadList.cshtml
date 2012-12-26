@@ -127,7 +127,7 @@
 }
 @helper printItem(dynamic item, string senderPrefix = "Sender", string receiverPrefix = "Receiver", string senderUserType = "user") {
   <li>
-    @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+    @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
         {"Data", item},
         {"DataPrefix", senderPrefix},
         {"Size", "mini"},

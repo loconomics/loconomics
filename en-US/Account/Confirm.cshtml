@@ -2,7 +2,7 @@
 @using WebMatrix.WebData;
 @{
     // Set the layout page and page title
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Registration Confirmation Page";
 
     string message = "";
@@ -46,7 +46,7 @@
                 ", confirmatedUserID);
                 FormsAuthentication.SetAuthCookie(confirmatedUserEmail, false);
                 // Redirect to dashboard
-                Response.Redirect(UrlUtil.LangPath + "Dashboard/Alerts/");
+                Response.Redirect(LcUrl.LangPath + "Dashboard/Alerts/");
 
 
                 // Standard logic (previous 2012-09-27, issue #134):
@@ -79,7 +79,7 @@
     <p>@message</p>
     if (showLogin)
     {
-        @RenderPage("$Login.cshtml", new { ShowHeader = false, ShowTools = false, Redirect = UrlUtil.LangPath + "Dashboard/" })
+        @RenderPage("$Login.cshtml", new { ShowHeader = false, ShowTools = false, Redirect = LcUrl.LangPath + "Dashboard/" })
     }
 } else {
     <form method="post" action="">

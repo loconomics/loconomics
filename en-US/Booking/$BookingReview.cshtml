@@ -82,15 +82,15 @@ else
     </div>
     @if (myUserType == "customer") {
         if (booking.ReviewedByCustomer) {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
         } else {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$ProviderRatingForm.cshtml")
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$ProviderRatingForm.cshtml")
         }
     } else if (myUserType == "provider") {
         if (booking.ReviewedByProvider) {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
         } else {
-            @RenderPage(UrlUtil.RenderLangPath + "Reviews/$CustomerRatingForm.cshtml")
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$CustomerRatingForm.cshtml")
         }
     }
 </div>

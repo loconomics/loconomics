@@ -10,11 +10,11 @@
     var showTools = PageData["ShowTools"] ?? true;
     string redirect =  N.W(Request.QueryString["ReturnUrl"]) ??
         N.W(PageData["Redirect"]) ?? N.W(Request.QueryString["Redirect"]) ?? N.W(Request.Form["Redirect"]) ??
-        UrlUtil.LangPath;
+        LcUrl.LangPath;
     Session["RegisterWaitConfirmation"] = PageData["RegisterWaitConfirmation"] ?? true;
     
     var facebookAppId = Facebook.AppId;
-    var facebookRedirectUri = UrlUtil.LangUrl + "Account/Facebook/";
+    var facebookRedirectUri = LcUrl.LangUrl + "Account/Facebook/";
     var facebookPermissions = "email"; //"COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES";
     // "SOME_ARBITRARY_BUT_UNIQUE_STRING";
     var facebookState = Session["facebookState"] = Guid.NewGuid().ToString();
@@ -31,7 +31,7 @@
         // is this a OAuth sign in request?
         string provider = Request.Form["provider"];
         if (!provider.IsEmpty()) {
-            OAuthWebSecurity.RequestAuthentication(provider, UrlUtil.LangPath + "Account/RegisterService/");
+            OAuthWebSecurity.RequestAuthentication(provider, LcUrl.LangPath + "Account/RegisterService/");
             return;
         }
     }*/
@@ -46,7 +46,7 @@
         if (WebSecurity.UserExists(username) && WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
             // We return a json with result OK and redirect link (Code=1),
             // and response end just after this:
-            LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/AccountLockedOut/");
+            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/AccountLockedOut/");
         }
 
         // Attempt to login to the Security object using provided creds
@@ -58,7 +58,7 @@
            
             // The redirect cannot be done to an url inside the /Account/ segment:
             if (redirect.Contains("/Account/")) {
-                redirect = UrlUtil.LangPath;
+                redirect = LcUrl.LangPath;
             }
             
             // Be carefully with hash value: if a user enter from an external link in an email
@@ -77,7 +77,7 @@
         } else if (WebSecurity.GetUserId(username) > -1 && !WebSecurity.IsConfirmed(username)) {
             // Resend confirmation mail, like in register
             var token = Database.Open("sqlloco").QueryValue("SELECT ConfirmationToken FROM webpages_Membership WHERE UserID=@0", WebSecurity.GetUserId(username));
-            var confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");      
+            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");      
             
             LcMessaging.SendWelcomeCustomer(WebSecurity.GetUserId(username), username, confirmationUrl, token);
             
@@ -94,7 +94,7 @@
     </hgroup>
     }
     <section>
-        <form class="choice-option ajax ajax-box login changes-notification-disabled" data-success-post-message="Logged successfully!" method="post" action="@(UrlUtil.LangPath)Account/$Login/@(Request.Url.Query)">
+        <form class="choice-option ajax ajax-box login changes-notification-disabled" data-success-post-message="Logged successfully!" method="post" action="@(LcUrl.LangPath)Account/$Login/@(Request.Url.Query)">
             @* If one or more validation errors exist, show an error *@
             @Html.ValidationSummary(null, true, null)
             <input type="hidden" name="Redirect" value="@redirect" />
@@ -144,8 +144,8 @@
         </div>
         @if(showTools){
         <div class="account-tools">
-            <a class="forgot-password" href="@(UrlUtil.LangPath)Account/ForgotPassword/">Forgot password?</a>
-            <a class="register" href="@(UrlUtil.LangPath)Account/Register/?Redirect=@Uri.EscapeDataString(redirect ?? "")">Need an account?</a>
+            <a class="forgot-password" href="@(LcUrl.LangPath)Account/ForgotPassword/">Forgot password?</a>
+            <a class="register" href="@(LcUrl.LangPath)Account/Register/?Redirect=@Uri.EscapeDataString(redirect ?? "")">Need an account?</a>
         </div>
         }
     </section>

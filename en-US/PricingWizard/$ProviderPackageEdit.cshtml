@@ -234,7 +234,7 @@
             positionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box provider-package" action="@(UrlUtil.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)&Type=@(type)">
+<form method="post" class="ajax ajax-box provider-package" action="@(LcUrl.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(packageID)&PositionID=@(positionID)&Type=@(type)">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
         @{

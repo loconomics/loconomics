@@ -43,7 +43,7 @@
             */
         //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
         LcHelpers.ReturnJsonResult(1, 
-            UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+            LcUrl.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
     }
 
@@ -382,7 +382,7 @@
 <p class="info">
     <srong>Visa, Mastercard, or American Express will do nicely, thank you</srong>
 </p>
-<form action="@(UrlUtil.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
+<form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()
@@ -481,6 +481,6 @@
         </div>
     </fieldset>
     <fieldset class="actions">
-        <button data-wizard-next-step="@Href(UrlUtil.LangPath + "Booking/Confirmation/")" class="complete-booking next finish main-action">book it!</button>
+        <button data-wizard-next-step="@Href(LcUrl.LangPath + "Booking/Confirmation/")" class="complete-booking next finish main-action">book it!</button>
     </fieldset>
 </form>

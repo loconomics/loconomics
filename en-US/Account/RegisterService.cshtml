@@ -1,6 +1,6 @@
 ﻿@{
     Page.Title = "Register an account";
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
 
     string email = "";
 
@@ -9,7 +9,7 @@
     if (IsPost) {
         var result = (AuthenticationResult)Session["OAuthResult"];
         if (result == null) {
-            Response.Redirect(UrlUtil.LangPath);
+            Response.Redirect(LcUrl.LangPath);
         }
 
         email = Request.Form["email"];
@@ -31,7 +31,7 @@
                 // as opposed to via a normal account.
                 Session["OAuthLoggedIn"] = true;
                 
-                Response.Redirect(UrlUtil.LangPath);
+                Response.Redirect(LcUrl.LangPath);
             }
             else {
                 ModelState.AddError("email", "This username is already taken.");
@@ -55,7 +55,7 @@
                 
                 var returnUrl = Request.QueryString["ReturnUrl"];
                 if (returnUrl.IsEmpty()) {
-                    Response.Redirect(UrlUtil.LangPath);
+                    Response.Redirect(LcUrl.LangPath);
                 }
                 else {
                     Context.RedirectLocal(returnUrl);

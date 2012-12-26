@@ -210,7 +210,7 @@ public static partial class LcData
             // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
             if (u == null) {
                 // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
-                HttpContext.Current.Response.Redirect(UrlUtil.LangPath + "Account/Logout/", true);
+                HttpContext.Current.Response.Redirect(LcUrl.LangPath + "Account/Logout/", true);
             }
             return u;
         }
@@ -224,7 +224,7 @@ public static partial class LcData
             // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
             if (u == null) {
                 // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
-                HttpContext.Current.Response.Redirect(UrlUtil.LangPath + "Account/Logout/", true);
+                HttpContext.Current.Response.Redirect(LcUrl.LangPath + "Account/Logout/", true);
             }
             return u;
         }
@@ -315,11 +315,11 @@ public static partial class LcData
 
         public static string GetMyPublicURL()
         {
-            return UrlUtil.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
+            return LcUrl.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
         }
         public static string GetUserPublicURL(int userid)
         {
-            return UrlUtil.LangPath + "Profile/?UserID=" + userid;
+            return LcUrl.LangPath + "Profile/?UserID=" + userid;
         }
 
         /// <summary>

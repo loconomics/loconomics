@@ -189,7 +189,7 @@
                     if (pastReference) {
                         LcHelpers.ReturnJsonResult(0, "Thanks for your review!", false);
                     } else {
-                        LcHelpers.ReturnJsonResult(3, UrlUtil.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
+                        LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
                     }
 
                     // Send emails recommending this provider to comma-sepparated 'share-email-addresses'
@@ -208,7 +208,7 @@
                         if (!string.IsNullOrEmpty(newemails)) {
                             LcMessaging.SendMail(newemails, String.Format(subject, customer.FirstName, customer.LastName,
                                 provider.FirstName, position.PositionSingular),
-                                LcMessaging.ApplyTemplate(UrlUtil.LangPath + "Profile/EmailRecommendation/",
+                                LcMessaging.ApplyTemplate(LcUrl.LangPath + "Profile/EmailRecommendation/",
                                 new Dictionary<string,object>{ 
                                     { "CustomerUserID", customerUserID },
                                     { "ProviderUserID", provider.UserID },
@@ -228,11 +228,11 @@
             <li class="rating3">
                 <span>@(rateTexts.Rating3)@(String.IsNullOrEmpty(rateTexts.Rating3FormDescription) ? "" : " - " + rateTexts.Rating3FormDescription): @*Rate @(provider.FirstName)'s professionalism*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating3", Request["rating3"], "false" })
                 </div>
             </li>
 }
-<form class="provider-rating-form ajax ajax-box" method="post" action="@(UrlUtil.LangPath)Reviews/$ProviderRatingForm/@(Request.Url.Query)">
+<form class="provider-rating-form ajax ajax-box" method="post" action="@(LcUrl.LangPath)Reviews/$ProviderRatingForm/@(Request.Url.Query)">
     @LcHelpers.SetupStarRatingPlugin()
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary()
@@ -256,13 +256,13 @@
             <li class="rating1">
                 <span>@(rateTexts.Rating1)@(String.IsNullOrEmpty(rateTexts.Rating1FormDescription) ? "" : " - " + rateTexts.Rating1FormDescription): @*Rate the quality of work @provider.FirstName performed:*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating1", Request["rating1"], "false" })
                 </div>
             </li>
             <li class="rating2">
                 <span>@(rateTexts.Rating2)@(String.IsNullOrEmpty(rateTexts.Rating2FormDescription) ? "" : " - " + rateTexts.Rating2FormDescription): @*Rate the efficience in which @provider.FirstName performed the work:*@</span>
                 <div class="user-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "rating2", Request["rating2"], "false" })
                 </div>
             </li>
             @if (pastReference)
@@ -305,10 +305,10 @@
             </li>
             <li class="share-social">
                 Please share @(provider.FirstName)'s profile with your family and friends: 
-                @RenderPage(UrlUtil.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml",
+                @RenderPage(LcUrl.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml",
                     new
                     {
-                        URL = UrlUtil.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
+                        URL = LcUrl.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
                         Title = "An amazing " + position.PositionSingular + ": " + LcHelpers.GetUserDisplayName(provider)
                     })
             </li>

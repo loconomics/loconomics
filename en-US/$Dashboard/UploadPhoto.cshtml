@@ -65,7 +65,7 @@
     bool processed = false;
     
     string filePathInApp = "img/userphotos/u" + userId.ToString() + "/";
-    string virtualPath = UrlUtil.RenderAppPath + filePathInApp;
+    string virtualPath = LcUrl.RenderAppPath + filePathInApp;
     
     // qq File uploader support, XHR Upload
     if (!String.IsNullOrEmpty(Request["qqfile"])){
@@ -148,14 +148,14 @@
 }
 <html>
     <head>
-        <script src="@Href(UrlUtil.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-        <script src="@Href(UrlUtil.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(UrlUtil.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-        <script src="@Href(UrlUtil.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
-        <link rel="stylesheet" href="@Href(UrlUtil.AppPath + "Scripts/fileuploader/fileuploader.css")"/>
+        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
+        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
+        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
+        <script src="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.js")" type="text/javascript"></script>
+        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Scripts/fileuploader/fileuploader.css")"/>
 
         <script type="text/javascript">
-            @Html.Raw(UrlUtil.ToJsVar())
+            @Html.Raw(LcUrl.ToJsVar())
         </script>
 
         <script type="text/javascript">
@@ -177,7 +177,7 @@
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('change-photo-file-uploader'),
                     // path to server-side upload script
-                    action: '@(UrlUtil.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)',
+                    action: '@(LcUrl.LangPath)Dashboard/UploadPhoto/?PositionID=@(positionId)',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
@@ -200,7 +200,7 @@
         <div class="change-photo">
             <div id="change-photo-file-uploader">
                 @if(!ajaxEnabled) {
-                <form id="uploadPhotoForm" action="@(UrlUtil.LangPath)$Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
+                <form id="uploadPhotoForm" action="@(LcUrl.LangPath)$Dashboard/UploadPhoto/?PositionID=@(positionId)" method="post" enctype="multipart/form-data">
                     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                     <label>Choose an image from your computer: <input type="file" name="avatar" /></label>
                     <button class="button main-action" type="submit">Upload!</button>

@@ -72,7 +72,7 @@
 Yep, privacy is pretty important. Let us know what you’re thinking below, and <a href="mailto:providerhelp@loconomics.com">e-mail us</a> with any concerns or questions.
 </p>
 <div class="preferences">
-<form method="post" action="@(UrlUtil.LangPath)$Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box">
+<form method="post" action="@(LcUrl.LangPath)$Dashboard/$PreferencesPrivacySettings/" class="ajax ajax-box">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (u.IsProvider)
@@ -174,7 +174,7 @@ Yep, privacy is pretty important. Let us know what you’re thinking below, and 
     <div class="delete-message-confirm">
         <p>Are you sure you want to delete your account?</p>
         <p>We hate to see you go! Please reconsider and contact us with any concerns. We want you to stay.</p>
-        <form action="@(UrlUtil.LangPath)Account/$Delete/" method="post" class="ajax ajax-box confirm actions">
+        <form action="@(LcUrl.LangPath)Account/$Delete/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>
         </form>
@@ -184,7 +184,7 @@ Yep, privacy is pretty important. Let us know what you’re thinking below, and 
     {
     <div class="deactivate-message-confirm">
         <p>Are you sure you want to deactivate your account?</p>
-        <form action="@(UrlUtil.LangPath)Account/$Deactivate/" method="post" class="ajax ajax-box confirm actions">
+        <form action="@(LcUrl.LangPath)Account/$Deactivate/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>
         </form>
@@ -194,7 +194,7 @@ Yep, privacy is pretty important. Let us know what you’re thinking below, and 
     {
     <div class="reactivate-message-confirm">
         <p>Are you sure you want to reactivate your account?</p>
-        <form action="@(UrlUtil.LangPath)Account/$Reactivate/" method="post" class="ajax ajax-box confirm actions">
+        <form action="@(LcUrl.LangPath)Account/$Reactivate/" method="post" class="ajax ajax-box confirm actions">
             <button type="button" class="cancel-action">No</button>
             <button type="submit" class="main-action">Yes</button>
         </form>

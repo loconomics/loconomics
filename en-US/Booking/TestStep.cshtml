@@ -10,14 +10,14 @@
     int positionid = Request["PositionID"].AsInt();
     
     if (providerid == 0 || positionid == 0) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
         
     PageData["providerrow"] = LcData.UserInfo.GetUserRow(providerid);
     PageData["positionrow"] = LcData.UserInfo.GetUserPos(providerid, positionid);
     
     if (PageData["providerrow"] == null || PageData["positionrow"] == null) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
     
     // Some data to simulate real state and get results on different steps
@@ -37,9 +37,9 @@
         ,{ "dt3End", null }
     };
     
-    Styles.Add(UrlUtil.AppPath + "Styles/Booking.css");
+    Styles.Add(LcUrl.AppPath + "Styles/Booking.css");
 }
-<script type="text/javascript" src="@(UrlUtil.AppPath)Scripts/Booking.js"></script>
+<script type="text/javascript" src="@(LcUrl.AppPath)Scripts/Booking.js"></script>
   <div id="container" class="clearfix booking editable">
     <div id="main" class="tabbed wizard fancy">
         

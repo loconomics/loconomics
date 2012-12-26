@@ -183,7 +183,7 @@
 {
     if (embMode == "none")
     {
-        <form action="@(UrlUtil.LangPath)PricingWizard/$ProviderPricingOptions/" method="post" class="@PageData["PricingWizardClasses"] pricingwizard positionpricing ajax ajax-box" id="@idprefix">
+        <form action="@(LcUrl.LangPath)PricingWizard/$ProviderPricingOptions/" method="post" class="@PageData["PricingWizardClasses"] pricingwizard positionpricing ajax ajax-box" id="@idprefix">
             <input type="hidden" name="PositionID" value="@pos.PositionID" />
             <input type="hidden" name="ClientTypeID" value="@clienttypeid" />
             <input type="hidden" name="PricingTypeID" value="@pricingTypeID" />

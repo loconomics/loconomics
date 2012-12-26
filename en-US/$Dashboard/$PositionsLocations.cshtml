@@ -10,11 +10,11 @@
     Fill clients in on where you can be expected to work. Do you work in specific spots around town? From an office somewhere? Your working address(es) won’t be shared until a booking is confirmed.
 </p>
 <div class="positionlocations">
-    <div class="edit-panel" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsLocationEdit/?LocationID=0&PositionID=@p.PositionID">
+    <div class="edit-panel" data-source-url="@(LcUrl.LangPath)Dashboard/$PositionsLocationEdit/?LocationID=0&PositionID=@p.PositionID">
         @*@RenderPage("$PositionsLocationEdit.cshtml", new { PositionID = p.PositionID })*@
     </div>
 
-    <div class="locations-list view-panel" data-source-url="@(UrlUtil.LangPath)Dashboard/$PositionsLocationsList/?PositionID=@(p.PositionID)&RedirectURL=@(redirectURL)">
+    <div class="locations-list view-panel" data-source-url="@(LcUrl.LangPath)Dashboard/$PositionsLocationsList/?PositionID=@(p.PositionID)&RedirectURL=@(redirectURL)">
         @RenderPage("$PositionsLocationsList.cshtml")
     </div>
 </div>

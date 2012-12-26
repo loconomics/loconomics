@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = UrlUtil.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Provider Request More Service Attributes";
     
     var providerID = Request["ProviderUserID"].AsInt();
@@ -14,7 +14,7 @@
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Provider Request More Service Attributes";
     // Create URL:
-    PageData["viewOnSiteUrl"] = UrlUtil.LangUrl + "Profile/?UserID=" + providerID.ToString();
+    PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Profile/?UserID=" + providerID.ToString();
 }
 <div>
     <ul>

@@ -13,10 +13,10 @@
                 <li><a class="button profile fanciful" href="#bookings-failed-requests">Expired Requests</a></li>
             </ul>
             
-            <div id="bookings-all" class="tab-body current" data-source-url="@(UrlUtil.LangPath + "Booking/$BookingsList/")">
-                @RenderPage(UrlUtil.RenderLangPath + "Booking/$BookingsList.cshtml")
+            <div id="bookings-all" class="tab-body current" data-source-url="@(LcUrl.LangPath + "Booking/$BookingsList/")">
+                @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingsList.cshtml")
             </div><!-- #bookings-all -->
-            <div id="bookings-failed-requests" class="tab-body" data-source-url="@(UrlUtil.LangPath + "Booking/$BookingsList/?view=failed-requests")">
-                @*RenderPage(UrlUtil.LangPath + "Booking/$BookingsList.cshtml", new { view = "failed-requests" })*@
+            <div id="bookings-failed-requests" class="tab-body" data-source-url="@(LcUrl.LangPath + "Booking/$BookingsList/?view=failed-requests")">
+                @*RenderPage(LcUrl.LangPath + "Booking/$BookingsList.cshtml", new { view = "failed-requests" })*@
             </div><!-- #bookings-all -->
 		</div><!-- #bookings -->

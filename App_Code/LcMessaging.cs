@@ -176,7 +176,7 @@ public class LcMessaging
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
             SendMail(provider.Email, "Booking Request From a Loconomics Client-", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", ProviderUserID }
@@ -184,7 +184,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Your Booking Request From Loconomics", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", CustomerUserID }
@@ -218,7 +218,7 @@ public class LcMessaging
             int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID, "Booking", subject);
 
             SendMail(provider.Email, "Booking Request From a Loconomics Client", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
@@ -227,7 +227,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Your Booking Request From Loconomics", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
@@ -274,7 +274,7 @@ public class LcMessaging
             int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, BookingRequestID, "BookingRequest");
 
             SendMail(provider.Email, "Booking Request Expired", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.ProviderUserID }
@@ -282,7 +282,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Booking Request Expired", 
-                ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "UserID", thread.CustomerUserID }
@@ -328,7 +328,7 @@ public class LcMessaging
             if (onlyTo == 'b' || onlyTo == 'p')
             {
                 SendMail(provider.Email, "Loconomics.com: Booking Update",
-                    ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                    ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
                     ,{ "UserID", thread.ProviderUserID }
@@ -339,7 +339,7 @@ public class LcMessaging
             if (onlyTo == 'b' || onlyTo == 'c')
             {
                 SendMail(customer.Email, "Loconomics.com: Booking Update",
-                    ApplyTemplate(UrlUtil.LangPath + "Booking/EmailBooking/",
+                    ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
                     ,{ "UserID", thread.CustomerUserID }
@@ -367,7 +367,7 @@ public class LcMessaging
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, InquirySubject, 1, InquiryText);
 
             SendMail(provider.Email, "A Message From a Loconomics Provider", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", 1 } // Customer inquiry (first message)
@@ -375,7 +375,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "A Message From a Loconomics Client", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", threadID }
                 ,{ "Kind", -1 } // Copy to author of Customer inquiry (first message)
@@ -405,7 +405,7 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 2, 3, InquiryAnswer);
 
             SendMail(customer.Email, "A Message From a Loconomics Provider", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -414,7 +414,7 @@ public class LcMessaging
                 ,{ "EmailTo", customer.Email }
             }));
             SendMail(provider.Email, "A Message From a Loconomics Client", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -445,7 +445,7 @@ public class LcMessaging
             int messageID = CreateMessage(ThreadID, 1, 1, InquiryAnswer);
 
             SendMail(provider.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -454,7 +454,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, "Loconomics.com: Inquiry", 
-                ApplyTemplate(UrlUtil.LangPath + "Messaging/EmailInquiry/",
+                ApplyTemplate(LcUrl.LangPath + "Messaging/EmailInquiry/",
                 new Dictionary<string, object> {
                 { "ThreadID", ThreadID }
                 ,{ "MessageID", messageID }
@@ -470,7 +470,7 @@ public class LcMessaging
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
         SendMail(providerEmail, "Welcome to Loconomics",
-            ApplyTemplate(UrlUtil.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
+            ApplyTemplate(LcUrl.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
                 { "EmailTo", providerEmail },
@@ -480,7 +480,7 @@ public class LcMessaging
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
         SendMail(userEmail, "Welcome to Loconomics", //"Welcome to Loconomics",
-            ApplyTemplate(UrlUtil.LangPath + "Email/EmailWelcomeCustomer/",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
                 { "UserID", userID },
                 { "EmailTo", userEmail },
@@ -491,7 +491,7 @@ public class LcMessaging
     public static void SendResetPassword(int userID, string userEmail, string resetURL, string resetToken)
     {
         SendMail(userEmail, "Loconomics Password Recovery",
-            ApplyTemplate(UrlUtil.LangPath + "Email/EmailResetPassword/",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailResetPassword/",
             new Dictionary<string, object> {
                 { "UserID", userID },
                 { "EmailTo", userEmail },
@@ -505,7 +505,7 @@ public class LcMessaging
     public static void SendReportUnauthorizedUse(int reportedByUserID, int reportedUserID, string message)
     {
         SendMail("legal@loconomics.com", "Report of Unauthorized Use",
-            ApplyTemplate(UrlUtil.LangPath + "Email/EmailReportUnauthorizedUse/",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailReportUnauthorizedUse/",
             new Dictionary<string,object> {
                 { "ReportedByUserID", reportedByUserID },
                 { "ReportedUserID", reportedUserID },
@@ -519,7 +519,7 @@ public class LcMessaging
     public static void SendProviderPaymentRequestToLoconomics(int bookingID)
     {
         SendMail("support@loconomics.com", "Provider Payment Request",
-            ApplyTemplate(UrlUtil.LangPath + "Email/EmailProviderPaymentRequest/",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderPaymentRequest/",
             new Dictionary<string,object> {
                 { "BookingID", bookingID },
                 { "EmailTo", "support@loconomics.com" }
@@ -546,7 +546,7 @@ public class LcMessaging
             if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
                 w.QueryString["RequestKey"] = SecurityRequestKey;
 
-            string completeURL = UrlUtil.SiteUrl + tplUrl;
+            string completeURL = LcUrl.SiteUrl + tplUrl;
             if (!LcHelpers.InProduction)
             {
                 completeURL = completeURL.Replace("https:", "http:");

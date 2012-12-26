@@ -4,7 +4,7 @@
     var u = LcData.UserInfo.GetUserRow();
     if (u != null && u.IsProvider) {
         // It's already a provider!
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
     
     // Initialize general page variables
@@ -88,7 +88,7 @@
                         bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
                         var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
                         if (requireEmailConfirmation) {
-                            confirmationUrl = UrlUtil.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+                            confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
 
                             // Verification code is sent along with the Welcome email, commenting the other email sent:
                             /*LcMessaging.SendMail(
@@ -99,7 +99,7 @@
                         }
 
                         if (requireEmailConfirmation) {
-                            //LcHelpers.ReturnJsonResult(1, UrlUtil.LangPath + "Account/Thanks/");
+                            //LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/Thanks/");
                             Session["RegisteredUserID"] = WebSecurity.GetUserId(email);
                             // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
                             // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
@@ -187,7 +187,7 @@
     }
 }
 
- <form method="post" id="provider-sign-up-create-a-login" action="@(UrlUtil.LangPath)Provider-sign-up/$Create-a-login/">
+ <form method="post" id="provider-sign-up-create-a-login" action="@(LcUrl.LangPath)Provider-sign-up/$Create-a-login/">
      @* If at least one validation error exists, notify the user *@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="login-data">
@@ -239,9 +239,9 @@
         {
         <p class="choice-or">or</p>
         <div class="facebook-connect social choice-option">
-            @RenderPage(UrlUtil.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" } )
+            @RenderPage(LcUrl.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Callback/Provider" } )
             @*<p class="footnote">*we don't post anything without your permission</p>*@
-            <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a class="view-terms-of-use" href="@(UrlUtil.LangPath)About#termsofuse" target="_blank">Terms of Use</a></p>
+            <p class="info">By clicking "Connect with Facebook" you confirm that you accept the <a class="view-terms-of-use" href="@(LcUrl.LangPath)About#termsofuse" target="_blank">Terms of Use</a></p>
         </div>
         }
     </fieldset>
@@ -258,7 +258,7 @@
         </ol>
         <ul>
              <li>
-                <label><input type="checkbox" data-customval-requirechecked="You must agree terms of use" @Validation.GetHtml("termsofuse") @LcHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(UrlUtil.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(UrlUtil.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
+                <label><input type="checkbox" data-customval-requirechecked="You must agree terms of use" @Validation.GetHtml("termsofuse") @LcHelpers.IsChecked(Request["termsofuse"].AsBool(), true) name="termsofuse" id="termsofuse" value="True"/>I have read and agree to the above and the full <a class="view-terms-of-use" target="_blank" href="@(LcUrl.LangPath)About/TermsOfUse/">Terms of Use</a> and <a class="view-privacy-policy" target="_blank" href="@(LcUrl.LangPath)About/PrivacyPolicy/">Privacy Policy</a>.</label>
                 @Html.ValidationMessage("termsofuse")
              </li>
              <li>

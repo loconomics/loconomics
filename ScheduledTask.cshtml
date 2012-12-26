@@ -317,7 +317,7 @@
 
     // Finishing: save log on disk
     try {
-        System.IO.File.AppendAllText(Server.MapPath(UrlUtil.RenderAppPath + "_logs/ScheduledTaskLog.txt"), logger.ToString());
+        System.IO.File.AppendAllText(Server.MapPath(LcUrl.RenderAppPath + "_logs/ScheduledTaskLog.txt"), logger.ToString());
     }catch {
     }
     

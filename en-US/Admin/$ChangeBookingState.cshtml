@@ -113,7 +113,7 @@
 }
 else
 {
-<form method="post" action="@(UrlUtil.LangPath)Admin/$ChangeBookingState/?BookingID=@(bookingID)" class="ajax ajax-box change-booking-status-form">
+<form method="post" action="@(LcUrl.LangPath)Admin/$ChangeBookingState/?BookingID=@(bookingID)" class="ajax ajax-box change-booking-status-form">
     @if (IsPost) { LcHelpers.GetValidationScripts(); }
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (bookingID > 0 && booking != null)

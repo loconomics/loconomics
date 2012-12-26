@@ -1,6 +1,6 @@
 ﻿@{     
-    Layout = UrlUtil.RenderLangPath + "_SiteLayout.cshtml";
-    Styles.Add(UrlUtil.AppPath + "Styles/Profile.css");
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    Styles.Add(LcUrl.AppPath + "Styles/Profile.css");
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
@@ -13,12 +13,12 @@
     int positionid = Request["PositionID"].AsInt();
 
     if (userid == 0) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
 
     var u = LcData.UserInfo.GetRequestedUserRow(userid);
     if (u == null) {
-        Response.Redirect(UrlUtil.LangPath);
+        Response.Redirect(LcUrl.LangPath);
     }
     userid = u.UserID;
     var ustats = LcData.UserInfo.GetUserStats(userid);
@@ -63,14 +63,14 @@
     var maxPositions = 5;
     
     Page.Title = u.FirstName;
-    Scripts.Add(UrlUtil.AppPath + "Scripts/Profile.js");
+    Scripts.Add(LcUrl.AppPath + "Scripts/Profile.js");
     
     int n = 0, ip = 0;
 }
 @helper printFriend(string name, string photo){
     if (String.IsNullOrEmpty(photo)){ photo = "generic-friend-avatar.png";}
     /* Between LI and A elements must not have white spaces */
-    <li><a href="@Href(UrlUtil.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(UrlUtil.AppPath + "img/theme/" + photo)"/></a></li>
+    <li><a href="@Href(LcUrl.LangPath + "Profile/?user=" + name)"><img alt="@name" src="@Href(LcUrl.AppPath + "img/theme/" + photo)"/></a></li>
 }
 @helper printName(dynamic p){
     string l = (string)p["LastName"];
@@ -82,8 +82,8 @@
 
 	    <div id="profileHeader" class="clearfix">
             <div id="profile-avatar">
-                <img class="avatar image-1dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"] + "/")" alt="User Photo" />
-                <img class="avatar image-2dppx" src="@Href(UrlUtil.LangPath + "Profile/Photo/" + u["UserID"] + "/2x/")" alt="User Photo" />
+                <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + u["UserID"] + "/")" alt="User Photo" />
+                <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + u["UserID"] + "/2x/")" alt="User Photo" />
             </div>
             <h1 class="profile-name">@printName(u)</h1>
 		    
@@ -101,7 +101,7 @@
             @*RenderPage("$UserVerificationsWidget.cshtml", new { UserID = userid })*@
             <aside>
                 <div class="user-rating global-rating">
-                    @RenderPage(UrlUtil.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
+                    @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
                     {
                         ReviewedID = userid,
                         // global rating of the user, as all positions when provider (-2) without include 
@@ -131,7 +131,7 @@
                 </div>
                 }
                 *@
-                @RenderPage(UrlUtil.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml")
             </aside>
 	    </div><!-- #profileHeader -->
         
@@ -188,7 +188,7 @@
                     <div id="@("position"+ip)-mywork" class="tab-body mywork">
                         @RenderPage("_MyWork.cshtml")
                     </div><!-- #@("position"+ip)-mywork -->
-                    <div id="@("position"+ip)-map" class="tab-body map" data-source-url="@(UrlUtil.LangPath + "Profile/$Map/?UserID=" + userid + "&PositionID=" + ip)">
+                    <div id="@("position"+ip)-map" class="tab-body map" data-source-url="@(LcUrl.LangPath + "Profile/$Map/?UserID=" + userid + "&PositionID=" + ip)">
                         @*RenderPage("$Map.cshtml")*@
                     </div><!-- #@("position"+ip)-map -->
                     <div id="@("position"+ip)-availability" class="tab-body availability">

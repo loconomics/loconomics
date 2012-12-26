@@ -228,13 +228,13 @@ public static partial class LcData
 
     #region l18n
     /// <summary>
-    /// Based on UrlUtil.LangId (string with format en-US, es-ES,..)
+    /// Based on LcUrl.LangId (string with format en-US, es-ES,..)
     /// returns the integer ID on database for the language part
     /// </summary>
     /// <returns></returns>
     public static int GetCurrentLanguageID()
     {
-        switch (UrlUtil.LangId.Substring(0, 2).ToUpper())
+        switch (LcUrl.LangId.Substring(0, 2).ToUpper())
         {
             case "EN":
                 return 1;
@@ -245,13 +245,13 @@ public static partial class LcData
         }
     }
     /// <summary>
-    /// Based on UrlUtil.LangId (string with format en-US, es-ES,..)
+    /// Based on LcUrl.LangId (string with format en-US, es-ES,..)
     /// returns the integer ID on database for the country part
     /// </summary>
     /// <returns></returns>
     public static int GetCurrentCountryID()
     {
-        switch (UrlUtil.LangId.Substring(3, 2).ToUpper())
+        switch (LcUrl.LangId.Substring(3, 2).ToUpper())
         {
             case "US":
             case "GB":
