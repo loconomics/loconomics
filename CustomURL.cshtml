@@ -1,8 +1,21 @@
-﻿@{
-    /* Receive a custom URL from URL-Routing (for RazorWebPages)
-     * Routing setup at _AppStart, parameter given "customurl"
-     */
-}
+﻿@using WebMatrix.Data;
+@*
+    Receive a custom URL from URL-Routing (for RazorWebPages)
+    Routing setup at _AppStart, parameter given "customurl"
+*@
+@{
+    var customurl = Context.GetRouteValue("customurl");
+    using (var db = Database.Open("sqlloco")){
+        var user = db.QueryValue(@"
+            SELECT  UserID
+            FROM    Users
+            WHERE   ProviderProfileURL = @0
+        ", customurl);
 
-<div>Request: @Request.Url.OriginalString</div>
-<div>CustomURL: @Context.GetRouteValue("customurl")</div>
+        if (user is int) {
+            @RenderPage(UrlUtil.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
+        }
+    }
+    // Not found custom URL, this URL page doesn't exist, transfer to Not Found
+    @RenderPage(UrlUtil.RenderAppPath + "Errors/Error404.cshtml");
+}

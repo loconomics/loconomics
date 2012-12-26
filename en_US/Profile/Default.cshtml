@@ -4,7 +4,7 @@
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
-    int userid = Request["userid"].AsInt();
+    int userid = (PageData["UserID"] ?? Request["userid"].AsInt());
     if (userid == 0) {
         userid = UrlData[0].AsInt();
     }

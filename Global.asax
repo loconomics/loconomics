@@ -62,29 +62,7 @@
         // database preferences.
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
-        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-        /*if (HttpContext.Current.Request.IsSecureConnection == false && 
-            HttpContext.Current.Request.IsLocal == false)
-        {
-            Response.Redirect("https://" + Request.ServerVariables["HTTP_HOST"]
-            + HttpContext.Current.Request.RawUrl);
-        }*/
-        
-        
-        /*// Redirect to subdomains folders
-        var h = HttpContext.Current.Request.Url.Host;
-        // Request.ServerVariables[“SERVER_NAME”]
-        var ih = h.IndexOf('.');
-        if (ih > -1) {
-            h = h.Substring(0, ih);
-        }
-        if (h != "loconomics" && h != "localhost")
-        {
-            //Server.Transfer(@"~/" + h + "/", true);
-            HttpContext.Current.RewritePath(@"~/" + h + "/");
-        }*/
-        
+        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");        
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
