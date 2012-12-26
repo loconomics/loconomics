@@ -1,6 +1,8 @@
 ﻿@{
-    /* Receive a custom URL in UrlData, from a UrlRewriting in web.config.
+    /* Receive a custom URL from URL-Routing (for RazorWebPages)
+     * Routing setup at _AppStart, parameter given "customurl"
      */
 }
 
 <div>Request: @Request.Url.OriginalString</div>
+<div>CustomURL: @Context.GetRouteValue("customurl")</div>
