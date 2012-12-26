@@ -1,0 +1,442 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var p = PageData["providerrow"] ?? LcData.UserInfo.GetUserRow(Request["providerid"].AsInt());
+    var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
+    var pos = PageData["positionrow"] ?? LcData.UserInfo.GetUserPos(Request["providerid"].AsInt(),
+        Request["positionid"].AsInt());
+    DateTime? dt1Start, dt1End, dt2Start, dt2End, dt3Start, dt3End, showDate;
+    dt1Start = dt1End = dt2Start = dt2End = dt3Start = dt3End = showDate = null;
+    showDate = LcHelpers.CreateDateTime(Request["show-date"]);
+    if (!showDate.HasValue) {
+        showDate = DateTime.Today;
+    }
+
+    if (p == null || c == null || pos == null){
+        var inputdataerrormessage = "This user has not been rated yet";
+        if (IsPost){
+            LcHelpers.ReturnJsonError(-1, inputdataerrormessage);
+        }else{
+            throw new Exception(inputdataerrormessage);
+        }
+    }
+   
+    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
+    Validation.RequireField("first-date", "You must specify a first choice");
+    Validation.Add("select-location", Validator.Integer("Invalid selected location"));
+
+    // Check if is a valid booking process (session not expired or error at first step)
+    var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
+    if (bookingRequestID <= 0) {
+        /* Several options to do here
+            * - Show error (strange message for user, need restart again introducing first his login)
+            * X Silently redirect to start booking again
+            * - Request login via ajax, re-send form data, looking in the database for a 'timeouted'
+            *   bookingrequest for this customer at this provider and position, recover it to continue
+            *   processing the form (if there is no bookingrequestid again, do second option).
+            */
+        //ModelState.AddFormError("Booking request is not valid, maybe the session time expired");
+        LcHelpers.ReturnJsonResult(1, 
+            UrlUtil.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
+            "&PositionID=" + pos.PositionID.ToString());
+    }
+    
+    // Date-times are checked and generated ever on postback, not only on valid request (to properly
+    // recover post values)
+    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
+    if (IsPost) {
+        dt1Start = LcHelpers.CreateDateTime(Request["first-date"], Request["first-start-time"]);
+        if (!dt1Start.HasValue) {
+            ModelState.AddFormError("The first choice you've selected is unavailable, please select another");
+        }
+        if (!Request["second-date"].IsEmpty()) {
+            dt2Start = LcHelpers.CreateDateTime(Request["second-date"], Request["second-start-time"]);
+            if (!dt2Start.HasValue) {
+                ModelState.AddFormError("The second choice you've selected is unavailable, please select another");
+            }
+        }
+        if (!Request["third-date"].IsEmpty()) {
+            dt3Start = LcHelpers.CreateDateTime(Request["third-date"], Request["third-start-time"]);
+            if (!dt3Start.HasValue) {
+                ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
+            }
+        }
+        decimal durationHours = getServiceDurationHours(null, bookingRequestID, p.UserID);
+        if (dt1Start.HasValue) {
+            dt1End = dt1Start.Value.AddHours((double)durationHours);
+        }
+        if (dt2Start.HasValue) {
+            dt2End = dt2Start.Value.AddHours((double)durationHours);
+        }
+        if (dt3Start.HasValue) {
+            dt3End = dt3Start.Value.AddHours((double)durationHours);
+        }
+    }
+    
+    
+    if (IsPost && Validation.IsValid() && ModelState.IsValid){
+
+        var zipcodeID = 0;
+        // Check if a location was selected or new location must be validated:
+        int locationID = Request["select-location"].AsInt();
+        if (Request["select-location"].IsEmpty()) {
+            ModelState.AddFormError("You must specify a location");
+        } else if (locationID == 0) {
+            if (Request["street-address-line-1"].IsEmpty()) {
+                ModelState.AddError("street-address-line-1", "The street address is required");
+            }
+            if (Request["city"].IsEmpty()) {
+                ModelState.AddError("city", "The city is required");
+            }
+            if (Request["state"].IsEmpty()) {
+                ModelState.AddError("state", "The state is required");
+            }
+            if (Request["zip"].IsEmpty()) {
+                ModelState.AddError("zip", "The zip code is required");
+            } else if (!Request["zip"].IsInt()) {
+                ModelState.AddError("zip", "The zip code must only contain numbers");
+            }
+            zipcodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
+            if (zipcodeID == 0) {
+                ModelState.AddError("tin_zipcode", "The zip code does not exist in the state you've entered");
+            }
+        }
+        
+        if (Request["save-location"] == "true" && String.IsNullOrWhiteSpace(Request["save-location-as"])){
+            ModelState.AddError("save-location-as", "Please input a name for this location to save it");
+        }
+        
+        if (ModelState.IsValid) {
+            // Validate provider availability with requested dates
+            var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
+            using (var db = Database.Open("sqlloco")) {
+
+                if (dt1Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
+                        ModelState.AddFormError("The first choice you've selected is unavailable, please select another");
+                    }
+                }
+                if (dt2Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
+                        ModelState.AddFormError("The second choice you've selected is unavailable, please select another");
+                    }
+                }
+                if (dt3Start.HasValue) {
+                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
+                        ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
+                    }
+                }
+            }
+        }
+        
+        if (ModelState.IsValid){
+            
+            // NOTE: as of 20120906 issue #117, events are not created on database on form-post else are saved in memory until the
+            // booking process finish it, to avoid 'dead tentative events' exist in the database.
+            // Save calculated datetimes in session to last step
+            Dictionary<int, Dictionary<string, DateTime?>> brs = null;
+            if (Session["BookingRequests"] == null) {
+                Session["BookingRequests"] = brs = new Dictionary<int, Dictionary<string, DateTime?>>();
+            } else {
+                brs = (Dictionary<int, Dictionary<string, DateTime?>>)Session["BookingRequests"];
+            }
+            brs[bookingRequestID] = new Dictionary<string, DateTime?> {
+                { "dt1Start", dt1Start }
+                ,{ "dt1End", dt1End }
+                ,{ "dt2Start", dt2Start }
+                ,{ "dt2End", dt2End }
+                ,{ "dt3Start", dt3Start }
+                ,{ "dt3End", dt3End }
+            };
+            
+            var sqlUpdBookingRequest = @"
+                UPDATE  BookingRequest SET
+                        AddressID = @1
+                WHERE   BookingRequestID = @0
+            ";
+            
+            // Inserting data into the database
+            using (var db = Database.Open("sqlloco")) {
+                // If we have not a location (is 0), means user specify one
+                // that must be saved:
+                if (locationID == 0) {
+                    // User wants to save as 'my location'?
+                    string locationNickName = "";
+                    if (Request["save-location"] == "true" &&
+                        !String.IsNullOrWhiteSpace(Request["save-location-as"])) {
+                        locationNickName = Request["save-location-as"].Trim();
+                    }
+                    // Save location as service location
+                    locationID = db.QueryValue(LcData.sqlSetServiceAddress,
+                        0, // AddressID:0, new address to be inserted
+                        c.UserID,
+                        Request["street-address-line-1"],
+                        Request["street-address-line-2"],
+                        Request["city"],
+                        Request["state"],
+                        zipcodeID,
+                        LcData.GetCurrentCountryID(),
+                        locationNickName,
+                        12 /*AddressType: Other*/,
+                        null, /* special instructions */
+                        null, null, null, /* latitude, longitude, googlemapsurl */
+                        0 /*Position Zero, customer*/,
+                        true /*Service performed at this location*/,
+                        false,
+                        null,
+                        null,
+                        false);
+                }
+                
+                // Updating BookingRequest with location and date-times
+                db.Execute(sqlUpdBookingRequest, bookingRequestID,
+                    locationID);
+            }
+            
+            // Return OK result
+            LcHelpers.ReturnJsonResult(0, null);
+        }
+    }
+    
+    /*
+     * Loading some data:
+     */
+    dynamic providerLocations, customerLocations, providerTravelLocation;
+    customerLocations = null;
+    decimal serviceDurationHours = 0;
+    using (var db = Database.Open("sqlloco")) {
+        // Provider locations
+        providerLocations = db.Query(@"
+            SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType
+            FROM    ServiceAddress As SA
+                     INNER JOIN
+                    Address As L
+                      ON L.AddressID = SA.AddressID
+                        INNER JOIN
+                    AddressType As AT
+                        ON L.AddressTypeID = AT.AddressTypeID
+            WHERE   L.UserId = @0 AND SA.PositionID = @1
+                     AND L.AddressName IS NOT NULL
+                     AND SA.ServicesPerformedAtLocation = 1
+        ", p.UserID, pos.PositionID);
+        // Get provider 'travel from' location, if it has
+        providerTravelLocation = db.QuerySingle(@"
+            SELECT  DISTINCT L.AddressID, L.AddressName, 
+                    SA.ServiceRadiusFromLocation
+                    ,L.Latitude
+                    ,L.Longitude
+            FROM    ServiceAddress As SA
+                     INNER JOIN
+                    Address As L
+                      ON L.AddressID = SA.AddressID
+            WHERE   L.UserId = @0 AND SA.PositionID = @1
+                     AND L.AddressName IS NOT NULL AND L.AddressName not like ''
+                     AND SA.TravelFromLocation = 1
+        ", p.UserID, pos.PositionID);
+        // Customer locations
+        // We only can offer customer locations if provider do travel
+        if (providerTravelLocation != null) {
+            customerLocations = db.Query(@"
+                SELECT  DISTINCT L.AddressID, L.AddressName
+                FROM    Address As L
+                WHERE   L.UserId = @0
+                         AND L.AddressName IS NOT NULL AND L.AddressName not like ''
+            ", c.UserID);
+        }
+        serviceDurationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
+    }
+    
+    var serviceDurationTime = TimeSpan.FromHours((double)serviceDurationHours);
+}
+@functions { 
+    decimal getServiceDurationHours(Database db, int bookingRequestID, int providerID) {
+        var dbclose = false;
+        if (db == null) {
+            db = Database.Open("sqlloco");
+            dbclose = true;
+        }
+        decimal serviceDurationHours = (decimal)db.QueryValue(@"
+            SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
+            FROM    BookingRequest As R
+                     INNER JOIN
+                    PricingEstimate As P
+                      ON R.PricingEstimateID = P.PricingEstimateID
+            WHERE   R.BookingRequestID = @0
+        ", bookingRequestID);
+        decimal minHours = (decimal)db.QueryValue(@"
+            SELECT  TOP 1 coalesce(max(MinTime), 0)
+            FROM    CalendarProviderAttributes
+            WHERE   UserID = @0
+        ", providerID);
+        if (dbclose) {
+            db.Dispose();
+        }
+        // Never be lower than minimum
+        serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
+        // Default duration 4 hours, if there is no info about it
+        return (serviceDurationHours == 0M ? 4M : serviceDurationHours);
+    }
+}
+@helper printOptionsHours(string selectedHour){
+    var firstHour = new TimeSpan(7, 0, 0);
+    var lastHour = new TimeSpan(22, 30, 0);
+    var interval = new TimeSpan(0, 30, 0);
+    <option @LcHelpers.IsSelected(selectedHour, "") value=""></option>
+    for (var hour = firstHour; hour <= lastHour; hour += interval)
+    {
+        string thisvalue = hour.ToString("c");
+        <option @LcHelpers.IsSelected(selectedHour, thisvalue) value="@thisvalue">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+    }
+}
+@helper printLongTime(TimeSpan duration){
+    if (duration.Days > 1) {
+        @(duration.Days + " days, ")
+    } else if (duration.Days == 1) {
+        @("1 day, ")
+    }
+    if (duration.Hours > 1) {
+        @(duration.Hours + " hours, ")
+    } else if (duration.Hours == 1) {
+        @("1 hour, ")
+    }
+    @(duration.Minutes + " minutes.")
+}
+
+<h2>Schedule</h2>
+<p class="info">
+    Search the days below for up to three appointment times that will work with your schedule.
+</p>
+<form action="@(UrlUtil.LangPath)Booking/$Schedule/" method="post" class="schedule" id="booking-schedule">
+    <input type="hidden" name="providerid" value="@p.UserID"/>
+    <input type="hidden" name="positionid" value="@pos.PositionID"/>
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <script type="text/javascript">
+        if (!serviceDurationHours) var serviceDurationHours = 0;
+        serviceDurationHours = @(serviceDurationHours);
+    </script>
+
+    <fieldset class="select-week">
+        <input id="showDate" class="date-pick" type="text" />
+        <input id="hideDate" type="hidden" value="@showDate.Value.ToShortDateString()" name="show-date" />
+        <div id="serviceDuration">Your booking will take <strong>@printLongTime(serviceDurationTime)</strong></div>
+
+        @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "WeekDaySelector", Date = showDate })
+
+    </fieldset>
+    <fieldset class="select-day-hours">
+        @RenderPage("$ScheduleCalendarElements.cshtml", new { 
+            Element = "DayHoursSelector", 
+            Date = showDate, 
+            DurationHours = serviceDurationHours,
+            UserID = p.UserID
+        })
+    </fieldset>
+    @{
+        var dateFormat = "dddd, MMM d";
+        var timeFormat = "t";
+    }
+    <fieldset class="selected-schedule">
+        <h2>Your selected times for @pos.PositionSingular services are:</h2>
+
+        <div class="choice first-choice @(dt1Start.HasValue ? "has-values" : "")" data-choice="first">
+            <h3>First Choice</h3>
+            <p>
+                <span class="date-showed">@(dt1Start.HasValue ? dt1Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt1Start.HasValue ? dt1Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt1End.HasValue ? dt1End.Value.ToString(timeFormat) : "")</span>
+            </p>
+            <input type="hidden" class="date" value="@Request["first-date"]" name="first-date" />
+            <input type="hidden" class="start-time" value="@Request["first-start-time"]" name="first-start-time" />
+        </div>
+        <div class="choice second-choice @(dt2Start.HasValue ? "has-values" : "")" data-choice="second">
+            <h3>Second Choice</h3>
+            <p>
+                <span class="date-showed">@(dt2Start.HasValue ? dt2Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt2Start.HasValue ? dt2Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt2End.HasValue ? dt2End.Value.ToString(timeFormat) : "")</span>
+                <a class="unselect-action" href="#unselect">X</a>
+            </p>
+            <input type="hidden" class="date" value="@Request["second-date"]" name="second-date" />
+            <input type="hidden" class="start-time" value="@Request["second-start-time"]" name="second-start-time" />
+        </div>
+        <div class="choice third-choice @(dt3Start.HasValue ? "has-values" : "")" data-choice="third">
+            <h3>Third Choice</h3>
+            <p>
+                <span class="date-showed">@(dt3Start.HasValue ? dt3Start.Value.ToString(dateFormat) : "")</span>
+                <span class="time start-time">@(dt3Start.HasValue ? dt3Start.Value.ToString(timeFormat) : "")</span>
+                <span class="time end-time">@(dt3End.HasValue ? dt3End.Value.ToString(timeFormat) : "")</span>
+                <a class="unselect-action" href="#unselect">X</a>
+            </p>
+            <input type="hidden" class="date" value="@Request["third-date"]" name="third-date" />
+            <input type="hidden" class="start-time" value="@Request["third-start-time"]" name="third-start-time" />
+        </div>
+
+        <div class="time-selection-note">
+            <strong>Why am I choosing three times?</strong>
+            <p>This allows us to figure out a good appointment time on both ends. Your provider has 18 hours to confirm your appointment.</p>
+        </div>
+    </fieldset>
+
+    <fieldset class="location step-block">
+        <legend>Select the location where your service will be performed</legend>
+        <div class="available-locations">
+            <select name="select-location" class="select-location">
+                <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
+                @if (providerTravelLocation != null)
+                {
+                <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
+                }
+                @if (providerLocations != null && providerLocations.Count > 0) {
+                    <optgroup label="Provider perform services at following locations">
+                        @foreach (var ploc in providerLocations) {
+                            // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
+                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressType</option>
+                        }
+                    </optgroup>
+                }
+                @if (customerLocations != null && customerLocations.Count > 0) {
+                    <optgroup label="Your locations">
+                        @foreach (var ploc in customerLocations) {
+                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+            <ul class="enter-new-location" style="display: none">
+                <li class="street-address-line-1">
+                    <label>Street address line 1:<input type="text" value="@Request["street-address-line-1"]" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
+                </li>
+                <li class="street-address-line-2">
+                    <label>Street address line 2:<input type="text" value="@Request["street-address-line-2"]" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
+                </li>
+                <li class="city">
+                    <label>City:<input type="text" value="@Request["city"]" name="city" @Validation.GetHtml("city")/></label>
+                </li>
+                <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
+                <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
+                            @LcHelpers.StateProvinceOptions(Request["state"].AsInt())
+                        </select></label></li>
+                <li class="zip">
+                    <label>Zip Code:<input type="text" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
+                </li>
+                <li class="save-to-my-locations">
+                    <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
+                    <label>to my locations as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
+                </li>
+            </ul>
+        </div>
+        @if (providerTravelLocation != null && providerTravelLocation.Latitude != 0 && providerTravelLocation.Longitude != 0)
+        {
+            <div class="service-radius">
+                <strong>@(p.FirstName)'s service radius</strong>
+                <div class="serviceRadiusMap" style="width: 370px; height: 300px" data-latitude="@providerTravelLocation.Latitude" data-longitude="@providerTravelLocation.Longitude" data-service-radius="@providerTravelLocation.ServiceRadiusFromLocation"></div>
+            </div>
+        }
+    </fieldset>
+
+    <fieldset class="actions">
+        <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">save & continue</button>
+    </fieldset>
+</form>

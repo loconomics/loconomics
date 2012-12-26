@@ -228,7 +228,7 @@ public static partial class LcData
 
     #region l18n
     /// <summary>
-    /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
+    /// Based on UrlUtil.LangId (string with format en-US, es-ES,..)
     /// returns the integer ID on database for the language part
     /// </summary>
     /// <returns></returns>
@@ -245,7 +245,7 @@ public static partial class LcData
         }
     }
     /// <summary>
-    /// Based on UrlUtil.LangId (string with format en_US, es_ES,..)
+    /// Based on UrlUtil.LangId (string with format en-US, es-ES,..)
     /// returns the integer ID on database for the country part
     /// </summary>
     /// <returns></returns>

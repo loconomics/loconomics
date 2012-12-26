@@ -80,14 +80,14 @@ public static class UrlUtil
         }
     }
     /// <summary>
-    /// Get the Lang Identifier in URL format.
-    /// Example: en_US, es_ES
+    /// Get the Lang Identifier for URL.
+    /// Example: en-US, es-ES
     /// </summary>
     public static string LangId
     {
         get
         {
-            return System.Globalization.CultureInfo.CurrentUICulture.Name.Replace('-', '_');
+            return System.Globalization.CultureInfo.CurrentUICulture.Name;
         }
     }
     /// <summary>

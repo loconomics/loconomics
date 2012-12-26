@@ -1,0 +1,206 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var brID = Request["BookingRequestID"];
+
+    var confirmationLimitHours = 18;
+    DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // TODO: Calculate location distance from provider to customer
+    
+    var booking = LcData.Booking.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
+
+    if (booking != null) {
+        confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
+    }
+    
+    var prefix = "booking-request-" + brID;
+}
+@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
+    var statusTitle = "Booking request involving {0}. Unknown status";
+    switch (itsUserType) {
+        case "customer":
+            statusTitle = "Booking request from {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request from {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Booking request from {0}";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "Cancelled booking confirmation";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Confirmed booking request";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined booking request";
+                    break;
+            }
+            break;
+        case "provider":
+            statusTitle = "Booking request for {0}. Unknown status";
+            switch ((int)booking.BookingRequestStatusID) {
+                case 1: // created but not complete
+                case 3: // created but not complete because time out
+                    statusTitle = "Incomplete booking request for {0}";
+                    break;
+                case 2: // completed request by customer, awaiting provider confirmation
+                    statusTitle = "Waiting for {0} to confirm request";
+                    break;
+                case 4: // cancelled by customer
+                    statusTitle = "{0} cancelled their booking";
+                    break;
+                case 5: // denied by provider
+                    statusTitle = "Declined booking request";
+                    break;
+                case 6: // expired (not answered by provider in time)
+                    statusTitle = "Expired booking request";
+                    break;
+                case 7: // accepted by provider (you must consider view the booking details!)
+                    statusTitle = "Confirmed booking request";
+                    break;
+                case 8: // denied with alternatives
+                    statusTitle = "Declined booking request";
+                    break;
+            }
+            break;
+    }
+    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
+}
+
+@if (booking == null)
+{
+    <div class="booking-request">
+        Sorry, we could not find the requested booking.  
+    </div>
+}
+else
+{
+    // Checking item: user type of the other user, not current user
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    //string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
+
+    <div class="booking-request">
+        <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+        <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+        @* If is customer and booking request is incomplete (status:1),
+            allow customer to cancel it (See that $cancelBookingRequest must follow same condition-rule) *@
+        @if (myUserType == "customer" && booking.BookingRequestStatusID == 1)
+        {
+        <div class="actions">
+            <button class="button item-action booking-request-action button-cancel-booking" type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
+        </div>
+        }
+        <h4>@itsUserLabel profile</h4>
+        @RenderPage(UrlUtil.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddCssClasses", "message-section" },
+            {"Data", itsUserData},
+            {"DataPrefix", ""},
+            {"Size", "medium"},
+            {"UserType", itsUserType},
+            {"PositionID", booking.PositionID}
+        })
+
+        @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer") {
+        <h4>Requested booking time(s)</h4>
+        <div class="requested-booking-times message-section">
+            <p class="info">
+            @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and has chosen
+            the following time(s) for you to meet up for an appointment. In order to accept the booking, choose one of these time slots
+            <strong>within @confirmationLimitHours hours from now (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+            .
+            </p>
+            <h5>Preferred time:</h5>
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
+            </button>
+            @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+            {
+            <h5>Alternate time(s):</h5>
+            }
+            @if (booking.AlternativeDate1Start is DateTime)
+            {
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+            </button>
+            }
+            @if (booking.AlternativeDate2Start is DateTime)
+            {
+            <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+            </button>
+            }
+            <h5>Decline booking request</h5>
+            <button type="button" class="button booking-request-action button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
+                Decline booking request. You can offer alternative times, if you’d like.
+            </button>
+        </div>
+        }
+        else if (booking.PreferredDateStart != null)
+        {
+        <h4>Requested booking time(s)</h4>
+        <div class="requested-booking-times message-section">
+            <p class="info">
+            @if (itsUserType == "customer")
+            {
+                <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked your @booking.PositionSingular services and chosen
+                the following time(s) for you to provide the service:</text>
+            }
+            else
+            {
+                <text>You have booked @LcHelpers.GetUserDisplayName(itsUserData)'s @booking.PositionSingular services and chosen
+                the following time(s) for the service:</text>
+            }
+            </p>
+            <h5>Preferred time:</h5>
+            <div class="selected-date preferred-date">
+                @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
+            </div>
+            @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+            {
+            <h5>Alternate time(s):</h5>
+            }
+            @if (booking.AlternativeDate1Start is DateTime)
+            {
+            <div class="selected-date alternative-date alternative-date-1">
+                @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+            </div>
+            }
+            @if (booking.AlternativeDate2Start is DateTime)
+            {
+            <div class="selected-date alternative-date alternative-date-2">
+                @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+            </div>
+            }
+        </div>
+        }
+
+        <h4>Booking details</h4>
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
+
+        <h4>Reminders</h4>
+        @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+    </div>
+}
