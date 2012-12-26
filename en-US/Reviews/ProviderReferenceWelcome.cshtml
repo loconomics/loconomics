@@ -3,7 +3,7 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
     
-    Styles.Add(LcUrl.AppPath + "Styles/ProviderReview.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/ProviderReview.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);

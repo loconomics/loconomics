@@ -36,8 +36,9 @@
           <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
           <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
            @* Our styles *@
-           <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/style.css?v=20121203")"/>
-           @Styles.GetStylesTags()
+           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
+           @LcAssets.GetStylesTags()
+           <script type="text/javascript">var LC = window['LC'] || {};</script>
            <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.1.js")" type="text/javascript"></script>
            @if (!isHomePage)
            {
@@ -181,7 +182,7 @@
                         // More to load:
                         Modernizr.load([
                             LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
-                            LcUrl.AppPath + "Scripts/script.js?v=20121203"
+                            LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
                         ]);
                     }
                     });
@@ -203,10 +204,10 @@
                 *@
 		        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js")" type="text/javascript"></script>
                 @* Our scripts *@
-                <script src="@Href(LcUrl.AppPath + "Scripts/script.js?v=20121203")" type="text/javascript"></script>
+                @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/script.js")
             }
             @* Javascript linked from asp.net *@
-            @Scripts.GetScriptTags()
+            @LcAssets.GetScriptsTags()
             @if (PageData["InlineScript"] != null)
             {
                 <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>

@@ -23,7 +23,7 @@
         PageData["BodyClass"] = "search";
         PageData["IsHomePage"] = true; // consider true for now just all home script are shared
         Page.Title = "Search Results...";
-        Styles.Add(LcUrl.AppPath + "Styles/Search.css");
+        LcAssets.AddStyle(LcUrl.AppPath + "Styles/Search.css");
         
         // Building sql parameters:
         var LC_Term  = "%" + serviceType + "%";

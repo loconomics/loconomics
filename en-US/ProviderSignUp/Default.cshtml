@@ -11,6 +11,6 @@
 </div>
 @{
     // load ressources (at end, just when we know we need it and it was not an ajax response:
-    Styles.Add(LcUrl.AppPath + "Styles/ProviderSignUp.css");
-    Scripts.Add(LcUrl.AppPath + "Scripts/ProviderSignUp.js");    
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/ProviderSignUp.css");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/ProviderSignUp.js");    
 }

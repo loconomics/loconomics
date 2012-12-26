@@ -24,8 +24,8 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     
-    Styles.Add(LcUrl.AppPath + "Styles/Booking.css");
-    Styles.Add(LcUrl.AppPath + "Styles/Search.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Booking.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Search.css");
 }
 
   <div id="container" class="clearfix booking editable">

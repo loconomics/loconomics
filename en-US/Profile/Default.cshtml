@@ -1,6 +1,6 @@
 ﻿@{     
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-    Styles.Add(LcUrl.AppPath + "Styles/Profile.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Profile.css");
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
@@ -63,7 +63,7 @@
     var maxPositions = 5;
     
     Page.Title = u.FirstName;
-    Scripts.Add(LcUrl.AppPath + "Scripts/Profile.js");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/Profile.js");
     
     int n = 0, ip = 0;
 }

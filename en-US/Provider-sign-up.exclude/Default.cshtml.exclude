@@ -1,8 +1,8 @@
 ﻿@{  
     Layout = "../_SiteLayout.cshtml";
     Page.Title = "Welcome to Loconomics";
-    Styles.Add(LcUrl.AppPath + "Styles/Provider-sign-up.css");
-    Scripts.Add(LcUrl.AppPath + "Scripts/Provider-sign-up.js");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Provider-sign-up.css");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/Provider-sign-up.js");
 }
   <div id="container" class="clearfix sign-up-wizard editable">
     <div id="main" class="tabbed folders wizard">

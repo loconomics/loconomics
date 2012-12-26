@@ -20,9 +20,9 @@
         Response.Redirect(LcUrl.LangPath);
     }
 
-    Scripts.Add(LcUrl.AppPath + "Scripts/Booking.js");
-    Styles.Add(LcUrl.AppPath + "Styles/Booking.css");
-    Styles.Add(LcUrl.AppPath + "Styles/Search.css");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/Booking.js");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Booking.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Search.css");
 }
 
   <div id="container" class="clearfix booking editable changes-notification-enabled">

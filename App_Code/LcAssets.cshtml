@@ -1,0 +1,55 @@
+﻿@* IagoSRL: Assets Helper class similar to buit-in ScriptsHelper but
+    with enhancements as cache-busting versioning and support for
+    other assets, not only scripts
+*@
+@using System.Web.WebPages.Scope;
+
+@functions{
+    static public string AssetsVersion{
+        get { return "20121226"; }
+    }
+    static public string AddVersion(string file, string extension) {
+        if (!String.IsNullOrEmpty(AssetsVersion)) {
+            return file.Replace(extension, "." + AssetsVersion + extension);
+        }
+        return file;
+    }
+}
+
+@functions{ static public void AddStyle(string cssFile){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__LcStyles"] == null){
+        p["__LcStyles"] = new List<string>();
+    }
+    ((List<string>)p["__LcStyles"]).Add(cssFile);
+}}
+@helper GetStylesTags(){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__LcStyles"] != null){
+        foreach(var s in (List<string>)p["__LcStyles"]){
+            @PrintStyleTag(s)
+        }
+    }
+}
+@helper PrintStyleTag(string f){
+    <link rel="stylesheet" href="@AddVersion(f, ".css")"/>
+}
+
+@functions{ static public void AddScript(string file){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__LcScripts"] == null){
+        p["__LcScripts"] = new List<string>();
+    }
+    ((List<string>)p["__LcScripts"]).Add(file);
+}}
+@helper GetScriptsTags(){
+    var p = ScopeStorage.CurrentScope;
+    if (p["__LcScripts"] != null){
+        foreach(var s in (List<string>)p["__LcScripts"]){
+            @PrintScriptTag(s)
+        }
+    }
+}
+@helper PrintScriptTag(string f){
+    <script type="text/javascript" src="@AddVersion(f, ".js")"></script>
+}
