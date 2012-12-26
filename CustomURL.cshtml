@@ -13,7 +13,8 @@
         ", customurl);
 
         if (user is int) {
-            @RenderPage(UrlUtil.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
+            //@RenderPage(UrlUtil.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
+            Response.Redirect(UrlUtil.LangPath + "Profile/?UserID=" + user);
         }
     }
     // Not found custom URL, this URL page doesn't exist, transfer to Not Found

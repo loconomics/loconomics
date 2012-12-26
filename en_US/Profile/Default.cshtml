@@ -4,11 +4,9 @@
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
-    int userid = (PageData["UserID"] ?? Request["userid"].AsInt());
-    if (userid == 0) {
-        userid = UrlData[0].AsInt();
-    }
-    // Preserve compability with providerid url param still:    
+    int userid = (PageData["UserID"] ?? Request["userid"].AsInt(UrlData[0].AsInt()));
+
+    // Preserve compability with providerid url param still:
     if (userid == 0) {
         userid = Request["ProviderID"].AsInt();
     }
@@ -79,7 +77,6 @@
     if (l.Length > 1) { l = l.Substring(0, 1); }
     @(p["FirstName"] + " " + @l + ".")
 }
-
 <div id="container" class="profile clearfix">
     <div id="main" class="tabbed folders">
 
