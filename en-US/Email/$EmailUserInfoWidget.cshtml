@@ -36,7 +36,7 @@
     }
 }
 @helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
-    @Href(urlBase + LcData.UserInfo.GetUserPublicURL(data[dataPrefix + "UserID"]))
+    @(urlBase + LcData.UserInfo.GetUserPublicURL(data[dataPrefix + "UserID"]))
 }
 @if (size == "medium")
 {
