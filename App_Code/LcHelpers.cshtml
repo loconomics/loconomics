@@ -311,6 +311,57 @@
         }
         return str;
     }
+    /// <summary>
+    /// Will transform "some $ugly ###url wit[]h spaces" into "some-ugly-url-with-spaces"
+    /// </summary>
+    public static string StringSlugify(string phrase, int maxLength = 50)
+    {
+        if (String.IsNullOrEmpty(phrase)) return "";
+
+        string str = phrase.ToLower();
+        // special chars to Ascii equivalent:
+        str = ReplaceSpecialCharsWithAsciiEquivalent(str, true, false);
+        // invalid chars, make into spaces
+        str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
+        // convert multiple spaces/hyphens into one space
+        str = Regex.Replace(str, @"[\s-]+", " ").Trim();
+        // cut and trim it
+        str = str.Substring(0, str.Length <= maxLength ? str.Length : maxLength).Trim();
+        // hyphens
+        str = Regex.Replace(str, @"\s", "-");
+
+        return str;
+    }
+    
+    public static string ReplaceSpecialCharsWithAsciiEquivalent(string s, bool changeLowercases = true, bool changeUppercases = true){
+        string r = s ?? "";
+        
+        if (changeLowercases) {
+            r = Regex.Replace(r, "[àáâãäåæ]", "a");
+            r = Regex.Replace(r, "[èéêë]", "e");
+            r = Regex.Replace(r, "[ìíîï]", "i");
+            r = Regex.Replace(r, "[òóôõöø]", "o");
+            r = Regex.Replace(r, "[ùúûü]", "u");
+            r = Regex.Replace(r, "[ý]", "y");
+            r = Regex.Replace(r, "[ðþß]", "b");
+            r = Regex.Replace(r, "[ç]", "c");
+            r = Regex.Replace(r, "[ñ]", "n");
+        }
+        if (changeUppercases) {
+            r = Regex.Replace(r, "[ÀÁÂÃÄÅÆ]", "A");
+            r = Regex.Replace(r, "[ÈÉÊË]", "E");
+            r = Regex.Replace(r, "[ÌÍÎÏ]", "I");
+            r = Regex.Replace(r, "[ÒÓÔÕÖØ]", "O");
+            r = Regex.Replace(r, "[ÙÚÛÜ]", "U");
+            r = Regex.Replace(r, "[Ý]", "Y");
+            r = Regex.Replace(r, "[ÐÞß]", "B");
+            r = Regex.Replace(r, "[Ç]", "C");
+            r = Regex.Replace(r, "[Ñ]", "N");
+        }
+        
+        return r;
+    }
+
     /*
      * Convert given string into a string with only the characters
      * valid for Braintree, replacing all invalid chars to underscore (_)
@@ -319,19 +370,7 @@
     public static string ConvertToBraintreeToken(string str) {
         string r = str ?? "_";
         
-        Regex replace_a_Accents = new Regex("[á|à|ä|â]", RegexOptions.Compiled);
-        Regex replace_e_Accents = new Regex("[é|è|ë|ê]", RegexOptions.Compiled);
-        Regex replace_i_Accents = new Regex("[í|ì|ï|î]", RegexOptions.Compiled);
-        Regex replace_o_Accents = new Regex("[ó|ò|ö|ô]", RegexOptions.Compiled);
-        Regex replace_u_Accents = new Regex("[ú|ù|ü|û]", RegexOptions.Compiled);
-        r = replace_a_Accents.Replace(r, "a");
-        r = replace_e_Accents.Replace(r, "e");
-        r = replace_i_Accents.Replace(r, "i");
-        r = replace_o_Accents.Replace(r, "o");
-        r = replace_u_Accents.Replace(r, "u");
-        
-        Regex n_tilde = new Regex("[ñ]", RegexOptions.Compiled);
-        r = n_tilde.Replace(r, "n");
+        r = ReplaceSpecialCharsWithAsciiEquivalent(r);
         
         Regex all_non_valid = new Regex("[^a-zA-Z0-9-_]", RegexOptions.Compiled);
         r = all_non_valid.Replace(r, "_");

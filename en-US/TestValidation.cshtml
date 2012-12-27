@@ -1,9 +1,9 @@
 ﻿<html>
 <head>
     @* Required javascript for client-side validation *@
-    <script src="@(LcUrl.LangPath)Scripts/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
-    <script src="@(LcUrl.LangPath)Scripts/jquery/jquery.validate.min.js" type="text/javascript"></script>
-    <script src="@(LcUrl.LangPath)Scripts/jquery/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+    <script src="@(LcUrl.AppPath)Scripts/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="@(LcUrl.AppPath)Scripts/jquery/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="@(LcUrl.AppPath)Scripts/jquery/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
     
     @* Basic styles to properly work of validation *@
     <style>
@@ -119,23 +119,24 @@
         <li>
             @* Validation.GetHtml generates the html attributes for the html element 
                 with the data for use validation at client side with jQuery.Validation.Unobtrusive *@
-            <label>A: <input type="text" name="a" @Validation.GetHtml("a") /></label>
+            <label>A: <input type="text" name="a" @Validation.GetHtml("a") value="@Request["a"]" /></label>
             @* Html Element in that jQuery validation and server-side validation
                will place the error message about this specific field:
                (simply remove next line if message is not wanted)
              *@
             @Html.ValidationMessage("a")
+            <span>A slug: @LcHelpers.StringSlugify(Request["a"], 40)</span>
         </li>
         <li>
-            <label>B: <input type="text" name="b" @Validation.GetHtml("b")  /></label>
+            <label>B: <input type="text" name="b" @Validation.GetHtml("b") value="@Request["b"]" /></label>
             @Html.ValidationMessage("b")
         </li>
         <li>
-            <label>C: <input type="text" name="c" @Validation.GetHtml("c")  /></label>
+            <label>C: <input type="text" name="c" @Validation.GetHtml("c") value="@Request["c"]" /></label>
             @Html.ValidationMessage("c")
         </li>
         <li>
-            <label>D: <input type="text" name="d" @Validation.GetHtml("d")  /></label>
+            <label>D: <input type="text" name="d" @Validation.GetHtml("d") value="@Request["d"]" /></label>
             @Html.ValidationMessage("d")
         </li>
         <li>

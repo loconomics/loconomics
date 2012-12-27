@@ -315,11 +315,48 @@ public static partial class LcData
 
         public static string GetMyPublicURL()
         {
-            return LcUrl.LangPath + "Profile/?UserID=" + WebSecurity.CurrentUserId;
+            return GetUserPublicURL(WebSecurity.CurrentUserId);
         }
         public static string GetUserPublicURL(int userid)
         {
+            string city = GetUserCity(userid);
+            var pos = GetProviderPreferredPosition(userid);
+            city = ASP.LcHelpers.StringSlugify(city, 40);
+            if (!String.IsNullOrEmpty(city) && pos != null)
+            {
+                return LcUrl.AppPath + city + "/"
+                    + ASP.LcHelpers.StringSlugify(pos.PositionSingular, 40) + "/"
+                    + userid + "/";
+            }
+
             return LcUrl.LangPath + "Profile/?UserID=" + userid;
+        }
+
+        public static string GetUserCity(int userid)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return (string)db.QueryValue(@"
+                    SELECT  TOP 1 L.City
+                    FROM    Address As L
+                    WHERE   L.UserID = @0
+                            AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
+                ", userid);
+            }
+        }
+        public static dynamic GetProviderPreferredPosition(int userid)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT  TOP 1 P.*
+                    FROM    UserProfilePositions As UP
+                             INNER JOIN
+                            Positions As P
+                              ON P.PositionID = UP.PositionID
+                    WHERE   UP.UserID = @0
+                ", userid);
+            }
         }
 
         /// <summary>

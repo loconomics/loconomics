@@ -1,0 +1,51 @@
+﻿@using WebMatrix.Data;
+@*
+    Receive a URL optimized for SEO from URL-Routing to load a user public profile.
+
+    Routing setup at _AppStart, parameters given "city", "position", "user"
+    Parameters can be integers (IDs) or (preferible) strings (slugified! URL friendly strings):
+    - city: name as defined in DB:PostalCode.City (PostalCodeID for integer value)
+    - position: name as defined in DB:Positions.PositionSingular (PositionID for integer value)
+    - user: username/email as defined in DB:UserProfile.Email (UserId for integer value)
+
+    NOTE:
+     * Really, city and position fields are not required to get the user page (but required to fill URL segments to math
+     the routing rule), BUT we use it to verify that the URL match exactly that user and is unique.
+*@
+@{
+    var city = Context.GetRouteValue("city");
+    var position = Context.GetRouteValue("position");
+    var user = Context.GetRouteValue("user");
+
+    dynamic userid = null;
+    
+    try{
+        // If we have the userid on user already, we don't need do any check with database,
+        // despite if city or position are correct:
+        if (user.IsInt()) {
+            userid = user.AsInt();
+        } else {
+            using (var db = Database.Open("sqlloco")){
+                userid = db.QueryValue(@"
+                    SELECT  UserID
+                    FROM    UserProfile
+                    WHERE   Email = @0
+                ", user);
+            }
+        }
+        if (userid is int) {
+
+            // Verify city and position
+            if (city == LcHelpers.StringSlugify(LcData.UserInfo.GetUserCity(userid), 40)
+                &&
+                position == LcHelpers.StringSlugify(LcData.UserInfo.GetProviderPreferredPosition(userid).PositionSingular)
+            ) {
+                @RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = userid })
+                //Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + userid);
+            }
+        }
+    } catch { }
+    
+    // Not found, this URL page doesn't exist, transfer to Not Found
+    @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml")
+}
