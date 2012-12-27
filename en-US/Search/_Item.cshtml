@@ -18,7 +18,7 @@
     }
 }
 @helper hrefProfile(dynamic p){
-    @Href(LcUrl.LangPath + "Profile/?UserID=" + p.UserID + "#position" + p.PositionID);
+    @Href(LcData.UserInfo.GetUserPublicURL(p.UserID) + "#position" + p.PositionID)
 }
         @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new { 
             Size = "search", 
