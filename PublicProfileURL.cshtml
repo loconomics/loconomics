@@ -19,6 +19,8 @@
 
     dynamic userid = null;
     
+    bool ok = false;
+    
     try{
         // If we have the userid on user already, we don't need do any check with database,
         // despite if city or position are correct:
@@ -42,10 +44,14 @@
             ) {
                 @RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = userid })
                 //Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + userid);
+                
+                ok = true;
             }
         }
     } catch { }
     
-    // Not found, this URL page doesn't exist, transfer to Not Found
-    @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml")
+    if (!ok) {
+        // Not found, this URL page doesn't exist, transfer to Not Found
+        @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml")
+    }
 }
