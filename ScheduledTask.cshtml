@@ -6,6 +6,9 @@
 
     int messages = 0, items = 0;
     int totalmessages = 0, totalitems = 0;
+    
+    var sqlAddBookingMessagingLog = "UPDATE Booking SET MessagingLog = coalesce(MessagingLog, '') + @1 WHERE BookingID=@0";
+    
     using(var db = Database.Open("sqlloco")){
         /*
          * Check:: Booking Request timed out
@@ -70,7 +73,7 @@
         totalmessages += messages;
         
         /*
-         * Check:: 24H Booking Reminder
+         * Check:: [24H Service Reminder] Booking will be on 24Hours
          * If:: Confirmated bookings not cancelled
          * If:: Current time is 24 hours before Confirmed Service StarTime
          * Action:: send a booking reminder email
@@ -89,12 +92,17 @@
                         getdate() > dateadd(hh, -25, E.StartTime)
                          AND
                         getdate() <= dateadd(hh, -24, E.StartTime)
+                         AND
+                        B.MessagingLog not like '%[24H Service Reminder]%'
             ")){
             try {
                 // Send message
                 // TODO: Send a more specific reminder message, instead a simple copy of
                 // current booking state
                 LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                
+                // Update MessagingLog for the booking
+                db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[24H Service Reminder]");
 
                 items++;
                 messages += 2;
@@ -107,7 +115,7 @@
         totalmessages += messages;
         
         /*
-         * Check:: Booking Review Reminder Next 8AM
+         * Check:: [8AM Review Reminder] Booking Review Reminder Next day after service at 8AM
          * If:: Confirmed bookings not cancelled
          * If:: User did not the review still
          * If:: Current time is 8AM on the day after the Confirmed Service EndTime
@@ -145,6 +153,8 @@
                          AND
                         -- of the day after the service
                         Cast(dateadd(d, -1, getdate()) As Date) = Cast(E.EndTime As Date)
+                         AND
+                        B.MessagingLog not like '%[8AM Review Reminder]%'
             ")){
             try {
                 // We need check that there was not reviews already (why send a reminder for something
@@ -163,6 +173,9 @@
                 // TODO: Send a more specific reminder message, instead a simple copy of
                 // current booking state (that at this moment must show the review button)
                 LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
+                
+                // Update MessagingLog for the booking
+                db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[8AM Review Reminder]");
 
                 items++;
                 if (messageFor == 'c' || messageFor == 'p') {
@@ -179,7 +192,7 @@
         totalmessages += messages;
         
         /*
-         * Check:: Booking Review Reminder 1W
+         * Check:: [1W Review Reminder] Booking Review Reminder 1Week after service
          * If:: Confirmed bookings not cancelled, non stoped manully, maybe is set as performed already
          * If:: User did not the review still
          * If:: Past 1 Week from service
@@ -216,10 +229,12 @@
                             ,4 -- completed, service and payment done
                         )
                          AND
-                        -- at 1 Week=168 hours, after service ended (between 168 and 169 hours)
+                        -- at 1 Week=168 hours, after service ended (between 168 and 175 hours -6 hours of margin-)
                         getdate() >= dateadd(hh, 168, E.EndTime)
                          AND
-                        getdate() < dateadd(hh, 169, E.EndTime)
+                        getdate() < dateadd(hh, 175, E.EndTime)
+                         AND
+                        B.MessagingLog not like '%[1W Review Reminder]%'
             ")){
             try {
                 // We need check that there was not reviews already (why send a reminder for something
@@ -238,7 +253,10 @@
                 // TODO: Send a more specific reminder message, instead a simple copy of
                 // current booking state (that at this moment must show the review button)
                 LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
-
+                
+                // Update MessagingLog for the booking
+                db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[1W Review Reminder]");
+                
                 items++;
                 if (messageFor == 'c' || messageFor == 'p') {
                     messages++;
@@ -273,10 +291,11 @@
                           ON B.ConfirmedDateID = E.Id
                 WHERE   BookingStatusID = 1 -- confirmed, not cancelled and not other changes
                          AND
-                        -- at 48 hours after service ended (between 48 and 49 hours)
+                        -- at 48 hours after service ended (more than 48 hours is fine)
                         getdate() >= dateadd(hh, 48, E.EndTime)
-                         AND
-                        getdate() < dateadd(hh, 49, E.EndTime)
+                        /* AND
+                         getdate() < dateadd(hh, 49, E.EndTime)
+                        */
             ";
             var bookings = db.Query(sqlGet);
             // Update bookings affected by conditions to 
@@ -300,6 +319,9 @@
                     
                     // Notify customer and provider with an updated booking details:
                     LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+                    // Update MessagingLog for the booking
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Performed]");
 
                     items++;
                     messages += 3;
@@ -332,7 +354,7 @@
         logger.Append("\n");
     }
     void logEx(string task, Exception ex){
-        log("{1}: Exception {2}\n", task, ex.Message);
+        log("{0}: Exception {1}\n[LOGDATA[\n {2} \n]LOGDATA]", task, ex.Message, ex.StackTrace);
     }
 }
 @if (!LcHelpers.InProduction)
