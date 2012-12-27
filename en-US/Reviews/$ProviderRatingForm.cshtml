@@ -308,7 +308,7 @@
                 @RenderPage(LcUrl.RenderLangPath + "Social/_SocialNetworkingWidget.cshtml",
                     new
                     {
-                        URL = LcUrl.LangPath + "Profile/?UserID=" + provider.UserID + "&PositionID=" + position.PositionID,
+                        URL = LcData.UserInfo.GetUserPublicURL(provider.UserID, position.PositionID),
                         Title = "An amazing " + position.PositionSingular + ": " + LcHelpers.GetUserDisplayName(provider)
                     })
             </li>

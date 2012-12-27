@@ -317,7 +317,7 @@ public static partial class LcData
         {
             return GetUserPublicURL(WebSecurity.CurrentUserId);
         }
-        public static string GetUserPublicURL(int userid)
+        public static string GetUserPublicURL(int userid, object positionID = null)
         {
             string city = GetUserCity(userid);
             var pos = GetProviderPreferredPosition(userid);
@@ -326,10 +326,11 @@ public static partial class LcData
             {
                 return LcUrl.AppPath + city + "/"
                     + ASP.LcHelpers.StringSlugify(pos.PositionSingular, 40) + "/"
-                    + userid + "/";
+                    + userid + "/" + 
+                    (positionID == null ? "" : "?PositionID=" + positionID.ToString());
             }
 
-            return LcUrl.LangPath + "Profile/?UserID=" + userid;
+            return LcUrl.LangPath + "Profile/?UserID=" + userid + (positionID == null ? "" : "&PositionID=" + positionID.ToString());
         }
 
         public static string GetUserCity(int userid)

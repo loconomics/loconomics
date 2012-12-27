@@ -35,6 +35,9 @@
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
 }
+@helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
+    @Href(urlBase + LcData.UserInfo.GetUserPublicURL(data[dataPrefix + "UserID"]))
+}
 @if (size == "medium")
 {
     <div style="font-size: .9em;@addContainerStyle">
@@ -43,7 +46,7 @@
             <span>Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
-        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@printProfileLinkUrl(data, dataPrefix, urlBase)" width="55" height="55" />
         
         @if (withContactData) {
             <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
@@ -90,7 +93,7 @@
         }
         </div>
 
-        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + LcUrl.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View full profile</a>
+        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View full profile</a>
     </div>
 }
 @* Mini size is the same for all userType's *@
@@ -101,7 +104,7 @@ else if (size == "mini") {
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
             <div>@extraInfo</div>
         } else {
-            <a href="@(urlBase + LcUrl.LangPath)Profile/?UserID=@data[dataPrefix + "UserID"]">View profile</a>
+            <a href="@printProfileLinkUrl(data, dataPrefix, urlBase)">View profile</a>
         }
     </div>
 } else {

@@ -13,7 +13,7 @@
     // Data for the EmailLayout:
     PageData["messageTitle"] = "License Verification Request";
     // Create URL:
-    PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Profile/?UserID=" + providerID.ToString();
+    PageData["viewOnSiteUrl"] = LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(providerID);
 
     var sqlGetLicenseRequest = @"
         SELECT

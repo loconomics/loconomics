@@ -56,7 +56,7 @@
     }
 }
 @helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
-    @(urlBase + LcUrl.LangPath + "Profile/?UserID=" + data[dataPrefix + "UserID"])
+    @Href(urlBase + LcData.UserInfo.GetUserPublicURL(data[dataPrefix + "UserID"]))
 }
 @helper printProfileLink(dynamic data, string dataPrefix, string urlBase, string label = "View profile") {
     <a target="_blank" class="view-profile" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@label</a>

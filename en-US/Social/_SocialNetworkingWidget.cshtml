@@ -5,7 +5,12 @@
     string view = (string)PageData["View"] ?? "custom-icons"; // Possible values: custom-icons, network-widgets
     string size = PageData["Size"] ?? "32x32"; // Possible values: 32x32 (only one for now)
     
-    string photourl = url.Replace("Profile/?UserID=", "Photo/");
+    string photourl = null;
+    if (Context.GetRouteValue("user").IsInt()) {
+        photourl = LcUrl.LangUrl + "Profile/Photo/" + Context.GetRouteValue("user").AsInt();
+    } else {
+        photourl.Replace("?UserID=", "Photo/");
+    }
     var iaux = photourl.IndexOf('#');
     if (iaux > -1) {
         photourl = photourl.Substring(0, iaux);
