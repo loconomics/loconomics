@@ -337,13 +337,13 @@
     
     log("Elapsed time for this last tasks batch: {0}, for {1} items and {2} messages", DateTime.Now - elapsedTime, totalitems, totalmessages);
 
-    // Finishing: save log on disk
+    // Finishing: save log on disk, per month rotation
     try {
-        System.IO.File.AppendAllText(Server.MapPath(LcUrl.RenderAppPath + "_logs/ScheduledTaskLog.txt"), logger.ToString());
+        System.IO.File.AppendAllText(Server.MapPath(LcUrl.RenderAppPath + 
+            String.Format("_logs/ScheduledTaskLog{0:yyyyMM}.txt", DateTime.Today)),
+            logger.ToString());
     }catch {
     }
-    
-    // TODO: log file maintenance: daily/weekly? rotation and deletion of very old ones. Careful with total size.
 }
 @functions{
     void log(string format, params object[] pars){
