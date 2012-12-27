@@ -9,7 +9,7 @@
     if (Context.GetRouteValue("user").IsInt()) {
         photourl = LcUrl.LangUrl + "Profile/Photo/" + Context.GetRouteValue("user").AsInt();
     } else {
-        photourl.Replace("?UserID=", "Photo/");
+        photourl = url.Replace("?UserID=", "Photo/");
     }
     var iaux = photourl.IndexOf('#');
     if (iaux > -1) {
