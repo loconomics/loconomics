@@ -337,8 +337,11 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 return (string)db.QueryValue(@"
-                    SELECT  TOP 1 L.City
+                    SELECT  TOP 1 PC.City
                     FROM    Address As L
+                             INNER JOIN
+                            PostalCode As PC
+                              ON L.PostalCodeID = PC.PostalCodeID
                     WHERE   L.UserID = @0
                             AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
                 ", userid);
