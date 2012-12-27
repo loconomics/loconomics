@@ -46,7 +46,7 @@
             <span>Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
         </div>
         
-        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@printProfileLinkUrl(data, dataPrefix, urlBase)" width="55" height="55" />
+        <img style="@LcEmailTemplateHelper.StyleMiniAvatar()" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         
         @if (withContactData) {
             <div style="display: inline-block;line-height: normal;overflow: hidden;width: 400px;">
