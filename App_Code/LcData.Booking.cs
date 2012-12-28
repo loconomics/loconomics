@@ -632,69 +632,8 @@ public static partial class LcData
                     BookingRequestStatusID));
             }
 
-            var sqlInvalidateBookingRequest = @"
-                -- Parameters
-                DECLARE @BookingRequestID int, @BookingRequestStatusID int
-                SET @BookingRequestID = @0
-                SET @BookingRequestStatusID = @1
+            var sqlInvalidateBookingRequest = @"EXEC InvalidateBookingRequest @0, @1";
 
-                DECLARE @AddressID int
-
-                BEGIN TRY
-                    BEGIN TRAN
-
-                    -- Get Service Address ID to be (maybe) removed later
-                    SELECT  @AddressID = AddressID
-                    FROM    BookingRequest
-                    WHERE   BookingRequestID = @BookingRequestID
-
-                    -- Removing CalendarEvents:
-                    DELETE FROM CalendarEvents
-                    WHERE ID IN (
-                        SELECT TOP 1 PreferredDateID FROM BookingRequest
-                        WHERE BookingRequestID = @BookingRequestID
-                        UNION
-                        SELECT TOP 1 AlternativeDate1ID FROM BookingRequest
-                        WHERE BookingRequestID = @BookingRequestID
-                        UNION
-                        SELECT TOP 1 AlternativeDate2ID FROM BookingRequest
-                        WHERE BookingRequestID = @BookingRequestID
-                    )
-
-                    /*
-                     * Updating Booking Request status, and removing references to the 
-                     * user selected dates.
-                     */
-                    UPDATE  BookingRequest
-                    SET     BookingRequestStatusID = @BookingRequestStatusID,
-                            PreferredDateID = null,
-                            AlternativeDate1ID = null,
-                            AlternativeDate2ID = null,
-                            AddressID = null,
-                            UpdatedDate = getdate()
-                    WHERE   BookingRequestID = @BookingRequestID
-
-                    -- Removing Service Address, if is not an user saved location (it has not AddressName)
-                    DELETE FROM ServiceAddress
-                    WHERE AddressID = @AddressID
-                          AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @AddressID AND AddressName is null) = 1
-                    DELETE FROM Address
-                    WHERE AddressID = @AddressID
-                           AND
-                          AddressName is null
-
-                    COMMIT TRAN
-
-                    -- We return sucessful operation with Error=0
-                    SELECT 0 As Error
-                END TRY
-                BEGIN CATCH
-                    IF @@TRANCOUNT > 0
-                        ROLLBACK TRAN
-                    -- We return error number and message
-                    SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
-                END CATCH
-            ";
             using (var db = Database.Open("sqlloco"))
             {
                 // Check cancellation policy and get quantities to refund
