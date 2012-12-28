@@ -249,7 +249,7 @@
                          */
                         
                         // Find or create Customer on Braintree
-                        string customerIdOnBraintree = LcHelpers.Channel + ":" + c.UserID.ToString();
+                        string customerIdOnBraintree = LcHelpers.Channel + "_" + c.UserID.ToString();
                         try{
                             var gc = gateway.Customer.Find(customerIdOnBraintree);
                         } catch (Braintree.Exceptions.NotFoundException ex) {
