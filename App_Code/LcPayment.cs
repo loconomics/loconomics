@@ -48,37 +48,48 @@ public static class LcPayment
     {
         Result<Transaction> r = null;
 
-        var gateway = NewBraintreeGateway();
-
-        // Check if the transaction has something to refund (was not refunded yet)
-        Transaction transaction = gateway.Transaction.Find(transactionID);
-        if (transaction == null)
-            // It doesn't exists, 'refunded' ;)
-            return null;
-
-        if (transaction.Amount > 0)
+        try
         {
-            // There is something to refund:
-            if (transaction.Status == TransactionStatus.SETTLED ||
-                transaction.Status == TransactionStatus.SETTLING)
+            var gateway = NewBraintreeGateway();
+
+            // Check if the transaction has something to refund (was not refunded yet)
+            Transaction transaction = null;
+            try
             {
-                // Full refund transaction.
-                r = gateway.Transaction.Refund(transactionID);
+                transaction = gateway.Transaction.Find(transactionID);
             }
-            else if (transaction.Status == TransactionStatus.AUTHORIZED ||
-                transaction.Status == TransactionStatus.AUTHORIZING ||
-                transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
-            {
-                // Void transaction:
-                r = gateway.Transaction.Void(transactionID);
-            }
-            else
-            {
-                // No transaction, no accepted, no charge, nothing to refund
+            catch (Braintree.Exceptions.NotFoundException ex) { }
+            if (transaction == null)
+                // It doesn't exists, 'refunded' ;)
                 return null;
+
+            if (transaction.Amount > 0)
+            {
+                // There is something to refund:
+                if (transaction.Status == TransactionStatus.SETTLED ||
+                    transaction.Status == TransactionStatus.SETTLING)
+                {
+                    // Full refund transaction.
+                    r = gateway.Transaction.Refund(transactionID);
+                }
+                else if (transaction.Status == TransactionStatus.AUTHORIZED ||
+                    transaction.Status == TransactionStatus.AUTHORIZING ||
+                    transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+                {
+                    // Void transaction:
+                    r = gateway.Transaction.Void(transactionID);
+                }
+                else
+                {
+                    // No transaction, no accepted, no charge, nothing to refund
+                    return null;
+                }
             }
         }
-
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
     /// <summary>
@@ -94,69 +105,82 @@ public static class LcPayment
     {
         Result<Transaction> r = null;
 
-        var gateway = NewBraintreeGateway();
-
-        // Check if the transaction has something to refund (was not full refunded yet)
-        Transaction transaction = gateway.Transaction.Find(transactionID);
-        if (transaction == null)
-            // It doesn't exists, 'refunded' ;)
-            return null;
-
-        if (transaction.Amount > 0)
+        try
         {
-            // There is something to refund:
-            if (transaction.Status == TransactionStatus.SETTLED ||
-                transaction.Status == TransactionStatus.SETTLING)
+            var gateway = NewBraintreeGateway();
+
+            // Check if the transaction has something to refund (was not full refunded yet)
+            Transaction transaction = null;
+            try
             {
-                // Partial refund transaction.
-                r = gateway.Transaction.Refund(transactionID, amount);
+                transaction = gateway.Transaction.Find(transactionID);
             }
-            else if (transaction.Status == TransactionStatus.AUTHORIZED ||
-                transaction.Status == TransactionStatus.AUTHORIZING ||
-                transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+            catch (Braintree.Exceptions.NotFoundException ex) { }
+
+            if (transaction == null)
+                // It doesn't exists, 'refunded' ;)
+                return null;
+
+            if (transaction.Amount > 0)
             {
-                // Cannot be partial refunded if not settled, we
-                // clone the transaction to include (total - refunded) amount
-                // and void original transation
-
-                var request = new TransactionCloneRequest
+                // There is something to refund:
+                if (transaction.Status == TransactionStatus.SETTLED ||
+                    transaction.Status == TransactionStatus.SETTLING)
                 {
-                    // Total original amount less refunded amount
-                    Amount = transaction.Amount.Value - amount
-                };
-                Result<Transaction> newResult = gateway.Transaction.
-                  CloneTransaction(transactionID, request);
-
-                // Check that all was fine in this subtask
-                if (newResult.IsSuccess()
-                    && newResult.Target != null
-                    && !String.IsNullOrEmpty(newResult.Target.Id))
+                    // Partial refund transaction.
+                    r = gateway.Transaction.Refund(transactionID, amount);
+                }
+                else if (transaction.Status == TransactionStatus.AUTHORIZED ||
+                    transaction.Status == TransactionStatus.AUTHORIZING ||
+                    transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
                 {
-                    // A new transactionID is given, update it in database
-                    var newTransactionID = newResult.Target.Id;
-                    LcData.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
+                    // Cannot be partial refunded if not settled, we
+                    // clone the transaction to include (total - refunded) amount
+                    // and void original transation
 
-                    // Void original transaction
-                    r = gateway.Transaction.Void(transactionID);
-
-                    // Check error on Void, because if failed it means that more money was charged
-                    // to customer instead of refunded!
-                    if (!r.IsSuccess())
+                    var request = new TransactionCloneRequest
                     {
-                        // Try to void new transaction
-                        gateway.Transaction.Void(newTransactionID);
+                        // Total original amount less refunded amount
+                        Amount = transaction.Amount.Value - amount
+                    };
+                    Result<Transaction> newResult = gateway.Transaction.
+                      CloneTransaction(transactionID, request);
+
+                    // Check that all was fine in this subtask
+                    if (newResult.IsSuccess()
+                        && newResult.Target != null
+                        && !String.IsNullOrEmpty(newResult.Target.Id))
+                    {
+                        // A new transactionID is given, update it in database
+                        var newTransactionID = newResult.Target.Id;
+                        LcData.Booking.UpdateBookingTransactionID(transactionID, newTransactionID);
+
+                        // Void original transaction
+                        r = gateway.Transaction.Void(transactionID);
+
+                        // Check error on Void, because if failed it means that more money was charged
+                        // to customer instead of refunded!
+                        if (!r.IsSuccess())
+                        {
+                            // Try to void new transaction
+                            gateway.Transaction.Void(newTransactionID);
+                        }
+                    }
+                    else
+                    {
+                        return newResult.Message;
                     }
                 }
                 else
                 {
-                    return newResult.Message;
-                }                
+                    // No transaction, no accepted, no charge, nothing to refund
+                    return null;
+                }
             }
-            else
-            {
-                // No transaction, no accepted, no charge, nothing to refund
-                return null;
-            }
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
         }
 
         return (r == null || r.IsSuccess() ? null : r.Message);
@@ -171,9 +195,16 @@ public static class LcPayment
     {
         Result<Transaction> r = null;
 
-        var gateway = NewBraintreeGateway();
+        try
+        {
+            var gateway = NewBraintreeGateway();
 
-        r = gateway.Transaction.SubmitForSettlement(transactionID);
+            r = gateway.Transaction.SubmitForSettlement(transactionID);
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
