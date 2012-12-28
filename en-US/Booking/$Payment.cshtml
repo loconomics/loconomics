@@ -249,12 +249,13 @@
                          */
                         
                         // Find or create Customer on Braintree
+                        string customerIdOnBraintree = LcHelpers.Channel + ":" + c.UserID.ToString();
                         try{
-                            var gc = gateway.Customer.Find(c.UserID.ToString());
+                            var gc = gateway.Customer.Find(customerIdOnBraintree);
                         } catch (Braintree.Exceptions.NotFoundException ex) {
                             // Customer doens't exist, create it:
                             var gcr = new CustomerRequest{
-                                Id = c.UserID.ToString()
+                                Id = customerIdOnBraintree
                             };
 
                             var r = gateway.Customer.Create(gcr);
@@ -270,7 +271,7 @@
                             TransactionRequest request = new TransactionRequest
                             {
                                 Amount = TotalPrice,
-                                CustomerId = c.UserID.ToString(),
+                                CustomerId = customerIdOnBraintree,
                                 CreditCard = new TransactionCreditCardRequest
                                 {
                                     //Token = credidtCardToken,
