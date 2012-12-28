@@ -556,9 +556,11 @@ LC.redirectTo = function (url) {
     });
     // Navigate to new location:
     window.location = url;
-    // If page not changed (same url or internal link), refresh:
-    if (!redirected)
-        window.location.reload();
+    setTimeout(function () {
+        // If page not changed (same url or internal link), page continue executing next refresh:
+        if (!redirected)
+            window.location.reload();
+    }, 50);
 };
 LC.connectPopupAction = function (applyToSelector) {
     applyToSelector = applyToSelector || '.popup-action';
