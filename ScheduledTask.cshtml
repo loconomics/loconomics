@@ -7,6 +7,7 @@
     int messages = 0, items = 0;
     int totalmessages = 0, totalitems = 0;
     
+    var sqlAddBookingRequestMessagingLog = "UPDATE BookingRequest SET MessagingLog = coalesce(MessagingLog, '') + @1 WHERE BookingRequestID=@0";
     var sqlAddBookingMessagingLog = "UPDATE Booking SET MessagingLog = coalesce(MessagingLog, '') + @1 WHERE BookingID=@0";
     
     using(var db = Database.Open("sqlloco")){
@@ -60,6 +61,9 @@
                 if (result.Error == 0) {
                     // Send message
                     LcMessaging.SendBookingRequestInvalidation(br.BookingRequestID, 1, 19);
+                    
+                    // Update MessagingLog for the booking request
+                    db.Execute(sqlAddBookingMessagingLog, br.BookingRequestID, "[Booking Request Expiration]");
                 }
                 
                 items++;
