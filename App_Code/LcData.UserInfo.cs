@@ -23,6 +23,16 @@ public static partial class LcData
     /// </summary>
     public static class UserInfo
     {
+        public enum UserType : int
+        {
+            None = 0,
+            Anonymous = 1,
+            Customer = 2,
+            Provider = 4,
+            User = 7,
+            System = 8
+        }
+
         /* Get a data row with the User information identified with 'userId' from the database
         */
         public static dynamic GetUserRow(int userId) {

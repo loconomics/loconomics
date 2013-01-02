@@ -87,3 +87,139 @@
         return "border-bottom: 1px solid #d8d7d7;height: 0;padding: 4px !important;";
     }
 }
+
+@* Some non-css utilities
+ *@
+@functions{
+    public class BookingEmailInfo {
+        public int BookingRequestID;
+        public int BookingID;
+        public dynamic Booking;
+        public LcData.UserInfo.UserType SentTo;
+        public int SentToUserID;
+        public LcData.UserInfo.UserType SentBy;
+        public int SentByUserID;
+        public LcData.UserInfo.UserType PairUserType;
+        public int PairUserID;
+        public string ViewOnSiteURL;
+    }
+    public static BookingEmailInfo GetBookingInfo() {
+        
+        dynamic b = null;
+        string viewURL = null;
+        var sentTo = LcData.UserInfo.UserType.None;
+        var sentBy = LcData.UserInfo.UserType.System;
+        var pairType = LcData.UserInfo.UserType.None;
+        var bID = Request["BookingID"].AsInt();
+        var brID = Request["BookingRequestID"].AsInt();
+        if (!Enum.TryParse<LcData.UserInfo.UserType> (Request["SentTo"], out sentTo)) {
+            throw new ArgumentException("Invalid value for url request parameter SentTo: " + Request["SentTo"]);
+        }
+        Enum.TryParse<LcData.UserInfo.UserType> (Request["SentBy"], out sentBy);
+
+        if (sentTo == sentBy) {
+            throw new ArgumentException("Parameters SentTo and SentBy cannot be the same value");
+        }
+
+        if (bID == 0) {
+            b = LcData.Booking.GetBookingRequestForUser(brID, 0, true);
+            viewURL = LcUrl.LangUrl + String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID);
+        } else {
+            b = LcData.Booking.GetBookingForUser(bID, 0, true);
+            viewURL = LcUrl.LangUrl + String.Format("Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, bID);
+        }
+        
+        int toUserID = 0, byUserID = 0, pairUserID = 0;
+        if (sentTo == LcData.UserInfo.UserType.Provider) {
+            toUserID = b.ProviderUserID;
+        }
+        switch (sentTo) {
+            case LcData.UserInfo.UserType.Customer:
+                toUserID = b.CustomerUserID;
+                pairUserID = b.ProviderUserID;
+                pairType = LcData.UserInfo.UserType.Provider;
+                break;
+            case LcData.UserInfo.UserType.Provider:
+                toUserID = b.ProviderUserID;
+                pairUserID = b.CustomerUserID;
+                pairType = LcData.UserInfo.UserType.Customer;
+                break;
+        }
+        switch (sentBy) {
+            case LcData.UserInfo.UserType.Customer:
+                byUserID = b.CustomerUserID;
+                break;
+            case LcData.UserInfo.UserType.Provider:
+                byUserID = b.ProviderUserID;
+                break;
+        }      
+        
+        return new BookingEmailInfo{
+            BookingRequestID = brID
+            ,BookingID = bID
+            ,Booking = b
+            ,SentTo = sentTo
+            ,SentToUserID = toUserID
+            ,SentBy = sentBy
+            ,SentByUserID = byUserID
+            // If this message is sent to provider, the 'pair' is the customer, and viceversa:
+            ,PairUserID = pairUserID
+            ,PairUserType = pairType
+            ,ViewOnSiteURL = viewURL
+        };
+    }
+    
+    public static string GetLocationName(dynamic data){
+        if (String.IsNullOrWhiteSpace(data.LocationName)) {
+            return "";
+        } else {
+            return data.LocationUserFirstName + "'s " + data.LocationName;
+        }
+    }
+    public static string GetLocationForGoogleMaps(dynamic data){
+        return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+}
+@helper PrintAddress(IDictionary<string, object> addressDetails) {
+    <div>
+        @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
+        <div>@addressDetails["name"]</div>
+        }
+        <span>@addressDetails["location"]</span>
+        <span>@addressDetails["city"]</span>
+        <span>@addressDetails["state"]</span>
+        <span>@addressDetails["zipcode"]</span>
+    </div>
+}
+@helper PrintAddress(dynamic addressDetails) {
+    <div>
+        @if (!String.IsNullOrEmpty((string)addressDetails.Name)) {
+        <div>@addressDetails.Name</div>
+        }
+        <span>@addressDetails.Location</span>
+        <span>@addressDetails.City</span>
+        <span>@addressDetails.State</span>
+        <span>@addressDetails.PostalCode</span>
+    </div>
+}
+@helper PrintAddressBlock(dynamic data) {
+    if (data.StateProvinceCode != null)
+    {
+        <div>
+            @PrintAddress(new {
+                Name = GetLocationName(data),
+                Location = data.AddressLine1 + " " + data.AddressLine2,
+                City = data.City, 
+                State = data.StateProvinceCode,
+                PostalCode = data.PostalCode
+            })
+
+            <a target="_blank" href="http://maps.google.com/?q=@GetLocationForGoogleMaps(data)">View direction</a>
+        </div>
+    }
+    else
+    {
+        // Null, no location
+        <div>Address not available</div>
+    }
+}

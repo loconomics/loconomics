@@ -1,35 +1,23 @@
 ﻿@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
-    dynamic booking = null;
-    int thisUserID = 0;
-    dynamic thisUser = null;
-    var confirmationLimitHours = 18;
-    int brID = 0;
-    DateTime confirmationLimitDate = DateTime.MaxValue;
+    
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+    // We need the users data to display names
+    var pairUserData = LcData.UserInfo.GetUserRow(info.PairUserID);
+    var sentToUserData = LcData.UserInfo.GetUserRow(info.SentToUserID);
 
     try{
         Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
         Page.Title = "Your Booking Request has Expired";
 
-        thisUserID = Request["UserID"].AsInt();
-        thisUser = LcData.UserInfo.GetUserRow(thisUserID);
-        brID = Request["BookingRequestID"].AsInt();
-   
         // Data for the EmailLayout:
-        // This will be changed on body by more specific texts:
         PageData["messageTitle"] = "Your Booking Request has Expired";
         PageData["messageSubtitle"] = "";
         // Create URL:
-        PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
-    
-        // TODO: Calculate location distance from provider to customer
-    
-        booking = LcData.Booking.GetBookingRequestForUser(brID, thisUserID, thisUser.IsAdmin);
-    
-        if (booking != null) {
-            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
-    }
+        PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+   
     }catch(Exception ex){
         showError("HEAD", ex);
     }
@@ -41,82 +29,59 @@
         @(section + " ex: " + ex.Message + "::" + ex.StackTrace)
     }
 }
-@helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
-    @Href(urlBase + LcData.UserInfo.GetUserPublicURL(data[dataPrefix + "UserID"]))
-}
 @functions{
-    string getTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
-        var statusTitle = "Booking request involving {0}. Unknown status";
-        switch (itsUserType) {
-            case "customer":
-                statusTitle = "Booking request from {0}. Unknown status";
-                switch ((int)booking.BookingRequestStatusID) {
-                    case 6: // expired (not answered by provider in time)
-                        statusTitle = "Booking request from {0} has expired";
-                        break;
-                }
+    string getExpiredTitle(dynamic booking, dynamic pairUserData, LcData.UserInfo.UserType sentTo) {
+        var statusTitle = "Expired booking request involving {0}";
+        switch (sentTo) {
+			case LcData.UserInfo.UserType.Provider:
+                statusTitle = "Booking request from {0} has expired";
                 break;
-            case "provider":
-                statusTitle = "Booking request for {0}. Unknown status";
-                switch ((int)booking.BookingRequestStatusID) {
-                    case 6: // expired (not answered by provider in time)
-                        statusTitle = "Booking request for {0} has expired";
-                        break;
-                }
+            case LcData.UserInfo.UserType.Customer:
+                statusTitle = "Booking request for {0} has expired";
                 break;
         }
-        return String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData));
+        return String.Format(statusTitle, LcHelpers.GetUserDisplayName(pairUserData));
     }
 }
-@if (booking == null)
+@if (info.Booking == null)
 {
-    throw new Exception("We're unable to find this booking request, please contact us and reference Booking Request ID: " + brID.ToString());
+    throw new Exception("We're unable to find this booking request, please contact us and reference Booking Request ID: " + info.BookingRequestID.ToString());
 }
 else
 {
-
     try
     {
-
-        // Checking item: user type of the other user, not current user
-        int itsUserID = booking.ProviderUserID;
-        string itsUserType = "provider";
-        string itsUserLabel = "Provider";
-        string myUserType = "customer";
-        //string myUserPrefix = "Customer";
-        if (thisUserID == booking.ProviderUserID)
-        {
-            itsUserType = "customer";
-            itsUserLabel = "Customer";
-            myUserType = "provider";
-            itsUserID = booking.CustomerUserID;
-        } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-        var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
-
         <div>
             @{
-                PageData["messageTitle"] = getTitleStatus(booking, itsUserData, itsUserType);
-                PageData["messageSubtitle"] = "Booking Request ID: " + brID.ToString() + "last updated: " + booking.UpdatedDate.ToLongDateString() + " at " + booking.UpdatedDate.ToLongTimeString();
+                PageData["messageTitle"] = getExpiredTitle(info.Booking, pairUserData, info.SentTo);
+                PageData["messageSubtitle"] = String.Format(
+                    "Booking Request ID: {0} last updated: {1:D} at {2:T}",
+                    info.BookingRequestID, info.Booking.UpdatedDate, info.Booking.UpdatedDate
+                );
             }
-            @*<h3 @LcEmailTemplateHelper.StyleH3()>@gettTitleStatus(booking, itsUserData, itsUserType)</h3>
-            <span>Sent: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
             
-            @if (booking.BookingRequestStatusID == 6 && itsUserType == "customer")
-            {
-            <p @LcEmailTemplateHelper.StyleResetP()>Hello @LcHelpers.GetUserDisplayName(thisUserData), <br><br>
-            You haven´t replied to the booking request from @LcHelpers.GetUserDisplayName(itsUserData) requesting your @booking.PositionSingular services, within the alloted 18 hours, and as a result it has now expired. We know life is busy, but we need our community members to be responsive to ensure the best possible experience for everybody.<br><br>  
-			@LcHelpers.GetUserDisplayName(itsUserData) has also been informed.  If you’d like to contact @itsUser.ObjectPronoun,  <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">click here</a>.<br><br>
-			At your service,<br><br>
-			The Loconomics team</p>
+            @switch (info.SentTo) {
+			    case LcData.UserInfo.UserType.Provider:
+                    
+                    <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @LcHelpers.GetUserDisplayName(sentToUserData)! <br><br>
+                    We’re really sorry to have to let you down. @LcHelpers.GetUserDisplayName(pairUserData) did not respond to your request within the alloted time.  Your credit card has not been charged, and your authorization will expire shortly.<br><br>
+			        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(LcUrl.LangUrl)">Click here</a>. to search for another provider. <br><br>
+			        At your service,<br><br>
+			        The Loconomics team</p>
+                    
+                    break;
+                case LcData.UserInfo.UserType.Customer:
+
+                    <p @LcEmailTemplateHelper.StyleResetP()>Hello @LcHelpers.GetUserDisplayName(sentToUserData), <br><br>
+                    You haven´t replied to the booking request from @LcHelpers.GetUserDisplayName(pairUserData) requesting your @info.Booking.PositionSingular services, within the alloted 18 hours, and as a result it has now expired. We know life is busy, but we need our community members to be responsive to ensure the best possible experience for everybody.<br/><br/>  
+			        @LcHelpers.GetUserDisplayName(pairUserData) has also been informed.
+                    If you’d like to contact @pairUserData.ObjectPronoun, 
+                    <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(LcData.UserInfo.GetUserPublicURL(info.PairUserID))">click here</a>.<br><br>
+			        At your service,<br><br>
+			        The Loconomics team</p>
+                
+                    break;
             }
-            else if (booking.BookingRequestStatusID == 6 && itsUserType == "provider")
-            {
-            <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @LcHelpers.GetUserDisplayName(itsUserData)! <br><br>
-            We’re really sorry to have to let you down. @LcHelpers.GetUserDisplayName(thisUserData) did not respond to your request within the alloted time.  Your credit card has not been charged, and your authorization will expire shortly.<br><br>  
-			<a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(urlBase + LcUrl.LangPath)">Click here</a>. to search for another provider. <br><br>
-			At your service,<br><br>
-			The Loconomics team</p>      
-			}
         </div>
     }
     catch (Exception ex)
