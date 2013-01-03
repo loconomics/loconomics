@@ -141,24 +141,28 @@
     @if (performSearch)
     {
         <div id="secondary">
-            <div class="refine-search-results">
-                <h2>Refine Results</h2>
-            </div>
-            <div class="refine-search-groups">
-                <div class="refine-search-group">
-                    <h3>Price Range ($/hr)</h3>
+            @if (!categorizedResults)
+            {
+                <div class="sidebar-main-box refine-search-results">
+                    <h2>Refine Results</h2>
                 </div>
-                <div class="refine-search-group">
-                    <h3>Star Rating</h3>
+                <div class="refine-search-groups">
+                    <div class="refine-search-group">
+                        <h3>Price Range ($/hr)</h3>
+                    </div>
+                    <div class="refine-search-group">
+                        <h3>Star Rating</h3>
+                    </div>
+                    <div class="refine-search-group">
+                        <h3>Service Options</h3>
+                    </div>
                 </div>
-                <div class="refine-search-group">
-                    <h3>Service Options</h3>
-                </div>
-            </div>
-            @*if (!categorizedResults)
-            {*@
-                @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
-            @*}*@
+            }
+            else
+            {
+                @RenderPage(LcUrl.RenderLangPath + "Search/_CategoryBox.cshtml", new { Category = serviceCat })
+            }
+            @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
         </div>
     }
 </div>

@@ -400,11 +400,10 @@ ul.search-results table td { padding-right: 16px; }*/
 
 /************
  * sidebar **/
-.refine-search-results {
+.sidebar-main-box {
     border: 1px solid #CCC9C9;
     text-align: center;
     padding: 10px;
-    background: #f5f5f5;
     
     border-radius: 4px 4px 0 0;
     -moz-border-radius: 4px 4px 0 0;
@@ -414,6 +413,9 @@ ul.search-results table td { padding-right: 16px; }*/
     -moz-box-shadow: 0 0 4px 2px white inset;
     -o-box-shadow: 0 0 4px 2px white inset;
     -webkit-box-shadow: 0 0 4px 2px white inset;
+}
+.refine-search-results {
+    background: #f5f5f5;
 }
 .refine-search-results h2 {
     border: 1px solid #CCC9C9;
@@ -555,3 +557,22 @@ ul.search-results table td { padding-right: 16px; }*/
 #secondary .search-categories ul:hover li.cat-elderly:hover a{          background-position: -78px -26px}
 #secondary .search-categories li.selected.cat-celebrations a,
 #secondary .search-categories ul:hover li.cat-celebrations:hover a{     background-position: -26px -26px}
+/* Big image */
+.big-category {
+    background: white;
+}
+.big-category a {
+    background: url('../img/theme/search-categories-168px.png') no-repeat 0 0;
+    display: inline-block;
+    width: 168px;
+    height: 168px;
+    text-indent: -9999px;
+}
+.big-category.cat-home a {             background-position: -680px  0}
+.big-category.cat-child a {            background-position: -340px 0}
+.big-category.cat-pets a {             background-position: -1020px 0}
+.big-category.cat-people a {           background-position: -850px 0}
+.big-category.cat-transport a {        background-position: -1190px 0}
+.big-category.cat-business a {         background-position: 0 0}
+.big-category.cat-elderly a {          background-position: -510px 0}
+.big-category.cat-celebrations a {     background-position: -170px 0}
