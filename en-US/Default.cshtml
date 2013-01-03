@@ -16,7 +16,6 @@
         performSearch = true;
     }
     bool categorizedResults = (String.IsNullOrEmpty(serviceCat) ? false : true);
-    string[] searchedCategories = null;
     dynamic posrow = null;
 
     if (performSearch) {
@@ -32,17 +31,14 @@
         using (var db = Database.Open("sqlloco")) {
             if (categorizedResults) {
                 // By category:
-                var searchsql = "EXEC dbo.GetSearchResults @0,@1,@2,@3";
-                posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term, LC_Cat);
+                var searchsql = "EXEC SearchPositionsByCategory @0, @1, @2, @3"; // "EXEC dbo.GetSearchResults @0,@1,@2,@3";
+                posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Cat, serviceLocation);
             } else {
                 // By PositionSingular
                 var searchsql = "EXEC dbo.SearchProvidersByPositionSingular @0,@1,@2";
                 posrow = db.Query(searchsql, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), LC_Term);
             }
         }
-    
-        /* Simulating categorized search */
-        searchedCategories = new string[]{ "Housekeepers", "Handymen", "Gardeners", "Electricians", "Plumbers", "Painters" };
     } else {
         PageData["BodyClass"] = "home";
         PageData["IsHomePage"] = true;
@@ -105,36 +101,30 @@
          }
         
         <div class="search-results">
-            @*if (categorizedResults)
+            @if (categorizedResults)
             {
                 // hacking the results to emulate a search
                 var n = 0;
             <ol class="search-results-categories">
-                @foreach (var scat in searchedCategories)
+                @foreach (var item in posrow)
                 {
-                    // hacking the results to emulate a search
-                    n++;
-                    var i = 0;
                 <li class="clearfix">
-                    <h3>@scat</h3>
-                    <a class="view-more" href="?Service=@scat">View all @scat</a>
-                    <ol class="search-results-items">
-                        @foreach (var item in posrow)
-                        {
-                            // hacking the results to emulate a search
-                            i++;
-                            if (n != i) { continue; }
-                        <li>
-                            @RenderPage(LcUrl.RenderLangPath + "Search/_Item.cshtml", new { Item = item })
-                        </li>
-                        }
-                    </ol>
+                    <h3>@item.PositionPlural</h3>
+                    <p>@item.PositionDescription</p>
+                    <div class="stats">
+                        <div>Average rate from <strong>@(item.AverageHourlyRate.ToString("c"))</strong></div>
+                        <div>Average response time <strong>@(LcData.UserInfo.GetFormatedUserResponseTime(item.AverageResponseTimeMinutes))</strong></div>
+                        <div>Average rating <strong class="user-rating">@RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "CategoryAverageRating_" + serviceCat, item.AverageRating.ToString(), "true", "image" }) (@item.TotalRatings)</strong></div>
+                    </div>
+                    <div class="category-data actions">
+                        <a class="view-more main-action" href="?s=@(item.PositionSingular)&location=@(serviceLocation)&date=@(serviceDate)">View all @item.ProvidersCount @item.PositionPlural</a>
+                    </div>
                 </li>
                 }
             </ol>
             }
             else
-            {*@
+            {
             <ol class="search-results-items">
                 @foreach (var item in posrow)
                 {
@@ -143,7 +133,7 @@
                 </li>
                 }
             </ol>
-            @*}*@
+            }
 
         </div>
      }
