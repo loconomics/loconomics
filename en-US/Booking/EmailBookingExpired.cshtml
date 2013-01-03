@@ -47,10 +47,10 @@ else
                     
                     PageData["messageTitle"] = String.Format("Booking request from {0} has expired", LcHelpers.GetUserDisplayName(info.CustomerUser));
                     
-                    <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @LcHelpers.GetUserDisplayName(info.ProviderUser)! <br><br>
-                    We’re really sorry to have to let you down. @LcHelpers.GetUserDisplayName(info.CustomerUser) did not respond to your request within the alloted time.  Your credit card has not been charged, and your authorization will expire shortly.<br><br>
-			        <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(LcUrl.LangUrl)">Click here</a>. to search for another provider. <br><br>
-			        At your service,<br><br>
+                    <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @LcHelpers.GetUserDisplayName(info.ProviderUser)! <br/><br/>
+                    We’re really sorry to have to let you down. @LcHelpers.GetUserDisplayName(info.CustomerUser) did not respond to your request within the alloted time.  Your credit card has not been charged, and your authorization will expire shortly.<br/><br/>
+			        <a href="@(LcUrl.LangUrl)">Click here</a>. to search for another provider. <br/><br/>
+			        At your service,<br/><br/>
 			        The Loconomics team</p>
                     
                     break;
@@ -58,12 +58,12 @@ else
                 
                     PageData["messageTitle"] = String.Format("Booking request for {0} has expired", LcHelpers.GetUserDisplayName(info.ProviderUser));
 
-                    <p @LcEmailTemplateHelper.StyleResetP()>Hello @LcHelpers.GetUserDisplayName(info.CustomerUser), <br><br>
+                    <p @LcEmailTemplateHelper.StyleResetP()>Hello @LcHelpers.GetUserDisplayName(info.CustomerUser), <br/><br/>
                     You haven´t replied to the booking request from @LcHelpers.GetUserDisplayName(info.ProviderUser) requesting your @info.Booking.PositionSingular services, within the alloted 18 hours, and as a result it has now expired. We know life is busy, but we need our community members to be responsive to ensure the best possible experience for everybody.<br/><br/>  
 			        @LcHelpers.GetUserDisplayName(info.ProviderUser) has also been informed.
-                    If you’d like to contact @info.ProviderUser.ObjectPronoun, 
-                    <a style="text-transform: lowercase;width: 100px;display: inline;margin-left: 10px;" href="@(LcData.UserInfo.GetUserPublicURL(info.ProviderUser))">click here</a>.<br><br>
-			        At your service,<br><br>
+                    If you’d like to contact @info.ProviderUser.ObjectPronoun,
+                    <a href="@(LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">click here</a>.<br/><br/>
+			        At your service.<br/><br/>
 			        The Loconomics team</p>
 
                     break;

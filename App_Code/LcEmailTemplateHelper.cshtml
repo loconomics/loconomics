@@ -137,7 +137,7 @@
         public dynamic CustomerUser {
             get {
                 if (customerUser == null)
-                    customerUser = LcData.UserInfo.GetUserRow(Booking.CustomerUser);
+                    customerUser = LcData.UserInfo.GetUserRow(Booking.CustomerUserID);
                 return customerUser;
             }
         }
