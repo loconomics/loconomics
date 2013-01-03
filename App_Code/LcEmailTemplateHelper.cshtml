@@ -102,6 +102,45 @@
         public LcData.UserInfo.UserType PairUserType;
         public int PairUserID;
         public string ViewOnSiteURL;
+        
+        private dynamic sentToUser, sentByUser, pairUser;
+        public dynamic SentToUser {
+            get {
+                if (sentToUser == null) 
+                    sentToUser = LcData.UserInfo.GetUserRow(SentToUserID);
+                return sentToUser;
+            }
+        }
+        public dynamic SentByUser {
+            get {
+                if (sentByUser == null) 
+                    sentByUser = LcData.UserInfo.GetUserRow(SentByUserID);
+                return sentByUser;
+            }
+        }
+        public dynamic PairUser {
+            get {
+                if (pairUser == null) 
+                    pairUser = LcData.UserInfo.GetUserRow(PairUserID);
+                return pairUser;
+            }
+        }
+        
+        private dynamic providerUser, customerUser;
+        public dynamic ProviderUser {
+            get {
+                if (providerUser == null)
+                    providerUser = LcData.UserInfo.GetUserRow(Booking.ProviderUserID);
+                return providerUser;
+            }
+        }
+        public dynamic CustomerUser {
+            get {
+                if (customerUser == null)
+                    customerUser = LcData.UserInfo.GetUserRow(Booking.CustomerUser);
+                return customerUser;
+            }
+        }
     }
     public static BookingEmailInfo GetBookingInfo() {
         
@@ -133,6 +172,7 @@
         if (sentTo == LcData.UserInfo.UserType.Provider) {
             toUserID = b.ProviderUserID;
         }
+
         switch (sentTo) {
             case LcData.UserInfo.UserType.Customer:
                 toUserID = b.CustomerUserID;
