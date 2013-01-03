@@ -91,14 +91,14 @@
      }
      else
      {
-         if (!String.IsNullOrWhiteSpace(serviceType))
-         {
+         @*if (!String.IsNullOrWhiteSpace(serviceType))
+         {*@
             @searchForm()
-         }
+         @*}
          else
          {
              @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { SelectedCategory = serviceCat, UrlBase = "" })
-         }
+         }*@
         
         <div class="search-results">
             @if (categorizedResults)
@@ -155,10 +155,10 @@
                     <h3>Service Options</h3>
                 </div>
             </div>
-            @if (!categorizedResults)
-            {
+            @*if (!categorizedResults)
+            {*@
                 @RenderPage(LcUrl.RenderLangPath + "Search/_CategoriesList.cshtml", new { UrlBase = "", CategoriesTitle = "Browse by category" })
-            }
+            @*}*@
         </div>
     }
 </div>
