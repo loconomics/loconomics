@@ -7,8 +7,6 @@
 
     // All the data for this email:
     var info = LcEmailTemplateHelper.GetBookingInfo();
-    // We need the users data to display names
-    var pairUserData = LcData.UserInfo.GetUserRow(info.PairUserID);
 
     // Data for the EmailLayout:
     // This will be changed on body by more specific texts:
@@ -82,7 +80,7 @@ else
 {
     <div>
         @{
-            PageData["messageTitle"] = getTitleStatus(info.Booking, pairUserData, info.SentTo);
+            PageData["messageTitle"] = getTitleStatus(info.Booking, info.PairUser, info.SentTo);
             PageData["messageSubtitle"] = "last updated: " + info.Booking.UpdatedDate.ToLongDateString() + " at " + info.Booking.UpdatedDate.ToLongTimeString();
         }
 
@@ -123,7 +121,7 @@ else
         <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
         @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
-            {"Data", pairUserData},
+            {"Data", info.PairUser},
             {"DataPrefix", ""},
             {"Size", "medium"},
             {"UserType", info.PairUserType.ToString().ToLower()}
