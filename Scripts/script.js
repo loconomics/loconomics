@@ -642,6 +642,18 @@ LC.distanceUnits = {
     'ES': 'km',
     'US': 'miles'
 };
+LC.numericMilesSeparator = {
+    'es-ES': '.',
+    'es-US': '.',
+    'en-US': ',',
+    'en-ES': ','
+}
+LC.numericDecimalSeparator = {
+    'es-ES': ',',
+    'es-US': ',',
+    'en-US': '.',
+    'en-ES': '.'
+}
 LC.getCurrentCulture = function () {
     var c = $('html').data('culture');
     var s = c.split('-');
@@ -1165,7 +1177,10 @@ LC.getMoneyNumber = function (v, alt) {
     alt = alt || 0;
     if (v instanceof jQuery)
         v = v.val() || v.text();
-    v = parseFloat(v.replace(/[$€]/g, ''));
+    v = parseFloat(v
+        .replace(/[$€]/g, '')
+        .replace(new RegExp(LC.numericMilesSeparator[LC.getCurrentCulture().culture], 'g'), '')
+    );
     return isNaN(v) ? alt : v;
 };
 LC.setMoneyNumber = function (v, el) {
