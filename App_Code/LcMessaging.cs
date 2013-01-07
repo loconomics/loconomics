@@ -530,9 +530,6 @@ public class LcMessaging
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
-        /*if (!data.ContainsKey("RequestKey"))
-            data["RequestKey"] = SecurityRequestKey;*/
-
         string rtn = "";
 
         using (WebClient w = new WebClient())
@@ -555,20 +552,30 @@ public class LcMessaging
             {
                 rtn = w.DownloadString(completeURL);
             }
-            catch (Exception ex)
+            catch (WebException exception)
             {
+                string responseText;
+                using(var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
+                {
+                    responseText = reader.ReadToEnd();
+                }
                 string qs = "?";
                 foreach (var v in w.QueryString.AllKeys)
                 {
                     qs += v + "=" + w.QueryString[v] + "&";
                 }
-                HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, ex);
                 if (LcHelpers.Channel == "dev")
                 {
-                    throw new Exception(ex.Message + "::" + rtn);
+                    HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, exception);
+                    throw new Exception(exception.Message + "::" + responseText);
                 }
                 else
                 {
+                    try
+                    {
+                        NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
+                    }
+                    catch { }
                     throw new Exception("Email could not be sent");
                 }
             }
@@ -589,6 +596,18 @@ public class LcMessaging
         if ((LcHelpers.InProduction && !HttpContext.Current.Request.IsLocal) ||
             HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
+    }
+    #endregion
+
+    #region Generic app utilities
+    public static void NotifyError(string where, string url, string exceptionPageContent)
+    {
+        try
+        {
+            SendMail("iagosrl@gmail.com;support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+                exceptionPageContent);
+        }
+        catch { }
     }
     #endregion
 
