@@ -571,11 +571,7 @@ public class LcMessaging
                 }
                 else
                 {
-                    try
-                    {
-                        NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
-                    }
-                    catch { }
+                    NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
                     throw new Exception("Email could not be sent");
                 }
             }
@@ -604,7 +600,7 @@ public class LcMessaging
     {
         try
         {
-            SendMail("iagosrl@gmail.com;support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+            SendMail("iagosrl@gmail.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
                 exceptionPageContent);
         }
         catch { }
