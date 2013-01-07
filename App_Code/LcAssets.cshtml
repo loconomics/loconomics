@@ -5,8 +5,10 @@
 @using System.Web.WebPages.Scope;
 
 @functions{
+    static private string assetsVersion = "20000101";
     static public string AssetsVersion{
-        get { return "20121228"; }
+        get { return assetsVersion; }
+        set { assetsVersion = value; }
     }
     static public string AddVersion(string file, string extension) {
         if (!String.IsNullOrEmpty(AssetsVersion)) {

@@ -1444,6 +1444,13 @@ html.boxshadow #loginBox .field-validation-error{
     vertical-align: top;
     width: 55px;
 }
+.micro-avatar{
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    margin: 0 5px 0 0;
+    vertical-align: top;
+}
 
 /*******************************
  * have-sidebar class

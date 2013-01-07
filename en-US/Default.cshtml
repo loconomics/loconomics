@@ -106,20 +106,33 @@
                 // hacking the results to emulate a search
                 var n = 0;
             <ol class="search-results-categories">
-                @foreach (var item in posrow)
-                {
-                <li class="clearfix">
-                    <h3>@item.PositionPlural</h3>
-                    <p>@item.PositionDescription</p>
-                    <div class="stats">
-                        <div>Average rate from <strong>@(item.AverageHourlyRate == null ? "N/A" : item.AverageHourlyRate.ToString("c"))</strong></div>
-                        <div>Average response time <strong>@(LcData.UserInfo.GetFormatedUserResponseTime(item.AverageResponseTimeMinutes))</strong></div>
-                        <div>Average rating <strong class="user-rating">@RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "CategoryAverageRating_" + serviceCat, item.AverageRating.ToString(), "true", "image" }) (@(item.TotalRatings ?? 0))</strong></div>
-                    </div>
-                    <div class="category-data actions">
-                        <a class="view-more main-action" href="?s=@(item.PositionSingular)&location=@(serviceLocation)&date=@(serviceDate)">View all @item.ProvidersCount @item.PositionPlural</a>
-                    </div>
-                </li>
+                @{
+                    using (var db = Database.Open("sqlloco"))
+                    {
+                        foreach (var item in posrow)
+                        {
+                        <li class="clearfix">
+                            <h3>@item.PositionPlural</h3>
+                            <p>@item.PositionDescription</p>
+                            <div class="stats">
+                                <div>Average rate from <strong>@(item.AverageHourlyRate == null ? "N/A" : item.AverageHourlyRate.ToString("c"))</strong></div>
+                                <div>Average response time <strong>@(LcData.UserInfo.GetFormatedUserResponseTime(item.AverageResponseTimeMinutes))</strong></div>
+                                <div>Average rating <strong class="user-rating">@RenderPage(LcUrl.RenderLangPath + "Reviews/_StarRating.cshtml", new String[] { "CategoryAverageRating_" + serviceCat, item.AverageRating.ToString(), "true", "image" }) (@(item.TotalRatings ?? 0))</strong></div>
+                            </div>
+                            <div class="category-data">
+                                <div class="position-providers">
+                                @foreach(var prov in db.Query("SearchTopProvidersByPosition @0, @1, @2", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), item.PositionID))
+                                {
+                                    <a href="@(LcData.UserInfo.GetUserPublicURL(prov.UserID))"><img class="avatar micro-avatar" title="@(prov.FirstName)" alt="@(prov.FirstName)'s Photo" src="@(LcUrl.LangPath)Profile/Photo/@(prov.UserID)" width="30" height="30" /></a>
+                                }
+                                </div>
+                                <div class="actions">
+                                    <a class="view-more main-action" href="?s=@(item.PositionSingular)&location=@(serviceLocation)&date=@(serviceDate)">View all @item.ProvidersCount @item.PositionPlural</a>
+                                </div>
+                            </div>
+                        </li>
+                        }
+                    }
                 }
             </ol>
             }

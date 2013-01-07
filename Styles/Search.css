@@ -215,6 +215,10 @@ ul.search-results table td { padding-right: 16px; }*/
 #category-positions.buttons-list .button{
      margin: 2px;
 }
+.position-providers {
+    margin-left: 20px;
+    margin-top: 5px;
+}
 
 /*************************/
 /**** results items ******/
