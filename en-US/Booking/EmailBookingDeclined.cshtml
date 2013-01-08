@@ -10,17 +10,19 @@
     // Data for the EmailLayout:
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["showSign"] = true;
 }
 <div>
     @switch (info.SentTo) {
 		case LcData.UserInfo.UserType.Provider:
                     
             PageData["messageTitle"] = String.Format("You've successfully declined {0}'s booking request", LcHelpers.GetUserDisplayName(info.CustomerUser));
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
    
             <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.ProviderUser.FirstName), <br/><br/>
 
             This is a confirmation that you've declined @LcHelpers.GetUserDisplayName(info.CustomerUser)'s booking request.
-            As you know we want to keep the community strong and reliable so please <a href="mailto:support@loconomics.com">let us know</a>
+            As you know we want to keep the community strong and reliable so please <a href="mailto:@PageData["needHelpAddress"]">let us know</a>
             on how we could have prevented this from happening. Also, feel free to <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.Booking.CustomerUserID))">send a message to @LcHelpers.GetUserDisplayName(info.CustomerUser)</a> explaining why.
 
             </p>
@@ -29,6 +31,7 @@
         case LcData.UserInfo.UserType.Customer:
                 
             PageData["messageTitle"] = String.Format("{0} is unable to complete your request", LcHelpers.GetUserDisplayName(info.ProviderUser));
+            PageData["needHelpAddress"] = "support@loconomics.com";
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
 
@@ -43,9 +46,4 @@
 
             break;
     }
-            <p style="margin-top:1.5em">
-			At your service.
-            <br /><br />
-			The Loconomics team
-            </p>
 </div>

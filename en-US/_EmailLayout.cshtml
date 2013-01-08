@@ -6,6 +6,8 @@
     var messageID = PageData["messageID"];
     var messageTitle = PageData["messageTitle"];
     var messageSubtitle = PageData["messageSubtitle"];
+    var needHelpAddress = PageData["needHelpAddress"];
+    var showSign = PageData["showSign"];
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
         viewOnSiteUrl = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
@@ -84,15 +86,34 @@
                     <table width="600" style="font-size:13px;border-collapse:collapse">
                         <tr>
                             <td colspan="5" style="padding:0">
-                                <table width="600" style="font-size:13px;border-collapse:collapse"><tr><td style="padding:0;">
+
                                 @RenderBody()
-                                </td></tr></table>
+
+                                @if (showSign)
+                                {
+                                <p style="margin-top:1.5em">
+			                    At your service.
+                                <br /><br />
+			                    The Loconomics team
+                                </p>
+                                }
+
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            @***footer*@<tr height="60" align="center">
+            @***footer*@
+            @if (!String.IsNullOrEmpty(needHelpAddress))
+            {
+                <tr align="left">
+                    <td colspan="2" style="padding-top:5px;padding-bottom:20px;border-top:1px solid #dadada;">
+                        <strong style="font-size:15px">Need Help?</strong><br />
+                        If you have a question or need to report a problem, e-mail us at @needHelpAddress or call us at <span style="white-space:nowrap">1 (415) 735-6025</span>.
+                    </td>
+                </tr>
+            }
+            <tr height="60" align="center">
                 <td colspan="2">
                     This message was sent to <a href="mailto:@(emailTo)">@emailTo</a><br />
                     @if (!isNotAUser) {
