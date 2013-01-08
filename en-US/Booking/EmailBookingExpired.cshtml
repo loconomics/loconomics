@@ -11,13 +11,7 @@
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Your Booking Request has Expired";
     PageData["messageSubtitle"] = "";
-    // Create URL:
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
-    
-    PageData["messageSubtitle"] = String.Format(
-        "Booking Request ID: {0} last updated: {1:D} at {2:T}",
-        info.BookingRequestID, info.Booking.UpdatedDate, info.Booking.UpdatedDate
-    );
 }
 <div>
     @switch (info.SentTo) {
