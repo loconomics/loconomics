@@ -36,8 +36,11 @@
             "Booking/EmailBookingNEW/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
             ,"Booking/EmailBookingNEW/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
         ,{ "EmailBookingExpired", new List<string> { 
-            "Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
+            "Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"} }
+        ,{ "EmailBookingDeclined", new List<string> { 
+            "Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
     };
 }
 <!doctype html>
