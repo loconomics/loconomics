@@ -2499,6 +2499,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
         background-size: 85px 176px;
     }
+    .folders > ul.tabs li {
+        background-image: url('../img/theme/tab-editable-right-white@2x.png') !important;
+        background-size: 22px 132px;
+    }
     .image-2dppx {
         display: inherit !important;
     }
