@@ -113,7 +113,7 @@
                         {
                         <li class="clearfix">
                             <h3>@item.PositionPlural</h3>
-                            <p>@item.PositionDescription</p>
+                            <p>@item.PositionSearchDescription</p>
                             <div class="stats">
                                 <div>Average rate from <strong>@(item.AverageHourlyRate == null ? "N/A" : item.AverageHourlyRate.ToString("c"))</strong></div>
                                 <div>Average response time <strong>@(LcData.UserInfo.GetFormatedUserResponseTime(item.AverageResponseTimeMinutes))</strong></div>
