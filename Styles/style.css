@@ -2492,11 +2492,11 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     screen and (min-resolution: 1.2dppx)  /* The standard way */
 {
     #site-header #logo.replace {
-        background-image: url("../img/theme/logo-loconomics-header@2x.png");
+        background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
     }
     .user-rating-summary-widget span.rating-image {
-        background-image: url('../img/theme/star-rating-gray-orange@2x.png');
+        background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
         background-size: 85px 176px;
     }
     .image-2dppx {
@@ -2504,6 +2504,20 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     }
     .image-1dppx {
         display: none !important;
+    }
+    
+    /*= search */
+    .search-categories ul li{
+        background-image: url('../img/theme/search-categories@2x.png') !important;
+        background-size: 676px 166px !important;
+    }
+    #secondary .search-categories ul li a {
+        background-image: url('../img/theme/search-categories-24px@2x.png') !important;
+        background-size: 206px 50px !important;
+    }
+    .big-category a {
+        background-image: url('../img/theme/search-categories-168px@2x.png') !important;
+        background-size: 1356px 336px !important;
     }
 }
 

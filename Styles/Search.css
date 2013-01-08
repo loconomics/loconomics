@@ -499,7 +499,7 @@ ul.search-results table td { padding-right: 16px; }*/
     text-align: left;
 }
 #secondary .search-categories ul li {
-    background: none;
+    background: none !important;
     float: none;
     display: block;
     height: auto;
