@@ -219,6 +219,12 @@
     public static string GetLocationForGoogleMaps(dynamic data){
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
+    
+    public static string GetLastUpdateText(dynamic date) {
+        if (date == null) return "";
+        return string.Format("last updated: {0:D} at {1:T}",
+            date, date);
+    }
 }
 @helper PrintAddress(IDictionary<string, object> addressDetails) {
     <div>

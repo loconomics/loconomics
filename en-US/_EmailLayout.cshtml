@@ -21,7 +21,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Loconomics - @Page.Title</title>
+    <title>Loconomics - @(Page.Title ?? "Email")</title>
     @* Some styles only for capable mail clients -some are features imposible to use without using style-element 
         that is removed by gmail, hotmail and others services-; other are specific for some mail clients that support
         'style' block and has special hacks -as yahoo mail, outlook- *@

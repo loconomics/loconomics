@@ -1,1 +1,51 @@
-﻿
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+
+    // Data for the EmailLayout:
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+}
+<div>
+    @switch (info.SentTo) {
+		case LcData.UserInfo.UserType.Provider:
+                    
+            PageData["messageTitle"] = String.Format("You've successfully declined {0}'s booking request", LcHelpers.GetUserDisplayName(info.CustomerUser));
+   
+            <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.ProviderUser.FirstName), <br/><br/>
+
+            This is a confirmation that you've declined @LcHelpers.GetUserDisplayName(info.CustomerUser)'s booking request.
+            As you know we want to keep the community strong and reliable so please <a href="mailto:support@loconomics.com">let us know</a>
+            on how we could have prevented this from happening. Also, feel free to <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.Booking.CustomerUserID))">send a message to @LcHelpers.GetUserDisplayName(info.CustomerUser)</a> explaining why.
+
+            </p>
+
+            break;
+        case LcData.UserInfo.UserType.Customer:
+                
+            PageData["messageTitle"] = String.Format("{0} is unable to complete your request", LcHelpers.GetUserDisplayName(info.ProviderUser));
+
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
+
+            We’re really sorry to have to let you down. <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.ProviderUser.UserID))">@LcHelpers.GetUserDisplayName(info.ProviderUser)</a> is unfortunately unable to accept your request at this time.
+            <strong>Your credit card has not been charged</strong>, and your authorization will expire shortly.
+
+            @*We'd like you to give us another shot, and we'll waive the booking fees. *@
+            <a target="_blank" href="@(LcUrl.LangUrl)?s=@(info.Booking.PositionSingular)">Click here</a> to search for another @(info.Booking.PositionSingular).
+
+            @* and enter TRYAGAINCODE during the checkout process. *@
+            </p>
+
+            break;
+    }
+            <p style="margin-top:1.5em">
+			At your service.
+            <br /><br />
+			The Loconomics team
+            </p>
+</div>

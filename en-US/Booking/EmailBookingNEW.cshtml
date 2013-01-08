@@ -73,7 +73,7 @@
 <div>
     @{
         PageData["messageTitle"] = getTitleStatus(info.Booking, info.PairUser, info.SentTo);
-        PageData["messageSubtitle"] = "last updated: " + info.Booking.UpdatedDate.ToLongDateString() + " at " + info.Booking.UpdatedDate.ToLongTimeString();
+        PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     }
 
     @* When booking is not cancelled and service date is passed, show Review options:

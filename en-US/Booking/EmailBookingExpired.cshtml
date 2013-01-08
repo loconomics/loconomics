@@ -6,11 +6,9 @@
     var info = LcEmailTemplateHelper.GetBookingInfo();
 
     Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
-    Page.Title = "Your Booking Request has Expired";
 
     // Data for the EmailLayout:
-    PageData["messageTitle"] = "Your Booking Request has Expired";
-    PageData["messageSubtitle"] = "";
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
 }
 <div>
