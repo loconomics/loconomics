@@ -7,7 +7,7 @@
     var messageTitle = PageData["messageTitle"];
     var messageSubtitle = PageData["messageSubtitle"];
     var needHelpAddress = PageData["needHelpAddress"];
-    var showSign = PageData["showSign"];
+    var showSign = PageData["showSign"] ?? false;
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
         viewOnSiteUrl = LcUrl.LangUrl + "Dashboard/Mailbox/#!Thread-" + threadID;
