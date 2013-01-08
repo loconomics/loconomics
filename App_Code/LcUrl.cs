@@ -37,9 +37,10 @@ public static class LcUrl
             HttpContext context = HttpContext.Current;
             string url = "";
             // IsLocal doesn't work here: because in hosting for email templates returns true creating bad links
-            // We need this only for development channel
-            //if (HttpContext.Current.Request.IsLocal)
-            if (ASP.LcHelpers.Channel == "dev")
+            // We need this only when executed out of the loconomics.com domain, as in local ('dev' channel) or
+            // in hosting using the hosting cannonical urls (as in winhost: http://loconomi.w03.wh-2.com, this is
+            // important for ScheduledTask execution and the restricted scheduled tasks configuration of winhost)
+            if (!context.Request.Url.Authority.Contains("loconomics.com"))
                 url = context.Request.ApplicationPath;
             if (url.EndsWith("/"))
                 return url;
@@ -140,6 +141,14 @@ public static class LcUrl
         return "var LcUrl = " + ToJson() + ";";
     }
 
+    private static string RenderBase
+    {
+        get
+        {
+            return (HttpContext.Current.Request.Url.Authority.Contains("loconomics.com") ? "~" : "");
+        }
+    }
+
     /// <summary>
     /// Only for use with RenderPage
     /// </summary>
@@ -147,7 +156,7 @@ public static class LcUrl
     {
         get
         {
-            return (ASP.LcHelpers.Channel == "dev" ? "" : "~") + LangPath;
+            return RenderBase + LangPath;
         }
     }
     /// <summary>
@@ -157,7 +166,7 @@ public static class LcUrl
     {
         get
         {
-            return (ASP.LcHelpers.Channel == "dev" ? "" : "~") + AppPath;
+            return RenderBase + AppPath;
         }
     }
 

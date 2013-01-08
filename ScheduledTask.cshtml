@@ -63,7 +63,7 @@
                     LcMessaging.SendBookingRequestInvalidation(br.BookingRequestID, 1, 19);
                     
                     // Update MessagingLog for the booking request
-                    db.Execute(sqlAddBookingMessagingLog, br.BookingRequestID, "[Booking Request Expiration]");
+                    db.Execute(sqlAddBookingRequestMessagingLog, br.BookingRequestID, "[Booking Request Expiration]");
                 }
                 
                 items++;
