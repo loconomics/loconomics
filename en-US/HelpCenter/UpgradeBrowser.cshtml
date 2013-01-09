@@ -32,6 +32,9 @@
                 text-align: center;
                 padding: 30px 20px;
             }
+            #upgradeBox .content a img {
+                border: none;
+            }
             #upgradeBox .logo-lc {
                 margin-bottom: 30px;
             }
@@ -47,9 +50,9 @@
     </head>
     <body>
         <div id="upgradeBox">
-            <h1>Loconomics.com</h1>
+            <h1>loconomics.com</h1>
             <div class="content">
-                <img class="logo-lc" align="center" alt="Loconomics At Your Service!" src="@(LcUrl.AppPath)img/theme/logo-loconomics-header.png" />
+                <a href="@(LcUrl.SiteUrl)"><img class="logo-lc" align="center" alt="Loconomics At Your Service!" src="@(LcUrl.AppPath)img/theme/logo-loconomics-header.png" /></a>
                 <div class="message">
                     We're sorry, Internet Explorer doesn't fully support the technology used on Loconomics.
                     <p>To use Loconomics, download:</p>
@@ -57,15 +60,15 @@
                 <table class="browsers">
                     <tr>
                         <td>
-                            <a target="_blank" href="http://www.mozilla.com/">
-                                <img alt="Firefox" src="@(LcUrl.AppPath)img/theme/browsers/browser_firefox.gif" />
-                                Firefox
-                            </a>
-                        </td>
-                        <td>
                             <a target="_blank" href="http://www.google.com/chrome/">
                                 <img alt="Chrome" src="@(LcUrl.AppPath)img/theme/browsers/browser_chrome.gif" />
                                 Chrome
+                            </a>
+                        </td>
+                        <td>
+                            <a target="_blank" href="http://www.mozilla.com/">
+                                <img alt="Firefox" src="@(LcUrl.AppPath)img/theme/browsers/browser_firefox.gif" />
+                                Firefox
                             </a>
                         </td>
                         <td>
