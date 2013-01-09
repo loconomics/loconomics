@@ -1,0 +1,82 @@
+﻿@{
+
+}
+<!doctype html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" data-culture="@System.Globalization.CultureInfo.CurrentUICulture.Name">
+    <head>
+        <title>Please upgrade your browser</title>
+        <meta name="description" content="Find service providers to do the job right. At your service!"/>
+        <meta name="author" content="Loconomics Inc."/>
+        <meta charset="utf-8"/>
+        <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+        <style type="text/css">
+            body {
+                font-family: Verdana, Arial, Sans-Serif;
+                color: #747474;
+            }
+            #upgradeBox {
+                width: 400px;
+                border: 1px solid #aaa;
+                margin: 10% auto;
+            }
+            #upgradeBox h1 {
+                font-size: 1.1em;
+                color: #666;
+                margin: 0;
+                padding: 5px 10px;
+                text-align: center;
+                background: #eee;
+                border-bottom: 1px solid #aaa;
+            }
+            #upgradeBox .content {
+                text-align: center;
+                padding: 30px 20px;
+            }
+            #upgradeBox .logo-lc {
+                margin-bottom: 30px;
+            }
+            #upgradeBox table.browsers {
+                border: none;
+                border-collapse: collapse;
+            }
+            #upgradeBox table.browsers a {
+                text-decoration: none;
+                color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="upgradeBox">
+            <h1>Loconomics.com</h1>
+            <div class="content">
+                <img class="logo-lc" align="center" alt="Loconomics At Your Service!" src="@(LcUrl.AppPath)img/theme/logo-loconomics-header.png" />
+                <div class="message">
+                    We're sorry, Internet Explorer doesn't fully support the technology used on Loconomics.
+                    <p>To use Loconomics, download:</p>
+                </div>
+                <table class="browsers">
+                    <tr>
+                        <td>
+                            <a target="_blank" href="http://www.mozilla.com/">
+                                <img alt="Firefox" src="@(LcUrl.AppPath)img/theme/browsers/browser_firefox.gif" />
+                                Firefox
+                            </a>
+                        </td>
+                        <td>
+                            <a target="_blank" href="http://www.google.com/chrome/">
+                                <img alt="Chrome" src="@(LcUrl.AppPath)img/theme/browsers/browser_chrome.gif" />
+                                Chrome
+                            </a>
+                        </td>
+                        <td>
+                            <a target="_blank" href="http://www.apple.com/safari/">
+                                <img alt="Safari" src="@(LcUrl.AppPath)img/theme/browsers/browser_safari.gif" />
+                                Safari
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
