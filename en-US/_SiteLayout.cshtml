@@ -8,6 +8,9 @@
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
     LcAssets.AssetsVersion = "20130108";
+    
+    // Sniff IE browsers or based on its same engine (Trident).
+    var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
 }
 @helper howItWorksLi(){
                         <li>
@@ -23,10 +26,9 @@
                         </li>
 }
 <!doctype html>
-    <!--[if lt IE 7]> <html class="no-js ie ie6 oldie" lang="@abbrLangCode"> <![endif]-->
-    <!--[if IE 7]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode"> <![endif]-->
-    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode"> <![endif]-->
-    <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode"> <![endif]-->
+    <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
+    <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture"> <!--<![endif]-->
      <head>
           <meta charset="utf-8"/>
@@ -50,8 +52,21 @@
             <script type="text/javascript">
                 @Html.Raw(LcUrl.ToJsVar())
             </script>
+            @if(isIE){
+            <!--[if lt IE 9]>
+            <style type="text/css">
+                body,html,iframe{overflow: hidden; overflow:hidden !important;}
+            </style>
+            <![endif]-->
+            }
     </head>
     <body class="@PageData["BodyClass"]">
+        @if (isIE)
+        {
+            <!--[if lt IE 9]>
+            <iframe width="100%" height="100%" border="0" style="border:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:9999;filter: alpha(opacity=90);" src="@(LcUrl.LangUrl)HelpCenter/UpgradeBrowser/"></iframe>
+            <![endif]-->
+        }
         @RenderBody()
         <header id="site-header">
 		    <div class="wrap">
