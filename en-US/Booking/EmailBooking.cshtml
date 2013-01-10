@@ -3,25 +3,18 @@
     LcMessaging.SecureTemplate();
     
     Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
-    Page.Title = "Loconomics.com - Booking";
 
     // All the data for this email:
     var info = LcEmailTemplateHelper.GetBookingInfo();
 
     // Data for the EmailLayout:
-    // This will be changed on body by more specific texts:
-    PageData["messageTitle"] = "Booking";
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(info.Booking.BookingStatusID, info.PairUser, info.SentTo);
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
 }
-
 <div>
-    @{
-        PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(info.Booking.BookingStatusID, info.PairUser, info.SentTo);
-        PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
-    }
-
     @* When booking is not cancelled and service date is passed, show Review options:
-        *@
+     *@
     @if (info.Booking.BookingStatusID < 6 && DateTime.Now > info.Booking.ConfirmedDateEnd)
     {
     <div style="float: right;">

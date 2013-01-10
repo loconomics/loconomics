@@ -1,235 +1,108 @@
 ﻿@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
-    dynamic booking = null;
-    int thisUserID = 0;
-    dynamic thisUser = null;
-    var confirmationLimitHours = 18;
-    int brID = 0;
-    DateTime confirmationLimitDate = DateTime.MaxValue;
-
-    try{
-        Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
-        Page.Title = "Loconomics.com - Booking Request";
-
-        thisUserID = Request["UserID"].AsInt();
-        thisUser = LcData.UserInfo.GetUserRow(thisUserID);
-        brID = Request["BookingRequestID"].AsInt();
-   
-        // Data for the EmailLayout:
-        // This will be changed on body by more specific texts:
-        PageData["messageTitle"] = "Booking Request";
-        PageData["messageSubtitle"] = "";
-        // Create URL:
-        PageData["viewOnSiteUrl"] = LcUrl.LangUrl + "Dashboard/Bookings/#!BookingRequest-" + brID.ToString();
     
-        // TODO: Calculate location distance from provider to customer
-    
-        booking = LcData.Booking.GetBookingRequestForUser(brID, thisUserID, thisUser.IsAdmin);
-    
-        if (booking != null) {
-            confirmationLimitDate = booking.UpdatedDate.AddHours(confirmationLimitHours);
-    }
-    }catch(Exception ex){
-        showError("HEAD", ex);
-    }
-}
-@helper showError(string section, Exception ex) {
-    if (LcHelpers.InProduction) {
-        @("We're sorry. There was an error generating an email for you about a new Booking Request, please go to your dashboard to see it.")
-    } else {
-        @(section + " ex: " + ex.Message + "::" + ex.StackTrace)
-    }
-}
-@functions{
-    string getTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
-        var statusTitle = "Booking request involving {0}. Unknown status";
-        switch (itsUserType) {
-            case "customer":
-                statusTitle = "Booking request from {0}. Unknown status";
-                switch ((int)booking.BookingRequestStatusID) {
-                    case 1: // created but not complete
-                    case 3: // created but not complete because time out
-                        statusTitle = "Incomplete booking request from {0}";
-                        break;
-                    case 2: // completed request by customer, awaiting provider confirmation
-                        statusTitle = "Booking request from {0}";
-                        break;
-                    case 4: // cancelled by customer
-                        statusTitle = "Booking request cancelled by {0}";
-                        break;
-                    case 5: // denied by provider
-                        statusTitle = "Declined booking request from {0}";
-                        break;
-                    case 6: // expired (not answered by provider in time)
-                        statusTitle = "Expired booking request from {0}";
-                        break;
-                    case 7: // accepted by provider (you must consider view the booking details!)
-                        statusTitle = "Accepted booking request from {0}";
-                        break;
-                    case 8: // denied with alternatives
-                        statusTitle = "Declined with alternatives booking request from {0}";
-                        break;
-                }
-                break;
-            case "provider":
-                statusTitle = "Booking request for {0}. Unknown status";
-                switch ((int)booking.BookingRequestStatusID) {
-                    case 1: // created but not complete
-                    case 3: // created but not complete because time out
-                        statusTitle = "Incomplete booking request for {0}";
-                        break;
-                    case 2: // completed request by customer, awaiting provider confirmation
-                        statusTitle = "Waiting for {0} to confirm request";
-                        break;
-                    case 4: // cancelled by customer
-                        statusTitle = "Booking request for {0} cancelled by me";
-                        break;
-                    case 5: // denied by provider
-                        statusTitle = "Declined booking request by {0}";
-                        break;
-                    case 6: // expired (not answered by provider in time)
-                        statusTitle = "Expired booking request for {0}";
-                        break;
-                    case 7: // accepted by provider (you must consider view the booking details!)
-                        statusTitle = "Accepted booking request for {0}";
-                        break;
-                    case 8: // denied with alternatives
-                        statusTitle = "Declined with alternatives booking request by {0}";
-                        break;
-                }
-                break;
-        }
-        return String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData));
-    }
-}
-@if (booking == null)
-{
-    throw new Exception("Booking Request don't exists: " + brID.ToString());
-}
-else
-{
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
 
-    try
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+
+    // Data for the EmailLayout:
+    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(info.Booking.BookingRequestStatusID, info.PairUser, info.SentTo);
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    
+    DateTime confirmationLimitDate = info.Booking.UpdatedDate.AddHours(LcData.Booking.BookingRequestConfirmationLimitHours);
+}
+<div>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType profile</h4>
+    @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
+        {"Data", info.PairUser},
+        {"DataPrefix", ""},
+        {"Size", "medium"},
+        {"UserType", info.PairUserType.ToString().ToLower()}
+    })
+
+    @if (info.Booking.BookingRequestStatusID == 2 && info.SentTo == LcData.UserInfo.UserType.Provider)
     {
-
-        // Checking item: user type of the other user, not current user
-        int itsUserID = booking.ProviderUserID;
-        string itsUserType = "provider";
-        string itsUserLabel = "Provider";
-        string myUserType = "customer";
-        //string myUserPrefix = "Customer";
-        if (thisUserID == booking.ProviderUserID)
-        {
-            itsUserType = "customer";
-            itsUserLabel = "Customer";
-            myUserType = "provider";
-            itsUserID = booking.CustomerUserID;
-        } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
-        var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
-
-        <div>
-            @{
-                PageData["messageTitle"] = getTitleStatus(booking, itsUserData, itsUserType);
-                PageData["messageSubtitle"] = "last updated: " + booking.UpdatedDate.ToLongDateString() + " at " + booking.UpdatedDate.ToLongTimeString();
-            }
-            @*<h3 @LcEmailTemplateHelper.StyleH3()>@gettTitleStatus(booking, itsUserData, itsUserType)</h3>
-            <span>Sent: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
-
-            <h4 @LcEmailTemplateHelper.StyleH4()>@itsUserLabel profile</h4>
-            @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
-                {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},
-                {"Data", itsUserData},
-                {"DataPrefix", ""},
-                {"Size", "medium"},
-                {"UserType", itsUserType}
-            })
-
-            @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer")
+        <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
+        <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+            <p @LcEmailTemplateHelper.StyleResetP()>
+            @LcHelpers.GetUserDisplayName(info.PairUser) has booked you as a @info.Booking.PositionSingular and chosen
+            the following times for you to provide the service. Please confirm one of these times 
+            <strong style="font-weight: normal;color: #8b2143;">within @LcData.Booking.BookingRequestConfirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+            to accept this booking.
+            </p>
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
+            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+            </a>
+            @if (info.Booking.AlternativeDate1Start is DateTime || info.Booking.AlternativeDate2Start is DateTime)
             {
-            <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
-            <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-                <p @LcEmailTemplateHelper.StyleResetP()>
-                @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
-                the following times for you to provide the service. Please confirm one of these times 
-                <strong style="font-weight: normal;color: #8b2143;">within @confirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
-                to accept this booking.
-                </p>
-                <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=preferred">
-                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
-                </a>
-                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
-                {
-                <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
-                }
-                @if (booking.AlternativeDate1Start is DateTime)
-                {
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative1">
-                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
-                </a>
-                }
-                @if (booking.AlternativeDate2Start is DateTime)
-                {
-                <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(booking.BookingRequestID)&ConfirmedDateType=alternative2">
-                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
-                </a>
-                }
-                <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
-                <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(booking.BookingRequestID)">
-                    Decline booking (you can offer alternative times to the customer)
-                </a>
-            </div>
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
             }
-            else if (booking.PreferredDateStart is DateTime)
+            @if (info.Booking.AlternativeDate1Start is DateTime)
             {
-            <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
-            <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-                <p @LcEmailTemplateHelper.StyleResetP()>
-                @if (itsUserType == "customer")
-                {
-                    <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and chosen
-                    the following times for you to provide the service.</text>
-                }
-                else
-                {
-                    <text>You have booked to @LcHelpers.GetUserDisplayName(itsUserData) as a @booking.PositionSingular and chosen
-                    the following time(s) for an appointment:</text>
-                }
-                </p>
-                <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
-                <div class="selected-date preferred-date">
-                    @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
-                </div>
-                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
-                {
-                <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
-                }
-                @if (booking.AlternativeDate1Start is DateTime)
-                {
-                <div class="selected-date alternative-date alternative-date-1">
-                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
-                </div>
-                }
-                @if (booking.AlternativeDate2Start is DateTime)
-                {
-                <div class="selected-date alternative-date alternative-date-2">
-                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
-                </div>
-                }
-            </div>
+            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative1">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
+            </a>
             }
-        
-            <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>
-            @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", booking, myUserType, true)
-
-            <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
-            @RenderPage("$EmailBookingRemindersWidget.cshtml", myUserType)
-
+            @if (info.Booking.AlternativeDate2Start is DateTime)
+            {
+            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative2">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
+            </a>
+            }
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
+            <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)">
+                Decline booking (you can offer alternative times to the customer)
+            </a>
         </div>
     }
-    catch (Exception ex)
+    else if (info.Booking.PreferredDateStart is DateTime)
     {
-        showError("BODY", ex);
+        <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
+        <div style="@LcEmailTemplateHelper.StyleMessageSection()">
+            <p @LcEmailTemplateHelper.StyleResetP()>
+            @switch (info.SentTo) {
+                case LcData.UserInfo.UserType.Provider:
+                    <text>You have booked to @LcHelpers.GetUserDisplayName(info.PairUser) as a @info.Booking.PositionSingular and chosen
+                    the following time(s) for an appointment:</text>
+                    break;
+                case LcData.UserInfo.UserType.Customer:
+                    <text>@LcHelpers.GetUserDisplayName(info.PairUser) has booked you as a @info.Booking.PositionSingular and chosen
+                    the following times for you to provide the service.</text>
+                    break;
+            }
+            </p>
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
+            <div class="selected-date preferred-date">
+                @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+            </div>
+            @if (info.Booking.AlternativeDate1Start is DateTime || info.Booking.AlternativeDate2Start is DateTime)
+            {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
+            }
+            @if (info.Booking.AlternativeDate1Start is DateTime)
+            {
+            <div class="selected-date alternative-date alternative-date-1">
+                @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
+            </div>
+            }
+            @if (info.Booking.AlternativeDate2Start is DateTime)
+            {
+            <div class="selected-date alternative-date alternative-date-2">
+                @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
+            </div>
+            }
+        </div>
     }
-}
+        
+    <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>
+    @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
+
+    <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
+    @RenderPage("$EmailBookingRemindersWidget.cshtml", info.SentTo.ToString().ToLower())
+
+</div>

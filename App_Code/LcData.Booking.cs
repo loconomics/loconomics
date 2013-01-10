@@ -1205,6 +1205,7 @@ public static partial class LcData
         #endregion
 
         #region Bookings Information Utilities
+        public const int BookingRequestConfirmationLimitHours = 18;
         public static string GetBookingTitleFor(int bookingStatusID, dynamic pairUserData, LcData.UserInfo.UserType sentTo)
         {
             var statusTitle = "Booking involving {0}. Unknown status";
