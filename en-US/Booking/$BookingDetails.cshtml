@@ -38,58 +38,6 @@
 @helper printGoogleLink(string location){
     <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">view map and directions</a>
 }
-@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
-    var statusTitle = "Booking involving {0}. Unknown status";
-    switch (itsUserType) {
-        case "customer":
-            statusTitle = "Booking from {0}. Unknown status";
-            switch ((int)booking.BookingStatusID) {
-                case 1: // confirmed
-                    statusTitle = "Confirmed booking from {0}";
-                    break;
-                case 2: // service performed no pricing adjustment
-                    statusTitle = "Service performed by {0}";
-                    break;
-                case 3: // service performed pricing adjustment
-                    statusTitle = "Service performed by {0} with pricing adjustment";
-                    break;
-                case 4: // service performed and paid full
-                    statusTitle = "Service completed by {0}";
-                    break;
-                case 5: // service dispute
-                    statusTitle = "Service dispute with {0}";
-                    break;
-                case 6: // cancelled by customer
-                    statusTitle = "Booking cancelled by {0}";
-                    break;
-            }
-            break;
-        case "provider":
-            statusTitle = "Booking to {0}. Unknown status";
-            switch ((int)booking.BookingStatusID) {
-                case 1: // confirmed
-                    statusTitle = "Confirmed booking for {0}";
-                    break;
-                case 2: // service performed no pricing adjustment
-                    statusTitle = "Service performed by {0}";
-                    break;
-                case 3: // service performed pricing adjustment
-                    statusTitle = "Service performed by {0} with pricing adjustment";
-                    break;
-                case 4: // service performed and paid full
-                    statusTitle = "Service completed by {0}";
-                    break;
-                case 5: // service dispute
-                    statusTitle = "Service dispute with {0}";
-                    break;
-                case 6: // cancelled by customer
-                    statusTitle = "Booking with {0} cancelled by me";
-                    break;
-            }
-            break;
-    }
-    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
-}
 @functions{
     string getLocationName(dynamic data){
         if (String.IsNullOrWhiteSpace(data.LocationName)) {
@@ -113,12 +61,14 @@
 else
 {
     // Checking item: user type of the other user, not current user
+    var sentToUserType = LcData.UserInfo.UserType.Customer;
     int itsUserID = booking.ProviderUserID;
     string itsUserType = "provider";
     string itsUserLabel = "Provider";
     string myUserType = "customer";
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+        sentToUserType = LcData.UserInfo.UserType.Provider;
         itsUserType = "customer";
         itsUserLabel = "Customer";
         myUserType = "provider";
@@ -127,7 +77,7 @@ else
     var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
 <div class="booking-request booking">
-    <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+    <h3>@LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, sentToUserType)</h3>
     <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
     <div class="actions">

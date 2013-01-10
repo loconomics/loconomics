@@ -19,67 +19,6 @@
     
     var prefix = "booking-request-" + brID;
 }
-@helper printTitleStatus(dynamic booking, dynamic itsUserData, string itsUserType){
-    var statusTitle = "Booking request involving {0}. Unknown status";
-    switch (itsUserType) {
-        case "customer":
-            statusTitle = "Booking request from {0}. Unknown status";
-            switch ((int)booking.BookingRequestStatusID) {
-                case 1: // created but not complete
-                case 3: // created but not complete because time out
-                    statusTitle = "Incomplete booking request from {0}";
-                    break;
-                case 2: // completed request by customer, awaiting provider confirmation
-                    statusTitle = "Booking request from {0}";
-                    break;
-                case 4: // cancelled by customer
-                    statusTitle = "Cancelled booking confirmation";
-                    break;
-                case 5: // denied by provider
-                    statusTitle = "Declined booking request";
-                    break;
-                case 6: // expired (not answered by provider in time)
-                    statusTitle = "Expired booking request";
-                    break;
-                case 7: // accepted by provider (you must consider view the booking details!)
-                    statusTitle = "Confirmed booking request";
-                    break;
-                case 8: // denied with alternatives
-                    statusTitle = "Declined booking request";
-                    break;
-            }
-            break;
-        case "provider":
-            statusTitle = "Booking request for {0}. Unknown status";
-            switch ((int)booking.BookingRequestStatusID) {
-                case 1: // created but not complete
-                case 3: // created but not complete because time out
-                    statusTitle = "Incomplete booking request for {0}";
-                    break;
-                case 2: // completed request by customer, awaiting provider confirmation
-                    statusTitle = "Waiting for {0} to confirm request";
-                    break;
-                case 4: // cancelled by customer
-                    statusTitle = "{0} cancelled their booking";
-                    break;
-                case 5: // denied by provider
-                    statusTitle = "Declined booking request";
-                    break;
-                case 6: // expired (not answered by provider in time)
-                    statusTitle = "Expired booking request";
-                    break;
-                case 7: // accepted by provider (you must consider view the booking details!)
-                    statusTitle = "Confirmed booking request";
-                    break;
-                case 8: // denied with alternatives
-                    statusTitle = "Declined booking request";
-                    break;
-            }
-            break;
-    }
-    @String.Format(statusTitle, LcHelpers.GetUserDisplayName(itsUserData))
-}
-
 @if (booking == null)
 {
     <div class="booking-request">
@@ -89,12 +28,14 @@
 else
 {
     // Checking item: user type of the other user, not current user
+    var sentToUserType = LcData.UserInfo.UserType.Customer;
     int itsUserID = booking.ProviderUserID;
     string itsUserType = "provider";
     string itsUserLabel = "Provider";
     string myUserType = "customer";
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+        sentToUserType = LcData.UserInfo.UserType.Provider;
         itsUserType = "customer";
         itsUserLabel = "Customer";
         myUserType = "provider";
@@ -103,7 +44,7 @@ else
     var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
 
     <div class="booking-request">
-        <h3>@printTitleStatus(booking, itsUserData, itsUserType)</h3>
+        <h3>@LcData.Booking.GetBookingRequestTitleFor(booking.BookingRequestStatusID, itsUserData, sentToUserType)</h3>
         <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
         @* If is customer and booking request is incomplete (status:1),
             allow customer to cancel it (See that $cancelBookingRequest must follow same condition-rule) *@

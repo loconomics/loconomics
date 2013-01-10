@@ -13,64 +13,10 @@
     PageData["messageTitle"] = "Booking";
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
 }
-@functions{
-    string getTitleStatus(dynamic booking, dynamic pairUserData, LcData.UserInfo.UserType sentTo){
-        var statusTitle = "Booking involving {0}. Unknown status";
-        switch (sentTo) {
-			case LcData.UserInfo.UserType.Provider:
-				statusTitle = "Booking from {0}. Unknown status";
-				switch ((int)booking.BookingStatusID) {
-					case 1: // confirmed
-						statusTitle = "Confirmed booking from {0}";
-						break;
-					case 2: // service performed no pricing adjustment
-						statusTitle = "Service performed by {0}";
-						break;
-					case 3: // service performed pricing adjustment
-						statusTitle = "Service performed by {0} with pricing adjustment";
-						break;
-					case 4: // service performed and paid full
-						statusTitle = "Service completed by {0}";
-						break;
-					case 5: // service dispute
-						statusTitle = "Service dispute with {0}";
-						break;
-					case 6: // cancelled by customer
-						statusTitle = "Booking cancelled by {0}";
-						break;
-				}
-				break;
-			case LcData.UserInfo.UserType.Customer:
-				statusTitle = "Booking to {0}. Unknown status";
-				switch ((int)booking.BookingStatusID) {
-					case 1: // confirmed
-						statusTitle = "Confirmed booking for {0}";
-						break;
-					case 2: // service performed no pricing adjustment
-						statusTitle = "Service performed by {0}";
-						break;
-					case 3: // service performed pricing adjustment
-						statusTitle = "Service performed by {0} with pricing adjustment";
-						break;
-					case 4: // service performed and paid full
-						statusTitle = "Service completed by {0}";
-						break;
-					case 5: // service dispute
-						statusTitle = "Service dispute with {0}";
-						break;
-					case 6: // cancelled by customer
-						statusTitle = "Booking with {0} cancelled by me";
-						break;
-				}
-                break;
-        }
-        return String.Format(statusTitle, LcHelpers.GetUserDisplayName(pairUserData));
-    }
-}
 
 <div>
     @{
-        PageData["messageTitle"] = getTitleStatus(info.Booking, info.PairUser, info.SentTo);
+        PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(info.Booking.BookingStatusID, info.PairUser, info.SentTo);
         PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     }
 

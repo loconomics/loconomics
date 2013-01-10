@@ -16,7 +16,7 @@
     @switch (info.SentTo) {
 		case LcData.UserInfo.UserType.Provider:
                     
-            PageData["messageTitle"] = String.Format("Booking request from {0} has expired", LcHelpers.GetUserDisplayName(info.CustomerUser));
+            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(6, info.CustomerUser, info.SentTo);
             PageData["needHelpAddress"] = "providersupport@loconomics.com";
    
             <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName), <br/><br/>
@@ -34,7 +34,7 @@
             break;
         case LcData.UserInfo.UserType.Customer:
                 
-            PageData["messageTitle"] = String.Format("{0} did not respond to your request", LcHelpers.GetUserDisplayName(info.ProviderUser));
+            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(6, info.ProviderUser, info.SentTo);
             PageData["needHelpAddress"] = "support@loconomics.com";
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
