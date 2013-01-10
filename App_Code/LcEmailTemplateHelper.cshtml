@@ -273,3 +273,19 @@
         <div>Address not available</div>
     }
 }
+@helper PrintUserContactInformation(int userID) {
+    var user = LcData.UserInfo.GetUserRowWithContactData(userID);
+    <div>
+        @user.FullName<br />
+        Phone: 
+        @if(String.IsNullOrEmpty(user.MobilePhone)) { 
+            @user.AlternatePhone
+        } else if (String.IsNullOrEmpty(user.AlternatePhone)) {
+            @user.MobilePhone <text>(mobile)</text>
+        } else {
+            @user.MobilePhone <text>(mobile) or </text> @user.AlternatePhone <text>(other)</text>
+        }
+        <br />
+        e-mail: <a href="mailto:@user.Email">@user.Email</a>
+    </div>
+}
