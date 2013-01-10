@@ -1274,34 +1274,6 @@ public static partial class LcData
                     {
                         case 1: // created but not complete
                         case 3: // created but not complete because time out
-                            statusTitle = "Incomplete booking request for {0}";
-                            break;
-                        case 2: // completed request by customer, awaiting provider confirmation
-                            statusTitle = "Waiting for {0} to confirm request";
-                            break;
-                        case 4: // cancelled by customer
-                            statusTitle = "Booking request for {0} cancelled by me";
-                            break;
-                        case 5: // denied/declined by provider
-                            statusTitle = "You've successfully declined {0}'s booking request";
-                            break;
-                        case 6: // expired (not answered by provider in time)
-                            statusTitle = "Booking request from {0} has expired";
-                            break;
-                        case 7: // accepted by provider (you must consider view the booking details!)
-                            statusTitle = "Accepted booking request for {0}";
-                            break;
-                        case 8: // denied with alternatives
-                            statusTitle = "Declined with alternatives booking request by {0}";
-                            break;
-                    }
-                    break;
-                case LcData.UserInfo.UserType.Customer:
-                    statusTitle = "Booking request from {0}. Unknown status";
-                    switch (bookingRequestStatusID)
-                    {
-                        case 1: // created but not complete
-                        case 3: // created but not complete because time out
                             statusTitle = "Incomplete booking request from {0}";
                             break;
                         case 2: // completed request by customer, awaiting provider confirmation
@@ -1311,16 +1283,44 @@ public static partial class LcData
                             statusTitle = "Booking request cancelled by {0}";
                             break;
                         case 5: // denied/declined by provider
-                            statusTitle = "{0} is unable to complete your request";
+                            statusTitle = "You've successfully declined {0}'s booking request";
                             break;
                         case 6: // expired (not answered by provider in time)
-                            statusTitle = "{0} did not respond to your request";
+                            statusTitle = "Booking request from {0} has expired";
                             break;
                         case 7: // accepted by provider (you must consider view the booking details!)
                             statusTitle = "Accepted booking request from {0}";
                             break;
                         case 8: // denied with alternatives
                             statusTitle = "Declined with alternatives booking request from {0}";
+                            break;
+                    }
+                    break;
+                case LcData.UserInfo.UserType.Customer:
+                    statusTitle = "Booking request from {0}. Unknown status";
+                    switch (bookingRequestStatusID)
+                    {
+                        case 1: // created but not complete
+                        case 3: // created but not complete because time out
+                            statusTitle = "Incomplete booking request for {0}";
+                            break;
+                        case 2: // completed request by customer, awaiting provider confirmation
+                            statusTitle = "Booking request for {0}";
+                            break;
+                        case 4: // cancelled by customer
+                            statusTitle = "Booking request for {0} cancelled by me";
+                            break;
+                        case 5: // denied/declined by provider
+                            statusTitle = "{0} is unable to complete your request";
+                            break;
+                        case 6: // expired (not answered by provider in time)
+                            statusTitle = "{0} did not respond to your request";
+                            break;
+                        case 7: // accepted by provider (you must consider view the booking details!)
+                            statusTitle = "Accepted booking request for {0}";
+                            break;
+                        case 8: // denied with alternatives
+                            statusTitle = "Declined with alternatives booking request by {0}";
                             break;
                     }
                     break;

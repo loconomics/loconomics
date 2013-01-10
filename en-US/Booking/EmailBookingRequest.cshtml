@@ -24,90 +24,82 @@
     DateTime confirmationLimitDate = info.Booking.UpdatedDate.AddHours(LcData.Booking.BookingRequestConfirmationLimitHours);
 }
 <div>
-    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType profile</h4>
-    @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
-        {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
-        {"Data", info.PairUser},
-        {"DataPrefix", ""},
-        {"Size", "medium"},
-        {"UserType", info.PairUserType.ToString().ToLower()}
-    })
-
-    @if (info.Booking.BookingRequestStatusID == 2 && info.SentTo == LcData.UserInfo.UserType.Provider)
+    <p>
+        Hello, @(info.SentToUser.FirstName)!
+    </p>
+    @* For booking request first message (status:request-completed)
+     *@
+    @if (info.Booking.BookingRequestStatusID == 2)
     {
-        <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
-        <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-            <p @LcEmailTemplateHelper.StyleResetP()>
-            @LcHelpers.GetUserDisplayName(info.PairUser) has booked you as a @info.Booking.PositionSingular and chosen
-            the following times for you to provide the service. Please confirm one of these times 
-            <strong style="font-weight: normal;color: #8b2143;">within @LcData.Booking.BookingRequestConfirmationLimitHours hours (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
-            to accept this booking.
-            </p>
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
-            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
-                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-            </a>
-            @if (info.Booking.AlternativeDate1Start is DateTime || info.Booking.AlternativeDate2Start is DateTime)
-            {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
-            }
-            @if (info.Booking.AlternativeDate1Start is DateTime)
-            {
-            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative1">
-                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
-            </a>
-            }
-            @if (info.Booking.AlternativeDate2Start is DateTime)
-            {
-            <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative2">
-                Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
-            </a>
-            }
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking request</h5>
-            <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)">
-                Decline booking (you can offer alternative times to the customer)
-            </a>
-        </div>
+        switch ((LcData.UserInfo.UserType)info.SentTo)
+        {
+            case LcData.UserInfo.UserType.Customer:
+                <p>
+                    Please find the details of your booking request below.
+                    We're working with <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@(LcHelpers.GetUserDisplayName(info.ProviderUser))</a>
+                    to confirm it as soon as possible.
+                </p>
+    
+                <h4 @LcEmailTemplateHelper.StyleH4()>Time preferences</h4>
+                <div>
+                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                    <div class="selected-date preferred-date">
+                        @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                    </div>
+                    @if (info.Booking.AlternativeDate1Start is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>
+                        <div class="selected-date alternative-date alternative-date-1">
+                            @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
+                        </div>
+                    }
+                    @if (info.Booking.AlternativeDate2Start is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Third choice:</h5>
+                        <div class="selected-date alternative-date alternative-date-2">
+                            @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
+                        </div>
+                    }
+                </div>
+    
+                break;
+            case LcData.UserInfo.UserType.Provider:
+                <p>
+                    <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>
+                    (@LcData.UserInfo.GetCustomerGlobalRating(info.Booking.CustomerUserID).ToString("0.0") star rating and member since @info.CustomerUser.MemberSinceDate.ToString("MMMM yyyy"))
+                    has booked you as a <strong>@info.Booking.PositionSingular</strong>.
+                    @(info.CustomerUser.FirstName)'s chosen the following times for you to meet up for an appointment.
+                    In order to accept the booking, chose one of these time slots <strong>withing @LcData.Booking.BookingRequestConfirmationLimitHours hours</strong>
+                    from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>):
+                </p>
+                <div>
+                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                    <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
+                        Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                    </a>
+                    @if (info.Booking.AlternativeDate1Start is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>
+                        <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative1">
+                            Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
+                        </a>
+                    }
+                    @if (info.Booking.AlternativeDate2Start is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Third choice:</h5>
+                        <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=alternative2">
+                            Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
+                        </a>
+                    }
+                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking</h5>
+                    <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)">
+                        Decline booking
+                    </a>
+                </div>
+                break;
+        }
     }
-    else if (info.Booking.PreferredDateStart is DateTime)
-    {
-        <h4 @LcEmailTemplateHelper.StyleH4()>Requested booking times</h4>
-        <div style="@LcEmailTemplateHelper.StyleMessageSection()">
-            <p @LcEmailTemplateHelper.StyleResetP()>
-            @switch (info.SentTo) {
-                case LcData.UserInfo.UserType.Provider:
-                    <text>You have booked to @LcHelpers.GetUserDisplayName(info.PairUser) as a @info.Booking.PositionSingular and chosen
-                    the following time(s) for an appointment:</text>
-                    break;
-                case LcData.UserInfo.UserType.Customer:
-                    <text>@LcHelpers.GetUserDisplayName(info.PairUser) has booked you as a @info.Booking.PositionSingular and chosen
-                    the following times for you to provide the service.</text>
-                    break;
-            }
-            </p>
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Preferred time:</h5>
-            <div class="selected-date preferred-date">
-                @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-            </div>
-            @if (info.Booking.AlternativeDate1Start is DateTime || info.Booking.AlternativeDate2Start is DateTime)
-            {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Alternate times:</h5>
-            }
-            @if (info.Booking.AlternativeDate1Start is DateTime)
-            {
-            <div class="selected-date alternative-date alternative-date-1">
-                @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate1Start, info.Booking.AlternativeDate1End)
-            </div>
-            }
-            @if (info.Booking.AlternativeDate2Start is DateTime)
-            {
-            <div class="selected-date alternative-date alternative-date-2">
-                @LcHelpers.DateTimeRangeToString(info.Booking.AlternativeDate2Start, info.Booking.AlternativeDate2End)
-            </div>
-            }
-        </div>
-    }
-        
+ 
     <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>
     @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
 

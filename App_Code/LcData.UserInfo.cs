@@ -419,6 +419,30 @@ public static partial class LcData
                 return db.QuerySingle("SELECT UserID, ResponseTimeMinutes FROM UserStats WHERE UserID = @0", userId);
             }
         }
+        public static decimal GetCustomerGlobalRating(int userId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var r = db.QueryValue(@"
+		            SELECT	((coalesce(Rating1, 0) + coalesce(Rating2, 0) + coalesce(Rating3, 0)) / 3) As Rating
+		            FROM	Users As U
+				             INNER JOIN
+				            UserReviewScores AS UR
+				              ON UR.UserID = U.UserID
+					            AND UR.PositionID = 0
+                ", userId);
+
+                if (r == null)
+                    return 0;
+
+                // Round to .5 or .0
+                r = Decimal.Round(r * 10);
+                var rest = Decimal.Round(r * 10) % 5m;
+                r += (rest > .25m ? 5 - rest : -rest);
+                r = r / 10m;
+                return r;
+            }
+        }
         /// <summary>
         /// Get a dynamic row with the user preferences 
         /// </summary>
