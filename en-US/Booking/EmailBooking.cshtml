@@ -1,4 +1,5 @@
 ﻿@using WebMatrix.Data;
+
 @{
     LcMessaging.SecureTemplate();
     
@@ -11,8 +12,52 @@
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
     PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(info.Booking.BookingStatusID, info.PairUser, info.SentTo);
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["showSign"] = true;
+    switch (info.SentTo) {
+        case LcData.UserInfo.UserType.Provider:
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
+            break;
+        case LcData.UserInfo.UserType.Customer:
+            PageData["needHelpAddress"] = "support@loconomics.com";
+            break;
+    }
+}
+@helper printConfirmedDate(LcEmailTemplateHelper.BookingEmailInfo info){
+    if (info.Booking.ConfirmedDateStart is DateTime && info.Booking.ConfirmedDateEnd is DateTime)
+    {
+        <span>@LcHelpers.DateTimeRangeToString(info.Booking.ConfirmedDateStart, info.Booking.ConfirmedDateEnd)</span>
+    }
+    else
+    {
+        // Null values:
+        <span>Date not available</span>
+    }
 }
 <div>
+    <p>
+        Hello again, @(info.SentToUser.FirstName)!
+    </p>
+    @* For booking confirmation, attach message about the good news!
+     *@
+    @if (info.Booking.BookingStatusID == 1)
+    {
+        switch ((LcData.UserInfo.UserType)info.SentTo)
+        {
+             case LcData.UserInfo.UserType.Customer:
+                <p>
+                    Contratulations, you're all set for <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@(LcHelpers.GetUserDisplayName(info.ProviderUser))'s</a> <strong>@info.Booking.PositionSingular</strong>
+                    services to be performed on <strong>@printConfirmedDate(info)</strong>.
+                </p>
+                break;
+             case LcData.UserInfo.UserType.Provider:
+                <p>
+                    Contratulations, you're all set to perform <strong>@info.Booking.PositionSingular</strong> services for <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>
+                    on <strong>@printConfirmedDate(info)</strong>.
+                </p>
+                break;
+        }
+    }
+
     @* When booking is not cancelled and service date is passed, show Review options:
      *@
     @if (info.Booking.BookingStatusID < 6 && DateTime.Now > info.Booking.ConfirmedDateEnd)
@@ -62,15 +107,7 @@
         <span>@info.Booking.PositionSingular</span>
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Scheduled time: </h5>
-        @if (info.Booking.ConfirmedDateStart is DateTime && info.Booking.ConfirmedDateEnd is DateTime)
-        {
-        <span>@LcHelpers.DateTimeRangeToString(info.Booking.ConfirmedDateStart, info.Booking.ConfirmedDateEnd)</span>
-        }
-        else
-        {
-            // Null values:
-            <span>Date not available</span>
-        }
+        @printConfirmedDate(info)
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location: </h5>
         @LcEmailTemplateHelper.PrintAddressBlock(info.Booking)
@@ -81,4 +118,8 @@
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>
     @RenderPage("$EmailBookingRemindersWidget.cshtml", info.SentTo.ToString().ToLower())
+
+    <p>
+        If you need to make any changes to this booking, please <a href="@info.ViewOnSiteURL">login</a> and you can do so from your dashboard.
+    </p>
 </div>

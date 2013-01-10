@@ -246,6 +246,9 @@
         <span>@addressDetails.City</span>
         <span>@addressDetails.State</span>
         <span>@addressDetails.PostalCode</span>
+        @if (!String.IsNullOrEmpty(addressDetails.SpecialInstructions)) {
+            <span>(@addressDetails.SpecialInstructions)</span>
+        }
     </div>
 }
 @helper PrintAddressBlock(dynamic data) {
@@ -257,7 +260,8 @@
                 Location = data.AddressLine1 + " " + data.AddressLine2,
                 City = data.City, 
                 State = data.StateProvinceCode,
-                PostalCode = data.PostalCode
+                PostalCode = data.PostalCode,
+                SpecialInstructions = data.LocationSpecialInstructions
             })
 
             <a target="_blank" href="http://maps.google.com/?q=@GetLocationForGoogleMaps(data)">View direction</a>

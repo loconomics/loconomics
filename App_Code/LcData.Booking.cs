@@ -198,6 +198,7 @@ public static partial class LcData
                         L.City,
                         SP.StateProvinceName, SP.StateProvinceCode,
                         PC.PostalCode,
+                        L.SpecialInstructions As LocationSpecialInstructions,
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
@@ -1216,7 +1217,7 @@ public static partial class LcData
                     switch (bookingStatusID)
                     {
                         case 1: // confirmed
-                            statusTitle = "Confirmed booking from {0}";
+                            statusTitle = "Booking confirmation for {0}";
                             break;
                         case 2: // service performed no pricing adjustment
                             statusTitle = "Service performed by {0}";
@@ -1240,7 +1241,7 @@ public static partial class LcData
                     switch (bookingStatusID)
                     {
                         case 1: // confirmed
-                            statusTitle = "Confirmed booking for {0}";
+                            statusTitle = "Booking confirmation for {0}";
                             break;
                         case 2: // service performed no pricing adjustment
                             statusTitle = "Service performed by {0}";

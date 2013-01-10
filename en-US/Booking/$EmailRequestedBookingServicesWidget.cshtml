@@ -3,6 +3,9 @@
     dynamic booking = PageData[0];
     string myUserType = PageData[1];
     bool isRequest = PageData[2] ?? false;
+    bool showPayment = PageData[3] ?? true;
+    bool showPricing = PageData[4] ?? true;
+    bool showCancellationPolicy = PageData[5] ?? true;
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
@@ -27,37 +30,45 @@
 }
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
 
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment:</h5>
-        <div>
-            @switch(myUserType) {
-                case "provider":
-                    <text>
-                    Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
-                    </text>
-                break;
-                case "customer":
-                    <text>
-                    Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
-                    </text>
-                break;
-                default:
-                    <text>
-                    Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                    </text>
-                break;
-            }
-        </div>
-
-        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
-        @if (myUserType == "provider")
+        @if (showPayment)
         {
-            @LcPricingView.EmailProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment:</h5>
+            <div>
+                @switch (myUserType)
+                {
+                    case "provider":
+                        <text>
+                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
+                        </text>
+                                        break;
+                    case "customer":
+                        <text>
+                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
+                        </text>
+                                     break;
+                    default:
+                        <text>
+                        Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
+                        </text>
+                                       break;
+                }
+            </div>
         }
-        else if (myUserType == "customer")
+
+
+        @if (showPricing)
         {
-            @LcPricingView.EmailCustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
+            if (myUserType == "provider")
+            {
+                @LcPricingView.EmailProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            }
+            else if (myUserType == "customer")
+            {
+                @LcPricingView.EmailCustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+            }
         }
         
         @if (!String.IsNullOrEmpty(strServices))
@@ -93,5 +104,17 @@
             Full location and contact information will be shown after the appointment is confirmed.
             </p>
         </div>
+        }
+
+        @if (showCancellationPolicy)
+        {
+            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Cancellation policy</h5>
+            <div>
+               @RenderPage("$CancellationPolicyInfoWidget.cshtml", new
+               {
+                   CancellationPolicyID = booking.CancellationPolicyID,
+                   DisplayForUserType = myUserType
+               })
+            </div>
         }
     </div>

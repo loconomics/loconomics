@@ -11,6 +11,15 @@
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
     PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(info.Booking.BookingRequestStatusID, info.PairUser, info.SentTo);
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["showSign"] = true;
+    switch (info.SentTo) {
+        case LcData.UserInfo.UserType.Provider:
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
+            break;
+        case LcData.UserInfo.UserType.Customer:
+            PageData["needHelpAddress"] = "support@loconomics.com";
+            break;
+    }
     
     DateTime confirmationLimitDate = info.Booking.UpdatedDate.AddHours(LcData.Booking.BookingRequestConfirmationLimitHours);
 }
