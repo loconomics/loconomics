@@ -385,11 +385,11 @@
      */
     public static string GetUserDisplayName(dynamic row){
         if (row == null) { return ""; }
-        return (row.FirstName ?? "") + " " + GetInitialLetter(row.LastName) + ".";
+        return (row.FirstName ?? "") + "\xA0" + GetInitialLetter(row.LastName) + ".";
     }
     public static string GetUserDisplayName(dynamic row, string fieldPrefix){
         if (row == null) { return ""; }
-        return (row[fieldPrefix + "FirstName"] ?? "") + " " + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
+        return (row[fieldPrefix + "FirstName"] ?? "") + "\xA0" + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
     }
 }
 @helper PrintTextAsHtml(string text){

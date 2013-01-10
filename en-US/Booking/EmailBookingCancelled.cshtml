@@ -1,1 +1,55 @@
-﻿
+﻿@* Customer cancelled a confirmed booking
+ *@
+@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+
+    // Data for the EmailLayout:
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["showSign"] = true;
+}
+<div>
+    @switch (info.SentTo) {
+		case LcData.UserInfo.UserType.Provider:
+                    
+            PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(6, info.CustomerUser, info.SentTo);
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
+   
+            <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.ProviderUser.FirstName), <br/><br/>
+
+            We've got some bad news--<a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.CustomerUser.UserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a> had to cancel your booking.
+            </p>
+            @*
+            Bellow is a message from <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.CustomerUser.UserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>:
+            <div style="border:1px solid black;padding:5px 10px;margin:5px 0;">@someMessage</div>
+            *@
+            <p>
+                Your cancellation policy on this booking was market as: @LcData.Booking.GetCancellationPolicyTitle(info.Booking.CancellationPolicyID)
+            </p>
+    
+            <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Payment summary</h4>
+            @LcPricingView.EmailProviderCancellationPricingSummary(info.Booking)
+
+            break;
+        case LcData.UserInfo.UserType.Customer:
+
+            PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(6, info.ProviderUser, info.SentTo);
+            PageData["needHelpAddress"] = "support@loconomics.com";
+
+            <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.CustomerUser.FirstName),<br/><br/>
+            This is to confirm that you have successfully cancelled you booking with @LcHelpers.GetUserDisplayName(info.ProviderUser).
+            Your card will be refunded as follows:
+            </p>           
+
+            <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Refund summary</h4>
+            @LcPricingView.EmailCustomerCancellationPricingSummary(info.Booking)
+
+            break;
+    }
+</div>

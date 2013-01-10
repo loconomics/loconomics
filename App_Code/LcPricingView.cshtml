@@ -363,3 +363,41 @@
         </table>
     </div>
 }
+
+@helper EmailCustomerCancellationPricingSummary(dynamic booking) {
+    <table border="0" style="border:none;width:100%">
+        <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Original amount charged @(booking.BookingDate.ToShortDateString())</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@(booking.TotalPrice.ToString("c"))</td>
+        </tr>
+        <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less cancellation fee</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">-@(((booking.SubtotalPrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</td>
+        </tr>
+        <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less nonrefundable Loconomics service fee</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">-@(((booking.FeePrice ?? 0) - (booking.FeeRefunded ?? 0)).ToString("c"))</td>
+        </tr>
+        <tr>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Refund to card ending in @LcEncryptor.Decrypt((string)booking.PaymentCustomerCardLastDigits)</th>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalRefunded).ToString("c"))</th>
+        </tr>
+    </table>
+}
+
+@helper EmailProviderCancellationPricingSummary(dynamic booking) {
+    <table border="0" style="border:none;width:100%">
+        <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Cancellation fee</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@(((booking.SubtotalPrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</td>
+        </tr>
+        <tr>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less Loconomics service fee (payment processing costs)</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">-@((booking.PFeePrice ?? 0).ToString("c"))</td>
+        </tr>
+        <tr>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Payment to account ending in @LcEncryptor.Decrypt((string)booking.PaymentProviderAccountLastDigits)</th>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@(((booking.SubtotalPrice ?? 0) - (booking.PFeePrice ?? 0) - (booking.SubtotalRefunded ?? 0)).ToString("c"))</th>
+        </tr>
+    </table>
+}

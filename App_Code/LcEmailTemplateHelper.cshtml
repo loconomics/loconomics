@@ -156,10 +156,6 @@
         }
         Enum.TryParse<LcData.UserInfo.UserType> (Request["SentBy"], out sentBy);
 
-        if (sentTo == sentBy) {
-            throw new ArgumentException("Parameters SentTo and SentBy cannot be the same value");
-        }
-
         if (bID == 0) {
             b = LcData.Booking.GetBookingRequestForUser(brID, 0, true);
             viewURL = LcUrl.LangUrl + String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID);

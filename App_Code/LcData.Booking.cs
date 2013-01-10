@@ -177,6 +177,8 @@ public static partial class LcData
                         R.CustomerUserID,
                         R.PricingEstimateID,
                         R.SpecialRequests,
+                        R.CreatedDate As RequestDate,
+                        B.CreatedDate As BookingDate,
                         R.UpdatedDate,
                         R.BookingRequestStatusID,
                         B.BookingStatusID,
@@ -268,6 +270,7 @@ public static partial class LcData
                         R.CustomerUserID,
                         R.PricingEstimateID,
                         R.SpecialRequests,
+                        R.CreatedDate As RequestDate,
                         R.UpdatedDate,
                         R.BookingRequestStatusID,
                         R.PositionID,
@@ -1019,6 +1022,25 @@ public static partial class LcData
                          AND U.CountryID = @3
             ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
+        /// <summary>
+        /// Get a string with the name and description of the policy as informative title
+        /// </summary>
+        /// <param name="policyID"></param>
+        /// <returns></returns>
+        public static string GetCancellationPolicyTitle(int policyID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                var policy = db.QuerySingle(@"
+                    SELECT *
+                    FROM CancellationPolicy
+                    WHERE CancellationPolicyID = @0
+                        AND LanguageID = @1 AND CountryID = @2
+                ", policyID,
+                    LcData.GetCurrentLanguageID(),
+                    LcData.GetCurrentCountryID());
+                return policy.CancellationPolicyName + " (" + policy.CancellationPolicyDescription + ")";
+            }
+        }
         #endregion
 
         #region Create Booking Request (Wizard)
@@ -1232,7 +1254,7 @@ public static partial class LcData
                             statusTitle = "Service dispute with {0}";
                             break;
                         case 6: // cancelled by customer
-                            statusTitle = "Booking cancelled by {0}";
+                            statusTitle = "{0} cancelled your booking";
                             break;
                     }
                     break;
@@ -1256,7 +1278,7 @@ public static partial class LcData
                             statusTitle = "Service dispute with {0}";
                             break;
                         case 6: // cancelled by customer
-                            statusTitle = "Booking with {0} cancelled by me";
+                            statusTitle = "Cancellation of your booking with {0}";
                             break;
                     }
                     break;
