@@ -368,7 +368,7 @@
     <table border="0" style="border:none;width:100%">
         <tr>
             <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Original amount charged @(booking.BookingDate.ToShortDateString())</td>
-            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@(booking.TotalPrice.ToString("c"))</td>
+            <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalPrice ?? 0).ToString("c"))</td>
         </tr>
         <tr>
             <td style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">less cancellation fee</td>
@@ -380,7 +380,7 @@
         </tr>
         <tr>
             <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Refund to card ending in @LcEncryptor.Decrypt((string)booking.PaymentCustomerCardLastDigits)</th>
-            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalRefunded).ToString("c"))</th>
+            <th style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((booking.TotalRefunded ?? 0).ToString("c"))</th>
         </tr>
     </table>
 }
