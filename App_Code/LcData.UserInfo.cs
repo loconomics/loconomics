@@ -23,6 +23,7 @@ public static partial class LcData
     /// </summary>
     public static class UserInfo
     {
+        #region User Type
         public enum UserType : int
         {
             None = 0,
@@ -32,6 +33,39 @@ public static partial class LcData
             User = 7,
             System = 8
         }
+        public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
+        {
+            var ut = defaultTo;
+            Enum.TryParse<UserType>(strtype, true, out ut);
+            return ut;
+        }
+        /// <summary>
+        /// Parse UserType based on a single identifying char
+        /// </summary>
+        /// <param name="chartype">'p' for provider, 'c' for customer, 's' for system, 'u' for user, 'a' for anonymous, 'n' for none</param>
+        /// <param name="defaultTo"></param>
+        /// <returns></returns>
+        public static UserType ParseUserType(char chartype, UserType defaultTo = UserType.None)
+        {
+            switch (chartype)
+            {
+                case 's':
+                    return UserType.System;
+                case 'p':
+                    return UserType.Provider;
+                case 'c':
+                    return UserType.Customer;
+                case 'u':
+                    return UserType.User;
+                case 'a':
+                    return UserType.Anonymous;
+                case 'n':
+                    return UserType.None;
+                default:
+                    return defaultTo;
+            }
+        }
+        #endregion
 
         /* Get a data row with the User information identified with 'userId' from the database
         */

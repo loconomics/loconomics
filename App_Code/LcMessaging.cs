@@ -179,7 +179,8 @@ public class LcMessaging
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
-                ,{ "UserID", ProviderUserID }
+                ,{ "SentTo", "Provider" }
+                ,{ "SentBy", "Customer" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
@@ -187,12 +188,19 @@ public class LcMessaging
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
-                ,{ "UserID", CustomerUserID }
+                ,{ "SentTo", "Customer" }
+                ,{ "SentBy", "Provider" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
         }
     }
+    /// <summary>
+    /// A Booking Confirmation is ever sent by a provider
+    /// </summary>
+    /// <param name="BookingRequestID"></param>
+    /// <param name="BookingID"></param>
+    /// <param name="sentByProvider"></param>
     public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID, bool sentByProvider)
     {
         dynamic customer = null, provider = null, thread = null;
@@ -222,7 +230,8 @@ public class LcMessaging
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
-                ,{ "UserID", thread.ProviderUserID }
+                ,{ "SentTo", "Provider" }
+                ,{ "SentBy", "Provider" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
@@ -231,7 +240,8 @@ public class LcMessaging
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
-                ,{ "UserID", thread.CustomerUserID }
+                ,{ "SentTo", "Customer" }
+                ,{ "SentBy", "Provider" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
@@ -277,7 +287,7 @@ public class LcMessaging
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
-                ,{ "UserID", thread.ProviderUserID }
+                ,{ "SentTo", "Provider" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
@@ -285,7 +295,7 @@ public class LcMessaging
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
-                ,{ "UserID", thread.CustomerUserID }
+                ,{ "SentTo", "Customer" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", customer.Email }
             }));
@@ -331,7 +341,8 @@ public class LcMessaging
                     ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
-                    ,{ "UserID", thread.ProviderUserID }
+                    ,{ "SentTo", "Provider" }
+                    ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
                     ,{ "RequestKey", SecurityRequestKey }
                     ,{ "EmailTo", provider.Email }
                 }));
@@ -342,7 +353,8 @@ public class LcMessaging
                     ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
-                    ,{ "UserID", thread.CustomerUserID }
+                    ,{ "SentTo", "Customer" }
+                    ,{ "SentBy", LcData.UserInfo.ParseUserType(bySystemProviderOrCustomer) }
                     ,{ "RequestKey", SecurityRequestKey }
                     ,{ "EmailTo", customer.Email }
                 }));

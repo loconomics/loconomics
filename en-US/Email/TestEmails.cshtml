@@ -16,13 +16,13 @@
             "Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
             ,"Messaging/EmailInquiry/?ThreadID=13&MessageID=26&Kind=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"} }
         ,{ "EmailBooking", new List<string> { 
-            "Booking/EmailBooking/?BookingRequestID=120&BookingID=22&UserID=196&RequestKey=abcd3"
-            ,"Booking/EmailBooking/?BookingRequestID=120&BookingID=22&UserID=141&RequestKey=abcd3" } }
+            "Booking/EmailBooking/?BookingRequestID=120&BookingID=22&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBooking/?BookingRequestID=120&BookingID=22&SentTo=Provider&RequestKey=abcd3" } }
         ,{ "EmailBookingRequest", new List<string> { 
-            "Booking/EmailBookingRequest/?BookingRequestID=120&UserID=196&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=120&UserID=141&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&UserID=277&RequestKey=abcd3"
-            ,"Booking/EmailBookingRequest/?BookingRequestID=157&UserID=196&RequestKey=abcd3" } }
+            "Booking/EmailBookingRequest/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Customer&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequest/?BookingRequestID=157&SentTo=Provider&RequestKey=abcd3" } }
         ,{ "EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailResetPassword", new List<string> { "Email/EmailResetPassword/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailWelcomeCustomer", new List<string> { "Email/EmailWelcomeCustomer/?UserID=141&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
@@ -32,14 +32,11 @@
         ,{ "EmailReportUnauthorizedUse", new List<string> { "Email/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailProviderPaymentRequest", new List<string> { "Email/EmailProviderPaymentRequest/?BookingID=31&emailto=iagosrl@gmail.com&RequestKey=abcd3" } }
         
-        ,{ "EmailBookingNEW", new List<string> { 
-            "Booking/EmailBookingNEW/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
-            ,"Booking/EmailBookingNEW/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
         ,{ "EmailBookingExpired", new List<string> { 
             "Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
             ,"Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"} }
         ,{ "EmailBookingDeclined", new List<string> { 
-            "Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
+            "Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
             ,"Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
     };
 }
