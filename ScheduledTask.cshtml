@@ -101,9 +101,7 @@
             ")){
             try {
                 // Send message
-                // TODO: Send a more specific reminder message, instead a simple copy of
-                // current booking state
-                LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', "service");
                 
                 // Update MessagingLog for the booking
                 db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[24H Service Reminder]");
@@ -174,9 +172,7 @@
                     'b';
 
                 // Send message
-                // TODO: Send a more specific reminder message, instead a simple copy of
-                // current booking state (that at this moment must show the review button)
-                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
+                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review-firstreminder");
                 
                 // Update MessagingLog for the booking
                 db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[8AM Review Reminder]");
@@ -254,9 +250,7 @@
                     'b';
 
                 // Send message
-                // TODO: Send a more specific reminder message, instead a simple copy of
-                // current booking state (that at this moment must show the review button)
-                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor);
+                LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review");
                 
                 // Update MessagingLog for the booking
                 db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[1W Review Reminder]");

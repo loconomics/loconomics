@@ -1,5 +1,7 @@
-﻿@using WebMatrix.Data;
-
+﻿@* Email with updated information about a (confirmed) Booking, mainly to communicate to the
+    customer that a request was confirmed (BookingtatusID:1, but also generate content for other statuses)
+ *@
+@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
     
@@ -92,14 +94,17 @@
     </div>
     }
 
-    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
-    @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
-        {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
-        {"Data", info.PairUser},
-        {"DataPrefix", ""},
-        {"Size", "medium"},
-        {"UserType", info.PairUserType.ToString().ToLower()}
-    })
+    @if (info.Booking.BookingStatusID != 1)
+    {
+        <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
+        @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
+            {"Data", info.PairUser},
+            {"DataPrefix", ""},
+            {"Size", "medium"},
+            {"UserType", info.PairUserType.ToString().ToLower()}
+        })
+    }
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Booking time and location</h4>
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">

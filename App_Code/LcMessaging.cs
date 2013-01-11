@@ -175,7 +175,7 @@ public class LcMessaging
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
-            SendMail(provider.Email, "Booking Request From a Loconomics Client-", 
+            SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -184,7 +184,7 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
-            SendMail(customer.Email, "Your Booking Request From Loconomics", 
+            SendMail(customer.Email, LcData.Booking.GetBookingRequestTitleFor(2, provider, LcData.UserInfo.UserType.Customer),
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
@@ -201,7 +201,7 @@ public class LcMessaging
     /// <param name="BookingRequestID"></param>
     /// <param name="BookingID"></param>
     /// <param name="sentByProvider"></param>
-    public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID, bool sentByProvider)
+    public static void SendBookingRequestConfirmation(int BookingRequestID, int BookingID)
     {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
@@ -222,10 +222,10 @@ public class LcMessaging
             string subject = LcData.Booking.GetBookingSubject(BookingID);
             string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
 
-            // ThreadStatus=2, responded; MessageType=6-7 Booking Request Confirmation: 6 by customer, 7 by provider
-            int messageID = CreateMessage(thread.ThreadID, 2, sentByProvider ? 7 : 6, message, BookingID, "Booking", subject);
+            // ThreadStatus=2, responded; MessageType=7 by provider (6 by customer; ONLY provider can confirm it)
+            int messageID = CreateMessage(thread.ThreadID, 2, 7, message, BookingID, "Booking", subject);
 
-            SendMail(provider.Email, "Booking Request From a Loconomics Client", 
+            SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider), 
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
@@ -235,7 +235,7 @@ public class LcMessaging
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
-            SendMail(customer.Email, "Your Booking Request From Loconomics", 
+            SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
                 ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
@@ -279,20 +279,33 @@ public class LcMessaging
         {
             // Create message body based on detailed booking data
             string message = LcData.Booking.GetBookingRequestDetails(BookingRequestID);
+            var bookingRequest = LcData.Booking.GetBookingRequestBasicInfo(BookingRequestID);
 
             // ThreadStatus=2, responded;
             int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, BookingRequestID, "BookingRequest");
 
-            SendMail(provider.Email, "Booking Request Expired", 
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
+            // default value and explicit value for Status:2
+            string emailTemplatePath = "Booking/EmailBookingRequest/";
+            switch ((int)bookingRequest.BookingRequestStatusID)
+            {
+                case 6:
+                    emailTemplatePath = "Booking/EmailBookingRequestDeclined/";
+                    break;
+                case 7:
+                    emailTemplatePath = "Booking/EmailBookingRequestExpired/";
+                    break;
+            }
+
+            SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(bookingRequest.BookingRequestStatusID, customer, LcData.UserInfo.UserType.Provider),
+                ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Provider" }
                 ,{ "RequestKey", SecurityRequestKey }
                 ,{ "EmailTo", provider.Email }
             }));
-            SendMail(customer.Email, "Booking Request Expired", 
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
+            SendMail(customer.Email, LcData.Booking.GetBookingRequestTitleFor(bookingRequest.BookingRequestStatusID, provider, LcData.UserInfo.UserType.Customer),
+                ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Customer" }
@@ -309,7 +322,8 @@ public class LcMessaging
     /// <param name="BookingID"></param>
     /// <param name="bySystemProviderOrCustomer"></param>
     /// <param name="onlyTo">'p' for provider and 'c' for customer. Will send the email only to that, or 'b' both by default</param>
-    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b')
+    /// <param name="reminderType">Specify ONLY If the message is a Reminder. Set the kind of reminder (service, review-firstreminder, review)</param>
+    public static void SendBookingUpdate(int BookingID, char bySystemProviderOrCustomer, char onlyTo = 'b', string reminderType = null)
     {
         dynamic customer = null, provider = null, thread = null;
         using (var db = Database.Open("sqlloco"))
@@ -329,16 +343,44 @@ public class LcMessaging
             // Create message body based on detailed booking data
             string subject = LcData.Booking.GetBookingSubject(BookingID);
             string message = LcData.Booking.GetBookingStatus(BookingID);
+            var booking = LcData.Booking.GetBookingBasicInfo(BookingID);
 
             // ThreadStatus=2, responded;
             // MessageType: 'p' provider 15, 'c' customer 16, 's' system 19
             int messageType = bySystemProviderOrCustomer == 'p' ? 15 : bySystemProviderOrCustomer == 'c' ? 16 : 19;
             int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
 
+            // default value and explicit value for Status:1
+            string emailTemplatePath = "Booking/EmailBooking/";
+            if (reminderType == null)
+            {
+                switch ((int)booking.BookingStatusID)
+                {
+                    case 6:
+                        emailTemplatePath = "Booking/EmailBookingCancelled/";
+                        break;
+                }
+            }
+            else
+            {
+                switch (reminderType)
+                {
+                    case "service":
+                        emailTemplatePath = "Booking/EmailBookingReminder/";
+                        break;
+                    case "review-firstreminder":
+                        emailTemplatePath = "Booking/EmailBookingReview/?FirstReminder=true";
+                        break;
+                    case "review":
+                        emailTemplatePath = "Booking/EmailBookingReview/";
+                        break;
+                }
+            }
+
             if (onlyTo == 'b' || onlyTo == 'p')
             {
-                SendMail(provider.Email, "Loconomics.com: Booking Update",
-                    ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
+                SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, customer, LcData.UserInfo.UserType.Provider),
+                    ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
                     ,{ "SentTo", "Provider" }
@@ -349,8 +391,8 @@ public class LcMessaging
             }
             if (onlyTo == 'b' || onlyTo == 'c')
             {
-                SendMail(customer.Email, "Loconomics.com: Booking Update",
-                    ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
+                SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, provider, LcData.UserInfo.UserType.Customer),
+                    ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
                     new Dictionary<string, object> {
                     { "BookingID", BookingID }
                     ,{ "SentTo", "Customer" }
@@ -547,6 +589,22 @@ public class LcMessaging
         using (WebClient w = new WebClient())
         {
             w.Encoding = System.Text.Encoding.UTF8;
+
+            // Setup URL
+            string completeURL = LcUrl.SiteUrl + tplUrl;
+            if (!LcHelpers.InProduction)
+            {
+                completeURL = completeURL.Replace("https:", "http:");
+            }
+
+            // First, we need substract from the URL the QueryString to be
+            // assigned to the WebClient object, avoiding problems while
+            // manipulating the w.QueryString directly, and allowing both vias (url and data paramenter)
+            // to set paramenters
+            var uri = new Uri(completeURL);
+            w.QueryString = HttpUtility.ParseQueryString(uri.Query);
+            completeURL = uri.GetLeftPart(UriPartial.Path);
+
             if (data != null)
             foreach (var d in data)
             {
@@ -555,11 +613,6 @@ public class LcMessaging
             if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
                 w.QueryString["RequestKey"] = SecurityRequestKey;
 
-            string completeURL = LcUrl.SiteUrl + tplUrl;
-            if (!LcHelpers.InProduction)
-            {
-                completeURL = completeURL.Replace("https:", "http:");
-            }
             try
             {
                 rtn = w.DownloadString(completeURL);

@@ -1,4 +1,6 @@
-﻿@using WebMatrix.Data;
+﻿@* Booking Request declined by provider
+ *@
+@using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
     
@@ -16,35 +18,31 @@
     @switch (info.SentTo) {
 		case LcData.UserInfo.UserType.Provider:
                     
-            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(6, info.CustomerUser, info.SentTo);
+            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(5, info.CustomerUser, info.SentTo);
             PageData["needHelpAddress"] = "providersupport@loconomics.com";
    
-            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName), <br/><br/>
+            <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.ProviderUser.FirstName), <br/><br/>
 
-            You haven´t replied to the booking request from @LcHelpers.GetUserDisplayName(info.CustomerUser) requesting your services as a <strong>@info.Booking.PositionSingular</strong>,
-            within the alloted 18 hours, and as a result it has now expired.
-            We know life is busy, but we need our community members to be responsive to ensure the best possible experience for everybody.
-            
-            <br/><br/>
-			@LcHelpers.GetUserDisplayName(info.CustomerUser) has also been informed.
-            If you’d like to contact @info.ProviderUser.ObjectPronoun,
-            @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser, "click here").
+            This is a confirmation that you've declined @LcHelpers.GetUserDisplayName(info.CustomerUser)'s booking request.
+            As you know we want to keep the community strong and reliable so please <a href="mailto:@PageData["needHelpAddress"]">let us know</a>
+            on how we could have prevented this from happening. Also, feel free to send a message to @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) explaining why.
+
             </p>
 
             break;
         case LcData.UserInfo.UserType.Customer:
-                
-            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(6, info.ProviderUser, info.SentTo);
+
+            PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(5, info.ProviderUser, info.SentTo);
             PageData["needHelpAddress"] = "support@loconomics.com";
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
 
-            We’re really sorry to have to let you down. @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) did not respond to your request within the alloted time.
+            We’re really sorry to have to let you down. @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) is unfortunately unable to accept your request at this time.
             <strong>Your credit card has not been charged</strong>, and your authorization will expire shortly.
 
             @*We'd like you to give us another shot, and we'll waive the booking fees. *@
             <a target="_blank" href="@(LcUrl.LangUrl)?s=@(info.Booking.PositionSingular)">Click here</a> to search for another @(info.Booking.PositionSingular).
-			
+
             @* and enter TRYAGAINCODE during the checkout process. *@
             </p>
 

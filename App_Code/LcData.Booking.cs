@@ -96,6 +96,28 @@ public static partial class LcData
                 return db.QuerySingle(sqlGetBooking, BookingID);
             }
         }
+        /// <summary>
+        /// Get a dynamic record with the most basic information
+        /// about a Booking Request: customer and provider IDs, positionID,
+        /// BookingRequestStatusID.
+        /// </summary>
+        /// <param name="BookingRequestID"></param>
+        /// <returns></returns>
+        public static dynamic GetBookingRequestBasicInfo(int BookingRequestID)
+        {
+            var sqlGetBookingRequest = @"
+                SELECT  R.CustomerUserID, R.ProviderUserID,
+                        R.PositionID,
+                        R.BookingRequestID,
+                        R.BookingRequestStatusID
+                FROM    BookingRequest As R
+                WHERE   BookingRequestID = @0
+            ";
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(sqlGetBookingRequest, BookingRequestID);
+            }
+        }
         public static dynamic GetBooking(int BookingID)
         {
             var sqlGetBooking = @"

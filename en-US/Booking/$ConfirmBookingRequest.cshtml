@@ -136,7 +136,7 @@
             
                 if (result.Error == 0) {
                     // Send message
-                    LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID, true);
+                    LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID);
                 
                     if (Request.IsAjaxRequest()) {
                         LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
