@@ -80,7 +80,8 @@
             if (postalCodeID == 0) {
                 ModelState.AddError("zip", "Zip Postal Code is not valid");
             }
-        
+            var stateProvinceCode = LcData.GetStateProvinceCode(Request["state"].AsInt());
+
             if (ModelState.IsValid){
                 try {
                     /*
@@ -127,7 +128,7 @@
                             Request["street-address-line-1"],
                             Request["street-address-line-2"],
                             Request["city"],
-                            Request["state"],
+                            Request["state"].AsInt(),
                             postalCodeID,
                             LcData.GetCurrentCountryID(),
                             paymentNickName,
@@ -285,7 +286,7 @@
                                     StreetAddress = Request["street-address-line-1"],
                                     ExtendedAddress = Request["street-address-line-2"],
                                     Locality = Request["city"],
-                                    Region = Request["state"],
+                                    Region = stateProvinceCode,
                                     PostalCode = Request["zip"],
                                     CountryCodeAlpha2 = "US"
                                 },

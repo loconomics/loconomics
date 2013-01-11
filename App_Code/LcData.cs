@@ -299,6 +299,18 @@ public static partial class LcData
             return postalCodeID == null ? 0 : (int)postalCodeID;
         }
     }
+    public static string GetStateProvinceCode(int stateProvinceID)
+    {
+        var sqlGetStateCode = @"
+            SELECT  StateProvinceCode
+            FROM    StateProvince
+            WHERE   StateProvinceID = @0
+        ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QueryValue(sqlGetStateCode, stateProvinceID);
+        }
+    }
 
     public const string sqlGetAddresses = @"
         SELECT  L.AddressID
