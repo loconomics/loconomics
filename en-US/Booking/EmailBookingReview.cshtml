@@ -1,4 +1,4 @@
-﻿@* 8AM-next-service-day Review Reminder (first review email being sent)
+﻿@* Service Review reminders
  *@
 @using WebMatrix.Data;
 @{
@@ -13,6 +13,8 @@
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
     PageData["showSign"] = true;
+    
+    var first = PageData["FirstReminder"] ?? Request["FirstReminder"].AsBool();
 }
 <div>
     @switch (info.SentTo) {
@@ -21,14 +23,27 @@
             PageData["messageTitle"] = "Let us know how it went";
             PageData["needHelpAddress"] = "providersupport@loconomics.com";
 
-            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName)! <br/><br/>
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName)!</p>
 
-            We hope you enjoyed your appointment with @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) for @info.Booking.PositionSingular
-            services. To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
-            @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
-            and we'll walk you  through this 3-minute process. As always, we appreciate you choosing us to market your services.
-
-            </p>
+            if (first)
+            {
+                <p>
+                    We hope you enjoyed your appointment with @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) for @info.Booking.PositionSingular
+                    services. To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
+                    @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+                    and we'll walk you  through this 3-minute process. As always, we appreciate you choosing us to market your services.
+                </p>
+            }
+            else
+            {
+                <p>
+                    Just a quick reminder to help out @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) and the Loconomics community
+                    by completing a quick review of your appointment with @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) for
+                    @info.Booking.PositionSingular services.
+                    <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+                    and we'll walk you through this 3-minute process. As always, we appreciate you choosing us to market your services.
+                </p>
+            }
 
             break;
         case LcData.UserInfo.UserType.Customer:
@@ -36,14 +51,27 @@
             PageData["messageTitle"] = "Let us know how it went";
             PageData["needHelpAddress"] = "support@loconomics.com";
             
-            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.CustomerUser.FirstName)!<br/><br/>
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.CustomerUser.FirstName)!</p>
 
-            We hope you enjoyed your <strong>@info.Booking.PositionSingular</strong> services with @info.ProviderUser.FirstName.
-            To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
-            @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
-            and we'll walk you through this 3-minute process. As always, we appreciate you choosing independent service providers.
-
-            </p>
+            if (first)
+            {
+                <p>
+                    We hope you enjoyed your @info.Booking.PositionSingular services with @info.ProviderUser.FirstName.
+                    To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
+                    @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+                    and we'll walk you through this 3-minute process. As always, we appreciate you choosing independent service providers.
+                </p>
+            }
+            else
+            {
+                <p>
+                    Just a quick reminder to help out @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) and the Loconomics community by completing a quick review
+                    of @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser)'s services. We hope you enjoyed
+                    your @info.Booking.PositionSingular services.
+                    <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+                    and we'll walk you through this 3-minute process. As always, we appreciate you choosing independent service providers.
+                </p>
+            }
 
             break;
     }
