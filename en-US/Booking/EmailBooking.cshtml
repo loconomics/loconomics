@@ -110,7 +110,7 @@
         @printConfirmedDate(info)
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Location: </h5>
-        @LcEmailTemplateHelper.PrintAddressBlock(info.Booking)
+        @LcEmailTemplateHelper.PrintAddressLine(info.Booking)
 
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>@(info.PairUser.FirstName)'s contact information:</h5>
         @LcEmailTemplateHelper.PrintUserContactInformation(info.PairUserID)

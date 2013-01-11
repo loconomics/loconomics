@@ -269,6 +269,22 @@
         <div>Address not available</div>
     }
 }
+@helper PrintAddressLine(dynamic data) {
+    if (data.StateProvinceCode != null)
+    {
+        <span>
+            @data.AddressLine1, @(String.IsNullOrEmpty(data.AddressLine2) ? "" : data.AddressLine2 + ",") @data.City, @data.StateProvinceCode @data.PostalCode
+            @if (!String.IsNullOrEmpty(data.LocationSpecialInstructions)) {
+                <span>(@data.LocationSpecialInstructions)</span>
+            }
+        </span>
+    }
+    else
+    {
+        // Null, no location
+        <div>Address not available</div>
+    }
+}
 @helper PrintUserContactInformation(int userID) {
     var user = LcData.UserInfo.GetUserRowWithContactData(userID);
     <div>
