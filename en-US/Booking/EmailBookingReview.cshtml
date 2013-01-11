@@ -1,1 +1,50 @@
-﻿
+﻿@* 8AM-next-service-day Review Reminder (first review email being sent)
+ *@
+@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+
+    // Data for the EmailLayout:
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["showSign"] = true;
+}
+<div>
+    @switch (info.SentTo) {
+		case LcData.UserInfo.UserType.Provider:
+                    
+            PageData["messageTitle"] = "Let us know how it went";
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
+
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName)! <br/><br/>
+
+            We hope you enjoyed your appointment with @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) for @info.Booking.PositionSingular
+            services. To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
+            @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+            and we'll walk you  through this 3-minute process. As always, we appreciate you choosing us to market your services.
+
+            </p>
+
+            break;
+        case LcData.UserInfo.UserType.Customer:
+
+            PageData["messageTitle"] = "Let us know how it went";
+            PageData["needHelpAddress"] = "support@loconomics.com";
+            
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.CustomerUser.FirstName)!<br/><br/>
+
+            We hope you enjoyed your <strong>@info.Booking.PositionSingular</strong> services with @info.ProviderUser.FirstName.
+            To keep the Loconomics community strong and trustworthy, we need you to take a few minutes to complete a review for
+            @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) <a target="_blank" href="@info.ViewOnSiteURL">Click here</a>
+            and we'll walk you through this 3-minute process. As always, we appreciate you choosing independent service providers.
+
+            </p>
+
+            break;
+    }
+</div>
