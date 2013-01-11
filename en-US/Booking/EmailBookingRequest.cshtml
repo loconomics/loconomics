@@ -36,7 +36,7 @@
             case LcData.UserInfo.UserType.Customer:
                 <p>
                     Please find the details of your booking request below.
-                    We're working with <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@(LcHelpers.GetUserDisplayName(info.ProviderUser))</a>
+                    We're working with @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser)
                     to confirm it as soon as possible.
                 </p>
     
@@ -65,7 +65,7 @@
                 break;
             case LcData.UserInfo.UserType.Provider:
                 <p>
-                    <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>
+                    @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) 
                     (@LcData.UserInfo.GetCustomerGlobalRating(info.Booking.CustomerUserID).ToString("0.0") star rating and member since @info.CustomerUser.MemberSinceDate.ToString("MMMM yyyy"))
                     has booked you as a <strong>@info.Booking.PositionSingular</strong>.
                     @(info.CustomerUser.FirstName)'s chosen the following times for you to meet up for an appointment.

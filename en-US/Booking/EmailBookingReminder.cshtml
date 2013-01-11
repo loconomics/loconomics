@@ -1,1 +1,55 @@
-﻿
+﻿@* 24H previous Booking reminder
+ *@
+@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    // All the data for this email:
+    var info = LcEmailTemplateHelper.GetBookingInfo();
+
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+
+    // Data for the EmailLayout:
+    PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
+    PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
+    PageData["showSign"] = true;
+}
+<div>
+    @switch (info.SentTo) {
+		case LcData.UserInfo.UserType.Provider:
+                    
+            PageData["messageTitle"] = String.Format("Booking reminder for {0}", info.CustomerUser.FirstName);
+            PageData["needHelpAddress"] = "providersupport@loconomics.com";
+
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.ProviderUser.FirstName)! <br/><br/>
+
+            Just a friendly reminder that you're scheduled to perform <strong>@info.Booking.PositionSingular</strong> services for
+            @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) tomorrow,
+            <strong>@LcHelpers.DateTimeRangeToString(info.Booking.ConfirmedDateStart, info.Booking.ConfirmedDateEnd)</strong>.
+            Please remember to <a href="mailto:providersupport@loconomics.com">notify us</a> with any problems within 24 hours after the
+            scheduled service (we're confident there won't be).
+            </p>
+
+            break;
+        case LcData.UserInfo.UserType.Customer:
+
+            PageData["messageTitle"] = String.Format("Your booking with {0} is tomorrow", info.ProviderUser.FirstName);
+            PageData["needHelpAddress"] = "support@loconomics.com";
+
+            <p @LcEmailTemplateHelper.StyleResetP()>Hello, @(info.CustomerUser.FirstName)!<br/><br/>
+            Just a friendly reminder that you're scheduled for <strong>@info.Booking.PositionSingular</strong> services with @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser)
+            tomorrow, <strong>@LcHelpers.DateTimeRangeToString(info.Booking.ConfirmedDateStart, info.Booking.ConfirmedDateEnd)</strong>.
+            Please remember to <a href="mailto:support@loconomics.com">notify us</a> with any problems within 24 hours after the scheduled service (we're confident there won't be).
+            </p>
+
+            break;
+    }
+
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Location:</h4>
+    @LcEmailTemplateHelper.PrintAddressBlock(info.Booking)
+
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@(info.PairUser.FirstName)'s contact information:</h4>
+    @LcEmailTemplateHelper.PrintUserContactInformation(info.PairUserID)
+
+    <p>No further action is needed. Please <a href="@info.ViewOnSiteURL">click here</a> to review the full details of the booking.</p>
+</div>

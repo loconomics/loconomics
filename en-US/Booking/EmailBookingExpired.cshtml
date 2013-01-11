@@ -28,7 +28,7 @@
             <br/><br/>
 			@LcHelpers.GetUserDisplayName(info.CustomerUser) has also been informed.
             If you’d like to contact @info.ProviderUser.ObjectPronoun,
-            <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.Booking.CustomerUserID))">click here</a>.
+            @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser, "click here").
             </p>
 
             break;
@@ -39,7 +39,7 @@
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
 
-            We’re really sorry to have to let you down. <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.ProviderUser.UserID))">@LcHelpers.GetUserDisplayName(info.ProviderUser)</a> did not respond to your request within the alloted time.
+            We’re really sorry to have to let you down. @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) did not respond to your request within the alloted time.
             <strong>Your credit card has not been charged</strong>, and your authorization will expire shortly.
 
             @*We'd like you to give us another shot, and we'll waive the booking fees. *@

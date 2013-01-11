@@ -285,3 +285,6 @@
         e-mail: <a href="mailto:@user.Email">@user.Email</a>
     </div>
 }
+@helper PrintUserProfileLink(dynamic userdata, string label = null) {
+    <a target="_blank" href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(userdata.UserID))">@(label ?? LcHelpers.GetUserDisplayName(userdata))</a>
+}

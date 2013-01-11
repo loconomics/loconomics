@@ -23,7 +23,7 @@
 
             This is a confirmation that you've declined @LcHelpers.GetUserDisplayName(info.CustomerUser)'s booking request.
             As you know we want to keep the community strong and reliable so please <a href="mailto:@PageData["needHelpAddress"]">let us know</a>
-            on how we could have prevented this from happening. Also, feel free to <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.Booking.CustomerUserID))">send a message to @LcHelpers.GetUserDisplayName(info.CustomerUser)</a> explaining why.
+            on how we could have prevented this from happening. Also, feel free to send a message to @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) explaining why.
 
             </p>
 
@@ -35,7 +35,7 @@
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hello again, @(info.CustomerUser.FirstName)! <br/><br/>
 
-            We’re really sorry to have to let you down. <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.ProviderUser.UserID))">@LcHelpers.GetUserDisplayName(info.ProviderUser)</a> is unfortunately unable to accept your request at this time.
+            We’re really sorry to have to let you down. @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser) is unfortunately unable to accept your request at this time.
             <strong>Your credit card has not been charged</strong>, and your authorization will expire shortly.
 
             @*We'd like you to give us another shot, and we'll waive the booking fees. *@

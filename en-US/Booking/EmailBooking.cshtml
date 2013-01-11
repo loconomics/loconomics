@@ -45,13 +45,13 @@
         {
              case LcData.UserInfo.UserType.Customer:
                 <p>
-                    Contratulations, you're all set for <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@(LcHelpers.GetUserDisplayName(info.ProviderUser))'s</a> <strong>@info.Booking.PositionSingular</strong>
+                    Contratulations, you're all set for @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser)'s <strong>@info.Booking.PositionSingular</strong>
                     services to be performed on <strong>@printConfirmedDate(info)</strong>.
                 </p>
                 break;
              case LcData.UserInfo.UserType.Provider:
                 <p>
-                    Contratulations, you're all set to perform <strong>@info.Booking.PositionSingular</strong> services for <a href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(info.Booking.ProviderUserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>
+                    Contratulations, you're all set to perform <strong>@info.Booking.PositionSingular</strong> services for @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser)
                     on <strong>@printConfirmedDate(info)</strong>.
                 </p>
                 break;

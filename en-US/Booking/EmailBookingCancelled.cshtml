@@ -23,7 +23,7 @@
    
             <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.ProviderUser.FirstName), <br/><br/>
 
-            We've got some bad news--<a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.CustomerUser.UserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a> had to cancel your booking.
+            We've got some bad news--@LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) had to cancel your booking.
             </p>
             @*
             Bellow is a message from <a target="_blank" href="@(LcData.UserInfo.GetUserPublicURL(info.CustomerUser.UserID))">@LcHelpers.GetUserDisplayName(info.CustomerUser)</a>:
@@ -43,7 +43,7 @@
             PageData["needHelpAddress"] = "support@loconomics.com";
 
             <p @LcEmailTemplateHelper.StyleResetP()>Hi @(info.CustomerUser.FirstName),<br/><br/>
-            This is to confirm that you have successfully cancelled you booking with @LcHelpers.GetUserDisplayName(info.ProviderUser).
+            This is to confirm that you have successfully cancelled you booking with @LcEmailTemplateHelper.PrintUserProfileLink(info.ProviderUser).
             Your card will be refunded as follows:
             </p>           
 
