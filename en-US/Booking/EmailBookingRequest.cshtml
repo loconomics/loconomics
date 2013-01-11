@@ -65,7 +65,7 @@
                     }
                 </div>
     
-                break;
+                    break;
             case LcData.UserInfo.UserType.Provider:
                 <p>
                     @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) 
@@ -99,8 +99,19 @@
                         Decline booking
                     </a>
                 </div>
-                break;
+                                                                                                                                                                                                                          break;
         }
+    }
+    else
+    {
+        <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
+        @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
+            {"Data", info.PairUser},
+            {"DataPrefix", ""},
+            {"Size", "medium"},
+            {"UserType", info.PairUserType.ToString().ToLower()}
+        })
     }
  
     <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>

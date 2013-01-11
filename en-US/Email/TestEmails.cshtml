@@ -32,12 +32,12 @@
         ,{ "EmailReportUnauthorizedUse", new List<string> { "Email/EmailReportUnauthorizedUse/?ReportedUserID=141&ReportedByUserID=141&Message=Reporting+some+problem&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
         ,{ "EmailProviderPaymentRequest", new List<string> { "Email/EmailProviderPaymentRequest/?BookingID=31&emailto=iagosrl@gmail.com&RequestKey=abcd3" } }
         
-        ,{ "EmailBookingExpired", new List<string> { 
-            "Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingExpired/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"} }
-        ,{ "EmailBookingDeclined", new List<string> { 
-            "Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
-            ,"Booking/EmailBookingDeclined/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
+        ,{ "EmailBookingRequestExpired", new List<string> {
+            "Booking/EmailBookingRequestExpired/?BookingRequestID=120&SentTo=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequestExpired/?BookingRequestID=120&SentTo=Customer&RequestKey=abcd3"} }
+        ,{ "EmailBookingRequestDeclined", new List<string> { 
+            "Booking/EmailBookingRequestDeclined/?BookingRequestID=120&SentTo=Provider&SentBy=Provider&RequestKey=abcd3"
+            ,"Booking/EmailBookingRequestDeclined/?BookingRequestID=120&SentTo=Customer&SentBy=Provider&RequestKey=abcd3"} }
         ,{ "EmailBookingCancelled", new List<string> { 
             "Booking/EmailBookingCancelled/?BookingRequestID=120&BookingID=22&SentTo=Provider&SentBy=Customer&RequestKey=abcd3"
             ,"Booking/EmailBookingCancelled/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3"} }
