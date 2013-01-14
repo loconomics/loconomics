@@ -135,6 +135,17 @@
                 var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
                 if (result.Error == 0) {
+                    
+                    // Charge total amount of booking request to the customer (Submit to settlement the transaction)
+                    // Get booking request TransactionID
+                    string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
+                    if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
+                        string paymentError = LcPayment.SettleTransaction(tranID);
+                        if (paymentError != null) {
+                            @OnError(brID, "payment", paymentError, -92);
+                        }
+                    }
+                    
                     // Send message
                     LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID);
                 
@@ -148,16 +159,6 @@
                 } else {
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
                     @OnError(brID, "confirm", result.ErrorMessage, 0 - result.Error);
-                }
-            
-                // Charge total amount of booking request to the customer (Submit to settlement the transaction)
-                // Get booking request TransactionID
-                string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
-                if (!String.IsNullOrEmpty(tranID) && !tranID.StartsWith("TEST:")){
-                    string paymentError = LcPayment.SettleTransaction(tranID);
-                    if (paymentError != null) {
-                        @OnError(brID, "payment", paymentError, -92);
-                    }
                 }
             }
         } else {
