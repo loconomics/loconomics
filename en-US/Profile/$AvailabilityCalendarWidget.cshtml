@@ -72,8 +72,19 @@
             availData[a.DayOfWeek.ToString() + ":" + a.TimeBlock.ToString()] = a.CalendarAvailabilityTypeID;
         }
     }*/
-    
-    
+
+    var lcCalendar = new CalendarDll.CalendarUtils();
+    List<CalendarDll.ProviderAvailabilityResult> eventsFreeBusy =
+        lcCalendar.GetFreeEvents(
+            new CalendarDll.CalendarUser(userID),
+            date,
+            LcHelpers.GetLastWeekDay(date),
+            DateTime.Now);
+
+    foreach (var ev in eventsFreeBusy) {
+        availData[ev.DayOfWeek.ToString() + ":" + ev.TimeBlock.ToString()] = ev.CalendarAvailabilityTypeID;
+    }
+
     // Classes for differents calendar availability states
     var stateClasses = new List<string>(){"unavailable", "free", "busy", "tentative"};
     // states order/id's changed because the new sql-proc 'availabilityfullset', unavailable now is zero.
