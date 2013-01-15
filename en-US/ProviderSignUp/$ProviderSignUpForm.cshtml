@@ -187,6 +187,10 @@
             
             /*** All finished, it was ok? ***/
             if (ModelState.IsValid) {
+                
+                // Log Marketing URL parameters
+                db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, Request.Url.Query);
+                
                 //LcHelpers.ReturnJsonResult(0, null);
                 var red = LcUrl.LangPath + "Dashboard/Alerts/";
                 if (Request.IsAjaxRequest()) {
