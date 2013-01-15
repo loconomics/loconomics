@@ -73,15 +73,7 @@
         }
     }*/
 
-    var lcCalendar = new CalendarDll.CalendarUtils();
-    List<CalendarDll.ProviderAvailabilityResult> eventsFreeBusy =
-        lcCalendar.GetFreeEvents(
-            new CalendarDll.CalendarUser(userID),
-            date,
-            LcHelpers.GetLastWeekDay(date),
-            DateTime.Now);
-
-    foreach (var ev in eventsFreeBusy) {
+    foreach (var ev in LcCalendar.GetUserAvailability(userID, date, LcHelpers.GetLastWeekDay(date))) {
         availData[ev.DayOfWeek.ToString() + ":" + ev.TimeBlock.ToString()] = ev.CalendarAvailabilityTypeID;
     }
 
