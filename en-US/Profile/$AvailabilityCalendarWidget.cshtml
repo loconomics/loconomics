@@ -67,12 +67,6 @@
     }*/
 
     var availData = PageData["availData"] = new Dictionary<string,int>();
-    /*using (var db = Database.Open("sqlloco")) {
-        foreach (var a in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date)) {
-            availData[a.DayOfWeek.ToString() + ":" + a.TimeBlock.ToString()] = a.CalendarAvailabilityTypeID;
-        }
-    }*/
-
     foreach (var ev in LcCalendar.GetUserAvailability(userID, date, LcHelpers.GetLastWeekDay(date))) {
         availData[ev.DayOfWeek.ToString() + ":" + ev.TimeBlock.ToString()] = ev.CalendarAvailabilityTypeID;
     }

@@ -20,5 +20,10 @@ public static class LcCalendar
                 dateStart,
                 dateEnd,
                 DateTime.Now);
+
+        // Previous CASS code:
+        /*using (var db = Database.Open("sqlloco")) {
+            return db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date));
+        }*/
     }
 }

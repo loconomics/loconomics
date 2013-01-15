@@ -24,7 +24,7 @@
     }
 }
 @functions{
-    List<dynamic> createBlocks(dynamic availData, decimal durationHours){
+    List<dynamic> createBlocks(List<CalendarDll.ProviderAvailabilityResult> availData, decimal durationHours){
         var availHours = new List<dynamic>();
         // Creating time blocks and checking its availability in blocks with same duration
         // as service duration (durationHours), instead of standard 30 minutes
@@ -99,7 +99,7 @@
         dynamic availData = null;
         using (var db = Database.Open("sqlloco"))
         {
-            availData = db.Query("EXEC dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, date, date);
+            availData = LcCalendar.GetUserAvailability(userID, date.Value, date.Value);
         }
     
         <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-reload-mode="replace-me" data-source-url="@(LcUrl.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
