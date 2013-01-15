@@ -13,9 +13,7 @@
     hasLegend = PageData["AvailabilityCalendar.HasLegend"] ?? (N.W(Request["HasLegend"]) ?? "true").AsBool();
     hasControls = PageData["AvailabilityCalendar.HasControls"] ?? (N.W(Request["HasControls"]) ?? "true").AsBool();
     hasZoom = PageData["AvailabilityCalendar.HasZoom"] ?? (N.W(Request["HasZoom"]) ?? "false").AsBool();
-
-    var sqlGetAvailability = "exec dbo.GetProviderAvailabilityFullSet @0, @1";
-    
+   
     DateTime date = DateTime.Today;
     
     if (UrlData.Count > 1 && UrlData[0] == "Week") {
@@ -32,7 +30,7 @@
     // We want show the week, start with the first date
     date = LcHelpers.GetFirstWeekDay(date);
     
-    // If onlyData is true let us know that 'date' is a date specified by user; if not, is current
+    /*// If onlyData is true let us know that 'date' is a date specified by user; if not, is current
     // day automatically, let us try to discover when is the first available date to show that week:
     if (!onlyData) {
         using (var db = Database.Open("sqlloco")) {
@@ -66,14 +64,15 @@
                 }
             }
         }
-    }
-    
+    }*/
+
     var availData = PageData["availData"] = new Dictionary<string,int>();
-    using (var db = Database.Open("sqlloco")) {
-        foreach (var a in db.Query(sqlGetAvailability, userID, date)) {
+    /*using (var db = Database.Open("sqlloco")) {
+        foreach (var a in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date)) {
             availData[a.DayOfWeek.ToString() + ":" + a.TimeBlock.ToString()] = a.CalendarAvailabilityTypeID;
         }
-    }
+    }*/
+    
     
     // Classes for differents calendar availability states
     var stateClasses = new List<string>(){"unavailable", "free", "busy", "tentative"};

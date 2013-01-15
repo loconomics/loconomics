@@ -26,6 +26,32 @@ GO
 ALTER TABLE [dbo].[CalendarEventComments] CHECK CONSTRAINT [FK_Comments_CalendarEvents]
 GO
 
+/****** Object:  Table [dbo].[CalendarEventExceptionsPeriodsList]    Script Date: 01/15/2013 13:18:27 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CalendarEventExceptionsPeriodsList](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[IdEvent] [int] NOT NULL,
+ CONSTRAINT [PK_CalendarEventExceptions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[CalendarEventExceptionsPeriodsList]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEventExceptions_CalendarEvents] FOREIGN KEY([IdEvent])
+REFERENCES [dbo].[CalendarEvents] ([Id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[CalendarEventExceptionsPeriodsList] CHECK CONSTRAINT [FK_CalendarEventExceptions_CalendarEvents]
+GO
 
 /****** Object:  Table [dbo].[CalendarEventExceptionsPeriod]    Script Date: 01/15/2013 13:18:19 ******/
 SET ANSI_NULLS ON
@@ -57,17 +83,17 @@ GO
 ALTER TABLE [dbo].[CalendarEventExceptionsPeriod] CHECK CONSTRAINT [FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates]
 GO
 
-/****** Object:  Table [dbo].[CalendarEventExceptionsPeriodsList]    Script Date: 01/15/2013 13:18:27 ******/
+/****** Object:  Table [dbo].[CalendarEventRecurrencesPeriodList]    Script Date: 01/15/2013 13:18:43 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[CalendarEventExceptionsPeriodsList](
+CREATE TABLE [dbo].[CalendarEventRecurrencesPeriodList](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[IdEvent] [int] NOT NULL,
- CONSTRAINT [PK_CalendarEventExceptions] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_CalendarEventRecurrenceDates] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -75,14 +101,15 @@ CREATE TABLE [dbo].[CalendarEventExceptionsPeriodsList](
 
 GO
 
-ALTER TABLE [dbo].[CalendarEventExceptionsPeriodsList]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEventExceptions_CalendarEvents] FOREIGN KEY([IdEvent])
+ALTER TABLE [dbo].[CalendarEventRecurrencesPeriodList]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEventRecurrencesPeriodList_CalendarEvents] FOREIGN KEY([IdEvent])
 REFERENCES [dbo].[CalendarEvents] ([Id])
 ON UPDATE CASCADE
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[CalendarEventExceptionsPeriodsList] CHECK CONSTRAINT [FK_CalendarEventExceptions_CalendarEvents]
+ALTER TABLE [dbo].[CalendarEventRecurrencesPeriodList] CHECK CONSTRAINT [FK_CalendarEventRecurrencesPeriodList_CalendarEvents]
 GO
+
 
 /****** Object:  Table [dbo].[CalendarEventRecurrencesPeriod]    Script Date: 01/15/2013 13:18:36 ******/
 SET ANSI_NULLS ON
@@ -111,34 +138,6 @@ GO
 
 ALTER TABLE [dbo].[CalendarEventRecurrencesPeriod] CHECK CONSTRAINT [FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList]
 GO
-
-/****** Object:  Table [dbo].[CalendarEventRecurrencesPeriodList]    Script Date: 01/15/2013 13:18:43 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[CalendarEventRecurrencesPeriodList](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[IdEvent] [int] NOT NULL,
- CONSTRAINT [PK_CalendarEventRecurrenceDates] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[CalendarEventRecurrencesPeriodList]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEventRecurrencesPeriodList_CalendarEvents] FOREIGN KEY([IdEvent])
-REFERENCES [dbo].[CalendarEvents] ([Id])
-ON UPDATE CASCADE
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[CalendarEventRecurrencesPeriodList] CHECK CONSTRAINT [FK_CalendarEventRecurrencesPeriodList_CalendarEvents]
-GO
-
 
 /****** Object:  Table [dbo].[CalendarEventsAttendees]    Script Date: 01/15/2013 13:30:44 ******/
 SET ANSI_NULLS ON
