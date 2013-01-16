@@ -51,10 +51,10 @@
             Validation.Add("serviceHours", Validator.Decimal("The number of hours worked must be a valid number"));
         }
         /* Validating texts length */
-        Validation.Add("public-review", Validator.StringLength(250, 10, "LJDI: Public review must contains between 10 and 250 characters"));
-        Validation.Add("private-review", Validator.StringLength(1000, 0, "LJDI: Private review is excessive long, please less than 1000 characters"));
-        Validation.Add("question1", Validator.StringLength(175, 0, "LJDI: Setion 1 answer is excessive long, please less than 175 characters"));
-        Validation.Add("question2", Validator.StringLength(175, 0, "LJDI: Setion 2 answer is excessive long, please less than 175 characters"));
+        Validation.Add("public-review", Validator.StringLength(500, 20, "Your public review must be between 20 and 500 characters"));
+        Validation.Add("private-review", Validator.StringLength(1000, 0, "Your public review must be fewer than 1,000 characters"));
+        Validation.Add("question1", Validator.StringLength(1000, 0, "Please answer question 1 in fewer than 1,000 characters"));
+        Validation.Add("question2", Validator.StringLength(1000, 0, "Please answer question 1 in fewer than 1,000 characters"));
 
         if(IsPost && Validation.IsValid()){
 
