@@ -43,9 +43,9 @@
             Validation.RequireField("private-review", "Please write a private review");
         }
         Validation.RequireField("question2", "Please respond to all questions in Section 2");
-        Validation.RequireField("rating1", "Please rate the quality of work");
-        Validation.RequireField("rating2", "Please rate the efficiency");
-        Validation.RequireField("rating3", "Please rate the professionalism");
+        Validation.RequireField("rating1", "Please complete all star ratings");
+        Validation.RequireField("rating2", "Please complete all star ratings");
+        Validation.RequireField("rating3", "Please complete all star ratings");
         Validation.RequireField("public-review", "Please write a public review");
         if (pastReference) {
             Validation.Add("serviceHours", Validator.Decimal("The number of hours worked must be a valid number"));
