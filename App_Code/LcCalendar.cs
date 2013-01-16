@@ -5,12 +5,20 @@ using System.Web;
 using CalendarDll;
 using DDay.iCal;
 using DDay.Collections;
+using CalendarDll.Data;
 
 /// <summary>
 /// Descripción breve de LcCalendar
 /// </summary>
 public static class LcCalendar
 {
+    /// <summary>
+    /// Get availability table for the user between given date and times
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="dateStart"></param>
+    /// <param name="dateEnd"></param>
+    /// <returns></returns>
     public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
@@ -50,6 +58,24 @@ public static class LcCalendar
          using (var db = Database.Open("sqlloco")) {
             return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd)
          }
+         */
+    }
+    /// <summary>
+    /// Retrieve a list of Events of type Work Hours of the provider
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static List<CalendarEvents> GetProviderWorkHours(int userID)
+    {
+        var ent = new loconomicsEntities();
+        return ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+        // Previous CASS code:
+        /*
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query("EXEC GetUserFreeTimeSettings @0", userID);
+        }
          */
     }
 }

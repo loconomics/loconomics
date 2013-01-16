@@ -20,7 +20,6 @@
     var maxTime = 0M;
     var betweenTime = 0M;
 
-    var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
     //Validation.RequireField("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
@@ -29,18 +28,18 @@
     //Validation.RequireField("between-time", LcRessources.RequiredField("Minimum time between bookings"));
     
     if (!IsPost) {
-        dynamic hoursData = null, atts = null;
+        dynamic atts = null;
+        var hoursData = LcCalendar.GetProviderWorkHours((int)u.UserID);
         using (var db = Database.Open("sqlloco")) {
-            hoursData = db.Query(varSQLGetUserFreeTimeSettings ,u.UserID);
             atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, u.UserID);  
         }
         foreach (var dayHours in hoursData) {
-            if (dayHours.DayofWeek != null && 
-                dayHours.DayofWeek > 0 &&
-                dayHours.DayofWeek < 8) {
-                availDates[dayHours.DayofWeek - 1] = true;
-                dateHours[dayHours.DayofWeek - 1, 0] = dayHours.StartTime;
-                dateHours[dayHours.DayofWeek - 1, 1] = dayHours.EndTime;
+            if (dayHours.DayofWeek.HasValue && 
+                dayHours.DayofWeek.Value > 0 &&
+                dayHours.DayofWeek.Value < 8) {
+                availDates[dayHours.DayofWeek.Value - 1] = true;
+                dateHours[dayHours.DayofWeek.Value - 1, 0] = dayHours.StartTime.TimeOfDay;
+                dateHours[dayHours.DayofWeek.Value - 1, 1] = dayHours.EndTime.TimeOfDay;
             }
         }
         if (atts != null) {
