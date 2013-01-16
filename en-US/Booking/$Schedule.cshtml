@@ -109,21 +109,19 @@
         
         if (ModelState.IsValid) {
             // Validate provider availability with requested dates
-            var sqlCheckAvail = "exec dbo.CheckProviderAvailability @0,@1,@2";
             using (var db = Database.Open("sqlloco")) {
-
                 if (dt1Start.HasValue) {
-                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt1Start, dt1End)) {
+                    if (!LcCalendar.CheckUserAvailability(p.UserID, dt1Start.Value, dt1End.Value)) {
                         ModelState.AddFormError("The first choice you've selected is unavailable, please select another");
                     }
                 }
                 if (dt2Start.HasValue) {
-                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt2Start, dt2End)) {
+                    if (!LcCalendar.CheckUserAvailability(p.UserID, dt2Start.Value, dt2End.Value)) {
                         ModelState.AddFormError("The second choice you've selected is unavailable, please select another");
                     }
                 }
                 if (dt3Start.HasValue) {
-                    if ((bool)db.QueryValue(sqlCheckAvail, p.UserID, dt3Start, dt3End)) {
+                    if (!LcCalendar.CheckUserAvailability(p.UserID, dt3Start.Value, dt3End.Value)) {
                         ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
                     }
                 }
