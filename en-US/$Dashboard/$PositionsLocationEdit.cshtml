@@ -541,9 +541,9 @@
                     }
                 }
 
-                // Executing auto positioning:
+                // Executing auto positioning (changed to autosave:true to all time save the location):
                 //useGeolocation(true, false);
-                useGmapsGeocode(false, false);
+                useGmapsGeocode(false, true);
 
                 // Link options links:
                 l.on('click', '.options a', function () {
