@@ -29,7 +29,7 @@
         /* Validating texts length */
         Validation.Add("public-review", Validator.StringLength(500, 20, "Your public review must be between 20 and 500 characters"));
         Validation.Add("private-review", Validator.StringLength(1000, 0, "Your public review must be fewer than 1,000 characters"));
-        Validation.Add("question2", Validator.StringLength(1000, 0, "Please answer question 3 in fewer than 1,000 characters""));
+        Validation.Add("question2", Validator.StringLength(1000, 0, "Please answer question 3 in fewer than 1,000 characters"));
 
         if(IsPost && Validation.IsValid()){
 
