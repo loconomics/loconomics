@@ -13,6 +13,7 @@
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["ViewOnSiteURL"] = info.ViewOnSiteURL;
     PageData["showSign"] = true;
+    PageData["helpReference"] = "booking request #" + info.BookingRequestID.ToString();
 }
 <div>
     @switch (info.SentTo) {

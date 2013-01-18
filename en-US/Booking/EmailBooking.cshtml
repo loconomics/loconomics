@@ -15,6 +15,7 @@
     PageData["messageTitle"] = LcData.Booking.GetBookingTitleFor(info.Booking.BookingStatusID, info.PairUser, info.SentTo);
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["showSign"] = true;
+    PageData["helpReference"] = "booking #" + info.BookingID.ToString();
     switch (info.SentTo) {
         case LcData.UserInfo.UserType.Provider:
             PageData["needHelpAddress"] = "providersupport@loconomics.com";
