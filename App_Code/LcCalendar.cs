@@ -60,16 +60,40 @@ public static class LcCalendar
          }
          */
     }
+    public class WorkHoursDay
+    {
+        public DayOfWeek DayOfWeek;
+        public TimeSpan StartTime;
+        public TimeSpan EndTime;
+    }
     /// <summary>
     /// Retrieve a list of Events of type Work Hours of the provider
     /// </summary>
     /// <param name="userID"></param>
     /// <returns></returns>
-    public static List<CalendarEvents> GetProviderWorkHours(int userID)
+    public static IEnumerable<WorkHoursDay> GetProviderWorkHours(int userID)
     {
         var ent = new loconomicsEntities();
-        return ent.CalendarEvents
+        var events = ent.CalendarEvents
             .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+        foreach (var ev in events)
+        {
+            foreach (var evr in ev.CalendarReccurrence)
+            {
+                foreach (var evrf in evr.CalendarReccurrenceFrequency)
+                {
+                    if (evrf.DayOfWeek.HasValue &&
+                        evrf.DayOfWeek.Value > -1 &&
+                        evrf.DayOfWeek.Value < 7)
+                        yield return new WorkHoursDay {
+                            DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
+                            StartTime = ev.StartTime.TimeOfDay,
+                            EndTime = ev.EndTime.TimeOfDay
+                        };
+                }
+            }
+        }
 
         // Previous CASS code:
         /*

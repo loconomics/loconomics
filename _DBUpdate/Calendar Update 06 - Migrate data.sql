@@ -10,7 +10,9 @@
 INSERT INTO CalendarEvents ([DayofWeek], UserId, EventType, CalendarAvailabilityTypeID, Transparency, 
 	StartTime, EndTime, IsAllDay,
 	CreatedDate, UpdatedDate, ModifyBy)
-SELECT [DayofWeek],
+SELECT 
+	-- DayofWeek is saved as base-1, we need now base-0 to that we substract 1 to the current value
+	([DayofWeek] - 1),
 	UserID, 2 /* work hours */, 1 /*CalendarAvailabilityTypeID:Free*/, Cast(0 as bit),
 	( Cast('20000101' As DateTime) + Cast(MIN(TimeBlock) As DateTime) ),
 	( Cast('30000101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) ),

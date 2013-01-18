@@ -33,13 +33,12 @@
         using (var db = Database.Open("sqlloco")) {
             atts = db.QuerySingle(varSQLGetUserCalendarProviderAttributes, u.UserID);  
         }
-        foreach (var dayHours in hoursData) {
-            if (dayHours.DayofWeek.HasValue && 
-                dayHours.DayofWeek.Value > 0 &&
-                dayHours.DayofWeek.Value < 8) {
-                availDates[dayHours.DayofWeek.Value - 1] = true;
-                dateHours[dayHours.DayofWeek.Value - 1, 0] = dayHours.StartTime.TimeOfDay;
-                dateHours[dayHours.DayofWeek.Value - 1, 1] = dayHours.EndTime.TimeOfDay;
+        if (hoursData != null) {
+            foreach (var dayHours in hoursData) {
+                var dow = (int)dayHours.DayOfWeek;
+                availDates[dow] = true;
+                dateHours[dow, 0] = dayHours.StartTime;
+                dateHours[dow, 1] = dayHours.EndTime;
             }
         }
         if (atts != null) {
@@ -126,7 +125,7 @@
 @helper printOptionsHours(TimeSpan selectedHour){
     var firstHour = new TimeSpan(0, 0, 0);
     var lastHour = new TimeSpan(24, 0, 0);
-    var interval = new TimeSpan(0, 30, 0);
+    var interval = new TimeSpan(0, 15, 0);
     for (var hour = firstHour; hour <= lastHour; hour += interval)
     {
         <option @LcHelpers.IsSelected(selectedHour.ToString("c"), hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
