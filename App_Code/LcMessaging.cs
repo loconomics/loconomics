@@ -288,10 +288,10 @@ public class LcMessaging
             string emailTemplatePath = "Booking/EmailBookingRequest/";
             switch ((int)bookingRequest.BookingRequestStatusID)
             {
-                case 6:
+                case 5:
                     emailTemplatePath = "Booking/EmailBookingRequestDeclined/";
                     break;
-                case 7:
+                case 6:
                     emailTemplatePath = "Booking/EmailBookingRequestExpired/";
                     break;
             }
