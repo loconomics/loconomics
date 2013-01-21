@@ -20,8 +20,25 @@ public static class LcUrl
         get
         {
             //Request.Url.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+
             HttpContext context = HttpContext.Current;
-            return context.Request.Url.Scheme + "://" + context.Request.Url.Authority;
+            // Because some problems with URL creation on ScheduledTasks on hosting, we cannot
+            // allow create URLs using the hosting canonical URLs (as loconomi.w03.wh-2.com),
+            // we must check that if is Not in a local environment (localhost, local ip or alias,
+            // let say everything without '.com' in the name to avoid in-dev problems)
+            // and is Not in our real domain (loconomics.com) we must enforce to use that
+            // domain (loconomics.com) with or without subdomain depending on the channel
+            // (no subdomain for production, but yes for everything else)
+            var domain = context.Request.Url.Authority;
+            if (domain.Contains(".com") && 
+                !domain.Contains("loconomics.com"))
+            {
+                domain = (ASP.LcHelpers.InProduction ? "" : 
+                    ASP.LcHelpers.Channel + ".")
+                    + "loconomics.com";
+            }
+            
+            return context.Request.Url.Scheme + "://" + domain;
         }
     }
     /// <summary>
