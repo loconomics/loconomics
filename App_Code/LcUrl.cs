@@ -74,7 +74,9 @@ public static class LcUrl
     public static string AppUrl{
         get
         {
-            return SiteUrl + AppPath;
+            // Dont use AppPath if is being executed on winhost 
+            var domain = HttpContext.Current.Request.Url.Authority;
+            return SiteUrl + (domain.Contains(".com") ? "/" : AppPath);
         }
     }
     /// <summary>

@@ -591,7 +591,7 @@ public class LcMessaging
             w.Encoding = System.Text.Encoding.UTF8;
 
             // Setup URL
-            string completeURL = LcUrl.SiteUrl + tplUrl;
+            string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
             if (!LcHelpers.InProduction)
             {
                 completeURL = completeURL.Replace("https:", "http:");
