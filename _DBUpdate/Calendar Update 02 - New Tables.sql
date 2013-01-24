@@ -158,6 +158,13 @@ CREATE TABLE [dbo].[CalendarEventsAttendees](
 
 GO
 
+ALTER TABLE dbo.CalendarEventsAttendees ADD
+	Role nvarchar(50) NULL,
+	Uri nvarchar(200) NULL
+GO
+ALTER TABLE dbo.CalendarEventsAttendees SET (LOCK_ESCALATION = TABLE)
+GO
+
 ALTER TABLE [dbo].[CalendarEventsAttendees]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEventsAttendees_CalendarEvents] FOREIGN KEY([IdEvent])
 REFERENCES [dbo].[CalendarEvents] ([Id])
 ON UPDATE CASCADE
