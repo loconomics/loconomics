@@ -124,6 +124,7 @@
     </div>
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Requested services and pricing estimate</h4>
+    @{ PageData["BookingDate"] = info.Booking.ConfirmedDateStart; }
     @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", info.Booking, info.SentTo.ToString().ToLower())
 
     <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>

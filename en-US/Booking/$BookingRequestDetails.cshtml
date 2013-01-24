@@ -139,6 +139,19 @@ else
         }
 
         <h4>Booking details</h4>
+        @{
+            PageData["BookingDate"] = booking.PreferredDateStart;
+            if (booking.AlternativeDate1Start is DateTime &&
+                booking.AlternativeDate1Start < PageData["BookingDate"])
+            {
+                PageData["BookingDate"] = booking.AlternativeDate1Start;
+            }
+            if (booking.AlternativeDate2Start is DateTime &&
+                booking.AlternativeDate2Start < PageData["BookingDate"])
+            {
+                PageData["BookingDate"] = booking.AlternativeDate2Start;
+            }
+        }
         @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
 
         <h4>Reminders</h4>
