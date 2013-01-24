@@ -140,9 +140,9 @@
     for (var d = 0; d < 7; d++){
     <li>
         <span class="day">@days[d]</span>
-        <select name="day-@d-since-hour">@printOptionsHours(dateHours[d, 0])</select>
+        <select data-day-index="@d" name="day-@d-since-hour">@printOptionsHours(dateHours[d, 0])</select>
         and
-        <select name="day-@d-to-hour">@printOptionsHours(dateHours[d, 1])</select>
+        <select data-day-index="@d" name="day-@d-to-hour">@printOptionsHours(dateHours[d, 1])</select>
     </li>
     }
 }
@@ -341,4 +341,16 @@ What hours do you keep? We’d like to know when we can generally expect to sche
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
 </form>
+<script type="text/javascript">
+    $(function () {
+        $('.positionavailability-hours select').change(function () {
+            var day = parseInt($(this).data('day-index'));
+            if (!isNaN(day)) {
+                $(this).closest('form')
+                .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
+                .prop('checked', true);
+            }
+        })
+    });
+</script>
 </div>
