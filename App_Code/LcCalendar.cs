@@ -60,6 +60,12 @@ public static class LcCalendar
          }
          */
     }
+
+    #region Provider Work Hours
+    /// <summary>
+    /// One day information about work hours,
+    /// for generic week days.
+    /// </summary>
     public class WorkHoursDay
     {
         public DayOfWeek DayOfWeek;
@@ -102,4 +108,42 @@ public static class LcCalendar
         }
          */
     }
+    /// <summary>
+    /// Set a day work hours saving it as an Event on database
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="?"></param>
+    public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
+        var ent = new loconomicsEntities();
+        var events = ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+        var newev = new CalendarEvents();
+        /// TODO: 
+        /// Delete all events of type 2 for the userID
+        /// Create new recurrent events per day basing in workHoursDay details
+        // INCOMPLETE:
+        foreach (var ev in events)
+        {
+            foreach (var evr in ev.CalendarReccurrence)
+            {
+                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
+                {
+                    ev.StartTime = new DateTime(
+                        ev.StartTime.Year,
+                        ev.StartTime.Month,
+                        ev.StartTime.Day,
+                        workHoursDay.StartTime.Hours,
+                        workHoursDay.StartTime.Minutes,
+                        workHoursDay.StartTime.Seconds
+                    );
+                    // TODO More, waiting for CASS work in the CRUD API of the calendar
+                }
+            }
+        }
+
+        // Send to database
+        ent.SaveChanges();
+    }
+    #endregion
 }
