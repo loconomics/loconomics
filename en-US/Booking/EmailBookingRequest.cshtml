@@ -46,10 +46,13 @@
     
                 <h4 @LcEmailTemplateHelper.StyleH4()>Time preferences</h4>
                 <div>
-                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
-                    <div class="selected-date preferred-date">
-                        @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-                    </div>
+                    @if (info.Booking.PreferredDateStart is DateTime || info.Booking.PreferredDateEnd is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                        <div class="selected-date preferred-date">
+                            @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                        </div>
+                    }
                     @if (info.Booking.AlternativeDate1Start is DateTime)
                     {
                         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>
@@ -77,10 +80,13 @@
                     from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>):
                 </p>
                 <div>
-                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
-                    <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
-                        Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-                    </a>
+                    @if (info.Booking.PreferredDateStart is DateTime || info.Booking.PreferredDateEnd is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                        <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
+                            Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                        </a>
+                    }
                     @if (info.Booking.AlternativeDate1Start is DateTime)
                     {
                         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>

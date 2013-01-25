@@ -37,7 +37,9 @@
     Validation.Add("publicbio", Validator.StringLength(500, 0, "Public bio must be fewer than 500 characters"));
     Validation.Add("streetaddress1", Validator.StringLength(100, 0, "LJDI: Street Address 1 must be fewer than 100 characters."));
     Validation.Add("streetaddress2", Validator.StringLength(100, 0, "LJDI: Street Address 2 must be fewer than 100 characters."));
-    Validation.Add("city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
+    if (Validation.GetHtml("city") == null) {
+        Validation.Add("city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
+    }
 
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
