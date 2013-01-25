@@ -23,10 +23,8 @@
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
-    //Validation.RequireField("advance-time", LcRessources.RequiredField("Time in advance of bookings"));
-    //Validation.RequireField("min-time", LcRessources.RequiredField("Minimum booking time"));
-    //Validation.RequireField("max-time", LcRessources.RequiredField("Maximum booking time"));
-    //Validation.RequireField("between-time", LcRessources.RequiredField("Minimum time between bookings"));
+    Validation.Add("program-type", Validator.StringLength(200, 0, "LJDI: Program Type must be fewer than 200 characters."));
+    Validation.Add("program-url", Validator.StringLength(500, 0, "LJDI: Calendar Public URL must be fewer than 500 characters."));
     
     if (!IsPost) {
         dynamic hoursData = null, atts = null;

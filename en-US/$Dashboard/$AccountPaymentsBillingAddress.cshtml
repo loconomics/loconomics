@@ -12,6 +12,10 @@
     Validation.RequireField("city", LcRessources.RequiredField("City"));
     Validation.RequireField("state", LcRessources.RequiredField("State"));
     Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
+    Validation.Add("name", Validator.StringLength(100, 0, "LJDI: Address Name must be fewer than 50 characters."));
+    Validation.Add("addressline1", Validator.StringLength(100, 0, "LJDI: Address Line 1 must be fewer than 100 characters."));
+    Validation.Add("addressline2", Validator.StringLength(100, 0, "LJDI: Address Line 2 must be fewer than 100 characters."));
+    Validation.Add("city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
     
     if (IsPost && Validation.IsValid()) {
 

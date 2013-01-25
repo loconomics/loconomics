@@ -12,6 +12,7 @@
     dynamic bankinfo = null, paymentpreferences = null;
     
     Validation.RequireField("payment-type", LcRessources.RequiredField("Payment preference"));
+    Validation.Add("bank_fullname", Validator.StringLength(100, 0, "LJDI: Name on account must be fewer than 100 characters."));
        
     if (IsPost && Validation.IsValid()) {
         

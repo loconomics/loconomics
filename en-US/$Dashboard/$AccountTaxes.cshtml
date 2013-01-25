@@ -24,7 +24,12 @@
     Validation.RequireField("tin_signature", LcRessources.RequiredField("Signature"));
     Validation.Add("tin_number", Validator.Integer("The tax identification number must be a nine digit number, without dashes"));
     Validation.Add("tin_number", Validator.StringLength(9, 9, "The tax identification number must be a nine digit number"));
-   
+    Validation.Add("tin_fullname", Validator.StringLength(200, 0, "LJDI: Full Name must be fewer than 200 characters."));
+    Validation.Add("tin_businessname", Validator.StringLength(200, 0, "LJDI: Business Name must be fewer than 200 characters."));
+    Validation.Add("tin_streetaddress", Validator.StringLength(100, 0, "LJDI: Street must be fewer than 100 characters."));
+    Validation.Add("tin_city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
+    Validation.Add("tin_signature", Validator.StringLength(200, 0, "LJDI: Signature must be fewer than 200 characters."));
+
     if (IsPost && Validation.IsValid()) {
             
         var zipcodeID = LcData.GetPostalCodeID(Request["tin_zipcode"], Request["tin_state"].AsInt());
