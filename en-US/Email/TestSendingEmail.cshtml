@@ -1,0 +1,39 @@
+﻿@*
+    Testing sending email using LcMessaging API, to try find
+    the problem with duplicated sents, issue #176
+*@
+
+@{
+    float delay = Request["delayMinutes"].AsFloat(0);
+    var to = Request["to"] ?? "iagosrl@gmail.com";
+    var subject = "LC Test Email: ";
+    var q = Request["q"].AsInt(20);
+    var series = Request["series"] ?? "A";
+
+    for (var i = 1; i <= q; i++) {
+        var stime = " ::T::" + DateTime.Now.ToLongTimeString();
+        if (delay > 0) {
+            LcMessaging.ScheduleEmail(TimeSpan.FromMinutes((double)delay),
+                to, subject + series + i.ToString() + stime, "Testing Sending Email");
+        } else {
+            LcMessaging.SendMail(
+                to, subject + series + i.ToString() + stime, "Testing Sending Email");
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing sending emails</title>
+    </head>
+    <body>
+    <h1>Testing sending emails</h1>
+        <p>
+            @if (delay > 0) {
+                <span>Emails was scheduled to be sent</span>
+            } else {
+                <span>Emails was sent</span>
+            }
+        </p>
+    </body>
+</html>
