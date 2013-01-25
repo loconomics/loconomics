@@ -36,6 +36,8 @@
     Validation.RequireField("lastname", "You must specify your last name.");
     Validation.RequireField("termsofuse", "You must agree to the terms of use and privacy policy.");
     Validation.RequireField("zipcode", "You must enter your Zip code.");
+    Validation.Add("firstname", Validator.StringLength(50, 0, "LJDI: First Name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "LJDI: Last name be fewer than 145 characters."));
     // Position selection:
     Validation.RequireField("position", "You must add at least one position.");
         

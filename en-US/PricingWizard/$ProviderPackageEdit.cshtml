@@ -31,6 +31,8 @@
     Validation.RequireField("package-description", LcRessources.RequiredField("Description"));
     Validation.RequireField("price", LcRessources.RequiredField("Price"));
     Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
+    Validation.Add("package-name", Validator.StringLength(50, 0, "LJDI: Package Name must be fewer than 50 characters."));
+    Validation.Add("package-description", Validator.StringLength(1000, 0, "LJDI: Package Description must be fewer than 1000 characters."));
     Validation.Add("price", Validator.Decimal("Price must be a number"));
     Validation.Add("minutes", Validator.Integer("Session duration in minutes must be a number without decimals"));
     if (!isAddon) {

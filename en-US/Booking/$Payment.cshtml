@@ -60,6 +60,10 @@
     Validation.RequireField("card-exp-month", "Card expiration month is required");
     Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
+    Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "LJDI: Address Line 1 must be fewer than 100 characters."));
+    Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "LJDI: Address Line 2 must be fewer than 100 characters."));
+    Validation.Add("city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
+    Validation.Add("save-payment-as", Validator.StringLength(50, 0, "LJDI: Saved Payment Name must be fewer than 50 characters."));
     
     if (priceIsEstimated) {
         Validation.RequireField("agree-estimate", "You must agree the pricing estimate");

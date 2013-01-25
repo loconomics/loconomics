@@ -29,6 +29,9 @@
     // Initializing Validation rules
     Validation.RequireField("firstname", "First name is required");
     Validation.RequireField("lastname", "Last name is required");
+    Validation.Add("firstname", Validator.StringLength(50, 0, "LJDI: First Name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "LJDI: Last name be fewer than 145 characters."));
+    Validation.Add("secondlastname", Validator.StringLength(145, 0, "LJDI: Second Last name be fewer than 145 characters."));
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a unique letter"));
     Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
     Validation.Add("publicbio", Validator.StringLength(500, 0, "Public bio must be fewer than 500 characters"));

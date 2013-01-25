@@ -27,14 +27,14 @@
                     providerpricingoptioninputs as pi
                       ON pr.PricingOptionID = pi.PricingOptionID
                        AND pi.Active = 1 AND pi.ProviderUserID = @5
-            WHERE   pr.CountryID=@0 AND pr.LanguageID=@1
+            WHERE   pr.LanguageID=@0 AND pr.CountryID=@1
                      AND 
                     pr.ClientTypeID=@2 AND pr.PositionID=@3
                      AND 
                     pr.ProviderInputDataRequired = 1
                      AND
                     pr.Active = 1 AND pr.PricingTypeID = @4
-        ", 1, 1, clienttypeid, pos.PositionID, pricingTypeID, p.UserID);
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), clienttypeid, pos.PositionID, pricingTypeID, p.UserID);
     }
     
 

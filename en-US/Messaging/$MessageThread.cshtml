@@ -56,7 +56,7 @@
     ";
 
     Validation.RequireField("newmessage", "Cannot send an empty message");
-    Validation.Add("newmessage", Validator.StringLength(2500, 1, "Message is too big!"));
+    Validation.Add("newmessage", Validator.StringLength(2500, 0, "Message is too big!"));
     
     bool refreshThreadList = false;
     
