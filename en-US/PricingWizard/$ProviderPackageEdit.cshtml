@@ -31,8 +31,8 @@
     Validation.RequireField("package-description", LcRessources.RequiredField("Description"));
     Validation.RequireField("price", LcRessources.RequiredField("Price"));
     Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
-    Validation.Add("package-name", Validator.StringLength(50, 0, "LJDI: Package Name must be fewer than 50 characters."));
-    Validation.Add("package-description", Validator.StringLength(1000, 0, "LJDI: Package Description must be fewer than 1000 characters."));
+    Validation.Add("package-name", Validator.StringLength(50, 0, "Package/product/service name must be fewer than 50 characters."));
+    Validation.Add("package-description", Validator.StringLength(1000, 0, "Package/product/service description must be fewer than 1000 characters."));
     Validation.Add("price", Validator.Decimal("Price must be a number"));
     Validation.Add("minutes", Validator.Integer("Session duration in minutes must be a number without decimals"));
     if (!isAddon) {
@@ -240,7 +240,7 @@
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
         @{
-            var nameHolder = "Type the name of the package; e.g., Introductory Special";
+            var nameHolder = "Type the name of the package/product/service; e.g., Introductory Special";
             if (isAddon) {
                 nameHolder = "Type the name of the add-on";
             }
@@ -248,22 +248,22 @@
         <input class="package-name" type="text" name="package-name" placeholder="@nameHolder" value="@(Request["package-name"] ?? (package == null ? "" : package.Name))" />
         @if (!isAddon)
         {
-        <label class="package-sessions">Number of sessions in this package: 
+        <label class="package-sessions">Number of appointments/sessions in this package/product/service: 
             <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "" : package.NumberOfSessions))" /></label>
         }
-        <label class="package-price">Total price for @(!isAddon ? "package" : "add-on"): 
+        <label class="package-price">Total price for @(!isAddon ? "package/product/service" : "add-on"): 
             <input type="text" name="price" value="@(Request["price"] ?? (package == null ? "" : package.Price))" /></label>
-        <label class="package-duration">@(!isAddon ? "Length of each session:" : "Lenght of add-on service:")
+        <label class="package-duration">@(!isAddon ? "Length of each appointment/session:" : "Length of add-on service:")
             <input type="text" name="minutes" value="@(Request["minutes"] ?? (package == null ? "" : package.ServiceDuration))" /> minutes</label>
         @if (!isAddon)
         {
         <label class="only-first-time-clients">
             <input type="checkbox" name="first-time-clients-only" value="True" @LcHelpers.IsChecked(true, Request["first-time-clients-only"] ?? (package == null ? false : package.FirstTimeClientsOnly)) />
-            This package is only available to first-time clients
+            This package/product/service is only available to first-time clients
         </label>
         }
         <label class="package-description">
-            <textarea name="package-description" placeholder="Describe in detail what the client will receive by purchasing this package.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
+            <textarea name="package-description" placeholder="Describe in detail what the client will receive by purchasing this package/product/service.">@(Request["package-description"] ?? (package == null ? "" : package.Description))</textarea>
         </label>
     </fieldset>
 
@@ -287,7 +287,7 @@
     @if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
     {
         <fieldset class="package-details">
-            <h5>Services included in this package:</h5>
+            <h5>Services included in this package/product/service:</h5>
             <ul class="provider-package-services">
             @foreach (var att in (preCheckedAttributes.Count > 0 ? preCheckedAttributes : notCheckedAttributes))
             {

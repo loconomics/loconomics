@@ -12,7 +12,7 @@
     dynamic bankinfo = null, paymentpreferences = null;
     
     Validation.RequireField("payment-type", LcRessources.RequiredField("Payment preference"));
-    Validation.Add("bank_fullname", Validator.StringLength(100, 0, "LJDI: Name on account must be fewer than 100 characters."));
+    Validation.Add("bank_fullname", Validator.StringLength(100, 0, "Name on bank account must be fewer than 100 characters."));
        
     if (IsPost && Validation.IsValid()) {
         
@@ -35,9 +35,9 @@
                 ModelState.AddError("bank_accountnumber", "Invalid Account number");
             }
             if (!Request["bank_abanumber"].IsInt()) {
-                ModelState.AddError("bank_abanumber", "The ABA Number must be a nine digit number");
+                ModelState.AddError("bank_abanumber", "The ABA routing number must be a nine digit number");
             } else if (Request["bank_abanumber"].Length != 9) {
-                ModelState.AddError("bank_abanumber", "The ABA Number must be a nine digit number");
+                ModelState.AddError("bank_abanumber", "The ABA routing number must be a nine digit number");
             }
             
             // Now, paymentType is a value with '4.' as prefix, being the last number (after the dot) what must
@@ -48,7 +48,7 @@
                 try{
                     gateway = LcPayment.NewBraintreeGateway();
                 } catch {
-                    ModelState.AddFormError("There was an error communicating with our secure data store, please try again later.");
+                    ModelState.AddFormError("There was an error communicating with our secure data facility, please try again later.");
                 }
             }
         }
@@ -202,13 +202,13 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
     </div>
     <div class="col col-2 col-2-1 bank-account-preference">
         <fieldset id="@idprefix-fs-contactinfo" class="contact-info">
-            <legend>Name on account:</legend>
+            <legend>Name on bank account:</legend>
             <ul>
-                <li><label for="@idprefix-fullname">Full Name:</label><input @Validation.GetHtml("bank_fullname") id="@idprefix-fullname" type="text" name="bank_fullname" value="@(Request["bank_fullname"] ?? (bankinfo != null ? bankinfo.AccountName : ""))"/></li>
+                <li><label for="@idprefix-fullname"></label><input @Validation.GetHtml("bank_fullname") id="@idprefix-fullname" type="text" name="bank_fullname" value="@(Request["bank_fullname"] ?? (bankinfo != null ? bankinfo.AccountName : ""))"/></li>
             </ul>
         </fieldset>
         <fieldset id="@idprefix-fs-accounttype">
-            <legend>Bank Account Type:</legend>
+            <legend>Bank account type:</legend>
             <ul>
                 @foreach (var paymentpreference in paymentpreferences)
                 {
@@ -223,10 +223,10 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
     </div>
     <div class="col col-2 col-2-2 bank-account-preference">
         <fieldset id="@idprefix-fs-accountnumber">
-            <legend>Bank Account Number:</legend>
+            <legend>Bank account number:</legend>
             <ul>
-                <li><label for="@idprefix-abanumber">ABA Routing Number (9 digits):</label><input type="text" id="@idprefix-abanumber" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
-                <li><label for="@idprefix-accountnumber">Account Number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + LcEncryptor.Decrypt((string)bankinfo.LastThreeAccountDigits) : ""))"/></li>
+                <li><label for="@idprefix-abanumber">ABA routing number (9 digits):</label><input type="text" id="@idprefix-abanumber" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
+                <li><label for="@idprefix-accountnumber">Account number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + LcEncryptor.Decrypt((string)bankinfo.LastThreeAccountDigits) : ""))"/></li>
             </ul>
         </fieldset>
     </div>

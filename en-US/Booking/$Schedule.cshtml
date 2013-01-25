@@ -25,10 +25,10 @@
     /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
     Validation.RequireField("first-date", "You must specify a first choice");
     Validation.Add("select-location", Validator.Integer("Invalid selected location"));
-    Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "LJDI: Address Line 1 must be fewer than 100 characters."));
-    Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "LJDI: Address Line 2 must be fewer than 100 characters."));
-    Validation.Add("city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
-    Validation.Add("save-location-as", Validator.StringLength(50, 0, "LJDI: Saved Location Name must be fewer than 50 characters."));
+    Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address line 1 must be fewer than 100 characters."));
+    Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address line 2 must be fewer than 100 characters."));
+    Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    Validation.Add("save-location-as", Validator.StringLength(50, 0, "Saved location name must be fewer than 50 characters."));
 
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;

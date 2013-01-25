@@ -24,17 +24,17 @@
     Validation.RequireField("tin_signature", LcRessources.RequiredField("Signature"));
     Validation.Add("tin_number", Validator.Integer("The tax identification number must be a nine digit number, without dashes"));
     Validation.Add("tin_number", Validator.StringLength(9, 9, "The tax identification number must be a nine digit number"));
-    Validation.Add("tin_fullname", Validator.StringLength(200, 0, "LJDI: Full Name must be fewer than 200 characters."));
-    Validation.Add("tin_businessname", Validator.StringLength(200, 0, "LJDI: Business Name must be fewer than 200 characters."));
-    Validation.Add("tin_streetaddress", Validator.StringLength(100, 0, "LJDI: Street must be fewer than 100 characters."));
-    Validation.Add("tin_city", Validator.StringLength(100, 0, "LJDI: City must be fewer than 100 characters."));
-    Validation.Add("tin_signature", Validator.StringLength(200, 0, "LJDI: Signature must be fewer than 200 characters."));
+    Validation.Add("tin_fullname", Validator.StringLength(200, 0, "Full legal name must be fewer than 200 characters."));
+    Validation.Add("tin_businessname", Validator.StringLength(200, 0, "Business name must be fewer than 200 characters."));
+    Validation.Add("tin_streetaddress", Validator.StringLength(100, 0, "Street address must be fewer than 100 characters."));
+    Validation.Add("tin_city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    Validation.Add("tin_signature", Validator.StringLength(200, 0, "Signature must be fewer than 200 characters."));
 
     if (IsPost && Validation.IsValid()) {
             
         var zipcodeID = LcData.GetPostalCodeID(Request["tin_zipcode"], Request["tin_state"].AsInt());
         if (zipcodeID == 0) {
-            ModelState.AddError("tin_zipcode", "Zip code is not valid");
+            ModelState.AddError("tin_zipcode", "Zip code is invalid");
         }
         int individualEntityTypeID = 1; // Hardcoded ID=1 for individual/sole propeitor entity type
         if (Request["tin_taxentitytype"].AsInt() != individualEntityTypeID &&
@@ -187,10 +187,10 @@ Federal law requires us to issue you a 1099 form at the end of the year.  In ord
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>IRS Form W-9:</legend>
         <ul>
-            <li><label for="@idprefix-fullname">Full Name:</label><input id="@idprefix-fullname" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? (taxinfo != null ? taxinfo.FullName : ""))"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business Name:</label><input id="@idprefix-businessname" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? (taxinfo != null ? taxinfo.BusinessName : ""))"/><span class="info">(only if different from above)</span></li>
+            <li><label for="@idprefix-fullname">Full legal name:</label><input id="@idprefix-fullname" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? (taxinfo != null ? taxinfo.FullName : ""))"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business name:</label><input id="@idprefix-businessname" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? (taxinfo != null ? taxinfo.BusinessName : ""))"/><span class="info">(only if different from above)</span></li>
             <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? (taxinfo != null ? taxinfo.StreetApt : ""))"/></li>
+            <li><label for="@idprefix-streetaddress">Street address, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? (taxinfo != null ? taxinfo.StreetApt : ""))"/></li>
             <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@(Request["tin_city"] ?? (taxinfo != null ? taxinfo.City : ""))" @Validation.GetHtml("tin_city")/></li>
             <li><label for="@idprefix-state">State:</label>
                 <select id="@idprefix-state" name="tin_state" @Validation.GetHtml("tin_state")>

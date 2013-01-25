@@ -23,8 +23,8 @@
     var varSQLGetUserFreeTimeSettings = "EXEC GetUserFreeTimeSettings @0";
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
-    Validation.Add("program-type", Validator.StringLength(200, 0, "LJDI: Program Type must be fewer than 200 characters."));
-    Validation.Add("program-url", Validator.StringLength(500, 0, "LJDI: Calendar Public URL must be fewer than 500 characters."));
+    Validation.Add("program-type", Validator.StringLength(200, 0, "Calendar type must be fewer than 200 characters."));
+    Validation.Add("program-url", Validator.StringLength(500, 0, "Calendar public URL must be fewer than 500 characters."));
     
     if (!IsPost) {
         dynamic hoursData = null, atts = null;

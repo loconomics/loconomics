@@ -74,7 +74,7 @@
         // File name limit to 100 instead of database 2073 to avoid problems with the File I/O API. Being aware too
         // that the virtualPath is added to filename.
         if (fileName.Length > 100) {
-            ModelState.AddFormError("LJDI: File name must be lower than 100 characters.");
+            ModelState.AddFormError("File name must be lower than 100 characters.");
         } else {
             try{
                 uploadedFileURI = virtualPath + fileName;
