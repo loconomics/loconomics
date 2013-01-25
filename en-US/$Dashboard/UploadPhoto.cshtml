@@ -71,17 +71,23 @@
     if (!String.IsNullOrEmpty(Request["qqfile"])){
         string fileName = GetValidFileName((string)Request["qqfile"]);
 
-        try{
-            uploadedFileURI = virtualPath + fileName;
-            SavePhoto(Request.InputStream, virtualPath, fileName);
-        } catch(Exception ex) {
-            ModelState.AddFormError(ex.Message);
-        }
+        // File name limit to 100 instead of database 2073 to avoid problems with the File I/O API. Being aware too
+        // that the virtualPath is added to filename.
+        if (fileName.Length > 100) {
+            ModelState.AddFormError("LJDI: File name must be lower than 100 characters.");
+        } else {
+            try{
+                uploadedFileURI = virtualPath + fileName;
+                SavePhoto(Request.InputStream, virtualPath, fileName);
+            } catch(Exception ex) {
+                ModelState.AddFormError(ex.Message);
+            }
         
-        // File saved, register it on the database:
-        photoID = RegisterUserPhoto(fileName, userId, positionId);
+            // File saved, register it on the database:
+            photoID = RegisterUserPhoto(fileName, userId, positionId);
   
-        processed = true;
+            processed = true;
+        }
     } else if (IsPost){
 
         var fileuploaded = Request.Files["qqfile"] ?? Request.Files["avatar"];

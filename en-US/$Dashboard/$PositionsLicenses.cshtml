@@ -65,6 +65,14 @@
         Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
         Validation.RequireField("county", LcRessources.RequiredField("County"));
         Validation.RequireField("city", LcRessources.RequiredField("City"));
+        Validation.Add("license-link", Validator.StringLength(2073, 0, "LJDI: License link must be fewer than 2073 characters."));
+        Validation.Add("license-number", Validator.StringLength(100, 0, "LJDI: License Certifiation Number must be fewer than 100 characters."));
+        Validation.Add("first-name", Validator.StringLength(100, 0, "LJDI: First Name must be fewer than 100 characters."));
+        Validation.Add("last-name", Validator.StringLength(100, 0, "LJDI: Last Name must be fewer than 100 characters."));
+        Validation.Add("second-last-name", Validator.StringLength(100, 0, "LJDI: Second Lsat Name must be fewer than 100 characters."));
+        Validation.Add("middle-initial", Validator.StringLength(0, 1, "LJDI: Middel Initial must be only 1 character."));
+        Validation.Add("business-name", Validator.StringLength(200, 0, "LJDI: Business Name must be fewer than 200 characters."));
+        Validation.Add("city", Validator.StringLength(2073, 0, "LJDI: City must be fewer than 100 characters."));
     }
 
     if (IsPost && Validation.IsValid()) {
@@ -113,7 +121,7 @@
                     LicenseCertificationURL,
                     LicenseCertificationNumber,
                     -- Provider personal
-                    FirstName,                
+                    FirstName,
                     LastName,
                     SecondLastName,
                     MiddleInitial,

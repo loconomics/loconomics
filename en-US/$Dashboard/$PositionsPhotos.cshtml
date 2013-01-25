@@ -9,6 +9,7 @@
     var positionStatus = p.StatusID;
     
     string photosFolder = LcUrl.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    Validation.Add("photo-caption", Validator.StringLength(50, 0, "LJDI: Photo Caption must be fewer than 50 characters."));
 
     if (IsPost) {
         using (var db = Database.Open("sqlloco")) {
