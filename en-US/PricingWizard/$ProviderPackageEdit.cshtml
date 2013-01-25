@@ -249,7 +249,7 @@
         @if (!isAddon)
         {
         <label class="package-sessions">Number of appointments/sessions in this package/product/service: 
-            <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "" : package.NumberOfSessions))" /></label>
+            <input type="text" name="sessions-number" value="@(Request["sessions-number"] ?? (package == null ? "1" : package.NumberOfSessions))" /></label>
         }
         <label class="package-price">Total price for @(!isAddon ? "package/product/service" : "add-on"): 
             <input type="text" name="price" value="@(Request["price"] ?? (package == null ? "" : package.Price))" /></label>
