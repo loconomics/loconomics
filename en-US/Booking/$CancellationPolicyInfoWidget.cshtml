@@ -23,7 +23,7 @@
 
 @if (policy != null)
 {
-    DateTime refundLimitDate = (bookingDate ?? DateTime.Now).AddDays(7).AddHours(- policy.HoursRequired);
+    DateTime refundLimitDate = (bookingDate ?? DateTime.Now.AddDays(7)).AddHours(- policy.HoursRequired);
     <div class="cancellation-policy-info">
         <strong>@policy.CancellationPolicyName:</strong>
         <em><strong>@policy.CancellationPolicyDescription</strong>

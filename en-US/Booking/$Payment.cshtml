@@ -510,6 +510,19 @@
         </ul>
         <div class="popups">
             <div id="cancellation-policy" class="popup">
+                @{
+                    PageData["BookingDate"] = dt1Start;
+                    if (dt2Start.HasValue &&
+                        dt2Start < PageData["BookingDate"])
+                    {
+                        PageData["BookingDate"] = dt2Start;
+                    }
+                    if (dt3Start.HasValue &&
+                        dt3Start < PageData["BookingDate"])
+                    {
+                        PageData["BookingDate"] = dt3Start;
+                    }
+                }
                 @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
                     CancellationPolicyID = (cancellationPolicy == null ? LcData.Booking.DefaultCancellationPolicyID : cancellationPolicy.CancellationPolicyID),
                     DisplayForUserType = "customer" })
