@@ -199,5 +199,18 @@ public static class LcCalendar
             }
         }
     }
+    /// <summary>
+    /// Generate an iCalendar file to export booking events of the given UserID.
+    /// </summary>
+    /// <param name="UserID">Identifier of user wich calendar will be generated</param>
+    /// <returns>
+    /// Serialized iCalendar file as a Tuple with:
+    /// Item1 = binary file content, Item2 = filepath
+    /// </returns>
+    public static Tuple<byte[], string> Export(int UserID)
+    {
+        CalendarUtils libCalendarUtils = new CalendarUtils();
+        return libCalendarUtils.PrepareExportDataForUser(new CalendarUser(UserID));
+    }
     #endregion
 }

@@ -1,0 +1,12 @@
+﻿@*
+    Generates an iCalendar output for the UserID calendar given in the first URL segment
+*@
+@{
+    var userID = UrlData[0].AsInt();
+
+    if (userID > 0) {
+        var file = LcCalendar.Export(userID);
+        Response.ContentType = "text/calendar";
+        Response.WriteBinary(file.Item1, "text/calendar");
+    }
+}
