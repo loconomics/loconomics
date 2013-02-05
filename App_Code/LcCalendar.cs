@@ -178,12 +178,12 @@ public static class LcCalendar
             {
                 if (p.CalendarType != "gmail")
                 {
-                    yield return new Exception(String.Format("Calendar Import error: unrecognized calendar type '{0}'", p.CalendarType));
+                    yield return new Exception(String.Format("Calendar Import error on UserID:{0} : unrecognized calendar type '{1}'", p.UserID, p.CalendarType));
                     continue;
                 }
                 if (!LcValidators.IsUrl(String.IsNullOrWhiteSpace(p.CalendarURL)))
                 {
-                    yield return new Exception(String.Format("Calendar Import error: URL is not valid '{0}'", p.CalendarURL));
+                    yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
                     continue;
                 }
                 Exception resultEx = null;
@@ -193,7 +193,7 @@ public static class LcCalendar
                 }
                 catch (Exception ex)
                 {
-                    resultEx = ex;
+                    resultEx = new Exception(String.Format("Calendar Import error on UserID:{0} : Internal error processing iCalendar", p.UserID), ex);
                 }
                 yield return resultEx;
             }

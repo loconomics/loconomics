@@ -3,6 +3,10 @@
 @{
     var logger = PageData["Logger"] = new StringBuilder();
     var elapsedTime = DateTime.Now;
+    
+    /*
+     * Bookings
+     */
 
     int messages = 0, items = 0;
     int totalmessages = 0, totalitems = 0;
@@ -333,7 +337,34 @@
         totalmessages += messages;
     }
     
-    log("Elapsed time for this last tasks batch: {0}, for {1} items and {2} messages", DateTime.Now - elapsedTime, totalitems, totalmessages);
+    log("Elapsed time {0}, for {1} bookings affected and {2} messages sent", DateTime.Now - elapsedTime, totalitems, totalmessages);
+
+
+    /*
+     * iCalendar
+     */
+    DateTime partialElapsedTime = DateTime.Now;
+    
+    int successCalendars = 0,
+        failedCalendars = 0;
+        
+    foreach(var err in LcCalendar.BulkImport()){
+        if (err == null) {
+            successCalendars++;
+        } else {
+            failedCalendars++;
+            logEx("Import Calendar", err);
+        }
+    }
+
+    log("Elapsed time {0}, for {1} user calendars imported, {2} failed", DateTime.Now - partialElapsedTime, successCalendars, failedCalendars);
+    
+
+    /*
+     * Task Ended
+     */
+    
+    log("Total Elapsed time {0}", DateTime.Now - elapsedTime);
 
     // Finishing: save log on disk, per month rotation
     try {
@@ -352,7 +383,13 @@
         logger.Append("\n");
     }
     void logEx(string task, Exception ex){
-        log("{0}: Exception {1}\n[LOGDATA[\n {2} \n]LOGDATA]", task, ex.Message, ex.StackTrace);
+        log("{0}: Exception {1}\n[LOGDATA[\n {2} {3} \n]LOGDATA]", task, ex.Message, innerExToString(ex), ex.StackTrace);
+    }
+    string innerExToString(Exception ex){
+        if (ex.InnerException != null) {
+            return String.Format("InnerException {0}\n{1}", ex.InnerException, innerExToString(ex.InnerException));
+        }
+        return "";
     }
 }
 @if (!LcHelpers.InProduction)
