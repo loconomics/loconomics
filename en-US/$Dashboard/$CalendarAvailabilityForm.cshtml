@@ -8,6 +8,17 @@
     
     var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
+    var action = IsPost ? 
+        Request["reset-private-url"].AsBool()
+        ? "reset-private-url"
+        : "save"
+        : "load";
+
+    if (action == "reset-private-url") {
+        resetPrivateUrl(u.UserID);
+        action = "load";
+    }
+
     // From 0 (sunday) to 6 (saturday), true: is available. ON DATABASE use base-1; base-zero only arrays on this page
     bool[] availDates = new bool[7];
     // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
@@ -19,6 +30,7 @@
     var minTime = 0M;
     var maxTime = 0M;
     var betweenTime = 0M;
+    var privateUrlToken = "";
 
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
@@ -27,7 +39,7 @@
     //Validation.RequireField("max-time", LcRessources.RequiredField("Maximum booking time"));
     //Validation.RequireField("between-time", LcRessources.RequiredField("Minimum time between bookings"));
     
-    if (!IsPost) {
+    if (action == "load") {
         dynamic atts = null;
         var hoursData = LcCalendar.GetProviderWorkHours((int)u.UserID);
         using (var db = Database.Open("sqlloco")) {
@@ -49,8 +61,9 @@
             minTime                 = atts.MinTime;
             maxTime                 = atts.MaxTime;
             betweenTime             = atts.BetweenTime;
+            privateUrlToken         = atts.PrivateCalendarToken;
         }
-    } else {
+    } else if (action == "save") {
         for (int d = 0; d < 7; d++) {
             availDates[d]   = Request["availday-" + d.ToString()].AsBool();
             dateHours[d, 0] = Request["day-" + d.ToString() + "-since-hour"].AsDateTime().TimeOfDay;
@@ -80,7 +93,7 @@
         if (Validation.IsValid() && ModelState.IsValid) {
             
             var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
-            var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
+            var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7,@8";
 
             using (var db = Database.Open("sqlloco")) {
                 // Save data
@@ -92,7 +105,8 @@
                     betweenTime,
                     useCalendarProgram,
                     programType,
-                    programURL);
+                    programURL,
+                    privateUrlToken);
              
                 for (int d = 0; d < 7; d++) {
                     if (availDates[d]) {
@@ -119,6 +133,18 @@
                     LcHelpers.ReturnJsonResult(0, success);
                 }
             }
+        }
+    }
+}
+@functions {
+    void resetPrivateUrl(int userID){
+        using (var db = Database.Open("sqlloco")) {
+            var newtoken = LcEncryptor.GenerateRandomToken(userID.ToString());
+            db.Execute(@"
+                UPDATE  CalendarProviderAttributes
+                SET     PrivateCalendarToken = @1
+                WHERE   UserID = @0
+            ", userID, newtoken);
         }
     }
 }
@@ -327,6 +353,27 @@ What hours do you keep? We’d like to know when we can generally expect to sche
             </li>
         </ul>
     </fieldset>
+    <fieldset class="fs-calendar-private-url">
+        <legend>My Private Calendar URL</legend>
+        LJDI:
+        <p>You can see your booking appointments into your calendaring program by using the next URL.
+        <br />Copy this URL, go to your calendaring program, select 'add/new calendar' option and paste it.
+        <br />This must be preserved as private to ensure only you can access your appointments, for security you
+        can reset this URL at any time but remember copy and paste the new one in your calendaring program.
+        </p>
+        <ul><li>
+            @if (string.IsNullOrEmpty(privateUrlToken))
+            {
+                <span>You have not still a private URL, please click on the next 'reset' button to create one.</span>
+            }
+            else
+            {
+                <input class="calendar-private-url" readonly="readonly" type="text" value="@(LcUrl.AppUrl + "Calendar/" + u.UserID + "/" + privateUrlToken + "/ical/")" />
+            }
+        </li><li>
+            <button class="reset-private-url-action action" type="button">Reset Private URL</button>
+        </li></ul>
+    </fieldset>
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
         <label>Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>
@@ -347,7 +394,15 @@ What hours do you keep? We’d like to know when we can generally expect to sche
                 .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
                 .prop('checked', true);
             }
-        })
+        });
+        $('.calendar-private-url').focus(function () {
+            $(this).select();
+        });
+        $('.reset-private-url-action').click(function () {
+            var f = $(this).closest('form');
+            f.append('<input type="hidden" name="reset-private-url" value="True" />')
+            .submit();
+        });
     });
 </script>
 </div>

@@ -552,6 +552,9 @@ form.positionservices input{
 }
 
 /** Form: Positions - Availability **/
+form.positionavailability .fs-calendar-private-url input.calendar-private-url {
+    width: 90%;
+}
 form.positionavailability {
     position: relative;
     font-size: .9em;
