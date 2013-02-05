@@ -6,12 +6,14 @@ using CalendarDll;
 using DDay.iCal;
 using DDay.Collections;
 using CalendarDll.Data;
+using WebMatrix.Data;
 
 /// <summary>
 /// Descripción breve de LcCalendar
 /// </summary>
 public static class LcCalendar
 {
+    #region Availability
     /// <summary>
     /// Get availability table for the user between given date and times
     /// </summary>
@@ -60,6 +62,7 @@ public static class LcCalendar
          }
          */
     }
+    #endregion
 
     #region Provider Work Hours
     /// <summary>
@@ -144,6 +147,57 @@ public static class LcCalendar
 
         // Send to database
         ent.SaveChanges();
+    }
+    #endregion
+
+    #region iCal sync: import/export
+    /// <summary>
+    /// Import a calendar in iCalendar format at the given CalendarURL for the UserID
+    /// </summary>
+    /// <param name="UserID">ID of the user in that calendar will be imported</param>
+    /// <param name="CalendarURL">URL to retrieve the calendar data as iCalendar format</param>
+    public static void Import(int UserID, string CalendarURL)
+    {
+        var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
+
+        CalendarUtils libCalendarUtil = new CalendarUtils();
+        libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
+    }
+    /// <summary>
+    /// Perform calendar import on every user with importation enabled in its
+    /// calendar settings.
+    /// </summary>
+    /// <returns>Per each provider with importation enabled, returns an Exception object
+    /// as null if all works fine and imporation was successful for that and the
+    /// generated exception if something is wrong and importation fails.</returns>
+    public static IEnumerable<Exception> BulkImport()
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var p in db.Query("SELECT UserID, CalendarType, CalendarURL FROM CalendarProviderAttributes WHERE UseCalendarProgram = 1"))
+            {
+                if (p.CalendarType != "gmail")
+                {
+                    yield return new Exception(String.Format("Calendar Import error: unrecognized calendar type '{0}'", p.CalendarType));
+                    continue;
+                }
+                if (!LcValidators.IsUrl(String.IsNullOrWhiteSpace(p.CalendarURL)))
+                {
+                    yield return new Exception(String.Format("Calendar Import error: URL is not valid '{0}'", p.CalendarURL));
+                    continue;
+                }
+                Exception resultEx = null;
+                try
+                {
+                    Import(p.UserID, p.CalendarURL);
+                }
+                catch (Exception ex)
+                {
+                    resultEx = ex;
+                }
+                yield return resultEx;
+            }
+        }
     }
     #endregion
 }
