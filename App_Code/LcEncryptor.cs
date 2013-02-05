@@ -10,6 +10,25 @@ using System.IO;
 /// </summary>
 public class LcEncryptor 
 {
+    /// <summary>
+    /// Generates a random, and alphanumeric token, suitable for URL as segment and paramenter specially
+    /// to generate privated-secure URLs.
+    /// It tries to generated a unique value, but must be double checked saving it on database or something else, because
+    /// the unique value is filtered to only alphanumeric chars.
+    /// </summary>
+    /// <param name="extraValue">Additional string to be concated to the auto-generated value before be encrypted</param>
+    /// <returns></returns>
+    public static string GenerateRandomToken(string extraValue)
+    {
+        const string availableChars =
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        return new String(
+            Encrypt(extraValue + Guid.NewGuid().ToString())
+            .Select(b => availableChars[b % availableChars.Length])
+            .ToArray()
+        );
+    }
+
     public static string Decrypt(string cipherText)
     {
         try
