@@ -1325,12 +1325,12 @@ $(function () {
     })
     .delegate('a.register', 'click', function () {
         var url = this.getAttribute('href').replace('/Account/Register', '/Account/$Register');
-        popup(url, { width: 450, height: 430 });
+        popup(url, { width: 450, height: 500 });
         return false;
     })
     .delegate('a.forgot-password', 'click', function () {
         var url = this.getAttribute('href').replace('/Account/ForgotPassword', '/Account/$ForgotPassword');
-        popup(url, { width: 400, height: 220 });
+        popup(url, { width: 400, height: 240 });
         return false;
     })
     .delegate('.view-privacy-policy', 'click', function () {

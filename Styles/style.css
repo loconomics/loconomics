@@ -1371,7 +1371,9 @@ form div.validation-summary-valid{
     padding: 0;
 }
 .account-popup .username input,
-.account-popup .password input{
+.account-popup .password input,
+.account-popup .firstname input,
+.account-popup .lastname input{
     float: right;
 }
 .account-popup .remember-me{
@@ -1417,6 +1419,11 @@ form div.validation-summary-valid{
     margin: 0;
 }
 
+.blockMsg #loginBox,
+.blockMsg #registerBox,
+.blockMsg #forgotPasswordBox{
+    width: 100%;
+}
 #loginBox{
     width: 410px;
 }
