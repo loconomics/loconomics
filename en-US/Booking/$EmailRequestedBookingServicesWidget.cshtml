@@ -6,6 +6,7 @@
     bool showPayment = PageData[3] ?? true;
     bool showPricing = PageData[4] ?? true;
     bool showCancellationPolicy = PageData[5] ?? true;
+    var BookingDate = PageData["BookingDate"];
     
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
@@ -113,7 +114,8 @@
                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new
                {
                    CancellationPolicyID = booking.CancellationPolicyID,
-                   DisplayForUserType = myUserType
+                   DisplayForUserType = myUserType,
+                   BookingDate = BookingDate
                })
             </div>
         }

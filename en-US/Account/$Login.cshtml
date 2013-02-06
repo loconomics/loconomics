@@ -117,7 +117,7 @@
                 <legend>Log in to Your Account</legend>
                 <ul>
                     <li class="username">
-                        <label for="username" @if(!ModelState.IsValidField("username")){<text>class="error-label"</text>}>E-mail address:</label>
+                        <label for="username" autofocus @if(!ModelState.IsValidField("username")){<text>class="error-label"</text>}>E-mail address:</label>
                         <input type="text" id="username" class="@(ModelState.IsValidField("Ausername") ? "" : "input-validation-error")" name="username" value="@username" title="Username" @Validation.GetHtml("username")/>
                         @* Write any username validation errors to the page *@
                         @Html.ValidationMessage("username")

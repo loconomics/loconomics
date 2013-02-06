@@ -67,7 +67,8 @@ else
     string itsUserLabel = "Provider";
     string myUserType = "customer";
     //string myUserPrefix = "Customer";
-    if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+    if (WebSecurity.CurrentUserId == booking.ProviderUserID)
+    {
         sentToUserType = LcData.UserInfo.UserType.Provider;
         itsUserType = "customer";
         itsUserLabel = "Customer";
@@ -185,6 +186,7 @@ else
     </div>
 
     <h4>Booking details</h4>
+    @{ PageData["BookingDate"] = booking.ConfirmedDateStart; }
     @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType)
 
     <h4>Reminders</h4>

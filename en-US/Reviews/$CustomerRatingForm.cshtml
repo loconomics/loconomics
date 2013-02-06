@@ -27,9 +27,9 @@
         Validation.RequireField("public-review", "Please write a public review");
         Validation.RequireField("private-review", "Please write a private review");
         /* Validating texts length */
-        Validation.Add("public-review", Validator.StringLength(250, 10, "LJDI: Public review must contains between 10 and 250 characters"));
-        Validation.Add("private-review", Validator.StringLength(1000, 0, "LJDI: Private review is excessive long, please less than 1000 characters"));
-        Validation.Add("question2", Validator.StringLength(175, 0, "LJDI: Setion 3 answer is excessive long, please less than 175 characters"));
+        Validation.Add("public-review", Validator.StringLength(500, 20, "Your public review must be between 20 and 500 characters"));
+        Validation.Add("private-review", Validator.StringLength(1000, 0, "Your public review must be fewer than 1,000 characters"));
+        Validation.Add("question2", Validator.StringLength(1000, 0, "Please answer question 3 in fewer than 1,000 characters"));
 
         if(IsPost && Validation.IsValid()){
 
@@ -39,79 +39,20 @@
             var privatereview = Request["private-review"];
 
             if(ModelState.IsValid){
-                var sqlCheckReview = @"
-                    SELECT  count(*)
-                    FROM    UserReviews
-                    WHERE   BookingID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlGetScores = @"
-                    SELECT  Rating1, Rating2, Rating3, Rating4, Answer1, Answer2, TotalRatings
-                    FROM    UserReviewScores
-                    WHERE   UserID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlInsertScores = @"
-                    INSERT INTO UserReviewScores (
-                        UserID, PositionID,
-                        TotalRatings,
-                        Rating1, Rating2, Rating3, Rating4,
-                        Answer1, Answer2,
-                        ServiceHours, LastRatingDate,
-                        CreatedDate, UpdatedDate, ModifiedBy
-                    ) VALUES (
-                        @0, @1,
-                        @2, 
-                        @3, @4, @5, @6,
-                        @7, @8,
-                        @9, @10,
-                        getdate(), getdate(), 'sys'
-                    )
-                ";
-                var sqlUpdateScores = @"
-                    UPDATE UserReviewScores SET
-                        TotalRatings = @2,
-                        Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
-                        Answer1 = @7, Answer2 = @8,
-                        ServiceHours = @9, LastRatingDate = @10,
-                        UpdatedDate = getdate(),
-                        ModifiedBy = 'sys'
-                    WHERE   UserID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlInsertReview = @"
-                    INSERT INTO UserReviews (
-                        BookingID, CustomerUserID, ProviderUserID, PositionID,
-                        Rating1, Rating2, Rating3, Rating4,
-                        Answer1, Answer2,
-                        Answer1Comment, Answer2Comment,
-                        PrivateReview, PublicReview,
-                        ServiceHours, HelpfulReviewCount,
-                        CreatedDate, UpdatedDate, ModifiedBy
-                    ) VALUES (
-                        @0, @1, @2, @3,
-                        @4, @5, @6, @7,
-                        @8, @9,
-                        @10, @11,
-                        @12, @13,
-                        @14, @15,
-                        getdate(), getdate(), 'sys'
-                    )
-                ";
-
                 using (var db = Database.Open("sqlloco")) {
-                    var hasreview = db.QueryValue(sqlCheckReview, bookingID, 0);
+                    var hasreview = db.QueryValue(LcData.sqlCheckUserReview,
+                        0 /*positionID as customer*/,
+                        bookingID, 
+                        booking.ProviderUserID,
+                        booking.CustomerUserID);
                     if(hasreview > 0){
                         ModelState.AddFormError("The review for this service already exist");
                     } else {
                         //Look for existing scores
-                        var scores = db.QuerySingle(sqlGetScores, booking.CustomerUserID, 0);
+                        var scores = db.QuerySingle(LcData.sqlGetUserReviewScores, booking.CustomerUserID, 0);
                         if (scores == null) {
                             //First scores for the customer (positionID=0)
-                            db.Execute(sqlInsertScores, 
+                            db.Execute(LcData.sqlInsertUserReviewScores, 
                                 booking.CustomerUserID, 0,
                                 1,
                                 rating1, null, null, null,
@@ -121,7 +62,7 @@
                             // Recalculate and Save the updated scores
                             var tr = scores.TotalRatings;
                             var ntr = tr + 1;
-                            db.Execute(sqlUpdateScores,
+                            db.Execute(LcData.sqlUpdateUserReviewScores,
                                 booking.CustomerUserID, 0,
                                 ntr,
                                 ((scores.Rating1 ?? 0) * tr + rating1) / ntr,
@@ -134,7 +75,7 @@
                                 0, DateTime.Now);
                         };
                         //Store Review
-                        db.Execute(sqlInsertReview, 
+                        db.Execute(LcData.sqlInsertUserReview, 
                             bookingID, booking.CustomerUserID, thisUserID, 0,
                             rating1, null, null, null,
                             null, answer2, null, null,

@@ -15,6 +15,7 @@
     PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(info.Booking.BookingRequestStatusID, info.PairUser, info.SentTo);
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["showSign"] = true;
+    PageData["helpReference"] = "booking request #" + info.BookingRequestID.ToString();
     switch (info.SentTo) {
         case LcData.UserInfo.UserType.Provider:
             PageData["needHelpAddress"] = "providersupport@loconomics.com";
@@ -45,10 +46,13 @@
     
                 <h4 @LcEmailTemplateHelper.StyleH4()>Time preferences</h4>
                 <div>
-                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
-                    <div class="selected-date preferred-date">
-                        @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-                    </div>
+                    @if (info.Booking.PreferredDateStart is DateTime || info.Booking.PreferredDateEnd is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                        <div class="selected-date preferred-date">
+                            @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                        </div>
+                    }
                     @if (info.Booking.AlternativeDate1Start is DateTime)
                     {
                         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>
@@ -76,10 +80,13 @@
                     from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>):
                 </p>
                 <div>
-                    <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
-                    <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
-                        Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
-                    </a>
+                    @if (info.Booking.PreferredDateStart is DateTime || info.Booking.PreferredDateEnd is DateTime)
+                    {
+                        <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>First choice:</h5>
+                        <a class="button-confirm-datetime" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #99C027;" href="@(LcUrl.LangUrl)Booking/$ConfirmBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&ConfirmedDateType=preferred">
+                            Click here to confirm @LcHelpers.DateTimeRangeToString(info.Booking.PreferredDateStart, info.Booking.PreferredDateEnd)
+                        </a>
+                    }
                     @if (info.Booking.AlternativeDate1Start is DateTime)
                     {
                         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Second choice:</h5>
@@ -115,6 +122,19 @@
     }
  
     <h4 @LcEmailTemplateHelper.StyleH4()>Requested services and pricing estimate</h4>
+    @{
+        PageData["BookingDate"] = info.Booking.PreferredDateStart;
+        if (info.Booking.AlternativeDate1Start is DateTime &&
+            info.Booking.AlternativeDate1Start < PageData["BookingDate"])
+        {
+            PageData["BookingDate"] = info.Booking.AlternativeDate1Start;
+        }
+        if (info.Booking.AlternativeDate2Start is DateTime &&
+            info.Booking.AlternativeDate2Start < PageData["BookingDate"])
+        {
+            PageData["BookingDate"] = info.Booking.AlternativeDate2Start;
+        }
+    }
     @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", info.Booking, info.SentTo.ToString().ToLower(), true)
 
     <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>

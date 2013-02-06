@@ -6,6 +6,7 @@
     }
     // possible values: customer, provider
     var forUserType = PageData["DisplayForUserType"] ?? Request["DisplayForUserType"] ?? "customer";
+    var bookingDate = PageData["BookingDate"];
 
     dynamic policy = null;
     using (var db = Database.Open("sqlloco")) {
@@ -22,13 +23,33 @@
 
 @if (policy != null)
 {
-    DateTime refundLimitDate = DateTime.Now.AddDays(7).AddHours(- policy.HoursRequired);
+    DateTime refundLimitDate = (bookingDate ?? DateTime.Now.AddDays(7)).AddHours(- policy.HoursRequired);
     <div class="cancellation-policy-info">
         <strong>@policy.CancellationPolicyName:</strong>
         <em><strong>@policy.CancellationPolicyDescription</strong>
-            If you make this booking for one week from now, you would need to cancel by 
-            <strong>@(refundLimitDate.ToShortTimeString()) @refundLimitDate.ToLongDateString()</strong>
-            to receive a <strong>@(policy.RefundIfCancelledBefore.ToString("0.##%")) refund</strong>
+            @if (refundLimitDate <= DateTime.Now)
+            {
+                 <span>
+                    Since your request time is within @policy.HoursRequired hours, you will not be able to cancel this appointment.
+                 </span>
+            }
+            else if (bookingDate == null)
+            {
+                <span>
+                    If you make this booking for one week from now, you would need to cancel by 
+                    <strong>@(refundLimitDate.ToShortTimeString()) @refundLimitDate.ToLongDateString()</strong>
+                    to receive a <strong>@(policy.RefundIfCancelledBefore.ToString("0.##%")) refund.</strong>
+                </span>
+            }
+            else
+            {
+                <span>
+                    <strong>@(policy.RefundIfCancelledBefore.ToString("0.##%")) refund</strong>
+                    if cancelled before @policy.HoursRequired hours, except fees.
+                    You would need to cancel by @(refundLimitDate.ToShortTimeString()) @refundLimitDate.ToLongDateString(),
+                    to receive a @(policy.RefundIfCancelledBefore.ToString("0.##%")) refund.
+                </span>
+            }
         </em>
         <ul>
             <li>The Loconomics service fee is non-refundable.</li>

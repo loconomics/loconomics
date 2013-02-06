@@ -29,10 +29,18 @@
     // Initializing Validation rules
     Validation.RequireField("firstname", "First name is required");
     Validation.RequireField("lastname", "Last name is required");
-    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a unique letter"));
+    Validation.Add("firstname", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "Last name be fewer than 145 characters."));
+    Validation.Add("secondlastname", Validator.StringLength(145, 0, "Second Last name be fewer than 145 characters."));
+    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a single letter"));
     Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
     Validation.Add("publicbio", Validator.StringLength(500, 0, "Public bio must be fewer than 500 characters"));
-    
+    Validation.Add("streetaddress1", Validator.StringLength(100, 0, "Street Address 1 must be fewer than 100 characters."));
+    Validation.Add("streetaddress2", Validator.StringLength(100, 0, "Street Address 2 must be fewer than 100 characters."));
+    if (Validation.GetHtml("city") == null) {
+        Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    }
+
     if (IsPost && Validation.IsValid()) {
         int zipID = 0;
         if (!Zip.IsEmpty()) {
@@ -414,7 +422,7 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
     @if (u.IsProvider)
     {
         <fieldset id="@idprefix-fs-customurl" class="customurl">
-            <legend title="Create your own personal brand by customizing your profile's URL. Be orginal!" class="has-tooltip">Custom Loconomics URL:</legend>
+            <legend title="Create your own personal brand by customizing your profile's URL. Be original!" class="has-tooltip">Custom Loconomics URL:</legend>
             <ul>
                 <li>
                     https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
@@ -435,7 +443,7 @@ This is the bare-bones run down of who you are outside of your job. Please fill 
     <fieldset id="@idprefix-fs-publicbio">
         <legend>Public bio:</legend>
         <ul>
-            <li><textarea id="@idprefix-publicbio" name="publicbio" rows="7" placeholder="Who are you, anyway? Tell potential clients a little something about you, e.g. “I am a San Francisco native,” or “I can whistle through my teeth.” " @Validation.GetHtml("publicbio")>@Bio</textarea>
+            <li><textarea id="@idprefix-publicbio" name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community a little something about you, e.g. “I am a San Francisco native,” or “I can whistle through my teeth.” " @Validation.GetHtml("publicbio")>@Bio</textarea>
                 @Html.ValidationMessage("publicbio")
             </li>
         </ul>

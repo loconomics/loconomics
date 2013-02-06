@@ -992,4 +992,73 @@ public static partial class LcData
                     UL.StatusID = 2 -- Verified succesfully.
     ";
     #endregion
+
+    #region Reviews and Scores
+    public const string sqlCheckUserReview = @"
+        SELECT  count(*)
+        FROM    UserReviews
+        WHERE   PositionID = @0
+		            AND
+		        BookingID = @1
+		            AND
+		        ProviderUserID = @2
+		            AND
+		        CustomerUserID = @3
+    ";
+    public const string sqlGetUserReviewScores = @"
+        SELECT  Rating1, Rating2, Rating3, Rating4, Answer1, Answer2, TotalRatings, ServiceHours
+        FROM    UserReviewScores
+        WHERE   UserID = @0
+                    AND
+                PositionID = @1
+    ";
+    public const string sqlInsertUserReviewScores = @"
+        INSERT INTO UserReviewScores (
+            UserID, PositionID,
+            TotalRatings,
+            Rating1, Rating2, Rating3, Rating4,
+            Answer1, Answer2,
+            ServiceHours, LastRatingDate,
+            CreatedDate, UpdatedDate, ModifiedBy
+        ) VALUES (
+            @0, @1,
+            @2, 
+            @3, @4, @5, @6,
+            @7, @8,
+            @9, @10,
+            getdate(), getdate(), 'sys'
+        )
+    ";
+    public const string sqlUpdateUserReviewScores = @"
+        UPDATE UserReviewScores SET
+            TotalRatings = @2,
+            Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
+            Answer1 = @7, Answer2 = @8,
+            ServiceHours = @9, LastRatingDate = @10,
+            UpdatedDate = getdate(),
+            ModifiedBy = 'sys'
+        WHERE   UserID = @0
+                    AND
+                PositionID = @1
+    ";
+    public const string sqlInsertUserReview = @"
+        INSERT INTO UserReviews (
+            BookingID, CustomerUserID, ProviderUserID, PositionID,
+            Rating1, Rating2, Rating3, Rating4,
+            Answer1, Answer2,
+            Answer1Comment, Answer2Comment,
+            PrivateReview, PublicReview,
+            ServiceHours, HelpfulReviewCount,
+            CreatedDate, UpdatedDate, ModifiedBy
+        ) VALUES (
+            @0, @1, @2, @3,
+            @4, @5, @6, @7,
+            @8, @9,
+            @10, @11,
+            @12, @13,
+            @14, @15,
+            getdate(), getdate(), 'sys'
+        )
+    ";
+    #endregion
 }

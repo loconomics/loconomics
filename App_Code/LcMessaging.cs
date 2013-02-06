@@ -288,10 +288,10 @@ public class LcMessaging
             string emailTemplatePath = "Booking/EmailBookingRequest/";
             switch ((int)bookingRequest.BookingRequestStatusID)
             {
-                case 6:
+                case 5:
                     emailTemplatePath = "Booking/EmailBookingRequestDeclined/";
                     break;
-                case 7:
+                case 6:
                     emailTemplatePath = "Booking/EmailBookingRequestExpired/";
                     break;
             }
@@ -591,7 +591,7 @@ public class LcMessaging
             w.Encoding = System.Text.Encoding.UTF8;
 
             // Setup URL
-            string completeURL = LcUrl.SiteUrl + tplUrl;
+            string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
             if (!LcHelpers.InProduction)
             {
                 completeURL = completeURL.Replace("https:", "http:");

@@ -7,6 +7,7 @@
     var messageTitle = PageData["messageTitle"];
     var messageSubtitle = PageData["messageSubtitle"];
     var needHelpAddress = PageData["needHelpAddress"];
+    var helpReference = PageData["helpReference"];
     var showSign = PageData["showSign"] ?? false;
     var viewOnSiteUrl = PageData["viewOnSiteUrl"];
     if (threadID != null) {
@@ -110,6 +111,10 @@
                     <td colspan="2" style="padding-top:5px;padding-bottom:20px;border-top:1px solid #dadada;">
                         <strong style="font-size:15px">Need Help?</strong><br />
                         If you have a question or need to report a problem, e-mail us at @needHelpAddress or call us at <span style="white-space:nowrap">1 (415) 735-6025</span>.
+                        @if (!String.IsNullOrEmpty(helpReference))
+                        {
+                            <span>Please reference @(helpReference).</span>
+                        }
                     </td>
                 </tr>
             }

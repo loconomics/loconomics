@@ -65,6 +65,14 @@
         Validation.RequireField("license-number", LcRessources.RequiredField("License number"));
         Validation.RequireField("county", LcRessources.RequiredField("County"));
         Validation.RequireField("city", LcRessources.RequiredField("City"));
+        Validation.Add("license-link", Validator.StringLength(2073, 0, "License URL link must be fewer than 2073 characters."));
+        Validation.Add("license-number", Validator.StringLength(100, 0, "License/Certification number must be fewer than 100 characters."));
+        Validation.Add("first-name", Validator.StringLength(100, 0, "First name must be fewer than 100 characters."));
+        Validation.Add("last-name", Validator.StringLength(100, 0, "Last name must be fewer than 100 characters."));
+        Validation.Add("second-last-name", Validator.StringLength(100, 0, "Second last name must be fewer than 100 characters."));
+        Validation.Add("middle-initial", Validator.StringLength(0, 1, "Middle initial must be a single character."));
+        Validation.Add("business-name", Validator.StringLength(200, 0, "Business name must be fewer than 200 characters."));
+        Validation.Add("city", Validator.StringLength(2073, 0, "City must be fewer than 100 characters."));
     }
 
     if (IsPost && Validation.IsValid()) {
@@ -113,7 +121,7 @@
                     LicenseCertificationURL,
                     LicenseCertificationNumber,
                     -- Provider personal
-                    FirstName,                
+                    FirstName,
                     LastName,
                     SecondLastName,
                     MiddleInitial,
@@ -236,7 +244,7 @@ else
         <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="license-type-selector">
-            <label for="@idprefix-license-type">Please select the license you possess:</label>
+            <label for="@idprefix-license-type">Please select the license/certification you possess:</label>
             <select id="@idprefix-license-type" name="license-type" @Validation.GetHtml("license-type")>
                 <option value=""></option>
                 @foreach (var license in licenses)
@@ -254,7 +262,7 @@ else
             <ul class="license-details">
                 <li><strong>Description:</strong> <span class="license-description"></span></li>
                 <li><strong>State:</strong> <span class="license-state"></span></li>
-                <li><strong>Certifying Board:</strong> <a href="#" target="_blank" class="license-authority"></a></li>
+                <li><strong>Certifying board:</strong> <a href="#" target="_blank" class="license-authority"></a></li>
             </ul>
         </fieldset>
         <fieldset class="license-request">
@@ -267,7 +275,7 @@ else
                     </select>
                 </li>
                 <li>
-                    <label for="@idprefix-license-number">License number:</label>
+                    <label for="@idprefix-license-number">License/certificate number:</label>
                     <input type="text" id="@idprefix-license-number" value="@Request["license-number"]" name="license-number" @Validation.GetHtml("license-number")/>
                 </li>
                 <li>
@@ -275,24 +283,24 @@ else
                     <input type="text" id="@idprefix-business-name" value="@Request["business-name"]" name="business-name" @Validation.GetHtml("business-name")/>
                 </li>
                 <li>
-                    <label for="@idprefix-first-name">First Name:</label>
+                    <label for="@idprefix-first-name">First name:</label>
                     <input type="text" id="@idprefix-first-name" value="@Request["first-name"]" name="first-name" @Validation.GetHtml("first-name")/>
                 </li>
                 <li>
-                    <label for="@idprefix-last-name">Last Name:</label>
+                    <label for="@idprefix-last-name">Last name:</label>
                     <input type="text" id="@idprefix-last-name" value="@Request["last-name"]" name="last-name" @Validation.GetHtml("last-name")/>
                 </li>
                 @if (LcData.GetCurrentCountryID() == 1)
                 {
                 <li>
-                    <label for="@idprefix-middle-initial">Middle Initial:</label>
+                    <label for="@idprefix-middle-initial">Middle initial:</label>
                     <input type="text" id="@idprefix-middle-initial" value="@Request["middle-initial"]" name="middle-initial" @Validation.GetHtml("middle-initial")/>
                 </li>
                 }
                 @if (LcData.GetCurrentCountryID() == 2)
                 {
                 <li>
-                    <label for="@idprefix-second-last-name">Second Last Name:</label>
+                    <label for="@idprefix-second-last-name">Second last name:</label>
                     <input type="text" id="@idprefix-second-last-name" value="@Request["second-last-name"]" name="second-last-name" @Validation.GetHtml("second-last-name")/>
                 </li>
                 }

@@ -74,9 +74,16 @@ else
             .
             </p>
             <h5>Preferred time:</h5>
+            @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+            {
             <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
                 Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
             </button>
+            }
+            else
+            {
+                <div>Preferred time is not a available</div>
+            }
             @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
             <h5>Alternate time(s):</h5>
@@ -116,9 +123,14 @@ else
             }
             </p>
             <h5>Preferred time:</h5>
+            @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+            {
             <div class="selected-date preferred-date">
                 @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
             </div>
+            } else {
+                <div>Preferred time is not available</div>
+            }
             @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
             {
             <h5>Alternate time(s):</h5>
@@ -139,6 +151,19 @@ else
         }
 
         <h4>Booking details</h4>
+        @{
+            PageData["BookingDate"] = booking.PreferredDateStart;
+            if (booking.AlternativeDate1Start is DateTime &&
+                booking.AlternativeDate1Start < PageData["BookingDate"])
+            {
+                PageData["BookingDate"] = booking.AlternativeDate1Start;
+            }
+            if (booking.AlternativeDate2Start is DateTime &&
+                booking.AlternativeDate2Start < PageData["BookingDate"])
+            {
+                PageData["BookingDate"] = booking.AlternativeDate2Start;
+            }
+        }
         @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
 
         <h4>Reminders</h4>

@@ -35,7 +35,9 @@
     Validation.RequireField("firstname", "You must specify your first name.");
     Validation.RequireField("lastname", "You must specify your last name.");
     Validation.RequireField("termsofuse", "You must agree to the terms of use and privacy policy.");
-    Validation.RequireField("zipcode", "You must enter your Zip code.");
+    Validation.RequireField("zipcode", "You must enter your zip code.");
+    Validation.Add("firstname", Validator.StringLength(50, 0, "First name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "Last name must be fewer than 145 characters."));
     // Position selection:
     Validation.RequireField("position", "You must add at least one position.");
         
@@ -187,6 +189,10 @@
             
             /*** All finished, it was ok? ***/
             if (ModelState.IsValid) {
+                
+                // Log Marketing URL parameters
+                db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, Request.Url.Query);
+                
                 //LcHelpers.ReturnJsonResult(0, null);
                 var red = LcUrl.LangPath + "Dashboard/Alerts/";
                 if (Request.IsAjaxRequest()) {

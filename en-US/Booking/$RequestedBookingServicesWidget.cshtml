@@ -7,6 +7,7 @@
     bool showPricing = PageData[4] ?? true;
     bool showCancellationPolicy = PageData[5] ?? true;
     string cssClass = PageData[6] ?? "message-section";
+    var BookingDate = PageData["BookingDate"];
     var u = LcData.UserInfo.GetUserRow();
     
     if (booking == null || booking["BookingRequestID"] == null) {
@@ -118,7 +119,8 @@
                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new
                {
                    CancellationPolicyID = booking.CancellationPolicyID,
-                   DisplayForUserType = myUserType
+                   DisplayForUserType = myUserType,
+                   BookingDate = BookingDate
                })
             </div>
         }

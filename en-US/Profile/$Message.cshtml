@@ -11,6 +11,7 @@
 
     Validation.RequireField("message-body", "Message cannot be empty!");
     Validation.RequireField("subject", "Subject cannot be empty!");
+    Validation.Add("message-body", Validator.StringLength(2500, 0, "Message is too big!"));
     
     if (IsPost && Validation.IsValid()) {
         var u = LcData.UserInfo.GetUserRow();

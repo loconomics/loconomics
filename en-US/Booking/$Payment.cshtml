@@ -60,6 +60,10 @@
     Validation.RequireField("card-exp-month", "Card expiration month is required");
     Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
+    Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+    Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+    Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    Validation.Add("save-payment-as", Validator.StringLength(50, 0, "Card nickname must be fewer than 50 characters."));
     
     if (priceIsEstimated) {
         Validation.RequireField("agree-estimate", "You must agree the pricing estimate");
@@ -239,81 +243,113 @@
                         // avoiding comunicate with them.
                         transactionID = "TEST:" + Guid.NewGuid().ToString();
                     } else {
-                        // REAL Braintree Code
-                        BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
                         
-                        //string credidtCardToken = c.UserID.ToString() + ":creditcard:" + LcHelpers.ConvertToBraintreeToken(paymentNickName);
-                        
-                        /*
-                         * Send customer payment data to Braintree, 
-                         * using our UserID as identifier.
-                         */
-                        
-                        // Find or create Customer on Braintree
-                        string customerIdOnBraintree = LcHelpers.Channel + "_" + c.UserID.ToString();
                         try{
-                            var gc = gateway.Customer.Find(customerIdOnBraintree);
-                        } catch (Braintree.Exceptions.NotFoundException ex) {
-                            // Customer doens't exist, create it:
-                            var gcr = new CustomerRequest{
-                                Id = customerIdOnBraintree
-                            };
-
-                            var r = gateway.Customer.Create(gcr);
-                            if (!r.IsSuccess()) {
-                                ModelState.AddFormError(r.Message);
-                                foreach (var error in r.Errors.All()) {
-                                    ModelState.AddFormError(error.Message);
-                                }
-                            }
-                        }
+                            // REAL Braintree Code
+                            BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
                         
-                        if (ModelState.IsValid) {
-                            TransactionRequest request = new TransactionRequest
-                            {
-                                Amount = TotalPrice,
-                                CustomerId = customerIdOnBraintree,
-                                CreditCard = new TransactionCreditCardRequest
-                                {
-                                    //Token = credidtCardToken,
-                                    CardholderName = Request["name-on-card"],
-                                    Number = Request["card-number"],
-                                    ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
-                                    CVV = Request["cvv"]
-                                },
-                                BillingAddress = new AddressRequest
-                                {
-                                    StreetAddress = Request["street-address-line-1"],
-                                    ExtendedAddress = Request["street-address-line-2"],
-                                    Locality = Request["city"],
-                                    Region = stateProvinceCode,
-                                    PostalCode = Request["zip"],
-                                    CountryCodeAlpha2 = "US"
-                                },
-                                Options = new TransactionOptionsRequest
-                                {
-                                    StoreInVaultOnSuccess = true,
-                                    AddBillingAddressToPaymentMethod = true
-                                }
-                            };
+                            //string credidtCardToken = c.UserID.ToString() + ":creditcard:" + LcHelpers.ConvertToBraintreeToken(paymentNickName);
+                        
+                            /*
+                             * Send customer payment data to Braintree,
+                             * using our UserID as identifier.
+                             */
+                        
+                            // Find or create Customer on Braintree
+                            string customerIdOnBraintree = LcHelpers.Channel + "_" + c.UserID.ToString();
+                            string customerCreditCardToken = customerIdOnBraintree + "_CreditCard1";
+                            try{
+                                var gc = gateway.Customer.Find(customerIdOnBraintree);
+                            } catch (Braintree.Exceptions.NotFoundException ex) {
+                                // Customer doens't exist, create it:
+                                var gcr = new CustomerRequest{
+                                    Id = customerIdOnBraintree
+                                };
 
-                            var result = gateway.Transaction.Sale(request);
-                    
-                            // Checking results:
-                            if (result.IsSuccess()
-                                && result.Target != null
-                                && !String.IsNullOrEmpty(result.Target.Id)) {
-                                transactionID = result.Target.Id;
-                            } else {
-                                if (result.IsSuccess()) {
-                                    ModelState.AddFormError("Impossible to know transaction details, please contact support");
-                                } else {
-                                    ModelState.AddFormError(result.Message);
-                                    foreach (var error in result.Errors.All()) {
+                                var r = gateway.Customer.Create(gcr);
+                                if (!r.IsSuccess()) {
+                                    ModelState.AddFormError(r.Message);
+                                    foreach (var error in r.Errors.All()) {
                                         ModelState.AddFormError(error.Message);
                                     }
                                 }
                             }
+                        
+                        
+                            // Find or create the payment method (credit card) for the customer
+                            if (ModelState.IsValid) {
+
+                                var creditCardRequest = new CreditCardRequest
+                                {
+                                    CustomerId = customerIdOnBraintree,
+                                    Token = customerCreditCardToken,
+                                    CardholderName = Request["name-on-card"],
+                                    Number = Request["card-number"],
+                                    ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
+                                    CVV = Request["cvv"],
+                                    BillingAddress = new CreditCardAddressRequest
+                                    {
+                                        StreetAddress = Request["street-address-line-1"],
+                                        ExtendedAddress = Request["street-address-line-2"],
+                                        Locality = Request["city"],
+                                        Region = stateProvinceCode,
+                                        PostalCode = Request["zip"],
+                                        CountryCodeAlpha2 = "US"
+                                    }
+                                };
+                                
+                                Result<CreditCard> resultCreditCard = null;
+
+                                try{
+                                    // Find the card
+                                    gateway.CreditCard.Find(customerCreditCardToken);
+                                    
+                                    // Update it:
+                                    resultCreditCard = gateway.CreditCard.Update(customerCreditCardToken, creditCardRequest);
+
+                                } catch (Braintree.Exceptions.NotFoundException ex) {
+                                    // Credit card for customer doesn't exist, create it:
+                                    resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
+                                }
+                                
+                                if (!resultCreditCard.IsSuccess()) {
+                                    ModelState.AddFormError(resultCreditCard.Message);
+                                    foreach (var error in resultCreditCard.Errors.All()) {
+                                        ModelState.AddFormError(error.Message);
+                                    }
+                                }
+                            }
+                        
+                        
+                            if (ModelState.IsValid) {
+                                TransactionRequest request = new TransactionRequest
+                                {
+                                    Amount = TotalPrice,
+                                    CustomerId = customerIdOnBraintree,
+                                    PaymentMethodToken = customerCreditCardToken
+                                };
+
+                                var result = gateway.Transaction.Sale(request);
+                    
+                                // Checking results:
+                                if (result.IsSuccess()
+                                    && result.Target != null
+                                    && !String.IsNullOrEmpty(result.Target.Id)) {
+                                    transactionID = result.Target.Id;
+                                } else {
+                                    if (result.IsSuccess()) {
+                                        ModelState.AddFormError("Impossible to know transaction details, please contact support");
+                                    } else {
+                                        ModelState.AddFormError(result.Message);
+                                        foreach (var error in result.Errors.All()) {
+                                            ModelState.AddFormError(error.Message);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        } catch (Braintree.Exceptions.BraintreeException ex) {
+                            ModelState.AddFormError(ex.Message);
                         }
                     }
                     
@@ -423,7 +459,7 @@
             </li>
             <li class="save-to-my-payments">
                 <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save</label>
-                <label class="save-as">payment details as:<input type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
+                <label class="save-as">card details as:<input type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
             </li>
         </ul>
     </fieldset>
@@ -474,6 +510,19 @@
         </ul>
         <div class="popups">
             <div id="cancellation-policy" class="popup">
+                @{
+                    PageData["BookingDate"] = dt1Start;
+                    if (dt2Start.HasValue &&
+                        dt2Start < PageData["BookingDate"])
+                    {
+                        PageData["BookingDate"] = dt2Start;
+                    }
+                    if (dt3Start.HasValue &&
+                        dt3Start < PageData["BookingDate"])
+                    {
+                        PageData["BookingDate"] = dt3Start;
+                    }
+                }
                 @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
                     CancellationPolicyID = (cancellationPolicy == null ? LcData.Booking.DefaultCancellationPolicyID : cancellationPolicy.CancellationPolicyID),
                     DisplayForUserType = "customer" })
