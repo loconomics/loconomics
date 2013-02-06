@@ -630,6 +630,14 @@ form.positionavailability input{
     float: right;
     text-align: right;
 }
+/** Availability calendar **/
+.dashboard #availabilityCalendar .calendar {
+    /* availaibility-calendar is sized full-relative from 1px by default.
+        To change de global size (like a zoom) we apply a different 
+        font-size ONLY in the container .calendar.
+        NOTE: legend is not relative sized. */
+    font-size: 1.8px;
+}
 
 /** Form Positions - Photos **/
 .positionphotos fieldset{

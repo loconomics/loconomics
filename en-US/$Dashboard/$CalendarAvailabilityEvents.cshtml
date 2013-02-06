@@ -1,0 +1,20 @@
+﻿@*  $CalendarAvailaiblityEvents
+    Dashboard Page, Calendar section
+    List, create, edit and remove CalendarEvents of type 'availability events' (ID:3) that allow
+    to the provider be more specific with its available and not available service dates, additionally
+    to its general work hours.
+ *@
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+}
+<div class="actions">
+    <button type="button" class="add-event-action action">Add Appointment</button>
+</div>
+<div class="edit-event" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarEditEventForm/?EventID=0">
+    @*@RenderPage("$CalendarEditEventForm.cshtml", new { EventID = 0 })*@
+</div>
+<div class="list">
+    @RenderPage("$CalendarAvailabilityEventsList.cshtml")
+</div>

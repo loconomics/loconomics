@@ -1,0 +1,37 @@
+﻿@*  $CalendarEditEventForm.cshtml
+    Allow edit or create an event.
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var eventID = Request["EventID"].AsInt();
+    var idprefix = "editEvent" + eventID.ToString();
+    
+    if (Request["Action"] == "delete") {
+
+        // TODO Delete eventID
+
+        LcHelpers.ReturnJsonResult(0, "Event was succesful deleted!");
+        // ENDS page execution
+    }
+
+    // TODO Validation rules
+    
+    // TODO Save posted data
+    if (IsPost && Validation.IsValid()) {
+        
+        
+        if (ModelState.IsValid) {
+            // All was fine, AJAX-JSON response
+            LcHelpers.ReturnJsonResult(0, "Event was succesful saved!");
+        }
+    }
+}
+<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/" method="post" class="editevent ajax ajax-box" id="@idprefix">
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+
+</form>

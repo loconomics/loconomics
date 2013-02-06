@@ -567,7 +567,7 @@ ul.attributes-list li {
 
 /**********************************/
 /****** Availability **************/
-.profile .availability-calendar .calendar{
+.profile .availability-calendar .calendar {
     /* availaibility-calendar is sized full-relative from 1px by default.
         To change de global size (like a zoom) we apply a different 
         font-size ONLY in the container .calendar.
