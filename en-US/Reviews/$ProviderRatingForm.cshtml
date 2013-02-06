@@ -78,79 +78,16 @@
             }
 
             if(ModelState.IsValid){
-                var sqlCheckReview = @"
-                    SELECT  count(*)
-                    FROM    UserReviews
-                    WHERE   BookingID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlGetScores = @"
-                    SELECT  Rating1, Rating2, Rating3, Rating4, Answer1, Answer2, TotalRatings, ServiceHours
-                    FROM    UserReviewScores
-                    WHERE   UserID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlInsertScores = @"
-                    INSERT INTO UserReviewScores (
-                        UserID, PositionID,
-                        TotalRatings,
-                        Rating1, Rating2, Rating3, Rating4,
-                        Answer1, Answer2,
-                        ServiceHours, LastRatingDate,
-                        CreatedDate, UpdatedDate, ModifiedBy
-                    ) VALUES (
-                        @0, @1,
-                        @2, 
-                        @3, @4, @5, @6,
-                        @7, @8,
-                        @9, @10,
-                        getdate(), getdate(), 'sys'
-                    )
-                ";
-                var sqlUpdateScores = @"
-                    UPDATE UserReviewScores SET
-                        TotalRatings = @2,
-                        Rating1 = @3, Rating2 = @4, Rating3 = @5, Rating4 = @6,
-                        Answer1 = @7, Answer2 = @8,
-                        ServiceHours = @9, LastRatingDate = @10,
-                        UpdatedDate = getdate(),
-                        ModifiedBy = 'sys'
-                    WHERE   UserID = @0
-                             AND
-                            PositionID = @1
-                ";
-                var sqlInsertReview = @"
-                    INSERT INTO UserReviews (
-                        BookingID, CustomerUserID, ProviderUserID, PositionID,
-                        Rating1, Rating2, Rating3, Rating4,
-                        Answer1, Answer2,
-                        Answer1Comment, Answer2Comment,
-                        PrivateReview, PublicReview,
-                        ServiceHours, HelpfulReviewCount,
-                        CreatedDate, UpdatedDate, ModifiedBy
-                    ) VALUES (
-                        @0, @1, @2, @3,
-                        @4, @5, @6, @7,
-                        @8, @9,
-                        @10, @11,
-                        @12, @13,
-                        @14, @15,
-                        getdate(), getdate(), 'sys'
-                    )
-                ";
-
                 using (var db = Database.Open("sqlloco")) {
-                    var hasreview = db.QueryValue(sqlCheckReview, bookingID, positionID);
+                    var hasreview = db.QueryValue(LcData.sqlCheckUserReview, positionID, bookingID, providerUserID, customerUserID);
                     if(hasreview > 0){
                         ModelState.AddFormError("The review for this service already exist");
                     } else {
                         //Look for existing scores
-                        var scores = db.QuerySingle(sqlGetScores, providerUserID, positionID);
+                        var scores = db.QuerySingle(LcData.sqlGetUserReviewScores, providerUserID, positionID);
                         if (scores == null) {
                             //First scores for the provider and positionID
-                            db.Execute(sqlInsertScores, 
+                            db.Execute(LcData.sqlInsertUserReviewScores, 
                                 providerUserID, positionID,
                                 1,
                                 rating1, rating2, rating3, null,
@@ -160,7 +97,7 @@
                             // Recalculate and Save the updated scores
                             var tr = scores.TotalRatings;
                             var ntr = tr + 1;
-                            db.Execute(sqlUpdateScores,
+                            db.Execute(LcData.sqlUpdateUserReviewScores,
                                 providerUserID, positionID,
                                 ntr,
                                 ((scores.Rating1 ?? 0) * tr + rating1) / ntr,
@@ -174,7 +111,7 @@
                                 DateTime.Now);
                         };
                         //Store Review
-                        db.Execute(sqlInsertReview, 
+                        db.Execute(LcData.sqlInsertUserReview, 
                             bookingID, customerUserID, providerUserID, positionID,
                             rating1, rating2, rating3, null,
                             answer1, answer2, answer1Comment, null,
