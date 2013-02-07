@@ -1097,7 +1097,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
     options = $.extend({
         closable: false,
-        center: false
+        center: false,
+        closeOptions: null /* as a valid first parameter for jQuery.hide function */
     }, options);
 
     contentBox = $(contentBox);
@@ -1108,18 +1109,20 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     } else
         blocked = $(blocked);
 
+    var boxInsideBlocked = !blocked.is('tr,thead,tbody,tfoot,table,ul,ol,dl');
+
+    // Getting box element if exists and referencing
     var bID = blocked.data('smooth-box-block-id');
     if (!bID)
         bID = (contentBox.attr('id') || '') + (blocked.attr('id') || '') + '-smoothBoxBlock';
     if (bID == '-smoothBoxBlock') {
         bID = 'id-' + guidGenerator() + '-smoothBoxBlock';
-        //if (console) console.log('smoothBoxBlock needs IDs on the argument elements');
-        //return;
     }
     blocked.data('smooth-box-block-id', bID);
     var box = $('#' + escapeJQuerySelectorValue(bID));
+    // Hiding box:
     if (contentBox.length == 0) {
-        box.hide();
+        box.hide(options.closeOptions);
         return;
     }
     if (box.length == 0) {
@@ -1128,7 +1131,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         box.addClass(addclass);
         box.append(boxc);
         box.attr('id', bID);
-        blocked.append(box);
+        if (boxInsideBlocked)
+            blocked.append(box);
+        else
+            $('body').append(box);
     } else {
         var boxc = box.children('.smooth-box-block-element');
     }
@@ -1136,19 +1142,26 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     boxc.children().remove();
     if (options.closable) {
         var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
-        closeButton.click(function () { smoothBoxBlock(null, blocked); return false; });
+        closeButton.click(function () { smoothBoxBlock(null, blocked, null, options); return false; });
         boxc.append(closeButton);
     }
     boxc.append(contentBox);
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());
-    box.css('z-index', blocked.css('z-index') + 10);
     box.css('position', 'absolute');
-    if (!blocked.css('position') || blocked.css('position') == 'static')
-        blocked.css('position', 'relative');
-    //offs = blocked.position();
-    box.css('top', 0);
-    box.css('left', 0);
+    if (boxInsideBlocked) {
+        // Box positioning setup when inside the blocked element:
+        box.css('z-index', blocked.css('z-index') + 10);
+        if (!blocked.css('position') || blocked.css('position') == 'static')
+            blocked.css('position', 'relative');
+        //offs = blocked.position();
+        box.css('top', 0);
+        box.css('left', 0);
+    } else {
+        // Box positioning setup when outside the blocked element, as a direct child of Body:
+        box.css('z-index', Math.floor(Number.MAX_VALUE));
+        box.css(blocked.offset());
+    }
     box.show();
     if (options.center) {
         boxc.css('position', 'absolute');

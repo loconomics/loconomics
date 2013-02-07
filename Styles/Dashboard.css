@@ -1029,7 +1029,8 @@ html.js .user-verified-licenses h5 {
     width: 40px;
 }
 /**** Page/Form: package-pricing-type ****/
-.package-pricing-type .add-package {
+.package-pricing-type .add-package,
+.add-event {
     float: right;
 }
 .package-pricing-type .add-addon {
@@ -1038,6 +1039,7 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type label {
     width: auto !important;
 }
+.add-item > a,
 .package-pricing-type .add-package > a {
     background: url('../img/theme/add-new-button.png') no-repeat right center;
     min-height: 23px;
@@ -1046,6 +1048,7 @@ html.js .user-verified-licenses h5 {
     color: Black;
     text-decoration: none;
 }
+.add-item > a:hover,
 .package-pricing-type .add-package > a:hover {
     text-decoration: underline;
 }

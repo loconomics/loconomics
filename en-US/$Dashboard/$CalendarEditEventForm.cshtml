@@ -12,7 +12,7 @@
     if (Request["Action"] == "delete") {
 
         // TODO Delete eventID
-
+        System.Threading.Thread.Sleep(2000);
         LcHelpers.ReturnJsonResult(0, "Event was succesful deleted!");
         // ENDS page execution
     }
@@ -21,7 +21,7 @@
     
     // TODO Save posted data
     if (IsPost && Validation.IsValid()) {
-        
+        System.Threading.Thread.Sleep(2000);
         
         if (ModelState.IsValid) {
             // All was fine, AJAX-JSON response
@@ -33,5 +33,17 @@
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
+    @if (eventID == 0)
+    {
+        <div>New event!</div>
+    }
+    else
+    {
+        <div>Editing event @eventID</div>
+    }
 
+    <div class="actions">
+        <button type="button" class="button cancel-action">Cancel</button>
+        <button class="button main-action">Save</button>
+    </div>
 </form>

@@ -9,6 +9,64 @@
     var idprefix = "availbilityEventsList";
 
     // TODO Load events
+    dynamic events = null;
+    using (var db = Database.Open("sqlloco")) {
+        events = db.Query(@"
+            SELECT  E.Id, E.Summary, E.CalendarAvailabilityTypeID, E.StartTime, E.EndTime,
+                    T.CalendarAvailabilityTypeName As AvailabilityType
+            FROM    CalendarEvents As E
+                     INNER JOIN
+                    CalendarAvailabilityType As T
+                      ON E.CalendarAvailabilityTypeID = T.CalendarAvailabilityTypeID
+                        AND T.LanguageID = @1 AND T.CountryID = @2
+            WHERE   UserID = @0
+                     AND
+                    EventType = 3
+            ORDER BY StartTime ASC, EndTime ASC
+        ", u.UserID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+    }
+    
+    //TEST
+    events = new List<dynamic>{
+        new {
+            Summary = "Testing",
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now.AddHours(2),
+            AvailabilityType = "Busy",
+            Id = 20
+        }
+    };
 }
-<div>
-</div>
+@if (events == null || events.Count == 0)
+{
+    <div>There is no appointments still</div>
+}
+else
+{
+    <table id="@idprefix">
+        <thead>
+            <tr>
+                <th>What</th>
+                <th>Starts</th>
+                <th>Ends</th>
+                <th>Availability Type</th>
+                <th class="actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in events)
+            {
+                <tr class="event item" data-event-id="@e.Id">
+                    <td>@e.Summary</td>
+                    <td>@e.StartTime</td>
+                    <td>@e.EndTime</td>
+                    <td>@e.AvailabilityType</td>
+                    <td class="actions">
+                        <button type="button" class="action edit-action">Edit</button>
+                        <button type="button" class="action delete-action">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

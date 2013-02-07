@@ -230,7 +230,7 @@ $(document).ready(function () {
                 }
             }
             if (bID)
-                url = 'Booking/$CancelBooking/';    
+                url = 'Booking/$CancelBooking/';
             else
                 url = 'Booking/$CancelBookingRequest/';
         } else {
@@ -521,16 +521,18 @@ $(document).ready(function () {
                         ProviderPackageID: $(this).data('provider-package-id'),
                         PositionID: $(this).closest('.position-tab').data('position-id')
                     },
-                    success: function (data) {
+                    success: function (data, text, jx) {
                         if (data && data.Code == 0) {
                             smoothBoxBlock('<div>' + data.Result + '</div>', pak);
                             pak.click(function () { smoothBoxBlock(null, pak); pak.hide('slow', function () { pak.remove() }) });
-                        }
+                        } else
+                            ajaxFormsSuccessHandler(data, text, jx);
                     },
                     error: function (jx, message, ex) {
                         ajaxErrorPopupHandler(jx, message, ex);
                         smoothBoxBlock(null, pak);
-                    }
+                    },
+                    complete: ajaxFormsCompleteHandler
                 });
             }
         });
