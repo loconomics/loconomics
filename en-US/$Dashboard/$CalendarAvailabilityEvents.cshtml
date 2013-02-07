@@ -8,90 +8,29 @@
     LcHelpers.ProviderPage();
     
     var u = LcData.UserInfo.GetUserRow();
+    
+    var datacontext = "availabilityevents";
 }
-<div class="edit-event edit-panel" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarEditEventForm/?EventID=0">
-    @*@RenderPage("$CalendarEditEventForm.cshtml", new { EventID = 0 })*@
-</div>
-<div class="events-list">
-    <div class="lc-ressources">
-        <div class="confirm-delete-lcrud-item-message">Do you want to delete this event?</div>
-        <div class="delete-lcrud-item-loading-message">Deleting event</div>
+<div class="crudl" data-crudl-context="@datacontext" data-crudl-item-id-parameter="EventID">
+    <div class="edit-event crudl-editor" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarEditEventForm/">
+        @*@RenderPage("$CalendarEditEventForm.cshtml", new { EventID = 0 })*@
     </div>
-    <div class="add-item add-event actions lcrud-create">
-        <a href="#add-event" class="add-item-action add-event-action">Add Appointment</a>
-    </div>
-    <h3>Your availability appointments:</h3>
-    <div class="list view-panel lcrud-list" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarAvailabilityEventsList/">
-        @RenderPage("$CalendarAvailabilityEventsList.cshtml")
+    <div class="events-list crudl-viewer">
+        <div class="lc-ressources">
+            <div id="lcres-confirm-delete-crudl-item-message:@datacontext">Do you want to delete this event?</div>
+            <div id="lcres-delete-crudl-item-loading-message:@datacontext">Deleting event</div>
+        </div>
+        <div class="add-item add-event actions crudl-create">
+            <a href="#add-event" class="add-item-action add-event-action">Add Appointment</a>
+        </div>
+        <h3>Your availability appointments:</h3>
+        <div class="list view-panel crudl-list" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarAvailabilityEventsList/">
+            @RenderPage("$CalendarAvailabilityEventsList.cshtml")
+        </div>
     </div>
 </div>
 <script type="text/javascript">
     jQuery(function ($) {
-        $('.add-event-action').click(function () {
-            var $t = $(this);
-            $t.closest('.tab-body').find('.edit-panel').show().reload(function (url, defaultUrl) { return defaultUrl });
-            // Hide list while editing an event:
-            $t.closest('.tab-body').find('.events-list').hide('slow');
-            return false;
-        });
-        $('.view-panel .actions > .action').click(function () {
-            var $t = $(this);
-            var eventid = $t.closest('.event').data('event-id');
-            var item = $t.closest('.item');
-            var editPanel = $t.closest('.tab-body').find('.edit-panel');
-            if ($t.hasClass('edit-action')) {
-                editPanel.show().reload(function (url, defaultUrl) {
-                    return defaultUrl.replace(/EventID=0/, 'EventId=' + eventid);
-                });
-                // Hide list while editing an event:
-                $t.closest('.events-list').hide('slow');
-            }
-
-            if ($t.hasClass('delete-action')) {
-                var res = item.closest('.events-list').find('.lc-ressources');
-                if (confirm(res.children('.confirm-delete-lcrud-item-message').text())) {
-                    smoothBoxBlock(res.children('.delete-lcrud-item-loading-message'), item);
-                    $.ajax({
-                        url: editPanel.attr('data-source-url').replace(/EventID=0/i, 'EventID=' + eventid),
-                        data: {
-                            action: 'delete'
-                        },
-                        success: function (data, text, jx) {
-                            if (data && data.Code == 0) {
-                                smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
-                                    closable: true,
-                                    closeOptions: {
-                                        complete: function () {
-                                            item.hide('slow', function () { item.remove() });
-                                        }
-                                    }
-                                });
-                            } else
-                                ajaxFormsSuccessHandler(data, text, jx);
-                        },
-                        error: function (jx, message, ex) {
-                            ajaxErrorPopupHandler(jx, message, ex);
-                            smoothBoxBlock(null, item);
-                        },
-                        complete: ajaxFormsCompleteHandler
-                    });
-                }
-            }
-        });
-        function finishEdit() {
-            var editPanel = $(this).closest('.edit-panel');
-            var tab = editPanel.closest('.tab-body');
-            editPanel
-            .hide('slow', function () {
-                // Show again elements
-                tab.find('.events-list').show('slow');
-                // Avoid cached content on the edit-panel
-                editPanel.children().remove();
-            });
-            return false;
-        }
-        $('.edit-panel')
-        .on('click', '.cancel-action', finishEdit)
-        .on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', finishEdit)
+        LC.initCrudl();
     });
 </script>

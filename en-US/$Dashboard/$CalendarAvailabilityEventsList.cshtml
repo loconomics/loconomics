@@ -56,14 +56,14 @@ else
         <tbody>
             @foreach (var e in events)
             {
-                <tr class="event item" data-event-id="@e.Id">
+                <tr class="event crudl-item" data-crudl-item-id="@e.Id">
                     <td>@e.Summary</td>
                     <td>@e.StartTime</td>
                     <td>@e.EndTime</td>
                     <td>@e.AvailabilityType</td>
                     <td class="actions">
-                        <button type="button" class="action edit-action">Edit</button>
-                        <button type="button" class="action delete-action">Delete</button>
+                        <button type="button" class="action edit-action crudl-update">Edit</button>
+                        <button type="button" class="action delete-action crudl-delete">Delete</button>
                     </td>
                 </tr>
             }

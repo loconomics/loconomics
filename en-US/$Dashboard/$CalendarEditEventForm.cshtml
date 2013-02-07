@@ -29,7 +29,7 @@
         }
     }
 }
-<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/" method="post" class="editevent ajax ajax-box" id="@idprefix">
+<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/" method="post" class="crudl-form ajax ajax-box" id="@idprefix">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
@@ -43,7 +43,7 @@
     }
 
     <div class="actions">
-        <button type="button" class="button cancel-action">Cancel</button>
-        <button class="button main-action">Save</button>
+        <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
+        <button class="button main-action crudl-save">Save</button>
     </div>
 </form>

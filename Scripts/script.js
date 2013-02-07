@@ -647,13 +647,13 @@ LC.numericMilesSeparator = {
     'es-US': '.',
     'en-US': ',',
     'en-ES': ','
-}
+};
 LC.numericDecimalSeparator = {
     'es-ES': ',',
     'es-US': ',',
     'en-US': '.',
     'en-ES': '.'
-}
+};
 LC.getCurrentCulture = function () {
     var c = $('html').data('culture');
     var s = c.split('-');
@@ -662,6 +662,91 @@ LC.getCurrentCulture = function () {
         language: s[0],
         country: s[1]
     };
+};
+
+/* CRUDL Helper */
+LC.initCrudl = function () {
+    $('.crudl').each(function () {
+        var crudl = $(this);
+        if (crudl.data('__crudl_initialized__') === true) return;
+        var dctx = crudl.data('crudl-context') || '';
+        var vwr = crudl.find('.crudl-viewer');
+        var dtr = crudl.find('.crudl-editor');
+        var iidpar = crudl.data('crudl-item-id-parameter') || 'ItemID';
+        var formpars = { action: 'create' };
+        formpars[iidpar] = 0;
+
+        crudl.find('.crudl-create').click(function () {
+            formpars[iidpar] = 0;
+            formpars.action = 'create';
+            dtr.show().reload(function (url, defaultUrl) {
+                return defaultUrl + '?' + $.param(formpars);
+            });
+            // Hide viewer when in editor:
+            vwr.hide('slow');
+            return false;
+        });
+        vwr
+            .on('click', '.crudl-update', function () {
+                var $t = $(this);
+                var item = $t.closest('.crudl-item');
+                var itemid = item.data('crudl-item-id');
+                formpars[iidpar] = itemid;
+                formpars.action = 'update';
+                dtr.show().reload(function (url, defaultUrl) {
+                    return defaultUrl + '?' + $.param(formpars);
+                });
+                // Hide viewer when in editor:
+                vwr.hide('slow');
+            })
+            .on('click', '.crudl-delete', function () {
+                var $t = $(this);
+                var item = $t.closest('.crudl-item');
+                var itemid = item.data('crudl-item-id');
+
+                if (confirm(LC.getText('confirm-delete-crudl-item-message:' + dctx))) {
+                    smoothBoxBlock('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
+                    formpars[iidpar] = itemid;
+                    formpars.action = 'delete';
+                    $.ajax({
+                        url: dtr.attr('data-source-url'),
+                        data: formpars,
+                        success: function (data, text, jx) {
+                            if (data && data.Code == 0) {
+                                smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
+                                    closable: true,
+                                    closeOptions: {
+                                        complete: function () {
+                                            item.hide('slow', function () { item.remove() });
+                                        }
+                                    }
+                                });
+                            } else
+                                ajaxFormsSuccessHandler(data, text, jx);
+                        },
+                        error: function (jx, message, ex) {
+                            ajaxErrorPopupHandler(jx, message, ex);
+                            smoothBoxBlock(null, item);
+                        },
+                        complete: ajaxFormsCompleteHandler
+                    });
+                }
+            });
+        function finishEdit() {
+            dtr.hide('slow', function () {
+                // Show again the Viewer
+                vwr.show('slow');
+                // Avoid cached content on the Editor
+                dtr.children().remove();
+            });
+            return false;
+        }
+        dtr
+            .on('click', '.crudl-cancel', finishEdit)
+            .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit);
+
+        crudl.data('__crudl_initialized__', true);
+    });
 };
 
 /*******************
