@@ -257,7 +257,10 @@
             <span id="lcres-tab-has-changes-continue-without-change">@LcRessources.GetText("tab-has-changes-continue-without-change")</span>
         </div>
 
-        @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
-        @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")
+        @if (LcHelpers.Channel != "dev")
+        {
+            @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
+            @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")
+        }
     </body>
 </html>
