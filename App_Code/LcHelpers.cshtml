@@ -289,7 +289,7 @@
                 System.Web.Security.FormsAuthentication.SetAuthCookie(oboUser.Email, false);
                 
                 // Return to the original URL, setting the new cooking
-                Response.Redirect(Request.Url.OriginalString.Replace("OnBehalfOf", "_"));
+                Response.Redirect(LcUrl.GetTheGoodURL(Request.Url.OriginalString).Replace("OnBehalfOf", "_"));
             } else if (Session["OnBehalfOf_LoggedUserID"] is int) {
                 return String.Format("Logged as {0}:{1} On Behalf Of {2}:{3}",
                     Session["OnBehalfOf_LoggedUserID"],
