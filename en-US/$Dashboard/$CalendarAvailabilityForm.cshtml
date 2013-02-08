@@ -79,7 +79,7 @@
 
         if (Validation.IsValid() && ModelState.IsValid) {
             
-            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
+            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4";
             var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7";
 
             using (var db = Database.Open("sqlloco")) {
@@ -99,13 +99,16 @@
                         db.Execute(varSqlInsertAvailFreetime, u.UserID,
                             d + 1, // DATABASE Base-1
                             dateHours[d, 0],
-                            dateHours[d, 1]);
+                            dateHours[d, 1],
+                            false);
                     } else {
-                        // Not available, execute without date range to remove the existing data
+                        // Not available, execute with last parameter as 'true' to remove free events
                         db.Execute(varSqlInsertAvailFreetime, u.UserID,
                             d + 1, // DATABASE Base-1
                             TimeSpan.Zero,
-                            TimeSpan.Zero);
+                            TimeSpan.Zero,
+                            // Remove events:
+                            true);
                     }
                 }
                 
