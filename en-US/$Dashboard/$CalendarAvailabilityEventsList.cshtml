@@ -6,7 +6,7 @@
     LcHelpers.ProviderPage();
     
     var u = LcData.UserInfo.GetUserRow();
-    var idprefix = "availbilityEventsList";
+    var idprefix = "availabilityEventsList";
 
     // TODO Load events
     dynamic events = null;
@@ -39,7 +39,7 @@
 }
 @if (events == null || events.Count == 0)
 {
-    <div>There is no appointments still</div>
+    <div>There is no appointments still!</div>
 }
 else
 {
@@ -49,8 +49,8 @@ else
                 <th>What</th>
                 <th>Starts</th>
                 <th>Ends</th>
-                <th>Availability Type</th>
-                <th class="actions"></th>
+                <th>Availability</th>
+                <th class="actions">&nbsp;</th>
             </tr>
         </thead>
         <tbody>

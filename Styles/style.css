@@ -765,6 +765,11 @@ img.ui-datepicker-trigger{
     display: block !important;
     clear: both;
 }
+td.actions, th.actions {
+    display: table-cell !important;
+    clear: none;
+    text-align: center !important;
+}
 form fieldset.actions{
     margin: 10px 0 !important;
 }
