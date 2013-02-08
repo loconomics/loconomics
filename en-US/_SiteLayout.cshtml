@@ -11,6 +11,8 @@
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
+    
+    var onBehalfOf = LcHelpers.OnBehalfOf();
 }
 @helper howItWorksLi(){
                         <li>
@@ -80,7 +82,7 @@
                 }
 			    <ul class="user-tools">
                     @if (WebSecurity.IsAuthenticated) {
-			            <li>
+                        <li>
 					        <dl class="user-nav">
                                 @{
                                     var usermenuGreeting = "Welcome, {0}!";
@@ -132,6 +134,10 @@
 			            <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)ProviderSignUp/">Become a provider</a></li>
                     }
 			    </ul>
+                @if (onBehalfOf != null)
+                {
+                    <div style="float:right;clear:both;color:red;margin-top:5px;padding:0 5px;border:5px solid red;border-width:0 0 0 5px;">@onBehalfOf</div>
+                }
 		    </div>
         </header>
         <footer id="site-footer">
