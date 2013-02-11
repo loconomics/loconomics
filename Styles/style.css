@@ -785,9 +785,6 @@ form fieldset.actions{
 }
 .action:hover {
     box-shadow: 0 0 5px 2px #00989A;
-    -moz-box-shadow: 0 0 5px 2px #00989A;
-    -o-box-shadow: 0 0 5px 2px #00989A;
-    -webkit-box-shadow: 0 0 5px 2px #00989A;
 }
 /* .main-action, inside .actions container: bigger, more important button */
 .actions .main-action{
@@ -797,12 +794,16 @@ form fieldset.actions{
     padding: 0.4em 1.4em;
     text-decoration: none;
     border: none !important;
+    -moz-transition: background-color 1s, box-shadow .5s;
+}
+.has-changes .actions .main-action{
+    background-color: #E65A0F !important;
 }
 .actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
-    -moz-box-shadow: 0 0 5px 2px #99C027;
-    -o-box-shadow: 0 0 5px 2px #99C027;
-    -webkit-box-shadow: 0 0 5px 2px #99C027;
+}
+.has-changes .actions .main-action:hover{
+    box-shadow: 0 0 5px 2px #E65A0F;
 }
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
@@ -812,9 +813,6 @@ form fieldset.actions{
 }
 .actions .item-action:hover{
     box-shadow: 0 0 5px 2px #8b2143;
-    -moz-box-shadow: 0 0 5px 2px #8b2143;
-    -o-box-shadow: 0 0 5px 2px #8b2143;
-    -webkit-box-shadow: 0 0 5px 2px #8b2143;
 }
 /* .cancel-action for cancel buttons */
 .actions .cancel-action {
@@ -825,9 +823,6 @@ form fieldset.actions{
 }
 .actions .cancel-action:hover{
     box-shadow: 0 0 5px 2px #8B2143;
-    -moz-box-shadow: 0 0 5px 2px #8B2143;
-    -o-box-shadow: 0 0 5px 2px #8B2143;
-    -webkit-box-shadow: 0 0 5px 2px #8B2143;
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
@@ -840,9 +835,6 @@ form fieldset.actions{
 .add-action:hover {
     background: #00989a;
     box-shadow: 0 0 5px 2px #00989a;
-    -moz-box-shadow: 0 0 5px 2px #00989a;
-    -o-box-shadow: 0 0 5px 2px #00989a;
-    -webkit-box-shadow: 0 0 5px 2px #00989a;
 }
 .report-action {
     color: #747474;

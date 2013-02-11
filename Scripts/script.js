@@ -816,6 +816,14 @@ function ajaxFormsSuccessHandler(data, text, jx) {
                 LC.redirectTo(data.Result.RedirectURL);
             });
             showSuccessMessage(data.Result.SuccessMessage);
+        } else if (data.Code == 5) {
+            // Change main-action button message:
+            var btn = ctx.form.find('.main-action');
+            var dmsg = btn.data('default-text');
+            if (!dmsg)
+                btn.data('default-text', btn.text());
+            var msg = data.Result || btn.data('success-post-text') || 'Done!';
+            btn.text(msg);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
@@ -1785,11 +1793,11 @@ $(function () {
         // (outside the LC.ChangesNotification class to leave it as generic and simple as possible)
         $(target).on('lcChangesNotificationChangeRegistered', 'form', function () {
             $(this).parents('.tab-body').addClass('has-changes')
-        .each(function () {
-            // Adding class to the menu item (tab title)
-            TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
+            .each(function () {
+                // Adding class to the menu item (tab title)
+                TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
                 .attr('title', $('#lcres-changes-not-saved').text());
-        });
+            });
         })
         .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
             if (full)
