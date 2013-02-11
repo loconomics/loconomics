@@ -115,7 +115,8 @@
                {
                    CancellationPolicyID = booking.CancellationPolicyID,
                    DisplayForUserType = myUserType,
-                   BookingDate = BookingDate
+                   BookingDate = BookingDate,
+                   DisplayedCustomerName = LcData.UserInfo.GetUserRow(booking.CustomerUserID).FirstName
                })
             </div>
         }
