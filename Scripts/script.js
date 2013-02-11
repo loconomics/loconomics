@@ -824,6 +824,11 @@ function ajaxFormsSuccessHandler(data, text, jx) {
                 btn.data('default-text', btn.text());
             var msg = data.Result || btn.data('success-post-text') || 'Done!';
             btn.text(msg);
+            // Adding support to reset button text to default one
+            // when the First next changes happens on the form:
+            $(ctx.form).one('lcChangesNotificationChangeRegistered', function () {
+                btn.text(btn.data('default-text'));
+            });
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
