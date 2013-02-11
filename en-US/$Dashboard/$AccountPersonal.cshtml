@@ -34,7 +34,7 @@
     Validation.Add("secondlastname", Validator.StringLength(145, 0, "Second Last name be fewer than 145 characters."));
     Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a single letter"));
     Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
-    Validation.Add("publicbio", Validator.StringLength(500, 0, "Public bio must be fewer than 500 characters"));
+    Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
     Validation.Add("streetaddress1", Validator.StringLength(100, 0, "Street Address 1 must be fewer than 100 characters."));
     Validation.Add("streetaddress2", Validator.StringLength(100, 0, "Street Address 2 must be fewer than 100 characters."));
     if (Validation.GetHtml("city") == null) {
@@ -91,7 +91,7 @@
                         ,@StateProvinceID int
                         ,@PostalCodeID int
                         ,@CountryID int
-                        ,@PublicBio varchar(500)
+                        ,@PublicBio varchar(4000)
                         ,@GenderID int
                         ,@IAuthZumigoVerification bit
                         ,@IAuthZumigoLocation bit

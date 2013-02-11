@@ -70,7 +70,7 @@
         Validation.Add("first-name", Validator.StringLength(100, 0, "First name must be fewer than 100 characters."));
         Validation.Add("last-name", Validator.StringLength(100, 0, "Last name must be fewer than 100 characters."));
         Validation.Add("second-last-name", Validator.StringLength(100, 0, "Second last name must be fewer than 100 characters."));
-        Validation.Add("middle-initial", Validator.StringLength(0, 1, "Middle initial must be a single character."));
+        Validation.Add("middle-initial", Validator.StringLength(1, 0, "Middle initial must be a single character."));
         Validation.Add("business-name", Validator.StringLength(200, 0, "Business name must be fewer than 200 characters."));
         Validation.Add("city", Validator.StringLength(2073, 0, "City must be fewer than 100 characters."));
     }

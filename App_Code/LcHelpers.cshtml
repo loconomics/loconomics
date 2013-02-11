@@ -267,6 +267,39 @@
             throw new HttpException(404, "Not Found");
         }
     }
+    public static string OnBehalfOf() {
+        if (WebSecurity.IsAuthenticated) {
+            // Only for Admin users, for any page executing this (SiteLayout is fine, will redirect)
+            if (LcData.UserInfo.GetUserRow().IsAdmin == true
+                && Request["OnBehalfOf"].IsInt()) {
+                // Remember users data:
+                int oboID = Request["OnBehalfOf"].AsInt();
+                var loggedID = WebSecurity.CurrentUserId;
+                var loggedName = WebSecurity.CurrentUserName;
+                var oboUser = LcData.UserInfo.GetUserRow(oboID);
+
+                // Enter the site as another user, but remember the original to warning about
+                Session.Clear();
+
+                // New session:
+                Session["OnBehalfOf_LoggedUserID"] = loggedID;
+                Session["OnBehalfOf_LoggedUserName"] = loggedName;
+
+                // New authentication cookie:
+                System.Web.Security.FormsAuthentication.SetAuthCookie(oboUser.Email, false);
+                
+                // Return to the original URL, setting the new cooking
+                Response.Redirect(LcUrl.GetTheGoodURL(Request.Url.OriginalString).Replace("OnBehalfOf", "_"));
+            } else if (Session["OnBehalfOf_LoggedUserID"] is int) {
+                return String.Format("Logged as {0}:{1} On Behalf Of {2}:{3}",
+                    Session["OnBehalfOf_LoggedUserID"],
+                    Session["OnBehalfOf_LoggedUserName"],
+                    WebSecurity.CurrentUserId,
+                    WebSecurity.CurrentUserName);
+            }
+        }
+        return null;
+    }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
                 ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Server.UrlEncode(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));

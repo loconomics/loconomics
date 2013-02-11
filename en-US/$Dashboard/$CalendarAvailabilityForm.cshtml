@@ -90,8 +90,8 @@
 
         if (Validation.IsValid() && ModelState.IsValid) {
             
-            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3";
-            var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4, @5,@6,@7,@8";
+            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4";
+            var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4,@5,@6,@7,@8";
 
             using (var db = Database.Open("sqlloco")) {
                 // Save data
@@ -111,13 +111,16 @@
                         db.Execute(varSqlInsertAvailFreetime, u.UserID,
                             d + 1, // DATABASE Base-1
                             dateHours[d, 0],
-                            dateHours[d, 1]);
+                            dateHours[d, 1],
+                            false);
                     } else {
-                        // Not available, execute without date range to remove the existing data
+                        // Not available, execute with last parameter as 'true' to remove free events
                         db.Execute(varSqlInsertAvailFreetime, u.UserID,
                             d + 1, // DATABASE Base-1
                             TimeSpan.Zero,
-                            TimeSpan.Zero);
+                            TimeSpan.Zero,
+                            // Remove events:
+                            true);
                     }
                 }
                 
@@ -321,6 +324,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
+        <label class="all-days-times"><input type="checkbox" />All days/times</label>
         <ul>
             @printDaysElements(availDates)
         </ul>
@@ -393,6 +397,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
                 .prop('checked', true);
             }
         });
+
         $('.calendar-private-url').focus(function () {
             $(this).select();
         });
@@ -400,6 +405,21 @@ What hours do you keep? We’d like to know when we can generally expect to sche
             var f = $(this).closest('form');
             f.append('<input type="hidden" name="reset-private-url" value="True" />')
             .submit();
+        });
+
+        $('.positionavailability .all-days-times input').change(function () {
+            if (this.checked) {
+                var $f = $(this).closest('.positionavailability');
+                // Set days as 'yes'
+                $f.find('.positionavailability-days input[value=True]').prop('checked', true);
+                // Set hours as 'all day - 12AM-12AM' (selecting the same option on both selects is fine)
+                $f.closest('.positionavailability')
+                .find('.positionavailability-hours select option:first-child')
+                .prop('selected', true);
+            }
+        });
+        $('.positionavailability-hours :input, .positionavailability-days ul :input').change(function () {
+            $(this).closest('form').find('.all-days-times input').prop('checked', false);
         });
     });
 </script>

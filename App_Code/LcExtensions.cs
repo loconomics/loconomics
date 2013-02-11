@@ -32,4 +32,14 @@ public static class LcExtensions
 	    return output;
         //return input.ToDictionary(item => item.Key.ToString(), item => item.Value);
     }
+
+    public static string Capitalize(this String str)
+    {
+        if (str == null || str.Length < 1) return str;
+
+        return (
+            str[0].ToString().ToUpper() + 
+            (str.Length > 1 ? str.Substring(1) : "")
+        );
+    }
 }

@@ -580,6 +580,15 @@ form.positionavailability input{
     display: inline-block;
     vertical-align: top;
 }
+.positionavailability .all-days-times {
+    margin: 1em 0;
+    display: block;
+    font-size: 1em;
+    line-height: 1em;
+}
+.positionavailability-hours ul {
+    margin-top: 3em !important;
+}
 .positionavailability-days {
     width: 200px;
 }
