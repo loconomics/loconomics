@@ -300,6 +300,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
+        <label class="all-days-times"><input type="checkbox" />All days/times</label>
         <ul>
             @printDaysElements(availDates)
         </ul>
@@ -350,7 +351,21 @@ What hours do you keep? We’d like to know when we can generally expect to sche
                 .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
                 .prop('checked', true);
             }
-        })
+        });
+        $('.positionavailability .all-days-times input').change(function () {
+            if (this.checked) {
+                var $f = $(this).closest('.positionavailability');
+                // Set days as 'yes'
+                $f.find('.positionavailability-days input[value=True]').prop('checked', true);
+                // Set hours as 'all day - 12AM-12AM' (selecting the same option on both selects is fine)
+                $f.closest('.positionavailability')
+                .find('.positionavailability-hours select option:first-child')
+                .prop('selected', true);
+            }
+        });
+        $('.positionavailability-hours :input, .positionavailability-days ul :input').change(function () {
+            $(this).closest('form').find('.all-days-times input').prop('checked', false);
+        });
     });
 </script>
 </div>
