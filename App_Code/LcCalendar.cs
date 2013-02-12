@@ -9,7 +9,7 @@ using CalendarDll.Data;
 using WebMatrix.Data;
 
 /// <summary>
-/// Descripción breve de LcCalendar
+/// Calendaring Tasks, wrapper for some CalendarDll features.
 /// </summary>
 public static class LcCalendar
 {
@@ -118,20 +118,21 @@ public static class LcCalendar
     /// <param name="?"></param>
     public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
         var ent = new loconomicsEntities();
+        // Find user events of type 'work-hours'
         var events = ent.CalendarEvents
             .Where(c => c.UserId == userID && c.EventType == 2).ToList();
 
-        var newev = new CalendarEvents();
-        /// TODO: 
-        /// Delete all events of type 2 for the userID
-        /// Create new recurrent events per day basing in workHoursDay details
-        // INCOMPLETE:
+        // Find the event with recurrence rule for the requested DayOfWeek
+        var eventExists = false;
         foreach (var ev in events)
         {
             foreach (var evr in ev.CalendarReccurrence)
             {
                 if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
                 {
+                    // There is an event with recurrence rule for this work-week-day
+                    eventExists = true;
+                    // update it with the new data:
                     ev.StartTime = new DateTime(
                         ev.StartTime.Year,
                         ev.StartTime.Month,
@@ -140,9 +141,75 @@ public static class LcCalendar
                         workHoursDay.StartTime.Minutes,
                         workHoursDay.StartTime.Seconds
                     );
-                    // TODO More, waiting for CASS work in the CRUD API of the calendar
+                    ev.EndTime = new DateTime(
+                        ev.EndTime.Year,
+                        ev.EndTime.Month,
+                        ev.EndTime.Day,
+                        workHoursDay.EndTime.Hours,
+                        workHoursDay.EndTime.Minutes,
+                        workHoursDay.EndTime.Seconds
+                    );
+                    // TODO: WHAT DATE MUST HOLD RecurrenceId???
+                    //ev.RecurrenceId = new DateTime();
                 }
             }
+        }
+        // If there is not still an event for the work day, create it:
+        if (!eventExists)
+        {
+            var newevent = new CalendarDll.Data.CalendarEvents();
+            newevent.UserId = userID;
+            // Type work-hours: 2
+            newevent.EventType = 2;
+            // Automatic text, irrelevant
+            newevent.Summary = "Work hours";
+            //newevent.Description = "";
+            // free hours: 1
+            newevent.CalendarAvailabilityTypeID = 1;
+            newevent.Transparency = true;
+            newevent.StartTime = new DateTime(
+                DateTime.MinValue.Year,
+                DateTime.MinValue.Month,
+                DateTime.MinValue.Day,
+                workHoursDay.StartTime.Hours,
+                workHoursDay.StartTime.Minutes,
+                workHoursDay.StartTime.Seconds
+            );
+            newevent.EndTime = new DateTime(
+                DateTime.MaxValue.Year,
+                DateTime.MaxValue.Month,
+                DateTime.MaxValue.Day,
+                workHoursDay.EndTime.Hours,
+                workHoursDay.EndTime.Minutes,
+                workHoursDay.EndTime.Seconds
+            );
+            // TODO: WHAT DATE MUST HOLD RecurrenceId???
+            //newevent.RecurrenceId = new DateTime();
+            newevent.IsAllDay = false;
+            newevent.UpdatedDate = DateTime.Now;
+            newevent.CreatedDate = DateTime.Now;
+            newevent.ModifyBy = "UserID:" + userID;
+
+            // Recurrence rule:
+            newevent.CalendarReccurrence.Add(new CalendarReccurrence
+            {
+                Frequency = 5, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+                Interval = 1, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+
+                CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
+                {
+                    new CalendarReccurrenceFrequency
+                    {
+                        ByDay = true,
+                        DayOfWeek = (int)workHoursDay.DayOfWeek,
+                        // TODO: FrequencyDay IS NEED? WHAT VALUE???
+                        FrequencyDay = 9999
+                    }
+                }
+            });
+
+            // Add it to database
+            ent.CalendarEvents.Add(newevent);
         }
 
         // Send to database
