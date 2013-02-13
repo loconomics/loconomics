@@ -799,7 +799,8 @@ form fieldset.actions{
     -o-transition: background-color 1s, box-shadow .5s, width 2s;
     transition: background-color 1s, box-shadow .5s, width 2s;
 }
-.has-changes .actions .main-action{
+/* Change color button con changes, but only for changes done directly on the form containing it */
+form.has-changes .actions .main-action{
     background-color: #E65A0F !important;
 }
 .actions .main-action:hover{
@@ -1344,15 +1345,15 @@ table .number{
     right: 0;
     text-decoration: none;
     top: 0;
-    color: #E95D0F;
+    color: #E95D0F !important;
     font-weight: bold;
 }
 .blockUI .close-popup:hover,
 .smooth-box-block-element .close-popup:hover {
-    color: gray;
+    color: gray !important;
 }
 .smooth-box-block-element > .close-popup:hover {
-    color: #000;
+    color: #000 !important;
 }
 
 /****************************

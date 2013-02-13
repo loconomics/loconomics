@@ -10,6 +10,7 @@ public static class LcRessources
 {
     public const string ValidationSummaryTitle = "Please correct the errors and try again:";
     public const string DataSaved = "Saved successfully!";
+    public const string ShortDataSaved = "Saved";
     public const string RequestSent = "Request sent!";
     public const string MessageSent = "Message was sent";
     public const string FieldXIsRequired = "{0} is required";
