@@ -1319,7 +1319,7 @@ LC.getCookie = function getCookie(c_name) {
 LC.takeATour = function () {
     // Check the cookie:
     if (!LC.getCookie('lcTakeATour')) {
-        var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 300, height: 600 });
+        var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 310, height: 480 });
         //LC.setCookie('lcTakeATour', 'Skipped!');
         p.on('click', '.main-action', function () {
             LC.setCookie('lcTakeATour', 'Taken!');

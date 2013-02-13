@@ -2495,6 +2495,32 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     list-style: disc inside;
 }
 
+/*= TakeATour */
+#takeATour h1 {
+    background: url("../img/theme/logo-loconomics-header.png") center top no-repeat;
+    text-align: center;
+    font-size: 1.6em;
+    color: #00989A;
+    padding: 110px 0 5px;
+    margin-top: 0;
+    font-family: Hand Of Sean, Arial, sans-serif;
+}
+.es #site-header #logo.replace {
+    background-image: url('../img/theme/logo-loconomics-header-ES.png');
+}
+#takeATour p {
+    color: #999999;
+    text-align: justify;
+}
+#takeATour .actions {
+    text-align: center !important;
+    margin-top: 40px;
+}
+#takeATour .actions .main-action {
+    width: 50%;
+    font-weight: bold;
+}
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles
