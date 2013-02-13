@@ -2542,6 +2542,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
         background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
     }
+    #takeATour h1 {
+        background-image: url("../img/theme/logo-loconomics-header@2x.png");
+        background-size: 201px 78px;
+    }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
         background-size: 85px 176px;
