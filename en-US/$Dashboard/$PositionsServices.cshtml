@@ -201,7 +201,11 @@
         if (!String.IsNullOrEmpty(redirectURL)) {
             LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
         } else {
-            LcHelpers.ReturnJsonResult(0, success);
+            if (positionEnabled) {
+                LcHelpers.ReturnJsonResult(0, success);
+            } else {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
         }
     }
     
