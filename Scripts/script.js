@@ -1325,11 +1325,11 @@ LC.takeATour = function () {
     if (!LC.getCookie('lcTakeATour')) {
         var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 310, height: 480 });
         p.on('click', '.main-action', function () {
-            LC.setCookie('lcTakeATour', 'Taken!');
+            LC.setCookie('lcTakeATour', 'Taken!', 365);
             p.closePopup();
         });
         p.on('click', '.close-popup', function () {
-            LC.setCookie('lcTakeATour', 'Skipped!');
+            LC.setCookie('lcTakeATour', 'Skipped!', 365);
         });
     }
 };
