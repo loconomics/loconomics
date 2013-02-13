@@ -765,7 +765,11 @@ function popup(url, size, complete, loadingText, options){
     });
 
     $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
-    return $('.blockUI');
+    var returnedBlock = $('.blockUI');
+    returnedBlock.closePopup = function () {
+        $.unblockUI();
+    };
+    return returnedBlock;
 }
 function ajaxFormsSuccessHandler(data, text, jx) {
     var ctx = this;
@@ -1320,9 +1324,12 @@ LC.takeATour = function () {
     // Check the cookie:
     if (!LC.getCookie('lcTakeATour')) {
         var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 310, height: 480 });
-        //LC.setCookie('lcTakeATour', 'Skipped!');
         p.on('click', '.main-action', function () {
             LC.setCookie('lcTakeATour', 'Taken!');
+            p.closePopup();
+        });
+        p.on('click', '.close-popup', function () {
+            LC.setCookie('lcTakeATour', 'Skipped!');
         });
     }
 };
