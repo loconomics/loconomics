@@ -607,7 +607,7 @@ div.scripts { display: none; }
 #site-header dl dd a { display: block; }
 #site-header dl dd li:hover { background-color: #F5F5F5; }
 
-#site-footer { margin: 25px auto; font-size: 1.2em; color: #747474; text-align: center; }
+#site-footer { margin: 25px auto 0; padding-bottom: 25px; font-size: 1.2em; color: #747474; text-align: center; }
 #site-footer > div {
     display: inline-block;
     vertical-align: middle;
@@ -1255,10 +1255,61 @@ table .number{
 }
 
 /***********************/
-/** General rules for
-  * content inside the
-  * blockUI popup
+/** Popup and block boxes
   */
+/* Common */
+.smooth-box-block-overlay,
+.smooth-box-block-element,
+.blockUI.blockMsg {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+.smooth-box-block-overlay.full-block {
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -o-border-radius: 0;
+    /*position: fixed !important;*/
+}
+/* Overlay */
+.smooth-box-block-overlay,
+.blockUI.blockOverlay {
+    background: #dcdcdc !important;
+    background-color: rgba(220, 220, 220, .7) !important;
+    z-index: 1000;
+    opacity: 1;
+}
+.oldIE .smooth-box-block-overlay,
+.oldIE .blockUI.blockOverlay {
+    filter: alpha(opacity=100);
+}
+/* Element */
+.smooth-box-block-element {
+    background: white;
+    margin: 20px;
+    padding: 34px 25px 30px;
+    position: relative;
+    z-index: 1000;
+}
+.full-block .smooth-box-block-element {
+    margin: 0;
+}
+.blockUI.blockMsg {
+    overflow: visible !important;
+    cursor: inherit !important;
+}
+.smooth-box-block-element,
+.blockUI.blockMsg {
+    box-shadow: 0 20px 20px 0 #868686;
+    -webkit-box-shadow: 0 20px 20px 0 #868686;
+}
+.smooth-box-block-overlay.loading .smooth-box-block-element {
+    width: 50px;
+    margin: 20px auto;
+}
+/* Content */
 .blockUI h1{
     font-size: 2em;
     color: #6c6c6c;
@@ -1279,38 +1330,28 @@ table .number{
 .blockUI > .content > article {
     text-align: left;
 }
-.blockUI.blockMsg {
-    overflow: visible !important;
-    cursor: inherit !important;
-}
 .blockUI .content {
     overflow: auto !important;
     height: 100%;
 }
+/* Close button */
 .blockUI .close-popup,
 .smooth-box-block-element .close-popup {
-    background: none repeat scroll 0 0 white;
-    border: 3px solid #B5E1E2;
-    border-radius: 100px 100px 100px 100px;
     display: block;
-    padding: 2px 9px;
+    padding: 5px 10px;
+    font-size: 1.1em;
     position: absolute;
-    right: -20px;
+    right: 0;
     text-decoration: none;
-    top: -20px;
+    top: 0;
+    color: #E95D0F;
+    font-weight: bold;
 }
 .blockUI .close-popup:hover,
 .smooth-box-block-element .close-popup:hover {
-    border-color: #00989A;
-}
-.smooth-box-block-element > .close-popup {
-    right: -18px;
-    top: -15px;
-    border-color: #ccc;
-    color: #ccc;
+    color: gray;
 }
 .smooth-box-block-element > .close-popup:hover {
-    border-color: #000;
     color: #000;
 }
 
@@ -2022,28 +2063,6 @@ html.boxshadow #loginBox .field-validation-error{
     text-decoration: underline;
 }
 
-.smooth-box-block-overlay,
-.smooth-box-block-element {
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
-}
-.smooth-box-block-overlay {
-    background: url('../img/theme/trans-b-60.png');
-    z-index: 1000;
-}
-.smooth-box-block-element {
-    background: white;
-    margin: 20px;
-    padding: 20px;
-    position: relative;
-    z-index: 1000;
-}
-.smooth-box-block-overlay.loading .smooth-box-block-element {
-    width: 50px;
-    margin: 20px auto;
-}
 .lc-ressources, .popups, .template, .templates {
     display: none;
 }

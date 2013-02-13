@@ -680,15 +680,12 @@ function popupStyle(size) {
     return {
         cursor: 'default',
         width: size.width + 'px',
-        left: Math.round(($(window).width() - size.width) / 2) - 30 + 'px',
+        left: Math.round(($(window).width() - size.width) / 2) - 25 + 'px',
         height: size.height + 'px',
-        top: Math.round(($(window).height() - size.height) / 2) - 30 + 'px',
-        padding: '25px',
+        top: Math.round(($(window).height() - size.height) / 2) - 32 + 'px',
+        padding: '34px 25px 30px',
         overflow: 'auto',
-        border: '5px solid #b5e1e2',
-        '-moz-border-radius': '12px',
-        '-webkit-border-radius': '12px',
-        'border-radius': '12px',
+        border: 'none',
         '-moz-background-clip': 'padding',
         '-webkit-background-clip': 'padding-box',
         'background-clip': 'padding-box'
@@ -1132,20 +1129,24 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     blocked.data('smooth-box-block-id', bID);
     var box = $('#' + escapeJQuerySelectorValue(bID));
     if (contentBox.length == 0) {
-        box.hide();
+        box.fadeOut(600);
         return;
     }
     if (box.length == 0) {
         var boxc = $('<div class="smooth-box-block-element"/>');
         box = $('<div class="smooth-box-block-overlay"></div>');
         box.addClass(addclass);
+        if (full) box.addClass('full-block');
         box.append(boxc);
         box.attr('id', bID);
         blocked.append(box);
     } else {
         var boxc = box.children('.smooth-box-block-element');
     }
-    box.hide();
+    // Hidden for user, but available to compute:
+    contentBox.show();
+    box.show().css('opacity', 0);
+    // Setting up the box and styles.
     boxc.children().remove();
     if (options.closable) {
         var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
@@ -1162,7 +1163,6 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     //offs = blocked.position();
     box.css('top', 0);
     box.css('left', 0);
-    box.show();
     if (options.center) {
         boxc.css('position', 'absolute');
         var cl, ct;
@@ -1176,7 +1176,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         boxc.css('top', ct - boxc.outerHeight(true) / 2);
         boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
-    contentBox.show();
+    // Show block
+    box.animate({opacity: 1}, 300);
     LC.moveFocusTo(contentBox, { marginTop: 60 });
     return box;
 }
