@@ -765,6 +765,7 @@ function popup(url, size, complete, loadingText, options){
     });
 
     $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
+    return $('.blockUI');
 }
 function ajaxFormsSuccessHandler(data, text, jx) {
     var ctx = this;
@@ -1284,6 +1285,48 @@ function goToSummaryErrors(form) {
         console.error('goToSummaryErrors: no summary to focus');
 }
 
+/**
+* Cookies management.
+* Most code from http://stackoverflow.com/a/4825695/1622346
+*/
+LC.setCookie = function (name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+LC.getCookie = function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+/**
+ * Take a tour
+ */
+LC.takeATour = function () {
+    // Check the cookie:
+    if (!LC.getCookie('lcTakeATour')) {
+        var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 300, height: 600 });
+        //LC.setCookie('lcTakeATour', 'Skipped!');
+        p.on('click', '.main-action', function () {
+            LC.setCookie('lcTakeATour', 'Taken!');
+        });
+    }
+};
+
 /* Init code */
 $(window).load(function () {
     // Disable browser behavior to auto-scroll to url fragment/hash element position:
@@ -1299,6 +1342,8 @@ $(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
+
+    LC.takeATour();
 
     LC.connectPopupAction();
 
