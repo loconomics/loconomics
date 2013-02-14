@@ -13,6 +13,8 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcCalendar
 {
+    static bool EnableNewCalendar = false;
+
     #region Availability
     /// <summary>
     /// Get availability table for the user between given date and times
@@ -23,18 +25,23 @@ public static class LcCalendar
     /// <returns></returns>
     public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
-        var lcCalendar = new CalendarDll.CalendarUtils();
-        return
-            lcCalendar.GetFreeEvents(
-                new CalendarDll.CalendarUser(userID),
-                dateStart,
-                dateEnd,
-                DateTime.Now);
-
-        // Previous CASS code:
-        /*using (var db = Database.Open("sqlloco")) {
-            return db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date));
-        }*/
+        if (EnableNewCalendar)
+        {
+            var lcCalendar = new CalendarDll.CalendarUtils();
+            return
+                lcCalendar.GetFreeEvents(
+                    new CalendarDll.CalendarUser(userID),
+                    dateStart,
+                    dateEnd,
+                    DateTime.Now);
+        }
+        else
+        {
+            // Previous CASS code:
+            using (var db = Database.Open("sqlloco")) {
+                return db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date));
+            }
+        }
     }
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
@@ -45,22 +52,25 @@ public static class LcCalendar
     /// <returns>True when is available, False when not</returns>
     public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
-        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
+        if (EnableNewCalendar)
         {
-            var edt = e.DateSet + e.TimeBlock;
-            if (e.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE &&
-                edt >= dateStart &&
-                edt < dateEnd)
-                return false;
+            foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
+            {
+                var edt = e.DateSet + e.TimeBlock;
+                if (e.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE &&
+                    edt >= dateStart &&
+                    edt < dateEnd)
+                    return false;
+            }
+            return true;
         }
-        return true;
-
-        // Previous CASS code:
-        /*
-         using (var db = Database.Open("sqlloco")) {
-            return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd)
-         }
-         */
+        else
+        {
+            // Previous CASS code:
+             using (var db = Database.Open("sqlloco")) {
+                return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd)
+             }
+        }
     }
     #endregion
 
@@ -82,34 +92,44 @@ public static class LcCalendar
     /// <returns></returns>
     public static IEnumerable<WorkHoursDay> GetProviderWorkHours(int userID)
     {
-        var ent = new loconomicsEntities();
-        var events = ent.CalendarEvents
-            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-
-        foreach (var ev in events)
+        if (EnableNewCalendar)
         {
-            foreach (var evr in ev.CalendarReccurrence)
+            var ent = new loconomicsEntities();
+            var events = ent.CalendarEvents
+                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+            foreach (var ev in events)
             {
-                foreach (var evrf in evr.CalendarReccurrenceFrequency)
+                foreach (var evr in ev.CalendarReccurrence)
                 {
-                    if (evrf.DayOfWeek.HasValue &&
-                        evrf.DayOfWeek.Value > -1 &&
-                        evrf.DayOfWeek.Value < 7)
-                        yield return new WorkHoursDay {
-                            DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
-                            StartTime = ev.StartTime.TimeOfDay,
-                            EndTime = ev.EndTime.TimeOfDay
-                        };
+                    foreach (var evrf in evr.CalendarReccurrenceFrequency)
+                    {
+                        if (evrf.DayOfWeek.HasValue &&
+                            evrf.DayOfWeek.Value > -1 &&
+                            evrf.DayOfWeek.Value < 7)
+                            yield return new WorkHoursDay
+                            {
+                                DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
+                                StartTime = ev.StartTime.TimeOfDay,
+                                EndTime = ev.EndTime.TimeOfDay
+                            };
+                    }
                 }
             }
         }
-
-        // Previous CASS code:
-        /*
-        using (var db = Database.Open("sqlloco")) {
-            return db.Query("EXEC GetUserFreeTimeSettings @0", userID);
+        else
+        {
+            // Previous CASS code:
+            using (var db = Database.Open("sqlloco")) {
+                foreach (var item in db.Query("EXEC GetUserFreeTimeSettings @0", userID))
+                    yield return new WorkHoursDay
+                    {
+                        DayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), item.DayofWeek),
+                        StartTime = item.StartTime,
+                        EndTime = item.EndTime
+                    };
+            }
         }
-         */
     }
     /// <summary>
     /// Set a day work hours saving it as an Event on database
@@ -117,86 +137,88 @@ public static class LcCalendar
     /// <param name="userID"></param>
     /// <param name="?"></param>
     public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
-        var ent = new loconomicsEntities();
-        // Find user events of type 'work-hours'
-        var events = ent.CalendarEvents
-            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-
-        // Find the event with recurrence rule for the requested DayOfWeek
-        var eventExists = false;
-        foreach (var ev in events)
+        if (EnableNewCalendar)
         {
-            foreach (var evr in ev.CalendarReccurrence)
+            var ent = new loconomicsEntities();
+            // Find user events of type 'work-hours'
+            var events = ent.CalendarEvents
+                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+            // Find the event with recurrence rule for the requested DayOfWeek
+            var eventExists = false;
+            foreach (var ev in events)
             {
-                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
+                foreach (var evr in ev.CalendarReccurrence)
                 {
-                    // There is an event with recurrence rule for this work-week-day
-                    eventExists = true;
-                    // update it with the new data:
-                    ev.StartTime = new DateTime(
-                        ev.StartTime.Year,
-                        ev.StartTime.Month,
-                        ev.StartTime.Day,
-                        workHoursDay.StartTime.Hours,
-                        workHoursDay.StartTime.Minutes,
-                        workHoursDay.StartTime.Seconds
-                    );
-                    ev.EndTime = new DateTime(
-                        ev.EndTime.Year,
-                        ev.EndTime.Month,
-                        ev.EndTime.Day,
-                        workHoursDay.EndTime.Hours,
-                        workHoursDay.EndTime.Minutes,
-                        workHoursDay.EndTime.Seconds
-                    );
-                    // TODO: WHAT DATE MUST HOLD RecurrenceId???
-                    //ev.RecurrenceId = new DateTime();
+                    if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
+                    {
+                        // There is an event with recurrence rule for this work-week-day
+                        eventExists = true;
+                        // update it with the new data:
+                        ev.StartTime = new DateTime(
+                            ev.StartTime.Year,
+                            ev.StartTime.Month,
+                            ev.StartTime.Day,
+                            workHoursDay.StartTime.Hours,
+                            workHoursDay.StartTime.Minutes,
+                            workHoursDay.StartTime.Seconds
+                        );
+                        ev.EndTime = new DateTime(
+                            ev.EndTime.Year,
+                            ev.EndTime.Month,
+                            ev.EndTime.Day,
+                            workHoursDay.EndTime.Hours,
+                            workHoursDay.EndTime.Minutes,
+                            workHoursDay.EndTime.Seconds
+                        );
+                        // TODO: WHAT DATE MUST HOLD RecurrenceId???
+                        //ev.RecurrenceId = new DateTime();
+                    }
                 }
             }
-        }
-        // If there is not still an event for the work day, create it:
-        if (!eventExists)
-        {
-            var newevent = new CalendarDll.Data.CalendarEvents();
-            newevent.UserId = userID;
-            // Type work-hours: 2
-            newevent.EventType = 2;
-            // Automatic text, irrelevant
-            newevent.Summary = "Work hours";
-            //newevent.Description = "";
-            // free hours: 1
-            newevent.CalendarAvailabilityTypeID = 1;
-            newevent.Transparency = true;
-            newevent.StartTime = new DateTime(
-                DateTime.MinValue.Year,
-                DateTime.MinValue.Month,
-                DateTime.MinValue.Day,
-                workHoursDay.StartTime.Hours,
-                workHoursDay.StartTime.Minutes,
-                workHoursDay.StartTime.Seconds
-            );
-            newevent.EndTime = new DateTime(
-                DateTime.MaxValue.Year,
-                DateTime.MaxValue.Month,
-                DateTime.MaxValue.Day,
-                workHoursDay.EndTime.Hours,
-                workHoursDay.EndTime.Minutes,
-                workHoursDay.EndTime.Seconds
-            );
-            // TODO: WHAT DATE MUST HOLD RecurrenceId???
-            //newevent.RecurrenceId = new DateTime();
-            newevent.IsAllDay = false;
-            newevent.UpdatedDate = DateTime.Now;
-            newevent.CreatedDate = DateTime.Now;
-            newevent.ModifyBy = "UserID:" + userID;
-
-            // Recurrence rule:
-            newevent.CalendarReccurrence.Add(new CalendarReccurrence
+            // If there is not still an event for the work day, create it:
+            if (!eventExists)
             {
-                Frequency = 5, // TODO: IS CORRECT FOR A WEEKLY EVENT???
-                Interval = 1, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+                var newevent = new CalendarDll.Data.CalendarEvents();
+                newevent.UserId = userID;
+                // Type work-hours: 2
+                newevent.EventType = 2;
+                // Automatic text, irrelevant
+                newevent.Summary = "Work hours";
+                //newevent.Description = "";
+                // free hours: 1
+                newevent.CalendarAvailabilityTypeID = 1;
+                newevent.Transparency = true;
+                newevent.StartTime = new DateTime(
+                    DateTime.MinValue.Year,
+                    DateTime.MinValue.Month,
+                    DateTime.MinValue.Day,
+                    workHoursDay.StartTime.Hours,
+                    workHoursDay.StartTime.Minutes,
+                    workHoursDay.StartTime.Seconds
+                );
+                newevent.EndTime = new DateTime(
+                    DateTime.MaxValue.Year,
+                    DateTime.MaxValue.Month,
+                    DateTime.MaxValue.Day,
+                    workHoursDay.EndTime.Hours,
+                    workHoursDay.EndTime.Minutes,
+                    workHoursDay.EndTime.Seconds
+                );
+                // TODO: WHAT DATE MUST HOLD RecurrenceId???
+                //newevent.RecurrenceId = new DateTime();
+                newevent.IsAllDay = false;
+                newevent.UpdatedDate = DateTime.Now;
+                newevent.CreatedDate = DateTime.Now;
+                newevent.ModifyBy = "UserID:" + userID;
 
-                CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
+                // Recurrence rule:
+                newevent.CalendarReccurrence.Add(new CalendarReccurrence
+                {
+                    Frequency = 5, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+                    Interval = 1, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+
+                    CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
                 {
                     new CalendarReccurrenceFrequency
                     {
@@ -206,14 +228,19 @@ public static class LcCalendar
                         FrequencyDay = 9999
                     }
                 }
-            });
+                });
 
-            // Add it to database
-            ent.CalendarEvents.Add(newevent);
+                // Add it to database
+                ent.CalendarEvents.Add(newevent);
+            }
+
+            // Send to database
+            ent.SaveChanges();
         }
-
-        // Send to database
-        ent.SaveChanges();
+        else
+        {
+            throw new NotImplementedException("Method not connected to form still");
+        }
     }
     #endregion
 
