@@ -7,17 +7,22 @@
 
 		<ul class="tabs autofill-submenu-items">
 			<li class="current"><a class="current" href="#availability">General availability</a></li>
+            @if (LcCalendar.EnableNewCalendar)
+            {
             <li><a href="#availabilityEvents">Appointments</a></li>
+            }
             <li><a href="#availabilityCalendar">Availability calendar</a></li>
         </ul>
 
 		<div id="availability" class="tab-body current fancy">
             @RenderPage("$CalendarAvailabilityForm.cshtml")
 		</div><!-- #availability -->
-
+        @if (LcCalendar.EnableNewCalendar)
+        {
 		<div id="availabilityEvents" class="tab-body fancy">
             @RenderPage("$CalendarAvailabilityEvents.cshtml")
 		</div><!-- #availabilityEvents -->
+        }
 
         <div id="availabilityCalendar" class="tab-body fancy">
             @RenderPage(LcUrl.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", PageData["userow"].UserID } } )

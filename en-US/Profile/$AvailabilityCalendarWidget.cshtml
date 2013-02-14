@@ -32,6 +32,9 @@
     
     /*// If onlyData is true let us know that 'date' is a date specified by user; if not, is current
     // day automatically, let us try to discover when is the first available date to show that week:
+     * 
+    // DISABLED: WILL NOT WORK WITH THE NEW SYSTEM
+     * 
     if (!onlyData) {
         using (var db = Database.Open("sqlloco")) {
             // we limit the loops to avoid never ending code and excesive load time.

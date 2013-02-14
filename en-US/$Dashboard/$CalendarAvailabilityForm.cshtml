@@ -90,7 +90,6 @@
 
         if (Validation.IsValid() && ModelState.IsValid) {
             
-            var varSqlInsertAvailFreetime = "EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4";
             var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4,@5,@6,@7,@8";
 
             using (var db = Database.Open("sqlloco")) {
@@ -108,19 +107,19 @@
              
                 for (int d = 0; d < 7; d++) {
                     if (availDates[d]) {
-                        db.Execute(varSqlInsertAvailFreetime, u.UserID,
-                            d + 1, // DATABASE Base-1
-                            dateHours[d, 0],
-                            dateHours[d, 1],
-                            false);
+                        LcCalendar.SetProviderWorkHours(
+                            u.UserID,
+                            new LcCalendar.WorkHoursDay {
+                                DayOfWeek = (DayOfWeek)d,
+                                StartTime = dateHours[d, 0],
+                                EndTime = dateHours[d, 1]
+                            }
+                        );
                     } else {
-                        // Not available, execute with last parameter as 'true' to remove free events
-                        db.Execute(varSqlInsertAvailFreetime, u.UserID,
-                            d + 1, // DATABASE Base-1
-                            TimeSpan.Zero,
-                            TimeSpan.Zero,
-                            // Remove events:
-                            true);
+                        LcCalendar.DelProviderWorkHours(
+                            u.UserID,
+                            (DayOfWeek)d
+                        );
                     }
                 }
                 
@@ -355,6 +354,8 @@ What hours do you keep? We’d like to know when we can generally expect to sche
             </li>
         </ul>
     </fieldset>
+    @if (LcCalendar.EnableNewCalendar)
+    {
     <fieldset class="fs-calendar-private-url">
         <legend>My Private Calendar URL</legend>
         LJDI:
@@ -376,6 +377,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
             <button class="reset-private-url-action action" type="button">Reset Private URL</button>
         </li></ul>
     </fieldset>
+    }
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
         <label>Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>

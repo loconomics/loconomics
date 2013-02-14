@@ -13,7 +13,7 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcCalendar
 {
-    static bool EnableNewCalendar = false;
+    public const bool EnableNewCalendar = false;
 
     #region Availability
     /// <summary>
@@ -39,7 +39,17 @@ public static class LcCalendar
         {
             // Previous CASS code:
             using (var db = Database.Open("sqlloco")) {
-                return db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, date));
+                var rtn = new List<CalendarDll.ProviderAvailabilityResult>();
+                foreach (var item in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, dateStart, dateEnd))
+                    rtn.Add(new ProviderAvailabilityResult{
+                        CalendarAvailabilityTypeID = item.CalendarAvailabilityTypeID,
+                        DateSet = item.DateSet,
+                        DT = item.DT,
+                        DayOfWeek = item.DayOfWeek,
+                        EventSummary = "",
+                        TimeBlock = item.TimeBlock
+                    });
+                return rtn;
             }
         }
     }
@@ -68,7 +78,7 @@ public static class LcCalendar
         {
             // Previous CASS code:
              using (var db = Database.Open("sqlloco")) {
-                return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd)
+                return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd);
              }
         }
     }
@@ -124,7 +134,8 @@ public static class LcCalendar
                 foreach (var item in db.Query("EXEC GetUserFreeTimeSettings @0", userID))
                     yield return new WorkHoursDay
                     {
-                        DayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), item.DayofWeek),
+                        // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
+                        DayOfWeek = (DayOfWeek)(item.DayofWeek - 1),
                         StartTime = item.StartTime,
                         EndTime = item.EndTime
                     };
@@ -239,7 +250,40 @@ public static class LcCalendar
         }
         else
         {
-            throw new NotImplementedException("Method not connected to form still");
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Not available, execute with last parameter as 'true' to remove free events
+                db.Execute("EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4", 
+                    userID,
+                    // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
+                    ((int)workHoursDay.DayOfWeek + 1),
+                    workHoursDay.StartTime,
+                    workHoursDay.EndTime,
+                    // false for Not remove events, else insert or update
+                    false);
+            }
+        }
+    }
+    public static void DelProviderWorkHours(int userID, DayOfWeek dayOfWeek)
+    {
+        if (EnableNewCalendar)
+        {
+            throw new NotImplementedException("Need CASS calendar implementation to remove work-hours events");
+        }
+        else
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Not available, execute with last parameter as 'true' to remove free events
+                db.Execute("EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4", 
+                    userID,
+                    // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
+                    ((int)dayOfWeek + 1),
+                    TimeSpan.Zero,
+                    TimeSpan.Zero,
+                    // Remove events:
+                    true);
+            }
         }
     }
     #endregion
