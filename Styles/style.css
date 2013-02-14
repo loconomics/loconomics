@@ -607,7 +607,7 @@ div.scripts { display: none; }
 #site-header dl dd a { display: block; }
 #site-header dl dd li:hover { background-color: #F5F5F5; }
 
-#site-footer { margin: 25px auto; font-size: 1.2em; color: #747474; text-align: center; }
+#site-footer { margin: 25px auto 0; padding-bottom: 25px; font-size: 1.2em; color: #747474; text-align: center; }
 #site-footer > div {
     display: inline-block;
     vertical-align: middle;
@@ -790,9 +790,6 @@ form fieldset.actions{
 }
 .action:hover {
     box-shadow: 0 0 5px 2px #00989A;
-    -moz-box-shadow: 0 0 5px 2px #00989A;
-    -o-box-shadow: 0 0 5px 2px #00989A;
-    -webkit-box-shadow: 0 0 5px 2px #00989A;
 }
 /* .main-action, inside .actions container: bigger, more important button */
 .actions .main-action{
@@ -802,12 +799,20 @@ form fieldset.actions{
     padding: 0.4em 1.4em;
     text-decoration: none;
     border: none !important;
+    -moz-transition: background-color 1s, box-shadow .5s, width 2s;
+    -webkit-transition: background-color 1s, box-shadow .5s, width 2s;
+    -o-transition: background-color 1s, box-shadow .5s, width 2s;
+    transition: background-color 1s, box-shadow .5s, width 2s;
+}
+/* Change color button con changes, but only for changes done directly on the form containing it */
+form.has-changes .actions .main-action{
+    background-color: #E65A0F !important;
 }
 .actions .main-action:hover{
     box-shadow: 0 0 5px 2px #99C027;
-    -moz-box-shadow: 0 0 5px 2px #99C027;
-    -o-box-shadow: 0 0 5px 2px #99C027;
-    -webkit-box-shadow: 0 0 5px 2px #99C027;
+}
+.has-changes .actions .main-action:hover{
+    box-shadow: 0 0 5px 2px #E65A0F;
 }
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
@@ -817,9 +822,6 @@ form fieldset.actions{
 }
 .actions .item-action:hover{
     box-shadow: 0 0 5px 2px #8b2143;
-    -moz-box-shadow: 0 0 5px 2px #8b2143;
-    -o-box-shadow: 0 0 5px 2px #8b2143;
-    -webkit-box-shadow: 0 0 5px 2px #8b2143;
 }
 /* .cancel-action for cancel buttons */
 .actions .cancel-action {
@@ -830,9 +832,6 @@ form fieldset.actions{
 }
 .actions .cancel-action:hover{
     box-shadow: 0 0 5px 2px #8B2143;
-    -moz-box-shadow: 0 0 5px 2px #8B2143;
-    -o-box-shadow: 0 0 5px 2px #8B2143;
-    -webkit-box-shadow: 0 0 5px 2px #8B2143;
 }
 .add-action {
     background: none repeat scroll 0 0 #00989A;
@@ -845,9 +844,6 @@ form fieldset.actions{
 .add-action:hover {
     background: #00989a;
     box-shadow: 0 0 5px 2px #00989a;
-    -moz-box-shadow: 0 0 5px 2px #00989a;
-    -o-box-shadow: 0 0 5px 2px #00989a;
-    -webkit-box-shadow: 0 0 5px 2px #00989a;
 }
 .report-action {
     color: #747474;
@@ -1265,10 +1261,61 @@ table .number{
 }
 
 /***********************/
-/** General rules for
-  * content inside the
-  * blockUI popup
+/** Popup and block boxes
   */
+/* Common */
+.smooth-box-block-overlay,
+.smooth-box-block-element,
+.blockUI.blockMsg {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+.smooth-box-block-overlay.full-block {
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -o-border-radius: 0;
+    /*position: fixed !important;*/
+}
+/* Overlay */
+.smooth-box-block-overlay,
+.blockUI.blockOverlay {
+    background: #dcdcdc !important;
+    background-color: rgba(220, 220, 220, .7) !important;
+    z-index: 1000;
+    opacity: 1;
+}
+.oldIE .smooth-box-block-overlay,
+.oldIE .blockUI.blockOverlay {
+    filter: alpha(opacity=100);
+}
+/* Element */
+.smooth-box-block-element {
+    background: white;
+    margin: 20px;
+    padding: 34px 25px 30px;
+    position: relative;
+    z-index: 1000;
+}
+.full-block .smooth-box-block-element {
+    margin: 0;
+}
+.blockUI.blockMsg {
+    overflow: visible !important;
+    cursor: inherit !important;
+}
+.smooth-box-block-element,
+.blockUI.blockMsg {
+    box-shadow: 0 20px 20px 0 #868686;
+    -webkit-box-shadow: 0 20px 20px 0 #868686;
+}
+.smooth-box-block-overlay.loading .smooth-box-block-element {
+    width: 50px;
+    margin: 20px auto;
+}
+/* Content */
 .blockUI h1{
     font-size: 2em;
     color: #6c6c6c;
@@ -1289,39 +1336,29 @@ table .number{
 .blockUI > .content > article {
     text-align: left;
 }
-.blockUI.blockMsg {
-    overflow: visible !important;
-    cursor: inherit !important;
-}
 .blockUI .content {
     overflow: auto !important;
     height: 100%;
 }
+/* Close button */
 .blockUI .close-popup,
 .smooth-box-block-element .close-popup {
-    background: none repeat scroll 0 0 white;
-    border: 3px solid #B5E1E2;
-    border-radius: 100px 100px 100px 100px;
     display: block;
-    padding: 2px 9px;
+    padding: 5px 10px;
+    font-size: 1.1em;
     position: absolute;
-    right: -20px;
+    right: 0;
     text-decoration: none;
-    top: -20px;
+    top: 0;
+    color: #E95D0F !important;
+    font-weight: bold;
 }
 .blockUI .close-popup:hover,
 .smooth-box-block-element .close-popup:hover {
-    border-color: #00989A;
-}
-.smooth-box-block-element > .close-popup {
-    right: -18px;
-    top: -15px;
-    border-color: #ccc;
-    color: #ccc;
+    color: gray !important;
 }
 .smooth-box-block-element > .close-popup:hover {
-    border-color: #000;
-    color: #000;
+    color: #000 !important;
 }
 
 /****************************
@@ -2032,28 +2069,6 @@ html.boxshadow #loginBox .field-validation-error{
     text-decoration: underline;
 }
 
-.smooth-box-block-overlay,
-.smooth-box-block-element {
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
-}
-.smooth-box-block-overlay {
-    background: url('../img/theme/trans-b-60.png');
-    z-index: 1000;
-}
-.smooth-box-block-element {
-    background: white;
-    margin: 20px;
-    padding: 20px;
-    position: relative;
-    z-index: 1000;
-}
-.smooth-box-block-overlay.loading .smooth-box-block-element {
-    width: 50px;
-    margin: 20px auto;
-}
 .lc-ressources, .popups, .template, .templates {
     display: none;
 }
@@ -2486,6 +2501,32 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     list-style: disc inside;
 }
 
+/*= TakeATour */
+#takeATour h1 {
+    background: url("../img/theme/logo-loconomics-header.png") center top no-repeat;
+    text-align: center;
+    font-size: 1.6em;
+    color: #00989A;
+    padding: 110px 0 5px;
+    margin-top: 0;
+    font-family: Hand Of Sean, Arial, sans-serif;
+}
+.es #site-header #logo.replace {
+    background-image: url('../img/theme/logo-loconomics-header-ES.png');
+}
+#takeATour p {
+    color: #999999;
+    text-align: justify;
+}
+#takeATour .actions {
+    text-align: center !important;
+    margin-top: 40px;
+}
+#takeATour .actions .main-action {
+    width: 50%;
+    font-weight: bold;
+}
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles
@@ -2506,6 +2547,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     #site-header #logo.replace {
         background-image: url("../img/theme/logo-loconomics-header@2x.png") !important;
         background-size: contain;
+    }
+    #takeATour h1 {
+        background-image: url("../img/theme/logo-loconomics-header@2x.png");
+        background-size: 201px 78px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;

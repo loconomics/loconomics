@@ -765,15 +765,12 @@ function popupStyle(size) {
     return {
         cursor: 'default',
         width: size.width + 'px',
-        left: Math.round(($(window).width() - size.width) / 2) - 30 + 'px',
+        left: Math.round(($(window).width() - size.width) / 2) - 25 + 'px',
         height: size.height + 'px',
-        top: Math.round(($(window).height() - size.height) / 2) - 30 + 'px',
-        padding: '25px',
+        top: Math.round(($(window).height() - size.height) / 2) - 32 + 'px',
+        padding: '34px 25px 30px',
         overflow: 'auto',
-        border: '5px solid #b5e1e2',
-        '-moz-border-radius': '12px',
-        '-webkit-border-radius': '12px',
-        'border-radius': '12px',
+        border: 'none',
         '-moz-background-clip': 'padding',
         '-webkit-background-clip': 'padding-box',
         'background-clip': 'padding-box'
@@ -853,6 +850,11 @@ function popup(url, size, complete, loadingText, options){
     });
 
     $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
+    var returnedBlock = $('.blockUI');
+    returnedBlock.closePopup = function () {
+        $.unblockUI();
+    };
+    return returnedBlock;
 }
 function ajaxFormsSuccessHandler(data, text, jx) {
     var ctx = this;
@@ -901,6 +903,19 @@ function ajaxFormsSuccessHandler(data, text, jx) {
                 LC.redirectTo(data.Result.RedirectURL);
             });
             showSuccessMessage(data.Result.SuccessMessage);
+        } else if (data.Code == 5) {
+            // Change main-action button message:
+            var btn = ctx.form.find('.main-action');
+            var dmsg = btn.data('default-text');
+            if (!dmsg)
+                btn.data('default-text', btn.text());
+            var msg = data.Result || btn.data('success-post-text') || 'Done!';
+            btn.text(msg);
+            // Adding support to reset button text to default one
+            // when the First next changes happens on the form:
+            $(ctx.form).one('lcChangesNotificationChangeRegistered', function () {
+                btn.text(btn.data('default-text'));
+            });
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
@@ -1178,12 +1193,58 @@ function configureTooltip() {
     .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
+/**
+ * Hide an element using jQuery, allowing use standard  'hide' and 'fadeOut' effects, extended
+ * jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
+ * Depending on options.effect:
+ * - if not present, jQuery.hide(options)
+ * - 'animate': jQuery.animate(options.properties, options.options)
+ * - 'fade': jQuery.fadeOut
+ */
+LC.hideElement = function (element, options) {
+    var $e = $(element);
+    switch (options.effect) {
+        case 'animate':
+            $e.animate(options.properties, options.options);
+            break;
+        case 'fade':
+            $e.fadeOut(options);
+            break;
+        default:
+            $e.hide(options);
+    }
+};
+/**
+* Show an element using jQuery, allowing use standard  'show' and 'fadeIn' effects, extended
+* jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
+* Depending on options.effect:
+* - if not present, jQuery.hide(options)
+* - 'animate': jQuery.animate(options.properties, options.options)
+* - 'fade': jQuery.fadeOut
+*/
+LC.showElement = function (element, options) {
+    var $e = $(element);
+    switch (options.effect) {
+        case 'animate':
+            $e.animate(options.properties, options.options);
+            break;
+        case 'fade':
+            $e.fadeIn(options);
+            break;
+        default:
+            $e.show(options);
+    }
+};
 function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
     options = $.extend({
         closable: false,
         center: false,
-        closeOptions: null /* as a valid first parameter for jQuery.hide function */
+        /* as a valid options parameter for LC.hideElement function */
+        closeOptions: {
+            duration: 600,
+            effect: 'fade'
+        }
     }, options);
 
     contentBox = $(contentBox);
@@ -1207,13 +1268,14 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     var box = $('#' + escapeJQuerySelectorValue(bID));
     // Hiding box:
     if (contentBox.length == 0) {
-        box.hide(options.closeOptions);
+        LC.hideElement(box, options.closeOptions);
         return;
     }
     if (box.length == 0) {
         var boxc = $('<div class="smooth-box-block-element"/>');
         box = $('<div class="smooth-box-block-overlay"></div>');
         box.addClass(addclass);
+        if (full) box.addClass('full-block');
         box.append(boxc);
         box.attr('id', bID);
         if (boxInsideBlocked)
@@ -1223,7 +1285,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     } else {
         var boxc = box.children('.smooth-box-block-element');
     }
-    box.hide();
+    // Hidden for user, but available to compute:
+    contentBox.show();
+    box.show().css('opacity', 0);
+    // Setting up the box and styles.
     boxc.children().remove();
     if (options.closable) {
         var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
@@ -1234,6 +1299,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());
     box.css('position', 'absolute');
+
     if (boxInsideBlocked) {
         // Box positioning setup when inside the blocked element:
         box.css('z-index', blocked.css('z-index') + 10);
@@ -1248,6 +1314,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         box.css(blocked.offset());
     }
     box.show();
+
     if (options.center) {
         boxc.css('position', 'absolute');
         var cl, ct;
@@ -1261,7 +1328,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         boxc.css('top', ct - boxc.outerHeight(true) / 2);
         boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
-    contentBox.show();
+    // Show block
+    box.animate({opacity: 1}, 300);
     LC.moveFocusTo(contentBox, { marginTop: 60 });
     return box;
 }
@@ -1368,6 +1436,51 @@ function goToSummaryErrors(form) {
         console.error('goToSummaryErrors: no summary to focus');
 }
 
+/**
+* Cookies management.
+* Most code from http://stackoverflow.com/a/4825695/1622346
+*/
+LC.setCookie = function (name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+LC.getCookie = function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+/**
+ * Take a tour
+ */
+LC.takeATour = function () {
+    // Check the cookie:
+    if (!LC.getCookie('lcTakeATour')) {
+        var p = popup(LcUrl.LangPath + 'HelpCenter/$TakeATour/', { width: 310, height: 480 });
+        p.on('click', '.main-action', function () {
+            LC.setCookie('lcTakeATour', 'Taken!', 365);
+            p.closePopup();
+        });
+        p.on('click', '.close-popup', function () {
+            LC.setCookie('lcTakeATour', 'Skipped!', 365);
+        });
+    }
+};
+
 /* Init code */
 $(window).load(function () {
     // Disable browser behavior to auto-scroll to url fragment/hash element position:
@@ -1383,6 +1496,8 @@ $(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
+
+    LC.takeATour();
 
     LC.connectPopupAction();
 
@@ -1883,11 +1998,11 @@ $(function () {
         // (outside the LC.ChangesNotification class to leave it as generic and simple as possible)
         $(target).on('lcChangesNotificationChangeRegistered', 'form', function () {
             $(this).parents('.tab-body').addClass('has-changes')
-        .each(function () {
-            // Adding class to the menu item (tab title)
-            TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
+            .each(function () {
+                // Adding class to the menu item (tab title)
+                TabbedUX.getTabContext(this).menuitem.addClass('has-changes')
                 .attr('title', $('#lcres-changes-not-saved').text());
-        });
+            });
         })
         .on('lcChangesNotificationSaveRegistered', 'form', function (e, f, els, full) {
             if (full)

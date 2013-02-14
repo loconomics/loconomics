@@ -41,7 +41,7 @@
                 u.IsProvider ? Request["CoBrandedPartnerPermissions"].AsBool() : false
             );
         }
-        LcHelpers.ReturnJsonResult(0, "Preferences updated!");
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
     } else {
         using (var db = Database.Open("sqlloco")){
             PageData["userPrefs"] = db.QuerySingle(@"
