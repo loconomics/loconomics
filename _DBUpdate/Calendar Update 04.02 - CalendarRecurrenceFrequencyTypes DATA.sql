@@ -1,0 +1,10 @@
+INSERT INTO CalendarRecurrenceFrequencyTypes (ID, FrequencyType)
+VALUES
+	(0, 'none')
+	,(1, 'Secondly')
+	,(2, 'Minutely')
+	,(3, 'Hourly')
+	,(4, 'Daily')
+	,(5, 'Weekly')
+	,(6, 'Monthly')
+	,(7, 'Yearly')
