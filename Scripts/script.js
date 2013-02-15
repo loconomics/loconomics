@@ -743,7 +743,12 @@ LC.initCrudl = function () {
         }
         dtr
             .on('click', '.crudl-cancel', finishEdit)
-            .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit);
+            .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
+            .on('ajaxSuccessPost', 'form', function (e, data) {
+                if (data.Code == 0)
+                    // Show viewer and reload list:
+                    vwr.show('slow').find('.crudl-list').reload();
+            });
 
         crudl.data('__crudl_initialized__', true);
     });
