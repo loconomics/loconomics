@@ -175,7 +175,7 @@
             
             /** Add selected positions to the provider **/
             if (ModelState.IsValid) {      
-                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7";
+                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7,@8";
                 foreach (string sPosID in Request.Form.GetValues("position")) {
                     if (sPosID.IsInt()) {
                         // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
