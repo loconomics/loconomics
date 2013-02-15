@@ -117,7 +117,11 @@
             string success = positionEnabled
                 ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
                 : LcRessources.DataSaved;
-            LcHelpers.ReturnJsonResult(0, success);
+            if (positionEnabled) {
+                LcHelpers.ReturnJsonResult(0, success);
+            } else {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
         }
     }
 
