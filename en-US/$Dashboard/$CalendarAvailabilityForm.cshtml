@@ -323,7 +323,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
         <legend>I'm available these days:</legend>
-        <label class="all-days-times"><input type="checkbox" />All days/times</label>
+        <label class="all-days-times"><input name="all-days-times" type="checkbox" />All days/times</label>
         <ul>
             @printDaysElements(availDates)
         </ul>

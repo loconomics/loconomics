@@ -25,5 +25,5 @@
         }
 
         <div id="availabilityCalendar" class="tab-body fancy">
-            @RenderPage(LcUrl.LangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", PageData["userow"].UserID } } )
+            @RenderPage(LcUrl.RenderLangPath + "Profile/$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", PageData["userow"].UserID } } )
 		</div><!-- #availabilityCalendar -->
