@@ -993,6 +993,21 @@ public static partial class LcData
     ";
     #endregion
 
+    #region Education
+    public const string sqlSelectFromUserEducation = @"
+            SELECT  E.UserEducationId, E.UserID, E.InstitutionID
+                    ,E.DegreeCertificate
+                    ,E.FieldOfStudy
+                    ,E.FromYearAttended
+                    ,E.ToYearAttended
+                    ,I.InstitutionName
+            FROM    UserEducation As E
+                     INNER JOIN
+                    Institution As I
+                      ON E.InstitutionID = I.InstitutionID
+    ";
+    #endregion
+
     #region Reviews and Scores
     public const string sqlCheckUserReview = @"
         SELECT  count(*)

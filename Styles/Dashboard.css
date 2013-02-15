@@ -1051,7 +1051,8 @@ html.js .user-verified-licenses h5 {
 }
 /**** Page/Form: package-pricing-type ****/
 .package-pricing-type .add-package,
-.add-event {
+.add-event,
+.crudl-create {
     float: right;
 }
 .package-pricing-type .add-addon {
@@ -1132,6 +1133,14 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type .edit-panel {
     display: none;
     min-height: 160px;
+}
+
+/**** Form: Account Education ****/
+#account-profile-education .education-edit input {
+    width: 300px;
+}
+#account-profile-education .education-edit select {
+    width: 60px;
 }
 
 /**** Form: Account Personal ****/

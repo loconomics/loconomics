@@ -1,7 +1,34 @@
-﻿@{
+﻿@*  $AccountProfileEducation
+    Dashboard Page, Account section
+    List, create, edit and remove usereducation table records.
+ *@
+@{
+    LcHelpers.ProviderPage();
     
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var datacontext = "usereducation";
 }
 <p></p>
-<div>
-
+<div class="crudl" data-crudl-context="@datacontext" data-crudl-item-id-parameter="EducationID">
+    <div class="education-edit crudl-editor" data-source-url="@(LcUrl.LangUrl)$Dashboard/$AccountProfileEducationEdit/">
+    </div>
+    <div class="education-list crudl-viewer">
+        <div class="lc-ressources">
+            <div id="lcres-confirm-delete-crudl-item-message:@datacontext">Do you want to delete this?</div>
+            <div id="lcres-delete-crudl-item-loading-message:@datacontext">Deleting</div>
+        </div>
+        <div class="add-item add-education actions crudl-create">
+            <a href="#add-education" class="add-item-action add-education-action">Add</a>
+        </div>
+        <h3>Education:</h3>
+        <div class="list view-panel crudl-list" data-source-url="@(LcUrl.LangUrl)$Dashboard/$AccountProfileEducationList/">
+            @RenderPage("$AccountProfileEducationList.cshtml")
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    jQuery(function ($) {
+        LC.initCrudl();
+    });
+</script>
