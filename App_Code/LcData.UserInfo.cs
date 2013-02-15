@@ -67,6 +67,8 @@ public static partial class LcData
         }
         #endregion
 
+        #region Basic Account Info
+
         /* Get a data row with the User information identified with 'userId' from the database
         */
         public static dynamic GetUserRow(int userId) {
@@ -282,6 +284,11 @@ public static partial class LcData
             }
             return u;
         }
+
+        #endregion
+
+        #region Provider Position
+
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
@@ -357,6 +364,9 @@ public static partial class LcData
             }
         }
 
+        #endregion
+
+        #region Specific Information
         public static string GetMyPublicURL()
         {
             return GetUserPublicURL(WebSecurity.CurrentUserId);
@@ -406,6 +416,7 @@ public static partial class LcData
                 ", userid);
             }
         }
+        #endregion
 
         /// <summary>
         /// Get a dynamic row with the user statistics
@@ -474,5 +485,32 @@ public static partial class LcData
             }
             return responseTime;
         }
-	}
+
+        #region Verifications
+        public static dynamic GetUserVerifications(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT  UV.LastVerifiedDate,
+                            UV.VerificationStatusID,
+                            VS.VerificationStatusName,
+                            V.VerificationType,
+                            V.Icon,
+                            V.VerificationID,
+                            V.VerificationCategoryID
+                    FROM    UserVerification As UV
+                             INNER JOIN
+                            Verification As V
+                              ON UV.VerificationID = V.VerificationID
+                             INNER JOIN
+                            VerificationStatus As VS
+                              ON UV.VerificationStatusID = VS.VerificationStatusID
+                                AND V.LanguageID = @1 AND V.CountryID = @2
+                    WHERE   UserID = @0
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+        #endregion
+    }
 }

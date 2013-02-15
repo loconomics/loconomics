@@ -1,0 +1,347 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var idprefix = "account-personal-contact";
+    
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
+    
+    // Data
+    var FirstName = Request["firstname"] ?? u.FirstName;
+    var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
+    var LastName = Request["lastname"] ?? u.LastName;
+    var SecondLastName = Request["secondlastname"] ?? u.SecondLastName;
+    var MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
+    var AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
+    var Street1 = Request["streetaddress1"] ?? u.AddressLine1;
+    var Street2 = Request["streetaddress2"] ?? u.AddressLine2;
+    var City = Request["city"] ?? u.City;
+    var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
+    string Zip = Request["zipcode"] ?? u.PostalCode;
+    var GenderID = Request["gender"] ?? u.GenderID ?? "";
+    
+    // Initializing Validation rules
+    Validation.RequireField("firstname", "First name is required");
+    Validation.RequireField("lastname", "Last name is required");
+    Validation.Add("firstname", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "Last name be fewer than 145 characters."));
+    Validation.Add("secondlastname", Validator.StringLength(145, 0, "Second Last name be fewer than 145 characters."));
+    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a single letter"));
+    Validation.Add("streetaddress1", Validator.StringLength(100, 0, "Street Address 1 must be fewer than 100 characters."));
+    Validation.Add("streetaddress2", Validator.StringLength(100, 0, "Street Address 2 must be fewer than 100 characters."));
+    if (Validation.GetHtml("city") == null) {
+        Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    }
+    
+    // Processing
+    if (IsPost && Validation.IsValid()) {
+        int zipID = 0;
+        if (!Zip.IsEmpty()) {
+            zipID = LcData.GetPostalCodeID(Zip, State);
+            if (zipID == 0) {
+                ModelState.AddError("zipcode", "Zip code is invalid");
+            }
+        }
+        if (ModelState.IsValid) {
+            using (var db = Database.Open("sqlloco")) {
+                // Check what data changes to revoke verifications and update data:
+                db.Execute(@"
+                    DECLARE 
+                    @UserID int
+                    ,@FirstName varchar(50)
+                    ,@MiddleIn varchar(1)
+                    ,@LastName varchar(145)
+                    ,@SecondLastName varchar(145)
+                    ,@MobilePhone varchar(20)
+                    ,@AlternatePhone varchar(20)
+                    ,@AddressLine1 varchar(145)
+                    ,@AddressLine2 varchar(145)
+                    ,@City varchar(145)
+                    ,@StateProvinceID int
+                    ,@PostalCodeID int
+                    ,@CountryID int
+                    ,@GenderID int
+                    ,@LanguageID int
+
+                    SET @UserID = @0
+                    SET @FirstName = @1
+                    SET @MiddleIn = @2
+                    SET @LastName = @3
+                    SET @SecondLastName = @4
+                    SET @MobilePhone = @5
+                    SET @AlternatePhone = @6
+                    SET @AddressLine1 = @7
+                    SET @AddressLine2 = @8
+                    SET @City = @9
+                    SET @StateProvinceID = @10
+                    SET @PostalCodeID = @11
+                    SET @CountryID = @12
+                    SET @GenderID = @13
+                    SET @LanguageID = @14
+
+                    BEGIN TRAN
+
+                    /* Do checks to revoke verifications on some changes */
+                    -- @c var allow us check if data is equals (=1) or was changed (=0)
+                    DECLARE @c int
+
+                    -- Checking Full Name
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                                AND
+                            FirstName = @FirstName AND MiddleIn = @MiddleIn AND LastName = @LastName AND SecondLastName = @SecondLastName
+                    IF @c = 0 BEGIN
+                        -- Revoke social verifications (all VerificationCategoryID = 3)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID IN (
+                                    SELECT VerificationID
+                                    FROM    Verification
+                                    WHERE   VerificationCategoryID = 3
+                                )
+
+                        -- Revoke name verification (VerificationID=1)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 1
+
+                        -- Revoke background check verification (VerificationID=7)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 7
+                    END
+
+                    -- Checking Address
+                    SELECT  @c = count(*)
+                    FROM    Address
+                    WHERE   UserID = @UserID
+                            AND AddressTypeID = 1 -- Must be the type 1, its personal-home address
+                            AND AddressLine1 = @AddressLine1
+                            AND AddressLine2 = @AddressLine2
+                            AND City = @City
+                            AND StateProvinceID = @StateProvinceID
+                            AND PostalCodeID = @PostalCodeID
+                            AND CountryID = @CountryID
+                    IF @c = 0 BEGIN
+                        -- Revoke address verification (VerificationID=2)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 2
+                    END
+
+                    -- Checking Phone
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                            AND MobilePhone = @MobilePhone
+                            AND AlternatePhone = @AlternatePhone
+                    IF @c = 0 BEGIN
+                        -- Revoke phone verification (VerificationID=4)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 4
+                    END
+
+
+                    /** UPSERT Personal Address **/
+                    UPDATE  Address WITH (serializable)
+                    SET     AddressLine1 = @AddressLine1
+		                    ,AddressLine2 = @AddressLine2
+		                    ,City=@City
+		                    ,StateProvinceID = @StateProvinceID
+		                    ,PostalCodeID = @PostalCodeID
+		                    ,CountryID = @CountryID
+
+                            ,Active = 1
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+                                AND
+                            AddressTypeID = 1 -- Ever Type: Home
+
+                    IF @@rowcount = 0
+                    BEGIN
+                        DECLARE @AddressName nvarchar(50)
+                        SELECT @AddressName = AddressType
+                        FROM AddressType
+                        WHERE AddressTypeID = 1 -- Home
+                                AND LanguageID = @LanguageID
+                                AND CountryID = @CountryID
+
+                        INSERT INTO Address (UserID, AddressTypeID, AddressName,
+                            AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
+                            Active, CreatedDate, UpdatedDate, ModifiedBy)
+                        VALUES (@UserID, 1 /* Type: Home */, @AddressName, 
+                            @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, 
+                            1, getdate(), getdate(), 'sys')
+                    END
+
+                    /* Update User Personal Data */
+                    UPDATE	Users
+                    SET     FirstName = @FirstName
+		                    ,MiddleIn = @MiddleIn
+		                    ,LastName = @LastName
+		                    ,SecondLastName = @SecondLastName
+		                    ,MobilePhone = @MobilePhone
+		                    ,AlternatePhone = @AlternatePhone
+
+		                    ,GenderID = @GenderID
+
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    -- Check Alerts related with user info:
+                    EXEC TestAlertPersonalInfo @UserID
+                    EXEC TestAlertBasicInfoVerification @UserID
+                    EXEC TestAlertSocialMediaVerification @UserID
+                    EXEC TestAlertBackgroundCheck @UserID
+
+                    COMMIT TRAN
+                ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName,
+                    MobilePhone, AlternatePhone, Street1, Street2, City,
+                    State, zipID,
+                    LcData.GetCurrentCountryID(),
+                    (GenderID == null ? -1 : GenderID),
+                    LcData.GetCurrentLanguageID()
+                );
+                
+                string success = "Personal data updated!";
+                if (!String.IsNullOrEmpty(redirectURL))
+                {
+                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL });
+                }
+                else
+                {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
+            }
+        }
+    }
+    
+    // Load Data
+    // Note: Most user account and contact data was loaded already at beggining by the general
+    // method LcData.UserInfo.GetUserRowWithContactData
+    dynamic genders = null;
+    bool hasNameVerifications = false, hasAddressVerifications = false, hasPhoneVerifications = false;
+    var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
+    // Enabling needed warning messages:
+    foreach (var v in verifications){
+        // Only confirmed
+        if (v.VerificationStatusID == 1) {
+            if (v.VerificationCategoryID == 3 ||
+                v.VerificationID == 1 ||
+                v.VerificationID == 7) {
+                hasNameVerifications = true;
+            } else if (v.VerificationID == 2) {
+                hasAddressVerifications = true;
+            } else if (v.VerificationID == 4) {
+                hasPhoneVerifications = true;
+            }
+        }
+    }
+    using (var db = Database.Open("sqlloco")){
+        genders = db.Query(@"
+            SELECT  GenderID, GenderSingular
+            FROM    Gender
+            WHERE   LanguageID=@0 AND CountryID=@1 AND GenderID > 0
+        ", 1, 1);
+    }
+}
+<p></p>
+<div>
+<form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileContact/" id="personal" class="ajax ajax-box">
+    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
+    <div class="warning warning-large">
+        <h6>Friendly reminder:</h6>
+        <ul>
+        @if (hasNameVerifications) {
+        <li>If you change your <strong>name</strong>, any <strong><em>social media accounts and background checks</em></strong> will need to be verified again.</li>
+        }
+        @if (hasAddressVerifications) {
+        <li>If you change your <strong>address</strong>, it will need to be verified again.</li>
+        }
+        @if (hasPhoneVerifications) {
+        <li>If you change your <strong>phone number(s)</strong>, it will need to be verified again.</li>
+        }
+        </ul>
+    </div>
+    }
+    <div class="col col-2 col-2-1">
+    <fieldset>
+        <legend>Contact Information:</legend>
+        <ul>
+            <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name" value="@FirstName" @Validation.GetHtml("firstname")/>
+                @Html.ValidationMessage("firtname")
+            </li>
+            @if (LcData.GetCurrentCountryID() == 1)
+            {
+            <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial" value="@MiddleInitial" @Validation.GetHtml("middleinitial")/>
+                @Html.ValidationMessage("middleinitial")
+            </li>
+            }
+            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
+                @Html.ValidationMessage("lastname")
+            </li>
+            @if (LcData.GetCurrentCountryID() == 2)
+            {
+            <li><label for="@idprefix-secondlastname">Second Last Name:</label><input id="@idprefix-secondlastname" type="text" name="secondlastname" value="@SecondLastName" @Validation.GetHtml("secondlastname")/>
+                @Html.ValidationMessage("secondlastname")
+            </li>
+            }
+            <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
+                @Html.ValidationMessage("mobilephone")
+            </li>
+            <li><label for="@idprefix-alternatephone">Alternate Phone:</label><input id="@idprefix-alternatephone" type="text" name="alternatephone" value="@AlternatePhone" @Validation.GetHtml("alternatephone")/>
+                @Html.ValidationMessage("alternatephone")
+            </li>
+
+            <li><label>Gender Identity:</label>
+                @foreach (var gender in genders)
+                {
+                    <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
+                }
+                @Html.ValidationMessage("gender")
+            </li>
+        </ul>
+    </fieldset>
+    </div>
+    <div class="col col-2 col-2-2">
+    <fieldset>
+        <legend>Home address:</legend>
+        <ul>
+            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" @Validation.GetHtml("streetaddress1")/>
+                @Html.ValidationMessage("streetaddress1")
+            </li>
+            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2" value="@Street2" @Validation.GetHtml("streetaddress2")/>
+                @Html.ValidationMessage("streetaddress2")
+            </li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+                @Html.ValidationMessage("city")
+            </li>
+            <li><label for="@idprefix-state">State:</label>
+                <select id="@idprefix-state" name="state" @Validation.GetHtml("state")>
+                    @LcHelpers.StateProvinceOptions(State)
+                </select>
+                @Html.ValidationMessage("state")
+            </li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode" value="@Zip" @Validation.GetHtml("zipcode")/>
+                @Html.ValidationMessage("zipcode")
+            </li>
+        </ul>
+    </fieldset></div>
+    <fieldset class="actions">
+        <button class="save main-action" type="submit">Save</button>
+    </fieldset>
+</form>
+</div>

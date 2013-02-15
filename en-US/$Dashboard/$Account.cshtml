@@ -6,7 +6,8 @@
 }
 
 		<ul class="tabs autofill-submenu-items">
-			<li class="current"><a href="#account-personal">Personal</a></li>
+			<li class="current"><a href="#account-personal">Profile</a></li>
+            <li><a href="#account-verifications">Verifications</a></li>
             @if (u.IsProvider){
 			<li><a href="#account-payments">Payments</a></li>
             <li><a href="#account-taxes">Taxes</a></li>
@@ -14,9 +15,34 @@
             }
         </ul>
 
-		<div id="account-personal" class="tab-body current fancy buttons">
-            @RenderPage("$AccountPersonal.cshtml")
+		<div id="account-personal" class="tab-body current fancy buttons tabbed">
+            <ul class="tabs">
+                <li class="current"><a class="button profile fanciful" href="#account-profile-contact">Contact Info</a></li>
+                <li><a class="button profile fanciful" href="#account-profile-profile">Profile</a></li>
+                @if (u.IsProvider)
+                {
+                <li><a class="button profile fanciful" href="#account-profile-education">Education</a></li>
+                }
+            </ul>
+
+            <div id="account-profile-contact" class="tab-body current">
+                @RenderPage("$AccountProfileContact.cshtml")
+            </div><!-- #account-profile-contact -->
+            <div id="account-profile-profile" class="tab-body">
+                @RenderPage("$AccountProfileProfile.cshtml")
+            </div><!-- #account-profile-profile -->
+            @if (u.IsProvider)
+            {
+            <div id="account-profile-education" class="tab-body">
+                @RenderPage("$AccountProfileEducation.cshtml")
+            </div><!-- #account-profile-education -->
+            }
+
 		</div><!-- #account-personal -->
+
+		<div id="account-verifications" class="tab-body fancy buttons">
+            @RenderPage("$AccountVerifications.cshtml")
+		</div><!-- #account-verifications -->
         
 		<div id="account-payments" class="tab-body fancy tabbed buttons">
             <ul class="tabs">

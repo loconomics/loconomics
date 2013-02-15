@@ -1151,6 +1151,7 @@ form#personal li > label.gender {
 .user-verifications > ul > li{
     background: no-repeat center left;
     padding: 0 0 0 30px;
+    margin: 6px 0;
 }
 .user-verifications  li.license{
     background-image: url('../img/theme/icon-licenses.png');

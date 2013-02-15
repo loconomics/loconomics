@@ -1,4 +1,6 @@
-﻿@using WebMatrix.Data;
+﻿@* EXCLUDED 2013-02-15 because was splitted into $AccountProfile*.cshtml (index and sub-files) and $AccountVerifications.cshtml
+ *@
+@using WebMatrix.Data;
 @{
     LcHelpers.SecurePage();
     

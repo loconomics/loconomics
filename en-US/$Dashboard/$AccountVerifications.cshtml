@@ -1,0 +1,29 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
+}
+<div>
+    @* Social media verifications: request buttons *@
+    <div class="social-media">
+    <ul>
+        <li class="facebook">
+            @RenderPage(LcUrl.RenderLangPath + "Account/_FacebookConnectButton.cshtml", new { Section = "Verify", Result = "json" } )
+        </li>
+        @*
+        <li class="twitter"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
+        <li class="linkedin"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>
+        *@
+    </ul>
+    </div>
+    @* Saved verifications *@
+    <div class="user-verifications"><ul>
+        @foreach (var v in verifications)
+        {
+            <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> on @v.LastVerifiedDate</li>
+        }
+    </ul></div>
+</div>
