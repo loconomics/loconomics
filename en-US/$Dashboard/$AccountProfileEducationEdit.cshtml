@@ -171,4 +171,15 @@
         <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
         <button class="button main-action crudl-save">Save</button>
     </div>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('[name=institution]').autocomplete({
+                source: LcUrl.JsonPath + 'GetInstitutions/Autocomplete/',
+                autoFocus: false,
+                delay: 200,
+                minLength: 5
+            });
+        });
+    </script>
 </form>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Collections;
 
 /// <summary>
 /// LcExtensions is a set of usefull classes extensions to use along all the Loconomics site
@@ -41,5 +42,15 @@ public static class LcExtensions
             str[0].ToString().ToUpper() + 
             (str.Length > 1 ? str.Substring(1) : "")
         );
+    }
+
+    public static IEnumerable TopElements(this IEnumerable list, double limit)
+    {
+        double count = 0;
+        foreach (var item in list) {
+            if (count++ == limit)
+                yield break;
+            yield return item;
+        }
     }
 }
