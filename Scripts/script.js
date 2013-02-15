@@ -698,6 +698,7 @@ LC.initCrudl = function () {
                 });
                 // Hide viewer when in editor:
                 vwr.hide('slow');
+                return false;
             })
             .on('click', '.crudl-delete', function () {
                 var $t = $(this);
@@ -731,6 +732,7 @@ LC.initCrudl = function () {
                         complete: ajaxFormsCompleteHandler
                     });
                 }
+                return false;
             });
         function finishEdit() {
             dtr.hide('slow', function () {
@@ -746,7 +748,7 @@ LC.initCrudl = function () {
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
             .on('ajaxSuccessPost', 'form', function (e, data) {
                 if (data.Code == 0)
-                    // Show viewer and reload list:
+                // Show viewer and reload list:
                     vwr.show('slow').find('.crudl-list').reload();
             });
 

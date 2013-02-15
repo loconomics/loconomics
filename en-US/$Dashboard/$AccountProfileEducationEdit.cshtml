@@ -30,91 +30,97 @@
 
     // Save posted data
     if (IsPost && Validation.IsValid()) {
+        var institution = (Request["institution"] ?? "").Trim();
         
-        using (var db = Database.Open("sqlloco")) {
-            var institution = Request["institution"];
-            // Gets the ID for 'institution', creating a new one automatically or from
-            // existing one.
-            int institutionID = db.QueryValue(@"
-                DECLARE @id int
-                SELECT @id = InstitutionID
-                FROM    Institution
-                WHERE   InstitutionName like @0
-
-                IF @id is null BEGIN
-                    INSERT INTO Institution (
-                        InstitutionName
-                        ,StateProvinceID
-                        ,CountryID
-                        ,CreatedDate
-                        ,UpdatedDate
-                        ,ModifiedBy
-                    ) VALUES (
-                        @0
-                        ,@1
-                        ,@2
-                        ,getdate()
-                        ,getdate()
-                        ,'UserID' + Cast(@3 as varchar)
-                    )
-
-                    SET @id = @@IDENTITY
-                END
-
-                SELECT @id As ID
-            ", institution,
-            u.StateProvinceID,
-            u.CountryID,
-            u.UserID);
-
-            // Save it
-            db.Execute(@"
-                IF EXISTS (SELECT UserEducationID FROM UserEducation WHERE UserEducationID = @0 AND UserID = @1)
-                    UPDATE UserEducation SET
-                        InstitutionID = @2
-                        ,DegreeCertificate = @3
-                        ,FieldOfStudy = @4
-                        ,FromYearAttended = @5
-                        ,ToYearAttended = @6
-                        ,Active = 1
-                        ,ModifiedDate = getdate()
-                        ,ModifiedBy = 'UserID:' + Cast(@1 as varchar)
-                    WHERE UserEducationID = @0 AND UserID = @1
-                ELSE
-                    INSERT INTO UserEducation (
-                        UserID
-                        ,InstitutionID
-                        ,DegreeCertificate
-                        ,FieldOfStudy
-                        ,FromYearAttended
-                        ,ToYearAttended
-                        ,CreatedDate
-                        ,ModifiedDate
-                        ,ModifiedBy
-                        ,Active
-                    ) VALUES (
-                        @1
-                        ,@2
-                        ,@3
-                        ,@4
-                        ,@5
-                        ,@6
-                        ,getdate()
-                        ,getdate()
-                        ,'UserID:' + Cast(@1 as varchar)
-                        ,1
-                    )
-            ", educationID, u.UserID,
-                institutionID,
-                Request["degree"],
-                Request["fieldofstudy"],
-                Request["startyear"].AsInt(),
-                Request["endyear"].AsInt()
-            );
+        if (String.IsNullOrEmpty(institution)) {
+            ModelState.AddError("institution", LcRessources.RequiredField("School"));
         }
+        
+        if (ModelState.IsValid) {
+            using (var db = Database.Open("sqlloco")) {
+                // Gets the ID for 'institution', creating a new one automatically or from
+                // existing one.
+                int institutionID = db.QueryValue(@"
+                    DECLARE @id int
+                    SELECT @id = InstitutionID
+                    FROM    Institution
+                    WHERE   InstitutionName like @0
 
-        // All was fine, AJAX-JSON response
-        LcHelpers.ReturnJsonResult(0, LcRessources.ShortDataSaved);
+                    IF @id is null BEGIN
+                        INSERT INTO Institution (
+                            InstitutionName
+                            ,StateProvinceID
+                            ,CountryID
+                            ,CreatedDate
+                            ,UpdatedDate
+                            ,ModifiedBy
+                        ) VALUES (
+                            @0
+                            ,@1
+                            ,@2
+                            ,getdate()
+                            ,getdate()
+                            ,'UserID' + Cast(@3 as varchar)
+                        )
+
+                        SET @id = @@IDENTITY
+                    END
+
+                    SELECT @id As ID
+                ", institution,
+                u.StateProvinceID,
+                u.CountryID,
+                u.UserID);
+
+                // Save it
+                db.Execute(@"
+                    IF EXISTS (SELECT UserEducationID FROM UserEducation WHERE UserEducationID = @0 AND UserID = @1)
+                        UPDATE UserEducation SET
+                            InstitutionID = @2
+                            ,DegreeCertificate = @3
+                            ,FieldOfStudy = @4
+                            ,FromYearAttended = @5
+                            ,ToYearAttended = @6
+                            ,Active = 1
+                            ,ModifiedDate = getdate()
+                            ,ModifiedBy = 'UserID:' + Cast(@1 as varchar)
+                        WHERE UserEducationID = @0 AND UserID = @1
+                    ELSE
+                        INSERT INTO UserEducation (
+                            UserID
+                            ,InstitutionID
+                            ,DegreeCertificate
+                            ,FieldOfStudy
+                            ,FromYearAttended
+                            ,ToYearAttended
+                            ,CreatedDate
+                            ,ModifiedDate
+                            ,ModifiedBy
+                            ,Active
+                        ) VALUES (
+                            @1
+                            ,@2
+                            ,@3
+                            ,@4
+                            ,@5
+                            ,@6
+                            ,getdate()
+                            ,getdate()
+                            ,'UserID:' + Cast(@1 as varchar)
+                            ,1
+                        )
+                ", educationID, u.UserID,
+                    institutionID,
+                    Request["degree"],
+                    Request["fieldofstudy"],
+                    Request["startyear"].AsInt(),
+                    Request["endyear"].AsInt()
+                );
+            }
+
+            // All was fine, AJAX-JSON response
+            LcHelpers.ReturnJsonResult(0, LcRessources.ShortDataSaved);
+        }
     }
     
     // Load the education record
@@ -140,24 +146,24 @@
     <ul>
         <li class="institution">
             <label for="@(idprefix)-institution">School</label>
-            <input id="@(idprefix)-institution" type="text" name="institution" value="@(Request["institution"] ?? education.InstitutionName)"
+            <input id="@(idprefix)-institution" type="text" name="institution" value="@(Request["institution"] ?? education == null ? "" : education.InstitutionName)"
                  @Validation.GetHtml("institution") />
         </li>
         <li class="degree">
             <label for="@(idprefix)-degree">Degree</label>
-            <input id="@(idprefix)-degree" type="text" name="degree" value="@(Request["degree"] ?? education.DegreeCertificate)"
+            <input id="@(idprefix)-degree" type="text" name="degree" value="@(Request["degree"] ?? education == null ? "" : education.DegreeCertificate)"
                 @Validation.GetHtml("degree") />
         </li>
         <li class="fieldofstudy">
             <label for="@(idprefix)-fieldofstudy">Field of study</label>
-            <input id="@(idprefix)-fieldofstudy" type="text" name="fieldofstudy" value="@(Request["fieldofstudy"] ?? education.FieldOfStudy)"
+            <input id="@(idprefix)-fieldofstudy" type="text" name="fieldofstudy" value="@(Request["fieldofstudy"] ?? education == null ? "" : education.FieldOfStudy)"
                 @Validation.GetHtml("fieldofstudy") />
         </li>
         <li class="years">
             <label>Years attended</label>
-            @PrintYears("startyear", Request["startyear"] ?? education.FromYearAttended)
+            @PrintYears("startyear", Request["startyear"] ?? education == null ? 0 : education.FromYearAttended)
             -
-            @PrintYears("endyear", Request["endyear"] ?? education.ToYearAttended)
+            @PrintYears("endyear", Request["endyear"] ?? education == null ? 0 : education.ToYearAttended)
         </li>
     </ul>
 
