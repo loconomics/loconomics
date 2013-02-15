@@ -31,13 +31,13 @@ else
             @foreach (var e in education)
             {
                 <li class="education-item crudl-item" data-crudl-item-id="@e.UserEducationId">
-                    <h2>@e.InstitutionName</h2>
+                    <h4>@e.InstitutionName</h4>
                     <p>@e.DegreeCertificate, @e.FieldOfStudy</p>
                     <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
                     
                     <div class="actions">
-                        <button type="button" class="action edit-action crudl-update">Edit</button>
-                        <button type="button" class="action delete-action crudl-delete">Delete</button>
+                        <a href="delete" class="delete-action crudl-delete">Delete</a>
+                        <a href="edit" class="edit-action crudl-update">Edit</a>
                     </div>
                 </li>
             }

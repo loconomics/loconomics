@@ -1142,6 +1142,28 @@ html.js .user-verified-licenses h5 {
 #account-profile-education .education-edit select {
     width: 60px;
 }
+#account-profile-education .education-item p {
+    margin: 0;    
+}
+#account-profile-education .education-item .years-attended {
+    color: #828282;
+}
+.crudl-list li.crudl-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.crudl-list li.crudl-item .actions {
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+.crudl-list li.crudl-item .actions a {
+    color: #00989A;
+    text-decoration: none;
+}
+.crudl-list li.crudl-item .actions a:hover {
+    text-decoration: underline;
+}
 
 /**** Form: Account Personal ****/
 #account-personal auths > ul > li{
