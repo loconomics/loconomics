@@ -32,12 +32,23 @@ else
             {
                 <li class="education-item crudl-item" data-crudl-item-id="@e.UserEducationId">
                     <h4>@e.InstitutionName</h4>
-                    <p>@e.DegreeCertificate, @e.FieldOfStudy</p>
-                    <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
+                    @{
+                        var check = 0;
+                        check += String.IsNullOrEmpty(e.DegreeCertificate) ? 0 : 1;
+                        check += String.IsNullOrEmpty(e.FieldOfStudy) ? 0 : 1;
+                    }
+                    @if (check > 0)
+                    {
+                       <p>@e.DegreeCertificate@(check == 2 ? ", " : "") @e.FieldOfStudy</p>
+                    }
+                    @if (e.FromYearAttended is decimal || e.ToYearAttended is decimal)
+                    { 
+                        <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
+                    }
                     
                     <div class="actions">
-                        <a href="delete" class="delete-action crudl-delete">Delete</a>
-                        <a href="edit" class="edit-action crudl-update">Edit</a>
+                        <a href="#delete" class="delete-action crudl-delete">Delete</a>
+                        <a href="#edit" class="edit-action crudl-update">Edit</a>
                     </div>
                 </li>
             }

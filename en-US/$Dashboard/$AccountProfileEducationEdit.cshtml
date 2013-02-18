@@ -113,8 +113,8 @@
                     institutionID,
                     Request["degree"],
                     Request["fieldofstudy"],
-                    Request["startyear"].AsInt(),
-                    Request["endyear"].AsInt()
+                    Request["startyear"] == "" ? null : (int?)Request["startyear"].AsInt(),
+                    Request["endyear"] == "" ? null : (int?)Request["endyear"].AsInt()
                 );
             }
 
@@ -134,7 +134,8 @@
 }
 @helper PrintYears(string name, object val) {
     <select name="@name" @Validation.GetHtml(name)>
-        @for(int i = 1900; i <= DateTime.Today.Year; i++) {
+        <option value="">-</option>
+        @for(int i = DateTime.Today.Year; i >= 1900; i--) {
             <option @LcHelpers.IsSelected(i, val) value="@i">@i</option>
         }
     </select>
