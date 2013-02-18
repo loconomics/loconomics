@@ -747,9 +747,11 @@ LC.initCrudl = function () {
             .on('click', '.crudl-cancel', finishEdit)
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0)
-                // Show viewer and reload list:
+                if (data.Code == 0 || data.Code == 5)
+                    // Show viewer and reload list:
                     vwr.show('slow').find('.crudl-list').reload();
+                if (data.Code == 5)
+                    setTimeout(finishEdit, 1500);
             });
 
         crudl.data('__crudl_initialized__', true);
@@ -923,6 +925,8 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             $(ctx.form).one('lcChangesNotificationChangeRegistered', function () {
                 btn.text(btn.data('default-text'));
             });
+            // Trigger event for custom handlers
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);

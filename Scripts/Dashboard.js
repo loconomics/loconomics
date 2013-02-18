@@ -403,7 +403,10 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0) vp.show('fast', function () { vp.reload() });
+                if (data.Code == 0 || data.Code == 5)
+                    vp.show('fast', function () { vp.reload() });
+                if (data.Code == 5)
+                    setTimeout(closeAndClearEditPanel, 1500);
             })
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', closeAndClearEditPanel);
         });
@@ -556,8 +559,14 @@ $(document).ready(function () {
             if (options.is(':has(.no-pricing-wizard)'))
                 options.remove();
         });
+        function finishEdit(e, data) {
+            $(this).closest('.edit-panel').hide('slow', function () {
+                $(this).closest('.pricingwizard').find('.add-package').show('fast');
+                $(this).children().remove()
+            });
+        }
         $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
-            if (data.Code == 0) {
+            if (data.Code == 0 || data.Code == 5) {
                 var pw = $(this).closest('.pricingwizard');
                 // Reload packages list and show it
                 pw.find('.your-packages').show('fast', function () { $(this).reload() });
@@ -566,12 +575,9 @@ $(document).ready(function () {
                 // Reload services tab of this position too:
                 pw.closest('.tabbed').find('.services-tab').reload();
             }
-        }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', function (e, data) {
-            $(this).closest('.edit-panel').hide('slow', function () {
-                $(this).closest('.pricingwizard').find('.add-package').show('fast');
-                $(this).children().remove()
-            });
-        })
+            if (data.Code == 5)
+                setTimeout($.proxy(finishEdit, this), 1500);
+        }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', finishEdit)
         // Handler for 'show-more-attributes' button on edit a package
         .on('click', '.show-more-attributes', function () {
             var $t = $(this);
