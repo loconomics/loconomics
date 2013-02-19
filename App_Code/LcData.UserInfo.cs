@@ -440,6 +440,8 @@ public static partial class LcData
                 var rtn = new UserPositionActivation(userID);
 
                 var numbers = LcData.GetUserAlertsNumbers(userID);
+                rtn.NextAlert = numbers.NextAlert;
+
                 // Check if is enabled
                 if (ps.Value.StatusID == 1)
                 {

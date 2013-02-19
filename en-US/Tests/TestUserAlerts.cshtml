@@ -3,6 +3,7 @@
     
     var userID = WebSecurity.CurrentUserId;
     dynamic data = null;
+    PageData["TestData"] = new Dictionary<string, dynamic>();
     
     switch (UrlData[0].ToLower()) {
         case "numbers":
@@ -14,6 +15,9 @@
         case "checkactivation":
             data = LcData.UserInfo.CheckUserPositionActivation(userID, LcData.UserInfo.GetUserPositionsStatuses(userID));
             break;
+        case "profilepopup":
+            data = LcHelpers.UseProfileActivationPopup(LcData.UserInfo.GetUserPositionsStatuses(userID), userID);
+            break;
     }
 }
 <div id="testindex">
@@ -21,6 +25,7 @@
         <li><a href="numbers">Numbers</a></li>
         <li><a href="positions">GetUserPositionsStatuses</a></li>
         <li><a href="checkactivation">CheckUserPositionActivation</a></li>
+        <li><a href="profilepopup">UseProfileActivationPopup</a></li>
     </ul>
 </div>
 <div id="testdata" style="margin-top: 40px; padding: 20px; border: 1px maroon solid">

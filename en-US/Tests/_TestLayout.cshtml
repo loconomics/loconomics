@@ -47,7 +47,7 @@
     <body class="@PageData["BodyClass"]">
 
         <div id="container">
-            UserID: @WebSecurity.CurrentUserId
+            UserID: @Html.Raw(WebSecurity.CurrentUserId == -1 ? "<a href='login' class='login'>Login</a>" : WebSecurity.CurrentUserId.ToString())
             <div id="main">
                 @RenderBody()
             </div>
