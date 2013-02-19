@@ -288,7 +288,24 @@ public static partial class LcData
         #endregion
 
         #region Provider Position
-
+        #region Cache
+        public static void CleanCacheGetUserPos(int userId)
+        {
+            HelperPage.PageData["userposrows:" + userId.ToString()] = null;
+        }
+        public static void CleanCacheGetUserPos()
+        {
+            HelperPage.PageData["posrows"] = null;
+        }
+        public static void CleanCacheGetUserPos(int userId, int posId)
+        {
+            HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = null;
+        }
+        public static void CleanCacheGetUserCurrentPos()
+        {
+            HelperPage.PageData["position"] = null;
+        }
+        #endregion
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
@@ -378,10 +395,27 @@ public static partial class LcData
                 get;
                 private set;
             }
+            /// <summary>
+            /// Enumeration to distinguish more than profile actived-not actived.
+            /// </summary>
             public enum Statuses : short
             {
+                /// <summary>
+                /// InProgress for when the profile is not activated still because there are required alerts on
+                /// </summary>
                 InProgress,
+                /// <summary>
+                /// Enhance for when the profile is already activated but there are non required alerts on
+                /// </summary>
                 Enhance,
+                /// <summary>
+                /// JustCompleted for when the profile gets activated right now (last required alert went off just now) and there are
+                /// no more alerts (if was activated right now and there are still non required alerts, Enhance Must be used instead of this)
+                /// </summary>
+                JustCompleted,
+                /// <summary>
+                /// Completed for when the profile it has all alerts off, is activated but it get activated in a previuos action.
+                /// </summary>
                 Complete
             }
             public Statuses Status;
@@ -432,6 +466,8 @@ public static partial class LcData
         }
         public static UserPositionActivation CheckUserPositionActivation(int userID, Dictionary<int, dynamic> positionsStatuses)
         {
+            // Avoid cache before get updated data:
+            CleanCacheGetUserPos(userID);
             var newStatuses = GetUserPositionsStatuses(userID);
             var posActivationList = new List<UserPositionActivation>();
 
@@ -445,14 +481,18 @@ public static partial class LcData
                 // Check if is enabled
                 if (ps.Value.StatusID == 1)
                 {
+                    // By default, set as complete until other conditions change it:
+                    rtn.Status = UserPositionActivation.Statuses.Complete;
+
                     if (ps.Value.StatusID != positionsStatuses[ps.Key].StatusID)
+                    {
                         // It was enabled right now:
+                        rtn.Status = UserPositionActivation.Statuses.JustCompleted;
                         rtn.Messages.Add(LcRessources.GetText("PositionActivationComplete", ps.Value.PositionSingular));
-                    
+                    }
+                    // There are still non required alerts? must be showed as Enhance
                     if (numbers.CountActiveAlerts > 0)
                         rtn.Status = UserPositionActivation.Statuses.Enhance;
-                    else
-                        rtn.Status = UserPositionActivation.Statuses.Complete;
                 }
                 else if (ps.Value.StatusID == 2)
                 {

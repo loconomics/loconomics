@@ -248,10 +248,6 @@
             var nextStepLabel = "";
             switch (upa.Status)
             {
-                default:
-                case LcData.UserInfo.UserPositionActivation.Statuses.Complete:
-                    nextStepLabel = "";
-                    break;
                 case LcData.UserInfo.UserPositionActivation.Statuses.Enhance:
                     nextStepLabel = "Enhance your profile";
                     break;
@@ -265,7 +261,7 @@
                 AdditionalMessage = activationMessage,
                 OkLabel = okButtonLabel,
                 GoLabel = nextStepLabel,
-                GoURL = LcData.CreateAlertURL(upa.NextAlert)
+                GoURL = upa.NextAlert == null ? "" : LcData.CreateAlertURL(upa.NextAlert)
             });
             
             return true;

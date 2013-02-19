@@ -896,13 +896,16 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             content.append( $('<span class="success-message"/>').append(data.SuccessMessage) );
             if (data.AdditionalMessage)
                 content.append( $('<div class="additional-message"/>').append(data.AdditionalMessage) );
-            
-            var okBtn = $('<a class="action ok-action close-action" href="#ok"/>').append(data.OkLabel);
-            var goBtn = $('<a class="action go-action"/>').attr('href', data.GoURL).append(data.GoLabel);
-            // Forcing the 'close-action' in such a way that for internal links the popup gets closed in a safe way:
-            goBtn.click(function () { okBtn.click(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); });
 
-            content.append( $('<div class="actions"/>').append(okBtn).append(goBtn) );
+            var okBtn = $('<a class="action ok-action close-action" href="#ok"/>').append(data.OkLabel);
+            var goBtn = '';
+            if (data.GoURL && data.GoLabel) {
+                goBtn = $('<a class="action go-action"/>').attr('href', data.GoURL).append(data.GoLabel);
+                // Forcing the 'close-action' in such a way that for internal links the popup gets closed in a safe way:
+                goBtn.click(function () { okBtn.click(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); });
+            }
+
+            content.append( $('<div class="actions clearfix"/>').append(okBtn).append(goBtn) );
 
             smoothBoxBlock(content, ctx.box, null, {
                 closeOptions: {
