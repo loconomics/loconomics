@@ -403,7 +403,7 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0 || data.Code == 5)
+                if (data.Code == 0 || data.Code == 5 || data.Code == 6)
                     vp.show('fast', function () { vp.reload() });
                 if (data.Code == 5)
                     setTimeout(closeAndClearEditPanel, 1500);
@@ -566,7 +566,7 @@ $(document).ready(function () {
             });
         }
         $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
-            if (data.Code == 0 || data.Code == 5) {
+            if (data.Code == 0 || data.Code == 5 || data.Code == 6) {
                 var pw = $(this).closest('.pricingwizard');
                 // Reload packages list and show it
                 pw.find('.your-packages').show('fast', function () { $(this).reload() });

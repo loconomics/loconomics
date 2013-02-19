@@ -261,9 +261,9 @@
             }
             
             ReturnJsonResult(6, new {
-                SuccessMessage = "Great work!", // "Personal data updated!"
+                SuccessMessage = formSavedMessage,
                 AdditionalMessage = activationMessage,
-                OkLabel = "OK", // "OK, close popup"
+                OkLabel = okButtonLabel,
                 GoLabel = nextStepLabel,
                 GoURL = LcData.CreateAlertURL(upa.NextAlert)
             });

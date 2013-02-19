@@ -158,6 +158,9 @@
                     END
                 COMMIT TRAN
             ";
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)p.UserID);
+            
             using (var db = Database.Open("sqlloco")) {
                 packageID = db.QueryValue(sqlSetPackage, packageID,
                     p.UserID, positionID, 
@@ -187,8 +190,15 @@
                 }
             }
         
-            // Saved, all OK:
-            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                p.UserID,
+                "Great work!",
+                "Add/Edit packages"))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
         }
     }
     

@@ -747,7 +747,7 @@ LC.initCrudl = function () {
             .on('click', '.crudl-cancel', finishEdit)
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0 || data.Code == 5)
+                if (data.Code == 0 || data.Code == 5 || data.Code == 6)
                     // Show viewer and reload list:
                     vwr.show('slow').find('.crudl-list').reload();
                 if (data.Code == 5)

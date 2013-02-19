@@ -7,8 +7,6 @@
     // Current position data record:
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
-    var positionEnabled = false;
-    var positionStatus = p.StatusID;
     var action = Request["action"] ?? "edit"; // Possible values: delete, edit (by default, no checked)
 
     if (action == "delete") {
@@ -43,6 +41,8 @@
 
     if (IsPost && Validation.IsValid()) {
 
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+        
         using (var db = Database.Open("sqlloco")) {
 
             // Validate Postal Code
@@ -112,14 +112,13 @@
         }
         
         if (ModelState.IsValid) {
-            int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
-            positionEnabled = (newStatus == 1 && newStatus != positionStatus);
-            string success = positionEnabled
-                ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
-                : LcRessources.DataSaved;
-            if (positionEnabled) {
-                LcHelpers.ReturnJsonResult(0, success);
-            } else {
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                p.UserID,
+                "Great work!",
+                "Add/Edit locations"))
+            {
                 LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
             }
         }
