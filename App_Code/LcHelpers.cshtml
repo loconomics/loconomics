@@ -223,6 +223,56 @@
     </script>
 }
 @functions{
+    /*==== Page-controller Utilities ====*/
+    /// <summary>
+    /// Show the profile activation popup with 'ok' and 'next-step' buttons and progress information when need
+    /// (throught a JSON Code:6 result)
+    /// and returns true, if not returns false and other result type must be implemented.
+    /// Popup show specific buttons to go next-step (next alert) or continue in the same page,
+    /// with messages for alerts remaining or profile activated, all as detailed in #186
+    /// </summary>
+    /// <param name="beforePositionStatuses"></param>
+    /// <returns></returns>
+    public static bool UseProfileActivationPopup(
+        Dictionary<int, dynamic> beforePositionStatuses,
+        int userID,
+        string formSavedMessage = "Great work!",
+        string okButtonLabel = "OK")
+    {
+        var upa = LcData.UserInfo.CheckUserPositionActivation(userID, beforePositionStatuses);
+
+        var activationMessage = JoinNotEmptyStrings("<br/>", upa.Messages);
+
+        if (upa.Status != LcData.UserInfo.UserPositionActivation.Statuses.Complete)
+        {
+            var nextStepLabel = "";
+            switch (upa.Status)
+            {
+                default:
+                case LcData.UserInfo.UserPositionActivation.Statuses.Complete:
+                    nextStepLabel = "";
+                    break;
+                case LcData.UserInfo.UserPositionActivation.Statuses.Enhance:
+                    nextStepLabel = "Enhance your profile";
+                    break;
+                case LcData.UserInfo.UserPositionActivation.Statuses.InProgress:
+                    nextStepLabel = "Next step";
+                    break;
+            }
+            
+            ReturnJsonResult(6, new {
+                SuccessMessage = "Great work!", // "Personal data updated!"
+                AdditionalMessage = activationMessage,
+                OkLabel = "OK", // "OK, close popup"
+                NextStepURL = LcData.CreateAlertURL(upa.NextAlert),
+                NextStepLabel = nextStepLabel
+            });
+            
+            return true;
+        }
+        
+        return false;
+    }
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true){
         Response.ContentType = "application/json";

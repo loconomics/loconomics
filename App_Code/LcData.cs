@@ -898,6 +898,22 @@ public static partial class LcData
     #endregion
 
     #region Alerts
+    public static string CreateAlertURL(dynamic alert)
+    {
+        string completeUrl = N.W(alert.AlertPageURL);
+        if (completeUrl != null)
+        {
+            if (alert.PositionSpecific)
+            {
+                completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
+            }
+            if (!completeUrl.StartsWith("javascript:"))
+            {
+                completeUrl = LcUrl.LangPath + completeUrl;
+            }
+        }
+        return completeUrl;
+    }
     public static dynamic GetActiveUserAlerts(int userID)
     {
         using (var db = Database.Open("sqlloco")) {
@@ -909,7 +925,9 @@ public static partial class LcData
                     A.AlertTextDisplay,
                     A.AlertDescription,
                     A.AlertPageURL,
+                    A.DisplayRank,
                     A.PositionSpecific,
+                    A.Required,
                     UA.PositionID,
                     AT.AlertTypeName,
                     AT.AlertTypeDescription,
@@ -938,7 +956,7 @@ public static partial class LcData
             WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
                      AND A.LanguageID = @1 AND A.CountryID = @2
                      AND (UA.PositionID = 0 OR P.PositionID is not null)
-            ORDER BY AT.AlertTypeName, A.AlertName
+            ORDER BY AT.DisplayRank, AT.AlertTypeName, A.DisplayRank, A.AlertName
             ", userID,
              LcData.GetCurrentLanguageID(),
              LcData.GetCurrentCountryID());
@@ -960,6 +978,43 @@ public static partial class LcData
              LcData.GetCurrentCountryID());
         }*/
         return GetActiveUserAlerts(userID).Count;
+    }
+    public static dynamic GetUserAlertsNumbers(int userID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var counts = db.QuerySingle(@"
+                SELECT
+                    coalesce((SELECT count(*) FROM alert), 0) As Total
+                    ,coalesce((SELECT count(*) FROM alert WHERE Required = 1), 0) As TotalRequired
+            ", userID);
+            var countAlerts = counts.Total;
+            var countRequiredAlerts = counts.TotalRequired;
+
+            int countRequiredActiveAlerts = 0, countActiveAlerts = 0;
+            int alertRank = int.MaxValue;
+            dynamic nextAlert = null;
+            foreach (var a in GetActiveUserAlerts(userID))
+            {
+                countActiveAlerts++;
+                if (a.Required)
+                    countRequiredActiveAlerts++;
+                if (a.DisplayRank < alertRank)
+                {
+                    alertRank = a.DisplayRank;
+                    nextAlert = a;
+                }
+            }
+
+            return new {
+                CountAlerts = countAlerts,
+                CountActiveAlerts = countActiveAlerts,
+                CountRequiredAlerts = countRequiredAlerts,
+                CountRequiredActiveAlerts = countRequiredActiveAlerts,
+                CountRequiredPassedAlerts = countRequiredAlerts - countRequiredActiveAlerts,
+                NextAlert = nextAlert
+            };
+        }
     }
     #endregion
 

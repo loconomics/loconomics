@@ -29,18 +29,7 @@
                 }
                 lastAlertType = alert.AlertTypeName;
 
-                string completeUrl = N.W(alert.AlertPageURL);
-                if (completeUrl != null)
-                {
-                    if (alert.PositionSpecific)
-                    {
-                        completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
-                    }
-                    if (!completeUrl.StartsWith("javascript:"))
-                    {
-                        completeUrl = LcUrl.LangPath + completeUrl;
-                    }
-                }
+                string completeUrl = LcData.CreateAlertURL(alert);
                         <li class="item">
                             @if (completeUrl != null)
                             {

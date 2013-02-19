@@ -5,7 +5,6 @@
     var idprefix = "account-personal-contact";
     
     var u = LcData.UserInfo.GetUserRowWithContactData();
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
     // Data
     var FirstName = Request["firstname"] ?? u.FirstName;
@@ -44,6 +43,9 @@
             }
         }
         if (ModelState.IsValid) {
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+            
             using (var db = Database.Open("sqlloco")) {
                 // Check what data changes to revoke verifications and update data:
                 db.Execute(@"
@@ -213,12 +215,12 @@
                     LcData.GetCurrentLanguageID()
                 );
                 
-                string success = "Personal data updated!";
-                if (!String.IsNullOrEmpty(redirectURL))
-                {
-                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL });
-                }
-                else
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    "Great work!",
+                    "OK"))
                 {
                     LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                 }
@@ -258,7 +260,6 @@
 <p></p>
 <div>
 <form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileContact/" id="personal" class="ajax ajax-box">
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {

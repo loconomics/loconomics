@@ -39,6 +39,9 @@ public static class LcRessources
         ,{ "tab-has-changes-continue-without-change", "Continue anyway" }
 
         ,{ "DataSavedAndPositionEnabled", "Congratulations, your {0} profile is now active and can be viewed publicly! <a href='{1}'>View it here</a>" }
+
+        ,{ "PositionActivationProgress", "You've completed {0} out of {1} steps to activate your {2} profile." }
+        ,{ "PositionActivationComplete", "Your {1} profile is now public." }
     };
     public static string GetText(string key) {
         if (textress.ContainsKey(key))

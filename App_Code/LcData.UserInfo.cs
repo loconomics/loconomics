@@ -364,6 +364,111 @@ public static partial class LcData
             }
         }
 
+        public static Dictionary<int, dynamic> GetUserPositionsStatuses(int userID)
+        {
+            var d = new Dictionary<int, dynamic>();
+            foreach (var p in GetUserPos(userID, false))
+                d.Add(p.PositionID, p);
+            return d;
+        }
+        public class UserPositionActivation
+        {
+            public List<string> Messages
+            {
+                get;
+                private set;
+            }
+            public enum Statuses : short
+            {
+                InProgress,
+                Enhance,
+                Complete
+            }
+            public Statuses Status;
+            public int UserID
+            {
+                get;
+                private set;
+            }
+            public dynamic NextAlert;
+            public UserPositionActivation(int userID)
+            {
+                Messages = new List<string>();
+                Status = Statuses.InProgress;
+                UserID = userID;
+            }
+            /// <summary>
+            /// Generates a new UserPositionActivation object with the 'maximum'
+            /// values for each field from the passed list.
+            /// Messages property will be accumulated,
+            /// Status will be the more restricted (lower value),
+            /// NextStepURL will be that with lower NextStepRank (first on equal ranks)
+            /// </summary>
+            /// <param name="list"></param>
+            /// <returns></returns>
+            public static UserPositionActivation Max(IEnumerable<UserPositionActivation> list)
+            {
+                if (list == null)
+                    throw new ArgumentNullException("list");
+                
+                UserPositionActivation max = null;
+                foreach (var l in list)
+                {
+                    if (max == null)
+                    {
+                        max = l;
+                        continue;
+                    }
+                    if ((short)l.Status < (short)max.Status)
+                        max.Status = l.Status;
+                    max.Messages.AddRange(l.Messages);
+                    if (max.NextAlert == null ||
+                        l.NextAlert != null && 
+                        l.NextAlert.DisplayRank < max.NextAlert.DisplayRank)
+                        max.NextAlert = l.NextAlert;
+                }
+                return max;
+            }
+        }
+        public static UserPositionActivation CheckUserPositionActivation(int userID, Dictionary<int, dynamic> positionsStatuses)
+        {
+            var newStatuses = GetUserPositionsStatuses(userID);
+            var posActivationList = new List<UserPositionActivation>();
+
+            foreach (var ps in newStatuses)
+            {
+                var rtn = new UserPositionActivation(userID);
+
+                var numbers = LcData.GetUserAlertsNumbers(userID);
+                // Check if is enabled
+                if (ps.Value.StatusID == 1)
+                {
+                    if (ps.Value.StatusID != positionsStatuses[ps.Key].StatusID)
+                        // It was enabled right now:
+                        rtn.Messages.Add(LcRessources.GetText("PositionActivationComplete", ps.Value.PositionSingular));
+                    
+                    if (numbers.CountActiveAlerts > 0)
+                        rtn.Status = UserPositionActivation.Statuses.Enhance;
+                    else
+                        rtn.Status = UserPositionActivation.Statuses.Complete;
+                }
+                else if (ps.Value.StatusID == 2)
+                {
+                    rtn.Status = UserPositionActivation.Statuses.InProgress;
+                    // It is still incomplete, show progress
+                    rtn.Messages.Add(LcRessources.GetText("PositionActivationProgress",
+                        numbers.CountRequiredPassedAlerts,
+                        numbers.CountRequiredAlerts,
+                        ps.Value.PositionSingular)
+                    );
+                }
+
+                posActivationList.Add(rtn);
+            }
+
+            return UserPositionActivation.Max(posActivationList);
+        }
+
         #endregion
 
         #region Specific Information
