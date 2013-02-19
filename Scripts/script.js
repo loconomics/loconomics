@@ -904,9 +904,10 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             content.append( $('<div class="actions"/>').append(okBtn).append(goBtn) );
 
             smoothBoxBlock(content, ctx.box, null, {
-                complete: function () {
-                    ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]);
-                    console.log('ajaxSuccessPostMessageClosed');
+                closeOptions: {
+                    complete: function () {
+                        ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]);
+                    }
                 }
             });
 
@@ -1335,7 +1336,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     boxc.children().remove();
     if (options.closable)
         boxc.append( $('<a class="close-popup close-action" href="#close-popup">X</a>') );
-    boxc.on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, options); return false; });
+    if (!boxc.data('_close-action-added'))
+        boxc
+        .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, options); return false; })
+        .data('_close-action-added', true);
     boxc.append(contentBox);
     box.css('position', 'absolute');
     if (boxInsideBlocked) {
