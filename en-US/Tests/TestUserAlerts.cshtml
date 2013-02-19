@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "_TestLayout.cshtml";
+    
+    var userID = WebSecurity.CurrentUserId;
+    dynamic data = null;
+    
+    switch (UrlData[0].ToLower()) {
+        case "numbers":
+            data = LcData.GetUserAlertsNumbers(userID);
+            break;
+        case "positions":
+            data = LcData.UserInfo.GetUserPositionsStatuses(userID);
+            break;
+        case "checkactivation":
+            data = LcData.UserInfo.CheckUserPositionActivation(userID, LcData.UserInfo.GetUserPositionsStatuses(userID));
+            break;
+    }
+}
+<div id="testindex">
+    <ul>
+        <li><a href="numbers">Numbers</a></li>
+        <li><a href="positions">GetUserPositionsStatuses</a></li>
+        <li><a href="checkactivation">CheckUserPositionActivation</a></li>
+    </ul>
+</div>
+<div id="testdata" style="margin-top: 40px; padding: 20px; border: 1px maroon solid">
+    @ObjectInfo.Print(data)
+</div>

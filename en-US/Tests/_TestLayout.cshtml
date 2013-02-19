@@ -1,0 +1,90 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    var u = LcData.UserInfo.GetUserRow();
+
+    var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    // Updated assets version, to avoid problems with cache of css & js assets
+    LcAssets.AssetsVersion = "";
+    
+    // Sniff IE browsers or based on its same engine (Trident).
+    var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
+}
+<!doctype html>
+    <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
+    <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
+    <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
+    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture"> <!--<![endif]-->
+     <head>
+          <meta charset="utf-8"/>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+          <title>Loconomics - @Page.Title</title>
+          <meta name="description" content="Find service providers to do the job right. At your service!"/>
+          <meta name="author" content="Loconomics Inc."/>
+          @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
+          <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+          <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
+           @* Our styles *@
+           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
+           @LcAssets.GetStylesTags()
+           <script type="text/javascript">               var LC = window['LC'] || {};</script>
+           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.1.js")" type="text/javascript"></script>
+           <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
+            @* Our LcUrl class *@
+            <script type="text/javascript">
+                @Html.Raw(LcUrl.ToJsVar())
+            </script>
+            @if(isIE){
+            <!--[if lt IE 9]>
+            <style type="text/css">
+                body,html,iframe{overflow: hidden; overflow:hidden !important;}
+            </style>
+            <![endif]-->
+            }
+    </head>
+    <body class="@PageData["BodyClass"]">
+
+        <div id="container">
+            UserID: @WebSecurity.CurrentUserId
+            <div id="main">
+                @RenderBody()
+            </div>
+        </div>
+
+        <div class="scripts">
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
+            if (LcData.GetCurrentLanguageID() == 2)
+            {
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ui.datepicker-es.js")" type="text/javascript"></script>
+            }
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ba-hashchange.min.js")" type="text/javascript"></script>
+            @* IagoSRL: Disable to investigate if really are being used this scripts from old code:
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery.selectboxes.pack.js")" type="text/javascript"></script>
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery.backgroundPosition.js")" type="text/javascript"></script>*@
+            @*
+            IagoSRL: The author recommends replace the autocomplete plugin by the autocomplete widget included in jQuery.UI
+            Original author migration guide: http://www.learningjquery.com/2010/06/autocomplete-migration-guide
+            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.autocomplete.js")" type="text/javascript"></script>
+            *@
+		    <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js")" type="text/javascript"></script>
+            @* Our scripts *@
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/script.js")
+
+            @* Javascript linked from asp.net *@
+            @LcAssets.GetScriptsTags()
+            @if (PageData["InlineScript"] != null)
+            {
+                <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
+            }
+        </div>
+        <div class="lc-ressources">
+            <span id="lcres-quit-without-save">@LcRessources.GetText("quit-without-save")</span>
+            <span id="lcres-changes-not-saved">@LcRessources.GetText("changes-not-saved")</span>
+            <span id="lcres-tab-has-changes-stay-on">@LcRessources.GetText("tab-has-changes-stay-on")</span>
+            <span id="lcres-tab-has-changes-continue-without-change">@LcRessources.GetText("tab-has-changes-continue-without-change")</span>
+        </div>
+
+    </body>
+</html>
