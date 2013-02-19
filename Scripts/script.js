@@ -888,6 +888,34 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Clean previous validation errors
             setValidationSummaryAsValid(ctx.box);
         }
+        function showOkGoPopup(data) {
+            // Unblock loading:
+            ctx.box.unblock();
+
+            var content = $('<div class="ok-go-box"/>');
+            content.append( $('<span class="success-message"/>').append(data.SuccessMessage) );
+            if (data.AdditionalMessage)
+                content.append( $('<div class="additional-message"/>').append(data.AdditionalMessage) );
+            
+            // TODO review clases close-popup close-action
+            var okBtn = $('<a class="action ok-action close-action" href="#ok"/>').append(data.OkLabel);
+            var goBtn = $('<a class="action go-action"/>').attr('href', data.GoURL).append(data.GoLabel);
+
+            content.append( $('<div class="actions"/>').append(okBtn).append(goBtn) );
+
+            smoothBoxBlock(content, ctx.box, null, {
+                complete: function () {
+                    ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]);
+                    console.log('ajaxSuccessPostMessageClosed');
+                }
+            });
+
+            // Do not unblock in complete function!
+            ctx.autoUnblockLoading = false;
+
+            // Clean previous validation errors
+            setValidationSummaryAsValid(ctx.box);
+        }
         if (data.Code == 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
             showSuccessMessage(data.Result);
@@ -926,6 +954,10 @@ function ajaxFormsSuccessHandler(data, text, jx) {
                 btn.text(btn.data('default-text'));
             });
             // Trigger event for custom handlers
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        } else if (data.Code == 6) {
+            // Ok-Go actions popup with 'success' and 'additional' messages.
+            showOkGoPopup(data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
@@ -1209,14 +1241,14 @@ function configureTooltip() {
  * jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
  * Depending on options.effect:
  * - if not present, jQuery.hide(options)
- * - 'animate': jQuery.animate(options.properties, options.options)
+ * - 'animate': jQuery.animate(options.properties, options)
  * - 'fade': jQuery.fadeOut
  */
 LC.hideElement = function (element, options) {
     var $e = $(element);
     switch (options.effect) {
         case 'animate':
-            $e.animate(options.properties, options.options);
+            $e.animate(options.properties, options);
             break;
         case 'fade':
             $e.fadeOut(options);
@@ -1230,14 +1262,14 @@ LC.hideElement = function (element, options) {
 * jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
 * Depending on options.effect:
 * - if not present, jQuery.hide(options)
-* - 'animate': jQuery.animate(options.properties, options.options)
+* - 'animate': jQuery.animate(options.properties, options)
 * - 'fade': jQuery.fadeOut
 */
 LC.showElement = function (element, options) {
     var $e = $(element);
     switch (options.effect) {
         case 'animate':
-            $e.animate(options.properties, options.options);
+            $e.animate(options.properties, options);
             break;
         case 'fade':
             $e.fadeIn(options);
@@ -1301,16 +1333,11 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     box.show().css('opacity', 0);
     // Setting up the box and styles.
     boxc.children().remove();
-    if (options.closable) {
-        var closeButton = $('<a class="close-popup" href="#close-popup">X</a>');
-        closeButton.click(function () { smoothBoxBlock(null, blocked, null, options); return false; });
-        boxc.append(closeButton);
-    }
+    if (options.closable)
+        boxc.append( $('<a class="close-popup close-action" href="#close-popup">X</a>') );
+    boxc.on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, options); return false; });
     boxc.append(contentBox);
-    box.width(blocked.outerWidth());
-    box.height(blocked.outerHeight());
     box.css('position', 'absolute');
-
     if (boxInsideBlocked) {
         // Box positioning setup when inside the blocked element:
         box.css('z-index', blocked.css('z-index') + 10);
@@ -1324,6 +1351,9 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         box.css('z-index', Math.floor(Number.MAX_VALUE));
         box.css(blocked.offset());
     }
+    // Dimensions must be calculated after being appended and position type being set:
+    box.width(blocked.outerWidth());
+    box.height(blocked.outerHeight());
     box.show();
 
     if (options.center) {
