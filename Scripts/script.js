@@ -1281,7 +1281,7 @@ LC.showElement = function (element, options) {
 };
 function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
-    options = $.extend({
+    options = $.extend(true, {
         closable: false,
         center: false,
         /* as a valid options parameter for LC.hideElement function */

@@ -774,7 +774,7 @@ form fieldset.actions{
     margin: 10px 0 !important;
 }
 /* Common styles for action buttons */
-.action, .main-action, .cancel-action, .item-action, .add-action {
+.action, .main-action, .cancel-action, .item-action, .add-action, .go-action, .ok-action {
     border-radius: 4px 4px 4px 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
@@ -792,7 +792,9 @@ form fieldset.actions{
     box-shadow: 0 0 5px 2px #00989A;
 }
 /* .main-action, inside .actions container: bigger, more important button */
-.actions .main-action{
+.actions .main-action,
+.actions .go-action,
+.actions .ok-action {
     background: none repeat scroll 0 0 #99C027 !important;
     font-size: 1.1em;
     line-height: 150%;
@@ -805,14 +807,24 @@ form fieldset.actions{
     transition: background-color 1s, box-shadow .5s, width 2s;
 }
 /* Change color button con changes, but only for changes done directly on the form containing it */
-form.has-changes .actions .main-action{
+form.has-changes .actions .main-action,
+.actions .ok-action {
     background-color: #E65A0F !important;
 }
-.actions .main-action:hover{
+.actions .main-action:hover,
+.actions .go-action:hover {
     box-shadow: 0 0 5px 2px #99C027;
 }
-.has-changes .actions .main-action:hover{
+.has-changes .actions .main-action:hover,
+.actions .ok-action:hover {
     box-shadow: 0 0 5px 2px #E65A0F;
+}
+/* ok-action, go-action specifics */
+.ok-action {
+    float: left;
+}
+.ok-go-box .actions {
+    margin-top: 26px;
 }
 /* .item-action button, is the main-button equivalent for an item inside a list of items. */
 .actions .item-action {
