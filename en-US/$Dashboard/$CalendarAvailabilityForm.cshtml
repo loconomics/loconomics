@@ -6,8 +6,6 @@
     var u = LcData.UserInfo.GetUserRow();
     var idprefix = "availability-form";
     
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
-    
     var action = IsPost ? 
         Request["reset-private-url"].AsBool()
         ? "reset-private-url"
@@ -91,6 +89,8 @@
         if (Validation.IsValid() && ModelState.IsValid) {
             
             var varSqlInsertCalendarProviderAttributes = "EXEC dbo.InsertCalendarProviderAttributes @0,@1,@2,@3,@4,@5,@6,@7,@8";
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
 
             using (var db = Database.Open("sqlloco")) {
                 // Save data
@@ -125,11 +125,13 @@
                 
                 db.Execute("EXEC TestAlertAvailability @0", u.UserID);
 
-                // All was fine, AJAX-JSON response
-                string success = "Availability data was succesful saved!";
-                if (!String.IsNullOrEmpty(redirectURL)) {
-                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-                } else {
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    "Availability data was succesful saved.",
+                    "Edit availability"))
+                {
                     LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                 }
             }
@@ -318,7 +320,6 @@ What hours do you keep? We’d like to know when we can generally expect to sche
 </p>
 <div>
 <form action="@(LcUrl.LangPath)$Dashboard/$CalendarAvailabilityForm/" method="post" class="positionavailability ajax ajax-box" id="@idprefix">
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="positionavailability-days">
