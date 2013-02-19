@@ -264,8 +264,8 @@
                 SuccessMessage = "Great work!", // "Personal data updated!"
                 AdditionalMessage = activationMessage,
                 OkLabel = "OK", // "OK, close popup"
-                NextStepURL = LcData.CreateAlertURL(upa.NextAlert),
-                NextStepLabel = nextStepLabel
+                GoLabel = nextStepLabel,
+                GoURL = LcData.CreateAlertURL(upa.NextAlert)
             });
             
             return true;
