@@ -21,6 +21,8 @@
     
     if (IsPost && Validation.IsValid()) {
 
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)user.UserID);
+        
         using (var db = Database.Open("sqlloco")) {
             // Validate Postal Code
             var state = Request["state"].AsInt();
@@ -50,7 +52,15 @@
         }
         
         if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                user.UserID,
+                LcRessources.DataSaved,
+                LcRessources.OK))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
         }
     }
     

@@ -5,7 +5,6 @@
     
     var idprefix = "account-taxes";
     var user = LcData.UserInfo.GetUserRow();
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
     
     BraintreeGateway gateway = null;
     dynamic taxentities = null, tintypes = null;
@@ -86,6 +85,8 @@
                 EXEC TestAlertTaxDocs @0
                 ";
                 
+                var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)user.UserID);
+                
                 using (var db = Database.Open("sqlloco")) {
                     db.Execute(sqlSetProviderTaxForm, user.UserID,
                         Request["tin_fullname"],
@@ -130,10 +131,14 @@
                     result = gateway.Customer.Create(request);
                 }
                 if (result.IsSuccess()){
-                    string success = LcRessources.DataSaved;
-                    if (!String.IsNullOrEmpty(redirectURL)) {
-                        LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-                    } else {
+                    
+                    // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                    // if not the short message is showed:
+                    if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                        user.UserID,
+                        LcRessources.DataSaved,
+                        LcRessources.OK))
+                    {
                         LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                     }
                     
@@ -181,7 +186,6 @@
 Federal law requires us to issue you a 1099 form at the end of the year.  In order to do this, we need you to complete the information below.  Rest assured all your data is stored securely and used strictly for tax purposes.  
 </p>
 <form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountTaxes/" class="ajax ajax-box">
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">

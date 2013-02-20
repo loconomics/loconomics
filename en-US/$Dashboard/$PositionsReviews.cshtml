@@ -6,9 +6,6 @@
     var n = p.PositionID;
     // Current user data record:
     var u = LcData.UserInfo.GetUserRow();
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
-    var positionEnabled = false;
-    var positionStatus = p.StatusID;
     
     var idprefix = "position#" + n + "-reviews";
     
@@ -23,6 +20,9 @@
             ModelState.AddError("clientsemails", "There are errors in the email list. Please, use a comma to separate emails and verify all are valid addresses.");
         }
         if (ModelState.IsValid) {
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+            
             foreach (string email in emails) {
                 LcMessaging.SendMail(email,
                     String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
@@ -37,17 +37,13 @@
                 db.Execute("EXEC TestAlertReferenceRequests @0, @1", p.UserID, p.PositionID);
             }
             
-            int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
-            positionEnabled = (newStatus == 1 && newStatus != positionStatus);
-            if (positionEnabled) {
-                redirectURL = null;
-            }
-            string success = positionEnabled
-                ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
-                : LcRessources.MessageSent;
-            if (!String.IsNullOrEmpty(redirectURL)) {
-                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-            } else {
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                u.UserID,
+                "Sent.",
+                LcRessources.OK))
+            {
                 LcHelpers.ReturnJsonResult(5, "Sent");
             }
         }
@@ -59,7 +55,6 @@ Here’s a chance to pull in some favors. We know you’ve done great work in th
 <div>
 <form action="@(LcUrl.LangPath)$Dashboard/$PositionsReviews/" method="post" class="positionreviews ajax ajax-box" id="position#@(n)-reviews">
     <input type="hidden" name="PositionID" value="@p.PositionID"/>
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="references">

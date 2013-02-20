@@ -21,9 +21,18 @@
     // TODO Save posted data
     if (IsPost && Validation.IsValid()) {
         
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+        
         if (ModelState.IsValid) {
-            // All was fine, AJAX-JSON response
-            LcHelpers.ReturnJsonResult(0, "Event was succesful saved!");
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                u.UserID,
+                LcRessources.DataSaved,
+                LcRessources.OK))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
         }
     }
 }

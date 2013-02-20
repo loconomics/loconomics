@@ -37,6 +37,9 @@
         }
         
         if (ModelState.IsValid) {
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+            
             using (var db = Database.Open("sqlloco")) {
                 // Gets the ID for 'institution', creating a new one automatically or from
                 // existing one.
@@ -119,7 +122,17 @@
             }
 
             // All was fine, AJAX-JSON response
-            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            if (ModelState.IsValid) {
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    LcRessources.DataSaved,
+                    LcRessources.OK))
+                {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
+            }
         }
     }
     

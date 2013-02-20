@@ -18,6 +18,9 @@
     }
 
     if (IsPost) {
+        
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+        
         using (var db = Database.Open("sqlloco")){
             db.Execute(@"
                 UPDATE  users
@@ -41,7 +44,15 @@
                 u.IsProvider ? Request["CoBrandedPartnerPermissions"].AsBool() : false
             );
         }
-        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        // Show the profile activation popup with 'next-step' buttons and progress information when need,
+        // if not the short message is showed:
+        if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+            u.UserID,
+            LcRessources.DataSaved,
+            LcRessources.OK))
+        {
+            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        }
     } else {
         using (var db = Database.Open("sqlloco")){
             PageData["userPrefs"] = db.QuerySingle(@"

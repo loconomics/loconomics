@@ -6,9 +6,6 @@
     // Current position data record:
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
-    var positionEnabled = false;
-    var positionStatus = p.StatusID;
     
     var idprefix = "position" + n + "-licenses";
     
@@ -144,6 +141,9 @@
                     getdate(), getdate(), 'sys', 1 --Pending status
                 )
             ";
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+            
             using (var db = Database.Open("sqlloco")) {
             
                 if (db.QueryValue(sqlCheckLicense, u.UserID, p.PositionID, Request["license-type"]) > 0) {
@@ -180,16 +180,14 @@
                                 { "PositionID", p.PositionID },
                                 { "LicenseCertificationID", Request["license-type"] }
                     }));
-                    
-                    int newStatus = LcData.UserInfo.GetUserPositionStatus(p.UserID, p.PositionID);
-                    positionEnabled = (newStatus == 1 && newStatus != positionStatus);
-                    
-                    string success = positionEnabled
-                        ? LcRessources.GetText("DataSavedAndPositionEnabled", p.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
-                        : LcRessources.RequestSent;
-                    if (!String.IsNullOrEmpty(redirectURL)) {
-                        LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-                    } else {
+
+                    // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                    // if not the short message is showed:
+                    if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                        u.UserID,
+                        LcRessources.DataSaved,
+                        LcRessources.OK))
+                    {
                         LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                     }
                 }
@@ -241,7 +239,6 @@ else
         })
     <form action="@(LcUrl.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
         <input type="hidden" name="PositionID" value="@p.PositionID"/>
-        <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         <fieldset class="license-type-selector">
             <label for="@idprefix-license-type">Please select the license/certification you possess:</label>

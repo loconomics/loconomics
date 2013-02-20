@@ -9,9 +9,6 @@
     var idprefix = PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "pricingwizard";
     dynamic pvars;
     dynamic hourlyRate = 0;
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
-    var positionEnabled = false;
-    var positionStatus = pos.StatusID;
 
     using (var db = Database.Open("sqlloco")){
         // Get the Pricing Variables with the selected Provider Value
@@ -111,6 +108,8 @@
             COMMIT TRAN
         ";
         
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)p.UserID);
+        
         using (var db = Database.Open("sqlloco")){
             // Iterate all variables and save into providerpricingvariableinputs
             foreach (var pvar in pvars) {
@@ -136,24 +135,16 @@
                     pos.PositionID);
             }
         }
-            
+
         if (ModelState.IsValid) {
-            int newStatus = LcData.UserInfo.GetUserPositionStatus(pos.UserID, pos.PositionID);
-            positionEnabled = (newStatus == 1 && newStatus != positionStatus);
-            if (positionEnabled) {
-                redirectURL = null;
-            }
-            string success = positionEnabled
-                ? LcRessources.GetText("DataSavedAndPositionEnabled", pos.PositionSingular, LcData.UserInfo.GetMyPublicURL())  
-                : LcRessources.DataSaved;
-            if (!String.IsNullOrEmpty(redirectURL)) {
-                LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL } );
-            } else {
-                if (positionEnabled) {
-                    LcHelpers.ReturnJsonResult(0, success);
-                } else {
-                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-                }
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                p.UserID,
+                LcRessources.DataSaved,
+                LcRessources.OK))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
             }
         }
     }
@@ -169,7 +160,6 @@
 
 <form action="@(LcUrl.LangPath)Dashboard/$PositionsPricing/" method="post" class="@PageData["PricingWizardClasses"] pricingwizard ajax ajax-box" id="@idprefix">
     <input type="hidden" name="PositionID" value="@pos.PositionID"/>
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="pricing-wizard">
         <fieldset class="hourly-rate">

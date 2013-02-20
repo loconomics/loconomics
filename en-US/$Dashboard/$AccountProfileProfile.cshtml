@@ -3,7 +3,6 @@
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRowWithContactData();
-    var redirectURL = LcHelpers.GetRedirectURLFromReferrer("/alerts");
 
     // Initializing local data:
     var Bio = Request["publicbio"] ?? u.PublicBio;
@@ -25,6 +24,8 @@
                 ModelState.AddError("website-url", "The website URL you entered is invalid");
             }
         }
+        
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
 
         using (var db = Database.Open("sqlloco")){
             if (ModelState.IsValid) {
@@ -74,12 +75,13 @@
                 ", u.UserID, Bio,
                     (u.IsProvider ? ProfileUrl : null),
                     (u.IsProvider ? WebsiteUrl : null));
-                string success = "Saved";
-                if (!String.IsNullOrEmpty(redirectURL))
-                {
-                    LcHelpers.ReturnJsonResult(4, new { SuccessMessage = success, RedirectURL = redirectURL });
-                }
-                else
+
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    LcRessources.DataSaved,
+                    LcRessources.OK))
                 {
                     LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                 }
@@ -89,7 +91,6 @@
 }
 <p></p>
 <div><form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileProfile/" id="personal" class="ajax ajax-box">
-    <input type="hidden" name="RedirectURL" value="@(redirectURL)" />
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
