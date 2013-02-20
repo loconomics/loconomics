@@ -6,6 +6,9 @@
     PageData["TestData"] = new Dictionary<string, dynamic>();
     
     switch (UrlData[0].ToLower()) {
+        case "alerts":
+            data = LcData.GetActiveUserAlerts(userID);
+            break;
         case "numbers":
             data = LcData.GetUserAlertsNumbers(userID);
             break;
@@ -22,6 +25,7 @@
 }
 <div id="testindex">
     <ul>
+        <li><a href="alerts">Alerts</a></li>
         <li><a href="numbers">Numbers</a></li>
         <li><a href="positions">GetUserPositionsStatuses</a></li>
         <li><a href="checkactivation">CheckUserPositionActivation</a></li>

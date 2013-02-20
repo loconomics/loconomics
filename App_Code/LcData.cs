@@ -992,8 +992,8 @@ public static partial class LcData
             var countRequiredAlerts = counts.TotalRequired;
 
             int countRequiredActiveAlerts = 0, countActiveAlerts = 0;
-            int alertRank = int.MaxValue;
-            dynamic nextAlert = null;
+            int alertRank = int.MaxValue, requiredAlertRank = int.MaxValue;
+            dynamic nextAlert = null, requiredNextAlert = null;
             foreach (var a in GetActiveUserAlerts(userID))
             {
                 countActiveAlerts++;
@@ -1004,7 +1004,17 @@ public static partial class LcData
                     alertRank = a.DisplayRank;
                     nextAlert = a;
                 }
+                if (a.Required && a.DisplayRank < requiredAlertRank)
+                {
+                    requiredAlertRank = a.DisplayRank;
+                    requiredNextAlert = a;
+                }
             }
+
+            // Required alerts take precedence to other alerts, if there is one 
+            // and independently of Rank:
+            if (requiredNextAlert != null)
+                nextAlert = requiredNextAlert;
 
             return new {
                 CountAlerts = countAlerts,
