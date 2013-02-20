@@ -1051,8 +1051,10 @@ function ajaxErrorPopupHandler(jx, message, ex) {
 
     ctx.autoUnblockLoading = true;
 
-    // If is a connection aborted, no show message:
-    if (message == 'abort')
+    // If is a connection aborted, no show message.
+    // readyState different to 'done:4' means aborted too, 
+    // because window being closed/location changed
+    if (message == 'abort' || jx.readyState != 4)
         return;
 
     var m = message;

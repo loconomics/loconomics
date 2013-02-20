@@ -154,7 +154,7 @@
                 pastBookings = db.Query(sqlGetBookingsByDateRange, userID, null /*pastFirstDay*/, pastLastDay, 1, 1);
                 break;
             case "failed-requests":
-                failedRequests = db.Query(sqlGetFailedBookingRequest, userID, 1, 1);;
+                failedRequests = db.Query(sqlGetFailedBookingRequest, userID, 1, 1);
                 break;
         }
     }
