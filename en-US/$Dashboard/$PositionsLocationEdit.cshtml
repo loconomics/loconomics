@@ -52,6 +52,12 @@
                 ModelState.AddFormError("Postal Code not valid");
             }
             
+            // Validate that almost one of the 'location service-type' must be selected
+            if (!Request["iworkon"].AsBool() &&
+                !Request["itravel"].AsBool()) {
+                ModelState.AddFormError("LJDI: Almost one of the options 'I perform services here' and 'I travel to clients from' must be selected.");
+            }
+            
             // Validate that 'travel from location' is unique
             // Issue #86, details. for now, only allow one 'travel from' location for a simpler customer visualization of provider working zones.
             if (Request["itravel"].AsBool() &&
