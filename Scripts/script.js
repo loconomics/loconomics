@@ -603,6 +603,15 @@ LC.dateToInterchangleString = function (date) {
         d = '0' + d;
     return date.getUTCFullYear().toString() + '-' + m + '-' + d;
 };
+/* Focus the first element in the document (or in @container)
+    with the html5 attribute 'autofocus' (or alternative @cssSelector).
+    It's fine as a polyfill and for ajax loaded content that will not
+    get the browser support of the attribute.
+*/
+LC.autoFocus = function (container, cssSelector) {
+    container = $(container || document);
+    container.find(cssSelector || '[autofocus]').focus();
+};
 
 // TODO Convert as general function and use everywhere:
 // It executes the given 'ready' function as parameter when
@@ -835,6 +844,7 @@ function popup(url, size, complete, loadingText, options){
                 // Page content got, paste into the popup if is partial html (url starts with$)
                 if (/((^\$)|(\/\$))/.test(url)) {
                     contentHolder.append(data);
+                    LC.autoFocus(contentHolder);
                 } else {
                     // Else, if url is a full html page (normal page), put content into an iframe
                     var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
@@ -850,6 +860,7 @@ function popup(url, size, complete, loadingText, options){
                     // replace blocking element content (the loading) with the iframe:
                     contentHolder.remove();
                     $('.blockMsg').append(iframe);
+                    LC.autoFocus(iframe);
                 }
             }
         }, error: function (j, t, ex) {
@@ -993,6 +1004,8 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
         var newhtml = $(data);
 
+        // TODO: changesnotification before or after append element to doc? newhtml.trigger() or jb.trigger()?
+
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
         var newForm = newhtml.find('form:eq(0)').get(0);
         if (ctx.changedElements)
@@ -1017,6 +1030,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // box is content that must be replaced by the new content:
             ctx.box.replaceWith(jb);
 
+        LC.autoFocus(jb);
         newhtml.trigger('ajaxFormReturnedHtml');
     }
 }
@@ -1362,7 +1376,6 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Dimensions must be calculated after being appended and position type being set:
     box.width(blocked.outerWidth());
     box.height(blocked.outerHeight());
-    box.show();
 
     if (options.center) {
         boxc.css('position', 'absolute');
@@ -1377,6 +1390,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         boxc.css('top', ct - boxc.outerHeight(true) / 2);
         boxc.css('left', cl - boxc.outerWidth(true) / 2);
     }
+    // Last setup
+    LC.autoFocus(box);
     // Show block
     box.animate({opacity: 1}, 300);
     LC.moveFocusTo(contentBox, { marginTop: 60 });
@@ -1545,6 +1560,9 @@ $(function () {
                 this.value = this.getAttribute('placeholder');
         });
     }
+
+    // Autofocus polyfill
+    LC.autoFocus();
 
     LC.takeATour();
 
