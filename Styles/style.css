@@ -1797,8 +1797,16 @@ html.boxshadow #loginBox .field-validation-error{
 .buttons ul.tabs { 
     padding: 0;
 }
+.tabbed.buttons > ul.tabs {
+    white-space: normal !important;
+}
 .buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
-.buttons ul.tabs li a.button { font-size: inherit; line-height: 22px; }
+.buttons ul.tabs li a.button 
+{
+    font-size: inherit;
+    line-height: 22px;
+    margin-bottom: 5px;
+}
 
 .buttons .tab-body { display:none; padding: 0; 
     /*min-height: 400px;
