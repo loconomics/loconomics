@@ -13,11 +13,6 @@ ul.attributes-list li {
 .dashboard .folders > .tab-body > .tabs {
     margin-top: 0;
 }
-/* Extra right magin to avoid collision with possible upper-right utility button */
-.dashboard .folders > .tab-body > .tabs,
-.dashboard .folders > .tab-body > p:first-child{
-    margin-right: 30px;
-}
 
 .dashboard #highlights,
 .dashboard #dashboard-help,
