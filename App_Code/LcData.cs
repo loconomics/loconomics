@@ -1061,24 +1061,6 @@ public static partial class LcData
 
                 // Calculate passed alerts
                 p.Value.CountRequiredPassedAlerts = p.Value.CountRequiredAlerts - p.Value.CountRequiredActiveAlerts;
-
-                // Most positions take the same total values for alerts and required alerts but
-                // there are special exceptions: 
-                {
-                    // - backgroundcheck:12 alert: it is not required for all, but it is for some positions
-                    //   depending on the positionsbackgroundcheck table and its required field.
-                    if ((int)db.QueryValue(@"
-                        SELECT count(*) FROM positionbackgroundcheck WHERE
-                            PositionID = @0
-                            AND StateProvinceID = @1
-                            AND CountryID = @2
-                            AND Required = 1
-                            AND Active = 1
-                    ", p.Key, userDetails.StateProvinceID, userDetails.CountryID) > 0)
-                    {
-                        p.Value.CountRequiredAlerts++;
-                    }
-                }
             }
 
             return posCounts;
