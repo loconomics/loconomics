@@ -189,7 +189,7 @@
             <ul class="copy-location">
                 <li>
                     <label>You can specify a full new address or use one of yours addresses from the list:
-                        <select class="copy-location">
+                        <select class="copy-location" data-extra-query="@(Request["iworkon"].AsBool() ? "iworkon=True&" : "")@(Request["itravel"].AsBool() ? "itravel=True&" : "")">
                             <option value=""></option>
                             @foreach (var add in userAddresses)
                             {
@@ -331,7 +331,8 @@
                 $('select.copy-location').change(function () {
                     var $t = $(this);
                     $t.closest('.edit-panel').reload(function (currentUrl, defaultUrl) {
-                        return defaultUrl.replace(/LocationID=\d+/gi, 'LocationID=' + $t.val());
+                        return defaultUrl.replace(/LocationID=\d+/gi, 'LocationID=' + $t.val())
+                        + '&' + $t.data('extra-query');
                     });
                 });
             });
