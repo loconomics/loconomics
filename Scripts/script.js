@@ -750,6 +750,8 @@ LC.initCrudl = function () {
                 // Avoid cached content on the Editor
                 dtr.children().remove();
             });
+            // Mark form as saved to remove the 'has-changes' mark
+            LC.ChangesNotification.registerSave(dtr.find('form').get(0));
             return false;
         }
         dtr

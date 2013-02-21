@@ -815,7 +815,7 @@ form.has-changes .actions .main-action,
 .actions .go-action:hover {
     box-shadow: 0 0 5px 2px #99C027;
 }
-.has-changes .actions .main-action:hover,
+form.has-changes .actions .main-action:hover,
 .actions .ok-action:hover {
     box-shadow: 0 0 5px 2px #E65A0F;
 }

@@ -15,7 +15,7 @@
         LcHelpers.ReturnJsonResult(0, "Event was succesful deleted!");
         // ENDS page execution
     }
-
+    
     // TODO Validation rules
     
     // TODO Save posted data
@@ -35,37 +35,85 @@
             }
         }
     }
+    
+    dynamic eventTypes = null, repeatFrequencies = null;
+    using (var db = Database.Open("sqlloco")) {
+        eventTypes = db.Query(@"SELECT EventTypeID, DisplayName FROM CalendarEventType WHERE DisplayName is not null");
+        repeatFrequencies = db.Query(@"
+            SELECT  ID, FrequencyType
+            FROM    CalendarRecurrenceFrequencyTypes
+            WHERE   ID > 0
+        ");
+    }
 }
 <form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/" method="post" class="crudl-form ajax ajax-box" id="@idprefix">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
-    @if (eventID == 0)
-    {
-        <div>New event!</div>
-    }
-    else
-    {
-        <div>Editing event @eventID</div>
-    }
-
     <ul>
         <li class="type">
-            <label>Type</label>
-            <select name="type">
-                <option id="3">Appointment</option>
-                <option id="6">Offline Booking</option>
-                <option id="5">Other</option>
+            <label for="@(idprefix)Type">Type</label>
+            <select name="type" id="@(idprefix)Type">
+                @foreach (var type in eventTypes) {
+                    <option id="@type.EventTypeID">@type.DisplayName</option>
+                }
             </select>
         </li>
         <li class="what">
-            <label>What</label>
-            <input type="text" placeholder="Untitled event" name="title" />
+            <label for="@(idprefix)Summary">What</label>
+            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" />
         </li>
         <li class="when">
-            <label>When</label>
-            <input name="startdate" type="text" value="@DateTime.Today" />
+            <label for="@(idprefix)StartDate">When</label>
+            <input id="@(idprefix)StartDate" name="startdate" type="text" value="@DateTime.Today" />
             <input name="starttime" type="text" value="@DateTime.Now.TimeOfDay" />
+            <span class="when-to">to</span>
+            <input name="enddate" type="text" value="@DateTime.Today" />
+            <input name="endtime" type="text" value="@DateTime.Now.TimeOfDay" />
+            <div class="time-options">
+                <label><input type="checkbox" name="allday" /> All day</label>
+                <label><input type="checkbox" name="repeat" /> Repeat...</label>
+                <div class="repeat-options">
+                    <ul>
+                        <li>
+                            <label for="@(idprefix)RepeatFrequency">Repeats:</label>
+                            <select name="repeat-frequency" id="@(idprefix)RepeatFrequency">
+                                @foreach (var freq in repeatFrequencies) {
+                                    <option value="@freq.ID">@LcRessources.GetText(freq.FrequencyType)</option>
+                                }
+                            </select>
+                        </li>
+                        <li>
+                            <label for="@(idprefix)RepeatEvery">Repeat every:</label>
+                            <input type="number" id="@(idprefix)RepeatEvery" name="repeat-every" /> days
+                        </li>
+                        <li>
+                            <label for="@(idprefix)RepeatStarts">Starts on:</label>
+                            <input type="date" id="@(idprefix)RepeatStarts" name="repeat-start-date" />
+                        </li>
+                        <li>
+                            <label>Ends:</label>
+                            <ul>
+                                <li><label><input type="checkbox" checked value="never" name="repeat-ends" /> Never</label></li>
+                                <li><label><input type="checkbox" value="ocurrences" name="repeat-ends" /> After</label>
+                                    <label><input type="number" name="repeat-ocurrences" /> ocurrences</label>
+                                </li>
+                                <li><label><input type="checkbox" value="date" name="repeat-ends" /> On</label>
+                                    <input type="date" name="repeat-end-date" />
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <label for="@(idprefix)Where">Where</label>
+            <input id="@(idprefix)Where" name="location" />
+        </li>
+        <li>
+            <label for="@(idprefix)Description">Description</label>
+            <input id="@(idprefix)Description" name="description" />
         </li>
     </ul>
 
