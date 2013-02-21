@@ -979,10 +979,24 @@ public static partial class LcData
         }*/
         return GetActiveUserAlerts(userID).Count;
     }
-    public static dynamic GetUserAlertsNumbers(int userID)
+    public class UserAlertsNumbers
     {
+        public int CountAlerts;
+        public int CountRequiredAlerts;
+        public int CountActiveAlerts;
+        public int CountRequiredActiveAlerts;
+        public int CountRequiredPassedAlerts;
+        public dynamic NextAlert;
+        public int AlertRank;
+        public dynamic RequiredNextAlert;
+        public int RequiredAlertRank;
+    }
+    public static Dictionary<int, UserAlertsNumbers> GetUserAlertsNumbers(int userID)
+    {
+        var userDetails = LcData.UserInfo.GetUserRowWithContactData(userID);
         using (var db = Database.Open("sqlloco"))
         {
+            // Get generic/all positions alerts counts
             var counts = db.QuerySingle(@"
                 SELECT
                     coalesce((SELECT count(*) FROM alert), 0) As Total
@@ -991,39 +1005,83 @@ public static partial class LcData
             var countAlerts = counts.Total;
             var countRequiredAlerts = counts.TotalRequired;
 
-            int countRequiredActiveAlerts = 0, countActiveAlerts = 0;
-            int alertRank = int.MaxValue, requiredAlertRank = int.MaxValue;
-            dynamic nextAlert = null, requiredNextAlert = null;
+            var posCounts = new Dictionary<int, UserAlertsNumbers>();
             foreach (var a in GetActiveUserAlerts(userID))
             {
-                countActiveAlerts++;
+                dynamic posc = null;
+                if (!posCounts.ContainsKey(a.PositionID))
+                    posc = posCounts[a.PositionID] = new UserAlertsNumbers {
+                        CountAlerts = countAlerts,
+                        CountRequiredAlerts = countRequiredAlerts,
+                        CountActiveAlerts = 0,
+                        CountRequiredActiveAlerts = 0,
+                        CountRequiredPassedAlerts = 0,
+                        NextAlert = (dynamic)null,
+                        RequiredNextAlert = (dynamic)null,
+                        AlertRank = int.MaxValue,
+                        RequiredAlertRank = int.MaxValue
+                    };
+                else
+                    posc = posCounts[a.PositionID];
+
+                posc.CountActiveAlerts++;
                 if (a.Required)
-                    countRequiredActiveAlerts++;
-                if (a.DisplayRank < alertRank)
+                    posc.CountRequiredActiveAlerts++;
+                if (a.DisplayRank < posc.AlertRank)
                 {
-                    alertRank = a.DisplayRank;
-                    nextAlert = a;
+                    posc.AlertRank = a.DisplayRank;
+                    posc.NextAlert = a;
                 }
-                if (a.Required && a.DisplayRank < requiredAlertRank)
+                if (a.Required && a.DisplayRank < posc.RequiredAlertRank)
                 {
-                    requiredAlertRank = a.DisplayRank;
-                    requiredNextAlert = a;
+                    posc.RequiredAlertRank = a.DisplayRank;
+                    posc.RequiredNextAlert = a;
                 }
             }
 
-            // Required alerts take precedence to other alerts, if there is one 
-            // and independently of Rank:
-            if (requiredNextAlert != null)
-                nextAlert = requiredNextAlert;
+            // Last tasks per position
+            var allPositions = posCounts.ContainsKey(0) ? posCounts[0] : null;
+            foreach (var p in posCounts)
+            {
+                // Required alerts take precedence to other alerts, if there is one 
+                // and independently of Rank:
+                if (p.Value.RequiredNextAlert != null)
+                    p.Value.NextAlert = p.Value.RequiredNextAlert;
 
-            return new {
-                CountAlerts = countAlerts,
-                CountActiveAlerts = countActiveAlerts,
-                CountRequiredAlerts = countRequiredAlerts,
-                CountRequiredActiveAlerts = countRequiredActiveAlerts,
-                CountRequiredPassedAlerts = countRequiredAlerts - countRequiredActiveAlerts,
-                NextAlert = nextAlert
-            };
+                // Combine all-positions alerts (positionID:0) with each specific position:
+                if (allPositions != null && p.Key > 0)
+                {
+                    p.Value.CountActiveAlerts += allPositions.CountActiveAlerts;
+                    p.Value.CountRequiredActiveAlerts += allPositions.CountRequiredActiveAlerts;
+                    if (p.Value.RequiredNextAlert == null)
+                        p.Value.RequiredNextAlert = allPositions.RequiredNextAlert;
+                    if (p.Value.NextAlert == null)
+                        p.Value.NextAlert = allPositions.NextAlert;
+                }
+
+                // Calculate passed alerts
+                p.Value.CountRequiredPassedAlerts = p.Value.CountRequiredAlerts - p.Value.CountRequiredActiveAlerts;
+
+                // Most positions take the same total values for alerts and required alerts but
+                // there are special exceptions: 
+                {
+                    // - backgroundcheck:12 alert: it is not required for all, but it is for some positions
+                    //   depending on the positionsbackgroundcheck table and its required field.
+                    if ((int)db.QueryValue(@"
+                        SELECT count(*) FROM positionbackgroundcheck WHERE
+                            PositionID = @0
+                            AND StateProvinceID = @1
+                            AND CountryID = @2
+                            AND Required = 1
+                            AND Active = 1
+                    ", p.Key, userDetails.StateProvinceID, userDetails.CountryID) > 0)
+                    {
+                        p.Value.CountRequiredAlerts++;
+                    }
+                }
+            }
+
+            return posCounts;
         }
     }
     #endregion

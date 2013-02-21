@@ -21,6 +21,9 @@
         case "profilepopup":
             data = LcHelpers.UseProfileActivationPopup(LcData.UserInfo.GetUserPositionsStatuses(userID), userID);
             break;
+        case "usercontact":
+            data = LcData.UserInfo.GetUserRowWithContactData(userID);
+            break;
     }
 }
 <div id="testindex">
@@ -30,6 +33,7 @@
         <li><a href="positions">GetUserPositionsStatuses</a></li>
         <li><a href="checkactivation">CheckUserPositionActivation</a></li>
         <li><a href="profilepopup">UseProfileActivationPopup</a></li>
+        <li><a href="usercontact">UserRowWithContactData</a></li>
     </ul>
 </div>
 <div id="testdata" style="margin-top: 40px; padding: 20px; border: 1px maroon solid">

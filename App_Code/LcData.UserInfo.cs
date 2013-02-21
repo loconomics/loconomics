@@ -471,11 +471,13 @@ public static partial class LcData
             var newStatuses = GetUserPositionsStatuses(userID);
             var posActivationList = new List<UserPositionActivation>();
 
+            var totalNumbers = LcData.GetUserAlertsNumbers(userID);
+
             foreach (var ps in newStatuses)
             {
                 var rtn = new UserPositionActivation(userID);
 
-                var numbers = LcData.GetUserAlertsNumbers(userID);
+                var numbers = totalNumbers[ps.Key];
                 rtn.NextAlert = numbers.NextAlert;
 
                 // Check if is enabled
