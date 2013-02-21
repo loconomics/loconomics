@@ -993,7 +993,6 @@ public static partial class LcData
     }
     public static Dictionary<int, UserAlertsNumbers> GetUserAlertsNumbers(int userID)
     {
-        var userDetails = LcData.UserInfo.GetUserRowWithContactData(userID);
         using (var db = Database.Open("sqlloco"))
         {
             // Get generic/all positions alerts counts
