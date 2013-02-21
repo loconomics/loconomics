@@ -594,6 +594,22 @@ ul.attributes-list li {
 .user-verifications-licenses .education-cat {
     display: block !important;
 }
+/* education list */
+.education-list .education-item {
+    margin-bottom: 12px;
+}
+.education-list .education-item p {
+    margin: 0;    
+}
+.education-list .education-item .years-attended {
+    color: #828282;
+}
+.education-list .education-item h4 {
+    color: #747474;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 6px 0 0;
+}
 
 .profile .smooth-box-block-element > .close-popup {
     border-color: #00989A;

@@ -41,26 +41,12 @@
             ORDER BY V.RankPosition, V.VerificationType
         ", p.UserID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
-        education = db.Query(@"
-            SELECT
-                UE.DegreeCertificate
-                ,UE.FieldOfStudy
-                ,UE.FromYearAttended
-                ,UE.ToYearAttended
-                ,I.InstitutionName
-                ,I.InstitutionCity
-                ,I.InstitutionState
-            FROM
-                UserEducation As UE
-                 INNER JOIN
-                Institution As I
-                  ON UE.InstitutionID = I.InstitutionID
-            WHERE
-                UE.Active = 1
-                 AND
-                UE.UserID = @0
-                 AND
-                UE.VerifiedDate is not null
+        education = db.Query(LcData.sqlSelectFromUserEducation +
+        @"
+            WHERE   UserID = @0
+                     AND
+                    Active = 1
+            ORDER BY ToYearAttended DESC, FromYearAttended DESC
         ", p.UserID);
     }
     foreach(var vc in vCats) {
@@ -139,10 +125,24 @@
     </ul>
 }
 @helper printEducation(dynamic education) {
-    <ul class="attributes-list education-list">    
-        @foreach(var v in education){
-            <li>
-                @(v.DegreeCertificate), @(v.FieldOfStudy), @(v.InstitutionName), @(v.InstitutionCity), @(v.InstitutionState) (@(v.FromYearAttended) - @(v.ToYearAttended))
+    <ul class="education-list">
+        @foreach (var e in education)
+        {
+            <li class="education-item">
+                <h4>@e.InstitutionName</h4>
+                @{
+                    var check = 0;
+                    check += String.IsNullOrEmpty(e.DegreeCertificate) ? 0 : 1;
+                    check += String.IsNullOrEmpty(e.FieldOfStudy) ? 0 : 1;
+                }
+                @if (check > 0)
+                {
+                    <p>@e.DegreeCertificate@(check == 2 ? ", " : "") @e.FieldOfStudy</p>
+                }
+                @if (e.FromYearAttended is decimal || e.ToYearAttended is decimal)
+                { 
+                    <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
+                }
             </li>
         }
     </ul>

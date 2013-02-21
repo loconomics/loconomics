@@ -784,6 +784,10 @@ form fieldset.actions{
     display: inline-block;
     padding: 0 1em;
     text-decoration: none;
+    -moz-transition: background-color 1s, box-shadow .5s, width 2s;
+    -webkit-transition: background-color 1s, box-shadow .5s, width 2s;
+    -o-transition: background-color 1s, box-shadow .5s, width 2s;
+    transition: background-color 1s, box-shadow .5s, width 2s;
 }
 .action {
     background-color: #00989A;
@@ -801,10 +805,6 @@ form fieldset.actions{
     padding: 0.4em 1.4em;
     text-decoration: none;
     border: none !important;
-    -moz-transition: background-color 1s, box-shadow .5s, width 2s;
-    -webkit-transition: background-color 1s, box-shadow .5s, width 2s;
-    -o-transition: background-color 1s, box-shadow .5s, width 2s;
-    transition: background-color 1s, box-shadow .5s, width 2s;
 }
 /* Change color button con changes, but only for changes done directly on the form containing it */
 form.has-changes .actions .main-action,

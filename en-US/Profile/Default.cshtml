@@ -172,7 +172,7 @@
                         <li class="volatile"><a class="button profile fanciful" href="@("#position"+ip)-mywork">My Work</a></li>
                         <li><a class="button profile fanciful" href="@("#position"+ip)-map">Map</a></li>
                         <li><a class="button profile fanciful" href="@("#position"+ip)-availability">Availability</a></li>
-                        <li><a class="button profile fanciful" href="@("#position"+ip)-verifications">Verifications</a></li>
+                        <li><a class="button profile fanciful" href="@("#position"+ip)-credentials">Credentials</a></li>
                         <li class="message-tab-marker"><a class="button profile" href="@("#position"+ip)-message">Message</a></li>
                     </ul>
 
@@ -194,9 +194,9 @@
                     <div id="@("position"+ip)-availability" class="tab-body availability">
                         @RenderPage("_Availability.cshtml")
                     </div><!-- #@("position"+ip)-availability -->
-                    <div id="@("position"+ip)-verifications" class="tab-body verifications">
+                    <div id="@("position"+ip)-credentials" class="tab-body verifications">
                         @RenderPage("_Verifications.cshtml")
-                    </div><!-- #@("position"+ip)-verifications -->
+                    </div><!-- #@("position"+ip)-credentials -->
                     <div id="@("position"+ip)-message" class="tab-body message">
                         @RenderPage("$Message.cshtml")
                     </div><!-- #@("position"+ip)-message -->
