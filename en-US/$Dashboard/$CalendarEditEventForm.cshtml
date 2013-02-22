@@ -97,7 +97,7 @@
         }
     }
 }
-<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/?EventID=@(eventID)" method="post" class="crudl-form ajax ajax-box" id="@idprefix">
+<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/?EventID=@(eventID)" method="post" class="crudl-form ajax ajax-box availability-events-edit" id="@idprefix">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
@@ -124,14 +124,16 @@
         </li>
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
-            <input id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortDateString())" />
-            <input name="starttime" type="text" value="@(Request["starttime"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortTimeString())" />
+            <input class="date" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortDateString())" />
+            <input class="time" name="starttime" type="text" value="@(Request["starttime"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortTimeString())" />
             <span class="when-to">to</span>
-            <input name="endtime" type="text" value="@(Request["endtime"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortTimeString())" />
-            <input name="enddate" type="text" value="@(Request["enddate"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortDateString())" />
+            <input class="time" name="endtime" type="text" value="@(Request["endtime"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortTimeString())" />
+            <input class="date" name="enddate" type="text" value="@(Request["enddate"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortDateString())" />
             <div class="time-options">
-                <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? calEvent == null ? "" : calEvent.IsAllDay) /> All day</label>
-                <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? calEvent == null ? "" : calEventIsRecurrent) /> Repeat...</label>
+                <div class="time-switchers">
+                    <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? calEvent == null ? "" : calEvent.IsAllDay) /> All day</label>
+                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? calEvent == null ? "" : calEventIsRecurrent) /> Repeat...</label>
+                </div>
                 <div class="repeat-options">
                     <ul>
                         <li>
@@ -142,19 +144,19 @@
                                 }
                             </select>
                         </li>
-                        <li>
+                        <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="number" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" /> days
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" /> days
                         </li>
-                        <li>
+                        <li class="repeat-ends">
                             <label>Ends:</label>
                             <ul>
                                 <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" /> Never</label></li>
-                                <li><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" /> After</label>
-                                    <label><input type="number" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? calRecurrence == null ? "" : calRecurrence.Count)" /> ocurrences</label>
+                                <li class="repeat-ocurrences"><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" /> After</label>
+                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? calRecurrence == null ? "" : calRecurrence.Count)" /> ocurrences</label>
                                 </li>
-                                <li><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" /> On</label>
-                                    <input type="date" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : ""))" />
+                                <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" /> On</label>
+                                    <input class="date" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : ""))" />
                                 </li>
                             </ul>
                         </li>
@@ -164,11 +166,11 @@
         </li>
         <li>
             <label for="@(idprefix)Where">Where</label>
-            <input id="@(idprefix)Where" value="@(Request["location"] ?? calEvent == null ? "" : calEvent.Location)" name="location" />
+            <input type="text" id="@(idprefix)Where" value="@(Request["location"] ?? calEvent == null ? "" : calEvent.Location)" name="location" />
         </li>
         <li>
             <label for="@(idprefix)Description">Description</label>
-            <input id="@(idprefix)Description" value="@(Request["description"] ?? calEvent == null ? "" : calEvent.Description)" name="description" />
+            <textarea name="description" id="@(idprefix)Description">@(Request["description"] ?? calEvent == null ? "" : calEvent.Description)</textarea>
         </li>
     </ul>
 
@@ -181,11 +183,19 @@
         jQuery(function ($) {
             var f = $('#@(idprefix)');
             var repeat = f.find('[name=repeat]').change(function(){
-                f.find('.repeat-options').toggle(this.checked);
+                var a = f.find('.repeat-options');
+                if (this.checked)
+                    a.slideDown('fast');
+                else
+                    a.slideUp('fast');
             });
             var allday = f.find('[name=allday]').change(function(){
-                f.find('[name=starttime],[name=endtime]')
+                var a= f.find('[name=starttime],[name=endtime]')
                 .prop('disabled', this.checked);
+                if (this.checked)
+                    a.hide('fast');
+                else
+                    a.show('fast');
             });
 
             // Init:

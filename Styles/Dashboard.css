@@ -654,6 +654,49 @@ form.positionavailability input{
     border: 1px solid #61BDBE;
     padding: 4px;
 }
+.availability-events-edit ul > li label {
+    width: 120px;
+    text-align: right;
+    margin-right: 5px;
+}
+.availability-events-edit ul > li .time-options label,
+.availability-events-edit ul > li .time-options .repeat-options .repeat-ends ul label {
+    width: auto;
+    vertical-align: middle;
+}
+.availability-events-edit ul > li .time-options .repeat-options .repeat-ends ul li {
+    padding-left: 0;
+    font-weight: normal;
+}
+.availability-events-edit ul > li .time-switchers {
+    margin: 4px 5px 4px 130px;
+}
+.availability-events-edit ul > li .time-options .repeat-options label {
+    width: 110px;
+    font-weight: bold;
+}
+.availability-events-edit ul > li .repeat-options .repeat-ends > * {
+    display: inline-block;
+    vertical-align: top;
+}
+.availability-events-edit ul > li input[type=text],
+.availability-events-edit ul > li select,
+.availability-events-edit ul > li textarea {
+    width: 400px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.availability-events-edit ul > li.when input[type=text] {
+    width: 80px;
+}
+.availability-events-edit ul > li.when .repeat-every input[type=text] {
+    width: 40px;
+}
+.availability-events-edit ul > li.when .date,
+.availability-events-edit ul > li.when .time {
+    width: 6em !important;
+}
 
 /** Form Positions - Photos **/
 .positionphotos fieldset{
