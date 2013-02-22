@@ -288,6 +288,88 @@ public static class LcCalendar
     }
     #endregion
 
+    #region Appointments (custom user events)
+    public static List<CalendarEvents> GetUserAppointments(int userID)
+    {
+        using (var ent = new loconomicsEntities())
+        {
+            return ent.CalendarEvents
+                .Where(c => c.UserId == userID && (c.EventType == 3 || c.EventType == 5))
+                .ToList();
+        }
+    }
+    public static CalendarEvents GetUserAppointment(int userID, int eventID)
+    {
+        using (var ent = new loconomicsEntities())
+        {
+            return ent.CalendarEvents
+                .Include("CalendarReccurrence")
+                .Where(c => c.UserId == userID && c.Id == eventID).FirstOrDefault();
+        }
+    }
+    public static void SetUserAppointment(int userID, int EventID,
+        int EventTypeID,
+        string Summary,
+        DateTime StartTime,
+        DateTime EndTime,
+        bool IsAllDay,
+        bool IsRecurrent,
+        int RecurrenceFrequencyID,
+        int RecurrenceInterval,
+        DateTime? RecurrenceEndDate,
+        int? RecurrenceOccurrencesNumber,
+        string Location,
+        string Description)
+    {
+        using (var ent = new loconomicsEntities())
+        {
+            var dbevent = ent.CalendarEvents.Find(EventID);
+            if (dbevent == null)
+            {
+                dbevent = ent.CalendarEvents.Create();
+                ent.CalendarEvents.Add(dbevent);
+                dbevent.UserId = userID;
+            } else if (dbevent.UserId != userID)
+                return;
+
+            dbevent.EventType = EventTypeID;
+            dbevent.Summary = Summary;
+            dbevent.StartTime = StartTime;
+            dbevent.EndTime = EndTime;
+            dbevent.IsAllDay = IsAllDay;
+            dbevent.Location = Location;
+            dbevent.Description = Description;
+            if (IsRecurrent)
+            {
+                CalendarReccurrence rRule = null;
+                if (dbevent.CalendarReccurrence.Count > 0)
+                    rRule = dbevent.CalendarReccurrence.First();
+                else
+                {
+                    rRule = ent.CalendarReccurrence.Create();
+                    rRule.CalendarEvents = dbevent;
+                    ent.CalendarReccurrence.Add(rRule);
+                }
+                rRule.Frequency = RecurrenceFrequencyID;
+                rRule.Interval = RecurrenceInterval;
+                rRule.Until = RecurrenceEndDate;
+                rRule.Count = RecurrenceOccurrencesNumber < 1 ? null : RecurrenceOccurrencesNumber;
+            }
+            ent.SaveChanges();
+        }
+    }
+    public static void DelUserAppointment(int userID, int EventID)
+    {
+        using (var ent = new loconomicsEntities())
+        {
+            var dbevent = ent.CalendarEvents.Find(EventID);
+            if (dbevent != null && dbevent.UserId == userID)
+                ent.CalendarEvents.Remove(dbevent);
+            ent.SaveChanges();
+        }
+    }
+    #endregion
+
     #region iCal sync: import/export
     /// <summary>
     /// Import a calendar in iCalendar format at the given CalendarURL for the UserID

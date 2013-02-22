@@ -8,7 +8,6 @@
     var u = LcData.UserInfo.GetUserRow();
     var idprefix = "availabilityEventsList";
 
-    // TODO Load events
     dynamic events = null;
     using (var db = Database.Open("sqlloco")) {
         events = db.Query(@"
@@ -21,21 +20,10 @@
                         AND T.LanguageID = @1 AND T.CountryID = @2
             WHERE   UserID = @0
                      AND
-                    EventType = 3
+                    EventType IN (3, 5)
             ORDER BY StartTime ASC, EndTime ASC
         ", u.UserID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
-    
-    //TEST
-    events = new List<dynamic>{
-        new {
-            Summary = "Testing",
-            StartTime = DateTime.Now,
-            EndTime = DateTime.Now.AddHours(2),
-            AvailabilityType = "Busy",
-            Id = 20
-        }
-    };
 }
 @if (events == null || events.Count == 0)
 {

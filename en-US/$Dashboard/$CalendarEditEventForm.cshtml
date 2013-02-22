@@ -11,17 +11,44 @@
     
     if (Request["Action"] == "delete") {
 
-        // TODO Delete eventID
+        // Delete eventID
+        LcCalendar.DelUserAppointment(u.UserID, eventID);
         LcHelpers.ReturnJsonResult(0, "Event was succesful deleted!");
         // ENDS page execution
     }
     
-    // TODO Validation rules
+    // Validation rules
+    Validation.RequireField("summary", LcRessources.RequiredField("Title"));
+    Validation.RequireField("startdate", LcRessources.RequiredField("Start Date"));
+    Validation.RequireField("enddate", LcRessources.RequiredField("End Date"));
+    Validation.Add("startdate", Validator.DateTime());
+    Validation.Add("starttime", Validator.DateTime());
+    Validation.Add("enddate", Validator.DateTime());
+    Validation.Add("endtime", Validator.DateTime());
+    Validation.Add("repeat-every", Validator.Integer());
+    Validation.Add("repeat-ocurrences", Validator.Integer());
+    Validation.Add("repeat-end-date", Validator.DateTime());
     
-    // TODO Save posted data
+    // Save posted data
     if (IsPost && Validation.IsValid()) {
         
         var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+        
+        LcCalendar.SetUserAppointment(u.UserID,
+            eventID,
+            Request["type"].AsInt(),
+            Request["summary"],
+            (Request["startdate"] + " " + Request["starttime"]).AsDateTime(),
+            (Request["enddate"] + " " + Request["endtime"]).AsDateTime(),
+            Request["allday"].AsBool(),
+            Request["repeat"].AsBool(),
+            Request["repeat-frequency"].AsInt(),
+            Request["repeat-every"].AsInt(),
+            Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
+            Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
+            Request["location"],
+            Request["description"]
+        );
         
         if (ModelState.IsValid) {
             // Show the profile activation popup with 'next-step' buttons and progress information when need,
@@ -45,8 +72,25 @@
             WHERE   ID > 0
         ");
     }
+    var calEvent = LcCalendar.GetUserAppointment(u.UserID, eventID);
+    dynamic calRecurrence = null;
+    if (calEvent != null && calEvent.CalendarReccurrence != null && calEvent.CalendarReccurrence.Count > 0) {
+        foreach(var r in calEvent.CalendarReccurrence) {
+            calRecurrence = r;
+            break;
+        }
+    }
+    var calEventIsRecurrent = (calRecurrence != null);
+    var recEnds = "never";
+    if (calRecurrence != null) {
+        if (calRecurrence.Until != null) {
+            recEnds = "date";
+        } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
+            recEnds = "ocurrences";
+        }
+    }
 }
-<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/" method="post" class="crudl-form ajax ajax-box" id="@idprefix">
+<form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/?EventID=@(eventID)" method="post" class="crudl-form ajax ajax-box" id="@idprefix">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
@@ -55,51 +99,47 @@
             <label for="@(idprefix)Type">Type</label>
             <select name="type" id="@(idprefix)Type">
                 @foreach (var type in eventTypes) {
-                    <option id="@type.EventTypeID">@type.DisplayName</option>
+                    <option value="@type.EventTypeID" @LcHelpers.IsSelected(type.EventTypeID, Request["type"] ?? calEvent == null ? "" : calEvent.EventType)>@type.DisplayName</option>
                 }
             </select>
         </li>
         <li class="what">
             <label for="@(idprefix)Summary">What</label>
-            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" />
+            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" value="@(Request["summary"] ?? calEvent == null ? "" : calEvent.Summary)" />
         </li>
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
-            <input id="@(idprefix)StartDate" name="startdate" type="text" value="@DateTime.Today" />
-            <input name="starttime" type="text" value="@DateTime.Now.TimeOfDay" />
+            <input id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortDateString())" />
+            <input name="starttime" type="text" value="@(Request["starttime"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortTimeString())" />
             <span class="when-to">to</span>
-            <input name="enddate" type="text" value="@DateTime.Today" />
-            <input name="endtime" type="text" value="@DateTime.Now.TimeOfDay" />
+            <input name="endtime" type="text" value="@(Request["endtime"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortTimeString())" />
+            <input name="enddate" type="text" value="@(Request["enddate"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortDateString())" />
             <div class="time-options">
-                <label><input type="checkbox" name="allday" /> All day</label>
-                <label><input type="checkbox" name="repeat" /> Repeat...</label>
+                <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? calEvent == null ? "" : calEvent.IsAllDay) /> All day</label>
+                <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? calEvent == null ? "" : calEventIsRecurrent) /> Repeat...</label>
                 <div class="repeat-options">
                     <ul>
                         <li>
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
                             <select name="repeat-frequency" id="@(idprefix)RepeatFrequency">
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID">@LcRessources.GetText(freq.FrequencyType)</option>
+                                    <option value="@freq.ID" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.FrequencyType)</option>
                                 }
                             </select>
                         </li>
                         <li>
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="number" id="@(idprefix)RepeatEvery" name="repeat-every" /> days
-                        </li>
-                        <li>
-                            <label for="@(idprefix)RepeatStarts">Starts on:</label>
-                            <input type="date" id="@(idprefix)RepeatStarts" name="repeat-start-date" />
+                            <input type="number" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" /> days
                         </li>
                         <li>
                             <label>Ends:</label>
                             <ul>
-                                <li><label><input type="checkbox" checked value="never" name="repeat-ends" /> Never</label></li>
-                                <li><label><input type="checkbox" value="ocurrences" name="repeat-ends" /> After</label>
-                                    <label><input type="number" name="repeat-ocurrences" /> ocurrences</label>
+                                <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" /> Never</label></li>
+                                <li><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" /> After</label>
+                                    <label><input type="number" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? calRecurrence == null ? "" : calRecurrence.Count)" /> ocurrences</label>
                                 </li>
-                                <li><label><input type="checkbox" value="date" name="repeat-ends" /> On</label>
-                                    <input type="date" name="repeat-end-date" />
+                                <li><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" /> On</label>
+                                    <input type="date" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : ""))" />
                                 </li>
                             </ul>
                         </li>
@@ -109,11 +149,11 @@
         </li>
         <li>
             <label for="@(idprefix)Where">Where</label>
-            <input id="@(idprefix)Where" name="location" />
+            <input id="@(idprefix)Where" value="@(Request["location"] ?? calEvent == null ? "" : calEvent.Location)" name="location" />
         </li>
         <li>
             <label for="@(idprefix)Description">Description</label>
-            <input id="@(idprefix)Description" name="description" />
+            <input id="@(idprefix)Description" value="@(Request["description"] ?? calEvent == null ? "" : calEvent.Description)" name="description" />
         </li>
     </ul>
 
@@ -121,4 +161,21 @@
         <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
         <button class="button main-action crudl-save">Save</button>
     </div>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var f = $('#@(idprefix)');
+            var repeat = f.find('[name=repeat]').change(function(){
+                f.find('.repeat-options').toggle(this.checked);
+            });
+            var allday = f.find('[name=allday]').change(function(){
+                f.find('[name=starttime],[name=endtime]')
+                .prop('disabled', this.checked);
+            });
+
+            // Init:
+            repeat.change();
+            allday.change();
+        });
+    </script>
 </form>
