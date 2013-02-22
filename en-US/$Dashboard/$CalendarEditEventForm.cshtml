@@ -37,6 +37,7 @@
         LcCalendar.SetUserAppointment(u.UserID,
             eventID,
             Request["type"].AsInt(),
+            Request["availability"].AsInt(),
             Request["summary"],
             (Request["startdate"] + " " + Request["starttime"]).AsDateTime(),
             (Request["enddate"] + " " + Request["endtime"]).AsDateTime(),
@@ -63,7 +64,7 @@
         }
     }
     
-    dynamic eventTypes = null, repeatFrequencies = null;
+    dynamic eventTypes = null, repeatFrequencies = null, availabilityTypes = null;
     using (var db = Database.Open("sqlloco")) {
         eventTypes = db.Query(@"SELECT EventTypeID, DisplayName FROM CalendarEventType WHERE DisplayName is not null");
         repeatFrequencies = db.Query(@"
@@ -71,6 +72,12 @@
             FROM    CalendarRecurrenceFrequencyTypes
             WHERE   ID > 0
         ");
+        availabilityTypes = db.Query(@"
+            SELECT  CalendarAvailabilityTypeID As ID, SelectableAs As DisplayName
+            FROM    CalendarAvailabilityType
+            WHERE   LanguageID = @0 AND CountryID = @1
+                    AND SelectableAs is not null
+        ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
     var calEvent = LcCalendar.GetUserAppointment(u.UserID, eventID);
     dynamic calRecurrence = null;
@@ -100,6 +107,14 @@
             <select name="type" id="@(idprefix)Type">
                 @foreach (var type in eventTypes) {
                     <option value="@type.EventTypeID" @LcHelpers.IsSelected(type.EventTypeID, Request["type"] ?? calEvent == null ? "" : calEvent.EventType)>@type.DisplayName</option>
+                }
+            </select>
+        </li>
+        <li class="availability">
+            <label for="@(idprefix)Availability">Availability</label>
+            <select name="availability" id="@(idprefix)Availability">
+                @foreach (var type in availabilityTypes) {
+                    <option value="@type.ID" @LcHelpers.IsSelected(type.ID, Request["availability"] ?? calEvent == null ? "" : calEvent.CalendarAvailabilityTypeID)>@type.DisplayName</option>
                 }
             </select>
         </li>

@@ -309,6 +309,7 @@ public static class LcCalendar
     }
     public static void SetUserAppointment(int userID, int EventID,
         int EventTypeID,
+        int AvailabilityTypeID,
         string Summary,
         DateTime StartTime,
         DateTime EndTime,
@@ -333,6 +334,7 @@ public static class LcCalendar
                 return;
 
             dbevent.EventType = EventTypeID;
+            dbevent.CalendarAvailabilityTypeID = AvailabilityTypeID;
             dbevent.Summary = Summary;
             dbevent.StartTime = StartTime;
             dbevent.EndTime = EndTime;

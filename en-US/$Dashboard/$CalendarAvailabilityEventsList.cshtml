@@ -12,7 +12,7 @@
     using (var db = Database.Open("sqlloco")) {
         events = db.Query(@"
             SELECT  E.Id, E.Summary, E.CalendarAvailabilityTypeID, E.StartTime, E.EndTime,
-                    T.CalendarAvailabilityTypeName As AvailabilityType
+                    T.CalendarAvailabilityTypeName As DisplayName
             FROM    CalendarEvents As E
                      INNER JOIN
                     CalendarAvailabilityType As T
@@ -48,7 +48,7 @@ else
                     <td>@e.Summary</td>
                     <td>@e.StartTime</td>
                     <td>@e.EndTime</td>
-                    <td>@e.AvailabilityType</td>
+                    <td>@e.DisplayName</td>
                     <td class="actions">
                         <button type="button" class="action edit-action crudl-update">Edit</button>
                         <button type="button" class="action delete-action crudl-delete">Delete</button>
