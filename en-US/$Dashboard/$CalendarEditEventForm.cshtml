@@ -68,7 +68,7 @@
     using (var db = Database.Open("sqlloco")) {
         eventTypes = db.Query(@"SELECT EventTypeID, DisplayName FROM CalendarEventType WHERE DisplayName is not null");
         repeatFrequencies = db.Query(@"
-            SELECT  ID, FrequencyType
+            SELECT  ID, FrequencyType, UnitPlural
             FROM    CalendarRecurrenceFrequencyTypes
             WHERE   ID > 0
         ");
@@ -140,13 +140,14 @@
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
                             <select name="repeat-frequency" id="@(idprefix)RepeatFrequency">
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.FrequencyType)</option>
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.FrequencyType)</option>
                                 }
                             </select>
                         </li>
                         <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" /> days
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" />
+                            <span class="repeat-frequency-unit">days</span>
                         </li>
                         <li class="repeat-ends">
                             <label>Ends:</label>
@@ -197,10 +198,15 @@
                 else
                     a.show('fast');
             });
+            var repeatFrequency = f.find('[name=repeat-frequency]').change(function(){
+                f.find('.repeat-frequency-unit')
+                .text($(this).children(':selected').data('unit'));
+            });
 
             // Init:
             repeat.change();
             allday.change();
+            repeatFrequency.change();
         });
     </script>
 </form>

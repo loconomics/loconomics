@@ -697,6 +697,9 @@ form.positionavailability input{
 .availability-events-edit ul > li.when .time {
     width: 6em !important;
 }
+.availability-events-edit .repeat-frequency-unit {
+    text-transform: lowercase;
+}
 
 /** Form Positions - Photos **/
 .positionphotos fieldset{
