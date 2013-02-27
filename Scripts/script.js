@@ -1356,9 +1356,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     boxc.children().remove();
     if (options.closable)
         boxc.append( $('<a class="close-popup close-action" href="#close-popup">X</a>') );
+    box.data('modal-box-options', options);
     if (!boxc.data('_close-action-added'))
         boxc
-        .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, options); return false; })
+        .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, box.data('modal-box-options')); return false; })
         .data('_close-action-added', true);
     boxc.append(contentBox);
     box.css('position', 'absolute');
