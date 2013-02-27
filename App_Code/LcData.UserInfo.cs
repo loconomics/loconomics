@@ -481,7 +481,8 @@ public static partial class LcData
             {
                 var rtn = new UserPositionActivation(userID);
 
-                var numbers = totalNumbers[ps.Key];
+                // Get alert numbers for this position or an empty numbers if there is no alerts actived for the position.
+                var numbers = totalNumbers.ContainsKey(ps.Key) ? totalNumbers[ps.Key] : new LcData.UserAlertsNumbers();
                 rtn.NextAlert = numbers.NextAlert;
 
                 // Check if is enabled
