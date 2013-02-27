@@ -154,6 +154,10 @@ public static partial class LcData
                     var sqluser = 
                         //"exec GetUserDetails @0";
                         // NOTE: UserID is needed!
+                        // CREATED A NEW VIEW CALLED vwUsersContactData WITH THIS EXACT CONTENT
+                        // PLEASE, ANY CHANGE REPLICATE IT ON THAT VIEW, THAT IS USED BY SOME
+                        // STORED PROCEDURE TOO
+                        // (THE ONLY MISSING THING OF COURSE IS THE USERID CONDITION)
                         @"
                             SELECT
                                 -- Basic data
