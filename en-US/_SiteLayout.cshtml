@@ -147,6 +147,12 @@
             <div class="site-links"><a href="@(LcUrl.LangPath)About/">About</a>|<a href="@(LcUrl.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(LcUrl.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(LcUrl.LangPath + "HelpCenter/")">FAQs</a></div>
         </footer>
         <div class="scripts">           
+            <script type="text/javascript">
+                yepnope({
+                    test: typeof JSON === 'object',
+                    nope: LcUrl.AppPath + "Scripts/libs/json2.js"
+                });
+            </script>
             @if (isHomePage)
             {
                 @* Loading blockUI jquery-plugin and our script in a delayed way only on Home Page, to be faster loading *@

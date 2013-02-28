@@ -988,7 +988,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
-            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+            var message = data.Code + ": " + JSON.serialize(data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
             ctx.box.block({
                 message: 'Error: ' + message,
                 css: popupStyle(popupSize('small'))
