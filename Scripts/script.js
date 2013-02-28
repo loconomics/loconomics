@@ -1319,7 +1319,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     } else
         blocked = $(blocked);
 
-    var boxInsideBlocked = !blocked.is('tr,thead,tbody,tfoot,table,ul,ol,dl');
+    var boxInsideBlocked = !blocked.is('body,tr,thead,tbody,tfoot,table,ul,ol,dl');
 
     // Getting box element if exists and referencing
     var bID = blocked.data('smooth-box-block-id');

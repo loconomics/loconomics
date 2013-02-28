@@ -1,7 +1,7 @@
 ﻿@{
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "About Loconomics";
-    
+    PageData["ShowWelcomePopup"] = false;
     string section = UrlData[0] != null ? UrlData[0].ToUpper() : "";
     
 }
