@@ -1039,6 +1039,8 @@ function ajaxFormsCompleteHandler() {
     clearTimeout(this.loadingtimer);
     // Unblock
     if (this.autoUnblockLoading) {
+        // Double un-lock, because any of the two systems can being used:
+        smoothBoxBlock(null, this.box);
         this.box.unblock();
     }
 }
