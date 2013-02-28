@@ -4,6 +4,7 @@
     Response.ContentEncoding = System.Text.Encoding.UTF8;
     var u = LcData.UserInfo.GetUserRow();
     var isHomePage = PageData["IsHomePage"] ?? false;
+    var showWelcomePopup = PageData["ShowWelcomePopup"] ?? true;
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
@@ -63,6 +64,15 @@
             }
     </head>
     <body class="@PageData["BodyClass"]">
+        @if (showWelcomePopup && u == null)
+        {
+            // Annonymous access, Welcome popup
+            <div id="welcome-popup-overlay" class="smooth-box-block-overlay" style="position:absolute;top:0;left:0;right:0;min-height:100%;z-index:999;">
+                <div id="welcome-popup-container" class="smooth-box-block-element" style="width: 360px; margin: 120px auto 60px;">
+                    @RenderPage(LcUrl.LangPath + "Account/$WelcomePopup.cshtml")
+                </div>
+            </div>
+        }
         @if (isIE)
         {
             <!--[if lt IE 9]>
