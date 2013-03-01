@@ -1204,7 +1204,7 @@ function guidGenerator() {
     with css-class has-tooltip and title attribute */
 function configureTooltip() {
     var posoffset = { x: 16, y: 8 };
-    function pos(t, e) {
+    function pos(t, e, l) {
         var x, y;
         if (e.pageX && e.pageY) {
             x = e.pageX;
@@ -1264,7 +1264,7 @@ function configureTooltip() {
         //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
         // Create content, and only if non-null, non-empty content was added, continue executing:
         if (con(t, $t)) {
-            pos(t, e);
+            pos(t, e, $t);
             t.stop(true, true);
             if (!t.is(':visible'))
                 t.fadeIn();
