@@ -1,4 +1,17 @@
-﻿@helper GetFacebookInitializationScripts() {
+﻿@{
+    string size = PageData["Size"] ?? "medium";
+    var icon = "";
+    switch (size) {
+        default:
+        case "medium":
+            icon = "connect-facebook.png";
+            break;
+        case "large":
+            icon = "connect-facebook-large.png";
+            break;
+    }
+}
+@helper GetFacebookInitializationScripts() {
     var urlsection = PageData["Section"] ?? "Callback"; // Possible values: Callback, Verify, Callback/Provider
     var result = PageData["Result"] ?? "redirect"; // Possible values: redirect, json
     var facebookPermissions = "email,user_about_me";
@@ -58,7 +71,7 @@
 
     <a href="javascript: facebookConnect();">
         @GetFacebookInitializationScripts()
-        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/connect-facebook.png"/>
+        <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon"/>
     </a>
 
     @*
