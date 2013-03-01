@@ -313,7 +313,7 @@ public static partial class LcData
         #endregion
 
         #region Create
-        public const string sqlInsProviderPosition = "EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, getdate(), getdate(), 'sys', 1, @4";
+        public const string sqlInsProviderPosition = "EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, dbo.getdate(), dbo.getdate(), 'sys', 1, @4";
         public static void InsProviderPosition(int userID, int positionID)
         {
             using (var db = Database.Open("sqlloco"))

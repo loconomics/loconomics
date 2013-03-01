@@ -1047,7 +1047,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.replaceWith(jb);
 
         LC.autoFocus(jb);
-        newhtml.trigger('ajaxFormReturnedHtml');
+        $(newForm).trigger('ajaxFormReturnedHtml');
     }
 }
 function ajaxFormsCompleteHandler() {
@@ -1575,34 +1575,38 @@ LC.takeATour = function () {
  */
 LC.welcomePopup = function () {
     var c = $('#welcomepopup');
+    if (c.length == 0) return;
 
     // Init
     c.find('.profile-data, .terms, .position-description').hide();
     c.find('form').get(0).reset();
-    c.find('[name=jobtitle]').autocomplete({
-        source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-        autoFocus: false,
-        minLength: 0,
-        select: function (event, ui) {
-            // No value, no action :(
-            if (!ui || !ui.item || !ui.item.value) return;
-            // Save the id (value) in the hidden element
-            c.find('[name=positionid]').val(ui.item.value);
-            // Show description
-            c.find('.position-description')
+    function initProfileData() {
+        c.find('[name=jobtitle]').autocomplete({
+            source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
+            autoFocus: false,
+            minLength: 0,
+            select: function (event, ui) {
+                // No value, no action :(
+                if (!ui || !ui.item || !ui.item.value) return;
+                // Save the id (value) in the hidden element
+                c.find('[name=positionid]').val(ui.item.value);
+                // Show description
+                c.find('.position-description')
                         .slideDown('fast')
                         .find('textarea').val(ui.item.description);
-            // We want show the label (position name) in the textbox, not the id-value
-            $(this).val(ui.item.positionSingular);
-            return false;
-        },
-        focus: function (event, ui) {
-            if (!ui || !ui.item || !ui.item.positionSingular);
-            // We want the label in textbox, not the value
-            $(this).val(ui.item.positionSingular);
-            return false;
-        }
-    });
+                // We want show the label (position name) in the textbox, not the id-value
+                $(this).val(ui.item.positionSingular);
+                return false;
+            },
+            focus: function (event, ui) {
+                if (!ui || !ui.item || !ui.item.positionSingular);
+                // We want the label in textbox, not the value
+                $(this).val(ui.item.positionSingular);
+                return false;
+            }
+        });
+    }
+    initProfileData();
 
     // Actions
     c.on('click change', '.profile-choice [name=profile-type]', function () {
@@ -1611,10 +1615,14 @@ LC.welcomePopup = function () {
         c.find('.terms, .profile-data').slideDown('fast');
 
         // Set validation-required for depending of profile-type form elements:
-        c.find('.profile-data li.' + this.value + ' input:not([data-val])')
-                    .attr('data-val-required', 'This field is required.')
+        c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
+                    .attr('data-val-required', '')
                     .attr('data-val', true);
         LC.setupValidation();
+    });
+    c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
+        initProfileData();
+        c.find('.profile-choice [name=profile-type]:checked').change();
     });
 }
 

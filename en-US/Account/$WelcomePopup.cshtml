@@ -1,10 +1,10 @@
 ﻿@{
     var redirect = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-";
     
-    Validation.RequireField("profile-type");
-    Validation.RequireField("firstname");
-    Validation.RequireField("email");
-    Validation.RequireField("password");
+    Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
+    Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+    Validation.RequireField("email", LcRessources.RequiredField("Email"));
+    Validation.RequireField("password", LcRessources.RequiredField("Password"));
     Validation.Add("email",
         Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
 
@@ -41,19 +41,27 @@
                         asProvider
                     );
                     LcAuth.SendRegisterUserEmail(user);
-                    if (asProvider) {
-                        // Add position
-                        LcData.UserInfo.InsProviderPosition(user.UserID, Request["positionid"].AsInt());
-                    }
                     // Auto-login:
                     LcAuth.Login(user.Email, Request["password"]);
+                    try{
+                        if (asProvider) {
+                            // Add position
+                            LcData.UserInfo.InsProviderPosition(user.UserID, Request["positionid"].AsInt());
+                        }
+                    } catch {
+                        // If there is an error ONLY with the position creation, still continue as
+                        // successfully because the account was created, after the redirect
+                        // the form will be showed again to fullfill position information
+                    }
                 } catch (System.Web.Security.MembershipCreateUserException e) {
                     ModelState.AddFormError(e.Message);
                 }
                 
-                // We return a json with result OK and redirect link (Code=1),
-                // and response end just after this:
-                LcHelpers.ReturnJsonResult(1, redirect);
+                if (ModelState.IsValid) {
+                    // We return a json with result OK and redirect link (Code=1),
+                    // and response end just after this:
+                    LcHelpers.ReturnJsonResult(1, redirect);
+                }
             }
         }
     }
@@ -71,11 +79,15 @@
 
     <div class="register">
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box">
-            @Html.ValidationSummary("")
+            @if (IsPost)
+            {
+                // Only showed on post for back-end errors, avoiding show it for first-time front-end errors:
+                @Html.ValidationSummary("")
+            }
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") /> Provider</label>
-                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") /> Customer</label>
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", Request["profile-type"]) /> Provider</label>
+                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", Request["profile-type"]) /> Customer</label>
             </div>
             <div class="profile-data">
                 
@@ -87,12 +99,12 @@
 
                 <div class="choice-option">
                     <ul>
-                        <li class="provider customer"><input type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") /></li>
-                        <li class="customer"><input type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") /></li>
-                        <li class="provider customer"><input type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email")/></li>
-                        <li class="provider customer"><input type="password" placeholder="Create password" name="password"  @Validation.GetHtml("password")/></li>
-                        <li class="provider"><input type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle")/></li>
-                        <li class="position-description provider"><textarea rows="5" readonly></textarea><input type="hidden" name="positionid" /></li>
+                        <li class="provider customer"><input type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
+                        <li class="customer"><input type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer"><input type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
+                        <li class="provider customer"><input type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
+                        <li class="provider"><input type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
+                        <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">
                         <button type="submit" class="main-action action">Sign up - It's free!</button>
@@ -105,7 +117,7 @@
 
     <footer>
         <div class="terms">
-            By clicking Sign up, you confirm that you accept the <a href="@(LcUrl.LangPath)About/TermsOfUse/" data-tooltip-url="#terms-tooltip">Terms of Use.</a>
+            By clicking Sign up, you confirm that you accept the <a target="_blank" href="@(LcUrl.LangPath)About/TermsOfUse/" data-tooltip-url="#terms-tooltip">Terms of Use.</a>
             We won't share you email address or post anything to your Facebook profile without permission.
             <div class="popups"><div id="terms-tooltip">
                 <ul>
