@@ -2595,6 +2595,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     border-width: 1px 0;
     background-color: #f5f5f5;
     margin: 0;
+    position: relative;
 }
 #welcomepopup .register form {
     margin: 0 1em;
@@ -2643,6 +2644,15 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 }
 #terms-tooltip li {
     list-style: disc inside;
+}
+#welcomepopupLoading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background-color: rgba(220, 220, 220, .7);
 }
 
 /* ==|== media queries ======================================================

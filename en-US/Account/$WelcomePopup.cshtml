@@ -78,6 +78,7 @@
     </header>
 
     <div class="register">
+        <div id="welcomepopupLoading"><img alt="Loading" src="@(LcUrl.AppPath)img/theme/loading.gif" /></div>
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box">
             @if (IsPost)
             {

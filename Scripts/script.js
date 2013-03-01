@@ -1607,6 +1607,7 @@ LC.welcomePopup = function () {
         });
     }
     initProfileData();
+    c.find('#welcomepopupLoading').remove();
 
     // Actions
     c.on('click change', '.profile-choice [name=profile-type]', function () {
