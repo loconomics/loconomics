@@ -12,11 +12,12 @@ using System.Text.RegularExpressions;
 /// </summary>
 public static class LcValidators
 {
+    public const string EmailAddressRegexPattern = @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*";
     public static bool IsEmailAdress(string sEmail)
     {
         if (sEmail != "")
         {
-            var sRegex = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
+            var sRegex = new Regex(EmailAddressRegexPattern);
             return sRegex.IsMatch(sEmail) ? true : false;
         }
         else

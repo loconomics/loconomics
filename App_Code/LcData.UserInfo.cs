@@ -292,6 +292,7 @@ public static partial class LcData
         #endregion
 
         #region Provider Position
+
         #region Cache
         public static void CleanCacheGetUserPos(int userId)
         {
@@ -310,6 +311,25 @@ public static partial class LcData
             HelperPage.PageData["position"] = null;
         }
         #endregion
+
+        #region Create
+        public const string sqlInsProviderPosition = "EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, getdate(), getdate(), 'sys', 1, @4";
+        public static void InsProviderPosition(int userID, int positionID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
+                    userID, positionID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    LcData.Booking.DefaultCancellationPolicyID);
+                if (Results.Result != "Success") {
+                    throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
+                }
+            }
+        }
+        #endregion
+
+        #region Get
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
@@ -384,7 +404,6 @@ public static partial class LcData
                     userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
         }
-
         public static Dictionary<int, dynamic> GetUserPositionsStatuses(int userID)
         {
             var d = new Dictionary<int, dynamic>();
@@ -392,6 +411,9 @@ public static partial class LcData
                 d.Add(p.PositionID, p);
             return d;
         }
+        #endregion
+
+        #region Checkes
         public class UserPositionActivation
         {
             public List<string> Messages
@@ -517,7 +539,7 @@ public static partial class LcData
 
             return UserPositionActivation.Max(posActivationList);
         }
-
+        #endregion
         #endregion
 
         #region Specific Information
@@ -570,7 +592,6 @@ public static partial class LcData
                 ", userid);
             }
         }
-        #endregion
 
         /// <summary>
         /// Get a dynamic row with the user statistics
@@ -639,6 +660,7 @@ public static partial class LcData
             }
             return responseTime;
         }
+        #endregion
 
         #region Verifications
         public static dynamic GetUserVerifications(int userID)

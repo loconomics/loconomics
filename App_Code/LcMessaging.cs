@@ -533,7 +533,7 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
-        SendMail(userEmail, "Welcome to Loconomics", //"Welcome to Loconomics",
+        SendMail(userEmail, "Welcome to Loconomics",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
                 { "UserID", userID },

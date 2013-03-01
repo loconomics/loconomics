@@ -5,8 +5,11 @@
     Validation.RequireField("firstname");
     Validation.RequireField("email");
     Validation.RequireField("password");
+    Validation.Add("email",
+        Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
 
     if (IsPost && Validation.IsValid()) {
+        // Validations depending on the profile-type selected
         if (Request["profile-type"] == "provider") {
             if (!Request["positionid"].IsInt()) {
                 ModelState.AddError("jobtitle", LcRessources.RequiredField("Job title"));
@@ -21,10 +24,37 @@
 
         if (ModelState.IsValid) {
         
-            // TODO Create account:
-            
-            // Logged and all fine:
-            LcHelpers.ReturnJsonResult(1, redirect);
+            // Create account:
+            if (LcAuth.ExistsEmail(Request["email"])) {
+                // User already exists
+                ModelState.AddFormError("Email address is already in use.");
+            } else {
+                try {
+                    // Check user type to be created
+                    bool asProvider = Request["profile-type"] == "provider";
+                    var user = 
+                    LcAuth.RegisterUser(
+                        Request["email"],
+                        Request["firstname"],
+                        Request["lastname"],
+                        Request["password"],
+                        asProvider
+                    );
+                    LcAuth.SendRegisterUserEmail(user);
+                    if (asProvider) {
+                        // Add position
+                        LcData.UserInfo.InsProviderPosition(user.UserID, Request["positionid"].AsInt());
+                    }
+                    // Auto-login:
+                    LcAuth.Login(user.Email, Request["password"]);
+                } catch (System.Web.Security.MembershipCreateUserException e) {
+                    ModelState.AddFormError(e.Message);
+                }
+                
+                // We return a json with result OK and redirect link (Code=1),
+                // and response end just after this:
+                LcHelpers.ReturnJsonResult(1, redirect);
+            }
         }
     }
 }
@@ -41,6 +71,7 @@
 
     <div class="register">
         <form action="@(LcUrl.LangPath)Account/$WelcomePopup/@(Request.Url.Query)" method="post" class="ajax ajax-box">
+            @Html.ValidationSummary("")
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
                 <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") /> Provider</label>

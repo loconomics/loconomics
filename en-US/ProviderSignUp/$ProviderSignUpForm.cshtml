@@ -59,6 +59,7 @@
         email = u.Email;
         formzipcode = Request.Form["zipcode"] ?? u.PostalCode;
         state = u.StateProvinceID ?? 0;
+        userid = u.UserID;
     }
     
     // If this is a POST request, validate and process data
@@ -82,71 +83,37 @@
 
         // If all information is valid, create a new account
         if (ModelState.IsValid) { 
-            string confirmationUrl = null;
-            // Insert a new user into the database
-            var db = Database.Open("sqlloco");
-
             /** Create user profile (general creation - no provider still) **/
-            if (u == null) {
-                // Check if user already exists
-                var useremail = db.QuerySingle("EXEC dbo.CheckUserEmail @0", email);
-
-                if (useremail == null) {
-                    // Insert email into the profile table
-                    db.Execute("INSERT INTO UserProfile (Email) VALUES (@0)", email);
-                    // Create and associate a new entry in the membership database.
-                    // If successful, continue processing the request
+            if (u == null) {               
+                if (LcAuth.ExistsEmail(Request["email"])) {
+                    // User already exists
+                    ModelState.AddFormError("Email address is already in use.");
+                } else {
                     try {
-                        bool requireEmailConfirmation = !WebMail.SmtpServer.IsEmpty();
-                        var token = WebSecurity.CreateAccount(email, password, requireEmailConfirmation);
-                        if (requireEmailConfirmation) {
-                            confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token);
+                        var registeredUser = 
+                        LcAuth.RegisterUser(
+                            Request["email"],
+                            Request["firstname"],
+                            Request["lastname"],
+                            Request["password"],
+                            true
+                        );
+                        LcAuth.SendRegisterUserEmail(registeredUser);
+                        
+                        Session["RegisteredUserID"] = registeredUser.UserID;
+                        userid = registeredUser.UserID;
 
-                            // Verification code is sent along with the Welcome email, commenting the other email sent:
-                            /*LcMessaging.SendMail(
-                                to: email,
-                                subject: "Please confirm your account", 
-                                body: "Your confirmation code is: " + token + ". Visit <a href=\"" + confirmationUrl + "\">" + confirmationUrl + "</a> to confirm your account."
-                            );*/
-                        }
+                        // Auto-login:
+                        LcAuth.Login(registeredUser.Email, Request["password"]);
 
-                        if (requireEmailConfirmation) {
-                            //LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/Thanks/");
-                            Session["RegisteredUserID"] = WebSecurity.GetUserId(email);
-                            // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
-                            // login, what means user MUST can login but too MUST have an email-confirmation-code; we do that reusing the confirmation code
-                            // created by asp.net starter-app as until now, but HACKING that system doing a minor change on database, in the 
-                            // asp.net webpages generated table called 'webpages_Membership': there are two fields to manage confirmation, a bit field (this
-                            // we will hack changing it to true:1 manually -before of time-) and the confirmationToken that we will mantain to allow user confirmation
-                            // from the welcome-email sent and to off the alert:15 (with custom code on the Account/Confirm page).
-                            db.Execute(@"
-                                UPDATE webpages_Membership SET
-                                    IsConfirmed = 1
-                                WHERE UserId = @0
-                            ", Session["RegisteredUserID"]);
-                            // Now, we do the auto-login, is in non-require-confirmation step
-                            WebSecurity.Login(email, password);
-                            Session["OAuthLoggedIn"] = false;
-                        } else {
-                            // Auto login user with just created credentials:
-                            WebSecurity.Login(email, password);
-                            // mark the user as logged in via a normal account,
-                            // as opposed to via an OAuth or OpenID provider.
-                            Session["OAuthLoggedIn"] = false;
-                        }
                     } catch (System.Web.Security.MembershipCreateUserException e) {
                         ModelState.AddFormError(e.Message);
                     }
-                } else {
-                    // User already exists
-                    ModelState.AddFormError("Email address is already in use.");
                 }
             }
-            /** Convert created/existed user into a provider **/
+            /** Convert created user into a provider **/
             if (ModelState.IsValid) {
-                // Insert provider details                        
-                if (u != null) {
-                    userid = u.UserID;
+                using (var db = Database.Open("sqlloco")) {
                     db.Execute("exec CreateProviderFromUser @0,@1,@2,@3,@4,@5,@6,@7",
                         userid,
                         firstname,
@@ -156,32 +123,13 @@
                         lang,
                         countryId,
                         emailcontact.AsBool() ? 1 : 0);
-                } else {
-                    userid = WebSecurity.GetUserId(email);
-                    db.Execute("exec dbo.CreateProvider @0,@1,@2,@3,@4,@5,@6,@7",userid,firstname,lastname,
-                        (object)(zipcode == 0 ? null : (object)zipcode),
-                        (object)(state == 0 ? null : (object)state),
-                        lang,
-                        countryId,
-                        emailcontact.AsBool() ? 1 : 0);
-                }
-                
-                // All ok, send welcome email
-                LcMessaging.SendWelcomeProvider(
-                    (u != null ? u.UserID : userid), 
-                    (u != null ? u.Email : email),
-                    confirmationUrl ?? "");
-            }
-            
-            /** Add selected positions to the provider **/
-            if (ModelState.IsValid) {      
-                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7,@8";
-                foreach (string sPosID in Request.Form.GetValues("position")) {
-                    if (sPosID.IsInt()) {
-                        // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
-                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 1, LcData.Booking.DefaultCancellationPolicyID);
-                        if (Results.Result != "Success") {
-                            ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                    /** Add selected positions to the provider **/
+                    foreach (string sPosID in Request.Form.GetValues("position")) {
+                        if (sPosID.IsInt()) {
+                            var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition, userid, sPosID.AsInt(), lang, countryId, LcData.Booking.DefaultCancellationPolicyID);
+                            if (Results.Result != "Success") {
+                                ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                            }
                         }
                     }
                 }
@@ -189,11 +137,6 @@
             
             /*** All finished, it was ok? ***/
             if (ModelState.IsValid) {
-                
-                // Log Marketing URL parameters
-                db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, Request.Url.Query);
-                
-                //LcHelpers.ReturnJsonResult(0, null);
                 var red = LcUrl.LangPath + "Dashboard/Alerts/";
                 if (Request.IsAjaxRequest()) {
                     LcHelpers.ReturnJsonResult(1, red);
