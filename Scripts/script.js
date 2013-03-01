@@ -62,6 +62,22 @@ $.fn.hasScrollBar = function () {
         horizontal: this.outerWidth() < t.scrollWidth
     };
 }
+/**
+    Gets the html string of the first element and all its content.
+    The 'html' method only retrieves the html string of the content, not the element itself.
+**/
+$.fn.outerHtml = function () {
+    if (!this || this.length == 0) return '';
+    var el = this.get(0);
+    var html = '';
+    if (el.outerHTML)
+        html = el.outerHTML;
+    else {
+        html = this.wrapAll('<div></div>').parent().html();
+        this.unwrap();
+    }
+    return html;
+}
 $.fn.reload = function (newurl, onload) {
     this.each(function () {
         var $t = $(this);
@@ -1220,6 +1236,11 @@ function configureTooltip() {
                     l.outerWidth() < l[0].scrollWidth)
                     c = h;
             }
+            // Append data-tooltip-url content if exists
+            var urlcontent = $(l.data('tooltip-url'));
+            c = (c || '') + urlcontent.outerHtml();
+            // Remove original, is no more need and avoid id-conflicts
+            urlcontent.remove();
             if (c) {
                 l.data('tooltip-content', c);
                 l.attr('title', '');
@@ -1255,8 +1276,8 @@ function configureTooltip() {
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
     }
-    $('body').on('mousemove focusin', '[title][data-description][data-description!=""], [title].has-tooltip', showTooltip)
-    .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip', hideTooltip)
+    $('body').on('mousemove focusin', '[title][data-description][data-description!=""], [title].has-tooltip, [data-tooltip-url]', showTooltip)
+    .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip, [data-tooltip-url]', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
 /**
