@@ -2538,8 +2538,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     color: #999999;
     text-align: justify;
 }
-#takeATour .actions,
-#welcomepopup .actions {
+#takeATour .actions {
     text-align: center !important;
     margin-top: 40px;
 }
@@ -2562,7 +2561,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup header,
 #welcomepopup footer,
 #welcomepopup .register {
-    padding: 18px 25px;
+    padding: 20px 25px;
 }
 #welcomepopup h1,
 #welcomepopup h2 {
@@ -2570,15 +2569,15 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     margin: 0;
 }
 #welcomepopup h1 {
-    padding: 5px 0 5px 110px;
+    padding: 0 0 0 110px;
     background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
-    line-height: 40px;
+    line-height: 39px;
     font-size: 1.3em;
     color: #00989A;
     text-align: center;
 }
 #welcomepopup h2 {
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 #welcomepopup .presentation {
     text-align: justify;
@@ -2597,6 +2596,13 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     background-color: #f5f5f5;
     margin: 0;
 }
+#welcomepopup .register form {
+    margin: 0 1em;
+}
+#welcomepopup .actions {
+    text-align: center !important;
+    margin-top: 1em;
+}
 #welcomepopup .profile-choice h2 {
     margin-bottom: 1em;
 }
@@ -2608,6 +2614,20 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     font-size: .9em;
     line-height: normal;
     margin-bottom: 1em;
+}
+#welcomepopup .profile-data {
+    margin: 1em 0;
+}
+#welcomepopup .profile-data li {
+    padding: 3px 0;
+}
+#welcomepopup .profile-data input,
+#welcomepopup .profile-data textarea {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    width: 100%;
 }
 
 /* ==|== media queries ======================================================
