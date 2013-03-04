@@ -1614,6 +1614,10 @@ LC.welcomePopup = function () {
         c.find('.profile-data li:not(.' + this.value + ')').hide();
         c.find('.profile-choice, header .presentation').slideUp('fast');
         c.find('.terms, .profile-data').slideDown('fast');
+        // Terms of use different for profile type
+        if (this.value == 'customer') {
+            c.find('a.terms-of-use').data('tooltip-url', null);
+        }
 
         // Set validation-required for depending of profile-type form elements:
         c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
