@@ -108,11 +108,11 @@
 
                 <div class="choice-option">
                     <ul>
-                        <li class="provider customer"><input type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
-                        <li class="customer"><input type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
-                        <li class="provider customer"><input type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
-                        <li class="provider customer"><input type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
-                        <li class="provider"><input type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
+                        <li class="provider customer"><input class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
+                        <li class="customer"><input class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer"><input class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
+                        <li class="provider customer"><input class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
+                        <li class="provider"><input class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
                         <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">

@@ -280,7 +280,7 @@ form textarea {
     display: inline-block;
     padding: 0.31em 0.47em;   
     font-size: .9em;
-    background: #f5f5f5;
+    background-color: #f5f5f5;
     color: #747474;
     /*box-shadow: 0 0 0.1em 0.18em #FFFFFF inset, 0 0 0 0.1em #C9C9C9 inset;*/
     box-shadow: 0 0 2px 2px #FFFFFF inset;
@@ -2663,8 +2663,25 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 /*= .lightform */
 form.lightform input,
 form.lightform textarea {
-    background: white !important;
+    background-color: white;
     box-shadow: none;
+}
+
+/** Form icons / data classification **/
+form input.personal-data,
+form input.secure-data,
+form input.search-data {
+    background-position: 99% center;
+    background-repeat: no-repeat;
+}
+input.personal-data {
+    background-image: url('../img/theme/icon-form-personal.png');
+}
+input.secure-data {
+    background-image: url('../img/theme/icon-form-secure.png');
+}
+input.search-data {
+    background-image: url('../img/theme/icon-form-search.png');
 }
 
 /* ==|== media queries ======================================================
