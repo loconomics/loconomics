@@ -10,9 +10,17 @@
 
     if (IsPost && Validation.IsValid()) {
         // Validations depending on the profile-type selected
+        int positionID = 0;
         if (Request["profile-type"] == "provider") {
             if (!Request["positionid"].IsInt()) {
-                ModelState.AddError("jobtitle", LcRessources.RequiredField("Job title"));
+                if (Request["jobtitle"].IsEmpty()) {
+                    ModelState.AddError("jobtitle", LcRessources.RequiredField("Job Title"));
+                } else {
+                    positionID = LcData.GetPositionIDByName(Request["jobtitle"]);
+                    if (positionID <= 0) {
+                        ModelState.AddError("jobtitle", "We are still working on adding that position. Please e-mail us (support@loconomics.com), and we'll be sure to get it created right away.");
+                    }
+                }
             }
             redirect += "providers";
         } else {
@@ -46,7 +54,7 @@
                     try{
                         if (asProvider) {
                             // Add position
-                            LcData.UserInfo.InsProviderPosition(user.UserID, Request["positionid"].AsInt());
+                            LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
                         }
                     } catch {
                         // If there is an error ONLY with the position creation, still continue as

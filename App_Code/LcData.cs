@@ -1180,4 +1180,32 @@ public static partial class LcData
         )
     ";
     #endregion
+
+    #region Positions
+    public static int GetPositionIDByName(string nameOrTerm)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var r = db.Query("EXEC SearchPositions @0,@1,@2", "%" + nameOrTerm + "%", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            // Check results number:
+            switch (r.Count())
+            {
+                // Only one result, return that
+                case 1:
+                    return r.First().PositionID;
+                // No retults, return 0
+                case 0:
+                    return 0;
+            }
+            // More than one result, check for one record that matchs exactly the 
+            // PositionSingular name
+            foreach (var ri in r)
+                if (nameOrTerm.ToLower() == ri.PositionSingular.ToLower())
+                    return ri.PositionID;
+
+            // Too much partial matches, ambiguous search:
+            return -1;
+        }
+    }
+    #endregion
 }
