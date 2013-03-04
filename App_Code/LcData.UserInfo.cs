@@ -80,7 +80,7 @@ public static partial class LcData
                     var sqluser = 
                         //"exec GetUserDetails @0";
                         // NOTE: UserID is needed!
-                        // NOTE2: remove location details from this table and query, use GetUserWithContactData
+                        // NOTE2: remove location details from GetUserDetails (in this sql is not already), for that use GetUserWithContactData
                         @"
                             SELECT
                                 -- Basic data
@@ -313,7 +313,11 @@ public static partial class LcData
         #endregion
 
         #region Create
-        public const string sqlInsProviderPosition = "EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, dbo.getdate(), dbo.getdate(), 'sys', 1, @4";
+        public const string sqlInsProviderPosition = @"
+            DECLARE @t Datetime
+            SET @t = getdate()
+            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @t, @t, 'sys', 1, @4
+        ";
         public static void InsProviderPosition(int userID, int positionID)
         {
             using (var db = Database.Open("sqlloco"))
@@ -357,7 +361,7 @@ public static partial class LcData
         public static dynamic GetUserPos(bool onlyActivePositions = false){
             var poss = HelperPage.PageData["posrows"];
             if (poss == null) {
-                poss = GetUserPos(WebSecurity.CurrentUserId);
+                poss = GetUserPos(WebSecurity.CurrentUserId, onlyActivePositions);
                 HelperPage.PageData["posrows"] = poss;
             }
             return poss;

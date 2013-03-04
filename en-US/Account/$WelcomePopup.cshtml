@@ -1,17 +1,49 @@
 ﻿@{
     var redirect = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-";
     
-    Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
-    Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
-    Validation.RequireField("email", LcRessources.RequiredField("Email"));
-    Validation.RequireField("password", LcRessources.RequiredField("Password"));
-    Validation.Add("email",
-        Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+    /* The special case of provider logged but without a position still (it went from facebook redirect)
+        doesn't need more of the fields, only JobTitle,
+        because of that, we check if user is logged, provider and without position, and changes
+        validation rules and post tasks depending of that
+     */
+
+    // Check user
+    var u = LcData.UserInfo.GetUserRow();
+    bool providerWithoutPosition = false;
+    if (u != null) {
+        if (u.IsProvider) {
+            // Check if the logged provider has or not a position
+            providerWithoutPosition = LcData.UserInfo.GetUserPos().Count == 0;
+        }
+        if (!providerWithoutPosition) {
+            // Is customer or provider with almost one position, doesn't need this page, redirect
+            if (Request.IsAjaxRequest()) {
+                LcHelpers.ReturnJsonResult(1, LcUrl.LangPath);
+            } else {
+                Response.Redirect(LcUrl.LangPath);
+            }
+        }
+    }
+
+    /* Validation rules */
+    if (!providerWithoutPosition) {    
+        Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
+        Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+        Validation.RequireField("email", LcRessources.RequiredField("Email"));
+        Validation.RequireField("password", LcRessources.RequiredField("Password"));
+        Validation.Add("email",
+            Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+    }
 
     if (IsPost && Validation.IsValid()) {
         // Validations depending on the profile-type selected
-        int positionID = 0;
-        if (Request["profile-type"] == "provider") {
+        string profileType = Request["profile-type"];
+        int positionID = Request["positionid"].AsInt();
+        if (providerWithoutPosition) {
+            profileType = "provider";
+        }
+
+        if (profileType == "provider") {
             if (!Request["positionid"].IsInt()) {
                 if (Request["jobtitle"].IsEmpty()) {
                     ModelState.AddError("jobtitle", LcRessources.RequiredField("Job Title"));
@@ -31,50 +63,54 @@
         }
 
         if (ModelState.IsValid) {
-        
-            // Create account:
-            if (LcAuth.ExistsEmail(Request["email"])) {
-                // User already exists
-                ModelState.AddFormError("Email address is already in use.");
+            if (providerWithoutPosition) {
+                LcData.UserInfo.InsProviderPosition(u.UserID, positionID);
+                LcHelpers.ReturnJsonResult(1, redirect);
             } else {
-                try {
-                    // Check user type to be created
-                    bool asProvider = Request["profile-type"] == "provider";
-                    var user = 
-                    LcAuth.RegisterUser(
-                        Request["email"],
-                        Request["firstname"],
-                        Request["lastname"],
-                        Request["password"],
-                        asProvider
-                    );
-                    LcAuth.SendRegisterUserEmail(user);
-                    // Auto-login:
-                    LcAuth.Login(user.Email, Request["password"]);
-                    try{
+                // Create account:
+                if (LcAuth.ExistsEmail(Request["email"])) {
+                    // User already exists
+                    ModelState.AddFormError("Email address is already in use.");
+                } else {
+                    try {
+                        // Check user type to be created
+                        bool asProvider = profileType == "provider";
+                        var user = 
+                        LcAuth.RegisterUser(
+                            Request["email"],
+                            Request["firstname"],
+                            Request["lastname"],
+                            Request["password"],
+                            asProvider
+                        );
+                        LcAuth.SendRegisterUserEmail(user);
+                        // Auto-login:
+                        LcAuth.Login(user.Email, Request["password"]);
                         if (asProvider) {
-                            // Add position
-                            LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
+                            try{
+                                // Add position
+                                LcData.UserInfo.InsProviderPosition(user.UserID, positionID);
+                            } catch {
+                                // If there is an error ONLY with the position creation, still continue as
+                                // successfully because the account was created, after the redirect
+                                // the form will be showed again to fullfill position information
+                            }
                         }
-                    } catch {
-                        // If there is an error ONLY with the position creation, still continue as
-                        // successfully because the account was created, after the redirect
-                        // the form will be showed again to fullfill position information
+                    } catch (System.Web.Security.MembershipCreateUserException e) {
+                        ModelState.AddFormError(e.Message);
                     }
-                } catch (System.Web.Security.MembershipCreateUserException e) {
-                    ModelState.AddFormError(e.Message);
-                }
                 
-                if (ModelState.IsValid) {
-                    // We return a json with result OK and redirect link (Code=1),
-                    // and response end just after this:
-                    LcHelpers.ReturnJsonResult(1, redirect);
+                    if (ModelState.IsValid) {
+                        // We return a json with result OK and redirect link (Code=1),
+                        // and response end just after this:
+                        LcHelpers.ReturnJsonResult(1, redirect);
+                    }
                 }
             }
         }
     }
 }
-<div id="welcomepopup">
+<div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     <header>
         <h1>Welcome to Loconomics</h1>
         <div class="presentation">
@@ -93,38 +129,59 @@
                 // Only showed on post for back-end errors, avoiding show it for first-time front-end errors:
                 @Html.ValidationSummary("")
             }
+            @if (!providerWithoutPosition)
+            {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
                 <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", Request["profile-type"]) /> Provider</label>
                 <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", Request["profile-type"]) /> Customer</label>
             </div>
+            }
             <div class="profile-data">
-                
+                @if (!providerWithoutPosition)
+                {
                 <div class="social choice-option">
-                    @RenderPage("_FacebookConnectButton.cshtml", new { Redirect = redirect, Size = "large" } )
+                    @RenderPage("_FacebookConnectButton.cshtml", new { Redirect = redirect, Size = "large" })
                 </div>
                 
                 <p class="choice-or">or</p>
+                }
+
+                @if (providerWithoutPosition)
+                {
+                <h2>Select a job title:</h2>
+                }
 
                 <div class="choice-option">
                     <ul>
+                        @if (!providerWithoutPosition)
+                        {
                         <li class="provider customer"><input class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
                         <li class="customer"><input class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
                         <li class="provider customer"><input class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
                         <li class="provider customer"><input class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
-                        <li class="provider"><input class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
+                        }
+                        <li class="provider job-title"><input class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
                         <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">
-                        <button type="submit" class="main-action action">Sign up - It's free!</button>
+                        @{
+                            var btnText = "Sign up - It's free!";
+                        }
+                        @if (providerWithoutPosition)
+                        {
+                            btnText = "Save and continue";
+                        }
+                        <button type="submit" class="main-action action">@(btnText)</button>   
                     </div>
                 </div>
 
             </div>
         </form>
     </div>
-
     <footer>
+    @if (!providerWithoutPosition)
+    {
         <div class="terms">
             By clicking Sign up, you confirm that you accept the <a class="terms-of-use" target="_blank" href="@(LcUrl.LangPath)About/TermsOfUse/" data-tooltip-url="#terms-tooltip">Terms of Use.</a>
             We won't share you email address or post anything to your Facebook profile without permission.
@@ -142,5 +199,6 @@
         <div class="login">
             Already have an account? <a target="_blank" href="@(LcUrl.LangPath)Account/Login/" class="login action">Login</a>
         </div>
+    }
     </footer>
 </div>

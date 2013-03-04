@@ -1576,9 +1576,12 @@ LC.takeATour = function () {
 LC.welcomePopup = function () {
     var c = $('#welcomepopup');
     if (c.length == 0) return;
+    var skipStep1 = c.hasClass('select-position');
 
     // Init
-    c.find('.profile-data, .terms, .position-description').hide();
+    if (!skipStep1) {
+        c.find('.profile-data, .terms, .position-description').hide();
+    }
     c.find('form').get(0).reset();
     function initProfileData() {
         c.find('[name=jobtitle]').autocomplete({
@@ -1610,14 +1613,20 @@ LC.welcomePopup = function () {
     c.find('#welcomepopupLoading').remove();
 
     // Actions
-    c.on('click change', '.profile-choice [name=profile-type]', function () {
+    c.one('change', '.profile-choice [name=profile-type]', function () {
         c.find('.profile-data li:not(.' + this.value + ')').hide();
         c.find('.profile-choice, header .presentation').slideUp('fast');
         c.find('.terms, .profile-data').slideDown('fast');
         // Terms of use different for profile type
-        if (this.value == 'customer') {
+        if (this.value == 'customer')
             c.find('a.terms-of-use').data('tooltip-url', null);
-        }
+        // Change facebook redirect link
+        var fbc = c.find('.facebook-connect');
+        var addRedirect = 'customers';
+        if (this.value == 'provider')
+            addRedirect = 'providers';
+        fbc.data('redirect', fbc.data('redirect') + addRedirect);
+        fbc.data('profile', this.value);
 
         // Set validation-required for depending of profile-type form elements:
         c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')

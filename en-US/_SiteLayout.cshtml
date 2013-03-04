@@ -4,7 +4,6 @@
     Response.ContentEncoding = System.Text.Encoding.UTF8;
     var u = LcData.UserInfo.GetUserRow();
     var isHomePage = PageData["IsHomePage"] ?? false;
-    var showWelcomePopup = PageData["ShowWelcomePopup"] ?? true;
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
@@ -14,6 +13,11 @@
     var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
     
     var onBehalfOf = LcHelpers.OnBehalfOf();
+    
+    // Show welcome popup depending on the parameter passed from the page or
+    // detected automatically as true if anonymous user or provider without positions:
+    var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
+        (u == null ? true : u.IsProvider && LcData.UserInfo.GetUserPos().Count == 0);
 }
 @helper howItWorksLi(){
                         <li>
@@ -64,7 +68,7 @@
             }
     </head>
     <body class="@PageData["BodyClass"]">
-        @if (showWelcomePopup && u == null)
+        @if (showWelcomePopup)
         {
             // Annonymous access, Welcome popup
             <div id="welcome-popup-overlay" class="smooth-box-block-overlay" style="position:absolute;top:0;left:0;right:0;min-height:100%;z-index:999;">

@@ -2553,6 +2553,9 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup .position-description {
     display: none;
 }
+#welcomepopup.select-position .profile-data {
+    display: block;
+}
 #welcome-popup-container {
     padding: 0;
     width: 400px;
@@ -2583,6 +2586,14 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 }
 #welcomepopup h2 {
     font-size: 1.1em;
+}
+#welcomepopup.select-position .profile-data h2 {
+    color: Black;
+    text-align: left;
+    margin-bottom: .5em;
+}
+#welcomepopup.select-position .presentation {
+    display: none;
 }
 #welcomepopup .presentation {
     text-align: justify;
