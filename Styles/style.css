@@ -2557,6 +2557,11 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     padding: 0;
     width: 400px;
     margin: 120px auto 60px;
+    border: 1px solid #5a5b5b;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-border-radius: 10px;
 }
 #welcomepopup header,
 #welcomepopup footer,
@@ -2653,6 +2658,13 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     left: 0;
     z-index: 999;
     background-color: rgba(220, 220, 220, .7);
+}
+
+/*= .lightform */
+form.lightform input,
+form.lightform textarea {
+    background: white !important;
+    box-shadow: none;
 }
 
 /* ==|== media queries ======================================================
