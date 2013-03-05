@@ -24,7 +24,7 @@
         if (!facebookInitialized) {
             Modernizr.load({ load: document.location.protocol +
                 '//connect.facebook.net/@(Facebook.Language)/all.js',
-                callback: function () {
+                complete: function () {
                     FB.init({ appId: '@Facebook.AppId', status: true, cookie: true, xfbml: true });
                 }
             });
@@ -44,7 +44,6 @@
                                     //console.log('FacebookConnect: Welcome!');
                                     $.blockUI(loadingBlock);
                                     var url = LcUrl.LangPath + "Account/Facebook/@urlsection/?Redirect=" + redirect_url + '&profile=' + profile_url;
-                                    console.log(url);
                                     @if (result == "redirect") {
                                     <text>
                                     window.location = url;
@@ -64,11 +63,11 @@
                         }
                         return false;
                     };
-                    $(document).on('click', 'a.facebook-connect', facebookConnect);
+                    jQuery(document).on('click', 'a.facebook-connect', facebookConnect);
                 }
-                if (typeof jQuery === 'undefined')
+                if (!window['jQuery'])
                     Modernizr.load(
-                    { 
+                    {
                         load: LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js",
                         complete: initFacebookConnect
                     });
