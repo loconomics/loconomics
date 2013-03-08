@@ -59,18 +59,22 @@
                 var LC = window['LC'] || {};
                 @* OUR Loader *@
                 LC.load = function(opts) {
-                    opts = $.extend({
+                    opts = $.extend(true, {
                         scripts: [],
                         complete: null,
                         completeVerification: null,
                         loadDelay: 0,
                         trialsInterval: 500
                     }, opts);
+                    if (!opts.scripts.length) return;
                     function performComplete() {
                         if (opts.completeVerification())
                             opts.complete();
-                        else
+                        else {
                             setTimeout(performComplete, opts.trialsInterval);
+                            if (console && console.warn)
+                                console.warn('LC.load.completeVerification failed for ' + opts.scripts[0] + ' retrying it in ' + opts.trialsInterval + 'ms');
+                        }
                     }
                     function load() {
                         Modernizr.load({
@@ -199,62 +203,67 @@
             {
                 @* Loading blockUI jquery-plugin and our script in a delayed way only on Home Page, to be faster loading *@
                 <script type="text/javascript">
-                    Modernizr.load({ load: [
-                        LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js",
-                        @if (LcData.GetCurrentLanguageID() == 2)
-                        {
-                        <text>LcUrl.AppPath + "Scripts/jquery/jquery.ui.datepicker-es.js"</text>
+                    LC.load({
+                        scripts: [
+                            LcUrl.AppPath + 'Scripts/jquery/jquery-ui-1.8.21.custom.min.js'
+                            @if (LcData.GetCurrentLanguageID() == 2)
+                            {
+                            <text>,LcUrl.AppPath + 'Scripts/jquery/jquery.ui.datepicker-es.js'</text>
+                            }
+                        ],
+                        trialsInterval: 200,
+                        completeVerification: function () {
+                            return !!$.datepicker;
+                        },
+                        complete: function () {
+                            $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+                            $('.date-pick', document).datepicker({
+                                showAnim: 'blind'
+                            });
+                            // Location js-dropdown
+                            var s = $('#search-location');
+                            s.prop('readonly', true);
+                            s.autocomplete({
+                                source: LC.searchLocations
+                                , autoFocus: true
+                                , minLength: 0
+                                , select: function () {
+                                    return false;
+                                }
+                            });
+                            s.on('focus click', function () { s.autocomplete('search', '') });
+
+                            /* Positions autocomplete */
+                            var positionsAutocomplete = $('#search-service').autocomplete({
+                                source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
+                                autoFocus: false,
+                                minLength: 0,
+                                select: function (event, ui) {
+                                    // We want show the label (position name) in the textbox, not the id-value
+                                    //$(this).val(ui.item.label);
+                                    $(this).val(ui.item.positionSingular);
+                                    return false;
+                                },
+                                focus: function (event, ui) {
+                                    if (!ui || !ui.item || !ui.item.positionSingular);
+                                    // We want the label in textbox, not the value
+                                    //$(this).val(ui.item.label);
+                                    $(this).val(ui.item.positionSingular);
+                                    return false;
+                                }
+                            });
+                            // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
+                            /*$.getJSON(LcUrl.JsonPath + 'GetPositions/Autocomplete/',
+                                function (data) {
+                                    positionsAutocomplete.autocomplete('option', 'source', data);
+                                }
+                            );*/
+                            // More to load:
+                            Modernizr.load([
+                                LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
+                                LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
+                            ]);
                         }
-                    ], complete: function () {
-                        $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-                        $('.date-pick', document).datepicker({
-                            showAnim: 'blind'
-                        });
-                        // Location js-dropdown
-                        var s = $('#search-location');
-                        s.prop('readonly', true);
-                        s.autocomplete({
-                            source: LC.searchLocations
-                            , autoFocus: true
-                            , minLength: 0
-                            , select: function () {
-                                return false;
-                            }
-                        });
-                        s.on('focus click', function () { s.autocomplete('search', '') });
-
-                        /* Positions autocomplete */
-                        var positionsAutocomplete = $('#search-service').autocomplete({
-                            source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                            autoFocus: false,
-                            minLength: 0,
-                            select: function (event, ui) {
-                                // We want show the label (position name) in the textbox, not the id-value
-                                //$(this).val(ui.item.label);
-                                $(this).val(ui.item.positionSingular);
-                                return false;
-                            },
-                            focus: function (event, ui) {
-                                if (!ui || !ui.item || !ui.item.positionSingular);
-                                // We want the label in textbox, not the value
-                                //$(this).val(ui.item.label);
-                                $(this).val(ui.item.positionSingular);
-                                return false;
-                            }
-                        });
-                        // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
-                        /*$.getJSON(LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                            function (data) {
-                                positionsAutocomplete.autocomplete('option', 'source', data);
-                            }
-                        );*/
-
-                        // More to load:
-                        Modernizr.load([
-                            LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
-                            LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
-                        ]);
-                    }
                     });
                 </script>
             } else {
