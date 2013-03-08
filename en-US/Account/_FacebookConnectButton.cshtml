@@ -19,64 +19,51 @@
     
     <div id="fb-root" style="display: none"></div>
     <script type="text/javascript">
-        var facebookInitialized, facebookConnect, fbtimer;
-
-        if (!facebookInitialized) {
+        if (!window['facebookInitialized']) $(window).load(function() {
             Modernizr.load({ load: document.location.protocol +
                 '//connect.facebook.net/@(Facebook.Language)/all.js',
                 complete: function () {
                     FB.init({ appId: '@Facebook.AppId', status: true, cookie: true, xfbml: true });
                 }
             });
-
             if (!facebookConnect) {
-                function initFacebookConnect() {
-                    facebookConnect = function () {
-                        // If FB is was not loaded still, auto try again
-                        if (typeof(FB) === 'undefined') {
-                            fbtimer = setTimeout(facebookConnect, 500);
-                        } else {
-                            if (fbtimer) clearTimeout(fbtimer);
-                            var redirect_url = $(this).data('redirect');
-                            var profile_url = $(this).data('profile');
-                            FB.login(function (response) {
-                                if (response.authResponse) {
-                                    //console.log('FacebookConnect: Welcome!');
-                                    $.blockUI(loadingBlock);
-                                    var url = LcUrl.LangPath + "Account/Facebook/@urlsection/?Redirect=" + redirect_url + '&profile=' + profile_url;
-                                    @if (result == "redirect") {
-                                    <text>
-                                    window.location = url;
-                                    </text>
-                                    } else if (result == "json") {
-                                    <text>
-                                    popup(url, 'small', null, "Verifing");
-                                    </text>
-                                    }
-                                    /*FB.api('/me', function (response) {
-                                    console.log('FacebookConnect: Good to see you, ' + response.name + '.');
-                                    });*/
-                                } else {
-                                    //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
+                var facebookConnect, fbtimer;
+                facebookConnect = function () {
+                    // If FB is was not loaded still, auto try again
+                    if (!window['FB']) {
+                        fbtimer = setTimeout(facebookConnect, 500);
+                    } else {
+                        if (fbtimer) clearTimeout(fbtimer);
+                        var redirect_url = $(this).data('redirect');
+                        var profile_url = $(this).data('profile');
+                        FB.login(function (response) {
+                            if (response.authResponse) {
+                                //console.log('FacebookConnect: Welcome!');
+                                $.blockUI(loadingBlock);
+                                var url = LcUrl.LangPath + "Account/Facebook/@urlsection/?Redirect=" + redirect_url + '&profile=' + profile_url;
+                                @if (result == "redirect") {
+                                <text>
+                                window.location = url;
+                                </text>
+                                } else if (result == "json") {
+                                <text>
+                                popup(url, 'small', null, "Verifing");
+                                </text>
                                 }
-                            }, { scope: '@facebookPermissions' });
-                        }
-                        return false;
-                    };
-                    jQuery(document).on('click', 'a.facebook-connect', facebookConnect);
-                }
-                if (!window['jQuery'])
-                    Modernizr.load(
-                    {
-                        load: LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js",
-                        complete: initFacebookConnect
-                    });
-                else 
-                    initFacebookConnect();
+                                /*FB.api('/me', function (response) {
+                                console.log('FacebookConnect: Good to see you, ' + response.name + '.');
+                                });*/
+                            } else {
+                                //console.log('FacebookConnect: User cancelled login or did not fully authorize.');
+                            }
+                        }, { scope: '@facebookPermissions' });
+                    }
+                    return false;
+                };
+                jQuery(document).on('click', 'a.facebook-connect', facebookConnect);
             }
-
-            facebookInitialized = true;
-        }
+            window.facebookInitialized = true;
+        });
     </script>
 }
 

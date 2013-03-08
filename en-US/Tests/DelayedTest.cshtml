@@ -1,0 +1,24 @@
+﻿@{
+    System.Threading.Thread.Sleep(Request["ms"].AsInt());
+    if (!String.IsNullOrEmpty((string)PageData["Render"])) {
+        @RenderPage(PageData["Render"])
+    } else {
+        switch (Request["type"])
+        {
+            case "js":
+                Response.ContentType = "text/javascript";
+                <text>
+                    window.DelayedTest = @Request["ms"].AsInt();
+                </text>
+                break;
+            case "css":
+                Response.ContentType = "text/css";
+                <text>
+                .delayedTest {
+                    background: red;
+                }
+                </text>
+                break;
+        }
+    }
+}
