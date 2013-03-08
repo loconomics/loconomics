@@ -1432,6 +1432,7 @@ form div.validation-summary-valid{
 }
 .account-popup .remember-me{
     float: left;
+    margin-top: 1em;
 }
 .account-popup .remember-me label{
     font-size: 1em;
@@ -1453,7 +1454,6 @@ form div.validation-summary-valid{
 .account-popup .account-tools{
     font-size: 1.3em;
     font-weight: bold;
-    clear: both;
     overflow: hidden;
     margin: 30px 0 0;
 }
