@@ -50,7 +50,7 @@
            @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
            @LcAssets.GetStylesTags()
            <script type="text/javascript">var LC = window['LC'] || {};</script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.2.js")" type="text/javascript"></script>
+           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.development.2.6.2.js")" type="text/javascript"></script>
            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
            <script type="text/javascript">
                 @* Our LcUrl class *@
@@ -68,7 +68,7 @@
                     }, opts);
                     if (!opts.scripts.length) return;
                     function performComplete() {
-                        if (opts.completeVerification())
+                        if (typeof(opts.completeVerification) !== 'function' || opts.completeVerification())
                             opts.complete();
                         else {
                             setTimeout(performComplete, opts.trialsInterval);
@@ -79,10 +79,7 @@
                     function load() {
                         Modernizr.load({
                             load: opts.scripts,
-                            complete: (typeof(opts.completeVerification) == 'function'
-                                ? performComplete
-                                : opts.complete
-                            )
+                            complete: performComplete
                         });
                     }
                     if (opts.loadDelay)
