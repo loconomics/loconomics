@@ -35,17 +35,17 @@
                     DELETE FROM ProviderServicePhoto WHERE ProviderServicePhotoID = @PhotoID
                             AND UserID = @1 AND PositionID = @2
 
+                    -- Test Alert
+                    EXEC TestAlertShowcaseWork @1, @2
+
                     -- Checking if there are more records with the same file, or returning the address
                     IF 0 = (SELECT  count(*)
                             FROM    ProviderServicePhoto
                             WHERE   PhotoAddress like @address
                                     AND UserID = @1 AND PositionID = @2)
-                        SELECT @address As PhotoAddress
+                        SELECT coalesce(@address, '') As PhotoAddress
                     ELSE
                         SELECT '' As PhotoAddress
-
-                    -- Test Alert
-                    EXEC TestAlertShowcaseWork @1, @2
                 ", photoID, p.UserID, p.PositionID);
                 
                 if (!String.IsNullOrEmpty(photoAddress)) {

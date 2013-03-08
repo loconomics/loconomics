@@ -795,7 +795,13 @@ function initPositionPhotos() {
             } else {
                 smoothBoxBlock(form.find('.no-primary-photo'), editPanel);
             }
+            // Reset hidden fields manually to avoid browser memory breaking things
+            editPanel.find('[name=PhotoID]').val('');
+            editPanel.find('[name=photo-caption]').val('');
+            editPanel.find('[name=is-primary-photo]').prop('checked', false);
         }
+        // Reset delete option
+        editPanel.find('[name=delete-photo]').val('False');
     });
 }
 function openChangeBookingStateForm(bookingID, button) {
