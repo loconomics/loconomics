@@ -5,7 +5,7 @@
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     
-    string photosFolder = LcUrl.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    string photosFolder = "img/userphotos/u" + p.UserID.ToString() + "/";
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
 
     if (IsPost) {
@@ -51,7 +51,7 @@
                 if (!String.IsNullOrEmpty(photoAddress)) {
                     // Remove file from user folder
                     try{
-                        File.Delete(Server.MapPath(photosFolder + photoAddress));
+                        File.Delete(Server.MapPath(LcUrl.RenderAppPath + photosFolder + photoAddress));
                     }catch{
                         throw new Exception("Photo file could not be deleted");
                     }
@@ -168,7 +168,7 @@ Nothing like a glossy photo. Images of your hard work help clients visualize wha
         <ol>
             @foreach (var photo in photos)
             {
-                <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
+                <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(LcUrl.AppPath + photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
             }
         </ol>
     </fieldset>
