@@ -120,10 +120,6 @@ $(document).ready(function () {
         editPanel.find('[name=delete-photo]').val('True');
         editPanel.closest('form').submit();
     })
-    // Show a message to the user about all was saved fine
-    .on('ajaxFormReturnedHtml', '.positionphotos', function () {
-        ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(this, "All was saved succesfully!");
-    });
 
     /*
     * Position Services
