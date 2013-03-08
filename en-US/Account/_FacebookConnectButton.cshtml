@@ -19,11 +19,15 @@
     
     <div id="fb-root" style="display: none"></div>
     <script type="text/javascript">
+        /* Load if not initialized and only after all other elements were loaded in the page */
         if (!window['facebookInitialized']) $(window).load(function() {
-            Modernizr.load({ load: document.location.protocol +
-                '//connect.facebook.net/@(Facebook.Language)/all.js',
+            LC.load({
+                scripts: ['//connect.facebook.net/@(Facebook.Language)/all.js'],
                 complete: function () {
                     FB.init({ appId: '@Facebook.AppId', status: true, cookie: true, xfbml: true });
+                },
+                completeVerification: function () {
+                    return !!window['FB'];
                 }
             });
             if (!facebookConnect) {
@@ -31,7 +35,7 @@
                 facebookConnect = function () {
                     // If FB is was not loaded still, auto try again
                     if (!window['FB']) {
-                        fbtimer = setTimeout(facebookConnect, 500);
+                        fbtimer = setTimeout($.proxy(facebookConnect, this), 500);
                     } else {
                         if (fbtimer) clearTimeout(fbtimer);
                         var redirect_url = $(this).data('redirect');
