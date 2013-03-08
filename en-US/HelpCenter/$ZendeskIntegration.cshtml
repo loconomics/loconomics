@@ -1,4 +1,23 @@
-﻿<script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.5/zenbox.js"></script>
+﻿<style type="text/css" media="screen, projection">
+  @@import url(//assets.zendesk.com/external/zenbox/v2.5/zenbox.css);
+</style>
+<script type="text/javascript">
+    LC.load({
+        scripts: ['//assets.zendesk.com/external/zenbox/v2.5/zenbox.js'],
+        loadDelay: 4000,
+        completeVerification: function () { return typeof (Zenbox) !== "undefined" },
+        complete: function () {
+            Zenbox.init({
+                dropboxID: "20130752",
+                url: "https://loconomics.zendesk.com",
+                tabID: "Feedback",
+                tabColor: "#E65A0F",
+                tabPosition: "Left"
+            });
+        }
+    });
+</script>
+@*<script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.5/zenbox.js"></script>
 <style type="text/css" media="screen, projection">
   @@import url(//assets.zendesk.com/external/zenbox/v2.5/zenbox.css);
 </style>
@@ -12,4 +31,4 @@
             tabPosition: "Left"
         });
     }
-</script>
+</script>*@
