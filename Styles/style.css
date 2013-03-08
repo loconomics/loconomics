@@ -2068,6 +2068,7 @@ html.boxshadow #loginBox .field-validation-error{
     white-space: normal;
     overflow: hidden;
     color: Black;
+    text-align: left;
     
     border: 1px solid #e2e1e1;
     box-shadow: 1px 3px 3px 1px #e2e1e1;
@@ -2570,6 +2571,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup footer,
 #welcomepopup .register {
     padding: 20px 25px;
+    text-align: center;
 }
 #welcomepopup h1,
 #welcomepopup h2 {
@@ -2585,7 +2587,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     text-align: center;
 }
 #welcomepopup h2 {
-    font-size: 1.1em;
+    font-size: 1.05em;
 }
 #welcomepopup.select-position .profile-data h2 {
     color: Black;
