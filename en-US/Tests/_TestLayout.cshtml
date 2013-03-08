@@ -39,18 +39,22 @@
                 var LC = window['LC'] || {};
                 @* OUR Loader *@
                 LC.load = function(opts) {
-                    opts = $.extend({
+                    opts = $.extend(true, {
                         scripts: [],
                         complete: null,
                         completeVerification: null,
                         loadDelay: 0,
                         trialsInterval: 500
                     }, opts);
+                    if (!opts.scripts.length) return;
                     function performComplete() {
                         if (opts.completeVerification())
                             opts.complete();
-                        else
+                        else {
                             setTimeout(performComplete, opts.trialsInterval);
+                            if (console && console.warn)
+                                console.warn('LC.load.completeVerification failed for ' + opts.scripts[0] + ' retrying it in ' + opts.trialsInterval + 'ms');
+                        }
                     }
                     function load() {
                         Modernizr.load({

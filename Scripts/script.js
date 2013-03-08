@@ -644,8 +644,9 @@ LC.mapReady = function (ready) {
         ready();
     else if (!mapIsLoading) {
         LC._mapIsLoading = true;
-        Modernizr.load({
-            load: { googleapi: "https://www.google.com/jsapi" },
+        LC.load({
+            scripts: ["https://www.google.com/jsapi"],
+            completeVerification: function () { return !!window['google'] },
             complete: function () {
                 google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
                     LC._mapIsReady = true;

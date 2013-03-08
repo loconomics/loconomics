@@ -259,10 +259,12 @@
                                 }
                             );*/
                             // More to load:
-                            Modernizr.load([
-                                LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
-                                LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
-                            ]);
+                            LC.load({
+                                scripts: [
+                                    LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
+                                    LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
+                                ]
+                            });
                         }
                     });
                 </script>

@@ -202,11 +202,13 @@
         if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
         if (!jqueryStarRatingPluginLoaded) {
             jqueryStarRatingPluginLoaded = true;
-            Modernizr.load([
-                LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
-                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
-                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
-            ]);
+            LC.load({ 
+                scripts: [
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
+                ]
+            });
         } else {
             if ($ && $().rating)
                 // Re-apply plugin (to new added elements without the plugin loaded):
