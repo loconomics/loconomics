@@ -75,7 +75,7 @@
         <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/connect-facebook.png">
     </a>*@
 
-    <a class="facebook-connect" href="javascript:return false;" data-redirect="@Uri.EscapeDataString(redirectUrl ?? "")" data-profile="customer">
+    <a class="facebook-connect" href="#" data-redirect="@Uri.EscapeDataString(redirectUrl ?? "")" data-profile="customer">
         @GetFacebookInitializationScripts(redirectUrl)
         <img alt="Facebook Connect" src="@(LcUrl.AppPath)img/theme/@icon"/>
     </a>
