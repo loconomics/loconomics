@@ -58,25 +58,31 @@
                 @* OUR namespace (abbreviated Loconomics) *@
                 var LC = window['LC'] || {};
                 @* OUR Loader *@
-                LC.load = function(scripts, complete, completeVerification, loadDelay, trialsInterval) {
-                    trialsInterval = trialsInterval || 500;
+                LC.load = function(opts) {
+                    opts = $.extend({
+                        scripts: [],
+                        complete: null,
+                        completeVerification: null,
+                        loadDelay: 0,
+                        trialsInterval: 500
+                    }, opts);
                     function performComplete() {
-                        if (completeVerification())
-                            complete();
+                        if (opts.completeVerification())
+                            opts.complete();
                         else
-                            setTimeout(performComplete, trialsInterval);
+                            setTimeout(performComplete, opts.trialsInterval);
                     }
                     function load() {
                         Modernizr.load({
-                            load: scripts,
-                            complete: (typeof(completeVerification) == 'function'
+                            load: opts.scripts,
+                            complete: (typeof(opts.completeVerification) == 'function'
                                 ? performComplete
-                                : complete
+                                : opts.complete
                             )
                         });
                     }
-                    if (loadDelay)
-                        setTimeout(load, loadDelay);
+                    if (opts.loadDelay)
+                        setTimeout(load, opts.loadDelay);
                     else
                         load();
                 }
