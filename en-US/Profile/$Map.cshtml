@@ -73,7 +73,8 @@ Below you can find out if you're within this provider's service radius and/or at
         ];
 
         // First address position is null, delete
-        addresses.remove(0);
+        //addresses.remove(0);
+        Array.remove(addresses, 0);
 
         // If there is no address, nothing!
         if (addresses.length == 0) return;
