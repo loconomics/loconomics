@@ -23,28 +23,47 @@
             
             var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
             
+            int successfulSent = 0;
             foreach (string email in emails) {
-                LcMessaging.SendMail(email,
-                    String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
-                    LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
-                        { "ProviderUserID", u.UserID }
-                        ,{ "PositionID", p.PositionID }
-                }));
-            }
-            // Set VerificationID:12 for this user as confirmed just with only sent references requests (see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651
-            using (var db = Database.Open("sqlloco")){
-                db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 2);
-                db.Execute("EXEC TestAlertReferenceRequests @0, @1", p.UserID, p.PositionID);
+                try {
+                    LcMessaging.SendMail(email,
+                        String.Format("Loconomics.com - Write {0} {1} a reference", u.FirstName, u.LastName),
+                        LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderReference/", new Dictionary<string,object>{
+                            { "ProviderUserID", u.UserID }
+                            ,{ "PositionID", p.PositionID }
+                    }));
+                    successfulSent++;
+                } catch (System.FormatException ex) {
+                    ModelState.AddFormError(String.Format(
+                        "LJDI: We're sorry, there was an error sending the email to {0}, please check that the address is correct.",
+                        email)
+                    );
+                } catch (Exception ex) {
+                    ModelState.AddFormError(String.Format(
+                        "LJDI: We're sorry, there was an error sending the email to {0}.",
+                        email)
+                    );
+                }
             }
             
-            // Show the profile activation popup with 'next-step' buttons and progress information when need,
-            // if not the short message is showed:
-            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
-                u.UserID,
-                "Sent.",
-                LcRessources.OK))
-            {
-                LcHelpers.ReturnJsonResult(5, "Sent");
+            if (successfulSent > 0) {
+                // Set VerificationID:12 for this user as confirmed just with only sent references requests (see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651
+                using (var db = Database.Open("sqlloco")){
+                    db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 2);
+                    db.Execute("EXEC TestAlertReferenceRequests @0, @1", p.UserID, p.PositionID);
+                }
+            }
+
+            if (ModelState.IsValid) {
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    "Sent.",
+                    LcRessources.OK))
+                {
+                    LcHelpers.ReturnJsonResult(5, "Sent");
+                }
             }
         }
     }
