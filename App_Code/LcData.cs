@@ -1004,6 +1004,7 @@ public static partial class LcData
             var countAlerts = counts.Total;
             var countRequiredAlerts = counts.TotalRequired;
 
+            // Iterate for all active alerts
             var posCounts = new Dictionary<int, UserAlertsNumbers>();
             foreach (var a in GetActiveUserAlerts(userID))
             {
@@ -1038,7 +1039,27 @@ public static partial class LcData
                 }
             }
 
-            // Last tasks per position
+            // Complete collection with positions that user has but there are not in 
+            // the previous list of active alerts because has not a position specific alert
+            // but we need it to complete the list and then being updated with the all-positions numbers.
+            foreach (var p in LcData.UserInfo.GetUserPos(userID))
+            {
+                if (!posCounts.ContainsKey(p.PositionID))
+                    posCounts.Add(p.PositionID, new UserAlertsNumbers {
+                        CountAlerts = countAlerts,
+                        CountRequiredAlerts = countRequiredAlerts,
+                        CountActiveAlerts = 0,
+                        CountRequiredActiveAlerts = 0,
+                        CountRequiredPassedAlerts = 0,
+                        NextAlert = (dynamic)null,
+                        RequiredNextAlert = (dynamic)null,
+                        AlertRank = int.MaxValue,
+                        RequiredAlertRank = int.MaxValue
+                    });
+            }
+
+            // Iterate all numbers per position for the last tasks, including
+            // add all-positions numbers (positionID:0) to every position.
             var allPositions = posCounts.ContainsKey(0) ? posCounts[0] : null;
             foreach (var p in posCounts)
             {
