@@ -2,6 +2,7 @@
 @{
     // Log out of the current user context
     WebSecurity.Logout();
+    Session.Clear();
 
     if (UrlData.Count == 0 || UrlData[0] != "Deleted") {
         // Redirect back to the homepage or return URL
