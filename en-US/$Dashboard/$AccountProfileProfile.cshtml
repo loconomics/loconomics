@@ -90,7 +90,7 @@
     }
 }
 <p></p>
-<div><form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileProfile/" id="personal" class="ajax ajax-box">
+<div><form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileProfile/" id="account-profile-profile" class="ajax ajax-box">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
 
@@ -115,7 +115,7 @@
             </ul>
         </fieldset>
     }
-    <fieldset>
+    <fieldset id="personal-fs-publicbio">
         <legend>Public bio:</legend>
         <ul>
             <li><textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community a little something about you, e.g. “I am a San Francisco native,” or “I can whistle through my teeth.” " @Validation.GetHtml("publicbio")>@Bio</textarea>

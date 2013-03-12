@@ -904,7 +904,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        function showSuccessMessage(message) {
+        function showSuccessMessage(ctx, message) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
@@ -919,7 +919,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Clean previous validation errors
             setValidationSummaryAsValid(ctx.box);
         }
-        function showOkGoPopup(data) {
+        function showOkGoPopup(ctx, data) {
             // Unblock loading:
             ctx.box.unblock();
 
@@ -954,7 +954,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         }
         if (data.Code == 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
-            showSuccessMessage(data.Result);
+            showSuccessMessage(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         // Special Code 1: do a redirect
         } else if (data.Code == 1) {
@@ -975,7 +975,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.on('ajaxSuccessPostMessageClosed', function () {
                 LC.redirectTo(data.Result.RedirectURL);
             });
-            showSuccessMessage(data.Result.SuccessMessage);
+            showSuccessMessage(ctx, data.Result.SuccessMessage);
         } else if (data.Code == 5) {
             // Change main-action button message:
             var btn = ctx.form.find('.main-action');
@@ -993,7 +993,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code == 6) {
             // Ok-Go actions popup with 'success' and 'additional' messages.
-            showOkGoPopup(data.Result);
+            showOkGoPopup(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:

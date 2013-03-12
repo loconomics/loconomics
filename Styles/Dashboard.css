@@ -382,27 +382,22 @@ ul.attributes-list li {
 form#personal li label{
     min-width: 120px;
 }
-#personal .customurl input {
-    width: 140px !important;
-}
-#personal .websiteurl input {
-    width: 100% !important;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
 #personal-fs-contactinformation,
 #personal-fs-homeaddress{
     display: inline-block;
     vertical-align: top;
     width: 345px;
 }
+#account-profile-profile .customurl input {
+    width: 140px !important;
+}
+#account-profile-profile .websiteurl input {
+    width: 100% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
 #personal-fs-publicbio label{
     display: none;
-}
-#personal-publicbio{
-    width: 648px;
-    height: 8em;
-    margin: 0 10px;
 }
 /** Section: Positions **/
 .position-state {
