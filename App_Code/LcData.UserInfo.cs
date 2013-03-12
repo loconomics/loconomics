@@ -530,12 +530,15 @@ public static partial class LcData
                 else if (ps.Value.StatusID == 2)
                 {
                     rtn.Status = UserPositionActivation.Statuses.InProgress;
-                    // It is still incomplete, show progress
-                    rtn.Messages.Add(LcRessources.GetText("PositionActivationProgress",
-                        numbers.CountRequiredPassedAlerts,
-                        numbers.CountRequiredAlerts,
-                        ps.Value.PositionSingular)
-                    );
+                    if (numbers.CountRequiredAlerts > 0)
+                    {
+                        // It is still incomplete, show progress
+                        rtn.Messages.Add(LcRessources.GetText("PositionActivationProgress",
+                            numbers.CountRequiredPassedAlerts,
+                            numbers.CountRequiredAlerts,
+                            ps.Value.PositionSingular)
+                        );
+                    }
                 }
 
                 posActivationList.Add(rtn);
