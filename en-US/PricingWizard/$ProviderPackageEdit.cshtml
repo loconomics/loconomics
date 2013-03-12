@@ -312,11 +312,11 @@
                 <a href="#show-more-attributes" class="show-more-attributes" data-hide-text="Show fewer service options">Show more service options</a>
                 <ul class="provider-package-services services-not-checked">
 
-                @foreach (var att in attributes)
+                @foreach (var att in notCheckedAttributes)
                 {
-                                <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
-                                    <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
-                                </li>
+                    <li title="@att.ServiceAttribute" data-description="@att.ServiceAttributeDescription">
+                        <label><input name="package-service-attribute" type="checkbox" @LcHelpers.IsChecked(true, attributesInPackage.Contains(att.ServiceAttributeID)) value="@att.ServiceAttributeID" /> @att.ServiceAttribute</label>
+                    </li>
                 }
                 </ul>
             }
