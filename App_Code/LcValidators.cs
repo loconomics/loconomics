@@ -15,7 +15,7 @@ public static class LcValidators
     public const string EmailAddressRegexPattern = @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*";
     public static bool IsEmailAdress(string sEmail)
     {
-        if (sEmail != "")
+        if (!String.IsNullOrWhiteSpace(sEmail))
         {
             var sRegex = new Regex(EmailAddressRegexPattern);
             return sRegex.IsMatch(sEmail) ? true : false;
