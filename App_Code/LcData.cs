@@ -1063,11 +1063,6 @@ public static partial class LcData
             var allPositions = posCounts.ContainsKey(0) ? posCounts[0] : null;
             foreach (var p in posCounts)
             {
-                // Required alerts take precedence to other alerts, if there is one 
-                // and independently of Rank:
-                if (p.Value.RequiredNextAlert != null)
-                    p.Value.NextAlert = p.Value.RequiredNextAlert;
-
                 // Combine all-positions alerts (positionID:0) with each specific position:
                 if (allPositions != null && p.Key > 0)
                 {
@@ -1081,6 +1076,11 @@ public static partial class LcData
 
                 // Calculate passed alerts
                 p.Value.CountRequiredPassedAlerts = p.Value.CountRequiredAlerts - p.Value.CountRequiredActiveAlerts;
+
+                // Required alerts take precedence to other alerts, if there is one 
+                // and independently of Rank:
+                if (p.Value.RequiredNextAlert != null)
+                    p.Value.NextAlert = p.Value.RequiredNextAlert;
             }
 
             return posCounts;
