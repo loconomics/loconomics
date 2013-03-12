@@ -35,7 +35,7 @@ public static class LcValidators
     {
         List<string> list = new List<string>();
         if (String.IsNullOrWhiteSpace(emails)) return null;
-        var l = emails.Replace("\n", ",").Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+        var l = emails.Replace("\n", ",").Replace(";", ",").Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
         foreach (string email in l)
         {
             if (IsEmailAdress(email))
