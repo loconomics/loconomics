@@ -1,4 +1,5 @@
 ﻿@{
+    LcHelpers.TestArea();
     System.Threading.Thread.Sleep(Request["ms"].AsInt());
     if (!String.IsNullOrEmpty((string)PageData["Render"])) {
         @RenderPage(PageData["Render"])

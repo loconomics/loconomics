@@ -320,6 +320,11 @@
             throw new HttpException(404, "Not Found");
         }
     }
+    public static void TestArea() {
+        if (!Request.IsLocal) {
+            AdminPage();
+        }
+    }
     public static string OnBehalfOf() {
         if (WebSecurity.IsAuthenticated) {
             // Only for Admin users, for any page executing this (SiteLayout is fine, will redirect)
