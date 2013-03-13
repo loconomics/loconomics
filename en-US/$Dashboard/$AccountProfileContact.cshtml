@@ -49,9 +49,9 @@
                 ModelState.AddError("zipcode", "Zip code is invalid");
             }
         }
-        // MobilePhone and AlternatePhone: almost one of both is required
+        // MobilePhone and AlternatePhone: At least one phone number is required
         if (MobilePhone.IsEmpty() && AlternatePhone.IsEmpty()) {
-            ModelState.AddError("mobilephone", "Almost one phone number is required");
+            ModelState.AddError("mobilephone", "At least one phone number is required");
         }
         if (ModelState.IsValid) {
             
