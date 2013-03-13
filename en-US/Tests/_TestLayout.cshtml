@@ -48,7 +48,7 @@
                     }, opts);
                     if (!opts.scripts.length) return;
                     function performComplete() {
-                        if (opts.completeVerification())
+                        if (typeof(opts.completeVerification) !== 'function' || opts.completeVerification())
                             opts.complete();
                         else {
                             setTimeout(performComplete, opts.trialsInterval);
@@ -59,10 +59,7 @@
                     function load() {
                         Modernizr.load({
                             load: opts.scripts,
-                            complete: (typeof(opts.completeVerification) == 'function'
-                                ? performComplete
-                                : opts.complete
-                            )
+                            complete: opts.complete ? performComplete : null
                         });
                     }
                     if (opts.loadDelay)

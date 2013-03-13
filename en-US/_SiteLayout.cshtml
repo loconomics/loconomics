@@ -79,7 +79,7 @@
                     function load() {
                         Modernizr.load({
                             load: opts.scripts,
-                            complete: performComplete
+                            complete: opts.complete ? performComplete : null
                         });
                     }
                     if (opts.loadDelay)
