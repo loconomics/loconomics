@@ -61,8 +61,8 @@ $.fn.hasScrollBar = function () {
     //scrollHeight= we have content till this height
     var t = this.get(0);
     return {
-        vertical: this.outerHeight() < t.scrollHeight,
-        horizontal: this.outerWidth() < t.scrollWidth
+        vertical: this.outerHeight(false) < t.scrollHeight,
+        horizontal: this.outerWidth(false) < t.scrollWidth
     };
 }
 /**

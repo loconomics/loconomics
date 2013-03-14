@@ -1794,11 +1794,14 @@ html.boxshadow #loginBox .field-validation-error{
 }
 
 /*= Tabbed style: .buttons */
-.buttons ul.tabs { 
+.buttons ul.tabs {
     padding: 0;
 }
 .tabbed.buttons > ul.tabs {
     white-space: normal !important;
+}
+.tabbed.buttons > .tabs-slider {
+    display: none !important;
 }
 .buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
 .buttons ul.tabs li a.button 
