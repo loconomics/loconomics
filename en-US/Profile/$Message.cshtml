@@ -37,15 +37,15 @@ Have a question for for this provider?  Send a message below. </p>
         <input type="hidden" name="PositionID" value="@pos.PositionID"/>
         @LcHelpers.GetValidationScripts()
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-        <div class="from-line">
+        <div class="from-line message-section">
             <label>From:</label>
             <img class="user-pic" alt="@(u.FirstName)'s Photo" src="@(LcUrl.LangPath)Profile/Photo/@(u.UserID)" width="55" height="55" />
             <span class="from">@LcHelpers.GetUserDisplayName(u)</span>
         </div>
-        <div class="subject">
+        <div class="subject message-section">
             <label>Subject: <input type="text" name="subject" value="Message from @LcHelpers.GetUserDisplayName(u) about @pos.PositionSingular services"/></label>
         </div>
-        <div class="message-body">
+        <div class="message-body message-section">
             <textarea name="message-body" placeholder="Write your message to @LcHelpers.GetUserDisplayName(p)"></textarea>
         </div>
         <fieldset class="actions">

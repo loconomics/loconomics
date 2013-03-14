@@ -2002,7 +2002,7 @@ html.boxshadow #loginBox .field-validation-error{
 /*** Send Message Form ***/
 /***************************************/
 /********** Message ********************/
-.send-message-form div {
+.send-message-form .message-section {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
