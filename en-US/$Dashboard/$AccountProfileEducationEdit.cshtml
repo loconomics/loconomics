@@ -25,8 +25,8 @@
 
     // Validation rules
     Validation.RequireField("institution", LcRessources.RequiredField("School"));
-    Validation.Add("startyear", Validator.Range(1900, 2900, "LJDI: Start year attended is invalid"));
-    Validation.Add("endyear", Validator.Range(1900, 2900, "LJDI: End year attended is invalid"));
+    Validation.Add("startyear", Validator.Range(1900, 2900, "Start year is invalid, please re-enter"));
+    Validation.Add("endyear", Validator.Range(1900, 2900, "End year is invalid, please re-enter"));
 
     // Save posted data
     if (IsPost && Validation.IsValid()) {

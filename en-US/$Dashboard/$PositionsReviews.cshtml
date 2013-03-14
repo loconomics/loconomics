@@ -35,12 +35,12 @@
                     successfulSent++;
                 } catch (System.FormatException ex) {
                     ModelState.AddFormError(String.Format(
-                        "LJDI: We're sorry, there was an error sending the email to {0}, please check that the address is correct.",
+                        "We're sorry, there was an error sending the request to {0}, please ensure the address is correct.",
                         email)
                     );
                 } catch (Exception ex) {
                     ModelState.AddFormError(String.Format(
-                        "LJDI: We're sorry, there was an error sending the email to {0}.",
+                        "We're sorry, there was an error sending the request to {0}.",
                         email)
                     );
                 }
