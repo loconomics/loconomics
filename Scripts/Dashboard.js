@@ -657,7 +657,10 @@ $(document).ready(function () {
       * Request Reviews
      **/
     $('.dashboard').on('ajaxSuccessPost', '.positionreviews', function (event, data) {
-        $(this).find('[name=clientsemails]').val('').attr('placeholder', data.Result.SuccessMessage || data.Result);
+        $(this).find('[name=clientsemails]').val('')
+        .attr('placeholder', data.Result.SuccessMessage || data.Result)
+        // support for IE, 'non-placeholder-browsers'
+        .placeholder();
     });
 });
 

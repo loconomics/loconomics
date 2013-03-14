@@ -39,7 +39,10 @@ $(function () {
     /* Message */
     $('form.send-message-form').on('ajaxSuccessPost', function (event, data) {
         if (data.Code == 0) {
-            $('.message-body textarea').val('').attr('placeholder', data.Result);
+            $('.message-body textarea').val('')
+            .attr('placeholder', data.Result)
+            // support for IE, 'non-placeholder-browsers'
+            .placeholder();
         }
     });
 })();
