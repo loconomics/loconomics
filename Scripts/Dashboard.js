@@ -652,6 +652,13 @@ $(document).ready(function () {
         }
         return false;
     });
+
+    /**================
+      * Request Reviews
+     **/
+    $('.dashboard').on('ajaxSuccessPost', '.positionreviews', function (event, data) {
+        $(this).find('[name=clientsemails]').val('').attr('placeholder', data.Result.SuccessMessage || data.Result);
+    });
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

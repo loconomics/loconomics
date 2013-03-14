@@ -1060,7 +1060,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
         var newhtml = $(data);
 
-        // TODO: changesnotification before or after append element to doc? newhtml.trigger() or jb.trigger()?
+        // TODO: changesnotification before or after append element to doc?
 
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
         var newForm = newhtml.find('form:eq(0)').get(0);
