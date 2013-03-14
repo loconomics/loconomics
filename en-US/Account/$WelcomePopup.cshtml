@@ -109,6 +109,8 @@
             }
         }
     }
+    
+    var idprefix = "welcomepopup";
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     <header>
@@ -156,12 +158,12 @@
                     <ul>
                         @if (!providerWithoutPosition)
                         {
-                        <li class="provider customer"><input class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
-                        <li class="customer"><input class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
-                        <li class="provider customer"><input class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
-                        <li class="provider customer"><input class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
+                        <li class="provider customer"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
+                        <li class="customer"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
+                        <li class="provider customer"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
                         }
-                        <li class="provider job-title"><input class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
+                        <li class="provider job-title"><label for="@(idprefix)-jobtitle">Job title</label><input id="@(idprefix)-jobtitle" class="search-data" type="text" placeholder="Job title (you can add more later)" name="jobtitle"  @Validation.GetHtml("jobtitle") value="@Request["jobtitle"]" /></li>
                         <li class="position-description provider"><textarea rows="5" name="jobdescription" readonly>@Request["jobdescription"]</textarea><input type="hidden" name="positionid" value="@Request["positionid"]" /></li>
                     </ul>
                     <div class="actions">

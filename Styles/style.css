@@ -2648,6 +2648,9 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     -o-box-sizing: border-box;
     width: 100%;
 }
+#welcomepopup .profile-data label {
+    display: none;
+}
 #welcomepopup a.login {
     background-color: #f5f5f5;
     color: #747474 !important;
@@ -2784,4 +2787,39 @@ input.search-data {
   @page { margin: 0.5cm; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
+}
+
+/**
+  * Some plugins base-CSS
+ **/
+/*= placeholder polyfill
+ */
+span.placeholder{
+    position:absolute;
+    font-size:75%;
+    color:#999;
+    font-family:sans-serif;
+    padding:4px 3px;
+    z-index:1;
+    cursor:text;
+}
+span.placeholder-hide-except-screenreader {
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+}
+span.placeholder-hide{
+display:none;
+}
+/* overwrite for the HTML5 Boilerplate way to hide labels */
+label.visuallyhidden-with-placeholder{
+    /*clip: auto !important;*/
+    height:auto !important;
+    overflow: visible !important;
+    position:absolute !important;
+    left:-999em;
 }

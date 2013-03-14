@@ -631,6 +631,42 @@ LC.autoFocus = function (container, cssSelector) {
     container = $(container || document);
     container.find(cssSelector || '[autofocus]').focus();
 };
+/**
+  * Placeholder polyfill.
+  * Adds a new jQuery placeHolder method to setup or reapply placeHolder
+  * on elements (recommented to be apply only to selector '[placeholder]');
+  * thats method is fake on browsers that has native support for placeholder
+ **/
+LC.placeHolder = function() {
+    if (Modernizr.input.placeholder)
+        $.fn.placeholder = function () { };
+    else
+        (function () {
+            function doPlaceholder() {
+                var $t = $(this);
+                if (!$t.data('placeholder-supported')) {
+                    $t.on('focusin', function () {
+                        if (this.value == this.getAttribute('placeholder'))
+                            this.value = '';
+                    });
+                    $t.on('focusout', function () {
+                        if (!this.value.length)
+                            this.value = this.getAttribute('placeholder');
+                    });
+                    $t.data('placeholder-supported', true);
+                }
+                if (!this.value.length)
+                    this.value = this.getAttribute('placeholder');
+            }
+            $.fn.placeholder = function () {
+                return this.each(doPlaceholder);
+            };
+            $('[placeholder]').placeholder();
+            $(document).ajaxComplete(function () {
+                $('[placeholder]').placeholder();
+            });
+        })();
+};
 
 // TODO Convert as general function and use everywhere:
 // It executes the given 'ready' function as parameter when
@@ -1139,10 +1175,6 @@ function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
 }
-function hasPlaceholderSupport() {
-    var input = document.createElement('input');
-    return ('placeholder' in input);
-}
 function getHashBangParameters(hashbangvalue) {
     // Hashbangvalue is something like: Thread-1_Message-2
     // Where '1' is the ThreadID and '2' the optional MessageID, or other parameters
@@ -1587,6 +1619,8 @@ LC.welcomePopup = function () {
         c.find('.profile-data, .terms, .position-description').hide();
     }
     c.find('form').get(0).reset();
+    // Re-enable autocomplete:
+    setTimeout(function(){ c.find('[placeholder]').placeholder(); }, 500);
     function initProfileData() {
         c.find('[name=jobtitle]').autocomplete({
             source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
@@ -1650,15 +1684,8 @@ $(window).load(function () {
     setTimeout(function () { $('html,body').scrollTop(0); }, 1);
 });
 $(function () {
-    if (!hasPlaceholderSupport()) {
-        $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
-            if (this.value == this.getAttribute('placeholder'))
-                this.value = "";
-        }).blur(function () {
-            if (!this.value.length)
-                this.value = this.getAttribute('placeholder');
-        });
-    }
+    // Placeholder polyfill
+    LC.placeHolder();
 
     // Autofocus polyfill
     LC.autoFocus();
