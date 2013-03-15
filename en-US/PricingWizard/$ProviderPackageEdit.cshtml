@@ -73,8 +73,9 @@
                         ,UpdatedDate
                         ,ModifiedBy
                         ,Active
+                        ,PricingTypeID
                     ) VALUES (
-                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', 1
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', 1, @12
                     )
                     SET @PackageID = @@Identity
                 END ELSE
@@ -171,7 +172,8 @@
                     Request["minutes"].AsDecimal(),
                     isAddon ? false : Request["first-time-clients-only"].AsBool(),
                     isAddon ? 1 : Request["sessions-number"].AsInt(),
-                    isAddon
+                    isAddon,
+                    isAddon ? 6 : 3 // PricingTypeID -- code for the mid-step before completely update pricing with multiple pricingtypes-position and package as base
                 );
                 db.Execute(sqlDelDetails, packageID);
                 foreach(var att in attributesInPackage) {
