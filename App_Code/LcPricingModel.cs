@@ -132,6 +132,95 @@ public static class LcPricingModel
     }
     #endregion
 
+    #region Package Base
+    public class PackageBaseConfig
+    {
+        #region About Pricing Type
+        public int PricingTypeID;
+        public string PricingName;
+        #endregion
+        #region Form Texts
+        public string NamePlaceHolder;
+        public string DurationLabel;
+        public string PriceLabel;
+        public string PriceNote;
+        public string FirstTimeClientsOnlyLabel;
+        public string DescriptionPlaceHolder;
+        public string PriceRateQuantityLabel;
+        public string PriceRateUnitLabel;
+        public string NoPriceRateLabel;
+        public string NumberOfSessionsLabel;
+        #endregion
+        #region Action Texts
+        public string SuccessOnDelete;
+        public string ErrorOnDelete;
+        public string SuccessOnSave;
+        public string ErrorOnSave;
+        #endregion
+        #region Help Texts
+        public string LearnMoreLabel;
+        public string LearnMoreText;
+        #endregion
+        #region Additional configuration
+        public bool IncludeServiceAttributes;
+        public bool IncludeSpecialPromotion;
+        #endregion
+    }
+    public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
+    {
+        // Package Pricing Type
+        {
+            3,
+            new PackageBaseConfig {
+                PricingTypeID = 3,
+                PricingName = "Package",
+        
+                NamePlaceHolder = "Type the name of the package/product/service; e.g., Introductory Special",
+                NumberOfSessionsLabel = "Number of sessions in this package",
+                PriceLabel = "Total price for package",
+                DurationLabel = "Length of each appointment/session",
+                DescriptionPlaceHolder = "Describe in detail what the client will receive by purchasing this package/product/service",
+
+                SuccessOnDelete = "Package removed succesfully",
+                SuccessOnSave = "Add/Edit packages",
+            }
+        },
+        // Add-on Pricing Type
+        {
+            6,
+            new PackageBaseConfig {
+                PricingTypeID = 6,
+                PricingName = "Add-On",
+
+                NamePlaceHolder = "Type the name of the add-on",
+                PriceLabel = "Total price for add-on",
+                DurationLabel = "Length of add-on service",
+                DescriptionPlaceHolder = "Describe in detail what the client will receive by purchasing this add-on",
+
+                SuccessOnDelete = "Add-on removed succesfully",
+                SuccessOnSave = "Add/Edit add-ons",
+            }
+        }
+    };
+    public class PackageBaseData
+    {
+        public int ID;
+        public int PricingTypeID;
+        public int ProviderUserID;
+        public int PositionID;
+        public string Name;
+        public string Description;
+        public decimal Price;
+        public TimeSpan Duration;
+        public bool FirstTimeClientsOnly;
+        public int NumberOfSessions;
+        public int LanguageID;
+        public int CountryID;
+        public bool Active;
+        public List<int> ServiceAttributes = new List<int>();
+    }
+    #endregion
+
     #region Variables
     public static PricingSummaryData GetVariableItemNumbers(dynamic pvar, decimal hourPrice, dynamic fee)
     {
