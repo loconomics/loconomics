@@ -1,0 +1,109 @@
+﻿@*
+    List all packages for a given pricing type (PricingTypeID), provider (ProviderUserID) and position (PositionID)
+    List can be showed for edition by the ProviderUserID or as a read only list to pick a pricing type for booking (from a customer)
+*@
+@{
+    LcData.ProviderPackagesView data = PageData["data"];
+    bool editable = PageData["editable"] ?? Request["editable"].AsBool();
+    int pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
+    int providerUserID = PageData["ProviderUserID"] ?? Request["ProviderUserID"].AsInt();
+    int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    var customer = PageData["Customer"] ?? LcData.UserInfo.GetUserRow();
+    var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID];
+    
+    // If there is no customer or 'customer' and provider are different, ever in non-editable mode
+    if (customer == null || customer.UserID != providerUserID) {
+        editable = false;
+    }
+
+    if (data == null) {
+        data = LcData.GetPricingPackagesByProviderPosition(providerUserID, positionID);
+    }
+
+    // Get Fees that apply to the provider and customer
+    dynamic fee = null;
+    if (!editable) {
+        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID));
+    }
+}
+@if (data.Packages != null && data.Packages.Count > 0)
+{
+    <div class="lc-ressources">
+        <div class="confirm-delete-package-message">Are you sure do you want to remove this package?</div>
+        <div class="delete-package-loading-message">The package has been removed</div>
+    </div>
+    <ul>
+        @foreach (var pak in data.Packages)
+        {
+            // Filtering per PricingTypeID:
+            if (pak.PricingTypeID != pricingTypeID)
+            {
+                continue;
+            }
+
+            var withDetails = false;
+            <li class="provider-package">
+                <h4>@pak.Name</h4>
+                <div class="provider-package-service-summary">
+                    @String.Format(config.SummaryFormat, pak.NumberOfSessions, pak.ServiceDuration)
+                    <div class="provider-package-price">
+                        @if (editable)
+                        {
+                            <text>$@pak.Price</text>
+                        }
+                        else
+                        {
+                            // Non editable is a customer view, in search, profile, booking, communications,
+                            // show price with fees
+                            var priceWithFees = pak.Price + LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
+                            <div class="actions book">
+                                @* TODO: Price format depending on pricing config ('for $', 'since $'..) *@
+                                <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @if (editable)
+                {
+                <div class="edit-actions">
+                    <a href="#delete" class="delete" data-provider-package-id="@pak.ProviderPackageID">Delete</a>
+                    <a href="#edit" class="edit" data-provider-package-id="@pak.ProviderPackageID">Edit</a>
+                </div>
+                }
+                <h5>Description:</h5>
+                <div class="provider-package-description">
+                    @LcHelpers.PrintTextAsHtml(pak.Description)
+                </div>
+                @if (config.IncludeServiceAttributes)
+                {
+                    <h5>Services included in this package:</h5>
+                    <ul class="provider-package-services attributes-list">
+                        @*  Get filtered PackagesDetails by PackageID, if any *@
+                        @if (data.PackagesDetailsByPackage.ContainsKey(pak.ProviderPackageID))
+                        {
+                            foreach (var ser in data.PackagesDetailsByPackage[pak.ProviderPackageID])
+                            {
+                                if (ser.ProviderPackageID == pak.ProviderPackageID)
+                                {
+                                    withDetails = true;
+                                    <li title="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
+                                }
+                            }
+                        }
+                        @if (!withDetails)
+                        {
+                            if (editable)
+                            {
+                                <li class="empty">@config.WithoutServiceAttributesProviderMessage</li>
+                            }
+                            else
+                            {
+                                <li class="empty">@config.WithoutServiceAttributesCustomerMessage</li>
+                            }
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+}

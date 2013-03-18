@@ -165,6 +165,16 @@ public static class LcPricingModel
         public bool IncludeServiceAttributes;
         public bool IncludeSpecialPromotion;
         #endregion
+        #region List Texts
+        /// <summary>
+        /// Wildcards:
+        /// {0}: number of sessions
+        /// {1}: duration in minutes
+        /// </summary>
+        public string SummaryFormat;
+        public string WithoutServiceAttributesCustomerMessage;
+        public string WithoutServiceAttributesProviderMessage;
+        #endregion
     }
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
     {
@@ -183,6 +193,12 @@ public static class LcPricingModel
 
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
+
+                SummaryFormat = "{0} sessions - {1} minutes each",
+
+                IncludeServiceAttributes = true,
+                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
+                WithoutServiceAttributesProviderMessage = "",
             }
         },
         // Add-on Pricing Type
@@ -199,6 +215,12 @@ public static class LcPricingModel
 
                 SuccessOnDelete = "Add-on removed succesfully",
                 SuccessOnSave = "Add/Edit add-ons",
+
+                SummaryFormat = "Duration of add-on service: {1} minutes",
+
+                IncludeServiceAttributes = true,
+                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
+                WithoutServiceAttributesProviderMessage = "",
             }
         }
     };
