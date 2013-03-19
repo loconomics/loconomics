@@ -601,19 +601,23 @@ public static partial class LcData
     public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
     {       
         // Get our Pricing Type ID:
-        int pricingtypeid = LcData.GetPositionPricingTypeID(positionID, clienttypeid);
-        // Get Fees that apply to the provider and customer
-        var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingtypeid));
-
-        var providerPrice = new ProviderPrice();
+        var pricingTypes = LcData.GetPositionPricingTypes(positionID, clienttypeid);
+        ProviderPrice minProviderPrice = null;
 
         using (var db = Database.Open("sqlloco"))
         {
-            if (pricingtypeid == 2 || pricingtypeid == 1)
+            foreach (var pricingType in pricingTypes)
             {
-                providerPrice.IsHourly = true;
-                // Get hourly rate
-                providerPrice.Price = db.QueryValue(@"
+                var providerPrice = new ProviderPrice();
+                // Get Fees that apply to the provider and customer
+                var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingType.PricingTypeID));
+                
+                // Depending on pricing type, get price in a different way
+                if (pricingType.PricingTypeID == 2 || pricingType.PricingTypeID == 1)
+                {
+                    providerPrice.IsHourly = true;
+                    // Get hourly rate
+                    providerPrice.Price = db.QueryValue(@"
                     SELECT  coalesce(HourlyRate, 0)
                     FROM    ProviderHourlyRate
                     WHERE   UserID = @0
@@ -621,30 +625,41 @@ public static partial class LcData
                             PositionID = @1
                                 AND
                             ClientTypeID = @2
-                ", providerUserID, positionID, clienttypeid) ?? 0;
+                    ", providerUserID, positionID, clienttypeid) ?? 0;
 
-                // Apply fees
-                providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
-            }
-            else if (pricingtypeid == 3)
-            {
-                providerPrice.Price = db.QueryValue(@"
+                    // Apply fees
+                    providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
+                }
+                else
+                {
+                    providerPrice.Price = db.QueryValue(@"
                     SELECT  coalesce(min(ProviderPackagePrice), 0)
                     FROM    ProviderPackage
                     WHERE   ProviderUserID = @0
                              AND PositionID = @1
                              AND LanguageID = @2 AND CountryID = @3
                              AND IsAddOn = 0
-                ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+                    ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
 
-                // Apply fees
-                providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                    // Apply fees
+                    providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                }
+
+                // Compare price, return the minimum:
+                if (minProviderPrice == null || providerPrice.Price < minProviderPrice.Price)
+                    minProviderPrice = providerPrice;
             }
         }
-        return providerPrice;
+        return minProviderPrice ?? new ProviderPrice();
     }
     #endregion
     #region Common Pricing
+    /// <summary>
+    /// DEPRECATED: TO BE USED GetPositionPricingTypes
+    /// </summary>
+    /// <param name="positionID"></param>
+    /// <param name="clientTypeID"></param>
+    /// <returns></returns>
     public static int GetPositionPricingTypeID(int positionID, int clientTypeID)
     {
         using (var db = Database.Open("sqlloco"))
@@ -654,6 +669,23 @@ public static partial class LcData
                 FROM    positionpricingtype
                 WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
             ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 0);
+        }
+    }
+    /// <summary>
+    /// Get the ID list of pricing types for a position
+    /// </summary>
+    /// <param name="positionID"></param>
+    /// <param name="clientTypeID"></param>
+    /// <returns></returns>
+    public static dynamic GetPositionPricingTypes(int positionID, int clientTypeID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QueryValue(@"
+                SELECT  pricingtypeid
+                FROM    positionpricingtype
+                WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
+            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID);
         }
     }
 

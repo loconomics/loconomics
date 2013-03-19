@@ -1,0 +1,41 @@
+﻿@*
+    Presentation page at provider dashboard of different pricing types available for a specific position (PositionID),
+    with options to add a new from that opening the edit form or edit/delete one from the full list of pricing packages
+    that provider has created.
+*@
+@using WebMatrix.Data;
+@{
+    int positionID = PageData["PositionID"];
+    // TODO Get clienttypeid and do something with clienttypeid -- not still defined how clienttype must work
+    var clienttypeid = PageData["ClientTypeID"];
+    var pricingTypes = PageData["PricingTypes"] ?? LcData.GetPositionPricingTypes(positionID, clienttypeid);
+    var p = LcData.UserInfo.GetUserRow();
+    var data = LcData.GetProviderPackageByProviderPosition(p.UserID, positionID);
+    var idprefix = PageData["idprefix"] ?? "position" + positionID.ToString() + "-pricingwizard-packages";
+}
+<div class="@PageData["PricingWizardClasses"] pricingwizard">
+    @* TODO Implement  *@
+    <div class="edit-panel" data-source-url="@(LcUrl.LangPath)PricingWizard/$PackageBaseEdit/?ProviderPackageID=0&PositionID=@positionID&Type="></div>
+    @* List of pricing types, description and 'add' option *@
+    @foreach (var pricingType in pricingTypes)
+    {
+        var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingType.PricingTypeID];
+        // TODO Implement
+    }
+    @foreach (var pricingType in pricingTypes)
+    {
+        var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pricingType.PricingTypeID];
+        
+        <div class="add-package"><a href="#add-package">Add another @config.PricingName</a></div>
+        <h3 class="packages-list-title">Your @config.PricingName:</h3>
+        <div class="your-packages view-panel type-@config.PricingName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingTypePackagesList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
+            @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID})
+        </div>
+    }
+
+    @* Pricing Options ?? *@
+    <div class="package-pricing-options">
+        <h3>Your Pricing Options:</h3>
+        @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 } )
+    </div>
+</div>

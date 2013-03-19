@@ -1,6 +1,10 @@
-﻿@using WebMatrix.Data;
+﻿@*
+    Form to allow provider at dashboard to edit a package with a pricing type specific configuration (PricingTypeID; for all that are package based),
+    knowing the position (PositionID) and the package (ProviderPackageID) or 0 for new package.
+*@
+@using WebMatrix.Data;
 @{
-    LcHelpers.SecurePage();
+    LcHelpers.ProviderPage();
     
     // Main data setup:
     var p = LcData.UserInfo.GetUserRow();
