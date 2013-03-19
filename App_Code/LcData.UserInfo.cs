@@ -433,20 +433,20 @@ public static partial class LcData
                 /// <summary>
                 /// InProgress for when the profile is not activated still because there are required alerts on
                 /// </summary>
-                InProgress,
+                InProgress = 1,
                 /// <summary>
                 /// Enhance for when the profile is already activated but there are non required alerts on
                 /// </summary>
-                Enhance,
+                Enhance = 2,
                 /// <summary>
                 /// JustCompleted for when the profile gets activated right now (last required alert went off just now) and there are
                 /// no more alerts (if was activated right now and there are still non required alerts, Enhance Must be used instead of this)
                 /// </summary>
-                JustCompleted,
+                JustCompleted = 3,
                 /// <summary>
                 /// Completed for when the profile it has all alerts off, is activated but it get activated in a previuos action.
                 /// </summary>
-                Complete
+                Complete = 4
             }
             public Statuses Status;
             public int UserID
