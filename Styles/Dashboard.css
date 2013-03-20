@@ -1118,6 +1118,9 @@ html.js .user-verified-licenses h5 {
 .view-panel .provider-package .edit-actions a:hover {
     text-decoration: underline;
 }
+.package-pricing-type .edit-panel .label-text {
+    display: none;
+}
 .package-pricing-type .edit-panel .provider-package-services {
     max-height: 160px;
     overflow: auto;

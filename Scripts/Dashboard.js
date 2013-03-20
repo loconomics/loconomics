@@ -475,6 +475,24 @@ $(document).ready(function () {
     });
 
     /*==========================
+     *= .show-more-attributes
+     */
+    // Handler for 'show-more-attributes' button (used only on edit a package)
+    $(document).on('click', '.show-more-attributes', function () {
+        var $t = $(this);
+        var atts = $t.siblings('.services-not-checked');
+        if (atts.is(':visible')) {
+            $t.text($t.data('show-text'));
+            atts.stop().hide('fast');
+        } else {
+            $t.data('show-text', $t.text());
+            $t.text($t.data('hide-text'));
+            atts.stop().show('fast');
+        }
+        return false;
+    });
+
+    /*==========================
     * Pricing Wizard: packages
     */
     (function ($pricingPackage) {
@@ -574,20 +592,6 @@ $(document).ready(function () {
             if (data.Code == 5)
                 setTimeout($.proxy(finishEdit, this), 1500);
         }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', finishEdit)
-        // Handler for 'show-more-attributes' button on edit a package
-        .on('click', '.show-more-attributes', function () {
-            var $t = $(this);
-            var atts = $t.siblings('.services-not-checked');
-            if (atts.is(':visible')) {
-                $t.text($t.data('show-text'));
-                atts.stop().hide('fast');
-            } else {
-                $t.data('show-text', $t.text());
-                $t.text($t.data('hide-text'));
-                atts.stop().show('fast');
-            }
-            return false;
-        });
     })($('.pricingwizard.package-pricing-type'));
 
     /**==================
