@@ -19,8 +19,11 @@
     @* List of pricing types, description and 'add' option *@
     @foreach (var pricingType in pricingTypes)
     {
-        var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingType.PricingTypeID];
-        // TODO Implement
+        var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pricingType.PricingTypeID];
+        <div class="pricing-type-box">
+            <a class="action add-action add-new" href="#add-@config.PricingName"><h3 class="pricing-type-title">@config.AddNewLabel</h3></a>
+            <p class="pricing-type-description">@config.ProviderDescription</p>
+        </div>
     }
     @foreach (var pricingType in pricingTypes)
     {

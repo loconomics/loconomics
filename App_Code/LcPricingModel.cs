@@ -138,6 +138,24 @@ public static class LcPricingModel
         #region About Pricing Type
         public int PricingTypeID;
         public string PricingName;
+        public string AddNewLabel;
+        public string ProviderDescription;
+        /// <summary>
+        /// It defines group names in that only one element can be selected
+        /// from all that are in the group. This means that a pricing with a group
+        /// will only allow select one element from that pricing type, affected too
+        /// by any other pricing type that share the same group name;
+        /// for pricing types that allows select several elements, the collection will
+        /// be null or empty.
+        /// </summary>
+        public string[] SelectionGroups;
+        /// <summary>
+        /// List of selection groups used in other pricing types that will cause that
+        /// elements of this type cannot be selected (because you cannot select one of
+        /// this when one element of that group is selected, not because are the same
+        /// group else because are incompatible and create mutual exclusion.
+        /// </summary>
+        public string[] SelectionExclusionGroups;
         #endregion
         #region Form Texts
         public string NamePlaceHolder;
@@ -184,6 +202,9 @@ public static class LcPricingModel
             new PackageBaseConfig {
                 PricingTypeID = 3,
                 PricingName = "Package",
+                AddNewLabel = "Add a package",
+                ProviderDescription = "Do you offer a bundle of services or sessions for a special price? We'll help communicate this to your potential clients.",
+                SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package/product/service; e.g., Introductory Special",
                 NumberOfSessionsLabel = "Number of sessions in this package",
@@ -207,6 +228,8 @@ public static class LcPricingModel
             new PackageBaseConfig {
                 PricingTypeID = 6,
                 PricingName = "Add-On",
+                AddNewLabel = "Add an add-on service",
+                ProviderDescription = "Are there some additional services you provide clients who book you? We'll offer these to the customer during checkout.",
 
                 NamePlaceHolder = "Type the name of the add-on",
                 PriceLabel = "Total price for add-on",
