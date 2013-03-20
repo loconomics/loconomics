@@ -773,7 +773,6 @@ LC.initCrudl = function () {
             formpars[iidpar] = 0;
             formpars.action = 'create';
             var xq = getExtraQuery($(this));
-
             dtr.show().reload(function (url, defaultUrl) {
                 return defaultUrl + '?' + $.param(formpars) + xq;
             });
@@ -788,8 +787,9 @@ LC.initCrudl = function () {
                 var itemid = item.data('crudl-item-id');
                 formpars[iidpar] = itemid;
                 formpars.action = 'update';
+                var xq = getExtraQuery($(this));
                 dtr.show().reload(function (url, defaultUrl) {
-                    return defaultUrl + '?' + $.param(formpars);
+                    return defaultUrl + '?' + $.param(formpars) + xq;
                 });
                 // Hide viewer when in editor:
                 vwr.hide('slow');

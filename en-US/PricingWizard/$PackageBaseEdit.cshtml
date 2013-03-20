@@ -269,7 +269,7 @@
                 data.Name = package.Name;
                 data.Description = package.Description;
                 data.Price = package.Price;
-                data.Duration = package.ServiceDuration;
+                data.Duration = TimeSpan.FromMinutes(package.ServiceDuration);
                 data.FirstTimeClientsOnly = package.FirstTimeClientsOnly;
                 data.NumberOfSessions = package.NumberOfSessions;
             }

@@ -35,8 +35,8 @@
         @foreach (var pricingType in pricingTypes)
         {
             var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pricingType.PricingTypeID];
-            <div class="pricing-type-packages-list">
-                <div class="add-item crudl-create actions" data-crudl-extra-query="PricingTypeID=@(pricingType.PricingTypeID)">
+            <div class="pricing-type-packages-list" data-crudl-extra-query="PricingTypeID=@(pricingType.PricingTypeID)">
+                <div class="add-item crudl-create actions">
                     <a class="add-package-action" href="#add-@config.SlugName">Add another @config.SingularName</a>
                 </div>
                 <h3 class="packages-list-title">Your @config.PluralName:</h3>
