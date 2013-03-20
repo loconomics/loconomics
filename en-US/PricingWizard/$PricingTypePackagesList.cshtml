@@ -7,6 +7,9 @@
     bool editable = PageData["editable"] ?? Request["editable"].AsBool();
     int pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
     int providerUserID = PageData["ProviderUserID"] ?? Request["ProviderUserID"].AsInt();
+    if (providerUserID == 0) {
+        providerUserID = WebSecurity.CurrentUserId;
+    }
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var customer = PageData["Customer"] ?? LcData.UserInfo.GetUserRow();
     var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID];
