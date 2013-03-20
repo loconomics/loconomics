@@ -755,11 +755,27 @@ LC.initCrudl = function () {
         var formpars = { action: 'create' };
         formpars[iidpar] = 0;
 
+        function getExtraQuery(el) {
+            // Get extra query of the element, if any:
+            var xq = el.data('crudl-extra-query') || '';
+            if (xq) xq = '&' + xq;
+            // Iterate all parents including the 'crudl' element (parentsUntil excludes the first element given,
+            // because of that we get its parent())
+            // For any of them with an extra-query, append it:
+            el.parentsUntil(crudl.parent(), '[data-crudl-extra-query]').each(function(){
+                var x = $(this).data('crudl-extra-query');
+                if (x) xq += '&' + x;
+            });
+            return xq;
+        }
+
         crudl.find('.crudl-create').click(function () {
             formpars[iidpar] = 0;
             formpars.action = 'create';
+            var xq = getExtraQuery($(this));
+
             dtr.show().reload(function (url, defaultUrl) {
-                return defaultUrl + '?' + $.param(formpars);
+                return defaultUrl + '?' + $.param(formpars) + xq;
             });
             // Hide viewer when in editor:
             vwr.hide('slow');

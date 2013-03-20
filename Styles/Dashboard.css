@@ -1061,6 +1061,9 @@ html.js .user-verified-licenses h5 {
     color: Black;
     text-decoration: none;
 }
+.add-package-action {
+    float: none;
+}
 .provider-package .actions {
     top: 15px !important;
 }
@@ -1072,8 +1075,22 @@ html.js .user-verified-licenses h5 {
     -webkit-border-radius: 12px;
     padding: 8px 14px;
     display: inline-block;
-    width: 40%;
-    margin-right: 4%;
+    vertical-align: top;
+
+    width: 314px;
+    margin-right: 25px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.pricing-type-box:nth-child(odd) {
+    float: left;
+    margin-right: 0;
+}
+.pricing-type-box:nth-child(even) {
+    float: right;
+    margin-right: 0;
 }
 .pricing-type-box h5 {
     color: Black;
@@ -1082,6 +1099,7 @@ html.js .user-verified-licenses h5 {
 }
 .pricing-type-box .pricing-type-description {
     margin: 0;
+    color: Black;
 }
 .add-item > a:hover,
 .package-pricing-type .add-package > a:hover {
