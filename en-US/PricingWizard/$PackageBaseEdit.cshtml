@@ -291,7 +291,7 @@
             data.PositionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box provider-package" action="@(LcUrl.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(data.ID)&PositionID=@(data.PositionID)&PricingTypeID=@(data.PricingTypeID)">
+<form method="post" class="ajax ajax-box provider-package crudl-form" action="@(LcUrl.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(data.ID)&PositionID=@(data.PositionID)&PricingTypeID=@(data.PricingTypeID)">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
         <label>
@@ -351,7 +351,7 @@
                 }
             }
         }
-        @if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
+        if (preCheckedAttributes.Count > 0 || notCheckedAttributes.Count > 0)
         {
             <fieldset class="package-details">
                 <h5>Included services (you can add these if you think it will add clarity for the client):</h5>
@@ -380,7 +380,7 @@
         }
     }
     <fieldset class="actions">
-        <button type="button" class="button cancel-action">Cancel</button>
-        <button class="button main-action">Save</button>
+        <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
+        <button class="button main-action crudl-save">Save</button>
     </fieldset>
 </form>

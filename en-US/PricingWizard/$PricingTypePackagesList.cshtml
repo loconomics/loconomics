@@ -28,10 +28,6 @@
 }
 @if (data.Packages != null && data.Packages.Count > 0)
 {
-    <div class="lc-ressources">
-        <div class="confirm-delete-package-message">Are you sure do you want to remove this package?</div>
-        <div class="delete-package-loading-message">The package has been removed</div>
-    </div>
     <ul>
         @foreach (var pak in data.Packages)
         {
@@ -42,7 +38,7 @@
             }
 
             var withDetails = false;
-            <li class="provider-package">
+            <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
                 <div class="provider-package-service-summary">
                     @String.Format(config.SummaryFormat, pak.NumberOfSessions, pak.ServiceDuration)
@@ -65,9 +61,9 @@
                 </div>
                 @if (editable)
                 {
-                <div class="edit-actions">
-                    <a href="#delete" class="delete" data-provider-package-id="@pak.ProviderPackageID">Delete</a>
-                    <a href="#edit" class="edit" data-provider-package-id="@pak.ProviderPackageID">Edit</a>
+                <div class="actions">
+                    <a href="#delete" class="delete-action crudl-delete">Delete</a>
+                    <a href="#edit" class="edit-action crudl-update">Edit</a>
                 </div>
                 }
                 <h5>Description:</h5>

@@ -882,7 +882,6 @@ public static partial class LcData
                         ,p.ProviderPackageServiceDuration As ServiceDuration
                         ,p.FirstTimeClientsOnly
                         ,p.NumberOfSessions
-                        ,p.IsAddOn
                 FROM    providerpackage As p
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 
@@ -941,6 +940,14 @@ public static partial class LcData
         public Dictionary<int, dynamic> PackagesByID;
         public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
     }
+    /// <summary>
+    /// DEPRECATED
+    /// </summary>
+    /// <param name="providerUserID"></param>
+    /// <param name="positionID"></param>
+    /// <param name="packageID"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1, int type = -1)
     {
         dynamic packages, details;
@@ -948,6 +955,7 @@ public static partial class LcData
             // Get the Provider Packages
             packages = db.Query(@"
                 SELECT  p.ProviderPackageID
+                        ,p.PricingTypeID
                         ,p.ProviderPackageName As Name
                         ,p.ProviderPackageDescription As Description
                         ,p.ProviderPackagePrice As Price

@@ -1052,13 +1052,36 @@ html.js .user-verified-licenses h5 {
     width: auto !important;
 }
 .add-item > a,
-.package-pricing-type .add-package > a {
+.package-pricing-type .add-package > a,
+.add-package-action {
     background: url('../img/theme/add-new-button.png') no-repeat right center;
     min-height: 23px;
     padding-right: 34px;
     display: block;
     color: Black;
     text-decoration: none;
+}
+.provider-package .actions {
+    top: 15px !important;
+}
+.pricing-type-box {
+    border: 1px solid black;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -o-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    padding: 8px 14px;
+    display: inline-block;
+    width: 40%;
+    margin-right: 4%;
+}
+.pricing-type-box h5 {
+    color: Black;
+    font-size: 1.1em;
+    margin: 0;
+}
+.pricing-type-box .pricing-type-description {
+    margin: 0;
 }
 .add-item > a:hover,
 .package-pricing-type .add-package > a:hover {

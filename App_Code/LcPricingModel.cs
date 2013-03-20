@@ -137,7 +137,9 @@ public static class LcPricingModel
     {
         #region About Pricing Type
         public int PricingTypeID;
-        public string PricingName;
+        public string SingularName;
+        public string PluralName;
+        public string SlugName;
         public string AddNewLabel;
         public string ProviderDescription;
         /// <summary>
@@ -201,7 +203,9 @@ public static class LcPricingModel
             3,
             new PackageBaseConfig {
                 PricingTypeID = 3,
-                PricingName = "Package",
+                SingularName = "Package",
+                PluralName = "Packages",
+                SlugName = "package",
                 AddNewLabel = "Add a package",
                 ProviderDescription = "Do you offer a bundle of services or sessions for a special price? We'll help communicate this to your potential clients.",
                 SelectionGroups = new string[]{"package"},
@@ -224,10 +228,12 @@ public static class LcPricingModel
         },
         // Add-on Pricing Type
         {
-            6,
+            7,
             new PackageBaseConfig {
-                PricingTypeID = 6,
-                PricingName = "Add-On",
+                PricingTypeID = 7,
+                SingularName = "Add-On",
+                PluralName = "Add-Ons",
+                SlugName = "addon",
                 AddNewLabel = "Add an add-on service",
                 ProviderDescription = "Are there some additional services you provide clients who book you? We'll offer these to the customer during checkout.",
 
