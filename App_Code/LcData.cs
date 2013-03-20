@@ -681,7 +681,7 @@ public static partial class LcData
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return db.QueryValue(@"
+            return db.Query(@"
                 SELECT  pricingtypeid
                 FROM    positionpricingtype
                 WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
