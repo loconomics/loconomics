@@ -846,6 +846,8 @@ LC.initCrudl = function () {
             dtr.slideUp('slow', function () {
                 // Show again the Viewer
                 vwr.slideDown('slow');
+                // Mark the form as unchanged to avoid persisting warnings
+                LC.ChangesNotification.registerSave(dtr.find('form').get(0));
                 // Avoid cached content on the Editor
                 dtr.children().remove();
             });
