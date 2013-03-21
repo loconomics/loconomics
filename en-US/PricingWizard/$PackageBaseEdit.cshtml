@@ -419,7 +419,7 @@
             }
             @if(config.NoPriceRateLabel != null) {
                 <div class="no-price-rate">
-                    <label>@config.NoPriceRateLabel <input type="checkbox" name="no-price-rate" value="True" @LcHelpers.IsChecked(true, new object[]{Request["no-price-rate"], !(data == null || data.PriceRate != null)}) /></label>
+                    <label>@config.NoPriceRateLabel <input type="checkbox" name="no-price-rate" value="True" @LcHelpers.IsChecked(true, new object[]{Request["no-price-rate"], !(data == null || data.ID == 0 || data.PriceRate != null)}) /></label>
                     @if (config.NoPriceRateLearnMoreLabel != null && config.NoPriceRateLearnMoreText != null)
                     {
                         <div class="no-price-rate-learn-more learn-more">
