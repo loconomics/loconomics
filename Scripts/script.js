@@ -96,15 +96,28 @@ $.fn.outerHtml = function () {
     return html;
 }
 $.fn.reload = function (newurl, onload) {
+    var options = {
+        url: newurl,
+        complete: onload,
+        autofocus: true
+    };
+    // If options object is passed as unique parameter
+    if (arguments.length == 1 && $.isPlainObject(arguments[0])) {
+        // Unset the options object from url property
+        options.url = null;
+        // Merge options:
+        $.extend(true, options, arguments[0]);
+    }
+
     this.each(function () {
         var $t = $(this);
 
-        if (newurl) {
-            if ($.isFunction(newurl))
-            // Function params: currentReloadUrl, defaultReloadUrl
-                $t.data('source-url', $.proxy(newurl, this)($t.data('source-url'), $t.attr('data-source-url')));
+        if (options.url) {
+            if ($.isFunction(options.url))
+                // Function params: currentReloadUrl, defaultReloadUrl
+                $t.data('source-url', $.proxy(options.url, this)($t.data('source-url'), $t.attr('data-source-url')));
             else
-                $t.data('source-url', newurl);
+                $t.data('source-url', options.url);
         }
         var url = $t.data('source-url');
 
@@ -112,7 +125,7 @@ $.fn.reload = function (newurl, onload) {
         var jq = $t.data('isReloading');
         if (jq) {
             if (jq.url == url)
-            // Is the same url, do not abort because is the same result being retrieved
+                // Is the same url, do not abort because is the same result being retrieved
                 return;
             else
                 jq.abort();
@@ -126,7 +139,7 @@ $.fn.reload = function (newurl, onload) {
         if (url) {
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
-                smoothBoxBlock(loadingBlock.message, $t, 'loading');
+                smoothBoxBlock(loadingBlock.message, $t, 'loading', { autofocus: options.autofocus });
                 //$t.block(loadingBlock);
             }, gLoadingRetard);
             var ctx = {
@@ -147,8 +160,8 @@ $.fn.reload = function (newurl, onload) {
             jq.done(function () {
                 $t.data('isReloading', null);
             });
-            if (onload)
-                jq.done($.proxy(onload, $t));
+            if (options.complete)
+                jq.done($.proxy(options.complete, $t));
             // Mark element as is being reloaded, to avoid multiple attemps at same time, saving
             // current ajax object to allow be cancelled
             jq.url = url;
@@ -773,11 +786,11 @@ LC.initCrudl = function () {
             formpars[iidpar] = 0;
             formpars.action = 'create';
             var xq = getExtraQuery($(this));
-            dtr.show().reload(function (url, defaultUrl) {
+            dtr.slideDown().reload(function (url, defaultUrl) {
                 return defaultUrl + '?' + $.param(formpars) + xq;
             });
             // Hide viewer when in editor:
-            vwr.hide('slow');
+            vwr.slideUp('slow');
             return false;
         });
         vwr
@@ -792,7 +805,7 @@ LC.initCrudl = function () {
                     return defaultUrl + '?' + $.param(formpars) + xq;
                 });
                 // Hide viewer when in editor:
-                vwr.hide('slow');
+                vwr.slideUp('slow');
                 return false;
             })
             .on('click', '.crudl-delete', function () {
@@ -813,7 +826,7 @@ LC.initCrudl = function () {
                                     closable: true,
                                     closeOptions: {
                                         complete: function () {
-                                            item.hide('slow', function () { item.remove() });
+                                            item.fadeOut('slow', function () { item.remove() });
                                         }
                                     }
                                 });
@@ -830,9 +843,9 @@ LC.initCrudl = function () {
                 return false;
             });
         function finishEdit() {
-            dtr.hide('slow', function () {
+            dtr.slideUp('slow', function () {
                 // Show again the Viewer
-                vwr.show('slow');
+                vwr.slideDown('slow');
                 // Avoid cached content on the Editor
                 dtr.children().remove();
             });
@@ -844,7 +857,7 @@ LC.initCrudl = function () {
             .on('ajaxSuccessPost', 'form', function (e, data) {
                 if (data.Code == 0 || data.Code == 5 || data.Code == 6)
                     // Show viewer and reload list:
-                    vwr.show('slow').find('.crudl-list').reload();
+                    vwr.slideDown('slow').find('.crudl-list').reload({autofocus: false});
                 if (data.Code == 5)
                     setTimeout(finishEdit, 1500);
             });
@@ -1397,7 +1410,9 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         closeOptions: {
             duration: 600,
             effect: 'fade'
-        }
+        },
+        autofocus: true,
+        autofocusOptions: { marginTop: 60 }
     }, options);
 
     contentBox = $(contentBox);
@@ -1486,7 +1501,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     LC.autoFocus(box);
     // Show block
     box.animate({opacity: 1}, 300);
-    LC.moveFocusTo(contentBox, { marginTop: 60 });
+    if (options.autofocus)
+        LC.moveFocusTo(contentBox, options.autofocusOptions);
     return box;
 }
 function smoothBoxBlockCloseAll(container) {
