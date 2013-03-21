@@ -251,6 +251,33 @@ public static class LcPricingModel
                 WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
                 WithoutServiceAttributesProviderMessage = "",
             }
+        },
+        // Estimate Pricing Type
+        {
+            4,
+            new PackageBaseConfig {
+                PricingTypeID = 4,
+                SingularName = "Estimate",
+                PluralName = "Estimates",
+                SlugName = "estimate",
+                AddNewLabel = "Add an estimate visit",
+                ProviderDescription = "We know you're psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
+                DurationLabel = "Approximate length of visit:",
+                PriceLabel = "Price for estimate:",
+                PriceNote = "(enter 0.00 if free)",
+                DescriptionPlaceHolder = "Tell your clients what they can expect during the visit and what to prepare.",
+                PriceRateQuantityLabel = "My rates start at:",
+                PriceRateUnitLabel = "per",
+                NoPriceRateLabel = "I prefer not to state",
+
+                SuccessOnDelete = "Estimate removed succesfully",
+                SuccessOnSave = "Add/Edit estimates",
+
+                SummaryFormat = "Duration of estimate visit: {1} minutes",
+            }
         }
     };
     public class PackageBaseData
