@@ -493,7 +493,22 @@ $(document).ready(function () {
     });
 
     /*==========================
-    * Pricing Wizard: packages
+     * Provider Pricing Types
+     * multi-pricing, package-based
+     */
+    (function() {
+        // Handler for: Not to state price rate and price rate fields
+        $('.dashboard').on('change', '.provider-pricing-types [name=no-price-rate]', function(){
+            var $t = $(this),
+                f = $t.closest('form'),
+                pr = f.find('[name=price-rate],[name=price-rate-unit]');
+            pr.prop('disabled', $t.prop('checked'));
+        });
+        $('.dashboard [name=no-price-rate]').change();
+    })();
+
+    /*==========================
+    * Pricing Wizard: packages  || DEPRECATED by CRUDL and packageBaseEdit
     */
     (function ($pricingPackage) {
         // Fast quick
