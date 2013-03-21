@@ -97,7 +97,6 @@
                         ,ProviderPackageServiceDuration
                         ,FirstTimeClientsOnly
                         ,NumberOfSessions
-                        ,IsAddOn
                         ,CreatedDate
                         ,UpdatedDate
                         ,ModifiedBy
@@ -202,7 +201,8 @@
                     data.Price,
                     data.Duration.TotalMinutes,
                     data.FirstTimeClientsOnly,
-                    data.NumberOfSessions
+                    data.NumberOfSessions,
+                    1 // Active
                 );
                 if (config.IncludeServiceAttributes) {
                     db.Execute(sqlDelDetails, data.ID);
@@ -291,7 +291,7 @@
             data.PositionID, 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), p.UserID);
     }
 }
-<form method="post" class="ajax ajax-box provider-package crudl-form" action="@(LcUrl.LangPath)PricingWizard/$ProviderPackageEdit/?ProviderPackageID=@(data.ID)&PositionID=@(data.PositionID)&PricingTypeID=@(data.PricingTypeID)">
+<form method="post" class="ajax ajax-box provider-package crudl-form" action="@(LcUrl.LangPath)PricingWizard/$PackageBaseEdit/?ProviderPackageID=@(data.ID)&PositionID=@(data.PositionID)&PricingTypeID=@(data.PricingTypeID)">
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="package-data">
         <label>

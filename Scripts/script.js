@@ -817,9 +817,9 @@ LC.initCrudl = function () {
                     smoothBoxBlock('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
                     formpars[iidpar] = itemid;
                     formpars.action = 'delete';
+                    var xq = getExtraQuery($(this));
                     $.ajax({
-                        url: dtr.attr('data-source-url'),
-                        data: formpars,
+                        url: dtr.attr('data-source-url') + '?' + $.param(formpars) + xq,
                         success: function (data, text, jx) {
                             if (data && data.Code == 0) {
                                 smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
