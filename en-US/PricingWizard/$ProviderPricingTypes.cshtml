@@ -45,12 +45,12 @@
                 </div>
             </div>
         }
-    </div>
 
-    @* Pricing Options ?? *@
-    <div class="package-pricing-options">
-        <h3>Your Pricing Options:</h3>
-        @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 } )
+        @* Pricing Options ?? *@
+        <div class="package-pricing-options">
+            <h3>Your Pricing Options:</h3>
+            @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 } )
+        </div>
     </div>
 </div>
 <script type="text/javascript">
