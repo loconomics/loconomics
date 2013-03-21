@@ -317,8 +317,8 @@ public static class LcPricingModel
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
 
-                PriceRateIsRequiredValidationError = "LJDI: You need to specify a price rate or mark 'not to state'",
-                PriceRateUnitIsRequiredValidationError = "LJDI: You need to specify a price unit along with the price or mark 'not to state'",
+                PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
+                PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'not to state'",
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
