@@ -1169,6 +1169,10 @@ html.js .user-verified-licenses h5 {
     display: none;
     min-height: 160px;
 }
+.package-pricing-type .edit-panel .learn-more span {
+    text-decoration: underline;
+    color: #00989a;
+}
 
 /**** Form: Account Education ****/
 #account-profile-education .education-edit input {

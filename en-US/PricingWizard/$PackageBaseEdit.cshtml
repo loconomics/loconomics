@@ -379,6 +379,15 @@
             </fieldset>
         }
     }
+    @if (config.LearnMoreLabel != null && config.LearnMoreText != null)
+    {
+        <div class="learn-more">
+            <span data-tooltip-url="#learn-more-@config.SlugName">@config.LearnMoreLabel</span>
+            <div class="popups"><div id="learn-more-@config.SlugName">
+                @config.LearnMoreText
+            </div><</div>
+        </div>
+    }
     <fieldset class="actions">
         <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
         <button class="button main-action crudl-save">Save</button>
