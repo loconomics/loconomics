@@ -15,6 +15,8 @@ public static class LcRessources
     public const string RequestSent = "Request sent!";
     public const string MessageSent = "Message was sent";
     public const string FieldXIsRequired = "{0} is required";
+    public const string MoneySymbolPrefix = "$"; // For Spain: ""
+    public const string MoneySymbolSufix = ""; // For Spain: "€"
 
     private static Dictionary<string, string> textress = new Dictionary<string,string>(){
          { "messaging-message-type-title-inquiry", "Inquiry" }

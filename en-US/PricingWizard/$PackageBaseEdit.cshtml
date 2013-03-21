@@ -14,7 +14,8 @@
         PricingTypeID = Request["PricingTypeID"].AsInt(),
         ProviderUserID = p.UserID,
         // some defaults for get
-        NumberOfSessions = 1
+        NumberOfSessions = 1,
+        PriceRateUnit = "hour"
     };
     var config = LcPricingModel.PackageBasePricingTypeConfigs[data.PricingTypeID];
     
@@ -67,6 +68,8 @@
         data.Duration = TimeSpan.FromMinutes(Request["minutes"].AsInt());
         data.FirstTimeClientsOnly = Request["first-time-clients-only"].AsBool();
         data.NumberOfSessions = Request["sessions-number"].AsInt();
+        data.PriceRate = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : (decimal?)Request["price-rate"].AsDecimal();
+        data.PriceRateUnit = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : Request["price-rate-unit"];
         var checkedAtts = Request.Form.GetValues("package-service-attribute");
         if (config.IncludeServiceAttributes &&
             checkedAtts != null && 
@@ -78,8 +81,16 @@
                 }
             }
         }
+        // Some manual validations
+        // Require price-rate and unit if is in config and not checked 'no-price-rate'
+        if (config.PriceRateQuantityLabel != null && !Request["no-price-rate"].AsBool() && data.PriceRate <= 0) {
+            ModelState.AddError("price-rate", config.PriceRateIsRequiredValidationError);
+        }
+        if (config.PriceRateUnitLabel != null && !Request["no-price-rate"].AsBool() && String.IsNullOrWhiteSpace(data.PriceRateUnit)) {
+            ModelState.AddError("price-rate-unit", config.PriceRateUnitIsRequiredValidationError);
+        }
         
-        if (Validation.IsValid()) {
+        if (Validation.IsValid() && ModelState.IsValid) {
             var sqlSetPackage = @"
                 DECLARE @PackageID int
                 SET @PackageID = @0
@@ -97,12 +108,14 @@
                         ,ProviderPackageServiceDuration
                         ,FirstTimeClientsOnly
                         ,NumberOfSessions
+                        ,PriceRate
+                        ,PriceRateUnit
                         ,CreatedDate
                         ,UpdatedDate
                         ,ModifiedBy
                         ,Active
                     ) VALUES (
-                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys', @12
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys', @14
                     )
                     SET @PackageID = @@Identity
                 END ELSE
@@ -113,9 +126,11 @@
                         ,ProviderPackageServiceDuration = @9
                         ,FirstTimeClientsOnly = @10
                         ,NumberOfSessions = @11
+                        ,PriceRate = @12
+                        ,PriceRateUnit = @13
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
-                        ,Active = @12
+                        ,Active = @14
                     WHERE ProviderPackageID = @PackageID
 
                 -- Test Alert
@@ -202,6 +217,8 @@
                     data.Duration.TotalMinutes,
                     data.FirstTimeClientsOnly,
                     data.NumberOfSessions,
+                    data.PriceRate,
+                    data.PriceRateUnit,
                     1 // Active
                 );
                 if (config.IncludeServiceAttributes) {
@@ -251,6 +268,8 @@
                         ,p.NumberOfSessions
                         ,p.ProviderUserID
                         ,p.PositionID
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
                 FROM    providerpackage As p
                 WHERE   p.ProviderPackageID = @0
                          AND
@@ -272,6 +291,8 @@
                 data.Duration = TimeSpan.FromMinutes(package.ServiceDuration);
                 data.FirstTimeClientsOnly = package.FirstTimeClientsOnly;
                 data.NumberOfSessions = package.NumberOfSessions;
+                data.PriceRate = package.PriceRate;
+                data.PriceRateUnit = package.PriceRateUnit;
             }
             // getting attributes included in this package
             var packagesdetails = db.Query(@"
@@ -379,13 +400,46 @@
             </fieldset>
         }
     }
-    @if (config.LearnMoreLabel != null && config.LearnMoreText != null)
+    @if(config.PriceRateQuantityLabel != null)
+    {
+        <fieldset class="fs-price-rate">
+            <label class="price-rate">@config.PriceRateQuantityLabel @LcRessources.MoneySymbolPrefix <input type="text" name="price-rate" value="@(Request["price-rate"] ?? (dynamic)data.PriceRate)" /> @LcRessources.MoneySymbolSufix</label>
+            @if(config.PriceRateUnitLabel != null)
+            {
+                <label class="price-rate-unit">@config.PriceRateUnitLabel <input type="text" name="price-rate-unit" value="@(Request["price-rate-unit"] ?? data.PriceRateUnit)" /></label>
+            }
+            @if (config.PriceRateLearnMoreLabel != null && config.PriceRateLearnMoreText != null)
+            {
+                <div class="price-rate-learn-more learn-more">
+                    <span data-tooltip-url="#price-rate-learn-more-@config.SlugName">(@config.PriceRateLearnMoreLabel)</span>
+                    <div class="popups"><div id="price-rate-learn-more-@config.SlugName">
+                        @config.PriceRateLearnMoreText
+                    </div></div>
+                </div>
+            }
+            @if(config.NoPriceRateLabel != null) {
+                <div class="no-price-rate">
+                    <label>@config.NoPriceRateLabel <input type="checkbox" name="no-price-rate" value="True" @LcHelpers.IsChecked(true, new object[]{Request["no-price-rate"], !(data == null || data.PriceRate != null)}) /></label>
+                    @if (config.NoPriceRateLearnMoreLabel != null && config.NoPriceRateLearnMoreText != null)
+                    {
+                        <div class="no-price-rate-learn-more learn-more">
+                            <span data-tooltip-url="#no-price-rate-learn-more-@config.SlugName">(@config.NoPriceRateLearnMoreLabel)</span>
+                            <div class="popups"><div id="no-price-rate-learn-more-@config.SlugName">
+                                @config.NoPriceRateLearnMoreText
+                            </div></div>
+                        </div>
+                    }
+                </div>
+            }
+        </fieldset>
+    }
+    @if(config.LearnMoreLabel != null && config.LearnMoreText != null)
     {
         <div class="learn-more">
             <span data-tooltip-url="#learn-more-@config.SlugName">@config.LearnMoreLabel</span>
             <div class="popups"><div id="learn-more-@config.SlugName">
                 @config.LearnMoreText
-            </div><</div>
+            </div></div>
         </div>
     }
     <fieldset class="actions">

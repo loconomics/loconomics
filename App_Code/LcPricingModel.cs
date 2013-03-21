@@ -171,15 +171,21 @@ public static class LcPricingModel
         public string NoPriceRateLabel;
         public string NumberOfSessionsLabel;
         #endregion
-        #region Action Texts
+        #region Action And Validation Texts
         public string SuccessOnDelete;
         public string ErrorOnDelete;
         public string SuccessOnSave;
         public string ErrorOnSave;
+        public string PriceRateIsRequiredValidationError;
+        public string PriceRateUnitIsRequiredValidationError;
         #endregion
         #region Help Texts
         public string LearnMoreLabel;
         public string LearnMoreText;
+        public string PriceRateLearnMoreLabel;
+        public string PriceRateLearnMoreText;
+        public string NoPriceRateLearnMoreLabel;
+        public string NoPriceRateLearnMoreText;
         #endregion
         #region Additional configuration
         public bool IncludeServiceAttributes;
@@ -311,6 +317,8 @@ public static class LcPricingModel
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
 
+                PriceRateIsRequiredValidationError = "LJDI: You need to specify a price rate or mark 'not to state'",
+                PriceRateUnitIsRequiredValidationError = "LJDI: You need to specify a price unit along with the price or mark 'not to state'",
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
@@ -318,6 +326,12 @@ public static class LcPricingModel
 
                 LearnMoreLabel = "Learn more about consultation pricing.",
                 LearnMoreText = "We'll help schedule a consultation for you and your client.",
+                PriceRateLearnMoreLabel = "learn more",
+                PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
+                    You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right.",
+                NoPriceRateLearnMoreLabel = "not recommended",
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing: Determined in consultation.
+                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
             }
         },
         // Consultation Pricing Type
@@ -364,6 +378,8 @@ public static class LcPricingModel
         public TimeSpan Duration;
         public bool FirstTimeClientsOnly;
         public int NumberOfSessions;
+        public decimal? PriceRate;
+        public string PriceRateUnit;
         public int LanguageID;
         public int CountryID;
         public bool Active;

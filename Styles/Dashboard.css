@@ -1173,6 +1173,21 @@ html.js .user-verified-licenses h5 {
     text-decoration: underline;
     color: #00989a;
 }
+.package-pricing-type .edit-panel .fs-price-rate .learn-more {
+    display: inline;
+}
+.package-pricing-type .edit-panel .fs-price-rate label {
+    padding: 0;
+}
+.package-pricing-type .edit-panel .fs-price-rate .price-rate input {
+    width: 3em;
+}
+.package-pricing-type .edit-panel .fs-price-rate .price-rate-unit input {
+    width: 4em;
+}
+.package-pricing-type .edit-panel .fs-price-rate .no-price-rate {
+    margin-top: .5em;
+}
 
 /**** Form: Account Education ****/
 #account-profile-education .education-edit input {
