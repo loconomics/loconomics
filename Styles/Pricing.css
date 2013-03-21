@@ -19,16 +19,19 @@
 .profile .provider-package a.button.book-action {
     font-size: 0.6em;
 }
-.view-panel .provider-package-services li.empty {
+.view-panel .provider-package-services li.empty,
+.pricing-type-packages-list .service-attributes-list li.empty {
     font-style: italic;
     list-style: none outside none !important;
     margin: 0 0 0 10px;
     width: auto !important;
 }
-.view-panel .provider-package-services {
+.view-panel .provider-package-services,
+.pricing-type-packages-list .service-attributes-list {
     overflow: hidden;
 }
-.view-panel .provider-package-services li {
+.view-panel .provider-package-services li,
+.pricing-type-packages-list .service-attributes-list li {
     width: 200px !important;
     text-overflow: ellipsis;
     float: left;
@@ -36,7 +39,8 @@
 .view-panel .provider-package {
     position: relative;
 }
-.view-panel .provider-package .provider-package-service-summary {
+.view-panel .provider-package .provider-package-service-summary,
+.pricing-type-packages-list .provider-package .provider-package-service-summary {
     color: #00989A;
     position: relative;
     font-size: 1.5em;
@@ -44,7 +48,8 @@
 .profile .view-panel .provider-package .provider-package-service-summary {
     position: static;
 }
-.view-panel .provider-package .provider-package-service-summary .provider-package-price {
+.view-panel .provider-package .provider-package-service-summary .provider-package-price,
+.pricing-type-packages-list .provider-package .provider-package-service-summary .provider-package-price {
     position: absolute;
     top: 0;
     right: 0;
