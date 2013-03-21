@@ -224,6 +224,9 @@ public static class LcPricingModel
                 IncludeServiceAttributes = true,
                 WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
                 WithoutServiceAttributesProviderMessage = "",
+
+                LearnMoreLabel = "Learn more about packages pricing.",
+                LearnMoreText = null,
             }
         },
         // Add-on Pricing Type
@@ -250,6 +253,9 @@ public static class LcPricingModel
                 IncludeServiceAttributes = true,
                 WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
                 WithoutServiceAttributesProviderMessage = "",
+
+                LearnMoreLabel = "Learn more about add-ons pricing.",
+                LearnMoreText = null,
             }
         },
         // Estimate Pricing Type
@@ -277,6 +283,70 @@ public static class LcPricingModel
                 SuccessOnSave = "Add/Edit estimates",
 
                 SummaryFormat = "Duration of estimate visit: {1} minutes",
+
+                LearnMoreLabel = "Learn more about estimate pricing.",
+                LearnMoreText = null,
+            }
+        },
+        // Consultation Pricing Type
+        {
+            5,
+            new PackageBaseConfig {
+                PricingTypeID = 5,
+                SingularName = "Consultation",
+                PluralName = "Consultations",
+                SlugName = "consultation",
+                AddNewLabel = "Add a consultation",
+                ProviderDescription = "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
+                DurationLabel = "Approx. length of consultation:",
+                PriceLabel = "Price for consultation:",
+                PriceNote = "(enter 0.00 if free)",
+                DescriptionPlaceHolder = "Tell your clients what they can expect during the consultation and what to prepare.",
+                PriceRateQuantityLabel = "My rates start at:",
+                PriceRateUnitLabel = "per",
+                NoPriceRateLabel = "I prefer not to state",
+
+                SuccessOnDelete = "Consultation removed succesfully",
+                SuccessOnSave = "Add/Edit consultations",
+
+                SummaryFormat = "Duration of consultation: {1} minutes",
+
+                LearnMoreLabel = "Learn more about consultation pricing.",
+                LearnMoreText = "We'll help schedule a consultation for you and your client.",
+            }
+        },
+        // Consultation Pricing Type
+        {
+            6,
+            new PackageBaseConfig {
+                PricingTypeID = 6,
+                SingularName = "Service",
+                PluralName = "Services",
+                SlugName = "service",
+                AddNewLabel = "Add a service",
+                ProviderDescription = "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
+                DurationLabel = "Length of service:",
+                PriceLabel = "Price for service:",
+                PriceNote = "(this should be all-inclusive)",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
+
+                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnSave = "Add/Edit services",
+
+                SummaryFormat = "Duration of service: {1} minutes",
+
+                IncludeServiceAttributes = true,
+                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this service.",
+                WithoutServiceAttributesProviderMessage = "",
+
+                LearnMoreLabel = "Learn more about services pricing.",
+                LearnMoreText = null,
             }
         }
     };
