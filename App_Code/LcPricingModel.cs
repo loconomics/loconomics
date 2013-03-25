@@ -228,8 +228,8 @@ public static class LcPricingModel
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Duration (per appointment)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)",
-                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
-                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This package is available to first-time clients only",
 
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
@@ -266,9 +266,7 @@ public static class LcPricingModel
 
                 SummaryFormat = "Duration of add-on service: {1} minutes",
 
-                IncludeServiceAttributes = true,
-                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
-                WithoutServiceAttributesProviderMessage = "",
+                IncludeServiceAttributes = false,
 
                 LearnMoreLabel = "Learn more about add-ons pricing.",
                 LearnMoreText = null,
@@ -366,8 +364,8 @@ public static class LcPricingModel
                 PriceLabel = "Price for service:",
                 PriceNote = "(this should be all-inclusive)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
-                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
-                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyLabel = "This service is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This service is available to first-time clients only",
 
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
