@@ -69,10 +69,28 @@
                     <a href="#edit" class="edit-action crudl-update">Edit</a>
                 </div>
                 }
+                @if (config.InPersonPhoneListLabel != null)
+                {
+                    <h5>@config.InPersonPhoneListLabel</h5>
+                    <div class="package-inpersonphone">@(pak.IsPhone ? "phone" : "in-person")</div>
+                }
                 <h5>Description:</h5>
                 <div class="provider-package-description">
                     @LcHelpers.PrintTextAsHtml(pak.Description)
                 </div>
+                @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
+                {
+                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @pak.PriceRate.ToString("c")
+                        @if (config.PriceRateUnitListLabel != null)
+                        {
+                            <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
+                        }
+                    </h5>
+                }
+                @if (config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
+                {
+                    <h5>@config.NoPriceRateListMessage</h5>
+                }
                 @if (config.IncludeServiceAttributes)
                 {
                     <h5>Services included in this package:</h5>

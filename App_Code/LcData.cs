@@ -883,6 +883,9 @@ public static partial class LcData
                         ,p.ProviderPackageServiceDuration As ServiceDuration
                         ,p.FirstTimeClientsOnly
                         ,p.NumberOfSessions
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
+                        ,p.IsPhone
                 FROM    providerpackage As p
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 

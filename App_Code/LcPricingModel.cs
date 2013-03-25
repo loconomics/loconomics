@@ -201,6 +201,10 @@ public static class LcPricingModel
         public string SummaryFormat;
         public string WithoutServiceAttributesCustomerMessage;
         public string WithoutServiceAttributesProviderMessage;
+        public string InPersonPhoneListLabel;
+        public string PriceRateQuantityListLabel;
+        public string PriceRateUnitListLabel;
+        public string NoPriceRateListMessage;
         #endregion
     }
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
@@ -317,7 +321,11 @@ public static class LcPricingModel
                 PriceRateQuantityLabel = "My rates start at:",
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
+                PriceRateQuantityListLabel = "My rates start at:",
+                PriceRateUnitListLabel = "per",
+                NoPriceRateListMessage = "Pricing: Determined in consultation.",
                 InPersonPhoneLabel = "Consultation type:",
+                InPersonPhoneListLabel = "Consultation type:",
 
                 PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
                 PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'not to state'",
@@ -332,7 +340,7 @@ public static class LcPricingModel
                 PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
                     You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right.",
                 NoPriceRateLearnMoreLabel = "not recommended",
-                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing: Determined in consultation.
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing: Determined in consultation'.
                     We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
             }
         },
