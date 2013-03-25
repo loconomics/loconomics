@@ -191,7 +191,7 @@
                 <td class="package-name name">
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                 </td>
-                <td class="package-sessions number">@pak.NumberOfSessions</td>
+                <td class="package-sessions number">@(pak.NumberOfSessions < 1 ? "N/A" : pak.NumberOfSessions)</td>
                 <td class="package-duration number">@pak.ServiceDuration minutes</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>

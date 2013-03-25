@@ -117,8 +117,9 @@
                         ,UpdatedDate
                         ,ModifiedBy
                         ,Active
+                        ,IsAddon
                     ) VALUES (
-                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15, @16
                     )
                     SET @PackageID = @@Identity
                 END ELSE
@@ -135,6 +136,7 @@
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
                         ,Active = @15
+                        ,IsAddon = @16
                     WHERE ProviderPackageID = @PackageID
 
                 -- Test Alert
@@ -224,7 +226,8 @@
                     data.PriceRate,
                     data.PriceRateUnit,
                     data.IsPhone,
-                    1 // Active
+                    1, // Active
+                    config.IsAddon
                 );
                 if (config.IncludeServiceAttributes) {
                     db.Execute(sqlDelDetails, data.ID);

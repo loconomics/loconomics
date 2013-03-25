@@ -158,6 +158,13 @@ public static class LcPricingModel
         /// group else because are incompatible and create mutual exclusion.
         /// </summary>
         public string[] SelectionExclusionGroups;
+        /// <summary>
+        /// For now, we preserve IsAddon additionaly to the pricing-type:addon as a way
+        /// to know what packages must be showed in the 'addons' section in booking that
+        /// allow multi-selecting. The 'selection*groups' fields are a concept, not uset
+        /// still, for now IsAddon works for that use, more simple and enough for now.
+        /// </summary>
+        public bool IsAddon;
         #endregion
         #region Form Texts
         public string NamePlaceHolder;
@@ -254,6 +261,7 @@ public static class LcPricingModel
                 SlugName = "addon",
                 AddNewLabel = "Add an add-on service",
                 ProviderDescription = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable).",
+                IsAddon = true,
 
                 NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
                 PriceLabel = "Price for service:",
