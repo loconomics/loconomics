@@ -170,6 +170,7 @@ public static class LcPricingModel
         public string PriceRateUnitLabel;
         public string NoPriceRateLabel;
         public string NumberOfSessionsLabel;
+        public string InPersonPhoneLabel;
         #endregion
         #region Action And Validation Texts
         public string SuccessOnDelete;
@@ -316,6 +317,7 @@ public static class LcPricingModel
                 PriceRateQuantityLabel = "My rates start at:",
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
+                InPersonPhoneLabel = "Consultation type:",
 
                 PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
                 PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'not to state'",
@@ -380,6 +382,7 @@ public static class LcPricingModel
         public int NumberOfSessions;
         public decimal? PriceRate;
         public string PriceRateUnit;
+        public bool IsPhone;
         public int LanguageID;
         public int CountryID;
         public bool Active;

@@ -15,7 +15,8 @@
         ProviderUserID = p.UserID,
         // some defaults for get
         NumberOfSessions = 1,
-        PriceRateUnit = "hour"
+        PriceRateUnit = "hour",
+        IsPhone = false
     };
     var config = LcPricingModel.PackageBasePricingTypeConfigs[data.PricingTypeID];
     
@@ -70,6 +71,7 @@
         data.NumberOfSessions = Request["sessions-number"].AsInt();
         data.PriceRate = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : (decimal?)Request["price-rate"].AsDecimal();
         data.PriceRateUnit = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : Request["price-rate-unit"];
+        data.IsPhone = (Request["inpersonphone"] == "phone");
         var checkedAtts = Request.Form.GetValues("package-service-attribute");
         if (config.IncludeServiceAttributes &&
             checkedAtts != null && 
@@ -110,12 +112,13 @@
                         ,NumberOfSessions
                         ,PriceRate
                         ,PriceRateUnit
+                        ,IsPhone
                         ,CreatedDate
                         ,UpdatedDate
                         ,ModifiedBy
                         ,Active
                     ) VALUES (
-                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys', @14
+                        @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15
                     )
                     SET @PackageID = @@Identity
                 END ELSE
@@ -128,9 +131,10 @@
                         ,NumberOfSessions = @11
                         ,PriceRate = @12
                         ,PriceRateUnit = @13
+                        ,IsPhone=@14
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
-                        ,Active = @14
+                        ,Active = @15
                     WHERE ProviderPackageID = @PackageID
 
                 -- Test Alert
@@ -219,6 +223,7 @@
                     data.NumberOfSessions,
                     data.PriceRate,
                     data.PriceRateUnit,
+                    data.IsPhone,
                     1 // Active
                 );
                 if (config.IncludeServiceAttributes) {
@@ -270,6 +275,7 @@
                         ,p.PositionID
                         ,p.PriceRate
                         ,p.PriceRateUnit
+                        ,p.IsPhone
                 FROM    providerpackage As p
                 WHERE   p.ProviderPackageID = @0
                          AND
@@ -293,6 +299,7 @@
                 data.NumberOfSessions = package.NumberOfSessions;
                 data.PriceRate = package.PriceRate;
                 data.PriceRateUnit = package.PriceRateUnit;
+                data.IsPhone = package.IsPhone;
             }
             // getting attributes included in this package
             var packagesdetails = db.Query(@"
@@ -336,6 +343,13 @@
             <label class="package-duration">@config.DurationLabel
                 <input type="text" name="minutes" value="@(Request["minutes"] ?? data.Duration.TotalMinutes.ToString())" /> minutes
             </label>
+        }
+        @if (config.InPersonPhoneLabel != null){
+            <div class="inperson-phone">
+                @config.InPersonPhoneLabel
+                <label><input type="radio" name="inpersonphone" value="inperson" @LcHelpers.IsChecked("inperson", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> in-person</label>
+                <label><input type="radio" name="inpersonphone" value="phone" @LcHelpers.IsChecked("phone", Request["inpersonphone"] ?? (data.IsPhone ? "phone" : "inperson")) /> phone</label>
+            </div>
         }
         @if (config.FirstTimeClientsOnlyLabel != null)
         {

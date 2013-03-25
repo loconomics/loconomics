@@ -349,6 +349,7 @@ ul.attributes-list li {
     width: 100%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
     box-sizing: border-box;
 }
 .dashboard form li select{
@@ -1119,6 +1120,9 @@ html.js .user-verified-licenses h5 {
 .view-panel .provider-package .edit-actions a:hover {
     text-decoration: underline;
 }
+.package-pricing-type .edit-panel label {
+    padding: 0;
+}
 .package-pricing-type .edit-panel .label-text {
     display: none;
 }
@@ -1146,7 +1150,11 @@ html.js .user-verified-licenses h5 {
     margin: 2px 0;
 }
 .package-pricing-type .edit-panel .package-data .package-name {
-    width: 630px;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .package-pricing-type .edit-panel .package-data .package-sessions,
 .package-pricing-type .edit-panel .package-data .package-price {
@@ -1187,6 +1195,9 @@ html.js .user-verified-licenses h5 {
 }
 .package-pricing-type .edit-panel .fs-price-rate .no-price-rate {
     margin-top: .5em;
+}
+.package-pricing-type .edit-panel .inperson-phone label {
+    display: inline;
 }
 
 /**** Form: Account Education ****/
