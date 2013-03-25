@@ -56,7 +56,6 @@
                             // show price with fees
                             var priceWithFees = pak.Price + LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
                             <div class="actions book">
-                                @* TODO: Price format depending on pricing config ('for $', 'since $'..) *@
                                 <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
                             </div>
                         }
@@ -73,6 +72,10 @@
                 {
                     <h5>@config.InPersonPhoneListLabel</h5>
                     <div class="package-inpersonphone">@(pak.IsPhone ? "phone" : "in-person")</div>
+                }
+                @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
+                {
+                    <h5>@config.FirstTimeClientsOnlyListText</h5>
                 }
                 <h5>Description:</h5>
                 <div class="provider-package-description">

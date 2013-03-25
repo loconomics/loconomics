@@ -201,6 +201,7 @@ public static class LcPricingModel
         public string SummaryFormat;
         public string WithoutServiceAttributesCustomerMessage;
         public string WithoutServiceAttributesProviderMessage;
+        public string FirstTimeClientsOnlyListText;
         public string InPersonPhoneListLabel;
         public string PriceRateQuantityListLabel;
         public string PriceRateUnitListLabel;
@@ -227,6 +228,8 @@ public static class LcPricingModel
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Duration (per appointment)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)",
+                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
 
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
@@ -326,6 +329,8 @@ public static class LcPricingModel
                 NoPriceRateListMessage = "Pricing: Determined in consultation.",
                 InPersonPhoneLabel = "Consultation type:",
                 InPersonPhoneListLabel = "Consultation type:",
+                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
 
                 PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
                 PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'not to state'",
@@ -361,6 +366,8 @@ public static class LcPricingModel
                 PriceLabel = "Price for service:",
                 PriceNote = "(this should be all-inclusive)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
+                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
 
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
