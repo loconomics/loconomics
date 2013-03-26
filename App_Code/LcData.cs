@@ -682,7 +682,7 @@ public static partial class LcData
         using (var db = Database.Open("sqlloco"))
         {
             return db.Query(@"
-                SELECT  PO.pricingtypeid
+                SELECT  PO.pricingtypeid As PricingTypeID
                 FROM    positionpricingtype PO INNER JOIN pricingtype PR ON PR.PricingTypeID = PO.PricingTypeID AND PR.CountryID = PO.CountryID AND PR.LanguageID = PO.LanguageID
                 WHERE   PO.languageid = @0 AND PO.countryid=@1 AND PO.clienttypeid=@2 AND PO.positionid=@3
                 ORDER BY PR.DisplayRank ASC

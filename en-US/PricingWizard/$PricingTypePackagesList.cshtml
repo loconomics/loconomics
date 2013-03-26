@@ -12,6 +12,10 @@
     }
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     var customer = PageData["Customer"] ?? LcData.UserInfo.GetUserRow();
+    if (!LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pricingTypeID)) {
+        // WITHOUT Config, there is nothing to display (is not a package-based pricing type)
+        return;
+    }
     var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID];
     
     // If there is no customer or 'customer' and provider are different, ever in non-editable mode
@@ -20,7 +24,7 @@
     }
 
     if (data == null) {
-        data = LcData.GetPricingPackagesByProviderPosition(providerUserID, positionID);
+        data = LcData.GetPricingPackagesByProviderPosition(providerUserID, positionID, -1, pricingTypeID);
     }
 
     // Get Fees that apply to the provider and customer
@@ -34,7 +38,7 @@
     <ul>
         @foreach (var pak in data.Packages)
         {
-            // Filtering per PricingTypeID:
+            // Filtering per PricingTypeID (if data was externally provided without previous filter):
             if (pak.PricingTypeID != pricingTypeID)
             {
                 continue;

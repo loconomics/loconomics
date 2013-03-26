@@ -9,15 +9,10 @@
 
     var pricingTypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
 }
-
+<p></p>
 <div class="view-panel">
     @foreach(var pricingType in pricingTypes) {
-        if (pricingType.PricingTypeID == 3)
-        {
-            <h3>Select a package that meets your needs:</h3>
-            @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$ProviderPackagesList.cshtml")
-        
-            @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$ViewPricingOptions.cshtml", new { Title = "Additional options available during checkout:", PricingTypeID = 3, ClientTypeID = clienttypeid } )
-        }
+        @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$PricingTypePackagesList.cshtml", new { Editable = false, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = pos.UserID, PositionID = pos.PositionID })
     }
+    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$ViewPricingOptions.cshtml", new { Title = "Additional options available during checkout:", PricingTypeID = 3, ClientTypeID = clienttypeid } )
 </div>
