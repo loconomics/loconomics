@@ -8,7 +8,7 @@
     var pos = LcData.UserInfo.GetUserCurrentPos();
     var idprefix = PageData["idprefix"] ?? "position" + pos.PositionID.ToString() + "-pricingwizard-packages";
     
-    var data = LcData.GetProviderPackageByProviderPosition(p.UserID, pos.PositionID);
+    var data = LcData.GetPricingPackagesByProviderPosition(p.UserID, pos.PositionID);
 }
 <div class="@PageData["PricingWizardClasses"] pricingwizard package-pricing-type">
     <div class="add-package"><a href="#add-package">Add another package</a></div>

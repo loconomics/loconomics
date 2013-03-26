@@ -869,7 +869,7 @@ public static partial class LcData
     }
     #endregion
     #region Package Type (Provider Packages)
-    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1)
+    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;
         using (var db = Database.Open("sqlloco")){
@@ -887,6 +887,11 @@ public static partial class LcData
                         ,p.PriceRateUnit
                         ,p.IsPhone
                 FROM    providerpackage As p
+                         INNER JOIN
+                        PricingType As PT
+                          ON p.PricingTypeID = PT.PricingTypeID
+                            AND p.LanguageID = PT.LanguageID
+                            AND p.CountryID = PT.CountryID
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
@@ -894,7 +899,10 @@ public static partial class LcData
                         p.Active = 1
                          AND (@4 = -1 OR p.ProviderPackageID = @4)
                          AND (@5 = -1 OR p.PricingTypeID = @5)
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID);
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                ORDER BY PT.DisplayRank ASC
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
+            (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
             details = db.Query(@"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -913,8 +921,10 @@ public static partial class LcData
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
                          AND (@5 = -1 OR P.PricingTypeID = @5)
+                         AND (@6 = -1 OR p.IsAddOn = @6)
                 ORDER BY A.Name ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID);
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
+             (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
         }
         // Create index of packages, Key:ID, Value:Package record
         var index = new Dictionary<int, dynamic>(packages.Count);
@@ -943,67 +953,6 @@ public static partial class LcData
         public dynamic PackagesDetails;
         public Dictionary<int, dynamic> PackagesByID;
         public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
-    }
-    /// <summary>
-    /// DEPRECATED
-    /// </summary>
-    /// <param name="providerUserID"></param>
-    /// <param name="positionID"></param>
-    /// <param name="packageID"></param>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1, int type = -1)
-    {
-        dynamic packages, details;
-        using (var db = Database.Open("sqlloco")){
-            // Get the Provider Packages
-            packages = db.Query(@"
-                SELECT  p.ProviderPackageID
-                        ,p.PricingTypeID
-                        ,p.ProviderPackageName As Name
-                        ,p.ProviderPackageDescription As Description
-                        ,p.ProviderPackagePrice As Price
-                        ,p.ProviderPackageServiceDuration As ServiceDuration
-                        ,p.FirstTimeClientsOnly
-                        ,p.NumberOfSessions
-                        ,p.IsAddOn
-                FROM    providerpackage As p
-                WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
-                         AND 
-                        p.LanguageID = @2 AND p.CountryID = @3
-                         AND 
-                        p.Active = 1
-                         AND (@4 = -1 OR ProviderPackageID = @4)
-                         AND (@5 = -1 OR p.IsAddOn = @5)
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
-            details = db.Query(@"
-                SELECT  PD.ServiceAttributeID
-                        ,A.Name
-                        ,A.ServiceAttributeDescription
-                        ,P.ProviderPackageID
-                FROM    ProviderPackageDetail As PD
-                         INNER JOIN
-                        ProviderPackage As P
-                          ON P.ProviderPackageID = PD.ProviderPackageID
-                         INNER JOIN
-                        ServiceAttribute As A
-                          ON A.ServiceAttributeID = PD.ServiceAttributeID
-                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
-                WHERE   P.ProviderUserID = @0 AND P.PositionID = @1
-                         AND P.LanguageID = @2 AND P.CountryID = @3
-                         AND PD.Active = 1 AND P.Active = 1
-                         AND (@4 = -1 OR P.ProviderPackageID = @4)
-                         AND (@5 = -1 OR P.IsAddOn = @5)
-                ORDER BY A.Name ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
-        }
-        // Create index of packages, Key:ID, Value:Package record
-        var index = new Dictionary<int, dynamic>(packages.Count);
-        foreach (var pak in packages)
-        {
-            index.Add(pak.ProviderPackageID, pak);
-        }
-        return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index };
     }
     #endregion
     #endregion

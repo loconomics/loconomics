@@ -107,7 +107,7 @@
 
         // Packages
         if (hasPackages) {
-            packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
+            packages = LcData.GetPricingPackagesByProviderPosition(pos.UserID, pos.PositionID, -1, -1, false);
             if (packages.Packages.Count > 0) {
                 // Add to summary
                 SummaryLines.Add("packages", new LcPricingModel.PricingSummaryData("Package"));
@@ -116,7 +116,7 @@
 
         // Add-ons
         if (hasAddons) {
-            addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+            addons = LcData.GetPricingPackagesByProviderPosition(pos.UserID, pos.PositionID, -1, -1, true);
             if (addons.Packages.Count > 0) {
                 // Add to summary
                 SummaryLines.Add("addons", new LcPricingModel.PricingSummaryData("Add-on services"));

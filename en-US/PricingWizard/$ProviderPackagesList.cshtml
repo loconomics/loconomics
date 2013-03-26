@@ -5,7 +5,7 @@
 
     var pos = LcData.UserInfo.GetUserCurrentPos();
     if (data == null) {
-        data = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID);
+        data = LcData.GetPricingPackagesByProviderPosition(pos.UserID, pos.PositionID);
     }
     
     // Get Fees that apply to the provider and customer
