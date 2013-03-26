@@ -773,6 +773,9 @@ public static class LcPricingModel
                 // Concept, html text for Pricing summary detail, update it with package name:
                 modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
 
+                // Save in session the information that a location is not need for the booking because of the selected package
+                System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
+
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
                 };

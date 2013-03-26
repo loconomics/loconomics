@@ -21,14 +21,6 @@
             throw new Exception(inputdataerrormessage);
         }
     }
-   
-    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
-    Validation.RequireField("first-date", "You must specify a first choice");
-    Validation.Add("select-location", Validator.Integer("Invalid selected location"));
-    Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address line 1 must be fewer than 100 characters."));
-    Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address line 2 must be fewer than 100 characters."));
-    Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
-    Validation.Add("save-location-as", Validator.StringLength(50, 0, "Saved location name must be fewer than 50 characters."));
 
     // Check if is a valid booking process (session not expired or error at first step)
     var bookingRequestID = Session["BookingRequestID"] is int ? (int)Session["BookingRequestID"] : 0;
@@ -44,6 +36,20 @@
         LcHelpers.ReturnJsonResult(1, 
             LcUrl.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
+    }
+    
+    bool withoutLocation = Session["BookingWithoutLocation"] is bool
+        ? (bool)Session["BookingWithoutLocation"]
+        : false;
+
+    /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
+    Validation.RequireField("first-date", "You must specify a first choice");
+    if (!withoutLocation) {
+        Validation.Add("select-location", Validator.Integer("Invalid selected location"));
+        Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address line 1 must be fewer than 100 characters."));
+        Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address line 2 must be fewer than 100 characters."));
+        Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+        Validation.Add("save-location-as", Validator.StringLength(50, 0, "Saved location name must be fewer than 50 characters."));
     }
     
     // Date-times are checked and generated ever on postback, not only on valid request (to properly
@@ -81,34 +87,37 @@
     
     if (IsPost && Validation.IsValid() && ModelState.IsValid){
 
-        var zipcodeID = 0;
-        // Check if a location was selected or new location must be validated:
-        int locationID = Request["select-location"].AsInt();
-        if (Request["select-location"].IsEmpty()) {
-            ModelState.AddFormError("You must specify a location");
-        } else if (locationID == 0) {
-            if (Request["street-address-line-1"].IsEmpty()) {
-                ModelState.AddError("street-address-line-1", "The street address is required");
-            }
-            if (Request["city"].IsEmpty()) {
-                ModelState.AddError("city", "The city is required");
-            }
-            if (Request["state"].IsEmpty()) {
-                ModelState.AddError("state", "The state is required");
-            }
-            if (Request["zip"].IsEmpty()) {
-                ModelState.AddError("zip", "The zip code is required");
-            } else if (!Request["zip"].IsInt()) {
-                ModelState.AddError("zip", "The zip code must only contain numbers");
-            }
-            zipcodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
-            if (zipcodeID == 0) {
-                ModelState.AddError("tin_zipcode", "The zip code does not exist in the state you've entered");
-            }
-        }
+        int zipcodeID = 0, locationID = 0;
         
-        if (Request["save-location"] == "true" && String.IsNullOrWhiteSpace(Request["save-location-as"])){
-            ModelState.AddError("save-location-as", "Please input a name for this location to save it");
+        if (!withoutLocation) {
+            // Check if a location was selected or new location must be validated:
+            locationID = Request["select-location"].AsInt();
+            if (Request["select-location"].IsEmpty()) {
+                ModelState.AddFormError("You must specify a location");
+            } else if (locationID == 0) {
+                if (Request["street-address-line-1"].IsEmpty()) {
+                    ModelState.AddError("street-address-line-1", "The street address is required");
+                }
+                if (Request["city"].IsEmpty()) {
+                    ModelState.AddError("city", "The city is required");
+                }
+                if (Request["state"].IsEmpty()) {
+                    ModelState.AddError("state", "The state is required");
+                }
+                if (Request["zip"].IsEmpty()) {
+                    ModelState.AddError("zip", "The zip code is required");
+                } else if (!Request["zip"].IsInt()) {
+                    ModelState.AddError("zip", "The zip code must only contain numbers");
+                }
+                zipcodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
+                if (zipcodeID == 0) {
+                    ModelState.AddError("tin_zipcode", "The zip code does not exist in the state you've entered");
+                }
+            }
+        
+            if (Request["save-location"] == "true" && String.IsNullOrWhiteSpace(Request["save-location-as"])){
+                ModelState.AddError("save-location-as", "Please input a name for this location to save it");
+            }
         }
         
         if (ModelState.IsValid) {
@@ -160,40 +169,44 @@
             
             // Inserting data into the database
             using (var db = Database.Open("sqlloco")) {
-                // If we have not a location (is 0), means user specify one
-                // that must be saved:
-                if (locationID == 0) {
-                    // User wants to save as 'my location'?
-                    string locationNickName = "";
-                    if (Request["save-location"] == "true" &&
-                        !String.IsNullOrWhiteSpace(Request["save-location-as"])) {
-                        locationNickName = Request["save-location-as"].Trim();
+                
+                if (!withoutLocation) {
+                    // If we have not a location (is 0), means user specify one
+                    // that must be saved:
+                    if (locationID == 0) {
+                        // User wants to save as 'my location'?
+                        string locationNickName = "";
+                        if (Request["save-location"] == "true" &&
+                            !String.IsNullOrWhiteSpace(Request["save-location-as"])) {
+                            locationNickName = Request["save-location-as"].Trim();
+                        }
+                        // Save location as service location
+                        locationID = db.QueryValue(LcData.sqlSetServiceAddress,
+                            0, // AddressID:0, new address to be inserted
+                            c.UserID,
+                            Request["street-address-line-1"],
+                            Request["street-address-line-2"],
+                            Request["city"],
+                            Request["state"],
+                            zipcodeID,
+                            LcData.GetCurrentCountryID(),
+                            locationNickName,
+                            12 /*AddressType: Other*/,
+                            null, /* special instructions */
+                            null, null, null, /* latitude, longitude, googlemapsurl */
+                            0 /*Position Zero, customer*/,
+                            true /*Service performed at this location*/,
+                            false,
+                            null,
+                            null,
+                            false);
                     }
-                    // Save location as service location
-                    locationID = db.QueryValue(LcData.sqlSetServiceAddress,
-                        0, // AddressID:0, new address to be inserted
-                        c.UserID,
-                        Request["street-address-line-1"],
-                        Request["street-address-line-2"],
-                        Request["city"],
-                        Request["state"],
-                        zipcodeID,
-                        LcData.GetCurrentCountryID(),
-                        locationNickName,
-                        12 /*AddressType: Other*/,
-                        null, /* special instructions */
-                        null, null, null, /* latitude, longitude, googlemapsurl */
-                        0 /*Position Zero, customer*/,
-                        true /*Service performed at this location*/,
-                        false,
-                        null,
-                        null,
-                        false);
                 }
                 
                 // Updating BookingRequest with location and date-times
-                db.Execute(sqlUpdBookingRequest, bookingRequestID,
-                    locationID);
+                db.Execute(sqlUpdBookingRequest,
+                    bookingRequestID,
+                    locationID == 0 ? null : (int?)locationID);
             }
             
             // Return OK result
@@ -204,47 +217,48 @@
     /*
      * Loading some data:
      */
-    dynamic providerLocations, customerLocations, providerTravelLocation;
-    customerLocations = null;
+    dynamic providerLocations = null, customerLocations = null, providerTravelLocation = null;
     decimal serviceDurationHours = 0;
     using (var db = Database.Open("sqlloco")) {
-        // Provider locations
-        providerLocations = db.Query(@"
-            SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType
-            FROM    ServiceAddress As SA
-                     INNER JOIN
-                    Address As L
-                      ON L.AddressID = SA.AddressID
-                        INNER JOIN
-                    AddressType As AT
-                        ON L.AddressTypeID = AT.AddressTypeID
-            WHERE   L.UserId = @0 AND SA.PositionID = @1
-                     AND L.AddressName IS NOT NULL
-                     AND SA.ServicesPerformedAtLocation = 1
-        ", p.UserID, pos.PositionID);
-        // Get provider 'travel from' location, if it has
-        providerTravelLocation = db.QuerySingle(@"
-            SELECT  DISTINCT L.AddressID, L.AddressName, 
-                    SA.ServiceRadiusFromLocation
-                    ,L.Latitude
-                    ,L.Longitude
-            FROM    ServiceAddress As SA
-                     INNER JOIN
-                    Address As L
-                      ON L.AddressID = SA.AddressID
-            WHERE   L.UserId = @0 AND SA.PositionID = @1
-                     AND L.AddressName IS NOT NULL AND L.AddressName not like ''
-                     AND SA.TravelFromLocation = 1
-        ", p.UserID, pos.PositionID);
-        // Customer locations
-        // We only can offer customer locations if provider do travel
-        if (providerTravelLocation != null) {
-            customerLocations = db.Query(@"
-                SELECT  DISTINCT L.AddressID, L.AddressName
-                FROM    Address As L
-                WHERE   L.UserId = @0
+        if (!withoutLocation) {
+            // Provider locations
+            providerLocations = db.Query(@"
+                SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType
+                FROM    ServiceAddress As SA
+                         INNER JOIN
+                        Address As L
+                          ON L.AddressID = SA.AddressID
+                            INNER JOIN
+                        AddressType As AT
+                            ON L.AddressTypeID = AT.AddressTypeID
+                WHERE   L.UserId = @0 AND SA.PositionID = @1
+                         AND L.AddressName IS NOT NULL
+                         AND SA.ServicesPerformedAtLocation = 1
+            ", p.UserID, pos.PositionID);
+            // Get provider 'travel from' location, if it has
+            providerTravelLocation = db.QuerySingle(@"
+                SELECT  DISTINCT L.AddressID, L.AddressName, 
+                        SA.ServiceRadiusFromLocation
+                        ,L.Latitude
+                        ,L.Longitude
+                FROM    ServiceAddress As SA
+                         INNER JOIN
+                        Address As L
+                          ON L.AddressID = SA.AddressID
+                WHERE   L.UserId = @0 AND SA.PositionID = @1
                          AND L.AddressName IS NOT NULL AND L.AddressName not like ''
-            ", c.UserID);
+                         AND SA.TravelFromLocation = 1
+            ", p.UserID, pos.PositionID);
+            // Customer locations
+            // We only can offer customer locations if provider do travel
+            if (providerTravelLocation != null) {
+                customerLocations = db.Query(@"
+                    SELECT  DISTINCT L.AddressID, L.AddressName
+                    FROM    Address As L
+                    WHERE   L.UserId = @0
+                             AND L.AddressName IS NOT NULL AND L.AddressName not like ''
+                ", c.UserID);
+            }
         }
         serviceDurationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
     }
@@ -381,62 +395,69 @@
         </div>
     </fieldset>
 
-    <fieldset class="location step-block">
-        <legend>Select the location where your service will be performed</legend>
-        <div class="available-locations">
-            <select name="select-location" class="select-location">
-                <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
-                @if (providerTravelLocation != null)
-                {
-                <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
-                }
-                @if (providerLocations != null && providerLocations.Count > 0) {
-                    <optgroup label="Provider perform services at following locations">
-                        @foreach (var ploc in providerLocations) {
-                            // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
-                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressType</option>
-                        }
-                    </optgroup>
-                }
-                @if (customerLocations != null && customerLocations.Count > 0) {
-                    <optgroup label="Your locations">
-                        @foreach (var ploc in customerLocations) {
-                            <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
-                        }
-                    </optgroup>
-                }
-            </select>
-            <ul class="enter-new-location" style="display: none">
-                <li class="street-address-line-1">
-                    <label>Street address line 1:<input type="text" value="@Request["street-address-line-1"]" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
-                </li>
-                <li class="street-address-line-2">
-                    <label>Street address line 2:<input type="text" value="@Request["street-address-line-2"]" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
-                </li>
-                <li class="city">
-                    <label>City:<input type="text" value="@Request["city"]" name="city" @Validation.GetHtml("city")/></label>
-                </li>
-                <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
-                <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
-                            @LcHelpers.StateProvinceOptions(Request["state"].AsInt())
-                        </select></label></li>
-                <li class="zip">
-                    <label>Zip Code:<input type="text" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
-                </li>
-                <li class="save-to-my-locations">
-                    <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
-                    <label>to my locations as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
-                </li>
-            </ul>
-        </div>
-        @if (providerTravelLocation != null && providerTravelLocation.Latitude != 0 && providerTravelLocation.Longitude != 0)
-        {
-            <div class="service-radius">
-                <strong>@(p.FirstName)'s service radius</strong>
-                <div class="serviceRadiusMap" style="width: 370px; height: 300px" data-latitude="@providerTravelLocation.Latitude" data-longitude="@providerTravelLocation.Longitude" data-service-radius="@providerTravelLocation.ServiceRadiusFromLocation"></div>
+    @if (!withoutLocation)
+    {
+        <fieldset class="location step-block">
+            <legend>Select the location where your service will be performed</legend>
+            <div class="available-locations">
+                <select name="select-location" class="select-location">
+                    <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
+                    @if (providerTravelLocation != null)
+                    {
+                    <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
+                    }
+                    @if (providerLocations != null && providerLocations.Count > 0)
+                    {
+                        <optgroup label="Provider perform services at following locations">
+                            @foreach (var ploc in providerLocations)
+                            {
+                                // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
+                                <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressType</option>
+                            }
+                        </optgroup>
+                    }
+                    @if (customerLocations != null && customerLocations.Count > 0)
+                    {
+                        <optgroup label="Your locations">
+                            @foreach (var ploc in customerLocations)
+                            {
+                                <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
+                            }
+                        </optgroup>
+                    }
+                </select>
+                <ul class="enter-new-location" style="display: none">
+                    <li class="street-address-line-1">
+                        <label>Street address line 1:<input type="text" value="@Request["street-address-line-1"]" name="street-address-line-1" @Validation.GetHtml("street-address-line-1")/></label>
+                    </li>
+                    <li class="street-address-line-2">
+                        <label>Street address line 2:<input type="text" value="@Request["street-address-line-2"]" name="street-address-line-2" @Validation.GetHtml("street-address-line-2")/></label>
+                    </li>
+                    <li class="city">
+                        <label>City:<input type="text" value="@Request["city"]" name="city" @Validation.GetHtml("city")/></label>
+                    </li>
+                    <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
+                    <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
+                                @LcHelpers.StateProvinceOptions(Request["state"].AsInt())
+                            </select></label></li>
+                    <li class="zip">
+                        <label>Zip Code:<input type="text" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
+                    </li>
+                    <li class="save-to-my-locations">
+                        <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
+                        <label>to my locations as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
+                    </li>
+                </ul>
             </div>
-        }
-    </fieldset>
+            @if (providerTravelLocation != null && providerTravelLocation.Latitude != 0 && providerTravelLocation.Longitude != 0)
+            {
+                <div class="service-radius">
+                    <strong>@(p.FirstName)'s service radius</strong>
+                    <div class="serviceRadiusMap" style="width: 370px; height: 300px" data-latitude="@providerTravelLocation.Latitude" data-longitude="@providerTravelLocation.Longitude" data-service-radius="@providerTravelLocation.ServiceRadiusFromLocation"></div>
+                </div>
+            }
+        </fieldset>
+    }
 
     <fieldset class="actions">
         <button data-wizard-next-step="#payment" class="proceed-to-payment next main-action">save & continue</button>
