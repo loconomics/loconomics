@@ -852,6 +852,13 @@ public static partial class LcData
     }
     #endregion
     #region Package Type (Provider Packages)
+    public class ProviderPackagesView
+    {
+        public dynamic Packages;
+        public dynamic PackagesDetails;
+        public Dictionary<int, dynamic> PackagesByID;
+        public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
+    }
     public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;
@@ -869,12 +876,12 @@ public static partial class LcData
                         ,p.PriceRate
                         ,p.PriceRateUnit
                         ,p.IsPhone
-                FROM    providerpackage As p
+                FROM    ProviderPackage As P
                          INNER JOIN
                         PricingType As PT
-                          ON p.PricingTypeID = PT.PricingTypeID
-                            AND p.LanguageID = PT.LanguageID
-                            AND p.CountryID = PT.CountryID
+                          ON P.PricingTypeID = PT.PricingTypeID
+                            AND P.LanguageID = PT.LanguageID
+                            AND P.CountryID = PT.CountryID
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
@@ -904,7 +911,7 @@ public static partial class LcData
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
                          AND (@5 = -1 OR P.PricingTypeID = @5)
-                         AND (@6 = -1 OR p.IsAddOn = @6)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY A.Name ASC
             ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
              (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
@@ -929,13 +936,6 @@ public static partial class LcData
             detI.Add(det);
         }
         return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
-    }
-    public class ProviderPackagesView
-    {
-        public dynamic Packages;
-        public dynamic PackagesDetails;
-        public Dictionary<int, dynamic> PackagesByID;
-        public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
     }
     #endregion
     #endregion
