@@ -206,6 +206,7 @@ public static class LcPricingModel
         /// {1}: duration in minutes
         /// </summary>
         public string SummaryFormat;
+        public string SummaryFormatUniqueSession;
         public string WithoutServiceAttributesCustomerMessage;
         public string WithoutServiceAttributesProviderMessage;
         public string FirstTimeClientsOnlyListText;
@@ -241,11 +242,10 @@ public static class LcPricingModel
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
 
-                SummaryFormat = "{0} sessions - {1} minutes each",
+                SummaryFormat = "{1} appointments - {0} minutes each",
+                SummaryFormatUniqueSession = "{0} minutes",
 
                 IncludeServiceAttributes = true,
-                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this package.",
-                WithoutServiceAttributesProviderMessage = "",
 
                 LearnMoreLabel = "Learn more about packages pricing.",
                 LearnMoreText = null,
@@ -272,7 +272,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Add-on removed succesfully",
                 SuccessOnSave = "Add/Edit add-ons",
 
-                SummaryFormat = "Duration of add-on service: {1} minutes",
+                SummaryFormatUniqueSession = "Duration of add-on service: {0} minutes",
 
                 IncludeServiceAttributes = false,
 
@@ -300,11 +300,13 @@ public static class LcPricingModel
                 PriceRateQuantityLabel = "My rates start at:",
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
+                InPersonPhoneLabel = "Estimation type:",
+                InPersonPhoneListLabel = "Estimation type:",
 
                 SuccessOnDelete = "Estimate removed succesfully",
                 SuccessOnSave = "Add/Edit estimates",
 
-                SummaryFormat = "Duration of estimate visit: {1} minutes",
+                SummaryFormatUniqueSession = "Duration of estimate visit: {0} minutes",
 
                 LearnMoreLabel = "Learn more about estimate pricing.",
                 LearnMoreText = null,
@@ -343,7 +345,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
-                SummaryFormat = "Duration of consultation: {1} minutes",
+                SummaryFormatUniqueSession = "Duration of consultation: {0} minutes",
 
                 LearnMoreLabel = "Learn more about consultation pricing.",
                 LearnMoreText = "We'll help schedule a consultation for you and your client.",
@@ -378,11 +380,9 @@ public static class LcPricingModel
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
 
-                SummaryFormat = "Duration of service: {1} minutes",
+                SummaryFormatUniqueSession = "Duration of service: {0} minutes",
 
                 IncludeServiceAttributes = true,
-                WithoutServiceAttributesCustomerMessage = "Please contact the provider for more information about this service.",
-                WithoutServiceAttributesProviderMessage = "",
 
                 LearnMoreLabel = "Learn more about services pricing.",
                 LearnMoreText = null,

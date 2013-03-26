@@ -40,11 +40,17 @@
                 continue;
             }
 
-            var withDetails = false;
             <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
                 <div class="provider-package-service-summary">
-                    @String.Format(config.SummaryFormat, pak.NumberOfSessions, pak.ServiceDuration)
+                    @if (pak.NumberOfSessions == 1)
+                    {
+                        @String.Format(config.SummaryFormatUniqueSession, pak.ServiceDuration)
+                    }
+                    else
+                    {
+                        @String.Format(config.SummaryFormat ?? config.SummaryFormatUniqueSession, pak.ServiceDuration, pak.NumberOfSessions)
+                    }
                     <div class="provider-package-price">
                         @if (editable)
                         {
@@ -96,32 +102,36 @@
                 }
                 @if (config.IncludeServiceAttributes)
                 {
-                    <h5>Services included in this package:</h5>
-                    <ul class="provider-package-services attributes-list service-attributes-list">
-                        @*  Get filtered PackagesDetails by PackageID, if any *@
-                        @if (data.PackagesDetailsByPackage.ContainsKey(pak.ProviderPackageID))
-                        {
-                            foreach (var ser in data.PackagesDetailsByPackage[pak.ProviderPackageID])
+                    var details = data.PackagesDetailsByPackage.ContainsKey(pak.ProviderPackageID)
+                        ? data.PackagesDetailsByPackage[pak.ProviderPackageID]
+                        : null;
+                    var count = details == null
+                        ? 0
+                        : details.Count;
+                    if (count > 0
+                        || (config.WithoutServiceAttributesCustomerMessage != null && !editable)
+                        || (config.WithoutServiceAttributesProviderMessage != null && editable)
+                        )
+                    {
+                        <h5>Services included in this package:</h5>
+                        <ul class="provider-package-services attributes-list service-attributes-list">
+                            @foreach (var ser in details)
                             {
-                                if (ser.ProviderPackageID == pak.ProviderPackageID)
+                                <li title="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
+                            }
+                            @if (count == 0)
+                            {
+                                if (editable)
                                 {
-                                    withDetails = true;
-                                    <li title="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
+                                    <li class="empty">@config.WithoutServiceAttributesProviderMessage</li>
+                                }
+                                else
+                                {
+                                    <li class="empty">@config.WithoutServiceAttributesCustomerMessage</li>
                                 }
                             }
-                        }
-                        @if (!withDetails)
-                        {
-                            if (editable)
-                            {
-                                <li class="empty">@config.WithoutServiceAttributesProviderMessage</li>
-                            }
-                            else
-                            {
-                                <li class="empty">@config.WithoutServiceAttributesCustomerMessage</li>
-                            }
-                        }
-                    </ul>
+                        </ul>
+                    }
                 }
             </li>
         }

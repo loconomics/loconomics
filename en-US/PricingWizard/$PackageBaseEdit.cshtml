@@ -68,7 +68,11 @@
         data.Price = Request["price"].AsDecimal();
         data.Duration = TimeSpan.FromMinutes(Request["minutes"].AsInt());
         data.FirstTimeClientsOnly = Request["first-time-clients-only"].AsBool();
-        data.NumberOfSessions = Request["sessions-number"].AsInt();
+        {
+            var nses = Request["sessions-number"].AsInt(1);
+            if (nses < 1) { nses = 1; }
+            data.NumberOfSessions = nses;
+        }
         data.PriceRate = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : (decimal?)Request["price-rate"].AsDecimal();
         data.PriceRateUnit = (config.PriceRateQuantityLabel == null || Request["no-price-rate"].AsBool()) ? null : Request["price-rate-unit"];
         data.IsPhone = (Request["inpersonphone"] == "phone");
