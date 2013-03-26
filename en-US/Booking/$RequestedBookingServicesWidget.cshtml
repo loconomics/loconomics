@@ -74,6 +74,13 @@
                 @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
             }
         }
+        
+        @if (!String.IsNullOrEmpty(strPackAddons))
+        {
+            <div class="packages">
+                @strPackAddons
+            </div>
+        }
 
         @if (!String.IsNullOrEmpty(strServices))
         {
@@ -90,18 +97,11 @@
                 @strVarsOpts
             </div>
         }
-
-        @if (!String.IsNullOrEmpty(strPackAddons))
-        {
-            <h5>Packages and Add-Ons:</h5>
-            <div class="packages">
-                @strPackAddons
-            </div>
+       
+        @if (!String.IsNullOrWhiteSpace(booking.SpecialRequests)) {
+            <h5>Special instructions:</h5>
+            <p class="special-instructions">@booking.SpecialRequests</p>
         }
-        
-        <h5>Special instructions:</h5>
-        <p class="special-instructions">@booking.SpecialRequests</p>
-
         @if (isRequest)
         {
         <h5>Location and contact information:</h5>
