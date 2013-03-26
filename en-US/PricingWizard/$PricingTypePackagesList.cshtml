@@ -66,7 +66,16 @@
                             // show price with fees
                             var priceWithFees = pak.Price + LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
                             <div class="actions book">
-                                <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
+                                @if (config.IsAddon)
+                                {
+                                    // Addons cannot be booked independently:
+                                    <div class="package-price addon-price">@String.Format("{0:c}", priceWithFees)</div>
+                                    <div class="addon-price-note">Available during checkout</div>
+                                }
+                                else
+                                {
+                                    <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees)</a>
+                                }
                             </div>
                         }
                     </div>

@@ -9,7 +9,7 @@
     margin: 10px 0;
 }
 .provider-package h4 {
-    margin: 0;
+    margin: 0 !important;
 }
 .provider-package h5 {
     color: #6C6C6C;
@@ -56,7 +56,16 @@
 }
 .profile .view-panel .provider-package .provider-package-service-summary .provider-package-price {
     right: 10px;
-    top: 6px;
+    top: 10px;
+}
+
+.view-panel .provider-package .addon-price,
+.view-panel .provider-package .addon-price-note {
+    color: Black;
+    font-size: 0.65em;
+    font-weight: bold;
+    line-height: 1em;
+    text-align: right;
 }
 
 /* Pricing Wizard Views

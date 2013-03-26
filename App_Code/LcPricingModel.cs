@@ -272,7 +272,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Add-on removed succesfully",
                 SuccessOnSave = "Add/Edit add-ons",
 
-                SummaryFormatUniqueSession = "Duration of add-on service: {0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes",
 
                 IncludeServiceAttributes = false,
 
@@ -306,7 +306,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Estimate removed succesfully",
                 SuccessOnSave = "Add/Edit estimates",
 
-                SummaryFormatUniqueSession = "Duration of estimate visit: {0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes",
 
                 LearnMoreLabel = "Learn more about estimate pricing.",
                 LearnMoreText = null,
@@ -345,7 +345,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
-                SummaryFormatUniqueSession = "Duration of consultation: {0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes",
 
                 LearnMoreLabel = "Learn more about consultation pricing.",
                 LearnMoreText = "We'll help schedule a consultation for you and your client.",
@@ -380,7 +380,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
 
-                SummaryFormatUniqueSession = "Duration of service: {0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes",
 
                 IncludeServiceAttributes = true,
 
