@@ -655,23 +655,6 @@ public static partial class LcData
     #endregion
     #region Common Pricing
     /// <summary>
-    /// DEPRECATED: TO BE USED GetPositionPricingTypes
-    /// </summary>
-    /// <param name="positionID"></param>
-    /// <param name="clientTypeID"></param>
-    /// <returns></returns>
-    public static int GetPositionPricingTypeID(int positionID, int clientTypeID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            return ((int?)db.QueryValue(@"
-                SELECT  pricingtypeid
-                FROM    positionpricingtype
-                WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
-            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 0);
-        }
-    }
-    /// <summary>
     /// Get the ID list of pricing types for a position
     /// </summary>
     /// <param name="positionID"></param>

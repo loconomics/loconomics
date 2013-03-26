@@ -35,9 +35,18 @@
         // TODO: Get Customer Type Id
         var clienttypeid = 1;
         
-        // Get our Pricing Type ID:
-        int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
-        
+        // Multi-pricing:
+        var pricingTypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
+        // Emulate a pricing type id
+        int pricingtypeid = 0;
+        // If almost one of the pricing types is in the package-based collection,
+        // we set the emulated pricingtypeid as 3 (package) for compatibility with current booking:
+        foreach(var pt in pricingTypes) {
+            if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pt.PricingTypeID)) {
+                pricingtypeid = 3;
+            }
+        }
+
         // Define that price selected and payed is estimated or not
         bool priceIsEstimated = false;
         
@@ -163,6 +172,7 @@
             HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypeID = pricingtypeid,
+            PricingTypes = pricingTypes,
             ClientTypeID = clienttypeid,
             SummaryLines = SummaryLines
         };
