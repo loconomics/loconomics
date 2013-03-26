@@ -47,13 +47,20 @@
             <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
                 <div class="provider-package-service-summary">
-                    @if (pak.NumberOfSessions == 1)
-                    {
-                        @String.Format(config.SummaryFormatUniqueSession, pak.ServiceDuration)
-                    }
-                    else
-                    {
-                        @String.Format(config.SummaryFormat ?? config.SummaryFormatUniqueSession, pak.ServiceDuration, pak.NumberOfSessions)
+                    @{
+                        var inpersonphone = "in-person";
+                        if (config.InPersonPhoneLabel != null)
+                        {
+                            inpersonphone = (pak.IsPhone ? "phone" : "in-person");
+                        }
+                        if (pak.NumberOfSessions == 1)
+                        {
+                            @String.Format(config.SummaryFormatUniqueSession, pak.ServiceDuration, 1, inpersonphone)
+                        }
+                        else
+                        {
+                            @String.Format(config.SummaryFormat ?? config.SummaryFormatUniqueSession, pak.ServiceDuration, pak.NumberOfSessions, inpersonphone)
+                        }
                     }
                     <div class="provider-package-price">
                         @if (editable)
@@ -86,11 +93,6 @@
                     <a href="#delete" class="delete-action crudl-delete">Delete</a>
                     <a href="#edit" class="edit-action crudl-update">Edit</a>
                 </div>
-                }
-                @if (config.InPersonPhoneListLabel != null)
-                {
-                    <h5>@config.InPersonPhoneListLabel</h5>
-                    <div class="package-inpersonphone">@(pak.IsPhone ? "phone" : "in-person")</div>
                 }
                 @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
                 {

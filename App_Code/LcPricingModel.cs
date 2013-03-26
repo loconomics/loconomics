@@ -210,7 +210,6 @@ public static class LcPricingModel
         public string WithoutServiceAttributesCustomerMessage;
         public string WithoutServiceAttributesProviderMessage;
         public string FirstTimeClientsOnlyListText;
-        public string InPersonPhoneListLabel;
         public string PriceRateQuantityListLabel;
         public string PriceRateUnitListLabel;
         public string NoPriceRateListMessage;
@@ -301,12 +300,11 @@ public static class LcPricingModel
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
                 InPersonPhoneLabel = "Estimation type:",
-                InPersonPhoneListLabel = "Estimation type:",
 
                 SuccessOnDelete = "Estimate removed succesfully",
                 SuccessOnSave = "Add/Edit estimates",
 
-                SummaryFormatUniqueSession = "{0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes ({2} estimate)",
 
                 LearnMoreLabel = "Learn more about estimate pricing.",
                 LearnMoreText = null,
@@ -336,7 +334,6 @@ public static class LcPricingModel
                 PriceRateUnitListLabel = "per",
                 NoPriceRateListMessage = "Pricing: Determined in consultation.",
                 InPersonPhoneLabel = "Consultation type:",
-                InPersonPhoneListLabel = "Consultation type:",
                 FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
 
@@ -345,7 +342,7 @@ public static class LcPricingModel
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
-                SummaryFormatUniqueSession = "{0} minutes",
+                SummaryFormatUniqueSession = "{0} minutes ({2} consultation)",
 
                 LearnMoreLabel = "Learn more about consultation pricing.",
                 LearnMoreText = "We'll help schedule a consultation for you and your client.",

@@ -10,11 +10,14 @@
 }
 .provider-package h4 {
     margin: 0 !important;
+    font-size: 1.5em !important;
+    color: #00989A !important;
 }
 .provider-package h5 {
     color: #6C6C6C;
     font-size: 1.1em;
     margin: 8px 0 0;
+    display: block !important;
 }
 .profile .provider-package a.button.book-action {
     font-size: 0.6em;
@@ -43,7 +46,7 @@
 .pricing-type-packages-list .provider-package .provider-package-service-summary {
     color: #00989A;
     position: relative;
-    font-size: 1.5em;
+    font-size: 1.3em;
 }
 .profile .view-panel .provider-package .provider-package-service-summary {
     position: static;
@@ -66,6 +69,9 @@
     font-weight: bold;
     line-height: 1em;
     text-align: right;
+}
+.view-panel .provider-package .book {
+    font-size: 1.2em;
 }
 
 /* Pricing Wizard Views
