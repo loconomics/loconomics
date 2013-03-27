@@ -316,7 +316,7 @@
     }
     public static void AdminPage() {
         SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsAdmin == false) {
+        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int)) {
             throw new HttpException(404, "Not Found");
         }
     }
