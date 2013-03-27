@@ -26,24 +26,16 @@
         
         // Get our Pricing Type ID:
         pricingtypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
+        // NEW WAY by default: Multiple pricing types, based on PackageBase
+        pageToLoad = "$ProviderPricingTypes.cshtml";
+
+        // If there is a unique pricing-type, use specific stuff only for some unique pricing types
         if (pricingtypes.Count == 1) {
-            // TEMPORARY SUPPORT for the old way, unique pricing type per position:
             switch ((int)pricingtypes[0].PricingTypeID) {
-                /* NEVER IMPLEMENTED
-                 * case 1: // Hours
-                    pageToLoad = "_ProviderHoursType.cshtml";
-                    break;
-                 */
                 case 2: // Custom
                     pageToLoad = "_ProviderCustomType.cshtml";
                     break;
-                case 3: // Packages
-                    pageToLoad = "$ProviderPackagesType.cshtml";
-                    break;
             }
-        } else {
-            // NEW WAY: Multiple pricing types, based on PackageBase
-            pageToLoad = "$ProviderPricingTypes.cshtml";
         }
     }
     
