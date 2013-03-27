@@ -24,12 +24,14 @@ public static partial class LcData
                     ,PP.ProviderPackageDescription As Description
 
                     --,PP.ProviderPackagePrice As Price
-                    --,PP.ProviderPackageServiceDuration As ServiceDuration
+                    ,PP.ProviderPackageServiceDuration As SessionDuration
                     ,P.ServiceDuration
                     ,P.TotalPrice As Price
 
                     ,PP.FirstTimeClientsOnly
                     ,PP.NumberOfSessions
+                    ,PP.IsPhone
+                    ,PP.PricingTypeID
                     ,P.CustomerPricingDataInput
             FROM    PricingEstimateDetail As P
                      INNER JOIN
@@ -451,35 +453,13 @@ public static partial class LcData
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
 
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var pitem in pvars)
-            {
-                if (i > 0)
-                {
-                    iprint = "; ";
-                }
-                i++;
-                result += iprint + pitem.Name + " " + pitem.Quantity;
-            }
-            iprint = "";
-            if (pvars.Count > 0)
-            {
-                iprint = "; ";
-            }
-            i = 0;
+                details.Add(pitem.Name + " " + pitem.Quantity);
             foreach (var pitem in poptions)
-            {
-                if (i > 0)
-                {
-                    iprint = "; ";
-                }
-                i++;
-                result += iprint + pitem.Name + "" + pitem.Quantity;
-            }
+                details.Add(pitem.Name + "" + pitem.Quantity);
 
-            return result;
+            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
         }
         public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0)
         {
@@ -493,21 +473,11 @@ public static partial class LcData
                 services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var service in services)
-            {
-                if (i > 0)
-                {
-                    iprint = ", ";
-                }
-                i++;
-                result += iprint + service.Name;
-            }
+                details.Add(service.Name);
 
-            return result;
+            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
         }
         public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0)
         {
@@ -521,21 +491,28 @@ public static partial class LcData
                 packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var pak in packages)
             {
-                if (i > 0)
+                // Format for the package summary (starting with a basic one)
+                var f = "{0}, {1} minutes";
+                var inpersonphone = "";
+                try
                 {
-                    iprint = ", ";
+                    var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
+                    f = pricingConfig.NameAndSummaryFormatUniqueSession;
+                    if (pak.NumberOfSessions > 1)
+                        f = pricingConfig.NameAndSummaryFormat;
+                    if (pricingConfig.InPersonPhoneLabel != null)
+                        inpersonphone = pak.IsPhone
+                            ? "phone"
+                            : "in-person";
                 }
-                i++;
-                result += iprint + pak.Name; // + " (" + pak.CustomerPricingDataInput + ")";
+                catch { }
+                
+                details.Add(String.Format(f, pak.Name, pak.SessionDuration, pak.NumberOfSessions, inpersonphone));
             }
-
-            return result;
+            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
         }
         public static string GetBookingRequestSubject(int BookingRequestID)
         {

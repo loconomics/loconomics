@@ -214,6 +214,10 @@ public static class LcPricingModel
         public string PriceRateUnitListLabel;
         public string NoPriceRateListMessage;
         #endregion
+        #region Booking/PricingEstimate Texts
+        public string NameAndSummaryFormat;
+        public string NameAndSummaryFormatUniqueSession;
+        #endregion
     }
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
     {
@@ -243,6 +247,8 @@ public static class LcPricingModel
 
                 SummaryFormat = "{1} appointments - {0} minutes each",
                 SummaryFormatUniqueSession = "{0} minutes",
+                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
+                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
 
                 IncludeServiceAttributes = true,
 
@@ -272,6 +278,8 @@ public static class LcPricingModel
                 SuccessOnSave = "Add/Edit add-ons",
 
                 SummaryFormatUniqueSession = "{0} minutes",
+                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
+                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
 
                 IncludeServiceAttributes = false,
 
@@ -305,6 +313,8 @@ public static class LcPricingModel
                 SuccessOnSave = "Add/Edit estimates",
 
                 SummaryFormatUniqueSession = "{0} minutes ({2} estimate)",
+                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} estimation)",
+                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} estimation)",
 
                 LearnMoreLabel = "Learn more about estimate pricing.",
                 LearnMoreText = null,
@@ -343,6 +353,8 @@ public static class LcPricingModel
                 SuccessOnSave = "Add/Edit consultations",
 
                 SummaryFormatUniqueSession = "{0} minutes ({2} consultation)",
+                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} consultation)",
+                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} consultation)",
 
                 LearnMoreLabel = "Learn more about consultation pricing.",
                 LearnMoreText = "We'll help schedule a consultation for you and your client.",
@@ -378,6 +390,8 @@ public static class LcPricingModel
                 SuccessOnSave = "Add/Edit services",
 
                 SummaryFormatUniqueSession = "{0} minutes",
+                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
+                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
 
                 IncludeServiceAttributes = true,
 
