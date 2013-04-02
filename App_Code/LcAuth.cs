@@ -112,4 +112,67 @@ public static class LcAuth
         // as opposed to via an OAuth or OpenID provider.
         System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
     }
+    /// <summary>
+    /// Check a user autologinkey to performs the automatic login if
+    /// match.
+    /// If success, the request continue being processing but with a
+    /// new session and new authentication cookie being sent in the response.
+    /// </summary>
+    /// <param name="userid"></param>
+    /// <param name="autologinkey"></param>
+    public static void Autologin(string userid, string autologinkey)
+    {
+        try
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var p = db.QueryValue(@"
+                    SELECT  Password
+                    FROM    webpages_Membership
+                    WHERE   UserId=@0
+                ", userid);
+                // Check if autologinkey and password (encrypted and then converted for url) match
+                if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
+                {
+                    // Autologin Success
+                    // Get user email by userid
+                    var userEmail = db.QueryValue(@"
+                        SELECT  email
+                        FROM    userprofile
+                        WHERE   userid = @0
+                    ", userid);
+                    // Clear current session to avoid conflicts:
+                    HttpContext.Current.Session.Clear();
+                    // Autologin flag
+                    HttpContext.Current.Session["Autologged"] = DateTime.Now;
+                    // New authentication cookie: Logged!
+                    System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+                }
+            }
+        }
+        catch { }
+    }
+    /// <summary>
+    /// Get the key that enable the user to autologged from url, to
+    /// be used by email templates.
+    /// </summary>
+    /// <param name="userid"></param>
+    /// <returns></returns>
+    public static string GetAutologinKey(string userid)
+    {
+        try
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var p = db.QueryValue(@"
+                    SELECT  Password
+                    FROM    webpages_Membership
+                    WHERE   UserId=@0
+                ", userid);
+                return LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p));
+            }
+        }
+        catch { }
+        return null;
+    }
 }

@@ -11,7 +11,7 @@ using System.IO;
 public class LcEncryptor 
 {
     /// <summary>
-    /// Generates a random, and alphanumeric token, suitable for URL as segment and paramenter specially
+    /// Generates a random, alphanumeric token, suitable for URL as segment and paramenter specially
     /// to generate privated-secure URLs.
     /// It tries to generated a unique value, but must be double checked saving it on database or something else, because
     /// the unique value is filtered to only alphanumeric chars.
@@ -20,10 +20,21 @@ public class LcEncryptor
     /// <returns></returns>
     public static string GenerateRandomToken(string extraValue)
     {
+        return ConvertForURL(Encrypt(extraValue + Guid.NewGuid().ToString()));
+    }
+
+    /// <summary>
+    /// Convert the given text in an alphanumeric token suitable for use as an URL segment or parameter.
+    /// The result can be different from the source, is not a 'slug' function.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public static string ConvertForURL(string text)
+    {
         const string availableChars =
             "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         return new String(
-            Encrypt(extraValue + Guid.NewGuid().ToString())
+            text
             .Select(b => availableChars[b % availableChars.Length])
             .ToArray()
         );
