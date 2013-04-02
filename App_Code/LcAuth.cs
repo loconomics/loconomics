@@ -142,15 +142,14 @@ public static class LcAuth
                         WHERE   userid = @0
                     ", userid);
                     // Clear current session to avoid conflicts:
-                    HttpContext.Current.Session.Clear();
-                    // Autologin flag
-                    HttpContext.Current.Session["Autologged"] = DateTime.Now;
+                    if (HttpContext.Current.Session != null)
+                        HttpContext.Current.Session.Clear();
                     // New authentication cookie: Logged!
                     System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
                 }
             }
         }
-        catch { }
+        catch (Exception ex) { HttpContext.Current.Response.Write(ex.Message); }
     }
     /// <summary>
     /// Get the key that enable the user to autologged from url, to
