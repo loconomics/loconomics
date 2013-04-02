@@ -158,7 +158,7 @@ public static class LcAuth
     /// </summary>
     /// <param name="userid"></param>
     /// <returns></returns>
-    public static string GetAutologinKey(string userid)
+    public static string GetAutologinKey(int userid)
     {
         try
         {
@@ -174,5 +174,35 @@ public static class LcAuth
         }
         catch { }
         return null;
+    }
+    /// <summary>
+    /// Request an autologin using the values from the HttpRequest if
+    /// is need.
+    /// </summary>
+    public static void RequestAutologin(HttpRequest Request)
+    {
+        var Q = Request.QueryString;
+        // Autologin feature for anonymous sessions with autologin parameters on request
+        if (!Request.IsAuthenticated
+            && Q["alk"] != null
+            && Q["alu"] != null)
+        {
+            // 'alk' url parameter stands for 'Auto Login Key'
+            // 'alu' url parameter stands for 'Auto Login UserID'
+            LcAuth.Autologin(Q["alu"], Q["alk"]);
+        }
+    }
+    /// <summary>
+    /// Get for the given userID the params and values for autologin in URL string format,
+    /// ready to be appended to an URL
+    /// (without & or ? as prefix, but & as separator and last character).
+    /// To be used mainly by Email templates.
+    /// </summary>
+    /// <returns></returns>
+    public static string GetAutologinUrlParams(int userID)
+    {
+        return String.Format("alu={0}&alk={1}&",
+            userID,
+            GetAutologinKey(userID));
     }
 }

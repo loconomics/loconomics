@@ -62,7 +62,10 @@
         // database preferences.
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
-        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");        
+        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+        
+        // Autologin
+        LcAuth.RequestAutologin(Request);
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
