@@ -230,15 +230,15 @@ public static class LcPricingModel
                 PluralName = "Packages",
                 SlugName = "package",
                 AddNewLabel = "Add a package",
-                ProviderDescription = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
+                ProviderDescription = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable).",
                 SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
                 NumberOfSessionsLabel = "Number of appointments included:",
-                PriceLabel = "Price for package",
+                PriceLabel = "Price for package:  $",
                 PriceNote = "(this should be all-inclusive)",
-                DurationLabel = "Duration (per appointment)",
-                DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)",
+                DurationLabel = "Duration (per appointment):",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
                 FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This package is available to first-time clients only",
 
@@ -252,8 +252,8 @@ public static class LcPricingModel
 
                 IncludeServiceAttributes = true,
 
-                LearnMoreLabel = "Learn more about packages pricing.",
-                LearnMoreText = null,
+                LearnMoreLabel = "Learn more about package pricing",
+                LearnMoreText =  "Here you can communicate a bundle of services that occur in a single appointment or multiple appointments of a service. For example, you could offer six appointments for a discounted price.",
             }
         },
         // Add-on Pricing Type
@@ -269,7 +269,7 @@ public static class LcPricingModel
                 IsAddon = true,
 
                 NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
-                PriceLabel = "Price for service:",
+                PriceLabel = "Price for add-on service:  $",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Length of service:",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)",
@@ -283,8 +283,8 @@ public static class LcPricingModel
 
                 IncludeServiceAttributes = false,
 
-                LearnMoreLabel = "Learn more about add-ons pricing.",
-                LearnMoreText = null,
+                LearnMoreLabel = "Learn more about add-on pricing",
+                LearnMoreText =  "Here you can add additional services that clients can request with a service allowing them to customize their experience with you.",
             }
         },
         // Estimate Pricing Type
@@ -301,12 +301,15 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
                 DurationLabel = "Approximate length of visit:",
-                PriceLabel = "Price for estimate:",
+                PriceLabel = "Price for estimate: $",
                 PriceNote = "(enter 0.00 if free)",
-                DescriptionPlaceHolder = "Tell your clients what they can expect during the visit and what to prepare.",
+                DescriptionPlaceHolder = "Tell your clients what they can expect when you speak with them and what to prepare.",
                 PriceRateQuantityLabel = "My rates start at:",
                 PriceRateUnitLabel = "per",
                 NoPriceRateLabel = "I prefer not to state",
+                PriceRateQuantityListLabel = "My rates start at:",
+                PriceRateUnitListLabel = "per",
+                NoPriceRateListMessage = "Pricing will be disclosed during consultation.",
                 InPersonPhoneLabel = "Estimation type:",
 
                 SuccessOnDelete = "Estimate removed succesfully",
@@ -316,8 +319,14 @@ public static class LcPricingModel
                 NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} estimation)",
                 NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} estimation)",
 
-                LearnMoreLabel = "Learn more about estimate pricing.",
-                LearnMoreText = null,
+                LearnMoreLabel = "Learn more about estimate pricing",
+                LearnMoreText =  "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this).",
+                PriceRateLearnMoreLabel = "learn more",
+                PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
+                    You can discuss your full pricing when you speak and add any materials/parts required to get the job done right.",
+                NoPriceRateLearnMoreLabel = "not recommended",
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.
+                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
             }
         },
         // Consultation Pricing Type
@@ -334,7 +343,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
                 DurationLabel = "Approx. length of consultation:",
-                PriceLabel = "Price for consultation:",
+                PriceLabel = "Price for consultation: $",
                 PriceNote = "(enter 0.00 if free)",
                 DescriptionPlaceHolder = "Tell your clients what they can expect during the consultation and what to prepare.",
                 PriceRateQuantityLabel = "My rates start at:",
@@ -342,13 +351,13 @@ public static class LcPricingModel
                 NoPriceRateLabel = "I prefer not to state",
                 PriceRateQuantityListLabel = "My rates start at:",
                 PriceRateUnitListLabel = "per",
-                NoPriceRateListMessage = "Pricing: Determined in consultation.",
+                NoPriceRateListMessage = "Pricing will be disclosed during consultation.",
                 InPersonPhoneLabel = "Consultation type:",
                 FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
 
                 PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
-                PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'not to state'",
+                PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'I prefer not to state'",
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
@@ -356,17 +365,17 @@ public static class LcPricingModel
                 NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} consultation)",
                 NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} consultation)",
 
-                LearnMoreLabel = "Learn more about consultation pricing.",
-                LearnMoreText = "We'll help schedule a consultation for you and your client.",
+                LearnMoreLabel = "Learn more about consultation pricing",
+                LearnMoreText = "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).",
                 PriceRateLearnMoreLabel = "learn more",
                 PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
                     You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right.",
                 NoPriceRateLearnMoreLabel = "not recommended",
-                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing: Determined in consultation'.
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.
                     We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
             }
         },
-        // Consultation Pricing Type
+        // Service Pricing Type
         {
             6,
             new PackageBaseConfig {
@@ -380,7 +389,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
                 DurationLabel = "Length of service:",
-                PriceLabel = "Price for service:",
+                PriceLabel = "Price for service: $",
                 PriceNote = "(this should be all-inclusive)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
                 FirstTimeClientsOnlyLabel = "This service is available to first-time clients only",
@@ -395,8 +404,8 @@ public static class LcPricingModel
 
                 IncludeServiceAttributes = true,
 
-                LearnMoreLabel = "Learn more about services pricing.",
-                LearnMoreText = null,
+                LearnMoreLabel = "Learn more about service pricing",
+                LearnMoreText = "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments.",
             }
         }
     };

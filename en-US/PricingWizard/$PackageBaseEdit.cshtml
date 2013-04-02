@@ -46,7 +46,7 @@
     // Depending on config validation rules
     if (config.PriceLabel != null) {
         Validation.RequireField("price", LcRessources.RequiredField("Price"));
-        Validation.Add("price", Validator.Decimal("Price must be a number"));
+        Validation.Add("price", Validator.Decimal("Price must be a number not contain the $ symbol."));
     }
     if (config.DurationLabel != null) {
         Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
