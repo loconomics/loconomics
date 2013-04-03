@@ -69,7 +69,12 @@
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
-        LcData.UserInfo.RegisterLastActivityTime();        
+        LcData.UserInfo.RegisterLastActivityTime();
+        /* TESTING
+        using (var f = System.IO.File.AppendText(Request.MapPath(LcUrl.RenderAppPath + "EndRequest.log")))
+        {
+            f.WriteLine("EXECUTION: " + (HttpContext.Current.Handler.GetType()).ToString());
+        } */
     }
        
 </script>
