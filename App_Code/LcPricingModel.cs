@@ -235,7 +235,7 @@ public static class LcPricingModel
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
                 NumberOfSessionsLabel = "Number of appointments included:",
-                PriceLabel = "Price for package:  $",
+                PriceLabel = "Price for package:",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Duration (per appointment):",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
@@ -269,7 +269,7 @@ public static class LcPricingModel
                 IsAddon = true,
 
                 NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
-                PriceLabel = "Price for add-on service:  $",
+                PriceLabel = "Price for add-on service:",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Length of service:",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)",
@@ -301,7 +301,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
                 DurationLabel = "Approximate length of visit:",
-                PriceLabel = "Price for estimate: $",
+                PriceLabel = "Price for estimate:",
                 PriceNote = "(enter 0.00 if free)",
                 DescriptionPlaceHolder = "Tell your clients what they can expect when you speak with them and what to prepare.",
                 PriceRateQuantityLabel = "My rates start at:",
@@ -343,7 +343,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
                 DurationLabel = "Approx. length of consultation:",
-                PriceLabel = "Price for consultation: $",
+                PriceLabel = "Price for consultation:",
                 PriceNote = "(enter 0.00 if free)",
                 DescriptionPlaceHolder = "Tell your clients what they can expect during the consultation and what to prepare.",
                 PriceRateQuantityLabel = "My rates start at:",
@@ -389,7 +389,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
                 DurationLabel = "Length of service:",
-                PriceLabel = "Price for service: $",
+                PriceLabel = "Price for service:",
                 PriceNote = "(this should be all-inclusive)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
                 FirstTimeClientsOnlyLabel = "This service is available to first-time clients only",
