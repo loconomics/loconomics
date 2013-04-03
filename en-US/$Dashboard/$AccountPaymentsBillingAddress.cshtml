@@ -59,7 +59,7 @@
             if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
                 user.UserID,
                 LcRessources.DataSaved,
-                LcRessources.OK))
+                "Edit billing address"))
             {
                 LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
             }
