@@ -13,6 +13,7 @@
     var data = LcData.GetPricingPackagesByProviderPosition(p.UserID, positionID);
     var idprefix = PageData["idprefix"] ?? "position" + positionID.ToString() + "-pricingwizard-packages";
     var datacontext = "pricing-" + positionID.ToString();
+    var includePricingOptions = PageData["IncludePricingOptions"] ?? false;
 }
 <div class="@PageData["PricingWizardClasses"] crudl package-pricing-type provider-pricing-types" data-crudl-context="@(datacontext)" data-crudl-item-id-parameter="ProviderPackageID" data-crudl-extra-query="PositionID=@positionID">
     <div class="crudl-editor edit-panel" data-source-url="@(LcUrl.LangPath)PricingWizard/$PackageBaseEdit/"></div>
@@ -22,6 +23,7 @@
             <div id="lcres-delete-crudl-item-loading-message:@datacontext">Deleting</div>
         </div>
         @* List of pricing types, description and 'add' option *@
+        <h2 class="section-title">Add pricing</h2>
         <div class="pricing-types-list clearfix">
             @foreach (var pricingType in pricingTypes)
             {
@@ -32,25 +34,31 @@
                 </div>
             }
         </div>
+        <h2 class="section-title">My pricing</h2>
         @foreach (var pricingType in pricingTypes)
         {
             var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pricingType.PricingTypeID];
             <div class="pricing-type-packages-list" data-crudl-extra-query="PricingTypeID=@(pricingType.PricingTypeID)">
+                @* Title and additional button not wanted now #190:
                 <div class="add-item crudl-create actions">
                     <a class="add-package-action" href="#add-@config.SlugName">Add another @config.SingularName</a>
                 </div>
                 <h3 class="packages-list-title">Your @config.PluralName:</h3>
+                *@
                 <div class="your-packages crudl-list pricing-type-@config.SlugName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingTypePackagesList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
                     @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID})
                 </div>
             </div>
         }
 
-        @* Pricing Options ?? *@
-        <div class="package-pricing-options">
-            <h3>Your Pricing Options:</h3>
-            @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 } )
-        </div>
+        @* Pricing Options *@
+        @if (includePricingOptions)
+        {
+            <div class="package-pricing-options">
+                <h3>Your Pricing Options:</h3>
+                @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 })
+            </div>
+        }
     </div>
 </div>
 <script type="text/javascript">
