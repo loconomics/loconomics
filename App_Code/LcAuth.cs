@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 using WebMatrix.WebData;
 using WebMatrix.Security;
+using System.Web.WebPages;
 
 /// <summary>
 /// Utilities class about authentication and authorization,
@@ -103,14 +104,18 @@ public static class LcAuth
         else
             LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
     }
-    public static void Login(string email, string password)
+    public static bool Login(string email, string password, bool persistCookie = false)
     {
         // Navigate back to the homepage and exit
-        WebSecurity.Login(email, password);
+        var result = WebSecurity.Login(email, password, persistCookie);
+
+        LcData.UserInfo.RegisterLastLoginTime(0, email);
 
         // mark the user as logged in via a normal account,
         // as opposed to via an OAuth or OpenID provider.
         System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+
+        return result;
     }
     /// <summary>
     /// Check a user autologinkey to performs the automatic login if
@@ -146,6 +151,8 @@ public static class LcAuth
                         HttpContext.Current.Session.Clear();
                     // New authentication cookie: Logged!
                     System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+
+                    LcData.UserInfo.RegisterLastLoginTime(userid.AsInt(), userEmail);
                 }
             }
         }

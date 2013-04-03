@@ -601,6 +601,58 @@ public static partial class LcData
         }
 
         /// <summary>
+        /// Get a dynamic row with the user preferences 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static dynamic GetUserPrefs(int userId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT  UserID
+                            ,SMSBookingCommunication
+                            ,PhoneBookingCommunication
+                            ,LoconomicsCommunityCommunication
+                            ,LoconomicsDBMCampaigns
+                            ,ProfileSEOPermission
+                            ,LoconomicsMarketingCampaigns
+                            ,CoBrandedPartnerPermissions
+                    FROM Users WHERE UserID = @0
+                    ", userId);
+            }
+        }
+        #endregion
+
+        #region Verifications
+        public static dynamic GetUserVerifications(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT  UV.LastVerifiedDate,
+                            UV.VerificationStatusID,
+                            VS.VerificationStatusName,
+                            V.VerificationType,
+                            V.Icon,
+                            V.VerificationID,
+                            V.VerificationCategoryID
+                    FROM    UserVerification As UV
+                             INNER JOIN
+                            Verification As V
+                              ON UV.VerificationID = V.VerificationID
+                             INNER JOIN
+                            VerificationStatus As VS
+                              ON UV.VerificationStatusID = VS.VerificationStatusID
+                                AND V.LanguageID = @1 AND V.CountryID = @2
+                    WHERE   UserID = @0
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+        #endregion
+
+        #region Stats
+        /// <summary>
         /// Get a dynamic row with the user statistics
         /// </summary>
         /// <param name="userId"></param>
@@ -636,28 +688,6 @@ public static partial class LcData
                 return r;
             }
         }
-        /// <summary>
-        /// Get a dynamic row with the user preferences 
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public static dynamic GetUserPrefs(int userId)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                return db.QuerySingle(@"
-                    SELECT  UserID
-                            ,SMSBookingCommunication
-                            ,PhoneBookingCommunication
-                            ,LoconomicsCommunityCommunication
-                            ,LoconomicsDBMCampaigns
-                            ,ProfileSEOPermission
-                            ,LoconomicsMarketingCampaigns
-                            ,CoBrandedPartnerPermissions
-                    FROM Users WHERE UserID = @0
-                    ", userId);
-            }
-        }
         public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
         {
             var responseTime = "N/A";
@@ -667,31 +697,34 @@ public static partial class LcData
             }
             return responseTime;
         }
-        #endregion
-
-        #region Verifications
-        public static dynamic GetUserVerifications(int userID)
+        public static void RegisterLastActivityTime()
         {
+            if (!WebSecurity.IsAuthenticated || WebSecurity.CurrentUserId < 0) return;
+            SetLastActivityLoginTimes(DateTime.Now, null);
+        }
+        public static void RegisterLastLoginTime(int userId = 0, string username = "")
+        {
+            SetLastActivityLoginTimes(DateTime.Now, DateTime.Now, userId, username);
+        }
+        public static void SetLastActivityLoginTimes(DateTime activityTime, DateTime? loginTime, int userId = 0, string username = "")
+        {
+            if (userId == 0 && WebSecurity.IsAuthenticated && WebSecurity.CurrentUserId > 0)
+                userId = WebSecurity.CurrentUserId;
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(@"
-                    SELECT  UV.LastVerifiedDate,
-                            UV.VerificationStatusID,
-                            VS.VerificationStatusName,
-                            V.VerificationType,
-                            V.Icon,
-                            V.VerificationID,
-                            V.VerificationCategoryID
-                    FROM    UserVerification As UV
-                             INNER JOIN
-                            Verification As V
-                              ON UV.VerificationID = V.VerificationID
-                             INNER JOIN
-                            VerificationStatus As VS
-                              ON UV.VerificationStatusID = VS.VerificationStatusID
-                                AND V.LanguageID = @1 AND V.CountryID = @2
+                if (userId == 0)
+                    userId = (int)(db.QueryValue(@"SELECT UserID FROM UserProfile WHERE Email like @0", username) ?? 0);
+                db.Execute(@"
+                    UPDATE  UserStats
+                    SET     LastActivityTime = @1
+                            ,LastLoginTime = coalesce(@2, LastLoginTime)
                     WHERE   UserID = @0
-                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    IF @@rowcount = 0
+                    BEGIN
+                        INSERT INTO UserStats (UserID, LastActivityTime, LastLoginTime)
+                        VALUES (@0, @1, @2)
+                    END
+                ", userId, activityTime, loginTime);
             }
         }
         #endregion

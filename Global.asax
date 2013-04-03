@@ -69,7 +69,7 @@
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
-        
+        LcData.UserInfo.RegisterLastActivityTime();        
     }
        
 </script>
