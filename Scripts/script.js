@@ -1788,6 +1788,11 @@ $(function () {
         popup(url, { width: 400, height: 240 });
         return false;
     })
+    .delegate('a.change-password', 'click', function () {
+        var url = this.getAttribute('href').replace('/Account/ChangePassword', '/Account/$ChangePassword');
+        popup(url, { width: 450, height: 340 });
+        return false;
+    })
     .delegate('.view-privacy-policy', 'click', function () {
         popup(LcUrl.LangPath + 'HelpCenter/$PrivacyPolicy/', 'large');
         return false;

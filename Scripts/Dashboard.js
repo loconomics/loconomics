@@ -563,6 +563,8 @@ $(document).ready(function () {
             case '#reactivate-my-account':
                 b = smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
                 break;
+            default:
+                return true;
         }
         if (b) {
             $('html,body').stop(true, true).animate({ scrollTop: b.offset().top }, 500, null);

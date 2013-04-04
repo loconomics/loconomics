@@ -1490,6 +1490,9 @@ form div.validation-summary-valid{
 #forgotPasswordBox .field-validation-error{
     float: left;
 }
+#changePasswordBox {
+    width: 450px;
+}
 html.boxshadow #loginBox .field-validation-error{
     display: none;
 }
