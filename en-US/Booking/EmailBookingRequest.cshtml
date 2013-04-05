@@ -103,7 +103,7 @@
                         </a>
                     }
                     <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Decline booking</h5>
-                    <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)">
+                    <a class="button-decline-booking" style="@LcEmailTemplateHelper.StyleButton();padding:.1em 1em;margin:.2em 0;background: #e95d0f;" href="@(LcUrl.LangUrl)Booking/$DeclineBookingRequest/?BookingRequestID=@(info.Booking.BookingRequestID)&@(PageData["autologinQuery"])">
                         Decline booking
                     </a>
                 </div>
