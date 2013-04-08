@@ -1035,15 +1035,15 @@ public static partial class LcData
             if (db == null)
                 db = Database.Open("sqlloco");
 
-            var rtn = (int)(db.QueryValue(@"
+            int rtn = N.D(db.QueryValue(@"
                 SELECT  U.CancellationPolicyID
                 FROM    UserProfilePositions As U
                 WHERE   U.UserID = @0
                          AND U.PositionID = @1
                          AND U.LanguageID = @2
                          AND U.CountryID = @3
-            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())
-            ?? DefaultCancellationPolicyID);
+            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()))
+            ?? DefaultCancellationPolicyID;
 
             if (disposeDb)
                 db.Dispose();
