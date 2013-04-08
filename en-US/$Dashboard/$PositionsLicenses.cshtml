@@ -201,7 +201,13 @@
     }
 }
 @LcHelpers.GetValidationScripts()
-@if (licenses == null || licenses.Count == 0)
+@if (!(u.StateProvinceID is int))
+{
+    <p class="setting-instructions">
+        LJDI: You need to specify your address in the <a href="@(LcUrl.LangPath)Dashboard/Account/#account-profile-contact">contact form</a> in order to know if a license is required to perform this work.
+    </p>
+}
+else if (licenses == null || licenses.Count == 0)
 {
     <p class="setting-instructions">
         Our research has indicated that a license or certification is not needed for this type of work. If this is incorrect, please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>, and we'll update our records accordingly.
