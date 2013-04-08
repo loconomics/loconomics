@@ -260,13 +260,14 @@
                 /*
                 * Create Booking Request
                 */
+                int cancellationPolicyID = LcData.Booking.GetProviderCancellationPolicyID(p.UserID, pos.PositionID);
                 var bookingRequestID = LcData.Booking.CreateRequest(
                     c.UserID,
                     p.UserID,
                     pos.PositionID,
                     data.BookingTypeID,
                     estimateID,
-                    LcData.Booking.DefaultCancellationPolicyID, // CancellationPolicyID: TODO Get from provider preference when implemented as preference
+                    cancellationPolicyID,
                     data.ContainsSummary ? Request["booking-services-special-instructions"] : null
                 );
             }

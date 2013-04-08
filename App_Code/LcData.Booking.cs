@@ -1022,6 +1022,34 @@ public static partial class LcData
             ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
         /// <summary>
+        /// Gets the preferred cancellationPolicyID of the provider for the position
+        /// or the DefaultCancellationPolicyID if provider has not the preference.
+        /// </summary>
+        /// <param name="providerUserID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static int GetProviderCancellationPolicyID(int providerUserID, int positionID, Database db = null)
+        {
+            var disposeDb = db == null;
+            if (db == null)
+                db = Database.Open("sqlloco");
+
+            var rtn = (int)(db.QueryValue(@"
+                SELECT  U.CancellationPolicyID
+                FROM    UserProfilePositions As U
+                WHERE   U.UserID = @0
+                         AND U.PositionID = @1
+                         AND U.LanguageID = @2
+                         AND U.CountryID = @3
+            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())
+            ?? DefaultCancellationPolicyID);
+
+            if (disposeDb)
+                db.Dispose();
+            return rtn;
+        }
+        /// <summary>
         /// Get a string with the name and description of the policy as informative title
         /// </summary>
         /// <param name="policyID"></param>

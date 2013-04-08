@@ -121,8 +121,7 @@ else
                 <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
                     If you wish to cancel this booking, the following cancellation policy will apply:
 
-                    @* TODO CancellationPolicyID must be get from provider preferences when implemented *@
-                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = LcData.Booking.DefaultCancellationPolicyID })
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = booking.CancellationPolicyID })
 
                     <strong>Are you sure you want cancel this booking?</strong>
                     <div class="actions">
