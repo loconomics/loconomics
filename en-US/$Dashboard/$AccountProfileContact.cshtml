@@ -164,37 +164,8 @@
 
 
                     /** UPSERT Personal Address **/
-                    UPDATE  Address WITH (serializable)
-                    SET     AddressLine1 = @AddressLine1
-		                    ,AddressLine2 = @AddressLine2
-		                    ,City=@City
-		                    ,StateProvinceID = @StateProvinceID
-		                    ,PostalCodeID = @PostalCodeID
-		                    ,CountryID = @CountryID
+                    EXEC SetHomeAddress @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
 
-                            ,Active = 1
-                            ,UpdatedDate = getdate()
-                            ,ModifiedBy = 'sys'
-                    WHERE   UserId = @UserID
-                                AND
-                            AddressTypeID = 1 -- Ever Type: Home
-
-                    IF @@rowcount = 0
-                    BEGIN
-                        DECLARE @AddressName nvarchar(50)
-                        SELECT @AddressName = AddressType
-                        FROM AddressType
-                        WHERE AddressTypeID = 1 -- Home
-                                AND LanguageID = @LanguageID
-                                AND CountryID = @CountryID
-
-                        INSERT INTO Address (UserID, AddressTypeID, AddressName,
-                            AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
-                            Active, CreatedDate, UpdatedDate, ModifiedBy)
-                        VALUES (@UserID, 1 /* Type: Home */, @AddressName, 
-                            @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, 
-                            1, getdate(), getdate(), 'sys')
-                    END
 
                     /* Update User Personal Data */
                     UPDATE	Users

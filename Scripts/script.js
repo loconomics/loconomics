@@ -1699,7 +1699,7 @@ LC.welcomePopup = function () {
     c.find('#welcomepopupLoading').remove();
 
     // Actions
-    c.one('change', '.profile-choice [name=profile-type]', function () {
+    c.on('change', '.profile-choice [name=profile-type]', function () {
         c.find('.profile-data li:not(.' + this.value + ')').hide();
         c.find('.profile-choice, header .presentation').slideUp('fast');
         c.find('.terms, .profile-data').slideDown('fast');

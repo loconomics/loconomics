@@ -35,32 +35,42 @@
             // User already exists
             ModelState.AddFormError("Email address is already in use.");
         } else {
-            try {
-                var user = 
-                LcAuth.RegisterUser(
-                    Request["email"],
-                    Request["firstname"],
-                    Request["lastname"],
-                    Request["password"],
-                    false
-                );
-                LcAuth.SendRegisterUserEmail(user);
+            
+            var stateProvinceID = LcData.GetStateFromZipCode(Request["zipcode"]);
+            int postalCodeID = LcData.GetPostalCodeID(Request["zipcode"], stateProvinceID);
+            if (postalCodeID == 0) {
+                ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
+            }
+            
+            if (ModelState.IsValid) {
+                try {
+                    var user = 
+                    LcAuth.RegisterUser(
+                        Request["email"],
+                        Request["firstname"],
+                        Request["lastname"],
+                        Request["password"],
+                        false
+                    );
+                    LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
+                    LcAuth.SendRegisterUserEmail(user);
                 
-                if (waitConfirmation) {
-                    Session["RegisteredUserID"] = user.UserID;
-                    // Thank the user for registering and let them know an email is on its way
-                    // We return a json with result OK and redirect link (Code=1),
-                    // and response end just after this:
-                    LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/Thanks/");
-                } else {
-                    LcAuth.Login(user.Email, Request["password"]);
+                    if (waitConfirmation) {
+                        Session["RegisteredUserID"] = user.UserID;
+                        // Thank the user for registering and let them know an email is on its way
+                        // We return a json with result OK and redirect link (Code=1),
+                        // and response end just after this:
+                        LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Account/Thanks/");
+                    } else {
+                        LcAuth.Login(user.Email, Request["password"]);
 
-                    // We return a json with result OK and redirect link (Code=1),
-                    // and response end just after this:
-                    LcHelpers.ReturnJsonResult(1, redirect);
+                        // We return a json with result OK and redirect link (Code=1),
+                        // and response end just after this:
+                        LcHelpers.ReturnJsonResult(1, redirect);
+                    }
+                } catch (System.Web.Security.MembershipCreateUserException e) {
+                    ModelState.AddFormError(e.Message);
                 }
-            } catch (System.Web.Security.MembershipCreateUserException e) {
-                ModelState.AddFormError(e.Message);
             }
         }
     }
@@ -96,6 +106,12 @@
                         <input type="text" id="email" name="email" title="Email address" value="@Request["email"]" @Validation.GetHtml("email") />
                         @* Write any email validation errors to the page *@
                         @Html.ValidationMessage("email")
+                    </li>
+                    <li class="zipcode">
+                        <label for="zipcode" @if(!ModelState.IsValidField("zipcode")){<text>class="error-label"</text>}>Zip code:</label>
+                        <input type="text" id="zipcode" name="zipcode" title="Zip code" value="@Request["zipcode"]" @Validation.GetHtml("zipcode") />
+                        @* Write any email validation errors to the page *@
+                        @Html.ValidationMessage("zipcode")
                     </li>
                     <li class="password">
                         <label for="password" @if(!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password:</label>

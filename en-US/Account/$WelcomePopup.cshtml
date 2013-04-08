@@ -30,12 +30,19 @@
         Validation.RequireField("profile-type", "Please, select one from Provider or Customer");
         Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
         Validation.RequireField("email", LcRessources.RequiredField("Email"));
+        Validation.RequireField("zipcode", LcRessources.RequiredField("Zip code"));
         Validation.RequireField("password", LcRessources.RequiredField("Password"));
         Validation.Add("email",
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
     }
 
     if (IsPost && Validation.IsValid()) {
+        // Server side validations
+        var stateProvinceID = LcData.GetStateFromZipCode(Request["zipcode"]);
+        int postalCodeID = LcData.GetPostalCodeID(Request["zipcode"], stateProvinceID);
+        if (postalCodeID == 0) {
+            ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
+        }
         // Validations depending on the profile-type selected
         string profileType = Request["profile-type"];
         int positionID = Request["positionid"].AsInt();
@@ -83,6 +90,7 @@
                             Request["password"],
                             asProvider
                         );
+                        LcData.SetHomeAddress(user.UserID, "", "", "", stateProvinceID, postalCodeID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID());
                         LcAuth.SendRegisterUserEmail(user);
                         // Auto-login:
                         LcAuth.Login(user.Email, Request["password"]);
@@ -160,6 +168,7 @@
                         {
                         <li class="provider customer"><label for="@(idprefix)-firstname">First name</label><input id="@(idprefix)-firstname" class="personal-data" type="text" placeholder="First name" name="firstname" @Validation.GetHtml("firstname") value="@Request["firstname"]" /></li>
                         <li class="customer"><label for="@(idprefix)-lastname">Last name</label><input id="@(idprefix)-lastname" class="personal-data" type="text" placeholder="Last name" name="lastname" @Validation.GetHtml("lastname") value="@Request["lastname"]" /></li>
+                        <li class="provider customer"><label for="@(idprefix)-zipcode">Zip code</label><input data-val-postalcode="@(LcRessources.GetText("postal-code-validation-error"))" id="@(idprefix)-zipcode" class="personal-data" type="text" placeholder="Zip code" name="zipcode" @Validation.GetHtml("zipcode") value="@Request["zipcode"]" /></li>
                         <li class="provider customer"><label for="@(idprefix)-email">Email</label><input id="@(idprefix)-email" class="personal-data" type="text" placeholder="E-mail address" name="email"  @Validation.GetHtml("email") value="@Request["email"]" /></li>
                         <li class="provider customer"><label for="@(idprefix)-password">Password</label><input id="@(idprefix)-password" class="secure-data" type="password" placeholder="Create password" name="password" @Validation.GetHtml("password")/></li>
                         }

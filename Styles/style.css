@@ -1427,7 +1427,8 @@ form div.validation-summary-valid{
 .account-popup .username input,
 .account-popup .password input,
 .account-popup .firstname input,
-.account-popup .lastname input{
+.account-popup .lastname input,
+.account-popup .zipcode input{
     float: right;
 }
 .account-popup .remember-me{

@@ -311,7 +311,17 @@ public static partial class LcData
             return db.QueryValue(sqlGetStateCode, stateProvinceID);
         }
     }
-
+    /// <summary>
+    /// Parameters in order: @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
+    /// </summary>
+    public const string sqlSetHomeAddress = @"EXEC SetHomeAddress @0, @1, @2, @3, @4, @5, @6, @7";
+    public static void SetHomeAddress(int userID, string addressLine1, string addressLine2, string city, int stateProvinceID, int postalCodeID, int countryID, int languageID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(sqlSetHomeAddress, userID, addressLine1, addressLine2, city, stateProvinceID, postalCodeID, countryID, languageID);
+        }
+    }
     public const string sqlGetAddresses = @"
         SELECT  L.AddressID
                 ,L.UserID
