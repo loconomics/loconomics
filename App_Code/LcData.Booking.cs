@@ -1049,6 +1049,19 @@ public static partial class LcData
                 db.Dispose();
             return rtn;
         }
+        public static dynamic GetCancellationPolicies()
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT  C.CancellationPolicyID
+                            ,C.CancellationPolicyName
+                    FROM    CancellationPolicy As C
+                    WHERE   C.LanguageID = @0
+                             AND C.CountryID = @1
+                ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
         /// <summary>
         /// Get a string with the name and description of the policy as informative title
         /// </summary>

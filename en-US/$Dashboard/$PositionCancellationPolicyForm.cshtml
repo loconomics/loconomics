@@ -1,0 +1,37 @@
+﻿@{
+    int providerID = WebSecurity.CurrentUserId;
+    int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+
+    Validation.RequireField("cancellation-policy", "Please, select a valid cancellation policy");
+    if (IsPost && Validation.IsValid()) {
+        var policyID = Request["cancellation-policy"].AsInt();
+        using (var db = Database.Open("sqlloco")) {
+            db.Execute(@"
+                UPDATE userprofilepositions
+                SET CancellationPolicyID = @2
+                WHERE UserID = @0 AND PositionID = @1
+                    AND LanguageID = @3
+                    AND CountryID = @4
+            ", providerID, positionID, policyID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+    }
+
+    var policies = LcData.Booking.GetCancellationPolicies();
+    var selectedPolicyID = LcData.Booking.GetProviderCancellationPolicyID(providerID, positionID);
+}
+<div class="cancellation-policy-form">
+    <h2 class="section-title">My cancellation policy</h2>
+    <form action="@(LcUrl.LangPath)$Dashboard/$PositionCancellationPolicyForm/" method="post" class="ajax ajax-box">
+        <input type="hidden" name="PositionID" value="@positionID" />
+        <fieldset>
+            <legend>Cancellation policy (flakes are for breakfast, not for creating healthy business relationships):</legend>
+            <ul>
+                @foreach (var policy in policies)
+                {
+                    <li><label><input @LcHelpers.IsChecked(policy.CancellationPolicyID, new object[]{ Request["cancellation-policy"], selectedPolicyID }) type="radio" name="cancellation-policy" value="@policy.CancellationPolicyID" /> @policy.CancellationPolicyName</label></li>
+                }
+            </ul>
+        </fieldset>
+    </form>
+</div>

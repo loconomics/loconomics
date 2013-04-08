@@ -507,6 +507,16 @@ $(document).ready(function () {
         $('.dashboard [name=no-price-rate]').change();
     })();
 
+    /*===========================
+     * Cancellation Policy
+     */
+    (function() {
+        $('.dashboard').on('change', '.cancellation-policy-form [name=cancellation-policy]', function(){
+            var form = $(this).closest('form');
+            form.submit();
+        });
+    })();
+
     /**==================
     * Background check 
     */

@@ -73,7 +73,7 @@
 .view-panel .provider-package .book {
     font-size: 1.2em;
 }
-.provider-pricing-types .section-title {
+.dashboard-provider-pricing h2.section-title {
     font-size: 1em;
     border-bottom: 1px solid #B0B0B0;
     padding: 0 .5em .2em .5em;
