@@ -182,11 +182,9 @@
                             ,ModifiedBy = 'sys'
                     WHERE   UserId = @UserID
 
-                    -- Check Alerts related with user info:
-                    EXEC TestAlertPersonalInfo @UserID
-                    EXEC TestAlertBasicInfoVerification @UserID
-                    EXEC TestAlertSocialMediaVerification @UserID
-                    EXEC TestAlertBackgroundCheck @UserID
+                    -- A lot of direct and indirect alerts depend on contact info,
+                    -- execute all its alerts for all its positions
+                    EXEC TestAllUserAlerts @UserID
 
                     COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName,
