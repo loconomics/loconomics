@@ -143,6 +143,7 @@ public static class LcPricingModel
         public string AddNewLabel;
         public string ProviderDescription;
         /// <summary>
+        /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
         /// It defines group names in that only one element can be selected
         /// from all that are in the group. This means that a pricing with a group
         /// will only allow select one element from that pricing type, affected too
@@ -152,6 +153,7 @@ public static class LcPricingModel
         /// </summary>
         public string[] SelectionGroups;
         /// <summary>
+        /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
         /// List of selection groups used in other pricing types that will cause that
         /// elements of this type cannot be selected (because you cannot select one of
         /// this when one element of that group is selected, not because are the same
@@ -202,12 +204,18 @@ public static class LcPricingModel
         #endregion
         #region List Texts
         /// <summary>
+        /// SummaryFormat is the default format for summaries (required),
+        /// other formats are good for better detail, but depends
+        /// on other options configured per type.
         /// Wildcards:
-        /// {0}: number of sessions
-        /// {1}: duration in minutes
+        /// {0}: duration
+        /// {1}: sessions
+        /// {2}: inperson/phone
         /// </summary>
         public string SummaryFormat;
-        public string SummaryFormatUniqueSession;
+        public string SummaryFormatMultipleSessions;
+        public string SummaryFormatNoDuration;
+        public string SummaryFormatMultipleSessionsNoDuration;
         public string WithoutServiceAttributesCustomerMessage;
         public string WithoutServiceAttributesProviderMessage;
         public string FirstTimeClientsOnlyListText;
@@ -216,8 +224,20 @@ public static class LcPricingModel
         public string NoPriceRateListMessage;
         #endregion
         #region Booking/PricingEstimate Texts
+        /// <summary>
+        /// NameAndSummaryFormat is the default format for summaries with package name (required),
+        /// other formats are good for better detail, but depends
+        /// on other options configured per type.
+        /// Wildcards:
+        /// {0}: package name
+        /// {1}: duration
+        /// {2}: sessions
+        /// {3}: inperson/phone
+        /// </summary>
         public string NameAndSummaryFormat;
-        public string NameAndSummaryFormatUniqueSession;
+        public string NameAndSummaryFormatMultipleSessions;
+        public string NameAndSummaryFormatNoDuration;
+        public string NameAndSummaryFormatMultipleSessionsNoDuration;
         #endregion
     }
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
@@ -247,10 +267,10 @@ public static class LcPricingModel
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
 
-                SummaryFormat = "{1} appointments - {0} minutes each",
-                SummaryFormatUniqueSession = "{0} minutes",
-                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
-                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
+                SummaryFormat = "{0} minutes",
+                SummaryFormatMultipleSessions = "{1} appointments - {0} minutes each",
+                NameAndSummaryFormat = "{0}, {1} minutes",
+                NameAndSummaryFormatMultipleSessions = "{0}, {2} appointments - {1} minutes each",
 
                 IncludeServiceAttributes = true,
 
@@ -280,9 +300,11 @@ public static class LcPricingModel
                 SuccessOnDelete = "Add-on removed succesfully",
                 SuccessOnSave = "Add/Edit add-ons",
 
-                SummaryFormatUniqueSession = "{0} minutes",
-                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
-                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
+                SummaryFormat = "{0} minutes",
+                // Left a white space to avoid the default SummaryFormat be used instead:
+                SummaryFormatNoDuration = " ",
+                NameAndSummaryFormat = "{0}, {1} minutes",
+                NameAndSummaryFormatNoDuration = "{0}",
 
                 IncludeServiceAttributes = false,
 
@@ -319,9 +341,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Estimate removed succesfully",
                 SuccessOnSave = "Add/Edit estimates",
 
-                SummaryFormatUniqueSession = "{0} minutes ({2} estimate)",
-                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} estimation)",
-                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} estimation)",
+                SummaryFormat = "{0} minutes ({2} estimate)",
+                NameAndSummaryFormat = "{0}, {1} minutes ({3} estimation)",
 
                 LearnMoreLabel = "Learn more about estimate pricing",
                 LearnMoreText =  "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this).",
@@ -366,9 +387,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
-                SummaryFormatUniqueSession = "{0} minutes ({2} consultation)",
-                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each ({3} consultation)",
-                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes ({3} consultation)",
+                SummaryFormat = "{0} minutes ({2} consultation)",
+                NameAndSummaryFormat = "{0}, {1} minutes ({3} consultation)",
 
                 LearnMoreLabel = "Learn more about consultation pricing",
                 LearnMoreText = "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).",
@@ -404,9 +424,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
 
-                SummaryFormatUniqueSession = "{0} minutes",
-                NameAndSummaryFormat = "{0}, {2} appointments - {1} minutes each",
-                NameAndSummaryFormatUniqueSession = "{0}, {1} minutes",
+                SummaryFormat = "{0} minutes",
+                NameAndSummaryFormat = "{0}, {1} minutes",
 
                 IncludeServiceAttributes = true,
 

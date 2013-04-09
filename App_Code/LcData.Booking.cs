@@ -494,15 +494,24 @@ public static partial class LcData
             var details = new List<string>();
             foreach (var pak in packages)
             {
-                // Format for the package summary (starting with a basic one)
-                var f = "{0}, {1} minutes";
+                // Format for the package summary
+                var f = "";
                 var inpersonphone = "";
                 try
                 {
                     var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
-                    f = pricingConfig.NameAndSummaryFormatUniqueSession;
                     if (pak.NumberOfSessions > 1)
+                    {
+                        if (pak.ServiceDuration == 0)
+                            f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+                        else
+                            f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+                    }
+                    else if (pak.ServiceDuration == 0)
+                        f = pricingConfig.NameAndSummaryFormatNoDuration;
+                    if (String.IsNullOrEmpty(f))
                         f = pricingConfig.NameAndSummaryFormat;
+
                     if (pricingConfig.InPersonPhoneLabel != null)
                         inpersonphone = pak.IsPhone
                             ? "phone"

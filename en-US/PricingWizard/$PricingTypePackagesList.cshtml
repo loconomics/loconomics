@@ -53,14 +53,25 @@
                         {
                             inpersonphone = (pak.IsPhone ? "phone" : "in-person");
                         }
-                        if (pak.NumberOfSessions == 1)
+                        var summaryFormat = "";
+                        if (pak.NumberOfSessions > 1)
                         {
-                            @String.Format(config.SummaryFormatUniqueSession, pak.ServiceDuration, 1, inpersonphone)
+                            if (pak.ServiceDuration == 0) {
+                                summaryFormat = config.SummaryFormatMultipleSessionsNoDuration;
+                            } else {
+                                summaryFormat = config.SummaryFormatMultipleSessions;
+                            }
                         }
-                        else
+                        else if (pak.ServiceDuration == 0)
                         {
-                            @String.Format(config.SummaryFormat ?? config.SummaryFormatUniqueSession, pak.ServiceDuration, pak.NumberOfSessions, inpersonphone)
+                            summaryFormat = config.SummaryFormatNoDuration;
                         }
+                        // Default value and generic:
+                        if (String.IsNullOrEmpty(summaryFormat))
+                        {
+                            summaryFormat = config.SummaryFormat;
+                        }
+                        @String.Format(summaryFormat, pak.ServiceDuration, pak.NumberOfSessions, inpersonphone)
                     }
                     <div class="provider-package-price">
                         @if (editable)
