@@ -39,7 +39,7 @@
             }
             else if (bookingDate == null)
             {
-                var tpl = "If {0} makes a booking for one week from now, {0} would need to cancel by";
+                var tpl = "If a booking is made by {0} for one week from now, {0} would need to cancel by";
                 <span>
                     @String.Format(tpl, cancellationSubjectPronoun)
                     <strong>@(refundLimitDate.ToShortTimeString()) @refundLimitDate.ToLongDateString()</strong>
