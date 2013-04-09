@@ -196,6 +196,7 @@ public static class LcPricingModel
         public string NoPriceRateLearnMoreText;
         #endregion
         #region Additional configuration
+        public bool RequireDuration;
         public bool IncludeServiceAttributes;
         public bool IncludeSpecialPromotion;
         #endregion
@@ -238,6 +239,7 @@ public static class LcPricingModel
                 PriceLabel = "Price for package:",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Duration (per appointment):",
+                RequireDuration = true,
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
                 FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This package is available to first-time clients only",
@@ -272,6 +274,7 @@ public static class LcPricingModel
                 PriceLabel = "Price for add-on service:",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Length of service:",
+                RequireDuration = false,
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)",
 
                 SuccessOnDelete = "Add-on removed succesfully",
@@ -301,6 +304,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
                 DurationLabel = "Approximate length of visit:",
+                RequireDuration = true,
                 PriceLabel = "Price for estimate:",
                 PriceNote = "(enter 0.00 if free)",
                 DescriptionPlaceHolder = "Tell your clients what they can expect when you speak with them and what to prepare.",
@@ -343,6 +347,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
                 DurationLabel = "Approx. length of consultation:",
+                RequireDuration = true,
                 PriceLabel = "Price for consultation:",
                 PriceNote = "(enter 0.00 if free)",
                 DescriptionPlaceHolder = "Tell your clients what they can expect during the consultation and what to prepare.",
@@ -389,6 +394,7 @@ public static class LcPricingModel
 
                 NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
                 DurationLabel = "Length of service:",
+                RequireDuration = true,
                 PriceLabel = "Price for service:",
                 PriceNote = "(this should be all-inclusive)",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",

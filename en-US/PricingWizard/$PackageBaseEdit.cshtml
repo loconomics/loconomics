@@ -49,12 +49,15 @@
         Validation.Add("price", Validator.Decimal("Price must be a number not contain the $ symbol."));
     }
     if (config.DurationLabel != null) {
-        Validation.RequireField("minutes", LcRessources.RequiredField("Session duration in minutes"));
-        Validation.Add("minutes", Validator.Integer("Session duration in minutes must be a number without decimals"));
-    }   
+        Validation.Add("minutes", Validator.Integer("Duration in minutes must be a number without decimals"));
+        if (config.RequireDuration) {
+            Validation.RequireField("minutes", LcRessources.RequiredField("Duration in minutes"));
+            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration in minutes")));
+        }
+    }
     if (config.NumberOfSessionsLabel != null) {
-        Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of sessions"));
-        Validation.Add("sessions-number", Validator.Integer("Number of sessions must be a number without decimals"));
+        Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of appointments"));
+        Validation.Add("sessions-number", Validator.Integer("Number of appointments must be a number without decimals"));
     }
 
     // Saving:
