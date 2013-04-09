@@ -1103,7 +1103,13 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         // Post 'maybe' was wrong, html was returned to replace current 
         // form container: the ajax-box.
 
-        var newhtml = $(data);
+        // TODO: enable when jquery-1.9 Create html content from the data, in a secure way:
+        //var newhtml = $($.parseHTML(data));
+        var newhtml = $('#FAKEELEMENTEMPTYJQUERY');
+        // Try-catch to avoid errors when an empty document or malformed is returned:
+        try {
+            newhtml = $(data);
+        } catch (ex) { }
 
         // TODO: changesnotification before or after append element to doc?
 
@@ -1357,8 +1363,8 @@ function configureTooltip() {
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
     }
-    $('body').on('mousemove focusin', '[title][data-description][data-description!=""], [title].has-tooltip, [data-tooltip-url]', showTooltip)
-    .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip, [data-tooltip-url]', hideTooltip)
+    $('body').on('mousemove focusin', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', showTooltip)
+    .on('mouseleave focusout', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
 /**
