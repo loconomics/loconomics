@@ -32,7 +32,7 @@
         <em><strong>@policy.CancellationPolicyDescription</strong>
             @if (refundLimitDate <= DateTime.Now)
             {
-                var tpl = "Since {0} request time is within {1} hours, {2} will not be able to cancel this appointment.";
+                var tpl = "Since {0} requested time is within {1} hours, {2} will not be able to cancel this appointment.";
                 <span>
                     @String.Format(tpl, cancellationPossesivePronoun, policy.HoursRequired, cancellationSubjectPronoun)
                  </span>
