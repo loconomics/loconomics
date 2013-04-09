@@ -1015,6 +1015,12 @@ html.js .user-verified-licenses h5 {
     height: 7em;
 }
 /**** Form: Positions Pricing ****/
+.dashboard .cancellation-policy-form label {
+    width: auto !important;
+}
+.dashboard .cancellation-policy-form .cancellation-policy-info {
+    text-decoration: underline;
+}
 .dashboard form.positionpricing li label {
     width: auto;
 }
