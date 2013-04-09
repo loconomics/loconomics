@@ -19,6 +19,8 @@
 
     var policies = LcData.Booking.GetCancellationPolicies();
     var selectedPolicyID = LcData.Booking.GetProviderCancellationPolicyID(providerID, positionID);
+    
+    var prefix = "cancellation-policy-" + positionID.ToString();
 }
 <div class="cancellation-policy-form">
     <h2 class="section-title">My cancellation policy</h2>
@@ -29,7 +31,14 @@
             <ul>
                 @foreach (var policy in policies)
                 {
-                    <li><label><input @LcHelpers.IsChecked(policy.CancellationPolicyID, new object[]{ Request["cancellation-policy"], selectedPolicyID }) type="radio" name="cancellation-policy" value="@policy.CancellationPolicyID" /> @policy.CancellationPolicyName</label></li>
+                    <li>
+                        <label data-tooltip-url="#@prefix-policy-@policy.CancellationPolicyID"><input @LcHelpers.IsChecked(policy.CancellationPolicyID, new object[]{ Request["cancellation-policy"], selectedPolicyID }) type="radio" name="cancellation-policy" value="@policy.CancellationPolicyID" /> @policy.CancellationPolicyName</label>
+                        <div class="popups">
+                            <div id="@prefix-policy-@policy.CancellationPolicyID" class="popup">
+                                @RenderPage(LcUrl.RenderLangPath + "Booking/$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = policy.CancellationPolicyID, DisplayForUserType = "provider" })
+                            </div>
+                        </div>
+                    </li>
                 }
             </ul>
         </fieldset>
