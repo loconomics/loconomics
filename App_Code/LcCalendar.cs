@@ -294,6 +294,7 @@ public static class LcCalendar
         using (var ent = new loconomicsEntities())
         {
             return ent.CalendarEvents
+                .Include("CalendarAvailabilityType")
                 .Where(c => c.UserId == userID && (c.EventType == 3 || c.EventType == 5))
                 .ToList();
         }

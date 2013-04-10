@@ -8,7 +8,8 @@
     var u = LcData.UserInfo.GetUserRow();
     var idprefix = "availabilityEventsList";
 
-    dynamic events = null;
+    var events = LcCalendar.GetUserAppointments((int)u.UserID);
+    /*dynamic events = null;
     using (var db = Database.Open("sqlloco")) {
         events = db.Query(@"
             SELECT  E.Id, E.Summary, E.CalendarAvailabilityTypeID, E.StartTime, E.EndTime,
@@ -23,7 +24,7 @@
                     EventType IN (3, 5)
             ORDER BY StartTime ASC, EndTime ASC
         ", u.UserID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-    }
+    }*/
 }
 @if (events == null || events.Count == 0)
 {
@@ -48,7 +49,7 @@ else
                     <td>@e.Summary</td>
                     <td>@e.StartTime</td>
                     <td>@e.EndTime</td>
-                    <td>@e.DisplayName</td>
+                    <td>@e.CalendarAvailabilityType.CalendarAvailabilityTypeName</td>
                     <td class="actions">
                         <button type="button" class="action edit-action crudl-update">Edit</button>
                         <button type="button" class="action delete-action crudl-delete">Delete</button>
