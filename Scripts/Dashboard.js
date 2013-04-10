@@ -533,6 +533,8 @@ $(document).ready(function () {
         smoothBoxBlock(ps1, cont, 'background-check');
         return false;
     })
+    // Since #217, use 'returnedHTML' instead of custom code but maintaining code for a while:
+    /*
     .on('click', '.position-background-check .close-popup-action', function () {
         var cont = $(this).closest('.position-background-check');
         var posID = cont.data('position-id');
@@ -541,7 +543,6 @@ $(document).ready(function () {
             cont.closest('.tab-body').reload(LcUrl.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
         return false;
     })
-    // Since #217, use 'returnedHTML' instead of custom code but maintaining code for a while:
     .on('ajaxSuccessPost', '.popup.buy-step-1 form', function (e, data) {
         if (data.Code == 101) {
             var cont = $(this).closest('.position-background-check');
@@ -549,8 +550,8 @@ $(document).ready(function () {
             var ps2 = cont.find('.popup.buy-step-2');
             smoothBoxBlock(ps2, cont, 'background-check');
         }
-    })
-    .on('ajaxFormReturnedHtml', '.popup-buy-step-1 form', function (e, ajaxBox, ajaxForm, jx) {
+    })*/
+    .on('ajaxFormReturnedHtml', '.popup.buy-step-1 form', function (e, ajaxBox, ajaxForm, jx) {
         var cont = ajaxForm.closest('.position-background-check');
         smoothBoxBlock(null, cont);
         var ps2 = cont.find('.popup.buy-step-2');

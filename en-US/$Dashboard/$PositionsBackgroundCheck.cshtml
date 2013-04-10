@@ -48,10 +48,12 @@
                         { "BackgroundCheckID", Request["BackgroundCheckID"] }
             }));
             
-            /* NOTE::20130410::IAGOSRL: Disabled temporarly because the problem commented at issue #217,
-            * applying quick solution by does not answer with a JSON code else returning udpated HTML
-             * and updating the custom script for this page at Dashboard.js#544:
-            * 
+            /* NOTE::20130410::IAGOSRL: Following issue #217,
+             * and update of the html is done without show the activation-popup,
+             * requiring return html instead of a JSON.Code.
+             * There is some specific javascript code, and comments, at Dashboard.js#523
+             * and some javascript maybe require some cleanup.
+            *
             LcHelpers.ReturnJsonResult(101, null);
              */
         }
@@ -136,7 +138,7 @@
                     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                     <label class="agree"><input type="checkbox" name="agree" value="true" @Validation.GetHtml("agree") /> I agree to the terms and conditions above</label>
                     <fieldset class="actions">
-                        <button type="button" class="button cancel-action close-popup-action">Cancel</button>
+                        <button type="button" class="button cancel-action close-popup-action close-action">Cancel</button>
                         <input type="submit" class="button main-action" value="@(Request["main-action"] ?? "Purchase for $$")" />
                     </fieldset>
                 </form>
@@ -165,7 +167,7 @@
                         </div>
                     </li>
                 </ol>
-                <div class="actions"><button type="button" class="button main-action close-popup-action">Okay!</button></div>
+                <div class="actions"><button type="button" class="button main-action close-popup-action close-action">Okay!</button></div>
             </div>
         </div>
    </div>
