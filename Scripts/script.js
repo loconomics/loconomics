@@ -1138,7 +1138,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.replaceWith(jb);
 
         LC.autoFocus(jb);
-        $(newForm).trigger('ajaxFormReturnedHtml');
+        $(newForm).trigger('ajaxFormReturnedHtml', [jb, newForm, jx]);
     }
 }
 function ajaxFormsCompleteHandler() {

@@ -181,6 +181,9 @@
                                 { "LicenseCertificationID", Request["license-type"] }
                     }));
 
+                    /* NOTE::20130410::IAGOSRL: Disabled temporarly because the problem commented at issue #217,
+                     * applying quick solution by does not answer with a JSON code else returning udpated HTML:
+                     * 
                     // Show the profile activation popup with 'next-step' buttons and progress information when need,
                     // if not the short message is showed:
                     if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
@@ -190,6 +193,7 @@
                     {
                         LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                     }
+                    */
                 }
             }
         }
