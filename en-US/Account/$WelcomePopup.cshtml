@@ -38,10 +38,13 @@
 
     if (IsPost && Validation.IsValid()) {
         // Server side validations
-        var stateProvinceID = LcData.GetStateFromZipCode(Request["zipcode"]);
-        int postalCodeID = LcData.GetPostalCodeID(Request["zipcode"], stateProvinceID);
-        if (postalCodeID == 0) {
-            ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
+        int stateProvinceID = 0, postalCodeID = 0;
+        if (!providerWithoutPosition) {
+            stateProvinceID = LcData.GetStateFromZipCode(Request["zipcode"]);
+            postalCodeID = LcData.GetPostalCodeID(Request["zipcode"], stateProvinceID);
+            if (postalCodeID == 0) {
+                ModelState.AddError("zipcode", LcRessources.GetText("postal-code-validation-error"));
+            }
         }
         // Validations depending on the profile-type selected
         string profileType = Request["profile-type"];
