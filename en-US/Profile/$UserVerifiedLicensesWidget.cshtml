@@ -1,6 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
-    var userID = PageData["UserID"] ?? Request["UserID"];
+    var userID = PageData["UserID"] ?? Request["UserID"].AsInt();
+    var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
     string size = PageData["Size"] ?? "medium"; // possible values: medium (for private dashboard), mini (public profile, booking)
     string contID = PageData["ContainerID"] ?? "";
     string classes = PageData["ContainerClasses"] ?? "user-verified-licenses";
@@ -10,7 +11,7 @@
 
     dynamic data;
     using (var db = Database.Open("sqlloco")) {
-        data = db.Query(LcData.sqlGetVerifiedUserLicenses, userID);
+        data = db.Query(LcData.sqlGetVerifiedUserLicenses, userID, positionID);
     }
 }
 @switch (size)

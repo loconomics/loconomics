@@ -1165,6 +1165,8 @@ public static partial class LcData
                       ON C.CountyID = UL.CountyID
             WHERE   UL.ProviderUserID = @0
                      AND
+                    (@1 = 0 OR UL.PositionID = @1)
+                     AND
                     L.Active = 1
                      AND
                     UL.StatusID = 2 -- Verified succesfully.

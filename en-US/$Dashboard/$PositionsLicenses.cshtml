@@ -245,6 +245,7 @@ else
         }
         @RenderPage(LcUrl.RenderLangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
             UserID = u.UserID,
+            PositionID = p.PositionID,
             Title = "Your verified licenses:"
         })
     <form action="@(LcUrl.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">
