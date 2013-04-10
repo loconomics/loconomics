@@ -710,6 +710,7 @@ public static partial class LcData
         {
             if (userId == 0 && WebSecurity.IsAuthenticated && WebSecurity.CurrentUserId > 0)
                 userId = WebSecurity.CurrentUserId;
+            if (userId == 0) return;
             using (var db = Database.Open("sqlloco"))
             {
                 if (userId == 0)
