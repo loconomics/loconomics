@@ -8,6 +8,7 @@
     string message = "";
     var confirmationToken = Request["confirmationCode"];
     bool showLogin = false;
+    PageData["ShowWelcomePopup"] = false;
 
     WebSecurity.Logout();
     if (!confirmationToken.IsEmpty()) {

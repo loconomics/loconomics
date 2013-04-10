@@ -280,7 +280,7 @@ form textarea {
     display: inline-block;
     padding: 0.31em 0.47em;   
     font-size: .9em;
-    background: #f5f5f5;
+    background-color: #f5f5f5;
     color: #747474;
     /*box-shadow: 0 0 0.1em 0.18em #FFFFFF inset, 0 0 0 0.1em #C9C9C9 inset;*/
     box-shadow: 0 0 2px 2px #FFFFFF inset;
@@ -1427,11 +1427,13 @@ form div.validation-summary-valid{
 .account-popup .username input,
 .account-popup .password input,
 .account-popup .firstname input,
-.account-popup .lastname input{
+.account-popup .lastname input,
+.account-popup .zipcode input{
     float: right;
 }
 .account-popup .remember-me{
     float: left;
+    margin-top: 1em;
 }
 .account-popup .remember-me label{
     font-size: 1em;
@@ -1453,7 +1455,6 @@ form div.validation-summary-valid{
 .account-popup .account-tools{
     font-size: 1.3em;
     font-weight: bold;
-    clear: both;
     overflow: hidden;
     margin: 30px 0 0;
 }
@@ -1489,6 +1490,9 @@ form div.validation-summary-valid{
 }
 #forgotPasswordBox .field-validation-error{
     float: left;
+}
+#changePasswordBox {
+    width: 450px;
 }
 html.boxshadow #loginBox .field-validation-error{
     display: none;
@@ -1794,11 +1798,14 @@ html.boxshadow #loginBox .field-validation-error{
 }
 
 /*= Tabbed style: .buttons */
-.buttons ul.tabs { 
+.buttons ul.tabs {
     padding: 0;
 }
 .tabbed.buttons > ul.tabs {
     white-space: normal !important;
+}
+.tabbed.buttons > .tabs-slider {
+    display: none !important;
 }
 .buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
 .buttons ul.tabs li a.button 
@@ -2002,7 +2009,7 @@ html.boxshadow #loginBox .field-validation-error{
 /*** Send Message Form ***/
 /***************************************/
 /********** Message ********************/
-.send-message-form div {
+.send-message-form .message-section {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -o-border-radius: 4px;
@@ -2068,6 +2075,7 @@ html.boxshadow #loginBox .field-validation-error{
     white-space: normal;
     overflow: hidden;
     color: Black;
+    text-align: left;
     
     border: 1px solid #e2e1e1;
     box-shadow: 1px 3px 3px 1px #e2e1e1;
@@ -2521,7 +2529,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     list-style: disc inside;
 }
 
-/*= TakeATour */
+/*= TakeATour, WelcomePopup */
 #takeATour h1 {
     background: url("../img/theme/logo-loconomics-header.png") center top no-repeat;
     text-align: center;
@@ -2531,7 +2539,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     margin-top: 0;
     font-family: Hand Of Sean, Arial, sans-serif;
 }
-.es #site-header #logo.replace {
+.es #takeATour h1 {
     background-image: url('../img/theme/logo-loconomics-header-ES.png');
 }
 #takeATour p {
@@ -2542,9 +2550,161 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     text-align: center !important;
     margin-top: 40px;
 }
-#takeATour .actions .main-action {
-    width: 50%;
+#takeATour .actions .main-action,
+#welcomepopup .actions .main-action {
+    min-width: 50%;
     font-weight: bold;
+}
+/*= welcomepopup */
+#welcomepopup .profile-data,
+#welcomepopup .terms,
+#welcomepopup .position-description {
+    display: none;
+}
+#welcomepopup.select-position .profile-data {
+    display: block;
+}
+#welcome-popup-container {
+    padding: 0;
+    width: 400px;
+    margin: 120px auto 60px;
+    border: 1px solid #5a5b5b;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+#welcomepopup header,
+#welcomepopup footer,
+#welcomepopup .register {
+    padding: 20px 25px;
+    text-align: center;
+}
+#welcomepopup h1,
+#welcomepopup h2 {
+    font-family: Hand Of Sean, Arial, sans-serif;
+    margin: 0;
+}
+#welcomepopup h1 {
+    padding: 0 0 0 110px;
+    background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
+    line-height: 39px;
+    font-size: 1.3em;
+    color: #00989A;
+    text-align: center;
+}
+#welcomepopup h2 {
+    font-size: 1.05em;
+}
+#welcomepopup.select-position .profile-data h2 {
+    color: Black;
+    text-align: left;
+    margin-bottom: .5em;
+}
+#welcomepopup.select-position .presentation {
+    display: none;
+}
+#welcomepopup .presentation {
+    text-align: justify;
+    font-size: 1em;
+    margin: .5em 1em;
+    color: Black;
+    line-height: normal;
+}
+#welcomepopup strong {
+    text-transform: uppercase;
+    color: #e95d0f;
+}
+#welcomepopup .register {
+    border: 1px solid #cccccc;
+    border-width: 1px 0;
+    background-color: #f5f5f5;
+    margin: 0;
+    position: relative;
+}
+#welcomepopup .register form {
+    margin: 0 1em;
+}
+#welcomepopup .actions {
+    text-align: center !important;
+    margin-top: 1em;
+}
+#welcomepopup .profile-choice h2 {
+    margin-bottom: 1em;
+}
+#welcomepopup .choice-or {
+    font-family: Hand Of Sean, Arial, sans-serif;
+    color: Black;
+}
+#welcomepopup .terms {
+    font-size: .9em;
+    line-height: normal;
+    margin-bottom: 1em;
+}
+#welcomepopup .profile-data {
+    margin: 1em 0;
+}
+#welcomepopup .profile-data li {
+    padding: 3px 0;
+}
+#welcomepopup .profile-data input,
+#welcomepopup .profile-data textarea {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    width: 100%;
+}
+#welcomepopup .profile-data label {
+    display: none;
+}
+#welcomepopup a.login {
+    background-color: #f5f5f5;
+    color: #747474 !important;
+    border: 1px solid #ababab !important;
+    margin: 0 1em;
+}
+#welcomepopup a.login:hover {
+    box-shadow: 0 0 5px 2px #ababab;
+}
+#terms-tooltip {
+    text-align: justify;
+}
+#terms-tooltip li {
+    list-style: disc inside;
+}
+#welcomepopupLoading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background-color: rgba(220, 220, 220, .7);
+}
+
+/*= .lightform */
+form.lightform input,
+form.lightform textarea {
+    background-color: white;
+    box-shadow: none;
+}
+
+/** Form icons / data classification **/
+form input.personal-data,
+form input.secure-data,
+form input.search-data {
+    background-position: 99% center;
+    background-repeat: no-repeat;
+}
+input.personal-data {
+    background-image: url('../img/theme/icon-form-personal.png');
+}
+input.secure-data {
+    background-image: url('../img/theme/icon-form-secure.png');
+}
+input.search-data {
+    background-image: url('../img/theme/icon-form-search.png');
 }
 
 /* ==|== media queries ======================================================
@@ -2571,6 +2731,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     #takeATour h1 {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: 201px 78px;
+    }
+    #welcomepopup h1 {
+        background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
+        background-size: 100px 39px;
     }
     .user-rating-summary-widget span.rating-image {
         background-image: url('../img/theme/star-rating-gray-orange@2x.png') !important;
@@ -2630,4 +2794,39 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
   @page { margin: 0.5cm; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
+}
+
+/**
+  * Some plugins base-CSS
+ **/
+/*= placeholder polyfill
+ */
+span.placeholder{
+    position:absolute;
+    font-size:75%;
+    color:#999;
+    font-family:sans-serif;
+    padding:4px 3px;
+    z-index:1;
+    cursor:text;
+}
+span.placeholder-hide-except-screenreader {
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
+}
+span.placeholder-hide{
+display:none;
+}
+/* overwrite for the HTML5 Boilerplate way to hide labels */
+label.visuallyhidden-with-placeholder{
+    /*clip: auto !important;*/
+    height:auto !important;
+    overflow: visible !important;
+    position:absolute !important;
+    left:-999em;
 }

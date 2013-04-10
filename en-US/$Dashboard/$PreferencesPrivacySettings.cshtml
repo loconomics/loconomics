@@ -49,7 +49,7 @@
         if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
             u.UserID,
             LcRessources.DataSaved,
-            LcRessources.OK))
+            "Edit privacy settings"))
         {
             LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
         }
@@ -161,6 +161,7 @@ Yep, privacy is pretty important. Let us know what you’re thinking below, and 
     <fieldset class="my-account">
         <legend>My Account</legend>
         <ul>
+            <li><a class="change-password" href="@(LcUrl.LangPath + "Account/ChangePassword/")">Change password</a></li>
             @if (u.AccountStatusID > 0)
             {            
             <li id="preferences-privacysettings-delete-my-account"><a href="#delete-my-account">Delete my account</a></li>

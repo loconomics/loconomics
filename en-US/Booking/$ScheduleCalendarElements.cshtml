@@ -101,7 +101,7 @@
         {
             availData = LcCalendar.GetUserAvailability(userID, date.Value, date.Value);
         }
-    
+
         <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-reload-mode="replace-me" data-source-url="@(LcUrl.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
             <caption><h2>@(date.Value.ToString("dddd, MMM d"))</h2></caption>
             <tr>

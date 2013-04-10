@@ -77,7 +77,7 @@
             ModelState.AddFormError("File name must be lower than 100 characters.");
         } else {
             try{
-                uploadedFileURI = virtualPath + fileName;
+                uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
                 SavePhoto(Request.InputStream, virtualPath, fileName);
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
@@ -100,7 +100,7 @@
             string fileName = GetValidFileName(fileuploaded.FileName);
             
             try{
-                uploadedFileURI = virtualPath + fileName;
+                uploadedFileURI = LcUrl.AppPath + filePathInApp + fileName;
                 SavePhoto(fileuploaded.InputStream, virtualPath, fileName);
             } catch(Exception ex) {
                 ModelState.AddFormError(ex.Message);
@@ -163,6 +163,23 @@
         <script type="text/javascript">
             @Html.Raw(LcUrl.ToJsVar())
         </script>
+        <style type="text/css">
+            body {
+                font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
+            }
+            .qq-upload-button {
+                width: 100%;
+                border: none;
+                display: block;
+                font-size: 1em;
+                cursor: pointer;
+            }
+            .qq-upload-list {
+                margin: 15px 0 !important;
+                max-height: 120px !important;
+                overflow: auto;
+            }
+        </style>
 
         <script type="text/javascript">
             function reloadUserPhoto(fileName, photoID) {

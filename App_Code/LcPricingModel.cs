@@ -132,6 +132,330 @@ public static class LcPricingModel
     }
     #endregion
 
+    #region Package Base
+    public class PackageBaseConfig
+    {
+        #region About Pricing Type
+        public int PricingTypeID;
+        public string SingularName;
+        public string PluralName;
+        public string SlugName;
+        public string AddNewLabel;
+        public string ProviderDescription;
+        /// <summary>
+        /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
+        /// It defines group names in that only one element can be selected
+        /// from all that are in the group. This means that a pricing with a group
+        /// will only allow select one element from that pricing type, affected too
+        /// by any other pricing type that share the same group name;
+        /// for pricing types that allows select several elements, the collection will
+        /// be null or empty.
+        /// </summary>
+        public string[] SelectionGroups;
+        /// <summary>
+        /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
+        /// List of selection groups used in other pricing types that will cause that
+        /// elements of this type cannot be selected (because you cannot select one of
+        /// this when one element of that group is selected, not because are the same
+        /// group else because are incompatible and create mutual exclusion.
+        /// </summary>
+        public string[] SelectionExclusionGroups;
+        /// <summary>
+        /// For now, we preserve IsAddon additionaly to the pricing-type:addon as a way
+        /// to know what packages must be showed in the 'addons' section in booking that
+        /// allow multi-selecting. The 'selection*groups' fields are a concept, not uset
+        /// still, for now IsAddon works for that use, more simple and enough for now.
+        /// </summary>
+        public bool IsAddon;
+        #endregion
+        #region Form Texts
+        public string NamePlaceHolder;
+        public string DurationLabel;
+        public string PriceLabel;
+        public string PriceNote;
+        public string FirstTimeClientsOnlyLabel;
+        public string DescriptionPlaceHolder;
+        public string PriceRateQuantityLabel;
+        public string PriceRateUnitLabel;
+        public string NoPriceRateLabel;
+        public string NumberOfSessionsLabel;
+        public string InPersonPhoneLabel;
+        #endregion
+        #region Action And Validation Texts
+        public string SuccessOnDelete;
+        public string ErrorOnDelete;
+        public string SuccessOnSave;
+        public string ErrorOnSave;
+        public string PriceRateIsRequiredValidationError;
+        public string PriceRateUnitIsRequiredValidationError;
+        #endregion
+        #region Help Texts
+        public string LearnMoreLabel;
+        public string LearnMoreText;
+        public string PriceRateLearnMoreLabel;
+        public string PriceRateLearnMoreText;
+        public string NoPriceRateLearnMoreLabel;
+        public string NoPriceRateLearnMoreText;
+        #endregion
+        #region Additional configuration
+        public bool RequireDuration;
+        public bool IncludeServiceAttributes;
+        public bool IncludeSpecialPromotion;
+        #endregion
+        #region List Texts
+        /// <summary>
+        /// SummaryFormat is the default format for summaries (required),
+        /// other formats are good for better detail, but depends
+        /// on other options configured per type.
+        /// Wildcards:
+        /// {0}: duration
+        /// {1}: sessions
+        /// {2}: inperson/phone
+        /// </summary>
+        public string SummaryFormat;
+        public string SummaryFormatMultipleSessions;
+        public string SummaryFormatNoDuration;
+        public string SummaryFormatMultipleSessionsNoDuration;
+        public string WithoutServiceAttributesCustomerMessage;
+        public string WithoutServiceAttributesProviderMessage;
+        public string FirstTimeClientsOnlyListText;
+        public string PriceRateQuantityListLabel;
+        public string PriceRateUnitListLabel;
+        public string NoPriceRateListMessage;
+        #endregion
+        #region Booking/PricingEstimate Texts
+        /// <summary>
+        /// NameAndSummaryFormat is the default format for summaries with package name (required),
+        /// other formats are good for better detail, but depends
+        /// on other options configured per type.
+        /// Wildcards:
+        /// {0}: package name
+        /// {1}: duration
+        /// {2}: sessions
+        /// {3}: inperson/phone
+        /// </summary>
+        public string NameAndSummaryFormat;
+        public string NameAndSummaryFormatMultipleSessions;
+        public string NameAndSummaryFormatNoDuration;
+        public string NameAndSummaryFormatMultipleSessionsNoDuration;
+        #endregion
+    }
+    public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
+    {
+        // Package Pricing Type
+        {
+            3,
+            new PackageBaseConfig {
+                PricingTypeID = 3,
+                SingularName = "Package",
+                PluralName = "Packages",
+                SlugName = "package",
+                AddNewLabel = "Add a package",
+                ProviderDescription = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable).",
+                SelectionGroups = new string[]{"package"},
+        
+                NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
+                NumberOfSessionsLabel = "Number of appointments included:",
+                PriceLabel = "Price for package:",
+                PriceNote = "(this should be all-inclusive)",
+                DurationLabel = "Duration (per appointment):",
+                RequireDuration = true,
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
+                FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This package is available to first-time clients only",
+
+                SuccessOnDelete = "Package removed succesfully",
+                SuccessOnSave = "Add/Edit packages",
+
+                SummaryFormat = "{0} minutes",
+                SummaryFormatMultipleSessions = "{1} appointments - {0} minutes each",
+                NameAndSummaryFormat = "{0}, {1} minutes",
+                NameAndSummaryFormatMultipleSessions = "{0}, {2} appointments - {1} minutes each",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about package pricing",
+                LearnMoreText =  "Here you can communicate a bundle of services that occur in a single appointment or multiple appointments of a service. For example, you could offer six appointments for a discounted price.",
+            }
+        },
+        // Add-on Pricing Type
+        {
+            7,
+            new PackageBaseConfig {
+                PricingTypeID = 7,
+                SingularName = "Add-On",
+                PluralName = "Add-Ons",
+                SlugName = "addon",
+                AddNewLabel = "Add an add-on service",
+                ProviderDescription = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable).",
+                IsAddon = true,
+
+                NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
+                PriceLabel = "Price for add-on service:",
+                PriceNote = "(this should be all-inclusive)",
+                DurationLabel = "Length of service:",
+                RequireDuration = false,
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)",
+
+                SuccessOnDelete = "Add-on removed succesfully",
+                SuccessOnSave = "Add/Edit add-ons",
+
+                SummaryFormat = "{0} minutes",
+                // Left a white space to avoid the default SummaryFormat be used instead:
+                SummaryFormatNoDuration = " ",
+                NameAndSummaryFormat = "{0}, {1} minutes",
+                NameAndSummaryFormatNoDuration = "{0}",
+
+                IncludeServiceAttributes = false,
+
+                LearnMoreLabel = "Learn more about add-on pricing",
+                LearnMoreText =  "Here you can add additional services that clients can request with a service allowing them to customize their experience with you.",
+            }
+        },
+        // Estimate Pricing Type
+        {
+            4,
+            new PackageBaseConfig {
+                PricingTypeID = 4,
+                SingularName = "Estimate",
+                PluralName = "Estimates",
+                SlugName = "estimate",
+                AddNewLabel = "Add an estimate visit",
+                ProviderDescription = "We know you're psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
+                DurationLabel = "Approximate length of visit:",
+                RequireDuration = true,
+                PriceLabel = "Price for estimate:",
+                PriceNote = "(enter 0.00 if free)",
+                DescriptionPlaceHolder = "Tell your clients what they can expect when you speak with them and what to prepare.",
+                PriceRateQuantityLabel = "My rates start at:",
+                PriceRateUnitLabel = "per",
+                NoPriceRateLabel = "I prefer not to state",
+                PriceRateQuantityListLabel = "My rates start at:",
+                PriceRateUnitListLabel = "per",
+                NoPriceRateListMessage = "Pricing will be disclosed during consultation.",
+                InPersonPhoneLabel = "Estimation type:",
+
+                SuccessOnDelete = "Estimate removed succesfully",
+                SuccessOnSave = "Add/Edit estimates",
+
+                SummaryFormat = "{0} minutes ({2} estimate)",
+                NameAndSummaryFormat = "{0}, {1} minutes ({3} estimation)",
+
+                LearnMoreLabel = "Learn more about estimate pricing",
+                LearnMoreText =  "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this).",
+                PriceRateLearnMoreLabel = "learn more",
+                PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
+                    You can discuss your full pricing when you speak and add any materials/parts required to get the job done right.",
+                NoPriceRateLearnMoreLabel = "not recommended",
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.
+                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+            }
+        },
+        // Consultation Pricing Type
+        {
+            5,
+            new PackageBaseConfig {
+                PricingTypeID = 5,
+                SingularName = "Consultation",
+                PluralName = "Consultations",
+                SlugName = "consultation",
+                AddNewLabel = "Add a consultation",
+                ProviderDescription = "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
+                DurationLabel = "Approx. length of consultation:",
+                RequireDuration = true,
+                PriceLabel = "Price for consultation:",
+                PriceNote = "(enter 0.00 if free)",
+                DescriptionPlaceHolder = "Tell your clients what they can expect during the consultation and what to prepare.",
+                PriceRateQuantityLabel = "My rates start at:",
+                PriceRateUnitLabel = "per",
+                NoPriceRateLabel = "I prefer not to state",
+                PriceRateQuantityListLabel = "My rates start at:",
+                PriceRateUnitListLabel = "per",
+                NoPriceRateListMessage = "Pricing will be disclosed during consultation.",
+                InPersonPhoneLabel = "Consultation type:",
+                FirstTimeClientsOnlyLabel = "This consultation is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This consultation is available to first-time clients only",
+
+                PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
+                PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'I prefer not to state'",
+                SuccessOnDelete = "Consultation removed succesfully",
+                SuccessOnSave = "Add/Edit consultations",
+
+                SummaryFormat = "{0} minutes ({2} consultation)",
+                NameAndSummaryFormat = "{0}, {1} minutes ({3} consultation)",
+
+                LearnMoreLabel = "Learn more about consultation pricing",
+                LearnMoreText = "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).",
+                PriceRateLearnMoreLabel = "learn more",
+                PriceRateLearnMoreText = @"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.
+                    You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right.",
+                NoPriceRateLearnMoreLabel = "not recommended",
+                NoPriceRateLearnMoreText = @"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.
+                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+            }
+        },
+        // Service Pricing Type
+        {
+            6,
+            new PackageBaseConfig {
+                PricingTypeID = 6,
+                SingularName = "Service",
+                PluralName = "Services",
+                SlugName = "service",
+                AddNewLabel = "Add a service",
+                ProviderDescription = "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
+                DurationLabel = "Length of service:",
+                RequireDuration = true,
+                PriceLabel = "Price for service:",
+                PriceNote = "(this should be all-inclusive)",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable).",
+                FirstTimeClientsOnlyLabel = "This service is available to first-time clients only",
+                FirstTimeClientsOnlyListText = "This service is available to first-time clients only",
+
+                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnSave = "Add/Edit services",
+
+                SummaryFormat = "{0} minutes",
+                NameAndSummaryFormat = "{0}, {1} minutes",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about service pricing",
+                LearnMoreText = "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments.",
+            }
+        }
+    };
+    public class PackageBaseData
+    {
+        public int ID;
+        public int PricingTypeID;
+        public int ProviderUserID;
+        public int PositionID;
+        public string Name;
+        public string Description;
+        public decimal Price;
+        public TimeSpan Duration;
+        public bool FirstTimeClientsOnly;
+        public int NumberOfSessions;
+        public decimal? PriceRate;
+        public string PriceRateUnit;
+        public bool IsPhone;
+        public int LanguageID;
+        public int CountryID;
+        public bool Active;
+        public List<int> ServiceAttributes = new List<int>();
+    }
+    #endregion
+
     #region Variables
     public static PricingSummaryData GetVariableItemNumbers(dynamic pvar, decimal hourPrice, dynamic fee)
     {
@@ -493,6 +817,9 @@ public static class LcPricingModel
 
                 // Concept, html text for Pricing summary detail, update it with package name:
                 modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
+
+                // Save in session the information that a location is not need for the booking because of the selected package
+                System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
 
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }

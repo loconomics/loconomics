@@ -27,7 +27,7 @@
 			    </li>
 		    </ol>
             <div class="actions">
-                <a href="@(LcUrl.LangPath)Account/Register/" class="main-action">Get Started!</a>
+                <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "" : "Account/Register/")" class="main-action">Get Started!</a>
             </div>
         </div>
 		<div id="howitworks-providers" class="tab-body" role="content">
@@ -47,7 +47,7 @@
 			    </li>
 		    </ol>
             <div class="actions">
-                <a href="@(LcUrl.LangPath)ProviderSignUp/" class="main-action">Get Started!</a>
+                <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "Dashboard/Alerts/" : "ProviderSignUp/")" class="main-action">Get Started!</a>
             </div>
         </div>
         <div id="howitworks-faqs" class="tab-body" role="content">

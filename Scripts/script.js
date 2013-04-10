@@ -43,35 +43,81 @@ $.blockUI.defaults.onBlock = function () {
 var gLoadingRetard = 300;
 
 // Array Remove - By John Resig (MIT Licensed)
-Array.prototype.remove = function (from, to) {
-    var rest = this.slice((to || from) + 1 || this.length);
-    this.length = from < 0 ? this.length + from : from;
-    return this.push.apply(this, rest);
+/*Array.prototype.remove = function (from, to) {
+  IagoSRL: it seems incompatible with Modernizr loader feature loading Zendesk script,
+  moved from prototype to a class-static method */    
+Array.remove = function (anArray, from, to) {
+    var rest = anArray.slice((to || from) + 1 || anArray.length);
+    anArray.length = from < 0 ? anArray.length + from : from;
+    return anArray.push.apply(anArray, rest);
 };
 
 /*
  * Our jQuery additions (small plugins)
  */
-$.fn.hasScrollBar = function () {
+/**
+  * HasScrollBar returns an object with bool properties 'vertical' and 'horizontal'
+  * saying if the element has need of scrollbars for each dimension or not (element
+  * can need scrollbars and still not being showed because the css-overlflow property
+  * being set as 'hidden', but still we know that the element requires it and its
+  * content is not being fully displayed).
+  * @extragap, defaults to {x:0,y:0}, lets specify an extra size in pixels for each dimension that alter the real check,
+  * resulting in a fake result that can be interesting to discard some pixels of excess
+  * size (negative values) or exagerate the real used size with that extra pixels (positive values).
+ **/
+$.fn.hasScrollBar = function (extragap) {
+    extragap = $.extend({
+        x: 0,
+        y: 0
+    }, extragap);
     if (!this || this.length == 0) return { vertical: false, horizontal: false };
     //note: clientHeight= height of holder
     //scrollHeight= we have content till this height
     var t = this.get(0);
     return {
-        vertical: this.outerHeight() < t.scrollHeight,
-        horizontal: this.outerWidth() < t.scrollWidth
+        vertical: this.outerHeight(false) < (t.scrollHeight + extragap.y),
+        horizontal: this.outerWidth(false) < (t.scrollWidth + extragap.x)
     };
 }
+/**
+    Gets the html string of the first element and all its content.
+    The 'html' method only retrieves the html string of the content, not the element itself.
+**/
+$.fn.outerHtml = function () {
+    if (!this || this.length == 0) return '';
+    var el = this.get(0);
+    var html = '';
+    if (el.outerHTML)
+        html = el.outerHTML;
+    else {
+        html = this.wrapAll('<div></div>').parent().html();
+        this.unwrap();
+    }
+    return html;
+}
 $.fn.reload = function (newurl, onload) {
+    var options = {
+        url: newurl,
+        complete: onload,
+        autofocus: true
+    };
+    // If options object is passed as unique parameter
+    if (arguments.length == 1 && $.isPlainObject(arguments[0])) {
+        // Unset the options object from url property
+        options.url = null;
+        // Merge options:
+        $.extend(true, options, arguments[0]);
+    }
+
     this.each(function () {
         var $t = $(this);
 
-        if (newurl) {
-            if ($.isFunction(newurl))
-            // Function params: currentReloadUrl, defaultReloadUrl
-                $t.data('source-url', $.proxy(newurl, this)($t.data('source-url'), $t.attr('data-source-url')));
+        if (options.url) {
+            if ($.isFunction(options.url))
+                // Function params: currentReloadUrl, defaultReloadUrl
+                $t.data('source-url', $.proxy(options.url, this)($t.data('source-url'), $t.attr('data-source-url')));
             else
-                $t.data('source-url', newurl);
+                $t.data('source-url', options.url);
         }
         var url = $t.data('source-url');
 
@@ -79,7 +125,7 @@ $.fn.reload = function (newurl, onload) {
         var jq = $t.data('isReloading');
         if (jq) {
             if (jq.url == url)
-            // Is the same url, do not abort because is the same result being retrieved
+                // Is the same url, do not abort because is the same result being retrieved
                 return;
             else
                 jq.abort();
@@ -93,7 +139,7 @@ $.fn.reload = function (newurl, onload) {
         if (url) {
             // Loading, with retard
             var loadingtimer = setTimeout(function () {
-                smoothBoxBlock(loadingBlock.message, $t, 'loading');
+                smoothBoxBlock(loadingBlock.message, $t, 'loading', { autofocus: options.autofocus });
                 //$t.block(loadingBlock);
             }, gLoadingRetard);
             var ctx = {
@@ -114,8 +160,8 @@ $.fn.reload = function (newurl, onload) {
             jq.done(function () {
                 $t.data('isReloading', null);
             });
-            if (onload)
-                jq.done($.proxy(onload, $t));
+            if (options.complete)
+                jq.done($.proxy(options.complete, $t));
             // Mark element as is being reloaded, to avoid multiple attemps at same time, saving
             // current ajax object to allow be cancelled
             jq.url = url;
@@ -207,7 +253,7 @@ var TabbedUX = {
     },
     setupSlider: function (tabContainer) {
         var ts = tabContainer.children('.tabs-slider');
-        if (tabContainer.children('.tabs').hasScrollBar().horizontal == true) {
+        if (tabContainer.children('.tabs').hasScrollBar({x:-2}).horizontal == true) {
             tabContainer.addClass('has-tabs-slider');
             if (ts.length == 0) {
                 ts = document.createElement('div');
@@ -612,6 +658,42 @@ LC.autoFocus = function (container, cssSelector) {
     container = $(container || document);
     container.find(cssSelector || '[autofocus]').focus();
 };
+/**
+  * Placeholder polyfill.
+  * Adds a new jQuery placeHolder method to setup or reapply placeHolder
+  * on elements (recommented to be apply only to selector '[placeholder]');
+  * thats method is fake on browsers that has native support for placeholder
+ **/
+LC.placeHolder = function() {
+    if (Modernizr.input.placeholder)
+        $.fn.placeholder = function () { };
+    else
+        (function () {
+            function doPlaceholder() {
+                var $t = $(this);
+                if (!$t.data('placeholder-supported')) {
+                    $t.on('focusin', function () {
+                        if (this.value == this.getAttribute('placeholder'))
+                            this.value = '';
+                    });
+                    $t.on('focusout', function () {
+                        if (!this.value.length)
+                            this.value = this.getAttribute('placeholder');
+                    });
+                    $t.data('placeholder-supported', true);
+                }
+                if (!this.value.length)
+                    this.value = this.getAttribute('placeholder');
+            }
+            $.fn.placeholder = function () {
+                return this.each(doPlaceholder);
+            };
+            $('[placeholder]').placeholder();
+            $(document).ajaxComplete(function () {
+                $('[placeholder]').placeholder();
+            });
+        })();
+};
 
 // TODO Convert as general function and use everywhere:
 // It executes the given 'ready' function as parameter when
@@ -628,8 +710,9 @@ LC.mapReady = function (ready) {
         ready();
     else if (!mapIsLoading) {
         LC._mapIsLoading = true;
-        Modernizr.load({
-            load: { googleapi: "https://www.google.com/jsapi" },
+        LC.load({
+            scripts: ["https://www.google.com/jsapi"],
+            completeVerification: function () { return !!window['google'] },
             complete: function () {
                 google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
                     LC._mapIsReady = true;
@@ -685,14 +768,29 @@ LC.initCrudl = function () {
         var formpars = { action: 'create' };
         formpars[iidpar] = 0;
 
+        function getExtraQuery(el) {
+            // Get extra query of the element, if any:
+            var xq = el.data('crudl-extra-query') || '';
+            if (xq) xq = '&' + xq;
+            // Iterate all parents including the 'crudl' element (parentsUntil excludes the first element given,
+            // because of that we get its parent())
+            // For any of them with an extra-query, append it:
+            el.parentsUntil(crudl.parent(), '[data-crudl-extra-query]').each(function(){
+                var x = $(this).data('crudl-extra-query');
+                if (x) xq += '&' + x;
+            });
+            return xq;
+        }
+
         crudl.find('.crudl-create').click(function () {
             formpars[iidpar] = 0;
             formpars.action = 'create';
-            dtr.show().reload(function (url, defaultUrl) {
-                return defaultUrl + '?' + $.param(formpars);
+            var xq = getExtraQuery($(this));
+            dtr.slideDown().reload(function (url, defaultUrl) {
+                return defaultUrl + '?' + $.param(formpars) + xq;
             });
             // Hide viewer when in editor:
-            vwr.hide('slow');
+            vwr.slideUp('slow');
             return false;
         });
         vwr
@@ -702,11 +800,12 @@ LC.initCrudl = function () {
                 var itemid = item.data('crudl-item-id');
                 formpars[iidpar] = itemid;
                 formpars.action = 'update';
+                var xq = getExtraQuery($(this));
                 dtr.show().reload(function (url, defaultUrl) {
-                    return defaultUrl + '?' + $.param(formpars);
+                    return defaultUrl + '?' + $.param(formpars) + xq;
                 });
                 // Hide viewer when in editor:
-                vwr.hide('slow');
+                vwr.slideUp('slow');
                 return false;
             })
             .on('click', '.crudl-delete', function () {
@@ -718,16 +817,16 @@ LC.initCrudl = function () {
                     smoothBoxBlock('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
                     formpars[iidpar] = itemid;
                     formpars.action = 'delete';
+                    var xq = getExtraQuery($(this));
                     $.ajax({
-                        url: dtr.attr('data-source-url'),
-                        data: formpars,
+                        url: dtr.attr('data-source-url') + '?' + $.param(formpars) + xq,
                         success: function (data, text, jx) {
                             if (data && data.Code == 0) {
                                 smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
                                     closable: true,
                                     closeOptions: {
                                         complete: function () {
-                                            item.hide('slow', function () { item.remove() });
+                                            item.fadeOut('slow', function () { item.remove() });
                                         }
                                     }
                                 });
@@ -744,9 +843,11 @@ LC.initCrudl = function () {
                 return false;
             });
         function finishEdit() {
-            dtr.hide('slow', function () {
+            dtr.slideUp('slow', function () {
                 // Show again the Viewer
-                vwr.show('slow');
+                vwr.slideDown('slow');
+                // Mark the form as unchanged to avoid persisting warnings
+                LC.ChangesNotification.registerSave(dtr.find('form').get(0));
                 // Avoid cached content on the Editor
                 dtr.children().remove();
             });
@@ -760,7 +861,7 @@ LC.initCrudl = function () {
             .on('ajaxSuccessPost', 'form', function (e, data) {
                 if (data.Code == 0 || data.Code == 5 || data.Code == 6)
                     // Show viewer and reload list:
-                    vwr.show('slow').find('.crudl-list').reload();
+                    vwr.slideDown('slow').find('.crudl-list').reload({autofocus: false});
                 if (data.Code == 5)
                     setTimeout(finishEdit, 1500);
             });
@@ -886,7 +987,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        function showSuccessMessage(message) {
+        function showSuccessMessage(ctx, message) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
@@ -901,7 +1002,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Clean previous validation errors
             setValidationSummaryAsValid(ctx.box);
         }
-        function showOkGoPopup(data) {
+        function showOkGoPopup(ctx, data) {
             // Unblock loading:
             ctx.box.unblock();
 
@@ -936,7 +1037,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         }
         if (data.Code == 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
-            showSuccessMessage(data.Result);
+            showSuccessMessage(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         // Special Code 1: do a redirect
         } else if (data.Code == 1) {
@@ -957,7 +1058,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.on('ajaxSuccessPostMessageClosed', function () {
                 LC.redirectTo(data.Result.RedirectURL);
             });
-            showSuccessMessage(data.Result.SuccessMessage);
+            showSuccessMessage(ctx, data.Result.SuccessMessage);
         } else if (data.Code == 5) {
             // Change main-action button message:
             var btn = ctx.form.find('.main-action');
@@ -975,7 +1076,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code == 6) {
             // Ok-Go actions popup with 'success' and 'additional' messages.
-            showOkGoPopup(data.Result);
+            showOkGoPopup(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
@@ -990,7 +1091,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
-            var message = data.Code + ": " + (data.Result ? data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result : '');
+            var message = data.Code + ": " + JSON.stringify(data.Result ? (data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result) : '');
             ctx.box.block({
                 message: 'Error: ' + message,
                 css: popupStyle(popupSize('small'))
@@ -1004,9 +1105,15 @@ function ajaxFormsSuccessHandler(data, text, jx) {
         // Post 'maybe' was wrong, html was returned to replace current 
         // form container: the ajax-box.
 
-        var newhtml = $(data);
+        // TODO: enable when jquery-1.9 Create html content from the data, in a secure way:
+        //var newhtml = $($.parseHTML(data));
+        var newhtml = $('#FAKEELEMENTEMPTYJQUERY');
+        // Try-catch to avoid errors when an empty document or malformed is returned:
+        try {
+            newhtml = $(data);
+        } catch (ex) { }
 
-        // TODO: changesnotification before or after append element to doc? newhtml.trigger() or jb.trigger()?
+        // TODO: changesnotification before or after append element to doc?
 
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
         var newForm = newhtml.find('form:eq(0)').get(0);
@@ -1033,7 +1140,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.box.replaceWith(jb);
 
         LC.autoFocus(jb);
-        newhtml.trigger('ajaxFormReturnedHtml');
+        $(newForm).trigger('ajaxFormReturnedHtml', [jb, $(newForm), jx]);
     }
 }
 function ajaxFormsCompleteHandler() {
@@ -1041,6 +1148,8 @@ function ajaxFormsCompleteHandler() {
     clearTimeout(this.loadingtimer);
     // Unblock
     if (this.autoUnblockLoading) {
+        // Double un-lock, because any of the two systems can being used:
+        smoothBoxBlock(null, this.box);
         this.box.unblock();
     }
 }
@@ -1119,10 +1228,6 @@ function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, null])[1]);
 }
-function hasPlaceholderSupport() {
-    var input = document.createElement('input');
-    return ('placeholder' in input);
-}
 function getHashBangParameters(hashbangvalue) {
     // Hashbangvalue is something like: Thread-1_Message-2
     // Where '1' is the ThreadID and '2' the optional MessageID, or other parameters
@@ -1188,7 +1293,7 @@ function guidGenerator() {
     with css-class has-tooltip and title attribute */
 function configureTooltip() {
     var posoffset = { x: 16, y: 8 };
-    function pos(t, e) {
+    function pos(t, e, l) {
         var x, y;
         if (e.pageX && e.pageY) {
             x = e.pageX;
@@ -1220,6 +1325,11 @@ function configureTooltip() {
                     l.outerWidth() < l[0].scrollWidth)
                     c = h;
             }
+            // Append data-tooltip-url content if exists
+            var urlcontent = $(l.data('tooltip-url'));
+            c = (c || '') + urlcontent.outerHtml();
+            // Remove original, is no more need and avoid id-conflicts
+            urlcontent.remove();
             if (c) {
                 l.data('tooltip-content', c);
                 l.attr('title', '');
@@ -1243,7 +1353,7 @@ function configureTooltip() {
         //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
         // Create content, and only if non-null, non-empty content was added, continue executing:
         if (con(t, $t)) {
-            pos(t, e);
+            pos(t, e, $t);
             t.stop(true, true);
             if (!t.is(':visible'))
                 t.fadeIn();
@@ -1255,8 +1365,8 @@ function configureTooltip() {
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
     }
-    $('body').on('mousemove focusin', '[title][data-description][data-description!=""], [title].has-tooltip', showTooltip)
-    .on('mouseleave focusout', '[title][data-description][data-description!=""], [title].has-tooltip', hideTooltip)
+    $('body').on('mousemove focusin', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', showTooltip)
+    .on('mouseleave focusout', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
 /**
@@ -1310,7 +1420,9 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         closeOptions: {
             duration: 600,
             effect: 'fade'
-        }
+        },
+        autofocus: true,
+        autofocusOptions: { marginTop: 60 }
     }, options);
 
     contentBox = $(contentBox);
@@ -1321,7 +1433,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     } else
         blocked = $(blocked);
 
-    var boxInsideBlocked = !blocked.is('tr,thead,tbody,tfoot,table,ul,ol,dl');
+    var boxInsideBlocked = !blocked.is('body,tr,thead,tbody,tfoot,table,ul,ol,dl');
 
     // Getting box element if exists and referencing
     var bID = blocked.data('smooth-box-block-id');
@@ -1358,9 +1470,10 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     boxc.children().remove();
     if (options.closable)
         boxc.append( $('<a class="close-popup close-action" href="#close-popup">X</a>') );
+    box.data('modal-box-options', options);
     if (!boxc.data('_close-action-added'))
         boxc
-        .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, options); return false; })
+        .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, box.data('modal-box-options')); return false; })
         .data('_close-action-added', true);
     boxc.append(contentBox);
     box.css('position', 'absolute');
@@ -1398,7 +1511,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     LC.autoFocus(box);
     // Show block
     box.animate({opacity: 1}, 300);
-    LC.moveFocusTo(contentBox, { marginTop: 60 });
+    if (options.autofocus)
+        LC.moveFocusTo(contentBox, options.autofocusOptions);
     return box;
 }
 function smoothBoxBlockCloseAll(container) {
@@ -1548,6 +1662,77 @@ LC.takeATour = function () {
         });
     }
 };
+/**
+ * Welcome popup
+ */
+LC.welcomePopup = function () {
+    var c = $('#welcomepopup');
+    if (c.length == 0) return;
+    var skipStep1 = c.hasClass('select-position');
+
+    // Init
+    if (!skipStep1) {
+        c.find('.profile-data, .terms, .position-description').hide();
+    }
+    c.find('form').get(0).reset();
+    // Re-enable autocomplete:
+    setTimeout(function(){ c.find('[placeholder]').placeholder(); }, 500);
+    function initProfileData() {
+        c.find('[name=jobtitle]').autocomplete({
+            source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
+            autoFocus: false,
+            minLength: 0,
+            select: function (event, ui) {
+                // No value, no action :(
+                if (!ui || !ui.item || !ui.item.value) return;
+                // Save the id (value) in the hidden element
+                c.find('[name=positionid]').val(ui.item.value);
+                // Show description
+                c.find('.position-description')
+                        .slideDown('fast')
+                        .find('textarea').val(ui.item.description);
+                // We want show the label (position name) in the textbox, not the id-value
+                $(this).val(ui.item.positionSingular);
+                return false;
+            },
+            focus: function (event, ui) {
+                if (!ui || !ui.item || !ui.item.positionSingular);
+                // We want the label in textbox, not the value
+                $(this).val(ui.item.positionSingular);
+                return false;
+            }
+        });
+    }
+    initProfileData();
+    c.find('#welcomepopupLoading').remove();
+
+    // Actions
+    c.on('change', '.profile-choice [name=profile-type]', function () {
+        c.find('.profile-data li:not(.' + this.value + ')').hide();
+        c.find('.profile-choice, header .presentation').slideUp('fast');
+        c.find('.terms, .profile-data').slideDown('fast');
+        // Terms of use different for profile type
+        if (this.value == 'customer')
+            c.find('a.terms-of-use').data('tooltip-url', null);
+        // Change facebook redirect link
+        var fbc = c.find('.facebook-connect');
+        var addRedirect = 'customers';
+        if (this.value == 'provider')
+            addRedirect = 'providers';
+        fbc.data('redirect', fbc.data('redirect') + addRedirect);
+        fbc.data('profile', this.value);
+
+        // Set validation-required for depending of profile-type form elements:
+        c.find('.profile-data li.' + this.value + ' input:not([data-val]):not([type=hidden])')
+                    .attr('data-val-required', '')
+                    .attr('data-val', true);
+        LC.setupValidation();
+    });
+    c.on('ajaxFormReturnedHtml', 'form.ajax', function () {
+        initProfileData();
+        c.find('.profile-choice [name=profile-type]:checked').change();
+    });
+}
 
 /* Init code */
 $(window).load(function () {
@@ -1555,20 +1740,14 @@ $(window).load(function () {
     setTimeout(function () { $('html,body').scrollTop(0); }, 1);
 });
 $(function () {
-    if (!hasPlaceholderSupport()) {
-        $('.has-placeholder form input[type="text"][placeholder]').focus(function () {
-            if (this.value == this.getAttribute('placeholder'))
-                this.value = "";
-        }).blur(function () {
-            if (!this.value.length)
-                this.value = this.getAttribute('placeholder');
-        });
-    }
+    // Placeholder polyfill
+    LC.placeHolder();
 
     // Autofocus polyfill
     LC.autoFocus();
 
-    LC.takeATour();
+    //LC.takeATour();
+    LC.welcomePopup();
 
     LC.connectPopupAction();
 
@@ -1615,6 +1794,11 @@ $(function () {
     .delegate('a.forgot-password', 'click', function () {
         var url = this.getAttribute('href').replace('/Account/ForgotPassword', '/Account/$ForgotPassword');
         popup(url, { width: 400, height: 240 });
+        return false;
+    })
+    .delegate('a.change-password', 'click', function () {
+        var url = this.getAttribute('href').replace('/Account/ChangePassword', '/Account/$ChangePassword');
+        popup(url, { width: 450, height: 340 });
         return false;
     })
     .delegate('.view-privacy-policy', 'click', function () {

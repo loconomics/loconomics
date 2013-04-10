@@ -5,7 +5,7 @@
     var p = LcData.UserInfo.GetUserCurrentPos();
     var n = p.PositionID;
     
-    string photosFolder = LcUrl.AppPath + "img/userphotos/u" + p.UserID.ToString() + "/";
+    string photosFolder = "img/userphotos/u" + p.UserID.ToString() + "/";
     Validation.Add("photo-caption", Validator.StringLength(50, 0, "Photo caption must be fewer than 50 characters."));
 
     if (IsPost) {
@@ -35,23 +35,23 @@
                     DELETE FROM ProviderServicePhoto WHERE ProviderServicePhotoID = @PhotoID
                             AND UserID = @1 AND PositionID = @2
 
+                    -- Test Alert
+                    EXEC TestAlertShowcaseWork @1, @2
+
                     -- Checking if there are more records with the same file, or returning the address
                     IF 0 = (SELECT  count(*)
                             FROM    ProviderServicePhoto
                             WHERE   PhotoAddress like @address
                                     AND UserID = @1 AND PositionID = @2)
-                        SELECT @address As PhotoAddress
+                        SELECT coalesce(@address, '') As PhotoAddress
                     ELSE
                         SELECT '' As PhotoAddress
-
-                    -- Test Alert
-                    EXEC TestAlertShowcaseWork @1, @2
                 ", photoID, p.UserID, p.PositionID);
                 
                 if (!String.IsNullOrEmpty(photoAddress)) {
                     // Remove file from user folder
                     try{
-                        File.Delete(Server.MapPath(photosFolder + photoAddress));
+                        File.Delete(Server.MapPath(LcUrl.RenderAppPath + photosFolder + photoAddress));
                     }catch{
                         throw new Exception("Photo file could not be deleted");
                     }
@@ -77,7 +77,7 @@
                 ", photoID, caption, isPrimary, p.UserID, p.PositionID);
             }
             // Indiferent if we are on 'delete' task or 'update details', we try to save the photo gallery
-            // order (RankPosition field on database) if there are data abou it
+            // order (RankPosition field on database) if there are data about it
             var galleryOrder = Request["gallery-order"];
             if (!String.IsNullOrEmpty(galleryOrder)) {
                 // Comma separated values with the html element IDs that have the format 'UserPhoto-PHOTOID'
@@ -87,7 +87,9 @@
                 foreach (var go in galleryOrder.Split(',')) {
                     // If we have a valid ID (integer number)
                     var goID = go.Replace("UserPhoto-", "").AsInt();
-                    if (goID > 0) {
+                    // Only if is a valid ID and if is not the ID of a just deleted photo
+                    if (goID > 0 &&
+                        !(delete && photoID == goID)) {
                         // Save order to the database
                         db.Execute(@"
                             UPDATE  ProviderServicePhoto
@@ -98,14 +100,18 @@
                 }
             }
             
-            // Show the profile activation popup with 'next-step' buttons and progress information when need,
-            // if not the short message is showed:
-            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
-                p.UserID,
-                LcRessources.DataSaved,
-                LcRessources.OK))
-            {
-                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            // If is delete task, return html to refresh page,
+            // because of that only return a JSON if is not delete:
+            if (!delete) {
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    p.UserID,
+                    LcRessources.DataSaved,
+                    "Edit/add photos"))
+                {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
             }
         }
     }
@@ -162,7 +168,7 @@ Nothing like a glossy photo. Images of your hard work help clients visualize wha
         <ol>
             @foreach (var photo in photos)
             {
-                <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
+                <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(LcUrl.AppPath + photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
             }
         </ol>
     </fieldset>

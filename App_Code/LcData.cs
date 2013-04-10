@@ -311,7 +311,17 @@ public static partial class LcData
             return db.QueryValue(sqlGetStateCode, stateProvinceID);
         }
     }
-
+    /// <summary>
+    /// Parameters in order: @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
+    /// </summary>
+    public const string sqlSetHomeAddress = @"EXEC SetHomeAddress @0, @1, @2, @3, @4, @5, @6, @7";
+    public static void SetHomeAddress(int userID, string addressLine1, string addressLine2, string city, int stateProvinceID, int postalCodeID, int countryID, int languageID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(sqlSetHomeAddress, userID, addressLine1, addressLine2, city, stateProvinceID, postalCodeID, countryID, languageID);
+        }
+    }
     public const string sqlGetAddresses = @"
         SELECT  L.AddressID
                 ,L.UserID
@@ -601,19 +611,23 @@ public static partial class LcData
     public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
     {       
         // Get our Pricing Type ID:
-        int pricingtypeid = LcData.GetPositionPricingTypeID(positionID, clienttypeid);
-        // Get Fees that apply to the provider and customer
-        var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingtypeid));
-
-        var providerPrice = new ProviderPrice();
+        var pricingTypes = LcData.GetPositionPricingTypes(positionID, clienttypeid);
+        ProviderPrice minProviderPrice = null;
 
         using (var db = Database.Open("sqlloco"))
         {
-            if (pricingtypeid == 2 || pricingtypeid == 1)
+            foreach (var pricingType in pricingTypes)
             {
-                providerPrice.IsHourly = true;
-                // Get hourly rate
-                providerPrice.Price = db.QueryValue(@"
+                var providerPrice = new ProviderPrice();
+                // Get Fees that apply to the provider and customer
+                var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingType.PricingTypeID));
+                
+                // Depending on pricing type, get price in a different way
+                if (pricingType.PricingTypeID == 2 || pricingType.PricingTypeID == 1)
+                {
+                    providerPrice.IsHourly = true;
+                    // Get hourly rate
+                    providerPrice.Price = db.QueryValue(@"
                     SELECT  coalesce(HourlyRate, 0)
                     FROM    ProviderHourlyRate
                     WHERE   UserID = @0
@@ -621,39 +635,51 @@ public static partial class LcData
                             PositionID = @1
                                 AND
                             ClientTypeID = @2
-                ", providerUserID, positionID, clienttypeid) ?? 0;
+                    ", providerUserID, positionID, clienttypeid) ?? 0;
 
-                // Apply fees
-                providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
-            }
-            else if (pricingtypeid == 3)
-            {
-                providerPrice.Price = db.QueryValue(@"
+                    // Apply fees
+                    providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
+                }
+                else
+                {
+                    providerPrice.Price = db.QueryValue(@"
                     SELECT  coalesce(min(ProviderPackagePrice), 0)
                     FROM    ProviderPackage
                     WHERE   ProviderUserID = @0
                              AND PositionID = @1
                              AND LanguageID = @2 AND CountryID = @3
                              AND IsAddOn = 0
-                ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
+                    ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
 
-                // Apply fees
-                providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                    // Apply fees
+                    providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                }
+
+                // Compare price, return the minimum:
+                if (minProviderPrice == null || providerPrice.Price < minProviderPrice.Price)
+                    minProviderPrice = providerPrice;
             }
         }
-        return providerPrice;
+        return minProviderPrice ?? new ProviderPrice();
     }
     #endregion
     #region Common Pricing
-    public static int GetPositionPricingTypeID(int positionID, int clientTypeID)
+    /// <summary>
+    /// Get the ID list of pricing types for a position
+    /// </summary>
+    /// <param name="positionID"></param>
+    /// <param name="clientTypeID"></param>
+    /// <returns></returns>
+    public static dynamic GetPositionPricingTypes(int positionID, int clientTypeID)
     {
         using (var db = Database.Open("sqlloco"))
         {
-            return ((int?)db.QueryValue(@"
-                SELECT  pricingtypeid
-                FROM    positionpricingtype
-                WHERE   languageid = @0 AND countryid=@1 AND clienttypeid=@2 AND positionid=@3
-            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID) ?? 0);
+            return db.Query(@"
+                SELECT  PO.pricingtypeid As PricingTypeID
+                FROM    positionpricingtype PO INNER JOIN pricingtype PR ON PR.PricingTypeID = PO.PricingTypeID AND PR.CountryID = PO.CountryID AND PR.LanguageID = PO.LanguageID
+                WHERE   PO.languageid = @0 AND PO.countryid=@1 AND PO.clienttypeid=@2 AND PO.positionid=@3
+                ORDER BY PR.DisplayRank ASC
+            ", GetCurrentLanguageID(), GetCurrentCountryID(), clientTypeID, positionID);
         }
     }
 
@@ -841,30 +867,42 @@ public static partial class LcData
         public dynamic Packages;
         public dynamic PackagesDetails;
         public Dictionary<int, dynamic> PackagesByID;
+        public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
     }
-    public static ProviderPackagesView GetProviderPackageByProviderPosition(int providerUserID, int positionID, int packageID = -1, int type = -1)
+    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;
         using (var db = Database.Open("sqlloco")){
             // Get the Provider Packages
             packages = db.Query(@"
                 SELECT  p.ProviderPackageID
+                        ,p.PricingTypeID
                         ,p.ProviderPackageName As Name
                         ,p.ProviderPackageDescription As Description
                         ,p.ProviderPackagePrice As Price
                         ,p.ProviderPackageServiceDuration As ServiceDuration
                         ,p.FirstTimeClientsOnly
                         ,p.NumberOfSessions
-                        ,p.IsAddOn
-                FROM    providerpackage As p
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
+                        ,p.IsPhone
+                FROM    ProviderPackage As P
+                         INNER JOIN
+                        PricingType As PT
+                          ON P.PricingTypeID = PT.PricingTypeID
+                            AND P.LanguageID = PT.LanguageID
+                            AND P.CountryID = PT.CountryID
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
                          AND 
                         p.Active = 1
-                         AND (@4 = -1 OR ProviderPackageID = @4)
-                         AND (@5 = -1 OR p.IsAddOn = @5)
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
+                         AND (@4 = -1 OR p.ProviderPackageID = @4)
+                         AND (@5 = -1 OR p.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                ORDER BY PT.DisplayRank ASC
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
+            (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
             details = db.Query(@"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -882,9 +920,11 @@ public static partial class LcData
                          AND P.LanguageID = @2 AND P.CountryID = @3
                          AND PD.Active = 1 AND P.Active = 1
                          AND (@4 = -1 OR P.ProviderPackageID = @4)
-                         AND (@5 = -1 OR P.IsAddOn = @5)
+                         AND (@5 = -1 OR P.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY A.Name ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, type);
+            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
+             (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
         }
         // Create index of packages, Key:ID, Value:Package record
         var index = new Dictionary<int, dynamic>(packages.Count);
@@ -892,7 +932,20 @@ public static partial class LcData
         {
             index.Add(pak.ProviderPackageID, pak);
         }
-        return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index };
+        // Create index of packages details per package, Key:PackageID, Value:List of details records
+        var detailsIndex = new Dictionary<int, List<dynamic>>();
+        foreach (var det in details)
+        {
+            List<dynamic> detI = null;
+            if (detailsIndex.ContainsKey(det.ProviderPackageID))
+                detI = detailsIndex[det.ProviderPackageID];
+            else {
+                detI = new List<dynamic>();
+                detailsIndex.Add(det.ProviderPackageID, detI);
+            }
+            detI.Add(det);
+        }
+        return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
     }
     #endregion
     #endregion
@@ -1004,6 +1057,7 @@ public static partial class LcData
             var countAlerts = counts.Total;
             var countRequiredAlerts = counts.TotalRequired;
 
+            // Iterate for all active alerts
             var posCounts = new Dictionary<int, UserAlertsNumbers>();
             foreach (var a in GetActiveUserAlerts(userID))
             {
@@ -1038,15 +1092,30 @@ public static partial class LcData
                 }
             }
 
-            // Last tasks per position
+            // Complete collection with positions that user has but there are not in 
+            // the previous list of active alerts because has not a position specific alert
+            // but we need it to complete the list and then being updated with the all-positions numbers.
+            foreach (var p in LcData.UserInfo.GetUserPos(userID))
+            {
+                if (!posCounts.ContainsKey(p.PositionID))
+                    posCounts.Add(p.PositionID, new UserAlertsNumbers {
+                        CountAlerts = countAlerts,
+                        CountRequiredAlerts = countRequiredAlerts,
+                        CountActiveAlerts = 0,
+                        CountRequiredActiveAlerts = 0,
+                        CountRequiredPassedAlerts = 0,
+                        NextAlert = (dynamic)null,
+                        RequiredNextAlert = (dynamic)null,
+                        AlertRank = int.MaxValue,
+                        RequiredAlertRank = int.MaxValue
+                    });
+            }
+
+            // Iterate all numbers per position for the last tasks, including
+            // add all-positions numbers (positionID:0) to every position.
             var allPositions = posCounts.ContainsKey(0) ? posCounts[0] : null;
             foreach (var p in posCounts)
             {
-                // Required alerts take precedence to other alerts, if there is one 
-                // and independently of Rank:
-                if (p.Value.RequiredNextAlert != null)
-                    p.Value.NextAlert = p.Value.RequiredNextAlert;
-
                 // Combine all-positions alerts (positionID:0) with each specific position:
                 if (allPositions != null && p.Key > 0)
                 {
@@ -1060,6 +1129,11 @@ public static partial class LcData
 
                 // Calculate passed alerts
                 p.Value.CountRequiredPassedAlerts = p.Value.CountRequiredAlerts - p.Value.CountRequiredActiveAlerts;
+
+                // Required alerts take precedence to other alerts, if there is one 
+                // and independently of Rank:
+                if (p.Value.RequiredNextAlert != null)
+                    p.Value.NextAlert = p.Value.RequiredNextAlert;
             }
 
             return posCounts;
@@ -1090,6 +1164,8 @@ public static partial class LcData
                     County As C
                       ON C.CountyID = UL.CountyID
             WHERE   UL.ProviderUserID = @0
+                     AND
+                    (@1 = 0 OR UL.PositionID = @1)
                      AND
                     L.Active = 1
                      AND
@@ -1179,5 +1255,33 @@ public static partial class LcData
             getdate(), getdate(), 'sys'
         )
     ";
+    #endregion
+
+    #region Positions
+    public static int GetPositionIDByName(string nameOrTerm)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            var r = db.Query("EXEC SearchPositions @0,@1,@2", "%" + nameOrTerm + "%", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            // Check results number:
+            switch (r.Count())
+            {
+                // Only one result, return that
+                case 1:
+                    return r.First().PositionID;
+                // No retults, return 0
+                case 0:
+                    return 0;
+            }
+            // More than one result, check for one record that matchs exactly the 
+            // PositionSingular name
+            foreach (var ri in r)
+                if (nameOrTerm.ToLower() == ri.PositionSingular.ToLower())
+                    return ri.PositionID;
+
+            // Too much partial matches, ambiguous search:
+            return -1;
+        }
+    }
     #endregion
 }

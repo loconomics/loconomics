@@ -40,7 +40,7 @@ public static class LcCalendar
             // Previous CASS code:
             using (var db = Database.Open("sqlloco")) {
                 var rtn = new List<CalendarDll.ProviderAvailabilityResult>();
-                foreach (var item in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1", userID, dateStart, dateEnd))
+                foreach (var item in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, dateStart, dateEnd))
                     rtn.Add(new ProviderAvailabilityResult{
                         CalendarAvailabilityTypeID = item.CalendarAvailabilityTypeID,
                         DateSet = item.DateSet,

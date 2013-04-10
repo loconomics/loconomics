@@ -55,12 +55,12 @@
             window['LC'] = window['LC'] || {};
             LC.searchLocations = [ " + locationsCSV + @" ];
         ";
-        <form id="homeSearch" method="get">
+        <form id="homeSearch" method="get" class="lightform">
 			<fieldset class="search-options">
                 <ul>
                     <li class="search-service">
                         <label for="search-service">Search for a (e.g. Tutor, Gardener...)</label>
-                        <input id="search-service" type="text" name="s" placeholder="Dog Walker" value="@Request["s"]" />
+                        <input id="search-service" type="text" name="s" placeholder="Massage Therapist" value="@Request["s"]" />
                     </li>
                     <li class="search-location">
                         <label for="search-location">Where</label>

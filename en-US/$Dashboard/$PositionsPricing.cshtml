@@ -17,6 +17,7 @@
     }
     
     string pageToLoad = "";
+    dynamic pricingtypes = null;
 
     using (var db = Database.Open("sqlloco")){
         
@@ -24,21 +25,17 @@
         var clienttypeid = PageData["ClientTypeID"] = 1;
         
         // Get our Pricing Type ID:
-        int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
+        pricingtypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
+        // NEW WAY by default: Multiple pricing types, based on PackageBase
+        pageToLoad = "$ProviderPricingTypes.cshtml";
 
-        switch (pricingtypeid) {
-            case 1: // Hours
-                pageToLoad = "_ProviderHoursType.cshtml";
-                break;
-            case 2: // Custom
-                pageToLoad = "_ProviderCustomType.cshtml";
-                break;
-            case 3: // Packages
-                pageToLoad = "$ProviderPackagesType.cshtml";
-                break;
-            case 4: // Invoice
-                pageToLoad = "_ProviderInvoiceType.cshtml";
-                break;
+        // If there is a unique pricing-type, use specific stuff only for some unique pricing types
+        if (pricingtypes.Count == 1) {
+            switch ((int)pricingtypes[0].PricingTypeID) {
+                case 2: // Custom
+                    pageToLoad = "_ProviderCustomType.cshtml";
+                    break;
+            }
         }
     }
     
@@ -49,8 +46,9 @@
 <p class="setting-instructions">
 Keeping your prices available and realistic is a good idea. If you need help determining what’s right, <a href="mailto:providerhelp@loconomics.com">let us know</a>.
 </p>
-<div>
-    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/" + pageToLoad, new { PricingWizardClasses = "positionpricing" })
+<div class="dashboard-provider-pricing">
+    @RenderPage("$PositionCancellationPolicyForm.cshtml", new { PositionID = pos.PositionID })
+    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/" + pageToLoad, new { PricingWizardClasses = "positionpricing", PositionID = pos.PositionID, PricingTypes = pricingtypes })
 </div>
 }
 else

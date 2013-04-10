@@ -392,13 +392,8 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     dynamic billingAddress = null;
-    dynamic cancellationPolicy = null;
     using (var db = Database.Open("sqlloco")) {
         billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
-        cancellationPolicy = LcData.Booking.GetProviderCancellationPolicy(
-            p.UserID,
-            pos.PositionID,
-            db);
     }
 }
 
@@ -524,7 +519,7 @@
                     }
                 }
                 @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { 
-                    CancellationPolicyID = (cancellationPolicy == null ? LcData.Booking.DefaultCancellationPolicyID : cancellationPolicy.CancellationPolicyID),
+                    CancellationPolicyID = summary.CancellationPolicyID,
                     DisplayForUserType = "customer" })
             </div>
         </div>

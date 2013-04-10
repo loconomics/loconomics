@@ -50,11 +50,7 @@
         }
 
         // Attempt to login to the Security object using provided creds
-        if (WebSecurity.Login(username, password, rememberMe)) {
-
-            // mark the user as logged in via a normal account,
-            // as opposed to via an OAuth or OpenID provider.
-            Session["OAuthLoggedIn"] = false;
+        if (LcAuth.Login(username, password, rememberMe)) {
            
             // The redirect cannot be done to an url inside the /Account/ segment:
             if (redirect.Contains("/Account/")) {

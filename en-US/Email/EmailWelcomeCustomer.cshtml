@@ -13,7 +13,13 @@
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Welcome to a new kind of marketplace";
-    // Create URL:
+
+    var alq = PageData["autologinQuery"] = LcAuth.GetAutologinUrlParams(thisUserID);
+    if (confirmationURL.Contains("?")) {
+        confirmationURL += "&" + alq;   
+    } else {
+        confirmationURL += "?" + alq;
+    }
     PageData["viewOnSiteUrl"] = confirmationURL;
 }
 
@@ -30,7 +36,7 @@
     <div>
         @if (String.IsNullOrEmpty(confirmationURL))
         {
-            <a href="@PageData["viewOnSiteUrl"]" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Go to my dashboard</a>
+            <a href="@(LcUrl.LangUrl)Dashboard/?@(alq)" target="_blank" style="@LcEmailTemplateHelper.StyleRespondButton()" class="respond">Go to my dashboard</a>
         }
         else
         {
@@ -43,7 +49,7 @@
     <div>
         <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
-        <p>Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/">@(LcUrl.LangUrl)Account/Confirm/</a> and input
+        <p>Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/?@(alq)">@(LcUrl.LangUrl)Account/Confirm/</a> and input
         the confirmation code: @confirmationToken </p>
         }
     </div>

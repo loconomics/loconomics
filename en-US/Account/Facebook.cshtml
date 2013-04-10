@@ -66,6 +66,11 @@
                             } catch {}
                             db.Execute("EXEC dbo.CreateCustomer @0,@1,@2,1,1,@3,@4",
                                 userid, user.first_name, user.last_name, genderID, aboutme);
+                            
+                            // If is provider, update profile with that info (being both customer and provider)
+                            if (Request.QueryString["profile"] == "provider") {
+                                db.Execute("UPDATE Users SET IsProvider = 1 WHERE UserID = @0", userid);
+                            }
 
                             // Create asociation between locouser and facebookuser
                             db.Execute(string.Format("INSERT INTO {0} ({1}, {2}) VALUES (@0, @1)", "webpages_FacebookCredentials", "UserId", "FacebookId"), userid, user.id);

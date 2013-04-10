@@ -62,11 +62,19 @@
         // database preferences.
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
-        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");        
+        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+        
+        // Autologin
+        LcAuth.RequestAutologin(Request);
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
-        
+        LcData.UserInfo.RegisterLastActivityTime();
+        /* TESTING
+        using (var f = System.IO.File.AppendText(Request.MapPath(LcUrl.RenderAppPath + "EndRequest.log")))
+        {
+            f.WriteLine("EXECUTION: " + (HttpContext.Current.Handler.GetType()).ToString());
+        } */
     }
        
 </script>

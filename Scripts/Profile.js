@@ -1,10 +1,4 @@
-/* TODO doc */
 $(function () {
-    $("#customerName").hide();
-    $("#PositionID").hide();
-    $("#ProviderID").hide();
-    $("#PositionSingular").hide();
-
     /* Photos (MyWork) selection: */
     $('.position-tab > .mywork').on('click', '.photo-library li a', function () {
         var $t = $(this);
@@ -41,4 +35,14 @@ $(function () {
         smoothBoxBlock($t.siblings('.view-details-popup').clone(), $t.closest('.tab-body'), null, { closable: true });
         return false;
     });
-});
+
+    /* Message */
+    $('form.send-message-form').on('ajaxSuccessPost', function (event, data) {
+        if (data.Code == 0) {
+            $('.message-body textarea').val('')
+            .attr('placeholder', data.Result)
+            // support for IE, 'non-placeholder-browsers'
+            .placeholder();
+        }
+    });
+})();

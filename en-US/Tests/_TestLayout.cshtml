@@ -30,11 +30,43 @@
            @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
            @LcAssets.GetStylesTags()
            <script type="text/javascript">               var LC = window['LC'] || {};</script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.1.js")" type="text/javascript"></script>
+           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.2.js")" type="text/javascript"></script>
            <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-            @* Our LcUrl class *@
             <script type="text/javascript">
+                @* Our LcUrl class *@
                 @Html.Raw(LcUrl.ToJsVar())
+                @* OUR namespace (abbreviated Loconomics) *@
+                var LC = window['LC'] || {};
+                @* OUR Loader *@
+                LC.load = function(opts) {
+                    opts = $.extend(true, {
+                        scripts: [],
+                        complete: null,
+                        completeVerification: null,
+                        loadDelay: 0,
+                        trialsInterval: 500
+                    }, opts);
+                    if (!opts.scripts.length) return;
+                    function performComplete() {
+                        if (typeof(opts.completeVerification) !== 'function' || opts.completeVerification())
+                            opts.complete();
+                        else {
+                            setTimeout(performComplete, opts.trialsInterval);
+                            if (console && console.warn)
+                                console.warn('LC.load.completeVerification failed for ' + opts.scripts[0] + ' retrying it in ' + opts.trialsInterval + 'ms');
+                        }
+                    }
+                    function load() {
+                        Modernizr.load({
+                            load: opts.scripts,
+                            complete: opts.complete ? performComplete : null
+                        });
+                    }
+                    if (opts.loadDelay)
+                        setTimeout(load, opts.loadDelay);
+                    else
+                        load();
+                }
             </script>
             @if(isIE){
             <!--[if lt IE 9]>

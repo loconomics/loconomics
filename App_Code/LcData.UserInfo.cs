@@ -80,7 +80,7 @@ public static partial class LcData
                     var sqluser = 
                         //"exec GetUserDetails @0";
                         // NOTE: UserID is needed!
-                        // NOTE2: remove location details from this table and query, use GetUserWithContactData
+                        // NOTE2: remove location details from GetUserDetails (in this sql is not already), for that use GetUserWithContactData
                         @"
                             SELECT
                                 -- Basic data
@@ -154,6 +154,10 @@ public static partial class LcData
                     var sqluser = 
                         //"exec GetUserDetails @0";
                         // NOTE: UserID is needed!
+                        // CREATED A NEW VIEW CALLED vwUsersContactData WITH THIS EXACT CONTENT
+                        // PLEASE, ANY CHANGE REPLICATE IT ON THAT VIEW, THAT IS USED BY SOME
+                        // STORED PROCEDURE TOO
+                        // (THE ONLY MISSING THING OF COURSE IS THE USERID CONDITION)
                         @"
                             SELECT
                                 -- Basic data
@@ -288,6 +292,7 @@ public static partial class LcData
         #endregion
 
         #region Provider Position
+
         #region Cache
         public static void CleanCacheGetUserPos(int userId)
         {
@@ -306,6 +311,29 @@ public static partial class LcData
             HelperPage.PageData["position"] = null;
         }
         #endregion
+
+        #region Create
+        public const string sqlInsProviderPosition = @"
+            DECLARE @t Datetime
+            SET @t = getdate()
+            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @t, @t, 'sys', 1, @4
+        ";
+        public static void InsProviderPosition(int userID, int positionID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
+                    userID, positionID,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    LcData.Booking.DefaultCancellationPolicyID);
+                if (Results.Result != "Success") {
+                    throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
+                }
+            }
+        }
+        #endregion
+
+        #region Get
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
@@ -333,7 +361,7 @@ public static partial class LcData
         public static dynamic GetUserPos(bool onlyActivePositions = false){
             var poss = HelperPage.PageData["posrows"];
             if (poss == null) {
-                poss = GetUserPos(WebSecurity.CurrentUserId);
+                poss = GetUserPos(WebSecurity.CurrentUserId, onlyActivePositions);
                 HelperPage.PageData["posrows"] = poss;
             }
             return poss;
@@ -380,7 +408,6 @@ public static partial class LcData
                     userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
         }
-
         public static Dictionary<int, dynamic> GetUserPositionsStatuses(int userID)
         {
             var d = new Dictionary<int, dynamic>();
@@ -388,6 +415,9 @@ public static partial class LcData
                 d.Add(p.PositionID, p);
             return d;
         }
+        #endregion
+
+        #region Checkes
         public class UserPositionActivation
         {
             public List<string> Messages
@@ -403,20 +433,20 @@ public static partial class LcData
                 /// <summary>
                 /// InProgress for when the profile is not activated still because there are required alerts on
                 /// </summary>
-                InProgress,
+                InProgress = 1,
                 /// <summary>
                 /// Enhance for when the profile is already activated but there are non required alerts on
                 /// </summary>
-                Enhance,
+                Enhance = 2,
                 /// <summary>
                 /// JustCompleted for when the profile gets activated right now (last required alert went off just now) and there are
                 /// no more alerts (if was activated right now and there are still non required alerts, Enhance Must be used instead of this)
                 /// </summary>
-                JustCompleted,
+                JustCompleted = 3,
                 /// <summary>
                 /// Completed for when the profile it has all alerts off, is activated but it get activated in a previuos action.
                 /// </summary>
-                Complete
+                Complete = 4
             }
             public Statuses Status;
             public int UserID
@@ -477,7 +507,8 @@ public static partial class LcData
             {
                 var rtn = new UserPositionActivation(userID);
 
-                var numbers = totalNumbers[ps.Key];
+                // Get alert numbers for this position or an empty numbers if there is no alerts actived for the position.
+                var numbers = totalNumbers.ContainsKey(ps.Key) ? totalNumbers[ps.Key] : new LcData.UserAlertsNumbers();
                 rtn.NextAlert = numbers.NextAlert;
 
                 // Check if is enabled
@@ -499,12 +530,15 @@ public static partial class LcData
                 else if (ps.Value.StatusID == 2)
                 {
                     rtn.Status = UserPositionActivation.Statuses.InProgress;
-                    // It is still incomplete, show progress
-                    rtn.Messages.Add(LcRessources.GetText("PositionActivationProgress",
-                        numbers.CountRequiredPassedAlerts,
-                        numbers.CountRequiredAlerts,
-                        ps.Value.PositionSingular)
-                    );
+                    if (numbers.CountRequiredAlerts > 0)
+                    {
+                        // It is still incomplete, show progress
+                        rtn.Messages.Add(LcRessources.GetText("PositionActivationProgress",
+                            numbers.CountRequiredPassedAlerts,
+                            numbers.CountRequiredAlerts,
+                            ps.Value.PositionSingular)
+                        );
+                    }
                 }
 
                 posActivationList.Add(rtn);
@@ -512,7 +546,7 @@ public static partial class LcData
 
             return UserPositionActivation.Max(posActivationList);
         }
-
+        #endregion
         #endregion
 
         #region Specific Information
@@ -565,8 +599,59 @@ public static partial class LcData
                 ", userid);
             }
         }
+
+        /// <summary>
+        /// Get a dynamic row with the user preferences 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static dynamic GetUserPrefs(int userId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(@"
+                    SELECT  UserID
+                            ,SMSBookingCommunication
+                            ,PhoneBookingCommunication
+                            ,LoconomicsCommunityCommunication
+                            ,LoconomicsDBMCampaigns
+                            ,ProfileSEOPermission
+                            ,LoconomicsMarketingCampaigns
+                            ,CoBrandedPartnerPermissions
+                    FROM Users WHERE UserID = @0
+                    ", userId);
+            }
+        }
         #endregion
 
+        #region Verifications
+        public static dynamic GetUserVerifications(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT  UV.LastVerifiedDate,
+                            UV.VerificationStatusID,
+                            VS.VerificationStatusName,
+                            V.VerificationType,
+                            V.Icon,
+                            V.VerificationID,
+                            V.VerificationCategoryID
+                    FROM    UserVerification As UV
+                             INNER JOIN
+                            Verification As V
+                              ON UV.VerificationID = V.VerificationID
+                             INNER JOIN
+                            VerificationStatus As VS
+                              ON UV.VerificationStatusID = VS.VerificationStatusID
+                                AND V.LanguageID = @1 AND V.CountryID = @2
+                    WHERE   UserID = @0
+                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+        #endregion
+
+        #region Stats
         /// <summary>
         /// Get a dynamic row with the user statistics
         /// </summary>
@@ -603,28 +688,6 @@ public static partial class LcData
                 return r;
             }
         }
-        /// <summary>
-        /// Get a dynamic row with the user preferences 
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public static dynamic GetUserPrefs(int userId)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                return db.QuerySingle(@"
-                    SELECT  UserID
-                            ,SMSBookingCommunication
-                            ,PhoneBookingCommunication
-                            ,LoconomicsCommunityCommunication
-                            ,LoconomicsDBMCampaigns
-                            ,ProfileSEOPermission
-                            ,LoconomicsMarketingCampaigns
-                            ,CoBrandedPartnerPermissions
-                    FROM Users WHERE UserID = @0
-                    ", userId);
-            }
-        }
         public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
         {
             var responseTime = "N/A";
@@ -634,30 +697,35 @@ public static partial class LcData
             }
             return responseTime;
         }
-
-        #region Verifications
-        public static dynamic GetUserVerifications(int userID)
+        public static void RegisterLastActivityTime()
         {
+            if (!WebSecurity.IsAuthenticated || WebSecurity.CurrentUserId < 0) return;
+            SetLastActivityLoginTimes(DateTime.Now, null);
+        }
+        public static void RegisterLastLoginTime(int userId = 0, string username = "")
+        {
+            SetLastActivityLoginTimes(DateTime.Now, DateTime.Now, userId, username);
+        }
+        public static void SetLastActivityLoginTimes(DateTime activityTime, DateTime? loginTime, int userId = 0, string username = "")
+        {
+            if (userId == 0 && WebSecurity.IsAuthenticated && WebSecurity.CurrentUserId > 0)
+                userId = WebSecurity.CurrentUserId;
+            if (userId == 0) return;
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(@"
-                    SELECT  UV.LastVerifiedDate,
-                            UV.VerificationStatusID,
-                            VS.VerificationStatusName,
-                            V.VerificationType,
-                            V.Icon,
-                            V.VerificationID,
-                            V.VerificationCategoryID
-                    FROM    UserVerification As UV
-                             INNER JOIN
-                            Verification As V
-                              ON UV.VerificationID = V.VerificationID
-                             INNER JOIN
-                            VerificationStatus As VS
-                              ON UV.VerificationStatusID = VS.VerificationStatusID
-                                AND V.LanguageID = @1 AND V.CountryID = @2
+                if (userId == 0)
+                    userId = (int)(db.QueryValue(@"SELECT UserID FROM UserProfile WHERE Email like @0", username) ?? 0);
+                db.Execute(@"
+                    UPDATE  UserStats
+                    SET     LastActivityTime = @1
+                            ,LastLoginTime = coalesce(@2, LastLoginTime)
                     WHERE   UserID = @0
-                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    IF @@rowcount = 0
+                    BEGIN
+                        INSERT INTO UserStats (UserID, LastActivityTime, LastLoginTime)
+                        VALUES (@0, @1, @2)
+                    END
+                ", userId, activityTime, loginTime);
             }
         }
         #endregion

@@ -120,10 +120,6 @@ $(document).ready(function () {
         editPanel.find('[name=delete-photo]').val('True');
         editPanel.closest('form').submit();
     })
-    // Show a message to the user about all was saved fine
-    .on('ajaxFormReturnedHtml', '.positionphotos', function () {
-        ajaxFormMessageOnHtmlReturnedWithoutValidationErrors(this, "All was saved succesfully!");
-    });
 
     /*
     * Position Services
@@ -404,7 +400,7 @@ $(document).ready(function () {
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
                 if (data.Code == 0 || data.Code == 5 || data.Code == 6)
-                    vp.show('fast', function () { vp.reload() });
+                    vp.show('fast', function () { vp.reload({autofocus: true}) });
                 if (data.Code == 5)
                     setTimeout(closeAndClearEditPanel, 1500);
             })
@@ -479,120 +475,47 @@ $(document).ready(function () {
     });
 
     /*==========================
-    * Pricing Wizard: packages
-    */
-    (function ($pricingPackage) {
-        // Fast quick
-        if ($pricingPackage.length == 0) return;
-
-        $pricingPackage.find('.add-package a').click(function () {
-            var pw = $(this).closest('.pricingwizard');
-            var editPanel = pw.find('.edit-panel');
-            var type = $(this).attr('href') == '#add-addon' ? "addon" : "package";
-            // We read the data-source-url attribute to get the Default value, with ProviderPackageID=0, instead the last reload value:
-            editPanel.show().reload(function (sourceUrl, defaultSourceUrl) {
-                return defaultSourceUrl.replace('Type=', 'Type=' + type);
-            });
-            // Hide packages list and other pricing options and main actions
-            pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
-            pw.find('.add-package').hide('slow');
-            return false;
-        });
-        $pricingPackage.find('.view-panel').on('click', '.provider-package .edit', function () {
-            var editPanel = $(this).closest('.package-pricing-type').find('.edit-panel');
-            var type = $(this).closest('.view-panel').hasClass('type-addons') ? "addon" : "package";
-            var pakID = $(this).data('provider-package-id');
-            editPanel.closest('.pricingwizard').find('.add-package').hide('slow');
-            // We read the data-source-url attribute to get the Default value, and we replace ProviderPackageID=0 with the clicked provider-package-id data:
-            editPanel.show().reload(function (sourceUrl, defaultSourceUrl) {
-                return defaultSourceUrl
-                    .replace('ProviderPackageID=0', 'ProviderPackageID=' + pakID)
-                    .replace('Type=', 'Type=' + type);
-            });
-            // Hide packages list and other pricing options and main actions
-            editPanel.closest('.pricingwizard').find('.your-packages, h3.packages-list-title, .package-pricing-options').hide('slow');
-            return false;
-        }).on('click', '.provider-package .delete', function () {
-            var pak = $(this).closest('.provider-package');
-            var res = pak.closest('.view-panel').find('.lc-ressources');
-            if (confirm(res.children('.confirm-delete-package-message').text())) {
-                smoothBoxBlock(res.children('.delete-package-loading-message'), pak);
-                $.ajax({
-                    url: LcUrl.LangPath + 'PricingWizard/$ProviderPackageEdit/',
-                    data: {
-                        action: 'delete',
-                        ProviderPackageID: $(this).data('provider-package-id'),
-                        PositionID: $(this).closest('.position-tab').data('position-id')
-                    },
-                    success: function (data, text, jx) {
-                        if (data && data.Code == 0) {
-                            smoothBoxBlock('<div>' + data.Result + '</div>', pak);
-                            pak.click(function () { smoothBoxBlock(null, pak); pak.hide('slow', function () { pak.remove() }) });
-                        } else
-                            ajaxFormsSuccessHandler(data, text, jx);
-                    },
-                    error: function (jx, message, ex) {
-                        ajaxErrorPopupHandler(jx, message, ex);
-                        smoothBoxBlock(null, pak);
-                    },
-                    complete: ajaxFormsCompleteHandler
-                });
-            }
-        });
-        $pricingPackage.find('.edit-panel').each(function () {
-            var editPanel = $(this);
-            var pw = editPanel.closest('.pricingwizard');
-            var hasEdit = editPanel.children().length == 0;
-            pw.find('.add-package').toggle(hasEdit);
-            pw.find('.packages-list-title').toggle(hasEdit);
-            editPanel.toggle(!hasEdit)
-            .on('click', '.cancel-action', function () {
-                editPanel.hide('slow', function () {
-                    // Show again elements
-                    pw.find('.your-packages, h3.packages-list-title, .package-pricing-options').show('slow');
-                    $(this).closest('.pricingwizard').find('.add-package').show('fast');
-                    $(this).children().remove();
-                });
-            });
-            // Hide pricing options section if there are not options:
-            var options = pw.find('.package-pricing-options');
-            if (options.is(':has(.no-pricing-wizard)'))
-                options.remove();
-        });
-        function finishEdit(e, data) {
-            $(this).closest('.edit-panel').hide('slow', function () {
-                $(this).closest('.pricingwizard').find('.add-package').show('fast');
-                $(this).children().remove()
-            });
+     *= .show-more-attributes
+     */
+    // Handler for 'show-more-attributes' button (used only on edit a package)
+    $(document).on('click', '.show-more-attributes', function () {
+        var $t = $(this);
+        var atts = $t.siblings('.services-not-checked');
+        if (atts.is(':visible')) {
+            $t.text($t.data('show-text'));
+            atts.stop().hide('fast');
+        } else {
+            $t.data('show-text', $t.text());
+            $t.text($t.data('hide-text'));
+            atts.stop().show('fast');
         }
-        $pricingPackage.on('ajaxSuccessPost', '.edit-panel form', function (e, data) {
-            if (data.Code == 0 || data.Code == 5 || data.Code == 6) {
-                var pw = $(this).closest('.pricingwizard');
-                // Reload packages list and show it
-                pw.find('.your-packages').show('fast', function () { $(this).reload() });
-                // Show other elements too:
-                pw.find('h3, .package-pricing-options').show('fast');
-                // Reload services tab of this position too:
-                pw.closest('.tabbed').find('.services-tab').reload();
-            }
-            if (data.Code == 5)
-                setTimeout($.proxy(finishEdit, this), 1500);
-        }).on('ajaxSuccessPostMessageClosed', '.edit-panel .ajax-box', finishEdit)
-        // Handler for 'show-more-attributes' button on edit a package
-        .on('click', '.show-more-attributes', function () {
-            var $t = $(this);
-            var atts = $t.siblings('.services-not-checked');
-            if (atts.is(':visible')) {
-                $t.text($t.data('show-text'));
-                atts.stop().hide('fast');
-            } else {
-                $t.data('show-text', $t.text());
-                $t.text($t.data('hide-text'));
-                atts.stop().show('fast');
-            }
-            return false;
+        return false;
+    });
+
+    /*==========================
+     * Provider Pricing Types
+     * multi-pricing, package-based
+     */
+    (function() {
+        // Handler for: Not to state price rate and price rate fields
+        $('.dashboard').on('change', '.provider-pricing-types [name=no-price-rate]', function(){
+            var $t = $(this),
+                f = $t.closest('form'),
+                pr = f.find('[name=price-rate],[name=price-rate-unit]');
+            pr.prop('disabled', $t.prop('checked'));
         });
-    })($('.pricingwizard.package-pricing-type'));
+        $('.dashboard [name=no-price-rate]').change();
+    })();
+
+    /*===========================
+     * Cancellation Policy
+     */
+    (function() {
+        $('.dashboard').on('change', '.cancellation-policy-form [name=cancellation-policy]', function(){
+            var form = $(this).closest('form');
+            form.submit();
+        });
+    })();
 
     /**==================
     * Background check 
@@ -610,6 +533,8 @@ $(document).ready(function () {
         smoothBoxBlock(ps1, cont, 'background-check');
         return false;
     })
+    // Since #217, use 'returnedHTML' instead of custom code but maintaining code for a while:
+    /*
     .on('click', '.position-background-check .close-popup-action', function () {
         var cont = $(this).closest('.position-background-check');
         var posID = cont.data('position-id');
@@ -625,6 +550,12 @@ $(document).ready(function () {
             var ps2 = cont.find('.popup.buy-step-2');
             smoothBoxBlock(ps2, cont, 'background-check');
         }
+    })*/
+    .on('ajaxFormReturnedHtml', '.popup.buy-step-1 form', function (e, ajaxBox, ajaxForm, jx) {
+        var cont = ajaxForm.closest('.position-background-check');
+        smoothBoxBlock(null, cont);
+        var ps2 = cont.find('.popup.buy-step-2');
+        smoothBoxBlock(ps2, cont, 'background-check');
     });
 
     /**==============
@@ -650,11 +581,23 @@ $(document).ready(function () {
             case '#reactivate-my-account':
                 b = smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
                 break;
+            default:
+                return true;
         }
         if (b) {
             $('html,body').stop(true, true).animate({ scrollTop: b.offset().top }, 500, null);
         }
         return false;
+    });
+
+    /**================
+      * Request Reviews
+     **/
+    $('.dashboard').on('ajaxSuccessPost', '.positionreviews', function (event, data) {
+        $(this).find('[name=clientsemails]').val('')
+        .attr('placeholder', data.Result.SuccessMessage || data.Result)
+        // support for IE, 'non-placeholder-browsers'
+        .placeholder();
     });
 });
 
@@ -795,7 +738,13 @@ function initPositionPhotos() {
             } else {
                 smoothBoxBlock(form.find('.no-primary-photo'), editPanel);
             }
+            // Reset hidden fields manually to avoid browser memory breaking things
+            editPanel.find('[name=PhotoID]').val('');
+            editPanel.find('[name=photo-caption]').val('');
+            editPanel.find('[name=is-primary-photo]').prop('checked', false);
         }
+        // Reset delete option
+        editPanel.find('[name=delete-photo]').val('False');
     });
 }
 function openChangeBookingStateForm(bookingID, button) {

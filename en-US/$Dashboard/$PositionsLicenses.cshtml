@@ -181,15 +181,19 @@
                                 { "LicenseCertificationID", Request["license-type"] }
                     }));
 
+                    /* NOTE::20130410::IAGOSRL: Disabled temporarly because the problem commented at issue #217,
+                     * applying quick solution by does not answer with a JSON code else returning udpated HTML:
+                     * 
                     // Show the profile activation popup with 'next-step' buttons and progress information when need,
                     // if not the short message is showed:
                     if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
                         u.UserID,
                         LcRessources.DataSaved,
-                        LcRessources.OK))
+                        "Edit licenses"))
                     {
                         LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                     }
+                    */
                 }
             }
         }
@@ -201,7 +205,13 @@
     }
 }
 @LcHelpers.GetValidationScripts()
-@if (licenses == null || licenses.Count == 0)
+@if (!(u.StateProvinceID is int))
+{
+    <p class="setting-instructions">
+        Please specify your address in the <a href="@(LcUrl.LangPath)Dashboard/Account/#account-profile-contact">here</a> in order for us to determine if a license is required to perform this work.
+    </p>
+}
+else if (licenses == null || licenses.Count == 0)
 {
     <p class="setting-instructions">
         Our research has indicated that a license or certification is not needed for this type of work. If this is incorrect, please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>, and we'll update our records accordingly.
@@ -235,6 +245,7 @@ else
         }
         @RenderPage(LcUrl.RenderLangPath + "Profile/$UserVerifiedLicensesWidget.cshtml", new { 
             UserID = u.UserID,
+            PositionID = p.PositionID,
             Title = "Your verified licenses:"
         })
     <form action="@(LcUrl.LangPath)$Dashboard/$PositionsLicenses/" method="post" class="positionlicenses ajax" id="@idprefix-licenses">

@@ -11,8 +11,8 @@
     var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
     var LastName = Request["lastname"] ?? u.LastName;
     var SecondLastName = Request["secondlastname"] ?? u.SecondLastName;
-    var MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
-    var AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
+    string MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
+    string AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
     var Street1 = Request["streetaddress1"] ?? u.AddressLine1;
     var Street2 = Request["streetaddress2"] ?? u.AddressLine2;
     var City = Request["city"] ?? u.City;
@@ -21,8 +21,14 @@
     var GenderID = Request["gender"] ?? u.GenderID ?? "";
     
     // Initializing Validation rules
-    Validation.RequireField("firstname", "First name is required");
-    Validation.RequireField("lastname", "Last name is required");
+    Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+    Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+    Validation.RequireField("gender", LcRessources.RequiredField("Gender identity"));
+    Validation.RequireField("streetaddress1", LcRessources.RequiredField("Street Address 1"));
+    if (Validation.GetHtml("state") == null) {
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
+    Validation.RequireField("zipcode", LcRessources.RequiredField("Zip Code"));
     Validation.Add("firstname", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
     Validation.Add("lastname", Validator.StringLength(145, 0, "Last name be fewer than 145 characters."));
     Validation.Add("secondlastname", Validator.StringLength(145, 0, "Second Last name be fewer than 145 characters."));
@@ -30,6 +36,7 @@
     Validation.Add("streetaddress1", Validator.StringLength(100, 0, "Street Address 1 must be fewer than 100 characters."));
     Validation.Add("streetaddress2", Validator.StringLength(100, 0, "Street Address 2 must be fewer than 100 characters."));
     if (Validation.GetHtml("city") == null) {
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
         Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
     }
     
@@ -41,6 +48,10 @@
             if (zipID == 0) {
                 ModelState.AddError("zipcode", "Zip code is invalid");
             }
+        }
+        // MobilePhone and AlternatePhone: At least one phone number is required
+        if (MobilePhone.IsEmpty() && AlternatePhone.IsEmpty()) {
+            ModelState.AddError("mobilephone", "At least one phone number is required");
         }
         if (ModelState.IsValid) {
             
@@ -153,37 +164,8 @@
 
 
                     /** UPSERT Personal Address **/
-                    UPDATE  Address WITH (serializable)
-                    SET     AddressLine1 = @AddressLine1
-		                    ,AddressLine2 = @AddressLine2
-		                    ,City=@City
-		                    ,StateProvinceID = @StateProvinceID
-		                    ,PostalCodeID = @PostalCodeID
-		                    ,CountryID = @CountryID
+                    EXEC SetHomeAddress @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
 
-                            ,Active = 1
-                            ,UpdatedDate = getdate()
-                            ,ModifiedBy = 'sys'
-                    WHERE   UserId = @UserID
-                                AND
-                            AddressTypeID = 1 -- Ever Type: Home
-
-                    IF @@rowcount = 0
-                    BEGIN
-                        DECLARE @AddressName nvarchar(50)
-                        SELECT @AddressName = AddressType
-                        FROM AddressType
-                        WHERE AddressTypeID = 1 -- Home
-                                AND LanguageID = @LanguageID
-                                AND CountryID = @CountryID
-
-                        INSERT INTO Address (UserID, AddressTypeID, AddressName,
-                            AddressLine1, AddressLine2, City, StateProvinceID, PostalCodeID, CountryID,
-                            Active, CreatedDate, UpdatedDate, ModifiedBy)
-                        VALUES (@UserID, 1 /* Type: Home */, @AddressName, 
-                            @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, 
-                            1, getdate(), getdate(), 'sys')
-                    END
 
                     /* Update User Personal Data */
                     UPDATE	Users
@@ -200,11 +182,9 @@
                             ,ModifiedBy = 'sys'
                     WHERE   UserId = @UserID
 
-                    -- Check Alerts related with user info:
-                    EXEC TestAlertPersonalInfo @UserID
-                    EXEC TestAlertBasicInfoVerification @UserID
-                    EXEC TestAlertSocialMediaVerification @UserID
-                    EXEC TestAlertBackgroundCheck @UserID
+                    -- A lot of direct and indirect alerts depend on contact info,
+                    -- execute all its alerts for all its positions
+                    EXEC TestAllUserAlerts @UserID
 
                     COMMIT TRAN
                 ", u.UserID, FirstName, MiddleInitial, LastName, SecondLastName,
@@ -220,7 +200,7 @@
                 if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
                     u.UserID,
                     "Personal data updated.",
-                    LcRessources.OK))
+                    "Edit contact info"))
                 {
                     LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
                 }

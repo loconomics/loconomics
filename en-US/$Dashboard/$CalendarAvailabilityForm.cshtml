@@ -359,16 +359,15 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     {
     <fieldset class="fs-calendar-private-url">
         <legend>My Private Calendar URL</legend>
-        LJDI:
-        <p>You can see your booking appointments into your calendaring program by using the next URL.
-        <br />Copy this URL, go to your calendaring program, select 'add/new calendar' option and paste it.
-        <br />This must be preserved as private to ensure only you can access your appointments, for security you
-        can reset this URL at any time but remember copy and paste the new one in your calendaring program.
+        <p>You can link your Loconomics bookings to your calendar program by using the following URL:
+        <br />Copy this URL, go to your calendar program, and choose the 'add/new calendar' option and paste it.
+        <br />This URL is private to ensure only you can access your appointments. You
+        may reset this URL at any time by copying and pasting the new URL into your calendar program.
         </p>
         <ul><li>
             @if (string.IsNullOrEmpty(privateUrlToken))
             {
-                <span>You have not still a private URL, please click on the next 'reset' button to create one.</span>
+                <span>You have not generated a private URL, please click on the 'reset' button to create one.</span>
             }
             else
             {

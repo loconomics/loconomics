@@ -55,7 +55,7 @@
             // Validate that almost one of the 'location service-type' must be selected
             if (!Request["iworkon"].AsBool() &&
                 !Request["itravel"].AsBool()) {
-                ModelState.AddFormError("LJDI: Almost one of the options 'I perform services here' and 'I travel to clients from' must be selected.");
+                ModelState.AddFormError("Please add at least one location");
             }
             
             // Validate that 'travel from location' is unique

@@ -2,6 +2,7 @@
     // Set the layout page and page title
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome to Loconomics";
+    PageData["ShowWelcomePopup"] = false;
 }
 
 @if (!WebSecurity.IsAuthenticated) {

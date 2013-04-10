@@ -48,42 +48,48 @@
                         { "BackgroundCheckID", Request["BackgroundCheckID"] }
             }));
             
+            /* NOTE::20130410::IAGOSRL: Following issue #217,
+             * and update of the html is done without show the activation-popup,
+             * requiring return html instead of a JSON.Code.
+             * There is some specific javascript code, and comments, at Dashboard.js#523
+             * and some javascript maybe require some cleanup.
+            *
             LcHelpers.ReturnJsonResult(101, null);
+             */
         }
         
-    } else {
-        using (var db = Database.Open("sqlloco")) {
-            checks = db.Query(@"
-                SELECT  B.BackgroundCheckID
-                        ,B.BackgroundCheckName
-                        ,B.BackgroundCheckDescription
-                        ,B.BackgroundCheckPrice
-                        ,UB.StatusID
-                        ,UB.Summary
-                        ,UB.LastVerifiedDate
-                        ,S.StatusName
-                FROM    BackgroundCheck As B
-                         INNER JOIN
-                        PositionBackgroundCheck As P
-                          ON B.BackgroundCheckID = P.BackgroundCheckID
-                            AND P.PositionID = @1
-                            AND B.CountryID = P.CountryID
-                         LEFT JOIN
-                        UserBackgroundCheck As UB
-                          ON B.BackgroundCheckID = UB.BackgroundCheckID
-                            AND UB.UserID = @0
-                         LEFT JOIN
-                        Status As S
-                          ON UB.StatusID = S.StatusID
-                WHERE
-                    B.Active = 1 AND P.Active = 1
-                     AND B.LanguageID = @2 AND B.CountryID = @3
-                     AND P.StateProvinceID = @4
-            ", u.UserID, p.PositionID, 
-             LcData.GetCurrentLanguageID(),
-             u.CountryID,
-             u.StateProvinceID);
-        }
+    }
+    using (var db = Database.Open("sqlloco")) {
+        checks = db.Query(@"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+                    ,UB.StatusID
+                    ,UB.Summary
+                    ,UB.LastVerifiedDate
+                    ,S.StatusName
+            FROM    BackgroundCheck As B
+                        INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND P.PositionID = @1
+                        AND B.CountryID = P.CountryID
+                        LEFT JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                        AND UB.UserID = @0
+                        LEFT JOIN
+                    Status As S
+                        ON UB.StatusID = S.StatusID
+            WHERE
+                B.Active = 1 AND P.Active = 1
+                    AND B.LanguageID = @2 AND B.CountryID = @3
+                    AND P.StateProvinceID = @4
+        ", u.UserID, p.PositionID, 
+            LcData.GetCurrentLanguageID(),
+            u.CountryID,
+            u.StateProvinceID);
     }
 }
 @if (IsPost || checks != null && checks.Count > 0)
@@ -95,7 +101,7 @@
     <p class="setting-instructions">
         We’ve partnered with HireRight, a leading background screening company, to give you the ability to purchase and complete a background check. Background checks can be essential for some clients to feel at ease hiring your services, especially those may include children or the elderly.  Please select one of the options below, and HireRight will contact you directly via e-mail to complete the payment and process.  
     </p>
-   <div class="position-background-check">
+   <div class="position-background-check ajax-box">
         <ul>
         @foreach (var check in checks)
         {
@@ -122,7 +128,7 @@
         </ul>
 
         <div class="popups">
-            <div class="popup buy-step-1 ajax-box">
+            <div class="popup buy-step-1">
                 <p>Use of background check services is voluntary. If you opt to use or access information provided by a background check service offered through the Marketplace, you agree that Loconomics offers this background check service as a convenience and does not have control over or assume any responsibility for the quality, accuracy, or reliability of the background check service or the information provided by the background check service. </p>
                 <p>If you are a Service Provider and you opt to purchase background check services in connection with your Services: (i) you affirm that all of the information you provide to Loconomics in connection with the background check services is correct, complete, and applicable; (ii) you understand that you will be required to complete and sign a disclosure and consent form, which will have additional terms applicable to the background check services; (iii) you agree that Loconomics may obtain a report from HireRight that may contain information on your criminal history, address history, character, general reputation, personal characteristics, and mode of living; (iv) you agree that Loconomics may release the results of this report in connection with transactions on the Marketplace; (v) you understand that the information in the report may factor into other parties’ decisions to engage your services; (vi) you agree that Loconomics may review the information provided by the background check service and retains the right to terminate your membership based on the information; (vii) if you disagree with the contents of the report, or wish to stop the release of the results of the report, you must delete your profile; and (viii) you agree to indemnify and hold harmless Loconomics from any loss or liability that may result from the creation or release of the report.</p>
                 <form class="ajax" action="@(LcUrl.LangPath)$Dashboard/$PositionsBackgroundCheck/" method="post">
@@ -132,7 +138,7 @@
                     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
                     <label class="agree"><input type="checkbox" name="agree" value="true" @Validation.GetHtml("agree") /> I agree to the terms and conditions above</label>
                     <fieldset class="actions">
-                        <button type="button" class="button cancel-action close-popup-action">Cancel</button>
+                        <button type="button" class="button cancel-action close-popup-action close-action">Cancel</button>
                         <input type="submit" class="button main-action" value="@(Request["main-action"] ?? "Purchase for $$")" />
                     </fieldset>
                 </form>
@@ -161,7 +167,7 @@
                         </div>
                     </li>
                 </ol>
-                <div class="actions"><button type="button" class="button main-action close-popup-action">Okay!</button></div>
+                <div class="actions"><button type="button" class="button main-action close-popup-action close-action">Okay!</button></div>
             </div>
         </div>
    </div>

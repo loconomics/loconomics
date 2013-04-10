@@ -24,12 +24,14 @@ public static partial class LcData
                     ,PP.ProviderPackageDescription As Description
 
                     --,PP.ProviderPackagePrice As Price
-                    --,PP.ProviderPackageServiceDuration As ServiceDuration
+                    ,PP.ProviderPackageServiceDuration As SessionDuration
                     ,P.ServiceDuration
                     ,P.TotalPrice As Price
 
                     ,PP.FirstTimeClientsOnly
                     ,PP.NumberOfSessions
+                    ,PP.IsPhone
+                    ,PP.PricingTypeID
                     ,P.CustomerPricingDataInput
             FROM    PricingEstimateDetail As P
                      INNER JOIN
@@ -451,35 +453,13 @@ public static partial class LcData
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
 
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var pitem in pvars)
-            {
-                if (i > 0)
-                {
-                    iprint = "; ";
-                }
-                i++;
-                result += iprint + pitem.Name + " " + pitem.Quantity;
-            }
-            iprint = "";
-            if (pvars.Count > 0)
-            {
-                iprint = "; ";
-            }
-            i = 0;
+                details.Add(pitem.Name + " " + pitem.Quantity);
             foreach (var pitem in poptions)
-            {
-                if (i > 0)
-                {
-                    iprint = "; ";
-                }
-                i++;
-                result += iprint + pitem.Name + "" + pitem.Quantity;
-            }
+                details.Add(pitem.Name + "" + pitem.Quantity);
 
-            return result;
+            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
         }
         public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0)
         {
@@ -493,21 +473,11 @@ public static partial class LcData
                 services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var service in services)
-            {
-                if (i > 0)
-                {
-                    iprint = ", ";
-                }
-                i++;
-                result += iprint + service.Name;
-            }
+                details.Add(service.Name);
 
-            return result;
+            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
         }
         public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0)
         {
@@ -521,21 +491,37 @@ public static partial class LcData
                 packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
-
-            int i = 0;
-            string iprint = "";
-            string result = "";
+            var details = new List<string>();
             foreach (var pak in packages)
             {
-                if (i > 0)
+                // Format for the package summary
+                var f = "";
+                var inpersonphone = "";
+                try
                 {
-                    iprint = ", ";
-                }
-                i++;
-                result += iprint + pak.Name; // + " (" + pak.CustomerPricingDataInput + ")";
-            }
+                    var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
+                    if (pak.NumberOfSessions > 1)
+                    {
+                        if (pak.ServiceDuration == 0)
+                            f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+                        else
+                            f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+                    }
+                    else if (pak.ServiceDuration == 0)
+                        f = pricingConfig.NameAndSummaryFormatNoDuration;
+                    if (String.IsNullOrEmpty(f))
+                        f = pricingConfig.NameAndSummaryFormat;
 
-            return result;
+                    if (pricingConfig.InPersonPhoneLabel != null)
+                        inpersonphone = pak.IsPhone
+                            ? "phone"
+                            : "in-person";
+                }
+                catch { }
+                
+                details.Add(String.Format(f, pak.Name, pak.SessionDuration, pak.NumberOfSessions, inpersonphone));
+            }
+            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
         }
         public static string GetBookingRequestSubject(int BookingRequestID)
         {
@@ -1043,6 +1029,47 @@ public static partial class LcData
                          AND U.LanguageID = @2
                          AND U.CountryID = @3
             ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        /// <summary>
+        /// Gets the preferred cancellationPolicyID of the provider for the position
+        /// or the DefaultCancellationPolicyID if provider has not the preference.
+        /// </summary>
+        /// <param name="providerUserID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static int GetProviderCancellationPolicyID(int providerUserID, int positionID, Database db = null)
+        {
+            var disposeDb = db == null;
+            if (db == null)
+                db = Database.Open("sqlloco");
+
+            int rtn = N.D(db.QueryValue(@"
+                SELECT  U.CancellationPolicyID
+                FROM    UserProfilePositions As U
+                WHERE   U.UserID = @0
+                         AND U.PositionID = @1
+                         AND U.LanguageID = @2
+                         AND U.CountryID = @3
+            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()))
+            ?? DefaultCancellationPolicyID;
+
+            if (disposeDb)
+                db.Dispose();
+            return rtn;
+        }
+        public static dynamic GetCancellationPolicies()
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(@"
+                    SELECT  C.CancellationPolicyID
+                            ,C.CancellationPolicyName
+                    FROM    CancellationPolicy As C
+                    WHERE   C.LanguageID = @0
+                             AND C.CountryID = @1
+                ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
         }
         /// <summary>
         /// Get a string with the name and description of the policy as informative title

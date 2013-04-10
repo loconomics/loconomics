@@ -35,9 +35,18 @@
         // TODO: Get Customer Type Id
         var clienttypeid = 1;
         
-        // Get our Pricing Type ID:
-        int pricingtypeid = LcData.GetPositionPricingTypeID(pos.PositionID, clienttypeid);
-        
+        // Multi-pricing:
+        var pricingTypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
+        // Emulate a pricing type id
+        int pricingtypeid = 0;
+        // If almost one of the pricing types is in the package-based collection,
+        // we set the emulated pricingtypeid as 3 (package) for compatibility with current booking:
+        foreach(var pt in pricingTypes) {
+            if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pt.PricingTypeID)) {
+                pricingtypeid = 3;
+            }
+        }
+
         // Define that price selected and payed is estimated or not
         bool priceIsEstimated = false;
         
@@ -107,7 +116,7 @@
 
         // Packages
         if (hasPackages) {
-            packages = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 0);
+            packages = LcData.GetPricingPackagesByProviderPosition(pos.UserID, pos.PositionID, -1, -1, false);
             if (packages.Packages.Count > 0) {
                 // Add to summary
                 SummaryLines.Add("packages", new LcPricingModel.PricingSummaryData("Package"));
@@ -116,7 +125,7 @@
 
         // Add-ons
         if (hasAddons) {
-            addons = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, -1, 1);
+            addons = LcData.GetPricingPackagesByProviderPosition(pos.UserID, pos.PositionID, -1, -1, true);
             if (addons.Packages.Count > 0) {
                 // Add to summary
                 SummaryLines.Add("addons", new LcPricingModel.PricingSummaryData("Add-on services"));
@@ -163,6 +172,7 @@
             HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypeID = pricingtypeid,
+            PricingTypes = pricingTypes,
             ClientTypeID = clienttypeid,
             SummaryLines = SummaryLines
         };
@@ -250,13 +260,14 @@
                 /*
                 * Create Booking Request
                 */
+                int cancellationPolicyID = LcData.Booking.GetProviderCancellationPolicyID(p.UserID, pos.PositionID);
                 var bookingRequestID = LcData.Booking.CreateRequest(
                     c.UserID,
                     p.UserID,
                     pos.PositionID,
                     data.BookingTypeID,
                     estimateID,
-                    LcData.Booking.DefaultCancellationPolicyID, // CancellationPolicyID: TODO Get from provider preference when implemented as preference
+                    cancellationPolicyID,
                     data.ContainsSummary ? Request["booking-services-special-instructions"] : null
                 );
             }
@@ -301,7 +312,6 @@
         @if (data.ContainsPackages)
         {
             <fieldset>
-                <legend>Please select a package</legend>
                 @LcPricingView.Packages(viewData, data.Packages, data.Fee)
             </fieldset>
         }

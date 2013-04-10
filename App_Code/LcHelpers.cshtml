@@ -202,11 +202,13 @@
         if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
         if (!jqueryStarRatingPluginLoaded) {
             jqueryStarRatingPluginLoaded = true;
-            Modernizr.load([
-                LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
-                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
-                LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
-            ]);
+            LC.load({ 
+                scripts: [
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
+                ]
+            });
         } else {
             if ($ && $().rating)
                 // Re-apply plugin (to new added elements without the plugin loaded):
@@ -216,11 +218,16 @@
 }
 @helper GetValidationScripts(){
     <script type="text/javascript">
-        if (window['LC'] && LC['setupValidation'])
-            LC.setupValidation();
-        else
-            $(document).on('lcLibReady', function () { LC.setupValidation() });
+        @GetValidationScriptCode()
     </script>
+}
+@helper GetValidationScriptCode(){
+    <text>
+    if (window['LC'] && LC['setupValidation'])
+        LC.setupValidation();
+    else
+        $(document).on('lcLibReady', function () { LC.setupValidation() });
+    </text>
 }
 @functions{
     /*==== Page-controller Utilities ====*/
@@ -309,8 +316,13 @@
     }
     public static void AdminPage() {
         SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsAdmin == false) {
+        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int)) {
             throw new HttpException(404, "Not Found");
+        }
+    }
+    public static void TestArea() {
+        if (!Request.IsLocal) {
+            AdminPage();
         }
     }
     public static string OnBehalfOf() {

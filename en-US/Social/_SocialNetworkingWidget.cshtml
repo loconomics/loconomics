@@ -28,10 +28,14 @@
         if (!socialScriptsLoaded) var socialScriptsLoaded = false;
         if (!socialScriptsLoaded) {
             socialScriptsLoaded = true;
-            Modernizr.load(['https://connect.facebook.net/en_US/all.js#xfbml=1',
-                'https://apis.google.com/js/plusone.js',
-                'https://platform.linkedin.com/in.js',
-                'https://platform.twitter.com/widgets.js']);
+            LC.load({
+                scripts: [
+                    'https://connect.facebook.net/en_US/all.js#xfbml=1',
+                    'https://apis.google.com/js/plusone.js',
+                    'https://platform.linkedin.com/in.js',
+                    'https://platform.twitter.com/widgets.js'
+                ]
+            });
         } else {
             if (typeof (FB) != 'undefined' && FB.init) {
                 FB._initialized = false;
