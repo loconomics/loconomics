@@ -13,27 +13,35 @@ INSERT INTO CalendarEvents ([DayofWeek], UserId, EventType, CalendarAvailability
 SELECT 
 	-- DayofWeek is saved as base-1, we need now base-0 to that we substract 1 to the current value
 	([DayofWeek] - 1),
-	UserID, 2 /* work hours */, 1 /*CalendarAvailabilityTypeID:Free*/, Cast(0 as bit),
+	UserID,
+	2 /* work hours */, 1 /*CalendarAvailabilityTypeID:Free*/, Cast(0 as bit),
 	( Cast('20000101' As DateTime) + Cast(MIN(TimeBlock) As DateTime) ),
 	( Cast('30000101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) ),
 	Cast(1 as bit),
-	getdate(), getdate(), 'sys'
+	getdate(), getdate(), 'importer'
 FROM
 	CalendarProviderFreeEvents
 GROUP BY DayofWeek, UserID
 
 -- Create Recurrence rule per each EventType:2, each 1 Weekly the DayofWeek specified in the Event
-INSERT INTO CalendarReccurrence (EventID, Frequency, Interval, Count)
+INSERT INTO CalendarReccurrence (EventID, Frequency, Interval, [Count], Until, FirstDayOfWeek)
 SELECT
-		ID, 5 /* Weekly */, 1 /* each week */
-		, -2147483648 /* I don't know, every imported event adds this minimum value */
+		ID,
+		5 /* Weekly */,
+		1 /* each week */
+		, null /* there is no a limit of ocurrences */
+		, null /* Until: never ends */
+		, 0 /* Sunday */
 FROM	CalendarEvents
 WHERE	EventType = 2 /* work hours */
 -- Recurrence Frequency (what day)
-INSERT INTO CalendarReccurrenceFrequency (CalendarReccursiveID, ByDay, [DayOfWeek], FrequencyDay)
+INSERT INTO CalendarReccurrenceFrequency (CalendarReccursiveID, ByDay, [DayOfWeek], ExtraValue, FrequencyDay)
 SELECT
-	R.ID, 1, E.[DayOfWeek]
-	, -2147483648 /* I don't know, every imported event adds this minimum value */
+	R.ID, 
+	Cast(1 as bit), /* ByDay:true */
+	E.[DayOfWeek] /* DayOfWeek */
+	,E.[DayOfWeek] /* ExtraValue */
+	, null
 FROM
 		CalendarReccurrence As R
 		 INNER JOIN
