@@ -20,11 +20,15 @@ SELECT
 	([DayofWeek] - 1),
 	UserID,
 	2 /* work hours */, 1 /*CalendarAvailabilityTypeID:Free*/, Cast(0 as bit),
+	-- For start and end datetimes, the date part can be invented for 
+	-- recurrent events because the date information is specially treated, 
+	-- exact information is discarted but is important that the date be the same
+	-- with greater hour for the EndDateTime, what is ensured by use the real end hour
 	-- Start is the first block in the list (the minimum)
 	( Cast('20000101' As DateTime) + Cast(MIN(TimeBlock) As DateTime) ),
 	-- End is the last block in the list (the maximum) PLUS a quarter (because TimeBlock defines the start
 	-- of the block, not the end time)
-	( Cast('30000101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) + Cast('00:15:00' As DateTime) ),
+	( Cast('20000101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) + Cast('00:15:00' As DateTime) ),
 	Cast(1 as bit),
 	getdate(), getdate(),
 	/* IMPORTANT: Using ModifyBy to track what records are being updated in this script

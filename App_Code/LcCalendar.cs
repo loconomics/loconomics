@@ -152,6 +152,29 @@ public static class LcCalendar
         if (EnableNewCalendar)
         {
             var ent = new loconomicsEntities();
+
+            // Start and End Dates are not used 'as is', they are
+            // treated in a special way when recurrence rules are present,
+            // for that we can use invented
+            // dates as 2000-01-01; the End Date will be greater thanks
+            // to the hour information gathered from the user generic work hours
+            var startDateTime = new DateTime(
+                2000,
+                1,
+                1,
+                workHoursDay.StartTime.Hours,
+                workHoursDay.StartTime.Minutes,
+                workHoursDay.StartTime.Seconds
+            );
+            var endDateTime = new DateTime(
+                2000,
+                1,
+                1,
+                workHoursDay.EndTime.Hours,
+                workHoursDay.EndTime.Minutes,
+                workHoursDay.EndTime.Seconds
+            );
+
             // Find user events of type 'work-hours'
             var events = ent.CalendarEvents
                 .Where(c => c.UserId == userID && c.EventType == 2).ToList();
@@ -167,24 +190,8 @@ public static class LcCalendar
                         // There is an event with recurrence rule for this work-week-day
                         eventExists = true;
                         // update it with the new data:
-                        ev.StartTime = new DateTime(
-                            ev.StartTime.Year,
-                            ev.StartTime.Month,
-                            ev.StartTime.Day,
-                            workHoursDay.StartTime.Hours,
-                            workHoursDay.StartTime.Minutes,
-                            workHoursDay.StartTime.Seconds
-                        );
-                        ev.EndTime = new DateTime(
-                            ev.EndTime.Year,
-                            ev.EndTime.Month,
-                            ev.EndTime.Day,
-                            workHoursDay.EndTime.Hours,
-                            workHoursDay.EndTime.Minutes,
-                            workHoursDay.EndTime.Seconds
-                        );
-                        // TODO: WHAT DATE MUST HOLD RecurrenceId???
-                        //ev.RecurrenceId = new DateTime();
+                        ev.StartTime = startDateTime;
+                        ev.EndTime = endDateTime;
                     }
                 }
             }
@@ -201,24 +208,8 @@ public static class LcCalendar
                 // free hours: 1
                 newevent.CalendarAvailabilityTypeID = 1;
                 newevent.Transparency = true;
-                newevent.StartTime = new DateTime(
-                    DateTime.MinValue.Year,
-                    DateTime.MinValue.Month,
-                    DateTime.MinValue.Day,
-                    workHoursDay.StartTime.Hours,
-                    workHoursDay.StartTime.Minutes,
-                    workHoursDay.StartTime.Seconds
-                );
-                newevent.EndTime = new DateTime(
-                    DateTime.MaxValue.Year,
-                    DateTime.MaxValue.Month,
-                    DateTime.MaxValue.Day,
-                    workHoursDay.EndTime.Hours,
-                    workHoursDay.EndTime.Minutes,
-                    workHoursDay.EndTime.Seconds
-                );
-                // TODO: WHAT DATE MUST HOLD RecurrenceId???
-                //newevent.RecurrenceId = new DateTime();
+                newevent.StartTime = startDateTime;
+                newevent.EndTime = endDateTime;
                 newevent.IsAllDay = false;
                 newevent.UpdatedDate = DateTime.Now;
                 newevent.CreatedDate = DateTime.Now;
@@ -227,8 +218,10 @@ public static class LcCalendar
                 // Recurrence rule:
                 newevent.CalendarReccurrence.Add(new CalendarReccurrence
                 {
-                    Frequency = 5, // TODO: IS CORRECT FOR A WEEKLY EVENT???
-                    Interval = 1, // TODO: IS CORRECT FOR A WEEKLY EVENT???
+                    // Frequency Type Weekly:5
+                    Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+                    // Every 1 week (week determined by previuos Frequency)
+                    Interval = 1,
 
                     CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
                 {
@@ -236,8 +229,9 @@ public static class LcCalendar
                     {
                         ByDay = true,
                         DayOfWeek = (int)workHoursDay.DayOfWeek,
-                        // TODO: FrequencyDay IS NEED? WHAT VALUE???
-                        FrequencyDay = 9999
+                        ExtraValue = (int)workHoursDay.DayOfWeek,
+                        // FrequencyDay null, is for special values (first day on week, last,... not needed here)
+                        FrequencyDay = null
                     }
                 }
                 });
@@ -269,7 +263,24 @@ public static class LcCalendar
     {
         if (EnableNewCalendar)
         {
-            throw new NotImplementedException("Need CASS calendar implementation to remove work-hours events");
+            var ent = new loconomicsEntities();
+            // Find user events of type 'work-hours'
+            var events = ent.CalendarEvents
+                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+            // On that events, found what match the recurrence-frequency of the given day,
+            // and mark is for deletion:
+            foreach (var ev in events)
+            {
+                foreach (var evr in ev.CalendarReccurrence)
+                {
+                    if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)dayOfWeek).Count() > 0)
+                    {
+                        ent.CalendarEvents.Remove(ev);
+                    }
+                }
+            }
+            // Save to database: delete found event:
+            ent.SaveChanges();
         }
         else
         {
