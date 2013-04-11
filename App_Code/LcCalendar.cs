@@ -46,7 +46,8 @@ public static class LcCalendar
                         CalendarAvailabilityTypeID = item.CalendarAvailabilityTypeID,
                         DateSet = item.DateSet,
                         DT = item.DT,
-                        DayOfWeek = item.DayOfWeek,
+                        // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on), convert to Base0 (.net standard)
+                        DayOfWeek = ((int)item.DayOfWeek - 1),
                         EventSummary = "",
                         TimeBlock = item.TimeBlock
                     });
@@ -155,11 +156,12 @@ public static class LcCalendar
 
             // Start and End Dates are not used 'as is', they are
             // treated in a special way when recurrence rules are present,
-            // for that we can use invented
-            // dates as 2000-01-01; the End Date will be greater thanks
+            // for that we can use invented and convenient
+            // dates as 2006-01-01 (the year 2006 matchs the first day in the first week day--1:Sunday);
+            // the End Date will be greater thanks
             // to the hour information gathered from the user generic work hours
             var startDateTime = new DateTime(
-                2000,
+                2006,
                 1,
                 1,
                 workHoursDay.StartTime.Hours,
@@ -167,9 +169,10 @@ public static class LcCalendar
                 workHoursDay.StartTime.Seconds
             );
             var endDateTime = new DateTime(
-                2000,
+                2006,
                 1,
-                1,
+                /* Must be the next day if end time is '00:00:00'; else the same day */
+                (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
                 workHoursDay.EndTime.Hours,
                 workHoursDay.EndTime.Minutes,
                 workHoursDay.EndTime.Seconds

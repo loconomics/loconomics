@@ -25,10 +25,11 @@ SELECT
 	-- exact information is discarted but is important that the date be the same
 	-- with greater hour for the EndDateTime, what is ensured by use the real end hour
 	-- Start is the first block in the list (the minimum)
-	( Cast('20000101' As DateTime) + Cast(MIN(TimeBlock) As DateTime) ),
+	-- Year 2006 is convenient: it starts in the first week day--1:Sunday
+	( Cast('20060101' As DateTime) + Cast(MIN(TimeBlock) As DateTime) ),
 	-- End is the last block in the list (the maximum) PLUS a quarter (because TimeBlock defines the start
 	-- of the block, not the end time)
-	( Cast('20000101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) + Cast('00:15:00' As DateTime) ),
+	( Cast('20060101' As DateTime) + Cast(MAX(TimeBlock) As DateTime) + Cast('00:15:00' As DateTime) ),
 	Cast(1 as bit),
 	getdate(), getdate(),
 	/* IMPORTANT: Using ModifyBy to track what records are being updated in this script
