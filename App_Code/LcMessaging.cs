@@ -687,6 +687,7 @@ public class LcMessaging
                 logger.Log("WebMail.Send, to:{0}, subject:{1}, from:{2}, body::", to, subject, from);
                 logger.LogData(body);
                 logger.LogEx("SendMail (previous logged email)", ex);
+                logger.Save();
             }
         }
         //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
@@ -758,6 +759,7 @@ public class LcMessaging
                     logger.Log("ScheduleEmail, to:{0}, subject:{1}, from:{2}, body::", emailto, subject, from);
                     logger.LogData(body);
                     logger.LogEx("SendMail (previous logged email)", ex);
+                    logger.Save();
                 }
             }
             // TODO: Test using the normal API for email sending, trying to solve current problem with
@@ -779,6 +781,7 @@ public class LcMessaging
             using (var logger = new LcLogger("SendMail"))
             {
                 logger.LogEx("ScheduleEmail exception getting details from cache", ex);
+                logger.Save();
             }
         }
     }

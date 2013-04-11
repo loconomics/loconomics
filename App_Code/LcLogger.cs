@@ -65,7 +65,7 @@ public class LcLogger : IDisposable
     {
         string path = String.Format("_logs/{0}{1:yyyyMM}.log.txt", logName, DateTime.Today);
         if (HttpContext.Current != null)
-            path = LcUrl.RenderAppPath + HttpContext.Current.Server.MapPath(path);
+            path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + path);
         System.IO.File.AppendAllText(path, logger.ToString());
     }
     /// <summary>
