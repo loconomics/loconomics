@@ -13,7 +13,7 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcCalendar
 {
-    public const bool EnableNewCalendar = false;
+    public const bool EnableNewCalendar = true;
 
     #region Availability
     /// <summary>
