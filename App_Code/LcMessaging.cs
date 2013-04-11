@@ -677,7 +677,18 @@ public class LcMessaging
     {
         if (HttpContext.Current.Request.Url.Host == "localhost")
             return;
-        WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
+        try
+        {
+            WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
+        }
+        catch (Exception ex) {
+            using (var logger = new LcLogger("SendMail"))
+            {
+                logger.Log("WebMail.Send, to:{0}, subject:{1}, from:{2}, body::", to, subject, from);
+                logger.LogData(body);
+                logger.LogEx("SendMail (previous logged email)", ex);
+            }
+        }
         //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
     #endregion
@@ -736,7 +747,19 @@ public class LcMessaging
             string subject = emaildata["emailsubject"]; //"Loconomics test email";
             string from = emaildata["emailfrom"];
 
-            WebMail.Send(emailto, subject, body, from, contentEncoding: "utf-8");
+            try
+            {
+                WebMail.Send(emailto, subject, body, from, contentEncoding: "utf-8");
+            }
+            catch (Exception ex)
+            {
+                using (var logger = new LcLogger("SendMail"))
+                {
+                    logger.Log("ScheduleEmail, to:{0}, subject:{1}, from:{2}, body::", emailto, subject, from);
+                    logger.LogData(body);
+                    logger.LogEx("SendMail (previous logged email)", ex);
+                }
+            }
             // TODO: Test using the normal API for email sending, trying to solve current problem with
             // emails not being sent by this way:
             /*
@@ -751,7 +774,12 @@ public class LcMessaging
         }
         catch (Exception ex)
         {
-            HttpContext.Current.Trace.Warn("LcMessaging.ScheduleEmail=>CacheItemRemovedCallback Error: " + ex.ToString());
+            if (HttpContext.Current != null)
+                HttpContext.Current.Trace.Warn("LcMessaging.ScheduleEmail=>CacheItemRemovedCallback Error: " + ex.ToString());
+            using (var logger = new LcLogger("SendMail"))
+            {
+                logger.LogEx("ScheduleEmail exception getting details from cache", ex);
+            }
         }
     }
     #endregion
