@@ -13,7 +13,7 @@ using WebMatrix.Data;
 /// </summary>
 public static class LcCalendar
 {
-    public const bool EnableNewCalendar = true;
+    public const bool EnableNewCalendar = false;
 
     #region Availability
     /// <summary>
@@ -404,7 +404,7 @@ public static class LcCalendar
                     yield return new Exception(String.Format("Calendar Import error on UserID:{0} : unrecognized calendar type '{1}'", p.UserID, p.CalendarType));
                     continue;
                 }
-                if (!LcValidators.IsUrl(String.IsNullOrWhiteSpace(p.CalendarURL)))
+                if (!LcValidators.IsUrl(p.CalendarURL))
                 {
                     yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
                     continue;
