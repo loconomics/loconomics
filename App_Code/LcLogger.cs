@@ -26,21 +26,25 @@ public class LcLogger : IDisposable
     /// Multiline is not allowed in the text, any new-line character is stripped (replaced by a double white space),
     /// to log multi-line preserving original format, use LogData, but remember call previously to Log with a single-line title
     /// to document date-time and subject of the long text/data.
+    /// Message is not logged if is a null/empty/whitespace text (date-time mark will not be logged)
     /// </summary>
     /// <param name="format"></param>
     /// <param name="pars"></param>
     public void Log(string format, params object[] pars){
+        var str = String.Format(format.Replace("\n", "  "), pars);
+        if (String.IsNullOrWhiteSpace(str)) return;
         // Universal date-time, following ISO8601 format with Z identifier at the end
         logger.AppendFormat("{0:s}Z ", DateTime.Now.ToUniversalTime());
-        logger.AppendFormat(format.Replace("\n", "  "), pars);
-        logger.Append("\n");
+        logger.Append(str + "\n");
     }
     /// <summary>
     /// Log an Exception with detailed information and inner exception if exists.
+    /// If @ex is null, nothing is logged.
     /// </summary>
     /// <param name="task"></param>
     /// <param name="ex"></param>
     public void LogEx(string task, Exception ex){
+        if (ex == null) return;
         Log("{0}: Exception {1}", task, ex.Message);
         LogData("{0} {1}", innerExToString(ex), ex.StackTrace);
     }
@@ -48,12 +52,15 @@ public class LcLogger : IDisposable
     /// Log a multiline text.
     /// Remember add a call to Log method before of this with a single-line title
     /// to document date-time and subject of the long text/data added with this method.
+    /// Message is not logged if is a null/empty/whitespace text.
     /// </summary>
     /// <param name="format"></param>
     /// <param name="pars"></param>
     public void LogData(string format, params object[] pars)
     {
-        logger.AppendFormat("[LOGDATA[\n {0} \n]LOGDATA]\n", String.Format(format, pars));
+        var str = String.Format(format, pars);
+        if (String.IsNullOrWhiteSpace(str)) return;
+        logger.AppendFormat("[LOGDATA[\n {0} \n]LOGDATA]\n", str);
     }
     string innerExToString(Exception ex){
         if (ex.InnerException != null) {
