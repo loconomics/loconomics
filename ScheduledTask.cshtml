@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @using System.Text;
 @{
-    var logger = PageData["Logger"] = new StringBuilder();
+    var logger = new LcLogger("ScheduledTask");
     var elapsedTime = DateTime.Now;
     
     /*
@@ -36,10 +36,10 @@
 
                 items++;
             } catch (Exception ex){
-                logEx("Requests Timed-out", ex);
+                logger.LogEx("Requests Timed-out", ex);
             }
         }
-        log("Total invalidated as TimedOut Booking Requests: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total invalidated as TimedOut Booking Requests: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
@@ -73,10 +73,10 @@
                 items++;
                 messages += 2;
             } catch (Exception ex){
-                logEx("Requests Expired", ex);
+                logger.LogEx("Requests Expired", ex);
             }
         }
-        log("Total invalidated as Expired Booking Requests: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total invalidated as Expired Booking Requests: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
@@ -113,10 +113,10 @@
                 items++;
                 messages += 2;
             } catch (Exception ex){
-                logEx("Booking 24H Reminders", ex);
+                logger.LogEx("Booking 24H Reminders", ex);
             }
         }
-        log("Total of Booking 24H Reminders: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total of Booking 24H Reminders: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
@@ -188,10 +188,10 @@
                     messages+=2;
                 }
             } catch (Exception ex){
-                logEx("Booking Review Reminders Next 8AM", ex);
+                logger.LogEx("Booking Review Reminders Next 8AM", ex);
             }
         }
-        log("Total of Booking Review Reminders Next 8AM: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total of Booking Review Reminders Next 8AM: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
@@ -266,10 +266,10 @@
                     messages+=2;
                 }
             } catch (Exception ex){
-                logEx("Booking Review Reminders 1W", ex);
+                logger.LogEx("Booking Review Reminders 1W", ex);
             }
         }
-        log("Total of Booking Review Reminders 1W: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total of Booking Review Reminders 1W: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
@@ -328,16 +328,16 @@
                     items++;
                     messages += 3;
                 } catch (Exception ex){
-                    logEx("Booking 48H Service Performed", ex);
+                    logger.LogEx("Booking 48H Service Performed", ex);
                 }
             }
         }
-        log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
     }
     
-    log("Elapsed time {0}, for {1} bookings affected and {2} messages sent", DateTime.Now - elapsedTime, totalitems, totalmessages);
+    logger.Log("Elapsed time {0}, for {1} bookings affected and {2} messages sent", DateTime.Now - elapsedTime, totalitems, totalmessages);
 
 
     /*
@@ -353,44 +353,22 @@
             successCalendars++;
         } else {
             failedCalendars++;
-            logEx("Import Calendar", err);
+            logger.LogEx("Import Calendar", err);
         }
     }
 
-    log("Elapsed time {0}, for {1} user calendars imported, {2} failed", DateTime.Now - partialElapsedTime, successCalendars, failedCalendars);
+    logger.Log("Elapsed time {0}, for {1} user calendars imported, {2} failed", DateTime.Now - partialElapsedTime, successCalendars, failedCalendars);
     
 
     /*
      * Task Ended
      */
-    
-    log("Total Elapsed time {0}", DateTime.Now - elapsedTime);
+    logger.Log("Total Elapsed time {0}", DateTime.Now - elapsedTime);
 
     // Finishing: save log on disk, per month rotation
     try {
-        System.IO.File.AppendAllText(Server.MapPath(LcUrl.RenderAppPath + 
-            String.Format("_logs/ScheduledTaskLog{0:yyyyMM}.txt", DateTime.Today)),
-            logger.ToString());
-    }catch {
-    }
-}
-@functions{
-    void log(string format, params object[] pars){
-        StringBuilder logger = PageData["Logger"];
-        // Universal date-time, following ISO8601 format with Z identifier at the end
-        logger.AppendFormat("{0:s}Z ", DateTime.Now.ToUniversalTime());
-        logger.AppendFormat(format, pars);
-        logger.Append("\n");
-    }
-    void logEx(string task, Exception ex){
-        log("{0}: Exception {1}\n[LOGDATA[\n {2} {3} \n]LOGDATA]", task, ex.Message, innerExToString(ex), ex.StackTrace);
-    }
-    string innerExToString(Exception ex){
-        if (ex.InnerException != null) {
-            return String.Format("InnerException {0}\n{1}", ex.InnerException, innerExToString(ex.InnerException));
-        }
-        return "";
-    }
+        logger.Save();
+    }catch { }
 }
 @if (!LcHelpers.InProduction)
 {
