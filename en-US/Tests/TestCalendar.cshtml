@@ -1,0 +1,26 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    var imported = false;
+    if (IsPost) {
+        // Import
+        if (Request.Files["ics"] != null) {
+            LcCalendar.Import(WebSecurity.CurrentUserId, Request.Files["ics"].InputStream);
+            imported = true;
+        }
+    }
+}
+<div>
+    <h2>Import calendar file to user: @WebSecurity.CurrentUserId</h2>
+    <form method="post" enctype="multipart/form-data">
+        Select file: <input type="file" name="ics" />
+        <div class="actions">
+            <input type="submit" class="main-action" value="Import" />
+        </div>
+        @if (imported)
+        {
+            <div class="info">File imported!</div>
+        }
+    </form>
+</div>

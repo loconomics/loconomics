@@ -7,6 +7,7 @@ using DDay.iCal;
 using DDay.Collections;
 using CalendarDll.Data;
 using WebMatrix.Data;
+using System.IO;
 
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
@@ -382,6 +383,13 @@ public static class LcCalendar
     public static void Import(int UserID, string CalendarURL)
     {
         var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
+
+        CalendarUtils libCalendarUtil = new CalendarUtils();
+        libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
+    }
+    public static void Import(int UserID, Stream CalendarStream)
+    {
+        var iCaltoImport = iCalendar.LoadFromStream(CalendarStream);
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
