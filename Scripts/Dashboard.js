@@ -432,40 +432,47 @@ $(document).ready(function () {
     /*==============
     * Licenses
     */
-    function setup_license_request_form($t) {
-        var v = $t.val();
-        var option = $t.find(':selected');
-        var p = $t.parent();
-        var form = p.closest('.positionlicenses');
-        var licenseRequest = $('.license-request', form);
-        var det = $('.license-details', p);
-        if (v) {
-            $('.license-description', det).text(option.data('description'));
-            $('.license-state', det).text(option.data('state-name'));
-            $('.license-authority', det).text(option.data('authority-name'))
-                .attr('href', option.data('verification-url'));
-            var geturl = option.data('get-license-url');
-            if (geturl)
-                $('.get-license-url', form).show().attr('href', geturl);
-            else
-                $('.get-license-url', form).hide();
-            // Showing:
-            det.show(300);
-            licenseRequest.show(300);
-            form.find('.actions button').show(300);
-        } else {
-            det.hide(300);
-            licenseRequest.hide(300);
-            form.find('.actions button').hide(300);
-        }
+    function setup_license_request_form($selects) {
+        $selects.each(function(){
+            var $t = $(this);
+            var v = $t.val();
+            var option = $t.find(':selected');
+            var p = $t.parent();
+            var form = p.closest('.positionlicenses');
+            var licenseRequest = $('.license-request', form);
+            var det = $('.license-details', p);
+            if (v) {
+                $('.license-description', det).text(option.data('description'));
+                $('.license-state', det).text(option.data('state-name'));
+                $('.license-authority', det).text(option.data('authority-name'))
+                    .attr('href', option.data('verification-url'));
+                var geturl = option.data('get-license-url');
+                if (geturl)
+                    $('.get-license-url', form).show().attr('href', geturl);
+                else
+                    $('.get-license-url', form).hide();
+                // Showing:
+                det.show(300);
+                licenseRequest.show(300);
+                form.find('.actions button').show(300);
+            } else {
+                det.hide(300);
+                licenseRequest.hide(300);
+                form.find('.actions button').hide(300);
+            }
+        });
     }
-    $('body').delegate('.license-type-selector > select', 'change', function () {
+    $('body').on('change', '.license-type-selector > select', function () {
         setup_license_request_form($(this));
-    }).delegate('form.positionlicenses', 'ajaxFormReturnedHtml', function () {
+    }).on('ajaxFormReturnedHtml', 'form.positionlicenses', function () {
         // Listen the form.ajax event about returning html after post the form:
-        setup_license_request_form($('.license-type-selector > select'));
+        setup_license_request_form($(this).find('.license-type-selector > select'));
+    }).on('ajaxSuccessPostMessageClosed', 'form.positionlicenses', function () {
+        // Reloading the licenses page after succesful post, to show registered request and reset saved form:
+        $(this).closest('.position-licenses-container').reload();
     });
     setup_license_request_form($('.license-type-selector > select'));
+
     /*==========================
     * Verified licenses widget
     */
