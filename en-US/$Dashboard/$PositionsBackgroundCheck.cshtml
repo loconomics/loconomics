@@ -36,6 +36,9 @@
                     getdate(),
                     getdate(), getdate(), 'sys'
                 )
+
+                -- Check Alert
+                EXEC TestAlertBackgroundCheck @0
             ", u.UserID, Request["BackgroundCheckID"]);
             
             // Send email to loconomics
@@ -48,14 +51,7 @@
                         { "BackgroundCheckID", Request["BackgroundCheckID"] }
             }));
             
-            /* NOTE::20130410::IAGOSRL: Following issue #217,
-             * and update of the html is done without show the activation-popup,
-             * requiring return html instead of a JSON.Code.
-             * There is some specific javascript code, and comments, at Dashboard.js#523
-             * and some javascript maybe require some cleanup.
-            *
-            LcHelpers.ReturnJsonResult(101, null);
-             */
+            // Left return HTML, the javascript will show the step-2
         }
         
     }

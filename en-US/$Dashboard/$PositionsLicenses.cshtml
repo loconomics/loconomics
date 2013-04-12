@@ -204,7 +204,7 @@
     }
 }
 @LcHelpers.GetValidationScripts()
-<div id="positions-licenses-for-@(p.PositionID)" class="position-licenses-container" data-source-url="@(LcUrl.LangPath)$Dashboard/$PositionsLicenses/?PositionID=@(p.PositionID)" data-position-id="@(p.PositionID)">
+<div id="positions-licenses-for-@(p.PositionID)" class="position-licenses-container" data-position-id="@(p.PositionID)">
 @if (!(u.StateProvinceID is int))
 {
     <p class="setting-instructions">

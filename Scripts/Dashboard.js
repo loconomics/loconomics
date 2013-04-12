@@ -469,7 +469,9 @@ $(document).ready(function () {
         setup_license_request_form($(this).find('.license-type-selector > select'));
     }).on('ajaxSuccessPostMessageClosed', 'form.positionlicenses', function () {
         // Reloading the licenses page after succesful post, to show registered request and reset saved form:
-        $(this).closest('.position-licenses-container').reload();
+        var c= $(this).closest('.position-licenses-container');
+        var posID = c.data('position-id');
+        c.closest('.tab-body').reload(LcUrl.LangPath + '$Dashboard/$PositionsLicenses/?PositionID=' + posID);
     });
     setup_license_request_form($('.license-type-selector > select'));
 
@@ -531,7 +533,7 @@ $(document).ready(function () {
         var bcid = $(this).data('background-check-id');
         var posID = $(this).data('position-id');
         var cont = $(this).closest('.position-background-check');
-        cont.data('position-id', posID);
+        cont.closest('tab-body').data('position-id', posID);
         var ps1 = cont.find('.popup.buy-step-1');
         var f = ps1.find('form');
         f.find('[name=BackgroundCheckID]').val(bcid);
@@ -540,24 +542,6 @@ $(document).ready(function () {
         smoothBoxBlock(ps1, cont, 'background-check');
         return false;
     })
-    // Since #217, use 'returnedHTML' instead of custom code but maintaining code for a while:
-    /*
-    .on('click', '.position-background-check .close-popup-action', function () {
-        var cont = $(this).closest('.position-background-check');
-        var posID = cont.data('position-id');
-        smoothBoxBlock(null, cont);
-        if ($(this).closest('.popup').is('.buy-step-2'))
-            cont.closest('.tab-body').reload(LcUrl.LangPath + 'Dashboard/$PositionsBackgroundCheck/?PositionID=' + posID);
-        return false;
-    })
-    .on('ajaxSuccessPost', '.popup.buy-step-1 form', function (e, data) {
-        if (data.Code == 101) {
-            var cont = $(this).closest('.position-background-check');
-            smoothBoxBlock(null, cont);
-            var ps2 = cont.find('.popup.buy-step-2');
-            smoothBoxBlock(ps2, cont, 'background-check');
-        }
-    })*/
     .on('ajaxFormReturnedHtml', '.popup.buy-step-1 form', function (e, ajaxBox, ajaxForm, jx) {
         var cont = ajaxForm.closest('.position-background-check');
         smoothBoxBlock(null, cont);
