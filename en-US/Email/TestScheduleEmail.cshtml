@@ -5,7 +5,7 @@
 @{
     float delay = Request["delayMinutes"].AsFloat();
     
-    bool scheduled = LcMessaging.ScheduleEmail(TimeSpan.FromMinutes((double)delay),
+    bool scheduled = LcMessaging.SendMailDelayed(TimeSpan.FromMinutes((double)delay),
         "iagosrl@gmail.com",
         "Testing Loconomics",
         "Testing ReviewScheduling.ScheduleEmail");

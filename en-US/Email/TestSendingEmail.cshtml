@@ -13,7 +13,7 @@
     for (var i = 1; i <= q; i++) {
         var stime = " ::T::" + DateTime.Now.ToLongTimeString();
         if (delay > 0) {
-            LcMessaging.ScheduleEmail(TimeSpan.FromMinutes((double)delay),
+            LcMessaging.SendMailDelayed(TimeSpan.FromMinutes((double)delay),
                 to, subject + series + i.ToString() + stime, "Testing Sending Email");
         } else {
             LcMessaging.SendMail(
