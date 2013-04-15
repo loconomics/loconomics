@@ -620,15 +620,11 @@ public class LcMessaging
             catch (WebException exception)
             {
                 string responseText;
-                using(var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
+                using (var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
                 {
                     responseText = reader.ReadToEnd();
                 }
-                string qs = "?";
-                foreach (var v in w.QueryString.AllKeys)
-                {
-                    qs += v + "=" + w.QueryString[v] + "&";
-                }
+                string qs = GetWebClientQueryString(w);
                 if (LcHelpers.Channel == "dev")
                 {
                     HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, exception);
@@ -637,8 +633,24 @@ public class LcMessaging
                 else
                 {
                     NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
+                    using (var logger = new LcLogger("SendMail"))
+                    {
+                        logger.Log("Email ApplyTemplate URL:", completeURL + qs);
+                        logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
+                        logger.Save();
+                    }
                     throw new Exception("Email could not be sent");
                 }
+            }
+            catch (Exception ex)
+            {
+                using (var logger = new LcLogger("SendMail"))
+                {
+                    logger.Log("Email ApplyTemplate URL:", completeURL + GetWebClientQueryString(w));
+                    logger.LogEx("Email ApplyTemplate exception (previous logged URL)", ex);
+                    logger.Save();
+                }
+                throw new Exception("Email could not be sent");
             }
             // Next commented line are test for another tries to get web content processed,
             // can be usefull test if someone have best performance than others, when need.
@@ -650,6 +662,15 @@ public class LcMessaging
         }
 
         return rtn;
+    }
+    private static string GetWebClientQueryString(WebClient w)
+    {
+        string qs = "?";
+        foreach (var v in w.QueryString.AllKeys)
+        {
+            qs += v + "=" + w.QueryString[v] + "&";
+        }
+        return qs;
     }
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
