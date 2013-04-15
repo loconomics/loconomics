@@ -296,11 +296,13 @@ public static partial class LcData
         #region Cache
         public static void CleanCacheGetUserPos(int userId)
         {
-            HelperPage.PageData["userposrows:" + userId.ToString()] = null;
+            HelperPage.PageData["userposrows:" + userId.ToString() + ":active"] = null;
+            HelperPage.PageData["userposrows:" + userId.ToString() + ":all"] = null;
         }
         public static void CleanCacheGetUserPos()
         {
-            HelperPage.PageData["posrows"] = null;
+            HelperPage.PageData["posrows:active"] = null;
+            HelperPage.PageData["posrows:all"] = null;
         }
         public static void CleanCacheGetUserPos(int userId, int posId)
         {
@@ -337,8 +339,9 @@ public static partial class LcData
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
-        
-            var poss = HelperPage.PageData["userposrows:" + userId.ToString()];
+            var cachekey = String.Format("userposrows:{0}:{2}", userId, onlyActivePositions ? "active" : "all");
+
+            var poss = HelperPage.PageData[cachekey];
             if (poss == null) {
                 using (var db = Database.Open("sqlloco")) {
                     var sqlpositions = @"
@@ -352,17 +355,18 @@ public static partial class LcData
                     ";
                     poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 }
-                HelperPage.PageData["userposrows:" + userId.ToString()] = poss;
+                HelperPage.PageData[cachekey] = poss;
             }
             return poss;
         }
         /* Get a data object with the Positions rows of the current user from the database
         */
         public static dynamic GetUserPos(bool onlyActivePositions = false){
-            var poss = HelperPage.PageData["posrows"];
+            var cachekey = "posrows:" + (onlyActivePositions ? "active" : "all");
+            var poss = HelperPage.PageData[cachekey];
             if (poss == null) {
                 poss = GetUserPos(WebSecurity.CurrentUserId, onlyActivePositions);
-                HelperPage.PageData["posrows"] = poss;
+                HelperPage.PageData[cachekey] = poss;
             }
             return poss;
         }
