@@ -17,6 +17,9 @@
         <li class="twitter"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-twitter.png")" alt="Sign in Twitter"/></a></li>
         <li class="linkedin"><a href="#"><img src="@Href(LcUrl.AppPath + "img/connect-linkedin.png")" alt="Sign in LinkedIn"/></a></li>
         *@
+        <li class="email-verification-form">
+            @RenderPage(LcUrl.RenderLangPath + "Account/$ResendConfirmationEmail.cshtml")
+        </li>
     </ul>
     </div>
     @* Saved verifications *@
