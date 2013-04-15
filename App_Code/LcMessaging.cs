@@ -635,7 +635,7 @@ public class LcMessaging
                     NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
                     using (var logger = new LcLogger("SendMail"))
                     {
-                        logger.Log("Email ApplyTemplate URL:", completeURL + qs);
+                        logger.Log("Email ApplyTemplate URL:{0}", completeURL + qs);
                         logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
                         logger.Save();
                     }
@@ -646,7 +646,7 @@ public class LcMessaging
             {
                 using (var logger = new LcLogger("SendMail"))
                 {
-                    logger.Log("Email ApplyTemplate URL:", completeURL + GetWebClientQueryString(w));
+                    logger.Log("Email ApplyTemplate URL: {0}", completeURL + GetWebClientQueryString(w));
                     logger.LogEx("Email ApplyTemplate exception (previous logged URL)", ex);
                     logger.Save();
                 }
