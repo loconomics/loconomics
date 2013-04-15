@@ -4,6 +4,9 @@
 *@
 
 @{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
     float delay = Request["delayMinutes"].AsFloat(0);
     var to = Request["to"] ?? "iagosrl@gmail.com";
     var subject = "LC Test Email: ";
@@ -21,19 +24,12 @@
         }
     }
 }
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Testing sending emails</title>
-    </head>
-    <body>
+
     <h1>Testing sending emails</h1>
-        <p>
-            @if (delay > 0) {
-                <span>Emails was scheduled to be sent</span>
-            } else {
-                <span>Emails was sent</span>
-            }
-        </p>
-    </body>
-</html>
+    <p>
+        @if (delay > 0) {
+            <span>Emails was scheduled to be sent</span>
+        } else {
+            <span>Emails was sent</span>
+        }
+    </p>
