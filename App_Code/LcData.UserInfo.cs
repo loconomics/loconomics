@@ -339,7 +339,7 @@ public static partial class LcData
         /* Get a data object with the Positions rows of the user identified with 'userId' from the database
         */
         public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
-            var cachekey = String.Format("userposrows:{0}:{2}", userId, onlyActivePositions ? "active" : "all");
+            var cachekey = String.Format("userposrows:{0}:{1}", userId, onlyActivePositions ? "active" : "all");
 
             var poss = HelperPage.PageData[cachekey];
             if (poss == null) {
