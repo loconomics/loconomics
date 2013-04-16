@@ -42,9 +42,9 @@
         needVerification = N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", WebSecurity.CurrentUserId)) != null;
     }
 }
+@Html.Raw(headerHtml)
 @if (needVerification)
 {
-    @Html.Raw(headerHtml)
     <form action="@(LcUrl.LangPath)Account/$ResendConfirmationEmail/" method="post" class="ajax ajax-box">
         @Html.ValidationSummary("")
         @if (IsPost && ModelState.IsValid)
@@ -53,4 +53,8 @@
         }
         <button type="submit" class="action">Re-send verification e-mail</button>
     </form>
+}
+else
+{
+    <ul class="user-verifications"><li class="verification">Verified successfully</li></ul>
 }
