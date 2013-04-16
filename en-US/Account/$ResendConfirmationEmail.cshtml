@@ -1,6 +1,8 @@
 ﻿@{
     LcHelpers.SecurePage();
     
+    var headerHtml = PageData["HeaderHtml"];
+    
     var okMsg = "A verification e-mail has been re-sent and may take a few minutes to arrive. Please check both your inbox spam folders.";
 
     if (IsPost) {
@@ -42,12 +44,13 @@
 }
 @if (needVerification)
 {
+    @Html.Raw(headerHtml)
     <form action="@(LcUrl.LangPath)Account/$ResendConfirmationEmail/" method="post" class="ajax ajax-box">
         @Html.ValidationSummary("")
         @if (IsPost && ModelState.IsValid)
         {
             <div>@okMsg</div>
         }
-        <button type="submit" class="action">Resend e-mail verification</button>
+        <button type="submit" class="action">Re-send verification e-mail</button>
     </form>
 }
