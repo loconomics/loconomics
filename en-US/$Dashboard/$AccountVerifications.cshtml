@@ -24,13 +24,16 @@
         </ul>
     </div>
     @* Saved verifications *@
-    <div class="user-verifications">
-        <h4>Verifications:</h4>
-        <ul>
-            @foreach (var v in verifications)
-            {
-                <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> on @v.LastVerifiedDate</li>
-            }
-        </ul>
-    </div>
+    @if (verifications != null && verifications.Count > 0)
+    {
+        <div class="user-verifications">
+            <h4>Verifications:</h4>
+            <ul>
+                @foreach (var v in verifications)
+                {
+                    <li class="@v.Icon @(v.VerificationStatusID == 1 ? "status-confirmed" : "")">@v.VerificationType: <span class="status">@v.VerificationStatusName</span> on @v.LastVerifiedDate</li>
+                }
+            </ul>
+        </div>
+    }
 </div>
