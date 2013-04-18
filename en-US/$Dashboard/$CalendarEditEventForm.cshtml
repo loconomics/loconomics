@@ -103,6 +103,15 @@
         }
     }
 }
+@helper printOptionsHours(string selectedHour){
+    var firstHour = new TimeSpan(0, 0, 0);
+    var lastHour = new TimeSpan(24, 0, 0);
+    var interval = new TimeSpan(0, 15, 0);
+    for (var hour = firstHour; hour <= lastHour; hour += interval)
+    {
+        <option @LcHelpers.IsSelected(selectedHour, hour.ToString("c")) value="@hour.ToString("c")">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
+    }
+}
 <form action="@(LcUrl.LangPath)$Dashboard/$CalendarEditEventForm/?EventID=@(eventID)" method="post" class="crudl-form ajax ajax-box availability-events-edit" id="@idprefix">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
@@ -131,9 +140,11 @@
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
             <input class="date date-pick date-pick-icon" id="@(idprefix)StartDate" placeholder="01/01/2000" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
-            <input class="time" name="starttime" type="text" placeholder="12:00 PM" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />
+            @*<input class="time" name="starttime" type="text" placeholder="12:00 PM" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />*@
+            <select class="time" name="starttime">@printOptionsHours(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.TimeOfDay.ToString("c")))</select>
             <span class="when-to">to</span>
-            <input class="time" name="endtime" type="text" placeholder="12:00 PM" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />
+            @*<input class="time" name="endtime" type="text" placeholder="12:00 PM" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />*@
+            <select class="time" name="endtime">@printOptionsHours(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.TimeOfDay.ToString("c")))</select>
             <input class="date date-pick date-pick-icon" name="enddate" placeholder="01/01/2000" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
             <div class="time-options">
                 <div class="time-switchers">

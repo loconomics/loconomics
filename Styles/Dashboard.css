@@ -693,6 +693,9 @@ form.positionavailability input{
 .availability-events-edit ul > li.when .time[type="text"] {
     width: 6.3em;
 }
+.availability-events-edit ul > li.when select.time {
+    width: 5.7em;
+}
 .availability-events-edit .repeat-frequency-unit {
     text-transform: lowercase;
 }
