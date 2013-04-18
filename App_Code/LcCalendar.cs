@@ -458,4 +458,61 @@ public static class LcCalendar
         return libCalendarUtils.PrepareExportDataForUser(new CalendarUser(UserID));
     }
     #endregion
+
+    #region Frequency Types
+    public class FrequencyTypeDescriptor
+    {
+        public int ID;
+        public string Name;
+        public string UnitPlural;
+    }
+    public static IEnumerable<FrequencyTypeDescriptor> GetRecurrenceFrequencyTypes()
+    {
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Daily,
+            Name = "Daily",
+            UnitPlural = "Days"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Weekly,
+            Name = "Weekly",
+            UnitPlural = "Weeks"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Weekly + 200,
+            Name = "Bi-Weekly"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Monthly,
+            Name = "Month",
+            UnitPlural = "Months"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Monthly + 200,
+            Name = "Bi-Monthly"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = (int)FrequencyType.Yearly,
+            Name = "Yearly",
+            UnitPlural = "Years"
+        };
+
+        /* DB version:: */
+        /*
+        using (var db = Database.Open("sqlloco")) {
+            foreach (var f in db.Query(@"
+                SELECT  ID, FrequencyType, UnitPlural
+                FROM    CalendarRecurrenceFrequencyTypes
+                WHERE   ID > 0
+            ")) {
+                return new FrequencyTypeDescriptor {
+                    ID = f.ID,
+                    Name = f.FrequencyType,
+                    UnitPlural = f.UnitPlural
+                };
+            }
+        }
+        */
+    }
+    #endregion
 }

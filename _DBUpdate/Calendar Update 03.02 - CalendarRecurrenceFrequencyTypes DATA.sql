@@ -8,3 +8,5 @@ VALUES
 	,(5, 'Weekly')
 	,(6, 'Monthly')
 	,(7, 'Yearly')
+    ,(205, 'Bi-Weekly')
+    ,(206, 'Bi-Montly')

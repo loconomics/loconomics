@@ -34,6 +34,14 @@
         
         var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
         
+        var repeatFrequency = Request["repeat-frequency"].AsInt();
+        var repeatEvery = Request["repeat-every"].AsInt();
+        // Special frequencies with an ID of 2-hundred have forced
+        // an interval/repeatEvery value of 2
+        if ((int)repeatFrequency / 100 == 2) {
+            repeatEvery = 2;
+        }
+
         LcCalendar.SetUserAppointment(u.UserID,
             eventID,
             Request["type"].AsInt(),
@@ -43,8 +51,8 @@
             (Request["enddate"] + " " + Request["endtime"]).AsDateTime(),
             Request["allday"].AsBool(),
             Request["repeat"].AsBool(),
-            Request["repeat-frequency"].AsInt(),
-            Request["repeat-every"].AsInt(),
+            repeatFrequency,
+            repeatEvery,
             Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
             Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
             Request["location"],
@@ -64,14 +72,9 @@
         }
     }
     
-    dynamic eventTypes = null, repeatFrequencies = null, availabilityTypes = null;
+    dynamic eventTypes = null, availabilityTypes = null;
     using (var db = Database.Open("sqlloco")) {
         eventTypes = db.Query(@"SELECT EventTypeID, DisplayName FROM CalendarEventType WHERE DisplayName is not null");
-        repeatFrequencies = db.Query(@"
-            SELECT  ID, FrequencyType, UnitPlural
-            FROM    CalendarRecurrenceFrequencyTypes
-            WHERE   ID > 0
-        ");
         availabilityTypes = db.Query(@"
             SELECT  CalendarAvailabilityTypeID As ID, SelectableAs As DisplayName
             FROM    CalendarAvailabilityType
@@ -79,6 +82,7 @@
                     AND SelectableAs is not null
         ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
+    var repeatFrequencies = LcCalendar.GetRecurrenceFrequencyTypes();
     var calEvent = LcCalendar.GetUserAppointment(u.UserID, eventID);
     dynamic calRecurrence = null;
     if (calEvent != null && calEvent.CalendarReccurrence != null && calEvent.CalendarReccurrence.Count > 0) {
@@ -140,7 +144,7 @@
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
                             <select name="repeat-frequency" id="@(idprefix)RepeatFrequency">
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.FrequencyType)</option>
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.Name)</option>
                                 }
                             </select>
                         </li>
@@ -199,8 +203,15 @@
                     a.show('fast');
             });
             var repeatFrequency = f.find('[name=repeat-frequency]').change(function(){
+                var unit = $(this).children(':selected').data('unit');
                 f.find('.repeat-frequency-unit')
-                .text($(this).children(':selected').data('unit'));
+                .text(unit);
+                // If there is no unit, there is not interval/repeat-every field:
+                var interval = f.find('.repeat-every');
+                if (unit)
+                    interval.show('fast');
+                else
+                    interval.hide('fast');
             });
 
             // Init:
