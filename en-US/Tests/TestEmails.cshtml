@@ -1,5 +1,6 @@
 ﻿@{
-    LcHelpers.AdminPage();
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
     
     if (IsPost) {
         var url = Request["url"].Replace(LcUrl.SiteUrl, "");
@@ -51,10 +52,6 @@
             ,"Booking/EmailBookingReview/?BookingRequestID=120&BookingID=22&SentTo=Customer&SentBy=Customer&RequestKey=abcd3&FirstReminder=false"} }
     };
 }
-<!doctype html>
-<html>
-    <head></head>
-    <body>
     
         <h1>Testing Email Templates along the site</h1>
         <h2>Use next links to test every template with some example data in the parameters</h2>
@@ -77,5 +74,3 @@
             <input type="text" name="email" placeholder="Email to..." style="width:80%" />
             <input type="submit" value="Send email" style="display:block" />
         </form>
-    </body>
-</html>

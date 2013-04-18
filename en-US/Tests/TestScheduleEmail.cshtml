@@ -3,21 +3,19 @@
 *@
 
 @{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
     float delay = Request["delayMinutes"].AsFloat();
     
-    bool scheduled = LcMessaging.ScheduleEmail(TimeSpan.FromMinutes((double)delay),
+    bool scheduled = LcMessaging.SendMailDelayed(TimeSpan.FromMinutes((double)delay),
         "iagosrl@gmail.com",
         "Testing Loconomics",
         "Testing ReviewScheduling.ScheduleEmail");
 }
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Testing Review Scheduling Email (throught WebCache)</title>
-    </head>
-    <body>
-    <h1>Testing automated tasks using Cache</h1>
+    <h1>Testing Review Scheduling Email (throught WebCache)</h1>
+    <h2>Testing automated tasks using Cache</h2>
         <p>
             @if(scheduled){
                <text>Email was scheduled</text>
@@ -25,5 +23,3 @@
                <text>Email was not scheduled. Unexpected error happen.</text>
             }
         </p>
-    </body>
-</html>

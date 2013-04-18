@@ -1296,7 +1296,15 @@ form#personal li > label.gender {
     width: auto;
     min-width: 0;
 }
-.user-verifications > ul > li{
+#account-verifications .social-media,
+.email-verification-form {
+    margin-bottom: 1em;
+}
+#account-verifications .social-media li {
+    display: inline-block;
+    margin-right: 1em;
+}
+.user-verifications li{
     background: no-repeat center left;
     padding: 0 0 0 30px;
     margin: 6px 0;

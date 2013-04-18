@@ -620,15 +620,11 @@ public class LcMessaging
             catch (WebException exception)
             {
                 string responseText;
-                using(var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
+                using (var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
                 {
                     responseText = reader.ReadToEnd();
                 }
-                string qs = "?";
-                foreach (var v in w.QueryString.AllKeys)
-                {
-                    qs += v + "=" + w.QueryString[v] + "&";
-                }
+                string qs = GetWebClientQueryString(w);
                 if (LcHelpers.Channel == "dev")
                 {
                     HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, exception);
@@ -637,8 +633,24 @@ public class LcMessaging
                 else
                 {
                     NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
+                    using (var logger = new LcLogger("SendMail"))
+                    {
+                        logger.Log("Email ApplyTemplate URL:{0}", completeURL + qs);
+                        logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
+                        logger.Save();
+                    }
                     throw new Exception("Email could not be sent");
                 }
+            }
+            catch (Exception ex)
+            {
+                using (var logger = new LcLogger("SendMail"))
+                {
+                    logger.Log("Email ApplyTemplate URL: {0}", completeURL + GetWebClientQueryString(w));
+                    logger.LogEx("Email ApplyTemplate exception (previous logged URL)", ex);
+                    logger.Save();
+                }
+                throw new Exception("Email could not be sent");
             }
             // Next commented line are test for another tries to get web content processed,
             // can be usefull test if someone have best performance than others, when need.
@@ -650,6 +662,15 @@ public class LcMessaging
         }
 
         return rtn;
+    }
+    private static string GetWebClientQueryString(WebClient w)
+    {
+        string qs = "?";
+        foreach (var v in w.QueryString.AllKeys)
+        {
+            qs += v + "=" + w.QueryString[v] + "&";
+        }
+        return qs;
     }
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
@@ -673,13 +694,41 @@ public class LcMessaging
     #endregion
 
     #region Send Mail wrapper function
+    private static bool LogSuccessSendMail
+    {
+        get
+        {
+            try
+            {
+                return System.Configuration.ConfigurationManager.AppSettings["LogSuccessSendMail"] == "true";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
     public static void SendMail(string to, string subject, string body, string from = null)
     {
-        if (HttpContext.Current.Request.Url.Host == "localhost")
-            return;
+        if (LcHelpers.Channel == "dev") return;
+
+        SendMailNow(to, subject, body, from);
+        //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
+    }
+    private static void SendMailNow(string to, string subject, string body, string from = null)
+    {
         try
         {
             WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
+
+            if (LogSuccessSendMail)
+            {
+                using (var logger = new LcLogger("SendMail"))
+                {
+                    logger.Log("SUCCESS WebMail.Send, to:{0}, subject:{1}, from:{2}", to, subject, from);
+                    logger.Save();
+                }
+            }
         }
         catch (Exception ex) {
             using (var logger = new LcLogger("SendMail"))
@@ -690,7 +739,6 @@ public class LcMessaging
                 logger.Save();
             }
         }
-        //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
     #endregion
 
@@ -707,7 +755,7 @@ public class LcMessaging
     /// <param name="emailto"></param>
     /// <param name="emailsubject"></param>
     /// <param name="emailbody"></param>
-    public static bool ScheduleEmail(TimeSpan delayTime, string emailto, string emailsubject, string emailbody, string from = null)
+    public static bool SendMailDelayed(TimeSpan delayTime, string emailto, string emailsubject, string emailbody, string from = null)
     {
         try
         {
@@ -748,20 +796,8 @@ public class LcMessaging
             string subject = emaildata["emailsubject"]; //"Loconomics test email";
             string from = emaildata["emailfrom"];
 
-            try
-            {
-                WebMail.Send(emailto, subject, body, from, contentEncoding: "utf-8");
-            }
-            catch (Exception ex)
-            {
-                using (var logger = new LcLogger("SendMail"))
-                {
-                    logger.Log("ScheduleEmail, to:{0}, subject:{1}, from:{2}, body::", emailto, subject, from);
-                    logger.LogData(body);
-                    logger.LogEx("SendMail (previous logged email)", ex);
-                    logger.Save();
-                }
-            }
+            SendMailNow(emailto, subject, body, from);
+
             // TODO: Test using the normal API for email sending, trying to solve current problem with
             // emails not being sent by this way:
             /*
