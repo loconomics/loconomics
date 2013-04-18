@@ -130,11 +130,11 @@
         </li>
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
-            <input class="date" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
+            <input class="date date-pick" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
             <input class="time" name="starttime" type="text" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />
             <span class="when-to">to</span>
             <input class="time" name="endtime" type="text" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />
-            <input class="date" name="enddate" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
+            <input class="date date-pick" name="enddate" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
             <div class="time-options">
                 <div class="time-switchers">
                     <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? (calEvent == null ? "" : calEvent.IsAllDay)) /> All day</label>
@@ -163,7 +163,7 @@
                                     <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? (calRecurrence == null ? "" : calRecurrence.Count))" @Validation.GetHtml("repeat-ocurrences") /> ocurrences</label>
                                 </li>
                                 <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" @Validation.GetHtml("repeat-ends") /> On</label>
-                                    <input class="date" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
+                                    <input class="date date-pick" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
                                 </li>
                             </ul>
                         </li>
@@ -215,11 +215,19 @@
                 else
                     interval.hide('fast');
             });
+            // auto-select some options when its value change
+            f.find('[name=repeat-ocurrences]').change(function(){
+                f.find('[name=repeat-ends][value=ocurrences]').prop('checked', true);
+            });
+            f.find('[name=repeat-end-date]').change(function () {
+                f.find('[name=repeat-ends][value=date]').prop('checked', true);
+            });
 
             // Init:
             repeat.change();
             allday.change();
             repeatFrequency.change();
+            applyDatePicker();
         });
     </script>
 </form>
