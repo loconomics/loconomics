@@ -43,25 +43,34 @@
             // And the code of frequency MUST be changed to its 'real' equivalent:
             repeatFrequency -= 200;
         }
-
-        LcCalendar.SetUserAppointment(u.UserID,
-            eventID,
-            Request["type"].AsInt(),
-            Request["availability"].AsInt(),
-            Request["summary"],
-            (Request["startdate"] + " " + Request["starttime"]).AsDateTime(),
-            (Request["enddate"] + " " + Request["endtime"]).AsDateTime(),
-            Request["allday"].AsBool(),
-            Request["repeat"].AsBool(),
-            repeatFrequency,
-            repeatEvery,
-            Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
-            Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
-            Request["location"],
-            Request["description"]
-        );
+        
+        var startDT = (Request["startdate"] + " " + Request["starttime"]).AsDateTime();
+        var endDT = (Request["enddate"] + " " + Request["endtime"]).AsDateTime();
+        
+        if (endDT < startDT){
+            var dt = endDT;
+            endDT = startDT;
+            startDT = dt;
+        }
         
         if (ModelState.IsValid) {
+            LcCalendar.SetUserAppointment(u.UserID,
+                eventID,
+                Request["type"].AsInt(),
+                Request["availability"].AsInt(),
+                Request["summary"],
+                startDT,
+                endDT,
+                Request["allday"].AsBool(),
+                Request["repeat"].AsBool(),
+                repeatFrequency,
+                repeatEvery,
+                Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
+                Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
+                Request["location"],
+                Request["description"]
+            );
+            
             // Show the profile activation popup with 'next-step' buttons and progress information when need,
             // if not the short message is showed:
             if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
