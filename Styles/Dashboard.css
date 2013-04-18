@@ -689,9 +689,9 @@ form.positionavailability input{
 .availability-events-edit ul > li.when .repeat-every input[type=text] {
     width: 40px;
 }
-.availability-events-edit ul > li.when .date,
-.availability-events-edit ul > li.when .time {
-    width: 6.3em !important;
+.availability-events-edit ul > li.when .date[type="text"],
+.availability-events-edit ul > li.when .time[type="text"] {
+    width: 6.3em;
 }
 .availability-events-edit .repeat-frequency-unit {
     text-transform: lowercase;

@@ -130,11 +130,11 @@
         </li>
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
-            <input class="date date-pick" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
-            <input class="time" name="starttime" type="text" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />
+            <input class="date date-pick date-pick-icon" id="@(idprefix)StartDate" placeholder="01/01/2000" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
+            <input class="time" name="starttime" type="text" placeholder="12:00 PM" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />
             <span class="when-to">to</span>
-            <input class="time" name="endtime" type="text" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />
-            <input class="date date-pick" name="enddate" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
+            <input class="time" name="endtime" type="text" placeholder="12:00 PM" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />
+            <input class="date date-pick date-pick-icon" name="enddate" placeholder="01/01/2000" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
             <div class="time-options">
                 <div class="time-switchers">
                     <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? (calEvent == null ? "" : calEvent.IsAllDay)) /> All day</label>
@@ -227,7 +227,10 @@
             repeat.change();
             allday.change();
             repeatFrequency.change();
+            // add date pickers
             applyDatePicker();
+            // add placeholder support (polyfill)
+            f.find(':input').placeholder();
         });
     </script>
 </form>

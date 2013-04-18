@@ -746,7 +746,12 @@ div.scripts { display: none; }
 /* jQuery-UI date-picker and popup, generic styles */
 img.ui-datepicker-trigger
 {
-    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/icon-calendar.gif') no-repeat center center;
+    display:inline-block;width:24px;height:20px;text-indent:-1000px;overflow:hidden;background:url('../img/theme/icon-calendar.png') no-repeat center center;
+}
+/* Generic icon support through optional class in the input field */
+input.date-pick.date-pick-icon {
+    background: url('../img/theme/icon-calendar.png') no-repeat 5.7em center !important;
+    width: 8em !important;
 }
 img.ui-datepicker-trigger{
     bottom: 0;
