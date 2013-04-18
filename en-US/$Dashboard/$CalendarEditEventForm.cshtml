@@ -21,13 +21,13 @@
     Validation.RequireField("summary", LcRessources.RequiredField("Title"));
     Validation.RequireField("startdate", LcRessources.RequiredField("Start Date"));
     Validation.RequireField("enddate", LcRessources.RequiredField("End Date"));
-    Validation.Add("startdate", Validator.DateTime());
-    Validation.Add("starttime", Validator.DateTime());
-    Validation.Add("enddate", Validator.DateTime());
-    Validation.Add("endtime", Validator.DateTime());
-    Validation.Add("repeat-every", Validator.Integer());
-    Validation.Add("repeat-ocurrences", Validator.Integer());
-    Validation.Add("repeat-end-date", Validator.DateTime());
+    Validation.Add("startdate", Validator.DateTime("Start date is not valid"));
+    Validation.Add("starttime", Validator.DateTime("Start time is not valid"));
+    Validation.Add("enddate", Validator.DateTime("End date is not valid"));
+    Validation.Add("endtime", Validator.DateTime("End date is not valid"));
+    Validation.Add("repeat-every", Validator.Integer("'Repeat every' must be a number"));
+    Validation.Add("repeat-ocurrences", Validator.Integer("Number of occurrences must be a number"));
+    Validation.Add("repeat-end-date", Validator.DateTime("Repitition End Date is not valid"));
     
     // Save posted data
     if (IsPost && Validation.IsValid()) {
@@ -40,6 +40,8 @@
         // an interval/repeatEvery value of 2
         if ((int)repeatFrequency / 100 == 2) {
             repeatEvery = 2;
+            // And the code of frequency MUST be changed to its 'real' equivalent:
+            repeatFrequency -= 200;
         }
 
         LcCalendar.SetUserAppointment(u.UserID,
@@ -108,60 +110,60 @@
     <ul>
         <li class="type">
             <label for="@(idprefix)Type">Type</label>
-            <select name="type" id="@(idprefix)Type">
+            <select name="type" id="@(idprefix)Type" @Validation.GetHtml("type")>
                 @foreach (var type in eventTypes) {
-                    <option value="@type.EventTypeID" @LcHelpers.IsSelected(type.EventTypeID, Request["type"] ?? calEvent == null ? "" : calEvent.EventType)>@type.DisplayName</option>
+                    <option value="@type.EventTypeID" @LcHelpers.IsSelected(type.EventTypeID, Request["type"] ?? (calEvent == null ? "" : calEvent.EventType))>@type.DisplayName</option>
                 }
             </select>
         </li>
         <li class="availability">
             <label for="@(idprefix)Availability">Availability</label>
-            <select name="availability" id="@(idprefix)Availability">
+            <select name="availability" id="@(idprefix)Availability" @Validation.GetHtml("availability")>
                 @foreach (var type in availabilityTypes) {
-                    <option value="@type.ID" @LcHelpers.IsSelected(type.ID, Request["availability"] ?? calEvent == null ? "" : calEvent.CalendarAvailabilityTypeID)>@type.DisplayName</option>
+                    <option value="@type.ID" @LcHelpers.IsSelected(type.ID, Request["availability"] ?? (calEvent == null ? "" : calEvent.CalendarAvailabilityTypeID))>@type.DisplayName</option>
                 }
             </select>
         </li>
         <li class="what">
             <label for="@(idprefix)Summary">What</label>
-            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" value="@(Request["summary"] ?? calEvent == null ? "" : calEvent.Summary)" />
+            <input id="@(idprefix)Summary" type="text" placeholder="Untitled event" name="summary" value="@(Request["summary"] ?? (calEvent == null ? "" : calEvent.Summary))" @Validation.GetHtml("summary") />
         </li>
         <li class="when">
             <label for="@(idprefix)StartDate">When</label>
-            <input class="date" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortDateString())" />
-            <input class="time" name="starttime" type="text" value="@(Request["starttime"] ?? calEvent == null ? "" : calEvent.StartTime.ToShortTimeString())" />
+            <input class="date" id="@(idprefix)StartDate" name="startdate" type="text" value="@(Request["startdate"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortDateString()))" @Validation.GetHtml("startdate") />
+            <input class="time" name="starttime" type="text" value="@(Request["starttime"] ?? (calEvent == null ? "" : calEvent.StartTime.ToShortTimeString()))" @Validation.GetHtml("starttime") />
             <span class="when-to">to</span>
-            <input class="time" name="endtime" type="text" value="@(Request["endtime"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortTimeString())" />
-            <input class="date" name="enddate" type="text" value="@(Request["enddate"] ?? calEvent == null ? "" : calEvent.EndTime.ToShortDateString())" />
+            <input class="time" name="endtime" type="text" value="@(Request["endtime"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortTimeString()))" @Validation.GetHtml("endtime") />
+            <input class="date" name="enddate" type="text" value="@(Request["enddate"] ?? (calEvent == null ? "" : calEvent.EndTime.ToShortDateString()))" @Validation.GetHtml("enddate") />
             <div class="time-options">
                 <div class="time-switchers">
-                    <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? calEvent == null ? "" : calEvent.IsAllDay) /> All day</label>
-                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? calEvent == null ? "" : calEventIsRecurrent) /> Repeat...</label>
+                    <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? (calEvent == null ? "" : calEvent.IsAllDay)) /> All day</label>
+                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? (calEvent == null ? "" : calEventIsRecurrent)) /> Repeat...</label>
                 </div>
                 <div class="repeat-options">
                     <ul>
                         <li>
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
-                            <select name="repeat-frequency" id="@(idprefix)RepeatFrequency">
+                            <select name="repeat-frequency" id="@(idprefix)RepeatFrequency" @Validation.GetHtml("repeat-frequency")>
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? calRecurrence == null ? "" : calRecurrence.Frequency)>@LcRessources.GetText(freq.Name)</option>
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? (calRecurrence == null ? "" : calRecurrence.Frequency))>@LcRessources.GetText(freq.Name)</option>
                                 }
                             </select>
                         </li>
                         <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? calRecurrence == null ? "" : calRecurrence.Interval)" />
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "" : calRecurrence.Interval))" @Validation.GetHtml("repeat-every") />
                             <span class="repeat-frequency-unit">days</span>
                         </li>
                         <li class="repeat-ends">
                             <label>Ends:</label>
                             <ul>
-                                <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" /> Never</label></li>
-                                <li class="repeat-ocurrences"><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" /> After</label>
-                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? calRecurrence == null ? "" : calRecurrence.Count)" /> ocurrences</label>
+                                <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> Never</label></li>
+                                <li class="repeat-ocurrences"><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> After</label>
+                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? (calRecurrence == null ? "" : calRecurrence.Count))" @Validation.GetHtml("repeat-ocurrences") /> ocurrences</label>
                                 </li>
-                                <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" /> On</label>
-                                    <input class="date" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : ""))" />
+                                <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" @Validation.GetHtml("repeat-ends") /> On</label>
+                                    <input class="date" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
                                 </li>
                             </ul>
                         </li>
@@ -171,11 +173,11 @@
         </li>
         <li>
             <label for="@(idprefix)Where">Where</label>
-            <input type="text" id="@(idprefix)Where" value="@(Request["location"] ?? calEvent == null ? "" : calEvent.Location)" name="location" />
+            <input type="text" id="@(idprefix)Where" value="@(Request["location"] ?? (calEvent == null ? "" : calEvent.Location))" name="location" @Validation.GetHtml("location") />
         </li>
         <li>
             <label for="@(idprefix)Description">Description</label>
-            <textarea name="description" id="@(idprefix)Description">@(Request["description"] ?? calEvent == null ? "" : calEvent.Description)</textarea>
+            <textarea name="description" id="@(idprefix)Description" @Validation.GetHtml("description")>@(Request["description"] ?? (calEvent == null ? "" : calEvent.Description))</textarea>
         </li>
     </ul>
 
