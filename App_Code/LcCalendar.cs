@@ -478,19 +478,19 @@ public static class LcCalendar
             Name = "Weekly",
             UnitPlural = "Weeks"
         };
-        yield return new FrequencyTypeDescriptor {
+        /*yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Weekly + 200,
             Name = "Bi-Weekly"
-        };
+        };*/
         yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Monthly,
             Name = "Month",
             UnitPlural = "Months"
         };
-        yield return new FrequencyTypeDescriptor {
+        /*yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Monthly + 200,
             Name = "Bi-Monthly"
-        };
+        };*/
         yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Yearly,
             Name = "Yearly",
