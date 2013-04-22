@@ -535,6 +535,10 @@
     text-align: center;
     white-space: nowrap;
 }
+.booking table.calculation-summary th,
+.booking table.calculation-summary td {
+    white-space: normal;
+}
 .booking table .name {
     text-align: left;
     width: 100%;
