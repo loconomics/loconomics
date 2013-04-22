@@ -33,9 +33,8 @@
             for (int ih = 0; ih < availData.Count; ih++)
             {
                 var h = availData[ih];
-                // Only 'free' and 'tentative' states:
-                if (h.CalendarAvailabilityTypeID != 1 &&
-                    h.CalendarAvailabilityTypeID != 3)
+                // Only 'free' time blocks:
+                if (h.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE)
                 {
                     continue;
                 }
