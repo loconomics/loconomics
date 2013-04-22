@@ -84,10 +84,10 @@ LC.showDateHours = function (date) {
     // Load date hours:
     var $day = $('#dayHoursSelector');
     var strdate = LC.dateToInterchangleString(date);
-    var hours = $day.data('duration-hours');
+    var minutes = $day.data('duration-minutes');
     var userid = $day.data('user-id');
     $day.reload(LcUrl.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + hours + '/' + userid + '/', LC.markSelectedDates);
+            encodeURIComponent(strdate) + '/' + minutes + '/' + userid + '/', LC.markSelectedDates);
     $day.data('date', date);
 };
 LC.showWeek = function (date) {

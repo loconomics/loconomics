@@ -3,7 +3,7 @@
 @{   
     string element = PageData["Element"];
     DateTime? date = PageData["Date"];
-    decimal? durationHours = PageData["DurationHours"];
+    decimal? durationMinutes = (decimal?)PageData["DurationMinutes"];
     int userID = PageData["UserID"] ?? 0;
     if ((String.IsNullOrEmpty(element) || !date.HasValue) && UrlData.Count > 1) {
         element = UrlData[0];
@@ -12,11 +12,11 @@
     if (!date.HasValue) {
         date = DateTime.Today;
     }
-    if (!durationHours.HasValue){
+    if (!durationMinutes.HasValue){
         if (UrlData.Count > 2) {
-            durationHours = LcHelpers.CreateDecimal(UrlData[2]);
+            durationMinutes = LcHelpers.CreateDecimal(UrlData[2]);
         } else {
-            durationHours = 4M;
+            durationMinutes = 4M * 60;
         }
     }
     if (userID == 0 && UrlData.Count > 3) {
@@ -24,12 +24,12 @@
     }
 }
 @functions{
-    List<dynamic> createBlocks(List<CalendarDll.ProviderAvailabilityResult> availData, decimal durationHours){
+    List<dynamic> createBlocks(List<CalendarDll.ProviderAvailabilityResult> availData, decimal durationMinutes){
         var availHours = new List<dynamic>();
         // Creating time blocks and checking its availability in blocks with same duration
         // as service duration (durationHours), instead of standard 30 minutes
         {
-            var f = Math.Ceiling((decimal) durationHours / .25M);
+            var f = Math.Ceiling((decimal) durationMinutes / 60 / .25M);
             for (int ih = 0; ih < availData.Count; ih++)
             {
                 var h = availData[ih];
@@ -40,7 +40,7 @@
                     continue;
                 }
                 
-                var serviceEnd = h.TimeBlock.Add(TimeSpan.FromHours((double)durationHours));
+                var serviceEnd = h.TimeBlock.Add(TimeSpan.FromMinutes((double)durationMinutes));
                 for (int jh = ih; jh < availData.Count; jh++)
                 {
                     var j = availData[jh];
@@ -102,7 +102,7 @@
             availData = LcCalendar.GetUserAvailability(userID, date.Value, date.Value);
         }
 
-        <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-hours="@(durationHours)" class="step-block" data-reload-mode="replace-me" data-source-url="@(LcUrl.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationHours)/@(userID)/">
+        <table id="dayHoursSelector" data-user-id="@(userID)" data-date="@(date.Value.ToString("R"))" data-duration-minutes="@(durationMinutes)" class="step-block" data-reload-mode="replace-me" data-source-url="@(LcUrl.LangPath)/Booking/$ScheduleCalendarElements/@(element)/@(date.Value.ToString("s"))/@(durationMinutes)/@(userID)/">
             <caption><h2>@(date.Value.ToString("dddd, MMM d"))</h2></caption>
             <tr>
                 <th>Start</th>
@@ -110,7 +110,7 @@
                 <th></th>
             </tr>
             @{
-                var availHours = createBlocks(availData, (decimal)durationHours);
+                var availHours = createBlocks(availData, (decimal)durationMinutes);
 
                 foreach (var h in availHours)
                 {

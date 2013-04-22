@@ -72,15 +72,15 @@
                 ModelState.AddFormError("The third choice you've selected is unavailable, please select another");
             }
         }
-        decimal durationHours = getServiceDurationHours(null, bookingRequestID, p.UserID);
+        TimeSpan durationTime = getServiceDurationTime(null, bookingRequestID, p.UserID);
         if (dt1Start.HasValue) {
-            dt1End = dt1Start.Value.AddHours((double)durationHours);
+            dt1End = dt1Start.Value.Add(durationTime);
         }
         if (dt2Start.HasValue) {
-            dt2End = dt2Start.Value.AddHours((double)durationHours);
+            dt2End = dt2Start.Value.Add(durationTime);
         }
         if (dt3Start.HasValue) {
-            dt3End = dt3Start.Value.AddHours((double)durationHours);
+            dt3End = dt3Start.Value.Add(durationTime);
         }
     }
     
@@ -218,7 +218,7 @@
      * Loading some data:
      */
     dynamic providerLocations = null, customerLocations = null, providerTravelLocation = null;
-    decimal serviceDurationHours = 0;
+    var serviceDurationTime = TimeSpan.Zero;
     using (var db = Database.Open("sqlloco")) {
         if (!withoutLocation) {
             // Provider locations
@@ -260,13 +260,11 @@
                 ", c.UserID);
             }
         }
-        serviceDurationHours = getServiceDurationHours(db, bookingRequestID, p.UserID);
+        serviceDurationTime = getServiceDurationTime(db, bookingRequestID, p.UserID);
     }
-    
-    var serviceDurationTime = TimeSpan.FromHours((double)serviceDurationHours);
 }
 @functions { 
-    decimal getServiceDurationHours(Database db, int bookingRequestID, int providerID) {
+    TimeSpan getServiceDurationTime(Database db, int bookingRequestID, int providerID) {
         var dbclose = false;
         if (db == null) {
             db = Database.Open("sqlloco");
@@ -288,10 +286,20 @@
         if (dbclose) {
             db.Dispose();
         }
+        
         // Never be lower than minimum
         serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
         // Default duration 4 hours, if there is no info about it
-        return (serviceDurationHours == 0M ? 4M : serviceDurationHours);
+        serviceDurationHours = (serviceDurationHours == 0M ? 4M : serviceDurationHours);
+
+        var serviceDurationTime = TimeSpan.FromHours((double)serviceDurationHours);
+        // #225: we need round time to minutes (get 0 seconds ever)
+        // to be accurate with the real time saved:
+        serviceDurationTime = serviceDurationTime.Add(
+            TimeSpan.FromMinutes(Math.Round(serviceDurationTime.Seconds / 60.0))
+            .Subtract(TimeSpan.FromSeconds(serviceDurationTime.Seconds))
+        );
+        return serviceDurationTime;
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -316,7 +324,7 @@
     } else if (duration.Hours == 1) {
         @("1 hour, ")
     }
-    @(duration.Minutes + " minutes.")
+    @((duration.Minutes) + " minutes.")
 }
 
 <h2>Schedule</h2>
@@ -328,10 +336,6 @@
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-    <script type="text/javascript">
-        if (!serviceDurationHours) var serviceDurationHours = 0;
-        serviceDurationHours = @(serviceDurationHours);
-    </script>
 
     <fieldset class="select-week">
         <input id="showDate" class="date-pick" type="text" />
@@ -345,7 +349,7 @@
         @RenderPage("$ScheduleCalendarElements.cshtml", new { 
             Element = "DayHoursSelector", 
             Date = showDate, 
-            DurationHours = serviceDurationHours,
+            DurationMinutes = serviceDurationTime.TotalMinutes,
             UserID = p.UserID
         })
     </fieldset>
