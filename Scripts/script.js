@@ -1113,16 +1113,6 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             newhtml = $(data);
         } catch (ex) { }
 
-        // TODO: changesnotification before or after append element to doc?
-
-        // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
-        var newForm = newhtml.find('form:eq(0)').get(0);
-        if (ctx.changedElements)
-            LC.ChangesNotification.registerChange(
-                newForm,
-                ctx.changedElements
-            );
-
         // Check if the returned element is the ajax-box, if not, find
         // the element in the newhtml:
         var jb = newhtml;
@@ -1139,8 +1129,21 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // box is content that must be replaced by the new content:
             ctx.box.replaceWith(jb);
 
+        if (ctx.box.is('form'))
+            ctx.form = ctx.box;
+        else
+            ctx.form = ctx.box.find('form:eq(0)');
+
+        // Changesnotification after append element to document, if not will not work:
+        // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
+        if (ctx.changedElements)
+            LC.ChangesNotification.registerChange(
+                ctx.form.get(0),
+                ctx.changedElements
+            );
+
         LC.autoFocus(jb);
-        $(newForm).trigger('ajaxFormReturnedHtml', [jb, $(newForm), jx]);
+        ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }
 function ajaxFormsCompleteHandler() {
@@ -2023,17 +2026,29 @@ $(function () {
                         autoUnblockLoading = false;
                     }
                 } else {
-                    // Post was wrong, html was returned to replace current form:
-                    var newhtml = $(data);
+                    // Post 'maybe' was wrong, html was returned to replace current 
+                    // form container: the ajax-box.
 
-                    // Data not saved:
-                    var newForm = newhtml.find('form:eq(0)').get(0);
-                    LC.ChangesNotification.registerChange(
-                        newForm,
-                        changedElements
-                    );
+                    // TODO: enable when jquery-1.9 Create html content from the data, in a secure way:
+                    //var newhtml = $($.parseHTML(data));
+                    var newhtml = $('#FAKEELEMENTEMPTYJQUERY');
+                    // Try-catch to avoid errors when an empty document or malformed is returned:
+                    try {
+                        newhtml = $(data);
+                    } catch (ex) { }
+
                     // Showing new html:
                     currentStep.html(newhtml);
+                    var newForm = currentStep;
+                    if (!currentStep.is('form'))
+                        newForm = currentStep.find('form:eq(0)');
+
+                    // Changesnotification after append element to document, if not will not work:
+                    // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
+                    LC.ChangesNotification.registerChange(
+                        newForm.get(0),
+                        changedElements
+                    );
 
                     currentStep.trigger('reloadedHtmlWizardStep');
                 }
