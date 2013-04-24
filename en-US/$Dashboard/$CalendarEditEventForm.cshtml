@@ -242,6 +242,10 @@
             f.find('[name=repeat-end-date]').change(function () {
                 f.find('[name=repeat-ends][value=date]').prop('checked', true);
             });
+            // auto fill enddate with startdate when this last is updated
+            f.find('[name=startdate]').on('change', function(){
+                f.find('[name=enddate]').val(this.value);
+            });
 
             // Init:
             repeat.change();
