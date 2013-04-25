@@ -15,9 +15,33 @@
     }
         
     void Application_Error(object sender, EventArgs e) 
-    { 
-        // Código que se ejecuta al producirse un error no controlado
+    {
+        if (ASP.LcHelpers.Channel != "dev")
+        {
+            Exception ex = Server.GetLastError();
+            if (ex is HttpUnhandledException && ex.InnerException != null)
+            {
+                ex = ex.InnerException;
+            }
 
+            if (ex != null)
+            {
+                try
+                {
+                    using (var logger = new LcLogger("aspnet-errors"))
+                    {
+                        logger.LogEx("Page error, unhandled exception", ex);
+                        logger.Save();
+                    }
+                }
+                catch { }
+
+                //Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.
+                //   ExceptionPolicy.HandleException(ex, "AllExceptionsPolicy");
+                Server.ClearError();
+                Response.Redirect(LcUrl.AppPath + "Errors/Error/");
+            }
+        }
     }
 
     void Session_Start(object sender, EventArgs e) 
