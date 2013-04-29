@@ -31,6 +31,7 @@ public static class LcPricingModel
         public decimal TotalPrice = 0M;
         public decimal PFeePrice = 0M;
         public decimal ServiceDuration = 0M;
+        public decimal FirstSessionDuration = 0M;
         public string Concept = "";
         public PricingSummaryData()
         {
@@ -39,13 +40,14 @@ public static class LcPricingModel
         {
             this.Concept = concept;
         }
-        public PricingSummaryData(decimal subtotalPrice, decimal feePrice, decimal totalPrice, decimal serviceDuration, decimal pFeePrice = 0)
+        public PricingSummaryData(decimal subtotalPrice, decimal feePrice, decimal totalPrice, decimal serviceDuration, decimal firstSessionDuration, decimal pFeePrice = 0)
         {
             this.SubtotalPrice = subtotalPrice;
             this.FeePrice = feePrice;
             this.TotalPrice = totalPrice;
             this.PFeePrice = pFeePrice;
             this.ServiceDuration = serviceDuration;
+            this.FirstSessionDuration = firstSessionDuration;
         }
         public static PricingSummaryData operator + (PricingSummaryData one, PricingSummaryData add)
         {
@@ -54,12 +56,14 @@ public static class LcPricingModel
                 one.FeePrice + add.FeePrice,
                 one.TotalPrice + add.TotalPrice,
                 one.ServiceDuration + add.ServiceDuration,
+                one.FirstSessionDuration + add.FirstSessionDuration,
                 one.PFeePrice + add.PFeePrice
             );
         }
         public void Add(PricingSummaryData add)
         {
             this.ServiceDuration += add.ServiceDuration;
+            this.FirstSessionDuration += add.FirstSessionDuration;
             this.SubtotalPrice += add.SubtotalPrice;
             this.FeePrice += add.FeePrice;
             this.TotalPrice += add.TotalPrice;
@@ -488,6 +492,7 @@ public static class LcPricingModel
 
         return new PricingSummaryData{
             ServiceDuration = timeInHours,
+            FirstSessionDuration = timeInHours,
             SubtotalPrice = subtotal,
             FeePrice = feePrice,
             TotalPrice = subtotal + feePrice
@@ -538,6 +543,7 @@ public static class LcPricingModel
             // Create summary object for calculated customer selection
             var customerVarSummary = new PricingSummaryData{
                 ServiceDuration = timeInHours,
+                FirstSessionDuration = timeInHours,
                 SubtotalPrice = subtotal,
                 FeePrice = feePrice,
                 TotalPrice = subtotal + feePrice
@@ -605,6 +611,7 @@ public static class LcPricingModel
                     Request[pvar.PricingVariableName],
                     0, // systemPricingDataInput
                     itemNumbers.ServiceDuration,
+                    itemNumbers.FirstSessionDuration,
                     hourPrice,
                     itemNumbers.SubtotalPrice,
                     itemNumbers.FeePrice,
@@ -636,7 +643,7 @@ public static class LcPricingModel
                         att.AsInt(),
                         0,
                         null, null, 0, // There is no input data
-                        0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
+                        0, 0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
                 }
             }
         }
@@ -703,6 +710,7 @@ public static class LcPricingModel
                 // Create summary object for calculated customer selection
                 var customerNumbers = new PricingSummaryData{
                     ServiceDuration = timeInHours,
+                    FirstSessionDuration = timeInHours,
                     SubtotalPrice = subtotal,
                     FeePrice = feePrice,
                     TotalPrice = subtotal + feePrice
@@ -765,6 +773,7 @@ public static class LcPricingModel
                         Request[popt.PricingOptionName] ?? 1,
                         0, // systemPricingDataInput
                         itemNumbers.ServiceDuration,
+                        itemNumbers.FirstSessionDuration,
                         0, // hourlyRate (options are not calculated based on a hourly rate, save 0)
                         itemNumbers.SubtotalPrice,
                         itemNumbers.FeePrice,
@@ -788,7 +797,6 @@ public static class LcPricingModel
         if (ModelState.IsValid)
         {
             dynamic thePackage = null;
-            decimal timeFirstSession = 0;
             // Get database data for selected package
             //var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
             var packageID = selectedPackage.AsInt();
@@ -805,15 +813,15 @@ public static class LcPricingModel
 
                 // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
                 decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
-                timeFirstSession += sessionTimeInHours;
+                modelData.SummaryTotal.FirstSessionDuration += sessionTimeInHours;
 
-                decimal packageTimeInHours = Math.Round(sessionTimeInHours * thePackage.NumberOfSessions, 2);
+                int sesNumber = thePackage.NumberOfSessions < 1 ? 1 : thePackage.NumberOfSessions;
+                decimal packageTimeInHours = Math.Round(sessionTimeInHours * sesNumber, 2);
                 modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
                 modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
                 modelData.SummaryTotal.FeePrice = LcPricingModel.ApplyFeeAndRound(fee, modelData.SummaryTotal.SubtotalPrice);
                 modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
-                // TODO TimeFirstSession in modelData?
 
                 // Concept, html text for Pricing summary detail, update it with package name:
                 modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
@@ -851,6 +859,7 @@ public static class LcPricingModel
                 1, // ever quantity 1
                 0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
+                modelData.SummaryTotal.FirstSessionDuration,
                 hourPrice,
                 modelData.SummaryTotal.SubtotalPrice,
                 modelData.SummaryTotal.FeePrice,
@@ -870,7 +879,6 @@ public static class LcPricingModel
         if (selectedAddons == null) {
             selectedAddons = new string[0];
         }
-        decimal timeFirstSession = 0;
 
         if (selectedAddons.Length > 0) {
             foreach (var addon in selectedAddons) {
@@ -880,9 +888,10 @@ public static class LcPricingModel
                     var addonData = addons.PackagesByID[addonID];
 
                     decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
-                    timeFirstSession += sesHours;
-            
-                    decimal pakHours = Math.Round(sesHours * addonData.NumberOfSessions, 2);
+                    modelData.SummaryTotal.FirstSessionDuration += sesHours;
+
+                    int sesNumber = addonData.NumberOfSessions < 1 ? 1 : addonData.NumberOfSessions;
+                    decimal pakHours = Math.Round(sesHours * sesNumber, 2);
                     modelData.SummaryTotal.ServiceDuration += pakHours;
             
                     decimal addonPrice = Math.Round(addonData.Price, 2);
@@ -894,8 +903,6 @@ public static class LcPricingModel
 
                     // Concept, html text for Pricing summary detail, update? (already set in controller page):
                     //modelData.SummaryTotal.Concept = "Add-on services";
-
-                    // TODO TimeFirstSession in modelData?
 
                     selectedAddonsData.Add(new {
                         addonID = addonID
@@ -935,6 +942,7 @@ public static class LcPricingModel
                     1, // ever quantity 1
                     0, // systemPricingDataInput
                     addon.pakHours,
+                    addon.sesHours,
                     hourPrice,
                     addon.subtotalPrice,
                     addon.feePrice,

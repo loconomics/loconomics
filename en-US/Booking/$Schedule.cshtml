@@ -271,7 +271,7 @@
             dbclose = true;
         }
         decimal serviceDurationHours = (decimal)db.QueryValue(@"
-            SELECT  TOP 1 coalesce(max(P.ServiceDuration), 0)
+            SELECT  TOP 1 coalesce(max(P.FirstSessionDuration), 0)
             FROM    BookingRequest As R
                      INNER JOIN
                     PricingEstimate As P
@@ -295,10 +295,7 @@
         var serviceDurationTime = TimeSpan.FromHours((double)serviceDurationHours);
         // #225: we need round time to minutes (get 0 seconds ever)
         // to be accurate with the real time saved:
-        serviceDurationTime = serviceDurationTime.Add(
-            TimeSpan.FromMinutes(Math.Round(serviceDurationTime.Seconds / 60.0))
-            .Subtract(TimeSpan.FromSeconds(serviceDurationTime.Seconds))
-        );
+        serviceDurationTime = LcHelpers.RoundTimeToMinutes(serviceDurationTime);
         return serviceDurationTime;
     }
 }

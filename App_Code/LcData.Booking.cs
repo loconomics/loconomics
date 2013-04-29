@@ -1125,6 +1125,7 @@ public static partial class LcData
                                    ,[PricingEstimateRevision]
                                    ,[PricingTypeID]
                                    ,[ServiceDuration]
+                                   ,[FirstSessionDuration]
                                    ,[HourlyPrice]
                                    ,[SubtotalPrice]
                                    ,[FeePrice]
@@ -1135,7 +1136,7 @@ public static partial class LcData
                                    ,[ModifiedBy]
                                    ,[Active])
                              VALUES
-                                   (@id, @revision, @2, @3, @4, @5, @6, @7, @8, getdate(), getdate(), 'sys', 1)
+                                   (@id, @revision, @2, @3, @4, @5, @6, @7, @8, @9, getdate(), getdate(), 'sys', 1)
 
                         SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
                     COMMIT TRAN
@@ -1157,6 +1158,7 @@ public static partial class LcData
                                ,[SystemPricingDataInput]
 
                                ,[ServiceDuration]
+                               ,[FirstSessionDuration]
                                ,[HourlyPrice]
                                ,[SubtotalPrice]
                                ,[FeePrice]
@@ -1165,7 +1167,7 @@ public static partial class LcData
                                ,[CreatedDate]
                                ,[UpdatedDate]
                                ,[ModifiedBy])
-                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, getdate(), getdate(), 'sys')
+                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, getdate(), getdate(), 'sys')
         ";
         private const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest
@@ -1212,6 +1214,7 @@ public static partial class LcData
             int revisionID,
             int pricingTypeID,
             decimal timeRequired,
+            decimal firstSessionTime,
             decimal hourPrice,
             decimal subtotalPrice,
             decimal feePrice,
@@ -1221,7 +1224,7 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 return db.QuerySingle(LcData.Booking.sqlInsEstimate, estimateID, revisionID,
-                    pricingTypeID, timeRequired, hourPrice, subtotalPrice, feePrice, totalPrice, pfeePrice);
+                    pricingTypeID, timeRequired, firstSessionTime, hourPrice, subtotalPrice, feePrice, totalPrice, pfeePrice);
             }
         }
 

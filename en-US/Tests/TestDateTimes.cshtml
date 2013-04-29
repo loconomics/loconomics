@@ -11,4 +11,12 @@
     5.34 : @TimeSpan.FromHours((double)5.34)
     <br />
     5.32 : @TimeSpan.FromHours((double)5.32)
+    <h2>RoundToMinutes</h2>
+    5.33 hours : @LcHelpers.RoundHoursToMinutes(5.33)
+    <br />
+    5.34 hours : @LcHelpers.RoundHoursToMinutes(5.34)
+    <br />
+    5.32 hours : @LcHelpers.RoundHoursToMinutes(5.32)
+    <br />
+    65 minutes = @(65 / 60.0) hours = @LcHelpers.RoundHoursToMinutes(65 / 60.0) = @LcHelpers.RoundHoursToMinutes((double)Math.Round(65 / 60M, 2))
 </div>
