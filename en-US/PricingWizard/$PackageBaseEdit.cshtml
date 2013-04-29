@@ -52,7 +52,7 @@
         Validation.Add("minutes", Validator.Integer("Duration must be a number without decimals"));
         if (config.RequireDuration) {
             Validation.RequireField("minutes", LcRessources.RequiredField("Duration"));
-            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration in minutes")));
+            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration")));
         }
     }
     if (config.NumberOfSessionsLabel != null) {
