@@ -381,10 +381,10 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     }
     <fieldset class="positionavailability-booking">
         <legend>I require:</legend>
-        <label title="Insert LJDI" class="has-tooltip">Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>
-        <label title="Insert LJDI" class="has-tooltip">Minimum booking time:@printHoursMinBookingTime(minTime.ToString("###0.##"))</label>
+        <label title="How far in advance can clients book your services? We recommend 1 or 2 days, but it's up to you." class="has-tooltip">Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>
+        <label title="Let clients know the minimum time you'll work. Please ensure any pricing you have reflects this." class="has-tooltip">Minimum booking time:@printHoursMinBookingTime(minTime.ToString("###0.##"))</label>
         @*<label>Maximum booking time:@printHoursMaxBookingTime(maxTime.ToString("###0.##"))</label>*@
-        <label title="Insert LJDI" class="has-tooltip">Minimum time between bookings:@printHoursBetweenBookingTime(betweenTime.ToString("###0.##"))</label>
+        <label title="Do you need time to prepare for your next client after a booking?" class="has-tooltip">Minimum time between bookings:@printHoursBetweenBookingTime(betweenTime.ToString("###0.##"))</label>
     </fieldset>
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
