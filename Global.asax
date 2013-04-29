@@ -30,7 +30,11 @@
                 {
                     using (var logger = new LcLogger("aspnet-errors"))
                     {
-                        logger.LogEx("Page error, unhandled exception", ex);
+                        logger.Log("Page error, unhandled exception caugth at Global.asax, context:");
+                        logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
+                        logger.Log("Request::");
+                        logger.LogData(System.Web.Helpers.ObjectInfo.Print(Request).ToString());
+                        logger.LogEx("Page error details", ex);
                         logger.Save();
                     }
                 }
