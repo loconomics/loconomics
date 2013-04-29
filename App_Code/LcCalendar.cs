@@ -320,8 +320,9 @@ public static class LcCalendar
         {
             return ent.CalendarEvents
                 .Include("CalendarReccurrence")
+                .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
                 .Where(c => c.UserId == userID && c.Id == eventID).FirstOrDefault();
-        }
+         }
     }
     public static void SetUserAppointment(int userID, int EventID,
         int EventTypeID,
@@ -336,7 +337,8 @@ public static class LcCalendar
         DateTime? RecurrenceEndDate,
         int? RecurrenceOccurrencesNumber,
         string Location,
-        string Description)
+        string Description,
+        List<int> WeekDays = null)
     {
         using (var ent = new loconomicsEntities())
         {
@@ -372,6 +374,8 @@ public static class LcCalendar
                 rRule.Interval = RecurrenceInterval;
                 rRule.Until = RecurrenceEndDate;
                 rRule.Count = RecurrenceOccurrencesNumber < 1 ? null : RecurrenceOccurrencesNumber;
+
+                // TODO: If weekly, reset and save selectedWeekDays
             }
             ent.SaveChanges();
         }
@@ -484,7 +488,7 @@ public static class LcCalendar
         };*/
         yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Monthly,
-            Name = "Month",
+            Name = "Monthly",
             UnitPlural = "Months"
         };
         /*yield return new FrequencyTypeDescriptor {

@@ -60,4 +60,50 @@ public static class LcRessources
             : "" : "";
         return String.Format(FieldXIsRequired, l);
     }
+    #region Dates, time, calendaring
+    public class DayOfWeekRecord
+    {
+        public int ID;
+        public string Name;
+        public string Abbr;
+    }
+    public static IEnumerable<DayOfWeekRecord> ListWeekDays()
+    {
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Sunday,
+            Name = DayOfWeek.Sunday.ToString(),
+            Abbr = "S"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Monday,
+            Name = DayOfWeek.Monday.ToString(),
+            Abbr = "M"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Tuesday,
+            Name = DayOfWeek.Tuesday.ToString(),
+            Abbr = "T"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Wednesday,
+            Name = DayOfWeek.Wednesday.ToString(),
+            Abbr = "W"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Thursday,
+            Name = DayOfWeek.Thursday.ToString(),
+            Abbr = "T"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Friday,
+            Name = DayOfWeek.Friday.ToString(),
+            Abbr = "F"
+        };
+        yield return new DayOfWeekRecord{
+            ID = (int)DayOfWeek.Saturday,
+            Name = DayOfWeek.Saturday.ToString(),
+            Abbr = "S"
+        };
+    }
+    #endregion
 }

@@ -29,6 +29,19 @@
     Validation.Add("repeat-ocurrences", Validator.Integer("Number of occurrences must be a number"));
     Validation.Add("repeat-end-date", Validator.DateTime("Repitition End Date is not valid"));
     
+    List<int> selectedWeekDays = new List<int>();
+    if (Request.Form.AllKeys.Contains<string>("week-day")) {
+        foreach(var w in Request.Form.GetValues("week-day")){
+            // Try-catch because a bad-request can send non-valid values or repeated
+            // ones, making the list-addition fail. For normal use, that problem
+            // never will happen, because of that a better control 
+            // without try-catch is over-complicate the code
+            try{
+                selectedWeekDays.Add(w.AsInt());
+            }catch{}
+        }
+    }
+    
     // Save posted data
     if (IsPost && Validation.IsValid()) {
         
@@ -68,9 +81,10 @@
                 Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
                 Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
                 Request["location"],
-                Request["description"]
-            );
-            
+                Request["description"],
+                selectedWeekDays
+            );            
+                        
             // Show the profile activation popup with 'next-step' buttons and progress information when need,
             // if not the short message is showed:
             if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
@@ -110,6 +124,11 @@
         } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
             recEnds = "ocurrences";
         }
+    }
+
+    // Week days: Fill with db values, but not in post
+    if (!IsPost){
+        // TODO: If weekly, set selectedWeekDays from db value         
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -175,6 +194,16 @@
                             <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "" : calRecurrence.Interval))" @Validation.GetHtml("repeat-every") />
                             <span class="repeat-frequency-unit">days</span>
                         </li>
+                        <li class="frequency-extra frequency-extra-5 weekly-extra">
+                            <label>Repeat on:</label>
+                            <div class="week-days">
+                                @foreach(var weekday in LcRessources.ListWeekDays()){
+                                    <label title="@weekday.Name" class="has-tooltip"><input type="checkbox" name="week-day" value="@weekday.ID" @LcHelpers.IsChecked(true, selectedWeekDays.Contains(weekday.ID)) />@weekday.Abbr</label>
+                                }
+                            </div>
+                        </li>
+                        <li class="frequency-extra frequency-extra-6 monthly-extra">
+                        </li>
                         <li class="repeat-ends">
                             <label>Ends:</label>
                             <ul>
@@ -225,7 +254,8 @@
                     a.show('fast');
             });
             var repeatFrequency = f.find('[name=repeat-frequency]').change(function(){
-                var unit = $(this).children(':selected').data('unit');
+                var freq = $(this).children(':selected');
+                var unit = freq.data('unit');
                 f.find('.repeat-frequency-unit')
                 .text(unit);
                 // If there is no unit, there is not interval/repeat-every field:
@@ -234,6 +264,10 @@
                     interval.show('fast');
                 else
                     interval.hide('fast');
+                // Show frequency-extra, if there is someone
+                f.find('.frequency-extra-' + freq.val()).slideDown('fast');
+                // Hide all other frequency-extra
+                f.find('.frequency-extra:not(.frequency-extra-' + freq.val() + ')').slideUp('fast');
             });
             // auto-select some options when its value change
             f.find('[name=repeat-ocurrences]').change(function(){

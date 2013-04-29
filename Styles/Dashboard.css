@@ -676,6 +676,19 @@ form.positionavailability input{
     display: inline-block;
     vertical-align: top;
 }
+.availability-events-edit .frequency-extra {
+    display: none;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days {
+    display: inline;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days .has-tooltip {
+    text-decoration: none;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days label {
+    width: auto;
+    
+}
 .availability-events-edit ul > li input[type=text],
 .availability-events-edit ul > li select,
 .availability-events-edit ul > li textarea {
