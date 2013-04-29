@@ -625,6 +625,7 @@ form.positionavailability input{
     display: block;
     margin-bottom: 16px !important;
     padding: 0;
+    text-decoration: none;
 }
 .positionavailability-booking select{
     float: right;
