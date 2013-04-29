@@ -79,9 +79,9 @@
         if (Request["min-time"].IsEmpty()) {
             ModelState.AddError("min-time", LcRessources.RequiredField("Minimum booking time"));
         }
-        if (Request["max-time"].IsEmpty()) {
+        /*if (Request["max-time"].IsEmpty()) {
             ModelState.AddError("max-time", LcRessources.RequiredField("Maximum booking time"));
-        }
+        }*/
         if (Request["between-time"].IsEmpty()) {
             ModelState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
         }
@@ -301,6 +301,7 @@
     // Minimum time between bookings: 5 minutes, 10 minutes, 15 minutes, 30 minutes, 45 minutes, 1 hour, 2 hours, 3 hours, 4 hours, 5 hours, 6 hours
     <select name="between-time">
         <option value=""></option>
+        @printOption(selected, "0", "0 minutes")
         @printOption(selected, "0.08",  "5 minutes")
         @printOption(selected, "0.16",  "10 minutes")
         @printOption(selected, "0.25",  "15 minutes")
@@ -382,7 +383,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
         <legend>I require:</legend>
         <label>Time in advance of bookings:@printHoursTimeInAdvance(advanceTime.ToString("###0.##"))</label>
         <label>Minimum booking time:@printHoursMinBookingTime(minTime.ToString("###0.##"))</label>
-        <label>Maximum booking time:@printHoursMaxBookingTime(maxTime.ToString("###0.##"))</label>
+        @*<label>Maximum booking time:@printHoursMaxBookingTime(maxTime.ToString("###0.##"))</label>*@
         <label>Minimum time between bookings:@printHoursBetweenBookingTime(betweenTime.ToString("###0.##"))</label>
     </fieldset>
     <fieldset class="actions">
