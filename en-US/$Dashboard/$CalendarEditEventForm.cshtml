@@ -154,14 +154,24 @@
                 }
             }
             // Detect Weekly frequency Presets:
-            if (selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+            if (selectedWeekDays.Count == 3 &&
+                selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
                 selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
                 selectedWeekDays.Contains((int)DayOfWeek.Friday)){
                 repeatFrequency = 502;
             }
-            if (selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+            if (selectedWeekDays.Count == 2 &&
+                selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
                 selectedWeekDays.Contains((int)DayOfWeek.Thursday)) {
-                repeatFrequency = (repeatFrequency == 502 ? 501 : 503);
+                repeatFrequency = 503;
+            }
+            if (selectedWeekDays.Count == 5 &&
+                selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Friday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Thursday)){
+                repeatFrequency = 501;
             }
         }
     }
