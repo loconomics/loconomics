@@ -490,12 +490,33 @@ public static class LcCalendar
         public string Name;
         public string UnitPlural;
     }
+    /// <summary>
+    /// Returns a list of frequency types to be displayed for user selection.
+    /// It includes real frequencies and special ones that are modifications or presets
+    /// for real frequency, interval, extra-value.
+    /// Special frequencies has ID >= 100
+    /// ID > 200  sets for normal types that has implicit interval of 2
+    /// ID > 500  sets for presets using Weekly frequency
+    /// </summary>
+    /// <returns></returns>
     public static IEnumerable<FrequencyTypeDescriptor> GetRecurrenceFrequencyTypes()
     {
         yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Daily,
             Name = "Daily",
             UnitPlural = "Days"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = 501,
+            Name = "Every weekday (Monday to Friday)"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = 502,
+            Name = "Every Monday, Wednesday, and Friday"
+        };
+        yield return new FrequencyTypeDescriptor {
+            ID = 503,
+            Name = "Every Tuesday, and Thursday"
         };
         yield return new FrequencyTypeDescriptor {
             ID = (int)FrequencyType.Weekly,

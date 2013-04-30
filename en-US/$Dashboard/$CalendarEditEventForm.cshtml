@@ -29,6 +29,8 @@
     Validation.Add("repeat-ocurrences", Validator.Integer("Number of occurrences must be a number"));
     Validation.Add("repeat-end-date", Validator.DateTime("Repitition End Date is not valid"));
     
+    // Some form values catched in vars because they need special treatment:
+    int? repeatFrequency = Request["repeat-frequency"].AsInt();
     List<int> selectedWeekDays = new List<int>();
     if (Request.Form.AllKeys.Contains<string>("week-day")) {
         foreach(var w in Request.Form.GetValues("week-day")){
@@ -47,7 +49,6 @@
         
         var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
         
-        var repeatFrequency = Request["repeat-frequency"].AsInt();
         var repeatEvery = Request["repeat-every"].AsInt();
         // Special frequencies with an ID of 2-hundred have forced
         // an interval/repeatEvery value of 2
@@ -55,6 +56,24 @@
             repeatEvery = 2;
             // And the code of frequency MUST be changed to its 'real' equivalent:
             repeatFrequency -= 200;
+        }
+        // Weekly frequency presets: 5 hundred values
+        if ((int)repeatFrequency / 100 == 5) {
+            // Interval to 1
+            repeatEvery = 1;
+            // Set week-days
+            selectedWeekDays.Clear();
+            if (repeatFrequency == 501 || repeatFrequency == 502) {
+                selectedWeekDays.Add((int)DayOfWeek.Monday);
+                selectedWeekDays.Add((int)DayOfWeek.Wednesday);
+                selectedWeekDays.Add((int)DayOfWeek.Friday);
+            }
+            if (repeatFrequency == 501 || repeatFrequency == 503) {
+                selectedWeekDays.Add((int)DayOfWeek.Tuesday);
+                selectedWeekDays.Add((int)DayOfWeek.Thursday);
+            }
+            // Finally, set frequency to 'weekly':
+            repeatFrequency = 5;
         }
         
         var startDT = (Request["startdate"] + " " + Request["starttime"]).AsDateTime();
@@ -76,7 +95,7 @@
                 endDT,
                 Request["allday"].AsBool(),
                 Request["repeat"].AsBool(),
-                repeatFrequency,
+                repeatFrequency.Value,
                 repeatEvery,
                 Request["repeat-ends"] == "date" ? (DateTime?)Request["repeat-end-date"].AsDateTime() : null,
                 Request["repeat-ends"] == "ocurrences" ? (int?)Request["repeat-ocurrences"].AsInt() : null,
@@ -110,10 +129,21 @@
     var repeatFrequencies = LcCalendar.GetRecurrenceFrequencyTypes();
     dynamic calEvent = LcCalendar.GetUserAppointment((int)u.UserID, eventID);
     CalendarDll.Data.CalendarReccurrence calRecurrence = null;
+    var calEventIsRecurrent = false;
+    var recEnds = "never";
     if (calEvent != null && calEvent.CalendarReccurrence != null && calEvent.CalendarReccurrence.Count > 0) {
         foreach(var r in calEvent.CalendarReccurrence) {
             calRecurrence = r;
             break;
+        }
+        if (calRecurrence != null) {
+            calEventIsRecurrent = true;
+            if (calRecurrence.Until != null) {
+                recEnds = "date";
+            } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
+                recEnds = "ocurrences";
+            }
+            repeatFrequency = calRecurrence.Frequency;
         }
         // Week days: Fill with db values, but not in post
         if (!IsPost && calRecurrence != null && calRecurrence.CalendarReccurrenceFrequency != null && calRecurrence.CalendarReccurrenceFrequency.Count > 0){
@@ -123,15 +153,16 @@
                     selectedWeekDays.Add(rf.DayOfWeek.Value);
                 }
             }
-        }
-    }
-    var calEventIsRecurrent = (calRecurrence != null);
-    var recEnds = "never";
-    if (calRecurrence != null) {
-        if (calRecurrence.Until != null) {
-            recEnds = "date";
-        } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
-            recEnds = "ocurrences";
+            // Detect Weekly frequency Presets:
+            if (selectedWeekDays.Contains((int)DayOfWeek.Monday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Wednesday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Friday)){
+                repeatFrequency = 502;
+            }
+            if (selectedWeekDays.Contains((int)DayOfWeek.Tuesday) &&
+                selectedWeekDays.Contains((int)DayOfWeek.Thursday)) {
+                repeatFrequency = (repeatFrequency == 502 ? 501 : 503);
+            }
         }
     }
 }
@@ -189,13 +220,13 @@
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
                             <select name="repeat-frequency" id="@(idprefix)RepeatFrequency" @Validation.GetHtml("repeat-frequency")>
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? (calRecurrence == null ? -1 : calRecurrence.Frequency).ToString())>@LcRessources.GetText(freq.Name)</option>
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, repeatFrequency)>@LcRessources.GetText(freq.Name)</option>
                                 }
                             </select>
                         </li>
                         <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? -1 : calRecurrence.Interval).ToString())" @Validation.GetHtml("repeat-every") />
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "" : calRecurrence.Interval.ToString()))" @Validation.GetHtml("repeat-every") />
                             <span class="repeat-frequency-unit">days</span>
                         </li>
                         <li class="frequency-extra frequency-extra-5 weekly-extra">
