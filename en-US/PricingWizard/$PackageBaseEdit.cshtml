@@ -41,18 +41,18 @@
     // Common validation rules
     Validation.RequireField("package-name", LcRessources.RequiredField("Package name"));
     Validation.RequireField("package-description", LcRessources.RequiredField("Description"));
-    Validation.Add("package-name", Validator.StringLength(50, 0, "Package/product/service name must be fewer than 50 characters."));
-    Validation.Add("package-description", Validator.StringLength(1000, 0, "Package/product/service description must be fewer than 1000 characters."));
+    Validation.Add("package-name", Validator.StringLength(50, 0, "Name must be fewer than 50 characters."));
+    Validation.Add("package-description", Validator.StringLength(1000, 0, "Description must be fewer than 1000 characters."));
     // Depending on config validation rules
     if (config.PriceLabel != null) {
         Validation.RequireField("price", LcRessources.RequiredField("Price"));
-        Validation.Add("price", Validator.Decimal("Price must be a number not contain the $ symbol."));
+        Validation.Add("price", Validator.Decimal("Price must be a number and not contain the $ symbol."));
     }
     if (config.DurationLabel != null) {
-        Validation.Add("minutes", Validator.Integer("Duration in minutes must be a number without decimals"));
+        Validation.Add("minutes", Validator.Integer("Duration must be a number without decimals"));
         if (config.RequireDuration) {
-            Validation.RequireField("minutes", LcRessources.RequiredField("Duration in minutes"));
-            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration in minutes")));
+            Validation.RequireField("minutes", LcRessources.RequiredField("Duration"));
+            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration")));
         }
     }
     if (config.NumberOfSessionsLabel != null) {
