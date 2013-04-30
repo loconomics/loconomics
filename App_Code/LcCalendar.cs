@@ -227,16 +227,17 @@ public static class LcCalendar
                     Interval = 1,
 
                     CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
-                {
-                    new CalendarReccurrenceFrequency
                     {
-                        ByDay = true,
-                        DayOfWeek = (int)workHoursDay.DayOfWeek,
-                        ExtraValue = (int)workHoursDay.DayOfWeek,
-                        // FrequencyDay null, is for special values (first day on week, last,... not needed here)
-                        FrequencyDay = null
+                        new CalendarReccurrenceFrequency
+                        {
+                            ByDay = true,
+                            DayOfWeek = (int)workHoursDay.DayOfWeek,
+                            // I think ExtraValue is not need, but not totally sure..
+                            ExtraValue = (int)workHoursDay.DayOfWeek,
+                            // FrequencyDay null, is for special values (first day on week, last,... not needed here)
+                            FrequencyDay = null
+                        }
                     }
-                }
                 });
 
                 // Add it to database
@@ -359,23 +360,42 @@ public static class LcCalendar
             dbevent.IsAllDay = IsAllDay;
             dbevent.Location = Location;
             dbevent.Description = Description;
+            // Reset (remove) curren recurrent rules
+            foreach (var rRule in dbevent.CalendarReccurrence.ToList())
+            {
+                foreach (var rFreq in rRule.CalendarReccurrenceFrequency.ToList())
+                {
+                    ent.CalendarReccurrenceFrequency.Remove(rFreq);
+                }
+                ent.CalendarReccurrence.Remove(rRule);
+            }
+
             if (IsRecurrent)
             {
-                CalendarReccurrence rRule = null;
-                if (dbevent.CalendarReccurrence.Count > 0)
-                    rRule = dbevent.CalendarReccurrence.First();
-                else
-                {
-                    rRule = ent.CalendarReccurrence.Create();
-                    rRule.CalendarEvents = dbevent;
-                    ent.CalendarReccurrence.Add(rRule);
-                }
+                CalendarReccurrence rRule = ent.CalendarReccurrence.Create();
+                rRule.CalendarEvents = dbevent;
+                ent.CalendarReccurrence.Add(rRule);
+
                 rRule.Frequency = RecurrenceFrequencyID;
                 rRule.Interval = RecurrenceInterval;
                 rRule.Until = RecurrenceEndDate;
                 rRule.Count = RecurrenceOccurrencesNumber < 1 ? null : RecurrenceOccurrencesNumber;
 
-                // TODO: If weekly, reset and save selectedWeekDays
+                // If weekly, save WeekDays
+                if (WeekDays != null && RecurrenceFrequencyID == (int)FrequencyType.Weekly)
+                {
+                    foreach (var weekday in WeekDays)
+                    {
+                        rRule.CalendarReccurrenceFrequency.Add(new CalendarReccurrenceFrequency{
+                            ByDay = true,
+                            DayOfWeek = weekday,
+                            // I think ExtraValue is not need, but not totally sure..
+                            ExtraValue = weekday,
+                            // FrequencyDay null, is for special values (first day on week, last,... not needed here)
+                            FrequencyDay = null
+                        });
+                    }
+                }
             }
             ent.SaveChanges();
         }

@@ -108,12 +108,21 @@
         ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
     }
     var repeatFrequencies = LcCalendar.GetRecurrenceFrequencyTypes();
-    var calEvent = LcCalendar.GetUserAppointment(u.UserID, eventID);
-    dynamic calRecurrence = null;
+    dynamic calEvent = LcCalendar.GetUserAppointment((int)u.UserID, eventID);
+    CalendarDll.Data.CalendarReccurrence calRecurrence = null;
     if (calEvent != null && calEvent.CalendarReccurrence != null && calEvent.CalendarReccurrence.Count > 0) {
         foreach(var r in calEvent.CalendarReccurrence) {
             calRecurrence = r;
             break;
+        }
+        // Week days: Fill with db values, but not in post
+        if (!IsPost && calRecurrence != null && calRecurrence.CalendarReccurrenceFrequency != null && calRecurrence.CalendarReccurrenceFrequency.Count > 0){
+            foreach(var rf in calRecurrence.CalendarReccurrenceFrequency) {
+                if (rf.DayOfWeek.HasValue && 
+                    !selectedWeekDays.Contains(rf.DayOfWeek.Value)) {
+                    selectedWeekDays.Add(rf.DayOfWeek.Value);
+                }
+            }
         }
     }
     var calEventIsRecurrent = (calRecurrence != null);
@@ -124,11 +133,6 @@
         } else if (calRecurrence.Count != null && calRecurrence.Count > 0) {
             recEnds = "ocurrences";
         }
-    }
-
-    // Week days: Fill with db values, but not in post
-    if (!IsPost){
-        // TODO: If weekly, set selectedWeekDays from db value         
     }
 }
 @helper printOptionsHours(string selectedHour){
@@ -177,7 +181,7 @@
             <div class="time-options">
                 <div class="time-switchers">
                     <label><input type="checkbox" name="allday" value="True" @LcHelpers.IsChecked(true, Request["allday"] ?? (calEvent == null ? "" : calEvent.IsAllDay)) /> All day</label>
-                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? (calEvent == null ? "" : calEventIsRecurrent)) /> Repeat...</label>
+                    <label><input type="checkbox" name="repeat" value="True" @LcHelpers.IsChecked(true, Request["repeat"] ?? (calEvent == null ? false : calEventIsRecurrent).ToString()) /> Repeat...</label>
                 </div>
                 <div class="repeat-options">
                     <ul>
@@ -185,13 +189,13 @@
                             <label for="@(idprefix)RepeatFrequency">Repeats:</label>
                             <select name="repeat-frequency" id="@(idprefix)RepeatFrequency" @Validation.GetHtml("repeat-frequency")>
                                 @foreach (var freq in repeatFrequencies) {
-                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? (calRecurrence == null ? "" : calRecurrence.Frequency))>@LcRessources.GetText(freq.Name)</option>
+                                    <option value="@freq.ID" data-unit="@freq.UnitPlural" @LcHelpers.IsSelected(freq.ID, Request["repeat-frequency"] ?? (calRecurrence == null ? -1 : calRecurrence.Frequency).ToString())>@LcRessources.GetText(freq.Name)</option>
                                 }
                             </select>
                         </li>
                         <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "" : calRecurrence.Interval))" @Validation.GetHtml("repeat-every") />
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? -1 : calRecurrence.Interval).ToString())" @Validation.GetHtml("repeat-every") />
                             <span class="repeat-frequency-unit">days</span>
                         </li>
                         <li class="frequency-extra frequency-extra-5 weekly-extra">
@@ -209,10 +213,10 @@
                             <ul>
                                 <li><label><input type="radio" @LcHelpers.IsChecked("never", recEnds) value="never" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> Never</label></li>
                                 <li class="repeat-ocurrences"><label><input type="radio" @LcHelpers.IsChecked("ocurrences", recEnds) value="ocurrences" name="repeat-ends" @Validation.GetHtml("repeat-ends") /> After</label>
-                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? (calRecurrence == null ? "" : calRecurrence.Count))" @Validation.GetHtml("repeat-ocurrences") /> ocurrences</label>
+                                    <label><input type="text" name="repeat-ocurrences" value="@(Request["repeat-ocurrences"] ?? (calRecurrence == null ? "" : calRecurrence.Count.ToString()))" @Validation.GetHtml("repeat-ocurrences") /> ocurrences</label>
                                 </li>
                                 <li class="repeat-end-date"><label><input type="radio" value="date" @LcHelpers.IsChecked("date", recEnds) name="repeat-ends" @Validation.GetHtml("repeat-ends") /> On</label>
-                                    <input class="date date-pick" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until != null ? calRecurrence.Until.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
+                                    <input class="date date-pick" type="text" name="repeat-end-date" value="@(Request["repeat-end-date"] ?? (calRecurrence == null ? "" : (calRecurrence.Until.HasValue ? calRecurrence.Until.Value.ToShortDateString() : "")))" @Validation.GetHtml("repeat-end-date") />
                                 </li>
                             </ul>
                         </li>
