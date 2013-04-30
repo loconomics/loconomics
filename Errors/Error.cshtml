@@ -2,6 +2,7 @@
     // Page to manage generally errors
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Page Error :-(";
+    Response.StatusCode = 500;
 }
 <div id="container">
     <h1>We're terribly sorry, but there's an error.  Please contact us at support@loconomics.com so we can help you.</h1>
