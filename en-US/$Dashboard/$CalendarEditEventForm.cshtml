@@ -280,9 +280,19 @@
             f.find('[name=repeat-end-date]').change(function () {
                 f.find('[name=repeat-ends][value=date]').prop('checked', true);
             });
-            // auto fill enddate with startdate when this last is updated
+            // start-date trigger
             f.find('[name=startdate]').on('change', function(){
+                // auto fill enddate with startdate when this last is updated
                 f.find('[name=enddate]').val(this.value);
+                // if no week-days or only one, auto-select the day that matchs start-date
+                var weekDays = f.find('.weekly-extra .week-days input');
+                if (weekDays.are(':checked', {until:1})) {
+                    var date = $(this).datepicker("getDate");
+                    if (date) {
+                        weekDays.prop('checked', false);
+                        weekDays.filter('[value=' + date.getDay() + ']').prop('checked', true);
+                    }
+                }
             });
 
             // Init:
