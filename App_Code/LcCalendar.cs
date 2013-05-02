@@ -232,8 +232,6 @@ public static class LcCalendar
                         {
                             ByDay = true,
                             DayOfWeek = (int)workHoursDay.DayOfWeek,
-                            // I think ExtraValue is not need, but not totally sure..
-                            ExtraValue = (int)workHoursDay.DayOfWeek,
                             // FrequencyDay null, is for special values (first day on week, last,... not needed here)
                             FrequencyDay = null
                         }
@@ -389,8 +387,6 @@ public static class LcCalendar
                         rRule.CalendarReccurrenceFrequency.Add(new CalendarReccurrenceFrequency{
                             ByDay = true,
                             DayOfWeek = weekday,
-                            // I think ExtraValue is not need, but not totally sure..
-                            ExtraValue = weekday,
                             // FrequencyDay null, is for special values (first day on week, last,... not needed here)
                             FrequencyDay = null
                         });
