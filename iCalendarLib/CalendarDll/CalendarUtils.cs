@@ -1369,7 +1369,9 @@ namespace CalendarDll
                 if (fr.ByDay ?? false)
                 {
                     //var frecDay = fr.FrequencyDay??-2147483648;
-                    if (fr.DayOfWeek != null && fr.DayOfWeek > 0) 
+                    // Bugfix: @IagoSRL: DayOfWeek > -1 instead of buggy '> 0', because
+                    // Sunday is value 0, and was discarted for recurrence because of this:
+                    if (fr.DayOfWeek != null && fr.DayOfWeek > -1) 
                         recPattern.ByDay.Add( new WeekDay((DayOfWeek)fr.DayOfWeek, (FrequencyOccurrence)(fr.FrequencyDay ?? -2147483648)));
                 }
                 else if (fr.ByHour ?? false)
