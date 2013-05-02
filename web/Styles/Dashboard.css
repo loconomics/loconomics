@@ -679,13 +679,15 @@ form.positionavailability input{
 .availability-events-edit .frequency-extra {
     display: none;
 }
-.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days {
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days,
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .monthly-options {
     display: inline;
 }
 .availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days .has-tooltip {
     text-decoration: none;
 }
-.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days label {
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days label,
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .monthly-options label {
     width: auto;
     
 }
