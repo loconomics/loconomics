@@ -337,7 +337,8 @@ public static class LcCalendar
         int? RecurrenceOccurrencesNumber,
         string Location,
         string Description,
-        List<int> WeekDays = null)
+        List<int> WeekDays = null,
+        string monthlyOption = "month-day")
     {
         using (var ent = new loconomicsEntities())
         {
@@ -396,6 +397,28 @@ public static class LcCalendar
                             // FrequencyDay null, is for special values (first day on week, last,... not needed here)
                             FrequencyDay = null
                         });
+                    }
+                }
+                // If monthly, and valid monthlyOption, save month frequency
+                if (RecurrenceFrequencyID == (int)FrequencyType.Monthly &&
+                    new string[]{"month-day", "week-day"}.Contains(monthlyOption))
+                {
+                    switch (monthlyOption)
+                    {
+                        case "month-day":
+                            // Its the default option, but let us be explicit:
+                            rRule.CalendarReccurrenceFrequency.Add(new CalendarReccurrenceFrequency{
+                                ByMonthDay = true,
+                                ExtraValue = StartTime.Day
+                            });
+                            break;
+                        case "week-day":
+                            rRule.CalendarReccurrenceFrequency.Add(new CalendarReccurrenceFrequency{
+                                ByDay = true,
+                                DayOfWeek = (int)StartTime.DayOfWeek,
+                                FrequencyDay = ASP.LcHelpers.NthWeekDayInMonth(StartTime)
+                            });
+                            break;
                     }
                 }
             }

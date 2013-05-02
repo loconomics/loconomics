@@ -34,6 +34,14 @@
             return m;
         }
     }
+    public static decimal? CreateDecimal(string decimalString) {
+        decimal aux;
+        if (decimal.TryParse(decimalString, out aux))
+            return aux;
+        else
+            return null;
+    }
+
     /*==============
      * Dates
      */
@@ -69,15 +77,6 @@
             ,end
         );
     }
-    
-    public static decimal? CreateDecimal(string decimalString) {
-        decimal aux;
-        if (decimal.TryParse(decimalString, out aux))
-            return aux;
-        else
-            return null;
-    }
-    
     /// <summary>
     /// Get a TimeSpan for the given hours,
     /// rounding the result to Minutes unit
@@ -100,6 +99,23 @@
             TimeSpan.FromMinutes(Math.Round(time.Seconds / 60.0))
             .Subtract(TimeSpan.FromSeconds(time.Seconds))
         );
+    }
+    /// <summary>
+    /// Get the nth number of the week-day represented by @date
+    /// respect to the month.
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="inverse">Set as true to get the nth starting by the
+    /// end of the month</param>
+    /// <returns></returns>
+    public static int NthWeekDayInMonth(DateTime date, bool inverse = false){
+        int nth = 0;
+        var aux = date;
+        while(aux.Month == date.Month){
+            nth++;
+            aux.AddDays(inverse ? 7 : -7);
+        }
+        return nth;
     }
     
     /*===========
