@@ -354,6 +354,12 @@ public static class LcCalendar
             dbevent.CalendarAvailabilityTypeID = AvailabilityTypeID;
             dbevent.Summary = Summary;
             dbevent.StartTime = StartTime;
+            // Carefull with EndTime: if the event is fullday (or finish at 12:00AM/00:00, thats the same)
+            // and StartTime and EndTime are the same date
+            // the event will take 0 as duration, we must select the next day in EndTime to get successfully
+            // the full StartTime day.
+            if (EndTime.Date == StartTime.Date && (EndTime.TimeOfDay == TimeSpan.Zero || IsAllDay))
+                EndTime = EndTime.AddDays(1);
             dbevent.EndTime = EndTime;
             dbevent.IsAllDay = IsAllDay;
             dbevent.Location = Location;

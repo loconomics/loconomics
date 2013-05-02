@@ -49,7 +49,7 @@
         
         var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
         
-        var repeatEvery = Request["repeat-every"].AsInt();
+        var repeatEvery = Request["repeat-every"].AsInt(1);
         // Special frequencies with an ID of 2-hundred have forced
         // an interval/repeatEvery value of 2
         if ((int)repeatFrequency / 100 == 2) {
@@ -236,7 +236,7 @@
                         </li>
                         <li class="repeat-every">
                             <label for="@(idprefix)RepeatEvery">Repeat every:</label>
-                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "" : calRecurrence.Interval.ToString()))" @Validation.GetHtml("repeat-every") />
+                            <input type="text" id="@(idprefix)RepeatEvery" name="repeat-every" value="@(Request["repeat-every"] ?? (calRecurrence == null ? "1" : calRecurrence.Interval.ToString()))" @Validation.GetHtml("repeat-every") />
                             <span class="repeat-frequency-unit">days</span>
                         </li>
                         <li class="frequency-extra frequency-extra-5 weekly-extra">
