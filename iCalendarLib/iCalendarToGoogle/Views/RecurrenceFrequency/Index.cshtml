@@ -1,0 +1,105 @@
+﻿@model IEnumerable<CalendarDll.Data.CalendarReccurrenceFrequency>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            CalendarReccurrence
+        </th>
+        <th>
+            ByDay
+        </th>
+        <th>
+            ByHour
+        </th>
+        <th>
+            ByMinute
+        </th>
+        <th>
+            ByMonth
+        </th>
+        <th>
+            ByMonthDay
+        </th>
+        <th>
+            BySecond
+        </th>
+        <th>
+            BySetPosition
+        </th>
+        <th>
+            ByWeekNo
+        </th>
+        <th>
+            ByYearDay
+        </th>
+        <th>
+            ExtraValue
+        </th>
+        <th>
+            FrequencyDay
+        </th>
+        <th>
+            DayOfWeek
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CalendarReccurrence.EvaluationMode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByDay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByHour)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByMinute)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByMonthDay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BySecond)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BySetPosition)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByWeekNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ByYearDay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExtraValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FrequencyDay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DayOfWeek)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

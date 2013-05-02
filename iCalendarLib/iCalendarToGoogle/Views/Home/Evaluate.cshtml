@@ -1,0 +1,11 @@
+﻿@model IEnumerable<CalendarDll.ProviderAvailabilityResult>
+@{
+    ViewBag.Title = "Evaluate Availability";
+    Layout = null;
+    WebGrid grid = new WebGrid(canPage: false,canSort: true, ajaxUpdateContainerId: "grid");
+
+    grid.Bind(Model);
+   
+}
+
+@grid.GetHtml()

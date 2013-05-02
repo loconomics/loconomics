@@ -1,0 +1,13 @@
+﻿@model CalendarDll.Data.CalendarReccurrence
+
+@{ Layout = null;}
+ 
+<h3>Are you sure you want to delete this?</h3>
+
+@using (Ajax.BeginForm("Delete", "Recurrence", new { id = Model.ID }, new AjaxOptions { OnComplete = "CloseDialog(" + ViewBag.EventID + ")" }))
+{
+   
+    <p>
+        <input type="submit" value="Delete" />
+    </p>
+}

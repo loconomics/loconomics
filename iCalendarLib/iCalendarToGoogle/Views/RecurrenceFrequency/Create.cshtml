@@ -1,0 +1,129 @@
+﻿@model CalendarDll.Data.CalendarReccurrenceFrequency
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>CalendarReccurrenceFrequency</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CalendarReccursiveID, "CalendarReccurrence")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("CalendarReccursiveID", String.Empty)
+            @Html.ValidationMessageFor(model => model.CalendarReccursiveID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByDay)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByDay)
+            @Html.ValidationMessageFor(model => model.ByDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByHour)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByHour)
+            @Html.ValidationMessageFor(model => model.ByHour)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByMinute)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByMinute)
+            @Html.ValidationMessageFor(model => model.ByMinute)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByMonth)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByMonth)
+            @Html.ValidationMessageFor(model => model.ByMonth)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByMonthDay)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByMonthDay)
+            @Html.ValidationMessageFor(model => model.ByMonthDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BySecond)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BySecond)
+            @Html.ValidationMessageFor(model => model.BySecond)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BySetPosition)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BySetPosition)
+            @Html.ValidationMessageFor(model => model.BySetPosition)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByWeekNo)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByWeekNo)
+            @Html.ValidationMessageFor(model => model.ByWeekNo)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ByYearDay)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ByYearDay)
+            @Html.ValidationMessageFor(model => model.ByYearDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ExtraValue)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ExtraValue)
+            @Html.ValidationMessageFor(model => model.ExtraValue)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FrequencyDay)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FrequencyDay)
+            @Html.ValidationMessageFor(model => model.FrequencyDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DayOfWeek)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DayOfWeek)
+            @Html.ValidationMessageFor(model => model.DayOfWeek)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

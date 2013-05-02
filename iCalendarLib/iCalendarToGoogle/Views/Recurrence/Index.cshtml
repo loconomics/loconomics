@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CalendarDll.Data.CalendarReccurrence>
+
+
+
+@{ Layout = null;}
+
+
+<table>
+    <tr>
+       
+        <th>
+            Ocurrences
+        </th>
+       
+        <th>
+            Frequency
+        </th>
+        <th>
+            Interval
+        </th>
+        
+        <th>
+            Until
+        </th>
+        <th>
+            FirstDayOfWeek
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Count)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Frequency)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Interval)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Until)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstDayOfWeek)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", "Recurrence", new { id = item.ID, evId = item.EventID }, new { id = "EditLink" }) |
+            @Html.ActionLink("Delete", "Delete","Recurrence" , new { id = item.ID, evId = item.EventID }, new { id="DeleteLink"})
+        </td>
+    </tr>
+}
+
+</table>

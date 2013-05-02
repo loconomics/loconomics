@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    
+}
+
+<h2>@ViewBag.Message</h2>
+@using (Html.BeginForm())
+{
+    @Html.DropDownList("Users", ((IEnumerable<iCalendarToGoogle.Helpers.UserInfo>)ViewBag.CalendarUsers).Select(u => new SelectListItem { Text = u.Name, Value = u.UserId }))
+}
+<br />
+@using (Html.BeginForm("Export", "Home", FormMethod.Post))
+{ 
+    <input type="submit" name="export" value="Export Calendar" />
+}
+<br />
+@Html.ActionLink("Import iCalendar File", "Index", "Import")
+<br /><br />
+
+@using (Ajax.BeginForm("Evaluate", new AjaxOptions { InsertionMode = InsertionMode.Replace, HttpMethod = "Post", UpdateTargetId = "grid", OnComplete="EnableButton", OnFailure="EvaluateError" }))
+{
+    <table>
+        <tr>
+            <td>Date Start :</td>
+            <td>@Html.TextBox("dateStart")</td>
+            <td>Date End :</td>
+            <td>@Html.TextBox("dateEnd")</td>
+            <td>
+                <input type="submit" name="Send" value="Evaluate Availability" />
+            </td>
+        </tr>
+    </table>
+}
+<div id="grid">
+    
+</div>
+<div id="Error"></div>
+@{Html.BeginForm("Index", "Home");}
+
+<table style="border: 0px none white; width: 600px;">
+    <tr>
+        <td style="width: 300px;">
+            <input type="submit" value="Update Language" />
+        </td>
+
+
+        <td style="width: 300px;">
+            @Html.DropDownList("language", (IEnumerable<SelectListItem>)ViewBag.CulturesList)
+
+        </td>
+    </tr>
+
+
+    <tr>
+        <td style="width: 300px;"></td>
+        <td style="width: 300px;">@ViewBag.CurrentDate</td>
+
+    </tr>
+
+</table>
+
+@{Html.EndForm();}
+
+<script type="text/javascript">
+
+    function EvaluateError(ajaxContext) {
+
+        $('input[type="submit"]').removeAttr('disabled');
+
+        //  alert(ajaxContext.status);
+
+        $("#grid").html("");
+        $("#Error").html("No events found for given date range - code: " + ajaxContext.status);
+
+    }
+
+    // Buttons are temporarily disabled when retrieving results, 
+    // so that the user doesn't hit the buttons repeteadly, sending multiple requests
+    function EnableButton() {
+        $('input[type="submit"]').removeAttr('disabled');
+    }
+
+    $(document).ready(function () {
+        
+        // Disable Submit button
+        $('form').submit(function () {
+            $('input[type="submit"]', this).attr('disabled', 'disabled');
+        });
+
+        // Date Formats
+        $("#dateStart").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#dateEnd").datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $("Import").click(function () { });
+
+        // Change User
+        $("#Users").change(function () {
+            
+
+            var selection = $(this).val();
+            var dataToSend = {
+                Users: selection
+            };
+
+            $.ajax({
+                url: "Home/ChangeUser",
+                data: dataToSend,
+                success: function (data) {
+                   // $("#output").text("server returned:" + data.agent);
+                }
+            });
+        });
+
+    })
+
+</script>
+
+
+
+

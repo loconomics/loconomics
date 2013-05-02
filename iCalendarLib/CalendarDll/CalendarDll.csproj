@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06A6C567-A4A8-4954-AFA3-6F44E7830191}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CalendarDll</RootNamespace>
+    <AssemblyName>CalendarDll</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\External Assemblies\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.Collections">
+      <HintPath>..\External Assemblies\DDay.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.iCal">
+      <HintPath>..\External Assemblies\DDay.iCal.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CalendarUtils.cs" />
+    <Compile Include="Data\address.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\addresstype.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarAvailabilityType.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventComments.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventExceptionsPeriod.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventExceptionsPeriodsList.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventRecurrencesPeriod.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventRecurrencesPeriodList.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEvents.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventsAttendees.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventsContacts.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarEventType.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarProviderAttributes.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarReccurrence.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CalendarReccurrenceFrequency.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\country.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\county.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbCalendarUser.cs" />
+    <Compile Include="Data\GetProviderAvailabilityFullSet_Result.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\language.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\loconomics.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>loconomics.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\loconomics.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\loconomics.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>loconomics.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\postalcode.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\serviceaddress.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sp_helpdiagrams_Result.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\stateprovince.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sysdiagrams.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\transporttype.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\users.cs">
+      <DependentUpon>loconomics.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbUtilsTypes.cs" />
+    <Compile Include="EventsUtilities.cs" />
+    <Compile Include="Helpers\EventHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Data\loconomics.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>loconomics.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Data\loconomics.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>loconomics.edmx</DependentUpon>
+      <LastGenOutput>loconomics.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Data\loconomics.edmx.diagram">
+      <DependentUpon>loconomics.edmx</DependentUpon>
+    </None>
+    <None Include="Data\loconomics.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>loconomics.edmx</DependentUpon>
+      <LastGenOutput>loconomics.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.es-ES.resx" />
+    <EmbeddedResource Include="Resources.es-SV.resx" />
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

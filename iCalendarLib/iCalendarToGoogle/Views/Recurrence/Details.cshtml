@@ -1,0 +1,55 @@
+﻿@model CalendarDll.Data.CalendarReccurrence
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>CalendarReccurrence</legend>
+
+    <div class="display-label">CalendarEvents</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CalendarEvents.UID)
+    </div>
+
+    <div class="display-label">Count</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Count)
+    </div>
+
+    <div class="display-label">EvaluationMode</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EvaluationMode)
+    </div>
+
+    <div class="display-label">Frequency</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Frequency)
+    </div>
+
+    <div class="display-label">Interval</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Interval)
+    </div>
+
+    <div class="display-label">RestristionType</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.RestristionType)
+    </div>
+
+    <div class="display-label">Until</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Until)
+    </div>
+
+    <div class="display-label">FirstDayOfWeek</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstDayOfWeek)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

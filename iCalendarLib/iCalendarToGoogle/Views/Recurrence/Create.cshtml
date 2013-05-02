@@ -1,0 +1,166 @@
+﻿@model CalendarDll.Data.CalendarReccurrence
+
+
+<script src="@Url.Content("~/Scripts/Recurrence.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@*These are for DataTables*@
+<script src="@Url.Content("~/Scripts/DataTables-1.8.1/media/js/jquery.dataTables.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/DataTables-1.8.1/extras/TableTools/media/js/TableTools.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/DataTables-1.8.1/extras/TableTools/media/js/ZeroClipboard.js")" type="text/javascript"></script>
+
+@*These are for styling Control*@
+<link href="@Url.Content("~/Content/DataTables-1.8.1/extras/TableTools/media/css/TableTools.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/DataTables-1.8.1/extras/TableTools/media/css/TableTools_JUI.css")" rel="stylesheet" type="text/css" />
+
+
+@{ Layout = null;}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>CalendarReccurrence</legend>
+        @if (Model != null)
+        {
+            <input type="hidden" id = "ID" name ="ID" value = "@Model.ID" />
+        }
+        @Html.Hidden("EventID")
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Frequency, "Repeats:")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.Frequency,
+            Enum.GetValues(typeof(DDay.iCal.FrequencyType)).Cast<DDay.iCal.FrequencyType>().Select(v => new SelectListItem { Text = v.ToString(), Value = ((int)v).ToString() }))
+            @Html.ValidationMessageFor(model => model.Frequency)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Count)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Count)
+            @Html.ValidationMessageFor(model => model.Count)
+        </div>
+
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Interval)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Interval, "Repeat every")
+            @Html.ValidationMessageFor(model => model.Interval)
+            <label id="interval"></label>
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Until)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Until)
+            @Html.ValidationMessageFor(model => model.Until)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstDayOfWeek)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstDayOfWeek)
+            @Html.ValidationMessageFor(model => model.FirstDayOfWeek)
+        </div>
+    </fieldset>
+    <br />
+    <fieldset>
+        <legend>Add Frequency</legend>
+        <div class="AddForm">
+        <label>Day Of Week :</label>
+        @Html.TextBox("DayOfWeek")
+        <label>Frequency Day :</label>
+        @Html.TextBox("FrequencyDay")
+        <label>Extra Value:</label>
+        @Html.TextBox("ExtraValue")
+        <input type="button" value="Add" onclick="Add()" />
+        </div>
+        <br />
+
+        <table class="tbl" id="tbl">
+            <thead>
+                <tr>
+                    <th>Day Of Week</th>
+                    <th>Frequency Day</th>
+                    <th>Extra Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model.CalendarReccurrenceFrequency)
+                    { 
+                    <tr>
+                        <td>
+                            @Html.DisplayTextFor(i => item.DayOfWeek)
+                        </td>
+                        <td>
+                            @Html.DisplayTextFor(i => item.FrequencyDay)
+                        </td>
+                        <td>
+                            @Html.DisplayTextFor(i => item.ExtraValue)
+                        </td>
+
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+       <input type="button" value="Delete Selected Row" onclick="DeleteRow()" />
+      
+
+
+    </fieldset>
+    <p>
+        <input type="button" value="Create" onclick="SaveRecurrence()" />
+    </p>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.tbl').dataTable({
+            "sDom": 'T<"clear">lfrtip',
+            "oTableTools": {
+                "aButtons": [],
+                "sRowSelect": "single"
+            },
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false
+        });
+
+        var oTable = $('.tbl').dataTable();
+    });
+
+    // add item to list table
+    function Add() {
+
+        // Adding item to table
+        $('.tbl').dataTable().fnAddData([$('#DayOfWeek').val(), $('#FrequencyDay').val(), $('#ExtraValue').val()]);
+
+        // Clean values
+        $('.AddForm input[type="text"]').val('');
+    }
+
+
+    // delete selected row from Detail Table
+    function DeleteRow() {
+
+        //getting selected row items
+        var oTT = TableTools.fnGetInstance('tbl'); // Get Table instance
+        var sRow = oTT.fnGetSelected(); // Get Selected Item From Table
+
+        $('.tbl').dataTable().fnDeleteRow(sRow[0]);
+    }
+
+   
+</script>
+
+

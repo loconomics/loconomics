@@ -1,0 +1,91 @@
+﻿@model CalendarDll.Data.CalendarReccurrence
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>CalendarReccurrence</legend>
+
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EventID, "CalendarEvents")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("EventID", String.Empty)
+            @Html.ValidationMessageFor(model => model.EventID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Count)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Count)
+            @Html.ValidationMessageFor(model => model.Count)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EvaluationMode)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EvaluationMode)
+            @Html.ValidationMessageFor(model => model.EvaluationMode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Frequency)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Frequency)
+            @Html.ValidationMessageFor(model => model.Frequency)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Interval)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Interval)
+            @Html.ValidationMessageFor(model => model.Interval)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.RestristionType)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.RestristionType)
+            @Html.ValidationMessageFor(model => model.RestristionType)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Until)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Until)
+            @Html.ValidationMessageFor(model => model.Until)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstDayOfWeek)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstDayOfWeek)
+            @Html.ValidationMessageFor(model => model.FirstDayOfWeek)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

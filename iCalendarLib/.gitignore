@@ -1,0 +1,9 @@
+!.gitignore
+*.suo
+.DS_Store
+packages/
+temp/
+obj/
+*/obj/
+*/bin/Debug/
+*/bin/Release/
