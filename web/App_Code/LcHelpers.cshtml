@@ -113,7 +113,7 @@
         var aux = date;
         while(aux.Month == date.Month){
             nth++;
-            aux.AddDays(inverse ? 7 : -7);
+            aux = aux.AddDays(inverse ? 7 : -7);
         }
         return nth;
     }
