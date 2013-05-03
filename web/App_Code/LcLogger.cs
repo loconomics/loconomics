@@ -46,7 +46,7 @@ public class LcLogger : IDisposable
     public void LogEx(string task, Exception ex){
         if (ex == null) return;
         Log("{0}: Exception {1}", task, ex.Message);
-        LogData("{0} {1}", innerExToString(ex), ex.StackTrace);
+        LogData("{0} {1}", ex.StackTrace, innerExToString(ex));
     }
     /// <summary>
     /// Log a multiline text.
@@ -60,11 +60,11 @@ public class LcLogger : IDisposable
     {
         var str = String.Format(format, pars);
         if (String.IsNullOrWhiteSpace(str)) return;
-        logger.AppendFormat("[LOGDATA[\n {0} \n]LOGDATA]\n", str);
+        logger.AppendFormat("[LOGDATA[\n{0}\n]LOGDATA]\n", str);
     }
     string innerExToString(Exception ex){
         if (ex.InnerException != null) {
-            return String.Format("InnerException {0}\n{1}", ex.InnerException, innerExToString(ex.InnerException));
+            return String.Format("\nInnerException {0}\n{1}{2}", ex.InnerException.Message, ex.InnerException.StackTrace, innerExToString(ex.InnerException));
         }
         return "";
     }

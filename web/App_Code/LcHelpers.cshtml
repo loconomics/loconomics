@@ -424,6 +424,14 @@
                 newstrs.Add(str);
         return String.Join(delimiter, newstrs);
     }
+    public static string NameValueToString(System.Collections.Specialized.NameValueCollection collection){
+        var str = "";
+        foreach(var n in collection.AllKeys){
+            var v = collection.GetValues(n);
+            str += String.Format("{0}={1}\n", n, (v.Length > 1 ? Json.Encode(v) : collection[n]));
+        }
+        return str;
+    }
     public static bool ReadBoolFrom(params object[] values) {
         foreach (object val in values) {
             if (val != null) {

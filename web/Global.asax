@@ -32,8 +32,10 @@
                     {
                         logger.Log("Page error, unhandled exception caugth at Global.asax, context:");
                         logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
-                        logger.Log("Request::");
-                        logger.LogData(System.Web.Helpers.ObjectInfo.Print(Request).ToString());
+                        logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+                        logger.Log("User-Agent:: {0}", Request.UserAgent);
+                        logger.Log("Form Data::");
+                        logger.LogData(ASP.LcHelpers.NameValueToString(Request.Form));
                         logger.LogEx("Page error details", ex);
                         logger.Save();
                     }
