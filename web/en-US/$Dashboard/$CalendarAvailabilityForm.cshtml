@@ -33,7 +33,8 @@
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
     Validation.Add("program-type", Validator.StringLength(200, 0, "Calendar type must be fewer than 200 characters."));
-    Validation.Add("program-url", Validator.StringLength(500, 0, "Calendar public URL must be fewer than 500 characters."));
+    Validation.Add("program-url", Validator.StringLength(500, 0, "Calendar private URL must be fewer than 500 characters."));
+    Validation.Add("program-url", Validator.Url("Calendar private URL is not valid"));
     
     if (action == "load") {
         dynamic atts = null;
@@ -124,6 +125,12 @@
                 }
                 
                 db.Execute("EXEC TestAlertAvailability @0", u.UserID);
+                
+                // Do a calendar import for this user, to get inmediate results instead of wait for ScheduleTask and seems 'buggy'
+                if (LcValidators.IsUrl(programURL)) {
+                    //var async = new PageAsyncTask(new EventHandler(LcCalendar.Import), null, null, null, true);
+                    LcCalendar.Import(u.UserID, programURL);
+                }
 
                 // Show the profile activation popup with 'next-step' buttons and progress information when need,
                 // if not the short message is showed:
@@ -351,7 +358,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
                 </select>
             </li>
             <li class="positionavailability-program-url">
-                <label for="@idprefix-program-url">Public URL:</label>
+                <label for="@idprefix-program-url">Private URL:</label>
                 <input type="text" name="program-url" value="@programURL" id="@idprefix-program-url"/>
             </li>
         </ul>
