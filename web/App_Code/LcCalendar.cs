@@ -446,7 +446,6 @@ public static class LcCalendar
     public static void Import(int UserID, string CalendarURL)
     {
         var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
-
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
     }
