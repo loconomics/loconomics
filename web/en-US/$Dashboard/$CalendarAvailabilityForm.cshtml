@@ -126,8 +126,9 @@
                 
                 db.Execute("EXEC TestAlertAvailability @0", u.UserID);
                 
-                // Do a calendar import for this user, to get inmediate results instead of wait for ScheduleTask and seems 'buggy'
+                // Do a calendar import for this user, to get inmediate results instead of wait for ScheduleTask
                 if (LcValidators.IsUrl(programURL)) {
+                    // TODO: Do the task in asynchronous way to be quickly returning the result to the user
                     //var async = new PageAsyncTask(new EventHandler(LcCalendar.Import), null, null, null, true);
                     LcCalendar.Import(u.UserID, programURL);
                 }
