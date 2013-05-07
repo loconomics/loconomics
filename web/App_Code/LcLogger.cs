@@ -46,7 +46,8 @@ public class LcLogger : IDisposable
     public void LogEx(string task, Exception ex){
         if (ex == null) return;
         Log("{0}: Exception {1}", task, ex.Message);
-        LogData("{0} {1}", ex.StackTrace, innerExToString(ex));
+        // Exception 'ToString' have full details, exception type, stacktrace, additional data..
+        LogData("{0} {1}", ex.ToString(), innerExToString(ex));
     }
     /// <summary>
     /// Log a multiline text.
@@ -64,7 +65,7 @@ public class LcLogger : IDisposable
     }
     string innerExToString(Exception ex){
         if (ex.InnerException != null) {
-            return String.Format("\nInnerException {0}\n{1}{2}", ex.InnerException.Message, ex.InnerException.StackTrace, innerExToString(ex.InnerException));
+            return String.Format("\nInnerException {0}\n{1}{2}", ex.InnerException.Message, ex.InnerException.ToString(), innerExToString(ex.InnerException));
         }
         return "";
     }
