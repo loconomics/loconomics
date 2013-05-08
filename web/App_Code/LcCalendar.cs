@@ -223,8 +223,10 @@ public static class LcCalendar
                 {
                     // Frequency Type Weekly:5
                     Frequency = (int)DDay.iCal.FrequencyType.Weekly,
-                    // Every 1 week (week determined by previuos Frequency)
+                    // Every 1 week (week determined by previous Frequency)
                     Interval = 1,
+                    // We need save as reference, the first day of week for this rrule:
+                    FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek,
 
                     CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
                     {
@@ -385,6 +387,8 @@ public static class LcCalendar
                 rRule.Interval = RecurrenceInterval;
                 rRule.Until = RecurrenceEndDate;
                 rRule.Count = RecurrenceOccurrencesNumber < 1 ? null : RecurrenceOccurrencesNumber;
+                // We need save as reference, the first day of week for this rrule:
+                rRule.FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek;
 
                 // If weekly, save WeekDays
                 if (WeekDays != null && RecurrenceFrequencyID == (int)FrequencyType.Weekly)
