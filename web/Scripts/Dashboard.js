@@ -400,7 +400,7 @@ $(document).ready(function () {
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
                 if (data.Code == 0 || data.Code == 5 || data.Code == 6)
-                    vp.show('fast', function () { vp.reload({autofocus: true}) });
+                    vp.show('fast', function () { vp.reload({ autofocus: true }) });
                 if (data.Code == 5)
                     setTimeout(closeAndClearEditPanel, 1500);
             })
@@ -433,7 +433,7 @@ $(document).ready(function () {
     * Licenses
     */
     function setup_license_request_form($selects) {
-        $selects.each(function(){
+        $selects.each(function () {
             var $t = $(this);
             var v = $t.val();
             var option = $t.find(':selected');
@@ -469,7 +469,7 @@ $(document).ready(function () {
         setup_license_request_form($(this).find('.license-type-selector > select'));
     }).on('ajaxSuccessPostMessageClosed', 'form.positionlicenses', function () {
         // Reloading the licenses page after succesful post, to show registered request and reset saved form:
-        var c= $(this).closest('.position-licenses-container');
+        var c = $(this).closest('.position-licenses-container');
         var posID = c.data('position-id');
         c.closest('.tab-body').reload(LcUrl.LangPath + '$Dashboard/$PositionsLicenses/?PositionID=' + posID);
     });
@@ -484,8 +484,8 @@ $(document).ready(function () {
     });
 
     /*==========================
-     *= .show-more-attributes
-     */
+    *= .show-more-attributes
+    */
     // Handler for 'show-more-attributes' button (used only on edit a package)
     $(document).on('click', '.show-more-attributes', function () {
         var $t = $(this);
@@ -502,12 +502,12 @@ $(document).ready(function () {
     });
 
     /*==========================
-     * Provider Pricing Types
-     * multi-pricing, package-based
-     */
-    (function() {
+    * Provider Pricing Types
+    * multi-pricing, package-based
+    */
+    (function () {
         // Handler for: Not to state price rate and price rate fields
-        $('.dashboard').on('change', '.provider-pricing-types [name=no-price-rate]', function(){
+        $('.dashboard').on('change', '.provider-pricing-types [name=no-price-rate]', function () {
             var $t = $(this),
                 f = $t.closest('form'),
                 pr = f.find('[name=price-rate],[name=price-rate-unit]');
@@ -517,10 +517,10 @@ $(document).ready(function () {
     })();
 
     /*===========================
-     * Cancellation Policy
-     */
-    (function() {
-        $('.dashboard').on('change', '.cancellation-policy-form [name=cancellation-policy]', function(){
+    * Cancellation Policy
+    */
+    (function () {
+        $('.dashboard').on('change', '.cancellation-policy-form [name=cancellation-policy]', function () {
             var form = $(this).closest('form');
             form.submit();
         });
@@ -582,14 +582,52 @@ $(document).ready(function () {
     });
 
     /**================
-      * Request Reviews
-     **/
+    * Request Reviews
+    **/
     $('.dashboard').on('ajaxSuccessPost', '.positionreviews', function (event, data) {
         $(this).find('[name=clientsemails]').val('')
         .attr('placeholder', data.Result.SuccessMessage || data.Result)
         // support for IE, 'non-placeholder-browsers'
         .placeholder();
     });
+
+    /**================
+    * Availability
+    **/
+    (function () {
+        var availcontainer = $('#availability');
+        availcontainer.on('change', '.positionavailability-hours select', function () {
+            var day = parseInt($(this).data('day-index'));
+            if (!isNaN(day)) {
+                $(this).closest('form')
+                    .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
+                    .prop('checked', true);
+            }
+        });
+
+        availcontainer.on('focus', '.calendar-private-url', function () {
+            $(this).select();
+        });
+        availcontainer.on('click', '.reset-private-url-action', function () {
+            var f = $(this).closest('form');
+            f.append('<input type="hidden" name="reset-private-url" value="True" />')
+                .submit();
+        });
+        availcontainer.on('change', '.positionavailability .all-days-times input', function () {
+            if (this.checked) {
+                var $f = $(this).closest('.positionavailability');
+                // Set days as 'yes'
+                $f.find('.positionavailability-days input[value=True]').prop('checked', true);
+                // Set hours as 'all day - 12AM-12AM' (selecting the same option on both selects is fine)
+                $f.closest('.positionavailability')
+                    .find('.positionavailability-hours select option:first-child')
+                    .prop('selected', true);
+            }
+        });
+        availcontainer.on('change', '.positionavailability-hours :input, .positionavailability-days ul :input', function () {
+            $(this).closest('form').find('.all-days-times input').prop('checked', false);
+        });
+    })();
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {
