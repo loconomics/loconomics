@@ -605,7 +605,7 @@ namespace CalendarDll
 
         #region Get Availability Id
 
-         private int getAvailabilityId(Event currEvent)
+        private int getAvailabilityId(Event currEvent)
         {
             var Status = currEvent.Status;
             var Transparency = currEvent.Transparency;
@@ -649,6 +649,29 @@ namespace CalendarDll
 
             } 
             return (Int32)returnValue;
+        }
+
+        /// <summary>
+        /// Get the Database AvailabilityID based on the 
+        /// FreeBusyEntry status, that has one-to-one equivalencies
+        /// </summary>
+        /// <param name="fbentry"></param>
+        /// <returns></returns>
+        /// <remarks>IagoSRL 2013/05/08</remarks>
+        private AvailabilityTypes getAvailabilityId(IFreeBusyEntry fbentry)
+        {
+            switch (fbentry.Status)
+            {
+                case FreeBusyStatus.Free:
+                    return AvailabilityTypes.FREE;
+                default:
+                case FreeBusyStatus.Busy:
+                    return AvailabilityTypes.BUSY;
+                case FreeBusyStatus.BusyTentative:
+                    return AvailabilityTypes.TENTATIVE;
+                case FreeBusyStatus.BusyUnavailable:
+                    return AvailabilityTypes.UNAVAILABLE;
+            }
         }
 
 
@@ -1149,7 +1172,12 @@ namespace CalendarDll
                         ct => ct.Contact));
         }
 
-        private void FillContactsToDB(Event iCalEvent, CalendarDll.Data.CalendarEvents eventForDB)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iCalEvent"></param>
+        /// <param name="eventForDB"></param>
+        private void FillContactsToDB(dynamic iCalEvent, CalendarEvents eventForDB)
         {
             if (!iCalEvent.Contacts.Any()) return;
 
@@ -1185,18 +1213,24 @@ namespace CalendarDll
                 
             }
         }
-
-        private void FillAttendeesToDB(Event iCalEvent, CalendarEvents eventForDB)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iCalEvent"></param>
+        /// <param name="eventForDB"></param>
+        /// <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
+        /// and dynamic objectForDB that has CalendarEventComments field.
+        /// This allow using the method not only for Events, like originally, else for vfreebusy objects
+        /// and others.</remarks>
+        private void FillAttendeesToDB(IUniqueComponent iCalObject, dynamic objectForDB)
         {
-            if (!iCalEvent.Attendees.Any()) return;
+            if (!iCalObject.Attendees.Any()) return;
 
-            foreach (var atts in iCalEvent.Attendees) {
-                eventForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees { 
-                    Attendee = atts.CommonName, IdEvent = eventForDB.Id, Role = atts.Role, Uri = atts.Value.ToString()
+            foreach (var atts in iCalObject.Attendees) {
+                objectForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees { 
+                    Attendee = atts.CommonName, IdEvent = objectForDB.Id, Role = atts.Role, Uri = atts.Value.ToString()
                 });
             }
-
-           
         }
 
         #endregion
@@ -1220,12 +1254,21 @@ namespace CalendarDll
                         cmts => cmts.Comment));
         }
 
-        private void FillCommentsToDB( Event iCalEvent, CalendarEvents eventForDB)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iCalObject"></param>
+        /// <param name="objectForDB"></param>
+        /// <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
+        /// and dynamic objectForDB that has CalendarEventComments field.
+        /// This allow using the method not only for Events, like originally, else for vfreebusy objects
+        /// and others.</remarks>
+        private void FillCommentsToDB(IUniqueComponent iCalObject, dynamic objectForDB)
         {
-            if (!iCalEvent.Comments.Any()) return;
+            if (!iCalObject.Comments.Any()) return;
 
-            foreach(var comment in iCalEvent.Comments)
-                eventForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = eventForDB.Id  });            
+            foreach(var comment in iCalObject.Comments)
+                objectForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = objectForDB.Id  });            
         }
 
 
@@ -1527,7 +1570,6 @@ namespace CalendarDll
                     //----------------------------------------------------------------------
                     // Loop to Import the Events
                     //----------------------------------------------------------------------
-
                     foreach (Event currEvent in calendar.FirstOrDefault().Events.Where(evs => !evs.UID.StartsWith("*")))
                     {
 
@@ -1593,6 +1635,77 @@ namespace CalendarDll
 
                         db.CalendarEvents.Add(eventForDB);
                     } // foreach (Event currEvent in...
+                    
+                    // By IagoSRL @Loconomics:
+                    // To support Public Calendars, that mainly provide VFREEBUSY (and most of times only that kind of elements),
+                    // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
+                    // with automatic name/summary and the given availability:
+                    foreach (var fb in calendar.FirstOrDefault().FreeBusy.Where(fb => !fb.UID.StartsWith("*")))
+                    {
+                        // If the FreeBusy block contains Entries, one event must be created for each entry
+                        if (fb.Entries != null && fb.Entries.Count > 0)
+                        {
+                            int ientry = 0;
+                            foreach (var fbentry in fb.Entries)
+                            {
+                                ientry++;
+                                var availID = getAvailabilityId(fbentry);
+                                var dbevent = new CalendarEvents()
+                                {
+                                    CreatedDate = DateTime.Now,
+                                    UpdatedDate = DateTime.Now,
+                                    ModifyBy = "importer",
+                                    UID = fb.UID + "_freebusyentry:" + ientry.ToString(),
+                                    UserId = user.Id,
+                                    StartTime = fbentry.StartTime.Value,
+                                    TimeZone = fbentry.StartTime.TZID,
+                                    EndTime = (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
+                                    Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
+                                    CalendarAvailabilityTypeID = (int)availID,
+                                    Transparency = false,
+                                    Summary = fb.Name ?? availID.ToString(),
+                                    EventType = 4, // 4 = Imported
+                                    IsAllDay = false
+                                };
+                                // Linked records
+                                FillCommentsToDB(fb, dbevent);
+                                FillAttendeesToDB(fb, dbevent);
+                                // Add to database
+                                db.CalendarEvents.Add(dbevent);
+                            }
+                        }
+                        // If there is no entries, the event is created for the vfreebusy dtstart-dtend dates:
+                        else
+                        {
+                            // The availability for a VFREEBUSY is ever 'Busy', because the object doesn't
+                            // allow set the availability/status information, it goes inside freebusy-entries when
+                            // there are some.
+                            var availID = AvailabilityTypes.BUSY;
+                            var dbevent = new CalendarEvents()
+                            {
+                                CreatedDate = DateTime.Now,
+                                UpdatedDate = DateTime.Now,
+                                ModifyBy = "importer",
+                                UID = fb.UID,
+                                UserId = user.Id,
+                                StartTime = fb.DTStart.Value,
+                                TimeZone = fb.DTStart.TZID,
+                                EndTime = fb.DTEnd.Value,
+                                Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
+                                CalendarAvailabilityTypeID = (int)availID,
+                                Transparency = false,
+                                Summary = fb.Name ?? availID.ToString(),
+                                EventType = 4, // 4 = Imported
+                                IsAllDay = false
+                            };
+                            // Linked records
+                            FillCommentsToDB(fb, dbevent);
+                            FillAttendeesToDB(fb, dbevent);
+                            // Add to database
+                            db.CalendarEvents.Add(dbevent);
+                        }
+                    }
+
 
                     //----------------------------------------------------------------------
                     // Saves the Events to the Database
