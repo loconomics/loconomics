@@ -4,23 +4,23 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="loconomicsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl" Alias="Self" Namespace="loconomicsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008">
         <EntityContainer Name="loconomicsModelStoreContainer">
-          <EntitySet Name="address" EntityType="loconomicsModel.Store.address" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="addresstype" EntityType="loconomicsModel.Store.addresstype" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarAvailabilityType" EntityType="loconomicsModel.Store.CalendarAvailabilityType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventComments" EntityType="loconomicsModel.Store.CalendarEventComments" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventExceptionsPeriod" EntityType="loconomicsModel.Store.CalendarEventExceptionsPeriod" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventExceptionsPeriodsList" EntityType="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventRecurrencesPeriod" EntityType="loconomicsModel.Store.CalendarEventRecurrencesPeriod" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventRecurrencesPeriodList" EntityType="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEvents" EntityType="loconomicsModel.Store.CalendarEvents" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventsAttendees" EntityType="loconomicsModel.Store.CalendarEventsAttendees" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventsContacts" EntityType="loconomicsModel.Store.CalendarEventsContacts" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarEventType" EntityType="loconomicsModel.Store.CalendarEventType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarProviderAttributes" EntityType="loconomicsModel.Store.CalendarProviderAttributes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarReccurrence" EntityType="loconomicsModel.Store.CalendarReccurrence" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CalendarReccurrenceFrequency" EntityType="loconomicsModel.Store.CalendarReccurrenceFrequency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="address" EntityType="loconomicsModel.Store.address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="addresstype" EntityType="loconomicsModel.Store.addresstype" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarAvailabilityType" EntityType="loconomicsModel.Store.CalendarAvailabilityType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventComments" EntityType="loconomicsModel.Store.CalendarEventComments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventExceptionsPeriod" EntityType="loconomicsModel.Store.CalendarEventExceptionsPeriod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventExceptionsPeriodsList" EntityType="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventRecurrencesPeriod" EntityType="loconomicsModel.Store.CalendarEventRecurrencesPeriod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventRecurrencesPeriodList" EntityType="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEvents" EntityType="loconomicsModel.Store.CalendarEvents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventsAttendees" EntityType="loconomicsModel.Store.CalendarEventsAttendees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventsContacts" EntityType="loconomicsModel.Store.CalendarEventsContacts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarEventType" EntityType="loconomicsModel.Store.CalendarEventType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarProviderAttributes" EntityType="loconomicsModel.Store.CalendarProviderAttributes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarReccurrence" EntityType="loconomicsModel.Store.CalendarReccurrence" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarReccurrenceFrequency" EntityType="loconomicsModel.Store.CalendarReccurrenceFrequency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="country" EntityType="loconomicsModel.Store.country" store:Type="Tables" store:Schema="dbo" store:Name="country">
             <DefiningQuery>SELECT 
       [country].[CountryID] AS [CountryID], 
@@ -76,7 +76,7 @@
       [postalcode].[ModifiedBy] AS [ModifiedBy]
       FROM [dbo].[postalcode] AS [postalcode]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="serviceaddress" EntityType="loconomicsModel.Store.serviceaddress" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="serviceaddress" EntityType="loconomicsModel.Store.serviceaddress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="stateprovince" EntityType="loconomicsModel.Store.stateprovince" store:Type="Tables" store:Schema="dbo" store:Name="stateprovince">
             <DefiningQuery>SELECT 
       [stateprovince].[StateProvinceID] AS [StateProvinceID], 
@@ -87,7 +87,15 @@
       [stateprovince].[PostalCodePrefix] AS [PostalCodePrefix]
       FROM [dbo].[stateprovince] AS [stateprovince]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="sysdiagrams" EntityType="loconomicsModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sysdiagrams" EntityType="loconomicsModel.Store.sysdiagrams" store:Type="Tables" store:Schema="dbo" store:Name="sysdiagrams">
+            <DefiningQuery>SELECT 
+      [sysdiagrams].[name] AS [name], 
+      [sysdiagrams].[principal_id] AS [principal_id], 
+      [sysdiagrams].[diagram_id] AS [diagram_id], 
+      [sysdiagrams].[version] AS [version], 
+      [sysdiagrams].[definition] AS [definition]
+      FROM [dbo].[sysdiagrams] AS [sysdiagrams]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="transporttype" EntityType="loconomicsModel.Store.transporttype" store:Type="Tables" store:Schema="dbo" store:Name="transporttype">
             <DefiningQuery>SELECT 
       [transporttype].[TransportTypeID] AS [TransportTypeID], 
@@ -101,85 +109,77 @@
       [transporttype].[Active] AS [Active]
       FROM [dbo].[transporttype] AS [transporttype]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="users" EntityType="loconomicsModel.Store.users" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="users" EntityType="loconomicsModel.Store.users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__servicead__UserI__457442E6" Association="loconomicsModel.Store.FK__servicead__UserI__457442E6">
-            <End Role="users" EntitySet="users" />
-            <End Role="serviceaddress" EntitySet="serviceaddress" />
+            <End EntitySet="users" Role="users" />
+            <End EntitySet="serviceaddress" Role="serviceaddress" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventExceptions_CalendarEvents" Association="loconomicsModel.Store.FK_CalendarEventExceptions_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarEventExceptionsPeriodsList" EntitySet="CalendarEventExceptionsPeriodsList" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarEventExceptionsPeriodsList" Role="CalendarEventExceptionsPeriodsList" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" Association="loconomicsModel.Store.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
-            <End Role="CalendarEventExceptionsPeriodsList" EntitySet="CalendarEventExceptionsPeriodsList" />
-            <End Role="CalendarEventExceptionsPeriod" EntitySet="CalendarEventExceptionsPeriod" />
+            <End EntitySet="CalendarEventExceptionsPeriodsList" Role="CalendarEventExceptionsPeriodsList" />
+            <End EntitySet="CalendarEventExceptionsPeriod" Role="CalendarEventExceptionsPeriod" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" Association="loconomicsModel.Store.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
-            <End Role="CalendarEventRecurrencesPeriodList" EntitySet="CalendarEventRecurrencesPeriodList" />
-            <End Role="CalendarEventRecurrencesPeriod" EntitySet="CalendarEventRecurrencesPeriod" />
+            <End EntitySet="CalendarEventRecurrencesPeriodList" Role="CalendarEventRecurrencesPeriodList" />
+            <End EntitySet="CalendarEventRecurrencesPeriod" Role="CalendarEventRecurrencesPeriod" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventRecurrencesPeriodList_CalendarEvents" Association="loconomicsModel.Store.FK_CalendarEventRecurrencesPeriodList_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarEventRecurrencesPeriodList" EntitySet="CalendarEventRecurrencesPeriodList" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarEventRecurrencesPeriodList" Role="CalendarEventRecurrencesPeriodList" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEvents_CalendarAvailabilityType" Association="loconomicsModel.Store.FK_CalendarEvents_CalendarAvailabilityType">
-            <End Role="CalendarAvailabilityType" EntitySet="CalendarAvailabilityType" />
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
+            <End EntitySet="CalendarAvailabilityType" Role="CalendarAvailabilityType" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEvents_CalendarEventType" Association="loconomicsModel.Store.FK_CalendarEvents_CalendarEventType">
-            <End Role="CalendarEventType" EntitySet="CalendarEventType" />
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CalendarEvents_users" Association="loconomicsModel.Store.FK_CalendarEvents_users">
-            <End Role="users" EntitySet="users" />
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
+            <End EntitySet="CalendarEventType" Role="CalendarEventType" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventsAttendees_CalendarEvents" Association="loconomicsModel.Store.FK_CalendarEventsAttendees_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarEventsAttendees" EntitySet="CalendarEventsAttendees" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarEventsAttendees" Role="CalendarEventsAttendees" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarEventsContacts_CalendarEvents" Association="loconomicsModel.Store.FK_CalendarEventsContacts_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarEventsContacts" EntitySet="CalendarEventsContacts" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarEventsContacts" Role="CalendarEventsContacts" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarFrecuency_CalendarReccursive" Association="loconomicsModel.Store.FK_CalendarFrecuency_CalendarReccursive">
-            <End Role="CalendarReccurrence" EntitySet="CalendarReccurrence" />
-            <End Role="CalendarReccurrenceFrequency" EntitySet="CalendarReccurrenceFrequency" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CalendarProviderAttributes_users" Association="loconomicsModel.Store.FK_CalendarProviderAttributes_users">
-            <End Role="users" EntitySet="users" />
-            <End Role="CalendarProviderAttributes" EntitySet="CalendarProviderAttributes" />
+            <End EntitySet="CalendarReccurrence" Role="CalendarReccurrence" />
+            <End EntitySet="CalendarReccurrenceFrequency" Role="CalendarReccurrenceFrequency" />
           </AssociationSet>
           <AssociationSet Name="FK_CalendarReccursive_CalendarEvents" Association="loconomicsModel.Store.FK_CalendarReccursive_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarReccurrence" EntitySet="CalendarReccurrence" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarReccurrence" Role="CalendarReccurrence" />
           </AssociationSet>
           <AssociationSet Name="FK_Comments_CalendarEvents" Association="loconomicsModel.Store.FK_Comments_CalendarEvents">
-            <End Role="CalendarEvents" EntitySet="CalendarEvents" />
-            <End Role="CalendarEventComments" EntitySet="CalendarEventComments" />
+            <End EntitySet="CalendarEvents" Role="CalendarEvents" />
+            <End EntitySet="CalendarEventComments" Role="CalendarEventComments" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="address">
           <Key>
             <PropertyRef Name="AddressID" />
           </Key>
-          <Property Name="AddressID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="AddressTypeID" Type="int" Nullable="false" />
-          <Property Name="AddressName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="AddressLine1" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="AddressLine2" Type="varchar" MaxLength="100" />
-          <Property Name="City" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="StateProvinceID" Type="int" Nullable="false" />
-          <Property Name="PostalCodeID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="AddressID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="UserID" Nullable="false" Type="int" />
+          <Property Name="AddressTypeID" Nullable="false" Type="int" />
+          <Property Name="AddressName" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="AddressLine1" Nullable="false" MaxLength="100" Type="varchar" />
+          <Property Name="AddressLine2" MaxLength="100" Type="varchar" />
+          <Property Name="City" Nullable="false" MaxLength="100" Type="varchar" />
+          <Property Name="StateProvinceID" Nullable="false" Type="int" />
+          <Property Name="PostalCodeID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
-          <Property Name="GoogleMapsURL" Type="varchar" MaxLength="2073" />
-          <Property Name="SpecialInstructions" Type="varchar" MaxLength="1000" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="varchar" Nullable="false" MaxLength="25" />
+          <Property Name="GoogleMapsURL" MaxLength="2073" Type="varchar" />
+          <Property Name="SpecialInstructions" MaxLength="1000" Type="varchar" />
+          <Property Name="CreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="UpdatedDate" Nullable="false" Type="datetime" />
+          <Property Name="ModifiedBy" Nullable="false" MaxLength="25" Type="varchar" />
           <Property Name="Active" Type="bit" />
         </EntityType>
         <EntityType Name="addresstype">
@@ -188,94 +188,93 @@
             <PropertyRef Name="LanguageID" />
             <PropertyRef Name="CountryID" />
           </Key>
-          <Property Name="AddressTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="AddressType" Type="varchar" MaxLength="50" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="varchar" Nullable="false" MaxLength="25" />
-          <Property Name="Active" Type="bit" Nullable="false" />
-          <Property Name="UniquePerUser" Type="bit" Nullable="false" />
-          <Property Name="Selectable" Type="bit" Nullable="false" />
+          <Property Name="AddressTypeID" Nullable="false" Type="int" />
+          <Property Name="LanguageID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="AddressType" MaxLength="50" Type="varchar" />
+          <Property Name="CreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="UpdatedDate" Nullable="false" Type="datetime" />
+          <Property Name="ModifiedBy" Nullable="false" MaxLength="25" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
+          <Property Name="UniquePerUser" Nullable="false" Type="bit" />
+          <Property Name="Selectable" Nullable="false" Type="bit" />
         </EntityType>
         <EntityType Name="CalendarAvailabilityType">
           <Key>
             <PropertyRef Name="CalendarAvailabilityTypeID" />
           </Key>
-          <Property Name="CalendarAvailabilityTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="CalendarAvailabilityTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
-          <Property Name="CalendarAvailabilityTypeDescription" Type="nvarchar" Nullable="false" MaxLength="300" />
+          <Property Name="CalendarAvailabilityTypeID" Nullable="false" Type="int" />
+          <Property Name="LanguageID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="CalendarAvailabilityTypeName" Nullable="false" MaxLength="50" Type="nvarchar" />
+          <Property Name="CalendarAvailabilityTypeDescription" Nullable="false" MaxLength="300" Type="nvarchar" />
+          <Property Name="SelectableAs" MaxLength="50" Type="nvarchar" />
         </EntityType>
         <EntityType Name="CalendarEventComments">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdEvent" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="IdEvent" Nullable="false" Type="int" />
           <Property Name="Comment" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CalendarEventExceptionsPeriod">
           <Key>
             <PropertyRef Name="IdException" />
             <PropertyRef Name="DateStart" />
-            <PropertyRef Name="DateEnd" />
           </Key>
-          <Property Name="IdException" Type="int" Nullable="false" />
-          <Property Name="DateStart" Type="datetime" Nullable="false" />
-          <Property Name="DateEnd" Type="datetime" Nullable="false" />
+          <Property Name="IdException" Nullable="false" Type="int" />
+          <Property Name="DateStart" Nullable="false" Type="datetime" />
+          <Property Name="DateEnd" Type="datetime" />
         </EntityType>
         <EntityType Name="CalendarEventExceptionsPeriodsList">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdEvent" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="IdEvent" Nullable="false" Type="int" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriod">
           <Key>
             <PropertyRef Name="IdRecurrence" />
             <PropertyRef Name="DateStart" />
-            <PropertyRef Name="DateEnd" />
           </Key>
-          <Property Name="IdRecurrence" Type="int" Nullable="false" />
-          <Property Name="DateStart" Type="datetime" Nullable="false" />
-          <Property Name="DateEnd" Type="datetime" Nullable="false" />
+          <Property Name="IdRecurrence" Nullable="false" Type="int" />
+          <Property Name="DateStart" Nullable="false" Type="datetime" />
+          <Property Name="DateEnd" Type="datetime" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriodList">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdEvent" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="IdEvent" Nullable="false" Type="int" />
         </EntityType>
         <EntityType Name="CalendarEvents">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="EventType" Type="int" Nullable="false" />
-          <Property Name="Summary" Type="varchar" MaxLength="500" />
-          <Property Name="UID" Type="varchar" MaxLength="150" />
-          <Property Name="CalendarAvailabilityTypeID" Type="int" Nullable="false" />
-          <Property Name="Transparency" Type="bit" Nullable="false" />
-          <Property Name="StartTime" Type="datetime" Nullable="false" />
-          <Property Name="EndTime" Type="datetime" Nullable="false" />
-          <Property Name="IsAllDay" Type="bit" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="UserId" Nullable="false" Type="int" />
+          <Property Name="EventType" Nullable="false" Type="int" />
+          <Property Name="Summary" MaxLength="500" Type="varchar" />
+          <Property Name="UID" MaxLength="150" Type="varchar" />
+          <Property Name="CalendarAvailabilityTypeID" Nullable="false" Type="int" />
+          <Property Name="Transparency" Nullable="false" Type="bit" />
+          <Property Name="StartTime" Nullable="false" Type="datetime" />
+          <Property Name="EndTime" Nullable="false" Type="datetime" />
+          <Property Name="IsAllDay" Nullable="false" Type="bit" />
           <Property Name="StampTime" Type="datetime" />
-          <Property Name="TimeZone" Type="nvarchar" MaxLength="100" />
+          <Property Name="TimeZone" MaxLength="100" Type="nvarchar" />
           <Property Name="Priority" Type="int" />
-          <Property Name="Location" Type="nvarchar" MaxLength="100" />
+          <Property Name="Location" MaxLength="100" Type="nvarchar" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedDate" Type="datetime" />
-          <Property Name="ModifyBy" Type="nvarchar" MaxLength="50" />
-          <Property Name="Class" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifyBy" MaxLength="50" Type="nvarchar" />
+          <Property Name="Class" MaxLength="50" Type="nvarchar" />
           <Property Name="Organizer" Type="nvarchar(max)" />
           <Property Name="Sequence" Type="int" />
-          <Property Name="Geo" Type="nvarchar" MaxLength="100" />
+          <Property Name="Geo" MaxLength="100" Type="nvarchar" />
           <Property Name="RecurrenceId" Type="datetime" />
           <Property Name="TimeBlock" Type="time" />
           <Property Name="DayofWeek" Type="int" />
@@ -285,49 +284,51 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdEvent" Type="int" Nullable="false" />
-          <Property Name="Attendee" Type="nvarchar" MaxLength="50" />
-          <Property Name="Role" Type="nvarchar" MaxLength="50" />
-          <Property Name="Uri" Type="nvarchar" MaxLength="200" />
+          <Property Name="Id" Nullable="false" Type="int" />
+          <Property Name="IdEvent" Nullable="false" Type="int" />
+          <Property Name="Attendee" Type="nvarchar(max)" />
+          <Property Name="Role" MaxLength="50" Type="nvarchar" />
+          <Property Name="Uri" MaxLength="200" Type="nvarchar" />
         </EntityType>
         <EntityType Name="CalendarEventsContacts">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="IdEvent" Type="int" Nullable="false" />
-          <Property Name="Contact" Type="nvarchar" MaxLength="500" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="IdEvent" Nullable="false" Type="int" />
+          <Property Name="Contact" MaxLength="500" Type="nvarchar" />
         </EntityType>
         <EntityType Name="CalendarEventType">
           <Key>
             <PropertyRef Name="EventTypeId" />
           </Key>
-          <Property Name="EventTypeId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="EventType" Type="nvarchar" MaxLength="100" />
+          <Property Name="EventTypeId" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="EventType" MaxLength="100" Type="nvarchar" />
           <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="DisplayName" MaxLength="100" Type="nvarchar" />
         </EntityType>
         <EntityType Name="CalendarProviderAttributes">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="AdvanceTime" Type="decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="MinTime" Type="decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="MaxTime" Type="decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="BetweenTime" Type="decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="UseCalendarProgram" Type="bit" Nullable="false" />
-          <Property Name="CalendarType" Type="varchar" MaxLength="200" />
-          <Property Name="CalendarURL" Type="varchar" MaxLength="500" />
+          <Property Name="UserID" Nullable="false" Type="int" />
+          <Property Name="AdvanceTime" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="MinTime" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="MaxTime" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="BetweenTime" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="UseCalendarProgram" Nullable="false" Type="bit" />
+          <Property Name="CalendarType" MaxLength="200" Type="varchar" />
+          <Property Name="CalendarURL" MaxLength="500" Type="varchar" />
+          <Property Name="PrivateCalendarToken" MaxLength="128" Type="varchar" />
         </EntityType>
         <EntityType Name="CalendarReccurrence">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
           <Property Name="EventID" Type="int" />
           <Property Name="Count" Type="int" />
-          <Property Name="EvaluationMode" Type="nvarchar" MaxLength="50" />
+          <Property Name="EvaluationMode" MaxLength="50" Type="nvarchar" />
           <Property Name="Frequency" Type="int" />
           <Property Name="Interval" Type="int" />
           <Property Name="RestristionType" Type="int" />
@@ -338,7 +339,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
           <Property Name="CalendarReccursiveID" Type="int" />
           <Property Name="ByDay" Type="bit" />
           <Property Name="ByHour" Type="bit" />
@@ -353,8 +354,8 @@
           <Property Name="FrequencyDay" Type="int" />
           <Property Name="DayOfWeek" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.country' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.country' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="country">
           <Key>
@@ -364,18 +365,18 @@
             <PropertyRef Name="CountryCode" />
             <PropertyRef Name="Active" />
           </Key>
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryName" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="CountryCode" Type="varchar" Nullable="false" MaxLength="3" />
-          <Property Name="CountryCallingCode" Type="varchar" MaxLength="3" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="LanguageID" Nullable="false" Type="int" />
+          <Property Name="CountryName" Nullable="false" MaxLength="100" Type="varchar" />
+          <Property Name="CountryCode" Nullable="false" MaxLength="3" Type="varchar" />
+          <Property Name="CountryCallingCode" MaxLength="3" Type="varchar" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="ModifiedBy" Type="varchar" MaxLength="25" />
-          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="ModifiedBy" MaxLength="25" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.county' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.county' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="county">
           <Key>
@@ -386,17 +387,17 @@
             <PropertyRef Name="ModifiedBy" />
             <PropertyRef Name="Active" />
           </Key>
-          <Property Name="CountyID" Type="int" Nullable="false" />
-          <Property Name="CountyName" Type="varchar" MaxLength="100" />
+          <Property Name="CountyID" Nullable="false" Type="int" />
+          <Property Name="CountyName" MaxLength="100" Type="varchar" />
           <Property Name="FIPSCode" Type="int" />
-          <Property Name="StateProvinceID" Type="int" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="varchar" Nullable="false" MaxLength="25" />
-          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="StateProvinceID" Nullable="false" Type="int" />
+          <Property Name="CreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="UpdatedDate" Nullable="false" Type="datetime" />
+          <Property Name="ModifiedBy" Nullable="false" MaxLength="25" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.language' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.language' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="language">
           <Key>
@@ -404,17 +405,17 @@
             <PropertyRef Name="CountryID" />
             <PropertyRef Name="LanguageName" />
           </Key>
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="LanguageName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="LanguageID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="LanguageName" Nullable="false" MaxLength="50" Type="varchar" />
           <Property Name="Active" Type="bit" />
-          <Property Name="LanguageCode" Type="varchar" MaxLength="2" />
+          <Property Name="LanguageCode" MaxLength="2" Type="varchar" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="ModifiedBy" Type="varchar" MaxLength="25" />
+          <Property Name="ModifiedBy" MaxLength="25" Type="varchar" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.postalcode' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.postalcode' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="postalcode">
           <Key>
@@ -422,20 +423,20 @@
             <PropertyRef Name="StateProvinceID" />
             <PropertyRef Name="CountryID" />
           </Key>
-          <Property Name="PostalCodeID" Type="int" Nullable="false" />
-          <Property Name="PostalCode" Type="varchar" MaxLength="25" />
-          <Property Name="City" Type="varchar" MaxLength="250" />
-          <Property Name="StateProvinceID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="PostalCodeID" Nullable="false" Type="int" />
+          <Property Name="PostalCode" MaxLength="25" Type="varchar" />
+          <Property Name="City" MaxLength="250" Type="varchar" />
+          <Property Name="StateProvinceID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
           <Property Name="TimeZone" Type="decimal" />
           <Property Name="DST" Type="bit" />
-          <Property Name="Location" Type="varchar" MaxLength="250" />
-          <Property Name="PostalCodeType" Type="varchar" MaxLength="50" />
+          <Property Name="Location" MaxLength="250" Type="varchar" />
+          <Property Name="PostalCodeType" MaxLength="50" Type="varchar" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="ModifiedBy" Type="varchar" MaxLength="25" />
+          <Property Name="ModifiedBy" MaxLength="25" Type="varchar" />
         </EntityType>
         <EntityType Name="serviceaddress">
           <Key>
@@ -443,46 +444,51 @@
             <PropertyRef Name="UserID" />
             <PropertyRef Name="PositionID" />
           </Key>
-          <Property Name="AddressID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="PositionID" Type="int" Nullable="false" />
-          <Property Name="ServicesPerformedAtLocation" Type="bit" Nullable="false" />
-          <Property Name="TravelFromLocation" Type="bit" Nullable="false" />
-          <Property Name="ServiceRadiusFromLocation" Type="varchar" MaxLength="25" />
+          <Property Name="AddressID" Nullable="false" Type="int" />
+          <Property Name="UserID" Nullable="false" Type="int" />
+          <Property Name="PositionID" Nullable="false" Type="int" />
+          <Property Name="ServicesPerformedAtLocation" Nullable="false" Type="bit" />
+          <Property Name="TravelFromLocation" Nullable="false" Type="bit" />
+          <Property Name="ServiceRadiusFromLocation" MaxLength="25" Type="varchar" />
           <Property Name="TransportType" Type="int" />
-          <Property Name="PreferredAddress" Type="bit" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="varchar" Nullable="false" MaxLength="25" />
-          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="PreferredAddress" Nullable="false" Type="bit" />
+          <Property Name="CreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="UpdatedDate" Nullable="false" Type="datetime" />
+          <Property Name="ModifiedBy" Nullable="false" MaxLength="25" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.stateprovince' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.stateprovince' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="stateprovince">
           <Key>
             <PropertyRef Name="StateProvinceID" />
             <PropertyRef Name="CountryID" />
           </Key>
-          <Property Name="StateProvinceID" Type="int" Nullable="false" />
-          <Property Name="StateProvinceName" Type="varchar" MaxLength="100" />
-          <Property Name="StateProvinceCode" Type="varchar" MaxLength="25" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="RegionCode" Type="varchar" MaxLength="25" />
-          <Property Name="PostalCodePrefix" Type="varchar" MaxLength="25" />
+          <Property Name="StateProvinceID" Nullable="false" Type="int" />
+          <Property Name="StateProvinceName" MaxLength="100" Type="varchar" />
+          <Property Name="StateProvinceCode" MaxLength="25" Type="varchar" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="RegionCode" MaxLength="25" Type="varchar" />
+          <Property Name="PostalCodePrefix" MaxLength="25" Type="varchar" />
         </EntityType>
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.sysdiagrams' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
+      -->
         <EntityType Name="sysdiagrams">
           <Key>
+            
+            
             <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Nullable="false" MaxLength="128" Type="nvarchar" />
+          <Property Name="principal_id" Nullable="false" Type="int" />
+          <Property Name="diagram_id" Nullable="false" Type="int" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'loconomics.dbo.transporttype' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Se encontraron errores durante la generación:
+      advertencia 6002: La tabla o vista 'loconomics.dbo.transporttype' no tiene ninguna clave principal definida. Se ha inferido la clave y la definición se creó como vista o tabla de solo lectura.
       -->
         <EntityType Name="transporttype">
           <Key>
@@ -495,59 +501,58 @@
             <PropertyRef Name="ModifiedBy" />
             <PropertyRef Name="Active" />
           </Key>
-          <Property Name="TransportTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="TransportTypeName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="TransportTypeDescription" Type="varchar" MaxLength="300" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="varchar" Nullable="false" MaxLength="25" />
-          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="TransportTypeID" Nullable="false" Type="int" />
+          <Property Name="LanguageID" Nullable="false" Type="int" />
+          <Property Name="CountryID" Nullable="false" Type="int" />
+          <Property Name="TransportTypeName" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="TransportTypeDescription" MaxLength="300" Type="varchar" />
+          <Property Name="CreatedDate" Nullable="false" Type="datetime" />
+          <Property Name="UpdatedDate" Nullable="false" Type="datetime" />
+          <Property Name="ModifiedBy" Nullable="false" MaxLength="25" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
         </EntityType>
         <EntityType Name="users">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="FirstName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="MiddleIn" Type="varchar" Nullable="false" MaxLength="1" />
-          <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="145" />
-          <Property Name="SecondLastName" Type="varchar" Nullable="false" MaxLength="145" />
-          <Property Name="NickName" Type="varchar" MaxLength="50" />
-          <Property Name="PublicBio" Type="varchar" MaxLength="500" />
-          <Property Name="GenderID" Type="int" />
+          <Property Name="UserID" Nullable="false" Type="int" />
+          <Property Name="FirstName" Nullable="false" MaxLength="50" Type="varchar" />
+          <Property Name="MiddleIn" Nullable="false" MaxLength="1" Type="varchar" />
+          <Property Name="LastName" Nullable="false" MaxLength="145" Type="varchar" />
+          <Property Name="SecondLastName" Nullable="false" MaxLength="145" Type="varchar" />
+          <Property Name="NickName" MaxLength="50" Type="varchar" />
+          <Property Name="PublicBio" MaxLength="500" Type="varchar" />
+          <Property Name="GenderID" Nullable="false" Type="int" />
           <Property Name="PreferredLanguageID" Type="int" />
           <Property Name="PreferredCountryID" Type="int" />
           <Property Name="IsProvider" Type="bit" />
           <Property Name="IsCustomer" Type="bit" />
           <Property Name="IsAdmin" Type="bit" />
-          <Property Name="Photo" Type="varchar" MaxLength="150" />
-          <Property Name="MobilePhone" Type="varchar" MaxLength="20" />
-          <Property Name="AlternatePhone" Type="varchar" MaxLength="20" />
-          <Property Name="ProviderProfileURL" Type="varchar" MaxLength="2078" />
-          <Property Name="PersonalizedProviderProfileURL" Type="varchar" MaxLength="2078" />
-          <Property Name="SMSBookingCommunication" Type="bit" Nullable="false" />
-          <Property Name="PhoneBookingCommunication" Type="bit" Nullable="false" />
-          <Property Name="LoconomicsMarketingCampaigns" Type="bit" Nullable="false" />
-          <Property Name="ProfileSEOPermission" Type="bit" Nullable="false" />
+          <Property Name="Photo" MaxLength="150" Type="varchar" />
+          <Property Name="MobilePhone" MaxLength="20" Type="varchar" />
+          <Property Name="AlternatePhone" MaxLength="20" Type="varchar" />
+          <Property Name="ProviderProfileURL" MaxLength="2078" Type="varchar" />
+          <Property Name="PersonalizedProviderProfileURL" MaxLength="2078" Type="varchar" />
+          <Property Name="SMSBookingCommunication" Nullable="false" Type="bit" />
+          <Property Name="PhoneBookingCommunication" Nullable="false" Type="bit" />
+          <Property Name="LoconomicsMarketingCampaigns" Nullable="false" Type="bit" />
+          <Property Name="ProfileSEOPermission" Nullable="false" Type="bit" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="ModifiedBy" Type="varchar" MaxLength="50" />
-          <Property Name="Active" Type="bit" Nullable="false" />
-          <Property Name="LoconomicsCommunityCommunication" Type="bit" Nullable="false" />
+          <Property Name="ModifiedBy" MaxLength="50" Type="varchar" />
+          <Property Name="Active" Nullable="false" Type="bit" />
+          <Property Name="LoconomicsCommunityCommunication" Nullable="false" Type="bit" />
           <Property Name="IAuthZumigoVerification" Type="bit" />
           <Property Name="IAuthZumigoLocation" Type="bit" />
-          <Property Name="LoconomicsDBMCampaigns" Type="bit" Nullable="false" />
-          <Property Name="AccountStatusID" Type="int" Nullable="false" />
-          <Property Name="CoBrandedPartnerPermissions" Type="bit" Nullable="false" />
-          <Property Name="ProviderWebsiteURL" Type="varchar" MaxLength="2048" />
+          <Property Name="LoconomicsDBMCampaigns" Nullable="false" Type="bit" />
+          <Property Name="AccountStatusID" Nullable="false" Type="int" />
+          <Property Name="CoBrandedPartnerPermissions" Nullable="false" Type="bit" />
+          <Property Name="ProviderWebsiteURL" MaxLength="2048" Type="varchar" />
+          <Property Name="MarketingSource" MaxLength="2055" Type="varchar" />
         </EntityType>
         <Association Name="FK__servicead__UserI__457442E6">
-          <End Role="users" Type="loconomicsModel.Store.users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="serviceaddress" Type="loconomicsModel.Store.serviceaddress" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.users" Multiplicity="1" Role="users" />
+          <End Type="loconomicsModel.Store.serviceaddress" Multiplicity="*" Role="serviceaddress" />
           <ReferentialConstraint>
             <Principal Role="users">
               <PropertyRef Name="UserID" />
@@ -558,10 +563,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEventExceptions_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventExceptionsPeriodsList" Type="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" Multiplicity="*" Role="CalendarEventExceptionsPeriodsList" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -572,10 +577,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
-          <End Role="CalendarEventExceptionsPeriodsList" Type="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEventExceptionsPeriodsList" Multiplicity="1" Role="CalendarEventExceptionsPeriodsList">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventExceptionsPeriod" Type="loconomicsModel.Store.CalendarEventExceptionsPeriod" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventExceptionsPeriod" Multiplicity="*" Role="CalendarEventExceptionsPeriod" />
           <ReferentialConstraint>
             <Principal Role="CalendarEventExceptionsPeriodsList">
               <PropertyRef Name="Id" />
@@ -586,8 +591,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
-          <End Role="CalendarEventRecurrencesPeriodList" Type="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" Multiplicity="1" />
-          <End Role="CalendarEventRecurrencesPeriod" Type="loconomicsModel.Store.CalendarEventRecurrencesPeriod" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" Multiplicity="1" Role="CalendarEventRecurrencesPeriodList" />
+          <End Type="loconomicsModel.Store.CalendarEventRecurrencesPeriod" Multiplicity="*" Role="CalendarEventRecurrencesPeriod" />
           <ReferentialConstraint>
             <Principal Role="CalendarEventRecurrencesPeriodList">
               <PropertyRef Name="Id" />
@@ -598,10 +603,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEventRecurrencesPeriodList_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventRecurrencesPeriodList" Type="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventRecurrencesPeriodList" Multiplicity="*" Role="CalendarEventRecurrencesPeriodList" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -612,10 +617,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEvents_CalendarAvailabilityType">
-          <End Role="CalendarAvailabilityType" Type="loconomicsModel.Store.CalendarAvailabilityType" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarAvailabilityType" Multiplicity="1" Role="CalendarAvailabilityType">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="*" Role="CalendarEvents" />
           <ReferentialConstraint>
             <Principal Role="CalendarAvailabilityType">
               <PropertyRef Name="CalendarAvailabilityTypeID" />
@@ -626,10 +631,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEvents_CalendarEventType">
-          <End Role="CalendarEventType" Type="loconomicsModel.Store.CalendarEventType" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEventType" Multiplicity="1" Role="CalendarEventType">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="*" Role="CalendarEvents" />
           <ReferentialConstraint>
             <Principal Role="CalendarEventType">
               <PropertyRef Name="EventTypeId" />
@@ -639,25 +644,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CalendarEvents_users">
-          <End Role="users" Type="loconomicsModel.Store.users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="CalendarEvents">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CalendarEventsAttendees_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventsAttendees" Type="loconomicsModel.Store.CalendarEventsAttendees" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventsAttendees" Multiplicity="*" Role="CalendarEventsAttendees" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -668,10 +659,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarEventsContacts_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventsContacts" Type="loconomicsModel.Store.CalendarEventsContacts" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventsContacts" Multiplicity="*" Role="CalendarEventsContacts" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -682,10 +673,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CalendarFrecuency_CalendarReccursive">
-          <End Role="CalendarReccurrence" Type="loconomicsModel.Store.CalendarReccurrence" Multiplicity="0..1">
+          <End Type="loconomicsModel.Store.CalendarReccurrence" Multiplicity="0..1" Role="CalendarReccurrence">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarReccurrenceFrequency" Type="loconomicsModel.Store.CalendarReccurrenceFrequency" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarReccurrenceFrequency" Multiplicity="*" Role="CalendarReccurrenceFrequency" />
           <ReferentialConstraint>
             <Principal Role="CalendarReccurrence">
               <PropertyRef Name="ID" />
@@ -695,25 +686,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CalendarProviderAttributes_users">
-          <End Role="users" Type="loconomicsModel.Store.users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="CalendarProviderAttributes" Type="loconomicsModel.Store.CalendarProviderAttributes" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="CalendarProviderAttributes">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CalendarReccursive_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="0..1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="0..1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarReccurrence" Type="loconomicsModel.Store.CalendarReccurrence" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarReccurrence" Multiplicity="*" Role="CalendarReccurrence" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -724,10 +701,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Comments_CalendarEvents">
-          <End Role="CalendarEvents" Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1">
+          <End Type="loconomicsModel.Store.CalendarEvents" Multiplicity="1" Role="CalendarEvents">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="CalendarEventComments" Type="loconomicsModel.Store.CalendarEventComments" Multiplicity="*" />
+          <End Type="loconomicsModel.Store.CalendarEventComments" Multiplicity="*" Role="CalendarEventComments" />
           <ReferentialConstraint>
             <Principal Role="CalendarEvents">
               <PropertyRef Name="Id" />
@@ -805,14 +782,6 @@
           <EntitySet Name="sysdiagrams" EntityType="loconomicsModel.sysdiagrams" />
           <EntitySet Name="transporttype" EntityType="loconomicsModel.transporttype" />
           <EntitySet Name="users" EntityType="loconomicsModel.users" />
-          <AssociationSet Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
-            <End Role="CalendarEventExceptionsPeriodsList" EntitySet="CalendarEventExceptionsPeriodsList" />
-            <End Role="CalendarEventExceptionsPeriod" EntitySet="CalendarEventExceptionsPeriod" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" Association="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
-            <End Role="CalendarEventRecurrencesPeriodList" EntitySet="CalendarEventRecurrencesPeriodList" />
-            <End Role="CalendarEventRecurrencesPeriod" EntitySet="CalendarEventRecurrencesPeriod" />
-          </AssociationSet>
           <AssociationSet Name="FK_CalendarProviderAttributes_users" Association="loconomicsModel.FK_CalendarProviderAttributes_users">
             <End Role="users" EntitySet="users" />
             <End Role="CalendarProviderAttributes" EntitySet="CalendarProviderAttributes" />
@@ -903,6 +872,14 @@
             <End Role="CalendarEventType" EntitySet="CalendarEventType" />
             <End Role="CalendarEvents" EntitySet="CalendarEvents" />
           </AssociationSet>
+          <AssociationSet Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
+            <End Role="CalendarEventExceptionsPeriodsList" EntitySet="CalendarEventExceptionsPeriodsList" />
+            <End Role="CalendarEventExceptionsPeriod" EntitySet="CalendarEventExceptionsPeriod" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" Association="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
+            <End Role="CalendarEventRecurrencesPeriodList" EntitySet="CalendarEventRecurrencesPeriodList" />
+            <End Role="CalendarEventRecurrencesPeriod" EntitySet="CalendarEventRecurrencesPeriod" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="address">
           <Key>
@@ -954,6 +931,7 @@
           <Property Name="CalendarAvailabilityTypeName" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="CalendarAvailabilityTypeDescription" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" FromRole="CalendarAvailabilityType" ToRole="CalendarEvents" />
+          <Property Type="String" Name="SelectableAs" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CalendarEventComments">
           <Key>
@@ -968,11 +946,10 @@
           <Key>
             <PropertyRef Name="IdException" />
             <PropertyRef Name="DateStart" />
-            <PropertyRef Name="DateEnd" />
           </Key>
           <Property Name="IdException" Type="Int32" Nullable="false" />
           <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateEnd" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateEnd" Nullable="true" Precision="3" Type="DateTime" />
           <NavigationProperty Name="CalendarEventExceptionsPeriodsList" Relationship="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" FromRole="CalendarEventExceptionsPeriod" ToRole="CalendarEventExceptionsPeriodsList" />
         </EntityType>
         <EntityType Name="CalendarEventExceptionsPeriodsList">
@@ -981,18 +958,17 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdEvent" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="CalendarEventExceptionsPeriod" Relationship="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" FromRole="CalendarEventExceptionsPeriodsList" ToRole="CalendarEventExceptionsPeriod" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" FromRole="CalendarEventExceptionsPeriodsList" ToRole="CalendarEvents" />
+          <NavigationProperty Name="CalendarEventExceptionsPeriod" Relationship="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" FromRole="CalendarEventExceptionsPeriodsList" ToRole="CalendarEventExceptionsPeriod" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriod">
           <Key>
             <PropertyRef Name="IdRecurrence" />
             <PropertyRef Name="DateStart" />
-            <PropertyRef Name="DateEnd" />
           </Key>
           <Property Name="IdRecurrence" Type="Int32" Nullable="false" />
           <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateEnd" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateEnd" Type="DateTime" Precision="3" Nullable="true" />
           <NavigationProperty Name="CalendarEventRecurrencesPeriodList" Relationship="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" FromRole="CalendarEventRecurrencesPeriod" ToRole="CalendarEventRecurrencesPeriodList" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriodList">
@@ -1001,8 +977,8 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdEvent" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="CalendarEventRecurrencesPeriod" Relationship="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" FromRole="CalendarEventRecurrencesPeriodList" ToRole="CalendarEventRecurrencesPeriod" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarEventRecurrencesPeriodList_CalendarEvents" FromRole="CalendarEventRecurrencesPeriodList" ToRole="CalendarEvents" />
+          <NavigationProperty Name="CalendarEventRecurrencesPeriod" Relationship="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" FromRole="CalendarEventRecurrencesPeriodList" ToRole="CalendarEventRecurrencesPeriod" />
         </EntityType>
         <EntityType Name="CalendarEventsAttendees">
           <Key>
@@ -1037,6 +1013,7 @@
           <Property Name="CalendarType" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
           <Property Name="CalendarURL" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="users" Relationship="loconomicsModel.FK_CalendarProviderAttributes_users" FromRole="CalendarProviderAttributes" ToRole="users" />
+          <Property Type="String" Name="PrivateCalendarToken" MaxLength="128" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CalendarReccurrence">
           <Key>
@@ -1220,7 +1197,7 @@
           <Property Name="SecondLastName" Type="String" Nullable="false" MaxLength="145" Unicode="false" FixedLength="false" />
           <Property Name="NickName" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="PublicBio" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="GenderID" Type="Int32" />
+          <Property Name="GenderID" Type="Int32" Nullable="false" />
           <Property Name="PreferredLanguageID" Type="Int32" />
           <Property Name="PreferredCountryID" Type="Int32" />
           <Property Name="IsProvider" Type="Boolean" />
@@ -1249,31 +1226,8 @@
           <NavigationProperty Name="CalendarProviderAttributes" Relationship="loconomicsModel.FK_CalendarProviderAttributes_users" FromRole="users" ToRole="CalendarProviderAttributes" />
           <NavigationProperty Name="serviceaddress" Relationship="loconomicsModel.FK__servicead__UserI__457442E6" FromRole="users" ToRole="serviceaddress" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarEvents_users" FromRole="users" ToRole="CalendarEvents" />
+          <Property Type="String" Name="MarketingSource" MaxLength="2055" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
-          <End Role="CalendarEventExceptionsPeriodsList" Type="loconomicsModel.CalendarEventExceptionsPeriodsList" Multiplicity="1" />
-          <End Role="CalendarEventExceptionsPeriod" Type="loconomicsModel.CalendarEventExceptionsPeriod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CalendarEventExceptionsPeriodsList">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CalendarEventExceptionsPeriod">
-              <PropertyRef Name="IdException" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
-          <End Role="CalendarEventRecurrencesPeriodList" Type="loconomicsModel.CalendarEventRecurrencesPeriodList" Multiplicity="1" />
-          <End Role="CalendarEventRecurrencesPeriod" Type="loconomicsModel.CalendarEventRecurrencesPeriod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CalendarEventRecurrencesPeriodList">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CalendarEventRecurrencesPeriod">
-              <PropertyRef Name="IdRecurrence" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CalendarProviderAttributes_users">
           <End Role="users" Type="loconomicsModel.users" Multiplicity="1" />
           <End Role="CalendarProviderAttributes" Type="loconomicsModel.CalendarProviderAttributes" Multiplicity="0..1" />
@@ -1487,6 +1441,7 @@
           <Property Type="String" Name="EventType" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarEvents_CalendarEventType" FromRole="CalendarEventType" ToRole="CalendarEvents" />
+          <Property Type="String" Name="DisplayName" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CalendarEvents_CalendarEventType">
           <End Type="loconomicsModel.CalendarEventType" Role="CalendarEventType" Multiplicity="1">
@@ -1499,6 +1454,30 @@
             </Principal>
             <Dependent Role="CalendarEvents">
               <PropertyRef Name="EventType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates">
+          <End Type="loconomicsModel.CalendarEventExceptionsPeriodsList" Role="CalendarEventExceptionsPeriodsList" Multiplicity="1" />
+          <End Type="loconomicsModel.CalendarEventExceptionsPeriod" Role="CalendarEventExceptionsPeriod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarEventExceptionsPeriodsList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CalendarEventExceptionsPeriod">
+              <PropertyRef Name="IdException" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList">
+          <End Type="loconomicsModel.CalendarEventRecurrencesPeriodList" Role="CalendarEventRecurrencesPeriodList" Multiplicity="1" />
+          <End Type="loconomicsModel.CalendarEventRecurrencesPeriod" Role="CalendarEventRecurrencesPeriod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarEventRecurrencesPeriodList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CalendarEventRecurrencesPeriod">
+              <PropertyRef Name="IdRecurrence" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1551,6 +1530,7 @@
           <EntitySetMapping Name="CalendarAvailabilityType">
             <EntityTypeMapping TypeName="loconomicsModel.CalendarAvailabilityType">
               <MappingFragment StoreEntitySet="CalendarAvailabilityType">
+                <ScalarProperty Name="SelectableAs" ColumnName="SelectableAs" />
                 <ScalarProperty Name="CalendarAvailabilityTypeID" ColumnName="CalendarAvailabilityTypeID" />
                 <ScalarProperty Name="LanguageID" ColumnName="LanguageID" />
                 <ScalarProperty Name="CountryID" ColumnName="CountryID" />
@@ -1625,6 +1605,7 @@
           <EntitySetMapping Name="CalendarProviderAttributes">
             <EntityTypeMapping TypeName="loconomicsModel.CalendarProviderAttributes">
               <MappingFragment StoreEntitySet="CalendarProviderAttributes">
+                <ScalarProperty Name="PrivateCalendarToken" ColumnName="PrivateCalendarToken" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="AdvanceTime" ColumnName="AdvanceTime" />
                 <ScalarProperty Name="MinTime" ColumnName="MinTime" />
@@ -1793,6 +1774,7 @@
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="loconomicsModel.users">
               <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="MarketingSource" ColumnName="MarketingSource" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="MiddleIn" ColumnName="MiddleIn" />
@@ -1899,6 +1881,7 @@
           <EntitySetMapping Name="CalendarEventType">
             <EntityTypeMapping TypeName="loconomicsModel.CalendarEventType">
               <MappingFragment StoreEntitySet="CalendarEventType">
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="EventType" ColumnName="EventType" />
                 <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
@@ -1925,6 +1908,96 @@
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
+    <Diagrams>
+      <Diagram Name="loconomics" ZoomLevel="114">
+        <EntityTypeShape EntityType="loconomicsModel.address" Width="1.5" PointX="0.75" PointY="0.75" Height="4.480205078125" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.addresstype" Width="1.5" PointX="2.75" PointY="0.75" Height="2.9417936197916656" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarAvailabilityType" Width="1.5" PointX="3.75" PointY="7.125" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventComments" Width="1.5" PointX="8.25" PointY="6" Height="1.7879850260416657" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventExceptionsPeriod" Width="2.5" PointX="10.5" PointY="8.5" Height="1.7879850260416657" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventExceptionsPeriodsList" Width="1.5" PointX="8.25" PointY="8.5" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventRecurrencesPeriod" Width="2.875" PointX="10.5" PointY="11" Height="1.7879850260416657" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventRecurrencesPeriodList" Width="1.5" PointX="8.25" PointY="11" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventsAttendees" Width="1.5" PointX="8.25" PointY="13.5" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventsContacts" Width="1.5" PointX="8.25" PointY="16.5" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarProviderAttributes" Width="1.5" PointX="3" PointY="10.875" Height="2.7494921875000031" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarReccurrence" Width="1.5" PointX="8.25" PointY="19.375" Height="3.1340950520833317" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarReccurrenceFrequency" Width="2.875" PointX="10.5" PointY="19" Height="3.9033007812500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.country" Width="1.5" PointX="4.75" PointY="0.75" Height="2.7494921875000031" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.county" Width="1.5" PointX="6.75" PointY="0.75" Height="2.5571907552083388" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.language" Width="1.5" PointX="0.75" PointY="6.75" Height="2.5571907552083388" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.postalcode" Width="1.5" PointX="8.75" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.serviceaddress" Width="1.5" PointX="3" PointY="14.375" Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.stateprovince" Width="1.5" PointX="10.75" PointY="0.75" Height="2.1725878906250031" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.sysdiagrams" Width="1.5" PointX="10.75" PointY="3.75" Height="1.9802864583333388" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.transporttype" Width="1.5" PointX="12.75" PointY="0.75" Height="2.7494921875000031" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.users" Width="1.5" PointX="0.75" PointY="10.5" Height="7.9416308593750067" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEvents" Width="1.5" PointX="6" PointY="10.625" Height="7.5570279947916656" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventType" Width="1.5" PointX="3.75" PointY="19" Height="1.7879850260416674" IsExpanded="true" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarProviderAttributes_users" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="12.249746093750002" />
+          <ConnectorPoint PointX="3" PointY="12.249746093750002" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarFrecuency_CalendarReccursive" ManuallyRouted="false">
+          <ConnectorPoint PointX="9.75" PointY="20.942047526041666" />
+          <ConnectorPoint PointX="10.5" PointY="20.942047526041666" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK__servicead__UserI__457442E6" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="16.134348958333334" />
+          <ConnectorPoint PointX="3" PointY="16.134348958333334" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.90625" PointY="9.297587890625" />
+          <ConnectorPoint PointX="4.90625" PointY="13.999746093750002" />
+          <ConnectorPoint PointX="6" PointY="13.999746093750002" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_Comments_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="6.75" PointY="10.625" />
+          <ConnectorPoint PointX="6.75" PointY="6.8939925130208328" />
+          <ConnectorPoint PointX="8.25" PointY="6.8939925130208328" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.1562525" PointY="10.625" />
+          <ConnectorPoint PointX="7.1562525" PointY="9.3939925130208337" />
+          <ConnectorPoint PointX="8.25" PointY="9.3939925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventRecurrencesPeriodList_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.5" PointY="11.893992513020834" />
+          <ConnectorPoint PointX="8.25" PointY="11.893992513020834" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_users" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="18.069112955729167" />
+          <ConnectorPoint PointX="4.994791666666667" PointY="18.069112955729167" />
+          <ConnectorPoint PointX="5.161458333333333" PointY="18.069112955729167" />
+          <ConnectorPoint PointX="6" PointY="18.069112955729167" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventsAttendees_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.5" PointY="14.5862939453125" />
+          <ConnectorPoint PointX="8.25" PointY="14.5862939453125" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventsContacts_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.5" PointY="17.341013997395834" />
+          <ConnectorPoint PointX="8.25" PointY="17.341013997395834" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarReccursive_CalendarEvents" ManuallyRouted="false">
+          <ConnectorPoint PointX="6.75" PointY="18.182027994791667" />
+          <ConnectorPoint PointX="6.75" PointY="20.942047526041666" />
+          <ConnectorPoint PointX="8.25" PointY="20.942047526041666" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarEventType" ManuallyRouted="false">
+          <ConnectorPoint PointX="5.078125" PointY="19" />
+          <ConnectorPoint PointX="5.078125" PointY="14.187375546874995" />
+          <ConnectorPoint PointX="6" PointY="14.187375546874995" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" >
+          <ConnectorPoint PointX="9.75" PointY="9.3939925130208337" />
+          <ConnectorPoint PointX="10.5" PointY="9.3939925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" >
+          <ConnectorPoint PointX="9.75" PointY="11.893992513020834" />
+          <ConnectorPoint PointX="10.5" PointY="11.893992513020834" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
   </Designer>
 </edmx:Edmx>

@@ -1019,10 +1019,15 @@ namespace CalendarDll
                 var period = new PeriodList();
                 foreach (var dates in prd.CalendarEventExceptionsPeriod)
                 {
-                    period.Add(
-                        new Period(
-                            new iCalDateTime(dates.DateStart),
-                            new iCalDateTime(dates.DateEnd)));
+                    if (dates.DateEnd.HasValue)
+                        period.Add(
+                            new Period(
+                                new iCalDateTime(dates.DateStart),
+                                new iCalDateTime(dates.DateEnd.Value)));
+                    else
+                        period.Add(
+                            new Period(
+                                new iCalDateTime(dates.DateStart)));
                 }
                 iCalEvent.ExceptionDates.Add(period);
             }
@@ -1048,7 +1053,7 @@ namespace CalendarDll
                     periods.CalendarEventExceptionsPeriod.Add(new CalendarEventExceptionsPeriod()
                     {
                         DateStart = dates.StartTime.Value,
-                        DateEnd = dates.EndTime.Value,
+                        DateEnd = dates.EndTime != null ? (DateTime?)dates.EndTime.Value : null,
                     });
                 }
             }
@@ -1084,9 +1089,13 @@ namespace CalendarDll
 
                 foreach (var dates in prd.CalendarEventRecurrencesPeriod)
                 {
-                    period.Add( new Period(
+                    if (dates.DateEnd.HasValue)
+                        period.Add( new Period(
                             new iCalDateTime(dates.DateStart),
-                            new iCalDateTime(dates.DateEnd)));
+                            new iCalDateTime(dates.DateEnd.Value)));
+                    else
+                        period.Add( new Period(
+                            new iCalDateTime(dates.DateStart)));
                 }
 
                 iCalEvent.RecurrenceDates.Add(period);
@@ -1107,8 +1116,8 @@ namespace CalendarDll
                 foreach (var dates in prd)
                 {
                     periodsList.CalendarEventRecurrencesPeriod.Add(new CalendarEventRecurrencesPeriod{
-                        DateEnd = dates.EndTime.Value,
-                        DateStart = dates.StartTime.Value
+                        DateStart = dates.StartTime.Value,
+                        DateEnd = dates.EndTime != null ? (DateTime?)dates.EndTime.Value : null
                     });
                 }
             }
