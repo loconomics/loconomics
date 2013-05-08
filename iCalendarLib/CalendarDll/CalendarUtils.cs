@@ -1177,7 +1177,7 @@ namespace CalendarDll
         /// </summary>
         /// <param name="iCalEvent"></param>
         /// <param name="eventForDB"></param>
-        private void FillContactsToDB(dynamic iCalEvent, CalendarEvents eventForDB)
+        private void FillContactsToDB(Event iCalEvent, CalendarEvents eventForDB)
         {
             if (!iCalEvent.Contacts.Any()) return;
 
