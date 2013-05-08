@@ -1218,17 +1218,16 @@ namespace CalendarDll
         /// </summary>
         /// <param name="iCalEvent"></param>
         /// <param name="eventForDB"></param>
-        /// <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
-        /// and dynamic objectForDB that has CalendarEventComments field.
+        /// <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent.
         /// This allow using the method not only for Events, like originally, else for vfreebusy objects
         /// and others.</remarks>
-        private void FillAttendeesToDB(IUniqueComponent iCalObject, dynamic objectForDB)
+        private void FillAttendeesToDB(IUniqueComponent iCalObject, CalendarEvents eventForDB)
         {
             if (!iCalObject.Attendees.Any()) return;
 
             foreach (var atts in iCalObject.Attendees) {
-                objectForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees { 
-                    Attendee = atts.CommonName, IdEvent = objectForDB.Id, Role = atts.Role, Uri = atts.Value.ToString()
+                eventForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees { 
+                    Attendee = atts.CommonName, IdEvent = eventForDB.Id, Role = atts.Role, Uri = atts.Value.ToString()
                 });
             }
         }
@@ -1260,15 +1259,14 @@ namespace CalendarDll
         /// <param name="iCalObject"></param>
         /// <param name="objectForDB"></param>
         /// <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
-        /// and dynamic objectForDB that has CalendarEventComments field.
         /// This allow using the method not only for Events, like originally, else for vfreebusy objects
         /// and others.</remarks>
-        private void FillCommentsToDB(IUniqueComponent iCalObject, dynamic objectForDB)
+        private void FillCommentsToDB(IUniqueComponent iCalObject, CalendarEvents eventForDB)
         {
             if (!iCalObject.Comments.Any()) return;
 
             foreach(var comment in iCalObject.Comments)
-                objectForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = objectForDB.Id  });            
+                eventForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = eventForDB.Id  });            
         }
 
 
@@ -1663,7 +1661,7 @@ namespace CalendarDll
                                     Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                     CalendarAvailabilityTypeID = (int)availID,
                                     Transparency = false,
-                                    Summary = fb.Name ?? availID.ToString(),
+                                    Summary = (fb.Properties["SUMMARY"] != null ? fb.Properties["SUMMARY"].Value : availID).ToString(),
                                     EventType = 4, // 4 = Imported
                                     IsAllDay = false
                                 };
@@ -1694,7 +1692,7 @@ namespace CalendarDll
                                 Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                 CalendarAvailabilityTypeID = (int)availID,
                                 Transparency = false,
-                                Summary = fb.Name ?? availID.ToString(),
+                                Summary = (fb.Properties["SUMMARY"] != null ? fb.Properties["SUMMARY"].Value : availID).ToString(),
                                 EventType = 4, // 4 = Imported
                                 IsAllDay = false
                             };
