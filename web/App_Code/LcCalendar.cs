@@ -195,6 +195,8 @@ public static class LcCalendar
                         // update it with the new data:
                         ev.StartTime = startDateTime;
                         ev.EndTime = endDateTime;
+                        ev.UpdatedDate = DateTime.Now;
+                        ev.ModifyBy = "UserID:" + userID;
                     }
                 }
             }
@@ -273,9 +275,10 @@ public static class LcCalendar
                 .Where(c => c.UserId == userID && c.EventType == 2).ToList();
             // On that events, found what match the recurrence-frequency of the given day,
             // and mark is for deletion:
-            foreach (var ev in events)
+            // The extra 'ToList' are required to avoid an exception of kind 'collection modified in iterator'
+            foreach (var ev in events.ToList())
             {
-                foreach (var evr in ev.CalendarReccurrence)
+                foreach (var evr in ev.CalendarReccurrence.ToList())
                 {
                     if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)dayOfWeek).Count() > 0)
                     {

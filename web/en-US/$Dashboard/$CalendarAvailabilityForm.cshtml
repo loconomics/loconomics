@@ -130,7 +130,9 @@
                 if (LcValidators.IsUrl(programURL)) {
                     // TODO: Do the task in asynchronous way to be quickly returning the result to the user
                     //var async = new PageAsyncTask(new EventHandler(LcCalendar.Import), null, null, null, true);
-                    LcCalendar.Import(u.UserID, programURL);
+                    try{
+                        LcCalendar.Import(u.UserID, programURL);
+                    }catch{}
                 }
 
                 // Show the profile activation popup with 'next-step' buttons and progress information when need,
@@ -397,41 +399,43 @@ What hours do you keep? We’d like to know when we can generally expect to sche
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>
     </fieldset>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.positionavailability-hours select').change(function () {
+                var day = parseInt($(this).data('day-index'));
+                if (!isNaN(day)) {
+                    $(this).closest('form')
+                    .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
+                    .prop('checked', true);
+                }
+            });
+
+            $('.calendar-private-url').focus(function () {
+                $(this).select();
+            });
+            $('.reset-private-url-action').click(function () {
+                var f = $(this).closest('form');
+                f.append('<input type="hidden" name="reset-private-url" value="True" />')
+                .submit();
+            });
+
+            $('.positionavailability .all-days-times input').change(function () {
+                if (this.checked) {
+                    var $f = $(this).closest('.positionavailability');
+                    // Set days as 'yes'
+                    $f.find('.positionavailability-days input[value=True]').prop('checked', true);
+                    // Set hours as 'all day - 12AM-12AM' (selecting the same option on both selects is fine)
+                    $f.closest('.positionavailability')
+                    .find('.positionavailability-hours select option:first-child')
+                    .prop('selected', true);
+                }
+            });
+            $('.positionavailability-hours :input, .positionavailability-days ul :input').change(function () {
+                $(this).closest('form').find('.all-days-times input').prop('checked', false);
+            });
+        });
+    </script>
+
 </form>
-<script type="text/javascript">
-    $(function () {
-        $('.positionavailability-hours select').change(function () {
-            var day = parseInt($(this).data('day-index'));
-            if (!isNaN(day)) {
-                $(this).closest('form')
-                .find('.positionavailability-days input[value=True][name=availday-' + day + ']')
-                .prop('checked', true);
-            }
-        });
-
-        $('.calendar-private-url').focus(function () {
-            $(this).select();
-        });
-        $('.reset-private-url-action').click(function () {
-            var f = $(this).closest('form');
-            f.append('<input type="hidden" name="reset-private-url" value="True" />')
-            .submit();
-        });
-
-        $('.positionavailability .all-days-times input').change(function () {
-            if (this.checked) {
-                var $f = $(this).closest('.positionavailability');
-                // Set days as 'yes'
-                $f.find('.positionavailability-days input[value=True]').prop('checked', true);
-                // Set hours as 'all day - 12AM-12AM' (selecting the same option on both selects is fine)
-                $f.closest('.positionavailability')
-                .find('.positionavailability-hours select option:first-child')
-                .prop('selected', true);
-            }
-        });
-        $('.positionavailability-hours :input, .positionavailability-days ul :input').change(function () {
-            $(this).closest('form').find('.all-days-times input').prop('checked', false);
-        });
-    });
-</script>
 </div>
