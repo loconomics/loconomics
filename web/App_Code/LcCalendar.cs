@@ -350,6 +350,7 @@ public static class LcCalendar
                 dbevent = ent.CalendarEvents.Create();
                 ent.CalendarEvents.Add(dbevent);
                 dbevent.UserId = userID;
+                dbevent.CreatedDate = DateTime.Now;
             } else if (dbevent.UserId != userID)
                 return;
 
@@ -367,6 +368,10 @@ public static class LcCalendar
             dbevent.IsAllDay = IsAllDay;
             dbevent.Location = Location;
             dbevent.Description = Description;
+
+            dbevent.UpdatedDate = DateTime.Now;
+            dbevent.ModifyBy = "sys";
+
             // Reset (remove) curren recurrent rules
             foreach (var rRule in dbevent.CalendarReccurrence.ToList())
             {
