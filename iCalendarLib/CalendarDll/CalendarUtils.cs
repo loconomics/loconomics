@@ -164,7 +164,8 @@ namespace CalendarDll
                     GetEventsByUserDateRange(
                         user, 
                         startDate, 
-                        endDate))
+                        endDate,
+                        user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
             {
                 iCal.Events.Add(currEvent);
             }
@@ -326,7 +327,7 @@ namespace CalendarDll
 
             if (user != null)
             {
-                foreach (var currEvent in GetEventsByUser(user))
+                foreach (var currEvent in GetEventsByUser(user, user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
                 {
                     iCal.Events.Add(currEvent);
                 }
@@ -358,7 +359,8 @@ namespace CalendarDll
                 foreach (var currEvent in GetEventsByUserDateRange(
                     user, 
                     startDate, 
-                    endDate))
+                    endDate,
+                    user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
                 {
                     iCal.Events.Add(currEvent);
                 }
@@ -404,7 +406,7 @@ namespace CalendarDll
 
             if (user != null)
             {
-                foreach (var currEvent in GetEventsByUser(user))
+                foreach (var currEvent in GetEventsByUser(user, user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
                 {
                     // Only add Events that have an UID with a "*" in front
                     if (currEvent.UID.Length > 0 && 
@@ -429,7 +431,6 @@ namespace CalendarDll
 
         #region Create Event (iCal Format, having the Loconomics DB Record)
 
-
         /// <summary>
         /// Create Event 
         /// 
@@ -439,13 +440,16 @@ namespace CalendarDll
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         private iEvent CreateEvent(
-            CalendarDll.Data.CalendarEvents eventFromDB)
+            CalendarDll.Data.CalendarEvents eventFromDB,
+            string defaultTZID)
         {
+            // TODO: When TZID in DB implemented as a recognized Time-Zone ID string, use next commented code:
+            //defaultTZID = eventFromDB.TimeZone ?? defaultTZID;
 
             iEvent iCalEvent = new iEvent()
             {
                 Summary = eventFromDB.Summary ?? null,
-                Start = new iCalDateTime((DateTime)eventFromDB.StartTime),
+                Start = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
                 Duration = (eventFromDB.EndTime - eventFromDB.StartTime),
                 Location = eventFromDB.Location ?? null,
                 AvailabilityID = eventFromDB.CalendarAvailabilityTypeID,
@@ -453,17 +457,17 @@ namespace CalendarDll
                 IsAllDay = eventFromDB.IsAllDay,
                 Status = GetEventStatus(eventFromDB.CalendarAvailabilityTypeID),
                 Priority = eventFromDB.Priority ?? 0,
-                UID = (string.IsNullOrEmpty(eventFromDB.UID)) ? "*" + Guid.NewGuid().ToString() : eventFromDB.UID,
+                UID = (string.IsNullOrEmpty(eventFromDB.UID)) ? "*" + Guid.NewGuid().ToString() + "@loconomics.com" : eventFromDB.UID,
                 Class = eventFromDB.Class,
                 Organizer = eventFromDB.Organizer != null ? new Organizer(eventFromDB.Organizer) : null,
                 Transparency = (TransparencyType)(eventFromDB.Transparency ? 1 : 0),
-                Created      = new iCalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now)),
-                DTEnd        = new iCalDateTime((DateTime)eventFromDB.EndTime),
-                DTStamp      = new iCalDateTime((DateTime)(eventFromDB.StampTime ?? DateTime.Now)),
-                DTStart      = new iCalDateTime((DateTime)eventFromDB.StartTime),
-                LastModified = new iCalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now)),
+                Created      = new iCalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now), defaultTZID),
+                DTEnd        = new iCalDateTime((DateTime)eventFromDB.EndTime, defaultTZID),
+                DTStamp      = new iCalDateTime((DateTime)(eventFromDB.StampTime ?? DateTime.Now), defaultTZID),
+                DTStart      = new iCalDateTime((DateTime)eventFromDB.StartTime, defaultTZID),
+                LastModified = new iCalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now), defaultTZID),
                 Sequence = eventFromDB.Sequence ?? 0,
-                RecurrenceID = eventFromDB.RecurrenceId != null ? new iCalDateTime((DateTime)eventFromDB.RecurrenceId) : null,
+                RecurrenceID = eventFromDB.RecurrenceId != null ? new iCalDateTime((DateTime)eventFromDB.RecurrenceId, defaultTZID) : null,
                 GeographicLocation = eventFromDB.Geo != null    ? new GeographicLocation(eventFromDB.Geo) : null/*"+-####;+-####"*/,
                 Description = eventFromDB.Description ?? null
             };
@@ -474,8 +478,8 @@ namespace CalendarDll
             //----------------------------------------------------------------------
 
 
-            FillExceptionsDates( iCalEvent, eventFromDB);
-            FillRecurrencesDates(iCalEvent, eventFromDB);
+            FillExceptionsDates( iCalEvent, eventFromDB, defaultTZID);
+            FillRecurrencesDates(iCalEvent, eventFromDB, defaultTZID);
             FillContacts(        iCalEvent, eventFromDB);
             FillAttendees(       iCalEvent, eventFromDB);
             FillComments(        iCalEvent, eventFromDB);
@@ -872,7 +876,7 @@ namespace CalendarDll
         /// <param name="user"></param>
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
-        private IEnumerable<iEvent> GetEventsByUser(CalendarUser user)
+        private IEnumerable<iEvent> GetEventsByUser(CalendarUser user, string defaultTZID)
         {
 
             using (var db = new CalendarDll.Data.loconomicsEntities()) 
@@ -886,7 +890,7 @@ namespace CalendarDll
 
                 foreach (var currEventFromDB in listEventsFromDB)
                 {
-                    var iCalEvent = CreateEvent(currEventFromDB);
+                    var iCalEvent = CreateEvent(currEventFromDB, defaultTZID);
 
                     iCalEvents.Add(iCalEvent);
 
@@ -949,7 +953,8 @@ namespace CalendarDll
         private IEnumerable<iEvent> GetEventsByUserDateRange(
             CalendarUser user, 
             DateTime startEvaluationDate, 
-            DateTime endEvaluationDate)
+            DateTime endEvaluationDate,
+            string defaultTZID)
         {
 
             // For the Ending of the Range
@@ -978,7 +983,7 @@ namespace CalendarDll
 
                 foreach (var currEventFromDB in listEventsFromDB)
                 {
-                    var iCalEvent = CreateEvent(currEventFromDB);
+                    var iCalEvent = CreateEvent(currEventFromDB, defaultTZID);
 
                     iCalEvents.Add(iCalEvent);
 
@@ -1041,7 +1046,8 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         private void FillExceptionsDates(
             Event iCalEvent,
-            CalendarDll.Data.CalendarEvents eventFromDB)
+            CalendarDll.Data.CalendarEvents eventFromDB,
+            string defaultTZID)
         {
             var exceptionDates = 
                 eventFromDB.CalendarEventExceptionsPeriodsList;
@@ -1061,12 +1067,12 @@ namespace CalendarDll
                     if (dates.DateEnd.HasValue)
                         period.Add(
                             new Period(
-                                new iCalDateTime(dates.DateStart),
-                                new iCalDateTime(dates.DateEnd.Value)));
+                                new iCalDateTime(dates.DateStart, defaultTZID),
+                                new iCalDateTime(dates.DateEnd.Value, defaultTZID)));
                     else
                         period.Add(
                             new Period(
-                                new iCalDateTime(dates.DateStart)));
+                                new iCalDateTime(dates.DateStart, defaultTZID)));
                 }
                 iCalEvent.ExceptionDates.Add(period);
             }
@@ -1113,7 +1119,8 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         private void FillRecurrencesDates(
             Event iCalEvent,
-            CalendarDll.Data.CalendarEvents eventFromDB)
+            CalendarDll.Data.CalendarEvents eventFromDB,
+            string defaultTZID)
         {
             var recurrenceDates = 
                 eventFromDB.CalendarEventRecurrencesPeriodList;
@@ -1130,11 +1137,11 @@ namespace CalendarDll
                 {
                     if (dates.DateEnd.HasValue)
                         period.Add( new Period(
-                            new iCalDateTime(dates.DateStart),
-                            new iCalDateTime(dates.DateEnd.Value)));
+                            new iCalDateTime(dates.DateStart, defaultTZID),
+                            new iCalDateTime(dates.DateEnd.Value, defaultTZID)));
                     else
                         period.Add( new Period(
-                            new iCalDateTime(dates.DateStart)));
+                            new iCalDateTime(dates.DateStart, defaultTZID)));
                 }
 
                 iCalEvent.RecurrenceDates.Add(period);
