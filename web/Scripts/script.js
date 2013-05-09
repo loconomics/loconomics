@@ -2,16 +2,6 @@
 // OUR namespace (abbreviated Loconomics)
 var LC = window['LC'] || {};
 
-/* ===============
-Console Wrapper
-*/
-// usage: log('inside coolFunc', this, arguments);
-// paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/
-window.log = function f() { log.history = log.history || []; log.history.push(arguments); if (this.console) { var args = arguments, newarr; args.callee = args.callee.caller; newarr = [].slice.call(args); if (typeof console.log === 'object') log.apply.call(console.log, console, newarr); else console.log.apply(console, newarr); } };
-// make it safe to use console.log always
-(function (a) { function b() { } for (var c = "assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,time,timeEnd,trace,warn".split(","), d; !!(d = c.pop()); ) { a[d] = a[d] || b; } })
-(function () { try { console.log(); return window.console; } catch (a) { return (window.console = {}); } } ());
-
 /* Generic blockUI options sets */
 var loadingBlock = { message: '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
 var errorBlock = function (error, reload, style) {
@@ -1655,7 +1645,7 @@ function convertMilesKm(q, unit) {
         return MILES_TO_KM * q;
     else if (unit == 'km')
         return q / MILES_TO_KM;
-    if (console) console.log('convertMilesKm: Unrecognized unit ' + unit);
+    if (console && console.log) console.log('convertMilesKm: Unrecognized unit ' + unit);
     return 0;
 }
 function goToSummaryErrors(form) {
@@ -1663,7 +1653,7 @@ function goToSummaryErrors(form) {
     if (off)
         $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
     else
-        console.error('goToSummaryErrors: no summary to focus');
+        if (console && console.error) console.error('goToSummaryErrors: no summary to focus');
 }
 
 /**

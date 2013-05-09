@@ -463,7 +463,7 @@
                                 }
                             },
                             function (error) {
-                                console.log("Something went wrong: ", error);
+                                if (console && console.log) console.log("Something went wrong: ", error);
                             },
                             {
                                 timeout: (5 * 1000),
@@ -546,12 +546,12 @@
                         geocoder.geocode({ 'address': address }, function (results, status) {
                             if (status == google.maps.GeocoderStatus.OK) {
                                 var latLng = results[0].geometry.location;
-                                console.info('Geocode retrieved: ' + latLng + ' for address "' + address + '"');
+                                //console.info('Geocode retrieved: ' + latLng + ' for address "' + address + '"');
                                 foundLocations.byGeocode = latLng;
 
                                 placeMarker(latLng, true, autosave);
                             } else {
-                                console.error('Geocode was not successful for the following reason: ' + status + ' on address "' + address + '"');
+                                if (console && console.error) console.error('Geocode was not successful for the following reason: ' + status + ' on address "' + address + '"');
                             }
                         });
                     }
