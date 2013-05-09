@@ -379,12 +379,28 @@ namespace CalendarDll
         public iCalendar GetCalendarByUserForExport(
             CalendarUser user)
         {
-
-
             iCalendar iCalForExport = GetICalendarLibraryInstance();
 
             iCalForExport.Events.Clear();
 
+            /* IagoSRL: We add some properties to the exported calendar for best interoperability
+             * with other programs, some standard and some other not:
+             */
+            // By default, ical is Gregorian, but for best result be explicit
+            iCalForExport.AddProperty("CALSCALE", "GREGORIAN");
+            // Calendar name to display (Google Calendar property)
+            iCalForExport.AddProperty("X-WR-CALNAME", "Loconomics");
+            // Time Zone
+            if (user.DefaultTimeZone != null)
+            {
+                // Calendar Time Zone information in standard format
+                // used by objects contained in the file (events, vfreebusy..)
+                iCalForExport.AddTimeZone(user.DefaultTimeZone);
+                // Default calendar TimeZone (Google Calendar property) -used for objets without 
+                // a specific time-zone, but non standard-
+                iCalForExport.AddProperty("X-WR-TIMEZONE", user.DefaultTimeZone.Id);
+            }
+            
 
             if (user != null)
             {

@@ -24,6 +24,7 @@ namespace CalendarDll
         public TimeSpan BetweenTime { set; get; }
         public TimeSpan AdvanceTime { set; get; }
         public users UserInfo { set; get; }
+        public TimeZoneInfo DefaultTimeZone { set; get; }
         public CalendarUser(int id)
         {
             var db = new loconomicsEntities();

@@ -23,4 +23,15 @@
             <div class="info">File imported!</div>
         }
     </form>
+    <h2>Time Zones</h2>
+    @{
+        System.Collections.ObjectModel.ReadOnlyCollection<TimeZoneInfo> zones = TimeZoneInfo.GetSystemTimeZones();
+        <div>@String.Format("The local system has the following {0} time zones", zones.Count)</div>
+        <table>
+        <tr><th>DisplayName</th><th>Microsoft TimeZoneInfo ID</th><th>Offset</th><th>DST</th></tr>
+        @foreach (TimeZoneInfo zone in zones) {
+           <tr><td>@zone.DisplayName</td><td>@(zone.Id)</td><td>@zone.BaseUtcOffset</td><td>@zone.SupportsDaylightSavingTime</td></tr>
+        }
+        </table>
+    }
 </div>
