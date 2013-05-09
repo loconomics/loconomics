@@ -532,7 +532,6 @@
           <Property Name="MobilePhone" Type="varchar" MaxLength="20" />
           <Property Name="AlternatePhone" Type="varchar" MaxLength="20" />
           <Property Name="ProviderProfileURL" Type="varchar" MaxLength="2078" />
-          <Property Name="PersonalizedProviderProfileURL" Type="varchar" MaxLength="2078" />
           <Property Name="SMSBookingCommunication" Type="bit" Nullable="false" />
           <Property Name="PhoneBookingCommunication" Type="bit" Nullable="false" />
           <Property Name="LoconomicsMarketingCampaigns" Type="bit" Nullable="false" />
@@ -1207,7 +1206,6 @@
           <Property Name="MobilePhone" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
           <Property Name="AlternatePhone" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
           <Property Name="ProviderProfileURL" Type="String" MaxLength="2078" Unicode="false" FixedLength="false" />
-          <Property Name="PersonalizedProviderProfileURL" Type="String" MaxLength="2078" Unicode="false" FixedLength="false" />
           <Property Name="SMSBookingCommunication" Type="Boolean" Nullable="false" />
           <Property Name="PhoneBookingCommunication" Type="Boolean" Nullable="false" />
           <Property Name="LoconomicsMarketingCampaigns" Type="Boolean" Nullable="false" />
@@ -1792,7 +1790,6 @@
                 <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
                 <ScalarProperty Name="AlternatePhone" ColumnName="AlternatePhone" />
                 <ScalarProperty Name="ProviderProfileURL" ColumnName="ProviderProfileURL" />
-                <ScalarProperty Name="PersonalizedProviderProfileURL" ColumnName="PersonalizedProviderProfileURL" />
                 <ScalarProperty Name="SMSBookingCommunication" ColumnName="SMSBookingCommunication" />
                 <ScalarProperty Name="PhoneBookingCommunication" ColumnName="PhoneBookingCommunication" />
                 <ScalarProperty Name="LoconomicsMarketingCampaigns" ColumnName="LoconomicsMarketingCampaigns" />
@@ -1931,19 +1928,19 @@
         <EntityTypeShape EntityType="loconomicsModel.stateprovince" Width="1.5" PointX="10.75" PointY="0.75" Height="2.1725878906250031" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.sysdiagrams" Width="1.5" PointX="10.75" PointY="3.75" Height="1.9802864583333388" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.transporttype" Width="1.5" PointX="12.75" PointY="0.75" Height="2.7494921875000031" IsExpanded="true" />
-        <EntityTypeShape EntityType="loconomicsModel.users" Width="1.5" PointX="0.75" PointY="10.5" Height="7.9416308593750067" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.users" Width="2.125" PointX="0.5" PointY="10.5" Height="7.9416308593750031" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.CalendarEvents" Width="1.5" PointX="6" PointY="10.625" Height="7.5570279947916656" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.CalendarEventType" Width="1.5" PointX="3.75" PointY="19" Height="1.7879850260416674" IsExpanded="true" />
         <AssociationConnector Association="loconomicsModel.FK_CalendarProviderAttributes_users" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="12.249746093750002" />
-          <ConnectorPoint PointX="3" PointY="12.249746093750002" />
+          <ConnectorPoint PointX="2.625" PointY="12.345896809895834" />
+          <ConnectorPoint PointX="3" PointY="12.345896809895834" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarFrecuency_CalendarReccursive" ManuallyRouted="false">
           <ConnectorPoint PointX="9.75" PointY="20.942047526041666" />
           <ConnectorPoint PointX="10.5" PointY="20.942047526041666" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK__servicead__UserI__457442E6" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="16.134348958333334" />
+          <ConnectorPoint PointX="2.625" PointY="16.134348958333334" />
           <ConnectorPoint PointX="3" PointY="16.134348958333334" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" ManuallyRouted="false">
@@ -1966,7 +1963,7 @@
           <ConnectorPoint PointX="8.25" PointY="11.893992513020834" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_users" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="18.069112955729167" />
+          <ConnectorPoint PointX="2.625" PointY="18.069112955729167" />
           <ConnectorPoint PointX="4.994791666666667" PointY="18.069112955729167" />
           <ConnectorPoint PointX="5.161458333333333" PointY="18.069112955729167" />
           <ConnectorPoint PointX="6" PointY="18.069112955729167" />
@@ -1986,8 +1983,8 @@
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarEventType" ManuallyRouted="false">
           <ConnectorPoint PointX="5.078125" PointY="19" />
-          <ConnectorPoint PointX="5.078125" PointY="14.187375546874995" />
-          <ConnectorPoint PointX="6" PointY="14.187375546874995" />
+          <ConnectorPoint PointX="5.078125" PointY="10.71875" />
+          <ConnectorPoint PointX="6" PointY="10.71875" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" >
           <ConnectorPoint PointX="9.75" PointY="9.3939925130208337" />

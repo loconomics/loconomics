@@ -37,7 +37,6 @@ namespace CalendarDll.Data
         public string MobilePhone { get; set; }
         public string AlternatePhone { get; set; }
         public string ProviderProfileURL { get; set; }
-        public string PersonalizedProviderProfileURL { get; set; }
         public bool SMSBookingCommunication { get; set; }
         public bool PhoneBookingCommunication { get; set; }
         public bool LoconomicsMarketingCampaigns { get; set; }
