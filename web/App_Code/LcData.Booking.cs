@@ -1401,6 +1401,14 @@ public static partial class LcData
             }
             return String.Format(statusTitle, ASP.LcHelpers.GetUserDisplayName(pairUserData));
         }
+        public static string GetUrlPathForBookingRequest(int bookingRequestID)
+        {
+            return String.Format("Dashboard/Bookings/#!BookingRequest-{0}", bookingRequestID);
+        }
+        public static string GetUrlPathForBooking(int bookingID, int bookingRequestID = 0)
+        {
+            return String.Format("Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", bookingRequestID, bookingID);
+        }
         #endregion
     }
 }

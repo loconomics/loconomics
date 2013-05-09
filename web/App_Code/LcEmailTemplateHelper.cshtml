@@ -158,10 +158,10 @@
 
         if (bID == 0) {
             b = LcData.Booking.GetBookingRequestForUser(brID, 0, true);
-            viewURL = LcUrl.LangUrl + String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID);
+            viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(brID);
         } else {
             b = LcData.Booking.GetBookingForUser(bID, 0, true);
-            viewURL = LcUrl.LangUrl + String.Format("Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, bID);
+            viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBooking(bID, brID);
         }
         
         int toUserID = 0, byUserID = 0, pairUserID = 0;
