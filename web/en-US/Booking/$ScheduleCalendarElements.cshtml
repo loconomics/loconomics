@@ -5,6 +5,7 @@
     DateTime? date = PageData["Date"];
     decimal? durationMinutes = (decimal?)PageData["DurationMinutes"];
     int userID = PageData["UserID"] ?? 0;
+    var DEFAULT_DURATION_MINUTES = 4M * 60;
     if ((String.IsNullOrEmpty(element) || !date.HasValue) && UrlData.Count > 1) {
         element = UrlData[0];
         date = LcHelpers.CreateDateTime(UrlData[1]);
@@ -14,9 +15,9 @@
     }
     if (!durationMinutes.HasValue){
         if (UrlData.Count > 2) {
-            durationMinutes = LcHelpers.CreateDecimal(UrlData[2]);
+            durationMinutes = LcHelpers.CreateDecimal(UrlData[2]) ?? DEFAULT_DURATION_MINUTES;
         } else {
-            durationMinutes = 4M * 60;
+            durationMinutes = DEFAULT_DURATION_MINUTES;
         }
     }
     if (userID == 0 && UrlData.Count > 3) {
