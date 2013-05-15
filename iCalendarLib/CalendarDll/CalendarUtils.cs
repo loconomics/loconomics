@@ -1636,6 +1636,9 @@ namespace CalendarDll
                             UID = currEvent.UID,
                             UserId = user.Id,
                             StartTime = currEvent.Start.Date.Year != 1 ? currEvent.Start.Date.Add(currEvent.Start.TimeOfDay) : DateTime.Now,
+                            // IagoSRL @Loconomics: Added TimeZone based on the StartTime TZID (we suppose endtime use the same, is the most common,
+                            // and our back-end calendar doesn't support one timezone per start-end date)
+                            TimeZone = currEvent.Start.TZID,
                             EndTime = currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
                             Organizer = (currEvent.Organizer != null) ? currEvent.Organizer.CommonName : string.Empty,
                             CalendarAvailabilityTypeID = getAvailabilityId(currEvent),
