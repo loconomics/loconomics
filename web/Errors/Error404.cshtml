@@ -2,6 +2,18 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Page Not Found";
     Response.StatusCode = 404;
+    
+    //try{
+        using (var logger = new LcLogger("PageNotFound"))
+        {
+            logger.Log("Page not found, custom 404 page showed. Context:");
+            logger.Log("Current Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+            logger.Log("Referrer URL:: {0}", Request.UrlReferrer);
+            logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
+            logger.Log("User-Agent:: {0}", Request.UserAgent);
+            logger.Save();
+        }
+    //}catch{}
 }
 <div id="container">
     <h1>We're unable to find what you're looking for. Please contact us by clicking on the orange tab at the bottom of your screen so we can assist you.</h1>
