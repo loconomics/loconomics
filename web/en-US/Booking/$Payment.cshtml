@@ -171,32 +171,6 @@
                                 FROM    PostalCode
                                 WHERE   PostalCodeID = @0
                             ";
-                            var sqlInsCalendarEvent = @"
-                                INSERT INTO [CalendarEvents]
-                                           ([UserId]
-                                           ,[CalendarAvailabilityTypeID]
-                                           ,[EventType]
-                                           ,[Summary]
-                                           ,[Description]
-                                           ,[StartTime]
-                                           ,[EndTime]
-                                           ,[TimeZone]
-                                           ,[CreatedDate]
-                                           ,[UpdatedDate]
-                                           ,[ModifyBy])
-                                     VALUES (@0
-                                            ,@1
-                                            ,1 -- Booking
-                                            ,@2
-                                            ,@3
-                                            ,@4
-                                            ,@5
-                                            ,@6
-                                            ,getdate()
-                                            ,getdate()
-                                            ,'sys')
-                                SELECT Cast(@@Identity As int) As CalendarEventID
-                            ";
                             var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
                             // Save date-times as 'tentative' provider Events
                             int? dt1ID, dt2ID, dt3ID;
@@ -204,19 +178,19 @@
                             string eventSummary = String.Format("Booking Request for {0}", ASP.LcHelpers.GetUserDisplayName(c));
                             string eventDesc = "Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(bookingRequestID);
                             if (dt1Start.HasValue && dt1End.HasValue) {
-                                dt1ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                dt1ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
                                     3, // Availability is 'Tentative'
                                     eventSummary, eventDesc,
                                     dt1Start, dt1End, timeZone);
                             }
                             if (dt2Start.HasValue && dt2End.HasValue) {
-                                dt2ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                dt2ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
                                     3, // Availability is 'Tentative'
                                     eventSummary, eventDesc,
                                     dt2Start, dt2End, timeZone);
                             }
                             if (dt3Start.HasValue && dt3End.HasValue) {
-                                dt3ID = db.QueryValue(sqlInsCalendarEvent, p.UserID,
+                                dt3ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
                                     3, // Availability is 'Tentative'
                                     eventSummary, eventDesc,
                                     dt3Start, dt3End, timeZone);
@@ -388,7 +362,7 @@
                     
                     
                 } catch (Exception ex) {
-                    if (Context.IsDebuggingEnabled) {
+                    if (!LcHelpers.InProduction) {
                         throw ex;
                     }
                     LcHelpers.ReturnJsonError(-1, ex.Message);

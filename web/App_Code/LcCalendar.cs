@@ -14,7 +14,68 @@ using System.IO;
 /// </summary>
 public static class LcCalendar
 {
-    public const bool EnableNewCalendar = true;
+    public const bool EnableNewCalendar = false;
+
+    #region Booking
+    public static string sqlInsBookingEvent
+    {
+        get
+        {
+            if (EnableNewCalendar)
+                return @"
+                    INSERT INTO [CalendarEvents]
+                                ([UserId]
+                                ,[CalendarAvailabilityTypeID]
+                                ,[EventType]
+                                ,[Summary]
+                                ,[Description]
+                                ,[StartTime]
+                                ,[EndTime]
+                                ,[TimeZone]
+                                ,[CreatedDate]
+                                ,[UpdatedDate]
+                                ,[ModifyBy])
+                            VALUES (@0
+                                ,@1
+                                ,1 -- Booking
+                                ,@2
+                                ,@3
+                                ,@4
+                                ,@5
+                                ,@6
+                                ,getdate()
+                                ,getdate()
+                                ,'sys')
+                    SELECT Cast(@@Identity As int) As CalendarEventID
+                ";
+            else
+                return @"
+                    INSERT INTO [CalendarEvents]
+                                ([UserId]
+                                ,[CalendarAvailabilityTypeID]
+                                ,[Summary]
+                                ,[Description]
+                                ,[StartTime]
+                                ,[EndTime]
+                                ,[TimeZone]
+                                ,[CreatedDate]
+                                ,[UpdatedDate]
+                                ,[ModifyBy])
+                            VALUES (@0
+                                ,@1
+                                ,@2
+                                ,@3
+                                ,@4
+                                ,@5
+                                ,@6
+                                ,getdate()
+                                ,getdate()
+                                ,'sys')
+                    SELECT Cast(@@Identity As int) As CalendarEventID
+                ";
+        }
+    }
+    #endregion
 
     #region Availability
     /// <summary>
