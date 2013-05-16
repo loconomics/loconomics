@@ -53,24 +53,14 @@ public static class LcCalendar
                     INSERT INTO [CalendarEvents]
                                 ([UserId]
                                 ,[CalendarAvailabilityTypeID]
-                                ,[Summary]
-                                ,[Description]
                                 ,[StartTime]
                                 ,[EndTime]
-                                ,[TimeZone]
-                                ,[CreatedDate]
-                                ,[UpdatedDate]
-                                ,[ModifyBy])
+                                ,[TimeZone])
                             VALUES (@0
                                 ,@1
-                                ,@2
-                                ,@3
                                 ,@4
                                 ,@5
-                                ,@6
-                                ,getdate()
-                                ,getdate()
-                                ,'sys')
+                                ,@6)
                     SELECT Cast(@@Identity As int) As CalendarEventID
                 ";
         }
