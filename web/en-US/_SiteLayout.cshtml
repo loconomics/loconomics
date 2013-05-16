@@ -10,7 +10,7 @@
     LcAssets.AssetsVersion = "20130509";
     
     // Sniff IE browsers or based on its same engine (Trident).
-    var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
+    var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
     
     var onBehalfOf = LcHelpers.OnBehalfOf();
     
