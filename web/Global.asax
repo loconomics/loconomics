@@ -45,7 +45,9 @@
                 //Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.
                 //   ExceptionPolicy.HandleException(ex, "AllExceptionsPolicy");
                 Server.ClearError();
-                Response.Redirect(LcUrl.AppPath + "Errors/Error/");
+                // Show custom error page, preserving current URL:
+                Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error/");
+                //Response.Redirect(LcUrl.AppPath + "Errors/Error/");
             }
         }
     }
