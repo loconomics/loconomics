@@ -30,7 +30,7 @@
                 lastAlertType = alert.AlertTypeName;
 
                 string completeUrl = LcData.CreateAlertURL(alert);
-                        <li class="item">
+                        <li class="item @(alert.Required ? "required" : "")">
                             @if (completeUrl != null)
                             {
                                 <a class="alert-info" href="@completeUrl">@alert.AlertHeadlineDisplay 

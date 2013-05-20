@@ -279,8 +279,12 @@ ul.attributes-list li {
     margin: 10px 0 4px 0;
 }
 #dashboard-alerts li.item {
-    list-style: url('../img/theme/alert-icon.png') inside;
-    line-height: 1em;
+    padding-left: 15px;
+    text-indent: 2em;
+}
+#dashboard-alerts li.item.required {
+    background: url('../img/theme/alert-icon.png') no-repeat 15px center;
+    line-height: 18px;
 }
 #dashboard-alerts li.item > .alert-info {
     color: #747474;
