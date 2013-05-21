@@ -37,7 +37,7 @@
     Validation.Add("addressline1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
     Validation.Add("addressline2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
     Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
-    Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special Instructions must be fewer than 1,000 characters."));
+    Validation.Add("special-instructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
 
     if (IsPost && Validation.IsValid()) {
 
@@ -188,7 +188,7 @@
                 var lastPositionID = 0;
             <ul class="copy-location">
                 <li>
-                    <label>You can specify a full new address or use one of yours addresses from the list:
+                    <label>Please fill in location information below or select one that you've already used:
                         <select class="copy-location" data-extra-query="@(Request["iworkon"].AsBool() ? "iworkon=True&" : "")@(Request["itravel"].AsBool() ? "itravel=True&" : "")">
                             <option value=""></option>
                             @foreach (var add in userAddresses)
