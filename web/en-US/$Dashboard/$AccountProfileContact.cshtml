@@ -271,7 +271,7 @@
                 @Html.ValidationMessage("middleinitial")
             </li>
             }
-            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
+            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" class="secure-data" @Validation.GetHtml("lastname")/>
                 @Html.ValidationMessage("lastname")
             </li>
             @if (LcData.GetCurrentCountryID() == 2)
@@ -301,22 +301,22 @@
     <fieldset>
         <legend>Home address:</legend>
         <ul>
-            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" @Validation.GetHtml("streetaddress1")/>
+            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" class="secure-data" @Validation.GetHtml("streetaddress1")/>
                 @Html.ValidationMessage("streetaddress1")
             </li>
-            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2" value="@Street2" @Validation.GetHtml("streetaddress2")/>
+            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2" value="@Street2" class="secure-data" @Validation.GetHtml("streetaddress2")/>
                 @Html.ValidationMessage("streetaddress2")
             </li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city" value="@City" class="secure-data" @Validation.GetHtml("city")/>
                 @Html.ValidationMessage("city")
             </li>
             <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="state" @Validation.GetHtml("state")>
+                <select id="@idprefix-state" name="state" class="secure-data" @Validation.GetHtml("state")>
                     @LcHelpers.StateProvinceOptions(State)
                 </select>
                 @Html.ValidationMessage("state")
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode" value="@Zip" @Validation.GetHtml("zipcode")/>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode" value="@Zip" class="secure-data" @Validation.GetHtml("zipcode")/>
                 @Html.ValidationMessage("zipcode")
             </li>
         </ul>

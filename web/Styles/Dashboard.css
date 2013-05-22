@@ -1356,6 +1356,12 @@ form#personal li > label.gender {
 #account-payments .payment-type label {
     display: block;
 }
+#account-payments .contact-info label {
+    width: auto !important;
+}
+#account-payments .contact-info input {
+    width: 94% !important;
+}
 
 /**** Form: Billing Address ****/
 .billing-address-form .location-data label {

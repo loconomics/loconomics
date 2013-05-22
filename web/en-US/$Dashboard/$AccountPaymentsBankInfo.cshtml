@@ -207,7 +207,7 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
         <fieldset id="@idprefix-fs-contactinfo" class="contact-info">
             <legend>Name on bank account:</legend>
             <ul>
-                <li><label for="@idprefix-fullname"></label><input @Validation.GetHtml("bank_fullname") id="@idprefix-fullname" type="text" name="bank_fullname" value="@(Request["bank_fullname"] ?? (bankinfo != null ? bankinfo.AccountName : ""))"/></li>
+                <li><label for="@idprefix-fullname"></label><input class="secure-data" @Validation.GetHtml("bank_fullname") id="@idprefix-fullname" type="text" name="bank_fullname" value="@(Request["bank_fullname"] ?? (bankinfo != null ? bankinfo.AccountName : ""))"/></li>
             </ul>
         </fieldset>
         <fieldset id="@idprefix-fs-accounttype">
@@ -228,8 +228,8 @@ Doing the job is the tough part, getting paid is the easy part.  You can be paid
         <fieldset id="@idprefix-fs-accountnumber">
             <legend>Bank account number:</legend>
             <ul>
-                <li><label for="@idprefix-abanumber">ABA routing number (9 digits):</label><input type="text" id="@idprefix-abanumber" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
-                <li><label for="@idprefix-accountnumber">Account number:</label><input type="text" id="@idprefix-accountnumber" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + LcEncryptor.Decrypt((string)bankinfo.LastThreeAccountDigits) : ""))"/></li>
+                <li><label for="@idprefix-abanumber">ABA routing number (9 digits):</label><input type="text" id="@idprefix-abanumber" class="secure-data" @Validation.GetHtml("bank_abanumber") name="bank_abanumber" value="@(Request["bank_abanumber"] ?? (bankinfo != null ? bankinfo.ABANumber : ""))"/></li>
+                <li><label for="@idprefix-accountnumber">Account number:</label><input type="text" id="@idprefix-accountnumber" class="secure-data" @Validation.GetHtml("bank_accountnumber") name="bank_accountnumber" value="@(Request["bank_accountnumber"] ?? (bankinfo != null ? "*****" + LcEncryptor.Decrypt((string)bankinfo.LastThreeAccountDigits) : ""))"/></li>
             </ul>
         </fieldset>
     </div>
