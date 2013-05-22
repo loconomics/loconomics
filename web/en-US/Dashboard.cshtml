@@ -82,7 +82,7 @@
                 <div id="nav">
                     <ul id="profile-menu" class="autofill-submenu">
                         @{
-                            var userAlertsCount = LcData.GetActiveUserAlertsCount(u.UserID);
+                            var userAlertsCount = LcData.GetActiveRequiredUserAlertsCount(u.UserID);
                         }
                         <li class="@menu("alerts")"><a href="@(LcUrl.LangPath)Dashboard/Alerts/">Alerts @if (userAlertsCount > 0) { <span class="warning-note">@userAlertsCount</span> }</a></li>
                         <li class="@menu("mailbox")"><a href="@(LcUrl.LangPath)Dashboard/Mailbox/">Inbox</a></li>
