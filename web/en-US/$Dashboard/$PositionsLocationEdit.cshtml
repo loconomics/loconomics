@@ -215,26 +215,26 @@
                     @Html.ValidationMessage("name")
                 </li>
                 <li class="location-addressline location-addressline1">
-                    <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" class="secure-data" @Validation.GetHtml("addressline1") /></label>
+                    <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("addressline1") /></label>
                     @Html.ValidationMessage("addressline1")
                 </li>
                 <li class="location-addressline location-addressline2">
-                    <label>Address Line 2: <input type="text" name="addressline2" value="@(Request["addressline2"] ?? (location != null ? location.AddressLine2 : null))" class="secure-data" @Validation.GetHtml("addressline2") /></label>
+                    <label>Address Line 2: <input type="text" name="addressline2" value="@(Request["addressline2"] ?? (location != null ? location.AddressLine2 : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("addressline2") /></label>
                     @Html.ValidationMessage("addressline2")
                 </li>
                 <li class="location-city">
-                    <label>City: <input type="text" name="city" value="@(Request["city"] ?? (location != null ? location.City : null))" class="secure-data" @Validation.GetHtml("city") /></label>
+                    <label>City: <input type="text" name="city" value="@(Request["city"] ?? (location != null ? location.City : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("city") /></label>
                 </li>
                 <li class="location-state">
                     <label>State:
-                        <select name="state" class="secure-data" @Validation.GetHtml("state")>
+                        <select name="state" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("state")>
                             @LcHelpers.StateProvinceOptions(Request["state"] ?? (location != null ? location.StateProvinceID : null))
                         </select>
                         @Html.ValidationMessage("state")
                     </label>
                 </li>
                 <li class="location-zipcode">
-                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" class="secure-data" @Validation.GetHtml("postalcode")/></label>
+                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("postalcode")/></label>
                     @Html.ValidationMessage("postalcode")
                 </li>
                 <li class="location-specialinstructions">

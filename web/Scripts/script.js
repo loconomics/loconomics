@@ -1328,7 +1328,7 @@ function guidGenerator() {
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
 /* Currently only applies to elements with title and data-description attributes or 
-    with css-class has-tooltip and title attribute */
+    with css-class has-tooltip or secure-data and title attribute */
 function configureTooltip() {
     var posoffset = { x: 16, y: 8 };
     function pos(t, e, l) {
@@ -1403,8 +1403,9 @@ function configureTooltip() {
         if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
             t.stop(true, true).fadeOut();
     }
-    $('body').on('mousemove focusin', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', showTooltip)
-    .on('mouseleave focusout', '[title][data-description], [title].has-tooltip, [data-tooltip-url]', hideTooltip)
+    var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url]';
+    $('body').on('mousemove focusin', selector, showTooltip)
+    .on('mouseleave focusout', selector, hideTooltip)
     .on('click', '.tooltip-button', function () { return false });
 }
 /**

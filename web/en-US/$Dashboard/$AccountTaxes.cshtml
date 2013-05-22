@@ -191,17 +191,17 @@ Federal law requires us to issue you a 1099 form at the end of the year.  In ord
     <fieldset id="@idprefix-fs-taxinfo" class="tax-info">
         <legend>IRS Form W-9:</legend>
         <ul>
-            <li><label for="@idprefix-fullname">Full legal name:</label><input id="@idprefix-fullname" class="secure-data" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? (taxinfo != null ? taxinfo.FullName : ""))"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
-            <li><label for="@idprefix-businessname">Business name:</label><input id="@idprefix-businessname" class="secure-data" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? (taxinfo != null ? taxinfo.BusinessName : ""))"/><span class="info">(only if different from above)</span></li>
+            <li><label for="@idprefix-fullname">Full legal name:</label><input id="@idprefix-fullname" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_fullname") type="text" name="tin_fullname" value="@(Request["tin_fullname"] ?? (taxinfo != null ? taxinfo.FullName : ""))"/><span class="info">(corresponding to your Tax Identification Number)</span></li>
+            <li><label for="@idprefix-businessname">Business name:</label><input id="@idprefix-businessname" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_businessname") type="text" name="tin_businessname" value="@(Request["tin_businessname"] ?? (taxinfo != null ? taxinfo.BusinessName : ""))"/><span class="info">(only if different from above)</span></li>
             <li>Mailing Address:</li>
-            <li><label for="@idprefix-streetaddress">Street address, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" class="secure-data" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? (taxinfo != null ? taxinfo.StreetApt : ""))"/></li>
-            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@(Request["tin_city"] ?? (taxinfo != null ? taxinfo.City : ""))" class="secure-data" @Validation.GetHtml("tin_city")/></li>
+            <li><label for="@idprefix-streetaddress">Street address, Apt:</label><input id="@idprefix-streetaddress" type="text" name="tin_streetaddress" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_streetaddress") value="@(Request["tin_streetaddress"] ?? (taxinfo != null ? taxinfo.StreetApt : ""))"/></li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="tin_city" value="@(Request["tin_city"] ?? (taxinfo != null ? taxinfo.City : ""))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_city")/></li>
             <li><label for="@idprefix-state">State:</label>
-                <select id="@idprefix-state" name="tin_state" class="secure-data" @Validation.GetHtml("tin_state")>
+                <select id="@idprefix-state" name="tin_state" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_state")>
                     @LcHelpers.StateProvinceOptions(Request["tin_state"] ?? (taxinfo != null ? taxinfo.StateProvinceID.ToString() : ""))
                 </select>
             </li>
-            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin_zipcode" value="@(Request["tin_zipcode"] ?? (taxinfo != null ? taxinfo.PostalCode : ""))" class="secure-data" @Validation.GetHtml("tin_zipcode")/></li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="tin_zipcode" value="@(Request["tin_zipcode"] ?? (taxinfo != null ? taxinfo.PostalCode : ""))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_zipcode")/></li>
             <li class="tax-entity-type">
                 <span>Tax Entity Type:</span>
                 <ul>
@@ -219,13 +219,13 @@ Federal law requires us to issue you a 1099 form at the end of the year.  In ord
                     <option value="P" @LcHelpers.IsSelected(getTaxData("tin_tax_classification"), "P")>Partnership</option>
                 </select>
             </li>*@
-            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @LcHelpers.IsChecked(Request["tin_exempt_payee"] ?? (taxinfo != null ? (taxinfo.ExemptPayee ? "true" : "false") : ""), "true") name="tin_exempt_payee" value="true" class="secure-data" @Validation.GetHtml("tin_exempt_payee")/></label></li>
+            <li class="tax-exempt-payee"><label>Exempt payee: <input type="checkbox" @LcHelpers.IsChecked(Request["tin_exempt_payee"] ?? (taxinfo != null ? (taxinfo.ExemptPayee ? "true" : "false") : ""), "true") name="tin_exempt_payee" value="true" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_exempt_payee")/></label></li>
         </ul>
     </fieldset>
     <fieldset id="@idprefix-fs-part1">
         <legend>Part 1: Taxpayer Identification Number (TIN):</legend>
         <span class="info">(This is a secure form. Your Tax ID Number will be stored in encrypted form.)</span>
-        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + LcEncryptor.Decrypt(taxinfo.LastThreeTINDigits) : ""))" class="secure-data" @Validation.GetHtml("tin_number")/>
+        <input type="text" name="tin_number" value="@(Request["tin_number"] ?? (taxinfo != null ? "*****" + LcEncryptor.Decrypt(taxinfo.LastThreeTINDigits) : ""))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("tin_number")/>
         @foreach (var tintype in tintypes)
         {
         <label><input type="radio" @Validation.GetHtml("tin_type") name="tin_type" @LcHelpers.IsChecked(Request["tin_type"] ?? (taxinfo != null ? taxinfo.TINTypeID : ""), tintype.TINTypeID) value="@tintype.TINTypeID"/><abbr title="@tintype.TINTypeName">@tintype.TINTypeAbbr</abbr></label>
