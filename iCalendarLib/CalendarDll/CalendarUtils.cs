@@ -406,17 +406,19 @@ namespace CalendarDll
 
             if (user != null)
             {
-                foreach (var currEvent in GetEventsByUser(user, user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
+                foreach (var currEvent in GetEventsByUserForExport(user, user.DefaultTimeZone != null ? user.DefaultTimeZone.Id : null))
                 {
+                    iCalForExport.Events.Add(currEvent);
+
+                    /* IagoSRL: filtering per "*" removed because is now events are filtered by EventType
+                     * that works better and more extensively, and has not the problem of events without saved GUID
                     // Only add Events that have an UID with a "*" in front
                     if (currEvent.UID.Length > 0 && 
                         currEvent.UID.Substring(0, 1) == "*")
                     {
-
                         iCalForExport.Events.Add(currEvent);
-
                     }
-
+                    */
                 }
 
             }
@@ -929,12 +931,46 @@ namespace CalendarDll
                     //----------------------------------------------------------------------
 
                 }     
-      
-            return iCalEvents;
-
-
+                return iCalEvents;
             }
+        }
+        /// <summary>
+        /// Based on GetEventsByUser, it filter events by type to only that required in
+        /// the export task.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="defaultTZID"></param>
+        /// <returns></returns>
+        /// <remarks>IagoSRL</remarks>
+        private IEnumerable<iEvent> GetEventsByUserForExport(CalendarUser user, string defaultTZID)
+        {
+            using (var db = new CalendarDll.Data.loconomicsEntities()) 
+            { 
+                var listEventsFromDB =
+                    db.CalendarEvents.
+                        // We filter by user and
+                        Where(c => c.UserId == user.Id &&
+                            // By type NOT being free-hours (2) or imported (4). Commented on issue #228 2013-05-13
+                            !(new int[]{2, 4}).Contains(c.EventType)).ToList();
 
+                var iCalEvents = new List<iEvent>();
+
+                foreach (var currEventFromDB in listEventsFromDB)
+                {
+                    var iCalEvent = CreateEvent(currEventFromDB, defaultTZID);
+
+                    iCalEvents.Add(iCalEvent);
+
+                    /* As requested by Josh on issue #228 2013-05-11
+                     * we don't want now the 'buffer event' be exported
+                    if (iCalEvent.EventType == 1)
+                    {
+                        var evExt = CreateBetweenEvent(iCalEvent,user);
+                        iCalEvents.Add(evExt);
+                    }*/
+                }     
+                return iCalEvents;
+            }
         }
 
         /// <summary>
