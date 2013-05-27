@@ -438,6 +438,13 @@ public static partial class LcData
         }
         #endregion
 
+        /// <summary>
+        /// Get the pricing variables and options of the booking request
+        /// TODO: MUST be renamed because it doesn't returns the full details, only pricing for custom pricing type.
+        /// </summary>
+        /// <param name="BookingRequestID"></param>
+        /// <param name="pricingEstimateID"></param>
+        /// <returns></returns>
         public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0)
         {
             dynamic pvars, poptions;
@@ -675,6 +682,7 @@ public static partial class LcData
         /// <summary>
         /// Get a string in text-only format to be used as the CalendarEvent Description field with the
         /// details of the booking request (hidden still the contact data)
+        /// This description contains data oriented for PROVIDERS ONLY
         /// </summary>
         /// <param name="BookingRequestID"></param>
         /// <returns></returns>
@@ -686,6 +694,53 @@ public static partial class LcData
             sb.AppendLine("\nCall Loconomics for help: (415) 735-6025");
             sb.AppendLine("Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(BookingRequestID));
             return sb.ToString();
+        }
+        /// <summary>
+        /// Get a string in text-only format to be used as the CalendarEvent Description field with the
+        /// details of the confirmed booking (this shows contact data too).
+        /// This description contains data oriented for PROVIDERS ONLY
+        /// </summary>
+        /// <param name="BookingID"></param>
+        /// <returns></returns>
+        public static string GetBookingEventDescription(int BookingID)
+        {
+            var booking = GetBookingBasicInfo(BookingID);
+            // We need customer full name and phones:
+            var customer = LcData.UserInfo.GetUserRowWithContactData(booking.CustomerUserID);
+            var phones = customer.MobilePhone ?? customer.AlternatePhone;
+            if (!string.IsNullOrEmpty(customer.MobilePhone) &&
+                !string.IsNullOrEmpty(customer.AlternatePhone))
+            {
+                phones = customer.MobilePhone + ", " + customer.AlternatePhone;
+            }
+            var sb = new System.Text.StringBuilder();
+            sb.AppendFormat("{0} {1}'s phone number: {2}\n", customer.FirstName, customer.LastName, phones);
+            // Rest is the same as booking request:
+            sb.Append(GetBookingRequestEventDescription(booking.BookingRequestID));
+            return sb.ToString();
+        }
+        /// <summary>
+        /// Get the location/address full information in one line of plain-text, to be used
+        /// for example as a CalendarEvent.Location
+        /// </summary>
+        /// <param name="BookingID"></param>
+        /// <returns></returns>
+        public static string GetBookingLocationAsOneLineText(int BookingID)
+        {
+            var booking = GetBookingForUser(BookingID, 0, true);
+            if (String.IsNullOrEmpty(booking.StateProvinceCode))
+                // There is no address:
+                return "";
+            // Else, build the address one-line:
+            return String.Format("{0} {1} - {2} ({4}) {5}{6}",
+                booking.AddressLine1,
+                booking.AddressLine2,
+                booking.City,
+                booking.StateProvinceName,
+                booking.StateProvinceCode,
+                booking.PostalCode,
+                !String.IsNullOrEmpty(booking.LocationSpecialInstructions) ? string.Format(" ({0})", booking.LocationSpecialInstructions) : ""
+            );
         }
         #endregion
 

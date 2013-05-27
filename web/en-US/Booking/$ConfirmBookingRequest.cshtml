@@ -135,7 +135,7 @@
                 var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
             
                 if (result.Error == 0) {
-                    
+                   
                     // Charge total amount of booking request to the customer (Submit to settlement the transaction)
                     // Get booking request TransactionID
                     string tranID = N.DE(db.QueryValue(LcData.Booking.sqlGetTransactionIDFromBookingRequest, brID));
@@ -148,6 +148,21 @@
                     
                     // Send message
                     LcMessaging.SendBookingRequestConfirmation(brID, result.BookingID);
+                    
+                    // Update the CalendarEvent to include contact data,
+                    // but this is not so important as the rest because of that it goes
+                    // inside a try-catch
+                    try{
+                        var description = LcData.Booking.GetBookingEventDescription(result.BookingID);
+                        var location = LcData.Booking.GetBookingLocationAsOneLineText(result.BookingID);
+                        db.Execute(@"
+                                UPDATE  CalendarEvents
+                                SET     Description = @1,
+                                        Location = @2
+                                WHERE   Id = @0
+                            ", dateID, description, location);
+                    }
+                    catch {}
                 
                     if (Request.IsAjaxRequest()) {
                         LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
