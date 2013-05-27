@@ -56,7 +56,7 @@
                 box-shadow: 0 0 5px 2px #e95d0f;
             }
             body,table,table td,table th { @* Required to avoid problems with default sizes of table contents in some email clients that don't inherit the body font-size or inline table font-size (but gmail works file without this) *@
-                font-size:13px;
+                font-size:14px;
             }
             @*@@media only screen and (max-device-width: 480px) {
             }
@@ -65,17 +65,25 @@
     </style>
 </head>
 <body alink="#FF0000" link="#FF0000" bgcolor="#ffffff" text="#747474" yahoo="fix" style="margin:0;padding:0">
-    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#747474;font-family:Arial,Helvetica,sans-serif;font-size:13px">
+    @***body_style*@<div style="padding:10px 0 30px 0;line-height:150%;margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;background:#ffffff;color:#747474;font-family:Arial,Helvetica,sans-serif;font-size:14px">
         @***table_layout*@<table cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" width="600" align="center">
             @***header*@<tr>
+                @* Title (status) and Subtitle (update time) removed for the new design, issue #174
                 <td width="420" style="padding: 0 20px 20px 0;">
 		            <h2 @LcEmailTemplateHelper.StyleH2(String.IsNullOrEmpty(messageSubtitle) ? "margin: 10px 0;" : "margin: 10px 0 0 0;")>@messageTitle</h2>
                     @if (!String.IsNullOrEmpty(messageSubtitle)) {
                         <span>@messageSubtitle</span>
                     }
+                </td>*@
+                <td width="300" style="padding: 0 20px 15px 0;">
+                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@LcUrl.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/loconomics-logo.png" width="140" height="50" /></a></h1>
                 </td>
-                <td width="180" style="padding: 0;" align="right" valign="top">
-                    <h1 style="font-size:1.4em;margin:0;padding:0"><a href="@LcUrl.LangUrl"><img border="0" alt="Loconomics, at your service." src="@(LcUrl.AppUrl)img/email/@(LcUrl.LangId)/loconomics-logo.png" width="172" height="61" /></a></h1>
+                <td width="300" style="padding: 12px 30px 0 0;color:#747474;font-weight:bold;font-size:13px;" align="right" valign="top">
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)Account/Login/">Login</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)HelpCenter/">Help</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a style="color:#747474;text-decoration:none" href="@(LcUrl.LangUrl)">Search</a>
                     <!--<a style="color:#00989A" target="_blank" href="@viewOnSiteUrl">Click here if this message isn't displaying correctly.</a>-->
                 </td>
             </tr>
@@ -84,7 +92,7 @@
                     @*<h2 @LcEmailTemplateHelper.StyleH2("margin:0;background: url('" + LcUrl.AppUrl + "img/email/tab-top.png') no-repeat 0 0;height:33px;")>
                         <span style="display:block;padding:5px 0 0 30px;width:200px;font-size: 12px;font-weight: bold;line-height: 15px">@messageTitle</span>
                     </h2>*@
-                    <table width="600" style="font-size:13px;border-collapse:collapse">
+                    <table width="600" style="font-size:14px;border-collapse:collapse">
                         <tr>
                             <td colspan="5" style="padding:0">
 
