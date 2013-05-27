@@ -17,5 +17,14 @@
                 Response.WriteBinary(file.Item1, "text/calendar");
             }
         }
+        // Logger
+        using (var logger = new LcLogger("calendar"))
+        {
+            logger.Log("Calendar public Export:");
+            logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+            logger.Log("User-Agent:: {0}", Request.UserAgent);
+            logger.Log("User-Address:: {0} {1}", Request.UserHostAddress, Request.UserHostName);
+            logger.Save();
+        }
     }
 }
