@@ -8,8 +8,8 @@
     var thisUserID = Request["UserID"].AsInt();
     var thisUser = LcData.UserInfo.GetUserRow(thisUserID);
     
-    var confirmationURL = Request["ConfirmationURL"];
-    var confirmationToken = Request["ConfirmationToken"];
+    var confirmationURL = Request["ConfirmationURL"] ?? "";
+    var confirmationToken = Request["ConfirmationToken"] ?? "";
     
     // Data for the EmailLayout:
     PageData["messageTitle"] = "Welcome to a new kind of marketplace";
