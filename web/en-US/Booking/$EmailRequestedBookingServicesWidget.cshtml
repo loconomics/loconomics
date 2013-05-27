@@ -20,7 +20,8 @@
     
     string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
     string strVarsOpts = LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID, booking.PricingEstimateID);
-    string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
+    // Packages and add-ons are included in pricing summary now
+    //string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
 }
 @helper printQuantityIfNeeded(string q){
     decimal quantity = 0;
@@ -71,6 +72,14 @@
                 @LcPricingView.EmailCustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
             }
         }
+        
+        @* Packages and add-ons are included in pricing summary now
+        if (!String.IsNullOrEmpty(strPackAddons))
+        {
+            <div class="packages">
+                @strPackAddons
+            </div>
+        }*@
         
         @if (!String.IsNullOrEmpty(strServices))
         {

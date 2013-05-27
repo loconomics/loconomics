@@ -175,8 +175,10 @@
                             // Save date-times as 'tentative' provider Events
                             int? dt1ID, dt2ID, dt3ID;
                             dt1ID = dt2ID = dt3ID = null;
-                            string eventSummary = String.Format("Booking Request for {0}", ASP.LcHelpers.GetUserDisplayName(c));
-                            string eventDesc = "Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(bookingRequestID);
+                            string eventSummary = String.Format("{0} services for {1}", pos.PositionSingular, LcHelpers.GetUserDisplayName(c));
+                            string eventDesc = 
+                                //"Pricing Summary: " + 
+                                "Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(bookingRequestID);
                             if (dt1Start.HasValue && dt1End.HasValue) {
                                 dt1ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
                                     3, // Availability is 'Tentative'

@@ -417,14 +417,14 @@ public static partial class LcData
                     switch ((int)g.PricingGroupID)
                     {
                         case 4: // packages
-                            concept = g.DynamicSummaryTitle.Replace("{package}", GetBookingRequestPackages(0, PricingEstimateID));
+                            concept = g.DynamicSummaryTitle.Replace("{package}", GetBookingRequestPackages(0, PricingEstimateID, false));
                             break;
                         case 2: // variables
                             if (bookingData != null)
                                 concept = g.DynamicSummaryTitle.Replace("{position}", bookingData.PositionSingular);
                             break;
                         case 5: // addons
-                            concept = g.DynamicSummaryTitle;
+                            concept = g.DynamicSummaryTitle.Replace("{addons}", GetBookingRequestPackages(0, PricingEstimateID, true));
                             break;
                     }
                     s.Concept = concept;
@@ -479,7 +479,7 @@ public static partial class LcData
 
             return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
         }
-        public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0)
+        public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
         {
             dynamic packages;
             using (var db = Database.Open("sqlloco"))
@@ -494,6 +494,13 @@ public static partial class LcData
             var details = new List<string>();
             foreach (var pak in packages)
             {
+                // Filter add-ons: show both packages and addons if null, only addons if true and not addons if false.
+                if (addons.HasValue)
+                    if (addons.Value && pak.PricingTypeID != 7)
+                        continue;
+                    else if (!addons.Value && pak.PricingTypeID == 7)
+                        continue;
+
                 // Format for the package summary
                 var f = "";
                 var inpersonphone = "";
