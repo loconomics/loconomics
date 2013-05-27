@@ -403,7 +403,7 @@
 }
 
 @functions{
-    public string TextOnlyProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+    public static string TextOnlyProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
         var sb = new System.Text.StringBuilder();
         foreach(var line in summaryLines) {
             sb.AppendFormat("{0}: {1:c}\n",
@@ -414,7 +414,7 @@
         sb.AppendFormat("Total price: {0:c}\n", (summary.SubtotalPrice - summary.PFeePrice));
         return sb.ToString();
     }
-    public string TextOnlyCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+    public static string TextOnlyCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
         var sb = new System.Text.StringBuilder();
         foreach(var line in summaryLines) {
             sb.AppendFormat("{0}: {1:c}\n",

@@ -7,6 +7,7 @@
     bool showPricing = PageData[4] ?? true;
     bool showCancellationPolicy = PageData[5] ?? true;
     string cssClass = PageData[6] ?? "message-section";
+    bool showPackages = PageData[7] ?? false;
     var BookingDate = PageData["BookingDate"];
     var u = LcData.UserInfo.GetUserRow();
     
@@ -23,8 +24,12 @@
     
     string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
     string strVarsOpts = LcData.Booking.GetBookingRequestDetails(booking.BookingRequestID, booking.PricingEstimateID);
-    // Packages and add-ons are included in pricing summary now
-    //string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
+    // Packages and add-ons are included in pricing summary now,
+    // BUT maybe we are in booking/confirmation/ with a special block for services and we want show the packages-addons inside
+    string strPackAddons = "";
+    if (showPackages) {
+        strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
+    }
 }
 @helper printQuantityIfNeeded(string q){
     decimal quantity = 0;
@@ -57,13 +62,12 @@
             }
         }
         
-        @* Packages and add-ons are included in pricing summary now
-        if (!String.IsNullOrEmpty(strPackAddons))
+        @if (showPackages && !String.IsNullOrEmpty(strPackAddons))
         {
             <div class="packages">
                 @strPackAddons
             </div>
-        }*@
+        }
 
         @if (!String.IsNullOrEmpty(strServices))
         {

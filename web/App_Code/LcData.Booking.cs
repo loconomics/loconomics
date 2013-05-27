@@ -682,7 +682,8 @@ public static partial class LcData
         {
             var sb = new System.Text.StringBuilder();
             sb.Append(GetBookingRequestInformationForProviderAsTextOnly(BookingRequestID));
-            sb.AppendLine("Call Loconomics for help: (415) 735-6025");
+            // Previous ends in new-line but we add another new-line to get an empty line, and the phone:
+            sb.AppendLine("\nCall Loconomics for help: (415) 735-6025");
             sb.AppendLine("Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(BookingRequestID));
             return sb.ToString();
         }
