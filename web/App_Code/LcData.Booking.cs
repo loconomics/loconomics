@@ -613,6 +613,79 @@ public static partial class LcData
             }
             return "";
         }
+        /// <summary>
+        /// Useful booking request information as text-only, for use in Calendar Events description or other text-only places.
+        /// </summary>
+        /// <param name="BookingRequestID"></param>
+        /// <returns></returns>
+        public static string GetBookingRequestInformationForProviderAsTextOnly(int BookingRequestID)
+        {
+            var sb = new System.Text.StringBuilder();
+            dynamic summary = LcData.Booking.GetBookingRequestForUser(BookingRequestID, 0, true);
+            var pricingSummary = LcData.Booking.GetPricingSummary(summary);
+            var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+            
+            sb.AppendLine("Pricing summary:");
+            sb.Append(ASP.LcPricingView.TextOnlyProviderPricingSummary(pricingSummary, pricingSummaryGroups, 0));
+
+            sb.AppendLine("Special instructions:");
+            sb.AppendLine(summary.SpecialRequests);
+
+            sb.AppendLine("Payment:");
+            sb.AppendLine(GetBookingPaymentInformation(summary, LcData.UserInfo.UserType.Provider));
+            
+            return sb.ToString();
+        }
+        /// <summary>
+        /// Get the text with payment information for a booking to be showed to the requested user-type
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <param name="userType"></param>
+        /// <returns></returns>
+        public static string GetBookingPaymentInformation(dynamic booking, string userType)
+        {
+            return GetBookingPaymentInformation(booking, LcData.UserInfo.ParseUserType(userType));
+        }
+        /// <summary>
+        /// Get the text with payment information for a booking to be showed to the requested user-type
+        /// </summary>
+        /// <param name="booking"></param>
+        /// <param name="userType"></param>
+        /// <returns></returns>
+        public static string GetBookingPaymentInformation(dynamic booking, LcData.UserInfo.UserType userType)
+        {
+            switch (userType)
+            {
+                case UserInfo.UserType.Provider:
+                    return String.Format(
+                        "Payment (direct deposit scheduled for {0:d}) to checking account ****{1})",
+                        booking.PaymentDate ?? "<date not available>",
+                        LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));
+                case UserInfo.UserType.Customer:
+                    return String.Format(
+                        "Payment (scheduled for {0:d} from credit card ****{1})",
+                        booking.PaymentDate ?? "<date not available>",
+                        LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits));
+                default:
+                    return String.Format(
+                        "Total to be paid on {0:d}",
+                        booking.PaymentDate ?? "<date not available>");
+            }
+        }
+        /// <summary>
+        /// Get a string in text-only format to be used as the CalendarEvent Description field with the
+        /// details of the booking request (hidden still the contact data)
+        /// </summary>
+        /// <param name="BookingRequestID"></param>
+        /// <returns></returns>
+        public static string GetBookingRequestEventDescription(int BookingRequestID)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append(GetBookingRequestInformationForProviderAsTextOnly(BookingRequestID));
+            sb.AppendLine("Call Loconomics for help: (415) 735-6025");
+            sb.AppendLine("Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(BookingRequestID));
+            return sb.ToString();
+        }
         #endregion
 
         #region Actions on bookings, modifications

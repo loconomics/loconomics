@@ -401,3 +401,28 @@
         </tr>
     </table>
 }
+
+@functions{
+    public string TextOnlyProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+        var sb = new System.Text.StringBuilder();
+        foreach(var line in summaryLines) {
+            sb.AppendFormat("{0}: {1:c}\n",
+                LcHelpers.StripHtmlTags(line.Value.Concept),
+                line.Value.SubtotalPrice);
+        }
+        sb.AppendFormat("Loconomics service fee (includes credit card processing costs): {0:c}\n", (0 - summary.PFeePrice));
+        sb.AppendFormat("Total price: {0:c}\n", (summary.SubtotalPrice - summary.PFeePrice));
+        return sb.ToString();
+    }
+    public string TextOnlyCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+        var sb = new System.Text.StringBuilder();
+        foreach(var line in summaryLines) {
+            sb.AppendFormat("{0}: {1:c}\n",
+                LcHelpers.StripHtmlTags(line.Value.Concept),
+                line.Value.TotalPrice);
+        }
+        sb.AppendFormat("Total price*: {0:c}\n", summary.TotalPrice);
+        sb.AppendFormat("*includes a {0:c} Loconomics service fee\n", summary.FeePrice);
+        return sb.ToString();
+    }
+}

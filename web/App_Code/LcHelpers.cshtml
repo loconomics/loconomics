@@ -500,6 +500,10 @@
         
         return r;
     }
+    
+    public static string StripHtmlTags(string html) {
+        return Regex.Replace(html, @"<[^>]*>", String.Empty);
+    }
 
     /*
      * Convert given string into a string with only the characters

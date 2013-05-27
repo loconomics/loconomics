@@ -36,26 +36,7 @@
         {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment:</h5>
             <div>
-                @switch (myUserType)
-                {
-                    case "provider":
-                        <text>
-                        Payment (direct deposit scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        to checking account @("****" + LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits)))
-                        </text>
-                                        break;
-                    case "customer":
-                        <text>
-                        Payment (scheduled for @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        from credit card @("****" + LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)))
-                        </text>
-                                     break;
-                    default:
-                        <text>
-                        Total to be paid on @String.Format("{0:d}", booking.PaymentDate ?? "<date not available>")
-                        </text>
-                                       break;
-                }
+                @LcData.Booking.GetBookingPaymentInformation(booking, myUserType)
             </div>
         }
 

@@ -176,9 +176,7 @@
                             int? dt1ID, dt2ID, dt3ID;
                             dt1ID = dt2ID = dt3ID = null;
                             string eventSummary = String.Format("{0} services for {1}", pos.PositionSingular, LcHelpers.GetUserDisplayName(c));
-                            string eventDesc = 
-                                //"Pricing Summary: " + 
-                                "Full details at " + LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(bookingRequestID);
+                            string eventDesc = LcData.Booking.GetBookingRequestEventDescription(bookingRequestID);
                             if (dt1Start.HasValue && dt1End.HasValue) {
                                 dt1ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
                                     3, // Availability is 'Tentative'
