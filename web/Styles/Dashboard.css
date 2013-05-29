@@ -299,6 +299,10 @@ ul.attributes-list li {
     color: #eb6e42;
     font-weight: bold;
 }
+#dashboard-alerts .dismiss-alert {
+    float: right;
+    color: #eb6e42;
+}
 
 /*** Dashboard forms ***/
 .dashboard form fieldset{

@@ -628,6 +628,17 @@ $(document).ready(function () {
             $(this).closest('form').find('.all-days-times input').prop('checked', false);
         });
     })();
+
+    /**================
+    * Alerts
+    **/
+    (function () {
+        $('.dashboard').on('click', '.dashboard-alerts a.dismiss-alert', function () {
+            var $t = $(this);
+            $t.closest('.dashboard-alerts').reload($t.attr('href'));
+            return false;
+        });
+    })();
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {

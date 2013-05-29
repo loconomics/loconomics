@@ -1009,6 +1009,9 @@ public static partial class LcData
             WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
                      AND A.LanguageID = @1 AND A.CountryID = @2
                      AND (UA.PositionID = 0 OR P.PositionID is not null)
+                    -- Added dismissed feature #243: not show if is dismissed
+                    -- except for required ones, that cannot be dismissed
+                    AND (A.Required = 1 OR UA.Dismissed = 0)
             ORDER BY AT.DisplayRank, AT.AlertTypeName, A.DisplayRank, A.AlertName
             ", userID,
              LcData.GetCurrentLanguageID(),

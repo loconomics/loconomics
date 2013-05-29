@@ -1085,7 +1085,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Special Code 3: reload current page content to the given url at data.Result)
             // Note: to reload same url page content, is better return the html directly from
             // this ajax server request.
-            //container.unblock(); is blocked and unblocked againg by the reload method:
+            //container.unblock(); is blocked and unblocked again by the reload method:
             ctx.autoUnblockLoading = false;
             ctx.box.reload(data.Result);
         } else if (data.Code == 4) {
