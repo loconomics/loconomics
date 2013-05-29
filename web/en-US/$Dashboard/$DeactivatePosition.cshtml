@@ -6,12 +6,18 @@
 
     if (positionID > 0) {
         using (var db = Database.Open("sqlloco")) {
-            db.Execute("UPDATE UserProfilePositions SET StatusID = 2 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+            // It just update StatusID to 3 'private profile, manual activation'
+            db.Execute("UPDATE UserProfilePositions SET StatusID = 3 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+        }
+        if (Request.IsAjaxRequest()) {
+            LcHelpers.ReturnJsonResult(0, "LJDI: Position deactivated");
+        }
+    } else {
+        if (Request.IsAjaxRequest()) {
+            LcHelpers.ReturnJsonResult(0, "LJDI: Impossible to deactivate position");
         }
     }
-    if (Request.IsAjaxRequest()) {
-        LcHelpers.ReturnJsonResult(0, "Position deactivated");
-    } else {
+    if (!Request.IsAjaxRequest()) {
         Response.Redirect(LcHelpers.GetRedirectURLFromReferrer("/Dashboard"));
     }
 }

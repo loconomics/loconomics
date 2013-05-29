@@ -6,12 +6,42 @@
 
     if (positionID > 0) {
         using (var db = Database.Open("sqlloco")) {
-            db.Execute("UPDATE UserProfilePositions SET StatusID = 1 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+            /* PROCESS: */
+            // Check the current StatusID
+            var statusID = LcData.UserInfo.GetUserPositionStatus(u.UserID, positionID);
+            // If status is of type 3 'private profile, manual activation'..
+            if (statusID == 3) {
+                // ..modify the profile StatusID from 3 to 2 'private profile, automatic activation'
+                // (because the TestProfileActivation only works for StatusID:2 to avoid unexpected changes)
+                db.Execute("UPDATE UserProfilePositions SET StatusID = 2 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+            }
+            // It executes the profile activation that checks that all required alerts must be off to activate:
+            db.Execute("EXEC TestProfileActivation @0, @1", u.UserID, positionID);
+            // Check the updated StatusID
+            var newStatusID = LcData.UserInfo.GetUserPositionStatus(u.UserID, positionID);
+            // If the status is 1 'public profile', success!
+            if (newStatusID == 1) {
+                if (Request.IsAjaxRequest()) {
+                    LcHelpers.ReturnJsonResult(0, "LJDI: Position reactivated");
+                }
+            } else {
+                // It is Not activated still, required alerts are pending, back to the original
+                // StatusID if was not 2 originally (it was updated in the middle of the process to run
+                // the TestProfileActivation procedure)
+                if (statusID >= 2) {
+                    db.Execute("UPDATE UserProfilePositions SET StatusID = @3 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID, statusID);
+                }
+                if (Request.IsAjaxRequest()) {
+                    LcHelpers.ReturnJsonResult(0, "LJDI: Impossible to reactivate position, there are required alerts pending");
+                }
+            }
+        }
+    } else {
+        if (Request.IsAjaxRequest()) {
+            LcHelpers.ReturnJsonResult(0, "LJDI: Impossible to reactivate position.");
         }
     }
-    if (Request.IsAjaxRequest()) {
-        LcHelpers.ReturnJsonResult(0, "Position deactivated");
-    } else {
+    if (!Request.IsAjaxRequest()) {
         Response.Redirect(LcHelpers.GetRedirectURLFromReferrer("/Dashboard"));
     }
 }
