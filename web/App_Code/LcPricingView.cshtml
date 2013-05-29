@@ -52,7 +52,7 @@
             <td class="var-values">
                 <span class="calculate-item-fee">@(String.Format("{0:c}", itemNumbers.FeePrice))</span>
                 <span class="calculate-item-price">@((itemNumbers.TotalPrice).ToString("c"))</span>
-                <span class="calculate-item-duration">@((itemNumbers.ServiceDuration).ToString("#.##"))</span>
+                <span class="calculate-item-duration">@*((itemNumbers.ServiceDuration).ToString("#.##"))*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromHours(itemNumbers.ServiceDuration), "N/A"))</span>
                 <span class="calculate-item-total">@((itemNumbers.TotalPrice).ToString("c"))</span>
 
                 @switch ((string)@pvar.CustomerDataInputType)
@@ -127,7 +127,7 @@
                 <td class="pricing-option-check name">
                     <label for="@idprefix-@popt.PricingOptionName-check">@popt.CustomerPricingOptionDisplayText</label>
                 </td>
-                <td class="pricint-option-duration duration">@(prices.ServiceDuration == 0 ? "" : Math.Round(unitPrices.ServiceDuration * 60, 0).ToString() + " minutes")</td>
+                <td class="pricint-option-duration duration">@*(prices.ServiceDuration == 0 ? "" : Math.Round(unitPrices.ServiceDuration * 60, 0).ToString() + " minutes")*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes((double)Math.Round(unitPrices.ServiceDuration * 60, 0)), "N/A"))</td>
                 <td class="pricing-option-item-price number money">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", unitPrices.FeePrice))</span>
                     <span class="calculate-item-price">@(String.Format("{0:c}", unitPrices.TotalPrice))</span>
@@ -192,7 +192,7 @@
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                 </td>
                 <td class="package-sessions number">@(pak.NumberOfSessions < 1 ? "N/A" : pak.NumberOfSessions)</td>
-                <td class="package-duration number">@pak.ServiceDuration minutes</td>
+                <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
                     <span class="calculate-item-quantity">1</span>
@@ -228,7 +228,7 @@
                 <td class="package-name name">
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                 </td>
-                <td class="package-duration number">@pak.ServiceDuration minutes</td>
+                <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
                     <span class="calculate-item-quantity">1</span>

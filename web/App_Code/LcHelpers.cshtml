@@ -117,34 +117,44 @@
         }
         return nth;
     }
-    public static string TimeToSmartLongString(TimeSpan duration){
-        var s = new List<string>();
-        if (duration.Days > 1) {
-            s.Add(String.Format("{0} days", duration.Days));
-        } else if (duration.Days == 1) {
-            s.Add("1 day");
+    public static string TimeToSmartLongString(TimeSpan duration, string defaultValue = null){
+        if (duration == TimeSpan.Zero) {
+            return defaultValue;
         }
-        if (duration.Hours > 1) {
-            s.Add(String.Format("{0} hours", duration.Hours));
-        } else if (duration.Hours == 1) {
-            s.Add("1 hour");
+        var result = "";
+        if (duration > TimeSpan.Zero) {
+            var s = new List<string>();
+            if (duration.Days > 1) {
+                s.Add(String.Format("{0} days", duration.Days));
+            } else if (duration.Days == 1) {
+                s.Add("1 day");
+            }
+            if (duration.Hours > 1) {
+                s.Add(String.Format("{0} hours", duration.Hours));
+            } else if (duration.Hours == 1) {
+                s.Add("1 hour");
+            }
+            if (duration.Minutes > 1) {
+                s.Add(String.Format("{0} minutes", duration.Minutes));
+            } else if (duration.Minutes == 1) {
+                s.Add("1 minute");
+            }
+            if (duration.Seconds > 1) {
+                s.Add(String.Format("{0} seconds", duration.Seconds));
+            } else if (duration.Seconds == 1) {
+                s.Add("1 second");
+            }
+            if (duration.Milliseconds > 1) {
+                s.Add(String.Format("{0} milliseconds", duration.Milliseconds));
+            } else if (duration.Milliseconds == 1) {
+                s.Add("1 millisecond");
+            }
+            result = JoinNotEmptyStrings(", ", s);
+        } else {
+            // Negatives!!
+            result = "-" + TimeToSmartLongString(TimeSpan.Zero - duration);
         }
-        if (duration.Minutes > 1) {
-            s.Add(String.Format("{0} minutes", duration.Minutes));
-        } else if (duration.Minutes == 1) {
-            s.Add("1 minute");
-        }
-        if (duration.Seconds > 1) {
-            s.Add(String.Format("{0} seconds", duration.Seconds));
-        } else if (duration.Seconds == 1) {
-            s.Add("1 second");
-        }
-        if (duration.Milliseconds > 1) {
-            s.Add(String.Format("{0} milliseconds", duration.Milliseconds));
-        } else if (duration.Milliseconds == 1) {
-            s.Add("1 millisecond");
-        }
-        return JoinNotEmptyStrings(", ", s);
+        return result;
     }
     
     /*===========
