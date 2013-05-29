@@ -74,6 +74,22 @@ $(document).ready(function () {
     }
     return false;
     });*/
+    (function () {
+        $('.dashboard').on('click', '.position-state.on-off-switch.off', function () {
+            var pos = $(this).closest('.position-tab');
+            var alerts = parseInt($('#required-alerts-global-count').text());
+            if (alerts != Number.NaN && alerts > 0) {
+                var popcontent = pos.find('.popups .popup.incomplete-position-profile').clone();
+                popcontent.find('.required-alerts-count').text(alerts);
+            } else {
+                var popcontent = pos.find('.popups .popup.enabling-position-profile').clone();
+            }
+            smoothBoxBlock(
+                popcontent,
+                pos, null, { closable: true, center: false, autofocus: false }
+            );
+        });
+    })();
 
     /*
     * Change Photo

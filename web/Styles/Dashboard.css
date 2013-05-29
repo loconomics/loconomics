@@ -413,6 +413,7 @@ form#personal li label{
     position: absolute;
     right: 20px;
     top: 10px;
+    cursor: pointer;
 }
 /*.position-state div {
     cursor: pointer;
