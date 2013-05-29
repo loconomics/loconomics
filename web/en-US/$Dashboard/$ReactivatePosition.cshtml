@@ -5,6 +5,9 @@
     var positionID = Request["PositionID"].AsInt();
 
     if (positionID > 0) {
+        
+        var alertsMsg = "You must complete another {0} steps to activate this profile--please visit the <a href='{1}'>Alerts</a> section to complete";
+        
         using (var db = Database.Open("sqlloco")) {
             /* PROCESS: */
             // Check the current StatusID
@@ -29,16 +32,21 @@
                 // StatusID if was not 2 originally (it was updated in the middle of the process to run
                 // the TestProfileActivation procedure)
                 if (statusID >= 2) {
-                    db.Execute("UPDATE UserProfilePositions SET StatusID = @3 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID, statusID);
+                    db.Execute("UPDATE UserProfilePositions SET StatusID = @2 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID, statusID);
                 }
                 if (Request.IsAjaxRequest()) {
-                    LcHelpers.ReturnJsonResult(0, "LJDI: Impossible to reactivate position, there are required alerts pending");
+                    // Notify about pending alerts:
+                    var alerts = LcData.GetActiveRequiredUserAlertsCount(u.UserID, positionID);
+                    LcHelpers.ReturnJsonResult(7, new {
+                        AlertsRequired = alerts,
+                        Message = String.Format(alertsMsg, alerts, LcUrl.LangPath + "Dashboard/Alerts/")
+                    });
                 }
             }
         }
     } else {
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(0, "LJDI: Impossible to reactivate position.");
+            LcHelpers.ReturnJsonResult(7, "LJDI: Impossible to reactivate position.");
         }
     }
     if (!Request.IsAjaxRequest()) {

@@ -2362,6 +2362,10 @@ html.boxshadow #loginBox .field-validation-error{
     width: 60px;
     height: 20px;
 }
+.on-off-switch.off > div.on-text,
+.on-off-switch.on > div.off-text {
+    display: none;
+}
 .on-off-switch > div {
     width: 34px;
     height: 20px;

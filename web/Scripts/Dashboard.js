@@ -77,24 +77,22 @@ $(document).ready(function () {
     (function () {
         $('.dashboard').on('click', '.position-state.on-off-switch.off', function () {
             var pos = $(this).closest('.position-tab');
-            var alerts = parseInt($('#required-alerts-global-count').text());
-            if (alerts != Number.NaN && alerts > 0) {
-                var popcontent = pos.find('.popups .popup.incomplete-position-profile').clone();
-                popcontent.find('.required-alerts-count').text(alerts);
-                smoothBoxBlock(
-                    popcontent,
-                    pos, null, { closable: true, center: false, autofocus: false }
-                );
-            } else {
-                var posID = pos.data('position-id');
-                var popcontent = pos.find('.popups .popup.enabling-position-profile').clone();
-                pos.reload({
-                    url: LcUrl.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID,
-                    loading: {
-                        message: poscontent
-                    }
-                });
-            }
+            var posID = pos.data('position-id');
+            var popcontent = pos.find('.popups .popup.enabling-position-profile').clone();
+            pos
+            .on('ajaxSuccessPost', function (event, data) {
+                if (data && data.Code == 0) {
+                    pos.find('.position-state.on-off-switch')
+                    .removeClass('off')
+                    .addClass('on');
+                }
+            })
+            .reload({
+                url: LcUrl.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID,
+                loading: {
+                    message: popcontent
+                }
+            });
         });
     })();
 

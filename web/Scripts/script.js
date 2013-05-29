@@ -1129,6 +1129,13 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Ok-Go actions popup with 'success' and 'additional' messages.
             showOkGoPopup(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+        } else if (data.Code == 7) {
+            // Special Code 7: show message saying contained at data.Result.Message.
+            // This code allow attach additional information in data.Result to distinguish
+            // different results all showing a message but maybe not being a success at all
+            // and maybe doing something more in the triggered event with the data object.
+            showSuccessMessage(ctx, data.Result.Message);
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);

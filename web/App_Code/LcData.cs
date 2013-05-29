@@ -967,7 +967,7 @@ public static partial class LcData
         }
         return completeUrl;
     }
-    public static dynamic GetActiveUserAlerts(int userID)
+    public static dynamic GetActiveUserAlerts(int userID, int positionID = -1)
     {
         using (var db = Database.Open("sqlloco")) {
             return db.Query(@"
@@ -1009,19 +1009,22 @@ public static partial class LcData
             WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
                      AND A.LanguageID = @1 AND A.CountryID = @2
                      AND (UA.PositionID = 0 OR P.PositionID is not null)
+                    -- Filtered optionally by position (-1 to not filter by position)
+                     AND (UA.PositionID = 0 OR @3 = -1 OR UA.PositionID = @3)
                     -- Added dismissed feature #243: not show if is dismissed
                     -- except for required ones, that cannot be dismissed
                     AND (A.Required = 1 OR UA.Dismissed = 0)
             ORDER BY AT.DisplayRank, AT.AlertTypeName, A.DisplayRank, A.AlertName
             ", userID,
              LcData.GetCurrentLanguageID(),
-             LcData.GetCurrentCountryID());
+             LcData.GetCurrentCountryID(),
+             positionID);
         }
     }
-    public static int GetActiveRequiredUserAlertsCount(int userID)
+    public static int GetActiveRequiredUserAlertsCount(int userID, int positionID = -1)
     {
         int required = 0;
-        foreach (var alert in GetActiveUserAlerts(userID))
+        foreach (var alert in GetActiveUserAlerts(userID, positionID))
         {
             if (alert.Required)
                 required++;
