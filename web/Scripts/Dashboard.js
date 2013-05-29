@@ -55,44 +55,48 @@ $(document).ready(function () {
         }
         return false;
     });
-    /*
+    /**
     * Change position state
     */
-    /*$('.position-state > div').click(function () {
-    var $t = $(this);
-    var posID = $t.closest('.position-tab').data('position-id');
-    $t = $t.parent();
-    if ($t.hasClass('on')) {
-    if (confirm('Are you sure you want deactivate your position?')) {
-    window.location = LcUrl.LangPath + 'Dashboard/$DeactivatePosition/?PositionID=' + posID;
-    }
-    }
-    else if ($t.hasClass('off')) {
-    if (confirm('Are you sure you want reactivate your position?')) {
-    window.location = LcUrl.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID;
-    }
-    }
-    return false;
-    });*/
     (function () {
-        $('.dashboard').on('click', '.position-state.on-off-switch.off', function () {
-            var pos = $(this).closest('.position-tab');
+
+        function changeState($t, loadingMessageSelector, fromState, toState, page) {
+            var pos = $t.closest('.position-tab');
             var posID = pos.data('position-id');
-            var popcontent = pos.find('.popups .popup.enabling-position-profile').clone();
+            var popcontent = pos.find('.popups .popup' + loadingMessageSelector).clone();
             pos
-            .on('ajaxSuccessPost', function (event, data) {
-                if (data && data.Code == 0) {
-                    pos.find('.position-state.on-off-switch')
-                    .removeClass('off')
-                    .addClass('on');
+            .on('ajaxSuccessPost', function (event, data, t, j, ctx) {
+                if (data && data.Code > 100) {
+                    if (data.Code == 101) {
+                        pos.find('.position-state.on-off-switch')
+                        .removeClass(fromState)
+                        .addClass(toState);
+                    } else {
+                        // Show message:
+                        ctx.autoUnblockLoading = false;
+                        var msg = $('<div class="info"/>').append(data.Result.Message);
+                        smoothBoxBlock(msg, pos, 'position-state-change', { closable: true, center: false, autofocus: false });
+                    }
                 }
             })
             .reload({
-                url: LcUrl.LangPath + 'Dashboard/$ReactivatePosition/?PositionID=' + posID,
+                url: LcUrl.LangPath + 'Dashboard/' + page + '/?PositionID=' + posID,
+                autofocus: false,
                 loading: {
                     message: popcontent
                 }
             });
+        }
+
+        $('.dashboard').on('click', '.position-state.on-off-switch.off', function () {
+            changeState($(this), '.enabling-position-profile',
+                'off', 'on',
+                '$ReactivatePosition');
+        })
+        .on('click', '.position-state.on-off-switch.on', function () {
+            changeState($(this), '.disabling-position-profile',
+                'on', 'off',
+                '$DeactivatePosition');
         });
     })();
 

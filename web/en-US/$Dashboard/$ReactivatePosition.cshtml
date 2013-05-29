@@ -25,7 +25,7 @@
             // If the status is 1 'public profile', success!
             if (newStatusID == 1) {
                 if (Request.IsAjaxRequest()) {
-                    LcHelpers.ReturnJsonResult(0, "LJDI: Position reactivated");
+                    LcHelpers.ReturnJsonResult(101);
                 }
             } else {
                 // It is Not activated still, required alerts are pending, back to the original
@@ -37,7 +37,7 @@
                 if (Request.IsAjaxRequest()) {
                     // Notify about pending alerts:
                     var alerts = LcData.GetActiveRequiredUserAlertsCount(u.UserID, positionID);
-                    LcHelpers.ReturnJsonResult(7, new {
+                    LcHelpers.ReturnJsonResult(102, new {
                         AlertsRequired = alerts,
                         Message = String.Format(alertsMsg, alerts, LcUrl.LangPath + "Dashboard/Alerts/")
                     });
@@ -46,7 +46,7 @@
         }
     } else {
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(7, "LJDI: Impossible to reactivate position.");
+            LcHelpers.ReturnJsonResult(103, new { Message = "LJDI: Impossible to reactivate position." });
         }
     }
     if (!Request.IsAjaxRequest()) {

@@ -137,6 +137,7 @@ $.fn.reload = function (newurl, onload) {
         autofocus: true,
         loading: {
             lockElement: true,
+            lockOptions: {},
             message: null,
             showLoadingIndicator: true
         }
@@ -189,7 +190,9 @@ $.fn.reload = function (newurl, onload) {
                     var w = fake.width();
                     fake.detach();
                     // Locking:
-                    smoothBoxBlock(loadingcontent, $t, options.loading.message ? 'custom-loading' : 'loading', { autofocus: options.autofocus, width: w });
+                    options.loading.lockOptions.autofocus = options.autofocus;
+                    options.loading.lockOptions.width = w;
+                    smoothBoxBlock(loadingcontent, $t, options.loading.message ? 'custom-loading' : 'loading', options.loading.lockOptions);
                     //$t.block(loadingBlock);
                 }, gLoadingRetard)
                 : null;
@@ -1138,7 +1141,7 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:
-            ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
+            ctx.form.trigger('ajaxSuccessPost', [data, text, jx, ctx]);
         } else { // data.Code < 0
             // There is an error code.
 

@@ -415,6 +415,9 @@ form#personal li label{
     top: 10px;
     cursor: pointer;
 }
+.smooth-box-block-overlay.position-state-change .smooth-box-block-element {
+    margin-top: 36px;
+}
 /*.position-state div {
     cursor: pointer;
 }*/
