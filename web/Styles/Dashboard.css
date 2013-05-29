@@ -415,14 +415,22 @@ form#personal li label{
 }*/
 .delete-position {
     position: absolute;
-    right: 91px;
-    top: 10px;
+    right: 20px;
+    top: 30px;
 }
 .delete-position a {
-    text-decoration: none;
+    text-decoration: underline;
     color: #AE637B;
     font-size: 0.9em;
 }
+/* We have delete-position under the on-off button, we need
+   move the top content on the tab to have space for it,
+   replacing the general rule for position tabs only:
+*/
+.dashboard .folders > .tab-body.position-tab {
+    padding-top: 56px;
+}
+
 /** Form: Positions - Services **/
 .dashboard .position-intro textarea {
     -moz-box-sizing: border-box;
