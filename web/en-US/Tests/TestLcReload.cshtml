@@ -1,0 +1,53 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+}
+<div id="reloadExample">
+    <button>Reloadme!</button>
+</div>
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        function testA(onload) {
+            $('#reloadExample').reload(LcUrl.LangPath + 'Tests/DelayedTest/?ms=3000&type=html&text=Testing+JS+LcReload+A', onload);
+        }
+        function testB(onload) {
+            $('#reloadExample').reload({
+                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=3000&type=html&text=Testing+JS+LcReload+B',
+                loading: {
+                    message: 'Loading..'
+                },
+                complete: onload
+            });
+        }
+        function testC(onload) {
+            $('#reloadExample').reload({
+                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=20000&type=html&text=Testing+JS+LcReload+C',
+                loading: {
+                    message: 'Loading loooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnngggggggggggggg..',
+                    showLoadingIndicator: false
+                },
+                complete: onload
+            });
+        }
+
+        function testD(onload) {
+            $('#reloadExample').reload({
+                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=3000&type=html&text=Testing+JS+LcReload+D',
+                loading: {
+                    lockElement: false
+                },
+                complete: onload
+            });
+        }
+
+        $('#reloadExample button').on('click', function () {
+            var list = [testA, testB, testC, testD];
+            function next() {
+                if (list.length)
+                    list.shift()(next);
+            }
+            next();
+        });
+    });
+</script>

@@ -1329,8 +1329,16 @@ table .number{
     -webkit-box-shadow: 0 20px 20px 0 #868686;
 }
 .smooth-box-block-overlay.loading .smooth-box-block-element {
-    width: 50px;
+    min-width: 50px;
     margin: 20px auto;
+}
+.smooth-box-block-overlay.custom-loading .smooth-box-block-element {
+    margin: 14px auto;
+    max-width: 66%;
+    overflow: auto;
+}
+.smooth-box-block-overlay.custom-loading .smooth-box-block-element .loading-message {
+    margin: 0 0 1.5em 0;
 }
 /* Content */
 .blockUI h1{

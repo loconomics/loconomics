@@ -134,7 +134,12 @@ $.fn.reload = function (newurl, onload) {
     var options = {
         url: newurl,
         complete: onload,
-        autofocus: true
+        autofocus: true,
+        loading: {
+            lockElement: true,
+            message: null,
+            showLoadingIndicator: true
+        }
     };
     // If options object is passed as unique parameter
     if (arguments.length == 1 && $.isPlainObject(arguments[0])) {
@@ -149,7 +154,7 @@ $.fn.reload = function (newurl, onload) {
 
         if (options.url) {
             if ($.isFunction(options.url))
-                // Function params: currentReloadUrl, defaultReloadUrl
+            // Function params: currentReloadUrl, defaultReloadUrl
                 $t.data('source-url', $.proxy(options.url, this)($t.data('source-url'), $t.attr('data-source-url')));
             else
                 $t.data('source-url', options.url);
@@ -160,7 +165,7 @@ $.fn.reload = function (newurl, onload) {
         var jq = $t.data('isReloading');
         if (jq) {
             if (jq.url == url)
-                // Is the same url, do not abort because is the same result being retrieved
+            // Is the same url, do not abort because is the same result being retrieved
                 return;
             else
                 jq.abort();
@@ -173,10 +178,21 @@ $.fn.reload = function (newurl, onload) {
 
         if (url) {
             // Loading, with retard
-            var loadingtimer = setTimeout(function () {
-                smoothBoxBlock(loadingBlock.message, $t, 'loading', { autofocus: options.autofocus });
-                //$t.block(loadingBlock);
-            }, gLoadingRetard);
+            var loadingtimer = options.loading.lockElement ?
+                setTimeout(function () {
+                    var loadingcontent = $(
+                        (options.loading.message ? '<div class="loading-message">' + options.loading.message + '</div>' : '') +
+                        (options.loading.showLoadingIndicator ? loadingBlock.message : ''));
+                    // 'double buffer': fake temp parent element to preload image and to get real message width:
+                    var fake = $('<div/>').append(loadingcontent);
+                    fake.css({ position: 'absolute', left: -99999 }).appendTo('body');
+                    var w = fake.width();
+                    fake.detach();
+                    // Locking:
+                    smoothBoxBlock(loadingcontent, $t, options.loading.message ? 'custom-loading' : 'loading', { autofocus: options.autofocus, width: w });
+                    //$t.block(loadingBlock);
+                }, gLoadingRetard)
+                : null;
             var ctx = {
                 form: $t,
                 box: $t,
@@ -1461,7 +1477,8 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
             effect: 'fade'
         },
         autofocus: true,
-        autofocusOptions: { marginTop: 60 }
+        autofocusOptions: { marginTop: 60 },
+        width: 'auto'
     }, options);
 
     contentBox = $(contentBox);
@@ -1515,6 +1532,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         .on('click', '.close-action', function () { smoothBoxBlock(null, blocked, null, box.data('modal-box-options')); return false; })
         .data('_close-action-added', true);
     boxc.append(contentBox);
+    boxc.width(options.width);
     box.css('position', 'absolute');
     if (boxInsideBlocked) {
         // Box positioning setup when inside the blocked element:

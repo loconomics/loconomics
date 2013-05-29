@@ -20,6 +20,15 @@
                 }
                 </text>
                 break;
+            case "html":
+                <div class="delayedTest">
+                    @(Request["text"] ?? "Delayed test")
+                </div>
+                break;
+            case "text":
+                Response.ContentType = "text/plain";
+                @(Request["text"] ?? "Delayed test")
+                break;
         }
     }
 }
