@@ -310,19 +310,6 @@
         <option @LcHelpers.IsSelected(selectedHour, thisvalue) value="@thisvalue">@((new DateTime(hour.Ticks)).ToShortTimeString())</option>
     }
 }
-@helper printLongTime(TimeSpan duration){
-    if (duration.Days > 1) {
-        @(duration.Days + " days, ")
-    } else if (duration.Days == 1) {
-        @("1 day, ")
-    }
-    if (duration.Hours > 1) {
-        @(duration.Hours + " hours, ")
-    } else if (duration.Hours == 1) {
-        @("1 hour, ")
-    }
-    @((duration.Minutes) + " minutes.")
-}
 
 <h2>Schedule</h2>
 <p class="info">
@@ -337,7 +324,7 @@
     <fieldset class="select-week">
         <input id="showDate" class="date-pick" type="text" />
         <input id="hideDate" type="hidden" value="@showDate.Value.ToShortDateString()" name="show-date" />
-        <div id="serviceDuration">Your booking will take <strong>@printLongTime(serviceDurationTime)</strong></div>
+        <div id="serviceDuration">Your booking will take <strong>@LcHelpers.TimeToSmartLongString(serviceDurationTime)</strong></div>
 
         @RenderPage("$ScheduleCalendarElements.cshtml", new { Element = "WeekDaySelector", Date = showDate })
 

@@ -71,7 +71,7 @@
                         {
                             summaryFormat = config.SummaryFormat;
                         }
-                        @String.Format(summaryFormat, pak.ServiceDuration, pak.NumberOfSessions, inpersonphone)
+                        @String.Format(summaryFormat, LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration)), pak.NumberOfSessions, inpersonphone)
                     }
                     <div class="provider-package-price">
                         @if (editable)

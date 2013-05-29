@@ -271,10 +271,10 @@ public static class LcPricingModel
                 SuccessOnDelete = "Package removed succesfully",
                 SuccessOnSave = "Add/Edit packages",
 
-                SummaryFormat = "{0} minutes",
-                SummaryFormatMultipleSessions = "{1} appointments - {0} minutes each",
-                NameAndSummaryFormat = "{0}, {1} minutes",
-                NameAndSummaryFormatMultipleSessions = "{0}, {2} appointments - {1} minutes each",
+                SummaryFormat = "{0}",
+                SummaryFormatMultipleSessions = "{1} appointments - {0} each",
+                NameAndSummaryFormat = "{0}, {1}",
+                NameAndSummaryFormatMultipleSessions = "{0}, {2} appointments - {1} each",
 
                 IncludeServiceAttributes = true,
 
@@ -304,10 +304,10 @@ public static class LcPricingModel
                 SuccessOnDelete = "Add-on removed succesfully",
                 SuccessOnSave = "Add/Edit add-ons",
 
-                SummaryFormat = "{0} minutes",
+                SummaryFormat = "{0}",
                 // Left a white space to avoid the default SummaryFormat be used instead:
                 SummaryFormatNoDuration = " ",
-                NameAndSummaryFormat = "{0}, {1} minutes",
+                NameAndSummaryFormat = "{0}, {1}",
                 NameAndSummaryFormatNoDuration = "{0}",
 
                 IncludeServiceAttributes = false,
@@ -345,8 +345,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Estimate removed succesfully",
                 SuccessOnSave = "Add/Edit estimates",
 
-                SummaryFormat = "{0} minutes ({2} estimate)",
-                NameAndSummaryFormat = "{0}, {1} minutes ({3} estimation)",
+                SummaryFormat = "{0} ({2} estimate)",
+                NameAndSummaryFormat = "{0}, {1} ({3} estimation)",
 
                 LearnMoreLabel = "Learn more about estimate pricing",
                 LearnMoreText =  "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this).",
@@ -391,8 +391,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Consultation removed succesfully",
                 SuccessOnSave = "Add/Edit consultations",
 
-                SummaryFormat = "{0} minutes ({2} consultation)",
-                NameAndSummaryFormat = "{0}, {1} minutes ({3} consultation)",
+                SummaryFormat = "{0} ({2} consultation)",
+                NameAndSummaryFormat = "{0}, {1} ({3} consultation)",
 
                 LearnMoreLabel = "Learn more about consultation pricing",
                 LearnMoreText = "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).",
@@ -428,8 +428,8 @@ public static class LcPricingModel
                 SuccessOnDelete = "Service removed succesfully",
                 SuccessOnSave = "Add/Edit services",
 
-                SummaryFormat = "{0} minutes",
-                NameAndSummaryFormat = "{0}, {1} minutes",
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
 
                 IncludeServiceAttributes = true,
 

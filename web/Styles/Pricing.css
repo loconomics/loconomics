@@ -12,6 +12,7 @@
     margin: 0 !important;
     font-size: 1.5em !important;
     color: #00989A !important;
+    max-width: 500px;
 }
 .provider-package h5 {
     color: #6C6C6C;
@@ -45,7 +46,6 @@
 .view-panel .provider-package .provider-package-service-summary,
 .pricing-type-packages-list .provider-package .provider-package-service-summary {
     color: #00989A;
-    position: relative;
     font-size: 1.3em;
 }
 .profile .view-panel .provider-package .provider-package-service-summary {
@@ -53,13 +53,12 @@
 }
 .view-panel .provider-package .provider-package-service-summary .provider-package-price,
 .pricing-type-packages-list .provider-package .provider-package-service-summary .provider-package-price {
-    position: absolute;
-    top: 0;
-    right: 0;
+    float: right;
 }
 .profile .view-panel .provider-package .provider-package-service-summary .provider-package-price {
     right: 10px;
     top: 10px;
+    position: absolute;
 }
 
 .view-panel .provider-package .addon-price,
