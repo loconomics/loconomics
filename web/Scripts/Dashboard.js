@@ -60,10 +60,10 @@ $(document).ready(function () {
     */
     (function () {
 
-        function changeState($t, loadingMessageSelector, fromState, toState, page) {
+        function changeState($t, loadingMessageClass, fromState, toState, page) {
             var pos = $t.closest('.position-tab');
             var posID = pos.data('position-id');
-            var popcontent = pos.find('.popups .popup' + loadingMessageSelector).clone();
+            var popcontent = pos.find('.popups .popup' + loadingMessageClass).clone();
             pos
             .on('ajaxSuccessPost', function (event, data, t, j, ctx) {
                 if (data && data.Code > 100) {

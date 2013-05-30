@@ -1332,6 +1332,11 @@ table .number{
     min-width: 50px;
     margin: 20px auto;
 }
+.smooth-box-block-overlay .smooth-box-block-element .loading-indicator {
+    text-align: center !important;
+    margin: auto !important;
+    display: block !important;
+}
 .smooth-box-block-overlay.custom-loading .smooth-box-block-element {
     margin: 14px auto;
     max-width: 66%;

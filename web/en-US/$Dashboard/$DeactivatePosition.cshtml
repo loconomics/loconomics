@@ -10,7 +10,7 @@
             db.Execute("UPDATE UserProfilePositions SET StatusID = 3 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
         }
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(101);
+            LcHelpers.ReturnJsonResult(101, null);
         }
     } else {
         if (Request.IsAjaxRequest()) {

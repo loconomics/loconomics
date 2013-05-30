@@ -3,7 +3,7 @@
 var LC = window['LC'] || {};
 
 /* Generic blockUI options sets */
-var loadingBlock = { message: '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
+var loadingBlock = { message: '<img class="loading-indicator" src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
@@ -181,18 +181,17 @@ $.fn.reload = function (newurl, onload) {
             // Loading, with retard
             var loadingtimer = options.loading.lockElement ?
                 setTimeout(function () {
-                    var loadingcontent = $(
-                        (options.loading.message ? '<div class="loading-message">' + options.loading.message + '</div>' : '') +
-                        (options.loading.showLoadingIndicator ? loadingBlock.message : ''));
-                    // 'double buffer': fake temp parent element to preload image and to get real message width:
-                    var fake = $('<div/>').append(loadingcontent);
-                    fake.css({ position: 'absolute', left: -99999 }).appendTo('body');
-                    var w = fake.width();
-                    fake.detach();
+                    // Creating content using a fake temp parent element to preload image and to get real message width:
+                    var loadingcontent = $('<div/>')
+                    .append(options.loading.message ? $('<div class="loading-message"/>').append(options.loading.message) : null)
+                    .append(options.loading.showLoadingIndicator ? loadingBlock.message : null);
+                    loadingcontent.css({ position: 'absolute', left: -99999 }).appendTo('body');
+                    var w = loadingcontent.width();
+                    loadingcontent.detach();
                     // Locking:
                     options.loading.lockOptions.autofocus = options.autofocus;
                     options.loading.lockOptions.width = w;
-                    smoothBoxBlock(loadingcontent, $t, options.loading.message ? 'custom-loading' : 'loading', options.loading.lockOptions);
+                    smoothBoxBlock(loadingcontent.html(), $t, options.loading.message ? 'custom-loading' : 'loading', options.loading.lockOptions);
                     //$t.block(loadingBlock);
                 }, gLoadingRetard)
                 : null;

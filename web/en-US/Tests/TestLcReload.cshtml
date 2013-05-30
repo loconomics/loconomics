@@ -13,9 +13,9 @@
         }
         function testB(onload) {
             $('#reloadExample').reload({
-                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=3000&type=html&text=Testing+JS+LcReload+B',
+                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=10000&type=html&text=Testing+JS+LcReload+B',
                 loading: {
-                    message: 'Loading..'
+                    message: 'Loading, please wait...'
                 },
                 complete: onload
             });
@@ -33,7 +33,7 @@
 
         function testD(onload) {
             $('#reloadExample').reload({
-                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=3000&type=html&text=Testing+JS+LcReload+D',
+                url: LcUrl.LangPath + 'Tests/DelayedTest/?ms=1000&type=html&text=Testing+JS+LcReload+D',
                 loading: {
                     lockElement: false
                 },

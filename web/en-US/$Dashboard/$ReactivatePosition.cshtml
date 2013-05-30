@@ -25,7 +25,7 @@
             // If the status is 1 'public profile', success!
             if (newStatusID == 1) {
                 if (Request.IsAjaxRequest()) {
-                    LcHelpers.ReturnJsonResult(101);
+                    LcHelpers.ReturnJsonResult(101, null);
                 }
             } else {
                 // It is Not activated still, required alerts are pending, back to the original
