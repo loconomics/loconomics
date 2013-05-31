@@ -63,7 +63,6 @@ $(document).ready(function () {
         function changeState($t, loadingMessageClass, fromState, toState, page) {
             var pos = $t.closest('.position-tab');
             var posID = pos.data('position-id');
-            var popcontent = pos.find('.popups .popup' + loadingMessageClass).clone();
             pos
             .on('ajaxSuccessPost', function (event, data, t, j, ctx) {
                 if (data && data.Code > 100) {
@@ -81,10 +80,7 @@ $(document).ready(function () {
             })
             .reload({
                 url: LcUrl.LangPath + 'Dashboard/' + page + '/?PositionID=' + posID,
-                autofocus: false,
-                loading: {
-                    message: popcontent
-                }
+                autofocus: false
             });
         }
 
