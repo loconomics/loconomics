@@ -50,10 +50,7 @@
     }
     if (config.DurationLabel != null) {
         Validation.Add("minutes", Validator.Integer("Duration must be a number without decimals"));
-        if (config.RequireDuration) {
-            Validation.RequireField("minutes", LcRessources.RequiredField("Duration"));
-            Validation.Add("minutes", Validator.Range(1, int.MaxValue, LcRessources.RequiredField("Duration")));
-        }
+		Validation.Add("hours", Validator.Integer("Hours must be a number without decimals"));
     }
     if (config.NumberOfSessionsLabel != null) {
         Validation.RequireField("sessions-number", LcRessources.RequiredField("Number of appointments"));
@@ -69,7 +66,7 @@
         data.Name = Request["package-name"];
         data.Description = Request["package-description"];
         data.Price = Request["price"].AsDecimal();
-        data.Duration = TimeSpan.FromMinutes(Request["minutes"].AsInt());
+        data.Duration = (TimeSpan.FromHours(Request["hours"].AsInt()) + TimeSpan.FromMinutes(Request["minutes"].AsInt()));
         data.FirstTimeClientsOnly = Request["first-time-clients-only"].AsBool();
         {
             var nses = Request["sessions-number"].AsInt(1);
@@ -97,6 +94,9 @@
         }
         if (config.PriceRateUnitLabel != null && !Request["no-price-rate"].AsBool() && String.IsNullOrWhiteSpace(data.PriceRateUnit)) {
             ModelState.AddError("price-rate-unit", config.PriceRateUnitIsRequiredValidationError);
+        }
+		if (config.RequireDuration && data.Duration.TotalMinutes < 1) {
+            ModelState.AddError("minutes", LcRessources.RequiredField("Duration"));
         }
         
         if (Validation.IsValid() && ModelState.IsValid) {
@@ -351,7 +351,8 @@
         @if (config.DurationLabel != null)
         {
             <label class="package-duration">@config.DurationLabel
-                <input type="text" name="minutes" value="@(Request["minutes"] ?? data.Duration.TotalMinutes.ToString())" /> minutes
+                <input type="text" name="hours" value="@(Request["hours"] ?? (data.Duration.Hours + data.Duration.Days * 24).ToString())" /> hours
+				<input type="text" name="minutes" value="@(Request["minutes"] ?? data.Duration.Minutes.ToString())" /> minutes
             </label>
         }
         @if (config.InPersonPhoneLabel != null){
