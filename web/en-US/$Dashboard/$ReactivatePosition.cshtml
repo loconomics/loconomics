@@ -46,7 +46,7 @@
         }
     } else {
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(103, new { Message = "LJDI: Impossible to reactivate position." });
+            LcHelpers.ReturnJsonResult(103, new { Message = "We're sorry, we're unable to reactivate this position.  Please contact us for help" });
         }
     }
     if (!Request.IsAjaxRequest()) {

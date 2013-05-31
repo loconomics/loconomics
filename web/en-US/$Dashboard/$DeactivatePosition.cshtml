@@ -14,7 +14,7 @@
         }
     } else {
         if (Request.IsAjaxRequest()) {
-            LcHelpers.ReturnJsonResult(103, new { Message = "LJDI: Impossible to deactivate position" });
+            LcHelpers.ReturnJsonResult(103, new { Message = "We're sorry, we're unable to remove your profile.  Please contact us for help." });
         }
     }
     if (!Request.IsAjaxRequest()) {
