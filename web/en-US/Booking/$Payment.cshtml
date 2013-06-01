@@ -4,9 +4,9 @@
 @{
     // true to testing, false to production/use braintree
     var TESTING_EMULATEBRAINTREE = false;
-    //if (!LcHelpers.InProduction) {
+    if (!LcHelpers.InProduction) {
         TESTING_EMULATEBRAINTREE = Request.Params["TESTING_EMULATEBRAINTREE"].AsBool();
-    //}
+    }
     
     var p = PageData["providerrow"] ?? LcData.UserInfo.GetUserRow(Request["providerid"].AsInt());
     var c = PageData["customerrow"] ?? LcData.UserInfo.GetUserRow();
