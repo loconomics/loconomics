@@ -1240,7 +1240,7 @@ html.js .user-verified-licenses h5 {
     display: block;
     margin: 2px 0;
 }
-.package-pricing-type .edit-panel .package-data .package-name {
+.package-pricing-type .edit-panel .package-data .package-name input {
     width: 100%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1289,6 +1289,54 @@ html.js .user-verified-licenses h5 {
 }
 .package-pricing-type .edit-panel .inperson-phone label {
     display: inline;
+}
+/* Housekeeper pricing specifics */
+.provider-average-time {
+	position: relative;
+	height: 65px;
+}
+.provider-average-time > label {
+    display: block !important;
+    margin: 0 !important;
+}
+.provider-average-time .average-label {
+	position:absolute;
+	left:36%;
+	right:36%;
+	width: auto;
+	text-align:center
+}
+.provider-average-time .below-average-label {
+    position: absolute;
+    left: 0;
+    right: 64%;
+}
+.provider-average-time .above-average-label {
+	position: absolute;
+	right: 0;
+	left: 64%;
+	text-align: right;
+}
+.housekeeper-pricing {
+    margin: 1em 0;
+}
+.housekeeper-pricing > div {
+    width: 30%;
+    margin-right: 3%;
+    display: inline-block;
+    vertical-align: top;
+}
+.housekeeper-pricing > .preview {
+    margin-right: 0;
+}
+.housekeeperservices .fs-price-rate {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    max-width: 34%;
+}
+.housekeeperservices .package-data > .package-name {
+    width: 70% !important;
 }
 
 /**** Form: Account Education ****/

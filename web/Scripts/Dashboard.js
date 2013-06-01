@@ -535,6 +535,49 @@ $(document).ready(function () {
             pr.prop('disabled', $t.prop('checked'));
         });
         $('.dashboard [name=no-price-rate]').change();
+
+        // Sliders on Housekeeper price:
+        LC.initProviderPackageSliders = function () {
+            /* Houseekeeper pricing */
+            function updateAverage($c, minutes) {
+                $c.find('[name=provider-average-time]').val(minutes);
+                minutes = parseInt(minutes);
+                $c.find('.preview .time').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
+            }
+            $(".provider-average-time-slider").each(function () {
+                var $c = $(this).closest('[data-slider-value]');
+                var average = $c.data('slider-value'),
+                    step = $c.data('slider-step') || 1;
+                if (!average) return;
+                var setup = {
+                    range: "min",
+                    value: average,
+                    min: average - 3 * step,
+                    max: average + 3 * step,
+                    step: step,
+                    slide: function (event, ui) {
+                        updateAverage($c, ui.value);
+                    }
+                };
+                var slider = $(this).slider(setup);
+                $c.find('.provider-average-time').on('click', 'label', function () {
+                    var $t = $(this);
+                    if ($t.hasClass('below-average-label'))
+                        slider.slider('value', setup.min);
+                    else if ($t.hasClass('average-label'))
+                        slider.slider('value', setup.value);
+                    else if ($t.hasClass('above-average-label'))
+                        slider.slider('value', setup.max);
+                    updateAverage($c, slider.slider('value'));
+                });
+                // Setup the input field, hidden and with initial value synchronized with slider
+                var field = $c.find('[name=provider-average-time]');
+                field.hide();
+                var currentValue = field.val() || average;
+                updateAverage($c, currentValue);
+                slider.slider('value', currentValue);
+            });
+        };
     })();
 
     /*===========================

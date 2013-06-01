@@ -56,38 +56,11 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		function smartTime(minutes) {
-			minutes = Math.floor(minutes);
-			var h = Math.floor(minutes / 60),
-				m = minutes - h * 60,
-				d = 0;
-			if (h >= 24) {
-				d = Math.floor(h / 24);
-				h = h - d * 24;
-			}
-			var r = [];
-			if (d > 1)
-				r.push(d + ' days');
-			else if (d == 1)
-				r.push('1 day');
-			if (h > 1)
-				r.push(h + ' hours');
-			else if (h == 1)
-				r.push('1 hour');
-			if (m > 1)
-				r.push(m + ' minutes');
-			else if (m == 1)
-				r.push('1 minute');
-			/*if (s > 1)
-				r.push(s + ' seconds');
-			else if (s == 1)
-				r.push('1 second');*/
-			return r.join(', ');
-		}
+		
 		$(function(){
 			function updateAverage($c, minutes) {
 				$c.find( '[name=provider-average-time]' ).val( minutes );
-				$c.find( '.smart-average-time' ).text( smartTime(minutes) );
+				$c.find( '.smart-average-time' ).text( LC.smartTime(Math.floor(minutes)) );
 			}
 			$( ".provider-average-time-slider" ).each(function(){
 				var $c = $(this).closest('[data-average-t]');
