@@ -11,6 +11,9 @@
     
     var datacontext = "availabilityevents";
 }
+<p class="setting-instructions">
+Here you can add appointments or bookings you've made outside of Loconomics to ensure we do not book you during the times that you're already busy. If you use a calendar program, it's best you sync your calendar so you don't have to enter them twice.   
+</p>
 <div class="crudl" data-crudl-context="@datacontext" data-crudl-item-id-parameter="EventID">
     <div class="edit-event crudl-editor" data-source-url="@(LcUrl.LangUrl)$Dashboard/$CalendarEditEventForm/">
         @*@RenderPage("$CalendarEditEventForm.cshtml", new { EventID = 0 })*@
