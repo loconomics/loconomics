@@ -877,6 +877,8 @@ public static partial class LcData
             packages = db.Query(@"
                 SELECT  p.ProviderPackageID
                         ,p.PricingTypeID
+                        ,p.ProviderUserID
+                        ,p.PositionID
                         ,p.ProviderPackageName As Name
                         ,p.ProviderPackageDescription As Description
                         ,p.ProviderPackagePrice As Price
@@ -886,6 +888,9 @@ public static partial class LcData
                         ,p.PriceRate
                         ,p.PriceRateUnit
                         ,p.IsPhone
+                        ,p.LanguageID
+                        ,p.CountryID
+                        ,p.Active
                 FROM    ProviderPackage As P
                          INNER JOIN
                         PricingType As PT

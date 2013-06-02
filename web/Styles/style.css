@@ -346,6 +346,12 @@ input.button:focus, button.next:focus { background: #00989a; color: #fff; }
 
 input.button{ padding-top: 2px; padding-bottom: 2px;}
 
+/** Especial additions to forms **/
+/* UI Sliders */
+.ui-slider-horizontal .ui-slider-range-min {
+    background: #E65A0F;
+}
+
 /*------------------------------
  * About icons and social links
  */

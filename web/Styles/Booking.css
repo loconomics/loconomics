@@ -111,6 +111,11 @@
 #booking-services.package-pricing .package-price {
     text-align: right;
 }
+#booking-services.package-pricing .package-extra-data {
+    display: none;
+    width: 60%;
+    margin-left: 2em;
+}
 
 /** Form: Schedule **/
 #booking-schedule{
@@ -550,6 +555,12 @@
 .booking table .package-total-price,
 .booking table .number {
     text-align: right;
+}
+.booking table .package-duration {
+    min-width: 120px;
+}
+.booking table .package-total-price {
+    min-width: 55px;
 }
 
 /* title */

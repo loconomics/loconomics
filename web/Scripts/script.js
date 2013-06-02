@@ -702,6 +702,48 @@ LC.dateToInterchangleString = function (date) {
         d = '0' + d;
     return date.getUTCFullYear().toString() + '-' + m + '-' + d;
 };
+LC.timeSpan = function(days, hours, minutes, seconds, milliseconds) {
+    this.days = days;
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+    this.milliseconds = milliseconds;
+};
+LC.timeSpan.fromMinutes = function(minutes) {
+    minutes = Math.floor(minutes);
+	var h = Math.floor(minutes / 60),
+		m = minutes - h * 60,
+		d = 0;
+	if (h >= 24) {
+		d = Math.floor(h / 24);
+		h = h - d * 24;
+	}
+    return new LC.timeSpan(d, h, m, 0, 0);
+};
+LC.smartTime = function(time) {
+	var r = [];
+	if (time.days > 1)
+		r.push(time.days + ' days');
+	else if (time.days == 1)
+		r.push('1 day');
+	if (time.hours > 1)
+		r.push(time.hours + ' hours');
+	else if (time.hours == 1)
+		r.push('1 hour');
+	if (time.minutes > 1)
+		r.push(time.minutes + ' minutes');
+	else if (time.minutes == 1)
+		r.push('1 minute');
+	if (time.seconds > 1)
+		r.push(time.seconds + ' seconds');
+	else if (time.seconds == 1)
+	    r.push('1 second');
+	if (time.milliseconds > 1)
+	    r.push(time.milliseconds + ' milliseconds');
+	else if (time.milliseconds == 1)
+	    r.push('1 millisecond');
+	return r.join(', ');
+}
 /* Focus the first element in the document (or in @container)
     with the html5 attribute 'autofocus' (or alternative @cssSelector).
     It's fine as a polyfill and for ajax loaded content that will not
@@ -1620,7 +1662,7 @@ function lcSetupCalculateTableItemsTotals() {
             LC.setMoneyNumber(LC.getMoneyNumber(ip) * LC.getMoneyNumber(iq, 1), it);
             tr.trigger('lcCalculatedItemTotal', tr);
         }
-        $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
+        $(this).find('.calculate-item-price, .calculate-item-quantity').on('change', calculateRow);
         $(this).find('tr').each(calculateRow);
         $(this).data('calculate-items-totals-initializated', true);
     });

@@ -249,7 +249,90 @@ LC.initScheduleStep = function () {
     LC.setupServiceMap();
 };
 
+// Sliders on Housekeeper price:
+LC.initCustomerPackageSliders = function () {
+    /* Houseekeeper pricing */
+    function updateAverage($c, minutes) {
+        // Update input value and trigger change event to notify standard listeners
+        $c.find('input').val(minutes).change();
+        // Showing time in a smart way to the user
+        minutes = parseInt(minutes);
+        $c.find('.preview .time').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
+    }
+    function calculateHousekeeperPackage($sliderContent) {
+        // Look for the housekeeper pricing container for this package
+        // that contains all fields for calculation
+        var calcContext = $sliderContent.closest('.housekeeper-pricing');
+        // Get the package container, where contents to be update are
+        var pak = calcContext.closest('tr');
+        // Calculation formula for housekeeper pricing
+        var formula = function (numbedrooms, numbathrooms) {
+            var formulaA = parseFloat(calcContext.data('formula-a')),
+                formulaB = parseFloat(calcContext.data('formula-b')),
+                formulaC = parseFloat(calcContext.data('formula-c')),
+                rate = parseFloat(calcContext.data('provider-rate'));
+            // It returns a time in float minutes
+            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
+        };
+        // Getting var-values from form and calculating
+        var numbedrooms = calcContext.find('[name="bedrooms-number"]').val(),
+            numbathrooms = calcContext.find('[name="bathrooms-number"]').val();
+        var minutes = Math.round(formula(numbedrooms, numbathrooms));
+        // Updating user-viewed time, show it in the smart way
+        pak.find('.package-duration').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
+        // Recalculating price with new time, using the package hourly-rate
+        var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
+        var price = Math.round(hourlyRate * (minutes / 60) * 100) / 100;
+        // Set new item-price and trigger a change event to allow the items-fees calculation
+        // system do their job and showing the total price
+        LC.setMoneyNumber(price, pak.find('.calculate-item-price'));
+        pak.find('.calculate-item-price').trigger('change');
+    }
+    $(".customer-slider").each(function () {
+        var $c = $(this);
+        // Creating sliders
+        var average = $c.data('slider-value'),
+            step = $c.data('slider-step') || 1;
+        if (!average) return;
+        var slider = $('<div class="slider"/>').appendTo($c);
+        var setup = {
+            range: "min",
+            value: average,
+            min: average - 3 * step,
+            max: average + 3 * step,
+            step: step,
+            slide: function (event, ui) {
+                updateAverage($c, ui.value);
+            }
+        };
+        slider.slider(setup);
+        // Setup the input field, hidden and with initial value synchronized with slider
+        var field = $c.find('input');
+        field.hide();
+        var currentValue = field.val() || average;
+        updateAverage($c, currentValue);
+        slider.slider('value', currentValue);
+
+        // Perform calculation of time-prices for the package on
+        // init and on variables changes
+        calculateHousekeeperPackage($c);
+        $c.on('change', 'input', function () { calculateHousekeeperPackage($c) });
+
+        // Switching sliders visualization on active package
+        $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {
+            var $t = $(this),
+                row = $t.closest('tr');
+            if ($t.is(':checked'))
+                row.find('.package-extra-data').slideDown('fast');
+            else
+                row.find('.package-extra-data').slideUp('fast');
+        }).change();
+    });
+};
+
 $(document).ready(function () {
+    LC.initCustomerPackageSliders();
+
     // Setup Schedule step:
     $('#schedule').on('endLoadWizardStep', function () {
         // Getting the tab content for payment that is not loaded at the start

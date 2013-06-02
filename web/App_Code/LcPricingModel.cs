@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using WebMatrix.Data;
 using System.Web;
 using System.Web.WebPages;
+using System.Web.Helpers;
+using System.Text;
 
 /// <summary>
 /// Models for LcPricingView views
@@ -21,6 +23,8 @@ public static class LcPricingModel
     public class PricingModelData {
         public bool Success = false;
         public dynamic Data = null;
+        public dynamic ProviderInput = null;
+        public dynamic CustomerInput = null;
         public PricingSummaryData SummaryTotal = new PricingSummaryData();
     }
 
@@ -30,6 +34,9 @@ public static class LcPricingModel
         public decimal FeePrice = 0M;
         public decimal TotalPrice = 0M;
         public decimal PFeePrice = 0M;
+        /// <summary>
+        /// Duration in Hours
+        /// </summary>
         public decimal ServiceDuration = 0M;
         public decimal FirstSessionDuration = 0M;
         public string Concept = "";
@@ -137,6 +144,137 @@ public static class LcPricingModel
     #endregion
 
     #region Package Base
+    public interface PackageMod
+    {
+        /// <summary>
+        /// It calculates the package duration and price (maybe other parameters as modelData.ProviderInput) before pass
+        /// the standard calculation of total price for pricingestimate.
+        /// Thats need for packages with special requirements on calculation based on additional
+        /// parameters with not a package price or package duration.
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="ModelState"></param>
+        void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
+        string GetCustomerHtml(PackageBaseData package, dynamic fee);
+        string GetProviderHtml(PackageBaseData package);
+        bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState);
+        void SaveProviderData(PackageBaseData package, Database db);
+    }
+    public class PackageModHousekeeper : PackageMod
+    {
+        double formulaA, formulaB, formulaC;
+        string type;
+        int sliderStep = 20;
+        public PackageModHousekeeper(string type)
+        {
+            this.type = type;
+            switch (type)
+            {
+                case "light":
+                    formulaA = 20.4;
+                    formulaB = 30.6;
+                    formulaC = 68.34;
+                    break;
+                case "routine":
+                    formulaA = 24;
+                    formulaB = 36;
+                    formulaC = 80.4;
+                    break;
+                case "deep":
+                    formulaA = 48;
+                    formulaB = 72;
+                    formulaC = 160.8;
+                    break;
+            }
+        }
+        /// <summary>
+        /// Calculate and returns the time in minutes for the given values
+        /// </summary>
+        /// <param name="numbedrooms"></param>
+        /// <param name="numbathrooms"></param>
+        /// <returns></returns>
+        private double ApplyFormula(int numbedrooms = 2, int numbathrooms = 2)
+        {
+            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
+        }
+        #region Customer form part
+        public void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+        {
+            // Get customer input
+            var nbeds = Request["bedrooms-number"].AsInt();
+            var nbaths = Request["bathrooms-number"].AsInt();
+            // TODO get provider input
+            var providerRate = .8; // 140.34 / formulaAverageT;
+            // Apply formula, changed by the providerRate (variation from the average)
+            var duration = ApplyFormula(nbeds, nbaths) * providerRate;
+            // Get HourlyRate for client-side calculation, NO FEES, they are calculated
+            // later (by the CalculatePackage, just after call this function).
+            var hourlyRate = (decimal)package.PriceRate;
+            // Change package with the information:
+            package.Duration = ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromMinutes(duration));
+            package.Price = (decimal)package.Duration.TotalHours * hourlyRate;
+            modelData.ProviderInput = providerRate;
+            modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
+        }
+        public string GetCustomerHtml(PackageBaseData package, dynamic fee)
+        {
+            // TODO get provider input
+            var providerRate = .8; // 140.34 / formulaAverageT;
+            // Get HourlyRate for client-side calculation, WITH FEES
+            var hourlyRate = package.PriceRate + LcPricingModel.ApplyFee(fee, package.PriceRate ?? 0);
+
+            var s = new StringBuilder();
+
+            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-provider-rate='{4}'>", formulaA, formulaB, formulaC, hourlyRate, providerRate);
+            s.Append(@"<div>Help us determine an accurate 
+                <span class='has-tooltip' title='LJDI: This is an estimate, you will need review it with the provider.'>
+                price estimate</span></div>");
+
+            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number' type='text' /></label></div>");
+            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number' type='text' /></label></div>");
+            s.Append("</div>");
+
+            return s.ToString();
+        }
+        #endregion
+        #region Provider form part
+        public string GetProviderHtml(PackageBaseData package)
+        {
+            var s = new StringBuilder();
+
+            // TODO Get saved value for provider average-ratio
+            var ratio = 0.76517553129036045555946929670072;
+            // Calculate time for the ratio
+            var time = ratio * ApplyFormula();
+
+            s.AppendFormat("<div class='housekeeper-pricing' data-slider-value='{0}' data-slider-step='{1}'>", ApplyFormula(), sliderStep);
+            s.AppendFormat("<div class='label'>Average time to {0} clean a 2 bedroom/2 bathroom home: <span class='note has-tooltip' title='LJDI: To create an estimate pricing for your customers.'>Why are we asking this?</span></div>", type);
+            s.AppendFormat(@"<div class='input'><input name='provider-average-time' type='text' value='{0}' />
+                    <div class='provider-average-time'>
+			            <div class='provider-average-time-slider'></div>
+			            <label class='below-average-label'>Below average</label>
+			            <label class='average-label'>Average</label>
+			            <label class='above-average-label'>Above average</label>
+		            </div>
+                </div>", time);
+            s.Append("<div class='preview'><span class='time'></span> (approximately)</div>");
+            s.Append("</div>");
+
+            return s.ToString();
+        }
+        public bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState)
+        {
+            // TODO
+            return true;
+        }
+        public void SaveProviderData(PackageBaseData package, Database db)
+        {
+            var provTime = Request["provider-average-time"].AsInt();
+            var provRate = provTime / ApplyFormula();
+            // TODO Save rate on DB
+        }
+        #endregion
+    }
     public class PackageBaseConfig
     {
         #region About Pricing Type
@@ -174,6 +312,7 @@ public static class LcPricingModel
         #endregion
         #region Form Texts
         public string NamePlaceHolder;
+        public string SuggestedName;
         public string DurationLabel;
         public string PriceLabel;
         public string PriceNote;
@@ -184,6 +323,10 @@ public static class LcPricingModel
         public string NoPriceRateLabel;
         public string NumberOfSessionsLabel;
         public string InPersonPhoneLabel;
+        /// <summary>
+        /// A CSS class name for the element containing the pricing details
+        /// </summary>
+        public string ClassName;
         #endregion
         #region Action And Validation Texts
         public string SuccessOnDelete;
@@ -242,6 +385,9 @@ public static class LcPricingModel
         public string NameAndSummaryFormatMultipleSessions;
         public string NameAndSummaryFormatNoDuration;
         public string NameAndSummaryFormatMultipleSessionsNoDuration;
+        #endregion
+        #region Modification from the base package pricing and out of common things
+        public PackageMod Mod;
         #endregion
     }
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
@@ -436,6 +582,39 @@ public static class LcPricingModel
                 LearnMoreLabel = "Learn more about service pricing",
                 LearnMoreText = "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments.",
             }
+        },
+        // Light Cleaning Service Pricing Type
+        {
+            9,
+            new PackageBaseConfig {
+                PricingTypeID = 6,
+                SingularName = "Light cleaning service",
+                PluralName = "Light cleaning services",
+                SlugName = "lightcleaningservice",
+                AddNewLabel = "Add light cleaning services",
+                ProviderDescription = "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique.",
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Light cleaning services",
+                SuggestedName = "Light cleaning services",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique.",
+                PriceRateQuantityLabel = "Hourly rate",
+                PriceRateIsRequiredValidationError = "You must set your hourly rate",
+
+                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnSave = "Add/Edit pricings",
+
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about light cleaning services pricing",
+                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+
+                ClassName = "housekeeperservices lightcleaningservices",
+                Mod = new PackageModHousekeeper("light")
+            }
         }
     };
     public class PackageBaseData
@@ -457,6 +636,33 @@ public static class LcPricingModel
         public int CountryID;
         public bool Active;
         public List<int> ServiceAttributes = new List<int>();
+        public PackageBaseData()
+        {
+        }
+        /// <summary>
+        /// Create a package object using a database
+        /// dynamic record
+        /// </summary>
+        /// <param name="package"></param>
+        public PackageBaseData(dynamic package)
+        {
+            ID = package.ProviderPackageID;
+            PricingTypeID = package.PricingTypeID;
+            ProviderUserID = package.ProviderUserID;
+            PositionID = package.PositionID;
+            Name = package.Name;
+            Description = package.Description;
+            Price = package.Price;
+            Duration = TimeSpan.FromMinutes(package.ServiceDuration);
+            FirstTimeClientsOnly = package.FirstTimeClientsOnly;
+            NumberOfSessions = package.NumberOfSessions;
+            PriceRate = package.PriceRate;
+            PriceRateUnit = package.PriceRateUnit;
+            IsPhone = package.IsPhone;
+            LanguageID = package.LanguageID;
+            CountryID = package.CountryID;
+            Active = package.Active;
+        }
     }
     #endregion
 
@@ -796,7 +1002,7 @@ public static class LcPricingModel
 
         if (ModelState.IsValid)
         {
-            dynamic thePackage = null;
+            PackageBaseData thePackage = null;
             // Get database data for selected package
             //var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
             var packageID = selectedPackage.AsInt();
@@ -807,12 +1013,17 @@ public static class LcPricingModel
             }
             else
             {
-                thePackage = packages.PackagesByID[selectedPackage.AsInt()];
+                thePackage = new PackageBaseData(packages.PackagesByID[selectedPackage.AsInt()]);
+                var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)thePackage.PricingTypeID];
 
                 // Calculate time and price required for selected package
-
-                // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
-                decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
+                if (config.Mod != null)
+                {
+                    // Applying calculation from the PackageMod
+                    config.Mod.CalculateCustomerData(thePackage, fee, modelData, ModelState);
+                }
+                // We get the time of one service - one session:
+                decimal sessionTimeInHours = Math.Round((decimal)thePackage.Duration.TotalHours, 2);
                 modelData.SummaryTotal.FirstSessionDuration += sessionTimeInHours;
 
                 int sesNumber = thePackage.NumberOfSessions < 1 ? 1 : thePackage.NumberOfSessions;
@@ -829,8 +1040,16 @@ public static class LcPricingModel
                 // Save in session the information that a location is not need for the booking because of the selected package
                 System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
 
+                // Packages can contain a price rate, only if its unit is 'hour' we sent it back as HourlyRate to be used
+                // on saving
+                decimal hourlyRate = 0;
+                if (!String.IsNullOrEmpty(thePackage.PriceRateUnit) &&
+                    thePackage.PriceRateUnit.ToUpper() == "HOUR")
+                    hourlyRate = thePackage.PriceRate ?? 0;
+
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
+                    ,{ "HourlyRate", hourlyRate }
                 };
             }
         }
@@ -855,12 +1074,12 @@ public static class LcPricingModel
                 4, // PricingGroupID:4 for packages
                 0, 0, 0, 0,
                 packageID,
-                null, // there is no provider value
-                1, // ever quantity 1
+                Json.Encode(modelData.ProviderInput ?? ""),
+                Json.Encode(modelData.CustomerInput ?? ""),
                 0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
                 modelData.SummaryTotal.FirstSessionDuration,
-                hourPrice,
+                modelData.Data["HourlyRate"], // hourPrice,
                 modelData.SummaryTotal.SubtotalPrice,
                 modelData.SummaryTotal.FeePrice,
                 modelData.SummaryTotal.TotalPrice);
