@@ -216,8 +216,11 @@
             foreach(var line in data.SummaryLines) {
                 summary.Add(line.Value);
             }
-            // and calculate summary payment-processing fees:
-            summary.PFeePrice = LcPricingModel.ApplyFee(data.PFee, summary.TotalPrice);
+            // and calculate summary payment-processing fees
+			// As decided on 2013/06/02 on Barcelona, we apply the payment-processing-fee on
+			// the Provider price (wihout our fees) instead of the total price (thats the price
+			// sent through Braintree), thats: the SubtotalPrice, not TotalPrice
+            summary.PFeePrice = LcPricingModel.ApplyFee(data.PFee, summary.SubtotalPrice);
 
             /* Save all data?
                 */
