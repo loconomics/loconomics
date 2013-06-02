@@ -34,6 +34,9 @@ public static class LcPricingModel
         public decimal FeePrice = 0M;
         public decimal TotalPrice = 0M;
         public decimal PFeePrice = 0M;
+        /// <summary>
+        /// Duration in Hours
+        /// </summary>
         public decimal ServiceDuration = 0M;
         public decimal FirstSessionDuration = 0M;
         public string Concept = "";
@@ -151,9 +154,9 @@ public static class LcPricingModel
         /// </summary>
         /// <param name="package"></param>
         /// <param name="ModelState"></param>
-        void CalculateCustomerData(dynamic package, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
-        string GetCustomerHtml(dynamic package);
-        string GetProviderHtml(dynamic package);
+        void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
+        string GetCustomerHtml(PackageBaseData package, dynamic fee);
+        string GetProviderHtml(PackageBaseData package);
         bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState);
         void SaveProviderData(PackageBaseData package, Database db);
     }
@@ -184,30 +187,45 @@ public static class LcPricingModel
                     break;
             }
         }
+        /// <summary>
+        /// Calculate and returns the time in minutes for the given values
+        /// </summary>
+        /// <param name="numbedrooms"></param>
+        /// <param name="numbathrooms"></param>
+        /// <returns></returns>
         private double ApplyFormula(int numbedrooms = 2, int numbathrooms = 2)
         {
             return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
         }
-        public void CalculateCustomerData(dynamic package, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+        #region Customer form part
+        public void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
             // Get customer input
             var nbeds = Request["bedrooms-number"].AsInt();
             var nbaths = Request["bathrooms-number"].AsInt();
             // TODO get provider input
             var providerRate = .8; // 140.34 / formulaAverageT;
-            // Apply formula
+            // Apply formula, changed by the providerRate (variation from the average)
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
+            // Get HourlyRate for client-side calculation, NO FEES, they are calculated
+            // later (by the CalculatePackage, just after call this function).
+            var hourlyRate = (decimal)package.PriceRate;
             // Change package with the information:
-            package.ServiceDuration = duration;
-            package.Price = duration * package.HourlyRate;
+            package.Duration = ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromMinutes(duration));
+            package.Price = (decimal)package.Duration.TotalHours * hourlyRate;
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
         }
-        public string GetCustomerHtml(dynamic package)
+        public string GetCustomerHtml(PackageBaseData package, dynamic fee)
         {
+            // TODO get provider input
+            var providerRate = .8; // 140.34 / formulaAverageT;
+            // Get HourlyRate for client-side calculation, WITH FEES
+            var hourlyRate = package.PriceRate + LcPricingModel.ApplyFee(fee, package.PriceRate ?? 0);
+
             var s = new StringBuilder();
 
-            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}'>", formulaA, formulaB, formulaC, package.PriceRate);
+            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-provider-rate='{4}'>", formulaA, formulaB, formulaC, hourlyRate, providerRate);
             s.Append(@"<div>Help us determine an accurate 
                 <span class='has-tooltip' title='LJDI: This is an estimate, you will need review it with the provider.'>
                 price estimate</span></div>");
@@ -218,8 +236,9 @@ public static class LcPricingModel
 
             return s.ToString();
         }
+        #endregion
         #region Provider form part
-        public string GetProviderHtml(dynamic package)
+        public string GetProviderHtml(PackageBaseData package)
         {
             var s = new StringBuilder();
 
@@ -617,6 +636,33 @@ public static class LcPricingModel
         public int CountryID;
         public bool Active;
         public List<int> ServiceAttributes = new List<int>();
+        public PackageBaseData()
+        {
+        }
+        /// <summary>
+        /// Create a package object using a database
+        /// dynamic record
+        /// </summary>
+        /// <param name="package"></param>
+        public PackageBaseData(dynamic package)
+        {
+            ID = package.ProviderPackageID;
+            PricingTypeID = package.PricingTypeID;
+            ProviderUserID = package.ProviderUserID;
+            PositionID = package.PositionID;
+            Name = package.Name;
+            Description = package.Description;
+            Price = package.Price;
+            Duration = TimeSpan.FromMinutes(package.ServiceDuration);
+            FirstTimeClientsOnly = package.FirstTimeClientsOnly;
+            NumberOfSessions = package.NumberOfSessions;
+            PriceRate = package.PriceRate;
+            PriceRateUnit = package.PriceRateUnit;
+            IsPhone = package.IsPhone;
+            LanguageID = package.LanguageID;
+            CountryID = package.CountryID;
+            Active = package.Active;
+        }
     }
     #endregion
 
@@ -956,7 +1002,7 @@ public static class LcPricingModel
 
         if (ModelState.IsValid)
         {
-            dynamic thePackage = null;
+            PackageBaseData thePackage = null;
             // Get database data for selected package
             //var paksAndDetails = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, selectedPackage.AsInt());
             var packageID = selectedPackage.AsInt();
@@ -967,17 +1013,17 @@ public static class LcPricingModel
             }
             else
             {
-                thePackage = packages.PackagesByID[selectedPackage.AsInt()];
+                thePackage = new PackageBaseData(packages.PackagesByID[selectedPackage.AsInt()]);
                 var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)thePackage.PricingTypeID];
 
                 // Calculate time and price required for selected package
                 if (config.Mod != null)
                 {
                     // Applying calculation from the PackageMod
-                    config.Mod.CalculateCustomerData(thePackage, modelData, ModelState);
+                    config.Mod.CalculateCustomerData(thePackage, fee, modelData, ModelState);
                 }
-                // We get the time of one service - one session. ServiceDuration is in Minutes ever, convert to hours:
-                decimal sessionTimeInHours = Math.Round((decimal)thePackage.ServiceDuration / 60, 2);
+                // We get the time of one service - one session:
+                decimal sessionTimeInHours = Math.Round((decimal)thePackage.Duration.TotalHours, 2);
                 modelData.SummaryTotal.FirstSessionDuration += sessionTimeInHours;
 
                 int sesNumber = thePackage.NumberOfSessions < 1 ? 1 : thePackage.NumberOfSessions;
@@ -994,8 +1040,16 @@ public static class LcPricingModel
                 // Save in session the information that a location is not need for the booking because of the selected package
                 System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
 
+                // Packages can contain a price rate, only if its unit is 'hour' we sent it back as HourlyRate to be used
+                // on saving
+                decimal hourlyRate = 0;
+                if (!String.IsNullOrEmpty(thePackage.PriceRateUnit) &&
+                    thePackage.PriceRateUnit.ToUpper() == "HOUR")
+                    hourlyRate = thePackage.PriceRate ?? 0;
+
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
+                    ,{ "HourlyRate", hourlyRate }
                 };
             }
         }
@@ -1025,7 +1079,7 @@ public static class LcPricingModel
                 0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
                 modelData.SummaryTotal.FirstSessionDuration,
-                hourPrice,
+                modelData.Data["HourlyRate"], // hourPrice,
                 modelData.SummaryTotal.SubtotalPrice,
                 modelData.SummaryTotal.FeePrice,
                 modelData.SummaryTotal.TotalPrice);

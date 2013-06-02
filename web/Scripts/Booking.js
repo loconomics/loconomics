@@ -269,9 +269,10 @@ LC.initCustomerPackageSliders = function () {
         var formula = function (numbedrooms, numbathrooms) {
             var formulaA = parseFloat(calcContext.data('formula-a')),
                 formulaB = parseFloat(calcContext.data('formula-b')),
-                formulaC = parseFloat(calcContext.data('formula-c'));
+                formulaC = parseFloat(calcContext.data('formula-c')),
+                rate = parseFloat(calcContext.data('provider-rate'));
             // It returns a time in float minutes
-            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
+            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
         };
         // Getting var-values from form and calculating
         var numbedrooms = calcContext.find('[name="bedrooms-number"]').val(),

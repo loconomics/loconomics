@@ -193,7 +193,7 @@
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
 					@if (config.Mod != null) {
 						<div class="package-extra-data">
-							@Html.Raw(config.Mod.GetCustomerHtml(pak))
+							@Html.Raw(config.Mod.GetCustomerHtml(new LcPricingModel.PackageBaseData(pak), fee))
 						</div>
 					}
                 </td>
