@@ -1662,7 +1662,7 @@ function lcSetupCalculateTableItemsTotals() {
             LC.setMoneyNumber(LC.getMoneyNumber(ip) * LC.getMoneyNumber(iq, 1), it);
             tr.trigger('lcCalculatedItemTotal', tr);
         }
-        $(this).find('.calculate-item-price, .calculate-item-quantity').change(calculateRow);
+        $(this).find('.calculate-item-price, .calculate-item-quantity').on('change', calculateRow);
         $(this).find('tr').each(calculateRow);
         $(this).data('calculate-items-totals-initializated', true);
     });

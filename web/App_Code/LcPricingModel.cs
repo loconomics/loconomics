@@ -207,13 +207,13 @@ public static class LcPricingModel
         {
             var s = new StringBuilder();
 
-            s.Append("<div class='housekeeper-pricing'>");
-            s.Append(@"<div>Help use determine an accurate 
+            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}'>", formulaA, formulaB, formulaC, package.PriceRate);
+            s.Append(@"<div>Help us determine an accurate 
                 <span class='has-tooltip' title='LJDI: This is an estimate, you will need review it with the provider.'>
                 price estimate</span></div>");
 
-            s.Append(@"<div class='housekeeper-pricing-bedrooms'><label>Bedrooms: <input name='bedrooms-number' type='text' /></label></div>");
-            s.Append(@"<div class='housekeeper-pricing-bathrooms'><label>Bathrooms: <input name='bathrooms-number' type='text' /></label></div>");
+            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number' type='text' /></label></div>");
+            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number' type='text' /></label></div>");
             s.Append("</div>");
 
             return s.ToString();

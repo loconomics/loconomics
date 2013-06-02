@@ -173,7 +173,7 @@
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
 
-    <table class="packages-list calculate-summary-group" data-calculation-summary-group="packages">
+    <table class="packages-list calculate-items-totals calculate-summary-group" data-calculation-summary-group="packages">
         <tr>
             <th class="row-selection"></th>
             <th class="package-name name">Name</th>
@@ -183,6 +183,7 @@
         </tr>
         @foreach (var pak in packages.Packages)
         {
+			var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
             var feePrice = LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
             <tr>
                 <td>
@@ -190,9 +191,14 @@
                 </td>
                 <td class="package-name name">
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+					@if (config.Mod != null) {
+						<div class="package-extra-data">
+							@Html.Raw(config.Mod.GetCustomerHtml(pak))
+						</div>
+					}
                 </td>
                 <td class="package-sessions number">@(pak.NumberOfSessions < 1 ? "N/A" : pak.NumberOfSessions)</td>
-                <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
+                <td class="package-duration">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
                     <span class="calculate-item-quantity">1</span>
