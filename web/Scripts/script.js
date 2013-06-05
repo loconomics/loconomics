@@ -1629,7 +1629,26 @@ function smoothBoxBlockCloseAll(container) {
 function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
 }
-LC.getMoneyNumber = function (v, alt) {
+
+/*------------
+    Several functions to manage
+    numbers, prices, money
+  ------------*/
+LC.roundTo = function LC_roundTo(number, decimals) {
+    var tens = Math.pow(10, decimals);
+    return Math.round(number * tens) / tens;
+};
+LC.Price = function LC_Price(basePrice, feeRate, roundedDecimals) {
+    var totalPrice = LC.roundTo(basePrice * (1 + feeRate), roundedDecimals),
+		feePrice = LC.roundTo(totalPrice - basePrice, 2);
+
+    this.basePrice = basePrice;
+    this.feeRate = feeRate;
+    this.roundedDecimals = roundedDecimals;
+    this.totalPrice = totalPrice;
+    this.feePrice = feePrice;
+};
+LC.getMoneyNumber = function LC_getMoneyNumber(v, alt) {
     alt = alt || 0;
     if (v instanceof jQuery)
         v = v.val() || v.text();
@@ -1639,8 +1658,8 @@ LC.getMoneyNumber = function (v, alt) {
     );
     return isNaN(v) ? alt : v;
 };
-LC.setMoneyNumber = function (v, el) {
-    v = Math.round(v * 100) / 100;
+LC.setMoneyNumber = function LC_setMoneyNumber(v, el) {
+    v = LC.roundTo(v, 2);
     v = '$' + v;
     if (el instanceof jQuery)
         if (el.is(':input'))
@@ -1649,6 +1668,7 @@ LC.setMoneyNumber = function (v, el) {
             el.text(v);
     return v;
 };
+
 function lcSetupCalculateTableItemsTotals() {
     $('table.calculate-items-totals').each(function () {
         if ($(this).data('calculate-items-totals-initializated'))

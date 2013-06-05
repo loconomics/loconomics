@@ -28,6 +28,74 @@ public static class LcPricingModel
         public PricingSummaryData SummaryTotal = new PricingSummaryData();
     }
 
+    public class Price
+    {
+        int roundedDecimals;
+        decimal feeRate;
+        decimal basePrice;
+        decimal totalPrice;
+        decimal feePrice;
+        /// <summary>
+        /// Giving a base price (no fees) the fees rate (from 0 to 1) and 
+        /// number of decimal to round up, it calculates the total price
+        /// (price with fees) and the fee amount.
+        /// Rounding is done on the Total Price, and fee amount updated
+        /// to match the rounded price and base price.
+        /// </summary>
+        /// <param name="basePrice">No fees price</param>
+        /// <param name="feeRate">Number between 0 and 1. Its percentage / 100.</param>
+        /// <param name="roundedDecimals">Number of decimals to round up from the final price (TotalPrice)</param>
+        public Price(decimal basePrice, decimal feeRate, int roundedDecimals)
+        {
+            this.basePrice = Math.Round(basePrice, 2);
+            this.feeRate = feeRate;
+            this.roundedDecimals = roundedDecimals;
+            Calculate();
+        }
+        private void Calculate()
+        {
+            totalPrice = Math.Round(basePrice * (1 + feeRate), roundedDecimals);
+            feePrice = totalPrice - basePrice;
+        }
+        public decimal BasePrice
+        {
+            get
+            {
+                return this.basePrice;
+            }
+            set
+            {
+                this.basePrice = value;
+                Calculate();
+            }
+        }
+        public decimal FeeRate
+        {
+            get
+            {
+                return this.feeRate;
+            }
+            set
+            {
+                this.feeRate = value;
+                Calculate();
+            }
+        }
+        public decimal TotalPrice
+        {
+            get
+            {
+                return this.totalPrice;
+            }
+        }
+        public decimal FeePrice
+        {
+            get
+            {
+                return this.feePrice;
+            }
+        }
+    }
     public class PricingSummaryData
     {
         public decimal SubtotalPrice = 0M;
@@ -209,10 +277,10 @@ public static class LcPricingModel
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
             // Get HourlyRate for client-side calculation, NO FEES, they are calculated
             // later (by the CalculatePackage, just after call this function).
-            var hourlyRate = (decimal)package.PriceRate;
+            var hourlyRate = (double)(package.PriceRate ?? 0);
             // Change package with the information:
             package.Duration = ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromMinutes(duration));
-            package.Price = (decimal)package.Duration.TotalHours * hourlyRate;
+            package.Price = (decimal)(package.Duration.TotalHours * hourlyRate);
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
         }
@@ -221,11 +289,12 @@ public static class LcPricingModel
             // TODO get provider input
             var providerRate = .8; // 140.34 / formulaAverageT;
             // Get HourlyRate for client-side calculation, WITH FEES
-            var hourlyRate = package.PriceRate + LcPricingModel.ApplyFee(fee, package.PriceRate ?? 0);
+            var hourlyFee = LcPricingModel.ApplyFeeAndRound(fee, package.PriceRate ?? 0);
+            var hourlyRate = package.PriceRate + hourlyFee;
 
             var s = new StringBuilder();
 
-            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-provider-rate='{4}'>", formulaA, formulaB, formulaC, hourlyRate, providerRate);
+            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-hourly-fee='{4}' data-provider-rate='{5}'>", formulaA, formulaB, formulaC, hourlyRate, hourlyFee, providerRate);
             s.Append(@"<div>Help us determine an accurate 
                 <span class='has-tooltip' title='LJDI: This is an estimate, you will need review it with the provider.'>
                 price estimate</span></div>");
@@ -587,7 +656,7 @@ public static class LcPricingModel
         {
             9,
             new PackageBaseConfig {
-                PricingTypeID = 6,
+                PricingTypeID = 9,
                 SingularName = "Light cleaning service",
                 PluralName = "Light cleaning services",
                 SlugName = "lightcleaningservice",
