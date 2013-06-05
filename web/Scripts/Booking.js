@@ -277,14 +277,15 @@ LC.initCustomerPackageSliders = function () {
         // Getting var-values from form and calculating
         var numbedrooms = calcContext.find('[name="bedrooms-number"]').val(),
             numbathrooms = calcContext.find('[name="bathrooms-number"]').val();
-        var minutes = Math.round(formula(numbedrooms, numbathrooms));
+        var minutes = Math.round(formula(numbedrooms, numbathrooms)),
+            hours = LC.roundTo(minutes / 60, 2);
         // Updating user-viewed time, show it in the smart way
         pak.find('.package-duration').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
         // Recalculating price with new time, using the package hourly-rate
         var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
-        var price = Math.round(hourlyRate * (minutes / 60) * 100) / 100;
+        var price = LC.roundTo(hourlyRate * hours, 2);
         var feeRate = parseFloat(calcContext.data('hourly-fee'));
-        var fee = Math.round(feeRate * (minutes / 60) * 100) / 100;
+        var fee = LC.roundTo(feeRate * hours, 2);
         // Set new item-price and trigger a change event to allow the items-fees calculation
         // system do their job and showing the total price
         LC.setMoneyNumber(price, pak.find('.calculate-item-price'));

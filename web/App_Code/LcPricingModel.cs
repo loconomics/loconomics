@@ -148,6 +148,12 @@ public static class LcPricingModel
         }
     }
 
+    public class FeeRate
+    {
+        public decimal Percentage;
+        public decimal Currency;
+    }
+
     /// <summary>
     /// Small utility, convert database scheme data about
     /// fee to apply into an easy struct with Percentage
@@ -156,7 +162,7 @@ public static class LcPricingModel
     /// </summary>
     /// <param name="feeData"></param>
     /// <returns></returns>
-    public static dynamic GetFee(dynamic feeData)
+    public static FeeRate GetFee(dynamic feeData)
     {
         decimal feePercentage = 0M, feeCurrency = 0M;
         if (feeData.ServiceFeeCurrency)
@@ -167,7 +173,7 @@ public static class LcPricingModel
         {
             feePercentage = feeData.ServiceFeeAmount;
         }
-        return new {
+        return new FeeRate {
             Percentage = feePercentage,
             Currency = feeCurrency
         };
@@ -179,9 +185,9 @@ public static class LcPricingModel
     /// </summary>
     /// <param name="feeData"></param>
     /// <returns></returns>
-    public static dynamic GetPFee(dynamic feeData)
+    public static FeeRate GetPFee(dynamic feeData)
     {
-        return new {
+        return new FeeRate {
             Percentage = feeData.PaymentProcessingFee,
             Currency = 0
         };
@@ -222,8 +228,8 @@ public static class LcPricingModel
         /// </summary>
         /// <param name="package"></param>
         /// <param name="ModelState"></param>
-        void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
-        string GetCustomerHtml(PackageBaseData package, dynamic fee);
+        void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
+        string GetCustomerHtml(PackageBaseData package, FeeRate fee);
         string GetProviderHtml(PackageBaseData package);
         bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState);
         void SaveProviderData(PackageBaseData package, Database db);
@@ -266,8 +272,12 @@ public static class LcPricingModel
             return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
         }
         #region Customer form part
-        public void CalculateCustomerData(PackageBaseData package, dynamic fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+        public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
+            /* IMPORTANT: we calculate here the service duration for one session based on some custom variables for housekeeper pricing,
+             * final price and fees are calculated in the standard code using the package Duration field, because of that
+             * we only update package.Duration here for later complete price calculation */
+
             // Get customer input
             var nbeds = Request["bedrooms-number"].AsInt();
             var nbaths = Request["bathrooms-number"].AsInt();
@@ -275,22 +285,19 @@ public static class LcPricingModel
             var providerRate = .8; // 140.34 / formulaAverageT;
             // Apply formula, changed by the providerRate (variation from the average)
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
-            // Get HourlyRate for client-side calculation, NO FEES, they are calculated
-            // later (by the CalculatePackage, just after call this function).
-            var hourlyRate = (double)(package.PriceRate ?? 0);
             // Change package with the information:
             package.Duration = ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromMinutes(duration));
-            package.Price = (decimal)(package.Duration.TotalHours * hourlyRate);
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
         }
-        public string GetCustomerHtml(PackageBaseData package, dynamic fee)
+        public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {
             // TODO get provider input
             var providerRate = .8; // 140.34 / formulaAverageT;
-            // Get HourlyRate for client-side calculation, WITH FEES
-            var hourlyFee = LcPricingModel.ApplyFeeAndRound(fee, package.PriceRate ?? 0);
-            var hourlyRate = package.PriceRate + hourlyFee;
+            // Get HourlyRate for client-side calculation, and fees CONTINUE
+            var price = new Price(package.PriceRate ?? 0M, fee.Percentage, 1);
+            var hourlyFee = price.FeePrice;
+            var hourlyRate = price.TotalPrice;
 
             var s = new StringBuilder();
 
@@ -344,6 +351,11 @@ public static class LcPricingModel
         }
         #endregion
     }
+    public enum PriceCalculationType : short
+    {
+        FixedPrice,
+        HourlyPrice
+    }
     public class PackageBaseConfig
     {
         #region About Pricing Type
@@ -353,6 +365,7 @@ public static class LcPricingModel
         public string SlugName;
         public string AddNewLabel;
         public string ProviderDescription;
+        public PriceCalculationType PriceCalculation;
         /// <summary>
         /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
         /// It defines group names in that only one element can be selected
@@ -459,6 +472,7 @@ public static class LcPricingModel
         public PackageMod Mod;
         #endregion
     }
+    #region Pricing Types Configuration
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
     {
         // Package Pricing Type
@@ -471,6 +485,7 @@ public static class LcPricingModel
                 SlugName = "package",
                 AddNewLabel = "Add a package",
                 ProviderDescription = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable).",
+                PriceCalculation = PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
@@ -507,6 +522,7 @@ public static class LcPricingModel
                 SlugName = "addon",
                 AddNewLabel = "Add an add-on service",
                 ProviderDescription = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable).",
+                PriceCalculation = PriceCalculationType.FixedPrice,
                 IsAddon = true,
 
                 NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
@@ -541,6 +557,7 @@ public static class LcPricingModel
                 SlugName = "estimate",
                 AddNewLabel = "Add an estimate visit",
                 ProviderDescription = "We know you're psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
+                PriceCalculation = PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
@@ -583,6 +600,7 @@ public static class LcPricingModel
                 SlugName = "consultation",
                 AddNewLabel = "Add a consultation",
                 ProviderDescription = "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services.",
+                PriceCalculation = PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
@@ -629,6 +647,7 @@ public static class LcPricingModel
                 SlugName = "service",
                 AddNewLabel = "Add a service",
                 ProviderDescription = "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service.",
+                PriceCalculation = PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
@@ -662,6 +681,7 @@ public static class LcPricingModel
                 SlugName = "lightcleaningservice",
                 AddNewLabel = "Add light cleaning services",
                 ProviderDescription = "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique.",
+                PriceCalculation = PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Light cleaning services",
@@ -686,6 +706,7 @@ public static class LcPricingModel
             }
         }
     };
+    #endregion
     public class PackageBaseData
     {
         public int ID;
@@ -1060,7 +1081,7 @@ public static class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(dynamic packages, dynamic fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculatePackages(dynamic packages, FeeRate fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -1091,17 +1112,54 @@ public static class LcPricingModel
                     // Applying calculation from the PackageMod
                     config.Mod.CalculateCustomerData(thePackage, fee, modelData, ModelState);
                 }
+
+                /* Calculation of ServiceDuration */
                 // We get the time of one service - one session:
                 decimal sessionTimeInHours = Math.Round((decimal)thePackage.Duration.TotalHours, 2);
                 modelData.SummaryTotal.FirstSessionDuration += sessionTimeInHours;
-
+                // Total sessions duration
                 int sesNumber = thePackage.NumberOfSessions < 1 ? 1 : thePackage.NumberOfSessions;
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * sesNumber, 2);
                 modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
-                modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
-                modelData.SummaryTotal.FeePrice = LcPricingModel.ApplyFeeAndRound(fee, modelData.SummaryTotal.SubtotalPrice);
-                modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+                /* Calculation of price, depending on type */
+                switch (config.PriceCalculation)
+                {
+                    default:
+                    case PriceCalculationType.FixedPrice:
+                        /* OLD WAY
+                        modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
+                        modelData.SummaryTotal.FeePrice = LcPricingModel.ApplyFeeAndRound(fee, modelData.SummaryTotal.SubtotalPrice);
+                        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
+                         */
+                        // Price with fees for packages are calculated without decimals
+                        // (decission at Barcelona 2013-06-02)
+                        var fixedPrice = new Price(thePackage.Price, fee.Percentage, 0);
+                        modelData.SummaryTotal.SubtotalPrice += fixedPrice.BasePrice;
+                        modelData.SummaryTotal.FeePrice = fixedPrice.FeePrice;
+                        modelData.SummaryTotal.TotalPrice = fixedPrice.TotalPrice;
+                        break;
+                    case PriceCalculationType.HourlyPrice:
+                        // For hourly prices we get the provider hourly price defined in the package (PriceRate field)
+                        // that is considered to be ever in hours for this kind of pricing-package
+                        // and we calculate the fees and total price (customer price) for one hour.
+                        // Price with fees for hourly prices are calculated with only one decimal
+                        // (decission at Barcelona 2013-06-02)
+                        var hourPrice = new Price(thePackage.PriceRate ?? 0, fee.Percentage, 1);
+
+                        // Final price is the result of multiply total duration of the service by the hourly rate
+                        // of the package.
+                        // Maybe the duration for one session of the package required a custom calculation, using 
+                        // a package Mod, called previous to this code (config.Mod.CalculateCustomerData line),
+                        // then the common calculation of duration for all sessions was applied and now we get the
+                        // final price.
+                        // ServiceDuration is in hours and PriceRate is price per hour ever on this cases
+                        modelData.SummaryTotal.SubtotalPrice += hourPrice.BasePrice * modelData.SummaryTotal.ServiceDuration;
+                        modelData.SummaryTotal.FeePrice += hourPrice.FeePrice * modelData.SummaryTotal.ServiceDuration;
+                        modelData.SummaryTotal.TotalPrice += hourPrice.TotalPrice * modelData.SummaryTotal.ServiceDuration;
+                        break;
+                }
+                
 
                 // Concept, html text for Pricing summary detail, update it with package name:
                 modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
