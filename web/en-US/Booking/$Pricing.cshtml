@@ -183,6 +183,9 @@
         var rtn = new Dictionary<string, LcPricingModel.PricingModelData>();
         
         var mustSave = UrlData[0].ToLower() != "calculate";
+        
+        var pricingTypeID = data.PricingTypeID;
+        var hourPrice = data.HourPrice;
 
         // Calculate & Save
         LcPricingModel.PricingModelData mdVariables = null, mdOptions = null, mdPackages = null, mdAddons = null;
@@ -205,6 +208,12 @@
                 mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
                 //rtn.Add("packages", mdPackages);
                 data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
+                // BECAUSE now everything is contained in a package, and this define the pricing type, we allow
+                // the selected package to change the PricingTypeID', to save the real pricing type choosen
+                pricingTypeID = mdPackages.Data["PricingTypeID"] ?? 3;
+                // And allow to an hourly rate package set the pricing hourlyRate, too to save real data instead of 0 ever
+                // (if there is no hourly rate, it will be zero as expected)
+                hourPrice = mdPackages.Data["HourlyRate"];
             }
             if (data.ContainsAddons) {
                 mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
@@ -219,8 +228,10 @@
             // and calculate summary payment-processing fees
 			// As decided on 2013/06/02 on Barcelona, we apply the payment-processing-fee on
 			// the Provider price (wihout our fees) instead of the total price (thats the price
-			// sent through Braintree), thats: the SubtotalPrice, not TotalPrice
-            summary.PFeePrice = LcPricingModel.ApplyFee(data.PFee, summary.SubtotalPrice);
+			// sent through Braintree), thats: the SubtotalPrice, not TotalPrice.
+            // On this case, provider fees are calculated with 2 decimals of precission like the
+            // payment processing system does:
+            summary.PFeePrice = (new LcPricingModel.Price(summary.SubtotalPrice, data.PFee, 2)).FeePrice;
 
             /* Save all data?
                 */
@@ -231,10 +242,10 @@
                 var estimate = LcData.Booking.CreatePricingEstimate(
                     estimateID,
                     revisionID,
-                    data.PricingTypeID,
+                    pricingTypeID,
                     summary.ServiceDuration,
                     summary.FirstSessionDuration,
-                    data.HourPrice,
+                    hourPrice,
                     summary.SubtotalPrice,
                     summary.FeePrice,
                     summary.TotalPrice,
@@ -249,16 +260,16 @@
                     LcPricingModel.SaveServices(estimateID, revisionID);
                 }
                 if (data.ContainsVariables) {
-                    LcPricingModel.SaveVariables(estimateID, revisionID, data.Variables, c.UserID, data.HourPrice, mdVariables.Data["PricingVariablesNumbers"]);
+                    LcPricingModel.SaveVariables(estimateID, revisionID, data.Variables, c.UserID, hourPrice, mdVariables.Data["PricingVariablesNumbers"]);
                 }
                 if (data.ContainsOptions) {
                     LcPricingModel.SaveOptions(estimateID, revisionID, data.Options, c.UserID, mdOptions.Data["PricingOptionsNumbers"]);
                 }
                 if (data.ContainsPackages) {
-                    LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState, data.HourPrice);
+                    LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState, hourPrice);
                 }
                 if (data.ContainsAddons) {
-                    LcPricingModel.SaveAddons(estimateID, revisionID, mdAddons, ModelState, data.HourPrice);
+                    LcPricingModel.SaveAddons(estimateID, revisionID, mdAddons, ModelState, hourPrice);
                 }
 
                 /*

@@ -637,8 +637,8 @@ public static partial class LcData
                             ClientTypeID = @2
                     ", providerUserID, positionID, clienttypeid) ?? 0;
 
-                    // Apply fees
-                    providerPrice.Price += LcPricingModel.ApplyFee(fee, providerPrice.Price);
+                    // Getting price with fees (1 decimal only for hourly prices)
+                    providerPrice.Price = (new LcPricingModel.Price(providerPrice.Price, fee, 1)).TotalPrice;
                 }
                 else
                 {
@@ -651,8 +651,8 @@ public static partial class LcData
                              AND IsAddOn = 0
                     ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
 
-                    // Apply fees
-                    providerPrice.Price += LcPricingModel.ApplyFeeAndRound(fee, providerPrice.Price);
+                    // Getting price with fees (no decimals for fixed prices)
+                    providerPrice.Price = (new LcPricingModel.Price(providerPrice.Price, fee, 0)).TotalPrice;
                 }
 
                 // Compare price, return the minimum:

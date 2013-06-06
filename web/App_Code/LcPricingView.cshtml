@@ -184,7 +184,8 @@
         @foreach (var pak in packages.Packages)
         {
 			var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
-            var feePrice = LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
+            // Calculating final price, with fees and full details, No decimals for fixed prices:
+            var price = new LcPricingModel.Price(pak.Price, fee, 0);
             <tr>
                 <td>
                     <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
@@ -200,10 +201,10 @@
                 <td class="package-sessions number">@(pak.NumberOfSessions < 1 ? "N/A" : pak.NumberOfSessions)</td>
                 <td class="package-duration">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
-                    <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
+                    <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
                     <span class="calculate-item-quantity">1</span>
-                    <span class="calculate-item-price">@(String.Format("{0:c}", pak.Price + feePrice))</span>
-                    <span class="calculate-item-total">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                    <span class="calculate-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
+                    <span class="calculate-item-total">@(String.Format("{0:c}", price.TotalPrice))</span>
                 </td>
             </tr>
         }
@@ -226,7 +227,8 @@
         </tr>
         @foreach (var pak in addons.Packages)
         {
-            var feePrice = LcPricingModel.ApplyFeeAndRound(fee, pak.Price);
+            // Calculating final price, with fees and full details, No decimals for fixed prices:
+            var price = new LcPricingModel.Price(pak.Price, fee, 0);
             <tr>
                 <td>
                     <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
@@ -236,10 +238,10 @@
                 </td>
                 <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
-                    <span class="calculate-item-fee">@(String.Format("{0:c}", feePrice))</span>
+                    <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
                     <span class="calculate-item-quantity">1</span>
-                    <span class="calculate-item-price">@(String.Format("{0:c}", pak.Price + feePrice))</span>
-                    <span class="calculate-item-total">@(String.Format("{0:c}", pak.Price + feePrice))</span>
+                    <span class="calculate-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
+                    <span class="calculate-item-total">@(String.Format("{0:c}", price.TotalPrice))</span>
                 </td>
             </tr>
         }

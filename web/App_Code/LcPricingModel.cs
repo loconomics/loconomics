@@ -11,7 +11,7 @@ using System.Text;
 /// </summary>
 public static class LcPricingModel
 {
-    #region Usefull properties, classes and methods
+    #region Utilities and data interchange classes
     private static HttpRequest Request
     {
         get
@@ -27,7 +27,9 @@ public static class LcPricingModel
         public dynamic CustomerInput = null;
         public PricingSummaryData SummaryTotal = new PricingSummaryData();
     }
+    #endregion
 
+    #region Price and fees
     public class Price
     {
         int roundedDecimals;
@@ -216,29 +218,6 @@ public static class LcPricingModel
             Percentage = feeData.PaymentProcessingFee,
             Currency = 0
         };
-    }
-
-    /// <summary>
-    /// Calculate and returns the fee price for the given price and fee data,
-    /// rounded up to integer (no decimals)
-    /// </summary>
-    /// <param name="fee"></param>
-    /// <param name="price"></param>
-    /// <returns></returns>
-    public static decimal ApplyFeeAndRound(dynamic fee, decimal price)
-    {
-        return Math.Ceiling(ApplyFee(fee, price));
-    }
-    /// <summary>
-    /// Calculate and returns the fee price for the given price and fee data,
-    /// rounded to 2 decimals
-    /// </summary>
-    /// <param name="fee"></param>
-    /// <param name="price"></param>
-    /// <returns></returns>
-    public static decimal ApplyFee(dynamic fee, decimal price)
-    {
-        return Math.Round((fee.Percentage * price) + fee.Currency, 2);
     }
     #endregion
 
@@ -497,6 +476,7 @@ public static class LcPricingModel
         public PackageMod Mod;
         #endregion
     }
+
     #region Pricing Types Configuration
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
     {
@@ -732,6 +712,7 @@ public static class LcPricingModel
         }
     };
     #endregion
+
     public class PackageBaseData
     {
         public int ID;
@@ -808,15 +789,18 @@ public static class LcPricingModel
         timeInHours = Math.Round(timeInHours, 2);
 
         // Numbers are per item:
-        var subtotal = timeInHours * hourPrice;
-        var feePrice = ApplyFee(fee, subtotal);
+        // Calculating price and fees, for hourly prices only 1 decimal
+        var hourPriceWithFees = new Price(hourPrice, fee, 1);
+        var subtotal = timeInHours * hourPriceWithFees.BasePrice;
+        var feePrice = timeInHours * hourPriceWithFees.FeePrice;
+        var total = timeInHours * hourPriceWithFees.TotalPrice;
 
         return new PricingSummaryData{
             ServiceDuration = timeInHours,
             FirstSessionDuration = timeInHours,
             SubtotalPrice = subtotal,
             FeePrice = feePrice,
-            TotalPrice = subtotal + feePrice
+            TotalPrice = total
         };
     }
     /// <summary>
@@ -986,14 +970,14 @@ public static class LcPricingModel
         timeInHours = Math.Round(timeInHours / 60, 2);
 
         // Numbers are per item:
-        var subtotal = unitprice;
-        var feePrice = ApplyFee(fee, subtotal);
+        // Calculating price and fees, for options only 1 decimal
+        var priceWithFees = new Price(unitprice, fee, 1);
 
         return new PricingSummaryData{
             ServiceDuration = timeInHours,
-            SubtotalPrice = subtotal,
-            FeePrice = feePrice,
-            TotalPrice = subtotal + feePrice
+            SubtotalPrice = priceWithFees.BasePrice,
+            FeePrice = priceWithFees.FeePrice,
+            TotalPrice = priceWithFees.TotalPrice
         };
     }
     public static PricingModelData CalculateOptions(dynamic poptions, dynamic fee)
@@ -1152,11 +1136,6 @@ public static class LcPricingModel
                 {
                     default:
                     case PriceCalculationType.FixedPrice:
-                        /* OLD WAY
-                        modelData.SummaryTotal.SubtotalPrice += Math.Round(thePackage.Price, 2);
-                        modelData.SummaryTotal.FeePrice = LcPricingModel.ApplyFeeAndRound(fee, modelData.SummaryTotal.SubtotalPrice);
-                        modelData.SummaryTotal.TotalPrice = modelData.SummaryTotal.SubtotalPrice + modelData.SummaryTotal.FeePrice;
-                         */
                         // Price with fees for packages are calculated without decimals
                         // (decission at Barcelona 2013-06-02)
                         var fixedPrice = new Price(thePackage.Price, fee, 0);
@@ -1202,6 +1181,7 @@ public static class LcPricingModel
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
                     ,{ "HourlyRate", hourlyRate }
+                    ,{ "PricingTypeID", (int)thePackage.PricingTypeID }
                 };
             }
         }
@@ -1264,13 +1244,11 @@ public static class LcPricingModel
                     int sesNumber = addonData.NumberOfSessions < 1 ? 1 : addonData.NumberOfSessions;
                     decimal pakHours = Math.Round(sesHours * sesNumber, 2);
                     modelData.SummaryTotal.ServiceDuration += pakHours;
-            
-                    decimal addonPrice = Math.Round(addonData.Price, 2);
-                    modelData.SummaryTotal.SubtotalPrice += addonPrice;
 
-                    decimal addonFee = ApplyFeeAndRound(fee, addonPrice);
-                    modelData.SummaryTotal.FeePrice += addonFee;
-                    modelData.SummaryTotal.TotalPrice += addonPrice + addonFee;
+                    var price = new Price(Math.Round(addonData.Price, 2), fee, 0);
+                    modelData.SummaryTotal.SubtotalPrice += price.BasePrice;
+                    modelData.SummaryTotal.FeePrice += price.FeePrice;
+                    modelData.SummaryTotal.TotalPrice += price.TotalPrice;
 
                     // Concept, html text for Pricing summary detail, update? (already set in controller page):
                     //modelData.SummaryTotal.Concept = "Add-on services";
@@ -1279,9 +1257,9 @@ public static class LcPricingModel
                         addonID = addonID
                         ,sesHours = sesHours
                         ,pakHours = pakHours
-                        ,subtotalPrice = addonPrice
-                        ,feePrice = addonFee
-                        ,addonPrice = addonPrice + addonFee //addonPrice
+                        ,subtotalPrice = price.BasePrice
+                        ,feePrice = price.FeePrice
+                        ,addonPrice = price.TotalPrice
                     });
                 }
             }
