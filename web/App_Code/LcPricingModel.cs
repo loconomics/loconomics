@@ -32,6 +32,7 @@ public static class LcPricingModel
     {
         int roundedDecimals;
         decimal feeRate;
+        decimal fixedFeeAmount;
         decimal basePrice;
         decimal totalPrice;
         decimal feePrice;
@@ -49,12 +50,24 @@ public static class LcPricingModel
         {
             this.basePrice = Math.Round(basePrice, 2);
             this.feeRate = feeRate;
+            this.fixedFeeAmount = 0M;
+            this.roundedDecimals = roundedDecimals;
+            Calculate();
+        }
+        public Price(decimal basePrice, FeeRate fee, int roundedDecimals)
+        {
+            this.basePrice = Math.Round(basePrice, 2);
+            this.feeRate = fee.Percentage;
+            this.fixedFeeAmount = fee.Currency;
             this.roundedDecimals = roundedDecimals;
             Calculate();
         }
         private void Calculate()
         {
-            totalPrice = Math.Round(basePrice * (1 + feeRate), roundedDecimals);
+            totalPrice = basePrice * (1 + feeRate) + fixedFeeAmount;
+            // Rounding up, ever (with ceiling but preserving decimals
+            var tens = (decimal)Math.Pow(10, roundedDecimals);
+            totalPrice = Math.Ceiling( totalPrice * tens ) / tens;
             feePrice = totalPrice - basePrice;
         }
         public decimal BasePrice
@@ -78,6 +91,18 @@ public static class LcPricingModel
             set
             {
                 this.feeRate = value;
+                Calculate();
+            }
+        }
+        public decimal FixedFeeAmount
+        {
+            get
+            {
+                return this.fixedFeeAmount;
+            }
+            set
+            {
+                this.fixedFeeAmount = value;
                 Calculate();
             }
         }
@@ -294,8 +319,8 @@ public static class LcPricingModel
         {
             // TODO get provider input
             var providerRate = .8; // 140.34 / formulaAverageT;
-            // Get HourlyRate for client-side calculation, and fees CONTINUE
-            var price = new Price(package.PriceRate ?? 0M, fee.Percentage, 1);
+            // Get HourlyRate for client-side calculation, and fees
+            var price = new Price(package.PriceRate ?? 0M, fee, 1);
             var hourlyFee = price.FeePrice;
             var hourlyRate = price.TotalPrice;
 
@@ -1134,7 +1159,7 @@ public static class LcPricingModel
                          */
                         // Price with fees for packages are calculated without decimals
                         // (decission at Barcelona 2013-06-02)
-                        var fixedPrice = new Price(thePackage.Price, fee.Percentage, 0);
+                        var fixedPrice = new Price(thePackage.Price, fee, 0);
                         modelData.SummaryTotal.SubtotalPrice += fixedPrice.BasePrice;
                         modelData.SummaryTotal.FeePrice = fixedPrice.FeePrice;
                         modelData.SummaryTotal.TotalPrice = fixedPrice.TotalPrice;
@@ -1145,7 +1170,7 @@ public static class LcPricingModel
                         // and we calculate the fees and total price (customer price) for one hour.
                         // Price with fees for hourly prices are calculated with only one decimal
                         // (decission at Barcelona 2013-06-02)
-                        var hourPrice = new Price(thePackage.PriceRate ?? 0, fee.Percentage, 1);
+                        var hourPrice = new Price(thePackage.PriceRate ?? 0, fee, 1);
 
                         // Final price is the result of multiply total duration of the service by the hourly rate
                         // of the package.

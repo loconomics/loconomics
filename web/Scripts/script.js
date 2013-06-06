@@ -1634,16 +1634,51 @@ function escapeJQuerySelectorValue(str) {
     Several functions to manage
     numbers, prices, money
   ------------*/
+/** Round a number to the specified number of decimals.
+    It can substract integer decimals by providing a negative
+    number of decimals.
+**/
 LC.roundTo = function LC_roundTo(number, decimals) {
     var tens = Math.pow(10, decimals);
     return Math.round(number * tens) / tens;
 };
-LC.Price = function LC_Price(basePrice, feeRate, roundedDecimals) {
-    var totalPrice = LC.roundTo(basePrice * (1 + feeRate), roundedDecimals),
-		feePrice = LC.roundTo(totalPrice - basePrice, 2);
+/** Round Up a number to the specified number of decimals.
+    Its similar to roundTo, but the number is ever rounded up,
+    to the lower integer greater or equals to the number.
+**/
+LC.ceilTo = function LC_ceilTo(number, decimals) {
+    var tens = Math.pow(10, decimals);
+    return Math.ceil(number * tens) / tens;
+};
+/** Round Down a number to the specified number of decimals.
+    Its similar to roundTo, but the number is ever rounded down,
+    to the bigger integer lower or equals to the number.
+**/
+LC.floorTo = function LC_floorTo(number, decimals) {
+    var tens = Math.pow(10, decimals);
+    return Math.floor(number * tens) / tens;
+};
+LC.Price = function LC_Price(basePrice, fee, roundedDecimals) {
+    // fee parameter can be a float number with the feeRate or an object
+    // that includes both a feeRate and a fixedFeeAmount
+    // Extracting fee values into local vars:
+    var feeRate = 0, fixedFeeAmount = 0;
+    if (fee['fixedFeeAmount'] || fee['feeRate']) {
+        fixedFeeAmount = fee.fixedFeeAmount || .0;
+        feeRate = fee.feeRate || .0;
+    } else
+        feeRate = fee;
 
+    // Calculating:
+    var totalPrice = LC.ceilTo(basePrice * (1 + feeRate) + fixedFeeAmount, roundedDecimals);
+    // final fee price is calculated as a substraction, but because javascript handles
+    // float numbers only, a round operation is required to avoid an irrational number
+    var feePrice = LC.roundTo(totalPrice - basePrice, 2);
+
+    // Creating object with full details:
     this.basePrice = basePrice;
     this.feeRate = feeRate;
+    this.fixedFeeAmount = fixedFeeAmount;
     this.roundedDecimals = roundedDecimals;
     this.totalPrice = totalPrice;
     this.feePrice = feePrice;

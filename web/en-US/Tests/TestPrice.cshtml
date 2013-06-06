@@ -6,69 +6,92 @@
 
 	var basePrice = Request["basePrice"].AsDecimal(25.00M);
 	var feeRate = Request["feeRate"].AsDecimal(.05M);
+    var fixedFeeAmount = Request["fixedFeeAmount"].AsDecimal(0);
 	var roundedDecimals = Request["roundedDecimals"].AsInt(1);
 
 	// Calculation to be tested:
     var price = new LcPricingModel.Price(
 		basePrice,
-		feeRate,
+		new LcPricingModel.FeeRate { Currency = fixedFeeAmount, Percentage  = feeRate },
 		roundedDecimals
 	);
 }
 <h1>Testing Prices and Fees calculation</h1>
-<form action="">
+<style type="text/css">
+    td, th
+    {
+        border: 1px solid #ccc;
+        padding: 5px 8px;
+    }
+</style>
+<form action="" method="get">
 	<fieldset>
-		<legend><h2>Server side calculation</h2></legend>
+		<legend><h2>Fixed price calculation (package price)</h2></legend>
 		<label>Base price <input type="text" name="basePrice" value="@(basePrice)"/></label>
 		<br/>
 		<label>Fee rate (from 0 to 1) <input type="text" name="feeRate" value="@(feeRate)"/></label>
+        <br/>
+		<label>Fixed Fee Amount <input type="text" name="fixedFeeAmount" value="@(fixedFeeAmount)"/></label>
 		<br/>
 		<label>Rounded decimals <input type="text" name="roundedDecimals" value="@(roundedDecimals)"/></label>
 		<br/><br/>
 		<input type="submit" value="Calculate"/>
-		<br/><br/>
-		<strong>Server calculated results</strong>
 		<br/>
-		<em>Base price:</em> @price.BasePrice.ToString("c")
-		<br/>
-		<em>Fee price:</em> @price.FeePrice.ToString("c")
-		<br/>
-		<em>Total price:</em> @price.TotalPrice.ToString("c")
-		<br/>
-		<em>Fee rate:</em> @price.FeeRate = @(price.FeeRate * 100)%
-	</fieldset>
-	<fieldset>
-		<legend><h2>Client side calculation</h2></legend>
-		<div>Calculating with javascript, it updates after any change without pressing 'calculate' and sending data to server,
-			<strong>it must match server side calculation</strong></div>
-		<strong>Instant calculated results</strong>
-		<br/>
-		<em>Base price:</em> <span id="basePrice"></span>
-		<br/>
-		<em>Fee price:</em> <span id="feePrice"></span>
-		<br/>
-		<em>Total price:</em> <span id="totalPrice"></span>
-		<br/>
-		<em>Fee rate:</em> <span id="feeRate"></span> = <span id="feePercentage"></span>%
+        <table>
+            <caption>Calculation, server and client side values must match</caption>
+            <tr>
+                <th></th>
+                <th>Server side results (press 'calculate')</th>
+                <th>Cliend side results (instant)</th>
+            </tr>
+            <tr>
+                <td>Base price</td>
+                <td>@price.BasePrice.ToString("c")</td>
+                <td><span id="basePrice"></span></td>
+            </tr>
+            <tr>
+                <td>Fee price</td>
+                <td>@price.FeePrice.ToString("c")</td>
+                <td><span id="feePrice"></span></td>
+            </tr>
+            <tr>
+                <td>Total price</td>
+                <td>@price.TotalPrice.ToString("c")</td>
+                <td><span id="totalPrice"></span></td>
+            </tr>
+            <tr>
+                <td>Fee rate</td>
+                <td>@price.FeeRate = @(price.FeeRate.ToString("0%"))</td>
+                <td><span id="feeRate"></span> = <span id="feePercentage"></span>%</td>
+            </tr>
+            <tr>
+                <td>Fixed fee amount</td>
+                <td>@price.FixedFeeAmount</td>
+                <td><span id="fixedFeeAmount"></span></td>
+            </tr>
+        </table>
 	</fieldset>
 	<script type="text/javascript">
-		jQuery(function($){
-			$('form input').change(function(){
-				// Calculate
-				var basePrice = LC.roundTo(parseFloat($('[name=basePrice]').val()), 2),
+	    jQuery(function ($) {
+	        $('form input').change(function () {
+	            // Calculate
+	            var basePrice = LC.roundTo(parseFloat($('[name=basePrice]').val()), 2),
 					feeRate = parseFloat($('[name=feeRate]').val()),
-					roundedDecimals = parseFloat($('[name=roundedDecimals]').val());
+                    fixedFeeAmount = parseFloat($('[name=fixedFeeAmount]').val()),
+                    fee = { feeRate: feeRate, fixedFeeAmount: fixedFeeAmount },
+	                roundedDecimals = parseFloat($('[name=roundedDecimals]').val());
 
-				// Calculation to be tested:
-				var price = new LC.Price(basePrice, feeRate, roundedDecimals);
+	            // Calculation to be tested:
+	            var price = new LC.Price(basePrice, fee, roundedDecimals);
 
-				// Write results
-				$('#basePrice').text(price.basePrice);
-				$('#feePrice').text(price.feePrice);
-				$('#totalPrice').text(price.totalPrice);
-				$('#feeRate').text(price.feeRate);
-				$('#feePercentage').text(LC.roundTo(price.feeRate * 100, 2));
-			}).change();
-		});
+	            // Write results
+	            $('#basePrice').text(price.basePrice);
+	            $('#feePrice').text(price.feePrice);
+	            $('#totalPrice').text(price.totalPrice);
+	            $('#feeRate').text(price.feeRate);
+	            $('#feePercentage').text(LC.roundTo(price.feeRate * 100, 2));
+	            $('#fixedFeeAmount').text(price.fixedFeeAmount);
+	        }).change();
+	    });
 	</script>
 </form>

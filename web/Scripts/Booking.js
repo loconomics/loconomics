@@ -284,8 +284,8 @@ LC.initCustomerPackageSliders = function () {
         // Recalculating price with new time, using the package hourly-rate
         var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
         var price = LC.roundTo(hourlyRate * hours, 2);
-        var feeRate = parseFloat(calcContext.data('hourly-fee'));
-        var fee = LC.roundTo(feeRate * hours, 2);
+        var feePriceHour = parseFloat(calcContext.data('hourly-fee'));
+        var fee = LC.roundTo(feePriceHour * hours, 2);
         // Set new item-price and trigger a change event to allow the items-fees calculation
         // system do their job and showing the total price
         LC.setMoneyNumber(price, pak.find('.calculate-item-price'));
