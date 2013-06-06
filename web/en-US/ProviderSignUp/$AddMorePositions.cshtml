@@ -28,9 +28,10 @@
                 var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7,@8";
                 var nadded = 0;
                 foreach (string sPosID in Request.Form.GetValues("position")) {
-                    if (sPosID.IsInt()) {
+                    var posID = sPosID.AsInt(0);
+                    if (posID > 0) {
                         // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
-                        var Results = db.QuerySingle(sqlinsertPosition, userid, sPosID.AsInt(), lang, countryId, DateTime.Now, DateTime.Now, "sys", 1, LcData.Booking.DefaultCancellationPolicyID);
+                        var Results = db.QuerySingle(sqlinsertPosition, userid, posID, lang, countryId, DateTime.Now, DateTime.Now, "sys", 1, LcData.Booking.DefaultCancellationPolicyID);
                         if (Results.Result != "Success") {
                             ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
                         }
@@ -59,7 +60,7 @@
             if (!first) {
                 positionIDList += ",";
             }
-            positionIDList += sPosID.AsInt().ToString();
+            positionIDList += sPosID.AsInt(-2).ToString();
             first = false;
         }
         if (positionIDList != "") {
