@@ -177,7 +177,6 @@
         <tr>
             <th class="row-selection"></th>
             <th class="package-name name">Name</th>
-            <th class="package-sessions number">Included sessions</th>
             <th class="package-duration number">Duration</th>
             <th class="package-total-price number">Price</th>
         </tr>
@@ -191,14 +190,13 @@
                     <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
                 </td>
                 <td class="package-name name">
-                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name @(pak.NumberOfSessions > 1 ? String.Format("({0} appointments)", pak.NumberOfSessions) : "")</label>
 					@if (config.Mod != null) {
 						<div class="package-extra-data">
 							@Html.Raw(config.Mod.GetCustomerHtml(new LcPricingModel.PackageBaseData(pak), fee))
 						</div>
 					}
                 </td>
-                <td class="package-sessions number">@(pak.NumberOfSessions < 1 ? "N/A" : pak.NumberOfSessions)</td>
                 <td class="package-duration">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
