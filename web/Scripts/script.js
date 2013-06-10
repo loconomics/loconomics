@@ -42,9 +42,16 @@ Array.remove = function (anArray, from, to) {
     return anArray.push.apply(anArray, rest);
 };
 
-/*
- * Our jQuery additions (small plugins)
+/* Some additions on Javascript native objects
  */
+/** Polyfill for string.contains
+ **/
+if (!('contains' in String.prototype))
+    String.prototype.contains = function (str, startIndex) { return -1 !== this.indexOf(str, startIndex); };
+
+/*
+* Our jQuery additions (small plugins)
+*/
 /**
   * HasScrollBar returns an object with bool properties 'vertical' and 'horizontal'
   * saying if the element has need of scrollbars for each dimension or not (element
@@ -631,6 +638,10 @@ LC.getXPath = function (element) {
     }
     return xpath;
 };
+/** An i18n utility, get a translation text by looking for specific elements in the html
+    with the name given as first paramenter and applying the given values on second and 
+    other parameters.
+**/
 LC.getText = function () {
     var args = arguments;
     // Get key and translate it
@@ -645,6 +656,33 @@ LC.getText = function () {
     }
     return formatted;
 };
+/** Base class 'enum' with utility methods for objects that are used as enumerations.
+    Its NOT a class to instantiate or to use as base for enumerations, else enumerations
+    are plain objects with properties-values only.
+**/
+LC.enum = {
+    parse: function (enumType, str, caseSensitive) {
+        if (caseSensitive)
+            return enumType[str] || null;
+        str = str.toLowerCase();
+        for (var e in enumType)
+            if (e.toLowerCase && e.toLowerCase() == str)
+                return enumType[e];
+        return null;
+    }
+}
+/** Enumeration to be uses by functions that implements 'rounding' operations on different
+    data types.
+    It holds the different ways a rounding operation can be apply.
+**/
+LC.roundingTypeEnum = {
+    Down: -1,
+    Nearest: 0,
+    Up: 1
+};
+/** Apply ever a redirect to the given URL, if this is an internal URL or same
+    page, it forces a page reload for the given URL.
+**/
 LC.redirectTo = function (url) {
     // Block to avoid more user interactions:
     $.blockUI({ message: '' }); //loadingBlock);
@@ -692,7 +730,7 @@ LC.setupValidation = function (reapplyOnlyTo) {
         }
     }
 }
-// TODO: look better name, better working (typo error: is interchangeable not interchangle :-S)
+// TODO: look for better name, better working (typo error: is interchangeable not interchangle :-S)
 LC.dateToInterchangleString = function (date) {
     var m = (date.getUTCMonth() + 1).toString(),
         d = date.getUTCDate().toString();
@@ -702,13 +740,45 @@ LC.dateToInterchangleString = function (date) {
         d = '0' + d;
     return date.getUTCFullYear().toString() + '-' + m + '-' + d;
 };
-LC.timeSpan = function(days, hours, minutes, seconds, milliseconds) {
-    this.days = days;
-    this.hours = hours;
-    this.minutes = minutes;
-    this.seconds = seconds;
-    this.milliseconds = milliseconds;
+/** timeSpan class to manage times, parse, format, compute.
+    Its not so complete as the C# ones but is usefull still.
+**/
+LC.timeSpan = function (days, hours, minutes, seconds, milliseconds) {
+    this.days = Math.floor(parseFloat(days)) || 0;
+    this.hours = Math.floor(parseFloat(hours)) || 0;
+    this.minutes = Math.floor(parseFloat(minutes)) || 0;
+    this.seconds = Math.floor(parseFloat(seconds)) || 0;
+    this.milliseconds = Math.floor(parseFloat(milliseconds)) || 0;
+
+    this.toString = function LC_timeSpan_proto_toString() {
+        // function 'to string with two digits almost'
+        function t(n) {
+            return Math.floor(n / 10) + '' + n % 10;
+        }
+        var h = t(this.hours),
+            d = (this.days > 0 ? this.days.toString() + LC.timeSpan.decimalsDelimiter : ''),
+            m = t(this.minutes),
+            s = t(this.seconds + this.milliseconds / 1000);
+        return (
+            d +
+            h + LC.timeSpan.unitsDelimiter +
+            m + LC.timeSpan.unitsDelimiter +
+            s);
+    };
+    this.valueOf = function LC_timeSpan_proto_valueOf() {
+        // Return the total milliseconds contained by the time
+        return (
+            this.days * (24 * 3600000) +
+            this.hours * 3600000 +
+            this.minutes * 60000 +
+            this.seconds * 1000 +
+            this.milliseconds
+        );
+    };
 };
+/** It creates a timeSpan object based on a decimal minutes
+    Incomplete: doesn't computes seconds and milliseconds.
+**/
 LC.timeSpan.fromMinutes = function(minutes) {
     minutes = Math.floor(minutes);
 	var h = Math.floor(minutes / 60),
@@ -720,7 +790,49 @@ LC.timeSpan.fromMinutes = function(minutes) {
 	}
     return new LC.timeSpan(d, h, m, 0, 0);
 };
-LC.smartTime = function(time) {
+/** It creates a timeSpan object based on a decimal hours
+    Incomplete: doesn't computes seconds and milliseconds.
+**/
+LC.timeSpan.fromHours = function (hours) {
+    return this.fromMinutes(hours * 60);
+};
+// For spanish and english works good ':' as unitsDelimiter and '.' as decimalDelimiter
+// TODO: this must be set from a global LC.i18n var localized for current user
+LC.timeSpan.unitsDelimiter = ':';
+LC.timeSpan.decimalsDelimiter = '.';
+LC.timeSpan.parse = function (strtime) {
+    strtime = (strtime || '').split(this.unitsDelimiter);
+    // Bad string, returns null
+    if (strtime.length < 2)
+        return null;
+
+    // Decoupled units:
+    var d, h, m, s, ms;
+    h = strtime[0];
+    m = strtime[1];
+    s = strtime.length > 2 ? strtime[2] : 0;
+    // Substracting days from the hours part (format: 'days.hours' where '.' is decimalsDelimiter)
+    if (h.contains(this.decimalsDelimiter)) {
+        var dhsplit = h.split(this.decimalsDelimiter);
+        d = dhsplit[0];
+        h = dhsplit[1];
+    }
+    // Milliseconds are extracted from the seconds (are represented as decimal numbers on the seconds part: 'seconds.milliseconds' where '.' is decimalsDelimiter)
+    ms = Math.round(parseFloat(s.replace(this.decimalsDelimiter, '.')) * 1000 % 1000);
+    // Return the new time instance
+    return new LC.timeSpan(d, h, m, s, ms);
+};
+LC.timeSpan.zero = new LC.timeSpan(0, 0, 0, 0, 0);
+LC.timeSpan.prototype.isZero = function LC_timeSpan_proto_isZero() {
+    return (
+        this.days == 0 &&
+        this.hours == 0 &&
+        this.minutes == 0 &&
+        this.seconds == 0 &&
+        this.milliseconds == 0
+    );
+};
+LC.smartTime = function LC_smartTime(time) {
 	var r = [];
 	if (time.days > 1)
 		r.push(time.days + ' days');
@@ -744,6 +856,46 @@ LC.smartTime = function(time) {
 	    r.push('1 millisecond');
 	return r.join(', ');
 }
+LC.timeSpan.prototype.toSmartString = function LC_timeSpan_proto_toSmartString() { return LC.smartTime(this) };
+LC.timeSpan.prototype.totalHours = function LC_timeSpan_proto_totalHours() {
+    return (
+        this.hours +
+        this.days * 24 +
+        this.minutes / 60 +
+        this.seconds / 3600 +
+        this.milliseconds / 3600000
+    );
+};
+LC.timeSpan.prototype.totalMilliseconds = function LC_timeSpan_proto_totalMilliseconds() {
+    return this.valueOf();
+};
+/** Rounds a time to the nearest 15 minutes fragment.
+    @roundTo specify the LC.roundingTypeEnum about how to round the time (down, nearest or up)
+**/
+LC.roundTimeToQuarterHour = function LC_roundTimeToQuarterHour(time, /* LC.roundingTypeEnum */roundTo) {
+    var restFromQuarter = time.totalHours() % .25;
+    var hours = time.totalHours();
+    if (restFromQuarter > 0.0) {
+        switch (roundTo) {
+            case LC.roundingTypeEnum.Down:
+                hours -= restFromQuarter;
+                break;
+            case LC.roundingTypeEnum.Nearest:
+                var limit = .25 / 2;
+                if (restFromQuarter >= limit) {
+                    hours += (.25 - restFromQuarter);
+                } else {
+                    hours -= restFromQuarter;
+                }
+                break;
+            case LC.roundingTypeEnum.Up:
+                hours += (.25 - restFromQuarter);
+                break;
+        }
+    }
+    return LC.timeSpan.fromHours(hours);
+};
+
 /* Focus the first element in the document (or in @container)
     with the html5 attribute 'autofocus' (or alternative @cssSelector).
     It's fine as a polyfill and for ajax loaded content that will not

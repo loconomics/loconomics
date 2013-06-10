@@ -53,4 +53,15 @@ public static class LcExtensions
             yield return item;
         }
     }
+
+    public static TimeSpan AsTimeSpan(this String str)
+    {
+        return str.AsTimeSpan(TimeSpan.Zero);
+    }
+    public static TimeSpan AsTimeSpan(this String str, TimeSpan defaultValue)
+    {
+        var r = defaultValue;
+        TimeSpan.TryParse(str, out r);
+        return r;
+    }
 }

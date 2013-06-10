@@ -15,6 +15,14 @@
 		new LcPricingModel.FeeRate { Currency = fixedFeeAmount, Percentage  = feeRate },
 		roundedDecimals
 	);
+    
+    var durationHours = Request["hours"].AsDecimal();
+    var durationTime = Request["time"].AsTimeSpan();
+    var roundTo = (LcHelpers.RoundingType)Enum.Parse(typeof(LcHelpers.RoundingType), Request["roundTo"] ?? "Up");
+    if (durationHours > 0) {
+        durationTime = TimeSpan.FromHours((double)durationHours);
+    }
+    var duration = LcHelpers.RoundTimeToQuarterHour(durationTime, roundTo);
 }
 <h1>Testing Prices and Fees calculation</h1>
 <style type="text/css">
@@ -25,7 +33,7 @@
     }
 </style>
 <form action="" method="get">
-	<fieldset>
+	<fieldset class="fixed-price">
 		<legend><h2>Fixed price calculation (package price)</h2></legend>
 		<label>Base price <input type="text" name="basePrice" value="@(basePrice)"/></label>
 		<br/>
@@ -42,7 +50,7 @@
             <tr>
                 <th></th>
                 <th>Server side results (press 'calculate')</th>
-                <th>Cliend side results (instant)</th>
+                <th>Client side results (instant)</th>
             </tr>
             <tr>
                 <td>Base price</td>
@@ -94,4 +102,44 @@
 	        }).change();
 	    });
 	</script>
+    <fieldset class="time">
+        <legend><h2>Rounding duration to 'quarter-hour' (15 minutes)</h2></legend>
+        <label>Hours: <input type="text" name="hours" value="@durationHours" /></label>
+        or <label>Time: <input type="text" name="time" value="@durationTime" /></label>
+        <div>
+            <label>Round to Down <input @LcHelpers.IsChecked(roundTo, LcHelpers.RoundingType.Down) type="radio" name="roundTo" value="Down" /></label>
+            <label>Round to Nearest <input @LcHelpers.IsChecked(roundTo, LcHelpers.RoundingType.Nearest) type="radio" name="roundTo" value="Nearest" /></label>
+            <label>Round to Up <input @LcHelpers.IsChecked(roundTo, LcHelpers.RoundingType.Up) type="radio" name="roundTo" value="Up" /></label>
+        </div>
+        <input type="submit" value="Calculate" />
+        <table>
+            <tr>
+                <th></th>
+                <th>Server side</th>
+                <th>Client side</th>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>@duration</td>
+                <td><span id="duration"></span></td>
+            </tr>
+        </table>
+    </fieldset>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var $f = $('form .time');
+            $f.on('change', 'input', function () {
+                var durationHours = parseFloat($f.find('[name=hours]').val()),
+                    durationTime = LC.timeSpan.parse($f.find('[name=time]').val()),
+                    roundTo = LC.enum.parse(LC.roundingTypeEnum, $f.find('[name=roundTo]:checked').val());
+
+                durationTime = durationTime || LC.timeSpan.fromHours(durationHours);
+
+                // Calculate
+                var duration = LC.roundTimeToQuarterHour(durationTime, roundTo);
+                // Results
+                $f.find('#duration').text(duration.toString());
+            }).find('input').change();
+        });
+    </script>
 </form>

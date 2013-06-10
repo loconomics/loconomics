@@ -100,6 +100,59 @@
             .Subtract(TimeSpan.FromSeconds(time.Seconds))
         );
     }
+    public enum RoundingType : short
+    {
+        /// <summary>
+        /// Also know as 'ceiling', it rounds ever to the same integer
+        /// without decimals (or any other unit to be rounded)
+        /// </summary>
+        Down = -1,
+        /// <summary>
+        /// Most common round, to the nearest approximated number.
+        /// For example: for a number 3.5 gets 4.0 and for 3.4 gets 3.0
+        /// </summary>
+        Nearest = 0,
+        /// <summary>
+        /// Also know as 'floor', it rounds to the next bigger integer
+        /// except if the number has no decimals, then left the same number
+        /// (the units 'integer, decimals' can change when apply)
+        /// </summary>
+        Up = 1
+    }
+    /// <summary>
+    /// It rounds a time to the nearest quarter-hour fragment.
+    /// This means that the time returned it has ever one of the next
+    /// values for minutes: 00, 15, 30, 45.
+    /// Lower units (seconds..) become 0.
+    /// The type of rounding (down, nearest, up) can be changed with the
+    /// second parameter, defaults to 'nearest'.
+    /// </summary>
+    /// <param name="time">Time to get rounded. Not modified, the new rounded time is returned</param>
+    /// <param name="roundTo">The type of rounding: down, nearest, up</param>
+    /// <returns>The new time rounded</returns>
+    public static TimeSpan RoundTimeToQuarterHour(TimeSpan time, RoundingType roundTo = RoundingType.Nearest){
+        var restFromQuarter = time.TotalHours % .25;
+        double hours = time.TotalHours;
+        if (restFromQuarter > 0.0) {
+            switch(roundTo){
+                case RoundingType.Down:
+                    hours -= restFromQuarter;
+                    break;
+                case RoundingType.Nearest:
+                    var limit = .25 / 2;
+                    if (restFromQuarter >= limit) {
+                        hours += (.25 - restFromQuarter);
+                    } else {
+                        hours -= restFromQuarter;
+                    }
+                    break;
+                case RoundingType.Up:
+                    hours += (.25 - restFromQuarter);
+                    break;
+            }
+        }
+        return TimeSpan.FromHours(hours);
+    }
     /// <summary>
     /// Get the nth number of the week-day represented by @date
     /// respect to the month.

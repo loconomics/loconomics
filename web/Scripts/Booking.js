@@ -12,6 +12,7 @@ function bookingChangeLocation() {
         sel.siblings('.enter-new-location, .enter-new-location:hidden').hide('fast');
     }
 }
+/* DEPRECATED: use LC.timeSpan defined at script.js, ever available */
 function lcTime (hour, minute, second) {
     this.hour = Math.floor(parseFloat(hour || 0));
     this.minute = Math.floor(parseFloat(minute || 0));
