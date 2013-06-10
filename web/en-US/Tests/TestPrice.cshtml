@@ -74,7 +74,7 @@
             </tr>
             <tr>
                 <td>Fixed fee amount</td>
-                <td>@price.FixedFeeAmount</td>
+                <td>@price.FixedFeeAmount.ToString("c")</td>
                 <td><span id="fixedFeeAmount"></span></td>
             </tr>
         </table>
@@ -93,12 +93,12 @@
 	            var price = new LC.Price(basePrice, fee, roundedDecimals);
 
 	            // Write results
-	            $('#basePrice').text(price.basePrice);
-	            $('#feePrice').text(price.feePrice);
-	            $('#totalPrice').text(price.totalPrice);
+	            LC.setMoneyNumber(price.basePrice, $('#basePrice'));
+	            LC.setMoneyNumber(price.feePrice, $('#feePrice'));
+	            LC.setMoneyNumber(price.totalPrice, $('#totalPrice'));
 	            $('#feeRate').text(price.feeRate);
 	            $('#feePercentage').text(LC.roundTo(price.feeRate * 100, 2));
-	            $('#fixedFeeAmount').text(price.fixedFeeAmount);
+	            LC.setMoneyNumber(price.fixedFeeAmount, $('#fixedFeeAmount'));
 	        }).change();
 	    });
 	</script>

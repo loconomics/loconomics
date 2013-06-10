@@ -1008,6 +1008,14 @@ LC.numericDecimalSeparator = {
     'en-US': '.',
     'en-ES': '.'
 };
+LC.moneySymbolPrefix = {
+    'ES': '',
+    'US': '$'
+};
+LC.moneySymbolSufix = {
+    'ES': '€',
+    'US': ''
+};
 LC.getCurrentCulture = function () {
     var c = $('html').data('culture');
     var s = c.split('-');
@@ -1860,9 +1868,31 @@ LC.getMoneyNumber = function LC_getMoneyNumber(v, alt) {
     );
     return isNaN(v) ? alt : v;
 };
-LC.setMoneyNumber = function LC_setMoneyNumber(v, el) {
+LC.numberToTwoDecimalsString = function LC_numberToTwoDecimalsString(v) {
+    var culture = LC.getCurrentCulture().culture;
+    // First, round to 2 decimals
     v = LC.roundTo(v, 2);
-    v = '$' + v;
+    // Get the decimal part (rest)
+    var rest = Math.round(v * 100 % 100);
+    return ('' +
+        // Integer part (no decimals)
+        Math.floor(v) +
+        // Decimal separator depending on locale
+        LC.numericDecimalSeparator[culture] +
+        // Decimals, ever two digits
+        Math.floor(rest / 10) + rest % 10
+    );
+};
+LC.numberToMoneyString = function LC_numberToMoneyString(v) {
+    var country = LC.getCurrentCulture().country;
+    // Two digits in decimals for rounded value with money symbol as for
+    // current locale
+    return (LC.moneySymbolPrefix[country] + LC.numberToTwoDecimalsString(v) + LC.moneySymbolSufix[country]);
+};
+LC.setMoneyNumber = function LC_setMoneyNumber(v, el) {
+    // Get value in money format:
+    v = LC.numberToMoneyString(v);
+    // Setting value:
     if (el instanceof jQuery)
         if (el.is(':input'))
             el.val(v);
