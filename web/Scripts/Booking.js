@@ -32,6 +32,7 @@ function lcTime (hour, minute, second) {
     };
     /* Print only hours and minutes in the common time of the day format
         (AM/PM in US, 24h on ES)
+       TODO: Needs migration to LC.timeSpan
     */
     this.toDayTimeString = function () {
         switch ($('html').attr('lang')) {
@@ -59,10 +60,14 @@ function lcTime (hour, minute, second) {
                 return h + lcTime.delimiter + m + sufix;
         }
     };
+    /* TODO: Needs migration to LC.timeSpan
+    */
     this.addHours = function (hours) {
         this.addMinutes(hours * 60);
         return this;
     };
+    /* TODO: Needs migration to LC.timeSpan
+    */
     this.addMinutes = function (minutes) {
         var m = this.hour * 60 + this.minute;
         var ntime = minutes + m;
@@ -253,12 +258,9 @@ LC.initScheduleStep = function () {
 // Sliders on Housekeeper price:
 LC.initCustomerPackageSliders = function () {
     /* Houseekeeper pricing */
-    function updateAverage($c, minutes) {
+    function updateAverage($c, value) {
         // Update input value and trigger change event to notify standard listeners
-        $c.find('input').val(minutes).change();
-        // Showing time in a smart way to the user
-        minutes = parseInt(minutes);
-        $c.find('.preview .time').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
+        $c.find('input').val(value).change();
     }
     function calculateHousekeeperPackage($sliderContent) {
         // Look for the housekeeper pricing container for this package
@@ -278,10 +280,19 @@ LC.initCustomerPackageSliders = function () {
         // Getting var-values from form and calculating
         var numbedrooms = calcContext.find('[name="bedrooms-number"]').val(),
             numbathrooms = calcContext.find('[name="bathrooms-number"]').val();
-        var minutes = Math.round(formula(numbedrooms, numbathrooms)),
-            hours = LC.roundTo(minutes / 60, 2);
+        // ...Gets duration rounded up to quarter-hours.
+        var duration = LC.roundTimeToQuarterHour(
+            // ..create a time object..
+            LC.timeSpan.fromMinutes(
+                // Computes formula with customer values...
+                formula(numbedrooms, numbathrooms)
+            )
+        , LC.roundingTypeEnum.Up);
+        // Get minutes and hours from rounded duration:
+        var minutes = duration.totalMinutes();
+        var hours = duration.totalHours();
         // Updating user-viewed time, show it in the smart way
-        pak.find('.package-duration').text(LC.smartTime(LC.timeSpan.fromMinutes(minutes)));
+        pak.find('.package-duration').text(duration.toSmartString());
         // Recalculating price with new time, using the package hourly-rate
         var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
         var price = LC.roundTo(hourlyRate * hours, 2);

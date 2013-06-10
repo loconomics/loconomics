@@ -776,26 +776,37 @@ LC.timeSpan = function (days, hours, minutes, seconds, milliseconds) {
         );
     };
 };
-/** It creates a timeSpan object based on a decimal minutes
-    Incomplete: doesn't computes seconds and milliseconds.
+/** It creates a timeSpan object based on a milliseconds
 **/
-LC.timeSpan.fromMinutes = function(minutes) {
-    minutes = Math.floor(minutes);
-	var h = Math.floor(minutes / 60),
-		m = minutes - h * 60,
-		d = 0;
-	if (h >= 24) {
-		d = Math.floor(h / 24);
-		h = h - d * 24;
-	}
-    return new LC.timeSpan(d, h, m, 0, 0);
+LC.timeSpan.fromMilliseconds = function LC_timeSpan_proto_fromMilliseconds(milliseconds) {
+    var ms = milliseconds % 1000,
+        s = Math.floor(milliseconds / 1000) % 60,
+        m = Math.floor(milliseconds / 60000) % 60,
+        h = Math.floor(milliseconds / 3600000) % 24,
+        d = Math.floor(milliseconds / (3600000 * 24));
+    return new LC.timeSpan(d, h, m, s, ms);
+};
+/** It creates a timeSpan object based on a decimal seconds
+**/
+LC.timeSpan.fromSeconds = function LC_timeSpan_proto_fromSeconds(seconds) {
+    return this.fromMilliseconds(seconds * 1000);
+};
+/** It creates a timeSpan object based on a decimal minutes
+**/
+LC.timeSpan.fromMinutes = function LC_timeSpan_proto_fromMinutes(minutes) {
+    return this.fromSeconds(minutes * 60);
 };
 /** It creates a timeSpan object based on a decimal hours
-    Incomplete: doesn't computes seconds and milliseconds.
 **/
-LC.timeSpan.fromHours = function (hours) {
+LC.timeSpan.fromHours = function LC_timeSpan_proto_fromHours(hours) {
     return this.fromMinutes(hours * 60);
 };
+/** It creates a timeSpan object based on a decimal days
+**/
+LC.timeSpan.fromDays = function LC_timeSpan_proto_fromDays(days) {
+    return this.fromHours(days * 24);
+};
+
 // For spanish and english works good ':' as unitsDelimiter and '.' as decimalDelimiter
 // TODO: this must be set from a global LC.i18n var localized for current user
 LC.timeSpan.unitsDelimiter = ':';
@@ -857,17 +868,20 @@ LC.smartTime = function LC_smartTime(time) {
 	return r.join(', ');
 }
 LC.timeSpan.prototype.toSmartString = function LC_timeSpan_proto_toSmartString() { return LC.smartTime(this) };
-LC.timeSpan.prototype.totalHours = function LC_timeSpan_proto_totalHours() {
-    return (
-        this.hours +
-        this.days * 24 +
-        this.minutes / 60 +
-        this.seconds / 3600 +
-        this.milliseconds / 3600000
-    );
-};
 LC.timeSpan.prototype.totalMilliseconds = function LC_timeSpan_proto_totalMilliseconds() {
     return this.valueOf();
+};
+LC.timeSpan.prototype.totalSeconds = function LC_timeSpan_proto_totalSeconds() {
+    return (this.totalMilliseconds() / 1000);
+};
+LC.timeSpan.prototype.totalMinutes = function LC_timeSpan_proto_totalMinutes() {
+    return (this.totalSeconds() / 60);
+};
+LC.timeSpan.prototype.totalHours = function LC_timeSpan_proto_totalHours() {
+    return (this.totalMinutes() / 60);
+};
+LC.timeSpan.prototype.totalDays = function LC_timeSpan_proto_totalDays() {
+    return (this.totalHours() / 24);
 };
 /** Rounds a time to the nearest 15 minutes fragment.
     @roundTo specify the LC.roundingTypeEnum about how to round the time (down, nearest or up)
@@ -880,6 +894,7 @@ LC.roundTimeToQuarterHour = function LC_roundTimeToQuarterHour(time, /* LC.round
             case LC.roundingTypeEnum.Down:
                 hours -= restFromQuarter;
                 break;
+            default:
             case LC.roundingTypeEnum.Nearest:
                 var limit = .25 / 2;
                 if (restFromQuarter >= limit) {

@@ -289,8 +289,10 @@ public static class LcPricingModel
             var providerRate = .8; // 140.34 / formulaAverageT;
             // Apply formula, changed by the providerRate (variation from the average)
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
+            // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
+            var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
             // Change package with the information:
-            package.Duration = ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromMinutes(duration));
+            package.Duration = timeDuration;
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
         }
