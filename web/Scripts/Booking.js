@@ -288,20 +288,19 @@ LC.initCustomerPackageSliders = function () {
                 formula(numbedrooms, numbathrooms)
             )
         , LC.roundingTypeEnum.Up);
-        // Get minutes and hours from rounded duration:
-        var minutes = duration.totalMinutes();
-        var hours = duration.totalHours();
         // Updating user-viewed time, show it in the smart way
         pak.find('.package-duration').text(duration.toSmartString());
         // Recalculating price with new time, using the package hourly-rate
         var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
-        var price = LC.roundTo(hourlyRate * hours, 2);
-        var feePriceHour = parseFloat(calcContext.data('hourly-fee'));
-        var fee = LC.roundTo(feePriceHour * hours, 2);
+        var hourlyFee = parseFloat(calcContext.data('hourly-fee'));
+        // Calculate the price for the total time,
+        // with the hourleRate (already with fees), hourlyFeeAmount
+        // and the already rounded duration:
+        var totalTimePrice = LC.calculateHourlyPrice(duration, hourlyRate, hourlyFee);
         // Set new item-price and trigger a change event to allow the items-fees calculation
         // system do their job and showing the total price
-        LC.setMoneyNumber(price, pak.find('.calculate-item-price'));
-        LC.setMoneyNumber(fee, pak.find('.calculate-item-fee'));
+        LC.setMoneyNumber(totalTimePrice.totalPrice, pak.find('.calculate-item-price'));
+        LC.setMoneyNumber(totalTimePrice.feePrice, pak.find('.calculate-item-fee'));
         pak.find('.calculate-item-price').trigger('change');
     }
     $(".customer-slider").each(function () {

@@ -1858,6 +1858,27 @@ LC.Price = function LC_Price(basePrice, fee, roundedDecimals) {
     this.totalPrice = totalPrice;
     this.feePrice = feePrice;
 };
+/** Calculate and returns the price and relevant data as an object for
+    a time, hourlyRate (with fees) and the hourlyFee.
+    The time (@duration) is used 'as is', without transformation, maybe you can require
+    use LC.roundTimeToQuarterHour before pass the duration to this function.
+    The fees must be calculated before pass the prices to this function, then the @hourlyRate contains
+    already the fees that apply and @hourlyFee is the fee amount already included in @hourlyRate.
+**/
+LC.calculateHourlyPrice = function LC_calculateHourlyPrice(duration, hourlyRate, hourlyFee) {
+    // Get hours from rounded duration:
+    var hours = LC.roundTo(duration.totalHours(), 2);
+    // Calculate final prices
+    var price = LC.roundTo(hourlyRate * hours, 2),
+                fee = LC.roundTo(hourlyFee * hours, 2),
+                subtotal = LC.roundTo(price - fee, 2)
+    return {
+        totalPrice: price,
+        feePrice: fee,
+        subtotalPrice: subtotal,
+        durationHours: hours
+    };
+}
 LC.getMoneyNumber = function LC_getMoneyNumber(v, alt) {
     alt = alt || 0;
     if (v instanceof jQuery)

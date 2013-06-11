@@ -4,11 +4,11 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
 
-	var basePrice = Request["basePrice"].AsDecimal(25.00M);
+    // Fixed price
+	var basePrice = Request["basePrice"].AsDecimal(120.00M);
 	var feeRate = Request["feeRate"].AsDecimal(.05M);
     var fixedFeeAmount = Request["fixedFeeAmount"].AsDecimal(0);
 	var roundedDecimals = Request["roundedDecimals"].AsInt(1);
-
 	// Calculation to be tested:
     var price = new LcPricingModel.Price(
 		basePrice,
@@ -16,13 +16,29 @@
 		roundedDecimals
 	);
     
+    // Duration
     var durationHours = Request["hours"].AsDecimal();
     var durationTime = Request["time"].AsTimeSpan();
     var roundTo = (LcHelpers.RoundingType)Enum.Parse(typeof(LcHelpers.RoundingType), Request["roundTo"] ?? "Up");
     if (durationHours > 0) {
         durationTime = TimeSpan.FromHours((double)durationHours);
     }
+    // Calculation to be tested:
     var duration = LcHelpers.RoundTimeToQuarterHour(durationTime, roundTo);
+    
+    // Hourly price
+    var hourlyRate = Request["hourlyRate"].AsDecimal(25.00M);   
+    // Calculation to be tested:
+    var hourlyPrice = new LcPricingModel.Price(
+        hourlyRate,
+        new LcPricingModel.FeeRate { Currency = fixedFeeAmount, Percentage  = feeRate },
+        roundedDecimals
+    );
+    // Next is a replication of the simple calculation code at LcPricingModel.CalculatePackages for HourlyPrice PriceCalculationType
+    var hourlyDurationHours = Math.Round((decimal)duration.TotalHours, 2);
+    var hourlySubtotalPrice = hourlyPrice.BasePrice * hourlyDurationHours;
+    var hourlyFeesPrice = hourlyPrice.FeePrice * hourlyDurationHours;
+    var hourlyTotalPrice = hourlyPrice.TotalPrice * hourlyDurationHours;
 }
 <h1>Testing Prices and Fees calculation</h1>
 <style type="text/css">
@@ -80,29 +96,40 @@
         </table>
 	</fieldset>
 	<script type="text/javascript">
-	    jQuery(function ($) {
-	        $('form input').change(function () {
-	            // Calculate
-	            var basePrice = LC.roundTo(parseFloat($('[name=basePrice]').val()), 2),
-					feeRate = parseFloat($('[name=feeRate]').val()),
-                    fixedFeeAmount = parseFloat($('[name=fixedFeeAmount]').val()),
-                    fee = { feeRate: feeRate, fixedFeeAmount: fixedFeeAmount },
-	                roundedDecimals = parseFloat($('[name=roundedDecimals]').val());
+	    function getFixedPriceFields($f) {
+	        var basePrice = LC.roundTo(parseFloat($f.find('[name=basePrice]').val()), 2),
+				feeRate = parseFloat($f.find('[name=feeRate]').val()),
+                fixedFeeAmount = parseFloat($f.find('[name=fixedFeeAmount]').val()),
+                fee = { feeRate: feeRate, fixedFeeAmount: fixedFeeAmount },
+	            roundedDecimals = parseFloat($f.find('[name=roundedDecimals]').val());
+	        return {
+	            basePrice: basePrice,
+	            feeRate: feeRate,
+	            fixedFeeAmount: fixedFeeAmount,
+	            fee: fee,
+	            roundedDecimals: roundedDecimals
+	        };
+        }
+        jQuery(function ($) {
+            var $f = $('form .fixed-price');
+            $f.on('change', 'input', function () {
+                // Calculate
+                var fields = getFixedPriceFields($f);
 
-	            // Calculation to be tested:
-	            var price = new LC.Price(basePrice, fee, roundedDecimals);
+                // Calculation to be tested:
+                var price = new LC.Price(fields.basePrice, fields.fee, fields.roundedDecimals);
 
-	            // Write results
-	            LC.setMoneyNumber(price.basePrice, $('#basePrice'));
-	            LC.setMoneyNumber(price.feePrice, $('#feePrice'));
-	            LC.setMoneyNumber(price.totalPrice, $('#totalPrice'));
-	            $('#feeRate').text(price.feeRate);
-	            $('#feePercentage').text(LC.roundTo(price.feeRate * 100, 2));
-	            LC.setMoneyNumber(price.fixedFeeAmount, $('#fixedFeeAmount'));
-	        }).change();
-	    });
+                // Write results
+                LC.setMoneyNumber(price.basePrice, $('#basePrice'));
+                LC.setMoneyNumber(price.feePrice, $('#feePrice'));
+                LC.setMoneyNumber(price.totalPrice, $('#totalPrice'));
+                $('#feeRate').text(price.feeRate);
+                $('#feePercentage').text(LC.roundTo(price.feeRate * 100, 2));
+                LC.setMoneyNumber(price.fixedFeeAmount, $('#fixedFeeAmount'));
+            }).find('input').change();
+        });
 	</script>
-    <fieldset class="time">
+    <fieldset class="duration">
         <legend><h2>Rounding duration to 'quarter-hour' (15 minutes)</h2></legend>
         <label>Hours: <input type="text" name="hours" value="@durationHours" /></label>
         or <label>Time: <input type="text" name="time" value="@durationTime" /></label>
@@ -126,19 +153,108 @@
         </table>
     </fieldset>
     <script type="text/javascript">
+        function getDurationFields($f) {
+            var durationHours = parseFloat($f.find('[name=hours]').val()),
+                durationTime = LC.timeSpan.parse($f.find('[name=time]').val()),
+                roundTo = LC.enum.parse(LC.roundingTypeEnum, $f.find('[name=roundTo]:checked').val());
+            durationTime = durationTime || LC.timeSpan.fromHours(durationHours);
+            return {
+                durationHours: durationHours,
+                durationTime: durationTime,
+                roundTo: roundTo
+            };
+        }
         jQuery(function ($) {
-            var $f = $('form .time');
+            var $f = $('form .duration');
             $f.on('change', 'input', function () {
-                var durationHours = parseFloat($f.find('[name=hours]').val()),
-                    durationTime = LC.timeSpan.parse($f.find('[name=time]').val()),
-                    roundTo = LC.enum.parse(LC.roundingTypeEnum, $f.find('[name=roundTo]:checked').val());
-
-                durationTime = durationTime || LC.timeSpan.fromHours(durationHours);
+                var fields = getDurationFields($f);
 
                 // Calculate
-                var duration = LC.roundTimeToQuarterHour(durationTime, roundTo);
+                var duration = LC.roundTimeToQuarterHour(fields.durationTime, fields.roundTo);
                 // Results
                 $f.find('#duration').text(duration.toString());
+            }).find('input').change();
+        });
+    </script>
+    <fieldset class="hourly-price">
+        <legend><h2>Hourly Price (hourly, housekeeper, babysitter..)</h2></legend>
+        <label>Hourly rate <input type="text" name="hourlyRate" value="@hourlyRate" /></label>
+        <div>Fees values and time values are get from the previous fields in the form</div>
+        <input type="submit" value="Calculate" />
+        <table>
+            <tr>
+                <th></th>
+                <th>Server side</th>
+                <th>Client side</th>
+            </tr>
+            <tr>
+                <td>Hourly rate</td>
+                <td>@hourlyRate.ToString("c")</td>
+                <td><span class="hourlyRate"></span></td>
+            </tr>
+            <tr>
+                <td>Hourly rate with fees</td>
+                <td>@hourlyPrice.TotalPrice.ToString("c")</td>
+                <td><span class="totalHourlyRate"></span></td>
+            </tr>
+            <tr>
+                <td>Hourly fees</td>
+                <td>@hourlyPrice.FeePrice.ToString("c")</td>
+                <td><span class="hourlyFees"></span></td>
+            </tr>
+            <tr>
+                <td>Time</td>
+                <td>@duration</td>
+                <td><span class="durationTime"></span></td>
+            </tr>
+            <tr>
+                <td>Hours</td>
+                <td>@hourlyDurationHours</td>
+                <td><span class="durationHours"></span></td>
+            </tr>
+            <tr>
+                <td>Subotal price</td>
+                <td>@hourlySubtotalPrice.ToString("c")</td>
+                <td><span class="hourlySubtotalPrice"></span></td>
+            </tr>
+            <tr>
+                <td>Fees price</td>
+                <td>@hourlyFeesPrice.ToString("c")</td>
+                <td><span class="hourlyFeesPrice"></span></td>
+            </tr>
+            <tr>
+                <td>Total price</td>
+                <td>@hourlyTotalPrice.ToString("c")</td>
+                <td><span class="hourlyTotalPrice"></span></td>
+            </tr>
+        </table>
+    </fieldset>
+    <script type="text/javascript">
+        function getHourlyPriceFields($f) {
+            return {
+                hourlyRate: parseFloat($f.find('[name=hourlyRate]').val())
+            };
+        }
+        jQuery(function ($) {
+            var $f = $('form .hourly-price');
+            $('form').on('change', 'input', function () {
+                var fields = getFixedPriceFields($('form .fixed-price'));
+                $.extend(true, fields, getDurationFields($('form .duration')));
+                $.extend(true, fields, getHourlyPriceFields($f));
+
+                // Calculation to be tested:
+                var hourlyPrice = new LC.Price(fields.hourlyRate, fields.fee, fields.roundedDecimals);
+                var duration = LC.roundTimeToQuarterHour(fields.durationTime, fields.roundTo);
+                var price = LC.calculateHourlyPrice(duration, hourlyPrice.totalPrice, hourlyPrice.feePrice);
+                // Results
+                LC.setMoneyNumber(fields.hourlyRate, $f.find('.hourlyRate'));
+                LC.setMoneyNumber(hourlyPrice.totalPrice, $f.find('.totalHourlyRate'));
+                LC.setMoneyNumber(hourlyPrice.feePrice, $f.find('.hourlyFees'));
+                $f.find('.durationTime').text(duration.toString());
+                $f.find('.durationHours').text(price.durationHours);
+                LC.setMoneyNumber(price.subtotalPrice, $f.find('.hourlySubtotalPrice'));
+                LC.setMoneyNumber(price.feePrice, $f.find('.hourlyFeesPrice'));
+                LC.setMoneyNumber(price.totalPrice, $f.find('.hourlyTotalPrice'));
             }).find('input').change();
         });
     </script>
