@@ -409,34 +409,34 @@ form#personal li label{
     display: none;
 }
 /** Section: Positions **/
-.position-state {
+.position-quick-tools-bar {
     position: absolute;
     right: 20px;
     top: 10px;
     cursor: pointer;
+    text-align: right;
+}
+.position-quick-tools-bar > .quick-tools-group {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: .6em;
 }
 .smooth-box-block-overlay.position-state-change .smooth-box-block-element {
     margin-top: 36px;
 }
-/*.position-state div {
-    cursor: pointer;
-}*/
-.delete-position {
-    position: absolute;
-    right: 20px;
-    top: 30px;
-}
-.delete-position a {
+.position-quick-tools-bar .quick-tools-link {
+    display: block;
     text-decoration: underline;
     color: #AE637B;
-    font-size: 0.9em;
+    font-size: 0.835em;
+    line-height: 1.2em;
 }
 /* We have delete-position under the on-off button, we need
    move the top content on the tab to have space for it,
    replacing the general rule for position tabs only:
 */
 .dashboard .folders > .tab-body.position-tab {
-    padding-top: 56px;
+    padding-top: 45px;
 }
 
 /** Form: Positions - Services **/

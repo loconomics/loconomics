@@ -48,21 +48,26 @@
                 <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
                 <li class="volatile"><a class="button profile fanciful" href="@("#position"+pid)-backgroundcheck">Background Check</a></li>
             </ul>
-            <div class="position-state on-off-switch @(position.StatusID == 1 ? "on" : "off")">
-                <div class="on-text">ON</div>
-                <div class="off-text">OFF</div>
-            </div>
-            <div class="delete-position">
-                <a href="#delete-position">Delete position</a>
-                <div class="lc-ressources position-ressources">
-                    <div class="delete-message-confirm">
-                        <p>Are you really sure you want to delete this position?</p>
-                        <form action="@(LcUrl.LangPath)$Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
-                            <input type="hidden" name="PositionID" value="@pid" />
-                            <button type="button" class="cancel-action">No</button>
-                            <button type="submit" class="main-action">Yes</button>
-                        </form>
+            <div class="position-quick-tools-bar">
+                <div class="quick-tools-group position-state on-off-switch @(position.StatusID == 1 ? "on" : "off")">
+                    <div class="on-text">ON</div>
+                    <div class="off-text">OFF</div>
+                </div>
+                <div class="quick-tools-group">
+                    <div class="delete-position">
+                        <a href="#delete-position" class="quick-tools-link">Delete position</a>
+                        <div class="lc-ressources position-ressources">
+                            <div class="delete-message-confirm">
+                                <p>Are you really sure you want to delete this position?</p>
+                                <form action="@(LcUrl.LangPath)$Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
+                                    <input type="hidden" name="PositionID" value="@pid" />
+                                    <button type="button" class="cancel-action">No</button>
+                                    <button type="submit" class="main-action">Yes</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                    <a href="@(LcData.UserInfo.GetUserPublicURL(u.UserID, pid))" class="view-position-profile quick-tools-link">View my profile</a>
                 </div>
             </div>
 
