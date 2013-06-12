@@ -112,6 +112,9 @@
                             ,'UserID:' + Cast(@1 as varchar)
                             ,1
                         )
+
+                    -- ReCheck Alert
+                    EXEC TestAlertEducation @1
                 ", educationID, u.UserID,
                     institutionID,
                     Request["degree"],
