@@ -431,6 +431,16 @@ form#personal li label{
     font-size: 0.835em;
     line-height: 1.2em;
 }
+.position-quick-tools-bar .view-position-profile,
+.position-quick-tools-bar .view-position-profile:link,
+.position-quick-tools-bar .view-position-profile:visited {
+    color: #00989a;
+}
+.position-quick-tools-bar .delete-position > .quick-tools-link,
+.position-quick-tools-bar .delete-position > .quick-tools-link:link,
+.position-quick-tools-bar .delete-position > .quick-tools-link:visited {
+    color: #EB6E42;
+}
 /* We have delete-position under the on-off button, we need
    move the top content on the tab to have space for it,
    replacing the general rule for position tabs only:
