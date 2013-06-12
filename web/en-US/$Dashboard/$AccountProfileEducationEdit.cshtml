@@ -17,6 +17,9 @@
                 DELETE FROM UserEducation
                 WHERE UserEducationID = @0
                       AND UserID = @1
+
+                -- ReCheck Alert
+                EXEC TestAlertEducation @1
             ", educationID, u.UserID);
         }
         LcHelpers.ReturnJsonResult(0, "Deleted");
