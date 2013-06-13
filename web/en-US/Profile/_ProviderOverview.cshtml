@@ -27,7 +27,14 @@
 @helper printAttributes(int catId, dynamic atts){
     <ul class="attributes-list">
         @foreach(var att in atts){
-            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
+            string title, desc;
+            desc = att["ServiceAttributeDescription"];
+            if (String.IsNullOrWhiteSpace(desc)) {
+                desc = title = "";
+            } else {
+                title = att["ServiceAttribute"];
+            }
+            <li title="@title" data-description="@desc" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
         }
     </ul>
 }
@@ -47,10 +54,17 @@
             {
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
+                    string title, desc;
+                    desc = cat.Value["ServiceAttributeCategoryDescription"];
+                    if (String.IsNullOrWhiteSpace(desc)) {
+                        desc = title = "";
+                    } else {
+                        title = cat.Value["ServiceAttributeCategoryName"];
+                    }
                     <div class="have-view-more">
-                        <h5 data-description="@cat.Value["ServiceAttributeCategoryDescription"]" title="@cat.Value["ServiceAttributeCategoryName"]">@cat.Value["ServiceAttributeCategoryName"]:</h5>
-                        @if (!String.IsNullOrEmpty(cat.Value["ServiceAttributeCategoryDescription"]))
-                        {<a class="tooltip-button button view-more" href="#" data-description="@cat.Value["ServiceAttributeCategoryDescription"]" title="@cat.Value["ServiceAttributeCategoryName"]">More</a>}
+                        <h5 data-description="@desc" title="@title">@cat.Value["ServiceAttributeCategoryName"]:</h5>
+                        @if (!String.IsNullOrWhiteSpace(desc))
+                        {<a class="tooltip-button button view-more" href="#" data-description="@desc" title="@title">More</a>}
                         @printAttributes(cat.Key, cat.Value["ServiceAttributes"])
                         <!--<a class="view-more" href="#">View more</a>-->
                     </div>
