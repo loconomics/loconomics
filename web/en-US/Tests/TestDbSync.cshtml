@@ -1,0 +1,170 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    const string DEFAULT_PREFIX = "autoDataTable";
+    var folder = Server.MapPath(LcUrl.RenderAppPath + "_DBUpdate/");
+
+    var db = Database.Open("sqlloco");
+    
+    if (IsPost) {
+        if (Request.Form["tables[]"] != null) {
+            var fprefix = (N.W(Request["file-prefix"]) ?? DEFAULT_PREFIX) + "-";
+            foreach(string table in Request.Form.GetValues("tables[]")) {
+                try{
+                    // Get full table data
+                    var tdata = db.Query("SELECT * FROM " + table);
+                
+                    // Export as JSON
+                    if (Request["export-json"].AsBool()) {
+                        System.IO.File.WriteAllText(
+                            // File name
+                            folder + fprefix + table + ".dbtable.json",
+                            // Table data
+                            Json.Encode(tdata),
+                            System.Text.Encoding.UTF8
+                        );
+                    }
+                
+                    // Export as SQL using Upsert template
+                    if (Request["export-sql"].AsBool()) {
+                        CreateSQLScript(folder, fprefix, table, tdata);
+                    }
+                } catch(Exception ex){
+                    ModelState.AddFormError("Error [" + table + "]: " + ex.Message);
+                }
+            }
+        }
+    }
+    
+    var tables = db.Query(@"
+        select name from sysobjects where xtype = 'U' order by name ASC
+    ");
+    var templates = new List<string>();
+    foreach(var f in System.IO.Directory.EnumerateFiles(folder, "_template-INSERT-*.sql", SearchOption.TopDirectoryOnly)) {
+        var r = new System.Text.RegularExpressions.Regex("_template-INSERT-(.*).sql", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var m = r.Match(f);
+        if (m.Success && m.Groups.Count > 1){
+            templates.Add(m.Groups[1].Value);
+        }
+    }
+ 
+    db.Dispose();
+}
+@functions{
+    /// <summary>
+    /// Create SQL script to replicate table.
+    /// Helpful ressources for single table and multi table changes,
+    /// Identity reseed and temporarly disable contraints (foreign keys, triggers).
+    /// http://stackoverflow.com/questions/159038/can-foreign-key-constraints-be-temporarily-disabled-using-t-sql
+    /// http://stackoverflow.com/questions/155246/how-do-you-truncate-all-tables-in-a-database-using-tsql#156813
+    /// </summary>
+    /// <param name="folder"></param>
+    /// <param name="fprefix"></param>
+    /// <param name="tablename"></param>
+    /// <param name="tdata"></param>
+    void CreateSQLScript(string folder, string fprefix, string tablename, dynamic tdata) {
+        var sql = "";
+        
+        // Disable constraints FOR ALL TABLES (do it per table gets errors):
+        sql += @"
+EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'";
+        // Delete all row
+        sql += String.Format("DELETE FROM {0} \n", tablename);
+
+        // Upserts for the new data
+        var tpl = System.IO.File.ReadAllText(folder + "_template-INSERT-" + tablename + ".sql");
+        foreach(var tr in tdata) {
+            var sqltr = tpl;
+            foreach(var col in tr.Columns) {
+                var r = new System.Text.RegularExpressions.Regex("@" + col + "\\b");
+                sqltr = r.Replace(sqltr, PrepareSqlValue(tr[col]));
+                //sqltr = sqltr.Replace("@" + col, PrepareSqlValue(tr[col]));
+            }
+            sql += sqltr + "\n";
+        }
+        
+        // Reenable constraints
+        sql += String.Format("ALTER TABLE {0} WITH CHECK CHECK CONSTRAINT all \n ALTER TABLE {0} ENABLE TRIGGER all \n GO \n", tablename);
+        // Re-enable constraints FOR ALL TABLES (do it per table gets errors):
+        sql += @"
+EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
+EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
+        
+        // Write file
+        System.IO.File.WriteAllText(
+            // File name
+            folder + fprefix + tablename + ".dbtable.sql",
+            // Table data as sql
+            sql,
+            System.Text.Encoding.UTF8
+        );
+    }
+    string PrepareSqlValue(object val) {
+        var strval = "NULL";
+        if (N.D(val) != null) {
+            strval = val.ToString().Replace("'", "''");
+            return "'" + strval + "'";
+        }
+        return strval;
+    }
+    bool FormKeyContains(string formkey, string value) {
+        if (Request.Form[formkey] != null){
+            foreach(var str in Request.Form.GetValues(formkey)){
+                if (str == value){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+@helper printTableCheck(string table){
+    <li><label><input type="checkbox" name="tables[]" value="@table" @LcHelpers.IsChecked(FormKeyContains("tables[]", table), true) /> @table</label></li>
+}
+<style type="text/css">
+    #syncDb ul > li 
+    {
+        margin: 0;
+        padding: 2px 0;
+    }
+</style>
+<div id="syncDb">
+    <h1>Sync channel databases</h1>
+    <p>Current channel <strong>@LcHelpers.Channel</strong></p>
+
+    <form action="" method="post">
+        @Html.ValidationSummary()
+        <label>File names prefix: <input type="text" name="file-prefix" value="@(Request["file-prefix"] ?? DEFAULT_PREFIX)" /></label>
+        <div>
+            <label><input type="checkbox" name="export-json" value="True" @LcHelpers.IsChecked(Request["export-json"].AsBool(), true) /> Export as JSON</label>
+            <label><input type="checkbox" name="export-sql" value="True" @LcHelpers.IsChecked(Request["export-sql"].AsBool(), true) /> Export as SQL</label>
+        </div>
+        <input type="submit" value="Export" />
+        <h2>Choose tables to export</h2>
+        <h3>Tables with template (<a href="#select-all-templates">click here to select all</a>)</h3>
+        <ul class="tables tables-with-templates">
+            @foreach (var table in templates)
+            {
+                @printTableCheck(table)
+            }
+        </ul>
+        <h3>All tables</h3>
+        <ul class="tables">
+            @foreach (var table in tables)
+            {
+                @printTableCheck(table.name)
+            }
+        </ul>
+    </form>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('form a').click(function () {
+                if (this.getAttribute('href') == '#select-all-templates') {
+                    $('.tables-with-templates input').prop('checked', true);
+                    return false;
+                }
+            });
+        });
+    </script>
+</div>

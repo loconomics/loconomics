@@ -1,0 +1,26 @@
+INSERT INTO [serviceattribute]
+       ([ServiceAttributeID]
+       ,[LanguageID]
+       ,[CountryID]
+       ,[SourceID]
+       ,[Name]
+       ,[ServiceAttributeDescription]
+       ,[CreateDate]
+       ,[UpdatedDate]
+       ,[ModifiedBy]
+       ,[Active]
+       ,[DisplayRank]
+       ,[PositionReference])
+ VALUES
+       (@ServiceAttributeID
+       ,@LanguageID
+       ,@CountryID
+       ,@SourceID
+       ,@Name
+       ,@ServiceAttributeDescription
+       ,@CreateDate
+       ,@UpdatedDate
+       ,@ModifiedBy
+       ,@Active
+       ,@DisplayRank
+       ,@PositionReference)

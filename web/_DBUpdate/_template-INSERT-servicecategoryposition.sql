@@ -1,0 +1,20 @@
+INSERT INTO [servicecategoryposition]
+   ([ServiceCategoryID]
+   ,[PositionID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[Rank]
+   ,[CreateDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@ServiceCategoryID
+   ,@PositionID
+   ,@LanguageID
+   ,@CountryID
+   ,@Rank
+   ,@CreateDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

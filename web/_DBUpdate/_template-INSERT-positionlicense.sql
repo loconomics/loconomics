@@ -1,0 +1,20 @@
+INSERT INTO [positionlicense]
+   ([PositionID]
+   ,[LicenseCertificationID]
+   ,[StateProvinceID]
+   ,[CountryID]
+   ,[Required]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@PositionID
+   ,@LicenseCertificationID
+   ,@StateProvinceID
+   ,@CountryID
+   ,@Required
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

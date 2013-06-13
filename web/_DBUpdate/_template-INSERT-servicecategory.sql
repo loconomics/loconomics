@@ -1,0 +1,22 @@
+INSERT INTO [servicecategory]
+   ([ServiceCategoryID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[Name]
+   ,[Description]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[ImagePath])
+VALUES
+   (@ServiceCategoryID
+   ,@LanguageID
+   ,@CountryID
+   ,@Name
+   ,@Description
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@ImagePath)
