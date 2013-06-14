@@ -1,0 +1,1 @@
+UPDATE CalendarProviderAttributes SET MinTime = 0
