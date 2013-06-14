@@ -278,17 +278,10 @@
                       ON R.PricingEstimateID = P.PricingEstimateID
             WHERE   R.BookingRequestID = @0
         ", bookingRequestID);
-        decimal minHours = (decimal)db.QueryValue(@"
-            SELECT  TOP 1 coalesce(max(MinTime), 0)
-            FROM    CalendarProviderAttributes
-            WHERE   UserID = @0
-        ", providerID);
         if (dbclose) {
             db.Dispose();
         }
         
-        // Never be lower than minimum
-        serviceDurationHours = (serviceDurationHours < minHours ? minHours : serviceDurationHours);
         // Default duration 4 hours, if there is no info about it
         serviceDurationHours = (serviceDurationHours == 0M ? 4M : serviceDurationHours);
 

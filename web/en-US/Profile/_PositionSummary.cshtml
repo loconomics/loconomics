@@ -12,14 +12,8 @@
         
     var providerPrice = LcData.GetProviderPrice(p.UserID, pos.PositionID, clienttypeid, (customer == null ? 0 : customer.UserID));
     
-    var minimumBookingTime = 0M;
     dynamic cancellationPolicy = null;
     using (var db = Database.Open("sqlloco")){
-        minimumBookingTime = db.QueryValue(@"
-            SELECT  MinTime
-            FROM    CalendarProviderAttributes
-            WHERE   UserID = @0
-        ", p.UserID) ?? 0;
         cancellationPolicy = LcData.Booking.GetProviderCancellationPolicy(
             p.UserID,
             pos.PositionID,
@@ -75,16 +69,6 @@
                 <a class="calculate-price" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">
-                    @if (minimumBookingTime > 0)
-                    {
-                        <div class="min-booking-time">
-                            <h5>Minimum booking time:</h5>
-                            <!--<a class="button view-more" href="#">More</a>-->
-                            <ul class="attributes-list"><li>
-                                @(minimumBookingTime) @(minimumBookingTime == 1 ? "hour" : "hours")
-                            </li></ul>
-                        </div>
-                    }
                     
                     @if (cancellationPolicy != null)
                     {
