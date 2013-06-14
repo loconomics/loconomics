@@ -26,7 +26,14 @@
     <ul class="attributes-list">
         @foreach (var att in cat["ServiceAttributes"]) {
             if (att["UserChecked"]) {
-            <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"]</li>
+                string title, desc;
+                desc = att["ServiceAttributeDescription"];
+                if (String.IsNullOrWhiteSpace(desc)) {
+                    desc = title = "";
+                } else {
+                    title = att["ServiceAttribute"];
+                }
+                <li title="@title" data-description="@desc">@att["ServiceAttribute"]</li>
             }
         }
     </ul>
@@ -42,13 +49,27 @@
                     var levelId = selected[att["ServiceAttributeID"]];
                     levelStr = levelsCat["ServiceAttributes"][levelsIndex[levelId]]["ServiceAttribute"];
                 }
-                <li title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]">@att["ServiceAttribute"] @(levelStr == null ? "" : "(" + levelStr + ")")</li>
+                string title, desc;
+                desc = att["ServiceAttributeDescription"];
+                if (String.IsNullOrWhiteSpace(desc)) {
+                    desc = title = "";
+                } else {
+                    title = att["ServiceAttribute"];
+                }
+                <li title="@title" data-description="@desc">@att["ServiceAttribute"] @(levelStr == null ? "" : "(" + levelStr + ")")</li>
             }
         }
     </ul>
 }
 @helper printCatTitle(dynamic cat){
-    <h5 title="@cat["ServiceAttributeCategoryName"]" data-description="@cat["ServiceAttributeCategoryDescription"]">
+    string title, desc;
+    desc = cat["ServiceAttributeCategoryDescription"];
+    if (String.IsNullOrWhiteSpace(desc)) {
+        desc = title = "";
+    } else {
+        title = cat["ServiceAttributeCategoryName"];
+    }
+    <h5 title="@title" data-description="@desc">
         @cat["ServiceAttributeCategoryName"]
     </h5>
 }
