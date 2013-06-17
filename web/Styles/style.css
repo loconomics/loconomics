@@ -1284,7 +1284,7 @@ table .number{
 }
 
 /***********************/
-/** Popup and block boxes
+/** Popups, tooltips and block boxes
   */
 /* Common */
 .smooth-box-block-overlay,
@@ -1378,6 +1378,7 @@ table .number{
 }
 /* Close button */
 .blockUI .close-popup,
+.popup-tooltip .close-action,
 .smooth-box-block-element .close-popup {
     display: block;
     padding: 5px 10px;
@@ -1390,11 +1391,55 @@ table .number{
     font-weight: bold;
 }
 .blockUI .close-popup:hover,
+.popup-tooltip .close-action:hover,
 .smooth-box-block-element .close-popup:hover {
     color: gray !important;
 }
+.popup-tooltip > .close-action:hover,
 .smooth-box-block-element > .close-popup:hover {
     color: #000 !important;
+}
+/**** tooltip class ****/
+.tooltip {
+    padding: 5px 10px;
+    z-index: 99999;
+    background: white;
+    white-space: normal;
+    overflow: hidden;
+    color: Black;
+    text-align: left;
+    
+    border: 1px solid #e2e1e1;
+    box-shadow: 1px 3px 3px 1px #e2e1e1;
+}
+.tooltip > h4 {
+    margin: 4px 0 0 !important;
+    font-size: 1em;
+    text-align: left !important;
+    overflow: hidden;
+    color: Black;
+}
+.tooltip > p {
+    margin: 3px 0;
+    text-align: left;
+    white-space: normal;
+    overflow: hidden;
+}
+.has-tooltip {
+    text-decoration: underline;
+}
+.has-popup-tooltip {
+    text-decoration: underline !important;
+    cursor: help;
+}
+.tooltip.popup-tooltip {
+    /* Some space for the close button */
+    padding-top: 8px;
+    padding-right: 20px;
+}
+.tooltip.popup-tooltip .close-action {
+    /* Lower padding than in other floating layers */
+    padding: 2px 4px;
 }
 
 /****************************
@@ -2090,35 +2135,6 @@ html.boxshadow #loginBox .field-validation-error{
 }
 .helpcenter .require-login h2 {
     margin-top: 1em;
-}
-/**** tooltip class ****/
-.tooltip {
-    padding: 5px 10px;
-    z-index: 99999;
-    background: white;
-    white-space: normal;
-    overflow: hidden;
-    color: Black;
-    text-align: left;
-    
-    border: 1px solid #e2e1e1;
-    box-shadow: 1px 3px 3px 1px #e2e1e1;
-}
-.tooltip > h4 {
-    margin: 4px 0 0 !important;
-    font-size: 1em;
-    text-align: left !important;
-    overflow: hidden;
-    color: Black;
-}
-.tooltip > p {
-    margin: 3px 0;
-    text-align: left;
-    white-space: normal;
-    overflow: hidden;
-}
-.has-tooltip {
-    text-decoration: underline;
 }
 
 .lc-ressources, .popups, .template, .templates {

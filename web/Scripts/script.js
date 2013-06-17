@@ -236,14 +236,14 @@ $.fn.reload = function (newurl, onload) {
 */
 var TabbedUX = {
     init: function () {
-        $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function () {
+        $('body').delegate('.tabbed > .tabs > li:not(.tabs-slider) > a', 'click', function (e) {
             var $t = $(this);
             if (TabbedUX.focusTab($t.attr('href'))) {
                 var st = $(document).scrollTop();
                 location.hash = $t.attr('href');
                 $('html,body').scrollTop(st);
             }
-            return false;
+            e.preventDefault();
         })
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseleave', TabbedUX.endMoveTabsSlider)
@@ -313,7 +313,7 @@ var TabbedUX = {
     },
     setupSlider: function (tabContainer) {
         var ts = tabContainer.children('.tabs-slider');
-        if (tabContainer.children('.tabs').hasScrollBar({x:-2}).horizontal == true) {
+        if (tabContainer.children('.tabs').hasScrollBar({ x: -2 }).horizontal == true) {
             tabContainer.addClass('has-tabs-slider');
             if (ts.length == 0) {
                 ts = document.createElement('div');
@@ -1588,9 +1588,10 @@ function guidGenerator() {
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
-/* Currently only applies to elements with title and data-description attributes or 
-    with css-class has-tooltip or secure-data and title attribute */
-function configureTooltip() {
+/** Creates smart tooltips with possibilities for on hover and on click,
+    additional description or external tooltip content.
+**/
+LC.initTooltips = function LC_initTooltips() {
     var posoffset = { x: 16, y: 8 };
     function pos(t, e, l) {
         var x, y;
@@ -1630,46 +1631,94 @@ function configureTooltip() {
             c = (c || '') + urlcontent.outerHtml();
             // Remove original, is no more need and avoid id-conflicts
             urlcontent.remove();
-            if (c) {
-                l.data('tooltip-content', c);
-                l.attr('title', '');
-            }
+            // Save tooltip content
+            l.data('tooltip-content', c);
+            // Remove browser tooltip (both when we are using our own tooltip and when no tooltip
+            // is need)
+            l.attr('title', '');
         }
-        t.html(c);
-        // Adjust content elements
-        t.children().css('max-width', t.css('max-width'));
-        // Return the content added:
+        // If there is content, update tooltip:
+        if (c) {
+            t.html(c);
+            // Adjust content elements
+            t.children().css('max-width', t.css('max-width'));
+        }
+        // Return the content added as string:
         return c;
     }
-    function showTooltip(e) {
-        var $t = $(this);
-        var t = $('body > .tooltip-singleton-layer:eq(0)');
-        if (t.length == 0) {
-            t = $('<div style="position:absolute" class="tooltip tooltip-singleton-layer"></div>');
+    function getTooltip(type) {
+        type = type || 'tooltip';
+        var id = 'singleton-' + type;
+        var t = document.getElementById(id);
+        if (!t) {
+            t = $('<div style="position:absolute" class="tooltip"></div>');
+            t.attr('id', id);
             t.hide();
             $('body').append(t);
         }
-        //if (!$t.data('tooltip-owner-id')) $t.data('tooltip-owner-id', guidGenerator());
-        //t.data('tooltip-owner-id', $t.data('tooltip-owner-id'));
-        // Create content, and only if non-null, non-empty content was added, continue executing:
+        return $(t);
+    }
+    function showTooltip(e) {
+        var $t = $(this);
+        var isPopup = $t.hasClass('has-popup-tooltip');
+        // Get or create tooltip layer
+        var t = getTooltip(isPopup ? 'popup-tooltip' : 'tooltip');
+        // If this is not popup and the event is click, discard without cancel event
+        if (!isPopup && e.type == 'click')
+            return true;
+
+        // Create content: if there is content, continue
         if (con(t, $t)) {
+            // For popups, setup class and close button
+            if (isPopup) {
+                t.addClass('popup-tooltip');
+                var closeButton = $('<a href="#close-popup" class="close-action">X</a>');
+                t.append(closeButton);
+            }
+            // If is a has-popup-tooltip and this is not a click, don't show
+            if (isPopup && e.type != 'click')
+                return true;
+            // Positionate
             pos(t, e, $t);
-            t.stop(true, true);
-            if (!t.is(':visible'))
-                t.fadeIn();
+            // Show (animations are stopped only on hide to avoid conflicts)
+            t.fadeIn();
         }
+
+        // Stop bubbling and default
         return false;
     }
     function hideTooltip(e) {
-        var t = $('body > .tooltip-singleton-layer:eq(0)');
-        if (t.length == 1) // && t.data('tooltip-owner-id') == $(this).data('tooltip-owner-id'))
+        $('.tooltip:visible').each(function () {
+            var t = $(this);
+            // If is a popup-tooltip and this is not a click, or the inverse,
+            // this is not a popup-tooltip and this is a click, do nothing
+            if (t.hasClass('popup-tooltip') && e.type != 'click' ||
+                !t.hasClass('popup-tooltip') && e.type == 'click')
+                return;
+            // Stop animations and hide
             t.stop(true, true).fadeOut();
+        });
+
+        return false;
     }
+    // Listen for events to show/hide tooltips
     var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url]';
     $('body').on('mousemove focusin', selector, showTooltip)
     .on('mouseleave focusout', selector, hideTooltip)
-    .on('click', '.tooltip-button', function () { return false });
-}
+    // Listen event for clickable popup-tooltips
+    .on('click mousemove focusin', '[title].has-popup-tooltip', showTooltip)
+    // Allowing buttons inside the tooltip
+    .on('click', '.tooltip-button', function () { return false })
+    // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
+    .on('click', function (e) {
+        if (e.target != $('.popup-tooltip:visible').get(0))
+            hideTooltip(e);
+    })
+    // Avoid close-action click from redirect page
+    .on('click', '.popup-tooltip .close-action', function (e) {
+        e.preventDefault();
+    });
+};
 /**
  * Hide an element using jQuery, allowing use standard  'hide' and 'fadeOut' effects, extended
  * jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
@@ -2572,7 +2621,7 @@ $(function () {
     });
 
     // Generic script for enhanced tooltips and element descriptions
-    configureTooltip();
+    LC.initTooltips();
 
     /***** AVAILABILITY CALENDAR WIDGET *****/
     $(document).delegate('.calendar-controls .action', 'click', function () {

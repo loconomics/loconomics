@@ -235,7 +235,7 @@
     </select>
 }
 @helper printCatLegend(dynamic cat){
-    <legend data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
+    <legend class="has-popup-tooltip" data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 @helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
     if (expLevels != null && expLevels.Count > 0)
