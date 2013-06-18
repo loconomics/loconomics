@@ -1599,6 +1599,9 @@ function guidGenerator() {
 **/
 LC.initTooltips = function LC_initTooltips() {
     var posoffset = { x: 16, y: 8 };
+    /** Positionate the tooltip depending on the
+        event or the target element position and an offset
+    **/
     function pos(t, e, l) {
         var x, y;
         if (e.pageX && e.pageY) {
@@ -1616,8 +1619,10 @@ LC.initTooltips = function LC_initTooltips() {
         t.css('max-width', $(window).width() - x - posoffset.x - tdif);
         //t.height($(document).height() - y - posoffset.y);
     }
-    function con(t, l) {
-        if (t.length == 0 || l.length == 0) return;
+    /** Get or create, and returns, the tooltip content for the element
+    **/
+    function con(l) {
+        if (l.length == 0) return null;
         var c = l.data('tooltip-content');
         if (!c) {
             var h = LC.sanitizeWhitepaces(l.attr('title'));
@@ -1643,18 +1648,16 @@ LC.initTooltips = function LC_initTooltips() {
             // is need)
             l.attr('title', '');
         }
-        // If there is content, update tooltip:
-        if (c) {
-            t.html(c);
-            // Adjust content elements
-            t.children().css('max-width', t.css('max-width'));
-        } else {
+        // If there is not content:
+        if (!c) {
             // Update target removing the class to avoid css marking tooltip when there is not
             l.removeClass('has-tooltip').removeClass('has-popup-tooltip');
         }
-        // Return the content added as string:
+        // Return the content as string:
         return c;
     }
+    /** Get or creates the singleton instance for a tooltip of the given type
+    **/
     function getTooltip(type) {
         type = type || 'tooltip';
         var id = 'singleton-' + type;
@@ -1667,6 +1670,9 @@ LC.initTooltips = function LC_initTooltips() {
         }
         return $(t);
     }
+    /** Show the tooltip on an event triggered by the element containing
+        information for a tooltip
+    **/
     function showTooltip(e) {
         var $t = $(this);
         var isPopup = $t.hasClass('has-popup-tooltip');
@@ -1677,16 +1683,19 @@ LC.initTooltips = function LC_initTooltips() {
             return true;
 
         // Create content: if there is content, continue
-        if (con(t, $t)) {
+        var content = con($t);
+        if (content) {
+            // If is a has-popup-tooltip and this is not a click, don't show
+            if (isPopup && e.type != 'click')
+                return true;
+            // Set tooltip content
+            t.html(content);
             // For popups, setup class and close button
             if (isPopup) {
                 t.addClass('popup-tooltip');
                 var closeButton = $('<a href="#close-popup" class="close-action">X</a>');
                 t.append(closeButton);
             }
-            // If is a has-popup-tooltip and this is not a click, don't show
-            if (isPopup && e.type != 'click')
-                return true;
             // Positionate
             pos(t, e, $t);
             // Show (animations are stopped only on hide to avoid conflicts)
@@ -1696,6 +1705,10 @@ LC.initTooltips = function LC_initTooltips() {
         // Stop bubbling and default
         return false;
     }
+    /** Hide all opened tooltips, for any type.
+        It has some special considerations for popup-tooltips depending
+        on the event being triggered.
+    **/
     function hideTooltip(e) {
         $('.tooltip:visible').each(function () {
             var t = $(this);
@@ -1732,9 +1745,8 @@ LC.initTooltips = function LC_initTooltips() {
         hideTooltip(e);
     });
     // Review every popup tooltip to prepare content and mark/unmark the link or text:
-    var auxtooltip = getTooltip();
     $(selector).each(function () {
-        con(auxtooltip, $(this));
+        con($(this));
     });
 };
 /**
