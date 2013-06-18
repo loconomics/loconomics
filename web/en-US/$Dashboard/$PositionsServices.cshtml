@@ -223,7 +223,7 @@
     </ul>
 }
 @helper printAttCheck(int catId, dynamic att){
-    <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
+    <label class="has-tooltip" title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
 }
 @helper printAttSelect(dynamic cat){
     <select title="@cat["ServiceAttributeCategoryName"]" 
@@ -235,7 +235,14 @@
     </select>
 }
 @helper printCatLegend(dynamic cat){
-    <legend class="has-popup-tooltip" data-description="@cat["ServiceAttributeCategoryDescription"]" title="@cat["ServiceAttributeCategoryName"]">@cat["ServiceAttributeCategoryName"]:</legend>
+    string tittle, desc;
+    desc = cat["ServiceAttributeCategoryDescription"];
+    if (String.IsNullOrWhiteSpace(desc)) {
+        desc = tittle = "";
+    } else {
+        tittle = cat["ServiceAttributeCategoryName"];
+    }
+    <legend class="has-popup-tooltip" data-description="@desc" title="@tittle">@cat["ServiceAttributeCategoryName"]:</legend>
 }
 @helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
     if (expLevels != null && expLevels.Count > 0)
