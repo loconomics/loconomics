@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.RegularExpressions;
+@{
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
     string DEFAULT_PREFIX = LcHelpers.Channel + "-table";
@@ -68,7 +69,7 @@
                     if (nerrors == 0) {
                         exportMessage = "Tables exported successfully!";
                     } else {
-                        exportMessage = String.Format("{0} errors found, some tables could be exported still.");
+                        exportMessage = String.Format("{0} errors found, some tables could be exported still.", nerrors);
                     }
                 }
                 break;
@@ -79,7 +80,9 @@
                         foreach(var script in Request.Form.GetValues("scripts[]")){
                             try{
                                 var sqlScript = System.IO.File.ReadAllText(folder + script + ".sql");
-                                db.Execute(sqlScript);
+                                foreach (var step in GetSqlBatchSteps(sqlScript)) {
+                                    db.Execute(step);
+                                }
                             } catch(Exception ex) {
                                 nerrors++;
                                 ModelState.AddFormError("Error [" + script + "]: " + ex.Message);
@@ -88,7 +91,7 @@
                         if (nerrors == 0) {
                             importMessage  = "Scripts executed successfully!";
                         } else {
-                            importMessage = String.Format("{0} errors found, some scripts could be executed still.");
+                            importMessage = String.Format("{0} errors found, some scripts could be executed still.", nerrors);
                         }
                     }
                 }
@@ -191,6 +194,18 @@ EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
         }
         return false;
     }
+    /// <summary>
+    /// It splits a batchSql into different strings with each
+    /// batch step.
+    /// It just split 'GO' keywords without beggining white-spaces and
+    /// doesn't discard GOs inside comments.
+    /// </summary>
+    /// <param name="batchSql"></param>
+    /// <returns></returns>
+    string[] GetSqlBatchSteps(string batchSql){
+        Regex regex = new Regex("^GO\\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        return regex.Split(batchSql);
+    }
 }
 @helper printTableCheck(string table, string prefix = ""){
     <li><label><input type="checkbox" name="@(prefix)tables[]" value="@table" @LcHelpers.IsChecked(FormKeyContains(prefix + "tables[]", table), true) /> @table</label></li>
@@ -260,6 +275,7 @@ EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
                     <div class="success message">@importMessage</div>
                 }
                 <input type="hidden" name="action" value="import" />
+                <div class="warning">Remember do a Backup first!</div>
                 <input type="submit" value="Execute / import" />
                 <h2>Choose scripts to execute</h2>
                 
