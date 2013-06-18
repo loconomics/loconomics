@@ -1642,6 +1642,9 @@ LC.initTooltips = function LC_initTooltips() {
             t.html(c);
             // Adjust content elements
             t.children().css('max-width', t.css('max-width'));
+        } else {
+            // Update target removing the class to avoid css marking tooltip when there is not
+            l.removeClass('has-tooltip').removeClass('has-popup-tooltip');
         }
         // Return the content added as string:
         return c;
@@ -1702,11 +1705,11 @@ LC.initTooltips = function LC_initTooltips() {
         return false;
     }
     // Listen for events to show/hide tooltips
-    var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url]';
+    var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url], [title].has-popup-tooltip';
     $('body').on('mousemove focusin', selector, showTooltip)
     .on('mouseleave focusout', selector, hideTooltip)
     // Listen event for clickable popup-tooltips
-    .on('click mousemove focusin', '[title].has-popup-tooltip', showTooltip)
+    .on('click', '[title].has-popup-tooltip', showTooltip)
     // Allowing buttons inside the tooltip
     .on('click', '.tooltip-button', function () { return false })
     // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
@@ -1717,6 +1720,11 @@ LC.initTooltips = function LC_initTooltips() {
     // Avoid close-action click from redirect page
     .on('click', '.popup-tooltip .close-action', function (e) {
         e.preventDefault();
+    });
+    // Review every popup tooltip to prepare content and mark/unmark the link or text:
+    var auxtooltip = getTooltip();
+    $(selector).each(function () {
+        con(auxtooltip, $(this));
     });
 };
 /**

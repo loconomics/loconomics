@@ -33,7 +33,7 @@
                 } else {
                     title = att["ServiceAttribute"];
                 }
-                <li title="@title" data-description="@desc">@att["ServiceAttribute"]</li>
+                <li title="@title" class="has-popup-tooltip" data-description="@desc">@att["ServiceAttribute"]</li>
             }
         }
     </ul>
@@ -56,7 +56,7 @@
                 } else {
                     title = att["ServiceAttribute"];
                 }
-                <li title="@title" data-description="@desc">@att["ServiceAttribute"] @(levelStr == null ? "" : "(" + levelStr + ")")</li>
+                <li title="@title" class="has-popup-tooltip" data-description="@desc">@att["ServiceAttribute"] @(levelStr == null ? "" : "(" + levelStr + ")")</li>
             }
         }
     </ul>
@@ -69,7 +69,7 @@
     } else {
         title = cat["ServiceAttributeCategoryName"];
     }
-    <h5 title="@title" data-description="@desc">
+    <h5 title="@title" class="has-popup-tooltip" data-description="@desc">
         @cat["ServiceAttributeCategoryName"]
     </h5>
 }

@@ -34,7 +34,7 @@
             } else {
                 title = att["ServiceAttribute"];
             }
-            <li title="@title" data-description="@desc" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
+            <li title="@title" class="has-popup-tooltip" data-description="@desc" class="positionservices-category[@(catId)]-attribute[@(att.ServiceAttributeID)]">@att.ServiceAttribute</li>
         }
     </ul>
 }
@@ -62,7 +62,7 @@
                         title = cat.Value["ServiceAttributeCategoryName"];
                     }
                     <div class="have-view-more">
-                        <h5 data-description="@desc" title="@title">@cat.Value["ServiceAttributeCategoryName"]:</h5>
+                        <h5 data-description="@desc" class="has-popup-tooltip" title="@title">@cat.Value["ServiceAttributeCategoryName"]:</h5>
                         @if (!String.IsNullOrWhiteSpace(desc))
                         {<a class="tooltip-button button view-more" href="#" data-description="@desc" title="@title">More</a>}
                         @printAttributes(cat.Key, cat.Value["ServiceAttributes"])
