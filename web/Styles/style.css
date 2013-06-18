@@ -1815,14 +1815,14 @@ html.boxshadow #loginBox .field-validation-error{
     max-height: 22px;
     overflow: hidden;
 }
-.folders > ul.tabs li {
+.folders > ul.tabs > li {
     height: 22px;
     background: url('../img/theme/tab-editable-right-white.png') no-repeat top right; 
     padding-right: 22px;
     padding-top: 0;
     background-position: 0 right;
 }
-.folders > ul.tabs li a {
+.folders > ul.tabs > li a {
 	display: block;
     width: auto;
     height: auto;
@@ -1842,20 +1842,20 @@ html.boxshadow #loginBox .field-validation-error{
     border-radius: 10px 0 0 0;
     background-color: #def2f2;
 }
-.folders > ul.tabs li.current,
-.folders > ul.tabs li.current:hover {
+.folders > ul.tabs > li.current,
+.folders > ul.tabs > li.current:hover {
     background-position: right -22px !important;
 }
-.folders > ul.tabs li.current a,
-.folders > ul.tabs li.current:hover a {
+.folders > ul.tabs > li.current a,
+.folders > ul.tabs > li.current:hover a {
     background-color: white;
     padding-top: 3px;
     border-bottom-color: white;
 }
-.folders > ul.tabs li:hover {
+.folders > ul.tabs > li:hover {
     background-position: right -44px !important;
 }
-.folders > ul.tabs li:hover a{
+.folders > ul.tabs > li:hover a{
     background-color: #eff8f9;
 }
 .folders > .tab-body {
@@ -1876,19 +1876,19 @@ html.boxshadow #loginBox .field-validation-error{
 .tabbed.buttons > .tabs-slider {
     display: none !important;
 }
-.buttons ul.tabs li { display: inline-block; list-style-type: none; font-size: .8em }
-.buttons ul.tabs li a.button 
+.buttons > ul.tabs > li { display: inline-block; list-style-type: none; font-size: .8em }
+.buttons > ul.tabs > li a.button 
 {
     font-size: inherit;
     line-height: 22px;
     margin-bottom: 5px;
 }
 
-.buttons .tab-body { display:none; padding: 0; 
+.buttons > .tab-body { display:none; padding: 0; 
     /*min-height: 400px;
     min-height: 100px;*/
 }
-.buttons .tab-body.current { display: block; }
+.buttons > .tab-body.current { display: block; }
 
 /*= Tabbed style: .wizard */
 .tabbed.wizard > .tabs:before {
@@ -1902,17 +1902,17 @@ html.boxshadow #loginBox .field-validation-error{
     background-color: #9d9d9d;
     border-radius: 10px;
 }
-.tabbed.wizard > .tabs li {
+.tabbed.wizard > .tabs > li {
     margin: 0;
     padding: 0;
     width: 33%;
 }
-.tabbed.wizard > .tabs li a {
+.tabbed.wizard > .tabs > li a {
     text-decoration: none;
     text-align: center;
     display: block;
 }
-.tabbed.wizard > .tabs li a .point {
+.tabbed.wizard > .tabs > li a .point {
     display: inline-block;
     line-height: 1.8em;
     width: 1.8em;
@@ -1923,14 +1923,14 @@ html.boxshadow #loginBox .field-validation-error{
     -o-border-radius: 60px;
     -webkit-border-radius: 60px;
 }
-.tabbed.wizard > .tabs li a .label {
+.tabbed.wizard > .tabs > li a .label {
     display: block;
     color: #b7b7b7;
 }
-.tabbed.wizard > .tabs li.current a .point {
+.tabbed.wizard > .tabs > li.current a .point {
     background: #88cfd0;
 }
-.tabbed.wizard > .tabs li.current a .label {
+.tabbed.wizard > .tabs > li.current a .label {
     color: #747474;
 }
 
