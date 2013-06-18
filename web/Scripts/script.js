@@ -1600,7 +1600,7 @@ function guidGenerator() {
 LC.initTooltips = function LC_initTooltips() {
     var posoffset = { x: 16, y: 8 };
     /** Positionate the tooltip depending on the
-        event or the target element position and an offset
+    event or the target element position and an offset
     **/
     function pos(t, e, l) {
         var x, y;
@@ -1629,14 +1629,8 @@ LC.initTooltips = function LC_initTooltips() {
             var d = LC.sanitizeWhitepaces(l.data('description'));
             if (d)
                 c = '<h4>' + h + '</h4><p>' + d + '</p>';
-            else {
-                // Only create tooltip content if element content is different
-                // from title value, or element content is not full visible
-                if (LC.sanitizeWhitepaces(l.text()) != h ||
-                    l.outerWidth() < l[0].scrollWidth) {
-                    c = h;
-                }
-            }
+            else
+                c = h;
             // Append data-tooltip-url content if exists
             var urlcontent = $(l.data('tooltip-url'));
             c = (c || '') + urlcontent.outerHtml();
@@ -1647,6 +1641,15 @@ LC.initTooltips = function LC_initTooltips() {
             // Remove browser tooltip (both when we are using our own tooltip and when no tooltip
             // is need)
             l.attr('title', '');
+        }
+        // Remove tooltip content (but preserve its cache in the element data)
+        // if is the same text as the element content and the element content
+        // is fully visible. Thats, for cases with different content, will be showed,
+        // and for cases with same content but is not visible because the element
+        // or container width, then will be showed.
+        if (LC.sanitizeWhitepaces(l.text()) == c &&
+            l.outerWidth() >= l[0].scrollWidth) {
+            c = null;
         }
         // If there is not content:
         if (!c) {
@@ -1671,7 +1674,7 @@ LC.initTooltips = function LC_initTooltips() {
         return $(t);
     }
     /** Show the tooltip on an event triggered by the element containing
-        information for a tooltip
+    information for a tooltip
     **/
     function showTooltip(e) {
         var $t = $(this);
@@ -1706,8 +1709,8 @@ LC.initTooltips = function LC_initTooltips() {
         return false;
     }
     /** Hide all opened tooltips, for any type.
-        It has some special considerations for popup-tooltips depending
-        on the event being triggered.
+    It has some special considerations for popup-tooltips depending
+    on the event being triggered.
     **/
     function hideTooltip(e) {
         $('.tooltip:visible').each(function () {
