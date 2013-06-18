@@ -230,6 +230,12 @@ $.fn.reload = function (newurl, onload) {
     });
     return this;
 }
+/** Checks if current element or one of the current set of elements has
+    a parent that match the element or expression given as first parameter
+**/
+$.fn.isChildOf = function jQuery_plugin_isChildOf(exp) {
+    return this.parents().filter(exp).length > 0;
+};
 
 /*
 * Tabbed interface logic
@@ -1714,12 +1720,16 @@ LC.initTooltips = function LC_initTooltips() {
     .on('click', '.tooltip-button', function () { return false })
     // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
     .on('click', function (e) {
-        if (e.target != $('.popup-tooltip:visible').get(0))
+        var t = $('.popup-tooltip:visible').get(0);
+        // If the click is Not on the tooltip or any element contained
+        // hide tooltip
+        if (e.target != t && !$(e.target).isChildOf(t))
             hideTooltip(e);
     })
-    // Avoid close-action click from redirect page
+    // Avoid close-action click from redirect page, and hide tooltip
     .on('click', '.popup-tooltip .close-action', function (e) {
         e.preventDefault();
+        hideTooltip(e);
     });
     // Review every popup tooltip to prepare content and mark/unmark the link or text:
     var auxtooltip = getTooltip();
