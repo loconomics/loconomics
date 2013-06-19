@@ -4,7 +4,7 @@ PackageVariables proposal database scheme
 ## Initial variables
 For housekeeper, hourly and babysitter pricing, we have next variables:
 
-- CleaningRate:decimal      provider rate cleaning 2beds and 2baths, for all cleaning pricing types
+- CleaningRate:decimal \t     provider rate cleaning 2beds and 2baths, for all cleaning pricing types
 - BedsNumber:int            customer value specifing the number of beds to clean, for all cleaning pricing types
 - BathsNumber:int           customer value specifing the number of bats to clean, for all cleaning pricing types
 - HoursNumber:decimal       customer value specifing the number of hours for the service, for hourly and babysitter pricing. Can be in minutes instead of in hours.
@@ -73,26 +73,48 @@ Its more similar to previous approach for variables, but re-thinking the fields 
   <th>VariableID</th><th>      InternalName</th><th>        PricingTypeID</th><th>       CP</th><th>      DataType</th>
  </tr>
  <tr>
-  <td>1</td><td>               'CleaningRate'</td><td>      9</td><td>                   'P'</td><td>     'decimal'</td><td>
+  <td>1</td><td>               'CleaningRate'</td><td>      9</td><td>                   'P'</td><td>     'decimal'</td>
  </tr>
  <tr>
-  <td>1</td><td>               'CleaningRate'</td><td>      10</td><td>                  'P'</td><td>     'decimal'</td><td>
+  <td>1</td><td>               'CleaningRate'</td><td>      10</td><td>                  'P'</td><td>     'decimal'</td>
+ </tr>
+ <tr>
+  <td>1</td><td>               'CleaningRate'</td><td>      11</td><td>                  'P'</td><td>     'decimal'</td>
+ </tr>
+ <tr>
+  <td>2</td><td>               'BedsNumber'</td><td>        9</td><td>                   'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>2</td><td>               'BedsNumber'</td><td>        10</td><td>                  'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>2</td><td>               'BedsNumber'</td><td>        11</td><td>                  'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>3</td><td>               'BathsNumber'</td><td>       9</td><td>                   'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>3</td><td>               'BathsNumber'</td><td>       10</td><td>                  'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>3</td><td>               'BathsNumber'</td><td>       11</td><td>                  'C'</td><td>     'int'</td>
+ </tr>
+ <tr>
+  <td>4</td><td>               'HoursNumber'</td><td>       1</td><td>                   'C'</td><td>     'decimal'</td>
+ </tr>
+ <tr>
+  <td>4</td><td>               'HoursNumber'</td><td>       16? (babysitter)</td><td>    'C'</td><td>     'decimal'</td>
+ </tr>
+ <tr>
+  <td>5</td><td>               'ChildsNumber'</td><td>      16? (babysitter)</td><td>    'C'</td><td>     'integer'</td>
+ </tr>
+ <tr>
+  <td>6</td><td>               'ChildSurcharge'</td><td>    16? (babysitter)</td><td>    'P'</td><td>     'decimal'</td><td>
  </tr>
 </table>
-1               'CleaningRate'      11                  'P'     'decimal'
-2               'BedsNumber'        9                   'C'     'int'
-2               'BedsNumber'        10                  'C'     'int'
-2               'BedsNumber'        11                  'C'     'int'
-3               'BathsNumber'       9                   'C'     'int'
-3               'BathsNumber'       10                  'C'     'int'
-3               'BathsNumber'       11                  'C'     'int'
-4               'HoursNumber'       1                   'C'     'decimal'
-4               'HoursNumber'       16? (babysitter)    'C'     'decimal'
-5               'ChildsNumber'      16? (babysitter)    'C'     'integer'
-6               'ChildSurcharge'    16? (babysitter)    'P'     'decimal'
 
 Note that this proposal requires more things to do the same, repeated variable records per pricing, extra code to do conversions, find variables and data is not saved 'as is'.
-Its good to have a large list of variables, but still think that any new variable on both cases require new code for the pricing and variable (variables are not showed automatically
+**Its good to have a large list of variables**, but still think that any new variable on both cases require new code for the pricing and variable (variables are not showed automatically
 in a list as previoulsy was done with the 'custom' pricing type, because we require now more complex calculations that affect multiple variables and not 'one per line' and specific
 UI to be smart and easier for our users.
 
@@ -105,4 +127,4 @@ Pricing formulas will still be coded instead of defined in database, as they can
 
 Texts showed to the user will be defined in the ressource files of the code; initially in the code itself but thinking in move it to ressources files as the most texts on the website. Because of that I didn't add LanguageID and CountryID fields on tables.
 
-Tables will have too the common fields: CreatedDate, UpdatedDate, ModifiedBy and Active on tables that required.
+Tables will have too the common fields: CreatedDate, UpdatedDate, ModifiedBy and Active on tables that require it.
