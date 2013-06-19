@@ -19,15 +19,15 @@ We doesn't need a table to define variables because they are already defined as 
 requiring it, with possibility to be reused between different pricings
 
 ###Scheme [PackageVariables]
-- UserID:int                provider or customer UserID
-- PackageID:int             package with that value
-- BookingId:int             will be 0 for provider values, and the BookingID for the customer values during booking. Maybe it can be the PricingEstimateID instead of BookingID
-- CleaningRate:decimal      can be null
-- BedsNumber:int            can be null
-- BathsNumber:int           can be null
-- HoursNumber:decimal       (or maybe minutes) can be null
-- ChildsNumber:int          can be null
-- ChildSurcharge:decimal    can be null
+    - UserID:int                provider or customer UserID
+    - PackageID:int             package with that value
+    - BookingId:int             will be 0 for provider values, and the BookingID for the customer values during booking. Maybe it can be the PricingEstimateID instead of BookingID
+    - CleaningRate:decimal      can be null
+    - BedsNumber:int            can be null
+    - BathsNumber:int           can be null
+    - HoursNumber:decimal       (or maybe minutes) can be null
+    - ChildsNumber:int          can be null
+    - ChildSurcharge:decimal    can be null
 
 ###System data
 There is no need to define records with variables because they are self-defined in the table columns.
@@ -42,30 +42,30 @@ Two tables: one to define what variables there are, and other one with values fr
 Its more similar to previous approach for variables, but re-thinking the fields we really need and using only one table for both provider and customer values.
 
 ###Scheme [PackageVariablesDefinition]
-- VariableID:int            identifier for the variable
-- InternalName:varchar      name of the variable. I prefer name it as 'InternalName' to be clear that
-                            is Not a name to be translated or to show to the user and needs be hardcoded to do
-                            specific things in code specific for to the variable meaning.
-- PricingTypeID:int         referencing for what pricing type will use this variable.
-                            Variables shared by different pricing types need a duplicated record with the
-                            different PricingTypeID (for example the three cleaning pricing types needs CleaningRate,
-                            BedsNumber and BathsNumber, the HoursNumber for hourly and babysitter)
-- CP:char                   is a Customer variable or a Provider variable?
-                            Possible values: 'C' or 'P' (maybe 'B' for 'both').
-                            Maybe is not required because variable names are hardcoded and used only what the specific code need.
-- DataType:nvarchar         it sets what kind of data we are saving as value for this variable: decimal, integer, text, bool.
-                            If will be only numeric values, we can remove this and use 'decimal' as data type ever.
+    - VariableID:int            identifier for the variable
+    - InternalName:varchar      name of the variable. I prefer name it as 'InternalName' to be clear that
+                                is Not a name to be translated or to show to the user and needs be hardcoded to do
+                                specific things in code specific for to the variable meaning.
+    - PricingTypeID:int         referencing for what pricing type will use this variable.
+                                Variables shared by different pricing types need a duplicated record with the
+                                different PricingTypeID (for example the three cleaning pricing types needs CleaningRate,
+                                BedsNumber and BathsNumber, the HoursNumber for hourly and babysitter)
+    - CP:char                   is a Customer variable or a Provider variable?
+                                Possible values: 'C' or 'P' (maybe 'B' for 'both').
+                                Maybe is not required because variable names are hardcoded and used only what the specific code need.
+    - DataType:nvarchar         it sets what kind of data we are saving as value for this variable: decimal, integer, text, bool.
+                                If will be only numeric values, we can remove this and use 'decimal' as data type ever.
 
 ###Scheme [PackageVariablesValues]
-- VariableID:int            references the variable
-- UserID:int                provider or customer identifier
-- PackageID:int             provider package that uses this value
-- BookingID:int             will be 0 for provider values, and the BookingID for the customer values during booking.
-                            Maybe it can be the PricingEstimateID instead of BookingID
-- Value:nvarchar            the variable value saved as text to allow hold any kind of data type.
-                            It requires conversions of the text to the defined variable DataType on any code using variables,
-                            to allow do calculation and formatting.
-                            It can be changed to 'decimal' if we consider we will hold only numeric values.
+    - VariableID:int            references the variable
+    - UserID:int                provider or customer identifier
+    - PackageID:int             provider package that uses this value
+    - BookingID:int             will be 0 for provider values, and the BookingID for the customer values during booking.
+                                Maybe it can be the PricingEstimateID instead of BookingID
+    - Value:nvarchar            the variable value saved as text to allow hold any kind of data type.
+                                It requires conversions of the text to the defined variable DataType on any code using variables,
+                                to allow do calculation and formatting.
+                                It can be changed to 'decimal' if we consider we will hold only numeric values.
 
 ###System data [PackageVariablesDefinition]
 <table>
