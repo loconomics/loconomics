@@ -4,12 +4,12 @@ PackageVariables proposal database scheme
 ## Initial variables
 For housekeeper, hourly and babysitter pricing, we have next variables:
 
-- CleaningRate:decimal______provider rate cleaning 2beds and 2baths, for all cleaning pricing types
-- BedsNumber:int____________customer value specifing the number of beds to clean, for all cleaning pricing types
-- BathsNumber:int___________customer value specifing the number of bats to clean, for all cleaning pricing types
-- HoursNumber:decimal_______customer value specifing the number of hours for the service, for hourly and babysitter pricing. Can be in minutes instead of in hours.
-- ChildsNumber:int__________customer value specifing the number of childs, for babysitter pricing only.
-- ChildSurcharge:decimal____provider value specifing the extra price per extra child, for babysitter pricing only
+    - CleaningRate:decimal      provider rate cleaning 2beds and 2baths, for all cleaning pricing types
+    - BedsNumber:int            customer value specifing the number of beds to clean, for all cleaning pricing types
+    - BathsNumber:int           customer value specifing the number of bats to clean, for all cleaning pricing types
+    - HoursNumber:decimal       customer value specifing the number of hours for the service, for hourly and babysitter pricing. Can be in minutes instead of in hours.
+    - ChildsNumber:int          customer value specifing the number of childs, for babysitter pricing only.
+    - ChildSurcharge:decimal    provider value specifing the extra price per extra child, for babysitter pricing only
 
 
 ##Proposal A
