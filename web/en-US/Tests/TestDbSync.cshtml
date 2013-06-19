@@ -34,7 +34,7 @@
                     }
 
                     var fprefix = (N.W(Request["file-prefix"]) ?? DEFAULT_PREFIX) + "-";
-                    int nerrors = 0;
+                    int nerrors = 0, nsuccesses = 0;
                     foreach (string table in posttables)
                     {
                         try
@@ -59,6 +59,8 @@
                             {
                                 CreateSQLScript(folder, fprefix, table, tdata);
                             }
+                            
+                            nsuccesses++;
                         }
                         catch (Exception ex)
                         {
@@ -67,31 +69,56 @@
                         }
                     }
                     if (nerrors == 0) {
-                        exportMessage = "Tables exported successfully!";
+                        exportMessage = String.Format("{0} Tables exported successfully!", nsuccesses);
                     } else {
-                        exportMessage = String.Format("{0} errors found, some tables could be exported still.", nerrors);
+                        exportMessage = String.Format("{0} tables with errors (not exported), and {1} tables exported successfully.", nerrors, nsuccesses);
                     }
                 }
                 break;
             case "import":
                 {
                     if (Request.Form["scripts[]"] != null) {
-                        int nerrors = 0;
+                        int nerrors = 0, nsuccesses = 0;
+                        // For a success batch execution, we disable contraints during update
+                        try{
+                        db.Execute(@"
+                            EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+                            EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+                        ");
+                        } catch (Exception ex){
+                            ModelState.AddFormError("Initializing batch: impossible to disable contraints. Detail: " + ex.Message);
+                        }
+                        
                         foreach(var script in Request.Form.GetValues("scripts[]")){
                             try{
                                 var sqlScript = System.IO.File.ReadAllText(folder + script + ".sql");
                                 foreach (var step in GetSqlBatchSteps(sqlScript)) {
                                     db.Execute(step);
                                 }
+                                nsuccesses++;
                             } catch(Exception ex) {
                                 nerrors++;
                                 ModelState.AddFormError("Error [" + script + "]: " + ex.Message);
                             }
                         }
+                        
+                        // Re-enabling contraints after update. Any constraint error introduced during update will appear right now.
+                        try{
+                        db.Execute(@"
+                            EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+                            EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+                        ");
+                        } catch (Exception ex) {
+                            ModelState.AddFormError(@"Ending batch: errors found while re-enabling constraints, data was introduced but constraints
+                                remains disabled until the errors in data are manually corrected or batch executed again without errors.
+                                Most times this is because other tables, with related data, require to be updated at the same time.
+                                Error detail: " + ex.Message);
+                        }
+                        
                         if (nerrors == 0) {
-                            importMessage  = "Scripts executed successfully!";
+                            importMessage  = String.Format("{0} Scripts executed successfully!", nsuccesses);
                         } else {
-                            importMessage = String.Format("{0} errors found, some scripts could be executed still.", nerrors);
+                            importMessage = String.Format("{0} scripts with errors (nothing or partially executed), {1} scripts executed successfully.", nerrors, nsuccesses);
                         }
                     }
                 }
@@ -145,10 +172,10 @@
         
         // Disable constraints FOR ALL TABLES (do it per table gets errors):
         sql += @"
-EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'";
-        // Delete all rows
-        sql += String.Format("DELETE FROM {0} \n", tablename);
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'";
+        // Delete all rows (don't forget \n)
+        sql += String.Format("\nDELETE FROM {0} \n", tablename);
 
         // Upserts for the new data
         var tpl = System.IO.File.ReadAllText(folder + "_template-INSERT-" + tablename + ".sql");
@@ -164,9 +191,10 @@ EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'";
         
         // Re-enable constraints FOR ALL TABLES (do it per table gets errors):
         sql += @"
-EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
-        
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
+        sql += "\n";
+
         // Write file
         System.IO.File.WriteAllText(
             // File name
@@ -199,12 +227,23 @@ EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'";
     /// batch step.
     /// It just split 'GO' keywords without beggining white-spaces and
     /// doesn't discard GOs inside comments.
+    /// SPECIAL: It removes every line of SQL that starts with the
+    /// special comment: /*__NOT_IN_BATCH__*/
+    /// The purpose of this is allow creation of individual scripts that works
+    /// fine itself (with that lines), but can be executed several of them in the same batch with
+    /// some additions to ensure the success (as disable contraints temporarly)
+    /// and that lines can be counterproductive for a batch.
     /// </summary>
     /// <param name="batchSql"></param>
     /// <returns></returns>
     string[] GetSqlBatchSteps(string batchSql){
-        Regex regex = new Regex("^GO\\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        return regex.Split(batchSql);
+        Regex regex = new Regex(@"^GO\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        var ret = regex.Split(batchSql);
+        // Remove lines with the special comment "/*__NOT_IN_BATCH__*/"
+        for(var i = 0; i < ret.Length; i++) {
+            ret[i] = (new Regex(@"^/\*__NOT_IN_BATCH__\*/.*$", RegexOptions.Multiline)).Replace(ret[i], "");
+        }
+        return ret;
     }
 }
 @helper printTableCheck(string table, string prefix = ""){

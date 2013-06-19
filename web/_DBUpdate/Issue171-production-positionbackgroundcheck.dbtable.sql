@@ -1,6 +1,27 @@
 ﻿
-EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'DELETE FROM positionbackgroundcheck 
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+DELETE FROM positionbackgroundcheck 
+INSERT INTO [positionbackgroundcheck]
+   ([PositionID]
+   ,[BackgroundCheckID]
+   ,[StateProvinceID]
+   ,[CountryID]
+   ,[Required]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('39'
+   ,'1'
+   ,'1'
+   ,'1'
+   ,'False'
+   ,'2/27/2013 12:00:00 AM'
+   ,'2/27/2013 12:00:00 AM'
+   ,'jd'
+   ,'True')
 INSERT INTO [positionbackgroundcheck]
    ([PositionID]
    ,[BackgroundCheckID]
@@ -16,7 +37,7 @@ VALUES
    ,'1'
    ,'1'
    ,'1'
-   ,'True'
+   ,'False'
    ,'6/21/2012 12:00:00 AM'
    ,'6/21/2012 12:00:00 AM'
    ,'jd'
@@ -36,7 +57,7 @@ VALUES
    ,'1'
    ,'1'
    ,'1'
-   ,'True'
+   ,'False'
    ,'4/27/2012 12:00:00 AM'
    ,'4/27/2012 12:00:00 AM'
    ,'jd'
@@ -56,30 +77,10 @@ VALUES
    ,'2'
    ,'1'
    ,'1'
-   ,'True'
+   ,'False'
    ,'6/21/2012 12:00:00 AM'
    ,'6/21/2012 12:00:00 AM'
    ,'jd'
-   ,'True')
-INSERT INTO [positionbackgroundcheck]
-   ([PositionID]
-   ,[BackgroundCheckID]
-   ,[StateProvinceID]
-   ,[CountryID]
-   ,[Required]
-   ,[CreatedDate]
-   ,[UpdatedDate]
-   ,[ModifiedBy]
-   ,[Active])
-VALUES
-   ('106'
-   ,'3'
-   ,'1'
-   ,'1'
-   ,'False'
-   ,'1/1/2013 12:00:00 AM'
-   ,'1/1/2013 12:00:00 AM'
-   ,'il'
    ,'True')
 INSERT INTO [positionbackgroundcheck]
    ([PositionID]
@@ -181,9 +182,6 @@ VALUES
    ,'7/6/2012 12:00:00 AM'
    ,'jd'
    ,'True')
-ALTER TABLE positionbackgroundcheck WITH CHECK CHECK CONSTRAINT all 
- ALTER TABLE positionbackgroundcheck ENABLE TRIGGER all 
- GO 
 
-EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'

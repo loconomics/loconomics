@@ -1,6 +1,7 @@
 ﻿
-EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'DELETE FROM servicecategory 
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+DELETE FROM servicecategory 
 INSERT INTO [servicecategory]
    ([ServiceCategoryID]
    ,[LanguageID]
@@ -353,9 +354,6 @@ VALUES
    ,'jd'
    ,'True'
    ,NULL)
-ALTER TABLE servicecategory WITH CHECK CHECK CONSTRAINT all 
- ALTER TABLE servicecategory ENABLE TRIGGER all 
- GO 
 
-EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
-EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
