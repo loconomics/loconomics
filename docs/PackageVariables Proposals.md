@@ -18,7 +18,7 @@ One table to hold values with table fields/columns per variable.
 We doesn't need a table to define variables because they are already defined as columns with name and data-type. All are optional (can be null) and be used only for pricings
 requiring it, with possibility to be reused between different pricings
 
-Scheme [PackageVariables]
+###Scheme [PackageVariables]
 - UserID:int                provider or customer UserID
 - PackageID:int             package with that value
 - BookingId:int             will be 0 for provider values, and the BookingID for the customer values during booking. Maybe it can be the PricingEstimateID instead of BookingID
@@ -29,7 +29,7 @@ Scheme [PackageVariables]
 - ChildsNumber:int          can be null
 - ChildSurcharge:decimal    can be null
 
-System data
+###System data
 There is no need to define records with variables because they are self-defined in the table columns.
 
 Note that is not good to have a large list of columns in a table, but this way they can be quicker and easier reused and accessed.
@@ -41,7 +41,7 @@ Two tables: one to define what variables there are, and other one with values fr
 
 Its more similar to previous approach for variables, but re-thinking the fields we really need and using only one table for both provider and customer values.
 
-Scheme [PackageVariablesDefinition]
+###Scheme [PackageVariablesDefinition]
 - VariableID:int            identifier for the variable
 - InternalName:varchar      name of the variable. I prefer name it as 'InternalName' to be clear that
                             is Not a name to be translated or to show to the user and needs be hardcoded to do
@@ -56,7 +56,7 @@ Scheme [PackageVariablesDefinition]
 - DataType:nvarchar         it sets what kind of data we are saving as value for this variable: decimal, integer, text, bool.
                             If will be only numeric values, we can remove this and use 'decimal' as data type ever.
 
-Scheme [PackageVariablesValues]
+###Scheme [PackageVariablesValues]
 - VariableID:int            references the variable
 - UserID:int                provider or customer identifier
 - PackageID:int             provider package that uses this value
@@ -67,10 +67,18 @@ Scheme [PackageVariablesValues]
                             to allow do calculation and formatting.
                             It can be changed to 'decimal' if we consider we will hold only numeric values.
 
-System data [PackageVariablesDefinition]
-VariableID      InternalName        PricingTypeID       CP      DataType
-1               'CleaningRate'      9                   'P'     'decimal'
-1               'CleaningRate'      10                  'P'     'decimal'
+###System data [PackageVariablesDefinition]
+<table>
+ <tr>
+  <th>VariableID</th><th>      InternalName</th><th>        PricingTypeID</th><th>       CP</th><th>      DataType</th>
+ </tr>
+ <tr>
+  <td>1</td><td>               'CleaningRate'</td><td>      9</td><td>                   'P'</td><td>     'decimal'</td><td>
+ </tr>
+ <tr>
+  <td>1</td><td>               'CleaningRate'</td><td>      10</td><td>                  'P'</td><td>     'decimal'</td><td>
+ </tr>
+</table>
 1               'CleaningRate'      11                  'P'     'decimal'
 2               'BedsNumber'        9                   'C'     'int'
 2               'BedsNumber'        10                  'C'     'int'
