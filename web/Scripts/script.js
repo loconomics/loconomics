@@ -982,6 +982,63 @@ LC.placeHolder = function() {
         })();
 };
 
+/** Create labels for a jquery-ui-slider.
+**/
+LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
+    // remove old ones:
+    var old = slider.siblings('.ui-slider-labels').filter(function () {
+        return ($(this).data('ui-slider').get(0) == slider.get(0));
+    }).remove();
+    // Create labels container
+    var labels = $('<div class="ui-slider-labels"/>');
+    labels.data('ui-slider', slider);
+
+    // Setup of useful vars for label creation
+    var max = slider.slider('option', 'max'),
+        min = slider.slider('option', 'min'),
+        step = slider.slider('option', 'step'),
+        steps = Math.floor((max - min) / step),
+        sw = 100 / steps;
+
+    // Creating and positioning labels
+    for (var i = 0; i <= steps; i++) {
+        // Create label
+        var lbl = $('<div class="ui-slider-label"/>');
+        // Setup label with its value
+        var labelValue = min + i * step;
+        lbl.text(labelValue);
+        lbl.data('ui-slider-value', labelValue);
+        // Positionate
+        var left = i * sw - sw * .5,
+        right = 100 - left - sw,
+        align = 'center';
+        if (i == 0) {
+            align = 'left';
+            left = 0;
+        } else if (i == steps) {
+            align = 'right';
+            right = 0;
+        }
+        lbl.css({
+            'text-align': align,
+            left: left + '%',
+            right: right + '%'
+        });
+        // Add to container
+        labels.append(lbl);
+    }
+
+    // Handler for labels click to select its position value
+    labels.on('click', '.ui-slider-label', function () {
+        var val = $(this).data('ui-slider-value'),
+            slider = $(this).parent().data('ui-slider');
+        slider.slider('value', val);
+    });
+
+    // Insert labels as a sibling of the slider (cannot be inserted inside)
+    slider.after(labels);
+};
+
 // TODO Convert as general function and use everywhere:
 // It executes the given 'ready' function as parameter when
 // map environment is ready (when google maps api and script is 

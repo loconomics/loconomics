@@ -254,7 +254,6 @@ LC.initScheduleStep = function () {
 
     LC.setupServiceMap();
 };
-
 // Sliders on Housekeeper price:
 LC.initCustomerPackageSliders = function () {
     /* Houseekeeper pricing */
@@ -282,9 +281,9 @@ LC.initCustomerPackageSliders = function () {
             numbathrooms = calcContext.find('[name="bathrooms-number"]').val();
         // ...Gets duration rounded up to quarter-hours.
         var duration = LC.roundTimeToQuarterHour(
-            // ..create a time object..
+        // ..create a time object..
             LC.timeSpan.fromMinutes(
-                // Computes formula with customer values...
+        // Computes formula with customer values...
                 formula(numbedrooms, numbathrooms)
             )
         , LC.roundingTypeEnum.Up);
@@ -316,11 +315,12 @@ LC.initCustomerPackageSliders = function () {
             min: average - 3 * step,
             max: average + 3 * step,
             step: step,
-            slide: function (event, ui) {
+            change: function (event, ui) {
                 updateAverage($c, ui.value);
             }
         };
         slider.slider(setup);
+        LC.createLabelsForUISlider(slider);
         // Setup the input field, hidden and with initial value synchronized with slider
         var field = $c.find('input');
         field.hide();
