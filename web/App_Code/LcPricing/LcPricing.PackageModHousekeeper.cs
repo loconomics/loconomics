@@ -69,10 +69,15 @@ public static partial class LcPricingModel
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
             // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
             var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
+            // Create variables object with the specific data used in this calculation (will be saved later by the normal packages process)
+            // Provider values get included in the object, something that is wanted for historic purposes on database.
+            var vars = new PackageVariables(package.ProviderUserID, package.ID);
+            vars["BathsNumber"] = nbaths;
+            vars["BedsNumber"] = nbeds;
             // Change package with the information:
             package.Duration = timeDuration;
             modelData.ProviderInput = providerRate;
-            modelData.CustomerInput = new { BedroomsNumber = nbeds, BathroomsNumber = nbaths };
+            modelData.CustomerInput = vars;
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebMatrix.Data;
+using System.Web.Helpers;
 
 /// <summary>
 /// Extension of LcPricingModel
@@ -14,17 +15,18 @@ public static partial class LcPricingModel
     /// with automatic type conversion, defaults and abstraction
     /// from the back-end at database.
     /// </summary>
-    public class PackageVariables
+    public class PackageVariables : IEnumerable<KeyValuePair<string, object>>
     {
          Dictionary<string, dynamic> data;
-        int userID, packageID, bookingID;
+        int userID, packageID, pricingEstimateID, pricingEstimateRevision;
 
-        public PackageVariables(int userID, int packageID, int bookingID = 0)
+        public PackageVariables(int userID, int packageID, int pricingEstimateID = 0, int pricingEstimateRevision = 0)
         {
             data = new Dictionary<string, object>();
             this.userID = userID;
             this.packageID = packageID;
-            this.bookingID = bookingID;
+            this.pricingEstimateID = pricingEstimateID;
+            this.pricingEstimateRevision = pricingEstimateRevision;
 
             LoadPackageVariables();
         }
@@ -78,16 +80,56 @@ public static partial class LcPricingModel
 
         public void LoadPackageVariables()
         {
-            ProposalA.Load(this, userID, packageID, bookingID);
+            ProposalA.Load(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
          }
         /// <summary>
         /// Save data on database
         /// </summary>
         public void Save()
         {
-            ProposalA.Save(this, userID, packageID, bookingID);
+            ProposalA.Save(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
+        }
+        /// <summary>
+        /// Save data on database for the given pricingEstimateID and pricingEstimateRevision;
+        /// thats values get updated in the object.
+        /// </summary>
+        /// <param name="pricingEstimateID"></param>
+        /// <param name="pricingEstimateRevision"></param>
+        public void Save(int pricingEstimateID, int pricingEstimateRevision)
+        {
+            this.pricingEstimateID = pricingEstimateID;
+            this.pricingEstimateRevision = pricingEstimateRevision;
+            Save();
         }
 
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return data.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return data.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Create a string in JSON format that represents the variables with value
+        /// included in this instance.
+        /// Additional context data as package, user... is not included
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var copy = new Dictionary<string, object>();
+            foreach (var r in data)
+            {
+                if (r.Value != null)
+                    copy.Add(r.Key, r.Value);
+            }
+            return Json.Encode(new DynamicJsonObject(copy));
+        }
+
+        #region DB Backend: Proposals 
         /// <summary>
         /// ProposalA backend implementation
         /// </summary>
@@ -99,25 +141,28 @@ public static partial class LcPricingModel
                 FROM    ProviderPackageVariables
                 WHERE   UserID = @0
                         AND PackageID = @1
-                        AND BookingID = @2
+                        AND PricingEstimateID = @2
+                        AND PricingEstimateRevision = @3
             ";
             const string sqlSetVariables = @"
                 UPDATE  ProviderPackageVariables SET
-                        CleaningRate = @3
-                        ,BedsNumber = @4
-                        ,BathsNumber = @5
-                        ,HoursNumber = @6
-                        ,ChildsNumber = @7
-                        ,ChildSurcharge = @8
+                        CleaningRate = @4
+                        ,BedsNumber = @5
+                        ,BathsNumber = @6
+                        ,HoursNumber = @7
+                        ,ChildsNumber = @8
+                        ,ChildSurcharge = @9
                 WHERE   UserID = @0
                         AND PackageID = @1
-                        AND BookingID = @2
+                        AND PricingEstimateID = @2
+                        AND PricingEstimateRevision = @3
 
                 IF @@rowcount = 0
                     INSERT INTO ProviderPackageVariables (
                         UserID
                         ,PackageID
-                        ,BookingID
+                        ,PricingEstimateID
+                        ,PricingEstimateRevision
                         ,CleaningRate
                         ,BedsNumber
                         ,BathsNumber
@@ -134,14 +179,15 @@ public static partial class LcPricingModel
                         ,@6
                         ,@7
                         ,@8
+                        ,@9
                     )
             ";
             #endregion
-            public static void Load(PackageVariables data, int userID, int packageID, int bookingID = 0)
+            public static void Load(PackageVariables data, int userID, int packageID, int pricingEstimateID = 0, int pricingEstimateRevision = 0)
             {
                 using (var db = Database.Open("sqlloco"))
                 {
-                    var r = db.QuerySingle(sqlGetVariables, userID, packageID, bookingID);
+                    var r = db.QuerySingle(sqlGetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision);
                     if (r != null)
                     {
                         data["CleaningRate"] = r.CleaningRate;
@@ -153,11 +199,11 @@ public static partial class LcPricingModel
                     }
                 }
             }
-            public static void Save(PackageVariables data, int userID, int packageID, int bookingID = 0)
+            public static void Save(PackageVariables data, int userID, int packageID, int pricingEstimateID = 0, int pricingEstimateRevision = 0)
             {
                 using (var db = Database.Open("sqlloco"))
                 {
-                    db.Execute(sqlSetVariables, userID, packageID, bookingID,
+                    db.Execute(sqlSetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision,
                         data.Get<decimal?>("CleaningRate", null),
                         data.Get<int?>("BedsNumber", null),
                         data.Get<int?>("BathsNumber", null),
@@ -167,5 +213,6 @@ public static partial class LcPricingModel
                 }
             }
         }
+        #endregion
     }
 }

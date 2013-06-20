@@ -498,6 +498,21 @@ public static partial class LcPricingModel
         int packageID = (int)modelData.Data["SelectedPackageID"];
         using (var db = Database.Open("sqlloco"))
         {
+            string provInput = Json.Encode(modelData.ProviderInput ?? "");
+            string custInput = "";
+
+            // Supporting PackageVariables, saving that in its own place on database
+            // and too as customerInput
+            if (modelData.CustomerInput is PackageVariables)
+            {
+                custInput = modelData.CustomerInput.ToString();
+                ((PackageVariables)modelData.CustomerInput).Save(estimateID, revisionID);
+            }
+            else
+            {
+                custInput = Json.Encode(modelData.CustomerInput ?? "");
+            }
+
             // TODO Reimplement sqlInsEstimateDetails SQL AND DATA
             // Inserting details of package selected by customer
             db.Execute(LcData.Booking.sqlInsEstimateDetails, 
@@ -506,8 +521,8 @@ public static partial class LcPricingModel
                 4, // PricingGroupID:4 for packages
                 0, 0, 0, 0,
                 packageID,
-                Json.Encode(modelData.ProviderInput ?? ""),
-                Json.Encode(modelData.CustomerInput ?? ""),
+                provInput,
+                custInput,
                 0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
                 modelData.SummaryTotal.FirstSessionDuration,
