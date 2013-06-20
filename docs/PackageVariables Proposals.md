@@ -142,7 +142,7 @@ UI to be smart and easier for our users.
     - NumberIncludedLabel: varchar  Label given to the provider when entering it in the form in the dashbaord (can be null)
     - NumberIncludedLabelPopup:     Text that will be in pop-up for NumberIncludedLabel
 
-###Scheme [ProviderPackageVariables]
+###Scheme [PackageVariablesValues]
     - ProviderPackageID:int         identifier for the package (maps to provider)
     - PricingVariableID:int         identifier for the variable
     - Value:nvarchar                the variable value saved as text to allow hold any kind of data type.
