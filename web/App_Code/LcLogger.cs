@@ -71,10 +71,16 @@ public class LcLogger : IDisposable
     }
     public void Save()
     {
-        string path = String.Format("_logs/{0}{1:yyyyMM}.log.txt", logName, DateTime.Today);
-        if (HttpContext.Current != null)
-            path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + path);
-        System.IO.File.AppendAllText(path, logger.ToString());
+        var text = this.ToString();
+        if (!String.IsNullOrEmpty(text))
+        {
+            string path = String.Format("_logs/{0}{1:yyyyMM}.log.txt", logName, DateTime.Today);
+            if (HttpContext.Current != null)
+                path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + path);
+            System.IO.File.AppendAllText(path, text);
+            // Clear saved log
+            logger.Clear();
+        }
     }
     /// <summary>
     /// Returns the full text logged.

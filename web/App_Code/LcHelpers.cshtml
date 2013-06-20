@@ -11,6 +11,31 @@
 
 @functions{
     /*=========================
+     * Debugging
+     */
+    public static LcLogger _debugLogger;
+    /// <summary>
+    /// It allows log things to a debug file.
+    /// Only works if debugging is enabled in web.config, and its
+    /// saved and closed on global.asax.
+    /// </summary>
+    public static LcLogger DebugLogger {
+        get {
+            if (_debugLogger == null) {
+                _debugLogger = new LcLogger("debug");
+            }
+            return _debugLogger;
+        }
+    }
+    public static void CloseDebugLogger() {
+        if (Context.IsDebuggingEnabled && _debugLogger != null)
+        {
+            _debugLogger.Save();
+            _debugLogger.Dispose();
+            _debugLogger = null;
+        }
+    }
+    /*=========================
      * Generic data management
      */
     public static string[] GetValuesFromCSVLine(string line){

@@ -48,6 +48,11 @@ public static partial class LcPricingModel
         {
             return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
         }
+        private double GetProviderCleaningRate(PackageBaseData package)
+        {
+            // return .8; // 140.34 / formulaAverageT
+            return (new PackageVariables(package.ProviderUserID, package.ID)).Get<double>("CleaningRate", 1.0);
+        }
         #region Customer form part
         public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
@@ -58,8 +63,8 @@ public static partial class LcPricingModel
             // Get customer input
             var nbeds = Request["bedrooms-number"].AsInt();
             var nbaths = Request["bathrooms-number"].AsInt();
-            // TODO get provider input
-            var providerRate = .8; // 140.34 / formulaAverageT;
+            // get provider rate
+            var providerRate = GetProviderCleaningRate(package);
             // Apply formula, changed by the providerRate (variation from the average)
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
             // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
@@ -71,8 +76,8 @@ public static partial class LcPricingModel
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {
-            // TODO get provider input
-            var providerRate = .8; // 140.34 / formulaAverageT;
+            // get provider rate
+            var providerRate = GetProviderCleaningRate(package);
             // Get HourlyRate for client-side calculation, and fees
             var price = new Price(package.PriceRate ?? 0M, fee, 1);
             var hourlyFee = price.FeePrice;
@@ -97,8 +102,8 @@ public static partial class LcPricingModel
         {
             var s = new StringBuilder();
 
-            // TODO Get saved value for provider average-ratio
-            var ratio = 0.76517553129036045555946929670072;
+            // Get saved value for provider average-ratio
+            var ratio = GetProviderCleaningRate(package);
             // Calculate time for the ratio
             var time = ratio * ApplyFormula();
 
@@ -119,14 +124,16 @@ public static partial class LcPricingModel
         }
         public bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState)
         {
-            // TODO
-            return true;
+            return Request["provider-average-time"].AsFloat() > 0;
         }
         public void SaveProviderData(PackageBaseData package, Database db)
         {
-            var provTime = Request["provider-average-time"].AsInt();
+            var provTime = Request["provider-average-time"].AsFloat();
             var provRate = provTime / ApplyFormula();
-            // TODO Save rate on DB
+            // Save rate on DB
+            var vars = new PackageVariables(package.ProviderUserID, package.ID);
+            vars.Set("CleaningRate", provRate);
+            vars.Save();
         }
         #endregion
     }

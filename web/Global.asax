@@ -102,6 +102,7 @@
     void Application_EndRequest(object sender, EventArgs e)
     {
         LcData.UserInfo.RegisterLastActivityTime();
+        LcHelpers.CloseDebugLogger();
         /* TESTING
         using (var f = System.IO.File.AppendText(Request.MapPath(LcUrl.RenderAppPath + "EndRequest.log")))
         {
