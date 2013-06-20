@@ -118,6 +118,55 @@ Note that this proposal requires more things to do the same, repeated variable r
 in a list as previoulsy was done with the 'custom' pricing type, because we require now more complex calculations that affect multiple variables and not 'one per line' and specific
 UI to be smart and easier for our users.
 
+##Proposal B++
+
+
+###Scheme [PackageVariablesDefinition]
+    - PricingVariableID:int         identifier for the variable
+    - PositionID:int                maps variable to position;  "-1" for all positions
+    - InternalName:varchar          name of the variable. I prefer name it as 'InternalName' to be clear that
+                                    is Not a name to be translated or to show to the user and needs be hardcoded to do
+                                    specific things in code specific for to the variable meaning.
+    - PricingTypeID:int             referencing for what pricing type will use this variable.
+                                    Variables shared by different pricing types need a duplicated record with the
+                                    different PricingTypeID (for example the three cleaning pricing types needs CleaningRate,
+                                    BedsNumber and BathsNumber, the HoursNumber for hourly and babysitter)
+    - CP:char                       is a Customer variable or a Provider variable?
+                                    Possible values: 'C' or 'P' (maybe 'B' for 'both').
+    - DataType:nvarchar             it sets what kind of data we are saving as value for this variable: decimal, integer, text, bool.
+                                    If will be only numeric values, we can remove this and use 'decimal' as data type ever.
+    - ProviderLabel: varchar        Label given to the provider when entering it in the form in the dashboard
+    - ProviderLabelPopUp: varchar   Text that will be in pop-up for ProviderLabel
+    - VariableNameSingular: varchar Singular name of variable to be used in front-end content to customer and provider
+    - VariableNamePlural: varchar   Plural name of variable to be used in front-end content to customer and provider
+    - NumberIncludedLabel: varchar  Label given to the provider when entering it in the form in the dashbaord (can be null)
+    - NumberIncludedLabelPopup:     Text that will be in pop-up for NumberIncludedLabel
+
+###Scheme [PackageVariablesValues]
+    - ProviderPackageID:int         identifier for the package (maps to provider)
+    - PricingVariableID:int         identifier for the variable
+    - Value:nvarchar                the variable value saved as text to allow hold any kind of data type.
+                                    It requires conversions of the text to the defined variable DataType on any code using variables,
+                                    to allow do calculation and formatting.
+                                    It can be changed to 'decimal' if we consider we will hold only numeric values.
+    - NumberIncluded:decimal        The number of the variable type that is included in the package. Will be null for hours and defaulted
+                                    to 1 for all others (providers can change this)
+    - MinNumberAllowed:decimal      Will be used for hourly variable only (and null for all others).  May be used in "Classes" pricing type in future for min students.
+    - MaxNumberAllowed:decimal      Will be used for max number of hours and also max number of a variable (if a babysitter can only babysit 4 children for example).
+
+###Scheme [PricingEstimateDetail]  -Fields used
+    - PricingEstimateID:int         identifier for the pricing estimate
+    - PricingVariableID:int         identifier for the variable
+    - ProviderPackageID: int        identifier for the package
+    - ProviderPricingDataInput:     from ProviderPackageVariables.Value  
+    - CustomerPricingDataInput:     from Booking Step 1
+    NEED TO FINISH
+
+
+CustomerInputValues:  --null (we could limit the inputs if this is text or even the numbers allowed)
+ProviderInputValues:  --null (we could limit the inputs if this is text or even the numbers allowed)
+
+
 
 ##Last notes
 
