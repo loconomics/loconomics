@@ -146,15 +146,25 @@ UI to be smart and easier for our users.
     - CalculateWithVariableID: int  Variable to match customer and provider variable inputs
     
 EXAMPLE INPUTS
-###System data [PackageVariablesDefinition]
+###System data [PricingVariablesDefinition]
 <table>
- <tr>
+ <tr><td>1</td>
   <th>PricingVariableID</th><th>      LanguageID</th><th>      CountryID</th><th>      PositionID</th><th>      InternalName</th><th>        PricingTypeID</th><th>       IsProviderVariable</th><th>      IsCustomerVariable</th><th>      DataType</th><th>      VariableLabel</th><th>      VariableLablePopUp</th><th>      VariableNameSingular</th><th>      VariableNamePlural</th><th>      NumberIncludedLabel</th><th>      NumberIncludedLabelPopUp</th><th>      CalculateWithVariableID</th>
  </tr>
  <tr>
-  <td>1</td><td>        1</td><td>        1</td><td>        -1</td><td>               'HourlyRate'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'Hourly Rate'</td><td>     'Please enter your hourly rate for these services'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+  <td>1</td><td>        1</td><td>        1</td><td>        -1</td><td>               'HourlyRate'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'Hourly Rate'</td><td>     'Please enter your hourly rate for these services'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
  </tr>
- 
+ <tr>
+  <td>2</td><td>        1</td><td>        1</td><td>        -1</td><td>               'Hours'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'decimal'</td><td>     'Hours'</td><td>     'Please select the number of hours'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     1</td>
+ </tr>
+ <tr>
+  <td>3</td><td>        1</td><td>        1</td><td>        16</td><td>               'ChildSurcharge'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'additional child'</td><td>     'Please indicate how many children your hourly rate includes and the hourly surcharge, if any, per additional child.'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+ </tr>
+ <tr>
+  <td>4</td><td>        1</td><td>        1</td><td>        16</td><td>               'NumberOfChildren'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'int'</td><td>     'Number of Children'</td><td>     'Please indicate how many children you'd like babysat'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+ </tr>
+    
+  
 </table>
 
 ###Scheme [PricingVariablesValues]
@@ -174,27 +184,31 @@ EXAMPLE INPUTS
     - ProviderMaxNumberAllowed:decimal      Will be used for max number of hours and also max number of a variable (if a babysitter 
                                     can only babysit 4 children for example).   Null if customer.
 
-
-
-
-
+<table>
+ <tr>
+  <th>UserID</th><th>ProviderPackageID</th><th>PricingVariableID</th><th>Value</th><th>ProviderNumberIncluded</th><th>ProviderMinNumberAllowed</th><th>ProviderMaxNumberAllowed</th>
+ </tr>
+ <tr>
+  <td>162</td><td>-1</td><td>1</td><td>25.00</td><td>NULL</td><td>1.5</td><td>8</td>
+  <td>162</td><td>24</td><td>3</td><td>5.00</td><td>2</td><td>NULL</td><td>4</td>
+  <td>319</td><td>NULL</td><td>4</td><td>4</td><td>NULL</td><td>NULL</td><td>NULL</td>
+ </tr>
+   
+</table>
+ 
+ 
 ###Scheme [PricingEstimateDetail]  -Fields used
     - PricingEstimateID:int         identifier for the pricing estimate
+    - PricingEstimateRevision
     - PricingVariableID:int         identifier for the variable
+    - PricingSurchargeID            Still used??
+    - PricingOptionID               Still used??
+    - ServiceAttributeID            Still used??
     - ProviderPackageID: int        identifier for the package
     - ProviderPricingDataInput:     from PricingVariables.Value  
     - CustomerPricingDataInput:     from PricingVariables.Value from customer ID
-    - PricingEstimateID
-    - PricingEstimateRevision
-    - PricingVariableID
-    - PricingSurchargeID
-    - PricingOptionID
-    - ServiceAttributeID
-    - ProviderPackageID
-    - ProviderPricingDataInput
-    - CustomerPricingDataInput
-    - SystemPricingDataInput
-    - HourlyPrice
+    - SystemPricingDataInput:       calculation using pricing type code
+    - HourlyPrice:                  uses provider input for variableID 1 and userID plus commission
     - SubtotalPrice
     - FeePrice
     - TotalPrice
@@ -204,11 +218,6 @@ EXAMPLE INPUTS
     - UpdatedDate
     - ModifiedBy
     - PricingGroupID
-
-
-CustomerInputValues:  --null (we could limit the inputs if this is text or even the numbers allowed)
-ProviderInputValues:  --null (we could limit the inputs if this is text or even the numbers allowed)
-
 
 
 ##Last notes
