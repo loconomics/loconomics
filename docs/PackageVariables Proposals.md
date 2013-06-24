@@ -152,16 +152,16 @@ EXAMPLE INPUTS
   <th>PricingVariableID</th><th>      LanguageID</th><th>      CountryID</th><th>      PositionID</th><th>      InternalName</th><th>        PricingTypeID</th><th>       IsProviderVariable</th><th>      IsCustomerVariable</th><th>      DataType</th><th>      VariableLabel</th><th>      VariableLablePopUp</th><th>      VariableNameSingular</th><th>      VariableNamePlural</th><th>      NumberIncludedLabel</th><th>      NumberIncludedLabelPopUp</th><th>      CalculateWithVariableID</th>
  </tr>
  <tr>
-  <td>1</td><td>        1</td><td>        1</td><td>        -1</td><td>               'HourlyRate'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'Hourly Rate'</td><td>     'Please enter your hourly rate for these services'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+  <td>1</td><td>        1</td><td>        1</td><td>        -1</td><td>               'HourlyRate'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'Hourly Rate'</td><td>     'Please enter your hourly rate for these services'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
  </tr>
  <tr>
-  <td>2</td><td>        1</td><td>        1</td><td>        -1</td><td>               'Hours'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'decimal'</td><td>     'Hours'</td><td>     'Please select the number of hours'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     1</td>
+  <td>2</td><td>        1</td><td>        1</td><td>        -1</td><td>               'Hours'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'decimal'</td><td>     'Hours'</td><td>     'Please select the number of hours'</td><td>     'hour'</td><td>     'hours'</td><td>     NULL</td><td>     NULL</td><td>     1</td><td>     NULL</td>
  </tr>
  <tr>
-  <td>3</td><td>        1</td><td>        1</td><td>        16</td><td>               'ChildSurcharge'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'additional child'</td><td>     'Please indicate how many children your hourly rate includes and the hourly surcharge, if any, per additional child.'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+  <td>3</td><td>        1</td><td>        1</td><td>        16</td><td>               'ChildSurcharge'</td><td>      1</td><td>                   1</td><td>                   0</td><td>     'decimal'</td><td>     'additional child'</td><td>     'Please indicate how many children your hourly rate includes and the hourly surcharge, if any, per additional child.'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
  </tr>
  <tr>
-  <td>4</td><td>        1</td><td>        1</td><td>        16</td><td>               'NumberOfChildren'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'int'</td><td>     'Number of Children'</td><td>     'Please indicate how many children you'd like babysat'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td>
+  <td>4</td><td>        1</td><td>        1</td><td>        16</td><td>               'NumberOfChildren'</td><td>      1</td><td>                   0</td><td>                   1</td><td>     'int'</td><td>     'Number of Children'</td><td>     'Please indicate how many children you'd like babysat'</td><td>     'child'</td><td>     'children'</td><td>     NULL</td><td>     NULL</td><td>     NULL</td><td>     3</td>
  </tr>
     
   
