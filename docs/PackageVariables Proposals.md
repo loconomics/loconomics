@@ -396,10 +396,19 @@ Provider variables values being used by this booking/pricing-estimate:
  </tr>
 </table>
 
-###Questions/notes
+###Motes
 - It seems clear from the previous example that provider VariableIDs doesn't require being added to [PricingEstimateDetail], they are included in the Customer VariableID row (with value in the ProviderPricingDataInput column but without VariableID)
 - Remember that we need lines per package in [PricingEstimateDetail] because customer could add add-ons to the booking (add-ons are packages actually).
 - I'm thinking in the need for [RevisionID] in the [ProviderPackage] table, being used as Key with the [ProviderPackageID] and referenced on related tables (as [PricingVariablesValues] and [PricingEstimateDetail]); it adds one more field on any related table and a bit more complication, but could let us save a copy of every change provider does when saving a package, showing ever the last revision but with a reference from pricing to the actual state of the package in the moment the booking was done, preventing future changes to don't match the data when booked.
+- General formula for variables in hourly pricings (some pricings may require alternative formulas, as Housekeeper, but the rest will use this):
+    hours*hourlyrate +
+    hours*((CustomerValueInputVariable1-ProviderNumberIncludedVariable1)*ProviderPriceVariable1
+    +
+    (CustomerValueInputVariable2-ProviderNumberIncludedVariable2)*ProviderPriceVariable2
+    +
+    (CustomerValueInputVariable3-ProviderNumberIncludedVariable3)*ProviderPriceVariable3
+    +
+    ....)
 
 ##Modification proposal for [PricingEstimateDetail]
 Question: Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table?
