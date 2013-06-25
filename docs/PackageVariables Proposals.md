@@ -349,14 +349,10 @@ EXAMPLE INPUTS
 ##Questions/notes on [PricingEstimateDetail]
 - It seems clear from the previous example that provider VariableIDs doesn't require being added to [PricingEstimateDetail], they are included in the Customer VariableID row (with value in the ProviderPricingDataInput column but without VariableID)
 - Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table? (on this last, adding PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value; VariableID could be removed from [PricingEstimateDetail] on this case; customer 'preferences' are obtained from values on the last PricingEstimateID).
-- I'm thinking in the need for [RevisionID] in the [ProviderPackage] table, being used as Key with the [ProviderPackageID] and referenced on related tables (as [PricingVariablesValues] and [PricingEstimateDetail]); it adds one more field on any related table and a minor complication, but could let us save a copy of every change provider does when saving a package, showing ever the last revision but with a reference from pricing to the actual state of the package in the moment the booking was done, preventing future changes to don't match the data whe was booked.
+- I'm thinking in the need for [RevisionID] in the [ProviderPackage] table, being used as Key with the [ProviderPackageID] and referenced on related tables (as [PricingVariablesValues] and [PricingEstimateDetail]); it adds one more field on any related table and a bit more complication, but could let us save a copy of every change provider does when saving a package, showing ever the last revision but with a reference from pricing to the actual state of the package in the moment the booking was done, preventing future changes to don't match the data when booked.
 
 ##Last notes
 
-I will try to create an abstraction in the code with some utilities shared by pricing types that require variables that can help to allow change in a future the database scheme with minimum changes in the code (only changing the utilities but not each pricing specific code).
-
 Pricing formulas will still be coded instead of defined in database, as they can vary syntax depending on pricing, it allow us more possibilities and it calculates using all variables and differently depending on provider calculation or customer calculation. Previous use of variables ('custom' pricing) only required calculations per each variable in a set of reduced possibilites.
-
-Texts showed to the user will be defined in the ressource files of the code; initially in the code itself but thinking in move it to ressources files as the most texts on the website. Because of that I didn't add LanguageID and CountryID fields on tables.
 
 Tables will have too the common fields: CreatedDate, UpdatedDate, ModifiedBy and Active on tables that require it.
