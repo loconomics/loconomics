@@ -319,7 +319,7 @@ It contains a package for Babysitter (that use variables) and an add-on (a real 
   <td>4 <em>NumberOfChildren</em></td>
   <td>34 <em>related package</em></td>
   <td>'10.00' <em>(ChildSurcharge var value)</em></td>
-  <td>'2' <em>(NumberOfChildren var value)</em></td>
+  <td>'3' <em>(NumberOfChildren var value)</em></td>
   <td>NULL <em>(What goes here?)</em></td>
   <td>$20.00 <em>(from VariableID:1, same as ProviderDataInput, but saved as decimal number)</em></td>
   <td>$20.00</td>
@@ -405,7 +405,7 @@ Provider variables values being used by this booking/pricing-estimate:
 Question: Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table?
 On last case: we add PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value.
 
-This is an altenative approach to save customer variables values for the case of a booking/pricing-estimate, its remove VariableID from [PricingEstimateDetail] (and some related clean-up) and save variables values in only one place, to have both provider and customer values in the table [PricingVariablesValues].
+This is an altenative approach to save customer variables values for the case of a booking/pricing-estimate, its remove VariableID from [PricingEstimateDetail] and some more related clean-up, and save variables values in only one place, to have both provider and customer values in the table [PricingVariablesValues].
 Next is an example of this proposal, to compare and to discuss about. The example data is the same as in the previous example but with the alternative scheme:
 
 ###[PricingEstimateDetail] example values
@@ -512,7 +512,7 @@ Next is an example of this proposal, to compare and to discuss about. The exampl
   <td>1</td>
   <td>34</td>
   <td>4 <em>NumberOfChildren</em></td>
-  <td>'2.00'</td>
+  <td>'3.00'</td>
   <td>NULL</td>
   <td>NULL</td>
   <td>NULL</td>
