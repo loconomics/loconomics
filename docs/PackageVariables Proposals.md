@@ -197,7 +197,6 @@ EXAMPLE INPUTS
  <tr>
   <td>319</td><td>NULL</td><td>4</td><td>4</td><td>NULL</td><td>NULL</td><td>NULL</td>
  </tr>
-   
 </table>
  
  
@@ -223,7 +222,10 @@ EXAMPLE INPUTS
     - ModifiedBy
     - PricingGroupID
 
-###Example data for [PricingEstimateDetail] for 1 PricingEstimate with additional *comments* and TOTALS row with its summary data at [PricingEstimate] table.
+###Example data for [PricingEstimateDetail] 
+Example data for 1 PricingEstimate with additional *comments* and TOTALS row with its summary data at [PricingEstimate] table.
+It contains a package for Babysitter (that use variables) and an add-on (a real example name for the add-on is welcome). Amounts maybe are not real but are easy to calculate :-)
+
 <table>
  <tr>
   <th><em>Comment</em></th>
@@ -255,8 +257,8 @@ EXAMPLE INPUTS
   <td>$100.00 <em>(from variables calculation)</em></td>
   <td>$5.00</td>
   <td>$105.00</td>
-  <td>4 hours</td>
-  <td>4 hours</td>
+  <td>4 hours <em>(from variables calculation)</em></td>
+  <td>4 hours <em>(from variables calculation)</em></td>
   <td>4</td>
  </tr>
  <tr>
@@ -328,28 +330,161 @@ EXAMPLE INPUTS
   <td>4</td>
  </tr>
  <tr>
+  <td><em>A babysitter add-on</em></td>
+  <td>123</td>
+  <td>1</td>
+  <td>NULL</td>
+  <td>37</td>
+  <td>NULL</td>
+  <td>NULL</td>
+  <td>NULL</td>
+  <td>NULL <em>(from [ProviderPackage].[PriceRate])</em></td>
+  <td>$30.00</td>
+  <td>$1.50</td>
+  <td>$1.50</td>
+  <td>NULL <em>(some add-ons may require extra time, reflected in the totals and schedule)</em></td>
+  <td>NULL <em>(some add-ons may require extra time, reflected in the totals and schedule)</em></td>
+  <td>5</td>
+ </tr>
+ <tr>
   <th><em>TOTALS at [PricingEstimate]</em></th>
   <th>123</th>
   <th>1</th>
   <th></th>
-  <th>34</th>
+  <th></th>
   <th></th>
   <th></th>
   <th></th>
   <th>NULL <em>from package or</em> $20.00 <em>from VariableID:1</em>?</th>
-  <th>$100.00</th>
-  <th>$5.00</th>
-  <th>$105.00</th>
+  <th>$130.00</th>
+  <th>$6.50</th>
+  <th>$136.50</th>
   <th>4 hours</th>
   <th>4 hours</th>
   <th></th>
  </tr>
 </table>
 
-##Questions/notes on [PricingEstimateDetail]
+##Questions/notes
 - It seems clear from the previous example that provider VariableIDs doesn't require being added to [PricingEstimateDetail], they are included in the Customer VariableID row (with value in the ProviderPricingDataInput column but without VariableID)
-- Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table? (on this last, adding PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value; VariableID could be removed from [PricingEstimateDetail] on this case; customer 'preferences' are obtained from values on the last PricingEstimateID).
+- Remember that we need lines per package in [PricingEstimateDetail] because customer could add add-ons to the booking (add-ons are packages actually).
+- Question: Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table? (on this last, adding PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value; VariableID could be removed from [PricingEstimateDetail] on this case; customer 'preferences' are obtained from values on the last PricingEstimateID).
 - I'm thinking in the need for [RevisionID] in the [ProviderPackage] table, being used as Key with the [ProviderPackageID] and referenced on related tables (as [PricingVariablesValues] and [PricingEstimateDetail]); it adds one more field on any related table and a bit more complication, but could let us save a copy of every change provider does when saving a package, showing ever the last revision but with a reference from pricing to the actual state of the package in the moment the booking was done, preventing future changes to don't match the data when booked.
+
+###Modification proposal for [PricingEstimateDetail]
+As commented above, an altenative way to save customer variables values for the case of a booking/pricing-estimate, its remove VariableID from [PricingEstimateDetail] (and some related clean-up) and save variables values in only one place, to have both provider and customer values.
+Next is an example of this proposal, to compare and to discuss about. The example data is the same as in the previous example in the proposed scheme:
+
+####[PricingEstimateDetail] example values
+<table>
+ <tr>
+  <th><em>Comment</em></th>
+  <th>PricingEstimateID</th>
+  <th>PricingEstimateRevision</th>
+  <th>ProviderPackageID</th>
+  <th>SubtotalPrice</th>
+  <th>FeePrice</th>
+  <th>TotalPrice</th>
+  <th>ServiceDuration</th>
+  <th>FirstSessionDuration</th>
+  <th>PricingGroupID</th>
+ </tr>
+ <tr>
+  <td><em>Selected package: babysitter</em></td>
+  <td>123</td>
+  <td>1</td>
+  <td>34</td>
+  <td>$100.00 <em>(from variables calculation)</em></td>
+  <td>$5.00</td>
+  <td>$105.00</td>
+  <td>4 hours <em>(from variables calculation)</em></td>
+  <td>4 hours <em>(from variables calculation)</em></td>
+  <td>4</td>
+ </tr>
+ <tr>
+  <td><em>A babysitter add-on</em></td>
+  <td>123</td>
+  <td>1</td>
+  <td>37</td>
+  <td>$30.00</td>
+  <td>$1.50</td>
+  <td>$1.50</td>
+  <td>NULL <em>(some add-ons may require extra time, reflected in the totals and schedule)</em></td>
+  <td>NULL <em>(some add-ons may require extra time, reflected in the totals and schedule)</em></td>
+  <td>5</td>
+ </tr>
+ <tr>
+  <th><em>TOTALS at [PricingEstimate]</em></th>
+  <th>123</th>
+  <th>1</th>
+  <th></th>
+  <th>$130.00</th>
+  <th>$6.50</th>
+  <th>$136.50</th>
+  <th>4 hours</th>
+  <th>4 hours</th>
+  <th></th>
+ </tr>
+</table>
+
+####[PricingVariableValues]
+<table>
+ <tr>
+  <th>UserID</th>
+  <th>PricingEstimateID</th>
+  <th>PricingEstimateRevision</th>
+  <th>ProviderPackageID</th>
+  <th>PricingVariableID</th>
+  <th>Value</th>
+  <th>ProviderNumberIncluded</th>
+  <th>ProviderMinNumberAllowed</th>
+  <th>ProviderMaxNumberAllowed</th>
+ </tr>
+ <tr>
+  <td>162</td>
+  <td>123</td>
+  <td>1</td>
+  <td>34</td>
+  <td>1 <em>HourlyRate</em></td>
+  <td>'20.00'</td>
+  <td>1.5</td>
+  <td>NULL</td>
+  <td>8</td>
+ </tr>
+ <tr>
+  <td>162</td>
+  <td>123</td>
+  <td>1</td>
+  <td>34</td>
+  <td>2 <em>Hours</em></td>
+  <td>'4.00'</td>
+  <td>NULL</td>
+  <td>NULL</td>
+  <td>NULL</td>
+ </tr>
+ <tr>
+  <td>162</td>
+  <td>123</td>
+  <td>1</td>
+  <td>34</td>
+  <td>3 <em>ChildSurcharge</em></td>
+  <td>'10.00'</td>
+  <td>1</td>
+  <td>1</td>
+  <td>4</td>
+ </tr>
+ <tr>
+  <td>162</td>
+  <td>123</td>
+  <td>1</td>
+  <td>34</td>
+  <td>4 <em>NumberOfChildren</em></td>
+  <td>'2.00'</td>
+  <td>NULL</td>
+  <td>NULL</td>
+  <td>NULL</td>
+ </tr>
+</table>
 
 ##Last notes
 
