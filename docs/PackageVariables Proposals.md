@@ -365,17 +365,50 @@ It contains a package for Babysitter (that use variables) and an add-on (a real 
  </tr>
 </table>
 
-##Questions/notes
+Provider variables values being used by this booking/pricing-estimate:
+<table>
+ <tr>
+  <th>UserID</th>
+  <th>ProviderPackageID</th>
+  <th>PricingVariableID</th>
+  <th>Value</th>
+  <th>ProviderNumberIncluded</th>
+  <th>ProviderMinNumberAllowed</th>
+  <th>ProviderMaxNumberAllowed</th>
+ </tr>
+ <tr>
+  <td>131</td>
+  <td>34</td>
+  <td>1 <em>HourlyRate</em></td>
+  <td>'20.00'</td>
+  <td>1.5</td>
+  <td>NULL</td>
+  <td>8</td>
+ </tr>
+ <tr>
+  <td>131</td>
+  <td>34</td>
+  <td>3 <em>ChildSurcharge</em></td>
+  <td>'10.00'</td>
+  <td>1</td>
+  <td>1</td>
+  <td>4</td>
+ </tr>
+</table>
+
+###Questions/notes
 - It seems clear from the previous example that provider VariableIDs doesn't require being added to [PricingEstimateDetail], they are included in the Customer VariableID row (with value in the ProviderPricingDataInput column but without VariableID)
 - Remember that we need lines per package in [PricingEstimateDetail] because customer could add add-ons to the booking (add-ons are packages actually).
-- Question: Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table? (on this last, adding PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value; VariableID could be removed from [PricingEstimateDetail] on this case; customer 'preferences' are obtained from values on the last PricingEstimateID).
 - I'm thinking in the need for [RevisionID] in the [ProviderPackage] table, being used as Key with the [ProviderPackageID] and referenced on related tables (as [PricingVariablesValues] and [PricingEstimateDetail]); it adds one more field on any related table and a bit more complication, but could let us save a copy of every change provider does when saving a package, showing ever the last revision but with a reference from pricing to the actual state of the package in the moment the booking was done, preventing future changes to don't match the data when booked.
 
-###Modification proposal for [PricingEstimateDetail]
-As commented above, an altenative way to save customer variables values for the case of a booking/pricing-estimate, its remove VariableID from [PricingEstimateDetail] (and some related clean-up) and save variables values in only one place, to have both provider and customer values.
-Next is an example of this proposal, to compare and to discuss about. The example data is the same as in the previous example in the proposed scheme:
+##Modification proposal for [PricingEstimateDetail]
+Question: Its better save Variables on [PricingEstimateDetail] table or in the [PricingVariablesValues] table?
+On last case: we add PricingEstimateID and PricingEstimateRevision fields, with value 0 for providers value.
 
-####[PricingEstimateDetail] example values
+This is an altenative approach to save customer variables values for the case of a booking/pricing-estimate, its remove VariableID from [PricingEstimateDetail] (and some related clean-up) and save variables values in only one place, to have both provider and customer values in the table [PricingVariablesValues].
+Next is an example of this proposal, to compare and to discuss about. The example data is the same as in the previous example but with the alternative scheme:
+
+###[PricingEstimateDetail] example values
 <table>
  <tr>
   <th><em>Comment</em></th>
@@ -483,6 +516,33 @@ Next is an example of this proposal, to compare and to discuss about. The exampl
   <td>NULL</td>
   <td>NULL</td>
   <td>NULL</td>
+ </tr>
+ <tr>
+  <td colspan="9">
+   <em>Next Records: provider variables values being used by the booking/pricing-estimate (and copied with a PricingEstimateID in previuos records)</em>
+  </td>
+ </tr>
+ <tr>
+  <td>131</td>
+  <td>0</td>
+  <td>0</td>
+  <td>34</td>
+  <td>1 <em>HourlyRate</em></td>
+  <td>'20.00'</td>
+  <td>1.5</td>
+  <td>NULL</td>
+  <td>8</td>
+ </tr>
+ <tr>
+  <td>131</td>
+  <td>0</td>
+  <td>0</td>
+  <td>34</td>
+  <td>3 <em>ChildSurcharge</em></td>
+  <td>'10.00'</td>
+  <td>1</td>
+  <td>1</td>
+  <td>4</td>
  </tr>
 </table>
 
