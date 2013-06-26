@@ -80,14 +80,14 @@ public static partial class LcPricingModel
 
         public void LoadPackageVariables()
         {
-            ProposalB.Load(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
-         }
+            Backend.Load(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
+        }
         /// <summary>
         /// Save data on database
         /// </summary>
         public void Save()
         {
-            ProposalB.Save(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
+            Backend.Save(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
         }
         /// <summary>
         /// Save data on database for the given pricingEstimateID and pricingEstimateRevision;
@@ -133,11 +133,18 @@ public static partial class LcPricingModel
             return Json.Encode(new DynamicJsonObject(copy));
         }
 
-        #region DB Backend: Proposals 
+        #region Static constructors
+        public static PackageVariables FromPricingEstimatePackage(int packageID, int pricingEstimateID, int pricingEstimateRevision)
+        {
+            return new PackageVariables(-1, packageID, pricingEstimateID, pricingEstimateRevision);
+        }
+        #endregion
+
+        #region DB Backend
         /// <summary>
-        /// ProposalB backend implementation
+        /// ProposalB++Alternative backend implementation
         /// </summary>
-        private static class ProposalB
+        private static class Backend
         {
             #region Consts
             const string sqlGetVariables = @"
@@ -148,7 +155,7 @@ public static partial class LcPricingModel
                           ON V.PricingVariableID = D.PricingVariableID
                             AND D.LanguageID = @4
                             AND D.CountryID = @5
-                WHERE   UserID = @0
+                WHERE   (UserID = @0 OR @0 = -1)
                         AND ProviderPackageID = @1
                         AND PricingEstimateID = @2
                         AND PricingEstimateRevision = @3

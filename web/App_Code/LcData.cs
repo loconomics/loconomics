@@ -869,6 +869,32 @@ public static partial class LcData
         public Dictionary<int, dynamic> PackagesByID;
         public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
     }
+    public static dynamic GetProviderPackage(int providerPackageID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QuerySingle(@"
+                SELECT  p.ProviderPackageID
+                        ,p.PricingTypeID
+                        ,p.ProviderUserID
+                        ,p.PositionID
+                        ,p.ProviderPackageName As Name
+                        ,p.ProviderPackageDescription As Description
+                        ,p.ProviderPackagePrice As Price
+                        ,p.ProviderPackageServiceDuration As ServiceDuration
+                        ,p.FirstTimeClientsOnly
+                        ,p.NumberOfSessions
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
+                        ,p.IsPhone
+                        ,p.LanguageID
+                        ,p.CountryID
+                        ,p.Active
+                FROM    ProviderPackage As P
+                WHERE   p.ProviderPackageID = @0
+            ", providerPackageID);
+        }
+    }
     public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
     {
         dynamic packages, details;

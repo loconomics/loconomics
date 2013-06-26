@@ -131,7 +131,8 @@
     border-collapse: collapse;
     float: right;
 }
-.dashboard .booking table.calculation {
+.dashboard .booking table.calculation,
+.dashboard .booking-request table.calculation {
     float: none !important;
     width: 100%;
 }

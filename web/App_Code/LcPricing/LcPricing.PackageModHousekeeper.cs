@@ -141,5 +141,17 @@ public static partial class LcPricingModel
             vars.Save();
         }
         #endregion
+        #region Pricing Summary
+        /// <summary>
+        /// It shows the customer variables values
+        /// </summary>
+        /// <param name="package"></param>
+        /// <returns></returns>
+        public string GetPackagePricingDetails(int packageID, int pricingEstimateID, int pricingEstimateRevision)
+        {
+            var pv = PackageVariables.FromPricingEstimatePackage(packageID, pricingEstimateID, pricingEstimateRevision);
+            return String.Format("bedrooms: {0}, bathrooms: {1}", pv["BedsNumber"], pv["BathsNumber"]);
+        }
+        #endregion
     }
 }

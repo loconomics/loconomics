@@ -24,7 +24,7 @@ public static partial class LcData
                     ,PP.ProviderPackageDescription As Description
 
                     --,PP.ProviderPackagePrice As Price
-                    ,PP.ProviderPackageServiceDuration As SessionDuration
+                    ,P.FirstSessionDuration As SessionDuration
                     ,P.ServiceDuration
                     ,P.TotalPrice As Price
 
@@ -488,17 +488,20 @@ public static partial class LcData
         }
         public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
         {
+            // TODO Include Revision in parameters or/and database lookup
+            int pricingEstimateRevision = 1;
             dynamic packages;
             using (var db = Database.Open("sqlloco"))
             {
                 if (pricingEstimateID == 0)
                 {
-                    pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
+                    pricingEstimateID = db.QueryValue(LcData.Booking.sqlGetBookingRequestPricingEstimate, bookingRequestID);
                 }
-                packages = db.Query(sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
+                packages = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
             var details = new List<string>();
+
             foreach (var pak in packages)
             {
                 // Filter add-ons: show both packages and addons if null, only addons if true and not addons if false.
@@ -511,31 +514,41 @@ public static partial class LcData
                 // Format for the package summary
                 var f = "";
                 var inpersonphone = "";
-                try
-                {
-                    var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
-                    if (pak.NumberOfSessions > 1)
-                    {
-                        if (pak.ServiceDuration == 0)
-                            f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
-                        else
-                            f = pricingConfig.NameAndSummaryFormatMultipleSessions;
-                    }
-                    else if (pak.ServiceDuration == 0)
-                        f = pricingConfig.NameAndSummaryFormatNoDuration;
-                    if (String.IsNullOrEmpty(f))
-                        f = pricingConfig.NameAndSummaryFormat;
 
-                    if (pricingConfig.InPersonPhoneLabel != null)
-                        inpersonphone = pak.IsPhone
-                            ? "phone"
-                            : "in-person";
+                var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
+                if (pak.NumberOfSessions > 1)
+                {
+                    if (pak.ServiceDuration == 0)
+                        f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+                    else
+                        f = pricingConfig.NameAndSummaryFormatMultipleSessions;
                 }
-                catch { }
+                else if (pak.SessionDuration == 0)
+                    f = pricingConfig.NameAndSummaryFormatNoDuration;
+                if (String.IsNullOrEmpty(f))
+                    f = pricingConfig.NameAndSummaryFormat;
+
+                if (pricingConfig.InPersonPhoneLabel != null)
+                    inpersonphone = pak.IsPhone
+                        ? "phone"
+                        : "in-person";
+
+                var extraDetails = "";    
+                // Extra information for special pricings:
+                if (pricingConfig.Mod != null) {
+                    extraDetails = pricingConfig.Mod.GetPackagePricingDetails((int)pak.ProviderPackageID, pricingEstimateID, pricingEstimateRevision);
+                }
                 
-                details.Add(String.Format(f, pak.Name, pak.SessionDuration, pak.NumberOfSessions, inpersonphone));
+                // Show duration in a smart way. They come from PricingDetail as hours, convert and round to minutes.
+                var duration = ASP.LcHelpers.TimeToSmartLongString(ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromHours((double)pak.SessionDuration)));
+
+                var result = String.Format(f, pak.Name, duration, pak.NumberOfSessions, inpersonphone);
+                if (!String.IsNullOrEmpty(extraDetails)) {
+                    result += String.Format(" ({0})", extraDetails);
+                }
+                details.Add(result);
             }
-            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
+            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
         }
         public static string GetBookingRequestSubject(int BookingRequestID)
         {

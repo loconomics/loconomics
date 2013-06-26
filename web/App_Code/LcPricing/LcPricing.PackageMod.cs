@@ -26,5 +26,14 @@ public static partial class LcPricingModel
         string GetProviderHtml(PackageBaseData package);
         bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState);
         void SaveProviderData(PackageBaseData package, Database db);
+        /// <summary>
+        /// It can return null or empty when there are no more details.
+        /// Its used to show the pricing variables of a package, for example, or other kind
+        /// of details associated with the package during a specific pricing that are specific
+        /// of the Mod.
+        /// </summary>
+        /// <param name="package"></param>
+        /// <returns></returns>
+        string GetPackagePricingDetails(int packageID, int pricingEstimateID, int pricingEstimateRevision);
     }
 }

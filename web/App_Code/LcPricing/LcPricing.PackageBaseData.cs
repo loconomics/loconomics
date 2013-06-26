@@ -54,5 +54,10 @@ public static partial class LcPricingModel
             CountryID = package.CountryID;
             Active = package.Active;
         }
+        public static PackageBaseData FromPackageID(int packageID)
+        {
+            var d = LcData.GetProviderPackage(packageID);
+            return new PackageBaseData(d);
+        }
     }
 }
