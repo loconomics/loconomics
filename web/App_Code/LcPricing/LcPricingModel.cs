@@ -506,7 +506,7 @@ public static partial class LcPricingModel
             if (modelData.CustomerInput is PackageVariables)
             {
                 custInput = modelData.CustomerInput.ToString();
-                ((PackageVariables)modelData.CustomerInput).Save(estimateID, revisionID);
+                ((PackageVariables)modelData.CustomerInput).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
             }
             else
             {

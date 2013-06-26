@@ -80,14 +80,14 @@ public static partial class LcPricingModel
 
         public void LoadPackageVariables()
         {
-            ProposalA.Load(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
+            ProposalB.Load(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
          }
         /// <summary>
         /// Save data on database
         /// </summary>
         public void Save()
         {
-            ProposalA.Save(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
+            ProposalB.Save(this, userID, packageID, pricingEstimateID, pricingEstimateRevision);
         }
         /// <summary>
         /// Save data on database for the given pricingEstimateID and pricingEstimateRevision;
@@ -95,10 +95,14 @@ public static partial class LcPricingModel
         /// </summary>
         /// <param name="pricingEstimateID"></param>
         /// <param name="pricingEstimateRevision"></param>
-        public void Save(int pricingEstimateID, int pricingEstimateRevision)
+        public void Save(int pricingEstimateID, int pricingEstimateRevision, int onBehalfUserID = 0)
         {
             this.pricingEstimateID = pricingEstimateID;
             this.pricingEstimateRevision = pricingEstimateRevision;
+            // Replace userID from the load with a new one, normally because the provider
+            // variables were loaded but here we are loading the customer ones.
+            if (onBehalfUserID > 0)
+                this.userID = onBehalfUserID;
             Save();
         }
 
@@ -131,55 +135,59 @@ public static partial class LcPricingModel
 
         #region DB Backend: Proposals 
         /// <summary>
-        /// ProposalA backend implementation
+        /// ProposalB backend implementation
         /// </summary>
-        private static class ProposalA
+        private static class ProposalB
         {
             #region Consts
             const string sqlGetVariables = @"
-                SELECT  TOP 1 *
-                FROM    ProviderPackageVariables
+                SELECT  V.Value, D.InternalName
+                FROM    PricingVariableValue As V
+                         INNER JOIN
+                        PricingVariableDefinition As D
+                          ON V.PricingVariableID = D.PricingVariableID
+                            AND D.LanguageID = @4
+                            AND D.CountryID = @5
                 WHERE   UserID = @0
-                        AND PackageID = @1
+                        AND ProviderPackageID = @1
                         AND PricingEstimateID = @2
                         AND PricingEstimateRevision = @3
             ";
             const string sqlSetVariables = @"
-                UPDATE  ProviderPackageVariables SET
-                        CleaningRate = @4
-                        ,BedsNumber = @5
-                        ,BathsNumber = @6
-                        ,HoursNumber = @7
-                        ,ChildsNumber = @8
-                        ,ChildSurcharge = @9
+                DECLARE @varID int
+                SELECT  TOP 1 @varID = PricingVariableID
+                FROM    PricingVariableDefinition
+                WHERE   InternalName = @4
+                         AND
+                        LanguageID = @6
+                         AND
+                        CountryID = @7
+
+                UPDATE  PricingVariableValue SET
+                        Value = @5
+                        ,UpdatedDate = getdate()
+                        ,ModifiedBy = 'sys'
                 WHERE   UserID = @0
-                        AND PackageID = @1
+                        AND ProviderPackageID = @1
                         AND PricingEstimateID = @2
                         AND PricingEstimateRevision = @3
+                        AND PricingVariableID = @varID
 
                 IF @@rowcount = 0
-                    INSERT INTO ProviderPackageVariables (
-                        UserID
-                        ,PackageID
+                    INSERT INTO PricingVariableValue (
+                        PricingVariableID                        
+                        ,UserID
+                        ,ProviderPackageID
                         ,PricingEstimateID
                         ,PricingEstimateRevision
-                        ,CleaningRate
-                        ,BedsNumber
-                        ,BathsNumber
-                        ,HoursNumber
-                        ,ChildsNumber
-                        ,ChildSurcharge
-                    )VALUES (
-                        @0
+                        ,Value
+                    ) VALUES (
+                        @varID
+                        ,@0
                         ,@1
                         ,@2
                         ,@3
-                        ,@4
                         ,@5
-                        ,@6
-                        ,@7
-                        ,@8
-                        ,@9
                     )
             ";
             #endregion
@@ -187,15 +195,11 @@ public static partial class LcPricingModel
             {
                 using (var db = Database.Open("sqlloco"))
                 {
-                    var r = db.QuerySingle(sqlGetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision);
-                    if (r != null)
+                    var vars = db.Query(sqlGetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision,
+                        LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    foreach(var r in vars)
                     {
-                        data["CleaningRate"] = r.CleaningRate;
-                        data["BedsNumber"] = r.BedsNumber;
-                        data["BathsNumber"] = r.BathsNumber;
-                        data["HoursNumber"] = r.HoursNumber;
-                        data["ChildsNumber"] = r.ChildsNumber;
-                        data["ChildSurcharge"] = r.ChildSurcharge;
+                        data[r.InternalName] = r.Value;
                     }
                 }
             }
@@ -203,13 +207,15 @@ public static partial class LcPricingModel
             {
                 using (var db = Database.Open("sqlloco"))
                 {
-                    db.Execute(sqlSetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision,
-                        data.Get<decimal?>("CleaningRate", null),
-                        data.Get<int?>("BedsNumber", null),
-                        data.Get<int?>("BathsNumber", null),
-                        data.Get<decimal?>("HoursNumber", null),
-                        data.Get<int?>("ChildsNumber", null),
-                        data.Get<decimal?>("ChildSurcharge", null));
+                    foreach (var v in data) {
+                        db.Execute(sqlSetVariables, 
+                            userID, packageID, pricingEstimateID, pricingEstimateRevision,
+                            v.Key,
+                            v.Value,
+                            LcData.GetCurrentLanguageID(),
+                            LcData.GetCurrentCountryID()
+                        );
+                    }
                 }
             }
         }
