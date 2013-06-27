@@ -9,25 +9,14 @@ using DDay.Collections;
 using DDay.iCal.Serialization;
 using CalendarDll.Data;
 
-
-
-
-
 namespace CalendarDll
 {
-
-
     /// <summary>
     /// Calendar Utils
     /// </summary>
     /// <remarks>2012/12/11 by CA2S (Static version), 2012/12/21 by RM (Dynamic version)</remarks>
     public class CalendarUtils
     {
-
-
-
-
-
         #region iCalendar - Get an Instance
 
 
@@ -53,8 +42,6 @@ namespace CalendarDll
 
 
         #endregion
-
-
 
         #region Get Free Events
 
@@ -428,9 +415,6 @@ namespace CalendarDll
 
         #endregion
 
-        
-
-
         #region Create Event (iCal Format, having the Loconomics DB Record)
 
         /// <summary>
@@ -573,9 +557,6 @@ namespace CalendarDll
 
 
         #endregion
-
-
-
 
         #region Get Event Status
 
@@ -1068,8 +1049,6 @@ namespace CalendarDll
 
         #endregion
 
-
-
         #region Fill Exceptions Dates
 
 
@@ -1524,8 +1503,6 @@ namespace CalendarDll
 
         #endregion
 
-
-
         #region Prepare Data for Export
 
         /// <summary>
@@ -1571,8 +1548,6 @@ namespace CalendarDll
         #endregion
 
         #region Import Calendar
-
-
 
         /// <summary>
         /// Import Calendar
@@ -1624,102 +1599,143 @@ namespace CalendarDll
                     db.SaveChanges();
                     
 
-                    //----------------------------------------------------------------------
-                    // Loop to Import the Events
-                    //----------------------------------------------------------------------
-                    foreach (Event currEvent in calendar.FirstOrDefault().Events.Where(evs => !evs.UID.StartsWith("*")))
+                    // Loop for every calendar in the imported file (it must be only one really)
+                    foreach (var currentCalendar in calendar)
                     {
-
-                        // Event Types 
-                        // (See table: CalendarEventType)
-                        //
-                        // 1	booking - GENERATES BETWEEN TIME
-                        // 2	work hours
-                        // 3	availibility events
-                        // 4	imported <-- As we are currently Importing, we will use this Type
-                        // 5	other
-                        
-
                         //----------------------------------------------------------------------
-                        // See if an Event with the same UID already Exists in the DB
-                        // If it Exists, don't import, or there will be duplicates
+                        // Loop to Import the Events
                         //----------------------------------------------------------------------
-
-
-                        //bool eventAlreadyExists=false;
-
-                        //----------------------------------------------------------------------
-                        //// Delete old event
-                        //// This won't be necessary anymore, 
-                        //// as the Imported Events are deleted beforehand now
-                        //// 2013/01/15 CA2S RM
-                        //----------------------------------------------------------------------
-
-                        //var eventExist = db.CalendarEvents.FirstOrDefault(
-                        //    ev => ev.UID == currEvent.UID);
-                        
-                        //if (eventExist != null)
-                        //{
-                        //    db.CalendarEvents.Remove(eventExist);
-                        //   // db.SaveChanges();
-                        //}
-
-                        //----------------------------------------------------------------------
-                        
-                        var eventForDB = new CalendarEvents()
+                        foreach (Event currEvent in currentCalendar.Events.Where(evs => !evs.UID.StartsWith("*")))
                         {
-                            CreatedDate = DateTime.Now,
-                            UID = currEvent.UID,
-                            UserId = user.Id,
-                            StartTime = currEvent.Start.Date.Year != 1 ? currEvent.Start.Date.Add(currEvent.Start.TimeOfDay) : DateTime.Now,
-                            // IagoSRL @Loconomics: Added TimeZone based on the StartTime TZID (we suppose endtime use the same, is the most common,
-                            // and our back-end calendar doesn't support one timezone per start-end date)
-                            TimeZone = currEvent.Start.TZID,
-                            EndTime = currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
-                            Organizer = (currEvent.Organizer != null) ? currEvent.Organizer.CommonName : string.Empty,
-                            CalendarAvailabilityTypeID = getAvailabilityId(currEvent),
-                            Transparency = getTransparency((int)currEvent.Status),
-                            Summary = currEvent.Summary,
-                            EventType = 4,  // 4 = Imported
-                            IsAllDay = false
-                        };
 
-                        FillExceptionsDatesToDB(currEvent, eventForDB);
-                        FillRecurrencesDatesToDB(currEvent, eventForDB);
-                        FillContactsToDB(currEvent, eventForDB);
-                        FillAttendeesToDB(currEvent, eventForDB);
-                        FillCommentsToDB(currEvent, eventForDB);
-                        FillRecurrencesToDB(currEvent, eventForDB);
+                            // Event Types 
+                            // (See table: CalendarEventType)
+                            //
+                            // 1	booking - GENERATES BETWEEN TIME
+                            // 2	work hours
+                            // 3	availibility events
+                            // 4	imported <-- As we are currently Importing, we will use this Type
+                            // 5	other
 
-                        // Add to the DB
 
-                        db.CalendarEvents.Add(eventForDB);
-                    } // foreach (Event currEvent in...
-                    
-                    // By IagoSRL @Loconomics:
-                    // To support Public Calendars, that mainly provide VFREEBUSY (and most of times only that kind of elements),
-                    // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
-                    // with automatic name/summary and the given availability:
-                    foreach (var fb in calendar.FirstOrDefault().FreeBusy.Where(fb => !fb.UID.StartsWith("*")))
-                    {
-                        // If the FreeBusy block contains Entries, one event must be created for each entry
-                        if (fb.Entries != null && fb.Entries.Count > 0)
-                        {
-                            int ientry = 0;
-                            foreach (var fbentry in fb.Entries)
+                            //----------------------------------------------------------------------
+                            // See if an Event with the same UID already Exists in the DB
+                            // If it Exists, don't import, or there will be duplicates
+                            //----------------------------------------------------------------------
+
+
+                            //bool eventAlreadyExists=false;
+
+                            //----------------------------------------------------------------------
+                            //// Delete old event
+                            //// This won't be necessary anymore, 
+                            //// as the Imported Events are deleted beforehand now
+                            //// 2013/01/15 CA2S RM
+                            //----------------------------------------------------------------------
+
+                            //var eventExist = db.CalendarEvents.FirstOrDefault(
+                            //    ev => ev.UID == currEvent.UID);
+
+                            //if (eventExist != null)
+                            //{
+                            //    db.CalendarEvents.Remove(eventExist);
+                            //   // db.SaveChanges();
+                            //}
+
+                            //----------------------------------------------------------------------
+
+                            // Convert the whole event to our System Time Zone before being inserted.
+                            UpdateEventDatesToSystemTimeZone(currEvent);
+
+                            var eventForDB = new CalendarEvents()
                             {
-                                ientry++;
-                                var availID = getAvailabilityId(fbentry);
+                                CreatedDate = DateTime.Now,
+                                UID = currEvent.UID,
+                                UserId = user.Id,
+                                StartTime = currEvent.Start.Date.Year != 1 ? currEvent.Start.Date.Add(currEvent.Start.TimeOfDay) : DateTime.Now,
+                                // IagoSRL @Loconomics: Added TimeZone based on the StartTime TZID (we suppose endtime use the same, is the most common,
+                                // and our back-end calendar doesn't support one timezone per start-end date)
+                                TimeZone = currEvent.Start.TZID,
+                                EndTime = currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
+                                Organizer = (currEvent.Organizer != null) ? currEvent.Organizer.CommonName : string.Empty,
+                                CalendarAvailabilityTypeID = getAvailabilityId(currEvent),
+                                Transparency = getTransparency((int)currEvent.Status),
+                                Summary = currEvent.Summary,
+                                EventType = 4,  // 4 = Imported
+                                IsAllDay = false
+                            };
+
+                            FillExceptionsDatesToDB(currEvent, eventForDB);
+                            FillRecurrencesDatesToDB(currEvent, eventForDB);
+                            FillContactsToDB(currEvent, eventForDB);
+                            FillAttendeesToDB(currEvent, eventForDB);
+                            FillCommentsToDB(currEvent, eventForDB);
+                            FillRecurrencesToDB(currEvent, eventForDB);
+
+                            // Add to the DB
+
+                            db.CalendarEvents.Add(eventForDB);
+                        } // foreach (Event currEvent in...
+
+                        // By IagoSRL @Loconomics:
+                        // To support Public Calendars, that mainly provide VFREEBUSY (and most of times only that kind of elements),
+                        // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
+                        // with automatic name/summary and the given availability:
+                        foreach (var fb in currentCalendar.FreeBusy.Where(fb => !fb.UID.StartsWith("*")))
+                        {
+                            // Convert the whole freebusy to our System Time Zone before being inserted
+                            // (it updates too all the freebusy.entries)
+                            UpdateFreeBusyDatesToSystemTimeZone(fb);
+
+                            // If the FreeBusy block contains Entries, one event must be created for each entry
+                            if (fb.Entries != null && fb.Entries.Count > 0)
+                            {
+                                int ientry = 0;
+                                foreach (var fbentry in fb.Entries)
+                                {
+                                    ientry++;
+                                    var availID = getAvailabilityId(fbentry);
+                                    var dbevent = new CalendarEvents()
+                                    {
+                                        CreatedDate = DateTime.Now,
+                                        UpdatedDate = DateTime.Now,
+                                        ModifyBy = "importer",
+                                        UID = fb.UID + "_freebusyentry:" + ientry.ToString(),
+                                        UserId = user.Id,
+                                        StartTime = fbentry.StartTime.Value,
+                                        TimeZone = fbentry.StartTime.TZID,
+                                        EndTime = (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
+                                        Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
+                                        CalendarAvailabilityTypeID = (int)availID,
+                                        Transparency = false,
+                                        Summary = (fb.Properties["SUMMARY"] != null ? fb.Properties["SUMMARY"].Value : availID).ToString(),
+                                        EventType = 4, // 4 = Imported
+                                        IsAllDay = false
+                                    };
+                                    // Linked records
+                                    FillCommentsToDB(fb, dbevent);
+                                    FillAttendeesToDB(fb, dbevent);
+                                    // Add to database
+                                    db.CalendarEvents.Add(dbevent);
+                                }
+                            }
+                            // If there is no entries, the event is created for the vfreebusy dtstart-dtend dates:
+                            else
+                            {
+                                // The availability for a VFREEBUSY is ever 'Busy', because the object doesn't
+                                // allow set the availability/status information, it goes inside freebusy-entries when
+                                // there are some.
+                                var availID = AvailabilityTypes.BUSY;
                                 var dbevent = new CalendarEvents()
                                 {
                                     CreatedDate = DateTime.Now,
                                     UpdatedDate = DateTime.Now,
                                     ModifyBy = "importer",
-                                    UID = fb.UID + "_freebusyentry:" + ientry.ToString(),
+                                    UID = fb.UID,
                                     UserId = user.Id,
-                                    StartTime = fbentry.StartTime.Value,
-                                    TimeZone = fbentry.StartTime.TZID,
-                                    EndTime = (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
+                                    StartTime = fb.DTStart.Value,
+                                    TimeZone = fb.DTStart.TZID,
+                                    EndTime = fb.DTEnd.Value,
                                     Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                     CalendarAvailabilityTypeID = (int)availID,
                                     Transparency = false,
@@ -1734,38 +1750,7 @@ namespace CalendarDll
                                 db.CalendarEvents.Add(dbevent);
                             }
                         }
-                        // If there is no entries, the event is created for the vfreebusy dtstart-dtend dates:
-                        else
-                        {
-                            // The availability for a VFREEBUSY is ever 'Busy', because the object doesn't
-                            // allow set the availability/status information, it goes inside freebusy-entries when
-                            // there are some.
-                            var availID = AvailabilityTypes.BUSY;
-                            var dbevent = new CalendarEvents()
-                            {
-                                CreatedDate = DateTime.Now,
-                                UpdatedDate = DateTime.Now,
-                                ModifyBy = "importer",
-                                UID = fb.UID,
-                                UserId = user.Id,
-                                StartTime = fb.DTStart.Value,
-                                TimeZone = fb.DTStart.TZID,
-                                EndTime = fb.DTEnd.Value,
-                                Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
-                                CalendarAvailabilityTypeID = (int)availID,
-                                Transparency = false,
-                                Summary = (fb.Properties["SUMMARY"] != null ? fb.Properties["SUMMARY"].Value : availID).ToString(),
-                                EventType = 4, // 4 = Imported
-                                IsAllDay = false
-                            };
-                            // Linked records
-                            FillCommentsToDB(fb, dbevent);
-                            FillAttendeesToDB(fb, dbevent);
-                            // Add to database
-                            db.CalendarEvents.Add(dbevent);
-                        }
-                    }
-
+                    } // Ends foreach calendar
 
                     //----------------------------------------------------------------------
                     // Saves the Events to the Database
@@ -1792,24 +1777,97 @@ namespace CalendarDll
 
         }
 
-       
+        /// <summary>
+        /// Modify the passed @anEvent updating its date-time fields from its
+        /// original time zone to the current system time zone (we are using California
+        /// TimeZone in our server and database data).
+        /// It updates every elements collection inside it (ExceptionDates, RecurrenceDates)
+        /// 
+        /// IagoSRL @Loconomics
+        /// </summary>
+        /// <param name="anEvent"></param>
+        public void UpdateEventDatesToSystemTimeZone(IEvent anEvent) {
+            // IEvent.Start is an alias for DTStart.
+            anEvent.Start = UpdateDateToSystemTimeZone(anEvent.Start);
+            // IEvent.End is an alias for DTEnd.
+            anEvent.End = UpdateDateToSystemTimeZone(anEvent.End);
+            anEvent.DTStamp = UpdateDateToSystemTimeZone(anEvent.DTStamp);
+            anEvent.Created = UpdateDateToSystemTimeZone(anEvent.Created);
+            anEvent.LastModified = UpdateDateToSystemTimeZone(anEvent.LastModified);
+            anEvent.RecurrenceID = UpdateDateToSystemTimeZone(anEvent.RecurrenceID);
 
+            foreach (var exDate in anEvent.ExceptionDates)
+            {
+                foreach (var d in exDate)
+                {
+                    d.StartTime = UpdateDateToSystemTimeZone(d.StartTime);
+                    d.EndTime = UpdateDateToSystemTimeZone(d.EndTime);
+                }
+            }
+            //foreach (var exRule in anEvent.ExceptionRules)
+            //{
+                // NOTHING to update
+            //}
+            foreach (var reDate in anEvent.RecurrenceDates)
+            {
+                foreach (var d in reDate)
+                {
+                    d.EndTime = UpdateDateToSystemTimeZone(d.EndTime);
+                    d.StartTime = UpdateDateToSystemTimeZone(d.StartTime);
+                }
+            }
+            //foreach (var reRule in anEvent.RecurrenceRules)
+            //{
+                // NOTHING to update
+            //}
+        }
 
+        /// <summary>
+        /// Modify the passed @freebusy updating its date-time fields from its
+        /// original time zone to the current system time zone (we are using California
+        /// TimeZone in our server and database data).
+        /// It updates every elements collection inside it (freebusyentries)
+        /// 
+        /// IagoSRL @Loconomics
+        /// </summary>
+        /// <param name="freebusy"></param>
+        public void UpdateFreeBusyDatesToSystemTimeZone(IFreeBusy freebusy)
+        {
+            // IFreeBusy.Start is an alias for DTStart.
+            freebusy.Start = UpdateDateToSystemTimeZone(freebusy.Start);
+            // IFreeBusy.End is an alias for DTEnd.
+            freebusy.End = UpdateDateToSystemTimeZone(freebusy.End);
+            freebusy.DTStamp = UpdateDateToSystemTimeZone(freebusy.DTStamp);
+            // Update all its entries
+            foreach (var freebusyentry in freebusy.Entries)
+            {
+                freebusyentry.EndTime = UpdateDateToSystemTimeZone(freebusyentry.EndTime);
+                freebusyentry.StartTime = UpdateDateToSystemTimeZone(freebusyentry.StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Returns an updated datetime object converting the given one
+        /// to the system time zone (we are using California TimeZone in our
+        /// server and database data).
+        /// 
+        /// IagoSRL @Loconomics
+        /// </summary>
+        /// <param name="datetime"></param>
+        /// <returns></returns>
+        public IDateTime UpdateDateToSystemTimeZone(IDateTime datetime)
+        {
+            var timeZone = datetime.Calendar.GetTimeZone(datetime.TZID);
+            // TODO Find what TimeZoneInfo we must use:
+            //timeZone.TimeZoneInfos[0]
+            
+            // TODO Converto from object TimeZoneInfo to the system TimeZone
+
+            // TODO Returns the updated datetime
+            return datetime;
+        }
 
         #endregion
 
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
 }
