@@ -1558,7 +1558,7 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         public bool ImportCalendar( IICalendarCollection calendar,  CalendarUser user)
         {
-            try
+            //try
             {
 
 
@@ -1770,10 +1770,10 @@ namespace CalendarDll
                 return true;
 
             }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            //catch (Exception ex)
+            //{
+            //    return false;
+            //}
 
         }
 
@@ -1857,14 +1857,48 @@ namespace CalendarDll
         /// <returns></returns>
         public IDateTime UpdateDateToSystemTimeZone(IDateTime datetime)
         {
-            var timeZone = datetime.Calendar.GetTimeZone(datetime.TZID);
-            // TODO Find what TimeZoneInfo we must use:
-            //timeZone.TimeZoneInfos[0]
-            
-            // TODO Converto from object TimeZoneInfo to the system TimeZone
+            if (datetime == null)
+                return null;
+            // We use a combination of DDay conversion and .Net conversion.
+            // The DDay method IDateTime.Local is 'supposed' to do just what we
+            // want, BUT FAILS (tested a log, is buggy).
+            // But, its IDateTime.UTC works fine, it detects properly the
+            // TimeZone of the imported DateTime and converts fine to UTC.
+            // After that, we use the .Net conversion to local time (server time,
+            // we use server at California, what we wants, then all goes fine :-).
+            return new DDay.iCal.iCalDateTime(datetime.UTC.ToLocalTime());
+            // And done! (fiuu... some debug, tests and notes following, it was
+            // time spending because DDay buggy 'Local', but ended simple and working).
 
-            // TODO Returns the updated datetime
-            return datetime;
+            /* DEBUGING, testing buggy 'Local' and looking for correct way:
+            System.IO.File.AppendAllText(@"E:\web\loconomi\beta\_logs\calendardll.log", String.Format(
+                "{3:s}Z:: UpdateDateToSystemTimeZone {4} A Source {0} ; Converted to Local: {1} ; Converted to UTC: {2} \n",
+                datetime,
+                datetime.Value.ToLocalTime(),
+                datetime.Value.ToUniversalTime(),
+                DateTime.Now.ToUniversalTime(),
+                TimeZoneInfo.Local.Id
+            ));
+            //datetime.IsUniversalTime = true;
+            System.IO.File.AppendAllText(@"E:\web\loconomi\beta\_logs\calendardll.log", String.Format(
+                "{3:s}Z:: UpdateDateToSystemTimeZone {4} B Source {0} ; Converted to Local: {1} ; Converted to icalLocal: {2} \n",
+                datetime,
+                datetime.Local,
+                datetime.UTC,
+                datetime.Local.ToLocalTime(),
+                DateTime.Now
+            ));
+            */
+
+            /* Alternative guide-lines for conversion:
+            //var timeZone = datetime.Calendar.GetTimeZone(datetime.TZID);
+            // Find what TimeZoneInfo we must use:
+            // -- //timeZone.TimeZoneInfos[0]
+            // Convert from object TimeZoneInfo to the system TimeZone
+            // --
+            // Returns the updated datetime
+            //return datetime;
+            */
         }
 
         #endregion
