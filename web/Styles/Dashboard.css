@@ -635,13 +635,16 @@ form.positionavailability input{
     display: none;
 }
 .positionavailability-program {
-    width: 424px !important;
+    display: block !important;
 }
 .dashboard .positionavailability-program li label{
     margin: 0 10px;
 }
 .positionavailability-program-url input{
-    width: 220px !important;
+    width: 570px !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 .positionavailability-booking {
     border-left: 1px solid #DADADA;
