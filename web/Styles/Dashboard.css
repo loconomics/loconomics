@@ -573,9 +573,6 @@ form.positionservices input{
 }
 
 /** Form: Positions - Availability **/
-form.positionavailability .fs-calendar-private-url input.calendar-private-url {
-    width: 90%;
-}
 form.positionavailability {
     position: relative;
     font-size: .9em;
@@ -640,7 +637,8 @@ form.positionavailability input{
 .dashboard .positionavailability-program li label{
     margin: 0 10px;
 }
-.positionavailability-program-url input{
+.positionavailability-program-url input,
+form.positionavailability .fs-calendar-private-url input.calendar-private-url {
     width: 100% !important;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
