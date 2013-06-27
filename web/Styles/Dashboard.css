@@ -641,7 +641,7 @@ form.positionavailability input{
     margin: 0 10px;
 }
 .positionavailability-program-url input{
-    width: 570px !important;
+    width: 100% !important;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;

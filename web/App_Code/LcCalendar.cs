@@ -530,13 +530,8 @@ public static class LcCalendar
     {
         using (var db = Database.Open("sqlloco"))
         {
-            foreach (var p in db.Query("SELECT UserID, CalendarType, CalendarURL FROM CalendarProviderAttributes WHERE UseCalendarProgram = 1"))
+            foreach (var p in db.Query("SELECT UserID, CalendarURL FROM CalendarProviderAttributes WHERE dbo.fx_IfNW(CalendarURL, null) is not null"))
             {
-                if (p.CalendarType != "gmail")
-                {
-                    yield return new Exception(String.Format("Calendar Import error on UserID:{0} : unrecognized calendar type '{1}'", p.UserID, p.CalendarType));
-                    continue;
-                }
                 if (!LcValidators.IsUrl(p.CalendarURL))
                 {
                     yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
