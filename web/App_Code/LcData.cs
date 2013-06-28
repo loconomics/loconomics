@@ -620,7 +620,7 @@ public static partial class LcData
             {
                 var providerPrice = new ProviderPrice();
                 // Get Fees that apply to the provider and customer
-                var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingType.PricingTypeID));
+                var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingType.PricingTypeID, positionID));
                 
                 // Depending on pricing type, get price in a different way
                 if (pricingType.PricingTypeID == 2 || pricingType.PricingTypeID == 1)

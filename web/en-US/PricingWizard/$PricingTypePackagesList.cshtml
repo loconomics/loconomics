@@ -30,7 +30,7 @@
     // Get Fees that apply to the provider and customer
     dynamic fee = null;
     if (!editable) {
-        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID));
+        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID, positionID));
     }
 }
 @if (data.Packages != null && data.Packages.Count > 0)

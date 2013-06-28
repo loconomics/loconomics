@@ -1404,10 +1404,42 @@ public static partial class LcData
             return bookingRequestID;
         }
 
-        public static dynamic GetFeeFor(int customerUserID, int providerUserID, int pricingTypeID)
+        public static dynamic GetFeeFor(int customerUserID, int providerUserID, int pricingTypeID, int positionID, string bookCode = null)
         {
             using (var db = Database.Open("sqlloco"))
             {
+                // If there is a book-code
+                if (bookCode != null)
+                {
+                    // Check that match the the provider and position book-code
+                    if (null != db.QueryValue(@"
+                        SELECT 'found' as A FROM UserProfilePositions 
+                        WHERE UserID = @0 AND PositionID = @1 AND BookCode like @2
+                        ", providerUserID, positionID, bookCode))
+                    {
+                        // Matchs! Use the special Fees record for this cases (ID=7)
+                        var codeFees = db.QuerySingle(@"
+                            SELECT 
+                                BookingTypeID
+                                ,ServiceFeeAmount
+                                ,ServiceFeeCurrency
+                                ,ServiceFeePercentage
+                                ,PaymentProcessingFee
+                            FROM    BookingType
+                            WHERE   BookingTypeID = 7
+                                     AND Active = 1
+                        ");
+                        if (codeFees != null)
+                        {
+                            return codeFees;
+                        }
+                    }
+                    // IF DOES NOT match or there is no fees record or is disabled,
+                    // continue with the standard fees information
+                }
+                // Find fees information row, standard fees:
+                // If the customer already booked provider, use the 'repeat booking' fees (ID:2)
+                // else use the standard fees (ID:1)
                 return db.QuerySingle(@"
                     SELECT 
                         BookingTypeID

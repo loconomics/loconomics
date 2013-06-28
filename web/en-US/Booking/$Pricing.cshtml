@@ -6,8 +6,9 @@
     var position = PageData["positionrow"] ?? (PageData["positionrow"] = LcData.UserInfo.GetUserPos(
         Request["providerid"].AsInt(),
         Request["positionid"].AsInt()));
+    var bookCode = Request["BookCode"];
     
-    var data = getData(customer, provider, position);
+    var data = getData(customer, provider, position, bookCode);
     
     Session["PriceIsEstimated"] = data.PriceIsEstimated;
     
@@ -29,7 +30,7 @@
         (data.ContainsServices || data.ContainsVariables || data.ContainsOptions || data.ContainsPackages || data.ContainsAddons);
 }
 @functions{
-    dynamic getData(dynamic c, dynamic p, dynamic pos) {
+    dynamic getData(dynamic c, dynamic p, dynamic pos, string bookCode) {
         
         // General Data
         // TODO: Get Customer Type Id
@@ -54,7 +55,7 @@
         var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
         
         // Booking type with fees policy
-        var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid);
+        var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid, pos.PositionID, bookCode);
         var fee = LcPricingModel.GetFee(feeData);
         var pfee = LcPricingModel.GetPFee(feeData);
         
