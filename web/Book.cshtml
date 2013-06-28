@@ -1,0 +1,22 @@
+﻿@using WebMatrix.Data;
+@*
+    Route a booking from external link to the given provider-position
+    reserved code.
+*@
+@{
+    var bookcode = UrlData[0];
+    using (var db = Database.Open("sqlloco")){
+        var userpos = db.QuerySingle(@"
+            SELECT  UserID, PositionID
+            FROM    UserProfilePositions
+            WHERE   BookCode = @0
+        ", bookcode);
+
+        if (userpos != null) {
+            //@RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
+            Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userpos.UserID + "&PositionID=" + userpos.PositionID + "&BookCode=" + bookcode);
+        }
+    }
+    // Not found custom URL, this URL page doesn't exist, transfer to Not Found
+    @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml");
+}
