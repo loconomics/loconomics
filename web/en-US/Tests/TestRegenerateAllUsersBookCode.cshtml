@@ -1,0 +1,22 @@
+﻿@* It just performs a task that raise an exception to see how the site manage the situation.
+   Information in the log file must be added and the custom error page must be showed.
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    var msg = "";
+    if (IsPost) {
+        LcData.UserInfo.RegenerateAllUsersBookCode();
+        msg = "Done!";
+    }
+}
+<div>
+    @if (msg != "")
+    {
+        <div class="success message">@msg</div>
+    }
+    <form action="" method="post">
+        <input type="submit" value="Click to regenerate all users book code" />
+    </form>
+</div>

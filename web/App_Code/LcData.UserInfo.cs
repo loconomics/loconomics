@@ -316,21 +316,55 @@ public static partial class LcData
         #endregion
 
         #region Create
-        public const string sqlInsProviderPosition = @"
-            DECLARE @t Datetime
-            SET @t = getdate()
-            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @t, @t, 'sys', 1, @4
+        private const string sqlInsProviderPosition = @"
+            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5
         ";
         public static void InsProviderPosition(int userID, int positionID)
         {
             using (var db = Database.Open("sqlloco"))
             {
+                // Create BookCode
+                var bookCode = GenerateBookCode(userID, positionID);
+                // Create position for the provider
                 var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
                     userID, positionID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    LcData.Booking.DefaultCancellationPolicyID);
+                    LcData.Booking.DefaultCancellationPolicyID,
+                    bookCode);
                 if (Results.Result != "Success") {
                     throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
+                }
+            }
+        }
+        #endregion
+
+        #region Utilities
+        /// <summary>
+        /// Creates a new random BookCode for the given provider and position.
+        /// Its size is 64 or lower ever, suitable for the database field.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="positionID"></param>
+        /// <returns></returns>
+        public static string GenerateBookCode(int userID, int positionID)
+        {
+            var r = LcEncryptor.GenerateRandomToken(userID.ToString() + "_" + positionID.ToString() + "_");
+            r = ASP.LcHelpers.GetLastStringChars(r, 64);
+            return r;
+        }
+        /// <summary>
+        /// Regenerates the BookCode for all providers and positions.
+        /// </summary>
+        public static void RegenerateAllUsersBookCode()
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                foreach (var p in db.Query("SELECT UserID, PositionID FROM UserProfilePositions"))
+                {
+                    db.Execute("UPDATE UserProfilePositions SET BookCode = @2 WHERE UserID = @0 AND PositionID = @1",
+                        p.UserID, p.PositionID,
+                        GenerateBookCode(p.UserID, p.PositionID)
+                    );
                 }
             }
         }

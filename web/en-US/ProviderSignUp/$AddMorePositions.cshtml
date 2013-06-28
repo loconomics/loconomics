@@ -25,17 +25,17 @@
         using (var db = Database.Open("sqlloco")) {
             /** Add selected positions to the provider **/
             if (ModelState.IsValid) {      
-                var sqlinsertPosition = "EXEC dbo.InsertUserProfilePositions @0,@1,@2,@3,@4,@5,@6,@7,@8";
                 var nadded = 0;
                 foreach (string sPosID in Request.Form.GetValues("position")) {
                     var posID = sPosID.AsInt(0);
                     if (posID > 0) {
-                        // Link the user with the selected position: VERY IMPORTANT: Ever 1 as Active now!
-                        var Results = db.QuerySingle(sqlinsertPosition, userid, posID, lang, countryId, DateTime.Now, DateTime.Now, "sys", 1, LcData.Booking.DefaultCancellationPolicyID);
-                        if (Results.Result != "Success") {
-                            ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                        // Link the user with the selected position
+                        try{
+                            LcData.UserInfo.InsProviderPosition(userid, posID);
+                            nadded++;
+                        } catch (Exception ex) {
+                            ModelState.AddFormError(ex.Message);
                         }
-                        nadded++;
                     }
                     if (nadded >= positionsRemaining) {
                         break;

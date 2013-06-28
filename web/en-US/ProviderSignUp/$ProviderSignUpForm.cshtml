@@ -126,9 +126,10 @@
                     /** Add selected positions to the provider **/
                     foreach (string sPosID in Request.Form.GetValues("position")) {
                         if (sPosID.IsInt()) {
-                            var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition, userid, sPosID.AsInt(), lang, countryId, LcData.Booking.DefaultCancellationPolicyID);
-                            if (Results.Result != "Success") {
-                                ModelState.AddFormError("We're sorry, there was an error creating your positions: " + Results.Result);
+                            try{
+                                LcData.UserInfo.InsProviderPosition(userid, sPosID.AsInt());
+                            } catch (Exception ex) {
+                                ModelState.AddFormError(ex.Message);
                             }
                         }
                     }
