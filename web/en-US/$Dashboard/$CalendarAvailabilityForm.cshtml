@@ -317,20 +317,17 @@ What hours do you keep? We’d like to know when we can generally expect to sche
             <li class="positionavailability-program-url">
                 <label for="@idprefix-program-url">Please paste the URL from your iCal-supported calendar to import your free/busy information here:</label>
                 <input type="text" name="program-url" value="@programURL" id="@idprefix-program-url"/>
-                <label for="@idprefix-program-url">Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:</label>
-                <ul><li>
+                <label for="@idprefix-private-url">Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:</label>
             		@if (string.IsNullOrEmpty(privateUrlToken))
             		{
                 		<span>You have not generated a private URL, please click on the 'reset' button to create one.</span>
             		}
             		else
             		{
-                		<input class="calendar-private-url" readonly="readonly" type="text" value="@(LcUrl.AppUrl + "Calendar/" + u.UserID + "/" + privateUrlToken + "/ical/")" />
+                		<input id="@idprefix-private-url" class="calendar-private-url" readonly="readonly" type="text" value="@(LcUrl.AppUrl + "Calendar/" + u.UserID + "/" + privateUrlToken + "/ical/")" />
             		}
-        		</li><li>
-            		<button class="reset-private-url-action action" type="button">Reset Private URL</button>
+                <button class="reset-private-url-action action" type="button">Reset Private URL</button>
         		<br />This URL is private to ensure only you can access your appointments. You may reset this URL at any time by clicking the button above and copying and pasting the new URL into your calendar program.
-        		</li></ul>
             </li>
         </ul>
         <legend>If you need help, click on your calendar program below:</legend>
