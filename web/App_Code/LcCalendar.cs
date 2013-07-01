@@ -14,57 +14,33 @@ using System.IO;
 /// </summary>
 public static class LcCalendar
 {
-    public const bool EnableNewCalendar = true;
-
     #region Booking
-    public static string sqlInsBookingEvent
-    {
-        get
-        {
-            if (EnableNewCalendar)
-                return @"
-                    INSERT INTO [CalendarEvents]
-                                ([UserId]
-                                ,[CalendarAvailabilityTypeID]
-                                ,[EventType]
-                                ,[Summary]
-                                ,[Description]
-                                ,[StartTime]
-                                ,[EndTime]
-                                ,[TimeZone]
-                                ,[CreatedDate]
-                                ,[UpdatedDate]
-                                ,[ModifyBy])
-                            VALUES (@0
-                                ,@1
-                                ,1 -- Booking
-                                ,@2
-                                ,@3
-                                ,@4
-                                ,@5
-                                ,@6
-                                ,getdate()
-                                ,getdate()
-                                ,'sys')
-                    SELECT Cast(@@Identity As int) As CalendarEventID
-                ";
-            else
-                return @"
-                    INSERT INTO [CalendarEvents]
-                                ([UserId]
-                                ,[CalendarAvailabilityTypeID]
-                                ,[StartTime]
-                                ,[EndTime]
-                                ,[TimeZone])
-                            VALUES (@0
-                                ,@1
-                                ,@4
-                                ,@5
-                                ,@6)
-                    SELECT Cast(@@Identity As int) As CalendarEventID
-                ";
-        }
-    }
+    public const string sqlInsBookingEvent = @"
+        INSERT INTO [CalendarEvents]
+                    ([UserId]
+                    ,[CalendarAvailabilityTypeID]
+                    ,[EventType]
+                    ,[Summary]
+                    ,[Description]
+                    ,[StartTime]
+                    ,[EndTime]
+                    ,[TimeZone]
+                    ,[CreatedDate]
+                    ,[UpdatedDate]
+                    ,[ModifyBy])
+                VALUES (@0
+                    ,@1
+                    ,1 -- Booking
+                    ,@2
+                    ,@3
+                    ,@4
+                    ,@5
+                    ,@6
+                    ,getdate()
+                    ,getdate()
+                    ,'sys')
+        SELECT Cast(@@Identity As int) As CalendarEventID
+    ";
     #endregion
 
     #region Availability
@@ -77,34 +53,13 @@ public static class LcCalendar
     /// <returns></returns>
     public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
-        if (EnableNewCalendar)
-        {
-            var lcCalendar = new CalendarDll.CalendarUtils();
-            return
-                lcCalendar.GetFreeEvents(
-                    new CalendarDll.CalendarUser(userID),
-                    dateStart,
-                    dateEnd,
-                    DateTime.Now);
-        }
-        else
-        {
-            // Previous CASS code:
-            using (var db = Database.Open("sqlloco")) {
-                var rtn = new List<CalendarDll.ProviderAvailabilityResult>();
-                foreach (var item in db.Query("exec dbo.GetProviderAvailabilityFullSet @0, @1, @2", userID, dateStart, dateEnd))
-                    rtn.Add(new ProviderAvailabilityResult{
-                        CalendarAvailabilityTypeID = item.CalendarAvailabilityTypeID,
-                        DateSet = item.DateSet,
-                        DT = item.DT,
-                        // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on), convert to Base0 (.net standard)
-                        DayOfWeek = ((int)item.DayOfWeek - 1),
-                        EventSummary = "",
-                        TimeBlock = item.TimeBlock
-                    });
-                return rtn;
-            }
-        }
+        var lcCalendar = new CalendarDll.CalendarUtils();
+        return
+            lcCalendar.GetFreeEvents(
+                new CalendarDll.CalendarUser(userID),
+                dateStart,
+                dateEnd,
+                DateTime.Now);
     }
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
@@ -115,25 +70,15 @@ public static class LcCalendar
     /// <returns>True when is available, False when not</returns>
     public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd)
     {
-        if (EnableNewCalendar)
+        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
         {
-            foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
-            {
-                var edt = e.DateSet + e.TimeBlock;
-                if (e.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE &&
-                    edt >= dateStart &&
-                    edt < dateEnd)
-                    return false;
-            }
-            return true;
+            var edt = e.DateSet + e.TimeBlock;
+            if (e.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE &&
+                edt >= dateStart &&
+                edt < dateEnd)
+                return false;
         }
-        else
-        {
-            // Previous CASS code:
-             using (var db = Database.Open("sqlloco")) {
-                return !(bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", userID, dateStart, dateEnd);
-             }
-        }
+        return true;
     }
     #endregion
 
@@ -155,43 +100,26 @@ public static class LcCalendar
     /// <returns></returns>
     public static IEnumerable<WorkHoursDay> GetProviderWorkHours(int userID)
     {
-        if (EnableNewCalendar)
-        {
-            var ent = new loconomicsEntities();
-            var events = ent.CalendarEvents
-                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+        var ent = new loconomicsEntities();
+        var events = ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
 
-            foreach (var ev in events)
-            {
-                foreach (var evr in ev.CalendarReccurrence)
-                {
-                    foreach (var evrf in evr.CalendarReccurrenceFrequency)
-                    {
-                        if (evrf.DayOfWeek.HasValue &&
-                            evrf.DayOfWeek.Value > -1 &&
-                            evrf.DayOfWeek.Value < 7)
-                            yield return new WorkHoursDay
-                            {
-                                DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
-                                StartTime = ev.StartTime.TimeOfDay,
-                                EndTime = ev.EndTime.TimeOfDay
-                            };
-                    }
-                }
-            }
-        }
-        else
+        foreach (var ev in events)
         {
-            // Previous CASS code:
-            using (var db = Database.Open("sqlloco")) {
-                foreach (var item in db.Query("EXEC GetUserFreeTimeSettings @0", userID))
-                    yield return new WorkHoursDay
-                    {
-                        // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
-                        DayOfWeek = (DayOfWeek)(item.DayofWeek - 1),
-                        StartTime = item.StartTime,
-                        EndTime = item.EndTime
-                    };
+            foreach (var evr in ev.CalendarReccurrence)
+            {
+                foreach (var evrf in evr.CalendarReccurrenceFrequency)
+                {
+                    if (evrf.DayOfWeek.HasValue &&
+                        evrf.DayOfWeek.Value > -1 &&
+                        evrf.DayOfWeek.Value < 7)
+                        yield return new WorkHoursDay
+                        {
+                            DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
+                            StartTime = ev.StartTime.TimeOfDay,
+                            EndTime = ev.EndTime.TimeOfDay
+                        };
+                }
             }
         }
     }
@@ -201,160 +129,124 @@ public static class LcCalendar
     /// <param name="userID"></param>
     /// <param name="?"></param>
     public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
-        if (EnableNewCalendar)
+        var ent = new loconomicsEntities();
+
+        // Start and End Dates are not used 'as is', they are
+        // treated in a special way when recurrence rules are present,
+        // for that we can use invented and convenient
+        // dates as 2006-01-01 (the year 2006 matchs the first day in the first week day--1:Sunday);
+        // the End Date will be greater thanks
+        // to the hour information gathered from the user generic work hours
+        var startDateTime = new DateTime(
+            2006,
+            1,
+            1,
+            workHoursDay.StartTime.Hours,
+            workHoursDay.StartTime.Minutes,
+            workHoursDay.StartTime.Seconds
+        );
+        var endDateTime = new DateTime(
+            2006,
+            1,
+            /* Must be the next day if end time is '00:00:00'; else the same day */
+            (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
+            workHoursDay.EndTime.Hours,
+            workHoursDay.EndTime.Minutes,
+            workHoursDay.EndTime.Seconds
+        );
+
+        // Find user events of type 'work-hours'
+        var events = ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+
+        // Find the event with recurrence rule for the requested DayOfWeek
+        var eventExists = false;
+        foreach (var ev in events)
         {
-            var ent = new loconomicsEntities();
-
-            // Start and End Dates are not used 'as is', they are
-            // treated in a special way when recurrence rules are present,
-            // for that we can use invented and convenient
-            // dates as 2006-01-01 (the year 2006 matchs the first day in the first week day--1:Sunday);
-            // the End Date will be greater thanks
-            // to the hour information gathered from the user generic work hours
-            var startDateTime = new DateTime(
-                2006,
-                1,
-                1,
-                workHoursDay.StartTime.Hours,
-                workHoursDay.StartTime.Minutes,
-                workHoursDay.StartTime.Seconds
-            );
-            var endDateTime = new DateTime(
-                2006,
-                1,
-                /* Must be the next day if end time is '00:00:00'; else the same day */
-                (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
-                workHoursDay.EndTime.Hours,
-                workHoursDay.EndTime.Minutes,
-                workHoursDay.EndTime.Seconds
-            );
-
-            // Find user events of type 'work-hours'
-            var events = ent.CalendarEvents
-                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-
-            // Find the event with recurrence rule for the requested DayOfWeek
-            var eventExists = false;
-            foreach (var ev in events)
+            foreach (var evr in ev.CalendarReccurrence)
             {
-                foreach (var evr in ev.CalendarReccurrence)
+                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
                 {
-                    if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
-                    {
-                        // There is an event with recurrence rule for this work-week-day
-                        eventExists = true;
-                        // update it with the new data:
-                        ev.StartTime = startDateTime;
-                        ev.EndTime = endDateTime;
-                        ev.UpdatedDate = DateTime.Now;
-                        ev.ModifyBy = "UserID:" + userID;
-                    }
+                    // There is an event with recurrence rule for this work-week-day
+                    eventExists = true;
+                    // update it with the new data:
+                    ev.StartTime = startDateTime;
+                    ev.EndTime = endDateTime;
+                    ev.UpdatedDate = DateTime.Now;
+                    ev.ModifyBy = "UserID:" + userID;
                 }
             }
-            // If there is not still an event for the work day, create it:
-            if (!eventExists)
-            {
-                var newevent = new CalendarDll.Data.CalendarEvents();
-                newevent.UserId = userID;
-                // Type work-hours: 2
-                newevent.EventType = 2;
-                // Automatic text, irrelevant
-                newevent.Summary = "Work hours";
-                //newevent.Description = "";
-                // free hours: 1
-                newevent.CalendarAvailabilityTypeID = 1;
-                newevent.Transparency = true;
-                newevent.StartTime = startDateTime;
-                newevent.EndTime = endDateTime;
-                newevent.IsAllDay = false;
-                newevent.UpdatedDate = DateTime.Now;
-                newevent.CreatedDate = DateTime.Now;
-                newevent.ModifyBy = "UserID:" + userID;
-
-                // Recurrence rule:
-                newevent.CalendarReccurrence.Add(new CalendarReccurrence
-                {
-                    // Frequency Type Weekly:5
-                    Frequency = (int)DDay.iCal.FrequencyType.Weekly,
-                    // Every 1 week (week determined by previous Frequency)
-                    Interval = 1,
-                    // We need save as reference, the first day of week for this rrule:
-                    FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek,
-
-                    CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
-                    {
-                        new CalendarReccurrenceFrequency
-                        {
-                            ByDay = true,
-                            DayOfWeek = (int)workHoursDay.DayOfWeek,
-                            // FrequencyDay null, is for special values (first day on week, last,... not needed here)
-                            FrequencyDay = null
-                        }
-                    }
-                });
-
-                // Add it to database
-                ent.CalendarEvents.Add(newevent);
-            }
-
-            // Send to database
-            ent.SaveChanges();
         }
-        else
+        // If there is not still an event for the work day, create it:
+        if (!eventExists)
         {
-            using (var db = Database.Open("sqlloco"))
+            var newevent = new CalendarDll.Data.CalendarEvents();
+            newevent.UserId = userID;
+            // Type work-hours: 2
+            newevent.EventType = 2;
+            // Automatic text, irrelevant
+            newevent.Summary = "Work hours";
+            //newevent.Description = "";
+            // free hours: 1
+            newevent.CalendarAvailabilityTypeID = 1;
+            newevent.Transparency = true;
+            newevent.StartTime = startDateTime;
+            newevent.EndTime = endDateTime;
+            newevent.IsAllDay = false;
+            newevent.UpdatedDate = DateTime.Now;
+            newevent.CreatedDate = DateTime.Now;
+            newevent.ModifyBy = "UserID:" + userID;
+
+            // Recurrence rule:
+            newevent.CalendarReccurrence.Add(new CalendarReccurrence
             {
-                // Not available, execute with last parameter as 'true' to remove free events
-                db.Execute("EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4", 
-                    userID,
-                    // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
-                    ((int)workHoursDay.DayOfWeek + 1),
-                    workHoursDay.StartTime,
-                    workHoursDay.EndTime,
-                    // false for Not remove events, else insert or update
-                    false);
-            }
+                // Frequency Type Weekly:5
+                Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+                // Every 1 week (week determined by previous Frequency)
+                Interval = 1,
+                // We need save as reference, the first day of week for this rrule:
+                FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek,
+
+                CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
+                {
+                    new CalendarReccurrenceFrequency
+                    {
+                        ByDay = true,
+                        DayOfWeek = (int)workHoursDay.DayOfWeek,
+                        // FrequencyDay null, is for special values (first day on week, last,... not needed here)
+                        FrequencyDay = null
+                    }
+                }
+            });
+
+            // Add it to database
+            ent.CalendarEvents.Add(newevent);
         }
+
+        // Send to database
+        ent.SaveChanges();
     }
     public static void DelProviderWorkHours(int userID, DayOfWeek dayOfWeek)
     {
-        if (EnableNewCalendar)
+        var ent = new loconomicsEntities();
+        // Find user events of type 'work-hours'
+        var events = ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+        // On that events, found what match the recurrence-frequency of the given day,
+        // and mark is for deletion:
+        // The extra 'ToList' are required to avoid an exception of kind 'collection modified in iterator'
+        foreach (var ev in events.ToList())
         {
-            var ent = new loconomicsEntities();
-            // Find user events of type 'work-hours'
-            var events = ent.CalendarEvents
-                .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-            // On that events, found what match the recurrence-frequency of the given day,
-            // and mark is for deletion:
-            // The extra 'ToList' are required to avoid an exception of kind 'collection modified in iterator'
-            foreach (var ev in events.ToList())
+            foreach (var evr in ev.CalendarReccurrence.ToList())
             {
-                foreach (var evr in ev.CalendarReccurrence.ToList())
+                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)dayOfWeek).Count() > 0)
                 {
-                    if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)dayOfWeek).Count() > 0)
-                    {
-                        ent.CalendarEvents.Remove(ev);
-                    }
+                    ent.CalendarEvents.Remove(ev);
                 }
             }
-            // Save to database: delete found event:
-            ent.SaveChanges();
         }
-        else
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                // Not available, execute with last parameter as 'true' to remove free events
-                db.Execute("EXEC InsertProviderAvailabilityFreeTime @0,@1,@2,@3,@4", 
-                    userID,
-                    // 'old way' db uses Base1 for dayOfWeek (Sunday:1, Monday:2 and go on)
-                    ((int)dayOfWeek + 1),
-                    TimeSpan.Zero,
-                    TimeSpan.Zero,
-                    // Remove events:
-                    true);
-            }
-        }
+        // Save to database: delete found event:
+        ent.SaveChanges();
     }
     #endregion
 
