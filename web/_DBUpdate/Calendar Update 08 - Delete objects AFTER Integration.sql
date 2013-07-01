@@ -32,3 +32,5 @@ DROP FUNCTION GetProviderAvailabilityByDateRange
 DROP TABLE CalendarProviderFreeEvents
 
 DROP TABLE CalendarTimeDayofWeek
+
+DROP TABLE CalendarTimeBlocks
