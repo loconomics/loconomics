@@ -245,7 +245,7 @@
     }
     public static bool InProduction{
         get{
-            return Channel == "production";
+            return (Channel == "production" || Channel == "staging");
         }
     }
 }
