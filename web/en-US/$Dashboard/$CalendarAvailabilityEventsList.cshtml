@@ -9,22 +9,6 @@
     var idprefix = "availabilityEventsList";
 
     var events = LcCalendar.GetUserAppointments((int)u.UserID);
-    /*dynamic events = null;
-    using (var db = Database.Open("sqlloco")) {
-        events = db.Query(@"
-            SELECT  E.Id, E.Summary, E.CalendarAvailabilityTypeID, E.StartTime, E.EndTime,
-                    T.CalendarAvailabilityTypeName As DisplayName
-            FROM    CalendarEvents As E
-                     INNER JOIN
-                    CalendarAvailabilityType As T
-                      ON E.CalendarAvailabilityTypeID = T.CalendarAvailabilityTypeID
-                        AND T.LanguageID = @1 AND T.CountryID = @2
-            WHERE   UserID = @0
-                     AND
-                    EventType IN (3, 5)
-            ORDER BY StartTime ASC, EndTime ASC
-        ", u.UserID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-    }*/
 }
 @if (events == null || events.Count == 0)
 {
