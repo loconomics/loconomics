@@ -45,8 +45,8 @@ GO
 ALTER TABLE [dbo].[CalendarEvents] CHECK CONSTRAINT [FK_CalendarEvents_CalendarEventType]
 GO
 
--- change data that breaks next constraint
-update calendarevents set userid = 141 where userid not in (select userid from users)
+-- remove orphan events, that breaks next constraint and is only data from old testing users
+delete from calendarevents where userid not in (select userid from users)
 
 ALTER TABLE [dbo].[CalendarEvents]  WITH CHECK ADD  CONSTRAINT [FK_CalendarEvents_users] FOREIGN KEY([UserId])
 REFERENCES [dbo].[users] ([UserID])
