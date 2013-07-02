@@ -27,18 +27,21 @@ public static class LcCommentRemover
     /// <returns></returns>
     public static string Sql(string source)
     {
+        string str = "";
         // Pass string as stream
         byte[] byteArray = Encoding.ASCII.GetBytes( source );
-        var output = new MemoryStream();
         using (StreamReader srd = new StreamReader(new MemoryStream( byteArray )))
-        using (StreamWriter swr = new StreamWriter(output)) {
+        using (StreamWriter swr = new StreamWriter(new MemoryStream())) {
             // Remove comments
             Remove("plsql", srd, swr);
+            swr.Flush();
 
-            // Returns stream as string
-            using (var sout = new StreamReader(output))
-                return sout.ReadToEnd();
+            // Return string wrote in memory
+            swr.BaseStream.Seek(0, SeekOrigin.Begin);
+            var sout = new StreamReader(swr.BaseStream);
+            str = sout.ReadToEnd();
         }
+        return str;
     }
     /// <summary>
     /// Remove comments from a Sql file at path @sourcefile and write
@@ -49,7 +52,10 @@ public static class LcCommentRemover
     public static void Sql(string sourceFile, string outputFile) {
         using (StreamReader srd = new StreamReader(sourceFile, Encoding.Default))
         using (StreamWriter swr = new StreamWriter(outputFile, false, Encoding.Default))
+        {
             Remove("plsql", srd, swr);
+            swr.Flush();
+        }
     }
     /// <summary>
     /// Remove comments for different source languages, from a stream to another strean
@@ -84,7 +90,7 @@ public static class LcCommentRemover
 
         int ss = 0; //Number of single line comments removed
         int ms = 0; //Number of multi line comments removed
-        string s; // Line string        
+        string s; // Line string    
 
         // Iterate each line from source reader
         bool mlc = false; // Marks when we are inside a multi line comment
@@ -131,7 +137,7 @@ public static class LcCommentRemover
                     mlc = false;
                 }
             }
-            if (ts.ToString()!="")
+            if (!String.IsNullOrEmpty(ts.ToString()))
                 swr.WriteLine(ts.ToString());
         }
         // Debug
