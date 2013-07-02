@@ -21,38 +21,35 @@
     
     bool ok = false;
     
-    try{
-        // If we have the userid on user already, we don't need do any check with database,
-        // despite if city or position are correct:
-        if (user.IsInt()) {
-            userid = user.AsInt();
-        } else {
-            using (var db = Database.Open("sqlloco")){
-                userid = db.QueryValue(@"
-                    SELECT  UserID
-                    FROM    UserProfile
-                    WHERE   Email = @0
-                ", user);
-            }
+    // If we have the userid on user already, we don't need do any check with database,
+    // despite if city or position are correct:
+    if (user.IsInt()) {
+        userid = user.AsInt();
+    } else {
+        using (var db = Database.Open("sqlloco")){
+            userid = db.QueryValue(@"
+                SELECT  UserID
+                FROM    UserProfile
+                WHERE   Email = @0
+            ", user);
         }
-        if (userid is int) {
+    }
+    if (userid is int) {
 
-            // Verify city and position
-            if (city == LcHelpers.StringSlugify(LcData.UserInfo.GetUserCity(userid), 40)
-                &&
-                position == LcHelpers.StringSlugify(LcData.UserInfo.GetProviderPreferredPosition(userid).PositionSingular)
-            ) {
-                @RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = userid })
-                //Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + userid);
+        // Verify city and position
+        if (city == LcHelpers.StringSlugify(LcData.UserInfo.GetUserCity(userid), 40)
+            &&
+            position == LcHelpers.StringSlugify(LcData.UserInfo.GetProviderPreferredPosition(userid).PositionSingular)
+        ) {
+            @RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = userid })
+            //Response.Redirect(LcUrl.LangPath + "Profile/?UserID=" + userid);
                 
-                ok = true;
-            }
+            ok = true;
         }
-    } catch { }
+    }
 
     if (!ok) {
         // Not found, this URL page doesn't exist, transfer to Not Found
         @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml")
     }
 }
-
