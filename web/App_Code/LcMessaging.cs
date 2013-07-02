@@ -592,7 +592,7 @@ public class LcMessaging
 
             // Setup URL
             string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
-            if (!LcHelpers.InProduction)
+            if (LcHelpers.Channel != "production")
             {
                 completeURL = completeURL.Replace("https:", "http:");
             }

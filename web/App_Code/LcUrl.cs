@@ -33,7 +33,7 @@ public static class LcUrl
             if (domain.Contains(".com") && 
                 !domain.Contains("loconomics.com"))
             {
-                domain = (ASP.LcHelpers.InProduction ? "" : 
+                domain = (ASP.LcHelpers.Channel == "production" ? "" : 
                     ASP.LcHelpers.Channel + ".")
                     + "loconomics.com";
             }

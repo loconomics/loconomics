@@ -243,6 +243,14 @@
             return (System.Configuration.ConfigurationManager.AppSettings["Channel"] ?? "dev").ToLower();
         }
     }
+    /// <summary>
+    /// This returns True when the site is in production channel or
+    /// in staging channel (that is an emulation of production) and must be
+    /// checked when something must be done different on production (also when emulating
+    /// production on staging).
+    /// If something requires be done only on production channel, not in staging (be carefully),
+    /// check Channel == "production".
+    /// </summary>
     public static bool InProduction{
         get{
             return (Channel == "production" || Channel == "staging");

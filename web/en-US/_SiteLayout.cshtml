@@ -291,7 +291,7 @@
                 <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
             }
             @* Google Analytics *@
-            @if (LcHelpers.InProduction) {
+            @if (LcHelpers.Channel == "production") {
             <script type="text/javascript">
                 var _gaq = _gaq || [];
   				_gaq.push(['_setAccount', 'UA-36860613-1']);
