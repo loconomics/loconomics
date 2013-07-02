@@ -236,14 +236,20 @@
     /// </summary>
     /// <param name="batchSql"></param>
     /// <returns></returns>
-    string[] GetSqlBatchSteps(string batchSql){
+    IEnumerable<string> GetSqlBatchSteps(string batchSql){
+        // Remove comments from file
+        batchSql = LcCommentRemover.Sql(batchSql);
+        // Get different batch steps, separated by the GO keyword
         Regex regex = new Regex(@"^GO\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
         var ret = regex.Split(batchSql);
         // Remove lines with the special comment "/*__NOT_IN_BATCH__*/"
         for(var i = 0; i < ret.Length; i++) {
-            ret[i] = (new Regex(@"^/\*__NOT_IN_BATCH__\*/.*$", RegexOptions.Multiline)).Replace(ret[i], "");
+            // Clean-up: avoid unwanted lines, not for batch
+            var str = (new Regex(@"^/\*__NOT_IN_BATCH__\*/.*$", RegexOptions.Multiline)).Replace(ret[i], "");
+            // Return only lines with content
+            if (!string.IsNullOrWhiteSpace(str))
+                yield return str;
         }
-        return ret;
     }
 }
 @helper printTableCheck(string table, string prefix = ""){
