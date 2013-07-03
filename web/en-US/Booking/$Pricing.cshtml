@@ -6,7 +6,7 @@
     var position = PageData["positionrow"] ?? (PageData["positionrow"] = LcData.UserInfo.GetUserPos(
         Request["providerid"].AsInt(),
         Request["positionid"].AsInt()));
-    var bookCode = Request["BookCode"];
+    var bookCode = Request["BookCode"] ?? (string)Session["BookCode"];
     
     var data = getData(customer, provider, position, bookCode);
     

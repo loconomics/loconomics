@@ -366,6 +366,10 @@ public static partial class LcData
                         GenerateBookCode(p.UserID, p.PositionID)
                     );
                 }
+                foreach (var u in db.Query("SELECT UserID FROM Users"))
+                {
+                    db.Execute("UPDATE Users SET BookCode = @1 WHERE UserID = @0", u.UserID, GenerateBookCode(u.UserID, 0));
+                }
             }
         }
         #endregion

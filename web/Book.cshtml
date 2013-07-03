@@ -6,6 +6,19 @@
 @{
     var bookcode = UrlData[0];
     using (var db = Database.Open("sqlloco")){
+        // Code per user
+        var userid = db.QueryValue(@"
+            SELECT  UserID
+            FROM    Users
+            WHERE   BookCode = @0
+        ", bookcode);
+
+        if (userid is int) {
+            Session["BookCode"] = bookcode;
+            Response.Redirect(LcData.UserInfo.GetUserPublicURL(userid));
+        }
+        
+        // Code per position
         var userpos = db.QuerySingle(@"
             SELECT  UserID, PositionID
             FROM    UserProfilePositions
@@ -13,7 +26,6 @@
         ", bookcode);
 
         if (userpos != null) {
-            //@RenderPage(LcUrl.RenderLangPath + "Profile/Default.cshtml", new { UserID = user });
             Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userpos.UserID + "&PositionID=" + userpos.PositionID + "&BookCode=" + bookcode);
         }
     }
