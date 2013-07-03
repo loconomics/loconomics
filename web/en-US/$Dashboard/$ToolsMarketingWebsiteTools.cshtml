@@ -6,7 +6,7 @@
     // Get User Book Code
     string bookCode = "";
     using (var db = Database.Open("sqlloco")) {
-        bookCode = (string)db.QueryValue("SELECT BookCode FROM users WHERE UserID = @0", WebSecurity.CurrentUserId);
+        bookCode = (string)N.D(db.QueryValue("SELECT BookCode FROM users WHERE UserID = @0", WebSecurity.CurrentUserId));
         // If there is no book code (minor cases), auto generate one
         if (String.IsNullOrWhiteSpace(bookCode)) {
             bookCode = LcData.UserInfo.GenerateBookCode(WebSecurity.CurrentUserId);
@@ -45,7 +45,7 @@
                 {
                     <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" />My @pos.PositionSingular booking page</label></li>
                 }
-                <li><label><input type="radio" name="positionid" value="" />My general profile</label></li>
+                <li><label><input checked type="radio" name="positionid" value="" />My general profile</label></li>
             </ul>
         </fieldset>
         <fieldset class="button-code" data-base-url="@(LcUrl.AppUrl)book/@(bookCode)/" data-base-src="@(LcUrl.AppPath)img/extern/book-me-button-">
