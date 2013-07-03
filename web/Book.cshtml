@@ -4,9 +4,11 @@
     reserved code.
 *@
 @{
+    LcHelpers.SecurePage();
+
     var bookcode = UrlData[0];
     using (var db = Database.Open("sqlloco")){
-        // Code per user
+        // Check the BookCode, gets the associated UserID
         var userid = db.QueryValue(@"
             SELECT  UserID
             FROM    Users
@@ -15,20 +17,21 @@
 
         if (userid is int) {
             Session["BookCode"] = bookcode;
-            Response.Redirect(LcData.UserInfo.GetUserPublicURL(userid));
-        }
-        
-        // Code per position
-        var userpos = db.QuerySingle(@"
-            SELECT  UserID, PositionID
-            FROM    UserProfilePositions
-            WHERE   BookCode = @0
-        ", bookcode);
-
-        if (userpos != null) {
-            Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userpos.UserID + "&PositionID=" + userpos.PositionID + "&BookCode=" + bookcode);
+            
+            // Check if there is a valid position in the URL
+            if (UrlData[1].IsInt()) {
+                int posID = UrlData[1].AsInt();
+                // Check that the position exists for the user and is public
+                if (LcData.UserInfo.GetUserPositionStatus(userid, posID) == 1){
+                    // Redirects to the booking page for that provider and position
+                    Response.Redirect(LcUrl.LangPath + "Booking/?ProviderID=" + userid + "&PositionID=" + posID);
+                }
+            } else {
+                // Redirect to the providers public profile
+                Response.Redirect(LcData.UserInfo.GetUserPublicURL(userid));
+            }
         }
     }
-    // Not found custom URL, this URL page doesn't exist, transfer to Not Found
+    // Not found user for the BookCode, this URL page doesn't exist, transfer to Not Found
     @RenderPage(LcUrl.RenderAppPath + "Errors/Error404.cshtml");
 }

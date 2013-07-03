@@ -1411,11 +1411,11 @@ public static partial class LcData
                 // If there is a book-code
                 if (bookCode != null)
                 {
-                    // Check that match the the provider and position book-code
+                    // Check that match the provider book-code
                     if (null != db.QueryValue(@"
-                        SELECT 'found' as A FROM UserProfilePositions 
-                        WHERE UserID = @0 AND PositionID = @1 AND BookCode like @2
-                        ", providerUserID, positionID, bookCode))
+                        SELECT 'found' as A FROM Users 
+                        WHERE UserID = @0 AND BookCode like @1
+                        ", providerUserID, bookCode))
                     {
                         // Matchs! Use the special Fees record for this cases (ID=7)
                         var codeFees = db.QuerySingle(@"

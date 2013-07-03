@@ -317,20 +317,17 @@ public static partial class LcData
 
         #region Create
         private const string sqlInsProviderPosition = @"
-            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5
+            EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4
         ";
         public static void InsProviderPosition(int userID, int positionID)
         {
             using (var db = Database.Open("sqlloco"))
             {
-                // Create BookCode
-                var bookCode = GenerateBookCode(userID, positionID);
                 // Create position for the provider
                 var Results = db.QuerySingle(LcData.UserInfo.sqlInsProviderPosition,
                     userID, positionID,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
-                    LcData.Booking.DefaultCancellationPolicyID,
-                    bookCode);
+                    LcData.Booking.DefaultCancellationPolicyID);
                 if (Results.Result != "Success") {
                     throw new Exception("We're sorry, there was an error creating your position: " + Results.Result);
                 }
@@ -340,15 +337,15 @@ public static partial class LcData
 
         #region Utilities
         /// <summary>
-        /// Creates a new random BookCode for the given provider and position.
+        /// Creates a new random BookCode for the given provider.
         /// Its size is 64 or lower ever, suitable for the database field.
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="positionID"></param>
         /// <returns></returns>
-        public static string GenerateBookCode(int userID, int positionID)
+        public static string GenerateBookCode(int userID)
         {
-            var r = LcEncryptor.GenerateRandomToken(userID.ToString() + "_" + positionID.ToString() + "_");
+            var r = LcEncryptor.GenerateRandomToken(userID.ToString() + "_");
             r = ASP.LcHelpers.GetLastStringChars(r, 64);
             return r;
         }
@@ -359,16 +356,10 @@ public static partial class LcData
         {
             using (var db = Database.Open("sqlloco"))
             {
-                foreach (var p in db.Query("SELECT UserID, PositionID FROM UserProfilePositions"))
-                {
-                    db.Execute("UPDATE UserProfilePositions SET BookCode = @2 WHERE UserID = @0 AND PositionID = @1",
-                        p.UserID, p.PositionID,
-                        GenerateBookCode(p.UserID, p.PositionID)
-                    );
-                }
+                // Iterate each user in database and give a new BookCode
                 foreach (var u in db.Query("SELECT UserID FROM Users"))
                 {
-                    db.Execute("UPDATE Users SET BookCode = @1 WHERE UserID = @0", u.UserID, GenerateBookCode(u.UserID, 0));
+                    db.Execute("UPDATE Users SET BookCode = @1 WHERE UserID = @0", u.UserID, GenerateBookCode(u.UserID));
                 }
             }
         }
@@ -447,8 +438,13 @@ public static partial class LcData
         {
             using (var db = Database.Open("sqlloco"))
             {
-                return (int)db.QueryValue("SELECT StatusID FROM UserProfilePositions WHERE UserID = @0 AND PositionID = @1 AND LanguageID = @2 AND LanguageID = @3",
+                var statusID = db.QueryValue("SELECT StatusID FROM UserProfilePositions WHERE UserID = @0 AND PositionID = @1 AND LanguageID = @2 AND LanguageID = @3",
                     userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                if (statusID is int)
+                    return statusID;
+                else
+                    // There is no position for the user, there is no user, or not for the languagen and country
+                    return -1;
             }
         }
         public static Dictionary<int, dynamic> GetUserPositionsStatuses(int userID)

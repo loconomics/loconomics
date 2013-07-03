@@ -122,7 +122,8 @@
                         (object)(state == 0 ? null : (object)state),
                         lang,
                         countryId,
-                        emailcontact.AsBool() ? 1 : 0);
+                        emailcontact.AsBool() ? 1 : 0,
+                        LcData.UserInfo.GenerateBookCode(userid));
                     /** Add selected positions to the provider **/
                     foreach (string sPosID in Request.Form.GetValues("position")) {
                         if (sPosID.IsInt()) {
