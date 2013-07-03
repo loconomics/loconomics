@@ -8,5 +8,7 @@
 !theme/howitworks/*.*
 !email/*.*
 !email/*/*.*
+!extern/*.*
+!extern/*/*.*
 .DS_Store
 *.DS_Store

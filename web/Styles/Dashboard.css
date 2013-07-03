@@ -1838,3 +1838,23 @@ form#personal li > label.gender {
 #admin-bookings .set-as-performed {
     margin: 20px 0;
 }
+
+
+/*=== Website Tools
+ */
+.dashboard .website-tools label {
+    width: auto !important;
+}
+.dashboard .website-tools .button-size .size-selection {
+    margin: 6px 0;
+}
+.dashboard .website-tools .button-size p,
+.dashboard .website-tools .button-size .button-preview {
+    margin: 6px;
+}
+.dashboard .website-tools .button-preview {
+    min-height: 60px;
+}
+.dashboard .website-tools .button-code textarea {
+    height: 10em;
+}

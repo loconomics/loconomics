@@ -703,6 +703,36 @@ $(document).ready(function () {
             return false;
         });
     })();
+
+    /**================
+    * WebsiteTools
+    **/
+    (function () {
+        /** Regenerates the button source-code and preview
+        **/
+        function regenerateButtonCode() {
+            var c = $('.website-tools'),
+                size = c.find('[name=size]:checked').val(),
+                positionid = c.find('[name=positionid]:checked').val(),
+                sourceContainer = c.find('[name=button-source-code]'),
+                previewContainer = c.find('.button-preview'),
+                buttonTpl = c.find('.button-source-code-template').text(),
+                linkTpl = c.find('.link-source-code-template').text(),
+                tpl = (size == 'link-only' ? linkTpl : buttonTpl),
+                tplVars = $('.button-code');
+
+            previewContainer.html(tpl);
+            previewContainer.find('a').attr('href',
+                tplVars.data('base-url') + (positionid ? positionid + '/' : ''));
+            previewContainer.find('img').attr('src',
+                tplVars.data('base-src') + size);
+            sourceContainer.val(previewContainer.html().trim());
+        }
+        // First generation
+        regenerateButtonCode();
+        // and on any form change
+        $('.website-tools').on('change', 'input', regenerateButtonCode);
+    })();
 });
 
 function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, extraData) {
