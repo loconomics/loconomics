@@ -1,33 +1,35 @@
 ﻿/**********************
  ** Help Center styles
  */
+/*= .introduction-header */
+.introduction-header h1 {
+    font-size: 2em;
+    text-transform: lowercase;
+    margin: 0;
+}
+.introduction-header h1 > em {
+    font-style: normal;
+    color: #00989b;
+}
+.introduction-header .subh1 {
+    font-size: 1em;
+    line-height: normal;
+    color: #747474;
+    font-weight: normal;
+    text-align: justify;
+}
+/* how it works page */
 .howitworks #main {
     float: none;
     width: auto;
     position: relative;
 }
-/* Header */
-.howitworks #main > header {
+.howitworks .introduction-header {
     left: 320px;
     position: absolute;
     right: 0;
     top: 1em;
     z-index: 10;
-}
-.howitworks h1 {
-    font-size: 2em;
-    text-transform: lowercase;
-    margin: 0;
-}
-.howitworks h1 > em {
-    font-style: normal;
-    color: #00989b;
-}
-.howitworks .subh1 {
-    font-size: 1em;
-    line-height: normal;
-    color: #747474;
-    font-weight: normal;
 }
 /*= Special tabbbed interface 
  * created for howitworks: .slider-tabs
@@ -241,4 +243,33 @@
 .howitworks .actions {
     text-align: center !important;
     padding: 10px 0 25px;
+}
+
+/** provider-welcome-page
+ **/
+.provider-welcome-page > #main {
+    border-radius: 4px 4px 4px 4px;
+    border: 2px solid rgb(201, 201, 201);
+    background: white;
+    padding: 20px;
+    
+    float: none;
+    width: auto;
+    position: relative;
+}
+.provider-welcome-page .introduction-header {
+    background: url('../img/theme/providerwelcome/triple-bottom-line.png') no-repeat left center;
+    padding-left: 120px;
+}
+
+/* Media query only for hi-resolution, 2dppx, 2dpi (as apple retina), displays:
+    We start counting from 1.2 to give hi-res to all devices with higher from
+    default and for browsers that emulate resolution on zooming (as Firefox) */
+@media screen and (-webkit-min-device-pixel-ratio: 1.2),  /* Webkit-based browsers */
+    screen and (min--moz-device-pixel-ratio: 1.2),    /* Older Firefox browsers (prior to Firefox 16) */
+    screen and (min-resolution: 1.2dppx)  /* The standard way */
+{
+    .provider-welcome-page .introduction-header {
+        background-image: url('../img/theme/providerwelcome/triple-bottom-line@2x.png');
+    }
 }
