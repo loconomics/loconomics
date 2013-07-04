@@ -261,6 +261,72 @@
     background: url('../img/theme/providerwelcome/triple-bottom-line.png') no-repeat left center;
     padding-left: 120px;
 }
+.provider-welcome-page .actions {
+    float: none !important;
+    text-align: center !important;
+    margin-top: 1em;
+}
+/*=.features-list */
+.provider-welcome-page .features-list {
+    background: url('../img/theme/providerwelcome/profile-elizabeth.png') no-repeat right center;
+    padding-right: 348px;
+    min-height: 375px;
+}
+.provider-welcome-page .features-list li {
+    display: inline-block;
+    vertical-align: top;
+    width: 220px;
+    margin-right: 20px;
+    margin-bottom: 14px;
+    padding-left: 38px;
+    background: no-repeat left center;
+}
+.provider-welcome-page .features-list h3 {
+    font-size: 1.1em;
+    margin: 0;
+}
+.provider-welcome-page .features-list p {
+    text-align: justify;
+    margin: 0;
+    line-height: normal;
+    font-size: .9em;
+}
+.provider-welcome-page .features-list li.booking {
+    background-image: url('../img/theme/providerwelcome/booking.png');
+}
+.provider-welcome-page .features-list li.calendar {
+    background-image: url('../img/theme/providerwelcome/calendar.png');
+}
+.provider-welcome-page .features-list li.reviews {
+    background-image: url('../img/theme/providerwelcome/reviews.png');
+}
+.provider-welcome-page .features-list li.community {
+    background-image: url('../img/theme/providerwelcome/community.png');
+}
+.provider-welcome-page .features-list li.payments {
+    background-image: url('../img/theme/providerwelcome/payments.png');
+}
+.provider-welcome-page .features-list li.url {
+    background-image: url('../img/theme/providerwelcome/url.png');
+}
+.provider-welcome-page .features-list li.website {
+    background-image: url('../img/theme/providerwelcome/website.png');
+}
+.provider-welcome-page .features-list li.marketing {
+    background-image: url('../img/theme/providerwelcome/marketing.png');
+}
+.provider-welcome-page .features-list li.cancellations {
+    background-image: url('../img/theme/providerwelcome/cancellations.png');
+}
+.provider-welcome-page .features-list li.tools {
+    background-image: url('../img/theme/providerwelcome/tools.png');
+}
+.provider-welcome-page .features-list li.trust {
+    background-image: url('../img/theme/providerwelcome/trust.png');
+}
+.provider-welcome-page .features-list li.reminders {
+    background-image: url('../img/theme/providerwelcome/reminders.png');
+}
 
 /* Media query only for hi-resolution, 2dppx, 2dpi (as apple retina), displays:
     We start counting from 1.2 to give hi-res to all devices with higher from
@@ -271,5 +337,49 @@
 {
     .provider-welcome-page .introduction-header {
         background-image: url('../img/theme/providerwelcome/triple-bottom-line@2x.png');
+        background-size: 100px 100px;
+    }
+    .provider-welcome-page .features-list {
+        background-image: url('../img/theme/providerwelcome/profile-elizabeth@2x.png');
+        background-size: 348px 375px;
+    }
+    .provider-welcome-page .features-list li {
+        background-size: 32px 32px;
+    }
+    .provider-welcome-page .features-list li.booking {
+        background-image: url('../img/theme/providerwelcome/booking@2x.png');
+    }
+    .provider-welcome-page .features-list li.calendar {
+        background-image: url('../img/theme/providerwelcome/calendar@2x.png');
+    }
+    .provider-welcome-page .features-list li.reviews {
+        background-image: url('../img/theme/providerwelcome/reviews@2x.png');
+    }
+    .provider-welcome-page .features-list li.community {
+        background-image: url('../img/theme/providerwelcome/community@2x.png');
+    }
+    .provider-welcome-page .features-list li.payments {
+        background-image: url('../img/theme/providerwelcome/payments@2x.png');
+    }
+    .provider-welcome-page .features-list li.url {
+        background-image: url('../img/theme/providerwelcome/url@2x.png');
+    }
+    .provider-welcome-page .features-list li.website {
+        background-image: url('../img/theme/providerwelcome/website@2x.png');
+    }
+    .provider-welcome-page .features-list li.marketing {
+        background-image: url('../img/theme/providerwelcome/marketing@2x.png');
+    }
+    .provider-welcome-page .features-list li.cancellations {
+        background-image: url('../img/theme/providerwelcome/cancellations@2x.png');
+    }
+    .provider-welcome-page .features-list li.tools {
+        background-image: url('../img/theme/providerwelcome/tools@2x.png');
+    }
+    .provider-welcome-page .features-list li.trust {
+        background-image: url('../img/theme/providerwelcome/trust@2x.png');
+    }
+    .provider-welcome-page .features-list li.reminders {
+        background-image: url('../img/theme/providerwelcome/reminders@2x.png');
     }
 }
