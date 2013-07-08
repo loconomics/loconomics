@@ -80,12 +80,13 @@
 							var priceSufix = "";
 							if (config.PriceLabel == null) {
 								price = pak.PriceRate;
-								if (String.IsNullOrEmpty(pak.PriceRateUnit) || pak.PriceRateUnit.ToUpper() == "HOUR") {
+								if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
 									priceSufix = "/h";
 								} else {
 									priceSufix = "per " + pak.PriceRateUnit;
 								}
 							}
+                            price = price ?? 0M;
 							if (editable)
 							{
 								<text>@price.ToString("c") @priceSufix</text>

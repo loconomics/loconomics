@@ -616,17 +616,32 @@ public static partial class LcData
         using (var db = Database.Open("sqlloco"))
         {
             var packages = db.Query(@"
-            SELECT  coalesce(ProviderPackagePrice, 0) As Price
-                    ,coalesce(PriceRate, 0) As PriceRate
-                    ,coalesce(PriceRateUnit, '') As PriceRateUnit
-                    ,PricingTypeID
-            FROM    ProviderPackage
-            WHERE   Active = 1
-                    AND ProviderUserID = @0
-                    AND PositionID = @1
-                    AND LanguageID = @2 AND CountryID = @3
+            SELECT  coalesce(P.ProviderPackagePrice, 0) As Price
+                    ,coalesce(P.PriceRate, 0) As PriceRate
+                    ,coalesce(P.PriceRateUnit, '') As PriceRateUnit
+                    ,P.PricingTypeID
+            FROM    ProviderPackage As P
+                     INNER JOIN
+                    pricingtype PR
+                      ON P.PricingTypeID = PR.PricingTypeID
+                         AND PR.CountryID = P.CountryID AND PR.LanguageID = P.LanguageID
+                     INNER JOIN
+                    positionpricingtype PO
+                     ON PR.PricingTypeID = PO.PricingTypeID AND PR.CountryID = PO.CountryID AND PR.LanguageID = PO.LanguageID
+                        AND PR.Active = 1
+                        AND PO.Active = 1
+                        AND P.PositionID = PO.PositionID
+            WHERE   P.Active = 1
+                    AND P.ProviderUserID = @0
+                    AND P.PositionID = @1
+                    AND P.LanguageID = @2 AND P.CountryID = @3
                     -- Discard addons:
-                    AND IsAddOn = 0
+                    AND P.IsAddOn = 0
+                    -- Important: only 'hourly rates', DB collation is case-insensitive for this
+                    AND (P.PriceRateUnit is null OR P.PriceRateUnit like 'HOUR')
+            ORDER BY
+                    -- Precedence to hourly-rates
+                    P.PriceRate DESC
             ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             foreach (var pak in packages)
             {
@@ -639,7 +654,7 @@ public static partial class LcData
 
                 // Hourly rates take precedence.
                 // If pak has an hourly rate, compare that
-                if (pak.PriceRateUnit == "hour" && pak.PriceRate > 0 &&
+                if (pak.PriceRate > 0 &&
                     pak.PriceRate < minPackage.PriceRate)
                 {
                     minPackage = pak;
