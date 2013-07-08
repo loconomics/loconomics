@@ -609,58 +609,81 @@ public static partial class LcData
         public decimal Price;
     }
     public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
-    {       
-        // Get our Pricing Type ID:
-        var pricingTypes = LcData.GetPositionPricingTypes(positionID, clienttypeid);
-        ProviderPrice minProviderPrice = null;
+    {
+        dynamic minPackage = null;
 
+        // Look for the package with the minimum price (fixed or rate)
         using (var db = Database.Open("sqlloco"))
         {
-            foreach (var pricingType in pricingTypes)
+            var packages = db.Query(@"
+            SELECT  coalesce(ProviderPackagePrice, 0) As Price
+                    ,coalesce(PriceRate, 0) As PriceRate
+                    ,coalesce(PriceRateUnit, '') As PriceRateUnit
+                    ,PricingTypeID
+            FROM    ProviderPackage
+            WHERE   Active = 1
+                    AND ProviderUserID = @0
+                    AND PositionID = @1
+                    AND LanguageID = @2 AND CountryID = @3
+                    -- Discard addons:
+                    AND IsAddOn = 0
+            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            foreach (var pak in packages)
             {
-                var providerPrice = new ProviderPrice();
-                // Get Fees that apply to the provider and customer
-                var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingType.PricingTypeID, positionID));
-                
-                // Depending on pricing type, get price in a different way
-                if (pricingType.PricingTypeID == 2 || pricingType.PricingTypeID == 1)
+                // No minimum, gets this
+                if (minPackage == null)
                 {
-                    providerPrice.IsHourly = true;
-                    // Get hourly rate
-                    providerPrice.Price = db.QueryValue(@"
-                    SELECT  coalesce(HourlyRate, 0)
-                    FROM    ProviderHourlyRate
-                    WHERE   UserID = @0
-                                AND
-                            PositionID = @1
-                                AND
-                            ClientTypeID = @2
-                    ", providerUserID, positionID, clienttypeid) ?? 0;
-
-                    // Getting price with fees (1 decimal only for hourly prices)
-                    providerPrice.Price = (new LcPricingModel.Price(providerPrice.Price, fee, 1)).TotalPrice;
-                }
-                else
-                {
-                    providerPrice.Price = db.QueryValue(@"
-                    SELECT  coalesce(min(ProviderPackagePrice), 0)
-                    FROM    ProviderPackage
-                    WHERE   ProviderUserID = @0
-                             AND PositionID = @1
-                             AND LanguageID = @2 AND CountryID = @3
-                             AND IsAddOn = 0
-                    ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()) ?? 0;
-
-                    // Getting price with fees (no decimals for fixed prices)
-                    providerPrice.Price = (new LcPricingModel.Price(providerPrice.Price, fee, 0)).TotalPrice;
+                    minPackage = pak;
+                    continue;
                 }
 
-                // Compare price, return the minimum:
-                if (minProviderPrice == null || providerPrice.Price < minProviderPrice.Price)
-                    minProviderPrice = providerPrice;
+                // Hourly rates take precedence.
+                // If pak has an hourly rate, compare that
+                if (pak.PriceRateUnit == "hour" && pak.PriceRate > 0 &&
+                    pak.PriceRate < minPackage.PriceRate)
+                {
+                    minPackage = pak;
+                    continue;
+                }
+
+                // If package has a fixed price, compare that
+                if (pak.Price > 0 && pak.Price < minPackage.Price)
+                {
+                    minPackage = pak;
+                    continue;
+                }
             }
         }
-        return minProviderPrice ?? new ProviderPrice();
+
+        // Create ProviderPrice from the minimum package
+        if (minPackage != null)
+        {
+            // Get Fees that apply to the provider and customer
+            var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, minPackage.PricingTypeID, positionID));
+            // If has an hourly rate
+            if (minPackage.PriceRate > 0)
+            {
+                // Get price with fees, 1 decimal for hourly rate
+                return new ProviderPrice
+                {
+                    IsHourly = true,
+                    Price = (new LcPricingModel.Price(minPackage.PriceRate, fee, 1)).TotalPrice
+                };
+            }
+            // If has fixed price
+            if (minPackage.Price > 0)
+            {
+                // Get price with fees, 0 decimal for fixed price
+                return new ProviderPrice
+                {
+                    IsHourly = false,
+                    Price = (new LcPricingModel.Price(minPackage.PriceRate, fee, 0)).TotalPrice
+                };
+            }
+        }
+
+        // No amounts, return zero record:
+        return new ProviderPrice();
     }
     #endregion
     #region Common Pricing

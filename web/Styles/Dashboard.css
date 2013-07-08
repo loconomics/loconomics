@@ -1190,10 +1190,12 @@ html.js .user-verified-licenses h5 {
 }
 .pricing-type-box:nth-child(odd) {
     float: left;
+    clear: left;
     margin-right: 0;
 }
 .pricing-type-box:nth-child(even) {
     float: right;
+    clear: right;
     margin-right: 0;
 }
 .pricing-type-box h5 {
