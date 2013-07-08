@@ -18,6 +18,10 @@
     var positions = LcData.UserInfo.GetUserPos(false);
 
     var selectedSize = Request["size"] ?? "medium.png";
+    var selectedPosition = Request["positionid"] ?? "";
+    if (positions != null && positions.Count > 0) {
+        selectedPosition = positions[0].PositionID.ToString();
+    }
     
     var buttonText = "Click here to book now (on loconomics.com)";
 }
@@ -44,17 +48,17 @@
             <ul>
                 @foreach (var pos in positions)
                 {
-                    <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" />My @pos.PositionSingular booking page
+                    <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" @LcHelpers.IsChecked(selectedPosition, pos.PositionID) />My @pos.PositionSingular booking page
                         @if (pos.StatusID > 1)
                         {
-                            <span>(This position is not yet active--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                            <span>(<strong>This position is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
                         }
                     </label></li>
                 }
-                <li><label><input checked type="radio" name="positionid" value="" />My general profile
+                <li><label><input type="radio" name="positionid" value="" @LcHelpers.IsChecked(selectedPosition, "") />My general profile
                     @if (!u.IsActiveProvider)
                     {
-                        <span>(This profile is not yet active--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                        <span>(<strong>This profile is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
                     }
                 </label></li>
             </ul>
