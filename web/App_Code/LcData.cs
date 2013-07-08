@@ -677,7 +677,7 @@ public static partial class LcData
                 return new ProviderPrice
                 {
                     IsHourly = false,
-                    Price = (new LcPricingModel.Price(minPackage.PriceRate, fee, 0)).TotalPrice
+                    Price = (new LcPricingModel.Price(minPackage.Price, fee, 0)).TotalPrice
                 };
             }
         }
