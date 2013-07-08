@@ -239,6 +239,74 @@ public static partial class LcPricingModel
                 ClassName = "housekeeperservices lightcleaningservices",
                 Mod = new PackageModHousekeeper("light")
             }
+        },
+        // Routine Cleaning Service Pricing Type
+        {
+            10,
+            new PackageBaseConfig {
+                PricingTypeID = 10,
+                SingularName = "Routine cleaning service",
+                PluralName = "Routine cleaning services",
+                SlugName = "routinecleaningservice",
+                AddNewLabel = "Add routines cleaning services",
+                ProviderDescription = "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique.",
+                PriceCalculation = PriceCalculationType.HourlyPrice,
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Routine cleaning services",
+                SuggestedName = "Routine cleaning services",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique.",
+                PriceRateQuantityLabel = "Hourly rate",
+                PriceRateIsRequiredValidationError = "You must set your hourly rate",
+
+                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnSave = "Add/Edit pricings",
+
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about routine cleaning services pricing",
+                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+
+                ClassName = "housekeeperservices routinecleaningservices",
+                Mod = new PackageModHousekeeper("routine")
+            }
+        },
+        // Deep Cleaning Service Pricing Type
+        {
+            11,
+            new PackageBaseConfig {
+                PricingTypeID = 11,
+                SingularName = "Deep cleaning service",
+                PluralName = "Deep cleaning services",
+                SlugName = "deepcleaningservice",
+                AddNewLabel = "Add deep cleaning services",
+                ProviderDescription = "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique.",
+                PriceCalculation = PriceCalculationType.HourlyPrice,
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Deep cleaning services",
+                SuggestedName = "Deep cleaning services",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique.",
+                PriceRateQuantityLabel = "Hourly rate",
+                PriceRateIsRequiredValidationError = "You must set your hourly rate",
+
+                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnSave = "Add/Edit pricings",
+
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about deep cleaning services pricing",
+                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+
+                ClassName = "housekeeperservices deepcleaningservices",
+                Mod = new PackageModHousekeeper("deep")
+            }
         }
     };
 }
