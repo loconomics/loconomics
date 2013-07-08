@@ -2,6 +2,7 @@
 @using WebMatrix.WebData;
 @{
     LcHelpers.SecurePage();
+    var u = LcData.UserInfo.GetUserRow();
     
     // Get User Book Code
     string bookCode = "";
@@ -14,7 +15,7 @@
         }
     }
     // Get provider positions
-    var positions = LcData.UserInfo.GetUserPos(true);
+    var positions = LcData.UserInfo.GetUserPos(false);
 
     var selectedSize = Request["size"] ?? "medium.png";
     
@@ -43,9 +44,19 @@
             <ul>
                 @foreach (var pos in positions)
                 {
-                    <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" />My @pos.PositionSingular booking page</label></li>
+                    <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" />My @pos.PositionSingular booking page
+                        @if (pos.StatusID > 1)
+                        {
+                            <span>(This position is not yet active--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                        }
+                    </label></li>
                 }
-                <li><label><input checked type="radio" name="positionid" value="" />My general profile</label></li>
+                <li><label><input checked type="radio" name="positionid" value="" />My general profile
+                    @if (!u.IsActiveProvider)
+                    {
+                        <span>(This profile is not yet active--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                    }
+                </label></li>
             </ul>
         </fieldset>
         <fieldset class="button-code" data-base-url="@(LcUrl.AppUrl)book/@(bookCode)/" data-base-src="@(LcUrl.AppPath)img/extern/book-me-button-">
