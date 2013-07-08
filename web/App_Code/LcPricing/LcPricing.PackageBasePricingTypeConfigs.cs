@@ -248,7 +248,7 @@ public static partial class LcPricingModel
                 SingularName = "Routine cleaning service",
                 PluralName = "Routine cleaning services",
                 SlugName = "routinecleaningservice",
-                AddNewLabel = "Add routines cleaning services",
+                AddNewLabel = "Add routine cleaning services",
                 ProviderDescription = "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique.",
                 PriceCalculation = PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
