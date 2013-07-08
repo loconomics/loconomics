@@ -58,6 +58,14 @@
     if (ustats != null) {
         responseTime = LcData.UserInfo.GetFormatedUserResponseTime(ustats.ResponseTimeMinutes);
     }
+    
+    // Show back-search button?
+    var backLink = "";
+    if (Request.UrlReferrer != null && 
+        Request.UrlReferrer.AbsolutePath == LcUrl.LangPath &&
+        !String.IsNullOrEmpty(Request.UrlReferrer.Query)) {
+        backLink = Request.UrlReferrer.PathAndQuery;
+    }
 
     // Number of maximum positions displayed:
     var maxPositions = 5;
@@ -79,7 +87,9 @@
 }
 <div id="container" class="profile clearfix">
     <div id="main" class="tabbed folders">
-
+        @if (backLink != "") {
+            <a class="back-link" href="@backLink">&lt;&lt; back to search results</a>
+        }
 	    <div id="profileHeader" class="clearfix">
             <div id="profile-avatar">
                 <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + u["UserID"] + "/")" alt="User Photo" />
