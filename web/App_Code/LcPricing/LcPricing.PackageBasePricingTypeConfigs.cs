@@ -234,7 +234,7 @@ public static partial class LcPricingModel
                 IncludeServiceAttributes = true,
 
                 LearnMoreLabel = "Learn more about light cleaning services pricing",
-                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+                LearnMoreText = "Price and list your services for what you consider a light cleaning of a home. Some clients just want a quick clean and aren't too concerned about spring cleaning. Customize by selecting attributes above.",
 
                 ClassName = "housekeeperservices lightcleaningservices",
                 Mod = new PackageModHousekeeper("light")
@@ -268,7 +268,7 @@ public static partial class LcPricingModel
                 IncludeServiceAttributes = true,
 
                 LearnMoreLabel = "Learn more about routine cleaning services pricing",
-                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+                LearnMoreText = "Price and list your services for what you consider a routine cleaning of a home. It's more than making the beds but isn't a spring cleaning either. Customize by selecting attributes above.",
 
                 ClassName = "housekeeperservices routinecleaningservices",
                 Mod = new PackageModHousekeeper("routine")
@@ -302,7 +302,7 @@ public static partial class LcPricingModel
                 IncludeServiceAttributes = true,
 
                 LearnMoreLabel = "Learn more about deep cleaning services pricing",
-                LearnMoreText = "We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services. You can discuss your full pricing during the estimate and add any materials/parts required to get the job done right.",
+                LearnMoreText = "Price and list your services for what you consider a deep cleaning of a home. We're talking about the client's mother coming to visit or a spring cleaning. Customize by selecting attributes above.",
 
                 ClassName = "housekeeperservices deepcleaningservices",
                 Mod = new PackageModHousekeeper("deep")
