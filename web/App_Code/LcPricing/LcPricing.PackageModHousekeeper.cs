@@ -92,7 +92,7 @@ public static partial class LcPricingModel
 
             s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-hourly-fee='{4}' data-provider-rate='{5}'>", formulaA, formulaB, formulaC, hourlyRate, hourlyFee, providerRate);
             s.Append(@"<div>Help us determine an accurate 
-                <span class='has-tooltip' title='LJDI: This is an estimate, you will need review it with the provider.'>
+                <span class='has-tooltip' title='You and your provider will review this estimate and finalize before the work begins.'>
                 price estimate</span></div>");
 
             s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number' type='text' /></label></div>");
@@ -113,7 +113,7 @@ public static partial class LcPricingModel
             var time = ratio * ApplyFormula();
 
             s.AppendFormat("<div class='housekeeper-pricing' data-slider-value='{0}' data-slider-step='{1}'>", ApplyFormula(), sliderStep);
-            s.AppendFormat("<div class='label'>Average time to {0} clean a 2 bedroom/2 bathroom home: <span class='note has-tooltip' title='LJDI: To create an estimate pricing for your customers.'>Why are we asking this?</span></div>", type);
+            s.AppendFormat("<div class='label'>Average time to {0} clean a 2 bedroom/2 bathroom home: <span class='note has-tooltip' title='We use this to help us determine an accurate estimate. You and the client will review the estimate and finalize before you begin the work.'>Why are we asking this?</span></div>", type);
             s.AppendFormat(@"<div class='input'><input name='provider-average-time' type='text' value='{0}' />
                     <div class='provider-average-time'>
 			            <div class='provider-average-time-slider'></div>
