@@ -45,8 +45,22 @@ public static partial class LcPricingModel
         public bool IsAddon;
         #endregion
         #region Form Texts
+        /// <summary>
+        /// Informational text showed as placeholder in the textbox.
+        /// Explain the field or give examples, but is not a actual value for it.
+        /// </summary>
         public string NamePlaceHolder;
+        /// <summary>
+        /// Name used to pre-fill the text-box value the first time (package creationg)
+        ///  as a recommended name, user can change it of course.
+        /// </summary>
         public string SuggestedName;
+        /// <summary>
+        /// Name used to pre-fill the text-box value and lock it, package for that
+        /// pricing type has ever this fixed name, user cannot change it.
+        /// SuggestedName and NamePlaceHolder has not sense when using this.
+        /// </summary>
+        public string FixedName;
         public string DurationLabel;
         public string PriceLabel;
         public string PriceNote;

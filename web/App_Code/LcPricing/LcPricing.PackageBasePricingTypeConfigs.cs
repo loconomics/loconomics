@@ -220,7 +220,7 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Light cleaning services",
-                SuggestedName = "Light cleaning services",
+                FixedName = "Light cleaning services",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique.",
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
@@ -254,7 +254,7 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Routine cleaning services",
-                SuggestedName = "Routine cleaning services",
+                FixedName = "Routine cleaning services",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique.",
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
@@ -288,7 +288,7 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Deep cleaning services",
-                SuggestedName = "Deep cleaning services",
+                FixedName = "Deep cleaning services",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique.",
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",

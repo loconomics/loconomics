@@ -63,7 +63,7 @@
         // Setting up data (will be used to be saved or to display form errors)
         data.LanguageID = LcData.GetCurrentLanguageID();
         data.CountryID = LcData.GetCurrentCountryID();
-        data.Name = Request["package-name"];
+        data.Name = config.FixedName ?? Request["package-name"];
         data.Description = Request["package-description"];
         data.Price = Request["price"].AsDecimal();
         data.Duration = (TimeSpan.FromHours(Request["hours"].AsInt()) + TimeSpan.FromMinutes(Request["minutes"].AsInt()));
@@ -340,7 +340,7 @@
     <fieldset class="package-data">
         <label class="package-name">
             <span class="label-text">@config.NamePlaceHolder</span>
-            <input type="text" name="package-name" placeholder="@config.NamePlaceHolder" value="@(Request["package-name"] ?? data.Name ?? config.SuggestedName)" />
+            <input type="text" name="package-name" @Html.Raw(config.FixedName != null ? "readonly" : "") placeholder="@config.NamePlaceHolder" value="@(config.FixedName ?? Request["package-name"] ?? data.Name ?? config.SuggestedName)" />
         </label>
         @if (config.NumberOfSessionsLabel != null)
         {
