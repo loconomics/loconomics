@@ -215,15 +215,15 @@
                     @Html.ValidationMessage("name")
                 </li>
                 <li class="location-addressline location-addressline1">
-                    <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("addressline1") /></label>
+                    <label>Address Line 1: <input type="text" name="addressline1" value="@(Request["addressline1"] ?? (location != null ? location.AddressLine1 : null))" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("addressline1") /></label>
                     @Html.ValidationMessage("addressline1")
                 </li>
                 <li class="location-addressline location-addressline2">
-                    <label>Address Line 2: <input type="text" name="addressline2" value="@(Request["addressline2"] ?? (location != null ? location.AddressLine2 : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("addressline2") /></label>
+                    <label>Address Line 2: <input type="text" name="addressline2" value="@(Request["addressline2"] ?? (location != null ? location.AddressLine2 : null))" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("addressline2") /></label>
                     @Html.ValidationMessage("addressline2")
                 </li>
                 <li class="location-city">
-                    <label>City: <input type="text" name="city" value="@(Request["city"] ?? (location != null ? location.City : null))" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("city") /></label>
+                    <label>City: <input type="text" name="city" value="@(Request["city"] ?? (location != null ? location.City : null))" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("city") /></label>
                 </li>
                 <li class="location-state">
                     <label>State:
@@ -234,11 +234,11 @@
                     </label>
                 </li>
                 <li class="location-zipcode">
-                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" title="We store this information with the highest security standards." class="secure-data" @Validation.GetHtml("postalcode")/></label>
+                    <label>Zip Code: <input type="text" name="postalcode" value="@(Request["postalcode"] ?? (location != null ? location.PostalCode : null))" data-val-postalcode="Postal Code is not valid" title="This address will only be disclosed to clients if you perform services here and only after you accept a booking." class="secure-data" @Validation.GetHtml("postalcode")/></label>
                     @Html.ValidationMessage("postalcode")
                 </li>
                 <li class="location-specialinstructions">
-                    <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions")>@(Request["special-instructions"] ?? (location != null ? location.SpecialInstructions : null))</textarea></label>
+                    <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions") placeholder="Do clients need to use an intercomm or follow any special instructions once at the address?">@(Request["special-instructions"] ?? (location != null ? location.SpecialInstructions : null))</textarea></label>
                     @Html.ValidationMessage("special-instructions")
                 </li>
                 <li class="location-preferredaddress input-option">
