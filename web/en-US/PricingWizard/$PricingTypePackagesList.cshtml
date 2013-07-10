@@ -83,7 +83,7 @@
                             LcPricingModel.Price priceWithFees = null;
                             if (!editable)
                             {
-                                new LcPricingModel.Price(price, fee, 0);
+                                priceWithFees = new LcPricingModel.Price(price, fee, 0);
                             }
 							if (config.PriceLabel == null) {
 								price = pak.PriceRate;
