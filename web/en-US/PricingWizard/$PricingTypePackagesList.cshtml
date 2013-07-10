@@ -80,11 +80,18 @@
 							var priceSufix = "";
                             // To use in non-editable (customer view, as search, profile, booking, communications..)
                             // calculate price with fees. No decimals for fixed prices
-                            var priceWithFees = new LcPricingModel.Price(price, fee, 0);
+                            LcPricingModel.Price priceWithFees = null;
+                            if (!editable)
+                            {
+                                new LcPricingModel.Price(price, fee, 0);
+                            }
 							if (config.PriceLabel == null) {
 								price = pak.PriceRate;
-                                // fees apply with 1 decimal for the case of hourly-rates:
-                                priceWithFees = new LcPricingModel.Price(price, fee, 1);
+                                if (!editable)
+                                {
+                                    // fees apply with 1 decimal for the case of hourly-rates:
+                                    priceWithFees = new LcPricingModel.Price(price, fee, 1);
+                                }
 								if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
 									priceSufix = "/h";
 								} else {
