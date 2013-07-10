@@ -412,6 +412,10 @@
         string okButtonLabel = "OK")
     {
         var upa = LcData.UserInfo.CheckUserPositionActivation(userID, beforePositionStatuses);
+        // There is no positions information, maybe a customer?
+        if (upa == null) {
+            return false;
+        }
 
         var activationMessage = JoinNotEmptyStrings("<br/>", upa.Messages);
 
