@@ -1,5 +1,8 @@
 ﻿@{
-    var redirect = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-";
+    //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
+    string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/ProviderWelcome/";
+    string CUSTOMER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-customers";
+    var redirect = "";
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
@@ -64,12 +67,12 @@
                     }
                 }
             }
-            redirect += "providers";
+            redirect += PROVIDER_REDIRECT;
         } else {
             if (Request["lastname"].IsEmpty()) {
                 ModelState.AddError("lastname", LcRessources.RequiredField("Last name"));
             }
-            redirect += "customers";
+            redirect += CUSTOMER_REDIRECT;
         }
 
         if (ModelState.IsValid) {
