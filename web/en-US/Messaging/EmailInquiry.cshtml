@@ -87,7 +87,7 @@
                     <h5 style="@LcEmailTemplateHelper.StyleUserPublicName()@LcEmailTemplateHelper.StyleMiniUserInfoH5()">@LcHelpers.GetUserDisplayName(thread, userPrefix)</h5>
                     <div>@message.MessageDate.ToShortDateString()</div>
                 </div>
-                <div style="@LcEmailTemplateHelper.StyleMessageSection();margin: 0 13px;width: 430px;overflow: hidden;@(messageStyle)@(message.MessageID == messageID ? LcEmailTemplateHelper.StyleHighlighted() : ""))">@printMessageBodyAsHtml(message.BodyText)</div>
+                <div style="@(LcEmailTemplateHelper.StyleMessageSection())margin: 0 13px;width: 430px;overflow: hidden;@(messageStyle)@(message.MessageID == messageID ? LcEmailTemplateHelper.StyleHighlighted() : "")">@printMessageBodyAsHtml(message.BodyText)</div>
             </div>
         }
     </div>
