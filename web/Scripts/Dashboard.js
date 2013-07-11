@@ -515,7 +515,6 @@ $(document).ready(function () {
             $t.text($t.data('show-text'));
             atts.stop().hide('fast');
         } else {
-            $t.data('show-text', $t.text());
             $t.text($t.data('hide-text'));
             atts.stop().show('fast');
         }

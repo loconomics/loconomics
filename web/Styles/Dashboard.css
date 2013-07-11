@@ -1243,7 +1243,7 @@ html.js .user-verified-licenses h5 {
     text-overflow: ellipsis;
 }
 .package-pricing-type .edit-panel .provider-package-services.services-not-checked {
-    display: none;
+    /*display: none;*/
 }
 .package-pricing-type .edit-panel .show-more-attributes {
     margin: 10px 0 0 13px;
