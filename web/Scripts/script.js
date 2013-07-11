@@ -1487,13 +1487,15 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // There is no ajax-box, use all element returned:
             jb = newhtml;
         }
-        if (ctx.boxIsContainer)
+        if (ctx.boxIsContainer) {
             // jb is content of the box container:
             ctx.box.html(jb);
-        else
+        } else {
             // box is content that must be replaced by the new content:
             ctx.box.replaceWith(jb);
-
+            // and refresh the reference to box with the new element
+            ctx.box = jb;
+        }
         if (ctx.box.is('form'))
             ctx.form = ctx.box;
         else
@@ -2276,7 +2278,7 @@ LC.welcomePopup = function () {
     }
     c.find('form').get(0).reset();
     // Re-enable autocomplete:
-    setTimeout(function(){ c.find('[placeholder]').placeholder(); }, 500);
+    setTimeout(function () { c.find('[placeholder]').placeholder(); }, 500);
     function initProfileData() {
         c.find('[name=jobtitle]').autocomplete({
             source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
