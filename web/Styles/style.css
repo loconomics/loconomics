@@ -2146,6 +2146,9 @@ html.boxshadow #loginBox .field-validation-error{
 .send-message-form .validation-summary-errors {
     padding: 15px;
 }
+.send-message-form .actions {
+    clear: none !important;
+}
 .helpcenter .require-login h2 {
     margin-top: 1em;
 }
