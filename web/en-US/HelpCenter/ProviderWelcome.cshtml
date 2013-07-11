@@ -12,6 +12,9 @@
             running a business, letting you focus on what you do best--providing great services. We're a triple-bottom-line company that's committed to helping you run your business.
             Below is a summary of the tools we offer you. We want this list to grow. with your input. So, welcome! We're glad you're here.</p>
         </header>
+        <div class="actions">
+            <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "Dashboard/Alerts/" : "ProviderSignUp/")" class="main-action">Finish Setting Up Your Account</a>
+        </div>
         <ul class="features-list">
             <li class="booking">
                 <h3>Clients find & book you</h3>
@@ -62,8 +65,8 @@
                 <p>People, planet, then profit. We're a benefit corporation dedicated to giving you tools to run your business.</p>
             </li>
         </ul>
-        <div class="actions">
-            <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "Dashboard/Alerts/" : "ProviderSignUp/")" class="main-action">Get Started!</a>
+        <div class="foot-action">
+            <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "Dashboard/Alerts/" : "ProviderSignUp/")">Finish Setting Up Your Account &gt;&gt;</a>
         </div>
     </div>
 </div>

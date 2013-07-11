@@ -262,9 +262,22 @@
     padding-left: 120px;
 }
 .provider-welcome-page .actions {
-    float: none !important;
+    float: right !important;
     text-align: center !important;
-    margin-top: 1em;
+    margin-top: 1.6em;
+    /* width as the list padding-right to hold the image */
+    width: 348px;
+}
+.provider-welcome-page .foot-action {
+    text-align: center;
+    margin: 2em 0;
+}
+.provider-welcome-page .foot-action a,
+.provider-welcome-page .foot-action a:link,
+.provider-welcome-page .foot-action a:visited {
+    color: #00989A;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 /*=.features-list */
 .provider-welcome-page .features-list {
