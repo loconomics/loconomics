@@ -584,10 +584,22 @@ $(document).ready(function () {
     * Cancellation Policy
     */
     (function () {
+        // Autosubmit form on changes (its a one choice form)
         $('.dashboard').on('change', '.cancellation-policy-form [name=cancellation-policy]', function () {
             var form = $(this).closest('form');
             form.submit();
         });
+        // Sync visualization of cancellation options with the CRUDL viewer -- to don't show it when the editor is open #297
+        var $cancelForm = $('.cancellation-policy-form');
+        if ($cancelForm.length) {
+            $('.dashboard-provider-pricing .crudl-viewer')
+            .on('xshow', function (e, opts) {
+                LC.showElement($cancelForm, opts);
+            })
+            .on('xhide', function (e, opts) {
+                LC.hideElement($cancelForm, opts);
+            });
+        }
     })();
 
     /**==================
@@ -728,10 +740,11 @@ $(document).ready(function () {
                 tplVars.data('base-src') + size);
             sourceContainer.val(previewContainer.html().trim());
         }
+        var c = $('.website-tools');
         // First generation
-        regenerateButtonCode();
+        if (c.length > 0) regenerateButtonCode();
         // and on any form change
-        $('.website-tools').on('change', 'input', regenerateButtonCode);
+        c.on('change', 'input', regenerateButtonCode);
     })();
 });
 

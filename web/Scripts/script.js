@@ -1127,7 +1127,7 @@ LC.initCrudl = function () {
             // Iterate all parents including the 'crudl' element (parentsUntil excludes the first element given,
             // because of that we get its parent())
             // For any of them with an extra-query, append it:
-            el.parentsUntil(crudl.parent(), '[data-crudl-extra-query]').each(function(){
+            el.parentsUntil(crudl.parent(), '[data-crudl-extra-query]').each(function () {
                 var x = $(this).data('crudl-extra-query');
                 if (x) xq += '&' + x;
             });
@@ -1142,7 +1142,8 @@ LC.initCrudl = function () {
                 return defaultUrl + '?' + $.param(formpars) + xq;
             });
             // Hide viewer when in editor:
-            vwr.slideUp('slow');
+            //vwr.slideUp('slow');
+            vwr.xhide({ effect: 'height', duration: 'slow' });
             return false;
         });
         vwr
@@ -1153,11 +1154,12 @@ LC.initCrudl = function () {
                 formpars[iidpar] = itemid;
                 formpars.action = 'update';
                 var xq = getExtraQuery($(this));
-                dtr.show().reload(function (url, defaultUrl) {
+                dtr.show({ effect: 'slide', duration: 'slow', direction: 'down' }).reload(function (url, defaultUrl) {
                     return defaultUrl + '?' + $.param(formpars) + xq;
                 });
                 // Hide viewer when in editor:
-                vwr.slideUp('slow');
+                //vwr.slideUp('slow')
+                vwr.xhide({ effect: 'height', duration: 'slow' });
                 return false;
             })
             .on('click', '.crudl-delete', function () {
@@ -1197,7 +1199,8 @@ LC.initCrudl = function () {
         function finishEdit() {
             dtr.slideUp('slow', function () {
                 // Show again the Viewer
-                vwr.slideDown('slow');
+                //vwr.slideDown('slow');
+                vwr.xshow({ effect: 'height', duration: 'slow' });
                 // Mark the form as unchanged to avoid persisting warnings
                 LC.ChangesNotification.registerSave(dtr.find('form').get(0));
                 // Avoid cached content on the Editor
@@ -1211,9 +1214,12 @@ LC.initCrudl = function () {
             .on('click', '.crudl-cancel', finishEdit)
             .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0 || data.Code == 5 || data.Code == 6)
+                if (data.Code == 0 || data.Code == 5 || data.Code == 6) {
                     // Show viewer and reload list:
-                    vwr.slideDown('slow').find('.crudl-list').reload({autofocus: false});
+                    //vwr.slideDown('slow')
+                    vwr.xshow({ effect: 'height', duration: 'slow' })
+                    .find('.crudl-list').reload({ autofocus: false });
+                }
                 if (data.Code == 5)
                     setTimeout(finishEdit, 1500);
             });
@@ -1826,9 +1832,20 @@ LC.hideElement = function (element, options) {
         case 'fade':
             $e.fadeOut(options);
             break;
+        case 'height':
+            $e.slideUp(options);
+            break;
+        case 'size':
         default:
             $e.hide(options);
     }
+    $e.trigger('xhide', [options]);
+};
+/** hideElement as a jQuery method: xhide
+ **/
+jQuery.fn.xhide = function xhide(options) {
+    LC.hideElement(this, options);
+    return this;
 };
 /**
 * Show an element using jQuery, allowing use standard  'show' and 'fadeIn' effects, extended
@@ -1847,10 +1864,53 @@ LC.showElement = function (element, options) {
         case 'fade':
             $e.fadeIn(options);
             break;
+        case 'height':
+            $e.slideDown(options);
+            break;
+        case 'size':
         default:
             $e.show(options);
     }
+    $e.trigger('xshow', [options]);
 };
+/** showElement as a jQuery method: xhide
+**/
+jQuery.fn.xshow = function xhide(options) {
+    LC.showElement(this, options);
+    return this;
+};
+/** Generic utility for highly configurable jQuery.toggle with support
+    to specify the toggle value explicity for any kind of effect: just pass true as second parameter 'toggle' to show
+    and false to hide. Toggle must be strictly a Boolean value to avoid auto-detection.
+    Toggle parameter can be omitted to auto-detect it, and second parameter can be the animation options.
+    All the others behave exactly as hideElement and showElement.
+**/
+LC.toggleElement = function (element, toggle, options) {
+    // If toggle is not a boolean
+    if (toggle !== true && toggle !== false) {
+        // If toggle is an object, then is the options as second parameter
+        if ($.isPlainObject(toggle))
+            options = toggle;
+        // Auto-detect toggle, it can vary on any element in the collection,
+        // then detection and action must be done per element:
+        $(element).each(function () {
+            // Reusing function, with explicit toggle value
+            LC.toggleElement(this, $(this).is(':visible'), options);
+        });
+    }
+    if (toggle)
+        showElement(element, options);
+    else
+        hideElement(element, options);
+}
+/** toggleElement as a jQuery method: xtoggle
+ **/
+jQuery.fn.xtoggle = function xtoggle(toggle, options) {
+    LC.toggleElement(this, toggle, options);
+    return this;
+};
+/** Custom Loconomics 'blockUI' popups
+**/
 function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
     options = $.extend(true, {
