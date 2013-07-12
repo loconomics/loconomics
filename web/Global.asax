@@ -16,9 +16,15 @@
         
     void Application_Error(object sender, EventArgs e) 
     {
+        Exception ex = Server.GetLastError();
+        // Special case for Page Not Found error (the page creates its own log file)
+        if (ex is HttpException && ((HttpException)ex).GetHttpCode() == 404)
+        {
+            Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+            // Execution ends right here.
+        }        
         if (ASP.LcHelpers.Channel != "dev")
         {
-            Exception ex = Server.GetLastError();
             if (ex is HttpUnhandledException && ex.InnerException != null)
             {
                 ex = ex.InnerException;
@@ -47,7 +53,7 @@
                 Server.ClearError();
                 // Show custom error page, preserving current URL:
                 Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error/");
-                //Response.Redirect(LcUrl.AppPath + "Errors/Error/");
+                // Execution ends right here
             }
         }
     }

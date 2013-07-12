@@ -480,13 +480,13 @@
     public static void ProviderPage() {
         SecurePage();
         if (LcData.UserInfo.GetUserRow().IsProvider == false) {
-            throw new HttpException(404, "Not Found");
+            PageNotFound();
         }
     }
     public static void AdminPage() {
         SecurePage();
         if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int)) {
-            throw new HttpException(404, "Not Found");
+            PageNotFound();
         }
     }
     public static void TestArea() {
@@ -526,6 +526,10 @@
             }
         }
         return null;
+    }
+    public static void PageNotFound() {
+        Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+        // throw new HttpException(404, "Not Found");
     }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())
