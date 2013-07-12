@@ -3,7 +3,7 @@
     Page.Title = "Page Not Found";
     Response.StatusCode = 404;
     
-    //try{
+    try{
         using (var logger = new LcLogger("PageNotFound"))
         {
             logger.Log("Page not found, custom 404 page showed. Context:");
@@ -13,7 +13,7 @@
             logger.Log("User-Agent:: {0}", Request.UserAgent);
             logger.Save();
         }
-    //}catch{}
+    }catch{}
 }
 <div id="container">
     <h1>We're unable to find what you're looking for. Please contact us by clicking on the orange tab at the bottom of your screen so we can assist you.</h1>

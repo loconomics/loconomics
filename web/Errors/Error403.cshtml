@@ -1,0 +1,44 @@
+﻿@{
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    Page.Title = "Forbidden";
+    Response.StatusCode = 403;
+    
+    // Gets what user type was required by the requested page, and current logged user is Not of that type.
+    var requires = LcData.UserInfo.ParseUserType(Request["requires"], LcData.UserInfo.UserType.None);
+
+    try{
+        using (var logger = new LcLogger("Forbidden"))
+        {
+            logger.Log("Forbidden, custom 403 page showed. Context:");
+            logger.Log("Current Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+            logger.Log("Required user type:: {0}", requires);
+            logger.Log("Referrer URL:: {0}", Request.UrlReferrer);
+            logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
+            logger.Log("User-Agent:: {0}", Request.UserAgent);
+            logger.Save();
+        }
+    }catch{}
+    
+    // For security reasons on the most important pages, a not-found is showed instead of 'forbidden' 
+    // for the case the user required was 'admin' or 'system'.
+    // Then, that user types can be discarted in further checks.
+    if (requires.HasFlag(LcData.UserInfo.UserType.Admin) ||
+        requires.HasFlag(LcData.UserInfo.UserType.System)) {
+        // Show a page-not-found page, to don't reveal the existance of an admin or system URL.
+        LcHelpers.PageNotFound();
+        // Execution stops here.
+    }
+}
+<div id="container">
+    @switch (requires)
+    {
+        // For forbidden trying to access a provider page:
+        case LcData.UserInfo.UserType.Provider:
+            <h1>LJDI: Sorry, you do not have access to a provider profile because you are a customer.</h1>
+            break;
+        // For any other case
+        default:
+            <h1>LJDI: We're unable to find what you're looking for. Please contact us by clicking on the orange tab at the bottom of your screen so we can assist you.</h1>
+            break;
+    }
+</div>

@@ -30,8 +30,9 @@ public static partial class LcData
             Anonymous = 1,
             Customer = 2,
             Provider = 4,
-            User = 7,
-            System = 8
+            Admin = 8,
+            User = 15,
+            System = 16
         }
         public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
         {

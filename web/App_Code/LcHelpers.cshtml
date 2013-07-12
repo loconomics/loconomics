@@ -480,13 +480,13 @@
     public static void ProviderPage() {
         SecurePage();
         if (LcData.UserInfo.GetUserRow().IsProvider == false) {
-            PageNotFound();
+            Forbidden(LcData.UserInfo.UserType.Provider);
         }
     }
     public static void AdminPage() {
         SecurePage();
         if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int)) {
-            PageNotFound();
+            Forbidden(LcData.UserInfo.UserType.Admin);
         }
     }
     public static void TestArea() {
@@ -527,9 +527,23 @@
         }
         return null;
     }
+    /// <summary>
+    /// Shows to the user the PageNotFound:404 page instead of the current one requested.
+    /// Page is prevented from being processed.
+    /// </summary>
     public static void PageNotFound() {
         Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
         // throw new HttpException(404, "Not Found");
+    }
+    /// <summary>
+    /// Shows to the user the Forbidden:403 page instead of the current one requested.
+    /// Page is prevented from being processed.
+    /// </summary>
+    /// <param name="requestedUserType">Lets know what user type was requested by this
+    /// page and not satisfied by the current user to show a more detailed error.</param>
+    public static void Forbidden(LcData.UserInfo.UserType requestedUserType) {
+        Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error403/?requires=" + requestedUserType.ToString());
+        // throw new HttpException(403, "Forbidden");
     }
     public static void RedirectToLogin() {
             if (Request.IsAjaxRequest())

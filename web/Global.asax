@@ -17,12 +17,20 @@
     void Application_Error(object sender, EventArgs e) 
     {
         Exception ex = Server.GetLastError();
-        // Special case for Page Not Found error (the page creates its own log file)
-        if (ex is HttpException && ((HttpException)ex).GetHttpCode() == 404)
+        // Special cases (each page creates its own log file)
+        if (ex is HttpException)
         {
-            Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
-            // Execution ends right here.
-        }        
+            switch (((HttpException)ex).GetHttpCode()){
+                case 404:
+                    Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    // Execution ends right here.
+                    break;
+                case 403:
+                    Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error403/");
+                    // Execution ends right here.
+                    break;
+            }
+        }
         if (ASP.LcHelpers.Channel != "dev")
         {
             if (ex is HttpUnhandledException && ex.InnerException != null)
