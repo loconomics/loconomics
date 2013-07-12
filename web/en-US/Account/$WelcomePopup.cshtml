@@ -83,7 +83,7 @@
                 // Create account:
                 if (LcAuth.ExistsEmail(Request["email"])) {
                     // User already exists
-                    ModelState.AddFormError("Email address is already in use.");
+                    ModelState.AddFormError("Email address is already in use--please click login below.");
                 } else {
                     try {
                         // Check user type to be created
