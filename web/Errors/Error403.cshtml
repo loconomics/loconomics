@@ -34,11 +34,11 @@
     {
         // For forbidden trying to access a provider page:
         case LcData.UserInfo.UserType.Provider:
-            <h1>LJDI: Sorry, you do not have access to a provider profile because you are a customer.</h1>
+            <h1>As a customer, you do not have a public profile. Please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">submit a request</a>, and we can deactivate your account.</h1>
             break;
         // For any other case
         default:
-            <h1>LJDI: We're unable to find what you're looking for. Please contact us by clicking on the orange tab at the bottom of your screen so we can assist you.</h1>
+            <h1>We're unable to find what you're looking for. Please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a>, and we can assist you.</h1>
             break;
     }
 </div>
