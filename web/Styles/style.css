@@ -2172,7 +2172,7 @@ html.boxshadow #loginBox .field-validation-error{
     position: relative;
 }
 .search-categories li > a {
-    font-size: .8em;
+    font-size: .8101em;
     text-decoration: none;
     position: absolute;
     top: 0;
@@ -2243,7 +2243,7 @@ html.boxshadow #loginBox .field-validation-error{
     color: #00989b;
 }
 .search-categories ul > li > .details > .description > p {
-    font-size: .8em;
+    font-size: .8101em;
     margin: 0;
     line-height: 1.1em;
 }
@@ -2307,13 +2307,14 @@ html.boxshadow #loginBox .field-validation-error{
 
 .search-categories ul{
     overflow: hidden;
+    white-space: nowrap;
 }
 .search-categories ul li{
     /* Using an sprite, mantain width and height exactly as image fragment */
     background: url('../img/theme/search-categories.png') no-repeat 0 0;
     width: 81px;
     height: 81px;
-    float: left;
+    display: inline-block;
     margin: 0 6px 0 0;
     line-height: normal;
     padding: 0
