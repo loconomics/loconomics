@@ -523,7 +523,7 @@ public class LcMessaging
     #region Type:Welcome
     public static void SendWelcomeProvider(int providerID, string providerEmail, string confirmationURL)
     {
-        SendMail(providerEmail, "Welcome to Loconomics",
+        SendMail(providerEmail, "Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "ProviderSignUp/EmailWelcomeProvider/",
             new Dictionary<string,object> {
                 { "UserID", providerID },
@@ -533,7 +533,7 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail, string confirmationURL, string confirmationToken)
     {
-        SendMail(userEmail, "Welcome to Loconomics",
+        SendMail(userEmail, "Welcome to Loconomics-Please Verify Your Account",
             ApplyTemplate(LcUrl.LangPath + "Email/EmailWelcomeCustomer/",
             new Dictionary<string, object> {
                 { "UserID", userID },

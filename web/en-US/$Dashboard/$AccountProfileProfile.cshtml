@@ -89,32 +89,7 @@
         }
     }
 }
-<p></p>
 <div><form method="post" action="@(LcUrl.LangPath)$Dashboard/$AccountProfileProfile/" id="account-profile-profile" class="ajax ajax-box">
-    @LcHelpers.GetValidationScripts()
-    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-
-    @if (u.IsProvider)
-    {
-        <fieldset class="customurl">
-            <legend title="Create your own personal brand by customizing your profile's URL. Be original!" class="has-tooltip">Custom Loconomics URL:</legend>
-            <ul>
-                <li>
-                    https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
-                    @Html.ValidationMessage("profile-url")
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset class="websiteurl">
-            <legend title="After you accept a booking, we'll send your personal website to clients to let them do some more research before their appointment.  This is completely optional." class="has-tooltip popup-action">Personal website URL:</legend>
-            <ul>
-                <li>
-                    <input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
-                    @Html.ValidationMessage("website-url")
-                </li>
-            </ul>
-        </fieldset>
-    }
     <fieldset id="personal-fs-publicbio">
         <legend>Public bio:</legend>
         <ul>
@@ -123,6 +98,33 @@
             </li>
         </ul>
     </fieldset>
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    @if (u.IsProvider)
+    {
+        <fieldset class="customurl">
+        	<p>Create your own personal brand by customizing your profile's URL. Be original! You can share it with anyone you want to book your services.</p>
+            <legend>Custom Loconomics URL:</legend>
+            <ul>
+                <li>
+                    <legend>Enter a URL:</legend>https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
+                    @Html.ValidationMessage("profile-url")
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="websiteurl">
+        	<p>If you have your own website, let us know the URL.  After you accept a booking, we'll send the link to clients to let them do some more research before their appointment.</p>
+            <legend>Personal website URL:</legend>
+            <ul>
+                <li>
+                    <legend>Enter your website:</legend><input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
+                    @Html.ValidationMessage("website-url")
+                </li>
+            </ul>
+        </fieldset>
+    }
+
 
     <fieldset class="actions">
         <button class="save main-action" type="submit">Save</button>

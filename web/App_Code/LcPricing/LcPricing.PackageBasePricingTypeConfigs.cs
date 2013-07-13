@@ -226,7 +226,7 @@ public static partial class LcPricingModel
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
 
                 SuccessOnDelete = "Service removed succesfully",
-                SuccessOnSave = "Add/Edit pricings",
+                SuccessOnSave = "Add/Edit pricing",
 
                 SummaryFormat = "{0}",
                 NameAndSummaryFormat = "{0}, {1}",

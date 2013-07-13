@@ -170,7 +170,7 @@
                  @Validation.GetHtml("institution") />
         </li>
         <li class="degree">
-            <label for="@(idprefix)-degree">Degree</label>
+            <label for="@(idprefix)-degree">Degree/Certificate</label>
             <input id="@(idprefix)-degree" type="text" name="degree" value="@(Request["degree"] ?? education == null ? "" : education.DegreeCertificate)"
                 @Validation.GetHtml("degree") />
         </li>

@@ -44,7 +44,7 @@
 @if (!String.IsNullOrEmpty(pageToLoad))
 {
 <p class="setting-instructions">
-Keeping your prices available and realistic is a good idea. If you need help determining what’s right, <a href="mailto:providerhelp@loconomics.com">let us know</a>.
+Keeping your prices available and realistic is a good idea. If you need help determining what’s right, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">let us know</a>.
 </p>
 <div class="dashboard-provider-pricing">
     @RenderPage("$PositionCancellationPolicyForm.cshtml", new { PositionID = pos.PositionID })
@@ -53,5 +53,5 @@ Keeping your prices available and realistic is a good idea. If you need help det
 }
 else
 {
-    <p>We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="mailto:providerhelp@loconomics.com">e-mail us</a>.</p>
+    <p>We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a>.</p>
 }

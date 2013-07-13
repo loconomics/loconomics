@@ -81,7 +81,7 @@
                 using (var db = Database.Open("sqlloco")) {
                     var hasreview = db.QueryValue(LcData.sqlCheckUserReview, positionID, bookingID, providerUserID, customerUserID);
                     if(hasreview > 0){
-                        ModelState.AddFormError("The review for this service already exist");
+                        ModelState.AddFormError("You've already reviewed this user for this service.");
                     } else {
                         //Look for existing scores
                         var scores = db.QuerySingle(LcData.sqlGetUserReviewScores, providerUserID, positionID);

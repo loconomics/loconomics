@@ -46,7 +46,7 @@
                         booking.ProviderUserID,
                         booking.CustomerUserID);
                     if(hasreview > 0){
-                        ModelState.AddFormError("The review for this service already exist");
+                        ModelState.AddFormError("You've already reviewed this user for this service.");
                     } else {
                         //Look for existing scores
                         var scores = db.QuerySingle(LcData.sqlGetUserReviewScores, booking.CustomerUserID, 0);
