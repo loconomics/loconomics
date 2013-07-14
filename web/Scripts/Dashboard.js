@@ -670,6 +670,12 @@ $(document).ready(function () {
     * Availability
     **/
     (function () {
+        // Refresh provider availability calendar on any focus of the tab #319
+        $('#availabilityCalendar').on('tabFocused', function () {
+            console.log('focused', $('.availability-calendar .calendar-container', this));
+            $('.availability-calendar .calendar-container', this).reload();
+        });
+        // Setup availability form
         var availcontainer = $('#availability');
         availcontainer.on('change', '.positionavailability-hours select', function () {
             var day = parseInt($(this).data('day-index'));
