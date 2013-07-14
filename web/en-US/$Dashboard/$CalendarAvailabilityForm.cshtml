@@ -56,6 +56,11 @@
             availDates[d]   = Request["availday-" + d.ToString()].AsBool();
             dateHours[d, 0] = Request["day-" + d.ToString() + "-since-hour"].AsDateTime().TimeOfDay;
             dateHours[d, 1] = Request["day-" + d.ToString() + "-to-hour"].AsDateTime().TimeOfDay;
+            
+            // Validate start-end datetimes
+            if (dateHours[d, 0] > dateHours[d, 1]) {
+                ModelState.AddError("availday-" + d.ToString(), string.Format("{0}: your end time can not be before your start time. Please review and correct.", (DayOfWeek)d).ToString().Capitalize());
+            }
         }
         programURL              = Request["program-url"];
         advanceTime             = Request["advance-time"].AsDecimal();

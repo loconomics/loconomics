@@ -604,6 +604,9 @@ form.positionavailability input{
     font-size: 1em;
     line-height: 1em;
 }
+.positionavailability .validation-summary-errors {
+    width: 400px;
+}
 .positionavailability-hours ul {
     margin-top: 3em !important;
 }
