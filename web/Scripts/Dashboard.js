@@ -621,7 +621,7 @@ $(document).ready(function () {
         var cont = ajaxForm.closest('.position-background-check');
         smoothBoxBlock(null, cont);
         var ps2 = cont.find('.popup.buy-step-2');
-        smoothBoxBlock(ps2, cont, 'background-check');
+        smoothBoxBlock(ps2, cont, 'background-check', { closable: true });
     });
 
     /**==============
