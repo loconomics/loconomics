@@ -7,7 +7,7 @@
 -- 11: loconomics user reviewed
 -- 12: review from former client
 -- =============================================
-CREATE PROCEDURE ut_AutocheckReviewVerifications
+ALTER PROCEDURE ut_AutocheckReviewVerifications
 AS BEGIN
 
 	DECLARE @cur CURSOR
@@ -31,6 +31,8 @@ AS BEGIN
 
 		IF @RevDate is not null
 			EXEC SetUserVerification @UserID, 11, @RevDate, 1
+		ELSE
+			EXEC DelUserVerification @UserID, 11
 
 		-- Check 12: 'review from former client'
 		SET @RevDate = null
@@ -41,6 +43,8 @@ AS BEGIN
 
 		IF @RevDate is not null
 			EXEC SetUserVerification @UserID, 12, @RevDate, 1
+		ELSE
+			EXEC DelUserVerification @UserID, 12
 
 		FETCH NEXT FROM @cur INTO @UserID
 	END
