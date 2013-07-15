@@ -21,8 +21,6 @@
     Validation.RequireField("tin_number", LcRessources.RequiredField("Tax Identification Number"));
     Validation.RequireField("tin_type", LcRessources.RequiredField("TIN Type"));
     Validation.RequireField("tin_signature", LcRessources.RequiredField("Signature"));
-    Validation.Add("tin_number", Validator.Integer("The tax identification number must be a nine digit number, without dashes"));
-    Validation.Add("tin_number", Validator.StringLength(9, 9, "The tax identification number must be a nine digit number"));
     Validation.Add("tin_fullname", Validator.StringLength(200, 0, "Full legal name must be fewer than 200 characters."));
     Validation.Add("tin_businessname", Validator.StringLength(200, 0, "Business name must be fewer than 200 characters."));
     Validation.Add("tin_streetaddress", Validator.StringLength(100, 0, "Street address must be fewer than 100 characters."));
@@ -39,6 +37,10 @@
         if (Request["tin_taxentitytype"].AsInt() != individualEntityTypeID &&
             Request["tin_businessname"].IsEmpty()) {
             ModelState.AddError("tin_businessname", LcRessources.RequiredField("Business name"));
+        }
+        var tinNumber = Request["tin_number"].Replace("-", "");
+        if (!tinNumber.IsInt() || tinNumber.Length != 9) {
+            ModelState.AddError("tin_number", "The tax identification number must be a nine digit number");
         }
 
         if (ModelState.IsValid) {
@@ -105,7 +107,7 @@
                         Request.UserHostAddress,
                         DateTime.Now,
                         // TIN Number: ONLY THE THREE LAST DIGITS
-                        LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["tin_number"], 3))
+                        LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(tinNumber, 3))
                     );
                 }
                 
@@ -115,7 +117,7 @@
                     Id = user.UserID.ToString(),
                     CustomerId = user.UserID.ToString(),
                     CustomFields = new Dictionary<string,string> {
-                        { "loco_tin", Request["tin_number"] }
+                        { "loco_tin", tinNumber }
                     }
                 };
                 // Check if user exists and must be updated, or be created
