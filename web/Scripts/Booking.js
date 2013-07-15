@@ -277,8 +277,8 @@ LC.initCustomerPackageSliders = function () {
             return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
         };
         // Getting var-values from form and calculating
-        var numbedrooms = calcContext.find('[name="bedrooms-number"]').val(),
-            numbathrooms = calcContext.find('[name="bathrooms-number"]').val();
+        var numbedrooms = calcContext.find('.housekeeper-pricing-bedrooms input').val(),
+            numbathrooms = calcContext.find('.housekeeper-pricing-bathrooms input').val();
         // ...Gets duration rounded up to quarter-hours.
         var duration = LC.roundTimeToQuarterHour(
         // ..create a time object..

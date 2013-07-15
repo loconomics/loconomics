@@ -61,8 +61,8 @@ public static partial class LcPricingModel
              * we only update package.Duration here for later complete price calculation */
 
             // Get customer input
-            var nbeds = Request["bedrooms-number"].AsInt();
-            var nbaths = Request["bathrooms-number"].AsInt();
+            var nbeds = Request[String.Format("bedrooms-number[{0}]", package.ID)].AsInt();
+            var nbaths = Request[String.Format("bathrooms-number[{0}]", package.ID)].AsInt();
             // get provider rate
             var providerRate = GetProviderCleaningRate(package);
             // Apply formula, changed by the providerRate (variation from the average)
@@ -95,8 +95,8 @@ public static partial class LcPricingModel
                 <span class='has-tooltip' title='You and your provider will review this estimate and finalize before the work begins.'>
                 price estimate</span></div>");
 
-            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number' type='text' /></label></div>");
-            s.Append(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number' type='text' /></label></div>");
+            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number[{0}]' type='text' /></label></div>", package.ID);
+            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number[{0}]' type='text' /></label></div>", package.ID);
             s.Append("</div>");
 
             return s.ToString();
