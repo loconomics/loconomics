@@ -92,8 +92,12 @@ LC.showDateHours = function (date) {
     var strdate = LC.dateToInterchangleString(date);
     var minutes = $day.data('duration-minutes');
     var userid = $day.data('user-id');
-    $day.reload(LcUrl.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
-            encodeURIComponent(strdate) + '/' + minutes + '/' + userid + '/', LC.markSelectedDates);
+    $day.reload({
+        url: LcUrl.LangPath + "Booking/$ScheduleCalendarElements/DayHoursSelector/" +
+            encodeURIComponent(strdate) + '/' + minutes + '/' + userid + '/',
+        complete: LC.markSelectedDates,
+        autofocus: false
+    });
     $day.data('date', date);
 };
 LC.showWeek = function (date) {
@@ -109,9 +113,12 @@ LC.showWeek = function (date) {
     }
 
     var strdate = LC.dateToInterchangleString(date);
-    $week.reload(LcUrl.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
-        encodeURIComponent(strdate) + '/',
-        function () { LC.selectWeekDay(date); LC.showDateHours(date); });
+    $week.reload({
+        url: LcUrl.LangPath + "Booking/$ScheduleCalendarElements/WeekDaySelector/" +
+            encodeURIComponent(strdate) + '/',
+        complete: function () { LC.selectWeekDay(date); LC.showDateHours(date); },
+        autofocus: false 
+    });
     $week.data('date', date);
 };
 LC.selectWeekDay = function (date) {
