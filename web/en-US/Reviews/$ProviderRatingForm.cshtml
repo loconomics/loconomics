@@ -129,7 +129,7 @@
                 }
                 if(ModelState.IsValid){
                     if (pastReference) {
-                        LcHelpers.ReturnJsonResult(0, "Thanks for your review!", false);
+                        LcHelpers.ReturnJsonResult(4, new { SuccessMessage = "Thanks for your review!", RedirectURL = LcUrl.LangPath }, false);
                     } else {
                         LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + "Reviews/$BookingRatingDetails/?BookingID=" + bookingID, false);
                     }
