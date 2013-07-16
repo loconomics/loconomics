@@ -30,23 +30,26 @@ AS BEGIN
 		SELECT TOP 1 @RevDate = CreatedDate
 		FROM UserReviews
 		WHERE ProviderUserID = @UserID
-			AND BookingID = 0		
+			AND BookingID = 0
+			AND PositionID = @PositionID
 
 		IF @RevDate is not null
 			-- There is reviews from former clients, verification confirmed
-			EXEC SetUserVerification @UserID, 12, @RevDate, 1
+			EXEC SetUserVerification @UserID, 12, @RevDate, 1, @PositionID
 		ELSE
-			-- Check if there is verification already
-			IF EXISTS (SELECT * FROM UserVerification
-				WHERE UserID = @UserID
+			-- Check if there is a verification already
+			SET @RevDate = null
+			SELECT TOP 1 @RevDate = CreatedDate
+			FROM UserVerification
+			WHERE	UserID = @UserID
 					AND VerificationID = 12
-					AND (PositionID = 0 OR PositionID = @PositionID)) BEGIN
+					AND (PositionID = 0 OR PositionID = @PositionID)
+			IF @RevDate is not null
 				-- State: Pending, enough to off the provider-alert but not
 				-- show the verification as done.
 				-- Verification specific for the position
 				EXEC SetUserVerification @UserID, 12, @RevDate, 2, @PositionID
-			END
-		
+
 		FETCH NEXT FROM @cur INTO @UserID, @PositionID
 	END
 	CLOSE @cur
