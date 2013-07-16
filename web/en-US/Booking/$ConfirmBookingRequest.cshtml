@@ -127,7 +127,7 @@
                 FROM    CalendarEvents
                 WHERE   ID = @0
             ", dateID);
-            var isNotAvailable = (bool)db.QueryValue("exec dbo.CheckProviderAvailability @0,@1,@2", u.UserID, dateInfo.StartTime, dateInfo.EndTime);
+            var isNotAvailable = !LcCalendar.CheckUserAvailability(u.UserID, dateInfo.StartTime, dateInfo.EndTime);
             
             if (isNotAvailable) {
                 @OnError(brID, "availability", null, -91);
