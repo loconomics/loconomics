@@ -47,7 +47,7 @@
                  UV.PositionID = @1
                 )
             ORDER BY V.RankPosition, V.VerificationType
-        ", p.UserID, p.PositionID);
+        ", p.UserID, pos.PositionID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
         education = db.Query(LcData.sqlSelectFromUserEducation +
         @"
