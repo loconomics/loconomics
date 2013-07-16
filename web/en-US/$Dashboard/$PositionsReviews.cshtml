@@ -47,9 +47,9 @@
             }
             
             if (successfulSent > 0) {
-                // Set VerificationID:12 for this user as confirmed just with only sent references requests (see issue #8 comment https://github.com/djorgensen/Loconomics/issues/8#issuecomment-6807651
+                // Set VerificationID:12 for this user as 'pending'; thats enough to off the alert.
                 using (var db = Database.Open("sqlloco")){
-                    db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 2);
+                    db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", p.UserID, 12, DateTime.Now, 2, p.PositionID);
                     db.Execute("EXEC TestAlertReferenceRequests @0, @1", p.UserID, p.PositionID);
                 }
             }

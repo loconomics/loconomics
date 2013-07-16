@@ -119,7 +119,7 @@
                             serviceHours, 0);
                         
                         if (bookingID == 0) {
-                            // If is an old client, bookingID=0, set VerificationID:12 for 'references from former clients' as status 'confirmed', and test again related alert
+                            // If is an old client, bookingID=0, set VerificationID:12 for 'references from former clients' as status 'confirmed'
                             // Issue #92 #issuecomment-8167333
                             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", providerUserID, 12, DateTime.Now, 1);
                         } else {
@@ -127,6 +127,8 @@
                             // (issue #8 comment #issuecomment-6807651)
                             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", providerUserID, 11, DateTime.Now, 1);
                         }
+                        // Test again related alert
+                        db.Execute(@"EXEC TestAlertReferenceRequests @0, @1", providerUserID, positionID);
                     }
                 }
                 if(ModelState.IsValid){

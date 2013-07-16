@@ -38,8 +38,16 @@
                 UV.UserID = @0
                  AND
                 UV.VerificationStatusID = 1 -- Confirmed
+                 AND
+                (
+                 -- Verification for any position (per user)
+                 UV.PositionID = 0
+                  OR
+                 -- Verification for this position
+                 UV.PositionID = @1
+                )
             ORDER BY V.RankPosition, V.VerificationType
-        ", p.UserID);
+        ", p.UserID, p.PositionID);
         licenses = db.Query(LcData.sqlGetVerifiedUserLicenses + " AND PositionID = @1", p.UserID, pos.PositionID);
         education = db.Query(LcData.sqlSelectFromUserEducation +
         @"
