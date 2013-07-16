@@ -2,15 +2,17 @@
 @{
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     Page.Title = "Welcome! Please provide a reference";
+    PageData["ShowWelcomePopup"] = false;
     
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/ProviderReview.css");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/Dashboard.css");
     
     var providerID = Request["ProviderUserID"].AsInt();
     var provider = LcData.UserInfo.GetUserRow(providerID);
     var position = LcData.UserInfo.GetUserPos(providerID, Request["PositionID"].AsInt());
 }
-<div id="container" class="provider-review clearfix">
-    <div id="main" class="provider-reference-welcome">
+<div id="container" class="provider-review editable clearfix">
+    <div id="main" class="booking-review past-customer-review provider-reference-welcome">
         @if (provider == null || position == null) {
             <h1>Our apologies</h1>
             <div>We're sorry, there is a problem with your request. Try copying the link from the e-mail and pasting it directly into the browser.
@@ -18,21 +20,28 @@
             </div>
         } else {
             <h1>Welcome! Help @provider.FirstName build his reputation</h1>
-            <p><strong>@provider.FirstName has asked you to write a reference for a profile on Loconomics.</strong> It should only take a minute or two.</p>
+            <p class="provider-reference-note"><strong>@provider.FirstName has asked you to write a reference for a profile on Loconomics.</strong> It should only take a minute or two.</p>
             
             if (WebSecurity.IsAuthenticated)
             {
-                <a href="@(LcUrl.LangPath)Reviews/ProviderReferenceForm/?ProviderUserID=@(providerID)&PositionID=@(position.PositionID)">Go! (to the review form)</a>
+                <div class="provider-reference-form tabbed folders">
+		            <ul class="tabs">
+			            <li class="current"><a href="#provider-reference-form-tab">Reference</a></li>
+                    </ul>
+		            <div id="provider-reference-form-tab" class="tab-body fancy current">
+                        @RenderPage("$ProviderRatingForm.cshtml", new { BookingID = 0 } )
+                    </div><!-- #provider-reference-form-tab -->
+                </div>
             }
             else
             {
-                <p>You'll need to login or create an account for free.</p>
+                <p class="account-required">You'll need to login or create an account for free.</p>
             
                 @RenderPage(LcUrl.RenderLangPath + "Account/$Login.cshtml", new
                    {
                        ShowHeader = false,
                        ShowTools = true,
-                       Redirect = LcUrl.LangPath + "Reviews/ProviderReferenceForm/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID
+                       Redirect = LcUrl.LangPath + "Reviews/ProviderReferenceWelcome/?ProviderUserID=" + providerID + "&PositionID=" + position.PositionID
                        ,
                        RegisterWaitConfirmation = false
                    })

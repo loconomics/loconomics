@@ -32,10 +32,20 @@
     font-size: 1.1em;
 }
 /* past customers form */
+#main.past-customer-review {
+    margin-bottom: 2em;
+}
 #main.past-customer-review h1,
+#main.past-customer-review .provider-reference-note,
 #main.past-customer-review .provider-reference-form {
     float: none;
     margin-left: auto;
     margin-right: auto;
     width: 730px;
+}
+#main.past-customer-review .account-required {
+    width: 410px;
+    margin: 2.5em auto 1em;
+    text-align: center;
+    font-size: 1.2em;
 }
