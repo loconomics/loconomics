@@ -1647,6 +1647,23 @@ namespace CalendarDll
                             // Convert the whole event to our System Time Zone before being inserted.
                             UpdateEventDatesToSystemTimeZone(currEvent);
 
+                            // Calculate the end date basing in the real End date set or the Start date
+                            // plus the event Duration. For case of error (no dates) gets as default
+                            // the minimum date (and will be discarded)
+                            var calculatedEndDate = currEvent.End.HasDate ? currEvent.End.Value :
+                                currEvent.Start.HasDate ? currEvent.Start.Value.Add(currEvent.Duration) :
+                                DateTime.MinValue;
+
+                            // Check if this is a past event that doesn't need to be imported (only non recurrent ones)
+                            if (calculatedEndDate < DateTime.Now
+                                && currEvent.RecurrenceDates.Count == 0
+                                && currEvent.RecurrenceRules.Count == 0)
+                            {
+                                // Old event, discarded, continue with next:
+                                continue;
+                            }
+
+                            // Create event
                             var eventForDB = new CalendarEvents()
                             {
                                 CreatedDate = DateTime.Now,
@@ -1656,7 +1673,7 @@ namespace CalendarDll
                                 // IagoSRL @Loconomics: Added TimeZone based on the StartTime TZID (we suppose endtime use the same, is the most common,
                                 // and our back-end calendar doesn't support one timezone per start-end date)
                                 TimeZone = currEvent.Start.TZID,
-                                EndTime = currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
+                                EndTime = calculatedEndDate, // currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
                                 Organizer = (currEvent.Organizer != null) ? currEvent.Organizer.CommonName : string.Empty,
                                 CalendarAvailabilityTypeID = getAvailabilityId(currEvent),
                                 Transparency = getTransparency((int)currEvent.Status),
