@@ -1711,6 +1711,21 @@ namespace CalendarDll
                                 foreach (var fbentry in fb.Entries)
                                 {
                                     ientry++;
+
+                                    // Calculate the end date basing in the real End date set or the Start date
+                                    // plus the entry Duration. For case of error (no dates) gets as default
+                                    // the minimum date (and will be discarded)
+                                    var calculatedEndDate = fbentry.EndTime.HasDate ? fbentry.EndTime.Value :
+                                        fbentry.StartTime.HasDate ? fbentry.StartTime.Value.Add(fbentry.Duration) :
+                                        DateTime.MinValue;
+
+                                    // Check if this is a past entry that doesn't need to be imported
+                                    if (calculatedEndDate < DateTime.Now)
+                                    {
+                                        // Old, discarded, continue with next:
+                                        continue;
+                                    }
+
                                     var availID = getAvailabilityId(fbentry);
                                     var dbevent = new CalendarEvents()
                                     {
@@ -1721,7 +1736,7 @@ namespace CalendarDll
                                         UserId = user.Id,
                                         StartTime = fbentry.StartTime.Value,
                                         TimeZone = fbentry.StartTime.TZID,
-                                        EndTime = (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
+                                        EndTime = calculatedEndDate, // (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
                                         Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                         CalendarAvailabilityTypeID = (int)availID,
                                         Transparency = false,
@@ -1739,6 +1754,20 @@ namespace CalendarDll
                             // If there is no entries, the event is created for the vfreebusy dtstart-dtend dates:
                             else
                             {
+                                // Calculate the end date basing in the real End date set or the Start date.
+                                // For case of error (no dates) gets as default
+                                // the minimum date (and will be discarded)
+                                var calculatedEndDate = fb.DTEnd.HasDate ? fb.DTEnd.Value :
+                                    fb.DTStart.HasDate ? fb.DTStart.Value :
+                                    DateTime.MinValue;
+
+                                // Check if this is a past entry that doesn't need to be imported
+                                if (calculatedEndDate < DateTime.Now)
+                                {
+                                    // Old, discarded, continue with next:
+                                    continue;
+                                }
+
                                 // The availability for a VFREEBUSY is ever 'Busy', because the object doesn't
                                 // allow set the availability/status information, it goes inside freebusy-entries when
                                 // there are some.
@@ -1752,7 +1781,7 @@ namespace CalendarDll
                                     UserId = user.Id,
                                     StartTime = fb.DTStart.Value,
                                     TimeZone = fb.DTStart.TZID,
-                                    EndTime = fb.DTEnd.Value,
+                                    EndTime = calculatedEndDate, //fb.DTEnd.Value,
                                     Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                     CalendarAvailabilityTypeID = (int)availID,
                                     Transparency = false,
