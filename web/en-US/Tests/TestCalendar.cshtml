@@ -3,11 +3,25 @@
     Layout = "_TestLayout.cshtml";
     
     var imported = false;
+    var cleanedup = false;
     if (IsPost) {
         // Import
         if (Request.Files["ics"] != null) {
             LcCalendar.Import(WebSecurity.CurrentUserId, Request.Files["ics"].InputStream);
             imported = true;
+        }
+        if (Request.Form["action"] == "cleanup") {
+            
+            using (var ent = new CalendarDll.Data.loconomicsEntities())
+            {
+                foreach(var dbevent in ent.CalendarEvents
+                    .Where(c => !c.CalendarReccurrence.Any() && c.EndTime < DateTime.Now && c.EventType == 4)) {
+                    ent.CalendarEvents.Remove(dbevent);
+                }
+                ent.SaveChanges();
+            }
+            
+            cleanedup = true;
         }
     }
 }
@@ -22,6 +36,16 @@
         {
             <div class="info">File imported!</div>
         }
+    </form>
+    <form method="post" style="margin: 3em 0;">
+        Clean-up calendar tables by removing old imported events (only not recurrent ones and only imported)
+        <input type="hidden" name="action" value="cleanup" />
+        @if (cleanedup) {
+            <div class="info">Cleaning done!</div>
+        }
+        <div class="actions">
+            <input type="submit" class="main-action" value="Clean-up calendar" />
+        </div>
     </form>
     <h2>Time Zones</h2>
     @{
