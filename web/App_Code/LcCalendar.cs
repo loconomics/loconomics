@@ -73,7 +73,9 @@ public static class LcCalendar
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
         {
             var edt = e.DateSet + e.TimeBlock;
-            if (e.CalendarAvailabilityTypeID != (int)CalendarDll.AvailabilityTypes.FREE &&
+            if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
+                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
+                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
                 edt >= dateStart &&
                 edt < dateEnd)
                 return false;

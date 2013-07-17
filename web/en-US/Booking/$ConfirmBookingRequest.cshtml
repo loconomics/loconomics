@@ -121,8 +121,15 @@
             }
         }
         if (dateID > 0) {
-            
+            // Change the event to be 'transparent'(4) for a while to don't
+            // affect the availability check.
+            // And get the required information from the event to do the
+            // availability check
             var dateInfo = db.QuerySingle(@"
+                UPDATE  CalendarEvents SET
+                        CalendarAvailabilityTypeID = 4
+                WHERE   ID = @0
+
                 SELECT  ID, StartTime, EndTime
                 FROM    CalendarEvents
                 WHERE   ID = @0
@@ -130,6 +137,12 @@
             var isNotAvailable = !LcCalendar.CheckUserAvailability(u.UserID, dateInfo.StartTime, dateInfo.EndTime);
             
             if (isNotAvailable) {
+                // Is not available, restore event to its previous state (availability 'tentative':3)
+                db.Execute(@"
+                    UPDATE  CalendarEvents SET
+                            CalendarAvailabilityTypeID = 3
+                    WHERE   ID = @0
+                ", dateID);
                 @OnError(brID, "availability", null, -91);
             } else {
                 var result = db.QuerySingle(sqlConfirmBooking, brID, dateID);
