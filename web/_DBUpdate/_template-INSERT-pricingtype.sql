@@ -1,0 +1,20 @@
+INSERT INTO [pricingtype]
+   ([PricingTypeID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[Description]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[DisplayRank])
+VALUES
+   (@PricingTypeID
+   ,@LanguageID
+   ,@CountryID
+   ,@Description
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@DisplayRank)
