@@ -1456,12 +1456,8 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             // Unblock loading:
             ctx.box.unblock();
             // Block with message:
-            var message = data.Code + ": " + JSON.stringify(data.Result ? (data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result) : '');
-            ctx.box.block({
-                message: 'Error: ' + message,
-                css: popupStyle(popupSize('small'))
-            })
-            .on('click', '.close-popup', function () { ctx.box.unblock(); return false; });
+            var message = "Error: " + data.Code + ": " + JSON.stringify(data.Result ? (data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result) : '');
+            smoothBoxBlock($('<div/>').append(message), ctx.box, null, { closable: true });
 
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;
