@@ -1,3 +1,7 @@
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ut_AutocheckReviewVerifications]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[ut_AutocheckReviewVerifications]
+GO
+
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
 -- Create date: 2013-07-15
@@ -7,7 +11,7 @@
 -- 11: loconomics user reviewed
 -- 12: review from former client
 -- =============================================
-ALTER PROCEDURE ut_AutocheckReviewVerifications
+CREATE PROCEDURE ut_AutocheckReviewVerifications
 AS BEGIN
 
 	DECLARE @cur CURSOR

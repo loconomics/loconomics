@@ -105,8 +105,8 @@
                         // Re-enabling contraints after update. Any constraint error introduced during update will appear right now.
                         try{
                         db.Execute(@"
-                            EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
-                            EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+                            EXEC sp_msforeachtable 'ALTER TABLE ? CHECK CONSTRAINT all'
+                            EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
                         ");
                         } catch (Exception ex) {
                             ModelState.AddFormError(@"Ending batch: errors found while re-enabling constraints, data was introduced but constraints

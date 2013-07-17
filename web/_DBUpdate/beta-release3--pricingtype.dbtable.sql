@@ -42,7 +42,7 @@ VALUES
    ,'11/16/2011 12:00:00 AM'
    ,'mfontan'
    ,'False'
-   ,NULL)
+   ,100)
 
 INSERT INTO [pricingtype]
    ([PricingTypeID]
