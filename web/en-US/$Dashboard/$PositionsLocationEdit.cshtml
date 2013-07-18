@@ -163,7 +163,8 @@
         transports = db.Query(sqlGetTransports);
         types = db.Query(sqlGetAddressTypes, u.UserID);
         if (locationID == 0){
-            userAddresses = db.Query(LcData.sqlGetServiceAddresses + sqlOrderAddressesByPosition, u.UserID, -1,
+            // Offer previous locations in dropdown to be selected (only complete addresses)
+            userAddresses = db.Query(LcData.sqlGetServiceAddresses + LcData.sqlCompleteAddressesFilter + sqlOrderAddressesByPosition, u.UserID, -1,
                 LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
         }
     }

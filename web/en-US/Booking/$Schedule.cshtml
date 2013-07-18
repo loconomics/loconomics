@@ -232,9 +232,11 @@
                         AddressType As AT
                             ON L.AddressTypeID = AT.AddressTypeID
                 WHERE   L.UserId = @0 AND SA.PositionID = @1
-                         AND L.AddressName IS NOT NULL
+                         AND L.Active = 1
+                         AND SA.Active = 1
                          AND SA.ServicesPerformedAtLocation = 1
-            ", p.UserID, pos.PositionID);
+            " + LcData.sqlCompleteAddressesFilter,
+              p.UserID, pos.PositionID);
             // Get provider 'travel from' location, if it has
             providerTravelLocation = db.QuerySingle(@"
                 SELECT  DISTINCT L.AddressID, L.AddressName, 
@@ -246,18 +248,22 @@
                         Address As L
                           ON L.AddressID = SA.AddressID
                 WHERE   L.UserId = @0 AND SA.PositionID = @1
-                         AND L.AddressName IS NOT NULL AND L.AddressName not like ''
+                         AND L.Active = 1
+                         AND SA.Active = 1
                          AND SA.TravelFromLocation = 1
-            ", p.UserID, pos.PositionID);
+                         AND L.Latitude is not null
+                         AND L.Longitude is not null
+            " + LcData.sqlCompleteAddressesFilter,
+              p.UserID, pos.PositionID);
             // Customer locations
             // We only can offer customer locations if provider do travel
             if (providerTravelLocation != null) {
                 customerLocations = db.Query(@"
                     SELECT  DISTINCT L.AddressID, L.AddressName
                     FROM    Address As L
-                    WHERE   L.UserId = @0
-                             AND L.AddressName IS NOT NULL AND L.AddressName not like ''
-                ", c.UserID);
+                    WHERE   L.UserId = @0 AND L.Active = 1
+                " + LcData.sqlCompleteAddressesFilter,
+                  c.UserID);
             }
         }
         serviceDurationTime = getServiceDurationTime(db, bookingRequestID, p.UserID);

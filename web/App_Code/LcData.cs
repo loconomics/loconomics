@@ -416,6 +416,18 @@ public static partial class LcData
                  -- We get all location, not only active: -- AND L.Active = 1
                  AND L.AddressName is not null AND L.AddressName not like ''
     ";
+    /// <summary>
+    /// Contains conditions to put in the 'where' that checks
+    /// that 'L' addresses are complete (contains address
+    /// details and name).
+    /// </summary>
+    public const string sqlCompleteAddressesFilter = @"
+		AND dbo.fx_IfNW(L.AddressName, null) is not null
+		AND dbo.fx_IfNW(L.AddressLine1, null) is not null
+        AND dbo.fx_IfNW(L.City, null) is not null
+        AND L.StateProvinceID > 0
+        AND L.PostalCodeID > 0
+    ";
     public const string sqlSetAddress = @"
         DECLARE @AddressID int
         SET @AddressID = @0
