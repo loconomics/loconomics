@@ -8,6 +8,17 @@
         using (var db = Database.Open("sqlloco")){
             // we update the new photo name
             return (int)db.QueryValue(@"
+                /* #346: Set as primary if is the first provider-position photo */
+                DECLARE @IsPrimary bit
+                IF NOT EXISTS (
+                    SELECT * FROM ProviderServicePhoto
+                    WHERE UserID = @0
+                        AND PositionID = @1
+                )
+                    SET @IsPrimary = 1
+                ELSE
+                    SET @IsPrimary = 0
+
                 INSERT INTO ProviderServicePhoto (
                     UserID
                     ,PositionID
@@ -27,7 +38,7 @@
 	                ,getdate()
 	                ,'sys'
 	                ,1
-                    ,0
+                    ,@IsPrimary
                 )
                 SELECT Cast(@@Identity as int)
 
@@ -182,11 +193,15 @@
         </style>
 
         <script type="text/javascript">
-            function reloadUserPhoto(fileName, photoID) {
+            function reloadPhoto(fileName, photoID) {
                 // Add image to the gallery, in the parent document! (this is an iframe)
                 var gallery = jQuery('.tab-body.current .positionphotos-gallery > ol', window.parent.document);
                 var tplImg = '<li id="UserPhoto-@@0"><a href="#"><img alt="Uploaded photo" src="@@1"/></a><a class="edit" href="#">Edit</a></li>';
-                gallery.append(tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName))
+                var newImg = jQuery(tplImg.replace(/@@0/g, photoID).replace(/@@1/g, fileName));
+                // If is there is no photos still, the first will be the primary by default
+                if (gallery.children().length == 0)
+                    newImg.addClass('is-primary-photo');
+                gallery.append(newImg)
                     // scroll the gallery to see the new element; using '-2' to avoid some browsers automatic scroll.
                     .animate({scrollTop: gallery[0].scrollHeight - gallery.height() - 2}, 1400)
                     .find('li:last-child')
@@ -204,7 +219,7 @@
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         if (responseJSON.success)
-                        reloadUserPhoto(responseJSON.fileURI, responseJSON.photoID);
+                        reloadPhoto(responseJSON.fileURI, responseJSON.photoID);
                     }
                 });
             });
@@ -213,7 +228,7 @@
             else if (IsPost)
             {
                 <text>
-                reloadUserPhoto('@uploadedFileURI', @photoID);
+                reloadPhoto('@uploadedFileURI', @photoID);
                 window.close();
                 </text>
             }
