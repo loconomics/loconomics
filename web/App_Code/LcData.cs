@@ -1249,7 +1249,7 @@ public static partial class LcData
                      AND
                     L.Active = 1
                      AND
-                    UL.StatusID = 2 -- Verified succesfully.
+                    UL.StatusID = 2 -- Verified successfully.
     ";
     #endregion
 

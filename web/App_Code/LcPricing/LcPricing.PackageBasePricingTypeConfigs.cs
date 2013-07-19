@@ -33,7 +33,7 @@ public static partial class LcPricingModel
                 FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This package is available to first-time clients only",
 
-                SuccessOnDelete = "Package removed succesfully",
+                SuccessOnDelete = "Package removed successfully",
                 SuccessOnSave = "Add/Edit packages",
 
                 SummaryFormat = "{0}",
@@ -67,7 +67,7 @@ public static partial class LcPricingModel
                 RequireDuration = false,
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)",
 
-                SuccessOnDelete = "Add-on removed succesfully",
+                SuccessOnDelete = "Add-on removed successfully",
                 SuccessOnSave = "Add/Edit add-ons",
 
                 SummaryFormat = "{0}",
@@ -109,7 +109,7 @@ public static partial class LcPricingModel
                 NoPriceRateListMessage = "Pricing will be disclosed during consultation.",
                 InPersonPhoneLabel = "Estimation type:",
 
-                SuccessOnDelete = "Estimate removed succesfully",
+                SuccessOnDelete = "Estimate removed successfully",
                 SuccessOnSave = "Add/Edit estimates",
 
                 SummaryFormat = "{0} ({2} estimate)",
@@ -156,7 +156,7 @@ public static partial class LcPricingModel
 
                 PriceRateIsRequiredValidationError = "You must specify a starting rate or check 'I prefer not to state'",
                 PriceRateUnitIsRequiredValidationError = "You need to specify a price unit along with your rate or mark 'I prefer not to state'",
-                SuccessOnDelete = "Consultation removed succesfully",
+                SuccessOnDelete = "Consultation removed successfully",
                 SuccessOnSave = "Add/Edit consultations",
 
                 SummaryFormat = "{0} ({2} consultation)",
@@ -194,7 +194,7 @@ public static partial class LcPricingModel
                 FirstTimeClientsOnlyLabel = "This service is available to first-time clients only",
                 FirstTimeClientsOnlyListText = "This service is available to first-time clients only",
 
-                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnDelete = "Service removed successfully",
                 SuccessOnSave = "Add/Edit services",
 
                 SummaryFormat = "{0}",
@@ -225,7 +225,7 @@ public static partial class LcPricingModel
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
 
-                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnDelete = "Service removed successfully",
                 SuccessOnSave = "Add/Edit pricing",
 
                 SummaryFormat = "{0}",
@@ -259,7 +259,7 @@ public static partial class LcPricingModel
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
 
-                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnDelete = "Service removed successfully",
                 SuccessOnSave = "Add/Edit pricing",
 
                 SummaryFormat = "{0}",
@@ -293,7 +293,7 @@ public static partial class LcPricingModel
                 PriceRateQuantityLabel = "Hourly rate",
                 PriceRateIsRequiredValidationError = "You must set your hourly rate",
 
-                SuccessOnDelete = "Service removed succesfully",
+                SuccessOnDelete = "Service removed successfully",
                 SuccessOnSave = "Add/Edit pricing",
 
                 SummaryFormat = "{0}",

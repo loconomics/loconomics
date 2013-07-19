@@ -17,7 +17,7 @@
         using (var db = Database.Open("sqlloco")) {
             db.Execute(LcData.sqlDelServiceAddress, locationID, p.UserID, p.PositionID, Request["use"]);
             
-            LcHelpers.ReturnJsonResult(0, "Location removed succesfully");
+            LcHelpers.ReturnJsonResult(0, "Location removed successfully");
         }
     }
 
