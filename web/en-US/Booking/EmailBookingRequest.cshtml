@@ -76,8 +76,8 @@
                     @LcEmailTemplateHelper.PrintUserProfileLink(info.CustomerUser) 
                     (@LcData.UserInfo.GetCustomerGlobalRating(info.Booking.CustomerUserID).ToString("0.0") star rating and member since @info.CustomerUser.MemberSinceDate.ToString("MMMM yyyy"))
                     has booked you as a <strong>@info.Booking.PositionSingular</strong>.
-                    @(info.CustomerUser.FirstName)'s chosen the following times for you to meet up for an appointment.
-                    In order to accept the booking, chose one of these time slots <strong>withing @LcData.Booking.BookingRequestConfirmationLimitHours hours</strong>
+                    @(info.CustomerUser.FirstName) has chosen the following times for you to meet up for an appointment.
+                    In order to accept the booking, choose one of these time slots <strong>within @LcData.Booking.BookingRequestConfirmationLimitHours hours</strong>
                     from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>):
                 </p>
                 <div>
