@@ -625,7 +625,13 @@ public class LcMessaging
                     responseText = reader.ReadToEnd();
                 }
                 string qs = GetWebClientQueryString(w);
-                if (LcHelpers.Channel == "dev")
+                using (var logger = new LcLogger("SendMail"))
+                {
+                    logger.Log("Email ApplyTemplate URL:{0}", completeURL + qs);
+                    logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
+                    logger.Save();
+                }
+                if (LcHelpers.InDev)
                 {
                     HttpContext.Current.Trace.Warn("LcMessagging.ApplyTemplate", "Error creating template " + completeURL + qs, exception);
                     throw new Exception(exception.Message + "::" + responseText);
@@ -633,12 +639,6 @@ public class LcMessaging
                 else
                 {
                     NotifyError("LcMessaging.ApplyTemplate", completeURL + qs, responseText);
-                    using (var logger = new LcLogger("SendMail"))
-                    {
-                        logger.Log("Email ApplyTemplate URL:{0}", completeURL + qs);
-                        logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
-                        logger.Save();
-                    }
                     throw new Exception("Email could not be sent");
                 }
             }
@@ -710,7 +710,8 @@ public class LcMessaging
     }
     public static void SendMail(string to, string subject, string body, string from = null)
     {
-        if (LcHelpers.Channel == "dev") return;
+        // No mails for local development.
+        if (LcHelpers.Channel == "localdev") return;
 
         SendMailNow(to, subject, body, from);
         //ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);

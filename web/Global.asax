@@ -31,31 +31,32 @@
                     break;
             }
         }
-        if (ASP.LcHelpers.Channel != "dev")
+
+        if (ex is HttpUnhandledException && ex.InnerException != null)
         {
-            if (ex is HttpUnhandledException && ex.InnerException != null)
-            {
-                ex = ex.InnerException;
-            }
+            ex = ex.InnerException;
+        }
 
-            if (ex != null)
+        if (ex != null)
+        {
+            try
             {
-                try
+                using (var logger = new LcLogger("aspnet-errors"))
                 {
-                    using (var logger = new LcLogger("aspnet-errors"))
-                    {
-                        logger.Log("Page error, unhandled exception caugth at Global.asax, context:");
-                        logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
-                        logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
-                        logger.Log("User-Agent:: {0}", Request.UserAgent);
-                        logger.Log("Form Data::");
-                        logger.LogData(ASP.LcHelpers.NameValueToString(Request.Form));
-                        logger.LogEx("Page error details", ex);
-                        logger.Save();
-                    }
+                    logger.Log("Page error, unhandled exception caugth at Global.asax, context:");
+                    logger.Log("User:: {0}:{1}", WebMatrix.WebData.WebSecurity.CurrentUserId, WebMatrix.WebData.WebSecurity.CurrentUserName);
+                    logger.Log("Request:: {0} {1}", Request.HttpMethod, Request.RawUrl);
+                    logger.Log("User-Agent:: {0}", Request.UserAgent);
+                    logger.Log("Form Data::");
+                    logger.LogData(ASP.LcHelpers.NameValueToString(Request.Form));
+                    logger.LogEx("Page error details", ex);
+                    logger.Save();
                 }
-                catch { }
+            }
+            catch { }
 
+            if (!ASP.LcHelpers.InDev)
+            {
                 //Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.
                 //   ExceptionPolicy.HandleException(ex, "AllExceptionsPolicy");
                 Server.ClearError();

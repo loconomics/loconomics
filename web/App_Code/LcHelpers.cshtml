@@ -251,9 +251,14 @@
     /// If something requires be done only on live channel, not in staging (be carefully),
     /// check Channel == "live".
     /// </summary>
-    public static bool InLive{
-        get{
+    public static bool InLive {
+        get {
             return (Channel == "live" || Channel == "staging");
+        }
+    }
+    public static bool InDev {
+        get {
+            return (Channel == "live" || Channel == "localdev");
         }
     }
 }
