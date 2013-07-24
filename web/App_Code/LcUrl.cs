@@ -28,12 +28,12 @@ public static class LcUrl
             // let say everything without '.com' in the name to avoid in-dev problems)
             // and is Not in our real domain (loconomics.com) we must enforce to use that
             // domain (loconomics.com) with or without subdomain depending on the channel
-            // (no subdomain for production, but yes for everything else)
+            // (no subdomain for live, but yes for everything else)
             var domain = context.Request.Url.Authority;
             if (domain.Contains(".com") && 
                 !domain.Contains("loconomics.com"))
             {
-                domain = (ASP.LcHelpers.Channel == "production" ? "" : 
+                domain = (ASP.LcHelpers.Channel == "live" ? "" : 
                     ASP.LcHelpers.Channel + ".")
                     + "loconomics.com";
             }

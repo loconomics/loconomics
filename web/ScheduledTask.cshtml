@@ -370,7 +370,7 @@
         logger.Save();
     //}catch { }
 }
-@if (!LcHelpers.InProduction)
+@if (!LcHelpers.InLive)
 {
     Response.ContentType = "text/plain";
     @logger.ToString()

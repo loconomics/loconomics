@@ -3,7 +3,7 @@
     
     var u = LcData.UserInfo.GetUserRow();
     
-    if (LcHelpers.InProduction && !u.IsAdmin) {
+    if (LcHelpers.InLive && !u.IsAdmin) {
         LcHelpers.RedirectToLogin();
     }
 

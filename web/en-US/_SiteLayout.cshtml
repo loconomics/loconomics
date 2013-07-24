@@ -292,7 +292,7 @@
                 <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
             }
             @* Google Analytics *@
-            @if (LcHelpers.Channel == "production") {
+            @if (LcHelpers.Channel == "live") {
             <script type="text/javascript">
                 var _gaq = _gaq || [];
   				_gaq.push(['_setAccount', 'UA-36860613-1']);
@@ -313,7 +313,7 @@
             <span id="lcres-tab-has-changes-continue-without-change">@LcRessources.GetText("tab-has-changes-continue-without-change")</span>
         </div>
 
-        @if (LcHelpers.InProduction)
+        @if (LcHelpers.InLive)
         {
             @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
             @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")

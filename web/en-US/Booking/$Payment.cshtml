@@ -2,9 +2,9 @@
 @using System.Configuration;
 @using WebMatrix.Data;
 @{
-    // true to testing, false to production/use braintree
+    // true to testing, false to live/use braintree
     var TESTING_EMULATEBRAINTREE = false;
-    if (LcHelpers.Channel != "production") {
+    if (LcHelpers.Channel != "live") {
         TESTING_EMULATEBRAINTREE = Request.Params["TESTING_EMULATEBRAINTREE"].AsBool();
     }
     
@@ -362,7 +362,7 @@
                     
                     
                 } catch (Exception ex) {
-                    if (!LcHelpers.InProduction) {
+                    if (!LcHelpers.InLive) {
                         throw ex;
                     }
                     LcHelpers.ReturnJsonError(-1, ex.Message);

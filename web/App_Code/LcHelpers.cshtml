@@ -244,16 +244,16 @@
         }
     }
     /// <summary>
-    /// This returns True when the site is in production channel or
-    /// in staging channel (that is an emulation of production) and must be
-    /// checked when something must be done different on production (also when emulating
-    /// production on staging).
-    /// If something requires be done only on production channel, not in staging (be carefully),
-    /// check Channel == "production".
+    /// This returns True when the site is in live channel or
+    /// in staging channel (that is an emulation of live) and must be
+    /// checked when something must be done different on live (also when emulating
+    /// live on staging).
+    /// If something requires be done only on live channel, not in staging (be carefully),
+    /// check Channel == "live".
     /// </summary>
-    public static bool InProduction{
+    public static bool InLive{
         get{
-            return (Channel == "production" || Channel == "staging");
+            return (Channel == "live" || Channel == "staging");
         }
     }
 }

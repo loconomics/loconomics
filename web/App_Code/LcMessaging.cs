@@ -592,7 +592,7 @@ public class LcMessaging
 
             // Setup URL
             string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
-            if (LcHelpers.Channel != "production")
+            if (LcHelpers.Channel != "live")
             {
                 completeURL = completeURL.Replace("https:", "http:");
             }
@@ -675,7 +675,7 @@ public class LcMessaging
     private static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
     {
-        if ((LcHelpers.InProduction && !HttpContext.Current.Request.IsLocal) ||
+        if ((LcHelpers.InLive && !HttpContext.Current.Request.IsLocal) ||
             HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
