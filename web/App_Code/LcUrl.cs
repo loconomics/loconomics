@@ -44,7 +44,7 @@ public static class LcUrl
     /// <summary>
 	/// Get the current virtual app path, will be empty for root app.
     /// Ever will return a begining and trailing slash (or unique slash if there is no path)
-    /// Example: /beta/ or /
+    /// Example: /testing/ or /
 	/// </summary>
 	/// <returns></returns>
     public static string AppPath
@@ -68,7 +68,7 @@ public static class LcUrl
     /// <summary>
 	/// Get the current virtual app URL, is just the SiteUrl with the AppPath
     /// Ever will return a trailing slash
-    /// Example: http://www.loconomics.com/beta/
+    /// Example: http://www.loconomics.com/testing/
 	/// </summary>
 	/// <returns></returns>
     public static string AppUrl{
