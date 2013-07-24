@@ -2327,6 +2327,9 @@ LC.welcomePopup = function () {
         initProfileData();
         c.find('.profile-choice [name=profile-type]:checked').change();
     });
+
+    // If profile type is prefilled by request:
+    c.find('.profile-choice [name=profile-type]:checked').change();
 }
 
 /* Init code */
