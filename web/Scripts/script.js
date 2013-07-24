@@ -1345,6 +1345,9 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
     // If is a JSON result:
     if (typeof (data) === 'object') {
+        // Clean previous validation errors
+        setValidationSummaryAsValid(ctx.box);
+
         function showSuccessMessage(ctx, message) {
             // Unblock loading:
             ctx.box.unblock();
@@ -1356,9 +1359,6 @@ function ajaxFormsSuccessHandler(data, text, jx) {
             .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); return false; });
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;
-
-            // Clean previous validation errors
-            setValidationSummaryAsValid(ctx.box);
         }
         function showOkGoPopup(ctx, data) {
             // Unblock loading:
@@ -1389,9 +1389,6 @@ function ajaxFormsSuccessHandler(data, text, jx) {
 
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;
-
-            // Clean previous validation errors
-            setValidationSummaryAsValid(ctx.box);
         }
         if (data.Code == 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
