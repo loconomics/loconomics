@@ -93,8 +93,7 @@
                             try{
                                 var sqlScript = System.IO.File.ReadAllText(folder + script + ".sql");
                                 foreach (var step in GetSqlBatchSteps(sqlScript)) {
-                                    //db.Execute(step);
-                                    Response.Write(step);
+                                    db.Execute(step);
                                 }
                                 nsuccesses++;
                             } catch(Exception ex) {
