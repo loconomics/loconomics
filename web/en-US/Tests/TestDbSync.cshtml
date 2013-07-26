@@ -93,7 +93,8 @@
                             try{
                                 var sqlScript = System.IO.File.ReadAllText(folder + script + ".sql");
                                 foreach (var step in GetSqlBatchSteps(sqlScript)) {
-                                    db.Execute(step);
+                                    //db.Execute(step);
+                                    Response.Write(step);
                                 }
                                 nsuccesses++;
                             } catch(Exception ex) {
@@ -237,10 +238,8 @@
     /// <param name="batchSql"></param>
     /// <returns></returns>
     IEnumerable<string> GetSqlBatchSteps(string batchSql){
-        // Remove comments from file
-        batchSql = LcCommentRemover.Sql(batchSql);
         // Get different batch steps, separated by the GO keyword
-        Regex regex = new Regex(@"^GO\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        Regex regex = new Regex(@"^/\*\*/GO/\*\*/\b", RegexOptions.IgnoreCase | RegexOptions.Multiline);
         var ret = regex.Split(batchSql);
         // Remove lines with the special comment "/*__NOT_IN_BATCH__*/"
         for(var i = 0; i < ret.Length; i++) {
