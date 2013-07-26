@@ -2317,7 +2317,8 @@ html.boxshadow #loginBox .field-validation-error{
     display: inline-block;
     margin: 0 6px 0 0;
     line-height: normal;
-    padding: 0
+    padding: 0;
+    white-space: normal;
 }
 .search-categories ul li:last-child {
     margin-right: 0;
