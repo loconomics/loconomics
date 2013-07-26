@@ -11,12 +11,7 @@
         ? "reset-private-url"
         : "save"
         : "load";
-
-    if (action == "reset-private-url") {
-        resetPrivateUrl(u.UserID);
-        action = "load";
-    }
-
+        
     // From 0 (sunday) to 6 (saturday), true: is available. ON DATABASE use base-1; base-zero only arrays on this page
     bool[] availDates = new bool[7];
     // From 0 (sunday) to 6 (saturday), sub-index 0: start time, sub-index 1: end time
@@ -25,6 +20,11 @@
     var advanceTime = 24M;
     var betweenTime = 0M;
     var privateUrlToken = "";
+
+    if (action == "reset-private-url") {
+        privateUrlToken = resetPrivateUrl(u.UserID);
+        action = "load";
+    }
 
     var varSQLGetUserCalendarProviderAttributes = "EXEC GetUserCalendarProviderAttributes @0";
     
@@ -50,6 +50,10 @@
             advanceTime             = atts.AdvanceTime;
             betweenTime             = atts.BetweenTime;
             privateUrlToken         = atts.PrivateCalendarToken;
+        }
+        // If there is no privateUrlToken, generate one:
+        if (String.IsNullOrEmpty(privateUrlToken)) {
+            privateUrlToken = resetPrivateUrl(u.UserID);
         }
     } else if (action == "save") {
         for (int d = 0; d < 7; d++) {
@@ -133,7 +137,7 @@
     }
 }
 @functions {
-    void resetPrivateUrl(int userID){
+    string resetPrivateUrl(int userID){
         using (var db = Database.Open("sqlloco")) {
             var newtoken = LcEncryptor.GenerateRandomToken(userID.ToString());
             db.Execute(@"
@@ -141,6 +145,7 @@
                 SET     PrivateCalendarToken = @1
                 WHERE   UserID = @0
             ", userID, newtoken);
+            return newtoken;
         }
     }
 }
@@ -248,14 +253,7 @@ What hours do you keep? We’d like to know when we can generally expect to sche
                 <label for="@idprefix-program-url">Please paste the URL from your iCal-supported calendar to import your free/busy information here:</label>
                 <input type="text" name="program-url" value="@programURL" id="@idprefix-program-url"/>
                 <label for="@idprefix-private-url">Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:</label>
-            		@if (string.IsNullOrEmpty(privateUrlToken))
-            		{
-                		<span>You have not generated a private URL, please click on the 'reset' button to create one.</span>
-            		}
-            		else
-            		{
-                		<input id="@idprefix-private-url" class="calendar-private-url" readonly="readonly" type="text" value="@(LcUrl.AppUrl + "Calendar/" + u.UserID + "/" + privateUrlToken + "/ical/")" />
-            		}
+                <input id="@idprefix-private-url" class="calendar-private-url" readonly="readonly" type="text" value="@(LcUrl.AppUrl + "Calendar/" + u.UserID + "/" + privateUrlToken + "/ical/")" />
                 <button class="reset-private-url-action action" type="button">Reset Private URL</button>
         		<br />This URL is private to ensure only you can access your appointments. You may reset this URL at any time by clicking the button above and copying and pasting the new URL into your calendar program.
             </li>
