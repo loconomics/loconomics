@@ -13,7 +13,6 @@
     var data = LcData.GetPricingPackagesByProviderPosition(p.UserID, positionID);
     var idprefix = PageData["idprefix"] ?? "position" + positionID.ToString() + "-pricingwizard-packages";
     var datacontext = "pricing-" + positionID.ToString();
-    var includePricingOptions = PageData["IncludePricingOptions"] ?? false;
 }
 <div class="@PageData["PricingWizardClasses"] crudl package-pricing-type provider-pricing-types" data-crudl-context="@(datacontext)" data-crudl-item-id-parameter="ProviderPackageID" data-crudl-extra-query="PositionID=@positionID">
 
@@ -52,15 +51,6 @@
                 <div class="your-packages crudl-list pricing-type-@config.SlugName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingTypePackagesList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
                     @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID })
                 </div>
-            </div>
-        }
-
-        @* Pricing Options *@
-        @if (includePricingOptions)
-        {
-            <div class="package-pricing-options">
-                <h3>Your Pricing Options:</h3>
-                @RenderPage("$ProviderPricingOptions.cshtml", new { EmbeddedMode = "none", idprefix = idprefix, PricingTypeID = 3 })
             </div>
         }
     </div>
