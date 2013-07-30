@@ -6,8 +6,8 @@
 @using WebMatrix.Data;
 @{
     int positionID = PageData["PositionID"];
-    // TODO Get clienttypeid and do something with clienttypeid -- not still defined how clienttype must work
-    var clienttypeid = PageData["ClientTypeID"];
+    // TODO Get clienttypeid and do something with clienttypeid -- not still defined how clienttype must work and how must be get
+    var clienttypeid = PageData["ClientTypeID"] ?? 1;
     var pricingTypes = PageData["PricingTypes"] ?? LcData.GetPositionPricingTypes(positionID, clienttypeid);
     var p = LcData.UserInfo.GetUserRow();
     var data = LcData.GetPricingPackagesByProviderPosition(p.UserID, positionID);
@@ -16,6 +16,10 @@
     var includePricingOptions = PageData["IncludePricingOptions"] ?? false;
 }
 <div class="@PageData["PricingWizardClasses"] crudl package-pricing-type provider-pricing-types" data-crudl-context="@(datacontext)" data-crudl-item-id-parameter="ProviderPackageID" data-crudl-extra-query="PositionID=@positionID">
+
+  @if (pricingTypes != null && pricingTypes.Count > 0)
+  {
+
     <div class="crudl-editor edit-panel" data-source-url="@(LcUrl.LangPath)PricingWizard/$PackageBaseEdit/"></div>
     <div class="crudl-viewer pricing-types-list">
         <div class="lc-ressources">
@@ -46,7 +50,7 @@
                 <h3 class="packages-list-title">Your @config.PluralName:</h3>
                 *@
                 <div class="your-packages crudl-list pricing-type-@config.SlugName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingTypePackagesList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
-                    @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID})
+                    @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID })
                 </div>
             </div>
         }
@@ -60,6 +64,12 @@
             </div>
         }
     </div>
+
+  }
+  else
+  {
+    <p>We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a>.</p>
+  }
 </div>
 <script type="text/javascript">
     jQuery(function ($) {

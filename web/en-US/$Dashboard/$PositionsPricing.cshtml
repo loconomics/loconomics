@@ -5,8 +5,8 @@
     var p = LcData.UserInfo.GetUserRow();
     // Current position data record:
     var pos = LcData.UserInfo.GetUserCurrentPos();
-    var n = pos.PositionID;
     
+    // Validating required page state data
     if (p == null || pos == null){
         var inputdataerrormessage = "Please correct any errors and click save";
         if (IsPost){
@@ -15,43 +15,12 @@
             throw new Exception(inputdataerrormessage);
         }
     }
-    
-    string pageToLoad = "";
-    dynamic pricingtypes = null;
-
-    using (var db = Database.Open("sqlloco")){
-        
-        // TODO: Get Customer Type Id   
-        var clienttypeid = PageData["ClientTypeID"] = 1;
-        
-        // Get our Pricing Type ID:
-        pricingtypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
-        // NEW WAY by default: Multiple pricing types, based on PackageBase
-        pageToLoad = "$ProviderPricingTypes.cshtml";
-
-        // If there is a unique pricing-type, use specific stuff only for some unique pricing types
-        if (pricingtypes.Count == 1) {
-            switch ((int)pricingtypes[0].PricingTypeID) {
-                case 2: // Custom
-                    pageToLoad = "_ProviderCustomType.cshtml";
-                    break;
-            }
-        }
-    }
-    
-    var idprefix = PageData["idprefix"] = "position#" + n + "-pricing";
 }
-@if (!String.IsNullOrEmpty(pageToLoad))
-{
+
 <p class="setting-instructions">
 Keeping your prices available and realistic is a good idea. If you need help determining what’s right, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">let us know</a>.
 </p>
 <div class="dashboard-provider-pricing">
     @RenderPage("$PositionCancellationPolicyForm.cshtml", new { PositionID = pos.PositionID })
-    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/" + pageToLoad, new { PricingWizardClasses = "positionpricing", PositionID = pos.PositionID, PricingTypes = pricingtypes })
+    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$ProviderPricingTypes.cshtml", new { PricingWizardClasses = "positionpricing", PositionID = pos.PositionID })
 </div>
-}
-else
-{
-    <p>We're currently researching how best to calculate pricing estimates for this position.  We'd love to get your input; please <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a>.</p>
-}
