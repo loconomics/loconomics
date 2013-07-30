@@ -11,7 +11,6 @@
     var bookingRequestID = PageData["BookingRequestID"];
     
     dynamic summary = PageData["Summary"] ?? LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
-    string strDetails = LcData.Booking.GetBookingRequestDetails(0, summary.PricingEstimateID);
     string strServices = LcData.Booking.GetBookingRequestServices(0, summary.PricingEstimateID);
     string strPackages = LcData.Booking.GetBookingRequestPackages(0, summary.PricingEstimateID);
 }
@@ -130,11 +129,6 @@
                 <strong>Location:</strong>
                 @*187 Bocana St., San Francisco, CA 94110*@
                 @summary.AddressLine1 @(summary.AddressLine2), @(summary.City), @summary.StateProvinceCode @summary.PostalCodeID
-            </li>
-            <li class="details">
-                <strong>Details:</strong>
-                @*Home with 3 bedrooms, 2 bathrooms, 1 kitchen, 2 living areas, and has cats.*@
-                @strDetails
             </li>
         </ul>
         @*<div class="actions">

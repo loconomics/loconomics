@@ -41,34 +41,12 @@ public static partial class LcData
                         AND 
                     PP.LanguageID = @1 AND PP.CountryID = @2
         ";
-        public const string sqlGetPricingOptionsInPricingEstimate = @"
-            SELECT  V.CustomerPricingOptionDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.ServiceDuration As Time, P.TotalPrice As Price
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingOption As V
-                      ON V.PricingOptionID = P.PricingOptionID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
-        public const string sqlGetPricingVarsInPricingEstimate = @"
-            SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity,
-                    P.ServiceDuration As Time, P.TotalPrice As Price
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    PricingVariable As V
-                      ON V.PricingVariableID = P.PricingVariableID
-            WHERE   P.PricingEstimateID = @0
-                     AND V.LanguageID = @1 AND V.CountryId = @2
-        ";
         public const string sqlGetServicesIncludedInPricingEstimate = @"
             SELECT  S.Name
             FROM    PricingEstimateDetail As P
                      INNER JOIN
                     ServiceAttribute As S
                       ON S.ServiceAttributeID = P.ServiceAttributeID
-                        -- Avoid show service attributes related to options
-                        AND P.PricingOptionID = 0
             WHERE   P.PricingEstimateID = @0
                      AND S.LanguageID = @1 AND S.CountryId = @2
         ";
@@ -419,10 +397,6 @@ public static partial class LcData
                         case 4: // packages
                             concept = g.DynamicSummaryTitle.Replace("{package}", GetBookingRequestPackages(0, PricingEstimateID, false));
                             break;
-                        case 2: // variables
-                            if (bookingData != null)
-                                concept = g.DynamicSummaryTitle.Replace("{position}", bookingData.PositionSingular);
-                            break;
                         case 5: // addons
                             concept = g.DynamicSummaryTitle.Replace("{addons}", GetBookingRequestPackages(0, PricingEstimateID, true));
                             break;
@@ -439,34 +413,27 @@ public static partial class LcData
         #endregion
 
         /// <summary>
-        /// Get the pricing variables and options of the booking request
-        /// TODO: MUST be renamed because it doesn't returns the full details, only pricing for custom pricing type.
+        /// Get the pricing details of the booking request as text-only
+        /// to be used in messaging and more.
+        /// This includes selected packages, addons and services.
         /// </summary>
         /// <param name="BookingRequestID"></param>
         /// <param name="pricingEstimateID"></param>
         /// <returns></returns>
         public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0)
         {
-            dynamic pvars, poptions;
-            using (var db = Database.Open("sqlloco"))
+            var paks = GetBookingRequestPackages(BookingRequestID, pricingEstimateID);
+            var sers = GetBookingRequestServices(BookingRequestID, pricingEstimateID);
+            var str = "";
+            if (!String.IsNullOrEmpty(paks))
+                str = paks;
+            if (!string.IsNullOrEmpty(sers))
             {
-                if (pricingEstimateID == 0)
-                {
-                    pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, BookingRequestID);
-                }
-                pvars = db.Query(sqlGetPricingVarsInPricingEstimate, pricingEstimateID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                poptions = db.Query(sqlGetPricingOptionsInPricingEstimate, pricingEstimateID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                if (str != "")
+                    str += "; ";
+                str += "Services included: " + sers;
             }
-
-            var details = new List<string>();
-            foreach (var pitem in pvars)
-                details.Add(pitem.Name + " " + pitem.Quantity);
-            foreach (var pitem in poptions)
-                details.Add(pitem.Name + "" + pitem.Quantity);
-
-            return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
+            return str;
         }
         public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0)
         {
@@ -1297,9 +1264,6 @@ public static partial class LcData
 
                                ,PricingGroupID
 
-                               ,[PricingVariableID]
-                               ,[PricingSurchargeID]
-                               ,[PricingOptionID]
                                ,[ServiceAttributeID]
                                ,[ProviderPackageID]
                                ,[ProviderPricingDataInput]
@@ -1316,7 +1280,7 @@ public static partial class LcData
                                ,[CreatedDate]
                                ,[UpdatedDate]
                                ,[ModifiedBy])
-                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, getdate(), getdate(), 'sys')
+                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys')
         ";
         private const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest

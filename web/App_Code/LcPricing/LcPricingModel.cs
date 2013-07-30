@@ -80,9 +80,8 @@ public static partial class LcPricingModel
                     // Set record (insert or update)
                     db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                         1, // PricingGroupID:1 for services
-                        0, 0, 0,
                         att.AsInt(),
-                        0,
+                        0, // ProviderPackageID
                         null, null, 0, // There is no input data
                         0, 0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
                 }
@@ -221,7 +220,7 @@ public static partial class LcPricingModel
                 estimateID,
                 revisionID,
                 4, // PricingGroupID:4 for packages
-                0, 0, 0, 0,
+                0, // ServiceAttributeID
                 packageID,
                 provInput,
                 custInput,
@@ -302,7 +301,7 @@ public static partial class LcPricingModel
             {
                 db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                     5, // PricingGroupID:5 for addons
-                    0, 0, 0, 0,
+                    0, // ServiceAttributeID
                     addon.addonID,
                     null, // there is no provider value
                     1, // ever quantity 1
