@@ -27,7 +27,7 @@
     };
     
     var hasPricingSummary = data.ContainsSummary && 
-        (data.ContainsServices || data.ContainsVariables || data.ContainsOptions || data.ContainsPackages || data.ContainsAddons);
+        (data.ContainsServices || data.ContainsPackages || data.ContainsAddons);
 }
 @functions{
     dynamic getData(dynamic c, dynamic p, dynamic pos, string bookCode) {
@@ -49,6 +49,8 @@
         }
 
         // Define that price selected and payed is estimated or not
+        // TODO: look for another way to set this, because cannot be set by
+        // pricingtype, it depends on selected package
         bool priceIsEstimated = false;
         
         // Get provider hour price
@@ -64,38 +66,18 @@
 
         // Configuring available data/groups depending on Pricing Type:
         bool hasServices = true, 
-            hasVariables = true,
-            hasOptions = true,
             hasPackages = true,
             hasAddons = true,
             hasSummary = true,
             hasInstructions = true;
-        /*
-         * We need granulated control over what show and what not
-         * independing of database data, we add exceptions
-         * here to avoid some 'elements groups' or configurate
-         * some properties
-         */
-        switch (pricingtypeid) {
-            // Packages
-            case 3:
-                hasVariables = false;
-                priceIsEstimated = false;
-                break;
-            // Custom
-            case 2:
-                hasPackages = false;
-                hasAddons = false;
-                priceIsEstimated = true;
-                break;
-        }
-
+        // TODO: There is no configuration of flags depending
+        // on pricing type anymore, maybe flags can be reused per
+        // other criteria or need refactoring
+        
         /*
          * Retrieving data of each group
          */
         dynamic dataCats = null, 
-            pvars = null, 
-            poptions = null, 
             packages = null, 
             addons = null;
         bool thereAreAttributes = false;
@@ -133,34 +115,10 @@
             }
         }
         
-        // Variables
-        if (hasVariables) {
-            // Get the Pricing Variables and with the selected Provider Value; if provider didn't select
-            // previously values for a variable, that variable will not be returned.
-            pvars = LcData.GetPricingVariables(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
-            if (pvars.Count > 0) {
-                // Add to summary
-                SummaryLines.Add("variables", new LcPricingModel.PricingSummaryData("Estimated Cost"));
-            }
-        }
-
-        // Options
-        if (hasOptions) {
-            poptions = LcData.GetPricingOptions(c.UserID, p.UserID, pos.PositionID, clienttypeid, pricingtypeid);
-            if (poptions.Count > 0) {
-                // Add to summary
-                SummaryLines.Add("options", new LcPricingModel.PricingSummaryData("Optional Services"));
-            }
-        }
-        
         // Return struct with all data and availability information (Contains* properties)
         return new {
             ContainsServices = hasServices && thereAreAttributes,
             Services = dataCats,
-            ContainsVariables = hasVariables && pvars.Count > 0,
-            Variables = pvars,
-            ContainsOptions = hasOptions && poptions.Count > 0,
-            Options = poptions,
             ContainsPackages = hasPackages && packages.Packages.Count > 0,
             Packages = packages,
             ContainsAddons = hasAddons && addons.Packages.Count > 0,
@@ -189,22 +147,12 @@
         var hourPrice = data.HourPrice;
 
         // Calculate & Save
-        LcPricingModel.PricingModelData mdVariables = null, mdOptions = null, mdPackages = null, mdAddons = null;
+        LcPricingModel.PricingModelData mdPackages = null, mdAddons = null;
 
         try {
                 
             /* Calculate summary
              */
-            if (data.ContainsVariables) {
-                mdVariables = LcPricingModel.CalculateVariables(data.Variables, data.HourPrice, data.Fee);
-                //rtn.Add("variables", mdVariables);
-                data.SummaryLines["variables"].Add(mdVariables.SummaryTotal);
-            }
-            if (data.ContainsOptions) {
-                mdOptions = LcPricingModel.CalculateOptions(data.Options, data.Fee);
-                rtn.Add("options", mdOptions);
-                data.SummaryLines["options"].Add(mdOptions.SummaryTotal);
-            }
             if (data.ContainsPackages) {
                 mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
                 //rtn.Add("packages", mdPackages);
@@ -259,12 +207,6 @@
                     */
                 if (data.ContainsServices) {
                     LcPricingModel.SaveServices(estimateID, revisionID);
-                }
-                if (data.ContainsVariables) {
-                    LcPricingModel.SaveVariables(estimateID, revisionID, data.Variables, c.UserID, hourPrice, mdVariables.Data["PricingVariablesNumbers"]);
-                }
-                if (data.ContainsOptions) {
-                    LcPricingModel.SaveOptions(estimateID, revisionID, data.Options, c.UserID, mdOptions.Data["PricingOptionsNumbers"]);
                 }
                 if (data.ContainsPackages) {
                     LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState, hourPrice);
@@ -337,22 +279,6 @@
             <fieldset>
                 <legend>Select add-on services</legend>
                 @LcPricingView.Addons(viewData, data.Addons, data.Fee)
-            </fieldset>
-        }
-
-        @if (data.ContainsVariables)
-        {
-            <fieldset>
-                <legend>Help us determine an accurate price</legend>
-                @LcPricingView.Variables(viewData, data.Variables, data.HourPrice, data.Fee)
-            </fieldset>
-        }
-        
-        @if (data.ContainsOptions)
-        {
-            <fieldset>
-                <legend>Please add any additional options you’d like</legend>
-                @LcPricingView.Options(viewData, data.Options, GetModelDataForView("options", modelsData), data.Fee)
             </fieldset>
         }
         
