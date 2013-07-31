@@ -21,7 +21,7 @@
     }
     
     var hasPricingSummary = data.ContainsSummary && 
-        (data.ContainsServices || data.ContainsPackages || data.ContainsAddons);
+        (data.ContainsPackages || data.ContainsAddons);
 }
 @functions{
     dynamic getData(dynamic c, dynamic p, dynamic pos, string bookCode) {
@@ -32,15 +32,6 @@
         
         // Multi-pricing:
         var pricingTypes = LcData.GetPositionPricingTypes(pos.PositionID, clienttypeid);
-        // Emulate a pricing type id
-        int pricingtypeid = 0;
-        // If almost one of the pricing types is in the package-based collection,
-        // we set the emulated pricingtypeid as 3 (package) for compatibility with current booking:
-        foreach(var pt in pricingTypes) {
-            if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pt.PricingTypeID)) {
-                pricingtypeid = 3;
-            }
-        }
 
         // Define that price selected and payed is estimated or not
         // TODO: look for another way to set this, because cannot be set by
@@ -48,7 +39,7 @@
         bool priceIsEstimated = false;
         
         // Booking type with fees policy
-        var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid, pos.PositionID, bookCode);
+        var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
         var fee = LcPricingModel.GetFee(feeData);
         var pfee = LcPricingModel.GetPFee(feeData);
         
@@ -100,7 +91,6 @@
             Fee = fee,
             PFee = pfee,
             BookingTypeID = feeData.BookingTypeID,
-            PricingTypeID = pricingtypeid,
             PricingTypes = pricingTypes,
             ClientTypeID = clienttypeid,
             SummaryLines = SummaryLines
@@ -113,8 +103,6 @@
         
         var mustSave = UrlData[0].ToLower() != "calculate";
         
-        var pricingTypeID = data.PricingTypeID;
-
         // Calculate & Save
         LcPricingModel.PricingModelData mdPackages = null, mdAddons = null;
 
@@ -126,9 +114,6 @@
                 mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
                 //rtn.Add("packages", mdPackages);
                 data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
-                // BECAUSE now everything is contained in a package, and this define the pricing type, we allow
-                // the selected package to change the PricingTypeID', to save the real pricing type choosen
-                pricingTypeID = mdPackages.Data["PricingTypeID"] ?? 3;
             }
             if (data.ContainsAddons) {
                 mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
@@ -157,7 +142,6 @@
                 var estimate = LcData.Booking.CreatePricingEstimate(
                     estimateID,
                     revisionID,
-                    pricingTypeID,
                     summary.ServiceDuration,
                     summary.FirstSessionDuration,
                     summary.SubtotalPrice,

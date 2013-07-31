@@ -1220,7 +1220,7 @@ public static partial class LcData
         ///            COMMIT TRAN
         ///         */
         /// </summary>
-        public const string sqlInsEstimate = @"
+        private const string sqlInsEstimate = @"
                     BEGIN TRAN
 
                         -- Getting a new ID if was not provided one
@@ -1239,7 +1239,6 @@ public static partial class LcData
                         INSERT INTO [pricingestimate]
                                    ([PricingEstimateID]
                                    ,[PricingEstimateRevision]
-                                   ,[PricingTypeID]
                                    ,[ServiceDuration]
                                    ,[FirstSessionDuration]
                                    ,[SubtotalPrice]
@@ -1251,7 +1250,7 @@ public static partial class LcData
                                    ,[ModifiedBy]
                                    ,[Active])
                              VALUES
-                                   (@id, @revision, @2, @3, @4, @5, @6, @7, @8, getdate(), getdate(), 'sys', 1)
+                                   (@id, @revision, @2, @3, @4, @5, @6, @7, getdate(), getdate(), 'sys', 1)
 
                         SELECT @id As PricingEstimateID, @revision As PricingEstimateRevision
                     COMMIT TRAN
@@ -1321,7 +1320,6 @@ public static partial class LcData
         public static dynamic CreatePricingEstimate(
             int estimateID,
             int revisionID,
-            int pricingTypeID,
             decimal timeRequired,
             decimal firstSessionTime,
             decimal subtotalPrice,
@@ -1332,7 +1330,7 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 return db.QuerySingle(LcData.Booking.sqlInsEstimate, estimateID, revisionID,
-                    pricingTypeID, timeRequired, firstSessionTime, subtotalPrice, feePrice, totalPrice, pfeePrice);
+                    timeRequired, firstSessionTime, subtotalPrice, feePrice, totalPrice, pfeePrice);
             }
         }
 

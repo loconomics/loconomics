@@ -159,7 +159,6 @@ public static partial class LcPricingModel
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
                     ,{ "HourlyRate", hourlyRate }
-                    ,{ "PricingTypeID", (int)thePackage.PricingTypeID }
                 };
             }
         }
