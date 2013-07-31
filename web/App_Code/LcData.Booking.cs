@@ -1412,7 +1412,7 @@ public static partial class LcData
                             THEN 2
                             ELSE 1 END
                     )
-                ", customerUserID, providerUserID, pricingTypeID);
+                ", customerUserID, providerUserID);
             }
         }
         #endregion
