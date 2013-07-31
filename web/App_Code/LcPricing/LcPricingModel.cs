@@ -196,11 +196,9 @@ public static partial class LcPricingModel
                 estimateID,
                 revisionID,
                 4, // PricingGroupID:4 for packages
-                0, // ServiceAttributeID
                 packageID,
                 provInput,
                 custInput,
-                0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
                 modelData.SummaryTotal.FirstSessionDuration,
                 modelData.Data["HourlyRate"],
@@ -276,11 +274,9 @@ public static partial class LcPricingModel
             {
                 db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
                     5, // PricingGroupID:5 for addons
-                    0, // ServiceAttributeID
                     addon.addonID,
                     null, // there is no provider value
                     1, // ever quantity 1
-                    0, // systemPricingDataInput
                     addon.pakHours,
                     addon.sesHours,
                     0, // Add-ons are ever a fixed price, there is no hourly-rate

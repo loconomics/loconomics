@@ -1263,11 +1263,9 @@ public static partial class LcData
 
                                ,PricingGroupID
 
-                               ,[ServiceAttributeID]
                                ,[ProviderPackageID]
                                ,[ProviderPricingDataInput]
                                ,[CustomerPricingDataInput]
-                               ,[SystemPricingDataInput]
 
                                ,[ServiceDuration]
                                ,[FirstSessionDuration]
@@ -1279,7 +1277,7 @@ public static partial class LcData
                                ,[CreatedDate]
                                ,[UpdatedDate]
                                ,[ModifiedBy])
-                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys')
+                         VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, getdate(), getdate(), 'sys')
         ";
         private const string sqlInsBookingRequest = @"
                 INSERT INTO BookingRequest
