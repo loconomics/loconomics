@@ -21,24 +21,7 @@
  * VIEWS, implemented as helpers
  *@
 
-@helper Services(dynamic viewData, dynamic services) {
-    var attributes = Request.Form.GetValues("positionservices-attributes");
-    
-    foreach (var cat in services)
-    {
-        <ul class="pricing-services">
-            @foreach(var att in cat.Value["ServiceAttributes"]){
-                if(att.UserChecked) {
-                    <li>
-                        <label title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @LcHelpers.IsChecked(true, (attributes == null ? false : attributes.Contains(((int)att["ServiceAttributeID"]).ToString()))) value="@att["ServiceAttributeID"]" name="positionservices-attributes"/>@att["ServiceAttribute"]</label>
-                    </li>
-                }
-            }
-        </ul>
-    }
-}
-
-@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages, dynamic fee) {
+@helper Packages(LcData.ProviderPackagesView packages, dynamic fee) {
     var idprefix = "pricingwizard";
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
@@ -79,7 +62,7 @@
     </table>
 }
 
-@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons, dynamic fee) {
+@helper Addons(LcData.ProviderPackagesView addons, dynamic fee) {
     var idprefix = "pricingwizard";
     var selectedAddons = Request.Form.GetValues("provider-package-addons");
     if (selectedAddons == null) {
@@ -116,7 +99,7 @@
     </table>
 }
 
-@helper CustomerPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+@helper CustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
     <noscript>
         <div class="calculate-price-button actions">
             <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
@@ -150,7 +133,7 @@
     </div>
 }
 
-@helper ProviderPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+@helper ProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
  
     <div class="calculation provider-pricing-summary pricing-summary">
         <table class="calculation">
@@ -186,7 +169,7 @@
     </div>
 }
 
-@helper EmailCustomerPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+@helper EmailCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
     <div>
         <table border="0" style="border:none;width:100%">
             @foreach(var line in summaryLines) {
@@ -209,7 +192,7 @@
     </div>
 }
 
-@helper EmailProviderPricingSummary(dynamic viewData, LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+@helper EmailProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
      <div>
         <table border="0" style="border:none;width:100%">
 

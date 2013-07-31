@@ -62,34 +62,6 @@ public static partial class LcPricingModel
     }
     #endregion
 
-    #region Services (attributes)
-    public static void SaveServices(
-        int estimateID,
-        int revisionID)
-    {
-        var attributes = Request.Form.GetValues("positionservices-attributes");
-        if (attributes != null)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                /*
-                * Save selected services in the Pricing Wizard tables (pricingEstimateDetail)
-                */
-                foreach (var att in attributes)
-                {
-                    // Set record (insert or update)
-                    db.Execute(LcData.Booking.sqlInsEstimateDetails, estimateID, revisionID,
-                        1, // PricingGroupID:1 for services
-                        att.AsInt(),
-                        0, // ProviderPackageID
-                        null, null, 0, // There is no input data
-                        0, 0, 0, 0, 0, 0); // Calculation fields are ever 0 for selected Regular Services
-                }
-            }
-        }
-    }
-    #endregion
-
     #region Packages
     public static PricingModelData CalculatePackages(dynamic packages, FeeRate fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {

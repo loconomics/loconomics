@@ -53,11 +53,11 @@
             <h5>Pricing estimate</h5>
             if (myUserType == "provider")
             {
-                @LcPricingView.ProviderPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+                @LcPricingView.ProviderPricingSummary(pricingSummary, pricingSummaryGroups, 0)
             }
             else if (myUserType == "customer")
             {
-                @LcPricingView.CustomerPricingSummary(null, pricingSummary, pricingSummaryGroups, 0)
+                @LcPricingView.CustomerPricingSummary(pricingSummary, pricingSummaryGroups, 0)
             }
         }
         

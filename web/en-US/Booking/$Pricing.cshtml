@@ -20,12 +20,6 @@
         modelsData = processData(customer, provider, position, data, summary);
     }
     
-    // TODO I believe that finally is not need, is not being used, and is not reset
-    // between view calls
-    var viewData = new {
-        Success = false
-    };
-    
     var hasPricingSummary = data.ContainsSummary && 
         (data.ContainsServices || data.ContainsPackages || data.ContainsAddons);
 }
@@ -62,8 +56,7 @@
         var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
 
         // Configuring available data/groups depending on Pricing Type:
-        bool hasServices = true, 
-            hasPackages = true,
+        bool hasPackages = true,
             hasAddons = true,
             hasSummary = true,
             hasInstructions = true;
@@ -74,25 +67,8 @@
         /*
          * Retrieving data of each group
          */
-        dynamic dataCats = null, 
-            packages = null, 
+        dynamic packages = null, 
             addons = null;
-        bool thereAreAttributes = false;
-
-        // Services
-        if (hasServices) {        
-            // Services: categories and attributes
-            dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "booking-services", pos.UserID);
-            foreach (var cat in dataCats) {
-                if (thereAreAttributes) {
-                    break;
-                }
-                foreach (var att in cat.Value["ServiceAttributes"]) {
-                    thereAreAttributes = true;
-                    break;
-                }
-            }
-        }
 
         // Packages
         if (hasPackages) {
@@ -114,8 +90,6 @@
         
         // Return struct with all data and availability information (Contains* properties)
         return new {
-            ContainsServices = hasServices && thereAreAttributes,
-            Services = dataCats,
             ContainsPackages = hasPackages && packages.Packages.Count > 0,
             Packages = packages,
             ContainsAddons = hasAddons && addons.Packages.Count > 0,
@@ -196,9 +170,6 @@
 
                 /* Save every detail
                     */
-                if (data.ContainsServices) {
-                    LcPricingModel.SaveServices(estimateID, revisionID);
-                }
                 if (data.ContainsPackages) {
                     LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState);
                 }
@@ -249,19 +220,11 @@
     <input type="hidden" name="positionid" value="@position.PositionID"/>
     <fieldset class="pricing-wizard ajax ajax-box step-blocks" data-ajax-fieldset-action="@(LcUrl.LangPath)Booking/$Pricing/Calculate/?providerid=@(provider.UserID)&amp;positionid=@(position.PositionID)">
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-
-        @if (data.ContainsServices)
-        {
-            <fieldset>
-                <legend>Please select the services you’d like performed (some may require an additional fee)</legend>
-                @LcPricingView.Services(viewData, data.Services)
-            </fieldset>
-        }
         
         @if (data.ContainsPackages)
         {
             <fieldset>
-                @LcPricingView.Packages(viewData, data.Packages, data.Fee)
+                @LcPricingView.Packages(data.Packages, data.Fee)
             </fieldset>
         }
         
@@ -269,7 +232,7 @@
         {
             <fieldset>
                 <legend>Select add-on services</legend>
-                @LcPricingView.Addons(viewData, data.Addons, data.Fee)
+                @LcPricingView.Addons(data.Addons, data.Fee)
             </fieldset>
         }
         
@@ -291,7 +254,7 @@
         {
             <fieldset>
                 <legend>Pricing summary</legend>
-                @LcPricingView.CustomerPricingSummary(viewData, summary, data.SummaryLines, data.HourPrice, true)
+                @LcPricingView.CustomerPricingSummary(summary, data.SummaryLines, data.HourPrice, true)
             </fieldset>
         }
 
