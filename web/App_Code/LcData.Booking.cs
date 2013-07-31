@@ -613,7 +613,7 @@ public static partial class LcData
             var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
             
             sb.AppendLine("Pricing summary:");
-            sb.Append(ASP.LcPricingView.TextOnlyProviderPricingSummary(pricingSummary, pricingSummaryGroups, 0));
+            sb.Append(ASP.LcPricingView.TextOnlyProviderPricingSummary(pricingSummary, pricingSummaryGroups));
 
             sb.AppendLine("Special instructions:");
             sb.AppendLine(summary.SpecialRequests);
@@ -1315,7 +1315,6 @@ public static partial class LcData
         /// <param name="revisionID"></param>
         /// <param name="pricingTypeID"></param>
         /// <param name="timeRequired"></param>
-        /// <param name="hourPrice"></param>
         /// <param name="subtotalPrice"></param>
         /// <param name="feePrice"></param>
         /// <param name="totalPrice"></param>

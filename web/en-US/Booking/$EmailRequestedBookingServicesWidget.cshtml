@@ -45,11 +45,11 @@
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
             if (myUserType == "provider")
             {
-                @LcPricingView.EmailProviderPricingSummary(pricingSummary, pricingSummaryGroups, 0)
+                @LcPricingView.EmailProviderPricingSummary(pricingSummary, pricingSummaryGroups)
             }
             else if (myUserType == "customer")
             {
-                @LcPricingView.EmailCustomerPricingSummary(pricingSummary, pricingSummaryGroups, 0)
+                @LcPricingView.EmailCustomerPricingSummary(pricingSummary, pricingSummaryGroups)
             }
         }
         

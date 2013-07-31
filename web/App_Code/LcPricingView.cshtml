@@ -99,7 +99,7 @@
     </table>
 }
 
-@helper CustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+@helper CustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
     <noscript>
         <div class="calculate-price-button actions">
             <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
@@ -133,7 +133,7 @@
     </div>
 }
 
-@helper ProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice, bool withRowSelectionColumn = false) {
+@helper ProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
  
     <div class="calculation provider-pricing-summary pricing-summary">
         <table class="calculation">
@@ -169,7 +169,7 @@
     </div>
 }
 
-@helper EmailCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+@helper EmailCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
     <div>
         <table border="0" style="border:none;width:100%">
             @foreach(var line in summaryLines) {
@@ -192,7 +192,7 @@
     </div>
 }
 
-@helper EmailProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+@helper EmailProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
      <div>
         <table border="0" style="border:none;width:100%">
 
@@ -262,7 +262,7 @@
 }
 
 @functions{
-    public static string TextOnlyProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+    public static string TextOnlyProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
         var sb = new System.Text.StringBuilder();
         foreach(var line in summaryLines) {
             sb.AppendFormat("{0}: {1:c}\n",
@@ -273,7 +273,7 @@
         sb.AppendFormat("Total price: {0:c}\n", (summary.SubtotalPrice - summary.PFeePrice));
         return sb.ToString();
     }
-    public static string TextOnlyCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, decimal hourPrice) {
+    public static string TextOnlyCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
         var sb = new System.Text.StringBuilder();
         foreach(var line in summaryLines) {
             sb.AppendFormat("{0}: {1:c}\n",
