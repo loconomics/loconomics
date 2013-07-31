@@ -2570,7 +2570,7 @@ $(function () {
                 // If is a JSON result:
                 if (typeof (data) === 'object') {
                     // Clean previous validation errors
-                    setValidationSummaryAsValid(ctx.box);
+                    setValidationSummaryAsValid(form);
                     if (data.Code == 0) {
                         // If there is next-step
                         if (nextStep) {
