@@ -22,7 +22,6 @@
         pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     }
     
-    string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
     // Packages and add-ons are included in pricing summary now,
     // BUT maybe we are in booking/confirmation/ with a special block for services and we want show the packages-addons inside
     string strPackAddons = "";
@@ -68,14 +67,6 @@
             </div>
         }
 
-        @if (!String.IsNullOrEmpty(strServices))
-        {
-            <h5>Services requested:</h5>
-            <div class="services">
-                @strServices
-            </div>
-        }
-       
         @if (!String.IsNullOrWhiteSpace(booking.SpecialRequests)) {
             <h5>Special instructions:</h5>
             <p class="special-instructions">@booking.SpecialRequests</p>

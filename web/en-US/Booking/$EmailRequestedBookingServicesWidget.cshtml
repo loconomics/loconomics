@@ -18,7 +18,6 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     
-    string strServices = LcData.Booking.GetBookingRequestServices(booking.BookingRequestID, booking.PricingEstimateID);
     // Packages and add-ons are included in pricing summary now
     //string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
 }
@@ -59,15 +58,7 @@
             <div class="packages">
                 @strPackAddons
             </div>
-        }*@
-        
-        @if (!String.IsNullOrEmpty(strServices))
-        {
-            <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Services requested:</h5>
-            <div>
-                @strServices
-            </div>
-        }
+        }*@     
 
         @if (!String.IsNullOrEmpty(booking.SpecialRequests))
         {

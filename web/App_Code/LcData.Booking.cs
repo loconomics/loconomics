@@ -41,15 +41,6 @@ public static partial class LcData
                         AND 
                     PP.LanguageID = @1 AND PP.CountryID = @2
         ";
-        public const string sqlGetServicesIncludedInPricingEstimate = @"
-            SELECT  S.Name
-            FROM    PricingEstimateDetail As P
-                     INNER JOIN
-                    ServiceAttribute As S
-                      ON S.ServiceAttributeID = P.ServiceAttributeID
-            WHERE   P.PricingEstimateID = @0
-                     AND S.LanguageID = @1 AND S.CountryId = @2
-        ";
         #endregion
 
         /// <summary>
@@ -206,7 +197,7 @@ public static partial class LcData
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,
 
-                        P.ServiceDuration, P.HourlyPrice, P.SubtotalPrice, P.FeePrice, P.TotalPrice, P.PFeePrice,
+                        P.ServiceDuration, P.SubtotalPrice, P.FeePrice, P.TotalPrice, P.PFeePrice,
                         P.FeeRefunded, P.SubtotalRefunded, P.TotalRefunded, P.DateRefunded,
 
                         CAST(CASE WHEN (SELECT count(*) FROM UserReviews As URP
@@ -294,7 +285,6 @@ public static partial class LcData
                         E3.StartTime As AlternativeDate2Start, E3.EndTime As AlternativeDate2End,
 
                         coalesce(P.ServiceDuration, 0) As ServiceDuration,
-                        coalesce(P.HourlyPrice, 0) As HourlyPrice,
                         coalesce(P.SubtotalPrice, 0) As SubtotalPrice,
                         coalesce(P.FeePrice, 0) As FeePrice,
                         coalesce(P.TotalPrice, 0) As TotalPrice,
@@ -412,47 +402,6 @@ public static partial class LcData
         }
         #endregion
 
-        /// <summary>
-        /// Get the pricing details of the booking request as text-only
-        /// to be used in messaging and more.
-        /// This includes selected packages, addons and services.
-        /// </summary>
-        /// <param name="BookingRequestID"></param>
-        /// <param name="pricingEstimateID"></param>
-        /// <returns></returns>
-        public static string GetBookingRequestDetails(int BookingRequestID, int pricingEstimateID = 0)
-        {
-            var paks = GetBookingRequestPackages(BookingRequestID, pricingEstimateID);
-            var sers = GetBookingRequestServices(BookingRequestID, pricingEstimateID);
-            var str = "";
-            if (!String.IsNullOrEmpty(paks))
-                str = paks;
-            if (!string.IsNullOrEmpty(sers))
-            {
-                if (str != "")
-                    str += "; ";
-                str += "Services included: " + sers;
-            }
-            return str;
-        }
-        public static string GetBookingRequestServices(int bookingRequestID, int pricingEstimateID = 0)
-        {
-            dynamic services;
-            using (var db = Database.Open("sqlloco"))
-            {
-                if (pricingEstimateID == 0)
-                {
-                    pricingEstimateID = db.QueryValue(sqlGetBookingRequestPricingEstimate, bookingRequestID);
-                }
-                services = db.Query(sqlGetServicesIncludedInPricingEstimate, pricingEstimateID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            }
-            var details = new List<string>();
-            foreach (var service in services)
-                details.Add(service.Name);
-
-            return ASP.LcHelpers.JoinNotEmptyStrings(", ", details);
-        }
         public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
         {
             // TODO Include Revision in parameters or/and database lookup

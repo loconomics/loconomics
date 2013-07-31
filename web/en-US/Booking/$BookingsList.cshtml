@@ -207,7 +207,7 @@
             <h5>Position:</h5> @item.PositionSingular
         </li>
         <li>
-            <h5>Details:</h5> @printItemDetails(item)
+            <h5>Details:</h5> @(LcData.Booking.GetBookingRequestPackages(item.BookingRequestID, item.PricingEstimateID))
         </li>
     </ul>
     <div class="actions">
@@ -273,28 +273,6 @@
         <div class="total-price item-extra-info">$@item.TotalPrice</div>
     </div>
   </li>
-}
-@helper printItemDetails(dynamic item) {
-    /* Copied from Booking/$Payment */
-    var sqlGetPricingVars = @"
-        SELECT  V.CustomerPricingVariableDisplayText As Name, P.CustomerPricingDataInput As Quantity
-        FROM    PricingEstimateDetail As P
-                 INNER JOIN
-                PricingVariable As V
-                  ON V.PricingVariableID = P.PricingVariableID
-        WHERE   P.PricingEstimateID = @0
-                 AND V.CountryId = @1 AND V.LanguageID = @2
-    ";
-    var db = Database.Open("sqlloco");
-    var i = 0;
-    var iprint = "";
-    foreach (var pitem in db.Query(sqlGetPricingVars, item.PricingEstimateID, 1, 1)) {
-        if (i > 0) {
-            iprint = "; ";
-        }
-        i++;
-        @(iprint + pitem.Name + " " + pitem.Quantity)
-    }
 }
 
 <ul class="booking-list-groups items-groups-list">
