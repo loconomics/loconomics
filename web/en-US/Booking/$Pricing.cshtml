@@ -53,9 +53,6 @@
         // pricingtype, it depends on selected package
         bool priceIsEstimated = false;
         
-        // Get provider hour price
-        var hourPrice = LcData.GetProviderHourlyRate(p.UserID, pos.PositionID, clienttypeid);
-        
         // Booking type with fees policy
         var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, pricingtypeid, pos.PositionID, bookCode);
         var fee = LcPricingModel.GetFee(feeData);
@@ -128,7 +125,6 @@
             PriceIsEstimated = priceIsEstimated,
             Fee = fee,
             PFee = pfee,
-            HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypeID = pricingtypeid,
             PricingTypes = pricingTypes,
@@ -144,7 +140,6 @@
         var mustSave = UrlData[0].ToLower() != "calculate";
         
         var pricingTypeID = data.PricingTypeID;
-        var hourPrice = data.HourPrice;
 
         // Calculate & Save
         LcPricingModel.PricingModelData mdPackages = null, mdAddons = null;
@@ -160,9 +155,6 @@
                 // BECAUSE now everything is contained in a package, and this define the pricing type, we allow
                 // the selected package to change the PricingTypeID', to save the real pricing type choosen
                 pricingTypeID = mdPackages.Data["PricingTypeID"] ?? 3;
-                // And allow to an hourly rate package set the pricing hourlyRate, too to save real data instead of 0 ever
-                // (if there is no hourly rate, it will be zero as expected)
-                hourPrice = mdPackages.Data["HourlyRate"];
             }
             if (data.ContainsAddons) {
                 mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
@@ -194,7 +186,6 @@
                     pricingTypeID,
                     summary.ServiceDuration,
                     summary.FirstSessionDuration,
-                    hourPrice,
                     summary.SubtotalPrice,
                     summary.FeePrice,
                     summary.TotalPrice,
@@ -209,10 +200,10 @@
                     LcPricingModel.SaveServices(estimateID, revisionID);
                 }
                 if (data.ContainsPackages) {
-                    LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState, hourPrice);
+                    LcPricingModel.SavePackages(estimateID, revisionID, mdPackages, ModelState);
                 }
                 if (data.ContainsAddons) {
-                    LcPricingModel.SaveAddons(estimateID, revisionID, mdAddons, ModelState, hourPrice);
+                    LcPricingModel.SaveAddons(estimateID, revisionID, mdAddons, ModelState);
                 }
 
                 /*

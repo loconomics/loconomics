@@ -620,6 +620,15 @@ public static partial class LcData
         public bool IsHourly;
         public decimal Price;
     }
+    /// <summary>
+    /// Gets the minimum price offered by the provider on a specific position,
+    /// being a 'since' fixed price or an hourly rate depending on its offered pricing.
+    /// </summary>
+    /// <param name="providerUserID"></param>
+    /// <param name="positionID"></param>
+    /// <param name="clienttypeid"></param>
+    /// <param name="customerUserID"></param>
+    /// <returns></returns>
     public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
     {
         dynamic minPackage = null;
@@ -750,21 +759,6 @@ public static partial class LcData
                 -- If there is no specific, with TOP 1 we get the default
                 ORDER BY PositionID DESC
             ", positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-        }
-    }
-
-    public static decimal GetProviderHourlyRate(
-        int providerUserID,
-        int positionID,
-        int clientTypeID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            return (decimal)(db.QueryValue(@"
-                SELECT  TOP 1 HourlyRate
-                FROM    providerhourlyrate
-                WHERE   UserID = @0 AND PositionID = @1 AND ClientTypeID = @2 AND Active = 1
-            ", providerUserID, positionID, clientTypeID) ?? 0);
         }
     }
 

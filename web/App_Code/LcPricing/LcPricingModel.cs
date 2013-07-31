@@ -132,6 +132,10 @@ public static partial class LcPricingModel
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * sesNumber, 2);
                 modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
 
+                // Packages can contain an hourly rate (its set or left zero depending on calculation type)
+                // We sent it back as HourlyRate on modelData to be used on saving.
+                decimal hourlyRate = 0;
+
                 /* Calculation of price, depending on type */
                 switch (config.PriceCalculation)
                 {
@@ -143,6 +147,12 @@ public static partial class LcPricingModel
                         modelData.SummaryTotal.SubtotalPrice += fixedPrice.BasePrice;
                         modelData.SummaryTotal.FeePrice = fixedPrice.FeePrice;
                         modelData.SummaryTotal.TotalPrice = fixedPrice.TotalPrice;
+
+                        // Packages with fixed price set price rate only if
+                        // its unit is 'hour'.
+                        if (!String.IsNullOrEmpty(thePackage.PriceRateUnit) &&
+                            thePackage.PriceRateUnit.ToUpper() == "HOUR")
+                            hourlyRate = thePackage.PriceRate ?? 0;
                         break;
                     case PriceCalculationType.HourlyPrice:
                         // For hourly prices we get the provider hourly price defined in the package (PriceRate field)
@@ -162,22 +172,17 @@ public static partial class LcPricingModel
                         modelData.SummaryTotal.SubtotalPrice += hourPrice.BasePrice * modelData.SummaryTotal.ServiceDuration;
                         modelData.SummaryTotal.FeePrice += hourPrice.FeePrice * modelData.SummaryTotal.ServiceDuration;
                         modelData.SummaryTotal.TotalPrice += hourPrice.TotalPrice * modelData.SummaryTotal.ServiceDuration;
+
+                        // We get as hourlyRate the hourPrice without fees
+                        hourlyRate = hourPrice.BasePrice;
                         break;
                 }
                 
-
                 // Concept, html text for Pricing summary detail, update it with package name:
                 modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
 
                 // Save in session the information that a location is not need for the booking because of the selected package
                 System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
-
-                // Packages can contain a price rate, only if its unit is 'hour' we sent it back as HourlyRate to be used
-                // on saving
-                decimal hourlyRate = 0;
-                if (!String.IsNullOrEmpty(thePackage.PriceRateUnit) &&
-                    thePackage.PriceRateUnit.ToUpper() == "HOUR")
-                    hourlyRate = thePackage.PriceRate ?? 0;
 
                 modelData.Data = new Dictionary<string, object>(){
                     { "SelectedPackageID", packageID }
@@ -193,8 +198,7 @@ public static partial class LcPricingModel
         int estimateID,
         int revisionID,
         PricingModelData modelData,
-        System.Web.WebPages.Html.ModelStateDictionary ModelState,
-        decimal hourPrice)
+        System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         int packageID = (int)modelData.Data["SelectedPackageID"];
         using (var db = Database.Open("sqlloco"))
@@ -227,7 +231,7 @@ public static partial class LcPricingModel
                 0, // systemPricingDataInput
                 modelData.SummaryTotal.ServiceDuration,
                 modelData.SummaryTotal.FirstSessionDuration,
-                modelData.Data["HourlyRate"], // hourPrice,
+                modelData.Data["HourlyRate"],
                 modelData.SummaryTotal.SubtotalPrice,
                 modelData.SummaryTotal.FeePrice,
                 modelData.SummaryTotal.TotalPrice);
@@ -291,8 +295,7 @@ public static partial class LcPricingModel
         int estimateID,
         int revisionID,
         PricingModelData modelData,
-        System.Web.WebPages.Html.ModelStateDictionary ModelState,
-        decimal hourPrice)
+        System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var selectedAddonsData = modelData.Data["SelectedAddonsData"];
         using (var db = Database.Open("sqlloco")) { 
@@ -308,7 +311,7 @@ public static partial class LcPricingModel
                     0, // systemPricingDataInput
                     addon.pakHours,
                     addon.sesHours,
-                    hourPrice,
+                    0, // Add-ons are ever a fixed price, there is no hourly-rate
                     addon.subtotalPrice,
                     addon.feePrice,
                     addon.addonPrice);
