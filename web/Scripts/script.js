@@ -257,7 +257,12 @@ var TabbedUX = {
         .delegate('.tabbed > .tabs-slider > a', 'click', function () { return false })
         .delegate('.tabbed > .tabs-slider-limit', 'mouseenter', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider)
-        .delegate('.tabbed > .tabs > li.removable', 'click', function () { TabbedUX.removeTab(null, this) });
+        .delegate('.tabbed > .tabs > li.removable', 'click', function (e) {
+            // Only on direct clicks to the tab, to avoid
+            // clicks to the tab-link (that select/focus the tab):
+            if (e.target == e.currentTarget)
+                TabbedUX.removeTab(null, this);
+        });
 
         // Init page loaded tabbed containers:
         $('.tabbed').each(function () {
