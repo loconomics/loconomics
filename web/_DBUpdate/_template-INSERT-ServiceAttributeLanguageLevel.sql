@@ -1,0 +1,20 @@
+INSERT INTO [ServiceAttributeLanguageLevel]
+   ([UserID]
+   ,[PositionID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[ServiceAttributeID]
+   ,[LanguageLevelID]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy])
+ VALUES
+   (@UserID
+   ,@PositionID
+   ,@LanguageID
+   ,@CountryID
+   ,@ServiceAttributeID
+   ,@LanguageLevelID
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy)
