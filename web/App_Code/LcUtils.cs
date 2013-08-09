@@ -67,8 +67,80 @@ public static class LcUtils
         }
     }
     /// <summary>
+    /// Retrieve the passed value converted to the given type (wrapped as object but an implicit conversion is safe).
+    /// If the value is null, DBNull, or impossible to convert, the desired defaultValue is returned (ensure to give
+    /// a value in the same desired type, this make safe do an implicit conversion of the returned value into the type).
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static object GetTypedValue(object val, object defaultValue, string type)
+    {
+        // Try to get the real type in @type
+        Type t = ParseType(type);
+        if (t == null) {
+            throw new ArgumentException("The specified type is not valid, maybe requires a namespace?", "type");
+        }
+        return GetTypedValue(val, defaultValue, t);
+    }
+    /// <summary>
+    /// Retrieve the passed value converted to the given type (wrapped as object but an implicit conversion is safe).
+    /// If the value is null, DBNull, or impossible to convert, the desired defaultValue is returned (ensure to give
+    /// a value in the same desired type, this make safe do an implicit conversion of the returned value into the type).
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="defaultValue"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static object GetTypedValue(object val, object defaultValue, Type type)
+    {
+        if (val == null || val is DBNull)
+        {
+            return defaultValue;
+        }
+        try
+        {
+            // Try to convert
+            return ConvertToType(val, type);
+        }
+        catch
+        {
+            // Error catched, return alternative value
+            return defaultValue;
+        }
+    }
+    /// <summary>
+    /// Converts the type name in a Type instance.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static Type ParseType(string type)
+    {
+        // Try to get the real type in @type
+        Type t = Type.GetType(type, false, true);
+        // If is not a type, try to guess
+        if (t == null)
+        {
+            // Is a C# alias?
+            if (CTypesTable.ContainsKey(type))
+            {
+                t = Type.GetType(CTypesTable[type]);
+            }
+            else
+            {
+                // Maybe lost the namespace, try appending the standard one
+                t = Type.GetType("System." + type, false, true);
+            }
+        }
+        return t;
+    }
+    /// <summary>
     /// Try to convert the given value at @val to the desired @type,
-    /// returning the value converted (but wrapped as object still).
+    /// returning the value converted (but wrapped as object).
+    /// If the internal type is already the correct, just is returned.
+    /// It not, converion is applied following .net rules, adapting type from compatible ones or parsing from text value.
+    /// For nullable values, if T is not-nullable, its underliying value type is get.
     /// It throws an error if conversion is not possible.
     /// </summary>
     /// <param name="val"></param>
@@ -98,23 +170,9 @@ public static class LcUtils
     public static bool ValidateType(object val, string type)
     {
         // Try to get the real type in @type
-        Type t = Type.GetType(type, false, true);
-        // If is not a type, try to guess
+        Type t = ParseType(type);
         if (t == null) {
-            // Is a C# alias?
-            if (CTypesTable.ContainsKey(type))
-            {
-                t = Type.GetType(CTypesTable[type]);
-            }
-            else
-            {
-                // Maybe lost the namespace, try appending the standard one
-                t = Type.GetType("System." + type, false, true);
-            }
-            if (t == null)
-            {
-                throw new ArgumentException("The specified type is not valid, maybe requires a namespace?", "type");
-            }
+            throw new ArgumentException("The specified type is not valid, maybe requires a namespace?", "type");
         }
         return ValidateType(val, t);
     }

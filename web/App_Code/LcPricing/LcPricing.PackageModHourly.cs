@@ -101,7 +101,7 @@ public static partial class LcPricingModel
                 {
                     if (!String.IsNullOrEmpty(provar.Value.Def.HourlySurchargeLabel))
                     {
-                        hSurcharges.AppendFormat("<li><label>$ <input type='text' name='{1}-value' value='{3}' /></label> <span class='has-tooltip' title='{2}'>{0}</span></li>",
+                        hSurcharges.AppendFormat("<li><label>$ <input type='text' name='{1}-value' value='{3}' /> <span class='has-tooltip' title='{2}'>{0}</span></label></li>",
                             provar.Value.Def.HourlySurchargeLabel,
                             provar.Value.Def.InternalName,
                             provar.Value.Def.HourlySurchargeLabelPopUp,
@@ -118,7 +118,7 @@ public static partial class LcPricingModel
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.NumberIncludedLabel))
                     {
-                        hIncludes.AppendFormat("<li><label>{0} <input type='text' name='{1}-numberincluded' value='{3}' /></label> <span class='has-tooltip' title='{2}'>{4}/{5}</span></li>",
+                        hIncludes.AppendFormat("<li><label>{0} <input type='text' name='{1}-numberincluded' value='{3}' /> <span class='has-tooltip' title='{2}'>{4}/{5}</span></label></li>",
                             provar.Value.Def.NumberIncludedLabel,
                             provar.Value.Def.InternalName,
                             provar.Value.Def.NumberIncludedLabelPopUp,
@@ -216,17 +216,23 @@ public static partial class LcPricingModel
                     valid = false;
                 }
             }
-            
             return valid;
         }
         public void SaveProviderData(PackageBaseData package, Database db)
         {
-            var provTime = Request["provider-average-time"].AsFloat();
-            var provRate = provTime / ApplyFormula();
-            // Save rate on DB
-            var vars = new PackageVariables(package.ProviderUserID, package.ID);
-            vars.Set("CleaningRate", provRate);
-            vars.Save();
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+            // Get values from for per variable
+            foreach (var provar in provars)
+            {
+                // Value
+                provar.Value.Value = LcUtils.GetTypedValue(Request[provar.Key + "-value"], null, provar.Value.Def.DataType);
+                // Number Included
+                provar.Value.ProviderNumberIncluded = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-numberincluded"], 0);
+                // Min/Max allowed
+                provar.Value.ProviderMinNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-minnumberallowed"], 0);
+                provar.Value.ProviderMaxNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-maxnumberallowed"], 0);
+            }
+            provars.Save();
         }
         #endregion
         #region Pricing Summary
