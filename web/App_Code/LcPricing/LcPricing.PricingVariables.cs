@@ -58,6 +58,12 @@ public static partial class LcPricingModel
         public string VariableNamePlural { get; internal set; }
         public string NumberIncludedLabel { get; internal set; }
         public string NumberIncludedLabelPopUp { get; internal set; }
+        public string HourlySurchargeLabel { get; internal set; }
+        public string HourlySurchargeLabelPopUp { get; internal set; }
+        public string MinNumberAllowedLabel { get; internal set; }
+        public string MinNumberAllowedLabelPopUp { get; internal set; }
+        public string MaxNumberAllowedLabel { get; internal set; }
+        public string MaxNumberAllowedLabelPopUp { get; internal set; }
         public int? CalculateWithVariableID { get; internal set; }
         #region Experimental cache and index
         private static Dictionary<PrimaryKey, PricingVariableDefinition> Cached
@@ -145,6 +151,10 @@ public static partial class LcPricingModel
         public decimal? ProviderNumberIncluded;
         public decimal? ProviderMinNumberAllowed;
         public decimal? ProviderMaxNumberAllowed;
+        public T GetValue<T>(T defaultValue)
+        {
+            return LcUtils.GetTypedValue<T>(Value, defaultValue);
+        }
         public PricingVariableDefinition Def { get; internal set; }
         internal static PricingVariableValue CreateFromDbRecord(dynamic r)
         {
