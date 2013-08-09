@@ -10,6 +10,39 @@ public static partial class LcPricingModel
 {
     public readonly static Dictionary<int, PackageBaseConfig> PackageBasePricingTypeConfigs = new Dictionary<int,PackageBaseConfig>
     {
+        // Hourly Pricing Type
+        {
+            1,
+            new PackageBaseConfig {
+                PricingTypeID = 1,
+                SingularName = "Hourly service",
+                PluralName = "Hourly services",
+                SlugName = "hourlyservice",
+                AddNewLabel = "Add hourly services",
+                ProviderDescription = "Describe to your potential clients in detail the service you provide and include what makes your services unique.",
+                PriceCalculation = PriceCalculationType.HourlyPrice,
+                SelectionGroups = new string[]{"package"},
+
+                NamePlaceHolder = "Hourly services",
+                DescriptionPlaceHolder = "Describe to your potential clients in detail the services you provide and include what makes your services unique.",
+                PriceRateQuantityLabel = "Hourly rate",
+                PriceRateIsRequiredValidationError = "You must set your hourly rate",
+
+                SuccessOnDelete = "Service removed successfully",
+                SuccessOnSave = "Add/Edit pricing",
+
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
+
+                IncludeServiceAttributes = true,
+
+                LearnMoreLabel = "Learn more about hourly service pricing",
+                LearnMoreText = "LJDI:",
+
+                ClassName = "hourlyservice",
+                Mod = new PackageModHourly()
+            }
+        },
         // Package Pricing Type
         {
             3,

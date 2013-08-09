@@ -12,6 +12,58 @@ public static partial class LcPricingModel
 {
     public class PricingVariableDefinition
     {
+        public int PricingVariableID { get; internal set; }
+        public int LanguageID { get; internal set; }
+        public int CountryID { get; internal set; }
+        public int PositionID { get; internal set; }
+        public int PricingTypeID { get; internal set; }
+        public string InternalName { get; internal set; }
+        public bool IsProviderVariable { get; internal set; }
+        public bool IsCustomerVariable { get; internal set; }
+        public string DataType { get; internal set; }
+        public string VariableLabel { get; internal set; }
+        public string VariableLabelPopUp { get; internal set; }
+        public string VariableNameSingular { get; internal set; }
+        public string VariableNamePlural { get; internal set; }
+        public string NumberIncludedLabel { get; internal set; }
+        public string NumberIncludedLabelPopUp { get; internal set; }
+        public string HourlySurchargeLabel { get; internal set; }
+        public string HourlySurchargeLabelPopUp { get; internal set; }
+        public string MinNumberAllowedLabel { get; internal set; }
+        public string MinNumberAllowedLabelPopUp { get; internal set; }
+        public string MaxNumberAllowedLabel { get; internal set; }
+        public string MaxNumberAllowedLabelPopUp { get; internal set; }
+        public int? CalculateWithVariableID { get; internal set; }
+        
+        internal static PricingVariableDefinition CreateFromDbRecord(dynamic r)
+        {
+            return new PricingVariableDefinition {
+                PricingVariableID       = r.PricingVariableID
+                ,LanguageID             = r.LanguageID
+                ,CountryID              = r.CountryID
+                ,PositionID             = r.PositionID
+                ,PricingTypeID          = r.PricingTypeID
+                ,InternalName           = r.InternalName
+                ,IsProviderVariable     = r.IsProviderVariable
+                ,IsCustomerVariable     = r.IsCustomerVariable
+                ,DataType               = r.DataType
+                ,VariableLabel          = r.VariableLabel
+                ,VariableLabelPopUp     = r.VariableLabelPopUp
+                ,VariableNameSingular   = r.VariableNameSingular
+                ,VariableNamePlural     = r.VariableNamePlural
+                ,NumberIncludedLabel    = r.NumberIncludedLabel
+                ,NumberIncludedLabelPopUp   = r.NumberIncludedLabelPopup
+                ,HourlySurchargeLabel       = r.HourlySurchargeLabel
+                ,HourlySurchargeLabelPopUp  = r.HourlySurchargeLabelPopUp
+                ,MinNumberAllowedLabel      = r.MinNumberAllowedLabel
+                ,MinNumberAllowedLabelPopUp = r.MinNumberAllowedLabelPopUp
+                ,MaxNumberAllowedLabel      = r.MaxNumberAllowedLabel
+                ,MaxNumberAllowedLabelPopUp = r.MaxNumberAllowedLabelPopUp
+                ,CalculateWithVariableID    = r.CalculateWithVariableID
+            };
+        }
+
+        #region Experimental cache and index INCOMPLETE
         public class PrimaryKey
         {
             public int PricingVariableID { get; private set; }
@@ -43,29 +95,6 @@ public static partial class LcPricingModel
                 return string.Format("{0}-{1}-{2}-{3}-{4}", PricingTypeID, LanguageID, CountryID, PositionID, PricingTypeID).GetHashCode();
             }
         }
-        public int PricingVariableID { get; internal set; }
-        public int LanguageID { get; internal set; }
-        public int CountryID { get; internal set; }
-        public int PositionID { get; internal set; }
-        public int PricingTypeID { get; internal set; }
-        public string InternalName { get; internal set; }
-        public bool IsProviderVariable { get; internal set; }
-        public bool IsCustomerVariable { get; internal set; }
-        public string DataType { get; internal set; }
-        public string VariableLabel { get; internal set; }
-        public string VariableLabelPopUp { get; internal set; }
-        public string VariableNameSingular { get; internal set; }
-        public string VariableNamePlural { get; internal set; }
-        public string NumberIncludedLabel { get; internal set; }
-        public string NumberIncludedLabelPopUp { get; internal set; }
-        public string HourlySurchargeLabel { get; internal set; }
-        public string HourlySurchargeLabelPopUp { get; internal set; }
-        public string MinNumberAllowedLabel { get; internal set; }
-        public string MinNumberAllowedLabelPopUp { get; internal set; }
-        public string MaxNumberAllowedLabel { get; internal set; }
-        public string MaxNumberAllowedLabelPopUp { get; internal set; }
-        public int? CalculateWithVariableID { get; internal set; }
-        #region Experimental cache and index
         private static Dictionary<PrimaryKey, PricingVariableDefinition> Cached
         {
             get
@@ -122,27 +151,6 @@ public static partial class LcPricingModel
             return ret;
         }
         #endregion
-        internal static PricingVariableDefinition CreateFromDbRecord(dynamic r)
-        {
-            return new PricingVariableDefinition {
-                PricingVariableID       = r.PricingVariableID
-                ,LanguageID             = r.LanguageID
-                ,CountryID              = r.CountryID
-                ,PositionID             = r.PositionID
-                ,PricingTypeID          = r.PricingTypeID
-                ,InternalName           = r.InternalName
-                ,IsProviderVariable     = r.IsProviderVariable
-                ,IsCustomerVariable     = r.IsCustomerVariable
-                ,DataType               = r.DataType
-                ,VariableLabel          = r.VariableLabel
-                ,VariableLabelPopUp     = r.VariableLabelPopUp
-                ,VariableNameSingular   = r.VariableNameSingular
-                ,VariableNamePlural     = r.VariableNamePlural
-                ,NumberIncludedLabel    = r.NumberIncludedLabel
-                ,NumberIncludedLabelPopUp   = r.NumberIncludedLabelPopup
-                ,CalculateWithVariableID    = r.CalculateWithVariableID
-            };
-        }
     }
     public class PricingVariableValue
     {
@@ -363,6 +371,12 @@ public static partial class LcPricingModel
                     ,D.VariableNamePlural
                     ,D.NumberIncludedLabel
                     ,D.NumberIncludedLabelPopUp
+                    ,D.HourlySurchargeLabel
+                    ,D.HourlySurchargeLabelPopUp
+                    ,D.MinNumberAllowedLabel
+                    ,D.MinNumberAllowedLabelPopUp
+                    ,D.MaxNumberAllowedLabel
+                    ,D.MaxNumberAllowedLabelPopUp
                     ,D.CalculateWithVariableID
             FROM    PricingVariableValue As V
                         INNER JOIN
@@ -393,6 +407,12 @@ public static partial class LcPricingModel
                     ,D.VariableNamePlural
                     ,D.NumberIncludedLabel
                     ,D.NumberIncludedLabelPopUp
+                    ,D.HourlySurchargeLabel
+                    ,D.HourlySurchargeLabelPopUp
+                    ,D.MinNumberAllowedLabel
+                    ,D.MinNumberAllowedLabelPopUp
+                    ,D.MaxNumberAllowedLabel
+                    ,D.MaxNumberAllowedLabelPopUp
                     ,D.CalculateWithVariableID
             FROM    PricingVariableDefinition As D
             WHERE   (D.PositionID = @0 OR D.PositionID = -1)
