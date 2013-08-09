@@ -257,6 +257,21 @@ public static partial class LcPricingModel
             LoadNew(ret, positionID, pricingTypeID);
             return ret;
         }
+        /// <summary>
+        /// Get variables given a package object that enables this to automatically get variables
+        /// for a new package (when ID is 0) or the values for the existing package on other case.
+        /// </summary>
+        /// <param name="package">The package information used to discover what variables and values retrieve.</param>
+        /// <returns></returns>
+        public static PricingVariables FromPackageBaseData(PackageBaseData package)
+        {
+            PricingVariables provars;
+            if (package.ID == 0)
+                provars = PricingVariables.ForNewProviderPackage(package.ProviderUserID, 0, package.PositionID, package.PricingTypeID);
+            else
+                provars = PricingVariables.FromProviderPackage(package.ProviderUserID, package.ID);
+            return provars;
+        }
         #endregion
         #endregion
 

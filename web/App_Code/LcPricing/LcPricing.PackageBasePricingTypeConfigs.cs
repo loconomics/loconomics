@@ -25,8 +25,6 @@ public static partial class LcPricingModel
 
                 NamePlaceHolder = "Hourly services",
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the services you provide and include what makes your services unique.",
-                PriceRateQuantityLabel = "Hourly rate",
-                PriceRateIsRequiredValidationError = "You must set your hourly rate",
 
                 SuccessOnDelete = "Service removed successfully",
                 SuccessOnSave = "Add/Edit pricing",

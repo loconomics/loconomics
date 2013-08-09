@@ -87,11 +87,7 @@ public static partial class LcPricingModel
         public string GetProviderHtml(PackageBaseData package)
         {
             // Get variables
-            PricingVariables provars;
-            if (package.ID == 0)
-                provars = PricingVariables.ForNewProviderPackage(package.ProviderUserID, 0, package.PositionID, package.PricingTypeID);
-            else
-                provars = PricingVariables.FromProviderPackage(package.ProviderUserID, package.ID);
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
 
             // Create html for form elements, variables values organized per sections
             var hValues = new StringBuilder();
@@ -185,7 +181,43 @@ public static partial class LcPricingModel
         }
         public bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState)
         {
-            return Request["provider-average-time"].AsFloat() > 0;
+            var valid = true;
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+            foreach (var provar in provars)
+            {
+                // Emit error if there is not a value or is not of the desired type
+                if (String.IsNullOrWhiteSpace(Request[provar.Key + "-value"]))
+                {
+                    modelState.AddError(provar.Key + "-value", LcRessources.RequiredField(provar.Value.Def.VariableLabel));
+                    valid = false;
+                }
+                else if (!LcUtils.ValidateType(Request[provar.Key + "-value"], provar.Value.Def.DataType))
+                {
+                    modelState.AddError(provar.Key + "-value", LcRessources.InvalidFieldValue(provar.Value.Def.VariableLabel));
+                    valid = false;
+                }
+                // Check the optional variable value properties (number, min, max)
+                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-numberincluded"]) &&
+                    !Request[provar.Key + "-numberincluded"].IsDecimal())
+                {
+                    modelState.AddError(provar.Key + "-numberincluded", String.Format("Invalid number for included '{0}'", provar.Value.Def.VariableNameSingular));
+                    valid = false;
+                }
+                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-minnumberallowed"]) &&
+                    !Request[provar.Key + "-minnumberallowed"].IsDecimal())
+                {
+                    modelState.AddError(provar.Key + "-minnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MinNumberAllowedLabel));
+                    valid = false;
+                }
+                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-maxnumberallowed"]) &&
+                    !Request[provar.Key + "-maxnumberallowed"].IsDecimal())
+                {
+                    modelState.AddError(provar.Key + "-maxnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MaxNumberAllowedLabel));
+                    valid = false;
+                }
+            }
+            
+            return valid;
         }
         public void SaveProviderData(PackageBaseData package, Database db)
         {
