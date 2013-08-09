@@ -68,11 +68,20 @@
             <li>Add slick photos of your work</li>
             <li>Show off your background checks and licenses, if applicable</li>
             <li>Link to your social media accounts</li>
-            <li>Share your profile with favorite folks: present clients, friends, and family.<br><br></li>
+            <li>Share your profile with favorite folks: present clients, friends, and family.</li>
         </ul>
     </div>
 
+    <h4 @LcEmailTemplateHelper.StyleH4()>Watch this short video for help</h4>
     <div>
+        <p @LcEmailTemplateHelper.StyleResetP("margin-bottom:40px;")>
+            <a style="text-decoration:none;" target="_blank" href="https://loconomics.zendesk.com/entries/24006012-Introduction-to-Your-Dashboard">
+                <img border="0" src="@(LcUrl.AppUrl)img/email/intro-dashboard-video-image.png" alt="Introduction video" width="600" height="337" />
+            </a>
+        </p>
+    </div>
+
+    <div style="width:600px;margin-bottom:20px">
         <p @LcEmailTemplateHelper.StyleResetP()>Alternatively, copy and paste the following link into your browser to verify your account: @confirmationURL</p>
         @if (!String.IsNullOrEmpty(confirmationToken)) {
         <p>Or go to <a href="@(LcUrl.LangUrl)Account/Confirm/?@(alq)">@(LcUrl.LangUrl)Account/Confirm/</a> and input
