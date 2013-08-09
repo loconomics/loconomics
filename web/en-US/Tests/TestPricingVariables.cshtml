@@ -1,0 +1,55 @@
+﻿@* It just performs a task that raise an exception to see how the site manage the situation.
+   Information in the log file must be added and the custom error page must be showed.
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    var a = LcPricingModel.PricingVariables.FromProviderPackage(141, 55);
+    var b = new LcPricingModel.PackageVariables(141, 55);
+    var c = LcPricingModel.PricingVariables.ForNewProviderPackage(141, 55, 14, 9);
+    
+    var d = LcPricingModel.PricingVariables.FromProviderPackage(141, 56);
+    var e = LcPricingModel.PricingVariables.ForNewProviderPackage(141, 56, 16, 1);
+
+}
+<h1>Testing PricingVariables class</h1>
+<h2>For Housekeeper</h2>
+<div>FromProviderPackage:
+@ObjectInfo.Print(a)
+</div>
+<div>FromProviderPackage (packagevariables):
+@ObjectInfo.Print(b)
+</div>
+<div>ForNewProviderPackage:
+@ObjectInfo.Print(c)
+</div>
+
+<h2>For Babysitter</h2>
+<div>FromProviderPackage:
+@ObjectInfo.Print(d)
+</div>
+<div>ForNewProviderPackage:
+@ObjectInfo.Print(e)
+</div>
+<div>NumberOfChildren from NewProviderPackage: <br />
+As float: @(e.GetValue<float>("NumberOfChildren", -1)) <br/>
+As int: @(e.GetValue<int>("NumberOfChildren", -1)) <br />
+As string: @(e.GetValue<string>("NumberOfChildren", "-1")) <br />
+Setting it to 3 <br />
+@{
+    // Setting all values to 1
+    foreach(var v in e){
+        v.Value.Value = 1;
+    }
+    // Override NumberOfChildren to 3
+    e["NumberOfChildren"].Value = 3;
+}
+As float: @(e.GetValue<float>("NumberOfChildren", -1)) <br/>
+As int: @(e.GetValue<int>("NumberOfChildren", -1)) <br />
+As string: @(e.GetValue<string>("NumberOfChildren", "-1")) <br />
+@{
+    e.Save();
+    e.Save(-100, 1);
+}
+</div>
