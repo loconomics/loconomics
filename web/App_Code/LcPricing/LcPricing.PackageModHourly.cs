@@ -103,44 +103,44 @@ public static partial class LcPricingModel
                     {
                         hSurcharges.AppendFormat("<li><label>$ <input type='text' name='{1}-value' value='{3}' /> <span class='has-tooltip' title='{2}'>{0}</span></label></li>",
                             provar.Value.Def.HourlySurchargeLabel,
-                            provar.Value.Def.InternalName,
+                            provar.Value.Def.InternalName, //==Key
                             provar.Value.Def.HourlySurchargeLabelPopUp,
-                            provar.Value.Value);
+                            Request[provar.Key + "-value"] ?? provar.Value.Value);
                     }
                     else
                     {
                         // Is not a surcharge, is a value
                         hValues.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span>: $ <input type='text' name='{1}-value' value='{3}' /></label></li>",
                             provar.Value.Def.VariableLabel,
-                            provar.Value.Def.InternalName,
+                            provar.Value.Def.InternalName, //==Key
                             provar.Value.Def.VariableLabelPopUp,
-                            provar.Value.Value);
+                            Request[provar.Key + "-value"] ?? provar.Value.Value);
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.NumberIncludedLabel))
                     {
                         hIncludes.AppendFormat("<li><label>{0} <input type='text' name='{1}-numberincluded' value='{3}' /> <span class='has-tooltip' title='{2}'>{4}/{5}</span></label></li>",
                             provar.Value.Def.NumberIncludedLabel,
-                            provar.Value.Def.InternalName,
+                            provar.Value.Def.InternalName, //==Key
                             provar.Value.Def.NumberIncludedLabelPopUp,
-                            provar.Value.ProviderNumberIncluded,
+                            (object)(Request[provar.Key + "-numberincluded"]) ?? provar.Value.ProviderNumberIncluded,
                             provar.Value.Def.VariableNameSingular,
                             provar.Value.Def.VariableNamePlural);
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.MinNumberAllowedLabel))
                     {
-                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-minnumberallowed' /></label></li>",
+                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-minnumberallowed' value='{3}' /></label></li>",
                             provar.Value.Def.MinNumberAllowedLabel,
-                            provar.Value.Def.InternalName,
+                            provar.Value.Def.InternalName, //==Key
                             provar.Value.Def.MinNumberAllowedLabelPopUp,
-                            provar.Value.ProviderMinNumberAllowed);
+                            (object)(Request[provar.Key + "-minnumberallowed"]) ?? provar.Value.ProviderMinNumberAllowed);
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.MaxNumberAllowedLabel))
                     {
-                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-maxnumberallowed' /></label></li>",
+                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-maxnumberallowed' value='{3}' /></label></li>",
                             provar.Value.Def.MaxNumberAllowedLabel,
-                            provar.Value.Def.InternalName,
+                            provar.Value.Def.InternalName, //==Key
                             provar.Value.Def.MaxNumberAllowedLabelPopUp,
-                            provar.Value.ProviderMaxNumberAllowed);
+                            (object)(Request[provar.Key + "-maxnumberallowed"]) ?? provar.Value.ProviderMaxNumberAllowed);
                     }
                 }
             }
@@ -185,35 +185,38 @@ public static partial class LcPricingModel
             PricingVariables provars = PricingVariables.FromPackageBaseData(package);
             foreach (var provar in provars)
             {
-                // Emit error if there is not a value or is not of the desired type
-                if (String.IsNullOrWhiteSpace(Request[provar.Key + "-value"]))
+                if (provar.Value.Def.IsProviderVariable)
                 {
-                    modelState.AddError(provar.Key + "-value", LcRessources.RequiredField(provar.Value.Def.VariableLabel));
-                    valid = false;
-                }
-                else if (!LcUtils.ValidateType(Request[provar.Key + "-value"], provar.Value.Def.DataType))
-                {
-                    modelState.AddError(provar.Key + "-value", LcRessources.InvalidFieldValue(provar.Value.Def.VariableLabel));
-                    valid = false;
-                }
-                // Check the optional variable value properties (number, min, max)
-                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-numberincluded"]) &&
-                    !Request[provar.Key + "-numberincluded"].IsDecimal())
-                {
-                    modelState.AddError(provar.Key + "-numberincluded", String.Format("Invalid number for included '{0}'", provar.Value.Def.VariableNameSingular));
-                    valid = false;
-                }
-                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-minnumberallowed"]) &&
-                    !Request[provar.Key + "-minnumberallowed"].IsDecimal())
-                {
-                    modelState.AddError(provar.Key + "-minnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MinNumberAllowedLabel));
-                    valid = false;
-                }
-                if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-maxnumberallowed"]) &&
-                    !Request[provar.Key + "-maxnumberallowed"].IsDecimal())
-                {
-                    modelState.AddError(provar.Key + "-maxnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MaxNumberAllowedLabel));
-                    valid = false;
+                    // Emit error if there is not a value or is not of the desired type
+                    if (String.IsNullOrWhiteSpace(Request[provar.Key + "-value"]))
+                    {
+                        modelState.AddError(provar.Key + "-value", LcRessources.RequiredField(provar.Value.Def.VariableLabel));
+                        valid = false;
+                    }
+                    else if (!LcUtils.ValidateType(Request[provar.Key + "-value"], provar.Value.Def.DataType))
+                    {
+                        modelState.AddError(provar.Key + "-value", LcRessources.InvalidFieldValue(provar.Value.Def.VariableLabel));
+                        valid = false;
+                    }
+                    // Check the optional variable value properties (number, min, max)
+                    if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-numberincluded"]) &&
+                        !Request[provar.Key + "-numberincluded"].IsDecimal())
+                    {
+                        modelState.AddError(provar.Key + "-numberincluded", String.Format("Invalid number for included '{0}'", provar.Value.Def.VariableNameSingular));
+                        valid = false;
+                    }
+                    if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-minnumberallowed"]) &&
+                        !Request[provar.Key + "-minnumberallowed"].IsDecimal())
+                    {
+                        modelState.AddError(provar.Key + "-minnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MinNumberAllowedLabel));
+                        valid = false;
+                    }
+                    if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-maxnumberallowed"]) &&
+                        !Request[provar.Key + "-maxnumberallowed"].IsDecimal())
+                    {
+                        modelState.AddError(provar.Key + "-maxnumberallowed", String.Format("Invalid number for '{0}'", provar.Value.Def.MaxNumberAllowedLabel));
+                        valid = false;
+                    }
                 }
             }
             return valid;
@@ -224,13 +227,16 @@ public static partial class LcPricingModel
             // Get values from for per variable
             foreach (var provar in provars)
             {
-                // Value
-                provar.Value.Value = LcUtils.GetTypedValue(Request[provar.Key + "-value"], null, provar.Value.Def.DataType);
-                // Number Included
-                provar.Value.ProviderNumberIncluded = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-numberincluded"], 0);
-                // Min/Max allowed
-                provar.Value.ProviderMinNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-minnumberallowed"], 0);
-                provar.Value.ProviderMaxNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-maxnumberallowed"], 0);
+                if (provar.Value.Def.IsProviderVariable)
+                {
+                    // Value
+                    provar.Value.Value = LcUtils.GetTypedValue(Request[provar.Key + "-value"], null, provar.Value.Def.DataType);
+                    // Number Included
+                    provar.Value.ProviderNumberIncluded = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-numberincluded"], 0);
+                    // Min/Max allowed
+                    provar.Value.ProviderMinNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-minnumberallowed"], 0);
+                    provar.Value.ProviderMaxNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-maxnumberallowed"], 0);
+                }
             }
             provars.Save();
         }

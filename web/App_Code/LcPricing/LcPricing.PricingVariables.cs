@@ -240,6 +240,22 @@ public static partial class LcPricingModel
             return ret;
         }
         /// <summary>
+        /// Returns a set of pricingVariables with the saved values for the given provider package
+        /// updated with current set of variables assigned to the position and pricingType,
+        /// suitable to fill the 'edit package' form.
+        /// </summary>
+        /// <param name="providerID"></param>
+        /// <param name="packageID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="pricingTypeID"></param>
+        /// <returns></returns>
+        public static PricingVariables FromUpdatedProviderPackage(int providerID, int packageID, int positionID, int pricingTypeID)
+        {
+            var ret = new PricingVariables(providerID, packageID);
+            LoadUpdated(ret, providerID, packageID, positionID, pricingTypeID);
+            return ret;
+        }
+        /// <summary>
         /// Get the collection of pricing variables required to create a package.
         /// When only loading variables to create the form, packageID can be 0 (providerID too),
         /// but for when using it to get the posted values and saved in database, all ID fields
@@ -269,7 +285,7 @@ public static partial class LcPricingModel
             if (package.ID == 0)
                 provars = PricingVariables.ForNewProviderPackage(package.ProviderUserID, 0, package.PositionID, package.PricingTypeID);
             else
-                provars = PricingVariables.FromProviderPackage(package.ProviderUserID, package.ID);
+                provars = PricingVariables.FromUpdatedProviderPackage(package.ProviderUserID, package.ID, package.PositionID, package.PricingTypeID);
             return provars;
         }
         #endregion
@@ -362,8 +378,8 @@ public static partial class LcPricingModel
         // ProposalB++Alternative backend implementation
         #region DB Backend
         #region Consts
-        const string sqlGetVariables = @"
-            SELECT  V.PricingVariableID
+        const string selectVarValuesDef = @"
+            SELECT  D.PricingVariableID
                     ,V.ProviderPackageID
                     ,V.UserID
                     ,V.PricingEstimateID
@@ -393,18 +409,32 @@ public static partial class LcPricingModel
                     ,D.MaxNumberAllowedLabel
                     ,D.MaxNumberAllowedLabelPopUp
                     ,D.CalculateWithVariableID
+        ";
+        const string sqlGetVariablesActualValues = selectVarValuesDef + @"
             FROM    PricingVariableValue As V
                         INNER JOIN
                     PricingVariableDefinition As D
                         ON V.PricingVariableID = D.PricingVariableID
-                        AND D.LanguageID = @4
-                        AND D.CountryID = @5
             WHERE   (UserID = @0 OR @0 = -1)
                     AND ProviderPackageID = @1
                     AND PricingEstimateID = @2
                     AND PricingEstimateRevision = @3
-                    AND V.Active = 1
-                    AND D.Active = 1
+                    AND D.LanguageID = @4
+                    AND D.CountryID = @5
+        ";
+        const string sqlGetVariablesForEdit = selectVarValuesDef + @"
+            FROM    PricingVariableDefinition As D
+                     LEFT JOIN
+                    PricingVariableValue As V
+                        ON V.PricingVariableID = D.PricingVariableID
+                        AND V.UserID = @0
+                        AND V.ProviderPackageID = @1
+                        AND V.Active = 1
+            WHERE   D.Active = 1
+                    AND D.LanguageID = @4
+                    AND D.CountryID = @5
+                    AND (D.PositionID = @2 OR D.PositionID = -1)
+                    AND D.PricingTypeID = @3
         ";
         const string sqlGetVariablesForNewPackage = @"
             SELECT  D.PricingVariableID
@@ -504,11 +534,38 @@ public static partial class LcPricingModel
                 }
             }
         }
+        /// <summary>
+        /// Load the set of pricingVariables with the saved values for the given provider package
+        /// updated with current set of variables assigned to the position and pricingType,
+        /// suitable to fill the 'edit package' form.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="userID"></param>
+        /// <param name="packageID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="pricingTypeID"></param>
+        private static void LoadUpdated(PricingVariables data, int userID, int packageID, int positionID, int pricingTypeID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var vars = db.Query(sqlGetVariablesForEdit,
+                    userID,
+                    packageID,
+                    positionID,
+                    pricingTypeID,
+                    LcData.GetCurrentLanguageID(),
+                    LcData.GetCurrentCountryID());
+                foreach(var r in vars)
+                {
+                    data[r.InternalName] = PricingVariableValue.CreateFromDbRecord(r);
+                }
+            }
+        }
         private static void Load(PricingVariables data, int userID, int packageID, int pricingEstimateID = 0, int pricingEstimateRevision = 0)
         {
             using (var db = Database.Open("sqlloco"))
             {
-                var vars = db.Query(sqlGetVariables, userID, packageID, pricingEstimateID, pricingEstimateRevision,
+                var vars = db.Query(sqlGetVariablesActualValues, userID, packageID, pricingEstimateID, pricingEstimateRevision,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 foreach(var r in vars)
                 {
@@ -533,7 +590,7 @@ public static partial class LcPricingModel
                 foreach (var v in data) {
                     // Only save provider values when there is no pricingEstimate
                     // (avoid save customer variables that are null, unneed and will fail)
-                    if (v.Value.Def.IsProviderVariable)
+                    if (pricingEstimateID > 0 || v.Value.Def.IsProviderVariable)
                         db.Execute(sqlSetVariables, 
                             userID, packageID, pricingEstimateID, pricingEstimateRevision,
                             v.Value.PricingVariableID,
