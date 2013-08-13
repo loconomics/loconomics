@@ -220,6 +220,12 @@
             var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)p.UserID);
             
             using (var db = Database.Open("sqlloco")) {
+				// Use Mod to save some specific data (as variables), but too allow set-up some package data
+                // in order to let the pricing-mod work fine.
+                if (config.Mod != null) {
+					config.Mod.SaveProviderData(data, db);
+				}
+                // Save the package
                 data.ID = db.QueryValue(sqlSetPackage,
                     data.ID,
                     data.PricingTypeID,
@@ -239,6 +245,7 @@
                     1, // Active
                     config.IsAddon
                 );
+                // Save the package attributes
                 if (config.IncludeServiceAttributes) {
                     db.Execute(sqlDelDetails, data.ID);
                     foreach(var att in data.ServiceAttributes) {
@@ -257,9 +264,6 @@
                         );
                     }
                 }
-				if (config.Mod != null) {
-					config.Mod.SaveProviderData(data, db);
-				}
             }
         
             // Show the profile activation popup with 'next-step' buttons and progress information when need,

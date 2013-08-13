@@ -236,6 +236,14 @@ public static partial class LcPricingModel
                     // Min/Max allowed
                     provar.Value.ProviderMinNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-minnumberallowed"], 0);
                     provar.Value.ProviderMaxNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-maxnumberallowed"], 0);
+
+                    // Detect pricing variable 'hourly rate' to copy the value to the standard field on package
+                    // PricingVariableID:1 'hourly rate' for all positions and pricings.
+                    if (provar.Value.PricingVariableID == 1)
+                    {
+                        package.PriceRate = provar.Value.Value;
+                        package.PriceRateUnit = "hour";
+                    }
                 }
             }
             provars.Save();
