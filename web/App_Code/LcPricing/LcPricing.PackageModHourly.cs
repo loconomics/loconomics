@@ -25,33 +25,31 @@ public static partial class LcPricingModel
         #region Customer form part
         public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
-            /* IMPORTANT: we calculate here the service duration for one session based on some custom variables for housekeeper pricing,
+            /* IMPORTANT: we calculate here the service duration for one session based on the pricing variables,
              * final price and fees are calculated in the standard code using the package Duration field, because of that
              * we only update package.Duration here for later complete price calculation */
 
-            // Get customer input
-            /*var nbeds = Request[String.Format("bedrooms-number[{0}]", package.ID)].AsInt();
-            var nbaths = Request[String.Format("bathrooms-number[{0}]", package.ID)].AsInt();
-            // get provider rate
-            var providerRate = GetProviderCleaningRate(package);
-            // Apply formula, changed by the providerRate (variation from the average)
-            var duration = ApplyFormula(nbeds, nbaths) * providerRate;
+            // Getting variables
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+            double duration = 0;
+
+            // Iterating customer variables:
+            foreach (var provar in provars)
+            {
+                if (provar.Value.Def.IsCustomerVariable)
+                {
+                    // Setting value from the form
+                    provar.Value.Value = LcUtils.GetTypedValue(Request[String.Format("{0}[{1}]", provar.Key, package.ID)], null, provar.Value.Def.DataType);
+                }
+                // TODO Calculate duration
+            }
+
+            // TODO Finish Calculate duration
             // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
             var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
-            // Create variables object with the specific data used in this calculation (will be saved later by the normal packages process)
-            // Provider values get included in the object, something that is wanted for historic purposes on database.
-            var vars = new PackageVariables(package.ProviderUserID, package.ID);
-            vars["BathsNumber"] = nbaths;
-            vars["BedsNumber"] = nbeds;
-            // Change package with the information:
+
+            // Update package data:
             package.Duration = timeDuration;
-            modelData.ProviderInput = providerRate;
-            modelData.CustomerInput = vars;*/
-
-            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
-
-            // TODO
-
             modelData.CustomerInput = provars;
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
