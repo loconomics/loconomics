@@ -47,6 +47,12 @@ public static partial class LcPricingModel
             package.Duration = timeDuration;
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = vars;*/
+
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+
+            // TODO
+
+            modelData.CustomerInput = provars;
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {

@@ -184,6 +184,12 @@ public static partial class LcPricingModel
                 custInput = modelData.CustomerInput.ToString();
                 ((PackageVariables)modelData.CustomerInput).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
             }
+            // Supporting PricingVariables
+            else if (modelData.CustomerInput is PricingVariables)
+            {
+                custInput = modelData.CustomerInput.ToString();
+                ((PricingVariables)modelData.CustomerInput).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
+            }
             else
             {
                 custInput = Json.Encode(modelData.CustomerInput ?? "");
