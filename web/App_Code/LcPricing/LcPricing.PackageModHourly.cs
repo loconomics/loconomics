@@ -13,27 +13,15 @@ public static partial class LcPricingModel
 {
     public class PackageModHourly : PackageMod
     {
-        double formulaA, formulaB, formulaC;
-        string type;
-        int sliderStep = 20;
         public PackageModHourly()
         {
         }
-        /// <summary>
-        /// Calculate and returns the time in minutes for the given values
-        /// </summary>
-        /// <param name="numbedrooms"></param>
-        /// <param name="numbathrooms"></param>
-        /// <returns></returns>
-        private double ApplyFormula(int numbedrooms = 2, int numbathrooms = 2)
+        #region Utilities
+        private string EncodeForHtml(string s)
         {
-            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC);
+            return HttpContext.Current.Server.HtmlEncode(s);
         }
-        private double GetProviderCleaningRate(PackageBaseData package)
-        {
-            // return .8; // 140.34 / formulaAverageT
-            return (new PackageVariables(package.ProviderUserID, package.ID)).Get<double>("CleaningRate", 1.0);
-        }
+        #endregion
         #region Customer form part
         public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
@@ -42,7 +30,7 @@ public static partial class LcPricingModel
              * we only update package.Duration here for later complete price calculation */
 
             // Get customer input
-            var nbeds = Request[String.Format("bedrooms-number[{0}]", package.ID)].AsInt();
+            /*var nbeds = Request[String.Format("bedrooms-number[{0}]", package.ID)].AsInt();
             var nbaths = Request[String.Format("bathrooms-number[{0}]", package.ID)].AsInt();
             // get provider rate
             var providerRate = GetProviderCleaningRate(package);
@@ -58,29 +46,54 @@ public static partial class LcPricingModel
             // Change package with the information:
             package.Duration = timeDuration;
             modelData.ProviderInput = providerRate;
-            modelData.CustomerInput = vars;
+            modelData.CustomerInput = vars;*/
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {
-            // get provider rate
-            var providerRate = GetProviderCleaningRate(package);
-            // Get HourlyRate for client-side calculation, and fees
-            var price = new Price(package.PriceRate ?? 0M, fee, 1);
-            var hourlyFee = price.FeePrice;
-            var hourlyRate = price.TotalPrice;
+            // Get variables
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
 
-            var s = new StringBuilder();
+            var sv = new StringBuilder();
 
-            s.AppendFormat("<div class='housekeeper-pricing' data-formula-a='{0}' data-formula-b='{1}' data-formula-c='{2}' data-hourly-rate='{3}' data-hourly-fee='{4}' data-provider-rate='{5}'>", formulaA, formulaB, formulaC, hourlyRate, hourlyFee, providerRate);
-            s.Append(@"<div>Help us determine an accurate 
-                <span class='has-tooltip' title='You and your provider will review this estimate and finalize before the work begins.'>
-                price estimate</span></div>");
+            // Iterating customer variables:
+            foreach (var provar in provars)
+            {
+                if (provar.Value.Def.IsCustomerVariable)
+                {
+                    var calculateWithVar = provars.GetCalculateWithVariableFor(provar.Value);
+                    var provPrice = new Price(calculateWithVar.GetValue<decimal>(0), fee, 1);
+                    var unitPrice = provPrice.TotalPrice;
+                    var unitFee = provPrice.FeePrice;
+                    string sliderFootnote = String.Format(provar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each"
+                        ,calculateWithVar.GetValue<decimal>(0));
 
-            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number[{0}]' type='text' /></label></div>", package.ID);
-            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number[{0}]' type='text' /></label></div>", package.ID);
-            s.Append("</div>");
+                    sv.AppendFormat(@"
+                        <div class='customer-slider' data-unit-price='{2}' data-unit-fee='{3}'
+                            data-slider-value='{6}' data-slider-step='{7}' data-slider-footnote='{8}' data-slider-stype='hourly'
+                            data-slider-min='{9}' data-slider-max='{10}' data-slider-number-included='{11}'>
+                        <label><span class='has-tooltip' title='{5}'>{4}</span>: <input name='{1}[{0}]' type='text' /></label></div>"
+                        ,package.ID
+                        ,EncodeForHtml(provar.Key)
+                        ,unitPrice
+                        ,unitFee
+                        ,EncodeForHtml(provar.Value.Def.VariableLabel)
+                        ,EncodeForHtml(provar.Value.Def.VariableLabelPopUp)
+                        ,provar.Value.Value
+                        ,1 // slider step fixed to 1
+                        ,EncodeForHtml(sliderFootnote)
+                        ,calculateWithVar.ProviderMinNumberAllowed
+                        ,calculateWithVar.ProviderMaxNumberAllowed
+                        ,calculateWithVar.ProviderNumberIncluded);
+                }
+            }
 
-            return s.ToString();
+            // Create html
+            var h = new StringBuilder();
+            h.AppendFormat("<div class='hourly-pricing'>");
+            h.Append(sv);
+            h.Append("</div>");
+
+            return h.ToString();
         }
         #endregion
         #region Provider form part
@@ -102,44 +115,44 @@ public static partial class LcPricingModel
                     if (!String.IsNullOrEmpty(provar.Value.Def.HourlySurchargeLabel))
                     {
                         hSurcharges.AppendFormat("<li><label>$ <input type='text' name='{1}-value' value='{3}' /> <span class='has-tooltip' title='{2}'>{0}</span></label></li>",
-                            provar.Value.Def.HourlySurchargeLabel,
-                            provar.Value.Def.InternalName, //==Key
-                            provar.Value.Def.HourlySurchargeLabelPopUp,
+                            EncodeForHtml(provar.Value.Def.HourlySurchargeLabel),
+                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
+                            EncodeForHtml(provar.Value.Def.HourlySurchargeLabelPopUp),
                             Request[provar.Key + "-value"] ?? provar.Value.Value);
                     }
                     else
                     {
                         // Is not a surcharge, is a value
                         hValues.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span>: $ <input type='text' name='{1}-value' value='{3}' /></label></li>",
-                            provar.Value.Def.VariableLabel,
-                            provar.Value.Def.InternalName, //==Key
-                            provar.Value.Def.VariableLabelPopUp,
+                            EncodeForHtml(provar.Value.Def.VariableLabel),
+                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
+                            EncodeForHtml(provar.Value.Def.VariableLabelPopUp),
                             Request[provar.Key + "-value"] ?? provar.Value.Value);
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.NumberIncludedLabel))
                     {
                         hIncludes.AppendFormat("<li><label>{0} <input type='text' name='{1}-numberincluded' value='{3}' /> <span class='has-tooltip' title='{2}'>{4}/{5}</span></label></li>",
-                            provar.Value.Def.NumberIncludedLabel,
-                            provar.Value.Def.InternalName, //==Key
-                            provar.Value.Def.NumberIncludedLabelPopUp,
+                            EncodeForHtml(provar.Value.Def.NumberIncludedLabel),
+                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
+                            EncodeForHtml(provar.Value.Def.NumberIncludedLabelPopUp),
                             (object)(Request[provar.Key + "-numberincluded"]) ?? provar.Value.ProviderNumberIncluded,
-                            provar.Value.Def.VariableNameSingular,
-                            provar.Value.Def.VariableNamePlural);
+                            EncodeForHtml(provar.Value.Def.VariableNameSingular),
+                            EncodeForHtml(provar.Value.Def.VariableNamePlural));
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.MinNumberAllowedLabel))
                     {
                         hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-minnumberallowed' value='{3}' /></label></li>",
-                            provar.Value.Def.MinNumberAllowedLabel,
-                            provar.Value.Def.InternalName, //==Key
-                            provar.Value.Def.MinNumberAllowedLabelPopUp,
+                            EncodeForHtml(provar.Value.Def.MinNumberAllowedLabel),
+                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
+                            EncodeForHtml(provar.Value.Def.MinNumberAllowedLabelPopUp),
                             (object)(Request[provar.Key + "-minnumberallowed"]) ?? provar.Value.ProviderMinNumberAllowed);
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.MaxNumberAllowedLabel))
                     {
                         hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-maxnumberallowed' value='{3}' /></label></li>",
-                            provar.Value.Def.MaxNumberAllowedLabel,
-                            provar.Value.Def.InternalName, //==Key
-                            provar.Value.Def.MaxNumberAllowedLabelPopUp,
+                            EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabel),
+                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
+                            EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabelPopUp),
                             (object)(Request[provar.Key + "-maxnumberallowed"]) ?? provar.Value.ProviderMaxNumberAllowed);
                     }
                 }

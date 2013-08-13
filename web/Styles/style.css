@@ -357,12 +357,18 @@ input.button{ padding-top: 2px; padding-bottom: 2px;}
     display: block;
     clear: both;
     height: 1.4em;
-    margin: .2em 0 .5em;
+    margin: .2em 0;
 }
 .ui-slider-labels > .ui-slider-label {
     height: 1.4em;
     position: absolute;
     cursor: pointer;
+}
+/* Footnote added to jquery-ui-slider */
+.ui-slider-footnote {
+    text-align: center;
+    font-size: 1em;
+    line-height: normal;
 }
 
 /*------------------------------

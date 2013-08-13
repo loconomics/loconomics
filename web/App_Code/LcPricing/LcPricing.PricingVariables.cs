@@ -185,6 +185,7 @@ public static partial class LcPricingModel
     {
         #region Instance private fields
         Dictionary<string, PricingVariableValue> data;
+        Dictionary<int, PricingVariableValue> idIndex;
         int userID, packageID, pricingEstimateID, pricingEstimateRevision;
         #endregion
 
@@ -207,6 +208,7 @@ public static partial class LcPricingModel
         private PricingVariables(int userID, int packageID)
         {
             data = new Dictionary<string, PricingVariableValue>();
+            idIndex = new Dictionary<int,PricingVariableValue>();
             this.userID = userID;
             this.packageID = packageID;
             this.pricingEstimateID = 0;
@@ -291,6 +293,7 @@ public static partial class LcPricingModel
         #endregion
         #endregion
 
+        #region Using variables
         /// <summary>
         /// Gets the value for a variable by
         /// its internal name (key), or the
@@ -323,7 +326,20 @@ public static partial class LcPricingModel
                 data[key] = value;
             }
         }
+        /// <summary>
+        /// Get the linked variable to the one given through the field CalculateWithVariable
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        public PricingVariableValue GetCalculateWithVariableFor(PricingVariableValue variable)
+        {
+            if (variable.Def.CalculateWithVariableID.HasValue)
+                return idIndex[variable.Def.CalculateWithVariableID.Value];
+            return null;
+        }
+        #endregion
 
+        #region Saving
         /// <summary>
         /// Save data on database
         /// </summary>
@@ -347,7 +363,9 @@ public static partial class LcPricingModel
                 this.userID = onBehalfUserID;
             Save();
         }
+        #endregion
 
+        #region Iterating
         public IEnumerator<KeyValuePair<string, PricingVariableValue>> GetEnumerator()
         {
             return data.GetEnumerator();
@@ -357,7 +375,9 @@ public static partial class LcPricingModel
         {
             return data.GetEnumerator();
         }
+        #endregion
 
+        #region Object override
         /// <summary>
         /// Create a string in JSON format that represents the variables with value
         /// included in this instance.
@@ -374,6 +394,7 @@ public static partial class LcPricingModel
             }
             return Json.Encode(new DynamicJsonObject(copy));
         }
+        #endregion
 
         // ProposalB++Alternative backend implementation
         #region DB Backend
@@ -523,7 +544,7 @@ public static partial class LcPricingModel
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 foreach(var r in vars)
                 {
-                    data[r.InternalName] = new PricingVariableValue {
+                    var varValue = new PricingVariableValue {
                         PricingVariableID           = r.PricingVariableID
                         ,Value                      = null
                         ,ProviderNumberIncluded     = null
@@ -531,6 +552,9 @@ public static partial class LcPricingModel
                         ,ProviderMaxNumberAllowed   = null
                         ,Def                        = PricingVariableDefinition.CreateFromDbRecord(r)
                     };
+                    data[r.InternalName] = varValue;
+                    // Update index
+                    data.idIndex[varValue.PricingVariableID] = varValue;
                 }
             }
         }
@@ -557,7 +581,10 @@ public static partial class LcPricingModel
                     LcData.GetCurrentCountryID());
                 foreach(var r in vars)
                 {
-                    data[r.InternalName] = PricingVariableValue.CreateFromDbRecord(r);
+                    var varValue = PricingVariableValue.CreateFromDbRecord(r);
+                    data[r.InternalName] = varValue;
+                    // Update index
+                    data.idIndex[varValue.PricingVariableID] = varValue;
                 }
             }
         }
@@ -569,7 +596,10 @@ public static partial class LcPricingModel
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
                 foreach(var r in vars)
                 {
-                    data[r.InternalName] = PricingVariableValue.CreateFromDbRecord(r);
+                    var varValue = PricingVariableValue.CreateFromDbRecord(r);
+                    data[r.InternalName] = varValue;
+                    // Update index
+                    data.idIndex[varValue.PricingVariableID] = varValue;
                 }
             }
         }

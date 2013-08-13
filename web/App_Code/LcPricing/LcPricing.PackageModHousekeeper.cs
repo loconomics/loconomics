@@ -95,8 +95,8 @@ public static partial class LcPricingModel
                 <span class='has-tooltip' title='You and your provider will review this estimate and finalize before the work begins.'>
                 price estimate</span></div>");
 
-            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number[{0}]' type='text' /></label></div>", package.ID);
-            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number[{0}]' type='text' /></label></div>", package.ID);
+            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' data-slider-stype='housekeeper' class='housekeeper-pricing-bedrooms customer-slider'><label>Bedrooms: <input name='bedrooms-number[{0}]' type='text' /></label></div>", package.ID);
+            s.AppendFormat(@"<div data-slider-value='3' data-slider-step='1' data-slider-stype='housekeeper' class='housekeeper-pricing-bathrooms customer-slider'><label>Bathrooms: <input name='bathrooms-number[{0}]' type='text' /></label></div>", package.ID);
             s.Append("</div>");
 
             return s.ToString();
@@ -112,7 +112,7 @@ public static partial class LcPricingModel
             // Calculate time for the ratio
             var time = ratio * ApplyFormula();
 
-            s.AppendFormat("<div class='housekeeper-pricing' data-slider-value='{0}' data-slider-step='{1}'>", ApplyFormula(), sliderStep);
+            s.AppendFormat("<div class='housekeeper-pricing' data-slider-value='{0}' data-slider-step='{1}' data-slider-stype='housekeeper'>", ApplyFormula(), sliderStep);
             s.AppendFormat("<div class='label'>Average time to {0} clean a 2 bedroom/2 bathroom home: <span class='note has-tooltip' title='We use this to help us determine an accurate estimate. You and the client will review the estimate and finalize before you begin the work.'>Why are we asking this?</span></div>", type);
             s.AppendFormat(@"<div class='input'><input name='provider-average-time' type='text' value='{0}' />
                     <div class='provider-average-time'>

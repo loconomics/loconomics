@@ -263,82 +263,113 @@ LC.initScheduleStep = function () {
 };
 // Sliders on Housekeeper price:
 LC.initCustomerPackageSliders = function () {
-    /* Houseekeeper pricing */
-    function updateAverage($c, value) {
-        // Update input value and trigger change event to notify standard listeners
-        $c.find('input').val(value).change();
-    }
-    function calculateHousekeeperPackage($sliderContent) {
-        // Look for the housekeeper pricing container for this package
-        // that contains all fields for calculation
-        var calcContext = $sliderContent.closest('.housekeeper-pricing');
-        // Get the package container, where contents to be update are
-        var pak = calcContext.closest('tr');
-        // Calculation formula for housekeeper pricing
-        var formula = function (numbedrooms, numbathrooms) {
-            var formulaA = parseFloat(calcContext.data('formula-a')),
-                formulaB = parseFloat(calcContext.data('formula-b')),
-                formulaC = parseFloat(calcContext.data('formula-c')),
-                rate = parseFloat(calcContext.data('provider-rate'));
-            // It returns a time in float minutes
-            return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
-        };
-        // Getting var-values from form and calculating
-        var numbedrooms = calcContext.find('.housekeeper-pricing-bedrooms input').val(),
-            numbathrooms = calcContext.find('.housekeeper-pricing-bathrooms input').val();
-        // ...Gets duration rounded up to quarter-hours.
-        var duration = LC.roundTimeToQuarterHour(
-        // ..create a time object..
-            LC.timeSpan.fromMinutes(
-        // Computes formula with customer values...
-                formula(numbedrooms, numbathrooms)
-            )
-        , LC.roundingTypeEnum.Up);
-        // Updating user-viewed time, show it in the smart way
-        pak.find('.package-duration').text(duration.toSmartString());
-        // Recalculating price with new time, using the package hourly-rate
-        var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
-        var hourlyFee = parseFloat(calcContext.data('hourly-fee'));
-        // Calculate the price for the total time,
-        // with the hourleRate (already with fees), hourlyFeeAmount
-        // and the already rounded duration:
-        var totalTimePrice = LC.calculateHourlyPrice(duration, hourlyRate, hourlyFee);
-        // Set new item-price and trigger a change event to allow the items-fees calculation
-        // system do their job and showing the total price
-        LC.setMoneyNumber(totalTimePrice.totalPrice, pak.find('.calculate-item-price'));
-        LC.setMoneyNumber(totalTimePrice.feePrice, pak.find('.calculate-item-fee'));
-        pak.find('.calculate-item-price').trigger('change');
-    }
+    /** Setups for different 'special type' sliders (stype)
+    **/
+    var stypes = {};
+    /** Houseekeeper pricing
+    **/
+    stypes['housekeeper'] = {
+        updateBackendValue: function housekeeper_updateBackendValue($c, value) {
+            // Update input value and trigger change event to notify standard listeners
+            $c.find('input').val(value).change();
+        },
+        calculate: function housekeeper_calculate($sliderContent) {
+            // Look for the housekeeper pricing container for this package
+            // that contains all fields for calculation
+            var calcContext = $sliderContent.closest('.housekeeper-pricing');
+            // Get the package container, where contents to be update are
+            var pak = calcContext.closest('tr');
+            // Calculation formula for housekeeper pricing
+            var formula = function (numbedrooms, numbathrooms) {
+                var formulaA = parseFloat(calcContext.data('formula-a')),
+                    formulaB = parseFloat(calcContext.data('formula-b')),
+                    formulaC = parseFloat(calcContext.data('formula-c')),
+                    rate = parseFloat(calcContext.data('provider-rate'));
+                // It returns a time in float minutes
+                return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
+            };
+            // Getting var-values from form and calculating
+            var numbedrooms = calcContext.find('.housekeeper-pricing-bedrooms input').val(),
+                numbathrooms = calcContext.find('.housekeeper-pricing-bathrooms input').val();
+            // ...Gets duration rounded up to quarter-hours.
+            var duration = LC.roundTimeToQuarterHour(
+            // ..create a time object..
+                LC.timeSpan.fromMinutes(
+            // Computes formula with customer values...
+                    formula(numbedrooms, numbathrooms)
+                )
+            , LC.roundingTypeEnum.Up);
+            // Updating user-viewed time, show it in the smart way
+            pak.find('.package-duration').text(duration.toSmartString());
+            // Recalculating price with new time, using the package hourly-rate
+            var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
+            var hourlyFee = parseFloat(calcContext.data('hourly-fee'));
+            // Calculate the price for the total time,
+            // with the hourleRate (already with fees), hourlyFeeAmount
+            // and the already rounded duration:
+            var totalTimePrice = LC.calculateHourlyPrice(duration, hourlyRate, hourlyFee);
+            // Set new item-price and trigger a change event to allow the items-fees calculation
+            // system do their job and showing the total price
+            LC.setMoneyNumber(totalTimePrice.totalPrice, pak.find('.calculate-item-price'));
+            LC.setMoneyNumber(totalTimePrice.feePrice, pak.find('.calculate-item-fee'));
+            pak.find('.calculate-item-price').trigger('change');
+        },
+        setup: function housekeeper_setup(setup, $c) {
+            setup.min = setup.value - 3 * setup.step;
+            setup.max = setup.value + 3 * setup.step;
+        }
+    };
+    /** Hourly pricing
+    **/
+    stypes['hourly'] = {
+        updateBackendValue: function hourly_updateBackendValue($c, value) {
+        },
+        calculate: function hourly_calculage($sliderContent) {
+        },
+        setup: function hourly_setup(setup, $c) {
+            setup.min = $c.data('slider-min') || 0;
+            setup.max = $c.data('slider-max') || 50;
+        }
+    };
+    /** Initializing sliders
+    **/
     $(".customer-slider").each(function () {
         var $c = $(this);
         // Creating sliders
-        var average = $c.data('slider-value'),
-            step = $c.data('slider-step') || 1;
-        if (!average) return;
+        var initial_value = $c.data('slider-value'),
+            step = $c.data('slider-step') || 1,
+            stype = $c.data('slider-stype'),
+            footnote = $c.data('slider-footnote');
+        if (initial_value === undefined || stype === undefined || !(stype in stypes)) return;
+        stype = stypes[stype];
         var slider = $('<div class="slider"/>').appendTo($c);
+        // Basic setup
         var setup = {
             range: "min",
-            value: average,
-            min: average - 3 * step,
-            max: average + 3 * step,
+            value: initial_value,
             step: step,
             change: function (event, ui) {
-                updateAverage($c, ui.value);
+                stype.updateBackendValue($c, ui.value);
             }
         };
+        // Specific setup
+        stype.setup(setup, $c);
+        // Creating slider
         slider.slider(setup);
+        if (footnote)
+            slider.after($('<div class="ui-slider-footnote"/>').html(footnote));
         LC.createLabelsForUISlider(slider);
         // Setup the input field, hidden and with initial value synchronized with slider
         var field = $c.find('input');
         field.hide();
-        var currentValue = field.val() || average;
-        updateAverage($c, currentValue);
+        var currentValue = field.val() || initial_value;
+        stype.updateBackendValue($c, currentValue);
         slider.slider('value', currentValue);
 
         // Perform calculation of time-prices for the package on
         // init and on variables changes
-        calculateHousekeeperPackage($c);
-        $c.on('change', 'input', function () { calculateHousekeeperPackage($c) });
+        stype.calculate($c);
+        $c.on('change', 'input', function () { stype.calculate($c) });
 
         // Switching sliders visualization on active package
         $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {

@@ -11,6 +11,7 @@
     
     var d = LcPricingModel.PricingVariables.FromProviderPackage(141, 71);
     var e = LcPricingModel.PricingVariables.ForNewProviderPackage(141, 56, 16, 1);
+    var f = LcPricingModel.PricingVariables.FromUpdatedProviderPackage(141, 72, 16, 1);
 
 }
 <h1>Testing PricingVariables class</h1>
@@ -32,6 +33,10 @@
 <div>ForNewProviderPackage:
 @ObjectInfo.Print(e)
 </div>
+<div>FromUpdatedProviderPackage:
+@ObjectInfo.Print(f)
+</div>
+<div>NumberOfChildren calculate with: @(f.GetCalculateWithVariableFor(f["NumberOfChildren"]).GetValue<decimal>(0))</div>
 <div>NumberOfChildren from NewProviderPackage: <br />
 As float: @(e.GetValue<float>("NumberOfChildren", -1)) <br/>
 As int: @(e.GetValue<int>("NumberOfChildren", -1)) <br />
