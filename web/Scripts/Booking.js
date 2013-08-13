@@ -329,7 +329,7 @@ LC.initCustomerPackageSliders = function () {
     function updateBackendValue($c, value) {
         // Update input value and trigger change event to notify standard listeners
         $c.find('input').val(value).change();
-    },
+    }
     /** Initializing sliders
     **/
     $(".customer-slider").each(function () {
