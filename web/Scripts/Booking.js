@@ -269,10 +269,6 @@ LC.initCustomerPackageSliders = function () {
     /** Houseekeeper pricing
     **/
     stypes['housekeeper'] = {
-        updateBackendValue: function housekeeper_updateBackendValue($c, value) {
-            // Update input value and trigger change event to notify standard listeners
-            $c.find('input').val(value).change();
-        },
         calculate: function housekeeper_calculate($sliderContent) {
             // Look for the housekeeper pricing container for this package
             // that contains all fields for calculation
@@ -322,15 +318,18 @@ LC.initCustomerPackageSliders = function () {
     /** Hourly pricing
     **/
     stypes['hourly'] = {
-        updateBackendValue: function hourly_updateBackendValue($c, value) {
-        },
         calculate: function hourly_calculage($sliderContent) {
         },
         setup: function hourly_setup(setup, $c) {
             setup.min = $c.data('slider-min') || 0;
-            setup.max = $c.data('slider-max') || 50;
+            setup.max = $c.data('slider-max') || 20;
         }
     };
+    /* Some utilities */
+    function updateBackendValue($c, value) {
+        // Update input value and trigger change event to notify standard listeners
+        $c.find('input').val(value).change();
+    },
     /** Initializing sliders
     **/
     $(".customer-slider").each(function () {
@@ -349,7 +348,7 @@ LC.initCustomerPackageSliders = function () {
             value: initial_value,
             step: step,
             change: function (event, ui) {
-                stype.updateBackendValue($c, ui.value);
+                updateBackendValue($c, ui.value);
             }
         };
         // Specific setup
@@ -363,7 +362,7 @@ LC.initCustomerPackageSliders = function () {
         var field = $c.find('input');
         field.hide();
         var currentValue = field.val() || initial_value;
-        stype.updateBackendValue($c, currentValue);
+        updateBackendValue($c, currentValue);
         slider.slider('value', currentValue);
 
         // Perform calculation of time-prices for the package on
