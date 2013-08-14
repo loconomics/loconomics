@@ -22,6 +22,13 @@ public static partial class LcPricingModel
         public int NumberOfSessions;
         public decimal? PriceRate;
         public string PriceRateUnit;
+        /// <summary>
+        /// Hourly Surcharge is a field that doesn't exist on database but is used
+        /// for calculation of additional price for the package, being multiply
+        /// by the final package duration and added to the package price.
+        /// Its used on PriceCalculationType.HourlyPrice and Mods like hourly-pricing.
+        /// </summary>
+        public decimal HourlySurcharge;
         public bool IsPhone;
         public int LanguageID;
         public int CountryID;

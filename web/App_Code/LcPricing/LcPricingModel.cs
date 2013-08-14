@@ -117,8 +117,8 @@ public static partial class LcPricingModel
                         // (decission at Barcelona 2013-06-02)
                         var fixedPrice = new Price(thePackage.Price, fee, 0);
                         modelData.SummaryTotal.SubtotalPrice += fixedPrice.BasePrice;
-                        modelData.SummaryTotal.FeePrice = fixedPrice.FeePrice;
-                        modelData.SummaryTotal.TotalPrice = fixedPrice.TotalPrice;
+                        modelData.SummaryTotal.FeePrice += fixedPrice.FeePrice;
+                        modelData.SummaryTotal.TotalPrice += fixedPrice.TotalPrice;
 
                         // Packages with fixed price set price rate only if
                         // its unit is 'hour'.
@@ -134,16 +134,22 @@ public static partial class LcPricingModel
                         // (decission at Barcelona 2013-06-02)
                         var hourPrice = new Price(thePackage.PriceRate ?? 0, fee, 1);
 
+                        // Hourly pricing could include a 'surcharge price', that gets calculated in the Mod (normally using variables)
+                        // and set in the 'HourlySurcharge' field at thePackage: here we need to apply the rounding and fees rules
+                        // and then the price is added to the final price mutiplied by the hours, like the hourPrice.
+                        // Note: because is a an hourly calculated price, we use the same rule for decimals
+                        // as for the hourPrice: only one decimal.
+                        var hourlySurchargePrice = new Price(thePackage.HourlySurcharge, fee, 1);
+
                         // Final price is the result of multiply total duration of the service by the hourly rate
-                        // of the package.
+                        // of the package and adding the surchargePrice.
                         // Maybe the duration for one session of the package required a custom calculation, using 
                         // a package Mod, called previous to this code (config.Mod.CalculateCustomerData line),
                         // then the common calculation of duration for all sessions was applied and now we get the
-                        // final price.
-                        // ServiceDuration is in hours and PriceRate is price per hour ever on this cases
-                        modelData.SummaryTotal.SubtotalPrice += hourPrice.BasePrice * modelData.SummaryTotal.ServiceDuration;
-                        modelData.SummaryTotal.FeePrice += hourPrice.FeePrice * modelData.SummaryTotal.ServiceDuration;
-                        modelData.SummaryTotal.TotalPrice += hourPrice.TotalPrice * modelData.SummaryTotal.ServiceDuration;
+                        // final price; same for the 'surchargeHourPrice'.
+                        modelData.SummaryTotal.SubtotalPrice += (hourPrice.BasePrice * packageTimeInHours) + (hourlySurchargePrice.BasePrice * packageTimeInHours);
+                        modelData.SummaryTotal.FeePrice += (hourPrice.FeePrice * packageTimeInHours) + (hourlySurchargePrice.FeePrice * packageTimeInHours);
+                        modelData.SummaryTotal.TotalPrice += (hourPrice.TotalPrice * packageTimeInHours) + (hourlySurchargePrice.TotalPrice * packageTimeInHours);
 
                         // We get as hourlyRate the hourPrice without fees
                         hourlyRate = hourPrice.BasePrice;

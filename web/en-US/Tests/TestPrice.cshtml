@@ -28,17 +28,21 @@
     
     // Hourly price
     var hourlyRate = Request["hourlyRate"].AsDecimal(25.00M);   
+    var hourlyFeeRate = new LcPricingModel.FeeRate { Currency = fixedFeeAmount, Percentage  = feeRate };
     // Calculation to be tested:
     var hourlyPrice = new LcPricingModel.Price(
         hourlyRate,
-        new LcPricingModel.FeeRate { Currency = fixedFeeAmount, Percentage  = feeRate },
+        hourlyFeeRate,
         roundedDecimals
     );
+    // Surcharge price
+    var hourlySurcharge = Request["hourlySurcharge"].AsDecimal(0M);
     // Next is a replication of the simple calculation code at LcPricingModel.CalculatePackages for HourlyPrice PriceCalculationType
     var hourlyDurationHours = Math.Round((decimal)duration.TotalHours, 2);
-    var hourlySubtotalPrice = hourlyPrice.BasePrice * hourlyDurationHours;
-    var hourlyFeesPrice = hourlyPrice.FeePrice * hourlyDurationHours;
-    var hourlyTotalPrice = hourlyPrice.TotalPrice * hourlyDurationHours;
+    var hourlySurchargePrice = new LcPricingModel.Price(hourlySurcharge, hourlyFeeRate, roundedDecimals);
+    var hourlySubtotalPrice = (hourlyPrice.BasePrice * hourlyDurationHours) + (hourlySurchargePrice.BasePrice * hourlyDurationHours);
+    var hourlyFeesPrice = (hourlyPrice.FeePrice * hourlyDurationHours) + (hourlySurchargePrice.FeePrice * hourlyDurationHours);
+    var hourlyTotalPrice = (hourlyPrice.TotalPrice * hourlyDurationHours) + (hourlySurchargePrice.TotalPrice * hourlyDurationHours);
 }
 <h1>Testing Prices and Fees calculation</h1>
 <style type="text/css">
@@ -179,6 +183,7 @@
     <fieldset class="hourly-price">
         <legend><h2>Hourly Price (hourly, housekeeper, babysitter..)</h2></legend>
         <label>Hourly rate <input type="text" name="hourlyRate" value="@hourlyRate" /></label>
+        <label>Hourly surcharge <input type="text" name="hourlySurcharge" value="@hourlySurcharge" /></label>
         <div>Fees values and time values are get from the previous fields in the form</div>
         <input type="submit" value="Calculate" />
         <table>
@@ -201,6 +206,21 @@
                 <td>Hourly fees</td>
                 <td>@hourlyPrice.FeePrice.ToString("c")</td>
                 <td><span class="hourlyFees"></span></td>
+            </tr>
+            <tr>
+                <td>Hourly surcharge</td>
+                <td>@hourlySurcharge.ToString("c")</td>
+                <td><span class="hourlySurcharge"></span></td>
+            </tr>
+            <tr>
+                <td>Hourly surcharge with fees</td>
+                <td>@hourlySurchargePrice.TotalPrice.ToString("c")</td>
+                <td><span class="totalHourlySurcharge"></span></td>
+            </tr>
+            <tr>
+                <td>Hourly surcharge fees</td>
+                <td>@hourlySurchargePrice.FeePrice.ToString("c")</td>
+                <td><span class="hourlySurchargeFees"></span></td>
             </tr>
             <tr>
                 <td>Time</td>

@@ -25,13 +25,16 @@ public static partial class LcPricingModel
         #region Customer form part
         public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
-            /* IMPORTANT: we calculate here the service duration for one session based on the pricing variables,
-             * final price and fees are calculated in the standard code using the package Duration field, because of that
-             * we only update package.Duration here for later complete price calculation */
+            /* IMPORTANT: we set here the service duration for one session based on the customer value (from the form),
+             * update the hourly-price from provider variable value
+             * and the hourly-surcharge based on the variables.
+             * Final price and fees are calculated in the standard code using the package Duration field and HourlySurcharge field, because of that
+             * the final price is not calculated here. */
 
             // Getting variables
             PricingVariables provars = PricingVariables.FromPackageBaseData(package);
-            double duration = 0;
+            decimal duration = 0;
+            decimal hourlySurcharge = 0;
 
             // Iterating customer variables:
             foreach (var provar in provars)
@@ -41,12 +44,14 @@ public static partial class LcPricingModel
                     // Setting value from the form
                     provar.Value.Value = LcUtils.GetTypedValue(Request[String.Format("{0}[{1}]", provar.Key, package.ID)], null, provar.Value.Def.DataType);
                 }
-                // TODO Calculate duration
+                // TODO Get duration from var
+                // TODO Calculate hourly surcharge
             }
 
-            // TODO Finish Calculate duration
+            // TODO Finish Calculation
+
             // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
-            var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
+            var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes((double)duration), ASP.LcHelpers.RoundingType.Up);
 
             // Update package data:
             package.Duration = timeDuration;
