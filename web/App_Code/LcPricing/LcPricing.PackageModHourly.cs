@@ -32,30 +32,41 @@ public static partial class LcPricingModel
              * the final price is not calculated here. */
 
             // Getting variables
-            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
-            decimal duration = 0;
+            PricingVariables pricingvars = PricingVariables.FromPackageBaseData(package);
+            TimeSpan timeDuration = TimeSpan.Zero;
             decimal hourlySurcharge = 0;
 
             // Iterating customer variables:
-            foreach (var provar in provars)
+            foreach (var pvar in pricingvars)
             {
-                if (provar.Value.Def.IsCustomerVariable)
+                if (pvar.Value.Def.IsCustomerVariable)
                 {
                     // Setting value from the form
-                    provar.Value.Value = LcUtils.GetTypedValue(Request[String.Format("{0}[{1}]", provar.Key, package.ID)], null, provar.Value.Def.DataType);
+                    pvar.Value.Value = LcUtils.GetTypedValue(Request[String.Format("{0}[{1}]", pvar.Key, package.ID)], null, pvar.Value.Def.DataType);
+                    // For the 'Hours:2' customer variable, we get it form the form and set the duration with it.
+                    if (pvar.Key == "Hours")
+                    {
+                        // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
+                        var duration = pvar.Value.GetValue<double>(0);
+                        timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
+                    }
+                    else
+                    {
+                        // For other variables, we calculate it using the general formula and its added to the hourly surcharge
+                        // Get the provider var, we need its values.
+                        var provar = pricingvars.GetCalculateWithVariableFor(pvar.Value);
+                        // General formula for 1 hour: (CustomerValueInputVariable - ProviderNumberIncludedVariable) * ProviderPriceVariable
+                        decimal amount = (pvar.Value.GetValue<decimal>(0) - (provar.ProviderNumberIncluded ?? 0)) * provar.GetValue<decimal>(0);
+                        // Add to the hourly surcharge
+                        hourlySurcharge += amount;
+                    }
                 }
-                // TODO Get duration from var
-                // TODO Calculate hourly surcharge
             }
-
-            // TODO Finish Calculation
-
-            // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
-            var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes((double)duration), ASP.LcHelpers.RoundingType.Up);
 
             // Update package data:
             package.Duration = timeDuration;
-            modelData.CustomerInput = provars;
+            package.HourlySurcharge = hourlySurcharge;
+            modelData.CustomerInput = pricingvars;
         }
         public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
         {
