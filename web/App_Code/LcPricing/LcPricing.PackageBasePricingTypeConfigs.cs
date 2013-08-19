@@ -91,7 +91,7 @@ public static partial class LcPricingModel
                 PluralName = "Estimates",
                 SlugName = "estimate",
                 AddNewLabel = "Add an estimate visit",
-                ProviderDescription = "We know you're psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
+                ProviderDescription = "We know you're not psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
                 PriceCalculation = PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
