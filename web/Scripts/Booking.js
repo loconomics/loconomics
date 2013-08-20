@@ -303,7 +303,7 @@ LC.initCustomerPackageSliders = function () {
             // Calculate the price for the total time,
             // with the hourleRate (already with fees), hourlyFeeAmount
             // and the already rounded duration:
-            var totalTimePrice = LC.calculateHourlyPrice(duration, hourlyRate, hourlyFee);
+            var totalTimePrice = LC.calculateHourlyPrice(duration, { totalPrice: hourlyRate, feePrice: hourlyFee, basePrice: hourlyRate - hourlyFee });
             // Set new item-price and trigger a change event to allow the items-fees calculation
             // system do their job and showing the total price
             LC.setMoneyNumber(totalTimePrice.totalPrice, pak.find('.calculate-item-price'));

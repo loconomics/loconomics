@@ -2078,24 +2078,23 @@ LC.Price = function LC_Price(basePrice, fee, roundedDecimals) {
     this.feePrice = feePrice;
 };
 /** Calculate and returns the price and relevant data as an object for
-    a time, hourlyRate (with fees) and the hourlyFee.
+    time, hourlyRate (with fees) and the hourlyFee.
     The time (@duration) is used 'as is', without transformation, maybe you can require
     use LC.roundTimeToQuarterHour before pass the duration to this function.
-    The fees must be calculated before pass the prices to this function, then the @hourlyRate contains
-    already the fees that apply and @hourlyFee is the fee amount already included in @hourlyRate.
+    It receives the parameters @hourlyPrice and @surchargePrice as LC.Price objects.
+    @surchargePrice is optional.
 **/
-LC.calculateHourlyPrice = function LC_calculateHourlyPrice(duration, hourlyRate, hourlyFee) {
+LC.calculateHourlyPrice = function LC_calculateHourlyPrice(duration, hourlyPrice, surchargePrice) {
+    // If there is no surcharge, get zeros
+    surchargePrice = surchargePrice || { totalPrice: 0, feePrice: 0, basePrice: 0 };
     // Get hours from rounded duration:
     var hours = LC.roundTo(duration.totalHours(), 2);
     // Calculate final prices
-    var price = LC.roundTo(hourlyRate * hours, 2),
-                fee = LC.roundTo(hourlyFee * hours, 2),
-                subtotal = LC.roundTo(price - fee, 2)
     return {
-        totalPrice: price,
-        feePrice: fee,
-        subtotalPrice: subtotal,
-        durationHours: hours
+        totalPrice:     LC.roundTo( hourlyPrice.totalPrice  * hours + surchargePrice.totalPrice * hours , 2),
+        feePrice:       LC.roundTo( hourlyPrice.feePrice    * hours + surchargePrice.feePrice   * hours , 2),
+        subtotalPrice:  LC.roundTo( hourlyPrice.basePrice   * hours + surchargePrice.basePrice  * hours , 2),
+        durationHours:  hours
     };
 }
 LC.getMoneyNumber = function LC_getMoneyNumber(v, alt) {

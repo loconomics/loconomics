@@ -252,7 +252,8 @@
     <script type="text/javascript">
         function getHourlyPriceFields($f) {
             return {
-                hourlyRate: parseFloat($f.find('[name=hourlyRate]').val())
+                hourlyRate: parseFloat($f.find('[name=hourlyRate]').val()),
+                hourlySurcharge: parseFloat($f.find('[name=hourlySurcharge]').val())
             };
         }
         jQuery(function ($) {
@@ -264,12 +265,16 @@
 
                 // Calculation to be tested:
                 var hourlyPrice = new LC.Price(fields.hourlyRate, fields.fee, fields.roundedDecimals);
+                var hourlySurchargePrice = new LC.Price(fields.hourlySurcharge, fields.fee, fields.roundedDecimals);
                 var duration = LC.roundTimeToQuarterHour(fields.durationTime, fields.roundTo);
-                var price = LC.calculateHourlyPrice(duration, hourlyPrice.totalPrice, hourlyPrice.feePrice);
+                var price = LC.calculateHourlyPrice(duration, hourlyPrice, hourlySurchargePrice);
                 // Results
                 LC.setMoneyNumber(fields.hourlyRate, $f.find('.hourlyRate'));
                 LC.setMoneyNumber(hourlyPrice.totalPrice, $f.find('.totalHourlyRate'));
                 LC.setMoneyNumber(hourlyPrice.feePrice, $f.find('.hourlyFees'));
+                LC.setMoneyNumber(fields.hourlySurcharge, $f.find('.hourlySurcharge'));
+                LC.setMoneyNumber(hourlySurchargePrice.totalPrice, $f.find('.totalHourlySurcharge'));
+                LC.setMoneyNumber(hourlySurchargePrice.feePrice, $f.find('.hourlySurchargeFees'));
                 $f.find('.durationTime').text(duration.toString());
                 $f.find('.durationHours').text(price.durationHours);
                 LC.setMoneyNumber(price.subtotalPrice, $f.find('.hourlySubtotalPrice'));
