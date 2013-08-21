@@ -451,6 +451,9 @@ public static partial class LcPricingModel
                         AND V.UserID = @0
                         AND V.ProviderPackageID = @1
                         AND V.Active = 1
+                        -- Data returned must be from the-package, not a previous estimate:
+                        AND V.PricingEstimateID = 0
+                        AND V.PricingEstimateRevision = 0
             WHERE   D.Active = 1
                     AND D.LanguageID = @4
                     AND D.CountryID = @5
