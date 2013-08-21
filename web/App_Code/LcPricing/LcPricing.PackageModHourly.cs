@@ -82,16 +82,17 @@ public static partial class LcPricingModel
             
 
             // Iterating customer variables:
-            foreach (var provar in provars)
+            foreach (var custvar in provars)
             {
-                if (provar.Value.Def.IsCustomerVariable)
+                if (custvar.Value.Def.IsCustomerVariable)
                 {
-                    var calculateWithVar = provars.GetCalculateWithVariableFor(provar.Value);
-                    string footNoteFormat = provar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each";
+                    var calculateWithVar = provars.GetCalculateWithVariableFor(custvar.Value);
+                    var provPrice = new Price(calculateWithVar.GetValue<decimal>(0), fee, 1);
+                    string footNoteFormat = custvar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each";
                     // If package already include an amount, notify it
                     if ((calculateWithVar.ProviderNumberIncluded ?? 0) > 0)
                         footNoteFormat = "Includes {1:#,##0.##}, adds {0:C} per additional";
-                    string sliderFootnote = String.Format(footNoteFormat, calculateWithVar.GetValue<decimal>(0), calculateWithVar.ProviderNumberIncluded);
+                    string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded);
 
                     sv.AppendFormat(@"
                         <div class='customer-slider' data-prov-value='{2}'
@@ -99,11 +100,11 @@ public static partial class LcPricingModel
                             data-slider-min='{8}' data-slider-max='{9}' data-slider-number-included='{10}'>
                         <label><span class='has-tooltip' title='{4}'>{3}</span>: <input name='{1}[{0}]' type='text' /></label></div>"
                         ,package.ID
-                        ,EncodeForHtml(provar.Key)
-                        ,calculateWithVar.GetValue<decimal>(0)
-                        ,EncodeForHtml(provar.Value.Def.VariableLabel)
-                        ,EncodeForHtml(provar.Value.Def.VariableLabelPopUp)
-                        ,provar.Value.Value
+                        ,EncodeForHtml(custvar.Key)
+                        ,provPrice.BasePrice // Gives to html the price without fees, that are calculated client-side
+                        ,EncodeForHtml(custvar.Value.Def.VariableLabel)
+                        ,EncodeForHtml(custvar.Value.Def.VariableLabelPopUp)
+                        ,custvar.Value.Value
                         ,1 // slider step fixed to 1
                         ,EncodeForHtml(sliderFootnote)
                         ,calculateWithVar.ProviderMinNumberAllowed
