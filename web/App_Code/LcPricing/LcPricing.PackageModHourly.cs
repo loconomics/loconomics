@@ -31,6 +31,8 @@ public static partial class LcPricingModel
              * Final price and fees are calculated in the standard code using the package Duration field and HourlySurcharge field, because of that
              * the final price is not calculated here. */
 
+            // TOREVIEW: Needs input data validation with ModelState and check ModelState.IsValid at LcPricingModel?
+
             // Getting variables
             PricingVariables pricingvars = PricingVariables.FromPackageBaseData(package);
             TimeSpan timeDuration = TimeSpan.Zero;
@@ -75,11 +77,9 @@ public static partial class LcPricingModel
         {
             // Get variables
             PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+            // TOREVIEW: Update vars with customers values from its last estimate/booking?
 
             var sv = new StringBuilder();
-
-            // Saving globally the hourly rate
-            
 
             // Iterating customer variables:
             foreach (var custvar in provars)
@@ -94,6 +94,14 @@ public static partial class LcPricingModel
                         footNoteFormat = "Includes {1:#,##0.##}, adds {0:C} per additional";
                     string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded);
 
+                    // We set the customer value as
+                    // - the posted-form value,
+                    // - else the db saved value (it works when variables get updated with its last estimate/booking values)
+                    // - else the ProviderNumberIncluded for the var
+                    // - else defaulted to zero:
+                    var custValue = Request[String.Format("{1}[{0}]", package.ID, EncodeForHtml(custvar.Key))]
+                        .AsDecimal(custvar.Value.GetValue<decimal>(calculateWithVar.ProviderNumberIncluded ?? 0));
+
                     sv.AppendFormat(@"
                         <div class='customer-slider' data-prov-value='{2}'
                             data-slider-value='{5}' data-slider-step='{6}' data-slider-footnote='{7}' data-slider-stype='hourly'
@@ -104,7 +112,7 @@ public static partial class LcPricingModel
                         ,provPrice.BasePrice // Gives to html the price without fees, that are calculated client-side
                         ,EncodeForHtml(custvar.Value.Def.VariableLabel)
                         ,EncodeForHtml(custvar.Value.Def.VariableLabelPopUp)
-                        ,custvar.Value.Value // TODO Change to something Request["{1}[{0}]"] ?? NumberIncluded after TODO review why the SQL return a provider value from estimate here
+                        ,custValue
                         ,1 // slider step fixed to 1
                         ,EncodeForHtml(sliderFootnote)
                         ,calculateWithVar.ProviderMinNumberAllowed
