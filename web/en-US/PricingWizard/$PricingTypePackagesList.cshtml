@@ -95,7 +95,7 @@
 								if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
 									priceSufix = "/h";
 								} else {
-									priceSufix = "per " + pak.PriceRateUnit;
+									priceSufix = "<span class='price-rate-unit'>" + config.PriceRateUnitListLabel + pak.PriceRateUnit + "</span>";
 								}
 							}
                             price = price ?? 0M;
@@ -114,7 +114,7 @@
 									}
 									else
 									{
-										<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @priceSufix</a>
+										<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
 									}
 								</div>
 							}
@@ -138,7 +138,13 @@
                 </div>
                 @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
                 {
-                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @pak.PriceRate.ToString("c")
+                    LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
+                    if (!editable)
+                    {
+                        // fees apply with 1 decimal for the case of hourly-rates:
+                        priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, fee, 1);
+                    }
+                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
                         @if (config.PriceRateUnitListLabel != null)
                         {
                             <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
