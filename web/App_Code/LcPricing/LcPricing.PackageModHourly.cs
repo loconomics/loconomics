@@ -91,7 +91,7 @@ public static partial class LcPricingModel
                     string footNoteFormat = custvar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each";
                     // If package already include an amount, notify it
                     if ((calculateWithVar.ProviderNumberIncluded ?? 0) > 0)
-                        footNoteFormat = "Includes {1:#,##0.##}, adds {0:C} per additional";
+                        footNoteFormat = "LJDI: Includes {1:#,##0.##}, adds {0:C} per additional";
                     string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded);
 
                     // We set the customer value as
