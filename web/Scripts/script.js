@@ -2064,7 +2064,9 @@ LC.Price = function LC_Price(basePrice, fee, roundedDecimals) {
         feeRate = fee;
 
     // Calculating:
-    var totalPrice = LC.ceilTo(basePrice * (1 + feeRate) + fixedFeeAmount, roundedDecimals);
+    // The roundTo with a big fixed decimals is to avoid the
+    // decimal error of floating point numbers
+    var totalPrice = LC.ceilTo( LC.roundTo(basePrice * (1 + feeRate) + fixedFeeAmount, 12), roundedDecimals);
     // final fee price is calculated as a substraction, but because javascript handles
     // float numbers only, a round operation is required to avoid an irrational number
     var feePrice = LC.roundTo(totalPrice - basePrice, 2);

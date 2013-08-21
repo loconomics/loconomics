@@ -361,6 +361,7 @@ LC.initCustomerPackageSliders = function () {
                 hourlySurchargePrice = new LC.Price(hourlySurcharge || 0, fee, 1),
                 totalTimePrice = LC.calculateHourlyPrice(timeDuration, hourlyPrice, hourlySurchargePrice);
 
+
             // Set the package price
             updateFrontendPackagePrice(pak, totalTimePrice);
         },
