@@ -350,7 +350,9 @@ LC.initCustomerPackageSliders = function () {
                 } else {
                     // For other variables, we calculate it using the general formula and its added to the hourly surcharge.
                     // General formula for 1 hour: (CustomerValueInputVariable - ProviderNumberIncludedVariable) * ProviderPriceVariable
-                    hourlySurcharge += (custValue - numberIncluded) * provValue;
+                    // EXCEPT when CustomerValueInputVariable is equal or less than ProviderNumberIncludedVariable, then is 0
+                    if (custValue > numberIncluded)
+                        hourlySurcharge += (custValue - numberIncluded) * provValue;
                 }
             });
 

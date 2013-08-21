@@ -56,7 +56,10 @@ public static partial class LcPricingModel
                         // Get the provider var, we need its values.
                         var provar = pricingvars.GetCalculateWithVariableFor(pvar.Value);
                         // General formula for 1 hour: (CustomerValueInputVariable - ProviderNumberIncludedVariable) * ProviderPriceVariable
-                        decimal amount = (pvar.Value.GetValue<decimal>(0) - (provar.ProviderNumberIncluded ?? 0)) * provar.GetValue<decimal>(0);
+                        // EXCEPT when CustomerValueInputVariable is equal or less than ProviderNumberIncludedVariable, then is 0
+                        decimal amount = 0;
+                        if (pvar.Value.GetValue<decimal>(0) > (provar.ProviderNumberIncluded ?? 0))
+                            amount = (pvar.Value.GetValue<decimal>(0) - (provar.ProviderNumberIncluded ?? 0)) * provar.GetValue<decimal>(0);
                         // Add to the hourly surcharge
                         hourlySurcharge += amount;
                     }
