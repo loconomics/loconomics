@@ -304,11 +304,9 @@ LC.initCustomerPackageSliders = function () {
             // with the hourleRate (already with fees), hourlyFeeAmount
             // and the already rounded duration:
             var totalTimePrice = LC.calculateHourlyPrice(duration, { totalPrice: hourlyRate, feePrice: hourlyFee, basePrice: hourlyRate - hourlyFee });
-            // Set new item-price and trigger a change event to allow the items-fees calculation
-            // system do their job and showing the total price
-            LC.setMoneyNumber(totalTimePrice.totalPrice, pak.find('.calculate-item-price'));
-            LC.setMoneyNumber(totalTimePrice.feePrice, pak.find('.calculate-item-fee'));
-            pak.find('.calculate-item-price').trigger('change');
+
+            // Set the package price
+            updateFrontendPackagePrice(pak, totalTimePrice);
         },
         setup: function housekeeper_setup(setup, $c) {
             setup.min = setup.value - 3 * setup.step;
@@ -319,6 +317,50 @@ LC.initCustomerPackageSliders = function () {
     **/
     stypes['hourly'] = {
         calculate: function hourly_calculage($sliderContent) {
+            // Look for the hourly pricing container for this package
+            // that contains all fields for calculation
+            var calcContext = $sliderContent.closest('.hourly-pricing');
+            // Get the package container, where contents to be update are
+            var pak = calcContext.closest('tr');
+
+            // Initializing global computation values
+            var hourlySurcharge = 0,
+                hourlyRate = 0,
+                timeDuration = LC.timeSpan.zero,
+                fee = {
+                    feeRate: parseFloat(calcContext.data('fee-rate'))
+                    , fixedFeeAmount: parseFloat(calcContext.data('fixed-fee-amount'))
+                };
+
+            // Iterate every variable to calculate
+            calcContext.find('.customer-slider').each(function () {
+                // Get the values to compute
+                var $t = $(this),
+                    $input = $t.find('input'),
+                    custValue = $input.val(),
+                    provValue = parseFloat($t.data('prov-value')),
+                    numberIncluded = parseFloat($t.data('slider-number-included'));
+
+                // Compute depending on the variable
+                if (/^Hours\[\d+\]$/.test($input.attr('name'))) {
+                    // Its 'Hours' variable, get as duration
+                    timeDuration = LC.roundTimeToQuarterHour(LC.timeSpan.fromHours(custValue), LC.roundingTypeEnum.Up);
+                    // And save the hourly-rate for last calculations (is the provider-value at 'Hours')
+                    hourlyRate = provValue;
+                } else {
+                    // For other variables, we calculate it using the general formula and its added to the hourly surcharge.
+                    // General formula for 1 hour: (CustomerValueInputVariable - ProviderNumberIncludedVariable) * ProviderPriceVariable
+                    hourlySurcharge += (custValue - numberIncluded) * provValue;
+                }
+            });
+
+            // Doing last calculations: get final price with fees
+            var hourlyPrice = new LC.Price(hourlyRate || 0, fee, 1),
+                hourlySurchargePrice = new LC.Price(hourlySurcharge || 0, fee, 1),
+                totalTimePrice = LC.calculateHourlyPrice(timeDuration, hourlyPrice, hourlySurchargePrice);
+
+            // Set the package price
+            updateFrontendPackagePrice(pak, totalTimePrice);
         },
         setup: function hourly_setup(setup, $c) {
             setup.min = $c.data('slider-min') || 0;
@@ -326,9 +368,21 @@ LC.initCustomerPackageSliders = function () {
         }
     };
     /* Some utilities */
+    /** Update the internal form @value for the given slider variable container at $c
+    **/
     function updateBackendValue($c, value) {
         // Update input value and trigger change event to notify standard listeners
         $c.find('input').val(value).change();
+    }
+    /** Update the showed prices for a package, from a calculated fees LC.Price object @price,
+    ** launching the total booking pricing update too.
+    **/
+    function updateFrontendPackagePrice($pak, price) {
+        // Set new item-price and trigger a change event to allow the items-fees calculation
+        // system do their job and showing the total price
+        LC.setMoneyNumber(price.totalPrice, $pak.find('.calculate-item-price'));
+        LC.setMoneyNumber(price.feePrice, $pak.find('.calculate-item-fee'));
+        $pak.find('.calculate-item-price').trigger('change');
     }
     /** Initializing sliders
     **/

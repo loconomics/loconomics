@@ -48,7 +48,7 @@ public static partial class LcPricingModel
                     {
                         // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
                         var duration = pvar.Value.GetValue<double>(0);
-                        timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
+                        timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromHours(duration), ASP.LcHelpers.RoundingType.Up);
                     }
                     else
                     {
@@ -75,27 +75,26 @@ public static partial class LcPricingModel
 
             var sv = new StringBuilder();
 
+            // Saving globally the hourly rate
+            
+
             // Iterating customer variables:
             foreach (var provar in provars)
             {
                 if (provar.Value.Def.IsCustomerVariable)
                 {
                     var calculateWithVar = provars.GetCalculateWithVariableFor(provar.Value);
-                    var provPrice = new Price(calculateWithVar.GetValue<decimal>(0), fee, 1);
-                    var unitPrice = provPrice.TotalPrice;
-                    var unitFee = provPrice.FeePrice;
                     string sliderFootnote = String.Format(provar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each"
                         ,calculateWithVar.GetValue<decimal>(0));
 
                     sv.AppendFormat(@"
-                        <div class='customer-slider' data-unit-price='{2}' data-unit-fee='{3}'
-                            data-slider-value='{6}' data-slider-step='{7}' data-slider-footnote='{8}' data-slider-stype='hourly'
-                            data-slider-min='{9}' data-slider-max='{10}' data-slider-number-included='{11}'>
-                        <label><span class='has-tooltip' title='{5}'>{4}</span>: <input name='{1}[{0}]' type='text' /></label></div>"
+                        <div class='customer-slider' data-prov-value='{2}'
+                            data-slider-value='{5}' data-slider-step='{6}' data-slider-footnote='{7}' data-slider-stype='hourly'
+                            data-slider-min='{8}' data-slider-max='{9}' data-slider-number-included='{10}'>
+                        <label><span class='has-tooltip' title='{4}'>{3}</span>: <input name='{1}[{0}]' type='text' /></label></div>"
                         ,package.ID
                         ,EncodeForHtml(provar.Key)
-                        ,unitPrice
-                        ,unitFee
+                        ,calculateWithVar.GetValue<decimal>(0)
                         ,EncodeForHtml(provar.Value.Def.VariableLabel)
                         ,EncodeForHtml(provar.Value.Def.VariableLabelPopUp)
                         ,provar.Value.Value
@@ -109,7 +108,7 @@ public static partial class LcPricingModel
 
             // Create html
             var h = new StringBuilder();
-            h.AppendFormat("<div class='hourly-pricing'>");
+            h.AppendFormat("<div class='hourly-pricing' data-fee-rate='{0}' data-fixed-fee-amount='{1}'>", fee.Percentage, fee.Currency);
             h.Append(sv);
             h.Append("</div>");
 
