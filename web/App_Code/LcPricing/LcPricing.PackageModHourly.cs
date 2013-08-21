@@ -87,8 +87,11 @@ public static partial class LcPricingModel
                 if (provar.Value.Def.IsCustomerVariable)
                 {
                     var calculateWithVar = provars.GetCalculateWithVariableFor(provar.Value);
-                    string sliderFootnote = String.Format(provar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each"
-                        ,calculateWithVar.GetValue<decimal>(0));
+                    string footNoteFormat = provar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each";
+                    // If package already include an amount, notify it
+                    if ((calculateWithVar.ProviderNumberIncluded ?? 0) > 0)
+                        footNoteFormat = "Includes {1:#,##0.##}, adds {0:C} per additional";
+                    string sliderFootnote = String.Format(footNoteFormat, calculateWithVar.GetValue<decimal>(0), calculateWithVar.ProviderNumberIncluded);
 
                     sv.AppendFormat(@"
                         <div class='customer-slider' data-prov-value='{2}'
