@@ -77,7 +77,18 @@
                 <div class="actions book">
                     <a class="book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Book now</a>
                 </div>
-                <span class="hour-price">
+                @{
+                    var priceExtraClass = 
+                        providerPrice.Price >= 1000M ?
+                        "thousands" :
+                        providerPrice.Price >= 100M ?
+                        "hundreds" :
+                        "";
+                    priceExtraClass +=
+                        providerPrice.IsHourly ?
+                        " hourly-price" :
+                        " fixed-price";
+                    <span class="highlighted-price @priceExtraClass">
                         @if (providerPrice.IsHourly)
                         {
                             <span class="price">@String.Format("{0:C}", providerPrice.Price)</span> <text>/h</text>
@@ -86,7 +97,8 @@
                         {
                             <span class="price-since">from:</span> <span class="price">@String.Format("{0:C}", providerPrice.Price)</span>
                         }
-                </span>
+                    </span>
+                }
                 <a class="calculate-price" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + p.UserID + "&positionid=" + pos.PositionID)">Calculate for your needs</a>
                 
                 <div class="provider-features-lists">

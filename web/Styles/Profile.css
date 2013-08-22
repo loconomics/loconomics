@@ -301,7 +301,7 @@ form.report-unauthorized-use textarea {
     margin: 0 auto 10px;
     text-align: center !important;
 }
-.position-summary .hour-price {
+.position-summary .highlighted-price {
     border: 6px solid #00989A;
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -315,10 +315,16 @@ form.report-unauthorized-use textarea {
     color: #5a5b5b;
     text-align: center;
 }
-.position-summary .hour-price .price {
+.position-summary .highlighted-price .price {
     font-weight: bold;
 }
-.position-summary .price-since {
+.position-summary .highlighted-price.hourly-price.hundreds {
+    font-size: 2.361em;
+}
+.position-summary .highlighted-price.hourly-price.thousands {
+    font-size: 1.945em;
+}
+.position-summary .highlighted-price.fixed-price .price-since {
     font-size: .6em;
     display: block;
     margin-top: -10px;
