@@ -1404,6 +1404,15 @@ public static partial class LcData
             return bookingRequestID;
         }
 
+        /// <summary>
+        /// Get the db fees record that applied on standard bookings, depending on paramenters is a first-time, repeat or book-me fees. 
+        /// </summary>
+        /// <param name="customerUserID"></param>
+        /// <param name="providerUserID"></param>
+        /// <param name="pricingTypeID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="bookCode"></param>
+        /// <returns></returns>
         public static dynamic GetFeeFor(int customerUserID, int providerUserID, int pricingTypeID, int positionID, string bookCode = null)
         {
             using (var db = Database.Open("sqlloco"))
@@ -1456,6 +1465,32 @@ public static partial class LcData
                             ELSE 1 END
                     )
                 ", customerUserID, providerUserID, pricingTypeID);
+            }
+        }
+        /// <summary>
+        /// Gets the db record with fees amounts that applied on free packages
+        /// </summary>
+        /// <param name="customerUserID"></param>
+        /// <param name="providerUserID"></param>
+        /// <param name="pricingTypeID"></param>
+        /// <param name="positionID"></param>
+        /// <param name="bookCode"></param>
+        /// <returns></returns>
+        public static dynamic GetFeeForFreePackages(int customerUserID, int providerUserID, int pricingTypeID, int positionID, string bookCode = null)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Find fees for 'estimate booking' (ID:4), AKA Free package booking (flat fees)
+                return db.QuerySingle(@"
+                    SELECT 
+                        BookingTypeID
+                        ,ServiceFeeAmount
+                        ,ServiceFeeCurrency
+                        ,ServiceFeePercentage
+                        ,PaymentProcessingFee
+                    FROM BookingType
+                    WHERE BookingTypeID = 4
+                ");
             }
         }
         #endregion

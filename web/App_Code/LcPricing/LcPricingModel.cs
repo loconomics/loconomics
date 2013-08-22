@@ -21,7 +21,7 @@ public static partial class LcPricingModel
     }
     #endregion
 
-    #region Price and fees
+    #region Fees
     /// <summary>
     /// Small utility, convert database scheme data about
     /// fee to apply into an easy struct with Percentage
@@ -59,6 +59,47 @@ public static partial class LcPricingModel
             Percentage = feeData.PaymentProcessingFee,
             Currency = 0
         };
+    }
+    /// <summary>
+    /// Gets a set of fees that can be applied to the given parameters,
+    /// depending on the target user and package/price.
+    /// It ever returns the elements:
+    /// "standard:customer" only for customers, applied most of the time (it gets the first-time booking, repeat-booking or book-me-button depending on parameters).
+    /// "standard:provider" only for providers, same conditions than for the standard:customer but with the provider fees.
+    /// "flat:customer" only for customers, applied on packages that are given for free by providers (most times estimates and consultations).
+    /// "flat:provider" only for provider, same conditions than for the standard:customer but with the provider fees.
+    /// </summary>
+    /// <param name="customerUserID"></param>
+    /// <param name="providerUserID"></param>
+    /// <param name="pricingTypeID"></param>
+    /// <param name="positionID"></param>
+    /// <param name="bookCode"></param>
+    /// <returns></returns>
+    public static Dictionary<string, LcPricingModel.FeeRate> GetFeesSetFor(int customerUserID, int providerUserID, int pricingTypeID, int positionID, string bookCode = null)
+    {
+        var ret = new Dictionary<string, LcPricingModel.FeeRate>();
+
+        var standard = LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingTypeID, positionID, bookCode);
+        ret["standard:customer"] = LcPricingModel.GetFee(standard);
+        ret["standard:provider"] = LcPricingModel.GetPFee(standard);
+
+        var flat = LcData.Booking.GetFeeForFreePackages(customerUserID, providerUserID, pricingTypeID, positionID, bookCode);
+        ret["flat:customer"] = LcPricingModel.GetFee(flat);
+        ret["flat:provider"] = LcPricingModel.GetPFee(flat);
+
+        return ret;
+    }
+    /// <summary>
+    /// Get the appropiated fees for the user and package price from the given set.
+    /// </summary>
+    /// <param name="feesSet"></param>
+    /// <param name="packagePrice"></param>
+    /// <param name="userType"></param>
+    /// <returns></returns>
+    public static LcPricingModel.FeeRate GetFeeByPackagePrice(Dictionary<string, LcPricingModel.FeeRate> feesSet, decimal packagePrice, LcData.UserInfo.UserType userType)
+    {
+        string type = packagePrice <= 0 ? "flat:" : "standard:";
+        return feesSet[type + userType.ToString().ToLower()];
     }
     #endregion
 
@@ -390,7 +431,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(dynamic packages, FeeRate fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculatePackages(dynamic packages, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -414,6 +455,9 @@ public static partial class LcPricingModel
             {
                 thePackage = new PackageBaseData(packages.PackagesByID[selectedPackage.AsInt()]);
                 var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)thePackage.PricingTypeID];
+
+                // Getting the correct fees for the package
+                var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, thePackage.Price, LcData.UserInfo.UserType.Customer);
 
                 // Calculate time and price required for selected package
                 if (config.Mod != null)
@@ -535,7 +579,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Addons
-    public static PricingModelData CalculateAddons(dynamic addons, dynamic fee, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculateAddons(dynamic addons, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -552,6 +596,11 @@ public static partial class LcPricingModel
                 if (addonID > 0) {
                     //var addonData = LcData.GetProviderPackageByProviderPosition(pos.UserID, pos.PositionID, addonID).Packages[0];
                     var addonData = addons.PackagesByID[addonID];
+
+                    // Getting the correct fees for the package
+                    // IMPORTANT: Ever get standard fees for add-ons, including price-less addons
+                    //var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, addonData.Price, LcData.UserInfo.UserType.Customer);
+                    var fee = feesSet["standard:customer"];
 
                     decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
                     modelData.SummaryTotal.FirstSessionDuration += sesHours;

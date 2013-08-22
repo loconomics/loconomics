@@ -168,7 +168,7 @@
     </table>
 }
 
-@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages, dynamic fee) {
+@helper Packages(dynamic viewData, LcData.ProviderPackagesView packages, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
     var idprefix = "pricingwizard";
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
@@ -183,6 +183,8 @@
         @foreach (var pak in packages.Packages)
         {
 			var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
+            // Getting the correct fees for the package
+            var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
             // Calculating final price, with fees and full details, No decimals for fixed prices:
             var price = new LcPricingModel.Price(pak.Price, fee, 0);
             <tr>
@@ -209,7 +211,7 @@
     </table>
 }
 
-@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons, dynamic fee) {
+@helper Addons(dynamic viewData, LcData.ProviderPackagesView addons, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
     var idprefix = "pricingwizard";
     var selectedAddons = Request.Form.GetValues("provider-package-addons");
     if (selectedAddons == null) {
@@ -225,6 +227,8 @@
         </tr>
         @foreach (var pak in addons.Packages)
         {
+            // Getting the correct fees for the package
+            var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
             // Calculating final price, with fees and full details, No decimals for fixed prices:
             var price = new LcPricingModel.Price(pak.Price, fee, 0);
             <tr>

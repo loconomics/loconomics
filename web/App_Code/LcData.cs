@@ -682,11 +682,12 @@ public static partial class LcData
             }
         }
 
+        // Get fees
+        var feesSet = LcPricingModel.GetFeesSetFor(customerUserID, providerUserID, minPackage.PricingTypeID, positionID);
+        var fee = feesSet["standard:customer"];
         // Create ProviderPrice from the minimum package
         if (minPackage != null)
         {
-            // Get Fees that apply to the provider and customer
-            var fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor(customerUserID, providerUserID, minPackage.PricingTypeID, positionID));
             // If has an hourly rate
             if (minPackage.PriceRate > 0)
             {
@@ -708,9 +709,13 @@ public static partial class LcData
                 };
             }
         }
-
-        // No amounts, return zero record:
-        return new ProviderPrice();
+        // There is no price, creates 0 and apply flat fees
+        fee = feesSet["flat:customer"];
+        return new ProviderPrice
+        {
+            IsHourly = false,
+            Price = (new LcPricingModel.Price(0, fee, 0)).TotalPrice
+        };
     }
     #endregion
     #region Common Pricing

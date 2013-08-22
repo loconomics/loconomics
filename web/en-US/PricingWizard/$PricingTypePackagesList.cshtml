@@ -28,10 +28,9 @@
     }
 
     // Get Fees that apply to the provider and customer
-    dynamic fee = null;
-    if (!editable) {
-        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID, positionID));
-    }
+    var feesSet = editable ?
+        null :
+        LcPricingModel.GetFeesSetFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID, positionID);
 }
 @if (data.Packages != null && data.Packages.Count > 0)
 {
@@ -43,6 +42,11 @@
             {
                 continue;
             }
+            
+            // Getting the correct fees for the package
+            var fee = editable ?
+                null :
+                LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
 
             <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
