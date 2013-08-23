@@ -415,6 +415,8 @@ LC.initCustomerPackageSliders = function () {
         if (footnote)
             slider.after($('<div class="ui-slider-footnote"/>').html(footnote));
         LC.createLabelsForUISlider(slider);
+        if (slider.is(':visible'))
+            LC.updateLabelsForUISlider(slider);
         // Setup the input field, hidden and with initial value synchronized with slider
         var field = $c.find('input');
         field.hide();
@@ -426,17 +428,18 @@ LC.initCustomerPackageSliders = function () {
         // init and on variables changes
         stype.calculate($c);
         $c.on('change', 'input', function () { stype.calculate($c) });
-
-        // Switching sliders visualization on active package
-        $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {
-            var $t = $(this),
-                row = $t.closest('tr');
-            if ($t.is(':checked'))
-                row.find('.package-extra-data').slideDown('fast');
-            else
-                row.find('.package-extra-data').slideUp('fast');
-        }).change();
     });
+    // Switching sliders visualization on active package
+    $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {
+        var $t = $(this),
+                row = $t.closest('tr');
+        if ($t.is(':checked')) {
+            row.find('.package-extra-data').slideDown('fast').find('.customer-slider .slider').each(function () {
+                LC.updateLabelsForUISlider($(this));
+            });
+        } else
+            row.find('.package-extra-data').slideUp('fast');
+    }).change();
 };
 
 $(document).ready(function () {

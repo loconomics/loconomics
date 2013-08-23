@@ -113,7 +113,8 @@ public static partial class LcPricingModel
                         ,EncodeForHtml(custvar.Value.Def.VariableLabel)
                         ,EncodeForHtml(custvar.Value.Def.VariableLabelPopUp)
                         ,custValue
-                        ,1 // slider step fixed to 1
+                        // slider step fixed to 1 for most cases, or .25 for Hours
+                        ,custvar.Value.PricingVariableID == 2 ? .25 : 1
                         ,EncodeForHtml(sliderFootnote)
                         ,calculateWithVar.ProviderMinNumberAllowed
                         ,calculateWithVar.ProviderMaxNumberAllowed

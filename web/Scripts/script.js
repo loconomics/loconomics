@@ -1008,10 +1008,10 @@ LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
     // Creating and positioning labels
     for (var i = 0; i <= steps; i++) {
         // Create label
-        var lbl = $('<div class="ui-slider-label"/>');
+        var lbl = $('<div class="ui-slider-label"><span class="ui-slider-label-text"/></div>');
         // Setup label with its value
         var labelValue = min + i * step;
-        lbl.text(labelValue);
+        lbl.children('.ui-slider-label-text').text(labelValue);
         lbl.data('ui-slider-value', labelValue);
         // Positionate
         var left = i * sw - sw * .5,
@@ -1042,6 +1042,39 @@ LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
 
     // Insert labels as a sibling of the slider (cannot be inserted inside)
     slider.after(labels);
+};
+/** Create labels of a jquery-ui-slider to fit in the available space.
+ ** Element needs to be visible.
+ **/
+LC.updateLabelsForUISlider = function LC_updateLabelsForUISlider(slider) {
+    // Get labels for slider
+    var labels_c = slider.siblings('.ui-slider-labels').filter(function () {
+        return ($(this).data('ui-slider').get(0) == slider.get(0));
+    });
+    var labels = labels_c.find('.ui-slider-label-text');
+
+    // Check if there are more labels than available space
+    // Get maximum label width
+    var item_width = 0;
+    labels.each(function () {
+        var tw = $(this).outerWidth(true);
+        if (tw >= item_width)
+            item_width = tw;
+    });
+    // If there is width, if not, element is not visible cannot be computed
+    if (item_width > 0) {
+        // Get the required stepping of labels
+        var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length));
+        if (labels_step > 1) {
+            // Hide the labels on positions out of the step
+            labels.each(function (i) {
+                if (i % labels_step)
+                    $(this).hide();
+                else
+                    $(this).show();
+            });
+        }
+    }
 };
 
 // TODO Convert as general function and use everywhere:
