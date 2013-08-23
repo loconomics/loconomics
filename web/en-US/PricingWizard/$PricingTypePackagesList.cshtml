@@ -145,8 +145,10 @@
                     LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
                     if (!editable)
                     {
+                        // Getting the correct fees for the price-rate (can be different from the package price
+                        var rateFee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.PriceRate, LcData.UserInfo.UserType.Customer);
                         // fees apply with 1 decimal for the case of hourly-rates:
-                        priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, fee, 1);
+                        priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, rateFee, 1);
                     }
                     <h5 class="price-rate">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
                         @if (config.PriceRateUnitListLabel != null)
