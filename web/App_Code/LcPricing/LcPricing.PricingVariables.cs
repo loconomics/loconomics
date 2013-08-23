@@ -55,7 +55,6 @@ public static partial class LcPricingModel
                 ,NumberIncludedLabel    = r.NumberIncludedLabel
                 ,NumberIncludedLabelPopUp   = r.NumberIncludedLabelPopup
                 ,HourlySurchargeLabel       = r.HourlySurchargeLabel
-                ,HourlySurchargeLabelPopUp  = r.HourlySurchargeLabelPopUp
                 ,MinNumberAllowedLabel      = r.MinNumberAllowedLabel
                 ,MinNumberAllowedLabelPopUp = r.MinNumberAllowedLabelPopUp
                 ,MaxNumberAllowedLabel      = r.MaxNumberAllowedLabel
@@ -448,7 +447,6 @@ public static partial class LcPricingModel
                     ,D.NumberIncludedLabel
                     ,D.NumberIncludedLabelPopUp
                     ,D.HourlySurchargeLabel
-                    ,D.HourlySurchargeLabelPopUp
                     ,D.MinNumberAllowedLabel
                     ,D.MinNumberAllowedLabelPopUp
                     ,D.MaxNumberAllowedLabel
@@ -502,7 +500,6 @@ public static partial class LcPricingModel
                     ,D.NumberIncludedLabel
                     ,D.NumberIncludedLabelPopUp
                     ,D.HourlySurchargeLabel
-                    ,D.HourlySurchargeLabelPopUp
                     ,D.MinNumberAllowedLabel
                     ,D.MinNumberAllowedLabelPopUp
                     ,D.MaxNumberAllowedLabel
