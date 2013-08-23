@@ -1,6 +1,7 @@
 ﻿@{     
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/Profile.css");
+    PageData["ShowWelcomePopup"] = false;
     
     PageData["Customer"] = LcData.UserInfo.GetUserRow();
 
