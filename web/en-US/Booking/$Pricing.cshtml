@@ -208,7 +208,7 @@
                 data.SummaryLines["options"].Add(mdOptions.SummaryTotal);
             }
             if (data.ContainsPackages) {
-                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
+                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.FeesSet, ModelState);
                 //rtn.Add("packages", mdPackages);
                 data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
                 // BECAUSE now everything is contained in a package, and this define the pricing type, we allow
@@ -219,7 +219,7 @@
                 hourPrice = mdPackages.Data["HourlyRate"];
             }
             if (data.ContainsAddons) {
-                mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
+                mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.FeesSet, ModelState);
                 //rtn.Add("addons", mdAddons);
                 data.SummaryLines["addons"].Add(mdAddons.SummaryTotal);
             }
