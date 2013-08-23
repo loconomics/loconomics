@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Text;
 
 /// <summary>
 /// Collection of static utilities shared by
@@ -195,6 +196,102 @@ public static class LcUtils
         catch {}
         // Error catched, impossible
         return false;
+    }
+    #endregion
+
+    #region Html
+    public static string EncodeForHtml(string s)
+    {
+        return HttpContext.Current.Server.HtmlEncode(s);
+    }
+    /// <summary>
+    /// Generates the HTML for a Select object
+    /// </summary>
+    /// <param name="nameAttr"></param>
+    /// <param name="selectedValue"></param>
+    /// <param name="items">Is a collection or iterator over KeyValuePair&ld;string, object> items</param>
+    /// <param name="additionalHtmlAttrs"></param>
+    /// <returns></returns>
+    public static string BuildHtmlSelect(string nameAttr, object selectedValue, dynamic items, string additionalHtmlAttrs = "")
+    {
+        var s = new StringBuilder();
+        foreach (KeyValuePair<string, object> v in items)
+        {
+            s.AppendFormat("<option value='{0}' {2}>{1}</option>",
+                v.Key,
+                EncodeForHtml(GetTypedValue<string>(v.Value, "")),
+                AreEquivalents(v.Key, selectedValue) ? "selected='selected'" : "");
+        }
+        return String.Format("<select name='{0}' {2}>{1}</select>",
+            EncodeForHtml(nameAttr),
+            s.ToString(),
+            additionalHtmlAttrs);
+    }
+    public static string BuildHtmlInput(string nameAttr, object value, string type = "text", string additionalHtmlAttrs = "")
+    {
+        return String.Format("<input type='{2}' name='{0}' value='{1}' {3} />",
+            EncodeForHtml(nameAttr),
+            EncodeForHtml(GetTypedValue<string>(value, "")),
+            type,
+            additionalHtmlAttrs);
+    }
+    #endregion
+
+    #region Data checks
+    public static bool AreEquivalents(IEnumerable<object> A, IEnumerable<object> B)
+    {
+        foreach (var a in A)
+        {
+            var av = a ?? "";
+            foreach (var b in B)
+            {
+                var bv = b ?? "";
+                if (av == bv || av.ToString() == bv.ToString())
+                    return true;
+            }
+        }
+        return false;
+    }
+    public static bool AreEquivalents(object A, object B)
+    {
+        IEnumerable<object> a, b;
+        if (A is IEnumerable<object>)
+            a = (IEnumerable<object>)A;
+        else
+            a = new object[] { A };
+        if (B is IEnumerable<object>)
+            b = (IEnumerable<object>)B;
+        else
+            b = new object[] { B };
+        return AreEquivalents(a, b);
+    }
+    #endregion
+
+    #region Text utilities
+    /// <summary>
+    /// Given a value, it returns a label for it using the number on the value
+    /// and the appropiated singular or plural form of its unit name.
+    /// The value is converted automatically to a number, if not possible
+    /// then is returned the string that represent it.
+    /// If the value is null, or an empty or white-space string, null is returned.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="unitSingularName"></param>
+    /// <param name="unitPluralName"></param>
+    /// <returns></returns>
+    public static string GetLabelForValue(object value, string unitSingularName, string unitPluralName)
+    {
+        if (value == null || (value is string && String.IsNullOrWhiteSpace((string)value)))
+            return null;
+
+        decimal? number = LcUtils.GetTypedValue<decimal?>(value, null);
+        if (number.HasValue)
+            if (number.Value != 1)
+                return String.Format("{0:#,##0.##} {1}", number.Value, unitPluralName);
+            else
+                return String.Format("1 {0}", unitSingularName);
+        else
+            return value.ToString();
     }
     #endregion
 }

@@ -33,6 +33,7 @@ public static partial class LcPricingModel
         public string MinNumberAllowedLabelPopUp { get; internal set; }
         public string MaxNumberAllowedLabel { get; internal set; }
         public string MaxNumberAllowedLabelPopUp { get; internal set; }
+        public string MinMaxValuesList { get; internal set; }
         public int? CalculateWithVariableID { get; internal set; }
         
         internal static PricingVariableDefinition CreateFromDbRecord(dynamic r)
@@ -60,8 +61,31 @@ public static partial class LcPricingModel
                 ,MaxNumberAllowedLabel      = r.MaxNumberAllowedLabel
                 ,MaxNumberAllowedLabelPopUp = r.MaxNumberAllowedLabelPopUp
                 ,CalculateWithVariableID    = r.CalculateWithVariableID
+                ,MinMaxValuesList           = r.MinMaxValuesList
             };
         }
+
+        #region Instance utils
+        /// <summary>
+        /// Generates a collection of key-value -> label for the MinMaxValuesList field.
+        /// Empty collection if there is no values in the list.
+        /// It generates automatically labels for only numeric lists.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<KeyValuePair<string, object>> GenerateMinMaxValuesCollection()
+        {
+            if (!String.IsNullOrWhiteSpace(MinMaxValuesList))
+            {
+                var jsonobj = Json.Decode(MinMaxValuesList);
+                if (jsonobj is DynamicJsonObject)
+                    foreach (var a in jsonobj)
+                        yield return a;
+                else if (jsonobj is DynamicJsonArray)
+                    foreach (var a in jsonobj)
+                        yield return new KeyValuePair<string,object>((a ?? "").ToString(), LcUtils.GetLabelForValue(a, VariableNameSingular, VariableNamePlural));
+            }
+        }
+        #endregion
 
         #region Experimental cache and index INCOMPLETE
         public class PrimaryKey
@@ -430,6 +454,7 @@ public static partial class LcPricingModel
                     ,D.MaxNumberAllowedLabel
                     ,D.MaxNumberAllowedLabelPopUp
                     ,D.CalculateWithVariableID
+                    ,D.MinMaxValuesList
         ";
         const string sqlGetVariablesActualValues = selectVarValuesDef + @"
             FROM    PricingVariableValue As V
@@ -483,6 +508,7 @@ public static partial class LcPricingModel
                     ,D.MaxNumberAllowedLabel
                     ,D.MaxNumberAllowedLabelPopUp
                     ,D.CalculateWithVariableID
+                    ,D.MinMaxValuesList
             FROM    PricingVariableDefinition As D
             WHERE   (D.PositionID = @0 OR D.PositionID = -1)
                     AND D.PricingTypeID = @1

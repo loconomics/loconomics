@@ -318,42 +318,18 @@
         <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
     }
 }
-@functions{ static bool AreEquivalents(IEnumerable<object> A, IEnumerable<object> B) {
-        foreach (var a in A) {
-            var av = a ?? "";
-            foreach (var b in B) {
-                var bv = b ?? "";
-                if (av == bv || av.ToString() == bv.ToString()) 
-                    return true;
-            }
-        }
-        return false;
-    }
-    static bool AreEquivalents(object A, object B) {
-        IEnumerable<object> a, b;
-        if (A is IEnumerable<object>)
-            a = (IEnumerable<object>)A;
-        else
-            a = new object[]{ A };
-        if (B is IEnumerable<object>)
-            b = (IEnumerable<object>)B;
-        else
-            b = new object[]{ B };
-        return AreEquivalents(a, b);
-    }
-}
 @helper IsChecked(object valueA, object valueB){
-    if (AreEquivalents(valueA, valueB)) {
+    if (LcUtils.AreEquivalents(valueA, valueB)) {
         @Html.Raw("checked='checked'")
     }
 }
 @helper IsSelected(object valueA, object valueB){
-    if (AreEquivalents(valueA, valueB)) {
+    if (LcUtils.AreEquivalents(valueA, valueB)) {
         @Html.Raw("selected='selected'")
     }
 }
 @helper CssCurrent(string a, string b){
-    if (AreEquivalents(a, b)) {
+    if (LcUtils.AreEquivalents(a, b)) {
         @("current")
     }
 }

@@ -88,11 +88,11 @@ public static partial class LcPricingModel
                 {
                     var calculateWithVar = provars.GetCalculateWithVariableFor(custvar.Value);
                     var provPrice = new Price(calculateWithVar.GetValue<decimal>(0), fee, 1);
-                    string footNoteFormat = custvar.Value.PricingVariableID == 1 ? "{0:C}" : "Adds {0:C} per each";
+                    string footNoteFormat = calculateWithVar.PricingVariableID == 1 ? "Base rate is {0:C} per hour" : "Add {0:C} per hour is for each additional {2}";
                     // If package already include an amount, notify it
                     if ((calculateWithVar.ProviderNumberIncluded ?? 0) > 0)
-                        footNoteFormat = "LJDI: Includes {1:#,##0.##}, adds {0:C} per additional";
-                    string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded);
+                        footNoteFormat = "Includes {1:#,##0.##} children--add {0:C} per hour is for each additional {2}";
+                    string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded, calculateWithVar.Def.VariableNameSingular);
 
                     // We set the customer value as
                     // - the posted-form value,
@@ -173,21 +173,52 @@ public static partial class LcPricingModel
                             EncodeForHtml(provar.Value.Def.VariableNameSingular),
                             EncodeForHtml(provar.Value.Def.VariableNamePlural));
                     }
+                    // Get min-max values list if available
+                    var minMaxValuesList = String.IsNullOrWhiteSpace(provar.Value.Def.MinMaxValuesList)
+                        ? null
+                        : provar.Value.Def.GenerateMinMaxValuesCollection();
                     if (!String.IsNullOrEmpty(provar.Value.Def.MinNumberAllowedLabel))
                     {
-                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-minnumberallowed' value='{3}' /></label></li>",
+                        string formControlHtml = "",
+                            name = provar.Key + "-minnumberallowed"; //==Value.Def.InternalName
+                        var selectedValue = (object)(Request[provar.Key + "-minnumberallowed"]) ?? provar.Value.ProviderMinNumberAllowed;
+
+                        if (minMaxValuesList != null)
+                        {
+                            formControlHtml = LcUtils.BuildHtmlSelect(
+                                name,
+                                selectedValue,
+                                minMaxValuesList);
+                        }
+                        else
+                            formControlHtml = LcUtils.BuildHtmlInput(
+                                name,
+                                selectedValue);
+
+                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> {1}</label></li>",
                             EncodeForHtml(provar.Value.Def.MinNumberAllowedLabel),
-                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
-                            EncodeForHtml(provar.Value.Def.MinNumberAllowedLabelPopUp),
-                            (object)(Request[provar.Key + "-minnumberallowed"]) ?? provar.Value.ProviderMinNumberAllowed);
+                            formControlHtml,
+                            EncodeForHtml(provar.Value.Def.MinNumberAllowedLabelPopUp));
                     }
                     if (!String.IsNullOrEmpty(provar.Value.Def.MaxNumberAllowedLabel))
                     {
-                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> <input type='text' name='{1}-maxnumberallowed' value='{3}' /></label></li>",
+                        string formControlHtml = "",
+                            name = provar.Key + "-maxnumberallowed"; //==Value.Def.InternalName
+                        var selectedValue = (object)(Request[provar.Key + "-maxnumberallowed"]) ?? provar.Value.ProviderMaxNumberAllowed;
+                        if (minMaxValuesList != null)
+                            formControlHtml = LcUtils.BuildHtmlSelect(
+                                name,
+                                selectedValue,
+                                minMaxValuesList);
+                        else
+                            formControlHtml = LcUtils.BuildHtmlInput(
+                                name,
+                                selectedValue);
+
+                        hRestrictions.AppendFormat("<li><label><span class='has-tooltip' title='{2}'>{0}</span> {1}</label></li>",
                             EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabel),
-                            EncodeForHtml(provar.Value.Def.InternalName), //==Key
-                            EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabelPopUp),
-                            (object)(Request[provar.Key + "-maxnumberallowed"]) ?? provar.Value.ProviderMaxNumberAllowed);
+                            formControlHtml,
+                            EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabelPopUp));
                     }
                 }
             }
