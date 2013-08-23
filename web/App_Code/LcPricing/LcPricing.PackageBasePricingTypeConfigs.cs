@@ -35,7 +35,7 @@ public static partial class LcPricingModel
                 IncludeServiceAttributes = true,
 
                 LearnMoreLabel = "Learn more about hourly service pricing",
-                LearnMoreText = "LJDI:",
+                LearnMoreText = "Here you can create one or more hourly services that you offer. If you have more than one, tell clients how they differ.",
 
                 ClassName = "hourlyservice",
                 Mod = new PackageModHourly()
