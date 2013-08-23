@@ -28,10 +28,9 @@
     }
 
     // Get Fees that apply to the provider and customer
-    dynamic fee = null;
-    if (!editable) {
-        fee = LcPricingModel.GetFee(LcData.Booking.GetFeeFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID, positionID));
-    }
+    var feesSet = editable ?
+        null :
+        LcPricingModel.GetFeesSetFor((customer == null ? 0 : customer.UserID), providerUserID, pricingTypeID, positionID);
 }
 @if (data.Packages != null && data.Packages.Count > 0)
 {
@@ -43,6 +42,11 @@
             {
                 continue;
             }
+            
+            // Getting the correct fees for the package
+            var fee = editable ?
+                null :
+                LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
 
             <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
@@ -95,7 +99,7 @@
 								if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
 									priceSufix = "/h";
 								} else {
-									priceSufix = "per " + pak.PriceRateUnit;
+									priceSufix = "<span class='price-rate-unit'>" + config.PriceRateUnitListLabel + pak.PriceRateUnit + "</span>";
 								}
 							}
                             price = price ?? 0M;
@@ -114,7 +118,7 @@
 									}
 									else
 									{
-										<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @priceSufix</a>
+										<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
 									}
 								</div>
 							}
@@ -138,7 +142,15 @@
                 </div>
                 @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
                 {
-                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @pak.PriceRate.ToString("c")
+                    LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
+                    if (!editable)
+                    {
+                        // Getting the correct fees for the price-rate (can be different from the package price
+                        var rateFee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.PriceRate, LcData.UserInfo.UserType.Customer);
+                        // fees apply with 1 decimal for the case of hourly-rates:
+                        priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, rateFee, 1);
+                    }
+                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
                         @if (config.PriceRateUnitListLabel != null)
                         {
                             <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>

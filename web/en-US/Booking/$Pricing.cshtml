@@ -42,6 +42,7 @@
         var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
         var fee = LcPricingModel.GetFee(feeData);
         var pfee = LcPricingModel.GetPFee(feeData);
+        var feesSet = LcPricingModel.GetFeesSetFor(c.UserID, p.UserID, pricingtypeid, pos.PositionID, bookCode);
         
         // Collection of Summary numbers per group that will be a detail line of the result
         var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
@@ -90,6 +91,8 @@
             PriceIsEstimated = priceIsEstimated,
             Fee = fee,
             PFee = pfee,
+            FeesSet = feesSet,
+            HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypes = pricingTypes,
             ClientTypeID = clienttypeid,
@@ -208,7 +211,7 @@
         @if (data.ContainsPackages)
         {
             <fieldset>
-                @LcPricingView.Packages(data.Packages, data.Fee)
+                @LcPricingView.Packages(data.Packages, data.FeesSet)
             </fieldset>
         }
         
@@ -216,7 +219,7 @@
         {
             <fieldset>
                 <legend>Select add-on services</legend>
-                @LcPricingView.Addons(data.Addons, data.Fee)
+                @LcPricingView.Addons(data.Addons, data.FeesSet)
             </fieldset>
         }
         
