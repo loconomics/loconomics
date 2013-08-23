@@ -79,11 +79,17 @@ public static partial class LcPricingModel
     {
         var ret = new Dictionary<string, LcPricingModel.FeeRate>();
 
+        // Get standard fees, that depends on customer and provider relationship and bookCode.
         var standard = LcData.Booking.GetFeeFor(customerUserID, providerUserID, pricingTypeID, positionID, bookCode);
         ret["standard:customer"] = LcPricingModel.GetFee(standard);
         ret["standard:provider"] = LcPricingModel.GetPFee(standard);
 
-        var flat = LcData.Booking.GetFeeForFreePackages(customerUserID, providerUserID, pricingTypeID, positionID, bookCode);
+        // Get the flat fees that apply most of times to 'free packages'.
+        // For the case the 'book-me button :7' fees were apply to standard,
+        // use that as 'flat' too (we never will charge to bookings from book-me buttons).
+        var flat = standard.BookingTypeID == 7
+            ? standard
+            : LcData.Booking.GetFeeForFreePackages(customerUserID, providerUserID, pricingTypeID, positionID, bookCode);
         ret["flat:customer"] = LcPricingModel.GetFee(flat);
         ret["flat:provider"] = LcPricingModel.GetPFee(flat);
 
