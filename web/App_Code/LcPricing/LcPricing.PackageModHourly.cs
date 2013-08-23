@@ -152,7 +152,7 @@ public static partial class LcPricingModel
                         hSurcharges.AppendFormat("<li><label>$ <input type='text' name='{1}-value' value='{3}' /> <span class='has-tooltip' title='{2}'>{0}</span></label></li>",
                             EncodeForHtml(provar.Value.Def.HourlySurchargeLabel),
                             EncodeForHtml(provar.Value.Def.InternalName), //==Key
-                            EncodeForHtml(provar.Value.Def.HourlySurchargeLabelPopUp),
+                            EncodeForHtml(provar.Value.Def.VariableLabelPopUp),
                             Request[provar.Key + "-value"] ?? provar.Value.Value);
                     }
                     else
