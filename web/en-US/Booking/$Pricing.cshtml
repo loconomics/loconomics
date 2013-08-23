@@ -42,7 +42,7 @@
         var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
         var fee = LcPricingModel.GetFee(feeData);
         var pfee = LcPricingModel.GetPFee(feeData);
-        var feesSet = LcPricingModel.GetFeesSetFor(c.UserID, p.UserID, pricingtypeid, pos.PositionID, bookCode);
+        var feesSet = LcPricingModel.GetFeesSetFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
         
         // Collection of Summary numbers per group that will be a detail line of the result
         var SummaryLines = new Dictionary<string, LcPricingModel.PricingSummaryData>();
@@ -89,10 +89,7 @@
             ContainsSummary = hasSummary,
             ContainsInstructions = hasInstructions,
             PriceIsEstimated = priceIsEstimated,
-            Fee = fee,
-            PFee = pfee,
             FeesSet = feesSet,
-            HourPrice = hourPrice,
             BookingTypeID = feeData.BookingTypeID,
             PricingTypes = pricingTypes,
             ClientTypeID = clienttypeid,
@@ -114,12 +111,12 @@
             /* Calculate summary
              */
             if (data.ContainsPackages) {
-                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.Fee, ModelState);
+                mdPackages = LcPricingModel.CalculatePackages(data.Packages, data.FeesSet, ModelState);
                 //rtn.Add("packages", mdPackages);
                 data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
             }
             if (data.ContainsAddons) {
-                mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.Fee, ModelState);
+                mdAddons = LcPricingModel.CalculateAddons(data.Addons, data.FeesSet, ModelState);
                 //rtn.Add("addons", mdAddons);
                 data.SummaryLines["addons"].Add(mdAddons.SummaryTotal);
             }
@@ -132,9 +129,11 @@
 			// As decided on 2013/06/02 on Barcelona, we apply the payment-processing-fee on
 			// the Provider price (wihout our fees) instead of the total price (thats the price
 			// sent through Braintree), thats: the SubtotalPrice, not TotalPrice.
+            // We get the provider fees basing on the total base price:
+            var pfee = LcPricingModel.GetFeeByPackagePrice(data.FeesSet, summary.SubtotalPrice, LcData.UserInfo.UserType.Provider);
             // On this case, provider fees are calculated with 2 decimals of precission like the
             // payment processing system does:
-            summary.PFeePrice = (new LcPricingModel.Price(summary.SubtotalPrice, data.PFee, 2)).FeePrice;
+            summary.PFeePrice = (new LcPricingModel.Price(summary.SubtotalPrice, pfee, 2)).FeePrice;
 
             /* Save all data?
                 */
