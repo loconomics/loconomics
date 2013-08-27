@@ -1043,8 +1043,8 @@ LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
     // Insert labels as a sibling of the slider (cannot be inserted inside)
     slider.after(labels);
 };
-/** Create labels of a jquery-ui-slider to fit in the available space.
- ** Element needs to be visible.
+/** Update the visibility of labels of a jquery-ui-slider depending if they fit in the available space.
+ ** Slider needs to be visible.
  **/
 LC.updateLabelsForUISlider = function LC_updateLabelsForUISlider(slider) {
     // Get labels for slider

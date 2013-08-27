@@ -364,6 +364,16 @@ input.button{ padding-top: 2px; padding-bottom: 2px;}
     position: absolute;
     cursor: pointer;
 }
+/* Marks on label position */
+.ui-slider-label:before {
+    content: '|';
+    position: absolute;
+    top: -10px;
+    left: 1px;
+    right: 0px;
+    font-size: 6px;
+    text-align: center;
+}
 /* Footnote added to jquery-ui-slider */
 .ui-slider-footnote {
     text-align: center;
