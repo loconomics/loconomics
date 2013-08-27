@@ -374,6 +374,13 @@ input.button{ padding-top: 2px; padding-bottom: 2px;}
     font-size: 6px;
     text-align: center;
 }
+.ui-slider-label:first-child:before {
+    text-align: left;
+}
+.ui-slider-label:last-child:before {
+    text-align: right;
+}
+
 /* Footnote added to jquery-ui-slider */
 .ui-slider-footnote {
     text-align: center;
