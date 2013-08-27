@@ -91,8 +91,10 @@ public static partial class LcPricingModel
                     string footNoteFormat = calculateWithVar.PricingVariableID == 1 ? "Base rate is {0:C} per hour" : "Add {0:C} per hour is for each additional {2}";
                     // If package already include an amount, notify it
                     if ((calculateWithVar.ProviderNumberIncluded ?? 0) > 0)
-                        footNoteFormat = "Includes {1:#,##0.##} children--add {0:C} per hour is for each additional {2}";
-                    string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice, calculateWithVar.ProviderNumberIncluded, calculateWithVar.Def.VariableNameSingular);
+                        footNoteFormat = "Includes {1:#,##0.##} {3}--add {0:C}/hr for each add'l {2}";
+                    string sliderFootnote = String.Format(footNoteFormat, provPrice.TotalPrice,
+                        calculateWithVar.ProviderNumberIncluded, calculateWithVar.Def.VariableNameSingular,
+                        calculateWithVar.Def.VariableNamePlural);
 
                     // We set the customer value as
                     // - the posted-form value,
