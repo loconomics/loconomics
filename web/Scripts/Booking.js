@@ -295,8 +295,7 @@ LC.initCustomerPackageSliders = function () {
                     formula(numbedrooms, numbathrooms)
                 )
             , LC.roundingTypeEnum.Up);
-            // Updating user-viewed time, show it in the smart way
-            pak.find('.package-duration').text(duration.toSmartString());
+
             // Recalculating price with new time, using the package hourly-rate
             var hourlyRate = parseFloat(calcContext.data('hourly-rate'));
             var hourlyFee = parseFloat(calcContext.data('hourly-fee'));
@@ -305,8 +304,8 @@ LC.initCustomerPackageSliders = function () {
             // and the already rounded duration:
             var totalTimePrice = LC.calculateHourlyPrice(duration, { totalPrice: hourlyRate, feePrice: hourlyFee, basePrice: hourlyRate - hourlyFee });
 
-            // Set the package price
-            updateFrontendPackagePrice(pak, totalTimePrice);
+            // Update front-end
+            updateFrontendPackagePrice(pak, totalTimePrice, duration);
         },
         setup: function housekeeper_setup(setup, $c) {
             setup.min = setup.value - 3 * setup.step;
@@ -361,9 +360,8 @@ LC.initCustomerPackageSliders = function () {
                 hourlySurchargePrice = new LC.Price(hourlySurcharge || 0, fee, 1),
                 totalTimePrice = LC.calculateHourlyPrice(timeDuration, hourlyPrice, hourlySurchargePrice);
 
-
-            // Set the package price
-            updateFrontendPackagePrice(pak, totalTimePrice);
+            // Update front-end
+            updateFrontendPackageDetails(pak, totalTimePrice, timeDuration);
         },
         setup: function hourly_setup(setup, $c) {
             setup.min = $c.data('slider-min') || 0;
@@ -378,14 +376,16 @@ LC.initCustomerPackageSliders = function () {
         $c.find('input').val(value).change();
     }
     /** Update the showed prices for a package, from a calculated fees LC.Price object @price,
-    ** launching the total booking pricing update too.
+    **  launching the total booking pricing update too, and the duration as a LC.TimeSpan object.
     **/
-    function updateFrontendPackagePrice($pak, price) {
+    function updateFrontendPackageDetails($pak, price, duration) {
         // Set new item-price and trigger a change event to allow the items-fees calculation
         // system do their job and showing the total price
         LC.setMoneyNumber(price.totalPrice, $pak.find('.calculate-item-price'));
         LC.setMoneyNumber(price.feePrice, $pak.find('.calculate-item-fee'));
         $pak.find('.calculate-item-price').trigger('change');
+        // Duration showed in the 'smart' way
+        $pak.find('.package-duration').text(duration.toSmartString());
     }
     /** Initializing sliders
     **/
