@@ -268,7 +268,7 @@ public static partial class LcPricingModel
             {
                 if (provar.Value.Def.IsProviderVariable)
                 {
-                    // Emit error if there is not a value or is not of the desired type
+                    // Validation: Emit error if there is not a value or is not of the desired type
                     if (String.IsNullOrWhiteSpace(Request[provar.Key + "-value"]))
                     {
                         modelState.AddError(provar.Key + "-value", LcRessources.RequiredField(provar.Value.Def.VariableLabel));
@@ -279,7 +279,15 @@ public static partial class LcPricingModel
                         modelState.AddError(provar.Key + "-value", LcRessources.InvalidFieldValue(provar.Value.Def.VariableLabel));
                         valid = false;
                     }
-                    // Check the optional variable value properties (number, min, max)
+                    // NO Validation: Detect pricing variable 'hourly rate' to copy the value to the standard field on package
+                    // PricingVariableID:1 'hourly rate' for all positions and pricings.
+                    // We need to do this data change on validation because the 'save' part happen after the package being saved (for good reasons)
+                    if (provar.Value.PricingVariableID == 1)
+                    {
+                        package.PriceRate = Request[provar.Key + "-value"].AsDecimal();
+                        package.PriceRateUnit = "hour";
+                    }
+                    // Validation: Check the optional variable value properties (number, min, max)
                     if (!String.IsNullOrWhiteSpace(Request[provar.Key + "-numberincluded"]) &&
                         !Request[provar.Key + "-numberincluded"].IsDecimal())
                     {
@@ -317,14 +325,6 @@ public static partial class LcPricingModel
                     // Min/Max allowed
                     provar.Value.ProviderMinNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-minnumberallowed"], 0);
                     provar.Value.ProviderMaxNumberAllowed = LcUtils.GetTypedValue<decimal>(Request[provar.Key + "-maxnumberallowed"], 0);
-
-                    // Detect pricing variable 'hourly rate' to copy the value to the standard field on package
-                    // PricingVariableID:1 'hourly rate' for all positions and pricings.
-                    if (provar.Value.PricingVariableID == 1)
-                    {
-                        package.PriceRate = provar.Value.Value;
-                        package.PriceRateUnit = "hour";
-                    }
                 }
             }
             provars.Save();

@@ -220,11 +220,6 @@
             var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)p.UserID);
             
             using (var db = Database.Open("sqlloco")) {
-				// Use Mod to save some specific data (as variables), but too allow set-up some package data
-                // in order to let the pricing-mod work fine.
-                if (config.Mod != null) {
-					config.Mod.SaveProviderData(data, db);
-				}
                 // Save the package
                 data.ID = db.QueryValue(sqlSetPackage,
                     data.ID,
@@ -245,6 +240,10 @@
                     1, // Active
                     config.IsAddon
                 );
+				// Use Mod to save some specific data (as variables),just after create/update the package
+                if (config.Mod != null) {
+					config.Mod.SaveProviderData(data, db);
+				}
                 // Save the package attributes
                 if (config.IncludeServiceAttributes) {
                     db.Execute(sqlDelDetails, data.ID);
