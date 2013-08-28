@@ -248,6 +248,14 @@ public static class LcUtils
                 var bv = b ?? "";
                 if (av == bv || av.ToString() == bv.ToString())
                     return true;
+                // If both can be converted to numbers, convert to decimal and compare
+                // (because sometimes, comparing a integer/float with a decimal gives a false negative because of fixed decimals)
+                var ad = GetTypedValue<decimal?>(av, null);
+                var bd = GetTypedValue<decimal?>(bv, null);
+                if (ad.HasValue &&
+                    bd.HasValue &&
+                    ad == bd)
+                    return true;
             }
         }
         return false;
