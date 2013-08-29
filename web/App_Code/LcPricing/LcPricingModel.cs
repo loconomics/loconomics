@@ -136,7 +136,13 @@ public static partial class LcPricingModel
                 var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)thePackage.PricingTypeID];
 
                 // Getting the correct fees for the package
-                var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, thePackage.Price, LcData.UserInfo.UserType.Customer);
+                FeeRate fee = null;
+                // Use the package price on FixedPrice packages to get the fees that fit better:
+                if (config.PriceCalculation == PriceCalculationType.FixedPrice)
+                    fee = LcPricingModel.GetFeeByPackagePrice(feesSet, thePackage.Price, LcData.UserInfo.UserType.Customer);
+                else
+                    // Else, get the standard ones
+                    fee = feesSet["standard:customer"];
 
                 // Calculate time and price required for selected package
                 if (config.Mod != null)

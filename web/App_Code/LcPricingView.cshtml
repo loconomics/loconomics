@@ -37,7 +37,15 @@
         {
 			var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
             // Getting the correct fees for the package
-            var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
+            LcPricingModel.FeeRate fee = null;
+            // Use the package price on FixedPrice packages to get the fees that fit better:
+            if (config.PriceCalculation == LcPricingModel.PriceCalculationType.FixedPrice) {
+                fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
+            } else {
+                // Else, get the standard ones
+                fee = feesSet["standard:customer"];
+            }
+            
             // Calculating final price, with fees and full details, No decimals for fixed prices:
             var price = new LcPricingModel.Price(pak.Price, fee, 0);
             <tr>

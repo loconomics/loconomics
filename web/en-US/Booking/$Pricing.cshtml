@@ -39,9 +39,8 @@
         bool priceIsEstimated = false;
         
         // Booking type with fees policy
+        // TODO Remove need for feeData saving bookingtypeid in feerate for set.
         var feeData = LcData.Booking.GetFeeFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
-        var fee = LcPricingModel.GetFee(feeData);
-        var pfee = LcPricingModel.GetPFee(feeData);
         var feesSet = LcPricingModel.GetFeesSetFor(c.UserID, p.UserID, -1, pos.PositionID, bookCode);
         
         // Collection of Summary numbers per group that will be a detail line of the result
@@ -130,6 +129,7 @@
 			// the Provider price (wihout our fees) instead of the total price (thats the price
 			// sent through Braintree), thats: the SubtotalPrice, not TotalPrice.
             // We get the provider fees basing on the total base price:
+            // TODO Consider bookingtypeid to don't charge the flat on book-me button (right now both standard and flat has the same pfee, but for future)
             var pfee = LcPricingModel.GetFeeByPackagePrice(data.FeesSet, summary.SubtotalPrice, LcData.UserInfo.UserType.Provider);
             // On this case, provider fees are calculated with 2 decimals of precission like the
             // payment processing system does:
