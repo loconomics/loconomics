@@ -987,36 +987,62 @@ LC.placeHolder = function() {
         })();
 };
 
-/** Create labels for a jquery-ui-slider.
+/******
+    Module:: Utilities for ui sliders,
+    incorpored to LC namespace
 **/
-LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
-    // remove old ones:
-    var old = slider.siblings('.ui-slider-labels').filter(function () {
-        return ($(this).data('ui-slider').get(0) == slider.get(0));
-    }).remove();
-    // Create labels container
-    var labels = $('<div class="ui-slider-labels"/>');
-    labels.data('ui-slider', slider);
+jQuery.extend(LC, (function () {
 
-    // Setup of useful vars for label creation
-    var max = slider.slider('option', 'max'),
-        min = slider.slider('option', 'min'),
-        step = slider.slider('option', 'step'),
-        steps = Math.floor((max - min) / step),
-        sw = 100 / steps;
+    /** Create labels for a jquery-ui-slider.
+    **/
+    function create(slider) {
+        // remove old ones:
+        var old = slider.siblings('.ui-slider-labels').filter(function () {
+            return ($(this).data('ui-slider').get(0) == slider.get(0));
+        }).remove();
+        // Create labels container
+        var labels = $('<div class="ui-slider-labels"/>');
+        labels.data('ui-slider', slider);
 
-    // Creating and positioning labels
-    for (var i = 0; i <= steps; i++) {
-        // Create label
-        var lbl = $('<div class="ui-slider-label"><span class="ui-slider-label-text"/></div>');
-        // Setup label with its value
-        var labelValue = min + i * step;
-        lbl.children('.ui-slider-label-text').text(labelValue);
-        lbl.data('ui-slider-value', labelValue);
-        // Positionate
+        // Setup of useful vars for label creation
+        var max = slider.slider('option', 'max'),
+            min = slider.slider('option', 'min'),
+            step = slider.slider('option', 'step'),
+            steps = Math.floor((max - min) / step);
+
+        // Creating and positioning labels
+        for (var i = 0; i <= steps; i++) {
+            // Create label
+            var lbl = $('<div class="ui-slider-label"><span class="ui-slider-label-text"/></div>');
+            // Setup label with its value
+            var labelValue = min + i * step;
+            lbl.children('.ui-slider-label-text').text(labelValue);
+            lbl.data('ui-slider-value', labelValue);
+            // Positionate
+            positionate(lbl, i, steps);
+            // Add to container
+            labels.append(lbl);
+        }
+
+        // Handler for labels click to select its position value
+        labels.on('click', '.ui-slider-label', function () {
+            var val = $(this).data('ui-slider-value'),
+                slider = $(this).parent().data('ui-slider');
+            slider.slider('value', val);
+        });
+
+        // Insert labels as a sibling of the slider (cannot be inserted inside)
+        slider.after(labels);
+    }
+
+    /** Positionate to the correct position and width an UI label at @lbl
+    for the required percentage-width @sw
+    **/
+    function positionate(lbl, i, steps) {
+        var sw = 100 / steps;
         var left = i * sw - sw * .5,
-        right = 100 - left - sw,
-        align = 'center';
+            right = 100 - left - sw,
+            align = 'center';
         if (i == 0) {
             align = 'left';
             left = 0;
@@ -1029,53 +1055,55 @@ LC.createLabelsForUISlider = function LC_createLabelsForUISlider(slider) {
             left: left + '%',
             right: right + '%'
         });
-        // Add to container
-        labels.append(lbl);
     }
 
-    // Handler for labels click to select its position value
-    labels.on('click', '.ui-slider-label', function () {
-        var val = $(this).data('ui-slider-value'),
-            slider = $(this).parent().data('ui-slider');
-        slider.slider('value', val);
-    });
+    /** Update the visibility of labels of a jquery-ui-slider depending if they fit in the available space.
+    Slider needs to be visible.
+    **/
+    function update(slider) {
+        // Get labels for slider
+        var labels_c = slider.siblings('.ui-slider-labels').filter(function () {
+            return ($(this).data('ui-slider').get(0) == slider.get(0));
+        });
+        var labels = labels_c.find('.ui-slider-label-text');
 
-    // Insert labels as a sibling of the slider (cannot be inserted inside)
-    slider.after(labels);
-};
-/** Update the visibility of labels of a jquery-ui-slider depending if they fit in the available space.
- ** Slider needs to be visible.
- **/
-LC.updateLabelsForUISlider = function LC_updateLabelsForUISlider(slider) {
-    // Get labels for slider
-    var labels_c = slider.siblings('.ui-slider-labels').filter(function () {
-        return ($(this).data('ui-slider').get(0) == slider.get(0));
-    });
-    var labels = labels_c.find('.ui-slider-label-text');
-
-    // Check if there are more labels than available space
-    // Get maximum label width
-    var item_width = 0;
-    labels.each(function () {
-        var tw = $(this).outerWidth(true);
-        if (tw >= item_width)
-            item_width = tw;
-    });
-    // If there is width, if not, element is not visible cannot be computed
-    if (item_width > 0) {
-        // Get the required stepping of labels
-        var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length));
-        if (labels_step > 1) {
-            // Hide the labels on positions out of the step
-            labels.each(function (i) {
-                if (i % labels_step)
-                    $(this).hide();
-                else
-                    $(this).show();
-            });
+        // Check if there are more labels than available space
+        // Get maximum label width
+        var item_width = 0;
+        labels.each(function () {
+            var tw = $(this).outerWidth(true);
+            if (tw >= item_width)
+                item_width = tw;
+        });
+        // If there is width, if not, element is not visible cannot be computed
+        if (item_width > 0) {
+            // Get the required stepping of labels
+            var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length)),
+                labels_steps = labels.length / labels_step;
+            console.log('labels steps', labels_steps);
+            if (labels_step > 1) {
+                // Hide the labels on positions out of the step
+                var newi = 0;
+                labels.each(function (i) {
+                    if (i % labels_step)
+                        $(this).hide();
+                    else {
+                        // Show
+                        $(this).show();
+                        // repositionate parent
+                       // positionate($(this).parent().addClass('visible'), newi, labels_steps);
+                        newi++;
+                    }
+                });
+            }
         }
     }
-};
+
+    return {
+        createLabelsForUISlider: create,
+        updateLabelsForUISlider: update
+    };
+})());
 
 // TODO Convert as general function and use everywhere:
 // It executes the given 'ready' function as parameter when
