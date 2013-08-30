@@ -343,7 +343,7 @@ public static partial class LcPricingModel
         {
             get
             {
-                return data[key];
+                return data.ContainsKey(key) ? data[key] : null;
             }
             internal set
             {
@@ -354,7 +354,7 @@ public static partial class LcPricingModel
         {
             get
             {
-                return idIndex[id];
+                return idIndex.ContainsKey(id) ? idIndex[id] : null;
             }
         }
         /// <summary>
@@ -712,7 +712,7 @@ public static partial class LcPricingModel
             foreach (var r in data)
             {
                 var v = vars[(int)r.PricingVariableID];
-                if (v.Def.IsCustomerVariable)
+                if (v != null && v.Def.IsCustomerVariable)
                     v.Value = r.Value;
             }
         }
