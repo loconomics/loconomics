@@ -684,10 +684,8 @@ public static partial class LcPricingModel
             {
                 var sql = @"
                     DECLARE @UserID int
-                    DECLARE @PackageID int
 
                     SET @UserID = @0
-                    SET @PackageID = @1
 
                     DECLARE @PricingEstimateID int
                     DECLARE @PricingEstimateRevision int
@@ -698,19 +696,17 @@ public static partial class LcPricingModel
                     FROM	PricingVariableValue
                     WHERE	Active = 1
 		                    AND UserID = @UserID
-		                    AND ProviderPackageID = @PackageID
                     ORDER BY PricingEstimateID DESC, PricingEstimateRevision DESC
 
                     SELECT	V.PricingVariableID, V.Value
                     FROM	PricingVariableValue As V
                     WHERE	V.Active = 1
 		                    AND V.UserID = @UserID
-		                    AND V.ProviderPackageID = @PackageID
 		                    AND V.PricingEstimateID = @PricingEstimateID
 		                    AND V.PricingEstimateRevision = @PricingEstimateRevision
                 ";
 
-                data = db.Query(sql, customerID, vars.PackageID);
+                data = db.Query(sql, customerID);
             }
             // Update vars with that values
             foreach (var r in data)
