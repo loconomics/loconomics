@@ -110,7 +110,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(dynamic packages, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculatePackages(int customerID, dynamic packages, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 
@@ -148,7 +148,7 @@ public static partial class LcPricingModel
                 if (config.Mod != null)
                 {
                     // Applying calculation from the PackageMod
-                    config.Mod.CalculateCustomerData(thePackage, fee, modelData, ModelState);
+                    config.Mod.CalculateCustomerData(customerID, thePackage, fee, modelData, ModelState);
                 }
 
                 /* Calculation of ServiceDuration */
@@ -257,7 +257,6 @@ public static partial class LcPricingModel
                 custInput = Json.Encode(modelData.CustomerInput ?? "");
             }
 
-            // TODO Reimplement sqlInsEstimateDetails SQL AND DATA
             // Inserting details of package selected by customer
             db.Execute(LcData.Booking.sqlInsEstimateDetails, 
                 estimateID,
@@ -277,7 +276,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Addons
-    public static PricingModelData CalculateAddons(dynamic addons, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculateAddons(int customerID, dynamic addons, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
     {
         var modelData = new PricingModelData();
 

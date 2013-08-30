@@ -21,8 +21,8 @@ public static partial class LcPricingModel
         /// </summary>
         /// <param name="package"></param>
         /// <param name="ModelState"></param>
-        void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
-        string GetCustomerHtml(PackageBaseData package, FeeRate fee);
+        void CalculateCustomerData(int customerID, PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState);
+        string GetCustomerHtml(int customerID, PackageBaseData package, FeeRate fee);
         string GetProviderHtml(PackageBaseData package);
         bool ValidateProviderData(PackageBaseData package, System.Web.WebPages.Html.ModelStateDictionary modelState);
         void SaveProviderData(PackageBaseData package, Database db);

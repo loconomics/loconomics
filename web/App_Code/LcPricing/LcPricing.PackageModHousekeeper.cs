@@ -54,7 +54,7 @@ public static partial class LcPricingModel
             return (new PackageVariables(package.ProviderUserID, package.ID)).Get<double>("CleaningRate", 1.0);
         }
         #region Customer form part
-        public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+        public void CalculateCustomerData(int customerID, PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
             /* IMPORTANT: we calculate here the service duration for one session based on some custom variables for housekeeper pricing,
              * final price and fees are calculated in the standard code using the package Duration field, because of that
@@ -79,7 +79,7 @@ public static partial class LcPricingModel
             modelData.ProviderInput = providerRate;
             modelData.CustomerInput = vars;
         }
-        public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
+        public string GetCustomerHtml(int customerID, PackageBaseData package, FeeRate fee)
         {
             // get provider rate
             var providerRate = GetProviderCleaningRate(package);

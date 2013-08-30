@@ -339,7 +339,8 @@ public static partial class LcPricingModel
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public PricingVariableValue this[string key]{
+        public PricingVariableValue this[string key]
+        {
             get
             {
                 return data[key];
@@ -347,6 +348,13 @@ public static partial class LcPricingModel
             internal set
             {
                 data[key] = value;
+            }
+        }
+        public PricingVariableValue this[int id]
+        {
+            get
+            {
+                return idIndex[id];
             }
         }
         /// <summary>
@@ -656,6 +664,60 @@ public static partial class LcPricingModel
                             v.Value.ProviderMaxNumberAllowed
                         );
                 }
+            }
+        }
+        #endregion
+
+        #region "Static Utilities"
+        /// <summary>
+        /// It updates the values for customer variables in the passed @vars with
+        /// the values used by the @customerID in its last booking/estimate.
+        /// This allows the 'memory effect' on bookings, helping customers with repeated bookings.
+        /// </summary>
+        /// <param name="vars"></param>
+        /// <param name="customerID"></param>
+        public static void UpdateWithLastCustomerValues(PricingVariables vars, int customerID)
+        {
+            dynamic data = null;
+            // Get customer values from last booking/estimate
+            using (var db = Database.Open("sqlloco"))
+            {
+                var sql = @"
+                    DECLARE @UserID int
+                    DECLARE @PackageID int
+
+                    SET @UserID = @0
+                    SET @PackageID = @1
+
+                    DECLARE @PricingEstimateID int
+                    DECLARE @PricingEstimateRevision int
+
+                    SELECT	TOP 1
+		                    @PricingEstimateID = PricingEstimateID,
+                            @PricingEstimateRevision = PricingEstimateRevision
+                    FROM	PricingVariableValue
+                    WHERE	Active = 1
+		                    AND UserID = @UserID
+		                    AND ProviderPackageID = @PackageID
+                    ORDER BY PricingEstimateID DESC, PricingEstimateRevision DESC
+
+                    SELECT	V.PricingVariableID, V.Value
+                    FROM	PricingVariableValue As V
+                    WHERE	V.Active = 1
+		                    AND V.UserID = @UserID
+		                    AND V.ProviderPackageID = @PackageID
+		                    AND V.PricingEstimateID = @PricingEstimateID
+		                    AND V.PricingEstimateRevision = @PricingEstimateRevision
+                ";
+
+                data = db.Query(sql, customerID, vars.PackageID);
+            }
+            // Update vars with that values
+            foreach (var r in data)
+            {
+                var v = vars[(int)r.PricingVariableID];
+                if (v.Def.IsCustomerVariable)
+                    v.Value = r.Value;
             }
         }
         #endregion

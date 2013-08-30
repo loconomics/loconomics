@@ -23,7 +23,7 @@ public static partial class LcPricingModel
         }
         #endregion
         #region Customer form part
-        public void CalculateCustomerData(PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+        public void CalculateCustomerData(int customerID, PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
         {
             /* IMPORTANT: we set here the service duration for one session based on the customer value (from the form),
              * update the hourly-price from provider variable value
@@ -73,11 +73,12 @@ public static partial class LcPricingModel
             package.HourlySurcharge = hourlySurcharge;
             modelData.CustomerInput = pricingvars;
         }
-        public string GetCustomerHtml(PackageBaseData package, FeeRate fee)
+        public string GetCustomerHtml(int customerID, PackageBaseData package, FeeRate fee)
         {
             // Get variables
             PricingVariables provars = PricingVariables.FromPackageBaseData(package);
-            // TOREVIEW: Update vars with customers values from its last estimate/booking?
+            // Update vars with customers values from its last estimate/booking?
+            PricingVariables.UpdateWithLastCustomerValues(provars, customerID);
 
             var sv = new StringBuilder();
 

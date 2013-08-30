@@ -21,7 +21,7 @@
  * VIEWS, implemented as helpers
  *@
 
-@helper Packages(LcData.ProviderPackagesView packages, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
+@helper Packages(int customerID, LcData.ProviderPackagesView packages, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
     var idprefix = "pricingwizard";
     var preSelectedPackage = Request["PackageID"];
     var selectedPackage = Request["provider-package"] ?? preSelectedPackage;
@@ -56,7 +56,7 @@
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name @(pak.NumberOfSessions > 1 ? String.Format("({0} appointments)", pak.NumberOfSessions) : "")</label>
 					@if (config.Mod != null) {
 						<div class="package-extra-data">
-							@Html.Raw(config.Mod.GetCustomerHtml(new LcPricingModel.PackageBaseData(pak), fee))
+							@Html.Raw(config.Mod.GetCustomerHtml(customerID, new LcPricingModel.PackageBaseData(pak), fee))
 						</div>
 					}
                 </td>
@@ -72,7 +72,7 @@
     </table>
 }
 
-@helper Addons(LcData.ProviderPackagesView addons, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
+@helper Addons(int customerID, LcData.ProviderPackagesView addons, Dictionary<string, LcPricingModel.FeeRate> feesSet) {
     var idprefix = "pricingwizard";
     var selectedAddons = Request.Form.GetValues("provider-package-addons");
     if (selectedAddons == null) {

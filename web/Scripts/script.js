@@ -1080,7 +1080,6 @@ jQuery.extend(LC, (function () {
             // Get the required stepping of labels
             var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length)),
                 labels_steps = labels.length / labels_step;
-            console.log('labels steps', labels_steps);
             if (labels_step > 1) {
                 // Hide the labels on positions out of the step
                 var newi = 0;
