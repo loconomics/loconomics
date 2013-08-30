@@ -366,5 +366,126 @@ public static partial class LcPricingModel
             return ASP.LcHelpers.JoinNotEmptyStrings(", ", res);
         }
         #endregion
+        #region Package View
+        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet)
+        {
+            // NOTE: It follows the same base code than GetProviderHtml but replacing form elements by div/span and appling fees when customer
+
+            // Get variables
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+
+            // Create html for form elements, variables values organized per sections
+            var hValues = new StringBuilder();
+            var hSurcharges = new StringBuilder();
+            var hIncludes = new StringBuilder();
+            var hRestrictions = new StringBuilder();
+            // Iterating provider variables:
+            foreach (var provar in provars)
+            {
+                // A listing view of *the package* only shows provider variables for any user, since there is no customer values!
+                if (provar.Value.Def.IsProviderVariable)
+                {
+                    // Showing the variable value.
+                    // Avoid the 'hourly-rate' variable value, thats is showed already in a special way 
+                    // by the standard package code (using the copy at pak.PriceRate)
+                    if (provar.Key != "HourlyRate")
+                    {
+                        // Provider variables *value*s are ever a price: if we have a feesSet, then
+                        // we must apply fees because the view require show prices with fees (mostly when is
+                        // the user who see the package, as in booking and public profile).
+                        // To variables, we apply ever the standard fees, there is no chance for the flat ones.
+                        // We follow the convention for hourly prices (since this are too per hour): 1 decimal position
+                        var valuePrice = feesSet == null
+                            // Without fees, we apply a fee-rate of 0, and rounding to 1 decimal
+                            ? new Price(provar.Value.GetValue<decimal>(0), 0, 1)
+                            // With fees, we apply that, rounding ever to 1 decimal
+                            : new Price(provar.Value.GetValue<decimal>(0), feesSet["standard:customer"], 1);
+
+                        if (!String.IsNullOrEmpty(provar.Value.Def.HourlySurchargeLabel))
+                        {
+                            hSurcharges.AppendFormat("<li>{1:c} {0}</li>",
+                                EncodeForHtml(provar.Value.Def.HourlySurchargeLabel),
+                                valuePrice.TotalPrice);
+                        }
+                        else
+                        {
+                            // Is not a surcharge, is a value
+                            hValues.AppendFormat("<li>{0}: {1:c}</li>",
+                                EncodeForHtml(provar.Value.Def.VariableLabel),
+                                valuePrice.TotalPrice);
+                        }
+                    }
+                    // Number Included
+                    if (!String.IsNullOrEmpty(provar.Value.Def.NumberIncludedLabel) &&
+                        provar.Value.ProviderNumberIncluded.HasValue &&
+                        provar.Value.ProviderNumberIncluded.Value > 0)
+                    {
+                        hIncludes.AppendFormat("<li>{0} {1:#,##0.##} {2}</li>",
+                            EncodeForHtml(provar.Value.Def.NumberIncludedLabel),
+                            provar.Value.ProviderNumberIncluded.Value,
+                            provar.Value.ProviderNumberIncluded.Value != 1
+                            ? EncodeForHtml(provar.Value.Def.VariableNamePlural)
+                            : EncodeForHtml(provar.Value.Def.VariableNameSingular));
+                    }
+                    // Minimum number
+                    if (!String.IsNullOrEmpty(provar.Value.Def.MinNumberAllowedLabel) &&
+                        provar.Value.ProviderMinNumberAllowed.HasValue)
+                    {
+                        hRestrictions.AppendFormat("<li>{0} {1:#,##0.##} {2}</li>",
+                            EncodeForHtml(provar.Value.Def.MinNumberAllowedLabel),
+                            provar.Value.ProviderMinNumberAllowed,
+                            provar.Value.ProviderMinNumberAllowed.Value != 1
+                            ? EncodeForHtml(provar.Value.Def.VariableNamePlural)
+                            : EncodeForHtml(provar.Value.Def.VariableNameSingular));
+                    }
+                    // Maximum number
+                    if (!String.IsNullOrEmpty(provar.Value.Def.MaxNumberAllowedLabel) &&
+                        provar.Value.ProviderMaxNumberAllowed.HasValue)
+                    {
+                        hRestrictions.AppendFormat("<li>{0} {1:#,##0.##} {2}</li>",
+                            EncodeForHtml(provar.Value.Def.MaxNumberAllowedLabel),
+                            provar.Value.ProviderMaxNumberAllowed,
+                            provar.Value.ProviderMaxNumberAllowed.Value != 1
+                            ? EncodeForHtml(provar.Value.Def.VariableNamePlural)
+                            : EncodeForHtml(provar.Value.Def.VariableNameSingular));
+                    }
+                }
+            }
+
+            // Creating HTML
+            var s = new StringBuilder();
+            s.Append("<div class='hourly-pricing'>");
+            if (hValues.Length > 0)
+            {
+                s.Append("<ul class='var-values'>");
+                s.Append(hValues);
+                s.Append("</ul>");
+            }
+            if (hIncludes.Length > 0)
+            {
+                s.Append("<h5>Includes:</h5>");
+                s.Append("<ul class='var-includes'>");
+                s.Append(hIncludes);
+                s.Append("</ul>");
+            }
+            if (hSurcharges.Length > 0)
+            {
+                s.Append("<h5>Hourly surcharge(s):</h5>");
+                s.Append("<ul class='var-surcharges'>");
+                s.Append(hSurcharges);
+                s.Append("</ul>");
+            }
+            if (hRestrictions.Length > 0)
+            {
+                s.Append("<h5>Booking restrictions:</h5>");
+                s.Append("<ul class='var-restrictions'>");
+                s.Append(hRestrictions);
+                s.Append("</ul>");
+            }
+            s.Append("</div>");
+
+            return s.ToString();
+        }
+        #endregion
     }
 }

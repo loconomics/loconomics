@@ -153,5 +153,12 @@ public static partial class LcPricingModel
             return String.Format("bedrooms: {0}, bathrooms: {1}", pv["BedsNumber"], pv["BathsNumber"]);
         }
         #endregion
+        #region Package View
+        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet)
+        {
+            // Nothing specific is required for housekeeper on the view
+            return "";
+        }
+        #endregion
     }
 }

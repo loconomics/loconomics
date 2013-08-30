@@ -35,5 +35,14 @@ public static partial class LcPricingModel
         /// <param name="package"></param>
         /// <returns></returns>
         string GetPackagePricingDetails(int packageID, int pricingEstimateID, int pricingEstimateRevision);
+        /// <summary>
+        /// It generates and return the extra html that the read-only view of a package (in a listing for example)
+        /// needs from specific data of this Mod.
+        /// The @feesSet will be null when the view is showed to its Provider owner of the package.
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="viewedBy"></param>
+        /// <returns></returns>
+        string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet);
     }
 }

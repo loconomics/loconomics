@@ -17,7 +17,7 @@
         return;
     }
     var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID];
-    
+
     // If there is no customer or 'customer' and provider are different, ever in non-editable mode
     if (customer == null || customer.UserID != providerUserID) {
         editable = false;
@@ -44,9 +44,20 @@
             }
             
             // Getting the correct fees for the package
-            var fee = editable ?
-                null :
-                LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
+            LcPricingModel.FeeRate fee = null;
+            if (!editable)
+            {
+                // Use the package price on FixedPrice packages to get the fees that fit better:
+                if (config.PriceCalculation == LcPricingModel.PriceCalculationType.FixedPrice)
+                {
+                    fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
+                }
+                else
+                {
+                    // Else, get the standard ones
+                    fee = feesSet["standard:customer"];
+                }
+            }
 
             <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
                 <h4>@pak.Name</h4>
@@ -136,6 +147,9 @@
                 {
                     <h5>@config.FirstTimeClientsOnlyListText</h5>
                 }
+		        @if (config.Mod != null) {
+			        @Html.Raw(config.Mod.GetPackageViewHtml(new LcPricingModel.PackageBaseData(pak), feesSet));
+		        }
                 <h5>Description:</h5>
                 <div class="provider-package-description">
                     @LcHelpers.PrintTextAsHtml(pak.Description)
@@ -145,8 +159,8 @@
                     LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
                     if (!editable)
                     {
-                        // Getting the correct fees for the price-rate (can be different from the package price
-                        var rateFee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.PriceRate, LcData.UserInfo.UserType.Customer);
+                        // The price-rate will ever be the standard fees (there is no chance for the flat ones) (this can be different from the package price)
+                        var rateFee = feesSet["standard:customer"];
                         // fees apply with 1 decimal for the case of hourly-rates:
                         priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, rateFee, 1);
                     }
