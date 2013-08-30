@@ -1,0 +1,709 @@
+﻿
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
+DELETE FROM PricingVariableDefinition 
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('1'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'1'
+   ,'HourlyRate'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,'Hourly Rate'
+   ,'Please enter your hourly rate for these services'
+   ,'hour'
+   ,'hours'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'Minimum booking time:'
+   ,NULL
+   ,'Maximum booking time:'
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:12:52 PM'
+   ,'6/26/2013 5:12:52 PM'
+   ,'sys'
+   ,'[1,1.5,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]')
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('2'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'1'
+   ,'Hours'
+   ,'False'
+   ,'True'
+   ,'decimal'
+   ,'Hours'
+   ,'Please select the number of hours'
+   ,'hour'
+   ,'hours'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'1'
+   ,'True'
+   ,'6/26/2013 5:12:52 PM'
+   ,'6/26/2013 5:12:52 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('3'
+   ,'1'
+   ,'1'
+   ,'16'
+   ,'1'
+   ,'ChildSurcharge'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,'Additional child'
+   ,'Please indicate how many children your hourly rate includes and the hourly surcharge, if any, per additional child.'
+   ,'child'
+   ,'children'
+   ,'up to'
+   ,NULL
+   ,'per additional child'
+   ,NULL
+   ,NULL
+   ,'Maximum number of children per booking:'
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:12:52 PM'
+   ,'6/26/2013 5:12:52 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('4'
+   ,'1'
+   ,'1'
+   ,'16'
+   ,'1'
+   ,'NumberOfChildren'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Number of Children'
+   ,'Please indicate how many children you''d like babysat'
+   ,'child'
+   ,'children'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'3'
+   ,'True'
+   ,'6/26/2013 5:12:52 PM'
+   ,'6/26/2013 5:12:52 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('5'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'9'
+   ,'CleaningRate'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:22:08 PM'
+   ,'6/26/2013 5:22:08 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('5'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'10'
+   ,'CleaningRate'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:22:08 PM'
+   ,'6/26/2013 5:22:08 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('5'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'11'
+   ,'CleaningRate'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:22:08 PM'
+   ,'6/26/2013 5:22:08 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('6'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'9'
+   ,'BedsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bedrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:23 PM'
+   ,'6/26/2013 5:30:23 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('6'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'10'
+   ,'BedsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bedrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:23 PM'
+   ,'6/26/2013 5:30:23 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('6'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'11'
+   ,'BedsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bedrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:23 PM'
+   ,'6/26/2013 5:30:23 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('7'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'9'
+   ,'BathsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bathrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:44 PM'
+   ,'6/26/2013 5:30:44 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('7'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'10'
+   ,'BathsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bathrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:44 PM'
+   ,'6/26/2013 5:30:44 PM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('7'
+   ,'1'
+   ,'1'
+   ,'-1'
+   ,'11'
+   ,'BathsNumber'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Bathrooms'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'6/26/2013 5:30:44 PM'
+   ,'6/26/2013 5:30:44 PM'
+   ,'sys'
+   ,NULL)
+
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
+/*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'

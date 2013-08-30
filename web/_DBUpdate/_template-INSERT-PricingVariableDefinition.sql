@@ -1,4 +1,4 @@
-INSERT INTO [PricingVariableDefinition]
+INSERT INTO [PricingVariableDefinition]  
    ([PricingVariableID]
    ,[LanguageID]
    ,[CountryID]
@@ -13,12 +13,18 @@ INSERT INTO [PricingVariableDefinition]
    ,[VariableNameSingular]
    ,[VariableNamePlural]
    ,[NumberIncludedLabel]
-   ,[NumberIncludedLabelPopup]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
    ,[CalculateWithVariableID]
+   ,[Active]
    ,[CreatedDate]
    ,[UpdatedDate]
    ,[ModifiedBy]
-   ,[Active])
+   ,[MinMaxValuesList])
 VALUES
    (@PricingVariableID
    ,@LanguageID
@@ -34,9 +40,15 @@ VALUES
    ,@VariableNameSingular
    ,@VariableNamePlural
    ,@NumberIncludedLabel
-   ,@NumberIncludedLabelPopup
+   ,@NumberIncludedLabelPopUp
+   ,@HourlySurchargeLabel
+   ,@MinNumberAllowedLabel
+   ,@MinNumberAllowedLabelPopUp
+   ,@MaxNumberAllowedLabel
+   ,@MaxNumberAllowedLabelPopUp
    ,@CalculateWithVariableID
+   ,@Active
    ,@CreatedDate
    ,@UpdatedDate
    ,@ModifiedBy
-   ,@Active)
+   ,@MinMaxValuesList)

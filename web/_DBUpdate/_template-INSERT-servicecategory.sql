@@ -8,7 +8,8 @@ INSERT INTO [servicecategory]
    ,[UpdatedDate]
    ,[ModifiedBy]
    ,[Active]
-   ,[ImagePath])
+   ,[ImagePath]
+   ,[headline])
 VALUES
    (@ServiceCategoryID
    ,@LanguageID
@@ -19,4 +20,5 @@ VALUES
    ,@UpdatedDate
    ,@ModifiedBy
    ,@Active
-   ,@ImagePath)
+   ,@ImagePath
+   ,@headline)
