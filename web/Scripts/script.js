@@ -1067,8 +1067,9 @@ jQuery.extend(LC, (function () {
         });
         var labels = labels_c.find('.ui-slider-label-text');
 
-        var layout_name = slider.data('layout') || 'standard',
+        var layout_name = slider.data('labels-layout') || 'standard',
             layout = layout_name in layouts ? layouts[layout_name] : layouts['standard'];
+        labels_c.addClass('layout-' + layout_name);
         layout(slider, labels_c, labels);
     }
 
@@ -1101,7 +1102,7 @@ jQuery.extend(LC, (function () {
                     var newi = 0;
                     for (var i = 0; i < labels.length; i++) {
                         var lbl = $(labels[i]);
-                        if ((i+1) < labels.length && (
+                        if ((i + 1) < labels.length && (
                             i % labels_step ||
                             i > labels.length - 1 - labels_step))
                             lbl.hide();
@@ -1120,6 +1121,24 @@ jQuery.extend(LC, (function () {
         integer hours being showed, the maximum number of it.
         **/
         hours: function hours_layout(slider, labels_c, labels) {
+            labels.each(function () {
+                var $t = $(this);
+                if (!$t.data('hour-processed')) {
+                    var v = parseFloat($t.text());
+                    if (v != Number.NaN) {
+                        v = LC.roundTo(v, 2);
+                        if (v % 1 > 0) {
+                            $t.addClass('decimal-hour').hide();
+                            if (v % .5 == 0)
+                                $t.parent().addClass('strong');
+                            $t.text(LC.timeSpan.fromHours(v).toString());
+                        } else
+                            $t.addClass('integer-hour').show().parent().addClass('visible');
+                    }
+
+                    $t.data('hour-processed', true);
+                }
+            });
         }
     };
 
