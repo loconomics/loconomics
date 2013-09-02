@@ -147,13 +147,13 @@
                 {
                     <h5>@config.FirstTimeClientsOnlyListText</h5>
                 }
-		        @if (config.Mod != null) {
-			        @Html.Raw(config.Mod.GetPackageViewHtml(new LcPricingModel.PackageBaseData(pak), feesSet));
-		        }
                 <h5>Description:</h5>
                 <div class="provider-package-description">
                     @LcHelpers.PrintTextAsHtml(pak.Description)
                 </div>
+		        @if (config.Mod != null) {
+			        @Html.Raw(config.Mod.GetPackageViewHtml(new LcPricingModel.PackageBaseData(pak), feesSet));
+		        }
                 @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
                 {
                     LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
