@@ -1,0 +1,22 @@
+INSERT INTO [verificationcategory]
+   ([VerificationCategoryID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[VerificationCategoryName]
+   ,[VerificationCategoryDescription]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[RankPosition])
+VALUES
+   (@VerificationCategoryID
+   ,@LanguageID
+   ,@CountryID
+   ,@VerificationCategoryName
+   ,@VerificationCategoryDescription
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@RankPosition)
