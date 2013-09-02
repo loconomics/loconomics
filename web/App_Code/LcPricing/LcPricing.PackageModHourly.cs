@@ -344,6 +344,13 @@ public static partial class LcPricingModel
             var summaryFormat = "{0}: {1}";
             foreach (var v in pv)
             {
+                // On pricing summary only customer values are showed,
+                // and the special var 'Hours' is avoided since the package already shows its 'total duration'
+                // as part of the generic information
+                if (v.Value.Def.IsProviderVariable ||
+                    v.Key == "Hours")
+                    continue;
+
                 // If value is a number
                 var val = v.Value.GetValue<double?>(null);
                 if (val.HasValue)
