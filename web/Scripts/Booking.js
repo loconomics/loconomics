@@ -398,7 +398,7 @@ LC.initCustomerPackageSliders = function () {
             footnote = $c.data('slider-footnote');
         if (initial_value === undefined || stype === undefined || !(stype in stypes)) return;
         stype = stypes[stype];
-        var slider = $('<div class="slider"/>').appendTo($c).data($c.data);
+        var slider = $('<div class="slider"/>').appendTo($c).data($c.data());
         // Basic setup
         var setup = {
             range: "min",

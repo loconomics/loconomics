@@ -108,7 +108,7 @@ public static partial class LcPricingModel
                     sv.AppendFormat(@"
                         <div class='customer-slider' data-prov-value='{2}'
                             data-slider-value='{5}' data-slider-step='{6}' data-slider-footnote='{7}' data-slider-stype='hourly'
-                            data-slider-min='{8}' data-slider-max='{9}' data-slider-number-included='{10}'>
+                            data-slider-min='{8}' data-slider-max='{9}' data-slider-number-included='{10}' data-slider-labels-layout='{11}'>
                         <label><span class='has-tooltip' title='{4}'>{3}</span>: <input name='{1}[{0}]' type='text' value='{5}' /></label></div>"
                         ,package.ID
                         ,EncodeForHtml(custvar.Key)
@@ -121,7 +121,9 @@ public static partial class LcPricingModel
                         ,EncodeForHtml(sliderFootnote)
                         ,calculateWithVar.ProviderMinNumberAllowed
                         ,calculateWithVar.ProviderMaxNumberAllowed
-                        ,calculateWithVar.ProviderNumberIncluded);
+                        ,calculateWithVar.ProviderNumberIncluded
+                        // special labels for Hours
+                        ,custvar.Key == "Hours" ? "hours" : "standard");
                 }
             }
 

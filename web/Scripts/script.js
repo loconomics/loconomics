@@ -1067,7 +1067,7 @@ jQuery.extend(LC, (function () {
         });
         var labels = labels_c.find('.ui-slider-label-text');
 
-        var layout_name = slider.data('labels-layout') || 'standard',
+        var layout_name = slider.data('slider-labels-layout') || 'standard',
             layout = layout_name in layouts ? layouts[layout_name] : layouts['standard'];
         labels_c.addClass('layout-' + layout_name);
         layout(slider, labels_c, labels);
@@ -1099,12 +1099,13 @@ jQuery.extend(LC, (function () {
                 labels_steps = labels.length / labels_step;
                 if (labels_step > 1) {
                     // Hide the labels on positions out of the step
-                    var newi = 0;
+                    var newi = 0,
+                        limit = labels.length - 1 - labels_step;
                     for (var i = 0; i < labels.length; i++) {
                         var lbl = $(labels[i]);
                         if ((i + 1) < labels.length && (
                             i % labels_step ||
-                            i > labels.length - 1 - labels_step))
+                            i > limit))
                             lbl.hide();
                         else {
                             // Show
