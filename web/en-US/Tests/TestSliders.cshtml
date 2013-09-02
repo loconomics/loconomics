@@ -1,0 +1,38 @@
+﻿@* Test .net JSON parsing and generation features
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+}
+<script type="text/javascript">
+    var sliders = [
+        {
+            value: 5,
+            min: 1,
+            max: 8,
+            step: .25
+        }
+    ];
+    function create_slider(setup) {
+        var $c = $('#sliders_holder');
+
+        var slider = $('<div class="slider"/>').appendTo($c).data(setup);
+        setup.range = setup.range || 'min';
+        // Creating slider
+        slider.slider(setup);
+        LC.createLabelsForUISlider(slider);
+        if (slider.is(':visible'))
+            LC.updateLabelsForUISlider(slider);
+    }
+    $(function () {
+        $.each(sliders, function () {
+            create_slider(this);
+        });
+    });
+</script>
+<h1>Testing Sliders</h1>
+
+<div id="sliders_holder" style="width: 329px">
+
+</div>

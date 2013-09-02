@@ -1067,40 +1067,66 @@ jQuery.extend(LC, (function () {
         });
         var labels = labels_c.find('.ui-slider-label-text');
 
-        // Check if there are more labels than available space
-        // Get maximum label width
-        var item_width = 0;
-        labels.each(function () {
-            var tw = $(this).outerWidth(true);
-            if (tw >= item_width)
-                item_width = tw;
-        });
-        // If there is width, if not, element is not visible cannot be computed
-        if (item_width > 0) {
-            // Get the required stepping of labels
-            var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length)),
-                labels_steps = labels.length / labels_step;
-            if (labels_step > 1) {
-                // Hide the labels on positions out of the step
-                var newi = 0;
-                labels.each(function (i) {
-                    if (i % labels_step)
-                        $(this).hide();
-                    else {
-                        // Show
-                        $(this).show();
-                        // repositionate parent
-                       // positionate($(this).parent().addClass('visible'), newi, labels_steps);
-                        newi++;
-                    }
-                });
-            }
-        }
+        var layout_name = slider.data('layout') || 'standard',
+            layout = layout_name in layouts ? layouts[layout_name] : layouts['standard'];
+        layout(slider, labels_c, labels);
     }
+
+    /** Set of different layouts for labels, allowing different kinds of 
+    placement and visualization using the slider data option 'labels-layout'.
+    Used by 'update', almost the 'standard' must exist and can be increased
+    externally
+    **/
+    var layouts = {
+        /** Show the maximum number of labels in equally sized gaps but
+        the last label that is ensured to be showed even if it creates
+        a higher gap with the previous one.
+        **/
+        standard: function standard_layout(slider, labels_c, labels) {
+            // Check if there are more labels than available space
+            // Get maximum label width
+            var item_width = 0;
+            labels.each(function () {
+                var tw = $(this).outerWidth(true);
+                if (tw >= item_width)
+                    item_width = tw;
+            });
+            // If there is width, if not, element is not visible cannot be computed
+            if (item_width > 0) {
+                // Get the required stepping of labels
+                var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length)),
+                labels_steps = labels.length / labels_step;
+                if (labels_step > 1) {
+                    // Hide the labels on positions out of the step
+                    var newi = 0;
+                    for (var i = 0; i < labels.length; i++) {
+                        var lbl = $(labels[i]);
+                        if ((i+1) < labels.length && (
+                            i % labels_step ||
+                            i > labels.length - 1 - labels_step))
+                            lbl.hide();
+                        else {
+                            // Show
+                            var parent = lbl.show().parent().addClass('visible');
+                            // repositionate parent
+                            // positionate(parent, newi, labels_steps);
+                            newi++;
+                        }
+                    };
+                }
+            }
+        },
+        /** Show labels number values formatted as hours, with only
+        integer hours being showed, the maximum number of it.
+        **/
+        hours: function hours_layout(slider, labels_c, labels) {
+        }
+    };
 
     return {
         createLabelsForUISlider: create,
-        updateLabelsForUISlider: update
+        updateLabelsForUISlider: update,
+        uiSliderLabelsLayouts: layouts
     };
 })());
 
