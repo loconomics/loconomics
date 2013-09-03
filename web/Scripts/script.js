@@ -1071,6 +1071,12 @@ jQuery.extend(LC, (function () {
             layout = layout_name in layouts ? layouts[layout_name] : layouts['standard'];
         labels_c.addClass('layout-' + layout_name);
         layout(slider, labels_c, labels);
+
+        // Update tooltips
+        LC.createTooltip(labels_c.children(), {
+            title: function () { return $(this).text() }
+            , persistent: true
+        });
     }
 
     /** Set of different layouts for labels, allowing different kinds of 
@@ -1106,7 +1112,7 @@ jQuery.extend(LC, (function () {
                         if ((i + 1) < labels.length && (
                             i % labels_step ||
                             i > limit))
-                            lbl.hide();
+                            lbl.hide().parent().removeClass('visible');
                         else {
                             // Show
                             var parent = lbl.show().parent().addClass('visible');
@@ -1131,7 +1137,7 @@ jQuery.extend(LC, (function () {
                         if (v != Number.NaN) {
                             v = LC.roundTo(v, 2);
                             if (v % 1 > 0) {
-                                $t.addClass('decimal-hour').hide();
+                                $t.addClass('decimal-hour').hide().parent().removeClass('visible');
                                 if (v % .5 == 0)
                                     $t.parent().addClass('strong');
                                 $t.text(LC.timeSpan.fromHours(v).toString());
@@ -1147,8 +1153,9 @@ jQuery.extend(LC, (function () {
             if (show_all !== true)
                 layouts['standard'](slider, intLabels.parent(), intLabels);
         },
-        'all-values': function all_layout() {
-            // Just do nothing, showing all labels
+        'all-values': function all_layout(slider, labels_c, labels) {
+            // Showing all labels
+            labels_c.show().addClass('visible').children().show();
         },
         'all-hours': function all_hours_layout() {
             // Just use hours layout but showing all integer hours
@@ -1777,11 +1784,18 @@ function guidGenerator() {
     };
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
-/** Creates smart tooltips with possibilities for on hover and on click,
-    additional description or external tooltip content.
-**/
-LC.initTooltips = function LC_initTooltips() {
+
+/**
+ ** Module:: tooltips
+ ** Creates smart tooltips with possibilities for on hover and on click,
+ ** additional description or external tooltip content.
+ ** incorpored to LC namespace
+ **/
+$.extend(LC, (function () {
+    // Main internal properties
     var posoffset = { x: 16, y: 8 };
+    var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url], [title].has-popup-tooltip';
+
     /** Positionate the tooltip depending on the
     event or the target element position and an offset
     **/
@@ -1806,7 +1820,8 @@ LC.initTooltips = function LC_initTooltips() {
     **/
     function con(l) {
         if (l.length == 0) return null;
-        var c = l.data('tooltip-content');
+        var c = l.data('tooltip-content'),
+            persistent = l.data('persistent-tooltip');
         if (!c) {
             var h = LC.sanitizeWhitepaces(l.attr('title'));
             var d = LC.sanitizeWhitepaces(l.data('description'));
@@ -1830,7 +1845,9 @@ LC.initTooltips = function LC_initTooltips() {
         // is fully visible. Thats, for cases with different content, will be showed,
         // and for cases with same content but is not visible because the element
         // or container width, then will be showed.
-        if (LC.sanitizeWhitepaces(l.text()) == c &&
+        // Except if is persistent
+        if (persistent !== true &&
+            LC.sanitizeWhitepaces(l.text()) == c &&
             l.outerWidth() >= l[0].scrollWidth) {
             c = null;
         }
@@ -1874,18 +1891,23 @@ LC.initTooltips = function LC_initTooltips() {
             // If is a has-popup-tooltip and this is not a click, don't show
             if (isPopup && e.type != 'click')
                 return true;
-            // Set tooltip content
-            t.html(content);
-            // For popups, setup class and close button
-            if (isPopup) {
-                t.addClass('popup-tooltip');
-                var closeButton = $('<a href="#close-popup" class="close-action">X</a>');
-                t.append(closeButton);
-            }
-            // Positionate
-            pos(t, e, $t);
-            // Show (animations are stopped only on hide to avoid conflicts)
-            t.fadeIn();
+            // The tooltip setup must be queued to avoid content to be showed and placed
+            // when still hidden the previous
+            t.queue(function () {
+                // Set tooltip content
+                t.html(content);
+                // For popups, setup class and close button
+                if (isPopup) {
+                    t.addClass('popup-tooltip');
+                    var closeButton = $('<a href="#close-popup" class="close-action">X</a>');
+                    t.append(closeButton);
+                }
+                // Positionate
+                pos(t, e, $t);
+                t.dequeue();
+                // Show (animations are stopped only on hide to avoid conflicts)
+                t.fadeIn();
+            });
         }
 
         // Stop bubbling and default
@@ -1909,32 +1931,63 @@ LC.initTooltips = function LC_initTooltips() {
 
         return false;
     }
-    // Listen for events to show/hide tooltips
-    var selector = '[title][data-description], [title].has-tooltip, [title].secure-data, [data-tooltip-url], [title].has-popup-tooltip';
-    $('body').on('mousemove focusin', selector, showTooltip)
-    .on('mouseleave focusout', selector, hideTooltip)
-    // Listen event for clickable popup-tooltips
-    .on('click', '[title].has-popup-tooltip', showTooltip)
-    // Allowing buttons inside the tooltip
-    .on('click', '.tooltip-button', function () { return false })
-    // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
-    .on('click', function (e) {
-        var t = $('.popup-tooltip:visible').get(0);
-        // If the click is Not on the tooltip or any element contained
-        // hide tooltip
-        if (e.target != t && !$(e.target).isChildOf(t))
+    /** Initialize tooltips
+    **/
+    function init() {
+        // Listen for events to show/hide tooltips
+        $('body').on('mousemove focusin', selector, showTooltip)
+        .on('mouseleave focusout', selector, hideTooltip)
+        // Listen event for clickable popup-tooltips
+        .on('click', '[title].has-popup-tooltip', showTooltip)
+        // Allowing buttons inside the tooltip
+        .on('click', '.tooltip-button', function () { return false })
+        // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
+        .on('click', function (e) {
+            var t = $('.popup-tooltip:visible').get(0);
+            // If the click is Not on the tooltip or any element contained
+            // hide tooltip
+            if (e.target != t && !$(e.target).isChildOf(t))
+                hideTooltip(e);
+        })
+        // Avoid close-action click from redirect page, and hide tooltip
+        .on('click', '.popup-tooltip .close-action', function (e) {
+            e.preventDefault();
             hideTooltip(e);
-    })
-    // Avoid close-action click from redirect page, and hide tooltip
-    .on('click', '.popup-tooltip .close-action', function (e) {
-        e.preventDefault();
-        hideTooltip(e);
-    });
-    // Review every popup tooltip to prepare content and mark/unmark the link or text:
-    $(selector).each(function () {
-        con($(this));
-    });
-};
+        });
+        update();
+    }
+    /** Update elements on the page to reflect changes or need for tooltips
+    **/
+    function update(element_selector) {
+        // Review every popup tooltip to prepare content and mark/unmark the link or text:
+        $(element_selector || selector).each(function () {
+            con($(this));
+        });
+    }
+    /** Create tooltip on element by demand
+    **/
+    function create_tooltip(element, options) {
+        var settings = $.extend({}, {
+            title: ''
+            , description: null
+            , url: null
+            , is_popup: false
+            , persistent: false
+        }, options);
+        $(element)
+        .attr('title', settings.title)
+        .data('description', settings.description)
+        .data('persistent-tooltip', settings.persistent)
+        .addClass(settings.is_popup ? 'has-popup-tooltip' : 'has-tooltip');
+        update(element);
+    }
+    return {
+        initTooltips: init
+        , updateTooltips: update
+        , createTooltip: create_tooltip
+    };
+})());
+
 /**
  * Hide an element using jQuery, allowing use standard  'hide' and 'fadeOut' effects, extended
  * jquery-ui effects (is loaded) or custom animation through jquery 'animate'.
