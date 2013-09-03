@@ -8,18 +8,36 @@
 <script type="text/javascript">
     var sliders = [
         {
+            footnote: 'Standard layout test 1 (1-8, step .25)',
             value: 5,
             min: 1,
             max: 8,
             step: .25
         },
         {
+            footnote: 'Standard layout test 2 (1.5-8, step .25)',
             min: 1.5,
             value: 4,
             max: 8,
             step: .25
         },
         {
+            footnote: 'Standard layout test 3 (1-8, step 1)',
+            min: 1,
+            value: 4,
+            max: 8,
+            step: 1
+        },
+        {
+            footnote: 'Hours layout test 1 (1-8, step .25)',
+            min: 1.,
+            value: 4,
+            max: 8,
+            step: .25,
+            'slider-labels-layout': 'hours'
+        },
+        {
+            footnote: 'Hours layout test 2 (1.5-8, step .25)',
             min: 1.5,
             value: 4,
             max: 8,
@@ -27,11 +45,35 @@
             'slider-labels-layout': 'hours'
         },
         {
+            footnote: '24 hours, step .25, using standard layout',
+            min: 1,
+            value: 10,
+            max: 24,
+            step: .25
+        },
+        {
+            footnote: '24 hours, step .25, using all-values layout',
+            min: 1,
+            value: 10,
+            max: 24,
+            step: .25,
+            'slider-labels-layout': 'all-values'
+        },
+        {
+            footnote: '24 hours, step .25, using hours layout',
             min: 1,
             value: 10,
             max: 24,
             step: .25,
             'slider-labels-layout': 'hours'
+        },
+        {
+            footnote: '24 hours, step .25, using all-hours layout',
+            min: 1,
+            value: 10,
+            max: 24,
+            step: .25,
+            'slider-labels-layout': 'all-hours'
         }
     ];
     function create_slider(setup) {
@@ -41,6 +83,8 @@
         setup.range = setup.range || 'min';
         // Creating slider
         slider.slider(setup);
+        if (setup.footnote)
+            slider.after($('<div class="ui-slider-footnote"/>').html(setup.footnote));
         LC.createLabelsForUISlider(slider);
         if (slider.is(':visible'))
             LC.updateLabelsForUISlider(slider);
@@ -51,6 +95,11 @@
         });
     });
 </script>
+<style type="text/css">
+    .ui-slider {
+        margin-top: 1em;
+    }
+</style>
 <h1>Testing Sliders</h1>
 
 <div id="sliders_holder" style="width: 329px">

@@ -1095,7 +1095,7 @@ jQuery.extend(LC, (function () {
             // If there is width, if not, element is not visible cannot be computed
             if (item_width > 0) {
                 // Get the required stepping of labels
-                var labels_step = Math.ceil(item_width / (labels_c.width() / labels.length)),
+                var labels_step = Math.ceil(item_width / (slider.width() / labels.length)),
                 labels_steps = labels.length / labels_step;
                 if (labels_step > 1) {
                     // Hide the labels on positions out of the step
@@ -1121,25 +1121,39 @@ jQuery.extend(LC, (function () {
         /** Show labels number values formatted as hours, with only
         integer hours being showed, the maximum number of it.
         **/
-        hours: function hours_layout(slider, labels_c, labels) {
-            labels.each(function () {
-                var $t = $(this);
-                if (!$t.data('hour-processed')) {
-                    var v = parseFloat($t.text());
-                    if (v != Number.NaN) {
-                        v = LC.roundTo(v, 2);
-                        if (v % 1 > 0) {
-                            $t.addClass('decimal-hour').hide();
-                            if (v % .5 == 0)
-                                $t.parent().addClass('strong');
-                            $t.text(LC.timeSpan.fromHours(v).toString());
-                        } else
-                            $t.addClass('integer-hour').show().parent().addClass('visible');
+        hours: function hours_layout(slider, labels_c, labels, show_all) {
+            var intLabels = slider.find('.integer-hour');
+            if (!intLabels.length) {
+                labels.each(function () {
+                    var $t = $(this);
+                    if (!$t.data('hour-processed')) {
+                        var v = parseFloat($t.text());
+                        if (v != Number.NaN) {
+                            v = LC.roundTo(v, 2);
+                            if (v % 1 > 0) {
+                                $t.addClass('decimal-hour').hide();
+                                if (v % .5 == 0)
+                                    $t.parent().addClass('strong');
+                                $t.text(LC.timeSpan.fromHours(v).toString());
+                            } else {
+                                $t.addClass('integer-hour').show().parent().addClass('visible');
+                                intLabels = intLabels.add($t);
+                            }
+                        }
+                        $t.data('hour-processed', true);
                     }
-
-                    $t.data('hour-processed', true);
-                }
-            });
+                });
+            }
+            if (show_all !== true)
+                layouts['standard'](slider, intLabels.parent(), intLabels);
+        },
+        'all-values': function all_layout() {
+            // Just do nothing, showing all labels
+        },
+        'all-hours': function all_hours_layout() {
+            // Just use hours layout but showing all integer hours
+            Array.prototype.push.call(arguments, true)
+            layouts['hours'].apply(this, arguments);
         }
     };
 
