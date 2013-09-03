@@ -390,7 +390,7 @@ LC.initCustomerPackageSliders = function () {
     /** Initializing sliders
     **/
     $(".customer-slider").each(function () {
-        var $c = $(this);
+        var $c = $(this).addClass('ui-slider-container');
         // Creating sliders
         var initial_value = $c.data('slider-value'),
             step = $c.data('slider-step') || 1,

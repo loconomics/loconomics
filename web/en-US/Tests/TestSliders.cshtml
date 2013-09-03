@@ -74,12 +74,57 @@
             max: 24,
             step: .25,
             'slider-labels-layout': 'all-hours'
+        },
+        {
+            footnote: 'Autosize ON: 4 values, step 1, using standard layout',
+            min: 1,
+            value: 4,
+            max: 4,
+            step: 1,
+            'slider-labels-layout': 'standard',
+            'slider-autosize': true
+        },
+        {
+            footnote: 'Autosize ON: 4 hours, step .25, using hours layout',
+            min: 1,
+            value: 4,
+            max: 4,
+            step: .25,
+            'slider-labels-layout': 'hours',
+            'slider-autosize': true
+        },
+        {
+            footnote: 'Autosize ON: 12 hours, step .25, using hours layout',
+            min: 1,
+            value: 4,
+            max: 12,
+            step: .25,
+            'slider-labels-layout': 'hours',
+            'slider-autosize': true
+        },
+        {
+            footnote: 'Autosize ON: 24 hours, step .25, using hours layout',
+            min: 1,
+            value: 10,
+            max: 24,
+            step: .25,
+            'slider-labels-layout': 'hours',
+            'slider-autosize': true
+        },
+        {
+            footnote: 'Autosize ON: 48 hours, step .25, using hours layout',
+            min: 1,
+            value: 10,
+            max: 48,
+            step: .25,
+            'slider-labels-layout': 'hours',
+            'slider-autosize': true
         }
     ];
     function create_slider(setup) {
-        var $c = $('#sliders_holder');
+        var $c = $('<div class="customer-slider ui-slider-container"/>').appendTo($('#sliders_holder'));
 
-        var slider = $('<div class="slider"/>').appendTo($c).data(setup);
+        var slider = $('<div/>').appendTo($c).data(setup);
         setup.range = setup.range || 'min';
         // Creating slider
         slider.slider(setup);
@@ -99,9 +144,25 @@
     .ui-slider {
         margin-top: 1em;
     }
+    /* Emulate size of booking step-1 packages table */
+    .ui-slider-container {
+        width: 350px;
+        max-width: 550px;
+        min-width: 200px;
+    }
+    #sliders_holder {
+        width: 523px;
+        outline:1px #ccc solid;
+        margin-bottom: 3em;
+    }
 </style>
 <h1>Testing Sliders</h1>
-
-<div id="sliders_holder" style="width: 329px">
+<div>
+    Max-width: 550px<br />
+    Min-width: 200px<br />
+    Fixed width: 350px<br /><br />
+    Slider has fixed width by default except for that with <strong>autosize</strong> enabled, but still they cannot be higher or lower than max and min values.
+</div>
+<div id="sliders_holder">
 
 </div>

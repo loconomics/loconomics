@@ -365,6 +365,10 @@ input.button{ padding-top: 2px; padding-bottom: 2px;}
     cursor: pointer;
     text-decoration: none !important;
 }
+.ui-slider-labels > .ui-slider-label > .ui-slider-label-text {
+    min-width: 8px;
+    width: auto;
+}
 /* Marks on label position */
 .ui-slider-label:before {
     content: '|';

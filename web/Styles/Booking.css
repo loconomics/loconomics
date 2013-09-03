@@ -113,11 +113,11 @@
 }
 #booking-services.package-pricing .package-extra-data {
     display: none;
-    width: 60%;
     margin-left: 2em;
 }
 #booking-services.package-pricing .package-extra-data .customer-slider {
     margin-bottom: 1.5em;
+    width: 500px;
 }
 
 /** Form: Schedule **/
