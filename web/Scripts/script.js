@@ -780,11 +780,20 @@ LC.timeSpan = function (days, hours, minutes, seconds, milliseconds) {
     this.seconds = Math.floor(parseFloat(seconds)) || 0;
     this.milliseconds = Math.floor(parseFloat(milliseconds)) || 0;
 
+    // internal utility function 'to string with two digits almost'
+    function t(n) {
+        return Math.floor(n / 10) + '' + n % 10;
+    }
+    /** Show only hours and minutes as a string with the format HH:mm
+     **/
+    this.toShortString = function LC_timeSpan_proto_toShortString() {
+        var h = t(this.hours),
+            m = t(this.minutes);
+        return (h + LC.timeSpan.unitsDelimiter + m);
+    };
+    /** Show the full time as a string, days can appear before hours if there are 24 hours or more
+     **/
     this.toString = function LC_timeSpan_proto_toString() {
-        // function 'to string with two digits almost'
-        function t(n) {
-            return Math.floor(n / 10) + '' + n % 10;
-        }
         var h = t(this.hours),
             d = (this.days > 0 ? this.days.toString() + LC.timeSpan.decimalsDelimiter : ''),
             m = t(this.minutes),
@@ -1140,7 +1149,7 @@ jQuery.extend(LC, (function () {
                                 $t.addClass('decimal-hour').hide().parent().removeClass('visible');
                                 if (v % .5 == 0)
                                     $t.parent().addClass('strong');
-                                $t.text(LC.timeSpan.fromHours(v).toString());
+                                $t.text(LC.timeSpan.fromHours(v).toShortString());
                             } else {
                                 $t.addClass('integer-hour').show().parent().addClass('visible');
                                 intLabels = intLabels.add($t);
