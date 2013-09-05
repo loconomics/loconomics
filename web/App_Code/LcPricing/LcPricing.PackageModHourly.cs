@@ -105,25 +105,46 @@ public static partial class LcPricingModel
                     var custValue = Request[String.Format("{1}[{0}]", package.ID, EncodeForHtml(custvar.Key))]
                         .AsDecimal(custvar.Value.GetValue<decimal>(calculateWithVar.ProviderNumberIncluded ?? 0));
 
-                    sv.AppendFormat(@"
+                    if (custvar.Key == "Hours")
+                    {
+                        sv.AppendFormat("<div class='customer-list'><label><span class='has-tooltip' title='{1}'>{0}</span>: {2}</div>",
+                            EncodeForHtml(custvar.Value.Def.VariableLabel),
+                            EncodeForHtml(custvar.Value.Def.VariableLabelPopUp),
+                            LcUtils.BuildHtmlSelect(
+                                String.Format("{1}[{0}]", package.ID, EncodeForHtml(custvar.Key)),
+                                custValue,
+                                LcUtils.GenerateKeyValueRange<string, object>(
+                                    calculateWithVar.ProviderMinNumberAllowed ?? 0,
+                                    (calculateWithVar.ProviderMaxNumberAllowed ?? 100) + .5M,
+                                    .5M,
+                                    custvar.Value.Def.VariableNameSingular,
+                                    custvar.Value.Def.VariableNamePlural
+                                )
+                            )
+                        );
+                    }
+                    else
+                    {
+                        sv.AppendFormat(@"
                         <div class='customer-slider' data-prov-value='{2}'
                             data-slider-value='{5}' data-slider-step='{6}' data-slider-footnote='{7}' data-slider-stype='hourly'
                             data-slider-min='{8}' data-slider-max='{9}' data-slider-number-included='{10}' data-slider-labels-layout='{11}' data-slider-autosize='true'>
                         <label><span class='has-tooltip' title='{4}'>{3}</span>: <input name='{1}[{0}]' type='text' value='{5}' /></label></div>"
-                        ,package.ID
-                        ,EncodeForHtml(custvar.Key)
-                        ,provPrice.BasePrice // Gives to html the price without fees, that are calculated client-side
-                        ,EncodeForHtml(custvar.Value.Def.VariableLabel)
-                        ,EncodeForHtml(custvar.Value.Def.VariableLabelPopUp)
-                        ,custValue
-                        // slider step fixed to 1 for most cases, or .5 for Hours
-                        ,custvar.Value.PricingVariableID == 2 ? .5 : 1
-                        ,EncodeForHtml(sliderFootnote)
-                        ,calculateWithVar.ProviderMinNumberAllowed
-                        ,calculateWithVar.ProviderMaxNumberAllowed
-                        ,calculateWithVar.ProviderNumberIncluded
-                        // special labels for Hours
-                        ,custvar.Key == "Hours" ? "hours" : "standard");
+                            , package.ID
+                            , EncodeForHtml(custvar.Key)
+                            , provPrice.BasePrice // Gives to html the price without fees, that are calculated client-side
+                            , EncodeForHtml(custvar.Value.Def.VariableLabel)
+                            , EncodeForHtml(custvar.Value.Def.VariableLabelPopUp)
+                            , custValue
+                            // slider step fixed to 1 for most cases, or .5 for Hours
+                            , custvar.Value.PricingVariableID == 2 ? .5 : 1
+                            , EncodeForHtml(sliderFootnote)
+                            , calculateWithVar.ProviderMinNumberAllowed
+                            , calculateWithVar.ProviderMaxNumberAllowed
+                            , calculateWithVar.ProviderNumberIncluded
+                            // special labels for Hours
+                            , custvar.Key == "Hours" ? "hours" : "standard");
+                    }
                 }
             }
 

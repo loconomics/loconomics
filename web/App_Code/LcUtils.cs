@@ -209,7 +209,7 @@ public static class LcUtils
     /// </summary>
     /// <param name="nameAttr"></param>
     /// <param name="selectedValue"></param>
-    /// <param name="items">Is a collection or iterator over KeyValuePair&ld;string, object> items</param>
+    /// <param name="items">Is a collection or iterator over KeyValuePair&lt;string, object> items</param>
     /// <param name="additionalHtmlAttrs"></param>
     /// <returns></returns>
     public static string BuildHtmlSelect(string nameAttr, object selectedValue, dynamic items, string additionalHtmlAttrs = "")
@@ -237,7 +237,7 @@ public static class LcUtils
     }
     #endregion
 
-    #region Data checks
+    #region Data utilities
     public static bool AreEquivalents(IEnumerable<object> A, IEnumerable<object> B)
     {
         foreach (var a in A)
@@ -273,6 +273,23 @@ public static class LcUtils
             b = new object[] { B };
         return AreEquivalents(a, b);
     }
+    /// <summary>
+    /// Generates a range of KeyValue pairs for (start, end] values,
+    /// generating proper labels as values for its singular and plural names.
+    /// </summary>
+    /// <typeparam name="TK"></typeparam>
+    /// <typeparam name="TV"></typeparam>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <param name="step"></param>
+    /// <param name="unitSingularName"></param>
+    /// <param name="unitPluralName"></param>
+    /// <returns></returns>
+    public static IEnumerable<KeyValuePair<TK, TV>> GenerateKeyValueRange<TK, TV>(decimal start, decimal end, decimal step = 1, string unitSingularName = null, string unitPluralName = null)
+    {
+        for(decimal i = start; i < end; i += step)
+            yield return new KeyValuePair<TK, TV>(GetTypedValue<TK>(i, default(TK)), GetTypedValue<TV>(GetLabelForValue(i, unitSingularName, unitPluralName), default(TV)));
+    }
     #endregion
 
     #region Text utilities
@@ -295,9 +312,9 @@ public static class LcUtils
         decimal? number = LcUtils.GetTypedValue<decimal?>(value, null);
         if (number.HasValue)
             if (number.Value != 1)
-                return String.Format("{0:#,##0.##} {1}", number.Value, unitPluralName);
+                return String.Format(String.IsNullOrEmpty(unitPluralName) ? "{0:#,##0.##}" : "{0:#,##0.##} {1}", number.Value, unitPluralName);
             else
-                return String.Format("1 {0}", unitSingularName);
+                return String.IsNullOrEmpty(unitSingularName) ? "1" : String.Format("1 {0}", unitSingularName);
         else
             return value.ToString();
     }
