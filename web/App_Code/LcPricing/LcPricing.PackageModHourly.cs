@@ -107,9 +107,11 @@ public static partial class LcPricingModel
 
                     if (custvar.Key == "Hours")
                     {
-                        sv.AppendFormat("<div class='customer-list'><label><span class='has-tooltip' title='{1}'>{0}</span>: {2}</div>",
+                        sv.AppendFormat("<div class='customer-list' data-prov-value='{2}' data-slider-stype='hourly' data-slider-footnote='{3}'><label><span class='has-tooltip' title='{1}'>{0}</span>: {4}</div>",
                             EncodeForHtml(custvar.Value.Def.VariableLabel),
                             EncodeForHtml(custvar.Value.Def.VariableLabelPopUp),
+                            provPrice.BasePrice, // Gives to html the price without fees, that are calculated client-side
+                            EncodeForHtml(sliderFootnote),
                             LcUtils.BuildHtmlSelect(
                                 String.Format("{1}[{0}]", package.ID, EncodeForHtml(custvar.Key)),
                                 custValue,

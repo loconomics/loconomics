@@ -315,7 +315,7 @@ LC.initCustomerPackageSliders = function () {
     /** Hourly pricing
     **/
     stypes['hourly'] = {
-        calculate: function hourly_calculage($sliderContent) {
+        calculate: function hourly_calculate($sliderContent) {
             // Look for the hourly pricing container for this package
             // that contains all fields for calculation
             var calcContext = $sliderContent.closest('.hourly-pricing');
@@ -332,13 +332,13 @@ LC.initCustomerPackageSliders = function () {
                 };
 
             // Iterate every variable to calculate
-            calcContext.find('.customer-slider').each(function () {
+            calcContext.find('.customer-slider, .customer-list').each(function () {
                 // Get the values to compute
                 var $t = $(this),
-                    $input = $t.find('input'),
+                    $input = $t.find($t.hasClass('customer-list') ? 'select' : 'input'),
                     custValue = $input.val(),
                     provValue = parseFloat($t.data('prov-value')),
-                    numberIncluded = parseFloat($t.data('slider-number-included'));
+                    numberIncluded = parseFloat($t.data('slider-number-included')) || 0;
 
                 // Compute depending on the variable
                 if (/^Hours\[\d+\]$/.test($input.attr('name'))) {
@@ -428,6 +428,19 @@ LC.initCustomerPackageSliders = function () {
         // init and on variables changes
         stype.calculate($c);
         $c.on('change', 'input', function () { stype.calculate($c) });
+    });
+    /** Allowing select lists, integrated with sliders logic:
+    **/
+    $(".customer-list").each(function () {
+        var $c = $(this),
+            stype = $c.data('slider-stype'),
+            footnote = $c.data('slider-footnote');
+        if (!(stype in stypes)) return;
+        stype = stypes[stype];
+        $('<div class="list-footnote"/>').text(footnote).appendTo($c);
+        // Calculate on init and on changes
+        stype.calculate($c);
+        $c.on('change', 'select', function () { stype.calculate($c) });
     });
     // Switching sliders visualization on active package
     $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {
