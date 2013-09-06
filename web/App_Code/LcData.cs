@@ -649,8 +649,6 @@ public static partial class LcData
                     AND P.LanguageID = @2 AND P.CountryID = @3
                     -- Discard addons:
                     AND P.IsAddOn = 0
-                    -- Important: only 'hourly rates', DB collation is case-insensitive for this
-                    AND (P.PriceRateUnit is null OR P.PriceRateUnit like 'HOUR')
             ORDER BY
                     -- Precedence to hourly-rates
                     P.PriceRate DESC
@@ -668,6 +666,7 @@ public static partial class LcData
                 // If pak has an hourly rate, compare that
                 if (pak.PriceRate != null &&
                     pak.PriceRate > 0 &&
+                    (pak.PriceRateUnit ?? "").ToUpper() == "HOUR" &&
                     pak.PriceRate < minPackage.PriceRate)
                 {
                     minPackage = pak;
@@ -693,7 +692,8 @@ public static partial class LcData
         {
             // If has an hourly rate
             if (minPackage.PriceRate != null &&
-                minPackage.PriceRate > 0)
+                minPackage.PriceRate > 0 &&
+                (minPackage.PriceRateUnit ?? "").ToUpper() == "HOUR")
             {
                 // Get price with fees, 1 decimal for hourly rate
                 return new ProviderPrice
