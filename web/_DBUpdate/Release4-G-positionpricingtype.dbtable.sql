@@ -1674,6 +1674,26 @@ INSERT INTO [positionpricingtype]
    ,[Active])
 VALUES
    ('78'
+   ,'1'
+   ,'1'
+   ,'1'
+   ,'1'
+   ,'9/3/2013 12:00:00 AM'
+   ,'9/3/2013 12:00:00 AM'
+   ,'jd'
+   ,'True')
+INSERT INTO [positionpricingtype]
+   ([PositionID]
+   ,[PricingTypeID]
+   ,[ClientTypeID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('78'
    ,'5'
    ,'1'
    ,'1'

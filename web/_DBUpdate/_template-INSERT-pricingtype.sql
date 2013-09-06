@@ -1,5 +1,3 @@
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -20,6 +18,3 @@ VALUES
    ,@ModifiedBy
    ,@Active
    ,@DisplayRank)
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO

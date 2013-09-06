@@ -1172,6 +1172,44 @@ INSERT INTO [ServiceAttributeExperienceLevel]
    ,[ModifiedBy])
  VALUES
    ('325'
+   ,'16'
+   ,'1'
+   ,'1'
+   ,'4'
+   ,'9/2/2013 11:12:22 AM'
+   ,'9/2/2013 11:12:22 AM'
+   ,'sys')
+
+INSERT INTO [ServiceAttributeExperienceLevel]
+   ([UserID]
+   ,[PositionID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[ExperienceLevelID]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy])
+ VALUES
+   ('325'
+   ,'78'
+   ,'1'
+   ,'1'
+   ,'3'
+   ,'9/4/2013 11:31:24 AM'
+   ,'9/4/2013 11:31:24 AM'
+   ,'sys')
+
+INSERT INTO [ServiceAttributeExperienceLevel]
+   ([UserID]
+   ,[PositionID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[ExperienceLevelID]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy])
+ VALUES
+   ('325'
    ,'106'
    ,'1'
    ,'1'

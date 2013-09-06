@@ -704,6 +704,114 @@ VALUES
    ,'6/26/2013 5:30:44 PM'
    ,'sys'
    ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('8'
+   ,'1'
+   ,'1'
+   ,'78'
+   ,'1'
+   ,'PetSurcharge'
+   ,'True'
+   ,'False'
+   ,'decimal'
+   ,'Additional pet'
+   ,'Please indicate how many pets your hourly rate includes and the hourly surcharge, if any, per additional pet.'
+   ,'pet'
+   ,'pets'
+   ,'up to'
+   ,NULL
+   ,'per additional pet'
+   ,NULL
+   ,NULL
+   ,'Maximum number of pets per booking:'
+   ,NULL
+   ,NULL
+   ,'True'
+   ,'9/3/2013 12:00:00 AM'
+   ,'9/3/2013 12:00:00 AM'
+   ,'sys'
+   ,NULL)
+INSERT INTO [PricingVariableDefinition]  
+   ([PricingVariableID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[PositionID]
+   ,[PricingTypeID]
+   ,[InternalName]
+   ,[IsProviderVariable]
+   ,[IsCustomerVariable]
+   ,[DataType]
+   ,[VariableLabel]
+   ,[VariableLabelPopUp]
+   ,[VariableNameSingular]
+   ,[VariableNamePlural]
+   ,[NumberIncludedLabel]
+   ,[NumberIncludedLabelPopUp]
+   ,[HourlySurchargeLabel]
+   ,[MinNumberAllowedLabel]
+   ,[MinNumberAllowedLabelPopUp]
+   ,[MaxNumberAllowedLabel]
+   ,[MaxNumberAllowedLabelPopUp]
+   ,[CalculateWithVariableID]
+   ,[Active]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[MinMaxValuesList])
+VALUES
+   ('9'
+   ,'1'
+   ,'1'
+   ,'78'
+   ,'1'
+   ,'NumberOfPets'
+   ,'False'
+   ,'True'
+   ,'int'
+   ,'Number of Pets'
+   ,'Please indicate how many pets you''d like to be looked after'
+   ,'pet'
+   ,'pets'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'8'
+   ,'True'
+   ,'9/3/2013 12:00:00 AM'
+   ,'9/3/2013 12:00:00 AM'
+   ,'sys'
+   ,NULL)
 
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'
