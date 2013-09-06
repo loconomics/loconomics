@@ -284,6 +284,7 @@ LC.initCustomerPackageSliders = function () {
                 // It returns a time in float minutes
                 return (formulaA * numbedrooms + formulaB * numbathrooms + formulaC) * rate;
             };
+
             // Getting var-values from form and calculating
             var numbedrooms = calcContext.find('.housekeeper-pricing-bedrooms input').val(),
                 numbathrooms = calcContext.find('.housekeeper-pricing-bathrooms input').val();
@@ -303,9 +304,8 @@ LC.initCustomerPackageSliders = function () {
             // with the hourleRate (already with fees), hourlyFeeAmount
             // and the already rounded duration:
             var totalTimePrice = LC.calculateHourlyPrice(duration, { totalPrice: hourlyRate, feePrice: hourlyFee, basePrice: hourlyRate - hourlyFee });
-
             // Update front-end
-            updateFrontendPackagePrice(pak, totalTimePrice, duration);
+            updateFrontendPackageDetails(pak, totalTimePrice, duration);
         },
         setup: function housekeeper_setup(setup, $c) {
             setup.min = setup.value - 3 * setup.step;
