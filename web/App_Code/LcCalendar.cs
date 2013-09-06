@@ -403,6 +403,8 @@ public static class LcCalendar
     public static void Import(int UserID, string CalendarURL)
     {
         var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
+        if (iCaltoImport == null)
+            throw new Exception("The URL doesn't contains icalendar information, is the correct URL? " + CalendarURL);
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
     }

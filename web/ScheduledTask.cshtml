@@ -365,6 +365,7 @@
      */
     logger.Log("Total Elapsed time {0}", DateTime.Now - elapsedTime);
 
+    string logresult = logger.ToString();
     // Finishing: save log on disk, per month rotation
     //try {
         logger.Save();
@@ -373,5 +374,5 @@
 @if (!LcHelpers.InLive)
 {
     Response.ContentType = "text/plain";
-    @logger.ToString()
+    @logresult
 }
