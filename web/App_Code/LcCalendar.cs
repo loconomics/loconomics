@@ -457,11 +457,15 @@ public static class LcCalendar
         CalendarUtils libCalendarUtils = new CalendarUtils();
         var calUser = new CalendarUser(UserID);
         // Get User Time Zone
-        var tznumber = LcData.UserInfo.GetUserRowWithContactData(UserID).TimeZone;
-        // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
-        // one used today:
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-        calUser.DefaultTimeZone = tz;
+        var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
+        if (userinfo != null)
+        {
+            var tznumber = userinfo.TimeZone;
+            // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
+            // one used today:
+            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            calUser.DefaultTimeZone = tz;
+        }
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }
     #endregion
