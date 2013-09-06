@@ -2,8 +2,6 @@
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? DISABLE TRIGGER  all'
 DELETE FROM pricingtype 
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -24,12 +22,6 @@ VALUES
    ,'mfontan'
    ,'True'
    ,'70')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -50,12 +42,6 @@ VALUES
    ,'mfontan'
    ,'False'
    ,'100')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -76,12 +62,6 @@ VALUES
    ,'mfontan'
    ,'True'
    ,'30')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -102,12 +82,6 @@ VALUES
    ,'jdanielson'
    ,'True'
    ,'40')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -128,12 +102,6 @@ VALUES
    ,'jdanielson'
    ,'True'
    ,'10')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -154,12 +122,6 @@ VALUES
    ,'jdanielson'
    ,'True'
    ,'20')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -180,12 +142,6 @@ VALUES
    ,'jdanielson'
    ,'True'
    ,'90')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -206,12 +162,6 @@ VALUES
    ,'jdanielson'
    ,'False'
    ,'60')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -232,12 +182,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -258,12 +202,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -284,12 +222,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -310,12 +242,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -336,12 +262,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
-SET IDENTITY_INSERT [pricingtype] ON
-GO
 INSERT INTO [pricingtype]
    ([PricingTypeID]
    ,[LanguageID]
@@ -362,10 +282,6 @@ VALUES
    ,'jd'
    ,'True'
    ,'80')
-GO
-SET IDENTITY_INSERT [pricingtype] OFF
-GO
-
 
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'
 /*__NOT_IN_BATCH__*/EXEC sp_msforeachtable 'ALTER TABLE ? ENABLE TRIGGER  all'

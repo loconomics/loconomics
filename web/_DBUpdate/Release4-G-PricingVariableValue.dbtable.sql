@@ -381,6 +381,118 @@ INSERT INTO [PricingVariableValue]
    ,[ModifiedBy]
    ,[Active])
 VALUES
+   ('1'
+   ,'81'
+   ,'141'
+   ,'425'
+   ,'1'
+   ,'16'
+   ,'0.00'
+   ,'1.50'
+   ,'8.00'
+   ,'8/30/2013 9:03:39 AM'
+   ,'8/30/2013 9:03:39 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('1'
+   ,'81'
+   ,'299'
+   ,'426'
+   ,'1'
+   ,'16'
+   ,'0.00'
+   ,'1.50'
+   ,'8.00'
+   ,'9/2/2013 5:26:45 AM'
+   ,'9/2/2013 5:26:45 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('1'
+   ,'82'
+   ,'325'
+   ,'0'
+   ,'0'
+   ,'50'
+   ,'0.00'
+   ,'1.00'
+   ,'9.00'
+   ,'9/2/2013 11:13:33 AM'
+   ,'9/2/2013 11:13:33 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('1'
+   ,'83'
+   ,'325'
+   ,'0'
+   ,'0'
+   ,'50'
+   ,'0.00'
+   ,'1.00'
+   ,'7.00'
+   ,'9/4/2013 11:32:33 AM'
+   ,'9/4/2013 11:35:59 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
    ('2'
    ,'74'
    ,'141'
@@ -392,6 +504,62 @@ VALUES
    ,NULL
    ,'8/13/2013 1:01:00 PM'
    ,'8/13/2013 1:01:00 PM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('2'
+   ,'81'
+   ,'141'
+   ,'425'
+   ,'1'
+   ,'4'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'8/30/2013 9:03:39 AM'
+   ,'8/30/2013 9:03:39 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('2'
+   ,'81'
+   ,'299'
+   ,'426'
+   ,'1'
+   ,'3.25'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'9/2/2013 5:26:45 AM'
+   ,'9/2/2013 5:26:45 AM'
    ,'sys'
    ,'True')
 INSERT INTO [PricingVariableValue]
@@ -661,6 +829,90 @@ INSERT INTO [PricingVariableValue]
    ,[ModifiedBy]
    ,[Active])
 VALUES
+   ('3'
+   ,'81'
+   ,'141'
+   ,'425'
+   ,'1'
+   ,'10'
+   ,'2.00'
+   ,'0.00'
+   ,'8.00'
+   ,'8/30/2013 9:03:39 AM'
+   ,'8/30/2013 9:03:39 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('3'
+   ,'81'
+   ,'299'
+   ,'426'
+   ,'1'
+   ,'10'
+   ,'2.00'
+   ,'0.00'
+   ,'8.00'
+   ,'9/2/2013 5:26:45 AM'
+   ,'9/2/2013 5:26:45 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('3'
+   ,'82'
+   ,'325'
+   ,'0'
+   ,'0'
+   ,'5'
+   ,'4.00'
+   ,'0.00'
+   ,'8.00'
+   ,'9/2/2013 11:13:33 AM'
+   ,'9/2/2013 11:13:33 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
    ('4'
    ,'74'
    ,'141'
@@ -672,6 +924,62 @@ VALUES
    ,NULL
    ,'8/13/2013 1:01:00 PM'
    ,'8/13/2013 1:01:00 PM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('4'
+   ,'81'
+   ,'141'
+   ,'425'
+   ,'1'
+   ,'2'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'8/30/2013 9:03:39 AM'
+   ,'8/30/2013 9:03:39 AM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('4'
+   ,'81'
+   ,'299'
+   ,'426'
+   ,'1'
+   ,'4'
+   ,NULL
+   ,NULL
+   ,NULL
+   ,'9/2/2013 5:26:45 AM'
+   ,'9/2/2013 5:26:45 AM'
    ,'sys'
    ,'True')
 INSERT INTO [PricingVariableValue]
@@ -3948,6 +4256,34 @@ VALUES
    ,NULL
    ,'7/16/2013 10:27:08 PM'
    ,'7/16/2013 10:27:08 PM'
+   ,'sys'
+   ,'True')
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   ('8'
+   ,'83'
+   ,'325'
+   ,'0'
+   ,'0'
+   ,'5'
+   ,'3.00'
+   ,'0.00'
+   ,'0.00'
+   ,'9/4/2013 11:32:33 AM'
+   ,'9/4/2013 11:35:59 AM'
    ,'sys'
    ,'True')
 
