@@ -666,7 +666,8 @@ public static partial class LcData
 
                 // Hourly rates take precedence.
                 // If pak has an hourly rate, compare that
-                if (pak.PriceRate > 0 &&
+                if (pak.PriceRate != null &&
+                    pak.PriceRate > 0 &&
                     pak.PriceRate < minPackage.PriceRate)
                 {
                     minPackage = pak;
@@ -674,7 +675,9 @@ public static partial class LcData
                 }
 
                 // If package has a fixed price, compare that
-                if (pak.Price > 0 && pak.Price < minPackage.Price)
+                if (pak.Price != null &&
+                    pak.Price > 0 &&
+                    pak.Price < minPackage.Price)
                 {
                     minPackage = pak;
                     continue;
@@ -683,13 +686,14 @@ public static partial class LcData
         }
 
         // Get fees
-        var feesSet = LcPricingModel.GetFeesSetFor(customerUserID, providerUserID, minPackage.PricingTypeID, positionID);
+        var feesSet = LcPricingModel.GetFeesSetFor(customerUserID, providerUserID, (minPackage != null ? minPackage.PricingTypeID : 0), positionID);
         var fee = feesSet["standard:customer"];
         // Create ProviderPrice from the minimum package
         if (minPackage != null)
         {
             // If has an hourly rate
-            if (minPackage.PriceRate > 0)
+            if (minPackage.PriceRate != null &&
+                minPackage.PriceRate > 0)
             {
                 // Get price with fees, 1 decimal for hourly rate
                 return new ProviderPrice
@@ -699,7 +703,8 @@ public static partial class LcData
                 };
             }
             // If has fixed price
-            if (minPackage.Price > 0)
+            if (minPackage.Price != null &&
+                minPackage.Price > 0)
             {
                 // Get price with fees, 0 decimal for fixed price
                 return new ProviderPrice
