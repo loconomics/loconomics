@@ -51,7 +51,8 @@ public static partial class LcPricingModel
         private double GetProviderCleaningRate(PackageBaseData package)
         {
             // return .8; // 140.34 / formulaAverageT
-            return (new PackageVariables(package.ProviderUserID, package.ID)).Get<double>("CleaningRate", 1.0);
+            PricingVariables pricingvars = PricingVariables.FromPackageBaseData(package);
+            return pricingvars.GetValue<double>("CleaningRate", 1.0);
         }
         #region Customer form part
         public void CalculateCustomerData(int customerID, PackageBaseData package, FeeRate fee, PricingModelData modelData, System.Web.WebPages.Html.ModelStateDictionary ModelState)
@@ -69,15 +70,16 @@ public static partial class LcPricingModel
             var duration = ApplyFormula(nbeds, nbaths) * providerRate;
             // Create time object from duration, rounded to quarter-hours (15 minutes blocks)
             var timeDuration = ASP.LcHelpers.RoundTimeToQuarterHour(TimeSpan.FromMinutes(duration), ASP.LcHelpers.RoundingType.Up);
+
             // Create variables object with the specific data used in this calculation (will be saved later by the normal packages process)
             // Provider values get included in the object, something that is wanted for historic purposes on database.
-            var vars = new PackageVariables(package.ProviderUserID, package.ID);
-            vars["BathsNumber"] = nbaths;
-            vars["BedsNumber"] = nbeds;
+            PricingVariables pricingvars = PricingVariables.FromPackageBaseData(package);
+            pricingvars["BathsNumber"].Value = nbaths;
+            pricingvars["BedsNumber"].Value = nbeds;
             // Change package with the information:
             package.Duration = timeDuration;
             modelData.ProviderInput = providerRate;
-            modelData.CustomerInput = vars;
+            modelData.CustomerInput = pricingvars;
         }
         public string GetCustomerHtml(int customerID, PackageBaseData package, FeeRate fee)
         {
@@ -136,9 +138,9 @@ public static partial class LcPricingModel
             var provTime = Request["provider-average-time"].AsFloat();
             var provRate = provTime / ApplyFormula();
             // Save rate on DB
-            var vars = new PackageVariables(package.ProviderUserID, package.ID);
-            vars.Set("CleaningRate", provRate);
-            vars.Save();
+            PricingVariables provars = PricingVariables.FromPackageBaseData(package);
+            provars["CleaningRate"].Value = provRate;
+            provars.Save();
         }
         #endregion
         #region Pricing Summary
@@ -149,8 +151,8 @@ public static partial class LcPricingModel
         /// <returns></returns>
         public string GetPackagePricingDetails(int packageID, int pricingEstimateID, int pricingEstimateRevision)
         {
-            var pv = PackageVariables.FromPricingEstimatePackage(packageID, pricingEstimateID, pricingEstimateRevision);
-            return String.Format("bedrooms: {0}, bathrooms: {1}", pv["BedsNumber"], pv["BathsNumber"]);
+            var pv = PricingVariables.FromPricingEstimatePackage(packageID, pricingEstimateID, pricingEstimateRevision);
+            return String.Format("bedrooms: {0}, bathrooms: {1}", pv["BedsNumber"].Value, pv["BathsNumber"].Value);
         }
         #endregion
         #region Package View

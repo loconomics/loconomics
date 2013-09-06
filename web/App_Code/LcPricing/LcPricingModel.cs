@@ -239,15 +239,8 @@ public static partial class LcPricingModel
             string provInput = Json.Encode(modelData.ProviderInput ?? "");
             string custInput = "";
 
-            // Supporting PackageVariables, saving that in its own place on database
-            // and too as customerInput
-            if (modelData.CustomerInput is PackageVariables)
-            {
-                custInput = modelData.CustomerInput.ToString();
-                ((PackageVariables)modelData.CustomerInput).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
-            }
             // Supporting PricingVariables
-            else if (modelData.CustomerInput is PricingVariables)
+            if (modelData.CustomerInput is PricingVariables)
             {
                 custInput = modelData.CustomerInput.ToString();
                 ((PricingVariables)modelData.CustomerInput).Save(estimateID, revisionID, WebMatrix.WebData.WebSecurity.CurrentUserId);
