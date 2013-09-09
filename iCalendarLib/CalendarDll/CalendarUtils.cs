@@ -1548,7 +1548,7 @@ namespace CalendarDll
         #endregion
 
         #region Import Calendar
-
+        public Srl.Timeline LastImportTimeline;
         /// <summary>
         /// Import Calendar
         /// </summary>
@@ -1560,7 +1560,8 @@ namespace CalendarDll
         {
             //try
             {
-
+                if (LastImportTimeline == null)
+                    LastImportTimeline = new Srl.Timeline();
 
                 //----------------------------------------------------------------------
                 // Loop that adds the Imported Events to a List of CalendarEvents 
@@ -1582,7 +1583,12 @@ namespace CalendarDll
                     // 2013/01/15 CA2S RM
                     //----------------------------------------------------------------------
 
+                    // PERF::
+                    LastImportTimeline.SetTime("Deleting previous events: " + user.Id);
 
+                    /** IMPORTANT:IagoSRL: Changed the deletion of user imported events from being done
+                     * through EntityFramework to be done with a manual SQL command **/
+                    /*
                     // read the Events for the Specified User and EventType==4 (Imported)
                     var previouslyImportedEventsToDelete =
                         db.CalendarEvents.Where(x =>
@@ -1597,7 +1603,15 @@ namespace CalendarDll
 
                     // Send the Changes (Deletes) to the Database
                     db.SaveChanges();
-                    
+                    */
+
+                    db.Database.ExecuteSqlCommand("DELETE FROM CalendarEvents WHERE UserID={0} AND EventType={1}", user.Id, 4);
+
+                    // PERF::
+                    LastImportTimeline.StopTime("Deleting previous events: " + user.Id);
+
+                    // PERF::
+                    LastImportTimeline.SetTime("Importing icalendars: " + user.Id);
 
                     // Loop for every calendar in the imported file (it must be only one really)
                     foreach (var currentCalendar in calendar)
@@ -1605,6 +1619,8 @@ namespace CalendarDll
                         //----------------------------------------------------------------------
                         // Loop to Import the Events
                         //----------------------------------------------------------------------
+                        // PERF::
+                        LastImportTimeline.SetTime("Importing:: events: " + user.Id);
                         foreach (Event currEvent in currentCalendar.Events.Where(evs => !evs.UID.StartsWith("*")))
                         {
 
@@ -1694,10 +1710,17 @@ namespace CalendarDll
                             db.CalendarEvents.Add(eventForDB);
                         } // foreach (Event currEvent in...
 
+                        // PERF::
+                        LastImportTimeline.StopTime("Importing:: events: " + user.Id);
+
                         // By IagoSRL @Loconomics:
                         // To support Public Calendars, that mainly provide VFREEBUSY (and most of times only that kind of elements),
                         // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
                         // with automatic name/summary and the given availability:
+
+                        // PERF::
+                        LastImportTimeline.SetTime("Importing:: freebusy: " + user.Id);
+
                         foreach (var fb in currentCalendar.FreeBusy.Where(fb => !fb.UID.StartsWith("*")))
                         {
                             // Convert the whole freebusy to our System Time Zone before being inserted
@@ -1796,14 +1819,25 @@ namespace CalendarDll
                                 db.CalendarEvents.Add(dbevent);
                             }
                         }
+
+                        // PERF::
+                        LastImportTimeline.StopTime("Importing:: freebusy: " + user.Id);
+
                     } // Ends foreach calendar
 
                     //----------------------------------------------------------------------
                     // Saves the Events to the Database
                     //----------------------------------------------------------------------
-
+                    // PERF::
+                    LastImportTimeline.SetTime("Importing:: saving to db: " + user.Id);
+                    
                     db.SaveChanges();
 
+                    // PERF::
+                    LastImportTimeline.StopTime("Importing:: saving to db: " + user.Id);
+
+                    // PERF::
+                    LastImportTimeline.StopTime("Importing icalendars: " + user.Id);
 
                 } //  using ( var db = new CalendarDll.Data.loconomicsEntities() )
 

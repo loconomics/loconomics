@@ -190,6 +190,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SrlTimeline.cs" />
+    <Compile Include="SrlTimeRange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

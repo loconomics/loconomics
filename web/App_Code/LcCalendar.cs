@@ -402,11 +402,32 @@ public static class LcCalendar
     /// <param name="CalendarURL">URL to retrieve the calendar data as iCalendar format</param>
     public static void Import(int UserID, string CalendarURL)
     {
+        // PERF::
+        if (LastBulkImport != null)
+            LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
+
         var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
         if (iCaltoImport == null)
             throw new Exception("The URL doesn't contains icalendar information, is the correct URL? " + CalendarURL);
+
+        // PERF::
+        if (LastBulkImport != null)
+            LastBulkImport.StopTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
+
+        // PERF::
+        if (LastBulkImport != null)
+            LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Importing ical");
+
         CalendarUtils libCalendarUtil = new CalendarUtils();
+        
+        // PERF::
+        libCalendarUtil.LastImportTimeline = LastBulkImport;
+
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
+
+        // PERF::
+        if (LastBulkImport != null)
+            LastBulkImport.StopTime("BulkImport:: Import " + UserID.ToString() + ":: Importing ical");
     }
     public static void Import(int UserID, Stream CalendarStream)
     {
@@ -415,6 +436,7 @@ public static class LcCalendar
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
     }
+    public static Srl.Timeline LastBulkImport;
     /// <summary>
     /// Perform calendar import on every user with importation enabled in its
     /// calendar settings.
@@ -424,6 +446,11 @@ public static class LcCalendar
     /// generated exception if something is wrong and importation fails.</returns>
     public static IEnumerable<Exception> BulkImport()
     {
+        LastBulkImport = new Srl.Timeline();
+
+        // PERF::
+        LastBulkImport.SetTime("BulkImport");
+
         using (var db = Database.Open("sqlloco"))
         {
             foreach (var p in db.Query("SELECT UserID, CalendarURL FROM CalendarProviderAttributes WHERE dbo.fx_IfNW(CalendarURL, null) is not null"))
@@ -436,7 +463,13 @@ public static class LcCalendar
                 Exception resultEx = null;
                 try
                 {
+                    // PERF::
+                    LastBulkImport.SetTime("BulkImport:: Import " + p.UserID.ToString());
+
                     Import(p.UserID, p.CalendarURL);
+
+                    // PERF::
+                    LastBulkImport.StopTime("BulkImport:: Import " + p.UserID.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -445,6 +478,9 @@ public static class LcCalendar
                 yield return resultEx;
             }
         }
+
+        // PERF::
+        LastBulkImport.StopTime("BulkImport");
     }
     /// <summary>
     /// Generate an iCalendar file to export booking events of the given UserID.
