@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SRL
 {
+    /// It represents a pair of Start and End times and elapsed time between both.
+    /// Author: IagoSRL@gmail.com
+    /// From Lib: SRL
     public class TimeRange
     {
         public TimeSpan? StartTime;

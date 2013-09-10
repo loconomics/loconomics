@@ -402,14 +402,17 @@ public static class LcCalendar
     /// <param name="CalendarURL">URL to retrieve the calendar data as iCalendar format</param>
     public static void Import(int UserID, string CalendarURL)
     {
+#if DEBUG
         // PERF::
         if (LastBulkImport != null)
             LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
+#endif
 
         var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
         if (iCaltoImport == null)
             throw new Exception("The URL doesn't contains icalendar information, is the correct URL? " + CalendarURL);
 
+#if DEBUG
         // PERF::
         if (LastBulkImport != null)
             LastBulkImport.StopTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
@@ -417,17 +420,22 @@ public static class LcCalendar
         // PERF::
         if (LastBulkImport != null)
             LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Importing ical");
+#endif
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
-        
+
+#if DEBUG
         // PERF::
         libCalendarUtil.LastImportTimeline = LastBulkImport;
+#endif
 
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
 
+#if DEBUG
         // PERF::
         if (LastBulkImport != null)
             LastBulkImport.StopTime("BulkImport:: Import " + UserID.ToString() + ":: Importing ical");
+#endif
     }
     public static void Import(int UserID, Stream CalendarStream)
     {
@@ -436,6 +444,9 @@ public static class LcCalendar
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
     }
+    /// <summary>
+    /// Tracks the timeline of the last bulk import execution if the app is in DEBUG mode.
+    /// </summary>
     public static Srl.Timeline LastBulkImport;
     /// <summary>
     /// Perform calendar import on every user with importation enabled in its
@@ -446,10 +457,12 @@ public static class LcCalendar
     /// generated exception if something is wrong and importation fails.</returns>
     public static IEnumerable<Exception> BulkImport()
     {
+#if DEBUG
         LastBulkImport = new Srl.Timeline();
 
         // PERF::
         LastBulkImport.SetTime("BulkImport");
+#endif
 
         using (var db = Database.Open("sqlloco"))
         {
@@ -463,13 +476,17 @@ public static class LcCalendar
                 Exception resultEx = null;
                 try
                 {
+#if DEBUG
                     // PERF::
                     LastBulkImport.SetTime("BulkImport:: Import " + p.UserID.ToString());
+#endif
 
                     Import(p.UserID, p.CalendarURL);
 
+#if DEBUG
                     // PERF::
                     LastBulkImport.StopTime("BulkImport:: Import " + p.UserID.ToString());
+#endif
                 }
                 catch (Exception ex)
                 {
@@ -479,8 +496,10 @@ public static class LcCalendar
             }
         }
 
+#if DEBUG
         // PERF::
         LastBulkImport.StopTime("BulkImport");
+#endif
     }
     /// <summary>
     /// Generate an iCalendar file to export booking events of the given UserID.

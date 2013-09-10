@@ -7,6 +7,11 @@ using System.Data;
 
 namespace Srl
 {
+    /// <summary>
+    /// Allows registering times on performing tasks to help in the measuring of performance.
+    /// Author: IagoSRL@gmail.com
+    /// From Lib: SRL
+    /// </summary>
     public class Timeline
     {
         private Dictionary<string, TimeRange> times = new Dictionary<string,TimeRange>();
@@ -104,6 +109,53 @@ namespace Srl
             }
 
             return s;
+        }
+        public string ToHtmlString(
+            string className = "timeline",
+            bool showName = true,
+            bool showStartTime = true,
+            bool showEndTime = true,
+            bool showElapsedTime = true,
+            bool showNotes = true)
+        {
+            var s = new StringBuilder();
+
+            s.AppendFormat("<table class='{0}'>", className);
+
+            // Headers
+            s.Append("<tr>");
+            if (showName)
+                s.Append("<th>Name</th>");
+            if (showStartTime)
+                s.Append("<th>Start</th>");
+            if (showEndTime)
+                s.Append("<th>End</th>");
+            if (showElapsedTime)
+                s.Append("<th>Elapsed</th>");
+            if (showNotes)
+                s.Append("<th>Notes</th>");
+            s.Append("</tr>");
+
+            // Data
+            foreach (var it in times)
+            {
+                s.Append("<tr>");
+                if (showName)
+                    s.AppendFormat("<td>{0}</td>", new System.Web.HtmlString(it.Key).ToHtmlString());
+                if (showStartTime)
+                    s.AppendFormat("<td>{0}</td>", it.Value.StartTime);
+                if (showEndTime)
+                    s.AppendFormat("<td>{0}</td>", it.Value.EndTime);
+                if (showElapsedTime)
+                    s.AppendFormat("<td>{0}</td>", it.Value.ElapsedTime);
+                if (showNotes)
+                    s.AppendFormat("<td>{0}</td>", (notes.ContainsKey(it.Key) ? new System.Web.HtmlString(notes[it.Key]).ToHtmlString() : ""));
+                s.Append("</tr>");
+            }
+
+            s.Append("</table>");
+
+            return s.ToString();
         }
     }
 }

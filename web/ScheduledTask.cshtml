@@ -373,9 +373,12 @@
 }
 @if (!LcHelpers.InLive)
 {
-    Response.ContentType = "text/plain";
-    @logresult
+    //Response.ContentType = "text/plain";
+    <div><h2>Log</h2>
+    <pre>@logresult</pre>
+    </div>
+
+    <div><h2>Timeline</h2>
+    @Html.Raw(LcCalendar.LastBulkImport.ToHtmlString(showStartTime: false, showEndTime: false, showNotes: false))
+    </div>
 }
-<div><br /><br /><h2>Timeline</h2>
-@(LcCalendar.LastBulkImport)
-</div>

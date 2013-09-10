@@ -1560,8 +1560,10 @@ namespace CalendarDll
         {
             //try
             {
+#if DEBUG
                 if (LastImportTimeline == null)
                     LastImportTimeline = new Srl.Timeline();
+#endif
 
                 //----------------------------------------------------------------------
                 // Loop that adds the Imported Events to a List of CalendarEvents 
@@ -1583,8 +1585,10 @@ namespace CalendarDll
                     // 2013/01/15 CA2S RM
                     //----------------------------------------------------------------------
 
+#if DEBUG
                     // PERF::
                     LastImportTimeline.SetTime("Deleting previous events: " + user.Id);
+#endif
 
                     /** IMPORTANT:IagoSRL: Changed the deletion of user imported events from being done
                      * through EntityFramework to be done with a manual SQL command **/
@@ -1607,11 +1611,13 @@ namespace CalendarDll
 
                     db.Database.ExecuteSqlCommand("DELETE FROM CalendarEvents WHERE UserID={0} AND EventType={1}", user.Id, 4);
 
+#if DEBUG
                     // PERF::
                     LastImportTimeline.StopTime("Deleting previous events: " + user.Id);
 
                     // PERF::
                     LastImportTimeline.SetTime("Importing icalendars: " + user.Id);
+#endif
 
                     // Loop for every calendar in the imported file (it must be only one really)
                     foreach (var currentCalendar in calendar)
@@ -1619,8 +1625,12 @@ namespace CalendarDll
                         //----------------------------------------------------------------------
                         // Loop to Import the Events
                         //----------------------------------------------------------------------
+
+#if DEBUG
                         // PERF::
                         LastImportTimeline.SetTime("Importing:: events: " + user.Id);
+#endif
+
                         foreach (Event currEvent in currentCalendar.Events.Where(evs => !evs.UID.StartsWith("*")))
                         {
 
@@ -1710,16 +1720,20 @@ namespace CalendarDll
                             db.CalendarEvents.Add(eventForDB);
                         } // foreach (Event currEvent in...
 
+#if DEBUG
                         // PERF::
                         LastImportTimeline.StopTime("Importing:: events: " + user.Id);
+#endif
 
                         // By IagoSRL @Loconomics:
                         // To support Public Calendars, that mainly provide VFREEBUSY (and most of times only that kind of elements),
                         // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
                         // with automatic name/summary and the given availability:
 
+#if DEBUG
                         // PERF::
                         LastImportTimeline.SetTime("Importing:: freebusy: " + user.Id);
+#endif
 
                         foreach (var fb in currentCalendar.FreeBusy.Where(fb => !fb.UID.StartsWith("*")))
                         {
@@ -1820,24 +1834,31 @@ namespace CalendarDll
                             }
                         }
 
+#if DEBUG
                         // PERF::
                         LastImportTimeline.StopTime("Importing:: freebusy: " + user.Id);
+#endif
 
                     } // Ends foreach calendar
 
                     //----------------------------------------------------------------------
                     // Saves the Events to the Database
                     //----------------------------------------------------------------------
+
+#if DEBUG
                     // PERF::
                     LastImportTimeline.SetTime("Importing:: saving to db: " + user.Id);
+#endif
                     
                     db.SaveChanges();
 
+#if DEBUG
                     // PERF::
                     LastImportTimeline.StopTime("Importing:: saving to db: " + user.Id);
 
                     // PERF::
                     LastImportTimeline.StopTime("Importing icalendars: " + user.Id);
+#endif
 
                 } //  using ( var db = new CalendarDll.Data.loconomicsEntities() )
 
