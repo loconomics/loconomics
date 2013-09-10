@@ -395,6 +395,7 @@ public static class LcCalendar
     #endregion
 
     #region iCal sync: import/export
+    private static uint FutureMonthsLimitForImportingFreeBusy = 4;
     /// <summary>
     /// Import a calendar in iCalendar format at the given CalendarURL for the UserID
     /// </summary>
@@ -423,6 +424,7 @@ public static class LcCalendar
 #endif
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
+        libCalendarUtil.FutureMonthsLimitForImportingFreeBusy = FutureMonthsLimitForImportingFreeBusy;
 
 #if DEBUG
         // PERF::
@@ -446,6 +448,7 @@ public static class LcCalendar
         var iCaltoImport = iCalendar.LoadFromStream(CalendarStream);
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
+        libCalendarUtil.FutureMonthsLimitForImportingFreeBusy = FutureMonthsLimitForImportingFreeBusy;
         libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
     }
     /// <summary>

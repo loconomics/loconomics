@@ -1550,6 +1550,14 @@ namespace CalendarDll
         #region Import Calendar
         public Srl.Timeline LastImportTimeline;
         /// <summary>
+        /// This property allows limit (when greater than zero) the FreeBusy items
+        /// to be imported by setting the limit in number of months of future items
+        /// allowed.
+        /// This allows avoid the overload of import excessive future items.
+        /// In other words: don't import freebusy events from x months and greater in the future.
+        /// </summary>
+        public uint FutureMonthsLimitForImportingFreeBusy = 0;
+        /// <summary>
         /// Import Calendar
         /// </summary>
         /// <param name="calendar"></param>
@@ -1730,6 +1738,9 @@ namespace CalendarDll
                         // we need import too the VFREEBUSY blocks, and we will create a single and simple event for each of that,
                         // with automatic name/summary and the given availability:
 
+                        // Calculate the future date limit to avoid recalculate on every item
+                        var futureDateLimit = DateTime.Now.AddMonths((int)FutureMonthsLimitForImportingFreeBusy);
+
 #if DEBUG
                         // PERF::
                         LastImportTimeline.SetTime("Importing:: freebusy: " + user.Id);
@@ -1760,6 +1771,14 @@ namespace CalendarDll
                                     if (calculatedEndDate < DateTime.Now)
                                     {
                                         // Old, discarded, continue with next:
+                                        continue;
+                                    }
+
+                                    // Check if there is a limit and is exceeded
+                                    if (FutureMonthsLimitForImportingFreeBusy > 0 &&
+                                        calculatedEndDate > futureDateLimit)
+                                    {
+                                        // Exceed the 'future' limit, discard:
                                         continue;
                                     }
 
@@ -1802,6 +1821,14 @@ namespace CalendarDll
                                 if (calculatedEndDate < DateTime.Now)
                                 {
                                     // Old, discarded, continue with next:
+                                    continue;
+                                }
+
+                                // Check if there is a limit and is exceeded
+                                if (FutureMonthsLimitForImportingFreeBusy > 0 &&
+                                    calculatedEndDate > futureDateLimit)
+                                {
+                                    // Exceed the 'future' limit, discard:
                                     continue;
                                 }
 
