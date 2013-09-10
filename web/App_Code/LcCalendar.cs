@@ -428,8 +428,12 @@ public static class LcCalendar
         // PERF::
         libCalendarUtil.LastImportTimeline = LastBulkImport;
 #endif
-
-        libCalendarUtil.ImportCalendar(iCaltoImport, new CalendarUser(UserID));
+        var calUser = new CalendarUser(UserID);
+        if (calUser.Id == 0)
+        {
+            throw new Exception("The UserID " + UserID + " doesn't exist on database, only its calendar URL " + CalendarURL);
+        }
+        libCalendarUtil.ImportCalendar(iCaltoImport, calUser);
 
 #if DEBUG
         // PERF::
