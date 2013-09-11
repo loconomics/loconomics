@@ -233,7 +233,10 @@ public static partial class LcPricingModel
                     {
                         string formControlHtml = "",
                             name = provar.Key + "-maxnumberallowed"; //==Value.Def.InternalName
-                        var selectedValue = (object)(Request[provar.Key + "-maxnumberallowed"]) ?? provar.Value.ProviderMaxNumberAllowed;
+                        var selectedValue = (object)(Request[provar.Key + "-maxnumberallowed"])
+                            ?? provar.Value.ProviderMaxNumberAllowed
+                            // Special default value for Max Hours #425
+                            ?? (provar.Key == "HourlyRate" ? 8 : 0);
                         if (minMaxValuesList != null)
                             formControlHtml = LcUtils.BuildHtmlSelect(
                                 name,
