@@ -321,7 +321,8 @@
                                 {
                                     Amount = TotalPrice,
                                     CustomerId = customerIdOnBraintree,
-                                    PaymentMethodToken = customerCreditCardToken
+                                    PaymentMethodToken = customerCreditCardToken,
+                                    DeviceData = Request.Form["device_data"]
                                 };
 
                                 var result = gateway.Transaction.Sale(request);
@@ -522,4 +523,29 @@
     <fieldset class="actions">
         <button data-wizard-next-step="@Href(LcUrl.LangPath + "Booking/Confirmation/")" class="complete-booking next finish main-action">book it!</button>
     </fieldset>
+    <script type="text/javascript">
+        function LC_BookingPayment() {
+            BraintreeData.setup('@(LcPayment.BraintreeMerchantId)', 'booking-payment', BraintreeData.environments.@(LcPayment.BraintreeJsEnvironment));
+        }
+        @if (!IsPost)
+        {
+        <text>
+        LC.load({
+            scripts: ['https://js.braintreegateway.com/v1/braintree.js', 'https://js.braintreegateway.com/v1/braintree-data.js'],
+            completeVerification: function () {
+                return (window['BraintreeData'] !== undefined);
+            },
+            complete: function () {
+                LC_BookingPayment();
+            }
+        });
+        </text>
+        }
+        else
+        {
+        <text>
+        LC_BookingPayment();
+        </text>
+        }
+    </script>
 </form>

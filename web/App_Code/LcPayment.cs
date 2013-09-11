@@ -34,6 +34,22 @@ public static class LcPayment
         }
         return gateway;
     }
+    public static string BraintreeJsEnvironment
+    {
+        get
+        {
+            return ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()
+                ? "sandbox"
+                : "production";
+        }
+    }
+    public static string BraintreeMerchantId
+    {
+        get
+        {
+            return ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"];
+        }
+    }
     /// <summary>
     /// Full refund a transaction ensuring that will be no charge to the customer
     /// or will be refunded if there was.
