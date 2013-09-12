@@ -47,7 +47,9 @@ public static class LcPayment
     {
         get
         {
-            return ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"];
+            return ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()
+                ? ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"]
+                : ConfigurationManager.AppSettings["Braintree.Production.MerchantId"];
         }
     }
     /// <summary>
