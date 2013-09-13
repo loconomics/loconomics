@@ -52,6 +52,13 @@ public static class LcPayment
                 : ConfigurationManager.AppSettings["Braintree.Production.MerchantId"];
         }
     }
+    public static bool BraintreeFraudProtectionToolsEnabled
+    {
+        get
+        {
+            return ConfigurationManager.AppSettings["Braintree.FraudProtectionTools.Enabled"].AsBool();
+        }
+    }
     /// <summary>
     /// Full refund a transaction ensuring that will be no charge to the customer
     /// or will be refunded if there was.
