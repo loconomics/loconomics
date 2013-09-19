@@ -210,6 +210,7 @@
         @if (data.ContainsPackages)
         {
             <fieldset>
+                <legend>Select the service you'd like @provider.FirstName to perform</legend>
                 @LcPricingView.Packages(customer.UserID, data.Packages, data.FeesSet)
             </fieldset>
         }
@@ -217,7 +218,7 @@
         @if (data.ContainsAddons)
         {
             <fieldset>
-                <legend>Select add-on services</legend>
+                <legend>Select any additional services you'd like performed</legend>
                 @LcPricingView.Addons(customer.UserID, data.Addons, data.FeesSet)
             </fieldset>
         }
