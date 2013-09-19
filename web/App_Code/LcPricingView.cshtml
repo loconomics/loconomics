@@ -54,6 +54,7 @@
                 </td>
                 <td class="package-name name">
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name @(pak.NumberOfSessions > 1 ? String.Format("({0} appointments)", pak.NumberOfSessions) : "")</label>
+                    <a class="quick-view" href="#quick-view" data-package-id="@(pak.ProviderPackageID)">quick view</a>
 					@if (config.Mod != null) {
 						<div class="package-extra-data">
 							@Html.Raw(config.Mod.GetCustomerHtml(customerID, new LcPricingModel.PackageBaseData(pak), fee))
@@ -98,6 +99,7 @@
                 </td>
                 <td class="package-name name">
                     <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+                    <a class="quick-view" href="#quick-view" data-package-id="@(pak.ProviderPackageID)">quick view</a>
                 </td>
                 <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
                 <td class="package-total-price number">

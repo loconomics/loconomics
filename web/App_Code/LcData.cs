@@ -807,12 +807,32 @@ public static partial class LcData
             ", providerPackageID);
         }
     }
-    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+    public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
     {
-        dynamic packages, details;
-        using (var db = Database.Open("sqlloco")){
-            // Get the Provider Packages
-            packages = db.Query(@"
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, GetCurrentLanguageID(), GetCurrentCountryID());
+        }
+    }
+    public const string SQLGetPackageServiceAttributesByPackageID = @"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   A.LanguageID = @1
+                        AND A.CountryID = @2
+                        AND PD.ProviderPackageID = @0
+                ORDER BY A.Name ASC
+    ";
+    public const string SQLGetPackagesByMulti = @"
                 SELECT  p.ProviderPackageID
                         ,p.PricingTypeID
                         ,p.ProviderUserID
@@ -844,9 +864,8 @@ public static partial class LcData
                          AND (@5 = -1 OR p.PricingTypeID = @5)
                          AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY PT.DisplayRank ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
-            (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
-            details = db.Query(@"
+    ";
+    public const string SQLGetPackageServiceAttributesByMulti = @"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
                         ,A.ServiceAttributeDescription
@@ -866,8 +885,30 @@ public static partial class LcData
                          AND (@5 = -1 OR P.PricingTypeID = @5)
                          AND (@6 = -1 OR P.IsAddOn = @6)
                 ORDER BY A.Name ASC
-            ", providerUserID, positionID, GetCurrentLanguageID(), GetCurrentCountryID(), packageID, pricingTypeID,
-             (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1));
+    ";
+    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+    {
+        dynamic packages, details;
+        using (var db = Database.Open("sqlloco")){
+            // Get the Provider Packages
+            packages = db.Query(SQLGetPackagesByMulti,
+                providerUserID,
+                positionID,
+                GetCurrentLanguageID(),
+                GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+            );
+            details = db.Query(SQLGetPackageServiceAttributesByMulti,
+                providerUserID,
+                positionID,
+                GetCurrentLanguageID(),
+                GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+            );
         }
         // Create index of packages, Key:ID, Value:Package record
         var index = new Dictionary<int, dynamic>(packages.Count);

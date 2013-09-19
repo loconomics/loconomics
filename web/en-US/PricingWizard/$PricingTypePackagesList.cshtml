@@ -16,7 +16,6 @@
         // WITHOUT Config, there is nothing to display (is not a package-based pricing type)
         return;
     }
-    var config = LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID];
 
     // If there is no customer or 'customer' and provider are different, ever in non-editable mode
     if (customer == null || customer.UserID != providerUserID) {
@@ -43,171 +42,18 @@
                 continue;
             }
             
-            // Getting the correct fees for the package
-            LcPricingModel.FeeRate fee = null;
-            if (!editable)
-            {
-                // Use the package price on FixedPrice packages to get the fees that fit better:
-                if (config.PriceCalculation == LcPricingModel.PriceCalculationType.FixedPrice)
-                {
-                    fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
-                }
-                else
-                {
-                    // Else, get the standard ones
-                    fee = feesSet["standard:customer"];
-                }
-            }
-
-            <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
-                <h4>@pak.Name</h4>
-                <div class="provider-package-service-summary">
-                    @{
-                        var inpersonphone = "in-person";
-                        if (config.InPersonPhoneLabel != null)
-                        {
-                            inpersonphone = (pak.IsPhone ? "phone" : "in-person");
-                        }
-                        var summaryFormat = "";
-                        if (pak.NumberOfSessions > 1)
-                        {
-                            if (pak.ServiceDuration == 0) {
-                                summaryFormat = config.SummaryFormatMultipleSessionsNoDuration;
-                            } else {
-                                summaryFormat = config.SummaryFormatMultipleSessions;
-                            }
-                        }
-                        else if (pak.ServiceDuration == 0)
-                        {
-                            summaryFormat = config.SummaryFormatNoDuration;
-                        }
-                        // Default value and generic:
-                        if (String.IsNullOrEmpty(summaryFormat))
-                        {
-                            summaryFormat = config.SummaryFormat;
-                        }
-                        @String.Format(summaryFormat, LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration)), pak.NumberOfSessions, inpersonphone)
-                    }
-                    <div class="provider-package-price">
-						@{
-							// Choices fixed price or price-rate checking the pricing-type configuration
-							var price = pak.Price;
-							var priceSufix = "";
-                            // To use in non-editable (customer view, as search, profile, booking, communications..)
-                            // calculate price with fees. No decimals for fixed prices
-                            LcPricingModel.Price priceWithFees = null;
-                            if (!editable)
-                            {
-                                priceWithFees = new LcPricingModel.Price(price, fee, 0);
-                            }
-							if (config.PriceLabel == null) {
-								price = pak.PriceRate;
-                                if (!editable)
-                                {
-                                    // fees apply with 1 decimal for the case of hourly-rates:
-                                    priceWithFees = new LcPricingModel.Price(price, fee, 1);
-                                }
-								if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
-									priceSufix = "/h";
-								} else {
-									priceSufix = "<span class='price-rate-unit'>" + config.PriceRateUnitListLabel + pak.PriceRateUnit + "</span>";
-								}
-							}
-                            price = price ?? 0M;
-							if (editable)
-							{
-								<text>@price.ToString("c") @priceSufix</text>
-							}
-							else
-							{
-								<div class="actions book">
-									@if (config.IsAddon)
-									{
-										// Addons cannot be booked independently:
-										<div class="package-price addon-price">@String.Format("{0:c}", priceWithFees.TotalPrice)</div>
-										<div class="addon-price-note">Available during checkout</div>
-									}
-									else
-									{
-										<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + providerUserID + "&positionid=" + positionID + "&packageid=" + pak.ProviderPackageID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
-									}
-								</div>
-							}
-						}
-                    </div>
-                </div>
-                @if (editable)
-                {
-                <div class="actions">
-                    <a href="#delete" class="delete-action crudl-delete">Delete</a>
-                    <a href="#edit" class="edit-action crudl-update">Edit</a>
-                </div>
-                }
-                @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
-                {
-                    <h5>@config.FirstTimeClientsOnlyListText</h5>
-                }
-                <h5>Description:</h5>
-                <div class="provider-package-description">
-                    @LcHelpers.PrintTextAsHtml(pak.Description)
-                </div>
-		        @if (config.Mod != null) {
-			        @Html.Raw(config.Mod.GetPackageViewHtml(new LcPricingModel.PackageBaseData(pak), feesSet));
-		        }
-                @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
-                {
-                    LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, 0, 1);
-                    if (!editable)
-                    {
-                        // The price-rate will ever be the standard fees (there is no chance for the flat ones) (this can be different from the package price)
-                        var rateFee = feesSet["standard:customer"];
-                        // fees apply with 1 decimal for the case of hourly-rates:
-                        priceRateWithFees = new LcPricingModel.Price(pak.PriceRate, rateFee, 1);
-                    }
-                    <h5 class="price-rate">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
-                        @if (config.PriceRateUnitListLabel != null)
-                        {
-                            <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
-                        }
-                    </h5>
-                }
-                @if (config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
-                {
-                    <h5>@config.NoPriceRateListMessage</h5>
-                }
-                @if (config.IncludeServiceAttributes)
-                {
-                    var details = data.PackagesDetailsByPackage.ContainsKey(pak.ProviderPackageID)
+            var details = data.PackagesDetailsByPackage.ContainsKey(pak.ProviderPackageID)
                         ? data.PackagesDetailsByPackage[pak.ProviderPackageID]
                         : null;
-                    var count = details == null
-                        ? 0
-                        : details.Count;
-                    if (count > 0
-                        || (config.WithoutServiceAttributesCustomerMessage != null && !editable)
-                        || (config.WithoutServiceAttributesProviderMessage != null && editable)
-                        )
-                    {
-                        <h5>Services included in this package:</h5>
-                        <ul class="provider-package-services attributes-list service-attributes-list">
-                            @foreach (var ser in details)
-                            {
-                                <li title="@ser.Name" data-description="@ser.ServiceAttributeDescription" data-service-attribute-id="@ser.ServiceAttributeID">@ser.Name</li>
-                            }
-                            @if (count == 0)
-                            {
-                                if (editable)
-                                {
-                                    <li class="empty">@config.WithoutServiceAttributesProviderMessage</li>
-                                }
-                                else
-                                {
-                                    <li class="empty">@config.WithoutServiceAttributesCustomerMessage</li>
-                                }
-                            }
-                        </ul>
-                    }
-                }
+
+            <li class="provider-package crudl-item" data-crudl-item-id="@pak.ProviderPackageID">
+                @RenderPage("$PackageView.cshtml", new { 
+                    Package = pak,
+                    ServiceAttributes = details,
+                    EditableView = editable,
+                    Customer = customer,
+                    FeesSet = feesSet
+                })
             </li>
         }
     </ul>

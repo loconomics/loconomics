@@ -455,8 +455,23 @@ LC.initCustomerPackageSliders = function () {
     }).change();
 };
 
+/** Quick view handler for packages
+ **/
+LC.packageQuickView = function LC_packageQuickView(id) {
+    if (typeof (id) != 'number')
+        id = parseInt($(this).closest('[data-package-id]').data('package-id'));
+    if (!id || id == Number.NaN)
+        return;
+    // Open popup with ajax-loaded package information
+    popup(LcUrl.LangPath + '$PackageView/?PackageID=' + id, { width: 660, height: 300 }, null, null, { closable: { onLoad: true }, autoresize: true });
+    return false;
+};
+
 $(document).ready(function () {
     LC.initCustomerPackageSliders();
+
+    // Setup package quick view
+    $('document').on('click', '.packages-list .quick-view', LC.packageQuickView);
 
     // Setup Schedule step:
     $('#schedule').on('endLoadWizardStep', function () {
