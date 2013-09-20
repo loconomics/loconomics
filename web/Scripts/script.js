@@ -1430,7 +1430,9 @@ function popup(url, size, complete, loadingText, options) {
             afterLoad: true,
             onError: true
         },
-        autosize: false
+        autoSize: false,
+        containerClass: '',
+        autoFocus: true
     }, options);
 
     // Prepare size and loading
@@ -1441,7 +1443,6 @@ function popup(url, size, complete, loadingText, options) {
     else
         swh = popupSize(options.size);
     
-    $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({
        message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
        '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' + options.loadingText,
@@ -1454,7 +1455,7 @@ function popup(url, size, complete, loadingText, options) {
     // Loading Url with Ajax and place content inside the blocked-box
     $.ajax({ url: options.url,
         success: function (data) {
-            var container = $('.blockMsg');
+            var container = $('.blockMsg').addClass(options.containerClass);
             // Add close button if requires it or empty message content to append then more
             container.html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
             var contentHolder = container.append('<div class="content"/>').children('.content');
@@ -1471,12 +1472,13 @@ function popup(url, size, complete, loadingText, options) {
                 // Page content got, paste into the popup if is partial html (url starts with $)
                 if (/((^\$)|(\/\$))/.test(options.url)) {
                     contentHolder.append(data);
-                    LC.autoFocus(contentHolder);
-                    if (options.autosize) {
+                    if (options.autoFocus)
+                        LC.autoFocus(contentHolder);
+                    if (options.autoSize) {
                         // Avoid miscalculations
-                        var prevWidth = contentHolder.css('width');
+                        var prevWidth = contentHolder[0].style.width;
                         contentHolder.css('width', 'auto');
-                        var prevHeight = contentHolder.css('height');
+                        var prevHeight = contentHolder[0].style.height;
                         contentHolder.css('height', 'auto');
                         // Get data
                         var actualWidth = contentHolder[0].scrollWidth,
@@ -1512,7 +1514,8 @@ function popup(url, size, complete, loadingText, options) {
                     // replace blocking element content (the loading) with the iframe:
                     contentHolder.remove();
                     $('.blockMsg').append(iframe);
-                    LC.autoFocus(iframe);
+                    if (options.autoFocus)
+                        LC.autoFocus(iframe);
                 }
             }
         }, error: function (j, t, ex) {

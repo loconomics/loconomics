@@ -465,9 +465,11 @@ LC.packageQuickView = function LC_packageQuickView(id) {
     // Open popup with ajax-loaded package information
     popup({
         url: LcUrl.LangPath + 'PricingWizard/$PackageView/?PackageID=' + id,
-        size: { width: 660, height: 300 },
+        size: { width: 660, height: 150 },
         closable: { onLoad: true },
-        autosize: true
+        autoSize: true,
+        autoFocus: false,
+        containerClass: 'something'
     });
     return false;
 };
