@@ -1420,7 +1420,7 @@ function popup(url, size, complete, loadingText, options){
     //window.open(url);
     
     // Load options overwriting defaults
-    options = $.extend({
+    options = $.extend(true, {
         closable: {
             onLoad: false,
             afterLoad: true,

@@ -463,7 +463,7 @@ LC.packageQuickView = function LC_packageQuickView(id) {
     if (!id || id == Number.NaN)
         return;
     // Open popup with ajax-loaded package information
-    popup(LcUrl.LangPath + '$PackageView/?PackageID=' + id, { width: 660, height: 300 }, null, null, { closable: { onLoad: true }, autoresize: true });
+    popup(LcUrl.LangPath + 'PricingWizard/$PackageView/?PackageID=' + id, { width: 660, height: 300 }, null, null, { closable: { onLoad: true }, autoresize: true });
     return false;
 };
 
@@ -471,7 +471,7 @@ $(document).ready(function () {
     LC.initCustomerPackageSliders();
 
     // Setup package quick view
-    $('document').on('click', '.packages-list .quick-view', LC.packageQuickView);
+    $('body').on('click', '.packages-list .quick-view', LC.packageQuickView);
 
     // Setup Schedule step:
     $('#schedule').on('endLoadWizardStep', function () {

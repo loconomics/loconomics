@@ -26,7 +26,7 @@
         containerTag = PageData["ContainerTag"];
         containerClasses = PageData["ContainerClasses"];
     } else {
-        pak = LcPricingModel.PackageBaseData.FromPackageID(Request["PackageID]"].AsInt());
+        pak = LcPricingModel.PackageBaseData.FromPackageID(Request["PackageID"].AsInt());
         atts = LcPricingModel.PackageServiceAttribute.ListFromPackageID(pak.ID);
     }
     

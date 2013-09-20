@@ -855,6 +855,13 @@ public static partial class LcData
                           ON P.PricingTypeID = PT.PricingTypeID
                             AND P.LanguageID = PT.LanguageID
                             AND P.CountryID = PT.CountryID
+                         INNER JOIN
+                        PositionPricingType AS PPT
+                          ON PPT.PositionID = P.PositionID
+                            AND PPT.PricingTypeID = PT.PricingTypeID
+                            AND PPT.LanguageID = PT.LanguageID
+                            AND PPT.CountryID = PT.CountryID
+                            AND PPT.Active = 1
                 WHERE   p.ProviderUserID = @0 AND P.PositionID = @1
                          AND 
                         p.LanguageID = @2 AND p.CountryID = @3
