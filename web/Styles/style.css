@@ -2804,6 +2804,12 @@ input.search-data {
     background-image: url('../img/theme/icon-form-search.png');
 }
 
+/* attributes */
+ul.attributes-list li {
+    list-style-position: inside;
+    list-style-image: url('../img/theme/bullet.png');
+}
+
 /* ==|== media queries ======================================================
    PLACEHOLDER Media Queries for Responsive Design.
    These override the primary ('mobile first') styles

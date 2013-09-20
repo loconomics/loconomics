@@ -293,14 +293,6 @@ form.report-unauthorized-use textarea {
 .profile .have-view-more{
     position: relative;
 }
-.profile .book-action.main-action {
-    padding: .3em .5em;
-    font-weight: bold;
-}
-.profile .actions.book{
-    margin: 0 auto 10px;
-    text-align: center !important;
-}
 .position-summary .highlighted-price {
     border: 6px solid #00989A;
     border-radius: 10px;
@@ -423,10 +415,6 @@ form.report-unauthorized-use textarea {
 .profile .overview .service-attribute-category ul {
     margin: 0;
     padding: 0 0 24px 0;
-}
-ul.attributes-list li {
-    list-style-position: inside;
-    list-style-image: url('../img/theme/bullet.png');
 }
 
 /**********************************/

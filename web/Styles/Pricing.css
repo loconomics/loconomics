@@ -13,6 +13,9 @@
 .profile .pricing h3 {
     margin: 10px 0;
 }
+.provider-package {
+    color: #747474;
+}
 .provider-package h4 {
     margin: 0 !important;
     font-size: 1.5em !important;
@@ -25,8 +28,21 @@
     margin: 8px 0 0;
     display: block !important;
 }
-.profile .provider-package a.button.book-action {
+.provider-package.view h5 {
+    color: rgb(59, 59, 59);
+    font-size: 1em;
+    margin: 5px 0px;
+}
+.provider-package.view a.button.book-action {
     font-size: 0.6em;
+}
+.provider-package.view .actions.book {
+    margin: 0px auto 10px;
+    text-align: center !important;
+}
+.provider-package.view .book-action.main-action {
+    padding: .3em .5em;
+    font-weight: bold;
 }
 .view-panel .provider-package-services li.empty,
 .pricing-type-packages-list .service-attributes-list li.empty {

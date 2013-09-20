@@ -469,7 +469,7 @@ LC.packageQuickView = function LC_packageQuickView(id) {
         closable: { onLoad: true },
         autoSize: true,
         autoFocus: false,
-        containerClass: 'something'
+        containerClass: 'view-panel'
     });
     return false;
 };
