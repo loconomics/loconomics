@@ -1415,31 +1415,36 @@ function popupStyle(size) {
         'background-clip': 'padding-box'
     };
 }
-function popup(url, size, complete, loadingText, options){
-    // Native popup
-    //window.open(url);
-    
+function popup(url, size, complete, loadingText, options) {
+    if (typeof (url) === 'object')
+        options = url;
+
     // Load options overwriting defaults
     options = $.extend(true, {
+        url: typeof (url) === 'string' ? url : '',
+        size: size || { width: 0, height: 0 },
+        complete: complete,
+        loadingText: loadingText,
         closable: {
             onLoad: false,
             afterLoad: true,
             onError: true
-        }
+        },
+        autosize: false
     }, options);
 
-    // Smart popup
-    loadingText = loadingText || '';
+    // Prepare size and loading
+    options.loadingText = options.loadingText || '';
     var swh;
-    if (size && size.width)
-        swh = size;
+    if (options.size.width)
+        swh = options.size;
     else
-        swh = popupSize(size);        
+        swh = popupSize(options.size);
     
     $('div.blockUI.blockMsg.blockPage').addClass('fancy');
     $.blockUI({
        message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
-       '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' + loadingText,
+       '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' + options.loadingText,
        centerY: false,
        css: popupStyle(swh),
        overlayCSS: { cursor: 'default' },
@@ -1447,11 +1452,12 @@ function popup(url, size, complete, loadingText, options){
     });
 
     // Loading Url with Ajax and place content inside the blocked-box
-    $.ajax({ url: url,
+    $.ajax({ url: options.url,
         success: function (data) {
+            var container = $('.blockMsg');
             // Add close button if requires it or empty message content to append then more
-            $('.blockMsg').html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
-            var contentHolder = $('.blockMsg').append('<div class="content"/>').children('.content');
+            container.html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
+            var contentHolder = container.append('<div class="content"/>').children('.content');
 
             if (typeof (data) === 'object') {
                 if (data.Code && data.Code == 2) {
@@ -1462,10 +1468,35 @@ function popup(url, size, complete, loadingText, options){
                     contentHolder.append(data.Result);
                 }
             } else {
-                // Page content got, paste into the popup if is partial html (url starts with$)
-                if (/((^\$)|(\/\$))/.test(url)) {
+                // Page content got, paste into the popup if is partial html (url starts with $)
+                if (/((^\$)|(\/\$))/.test(options.url)) {
                     contentHolder.append(data);
                     LC.autoFocus(contentHolder);
+                    if (options.autosize) {
+                        // Avoid miscalculations
+                        var prevWidth = contentHolder.css('width');
+                        contentHolder.css('width', 'auto');
+                        var prevHeight = contentHolder.css('height');
+                        contentHolder.css('height', 'auto');
+                        // Get data
+                        var actualWidth = contentHolder[0].scrollWidth,
+                            actualHeight = contentHolder[0].scrollHeight,
+                            contWidth = container.width(),
+                            contHeight = container.height(),
+                            extraWidth = container.outerWidth(true) - contWidth,
+                            extraHeight = container.outerHeight(true) - contHeight,
+                            maxWidth = $(window).width() - extraWidth,
+                            maxHeight = $(window).height() - extraHeight;
+                        // Calculate and apply
+                        var size = {
+                            width: actualWidth > maxWidth ? maxWidth : actualWidth,
+                            height: actualHeight > maxHeight ? maxHeight : actualHeight
+                        };
+                        container.animate(size, 600);
+                        // Reset miscalculations corrections
+                        contentHolder.css('width', prevWidth);
+                        contentHolder.css('height', prevHeight);
+                    }
                 } else {
                     // Else, if url is a full html page (normal page), put content into an iframe
                     var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
@@ -1487,7 +1518,7 @@ function popup(url, size, complete, loadingText, options){
         }, error: function (j, t, ex) {
             $('div.blockMsg').html((options.closable.onError ? '<a class="close-popup" href="#close-popup">X</a>' : '') + '<div class="content">Page not found</div>');
             if (console && console.info) console.info("Popup-ajax error: " + ex);
-        }, complete: complete
+        }, complete: options.complete
     });
 
     $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });

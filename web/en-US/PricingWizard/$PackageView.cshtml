@@ -31,6 +31,8 @@
     }
     
     // Setup variables that depends on others
+    containerClasses = containerClasses ?? "";
+    containerClasses += (editable ? "" : " view");
     // Pricing config:
     if (!LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pak.PricingTypeID)) {
         // WITHOUT Config, there is nothing to display (is not a package-based pricing type)

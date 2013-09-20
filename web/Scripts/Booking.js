@@ -463,7 +463,12 @@ LC.packageQuickView = function LC_packageQuickView(id) {
     if (!id || id == Number.NaN)
         return;
     // Open popup with ajax-loaded package information
-    popup(LcUrl.LangPath + 'PricingWizard/$PackageView/?PackageID=' + id, { width: 660, height: 300 }, null, null, { closable: { onLoad: true }, autoresize: true });
+    popup({
+        url: LcUrl.LangPath + 'PricingWizard/$PackageView/?PackageID=' + id,
+        size: { width: 660, height: 300 },
+        closable: { onLoad: true },
+        autosize: true
+    });
     return false;
 };
 

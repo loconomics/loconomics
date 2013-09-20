@@ -5,6 +5,10 @@
     padding: 15px;
     margin: 0 0 10px 0;
     position: relative;
+    text-align: left;
+}
+.blockUI .provider-package {
+    margin: 0;
 }
 .profile .pricing h3 {
     margin: 10px 0;
@@ -56,7 +60,7 @@
 .pricing-type-packages-list .provider-package .provider-package-service-summary .provider-package-price {
     float: right;
 }
-.profile .view-panel .provider-package .provider-package-service-summary .provider-package-price {
+.provider-package.view .provider-package-service-summary .provider-package-price {
     right: 10px;
     top: 10px;
     position: absolute;
