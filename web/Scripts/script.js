@@ -1437,25 +1437,27 @@ function popup(url, size, complete, loadingText, options) {
 
     // Prepare size and loading
     options.loadingText = options.loadingText || '';
-    var swh;
-    if (options.size.width)
-        swh = options.size;
-    else
-        swh = popupSize(options.size);
-    
+    if (!('width' in options.size))
+        options.size = popupSize(options.size);
+
     $.blockUI({
        message: (options.closable.onLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '') +
        '<img src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' + options.loadingText,
        centerY: false,
-       css: popupStyle(swh),
+       css: popupStyle(options.size),
        overlayCSS: { cursor: 'default' },
        focusInput: true
     });
 
     // Loading Url with Ajax and place content inside the blocked-box
-    $.ajax({ url: options.url,
+    $.ajax({
+        url: options.url,
+        context: {
+            options: options,
+            container: $('.blockMsg')
+        },
         success: function (data) {
-            var container = $('.blockMsg').addClass(options.containerClass);
+            var container = this.container.addClass(options.containerClass);
             // Add close button if requires it or empty message content to append then more
             container.html(options.closable.afterLoad ? '<a class="close-popup" href="#close-popup">X</a>' : '');
             var contentHolder = container.append('<div class="content"/>').children('.content');
@@ -1494,7 +1496,7 @@ function popup(url, size, complete, loadingText, options) {
                             width: actualWidth > maxWidth ? maxWidth : actualWidth,
                             height: actualHeight > maxHeight ? maxHeight : actualHeight
                         };
-                        container.animate(size, 600);
+                        container.animate(size, 300);
                         // Reset miscalculations corrections
                         contentHolder.css('width', prevWidth);
                         contentHolder.css('height', prevHeight);

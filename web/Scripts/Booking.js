@@ -469,7 +469,18 @@ LC.packageQuickView = function LC_packageQuickView(id) {
         closable: { onLoad: true },
         autoSize: true,
         autoFocus: false,
-        containerClass: 'view-panel'
+        containerClass: 'view-panel quick-view booking-quick-view',
+        complete: function () {
+            console.log(this);
+            this.container.find('.provider-package-price').each(function () {
+                var $t = $(this);
+                $t
+                .children().removeClass('actions book')
+                .children().attr('href', null)
+                .removeClass('button book-action main-action')
+                .find('.book-now-label').remove();
+            });
+        }
     });
     return false;
 };

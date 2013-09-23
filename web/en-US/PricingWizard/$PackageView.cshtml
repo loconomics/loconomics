@@ -132,7 +132,7 @@
 						}
 						else
 						{
-							<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + pak.ProviderUserID + "&positionid=" + pak.PositionID + "&packageid=" + pak.ID)">Book now for @String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
+							<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + pak.ProviderUserID + "&positionid=" + pak.PositionID + "&packageid=" + pak.ID)"><span class="book-now-label">Book now for </span>@String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
 						}
 					</div>
 				}

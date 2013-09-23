@@ -81,6 +81,12 @@
     top: 10px;
     position: absolute;
 }
+.booking-quick-view .provider-package.view .provider-package-price a {
+    color: Black;
+    text-decoration: none;
+    font-size: .8em;
+    font-weight: bold;
+}
 
 .view-panel .provider-package .addon-price,
 .view-panel .provider-package .addon-price-note {
