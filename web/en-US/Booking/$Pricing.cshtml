@@ -15,9 +15,12 @@
     var summary = new LcPricingModel.PricingSummaryData();
     
     Dictionary<string, LcPricingModel.PricingModelData> modelsData = null;
+    
+    // Data for the detailed pricing summary
+    List<LcPricingModel.PricingSummaryData> includedItems = new List<LcPricingModel.PricingSummaryData>();
 
     if (IsPost) {
-        modelsData = processData(customer, provider, position, data, summary);
+        modelsData = processData(customer, provider, position, data, summary, includedItems);
     }
     
     var hasPricingSummary = data.ContainsSummary && 
@@ -96,7 +99,7 @@
         };
     }
     
-    Dictionary<string, LcPricingModel.PricingModelData> processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingSummaryData summary) {
+    Dictionary<string, LcPricingModel.PricingModelData> processData(dynamic c, dynamic p, dynamic pos, dynamic data, LcPricingModel.PricingSummaryData summary, List<LcPricingModel.PricingSummaryData> includedItems) {
 
         var rtn = new Dictionary<string, LcPricingModel.PricingModelData>();
         
@@ -110,12 +113,12 @@
             /* Calculate summary
              */
             if (data.ContainsPackages) {
-                mdPackages = LcPricingModel.CalculatePackages(c.UserID, data.Packages, data.FeesSet, ModelState);
+                mdPackages = LcPricingModel.CalculatePackages(c.UserID, data.Packages, data.FeesSet, ModelState, includedItems);
                 //rtn.Add("packages", mdPackages);
                 data.SummaryLines["packages"].Add(mdPackages.SummaryTotal);
             }
             if (data.ContainsAddons) {
-                mdAddons = LcPricingModel.CalculateAddons(c.UserID, data.Addons, data.FeesSet, ModelState);
+                mdAddons = LcPricingModel.CalculateAddons(c.UserID, data.Addons, data.FeesSet, ModelState, includedItems);
                 //rtn.Add("addons", mdAddons);
                 data.SummaryLines["addons"].Add(mdAddons.SummaryTotal);
             }
@@ -241,7 +244,8 @@
         {
             <fieldset>
                 <legend>Pricing summary</legend>
-                @LcPricingView.CustomerPricingSummary(summary, data.SummaryLines, true)
+                @*LcPricingView.CustomerPricingSummaryGrouped(summary, data.SummaryLines, true)*@
+                @LcPricingView.CustomerPricingSummaryDetailed(summary, includedItems, true)
             </fieldset>
         }
 
@@ -254,7 +258,8 @@
         <script type="text/javascript">
             lcSetupCalculateTableItemsTotals();
             LC.setupCalculateSummary(true);
-			LC.initCustomerPackageSliders();
+            LC.initCustomerPackageSliders();
+            LC.setupUpdateDetailedPricingSummary();
         </script>
     }
 </form>

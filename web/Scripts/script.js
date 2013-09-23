@@ -2397,6 +2397,7 @@ function lcSetupCalculateTableItemsTotals() {
         $(this).data('calculate-items-totals-initializated', true);
     });
 }
+
 LC.setupCalculateSummary = function (force) {
     $('.calculate-summary').each(function () {
         var c = $(this);
@@ -2439,21 +2440,65 @@ LC.setupCalculateSummary = function (force) {
         c.data('calculate-summary-initializated', true);
     });
 };
+
+/** Update the detail of a pricing summary, one detail line per selected item
+ **/
+LC.updateDetailedPricingSummary = function LC_updateDetailedPricingSummary() {
+    $('.pricing-summary.detailed').each(function () {
+        var $s = $(this),
+            $d = $s.find('tbody.detail'),
+            $t = $s.find('tbody.detail-tpl').children('tr:eq(0)'),
+            $c = $s.closest('form'),
+            $items = $c.find('.pricing-summary-item');
+
+        // Do it!
+        // Remove old lines
+        $d.children().remove();
+        // Create new ones
+        $items.each(function () {
+            // Get values
+            var $i = $(this),
+                checked = $i.find('.pricing-summary-item-checked').prop('checked');
+            if (checked) {
+                var concept = $i.find('.pricing-summary-item-concept').text(),
+                    price = LC.getMoneyNumber($i.find('.pricing-summary-item-price:eq(0)'));
+                // Create row and set values
+                var $row = $t.clone()
+                .removeClass('detail-tpl')
+                .addClass('detail');
+                $row.find('.pricing-summary-item-concept').text(concept);
+                LC.setMoneyNumber(price, $row.find('.pricing-summary-item-price'));
+                // Add to the table
+                $d.append($row);
+            }
+        });
+    });
+};
+LC.setupUpdateDetailedPricingSummary = function LC_setupUpdateDetailedPricingSummary() {
+    var $c = $('.pricing-summary.detailed').closest('form');
+    // Initial calculation
+    LC.updateDetailedPricingSummary();
+    // Calculate on relevant form changes
+    $c.find('.pricing-summary-item-checked').change(LC.updateDetailedPricingSummary);
+    // Support for lcSetupCalculateTableItemsTotals event
+    $c.on('lcCalculatedItemTotal', LC.updateDetailedPricingSummary);
+};
+
 function convertMilesKm(q, unit) {
-    var MILES_TO_KM = 1.609;
-    if (unit == 'miles')
-        return MILES_TO_KM * q;
-    else if (unit == 'km')
-        return q / MILES_TO_KM;
-    if (console && console.log) console.log('convertMilesKm: Unrecognized unit ' + unit);
-    return 0;
+var MILES_TO_KM = 1.609;
+if (unit == 'miles')
+return MILES_TO_KM * q;
+else if (unit == 'km')
+return q / MILES_TO_KM;
+if (console && console.log) console.log('convertMilesKm: Unrecognized unit ' + unit);
+return 0;
 }
 function goToSummaryErrors(form) {
-    var off = form.find('.validation-summary-errors').offset();
-    if (off)
-        $('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
-    else
-        if (console && console.error) console.error('goToSummaryErrors: no summary to focus');
+var off = form.find('.validation-summary-errors').offset();
+if (off)
+$('html,body').stop(true, true).animate({ scrollTop: off.top }, 500);
+else
+if (console && console.error) console.error('goToSummaryErrors: no summary to focus');
 }
 
 /**

@@ -110,7 +110,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Packages
-    public static PricingModelData CalculatePackages(int customerID, dynamic packages, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculatePackages(int customerID, dynamic packages, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState, List<LcPricingModel.PricingSummaryData> detailItems)
     {
         var modelData = new PricingModelData();
 
@@ -151,14 +151,17 @@ public static partial class LcPricingModel
                     config.Mod.CalculateCustomerData(customerID, thePackage, fee, modelData, ModelState);
                 }
 
+                var pakSummary = new PricingSummaryData();
+                pakSummary.Concept = thePackage.Name;
+
                 /* Calculation of ServiceDuration */
                 // We get the time of one service - one session:
                 decimal sessionTimeInHours = Math.Round((decimal)thePackage.Duration.TotalHours, 2);
-                modelData.SummaryTotal.FirstSessionDuration += sessionTimeInHours;
+                pakSummary.FirstSessionDuration = sessionTimeInHours;
                 // Total sessions duration
                 int sesNumber = thePackage.NumberOfSessions < 1 ? 1 : thePackage.NumberOfSessions;
                 decimal packageTimeInHours = Math.Round(sessionTimeInHours * sesNumber, 2);
-                modelData.SummaryTotal.ServiceDuration += packageTimeInHours;
+                pakSummary.ServiceDuration = packageTimeInHours;
 
                 // Packages can contain an hourly rate (its set or left zero depending on calculation type)
                 // We sent it back as HourlyRate on modelData to be used on saving.
@@ -172,9 +175,9 @@ public static partial class LcPricingModel
                         // Price with fees for packages are calculated without decimals
                         // (decission at Barcelona 2013-06-02)
                         var fixedPrice = new Price(thePackage.Price, fee, 0);
-                        modelData.SummaryTotal.SubtotalPrice += fixedPrice.BasePrice;
-                        modelData.SummaryTotal.FeePrice += fixedPrice.FeePrice;
-                        modelData.SummaryTotal.TotalPrice += fixedPrice.TotalPrice;
+                        pakSummary.SubtotalPrice = fixedPrice.BasePrice;
+                        pakSummary.FeePrice = fixedPrice.FeePrice;
+                        pakSummary.TotalPrice = fixedPrice.TotalPrice;
 
                         // Packages with fixed price set price rate only if
                         // its unit is 'hour'.
@@ -203,17 +206,21 @@ public static partial class LcPricingModel
                         // a package Mod, called previous to this code (config.Mod.CalculateCustomerData line),
                         // then the common calculation of duration for all sessions was applied and now we get the
                         // final price; same for the 'surchargeHourPrice'.
-                        modelData.SummaryTotal.SubtotalPrice += (hourPrice.BasePrice * packageTimeInHours) + (hourlySurchargePrice.BasePrice * packageTimeInHours);
-                        modelData.SummaryTotal.FeePrice += (hourPrice.FeePrice * packageTimeInHours) + (hourlySurchargePrice.FeePrice * packageTimeInHours);
-                        modelData.SummaryTotal.TotalPrice += (hourPrice.TotalPrice * packageTimeInHours) + (hourlySurchargePrice.TotalPrice * packageTimeInHours);
+                        pakSummary.SubtotalPrice = (hourPrice.BasePrice * packageTimeInHours) + (hourlySurchargePrice.BasePrice * packageTimeInHours);
+                        pakSummary.FeePrice = (hourPrice.FeePrice * packageTimeInHours) + (hourlySurchargePrice.FeePrice * packageTimeInHours);
+                        pakSummary.TotalPrice = (hourPrice.TotalPrice * packageTimeInHours) + (hourlySurchargePrice.TotalPrice * packageTimeInHours);
 
                         // We get as hourlyRate the hourPrice without fees
                         hourlyRate = hourPrice.BasePrice;
                         break;
                 }
                 
+                // Update totals and detailed list
+                modelData.SummaryTotal.Add(pakSummary);
+                detailItems.Add(pakSummary);
+
                 // Concept, html text for Pricing summary detail, update it with package name:
-                modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
+                //modelData.SummaryTotal.Concept = "<strong>" + thePackage.Name + "</strong>";
 
                 // Save in session the information that a location is not need for the booking because of the selected package
                 System.Web.HttpContext.Current.Session["BookingWithoutLocation"] = thePackage.IsPhone;
@@ -269,7 +276,7 @@ public static partial class LcPricingModel
     #endregion
 
     #region Addons
-    public static PricingModelData CalculateAddons(int customerID, dynamic addons, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState)
+    public static PricingModelData CalculateAddons(int customerID, dynamic addons, Dictionary<string, LcPricingModel.FeeRate> feesSet, System.Web.WebPages.Html.ModelStateDictionary ModelState, List<LcPricingModel.PricingSummaryData> detailItems)
     {
         var modelData = new PricingModelData();
 
@@ -292,17 +299,23 @@ public static partial class LcPricingModel
                     //var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, addonData.Price, LcData.UserInfo.UserType.Customer);
                     var fee = feesSet["standard:customer"];
 
+                    var pakSummary = new PricingSummaryData();
+                    pakSummary.Concept = addonData.Name;
+
                     decimal sesHours = Math.Round((decimal)addonData.ServiceDuration / 60, 2);
-                    modelData.SummaryTotal.FirstSessionDuration += sesHours;
+                    pakSummary.FirstSessionDuration = sesHours;
 
                     int sesNumber = addonData.NumberOfSessions < 1 ? 1 : addonData.NumberOfSessions;
                     decimal pakHours = Math.Round(sesHours * sesNumber, 2);
-                    modelData.SummaryTotal.ServiceDuration += pakHours;
+                    pakSummary.ServiceDuration = pakHours;
 
                     var price = new Price(Math.Round(addonData.Price, 2), fee, 0);
-                    modelData.SummaryTotal.SubtotalPrice += price.BasePrice;
-                    modelData.SummaryTotal.FeePrice += price.FeePrice;
-                    modelData.SummaryTotal.TotalPrice += price.TotalPrice;
+                    pakSummary.SubtotalPrice = price.BasePrice;
+                    pakSummary.FeePrice = price.FeePrice;
+                    pakSummary.TotalPrice = price.TotalPrice;
+
+                    modelData.SummaryTotal.Add(pakSummary);
+                    detailItems.Add(pakSummary);
 
                     // Concept, html text for Pricing summary detail, update? (already set in controller page):
                     //modelData.SummaryTotal.Concept = "Add-on services";

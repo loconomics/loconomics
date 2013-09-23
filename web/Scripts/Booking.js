@@ -471,7 +471,6 @@ LC.packageQuickView = function LC_packageQuickView(id) {
         autoFocus: false,
         containerClass: 'view-panel quick-view booking-quick-view',
         complete: function () {
-            console.log(this);
             this.container.find('.provider-package-price').each(function () {
                 var $t = $(this);
                 $t
@@ -490,6 +489,9 @@ $(document).ready(function () {
 
     // Setup package quick view
     $('body').on('click', '.packages-list .quick-view', LC.packageQuickView);
+
+    // Init the generation of detailed pricing summary
+    LC.setupUpdateDetailedPricingSummary();
 
     // Setup Schedule step:
     $('#schedule').on('endLoadWizardStep', function () {

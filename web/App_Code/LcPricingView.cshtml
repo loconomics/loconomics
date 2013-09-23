@@ -48,12 +48,12 @@
             
             // Calculating final price, with fees and full details, No decimals for fixed prices:
             var price = new LcPricingModel.Price(pak.Price, fee, 0);
-            <tr>
+            <tr class="pricing-summary-item">
                 <td>
-                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
+                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked pricing-summary-item-checked" type="radio" @LcHelpers.IsChecked(pak.ProviderPackageID, selectedPackage) name="provider-package" value="@pak.ProviderPackageID" />
                 </td>
                 <td class="package-name name">
-                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name @(pak.NumberOfSessions > 1 ? String.Format("({0} appointments)", pak.NumberOfSessions) : "")</label>
+                    <label class="pricing-summary-item-concept" for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name @(pak.NumberOfSessions > 1 ? String.Format("({0} appointments)", pak.NumberOfSessions) : "")</label>
                     <a class="quick-view" href="#quick-view" data-package-id="@(pak.ProviderPackageID)">quick view</a>
 					@if (config.Mod != null) {
 						<div class="package-extra-data">
@@ -66,7 +66,7 @@
                     <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
                     <span class="calculate-item-quantity">1</span>
                     <span class="calculate-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
-                    <span class="calculate-item-total">@(String.Format("{0:c}", price.TotalPrice))</span>
+                    <span class="calculate-item-total pricing-summary-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
                 </td>
             </tr>
         }
@@ -93,12 +93,12 @@
             var fee = LcPricingModel.GetFeeByPackagePrice(feesSet, pak.Price, LcData.UserInfo.UserType.Customer);
             // Calculating final price, with fees and full details, No decimals for fixed prices:
             var price = new LcPricingModel.Price(pak.Price, fee, 0);
-            <tr>
+            <tr class="pricing-summary-item">
                 <td>
-                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
+                    <input id="@(idprefix)-package-@(pak.ProviderPackageID)" class="calculate-item-checked pricing-summary-item-checked" type="checkbox" @LcHelpers.IsChecked(selectedAddons.Contains(((int)pak.ProviderPackageID).ToString()), true) name="provider-package-addons" value="@pak.ProviderPackageID" />
                 </td>
                 <td class="package-name name">
-                    <label for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
+                    <label class="pricing-summary-item-concept" for="@(idprefix)-package-@(pak.ProviderPackageID)">@pak.Name</label>
                     <a class="quick-view" href="#quick-view" data-package-id="@(pak.ProviderPackageID)">quick view</a>
                 </td>
                 <td class="package-duration number">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
@@ -106,14 +106,57 @@
                     <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
                     <span class="calculate-item-quantity">1</span>
                     <span class="calculate-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
-                    <span class="calculate-item-total">@(String.Format("{0:c}", price.TotalPrice))</span>
+                    <span class="calculate-item-total pricing-summary-item-price">@(String.Format("{0:c}", price.TotalPrice))</span>
                 </td>
             </tr>
         }
     </table>
 }
 
-@helper CustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
+@helper CustomerPricingSummaryDetailed(LcPricingModel.PricingSummaryData summary, List<LcPricingModel.PricingSummaryData> detailItems, bool withRowSelectionColumn = false) {
+    <noscript>
+        <div class="calculate-price-button actions">
+            <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
+        </div>
+    </noscript>
+    <div class="calculation customer-pricing-summary pricing-summary detailed">
+        <table class="calculation calculation-summary">
+            <tbody class="detail-tpl" style="display:none">
+                <tr>
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th class="pricing-summary-item-concept concept"></th>
+                    <td class="subtotal-price price pricing-summary-item-price"></td>
+                </tr>
+            </tbody>
+            <tbody class="detail">
+            @foreach(var line in detailItems) {
+                <tr>
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th class="concept">@Html.Raw(line.Concept)</th>
+                    <td class="subtotal-price price">@line.TotalPrice.ToString("c")</td>
+                </tr>
+            }
+            </tbody>
+            <tfoot class="total">
+                <tr class="separator">
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <td class="separator" colspan="2"></td>
+                </tr>
+                <tr class="total">
+                    @if (withRowSelectionColumn) { <td class="row-selection"></td> }
+                    <th class="name">Total price*</th>
+                    <td class="calculation-summary-total price total-price">@summary.TotalPrice.ToString("c")</td>
+                </tr>
+                <tr class="fees">
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th colspan="2">*includes a <span class="calculation-summary-fee">@summary.FeePrice.ToString("c")</span> Loconomics service fee</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+@helper CustomerPricingSummaryGrouped(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
     <noscript>
         <div class="calculate-price-button actions">
             <button class="button action calculate-price-button ajax-fieldset-submit">Calculate</button>
