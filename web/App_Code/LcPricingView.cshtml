@@ -61,7 +61,7 @@
 						</div>
 					}
                 </td>
-                <td class="package-duration">@*pak.ServiceDuration minutes*@@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A"))</td>
+                <td class="package-duration">@(LcHelpers.TimeToSmartLongString(TimeSpan.FromMinutes(pak.ServiceDuration), "N/A")) @(pak.NumberOfSessions > 1 ? "each" : "")</td>
                 <td class="package-total-price number">
                     <span class="calculate-item-fee">@(String.Format("{0:c}", price.FeePrice))</span>
                     <span class="calculate-item-quantity">1</span>
