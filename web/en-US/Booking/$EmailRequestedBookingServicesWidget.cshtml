@@ -16,7 +16,8 @@
     
     dynamic summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, myUserID, false);
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
-    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    var rpricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
     
     // Packages and add-ons are included in pricing summary now
     //string strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
@@ -44,11 +45,11 @@
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Pricing summary:</h5>
             if (myUserType == "provider")
             {
-                @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, pricingSummaryGroups)
+                @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
             }
             else if (myUserType == "customer")
             {
-                @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, pricingSummaryGroups)
+                @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, rpricingSummaryDetails)
             }
         }
         
