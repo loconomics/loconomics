@@ -262,6 +262,7 @@ public static partial class LcData
                         R.ProviderUserID,
                         R.CustomerUserID,
                         R.PricingEstimateID,
+                        P.PricingEstimateRevision,
                         R.SpecialRequests,
                         R.CreatedDate As RequestDate,
                         R.UpdatedDate,
@@ -399,6 +400,44 @@ public static partial class LcData
                     pricingSummaryGroups.Add(g.InternalGroupName, s);
                 }
             return pricingSummaryGroups;
+        }
+        public static List<LcPricingModel.PricingSummaryData> GetPricingSummaryDetails(int PricingEstimateID, int PricingEstimateRevision)
+        {
+            var details = new List<LcPricingModel.PricingSummaryData>();
+            var sql = @"
+                SELECT
+                        D.ServiceDuration
+                        ,D.FirstSessionDuration
+                        ,D.HourlyPrice
+                        ,D.SubtotalPrice
+                        ,D.FeePrice
+                        ,D.TotalPrice
+                        ,P.ProviderUserID
+                        ,P.ProviderPackageName
+                FROM    PricingEstimateDetail As D
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = D.ProviderPackageID
+                WHERE   D.PricingEstimateID = @0
+                         AND
+                        D.PricingEstimateRevision = @1
+            ";
+            using (var db = Database.Open("sqlloco"))
+            {
+                var data = db.Query(sql, PricingEstimateID, PricingEstimateRevision);
+                foreach (var r in data)
+                {
+                    details.Add(new LcPricingModel.PricingSummaryData{
+                        Concept = r.ProviderPackageName
+                        ,ServiceDuration = r.ServiceDuration
+                        ,SubtotalPrice = r.SubtotalPrice
+                        ,FeePrice = r.FeePrice
+                        ,TotalPrice = r.TotalPrice
+                        ,FirstSessionDuration = r.FirstSessionDuration
+                    });
+                }
+            }
+            return details;
         }
         #endregion
 

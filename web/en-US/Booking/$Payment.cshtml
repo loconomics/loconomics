@@ -388,7 +388,8 @@
      */
     dynamic summary = LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
-    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    var pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
     dynamic billingAddress = null;
     using (var db = Database.Open("sqlloco")) {
         billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
@@ -488,7 +489,7 @@
             </ol>
         </div>
         <h4>Services Requested</h4>
-        @LcPricingView.CustomerPricingSummaryGrouped(pricingSummary, pricingSummaryGroups)
+        @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
         <div class="payment-info">Your card will be authorized immediately and charged when your provider accepts the booking, typically within 18 hr.</div>
     </fieldset>
     <fieldset class="agreement">

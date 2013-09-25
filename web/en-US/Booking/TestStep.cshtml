@@ -21,7 +21,7 @@
     }
     
     // Some data to simulate real state and get results on different steps
-    Session["BookingRequestID"] = 1;
+    Session["BookingRequestID"] = Request["BookingRequestID"].AsInt(1);
     Dictionary<int, Dictionary<string, DateTime?>> brs = null;
     if (Session["BookingRequests"] == null) {
         Session["BookingRequests"] = brs = new Dictionary<int, Dictionary<string, DateTime?>>();

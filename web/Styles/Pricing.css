@@ -202,3 +202,10 @@
     width: 100%;
     float: none;
 }
+#booking-payment .pricing-summary.detailed .concept {
+    font-weight: bold;
+}
+#booking-payment .pricing-summary td,
+#booking-payment .pricing-summary th {
+    padding: 0;
+}
