@@ -15,11 +15,12 @@
         throw new Exception("No data to bound RequestedBookingServices");
     }
 
-    dynamic pricingSummary = null, pricingSummaryGroups = null;
+    dynamic pricingSummary = null, pricingSummaryDetails = null;
     if (showPricing) {
         var summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
         pricingSummary = LcData.Booking.GetPricingSummary(summary);
-        pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+        //pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+        pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
     }
     
     // Packages and add-ons are included in pricing summary now,
@@ -52,11 +53,12 @@
             <h5>Pricing estimate</h5>
             if (myUserType == "provider")
             {
-                @LcPricingView.ProviderPricingSummary(pricingSummary, pricingSummaryGroups)
+                @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
             }
             else if (myUserType == "customer")
             {
-                @LcPricingView.CustomerPricingSummaryGrouped(pricingSummary, pricingSummaryGroups)
+                @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+                
             }
         }
         

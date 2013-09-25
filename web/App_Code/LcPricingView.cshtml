@@ -190,7 +190,43 @@
     </div>
 }
 
-@helper ProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
+@helper ProviderPricingSummaryDetailed(LcPricingModel.PricingSummaryData summary, List<LcPricingModel.PricingSummaryData> detailItems, bool withRowSelectionColumn = false) {
+ 
+    <div class="calculation provider-pricing-summary pricing-summary">
+        <table class="calculation">
+
+            @foreach(var line in detailItems) {
+                <tr>
+                    @if (withRowSelectionColumn) { <td></td> }
+                    <th class="concept">@Html.Raw(line.Concept)</th>
+                    <td class="subtotal-price price">@line.SubtotalPrice.ToString("c")</td>
+                </tr>
+            }
+
+            <tr class="fees">
+                @if (withRowSelectionColumn) { <td></td> }
+                <th>Loconomics service fee (includes credit card processing costs)</th>
+                @* As opposite to CustomerPricingSummary, here we show PFeePrice instead of FeePrice, and must be showed as a negative number,
+                    because is substracted from previous lines prices *@
+                <td>@((0 - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+
+            <tr class="separator">
+                @if (withRowSelectionColumn) { <td></td> }
+                <td class="separator" colspan="2"></td>
+            </tr>
+            <tr class="total">
+                @if (withRowSelectionColumn) { <td class="row-selection"></td> }
+                <th class="name">Total price</th>
+                @* Provider price to be paid is subtotal less payment processing fees (pfees) 
+                *@
+                <td class="price total-price">@((summary.SubtotalPrice - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+        </table>
+    </div>
+}
+
+@helper ProviderPricingSummaryGrouped(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines, bool withRowSelectionColumn = false) {
  
     <div class="calculation provider-pricing-summary pricing-summary">
         <table class="calculation">

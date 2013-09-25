@@ -22,7 +22,8 @@
     var provider = LcData.UserInfo.GetUserRow(booking.ProviderUserID);
     var summary = LcData.Booking.GetBookingRequestForUser(booking.BookingRequestID, u.UserID, u.IsAdmin);
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
-    var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
+    var pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
     
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/Booking.css");
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/Search.css");
@@ -48,7 +49,7 @@
 
             <section class="pricing">
                 <h3>Pricing estimate</h3>
-                @LcPricingView.CustomerPricingSummaryGrouped(pricingSummary, pricingSummaryGroups)
+                @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
             </section>
             <section class="scheduling">
                 <h3>Time preferences</h3>
