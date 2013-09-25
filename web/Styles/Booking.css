@@ -156,10 +156,7 @@
 }
 
 #booking-schedule .time-selection-note {
-    border: 1px solid #9fa0a0;
-    padding: 15px;
     margin-top: 20px;
-    background: #f9f99e;
 }
 #booking-schedule .time-selection-note p {
     font-weight: normal !important;
@@ -497,14 +494,8 @@
 #booking-payment .billing-info .card-cvv input{
     width: 35px;
 }
-#booking-payment .payment-info {
-    color: Black;
-    background: #fcfcca;
-    padding: 4px;
-    font-size: .9em;
-    margin-top: 20px;
-    font-weight: bold;
-}
+
+#booking 
 #booking-payment .agreement {
     width: 330px;
     float: right;
@@ -678,4 +669,13 @@
 }
 .booking-confirmation .scheduling {
     width: 38%;
+}
+
+.booking-warning {
+    color: Black;
+    background: #fcfcca;
+    padding: 15px;
+    font-size: .9em;
+    margin-top: 20px;
+    font-weight: bold;
 }
