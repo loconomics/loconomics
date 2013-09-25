@@ -262,7 +262,30 @@
     </div>
 }
 
-@helper EmailCustomerPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
+@helper EmailCustomerPricingSummaryDetailed(LcPricingModel.PricingSummaryData summary, List<LcPricingModel.PricingSummaryData> detailItems) {
+    <div>
+        <table border="0" style="border:none;width:100%">
+            @foreach(var line in detailItems) {
+                <tr>
+                    <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">@Html.Raw(line.Concept)</th>
+                    <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@line.TotalPrice.ToString("c")</td>
+                </tr>
+            }
+            <tr class="separator">
+                <td style="@LcEmailTemplateHelper.StylePricingSummarySeparator()" colspan="2"></td>
+            </tr>
+            <tr class="total">
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Total price*</th>
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@summary.TotalPrice.ToString("c")</td>
+            </tr>
+            <tr class="fees">
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()" colspan="2">*includes a @summary.FeePrice.ToString("c") Loconomics service fee</th>
+            </tr>
+        </table>
+    </div>
+}
+
+@helper EmailCustomerPricingSummaryGrouped(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
     <div>
         <table border="0" style="border:none;width:100%">
             @foreach(var line in summaryLines) {
@@ -285,7 +308,38 @@
     </div>
 }
 
-@helper EmailProviderPricingSummary(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
+@helper EmailProviderPricingSummaryDetailed(LcPricingModel.PricingSummaryData summary, List<LcPricingModel.PricingSummaryData> detailItems) {
+     <div>
+        <table border="0" style="border:none;width:100%">
+
+            @foreach(var line in detailItems) {
+                <tr>
+                    <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">@Html.Raw(line.Concept)</th>
+                    <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@line.SubtotalPrice.ToString("c")</td>
+                </tr>
+            }
+
+            <tr class="fees">
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Loconomics service fee (includes credit card processing costs)</th>
+                @* As opposite to CustomerPricingSummary, here we show PFeePrice instead of FeePrice, and must be showed as a negative number,
+                    because is substracted from previous lines prices *@
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((0 - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+
+            <tr class="separator">
+                <td style="@LcEmailTemplateHelper.StylePricingSummarySeparator()" colspan="2"></td>
+            </tr>
+            <tr class="total">
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Total price</th>
+                @* Provider price to be paid is subtotal less payment processing fees (pfees) 
+                *@
+                <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((summary.SubtotalPrice - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+        </table>
+    </div>
+}
+
+@helper EmailProviderPricingSummaryGrouped(LcPricingModel.PricingSummaryData summary, Dictionary<string, LcPricingModel.PricingSummaryData> summaryLines) {
      <div>
         <table border="0" style="border:none;width:100%">
 
