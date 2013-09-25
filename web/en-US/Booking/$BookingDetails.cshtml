@@ -6,9 +6,7 @@
     var u = LcData.UserInfo.GetUserRow();
     //var brID = Request["BookingRequestID"];
     var bID = Request["BookingID"];
-    
-    // TODO: Calculate location distance from provider to customer
-    
+
     var booking = LcData.Booking.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
     var prefix = "booking-" + bID;
 }
@@ -66,6 +64,7 @@ else
     string itsUserType = "provider";
     string itsUserLabel = "Provider";
     string myUserType = "customer";
+    var forUserType = LcData.UserInfo.UserType.Customer;
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == booking.ProviderUserID)
     {
@@ -73,6 +72,7 @@ else
         itsUserType = "customer";
         itsUserLabel = "Customer";
         myUserType = "provider";
+        forUserType = LcData.UserInfo.UserType.Provider;
         itsUserID = booking.CustomerUserID;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
@@ -185,8 +185,18 @@ else
     </div>
 
     <h4>Booking details</h4>
-    @{ PageData["BookingDate"] = booking.ConfirmedDateStart; }
-    @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType)
+    @RenderPage("$RequestedBookingServicesWidget.cshtml", new
+    {
+        BookingData = booking
+        ,ForUserType = forUserType
+        ,IsRequest = true
+        ,ShowPayment = true
+        ,ShowPricing = true
+        ,ShowCancellationPolicy = true
+        ,ShowPackages = true
+        ,BookingDate = booking.ConfirmedDateStart
+        ,CssClasses = "requested-booking-services message-section"
+    })
 
     <h4>Reminders</h4>
     @RenderPage("$BookingRemindersWidget.cshtml", myUserType)

@@ -20,19 +20,26 @@ public static partial class LcData
         ";
         public const string sqlGetPricingPackagesInPricingEstimate = @"
             SELECT  PP.ProviderPackageID
+                    ,PP.ProviderUserID
+                    ,PP.PricingTypeID
+                    ,PP.PositionID
                     ,PP.ProviderPackageName As Name
                     ,PP.ProviderPackageDescription As Description
 
                     --,PP.ProviderPackagePrice As Price
-                    ,P.FirstSessionDuration As SessionDuration
-                    ,P.ServiceDuration
+                    ,P.FirstSessionDuration As ServiceDuration
+                    ,P.ServiceDuration As AllSessionsServiceDuration
                     ,P.TotalPrice As Price
 
                     ,PP.FirstTimeClientsOnly
                     ,PP.NumberOfSessions
+                    ,PP.PriceRate
+                    ,PP.PriceRateUnit
                     ,PP.IsPhone
-                    ,PP.PricingTypeID
                     ,P.CustomerPricingDataInput
+                    ,PP.LanguageID
+                    ,PP.CountryID
+                    ,PP.Active
             FROM    PricingEstimateDetail As P
                      INNER JOIN
                     ProviderPackage As PP
@@ -467,43 +474,64 @@ public static partial class LcData
                         continue;
 
                 // Format for the package summary
-                var f = "";
-                var inpersonphone = "";
+                var pakdata = new LcPricingModel.PackageBaseData(pak);
+                // This query gets duration in hours not minutes as expected by PackageBaseData constructor, fix it:
+                pakdata.Duration = TimeSpan.FromHours((double)pak.ServiceDuration);
 
-                var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
-                if (pak.NumberOfSessions > 1)
-                {
-                    if (pak.ServiceDuration == 0)
-                        f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
-                    else
-                        f = pricingConfig.NameAndSummaryFormatMultipleSessions;
-                }
-                else if (pak.SessionDuration == 0)
-                    f = pricingConfig.NameAndSummaryFormatNoDuration;
-                if (String.IsNullOrEmpty(f))
-                    f = pricingConfig.NameAndSummaryFormat;
+                var result = GetOneLinePackageSummary(pakdata, pricingEstimateID, pricingEstimateRevision);
 
-                if (pricingConfig.InPersonPhoneLabel != null)
-                    inpersonphone = pak.IsPhone
-                        ? "phone"
-                        : "in-person";
-
-                var extraDetails = "";    
-                // Extra information for special pricings:
-                if (pricingConfig.Mod != null) {
-                    extraDetails = pricingConfig.Mod.GetPackagePricingDetails((int)pak.ProviderPackageID, pricingEstimateID, pricingEstimateRevision);
-                }
-                
-                // Show duration in a smart way. They come from PricingDetail as hours, convert and round to minutes.
-                var duration = ASP.LcHelpers.TimeToSmartLongString(ASP.LcHelpers.RoundTimeToMinutes(TimeSpan.FromHours((double)pak.SessionDuration)));
-
-                var result = String.Format(f, pak.Name, duration, pak.NumberOfSessions, inpersonphone);
-                if (!String.IsNullOrEmpty(extraDetails)) {
-                    result += String.Format(" ({0})", extraDetails);
-                }
                 details.Add(result);
             }
             return ASP.LcHelpers.JoinNotEmptyStrings("; ", details);
+        }
+
+        /// <summary>
+        /// Get the package name and main information in one line of plain-text.
+        /// It shows the inperson-phone text if need, number of appointments,
+        /// duration and pricing-mod extra-details following its pricing-config
+        /// in a standard format for this package summary.
+        /// </summary>
+        /// <param name="pak">Package information, from the package itself of from a package in pricing estimate</param>
+        /// <param name="pricingEstimateID">Optionally for the possible extra data associated to the package on a specific pricing</param>
+        /// <param name="pricingEstimateRevision">Optionally for the possible extra data associated to the package on a specific pricing</param>
+        /// <returns></returns>
+        public static string GetOneLinePackageSummary(LcPricingModel.PackageBaseData pak, int pricingEstimateID = 0, int pricingEstimateRevision = 1)
+        {
+            var f = "";
+            var inpersonphone = "";
+
+            var pricingConfig = LcPricingModel.PackageBasePricingTypeConfigs[(int)pak.PricingTypeID];
+            if (pak.NumberOfSessions > 1)
+            {
+                if (pak.Duration == TimeSpan.Zero)
+                    f = pricingConfig.NameAndSummaryFormatMultipleSessionsNoDuration;
+                else
+                    f = pricingConfig.NameAndSummaryFormatMultipleSessions;
+            }
+            else if (pak.Duration == TimeSpan.Zero)
+                f = pricingConfig.NameAndSummaryFormatNoDuration;
+            if (String.IsNullOrEmpty(f))
+                f = pricingConfig.NameAndSummaryFormat;
+
+            if (pricingConfig.InPersonPhoneLabel != null)
+                inpersonphone = pak.IsPhone
+                    ? "phone"
+                    : "in-person";
+
+            var extraDetails = "";    
+            // Extra information for special pricings:
+            if (pricingConfig.Mod != null && pricingEstimateID > 0) {
+                extraDetails = pricingConfig.Mod.GetPackagePricingDetails(pak.ID, pricingEstimateID, pricingEstimateRevision);
+            }
+                
+            // Show duration in a smart way.
+            var duration = ASP.LcHelpers.TimeToSmartLongString(ASP.LcHelpers.RoundTimeToMinutes(pak.Duration));
+
+            var result = String.Format(f, pak.Name, duration, pak.NumberOfSessions, inpersonphone);
+            if (!String.IsNullOrEmpty(extraDetails)) {
+                result += String.Format(" ({0})", extraDetails);
+            }
+            return result;
         }
         public static string GetBookingRequestSubject(int BookingRequestID)
         {

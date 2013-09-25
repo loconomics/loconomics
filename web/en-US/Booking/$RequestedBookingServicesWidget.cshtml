@@ -1,16 +1,16 @@
 ﻿@using WebMatrix.Data;
 @{
-    dynamic booking = PageData[0];
-    string myUserType = PageData[1];
-    bool isRequest = PageData[2] ?? false;
-    bool showPayment = PageData[3] ?? true;
-    bool showPricing = PageData[4] ?? true;
-    bool showCancellationPolicy = PageData[5] ?? true;
-    string cssClass = PageData[6] ?? "message-section";
-    bool showPackages = PageData[7] ?? false;
+    dynamic booking = PageData["BookingData"];
+    LcData.UserInfo.UserType forUserType = PageData["ForUserType"];
+    bool isRequest = PageData["IsRequest"] ?? false;
+    bool showPayment = PageData["ShowPayment"] ?? false;
+    bool showPricing = PageData["ShowPricing"] ?? false;
+    bool showCancellationPolicy = PageData["ShowCancellationPolicy"] ?? false;
+    bool showPackages = PageData["ShowPackages"] ?? false;
     var BookingDate = PageData["BookingDate"];
+    string cssClasses = PageData["CssClasses"] ?? "";
     var u = LcData.UserInfo.GetUserRow();
-    
+
     if (booking == null || booking["BookingRequestID"] == null) {
         throw new Exception("No data to bound RequestedBookingServices");
     }
@@ -38,34 +38,34 @@
     }
 }
 
-    <div class="requested-booking-services @cssClass">
+    <div class="@cssClasses">
 
         @if (showPayment)
         {
             <h5>Payment</h5>
             <div class="payment">
-                @LcData.Booking.GetBookingPaymentInformation(booking, myUserType)
+                @LcData.Booking.GetBookingPaymentInformation(booking, forUserType)
             </div>
         }
 
         @if (showPricing)
         {
-            <h5>Pricing estimate</h5>
-            if (myUserType == "provider")
+            <h5>Pricing Summary</h5>
+            if (forUserType == LcData.UserInfo.UserType.Provider)
             {
                 @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
             }
-            else if (myUserType == "customer")
+            else if (forUserType == LcData.UserInfo.UserType.Provider)
             {
                 @LcPricingView.CustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
-                
             }
         }
         
-        @if (showPackages && !String.IsNullOrEmpty(strPackAddons))
+        @if (showPackages)
         {
             <div class="packages">
-                @strPackAddons
+                <h5>Services Requested</h5>
+                @(strPackAddons ?? "")
             </div>
         }
 
@@ -90,7 +90,7 @@
                @RenderPage("$CancellationPolicyInfoWidget.cshtml", new
                {
                    CancellationPolicyID = booking.CancellationPolicyID,
-                   DisplayForUserType = myUserType,
+                   DisplayForUserType = forUserType.ToString(),
                    BookingDate = BookingDate,
                    DisplayedCustomerName = LcData.UserInfo.GetUserRow(booking.CustomerUserID).FirstName
                })

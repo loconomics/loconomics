@@ -9,8 +9,6 @@
     var confirmationLimitHours = 18;
     DateTime confirmationLimitDate = DateTime.MaxValue;
     
-    // TODO: Calculate location distance from provider to customer
-    
     var booking = LcData.Booking.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
 
     if (booking != null) {
@@ -33,6 +31,7 @@ else
     string itsUserType = "provider";
     string itsUserLabel = "Provider";
     string myUserType = "customer";
+    var forUserType = LcData.UserInfo.UserType.Customer;
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
         sentToUserType = LcData.UserInfo.UserType.Provider;
@@ -40,6 +39,7 @@ else
         itsUserLabel = "Customer";
         myUserType = "provider";
         itsUserID = booking.CustomerUserID;
+        forUserType = LcData.UserInfo.UserType.Provider;
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
 
@@ -152,19 +152,28 @@ else
 
         <h4>Booking details</h4>
         @{
-            PageData["BookingDate"] = booking.PreferredDateStart;
+            var bookingDate = booking.PreferredDateStart;
             if (booking.AlternativeDate1Start is DateTime &&
-                booking.AlternativeDate1Start < PageData["BookingDate"])
+                booking.AlternativeDate1Start < bookingDate)
             {
-                PageData["BookingDate"] = booking.AlternativeDate1Start;
+                bookingDate = booking.AlternativeDate1Start;
             }
             if (booking.AlternativeDate2Start is DateTime &&
-                booking.AlternativeDate2Start < PageData["BookingDate"])
+                booking.AlternativeDate2Start < bookingDate)
             {
-                PageData["BookingDate"] = booking.AlternativeDate2Start;
+                bookingDate = booking.AlternativeDate2Start;
             }
         }
-        @RenderPage("$RequestedBookingServicesWidget.cshtml", booking, myUserType, true)
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", new {
+            BookingData = booking
+            ,ForUserType = forUserType
+            ,IsRequest = true
+            ,ShowPayment = true
+            ,ShowPricing = true
+            ,ShowCancellationPolicy = true
+            ,BookingDate = bookingDate
+            ,CssClasses = "requested-booking-services message-section"
+        })
 
         <h4>Reminders</h4>
         @RenderPage("$BookingRemindersWidget.cshtml", myUserType)

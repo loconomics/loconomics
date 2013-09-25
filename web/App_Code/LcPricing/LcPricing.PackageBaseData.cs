@@ -51,7 +51,7 @@ public static partial class LcPricingModel
             Name = package.Name;
             Description = package.Description;
             Price = package.Price;
-            Duration = TimeSpan.FromMinutes(package.ServiceDuration);
+            Duration = TimeSpan.FromMinutes((double)package.ServiceDuration);
             FirstTimeClientsOnly = package.FirstTimeClientsOnly;
             NumberOfSessions = package.NumberOfSessions;
             PriceRate = package.PriceRate;
