@@ -443,16 +443,28 @@ LC.initCustomerPackageSliders = function () {
         $c.on('change', 'select', function () { stype.calculate($c) });
     });
     // Switching sliders visualization on active package
-    $('.pricing-wizard .packages-list input[name="provider-package"]').change(function () {
+    var radios = $('.pricing-wizard .packages-list .package-extra-data').closest('tr').find('input[name="provider-package"]');
+    radios.change(function () {
         var $t = $(this),
-                row = $t.closest('tr');
+            row = $t.closest('tr');
         if ($t.is(':checked')) {
             row.find('.package-extra-data').slideDown('fast').find('.customer-slider .slider').each(function () {
                 LC.updateLabelsForUISlider($(this));
             });
-        } else
+            // Execute change on unchecked elements (only from checked to avoid infinite loops)
+            $('[name="' + $t.attr('name') + '"]:not(:checked)').change();
+            // Mark with a class
+            $t.closest('tr').removeClass('hide-calculations');
+        } else {
             row.find('.package-extra-data').slideUp('fast');
-    }).change();
+            // Unmark the class
+            $t.closest('tr').addClass('hide-calculations');
+        }
+    });
+    // Initializing radio-switchers for active package. Because the checked one already triggers 'change' on
+    // others, we trigger it only on the checked one or all if there is no one checked
+    var checkedRadio = radios.filter(':checked');
+    (checkedRadio.length > 0 ? checkedRadio : radios).change();
 };
 
 /** Quick view handler for packages

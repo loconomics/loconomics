@@ -149,6 +149,11 @@
     color: #eb6e42;
 }
 
+.pricing-wizard .packages-list .hide-calculations .package-duration,
+.pricing-wizard .packages-list .hide-calculations .package-total-price {
+    display: none;
+}
+
 /* Calculation summary */
 .booking li.calculation{
     overflow: hidden;
