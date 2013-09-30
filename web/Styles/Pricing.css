@@ -36,7 +36,8 @@
 .provider-package.view a.button.book-action {
     font-size: 0.6em;
 }
-.provider-package.view .actions.book {
+.provider-package.view .actions.book,
+.profile .actions.book {
     margin: 0px auto 10px;
     text-align: center !important;
 }
