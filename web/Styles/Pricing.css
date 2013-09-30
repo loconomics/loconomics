@@ -41,6 +41,7 @@
     margin: 0px auto 10px;
     text-align: center !important;
 }
+.profile .book-action.main-action,
 .provider-package.view .book-action.main-action {
     padding: .3em .5em;
     font-weight: bold;
