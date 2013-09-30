@@ -1267,7 +1267,8 @@ table .number{
 .availability-calendar .calendar li.free{
     background-color: #ddeab8;
 }
-.availability-calendar .calendar li.busy{
+.availability-calendar .calendar li.busy,
+.availability-calendar .calendar li.offline{
     background-color: #d8abbd;
 }
 .availability-calendar .calendar li.tentative{

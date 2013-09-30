@@ -75,7 +75,7 @@
     }
 
     // Classes for differents calendar availability states
-    var stateClasses = new List<string>(){"unavailable", "free", "busy", "tentative"};
+    var stateClasses = new List<string>(){"unavailable", "free", "busy", "tentative", "offline"};
     // states order/id's changed because the new sql-proc 'availabilityfullset', unavailable now is zero.
     //var stateClasses = new List<string>(){"free", "busy", "tentative", "unavailable"};
     Random r = new Random();
@@ -108,7 +108,10 @@
             for(var b = 0; b < 2; b++){
                 var half = b == 0 ? "" : "half ";
                 for(var d = 0; d < 7; d++)
-                {<li class="@half@stateClasses[GetAvailDataIn(d, new TimeSpan(h, (b==0?0:30), 0))]"></li>}
+                {
+                    var stateClassIndex = GetAvailDataIn(d, new TimeSpan(h, (b == 0 ? 0 : 30), 0));
+                    <li class="@half@stateClasses[stateClassIndex]"></li>}
+                }
             }}</ol>
     </div>
     @if (!onlyData) { @Html.Raw("</div>") }

@@ -395,7 +395,7 @@ public static class LcCalendar
     #endregion
 
     #region iCal sync: import/export
-    private static uint FutureMonthsLimitForImportingFreeBusy = 4;
+    private static uint FutureMonthsLimitForImportingFreeBusy = 2;
     /// <summary>
     /// Import a calendar in iCalendar format at the given CalendarURL for the UserID
     /// </summary>
