@@ -1437,7 +1437,7 @@ function popup(url, size, complete, loadingText, options) {
 
     // Prepare size and loading
     options.loadingText = options.loadingText || '';
-    if (!('width' in options.size))
+    if (typeof(options.size["width"]) === 'undefined')
         options.size = popupSize(options.size);
 
     $.blockUI({
@@ -1503,7 +1503,7 @@ function popup(url, size, complete, loadingText, options) {
                     }
                 } else {
                     // Else, if url is a full html page (normal page), put content into an iframe
-                    var iframe = $('<iframe id="blockUIIframe" width="' + swh.width + '" height="' + swh.height + '" style="border:none;"></iframe>').get(0);
+                    var iframe = $('<iframe id="blockUIIframe" width="' + this.options.size.width + '" height="' + this.options.size.height + '" style="border:none;"></iframe>').get(0);
                     // When the iframe is ready
                     var iframeloaded = false;
                     iframe.onload = function () {
