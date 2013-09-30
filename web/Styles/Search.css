@@ -337,41 +337,6 @@ ul.search-results table td { padding-right: 16px; }*/
     -webkit-box-shadow: 0 0 5px 2px #99C027;
 }
 
-/**********************************************/
-/**** provider info widget in search item *****/
-.search-user-info {
-    line-height: 1em;
-    height: 66px;
-    overflow: hidden;
-}
-.search-user-info .user-micro-summary {
-    display: inline-block;
-    width: 130px;
-    overflow: hidden;
-}
-.search-user-info h5 {
-    font-size: 1.1em;
-    display: inline;
-}
-.search-user-info h5 a {
-    text-decoration: none;
-    color: black;
-}
-.search-user-info .avatar {
-    float: left;
-    width: 66px;
-    height: 66px;
-    margin: 0 10px 0 0;
-    vertical-align: top;
-}
-.search-user-info .user-text {
-    font-size: 0.8em;
-    line-height: normal;
-    margin: 0;
-    height: 30px;
-    overflow: hidden;
-}
-
 /*****************
  * provider-data */
 .provider-data {

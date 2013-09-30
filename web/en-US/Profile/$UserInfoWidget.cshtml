@@ -1,5 +1,5 @@
 ﻿@{
-    var size = PageData["Size"] ?? "mini"; // medium, large, search
+    var size = PageData["Size"] ?? "mini"; // medium, large, search, mini-position, mini
     var withContactData = PageData["WithContactData"] ?? false;
     var userID = PageData["UserID"] ?? 0;
     var data = PageData["Data"];
@@ -32,7 +32,7 @@
         dataPrefix = "";
     }
     
-    if (Array.IndexOf<string>(new string[] { "mini", "medium", "large", "search" }, size) == -1) {
+    if (Array.IndexOf<string>(new string[] { "mini", "medium", "large", "search", "mini-position" }, size) == -1) {
         throw new Exception("Size is not valid: " + size);
     }
     if (Array.IndexOf<string>(new string[] { "user", "customer", "provider" }, userType) == -1) {
@@ -158,8 +158,8 @@ else if (size == "mini") {
             @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new { ReviewedID = data[dataPrefix + "UserID"], PositionID = positionID })
         }
     </div>
-} else if (size == "search") {
-    <div class="@userType search-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+} else if (size == "search" || size == "mini-position") {
+    <div class="@userType @(size)-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, null, linkInName)
@@ -167,7 +167,7 @@ else if (size == "mini") {
             <p class="user-text">
                 @if (userType == "customer")
                 {
-                    @data[dataPrefix + "PublicBio"]
+                    @("Client") @*data[dataPrefix + "PublicBio"]*@
                 }
                 else if (userType == "provider")
                 {

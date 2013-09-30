@@ -588,22 +588,9 @@
 
 /* provider info */
 .booking .provider.search-user-info {
-    display: inline-block;
     position: absolute;
     top: 50px;
     right: 50px;
-    
-    border: 1px solid #b3b4b4;
-    border-radius: 4px;
-    padding: 12px;
-}
-.booking .provider .avatar {
-    float: right;
-    margin: 0 0 0 10px;
-}
-.booking .provider .user-text {
-    font-size: 1em;
-    line-height: 30px;
 }
 
 /* confirmation */
