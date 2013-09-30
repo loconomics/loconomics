@@ -152,7 +152,8 @@ public static partial class LcPricingModel
         public string GetPackagePricingDetails(int packageID, int pricingEstimateID, int pricingEstimateRevision)
         {
             var pv = PricingVariables.FromPricingEstimatePackage(packageID, pricingEstimateID, pricingEstimateRevision);
-            return String.Format("bedrooms: {0}, bathrooms: {1}", pv["BedsNumber"].Value, pv["BathsNumber"].Value);
+            return pv == null ? ""
+                : String.Format("bedrooms: {0}, bathrooms: {1}", pv.GetValue<int>("BedsNumber", 0), pv.GetValue<int>("BathsNumber", 0));
         }
         #endregion
         #region Package View
