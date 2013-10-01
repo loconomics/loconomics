@@ -56,9 +56,9 @@
                 FROM    BookingRequest
                 WHERE   BookingRequestStatusID = 2 -- request created and completed, without provider answer
                          AND
-                        -- passed 18 hours from request or some change (some provider communication or customer change)
-                        UpdatedDate < dateadd(hh, -18, getdate())
-            ")){
+                        -- passed x hours from request or some change (some provider communication or customer change)
+                        UpdatedDate < dateadd(hh, 0 - @0, getdate())
+            ", LcData.Booking.ConfirmationLimitInHours)){
             try {
                 // RequestStatusID:6:expired
                 var result = LcData.Booking.InvalidateBookingRequest(br.BookingRequestID, 6);

@@ -1,0 +1,311 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    // Page variables
+    var u = LcData.UserInfo.GetUserRow();
+    dynamic booking = null;
+    bool isRequest = false;
+    var prefix = "";
+    DateTime confirmationLimitDate = DateTime.MaxValue;
+    LcData.Address address = null;
+    int itsUserID = 0;
+    var itsUserType = LcData.UserInfo.UserType.Customer;
+    var myUserType = LcData.UserInfo.UserType.Provider;
+    dynamic itsUserData = null;
+    var title = "";
+    
+    // Setting up data
+    {
+        var brID = Request["BookingRequestID"];
+        var bID = Request["BookingID"];
+        
+        if (!String.IsNullOrEmpty(bID)) {
+            // Confirmed Booking
+            prefix = "booking-" + bID;
+            booking = LcData.Booking.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
+        } else {
+            // Booking Request
+            isRequest = true;
+            prefix = "booking-request-" + brID;
+            booking = LcData.Booking.GetBookingRequestForUser(brID.AsInt(), u.UserID, u.IsAdmin);
+            if (booking != null) {
+                confirmationLimitDate = booking.UpdatedDate.AddHours(LcData.Booking.ConfirmationLimitInHours);
+            }
+        }
+        
+        if (booking != null) {
+            address = new LcData.Address(booking);
+            address.Name = String.IsNullOrWhiteSpace(booking.LocationName)
+                ? ""
+                : booking.LocationUserFirstName + "'s " + booking.LocationName;
+            
+            // Provider or customer?
+            if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+                itsUserType = LcData.UserInfo.UserType.Provider;
+                myUserType = LcData.UserInfo.UserType.Customer;
+                itsUserID = booking.ProviderUserID;
+            } else {
+                itsUserID = booking.CustomerUserID;
+            }
+            itsUserData = isRequest
+                ? LcData.UserInfo.GetUserRow(itsUserID)
+                : LcData.UserInfo.GetUserRowWithContactData(itsUserID);
+
+            // Some labels
+            title = isRequest
+                ? LcData.Booking.GetBookingRequestTitleFor(booking.BookingRequestStatusID, itsUserData, itsUserType)
+                : LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, itsUserType);
+        }
+    }
+}
+<div class="w-BookingDetails @(isRequest ? "is-request booking-request" : "booking")">
+@if (booking == null)
+{
+    @(isRequest
+        ? "Sorry, we could not find the requested booking."
+        : "You have no bookings. Book one today!"
+    )
+}
+else
+{
+    <div class="w-BookingDetails-header">
+        <h3>@title</h3>
+        @*<span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
+
+        <div class="actions">
+            @*  CANCEL ACTIONS *@
+            @if (myUserType == LcData.UserInfo.UserType.Customer)
+            {
+                if (isRequest && booking.BookingRequestStatusID == 1) {
+                    @*  If is customer and booking request is incomplete (status:1),
+                        allow customer to cancel it (See that $cancelBookingRequest must follow same condition-rule) *@
+                    <button class="button item-action booking-request-action button-cancel-booking"
+                        type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
+                } else if (booking.BookingStatusID == 1) {
+                    <button class="button item-action booking-action button-cancel-booking"
+                        type="button" data-booking-id="@booking.BookingID" data-booking-request-id="@booking.BookingRequestID"
+                        data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
+                    <div class="popups">
+                        <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                            If you wish to cancel this booking, the following cancellation policy will apply:
+
+                            @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = booking.CancellationPolicyID })
+
+                            <strong>Are you sure you want cancel this booking?</strong>
+                            <div class="actions">
+                                <a href="#confirm-no" class="cancel-action">No</a>
+                                <a href="#confirm-yes" class="main-action">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                // REVIEW ACTIONS
+                // When booking is not cancelled and service date is passed, show Review options:
+                if (booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
+                {
+                    if (myUserType == LcData.UserInfo.UserType.Customer)
+                    {
+                        <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                            @(booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
+                        </button>
+                        if (booking.ReviewedByProvider == true)
+                        {
+                        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
+                            View provider review
+                        </button>
+                        }
+                    }
+                    else if (myUserType == LcData.UserInfo.UserType.Provider)
+                    {
+                        <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                            @(booking.ReviewedByProvider == true ? "View my review" : "Review client")
+                        </button>
+                        if (booking.ReviewedByCustomer == true)
+                        {
+                        <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
+                            View customer review
+                        </button>
+                        }
+                    }
+                }
+            }
+        </div>
+
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"Data", itsUserData},
+            {"DataPrefix", ""},
+            {"Size", "mini-position"},
+            {"UserType", itsUserType},
+            {"WithContactData", false},
+            {"WithLinkInName", true},
+            {"PositionID", booking.PositionID}
+        })
+    </div>
+    <div class="w-BookingDetails-content">
+
+        @if (isRequest)
+        {
+        <h4>Requested booking time(s)</h4>
+        <div class="requested-booking-times">
+            @if (booking.BookingRequestStatusID == 2 && itsUserType == LcData.UserInfo.UserType.Customer)
+            {
+                <p class="info">
+                @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and has chosen
+                the following time(s) for you to meet up for an appointment. In order to accept the booking, choose one of these time slots
+                <strong>within @LcData.Booking.ConfirmationLimitInHours hours from now (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
+                .
+                </p>
+                <h5>Preferred time:</h5>
+                @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+                {
+                <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
+                </button>
+                }
+                else
+                {
+                    <div>Preferred time is not a available</div>
+                }
+                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+                {
+                <h5>Alternate time(s):</h5>
+                }
+                @if (booking.AlternativeDate1Start is DateTime)
+                {
+                <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+                </button>
+                }
+                @if (booking.AlternativeDate2Start is DateTime)
+                {
+                <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
+                    Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+                </button>
+                }
+                <h5>Decline booking request</h5>
+                <button type="button" class="button booking-request-action button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
+                    Decline booking request. You can offer alternative times, if you’d like.
+                </button>
+            }
+            else if (booking.PreferredDateStart != null)
+            {
+                <p class="info">
+                @if (itsUserType == LcData.UserInfo.UserType.Customer)
+                {
+                    <text>@LcHelpers.GetUserDisplayName(itsUserData) has booked your @booking.PositionSingular services and chosen
+                    the following time(s) for you to provide the service:</text>
+                }
+                else
+                {
+                    <text>You have booked @LcHelpers.GetUserDisplayName(itsUserData)'s @booking.PositionSingular services and chosen
+                    the following time(s) for the service:</text>
+                }
+                </p>
+                <h5>Preferred time:</h5>
+                @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+                {
+                <div class="selected-date preferred-date">
+                    @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
+                </div>
+                }
+                else
+                {
+                    <div>Preferred time is not available</div>
+                }
+                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+                {
+                <h5>Alternate time(s):</h5>
+                }
+                @if (booking.AlternativeDate1Start is DateTime)
+                {
+                <div class="selected-date alternative-date alternative-date-1">
+                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
+                </div>
+                }
+                @if (booking.AlternativeDate2Start is DateTime)
+                {
+                <div class="selected-date alternative-date alternative-date-2">
+                    @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
+                </div>
+                }
+            }
+        </div>
+        }
+        else
+        {
+        <h4>Booking time and location</h4>
+        <div class="booking-time-location">
+            <h5>Services: </h5>
+            <span class="position">@booking.PositionSingular</span>
+
+            <h5>Scheduled time: </h5>
+            @if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
+            {
+            <span class="scheduled-time">@LcHelpers.DateTimeRangeToString(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+            }
+            else
+            {
+                // Null values:
+                <span>Date not available</span>
+            }
+
+            <h5>Location: </h5>
+            @if (booking.StateProvinceCode != null)
+            {
+            <div class="location">
+                @LcHelpers.PrintAddress(address, false)
+
+                <!--<a target="_blank" class="view-directions" href="http://maps.google.com/?q=@LcHelpers.GetLocationForGoogleMaps(booking)">View directions</a>-->
+                @LcHelpers.PrintGoogleLink(LcHelpers.GetLocationForGoogleMaps(booking))
+            </div>
+            }
+            else
+            {
+                // Null, no location
+                <div>Please contact your provider for location details.</div>
+            }
+        </div>
+        }
+        
+        <h4>Booking details</h4>
+        @{
+            var bookingDate = isRequest
+                ? booking.PreferredDateStart
+                : booking.ConfirmedDateStart;
+            if (isRequest)
+            {
+                if (booking.AlternativeDate1Start is DateTime &&
+                    booking.AlternativeDate1Start < bookingDate)
+                {
+                    bookingDate = booking.AlternativeDate1Start;
+                }
+                if (booking.AlternativeDate2Start is DateTime &&
+                    booking.AlternativeDate2Start < bookingDate)
+                {
+                    bookingDate = booking.AlternativeDate2Start;
+                }
+            }
+        }
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", new {
+            BookingData = booking
+            ,ForUserType = myUserType
+            ,IsRequest = true
+            ,ShowPayment = true
+            ,ShowPricing = true
+            ,ShowCancellationPolicy = true
+            ,ShowPackages = true
+            ,BookingDate = bookingDate
+            ,CssClasses = "requested-booking-services message-section"
+        })
+
+        <h4>Reminders</h4>
+         @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+
+    </div>
+}
+</div>

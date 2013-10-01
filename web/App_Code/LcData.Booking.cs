@@ -11,6 +11,13 @@ public static partial class LcData
     /// </summary>
     public static class Booking
     {
+        /// <summary>
+        /// After that time from the last update on a
+        /// booking request without provider confirmation,
+        /// the request will expire.
+        /// </summary>
+        public const int ConfirmationLimitInHours = 18;
+
         #region Query bookings
         #region SQLs
         public const string sqlGetBookingRequestPricingEstimate = @"

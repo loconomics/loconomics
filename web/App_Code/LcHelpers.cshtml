@@ -668,3 +668,34 @@
         @Html.Raw(text.Replace("\n", "<br/>"))
     }
 }
+
+@* Address utilities *@
+@helper PrintAddress(LcData.Address address, bool editable){
+    <div class="address">
+        @if (!String.IsNullOrEmpty(address.Name)) {
+        <span class="address-name">@address.Name</span>
+        }
+        <span class="address-location">@address.AddressLine1 @address.AddressLine2</span>
+        <span class="address-city">@address.City</span>
+        <span class="address-state">@address.StateProvinceCode</span>
+        <span class="address-zipcode">@address.PostalCode</span>
+        @if (editable) {
+        <div class="tools">
+            <a href="#" class="edit">Edit</a>
+            <a href="#" class="map">Map</a>
+            <a href="#" class="remove">Remove</a>
+        </div>
+        }
+    </div>
+}
+@functions {
+    public static string GetLocationForGoogleMaps(dynamic data){
+        return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+}
+@helper PrintGoogleMap(string location){
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@helper PrintGoogleLink(string location, string label = "view map and directions"){
+    <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">@label</a>
+}

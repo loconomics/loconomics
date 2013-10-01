@@ -1,0 +1,208 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    //var brID = Request["BookingRequestID"];
+    var bID = Request["BookingID"];
+
+    var booking = LcData.Booking.GetBookingForUser(bID.AsInt(), u.UserID, u.IsAdmin);
+    var prefix = "booking-" + bID;
+}
+@helper printAddress(IDictionary<string, object> addressDetails, bool editable){
+        <div class="address">
+            @if (!String.IsNullOrEmpty((string)addressDetails["name"])) {
+            <span class="address-name">@addressDetails["name"]</span>
+            }
+            <span class="address-location">@addressDetails["location"]</span>
+            <span class="address-city">@addressDetails["city"]</span>
+            <span class="address-state">@addressDetails["state"]</span>
+            <span class="address-zipcode">@addressDetails["zipcode"]</span>
+            @if (editable) {
+            <div class="tools">
+                <a href="#" class="edit">Edit</a>
+                <a href="#" class="map">Map</a>
+                <a href="#" class="remove">Remove</a>
+            </div>
+            }
+        </div>
+}
+@** Not used now because is too small, but preserved for future changes and addition
+ *@
+@helper printGoogleMap(string location){
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@helper printGoogleLink(string location){
+    <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">view map and directions</a>
+}
+@functions{
+    string getLocationName(dynamic data){
+        if (String.IsNullOrWhiteSpace(data.LocationName)) {
+            return "";
+        } else {
+            return data.LocationUserFirstName + "'s " + data.LocationName;
+        }
+    }
+    string getLocationForGoogleMaps(dynamic data){
+        return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+}
+@*LcHelpers.SetupStarRatingPlugin()*@
+
+@if (booking == null)
+{
+    <div class="booking">
+        You have no bookings. Book one today!
+    </div>
+}
+else
+{
+    // Checking item: user type of the other user, not current user
+    var sentToUserType = LcData.UserInfo.UserType.Customer;
+    int itsUserID = booking.ProviderUserID;
+    string itsUserType = "provider";
+    string itsUserLabel = "Provider";
+    string myUserType = "customer";
+    var forUserType = LcData.UserInfo.UserType.Customer;
+    //string myUserPrefix = "Customer";
+    if (WebSecurity.CurrentUserId == booking.ProviderUserID)
+    {
+        sentToUserType = LcData.UserInfo.UserType.Provider;
+        itsUserType = "customer";
+        itsUserLabel = "Customer";
+        myUserType = "provider";
+        forUserType = LcData.UserInfo.UserType.Provider;
+        itsUserID = booking.CustomerUserID;
+    } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
+    var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
+
+<div class="booking-request booking w-BookingDetails">
+    <div class="w-BookingDetails-header">
+        <h3>@LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, sentToUserType)</h3>
+        <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
+
+        <div class="actions">
+            @* When booking is not cancelled and service date is passed, show Review options:
+             *@
+            @if (booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
+            {
+                if (myUserType == "customer")
+                {
+                    <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                        @(booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
+                    </button>
+                    if (booking.ReviewedByProvider == true)
+                    {
+                    <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.ProviderUserID">
+                        View provider review
+                    </button>
+                    }
+                }
+                else if (myUserType == "provider")
+                {
+                    <button class="button main-action review-booking-action" type="button" data-booking-id="@booking.BookingID">
+                        @(booking.ReviewedByProvider == true ? "View my review" : "Review client")
+                    </button>
+                    if (booking.ReviewedByCustomer == true)
+                    {
+                    <button class="button item-action review-booking-action" type="button" data-booking-id="@booking.BookingID" data-as-user-id="@booking.CustomerUserID">
+                        View customer review
+                    </button>
+                    }
+                }
+            }
+            @* If is customer and booking is confirmed (status:1), but not other states that 
+                means 'finished' or 'already cancelled', allow customer to cancel it *@
+            @if (myUserType == "customer" && booking.BookingStatusID == 1)
+            {
+            <div class="actions">
+                <button class="button item-action booking-action button-cancel-booking" type="button" data-booking-id="@booking.BookingID" data-booking-request-id="@booking.BookingRequestID" data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
+                <div class="popups">
+                    <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                        If you wish to cancel this booking, the following cancellation policy will apply:
+
+                        @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = booking.CancellationPolicyID })
+
+                        <strong>Are you sure you want cancel this booking?</strong>
+                        <div class="actions">
+                            <a href="#confirm-no" class="cancel-action">No</a>
+                            <a href="#confirm-yes" class="main-action">Yes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+            {"Data", itsUserData},
+            {"DataPrefix", ""},
+            {"Size", "mini-position"},
+            {"UserType", itsUserType},
+            {"WithContactData", false},
+            {"WithLinkInName", true},
+            {"PositionID", booking.PositionID}
+        })
+    </div>
+
+    <div class="w-BookingDetails-content">
+
+        <h4>Booking time and location</h4>
+        <div class="booking-time-location message-section">
+            <h5>Services: </h5>
+            <span class="position">@booking.PositionSingular</span>
+
+            <h5>Scheduled time: </h5>
+            @if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
+            {
+            <span class="scheduled-time">@LcHelpers.DateTimeRangeToString(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+            }
+            else
+            {
+                // Null values:
+                <span>Date not available</span>
+            }
+
+            <h5>Location: </h5>
+            @if (booking.StateProvinceCode != null)
+            {
+            <div class="location">
+                @printAddress(new Dictionary<string, object>() {
+                    {"name", getLocationName(booking)}, 
+                    {"location", booking.AddressLine1 + " " + booking.AddressLine2},
+                    {"city", booking.City}, 
+                    {"state", booking.StateProvinceCode},
+                    {"zipcode", booking.PostalCode}
+                }, false)
+
+                <!--<a target="_blank" class="view-directions" href="http://maps.google.com/?q=@getLocationForGoogleMaps(booking)">View directions</a>-->
+                @printGoogleLink(getLocationForGoogleMaps(booking))
+            </div>
+            }
+            else
+            {
+                // Null, no location
+                <div>Please contact your provider for location details.</div>
+            }
+        </div>
+
+        <h4>Booking details</h4>
+        @RenderPage("$RequestedBookingServicesWidget.cshtml", new
+        {
+            BookingData = booking
+            ,ForUserType = forUserType
+            ,IsRequest = true
+            ,ShowPayment = true
+            ,ShowPricing = true
+            ,ShowCancellationPolicy = true
+            ,ShowPackages = true
+            ,BookingDate = booking.ConfirmedDateStart
+            ,CssClasses = "requested-booking-services message-section"
+        })
+
+        <h4>Reminders</h4>
+        @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+    </div>
+</div>
+}
