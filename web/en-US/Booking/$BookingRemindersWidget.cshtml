@@ -1,9 +1,11 @@
 ﻿@{
-    var userType = PageData[0] ?? PageData["UserType"] ?? "customer";
+    LcData.UserInfo.UserType userType = PageData["UserType"] is LcData.UserInfo.UserType 
+        ? PageData["UserType"] 
+        : LcData.UserInfo.ParseUserType(PageData["UserType"], LcData.UserInfo.UserType.Anonymous);
 }
-    <div class="reminders message-section @userType">
+    <div class="reminders @userType.ToString().ToLower()">
         <ol>
-            @if (userType == "provider")
+            @if (userType == LcData.UserInfo.UserType.Provider)
             {
             <li>Review the pricing and services with the client before starting the work</li>
             <li>You will be paid after the service is successfully completed</li>

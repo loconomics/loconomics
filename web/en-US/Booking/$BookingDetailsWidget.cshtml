@@ -14,6 +14,7 @@
     var itsUserType = LcData.UserInfo.UserType.Customer;
     var myUserType = LcData.UserInfo.UserType.Provider;
     dynamic itsUserData = null;
+    dynamic itsPositionData = null;
     var title = "";
     
     // Setting up data
@@ -36,16 +37,20 @@
         }
         
         if (booking != null) {
-            address = new LcData.Address(booking);
-            address.Name = String.IsNullOrWhiteSpace(booking.LocationName)
-                ? ""
-                : booking.LocationUserFirstName + "'s " + booking.LocationName;
+            
+            if (!isRequest) {
+                address = new LcData.Address(booking);
+                address.Name = String.IsNullOrWhiteSpace(booking.LocationName)
+                    ? ""
+                    : booking.LocationUserFirstName + "'s " + booking.LocationName;
+            }
             
             // Provider or customer?
-            if (WebSecurity.CurrentUserId == booking.ProviderUserID) {
+            if (WebSecurity.CurrentUserId == booking.CustomerUserID) {
                 itsUserType = LcData.UserInfo.UserType.Provider;
                 myUserType = LcData.UserInfo.UserType.Customer;
                 itsUserID = booking.ProviderUserID;
+                itsPositionData = LcData.UserInfo.GetUserPos(itsUserID, booking.PositionID);
             } else {
                 itsUserID = booking.CustomerUserID;
             }
@@ -83,7 +88,7 @@ else
                         allow customer to cancel it (See that $cancelBookingRequest must follow same condition-rule) *@
                     <button class="button item-action booking-request-action button-cancel-booking"
                         type="button" data-booking-request-id="@booking.BookingRequestID">Cancel</button>
-                } else if (booking.BookingStatusID == 1) {
+                } else if (!isRequest && booking.BookingStatusID == 1) {
                     <button class="button item-action booking-action button-cancel-booking"
                         type="button" data-booking-id="@booking.BookingID" data-booking-request-id="@booking.BookingRequestID"
                         data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</button>
@@ -106,7 +111,7 @@ else
             {
                 // REVIEW ACTIONS
                 // When booking is not cancelled and service date is passed, show Review options:
-                if (booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
+                if (!isRequest && booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
                 {
                     if (myUserType == LcData.UserInfo.UserType.Customer)
                     {
@@ -136,14 +141,13 @@ else
             }
         </div>
 
-        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"Data", itsUserData},
-            {"DataPrefix", ""},
-            {"Size", "mini-position"},
-            {"UserType", itsUserType},
-            {"WithContactData", false},
-            {"WithLinkInName", true},
-            {"PositionID", booking.PositionID}
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new { 
+            Data = itsUserData,
+            Size = "mini-position",
+            UserType = itsUserType,
+            WithContactData = false,
+            WithLinkInName = true,
+            PositionData = itsPositionData
         })
     </div>
     <div class="w-BookingDetails-content">
@@ -157,11 +161,10 @@ else
                 <p class="info">
                 @LcHelpers.GetUserDisplayName(itsUserData) has booked you as a @booking.PositionSingular and has chosen
                 the following time(s) for you to meet up for an appointment. In order to accept the booking, choose one of these time slots
-                <strong>within @LcData.Booking.ConfirmationLimitInHours hours from now (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>
-                .
+                <strong>within @LcData.Booking.ConfirmationLimitInHours hours from now (by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString())</strong>.
                 </p>
                 <h5>Preferred time:</h5>
-                @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+                if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
                 {
                 <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="preferred">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
@@ -171,17 +174,17 @@ else
                 {
                     <div>Preferred time is not a available</div>
                 }
-                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+                if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
                 {
                 <h5>Alternate time(s):</h5>
                 }
-                @if (booking.AlternativeDate1Start is DateTime)
+                if (booking.AlternativeDate1Start is DateTime)
                 {
                 <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative1">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
                 </button>
                 }
-                @if (booking.AlternativeDate2Start is DateTime)
+                if (booking.AlternativeDate2Start is DateTime)
                 {
                 <button type="button" class="button booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
                     Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
@@ -207,7 +210,7 @@ else
                 }
                 </p>
                 <h5>Preferred time:</h5>
-                @if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
+                if (booking.PreferredDateStart is DateTime || booking.PreferredDateEnd is DateTime)
                 {
                 <div class="selected-date preferred-date">
                     @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
@@ -217,17 +220,17 @@ else
                 {
                     <div>Preferred time is not available</div>
                 }
-                @if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
+                if (booking.AlternativeDate1Start is DateTime || booking.AlternativeDate2Start is DateTime)
                 {
                 <h5>Alternate time(s):</h5>
                 }
-                @if (booking.AlternativeDate1Start is DateTime)
+                if (booking.AlternativeDate1Start is DateTime)
                 {
                 <div class="selected-date alternative-date alternative-date-1">
                     @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
                 </div>
                 }
-                @if (booking.AlternativeDate2Start is DateTime)
+                if (booking.AlternativeDate2Start is DateTime)
                 {
                 <div class="selected-date alternative-date alternative-date-2">
                     @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
@@ -300,7 +303,7 @@ else
             ,ShowCancellationPolicy = true
             ,ShowPackages = true
             ,BookingDate = bookingDate
-            ,CssClasses = "requested-booking-services message-section"
+            ,CssClasses = "requested-booking-services"
         })
 
         <h4>Reminders</h4>

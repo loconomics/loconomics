@@ -4,7 +4,9 @@
     var userID = PageData["UserID"] ?? 0;
     var data = PageData["Data"];
     var dataPrefix = PageData["DataPrefix"] ?? "";
-    var userType = PageData["UserType"] ?? "user"; // customer, provider
+    LcData.UserInfo.UserType userType = PageData["UserType"] is LcData.UserInfo.UserType 
+        ? PageData["UserType"] 
+        : LcData.UserInfo.ParseUserType(PageData["UserType"], LcData.UserInfo.UserType.Anonymous);
     var addCssClasses = PageData["AddCssClasses"] ?? "";
     var extraInfo = PageData["ExtraInfo"];
     var withGoogleMap = PageData["WithGoogleMap"] ?? true;
@@ -35,7 +37,7 @@
     if (Array.IndexOf<string>(new string[] { "mini", "medium", "large", "search", "mini-position" }, size) == -1) {
         throw new Exception("Size is not valid: " + size);
     }
-    if (Array.IndexOf<string>(new string[] { "user", "customer", "provider" }, userType) == -1) {
+    if (userType.HasFlag((LcData.UserInfo.UserType)6)) {
         throw new Exception("UserType is not valid: " + userType);
     }
 }
@@ -75,7 +77,7 @@
 }
 @if (size == "medium")
 {
-    <div class="@userType medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+    <div class="@userType.ToString().ToLower() medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
@@ -112,7 +114,7 @@
         }
         else
         {
-            if (userType == "customer")
+            if (userType == LcData.UserInfo.UserType.Customer)
             {
                 <div class="user-rating global-rating">
                     @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
@@ -125,7 +127,7 @@
                     })
                 </div>
             }
-            else if (userType == "provider")
+            else if (userType == LcData.UserInfo.UserType.Provider)
             {
                 <div class="user-rating global-rating">
                     @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
@@ -145,7 +147,7 @@
 }
 @* Mini size is the same for all userType's *@
 else if (size == "mini") {
-    <div class="@userType mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+    <div class="@userType.ToString().ToLower() mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
@@ -159,17 +161,17 @@ else if (size == "mini") {
         }
     </div>
 } else if (size == "search" || size == "mini-position") {
-    <div class="@userType @(size)-user-info w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @(addCssClasses) @(withFullRating ? "with-full-rating" : "")">
+    <div class="@userType.ToString().ToLower() @(size)-user-info w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @(addCssClasses) @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, null, linkInName)
 
             <p class="user-text">
-                @if (userType == "customer")
+                @if (userType == LcData.UserInfo.UserType.Customer)
                 {
                     @("Client") @*data[dataPrefix + "PublicBio"]*@
                 }
-                else if (userType == "provider")
+                else if (userType == LcData.UserInfo.UserType.Provider)
                 {
                     if (data.Columns.Contains(dataPrefix + "Positions"))
                     {
@@ -183,7 +185,7 @@ else if (size == "mini") {
             </p>
 
             @if (!withFullRating) {
-                if (userType == "customer")
+                if (userType == LcData.UserInfo.UserType.Customer)
                 {
                     <div class="user-rating global-rating">
                         @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new
@@ -197,7 +199,7 @@ else if (size == "mini") {
                            })
                     </div>
                 }
-                else if (userType == "provider")
+                else if (userType == LcData.UserInfo.UserType.Provider)
                 {
                     <div class="user-rating global-rating">
                         @RenderPage(LcUrl.RenderLangPath + "Reviews/$UserRatingSummaryWidget.cshtml", new

@@ -1,0 +1,15 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+}
+<h1>Test Booking Widget</h1>
+<form method="get">
+    <label>BookingRequestID <input type="text" name="BookingRequestID" value="@Request["BookingRequestID"]" /></label>
+    <label>BookingID <input type="text" name="BookingID" value="@Request["BookingID"]" /></label>
+    <div class="actions">
+        <input type="submit" class="main-action" value="Load" />
+    </div>
+</form>
+<div class="test-booking-widget" style="margin: 4em 0;background:white;padding:2em">
+    @RenderPage(LcUrl.LangPath + "Booking/$BookingDetailsWidget.cshtml")
+</div>

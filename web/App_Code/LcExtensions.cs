@@ -67,13 +67,14 @@ public static class LcExtensions
 
     public static string ToPascalCase(this String str)
     {
+        if (str == null) return "";
         System.Globalization.TextInfo textInfo = System.Globalization.CultureInfo.CurrentUICulture.TextInfo;
-        string result = textInfo.ToTitleCase(str.Trim()).Replace(" ", "");
- 
+        string result = textInfo.ToTitleCase(str.Trim().Replace("-", " ")).Replace(" ", "");
         return result;
     }
     public static string ToCamelCase(this String str)
     {
+        if (str == null) return "";
         var result = str.ToPascalCase();
         if (result.Length > 1)
             result = result[0].ToString().ToLower() + result.Substring(1);
