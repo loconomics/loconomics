@@ -1,0 +1,92 @@
+﻿@{
+    var booking = PageData["BookingData"];
+    var isRequest = PageData["IsRequest"];
+    var itsUserData = PageData["ItsUserData"];
+    var myUserData = PageData["MyUserData"];
+    var myUserType = PageData["MyUserType"];
+    DateTime confirmationLimitDate = PageData["ConfirmationLimitDate"];
+    bool showGreetings = PageData["ShowGreetings"];
+    
+    // TODO Know if is a multiappointment booking (or pass by parameter)
+    var isMultiappointment = false;
+}
+@helper printConfirmedDate(dynamic booking){
+    if (booking.ConfirmedDateStart is DateTime && booking.ConfirmedDateEnd is DateTime)
+    {
+        <span>@LcHelpers.DateTimeRangeToString(booking.ConfirmedDateStart, booking.ConfirmedDateEnd)</span>
+    }
+    else
+    {
+        // Null values:
+        <span>Date not available</span>
+    }
+}
+<div class="w-BookingDetails-statusIntro">
+    @if (showGreetings)
+    {
+        <p class="greeting">Hello @myUserData.FirstName,</p>
+    }
+    @if (myUserType == LcData.UserInfo.UserType.Customer)
+    {
+        if(isRequest)
+        {
+            <p>
+                You're probably wondering what happens next. @itsUserData.FirstName has until <strong>@confirmationLimitDate.ToLongDateString(), @confirmationLimitDate.ToShortTimeString()</strong>
+                to confirm one of your appointment times. We'll then follow up with his contact information.
+            </p>
+        }
+        else
+        {
+            <p>
+                Congratulations, you're all set for @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData)'s <strong>@booking.PositionSingular</strong>
+                services to be performed on <strong>@printConfirmedDate(booking)</strong>.
+            </p>
+        }
+        if (isMultiappointment)
+        {
+            <p>
+                You've purchased a service with <strong>multiple appointments.</strong>
+                When you and @itsUserData.FirstName agree on follow-up appointments, he will let us know so
+                we can release payment for each. We'll check in after every appointment to ensure everything
+                is going as planned. You'll review his services after all appointments have been completed.
+            </p>
+        }
+    }
+    else if (myUserType == LcData.UserInfo.UserType.Provider)
+    {
+        if(isRequest)
+        {
+            <p>
+                @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData) 
+                has booked you as a <strong>@booking.PositionSingular</strong>.
+                @(itsUserData.FirstName) has chosen the following times for you to meet up for an appointment.
+                In order to accept the booking, choose one of the time preferences <strong>within @LcData.Booking.BookingRequestConfirmationLimitHours hours</strong>
+                from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>).
+            </p>
+        }
+        else
+        {
+            <p>
+                Congratulations, you're all set to perform <strong>@booking.PositionSingular</strong> services for @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData)
+                on <strong>@printConfirmedDate(booking)</strong>.
+            </p>
+        }
+        if (isMultiappointment)
+        {
+            <p>
+                @itsUserData.FirstName purchased a service with <strong>multiple appointments.</strong>
+                When you and @itsUserData.FirstName agree on follow-up appointments, <strong>you must let us know</strong>
+                (you'll have an option to do so after the first appointment) so
+                we can release payment for each. We'll check in after every appointment to ensure everything
+                is going as planned. You'll review his services after all appointments have been completed.
+            </p>
+        }
+    }
+    @if (showGreetings)
+    {
+        <p class="goodbye">
+            At your service,<br />
+            The Loconomics Team
+        </p>
+    }
+</div>
