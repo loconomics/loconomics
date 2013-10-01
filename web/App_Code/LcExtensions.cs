@@ -64,4 +64,19 @@ public static class LcExtensions
         TimeSpan.TryParse(str, out r);
         return r;
     }
+
+    public static string ToPascalCase(this String str)
+    {
+        System.Globalization.TextInfo textInfo = System.Globalization.CultureInfo.CurrentUICulture.TextInfo;
+        string result = textInfo.ToTitleCase(str.Trim()).Replace(" ", "");
+ 
+        return result;
+    }
+    public static string ToCamelCase(this String str)
+    {
+        var result = str.ToPascalCase();
+        if (result.Length > 1)
+            result = result[0].ToString().ToLower() + result.Substring(1);
+        return result;
+    }
 }

@@ -2167,7 +2167,7 @@ html.boxshadow #loginBox .field-validation-error{
 /**
     Booking details widget/compontent
 **/
-.w-booking-details--header {
+.w-BookingDetails-header {
     min-height: 74px;
 }
 /* Booking-request */

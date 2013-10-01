@@ -1,4 +1,4 @@
-﻿@{
+﻿@{   
     var size = PageData["Size"] ?? "mini"; // medium, large, search, mini-position, mini
     var withContactData = PageData["WithContactData"] ?? false;
     var userID = PageData["UserID"] ?? 0;
@@ -159,7 +159,7 @@ else if (size == "mini") {
         }
     </div>
 } else if (size == "search" || size == "mini-position") {
-    <div class="@userType @(size)-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+    <div class="@userType @(size)-user-info w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @(addCssClasses) @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, null, linkInName)

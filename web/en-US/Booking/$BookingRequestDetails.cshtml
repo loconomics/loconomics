@@ -43,8 +43,8 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRow(itsUserID);
 
-    <div class="booking-request w-booking-details">
-        <div class="w-booking-details--header">
+    <div class="booking-request w-BookingDetails">
+        <div class="w-BookingDetails-header">
             <h3>@LcData.Booking.GetBookingRequestTitleFor(booking.BookingRequestStatusID, itsUserData, sentToUserType)</h3>
             <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
             @* If is customer and booking request is incomplete (status:1),
@@ -66,7 +66,7 @@ else
             })
         </div>
 
-        <div class="w-booking-details--content">
+        <div class="w-BookingDetails-content">
 
             @if (booking.BookingRequestStatusID == 2 && itsUserType == "customer") {
             <h4>Requested booking time(s)</h4>

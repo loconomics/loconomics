@@ -77,8 +77,8 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
-<div class="booking-request booking w-booking-details">
-    <div class="w-booking-details--header">
+<div class="booking-request booking w-BookingDetails">
+    <div class="w-BookingDetails-header">
         <h3>@LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, sentToUserType)</h3>
         <span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>
 
@@ -146,7 +146,7 @@ else
         })
     </div>
 
-    <div class="w-booking-details--content">
+    <div class="w-BookingDetails-content">
 
         <h4>Booking time and location</h4>
         <div class="booking-time-location message-section">

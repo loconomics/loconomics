@@ -587,7 +587,7 @@
 }
 
 /* provider info */
-.booking .provider.search-user-info {
+.booking .provider.w-UserInfo {
     position: absolute;
     top: 50px;
     right: 50px;
