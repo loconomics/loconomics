@@ -597,6 +597,10 @@
 .booking-confirmation {
     margin-top: 50px;
 }
+.booking-confirmation em {
+    font-style: normal;
+    color: #e95d0f;
+}
 .booking-confirmation h2 {
     margin: 0 0 20px;
 }

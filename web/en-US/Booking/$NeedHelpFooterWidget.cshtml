@@ -1,0 +1,11 @@
+﻿@{
+    var bookingRequestID = PageData["BookingRequestID"];
+    var bookingID = PageData["BookingID"];
+    var isRequest = bookingID == null;
+}
+<p>
+    If you have a question or need to report a problem, 
+    e-mail us at <a href="mailto:help@loconomics.com">help@loconomics.com</a> 
+    or call us at 1 (415) 735-6025 
+    and reference <em><strong>Booking @(isRequest ? "request" : "") #@(isRequest ? bookingRequestID : bookingID)</strong></em>
+</p>

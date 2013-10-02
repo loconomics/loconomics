@@ -76,8 +76,9 @@
             </section>
             <section class="help">
                 <h3>Need Help?</h3>
-                <p>If you have a question or need to report a problem, e-mail us at <a href="mailto:help@loconomics.com">help@loconomics.com</a> or call us at 1 (415) 735-6025. 
-                </p>
+                @RenderPage("$NeedHelpFooterWidget.cshtml", new {
+                    BookingRequestID = booking.BookingRequestID
+                })
             </section>
         </article>
 
