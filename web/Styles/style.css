@@ -2168,13 +2168,18 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingDetails {
     position: relative;
 }
-.w-BookingDetails-header {
+.w-BookingDetails .w-BookingDetails-header {
     min-height: 74px;
+}
+.w-BookingDetails .w-BookingDetails-title {
+    margin: 0 0 .3em;
+    font-size: 1.5em;
+    color: #747474;
 }
 .w-BookingDetails .c-SectionTitle {
     font-weight: bold;
     color: #747474;
-    margin: 1em 0 0;
+    margin: 1em 0 0 !important;
     font-size: 1.1em;
 }
 .w-BookingDetails em {
@@ -2224,7 +2229,7 @@ html.boxshadow #loginBox .field-validation-error{
 }
 
 /*= w-BookingRequestedTimes */
-.w-BookingRequestedTimes .c-SectionTitle {
+.w-BookingRequestedTimes .w-BookingRequestedTimes-optionTitle {
     font-size: .9em;
     color: #747474;
     font-weight: normal;
