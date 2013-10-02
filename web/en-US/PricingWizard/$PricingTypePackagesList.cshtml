@@ -46,7 +46,7 @@
                         ? data.PackagesDetailsByPackage[pak.ProviderPackageID]
                         : null;
 
-            <li class="provider-package crudl-item @(editable ? "" : "view")" data-crudl-item-id="@pak.ProviderPackageID">
+            <li class="crudl-item @(editable ? "" : "view")" data-crudl-item-id="@pak.ProviderPackageID">
                 @RenderPage("$PackageView.cshtml", new { 
                     Package = pak,
                     ServiceAttributes = details,

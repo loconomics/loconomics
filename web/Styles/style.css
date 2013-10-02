@@ -2240,6 +2240,58 @@ html.boxshadow #loginBox .field-validation-error{
     font-size: 1.1em;
 }
 
+/*= w-ProviderPackage */
+.w-ProviderPackage {
+    color: #747474;
+
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+    position: relative;
+    text-align: left;
+}
+.w-ProviderPackage-name {
+    margin: 0 !important;
+    font-size: 1.5em !important;
+    color: #00989A !important;
+    max-width: 500px;
+}
+.w-ProviderPackage-sectionTitle {
+    display: block !important;
+    color: rgb(59, 59, 59);
+    font-size: 1em;
+    margin: 5px 0px;
+}
+.w-ProviderPackage-serviceSummary {
+    color: #00989A;
+    font-size: 1.3em;
+}
+.w-ProviderPackage-serviceAttributes {
+    overflow: hidden;
+}
+.w-ProviderPackage-serviceAttributes > li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    float: left;
+    list-style: disc inside url("../img/theme/bullet.png") !important;
+}
+
+/*= w-ProviderPackage inside w-BookingDetails */
+.w-BookingDetails .w-ProviderPackage {
+    border-radius: 0;
+    border: 1px solid #747474;
+    background: #F4F4F4;
+}
+.w-BookingDetails .w-ProviderPackage-name {
+    color: #6c6c6c !important;
+}
+.w-BookingDetails .w-ProviderPackage-serviceSummary {
+    color: #6c6c6c !important;
+}
+
+
 /* obsolete?
 .booking-request {
     position: relative;

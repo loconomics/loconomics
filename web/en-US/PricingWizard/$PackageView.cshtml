@@ -6,7 +6,7 @@
     int customerUserID = WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0;
     Dictionary<string, LcPricingModel.FeeRate> feesSet = null;
     string containerTag = "div";
-    string containerClasses = "provider-package";
+    string containerClasses = "provider-package w-ProviderPackage ";
     int pricingEstimateID = 0;
     int pricingEstimateRevision = 0;
     bool showPrices = true;
@@ -28,8 +28,8 @@
             customerUserID = PageData["Customer"].UserID;
         }
         feesSet = PageData["FeesSet"];
-        containerTag = PageData["ContainerTag"];
-        containerClasses = PageData["ContainerClasses"];
+        containerTag = PageData["ContainerTag"] ?? containerTag;
+        containerClasses += PageData["ContainerClasses"];
         pricingEstimateID = PageData["PricingEstimateID"] ?? 0;
         pricingEstimateRevision = PageData["PricingEstimateRevision"] ?? 0;
         showPrices = PageData["ShowPrices"] ?? true;
@@ -83,8 +83,8 @@
 {
     @Html.Raw(String.Format("<{0} class='{1}'>", containerTag, containerClasses));
 }
-    <h4>@pak.Name</h4>
-    <div class="provider-package-service-summary">
+    <h4 class="w-ProviderPackage-name">@pak.Name</h4>
+    <div class="provider-package-service-summary w-ProviderPackage-serviceSummary">
         @{
             var inpersonphone = "in-person";
             if (config.InPersonPhoneLabel != null)
@@ -175,10 +175,10 @@
     }
     @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
     {
-        <h5>@config.FirstTimeClientsOnlyListText</h5>
+        <h5 class="w-ProviderPackage-sectionTitle">@config.FirstTimeClientsOnlyListText</h5>
     }
-    <h5>Description:</h5>
-    <div class="provider-package-description">
+    <h5 class="w-ProviderPackage-sectionTitle">Description:</h5>
+    <div class="provider-package-description w-ProviderPackage-description">
         @LcHelpers.PrintTextAsHtml(pak.Description)
     </div>
 	@if (config.Mod != null) {
@@ -194,7 +194,7 @@
             // fees apply with 1 decimal for the case of hourly-rates:
             priceRateWithFees = new LcPricingModel.Price(pak.PriceRate ?? 0M, rateFee, 1);
         }
-        <h5 class="price-rate">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
+        <h5 class="price-rate w-ProviderPackage-sectionTitle">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
             @if (config.PriceRateUnitListLabel != null)
             {
                 <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
@@ -203,7 +203,7 @@
     }
     @if (showPrices && config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
     {
-        <h5>@config.NoPriceRateListMessage</h5>
+        <h5 class="w-ProviderPackage-sectionTitle">@config.NoPriceRateListMessage</h5>
     }
     @if (config.IncludeServiceAttributes)
     {
@@ -212,8 +212,8 @@
             || (config.WithoutServiceAttributesProviderMessage != null && editable)
             )
         {
-            <h5>Services included in this package:</h5>
-            <ul class="provider-package-services attributes-list service-attributes-list">
+            <h5 class="w-ProviderPackage-sectionTitle">Services included in this package:</h5>
+            <ul class="provider-package-services attributes-list service-attributes-list w-ProviderPackage-serviceAttributes">
                 @foreach (var ser in atts)
                 {
                     <li title="@ser.Name" data-description="@ser.Description" data-service-attribute-id="@ser.ID">@ser.Name</li>
