@@ -77,7 +77,7 @@
 }
 @if (size == "medium")
 {
-    <div class="@userType.ToString().ToLower() medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+    <div class="w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @userType.ToString().ToLower() medium-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
             <span class="member-since">Member since @data[dataPrefix + "MemberSinceDate"].ToString("MMMM yyyy")</span>
@@ -147,7 +147,7 @@
 }
 @* Mini size is the same for all userType's *@
 else if (size == "mini") {
-    <div class="@userType.ToString().ToLower() mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
+    <div class="w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @userType.ToString().ToLower() mini-user-info @addCssClasses @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="55" height="55" />
         @printUserName(data, dataPrefix, urlBase, positionData, linkInName)
         @if (!String.IsNullOrWhiteSpace(extraInfo)) {
@@ -161,7 +161,7 @@ else if (size == "mini") {
         }
     </div>
 } else if (size == "search" || size == "mini-position") {
-    <div class="@userType.ToString().ToLower() @(size)-user-info w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @(addCssClasses) @(withFullRating ? "with-full-rating" : "")">
+    <div class="w-UserInfo w-UserInfo--@(LcExtensions.ToCamelCase(size)) @userType.ToString().ToLower() @(size)-user-info @(addCssClasses) @(withFullRating ? "with-full-rating" : "")">
         <img class="avatar mini-avatar" alt="@data[dataPrefix + "FirstName"]'s Photo" src="@(urlBase + LcUrl.LangPath)Profile/Photo/@data[dataPrefix + "UserID"]" width="66" height="66" />
         <div class="user-micro-summary">
             @printUserName(data, dataPrefix, urlBase, null, linkInName)

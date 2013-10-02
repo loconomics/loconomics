@@ -3,7 +3,7 @@
         ? PageData["UserType"] 
         : LcData.UserInfo.ParseUserType(PageData["UserType"], LcData.UserInfo.UserType.Anonymous);
 }
-    <div class="reminders @userType.ToString().ToLower()">
+    <div class="reminders w-BookingReminders @userType.ToString().ToLower()">
         <ol>
             @if (userType == LcData.UserInfo.UserType.Provider)
             {

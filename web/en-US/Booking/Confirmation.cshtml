@@ -37,7 +37,7 @@
         @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", provider},
             {"DataPrefix", ""},
-            {"Size", "search"},
+            {"Size", "mini-position"},
             {"UserType", "provider"},
             {"WithContactData", false},
             {"WithLinkInName", true},
@@ -53,24 +53,10 @@
             </section>
             <section class="scheduling">
                 <h3>Time preferences</h3>
-                <h5>First choice:</h5>
-                <div class="selected-date preferred-date">
-                    @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
-                </div>
-                @if (booking.AlternativeDate1Start is DateTime)
-                {
-                    <h5>Second choice:</h5>
-                    <div class="selected-date alternative-date alternative-date-1">
-                        @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
-                    </div>
-                }
-                @if (booking.AlternativeDate2Start is DateTime)
-                {
-                    <h5>Third choice:</h5>
-                    <div class="selected-date alternative-date alternative-date-2">
-                        @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
-                    </div>
-                }
+                @RenderPage("$BookingRequestedTimes.cshtml", new {
+                    BookingData = booking,
+                    MyUserType = LcData.UserInfo.UserType.Customer
+                })
             </section>
             <section class="payment">
                 <h3>Payment</h3>

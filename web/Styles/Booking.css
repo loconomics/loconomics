@@ -623,16 +623,6 @@
 .booking-confirmation h5 {
     margin: 10px 0 0;
 }
-.booking-confirmation .scheduling h5 {
-    font-size: .9em;
-    color: #747474;
-    font-weight: normal;
-    margin: 4px 0 0;
-    line-height: 1em;
-}
-.booking-confirmation .scheduling .selected-date {
-    font-size: 1.1em;
-}
 .booking-confirmation table.calculation-summary {
     float: none !important;
 }

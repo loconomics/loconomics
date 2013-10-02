@@ -2164,13 +2164,78 @@ html.boxshadow #loginBox .field-validation-error{
     background-color: #9ACECE;
 }
 
-/**
-    Booking details widget/compontent
-**/
+/*= w-BookingDetails */
+.w-BookingDetails {
+    position: relative;
+}
 .w-BookingDetails-header {
     min-height: 74px;
 }
-/* Booking-request */
+.w-BookingDetails .c-SectionTitle {
+    font-weight: bold;
+    color: #747474;
+    margin: 1em 0 0;
+    font-size: 1.1em;
+}
+.w-BookingDetails em {
+    font-style: normal;
+    color: #e95d0f;
+}
+.w-BookingDetails strong {
+    font-weight: bold;
+}
+.w-BookingDetails p {
+    margin: 0;
+}
+
+/*= w-UserInfo in w-BookingDetails */
+.w-BookingDetails .w-UserInfo {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/*= w-PricingSummary */
+.w-PricingSummary table {
+    width: 100%;
+    float: none !important;
+    border: none;
+}
+.w-PricingSummary tr .concept {
+    padding-right: 5px;
+    text-align: left !important;
+}
+.w-PricingSummary tr .price {
+    padding-left: 3px;
+    text-align: right;
+    vertical-align: bottom;
+}
+.w-PricingSummary .total th,
+.w-PricingSummary .total td {
+    font-weight: bold !important;
+}
+.w-PricingSummary .total .name {
+    text-align: left;
+}
+.w-PricingSummary tr .separator {
+    border-bottom: 1px solid #d8d7d7;
+    height: 0;
+    padding: 1px !important;
+}
+
+/*= w-BookingRequestedTimes */
+.w-BookingRequestedTimes .c-SectionTitle {
+    font-size: .9em;
+    color: #747474;
+    font-weight: normal;
+    margin: 4px 0 0;
+    line-height: 1em;
+}
+.w-BookingRequestedTimes .w-BookingRequestedTimes-date {
+    font-size: 1.1em;
+}
+
+/* obsolete?
 .booking-request {
     position: relative;
 }
@@ -2200,21 +2265,6 @@ html.boxshadow #loginBox .field-validation-error{
 .booking-request p {
     margin: 0;
 }
-.booking-request table.pricing-summary {
-    border: none;
-    width: 100%;
-}
-.booking-request table.pricing-summary td.concept {
-    padding-right: 5px;
-}
-.booking-request table.pricing-summary td.price {
-    padding-left: 3px;
-    text-align: right;
-    vertical-align: bottom;
-}
-.booking-request table.pricing-summary tr.total {
-    font-weight: bold;
-}
 .requested-booking-services .services li {
     margin-left: 20px;
     width: 205px;
@@ -2234,6 +2284,8 @@ html.boxshadow #loginBox .field-validation-error{
     font-weight: normal;
     color: #8b2143;
 }
+*/
+
 .button-confirm-datetime {
     background: #99C027 !important;
 }
@@ -2251,9 +2303,6 @@ html.boxshadow #loginBox .field-validation-error{
     -moz-box-shadow: 0 0 5px 2px #e95d0f;
     -o-box-shadow: 0 0 5px 2px #e95d0f;
     -webkit-box-shadow: 0 0 5px 2px #e95d0f;
-}
-.booking-request .reminders ol li {
-    list-style: decimal inside;
 }
 
 /* Booking (booking request confirmed) */
@@ -2280,6 +2329,11 @@ html.boxshadow #loginBox .field-validation-error{
     padding: 0 1em;
     /*display: block;*/
     margin: 0 auto 4px;
+}
+
+/** w-BookingReminders **/
+.w-BookingReminders ol li {
+    list-style: decimal inside;
 }
 
 /** Booking review **/
