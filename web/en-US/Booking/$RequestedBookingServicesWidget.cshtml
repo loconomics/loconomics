@@ -27,7 +27,7 @@
     // BUT maybe we are in booking/confirmation/ with a special block for services and we want show the packages-addons inside
     string strPackAddons = "";
     if (showPackages) {
-        strPackAddons = LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
+        strPackAddons = LcData.Booking.GetOneLineBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID);
     }
 }
 @helper printQuantityIfNeeded(string q){

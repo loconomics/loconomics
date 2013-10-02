@@ -11,7 +11,7 @@
     var bookingRequestID = PageData["BookingRequestID"];
     
     dynamic summary = PageData["Summary"] ?? LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
-    string strPackages = LcData.Booking.GetBookingRequestPackages(0, summary.PricingEstimateID);
+    string strPackages = LcData.Booking.GetOneLineBookingRequestPackages(0, summary.PricingEstimateID);
 }
 
 @* From Profile/_PositionSummary *@

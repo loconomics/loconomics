@@ -1,5 +1,5 @@
 ﻿@{
-    // Default values
+    // Widget variables and default values
     LcPricingModel.PackageBaseData pak = null;
     List<LcPricingModel.PackageServiceAttribute> atts = null;
     bool editable = false;
@@ -7,15 +7,20 @@
     Dictionary<string, LcPricingModel.FeeRate> feesSet = null;
     string containerTag = "div";
     string containerClasses = "provider-package";
+    int pricingEstimateID = 0;
+    int pricingEstimateRevision = 0;
+    bool showPrices = true;
+    var extraDetails = "";
 
     // Getting values from RenderPage or Request
     if (PageData.ContainsKey("Package")) {
-        pak = new LcPricingModel.PackageBaseData(PageData["Package"]);
+        pak = PageData["Package"] is LcPricingModel.PackageBaseData
+            ? (LcPricingModel.PackageBaseData)PageData["Package"]
+            : new LcPricingModel.PackageBaseData(PageData["Package"]);
         var dbAtts = PageData["ServiceAttributes"];
-        if (dbAtts != null) {
+        if (dbAtts != null)
+        {
             atts = LcPricingModel.PackageServiceAttribute.ListFromDBRecords(dbAtts);
-        } else {
-            atts = new List<LcPricingModel.PackageServiceAttribute>();
         }
         editable = PageData["EditableView"];
         if (PageData["Customer"] != null)
@@ -25,28 +30,39 @@
         feesSet = PageData["FeesSet"];
         containerTag = PageData["ContainerTag"];
         containerClasses = PageData["ContainerClasses"];
+        pricingEstimateID = PageData["PricingEstimateID"] ?? 0;
+        pricingEstimateRevision = PageData["PricingEstimateRevision"] ?? 0;
+        showPrices = PageData["ShowPrices"] ?? true;
     } else {
         pak = LcPricingModel.PackageBaseData.FromPackageID(Request["PackageID"].AsInt());
-        atts = LcPricingModel.PackageServiceAttribute.ListFromPackageID(pak.ID);
+        pricingEstimateID = Request["PricingEstimateID"].AsInt();
+        pricingEstimateRevision = Request["PricingEstimateRevision"].AsInt();
+        showPrices = Request["ShowPrices"].AsBool(false);
     }
     
     // Setup variables that depends on others
     containerClasses = containerClasses ?? "";
     containerClasses += (editable ? "" : " view");
+    // Attributes: if not provided, fetched:
+    if (atts == null) {
+        atts = LcPricingModel.PackageServiceAttribute.ListFromPackageID(pak.ID);
+    }
     // Pricing config:
     if (!LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pak.PricingTypeID)) {
         // WITHOUT Config, there is nothing to display (is not a package-based pricing type)
         return;
     }
     var config = LcPricingModel.PackageBasePricingTypeConfigs[pak.PricingTypeID];
-    if (feesSet == null) {
+    if (feesSet == null && showPrices && pricingEstimateID == 0) {
         feesSet = editable ?
             null :
             LcPricingModel.GetFeesSetFor(customerUserID, pak.ProviderUserID, pak.PricingTypeID, pak.PositionID);
+    } else {
+        feesSet = null;
     }
     // Getting the correct fees for the package
     LcPricingModel.FeeRate fee = null;
-    if (!editable)
+    if (feesSet != null)
     {
         // Use the package price on FixedPrice packages to get the fees that fit better:
         if (config.PriceCalculation == LcPricingModel.PriceCalculationType.FixedPrice)
@@ -58,6 +74,9 @@
             // Else, get the standard ones
             fee = feesSet["standard:customer"];
         }
+    }
+    if (config.Mod != null && pricingEstimateID > 0) {
+        extraDetails = config.Mod.GetPackagePricingDetails(pak.ID, pricingEstimateID, pricingEstimateRevision);
     }
 }
 @if (!String.IsNullOrEmpty(containerTag))
@@ -92,52 +111,60 @@
             }
             @String.Format(summaryFormat, LcHelpers.TimeToSmartLongString(pak.Duration), pak.NumberOfSessions, inpersonphone)
         }
-        <div class="provider-package-price">
-			@{
-				// Choices fixed price or price-rate checking the pricing-type configuration
-				var price = pak.Price;
-				var priceSufix = "";
-                // To use in non-editable (customer view, as search, profile, booking, communications..)
-                // calculate price with fees. No decimals for fixed prices
-                LcPricingModel.Price priceWithFees = null;
-                if (!editable)
-                {
-                    priceWithFees = new LcPricingModel.Price(price, fee, 0);
-                }
-				if (config.PriceLabel == null) {
-					price = pak.PriceRate ?? 0M;
-                    if (!editable)
+        @if (!String.IsNullOrEmpty(extraDetails))
+        {
+            <div class="w-ProviderPackage-extraDetails">
+                @extraDetails
+            </div>
+        }
+        @if(showPrices){
+            <div class="provider-package-price">
+			    @{
+				    // Choices fixed price or price-rate checking the pricing-type configuration
+				    var price = pak.Price;
+				    var priceSufix = "";
+                    // To use in non-editable (customer view, as search, profile, booking, communications..)
+                    // calculate price with fees. No decimals for fixed prices
+                    LcPricingModel.Price priceWithFees = null;
+                    if (fee != null)
                     {
-                        // fees apply with 1 decimal for the case of hourly-rates:
-                        priceWithFees = new LcPricingModel.Price(price, fee, 1);
+                        priceWithFees = new LcPricingModel.Price(price, fee, 0);
                     }
-					if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
-						priceSufix = "/h";
-					} else {
-						priceSufix = "<span class='price-rate-unit'>" + config.PriceRateUnitListLabel + pak.PriceRateUnit + "</span>";
-					}
-				}
-				if (editable)
-				{
-					<text>@price.ToString("c") @priceSufix</text>
-				}
-				else
-				{
-					<div class="actions book">
-						@if (config.IsAddon)
-						{
-							// Addons cannot be booked independently:
-							<div class="package-price addon-price">@String.Format("{0:c}", priceWithFees.TotalPrice)</div>
-							<div class="addon-price-note">Available during checkout</div>
-						}
-						else
-						{
-							<a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + pak.ProviderUserID + "&positionid=" + pak.PositionID + "&packageid=" + pak.ID)"><span class="book-now-label">Book now for </span>@String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
-						}
-					</div>
-				}
-			}
-        </div>
+				    if (config.PriceLabel == null) {
+					    price = pak.PriceRate ?? 0M;
+                        if (fee != null)
+                        {
+                            // fees apply with 1 decimal for the case of hourly-rates:
+                            priceWithFees = new LcPricingModel.Price(price, fee, 1);
+                        }
+					    if (N.DW(pak.PriceRateUnit) == null || pak.PriceRateUnit.ToUpper() == "HOUR") {
+						    priceSufix = "/h";
+					    } else {
+						    priceSufix = "<span class='price-rate-unit'>" + config.PriceRateUnitListLabel + pak.PriceRateUnit + "</span>";
+					    }
+				    }
+				    if (editable || priceWithFees == null)
+				    {
+					    <text>@price.ToString("c") @priceSufix</text>
+				    }
+				    else
+				    {
+					    <div class="actions book">
+						    @if (config.IsAddon)
+						    {
+							    // Addons cannot be booked independently:
+							    <div class="package-price addon-price">@String.Format("{0:c}", priceWithFees.TotalPrice)</div>
+							    <div class="addon-price-note">Available during checkout</div>
+						    }
+						    else
+						    {
+							    <a class="button book-action main-action" href="@Href(LcUrl.LangPath + "Booking/?providerid=" + pak.ProviderUserID + "&positionid=" + pak.PositionID + "&packageid=" + pak.ID)"><span class="book-now-label">Book now for </span>@String.Format("{0:c}", priceWithFees.TotalPrice) @Html.Raw(priceSufix)</a>
+						    }
+					    </div>
+				    }
+			    }
+            </div>
+        }
     </div>
     @if (editable)
     {
@@ -157,10 +184,10 @@
 	@if (config.Mod != null) {
 		@Html.Raw(config.Mod.GetPackageViewHtml(pak, feesSet));
 	}
-    @if (config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
+    @if (showPrices && config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
     {
         LcPricingModel.Price priceRateWithFees = new LcPricingModel.Price(pak.PriceRate ?? 0M, 0, 1);
-        if (!editable)
+        if (!editable && feesSet != null)
         {
             // The price-rate will ever be the standard fees (there is no chance for the flat ones) (this can be different from the package price)
             var rateFee = feesSet["standard:customer"];
@@ -174,7 +201,7 @@
             }
         </h5>
     }
-    @if (config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
+    @if (showPrices && config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
     {
         <h5>@config.NoPriceRateListMessage</h5>
     }

@@ -51,9 +51,17 @@ public static partial class LcData
                      INNER JOIN
                     ProviderPackage As PP
                       ON PP.ProviderPackageID = P.ProviderPackageID
+                     INNER JOIN
+                    PricingType As PT
+                        ON PP.PricingTypeID = PT.PricingTypeID
+                        AND PP.LanguageID = PT.LanguageID
+                        AND PP.CountryID = PT.CountryID
             WHERE   P.PricingEstimateID = @0
-                        AND 
-                    PP.LanguageID = @1 AND PP.CountryID = @2
+                     AND 
+                    P.PricingEstimateRevision = @1
+                     AND
+                    PP.LanguageID = @2 AND PP.CountryID = @3
+            ORDER BY PT.DisplayRank
         ";
         #endregion
 
@@ -400,10 +408,10 @@ public static partial class LcData
                     switch ((int)g.PricingGroupID)
                     {
                         case 4: // packages
-                            concept = g.DynamicSummaryTitle.Replace("{package}", GetBookingRequestPackages(0, PricingEstimateID, false));
+                            concept = g.DynamicSummaryTitle.Replace("{package}", GetOneLineBookingRequestPackages(0, PricingEstimateID, false));
                             break;
                         case 5: // addons
-                            concept = g.DynamicSummaryTitle.Replace("{addons}", GetBookingRequestPackages(0, PricingEstimateID, true));
+                            concept = g.DynamicSummaryTitle.Replace("{addons}", GetOneLineBookingRequestPackages(0, PricingEstimateID, true));
                             break;
                     }
                     s.Concept = concept;
@@ -455,7 +463,35 @@ public static partial class LcData
         }
         #endregion
 
-        public static string GetBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
+        public static IEnumerable<LcPricingModel.PackageBaseData> GetPricingEstimatePackages(int pricingEstimateID, int pricingEstimateRevision = 0)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // When 0, look for last revision
+                if (pricingEstimateRevision == 0)
+                {
+                    pricingEstimateRevision = db.QueryValue("SELECT Max(PricingEstimateRevision) FROM PricingEstimate WHERE PricingEstimateID = @0", pricingEstimateID);
+                }
+                foreach (var pak in db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate,
+                    pricingEstimateID, pricingEstimateRevision,
+                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID()))
+                {
+                    var pakdata = new LcPricingModel.PackageBaseData(pak);
+                    pakdata.Duration = TimeSpan.FromHours((double)pak.ServiceDuration);
+                    yield return pakdata;
+                }
+            }
+        }
+
+        public static int GetPricingEstimateIDForBookingRequest(int bookingRequestID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QueryValue(LcData.Booking.sqlGetBookingRequestPricingEstimate, bookingRequestID);
+            }
+        }
+
+        public static string GetOneLineBookingRequestPackages(int bookingRequestID, int pricingEstimateID = 0, bool? addons = null)
         {
             // TODO Include Revision in parameters or/and database lookup
             int pricingEstimateRevision = 1;
@@ -466,7 +502,7 @@ public static partial class LcData
                 {
                     pricingEstimateID = db.QueryValue(LcData.Booking.sqlGetBookingRequestPricingEstimate, bookingRequestID);
                 }
-                packages = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, pricingEstimateID,
+                packages = db.Query(LcData.Booking.sqlGetPricingPackagesInPricingEstimate, pricingEstimateID, 1 /* revision */,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
             var details = new List<string>();

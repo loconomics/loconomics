@@ -171,7 +171,7 @@ public class LcMessaging
         {
             // Create message subject and message body based on detailed booking data
             string subject = LcData.Booking.GetBookingRequestSubject(BookingRequestID);
-            string message = LcData.Booking.GetBookingRequestPackages(BookingRequestID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
 
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
@@ -220,7 +220,7 @@ public class LcMessaging
         {
             // Create message body based on detailed booking data
             string subject = LcData.Booking.GetBookingSubject(BookingID);
-            string message = LcData.Booking.GetBookingRequestPackages(BookingRequestID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
 
             // ThreadStatus=2, responded; MessageType=7 by provider (6 by customer; ONLY provider can confirm it)
             int messageID = CreateMessage(thread.ThreadID, 2, 7, message, BookingID, "Booking", subject);
@@ -278,7 +278,7 @@ public class LcMessaging
         if (customer != null && provider != null)
         {
             // Create message body based on detailed booking data
-            string message = LcData.Booking.GetBookingRequestPackages(BookingRequestID);
+            string message = LcData.Booking.GetOneLineBookingRequestPackages(BookingRequestID);
             var bookingRequest = LcData.Booking.GetBookingRequestBasicInfo(BookingRequestID);
 
             // ThreadStatus=2, responded;

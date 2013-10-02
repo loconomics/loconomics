@@ -207,7 +207,7 @@
             <h5>Position:</h5> @item.PositionSingular
         </li>
         <li>
-            <h5>Details:</h5> @(LcData.Booking.GetBookingRequestPackages(item.BookingRequestID, item.PricingEstimateID))
+            <h5>Details:</h5> @(LcData.Booking.GetOneLineBookingRequestPackages(item.BookingRequestID, item.PricingEstimateID))
         </li>
     </ul>
     <div class="actions">

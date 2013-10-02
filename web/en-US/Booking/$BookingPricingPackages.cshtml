@@ -1,0 +1,17 @@
+﻿@{
+    var booking = PageData["BookingData"];
+}
+<ul>
+@foreach (var pak in LcData.Booking.GetPricingEstimatePackages(booking.PricingEstimateID))
+{
+    @RenderPage(LcUrl.LangPath + "PricingWizard/$PackageView.cshtml", new {
+        Package = pak,
+        EditableView = false,
+        PricingEstimateID = booking.PricingEstimateID,
+        PricingEstimateRevision = booking.PricingEstimateRevision,
+        ContainerClasses = "provider-package",
+        ContainerTag = "li",
+        ShowPrices = false
+    });
+}
+</ul>

@@ -160,8 +160,12 @@ else
         }
 
         <h4>Services</h4>
-        <p>TODO</p>
-        <p>@LcData.Booking.GetBookingRequestPackages(booking.BookingRequestID, booking.PricingEstimateID)</p>
+        <div class="w-BookingDetails-packages">
+            @RenderPage("$BookingPricingPackages.cshtml", new
+               {
+                   BookingData = booking
+               })
+        </div>
 
         @if (!String.IsNullOrWhiteSpace(booking.SpecialRequests)) {
             <h4>Notes for @LcData.UserInfo.GetUserRow(booking.ProviderUserID).FirstName</h4>
