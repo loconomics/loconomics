@@ -140,7 +140,8 @@
                 // Preparing dates for further filtering
                 var today = DateTime.Today;
                 var tomorrow = today.AddDays(1);
-                var thisweekFirstDay = today.AddDays(0 - today.DayOfWeek);
+                // This week must not include today and tomorrow, to avoid duplicated entries
+                var thisweekFirstDay = today.AddDays(2); // 0 - today.DayOfWeek
                 var thisweekLastDay = thisweekFirstDay.AddDays(6);
                 var upcomingFirstDay = tomorrow.AddDays(1);
                 var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
