@@ -196,7 +196,7 @@ $(document).ready(function () {
             openBookingInTab(
                 $t.data('booking-request-id'),
                 $t.data('booking-id'),
-                $t.closest('.bookings-list').find('.user-public-name:eq(0)').text()
+                $t.closest('.bookings-list').find('.user-public-name:eq(0) > .first-name').text()
             );
     });
     /*
@@ -281,8 +281,9 @@ $(document).ready(function () {
             complete: ajaxFormsCompleteHandler
         });
     };
-    $('body').delegate('.booking-request-action', 'click', performBookingRequestAction)
-    .delegate('.review-booking-action', 'click', function () {
+    $('body')
+    .on('click', '.booking-request-action', performBookingRequestAction)
+    .on('click', '.review-booking-action', function () {
         var $t = $(this);
         var extraData = {};
         var asUserID = $t.data('as-user-id');
@@ -291,17 +292,17 @@ $(document).ready(function () {
         openBookingInTab(
             0,
             $t.data('booking-id'),
-            $t.closest('.booking').find('.user-public-name:eq(0)').text(),
+            $t.closest('.booking').find('.user-public-name:eq(0) > .first-name').text(),
             true,
             extraData
         );
     })
-    .delegate('.booking-review .open-booking-action', 'click', function () {
+    .on('click', '.booking-review .open-booking-action', function () {
         var $t = $(this);
         openBookingInTab(
             0,
             $t.data('booking-id'),
-            $t.closest('.booking-review').find('.user-public-name:eq(0)').text()
+            $t.closest('.booking-review').find('.user-public-name:eq(0) > .first-name').text()
         );
     });
 
@@ -349,7 +350,7 @@ $(document).ready(function () {
             openBookingInTab(
                 brID,
                 bID,
-                $t.closest('.items-list').find('.user-public-name:eq(0)').text()
+                $t.closest('.items-list').find('.user-public-name:eq(0) > .first-name').text()
             );
         } else
             openMessageThreadInTab(
@@ -807,7 +808,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
 
                 // Updating the tab title, because when is loaded by URL, the title is the ID,
                 // here is setted something more usable:
-                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0)').text());
+                TabbedUX.setTabTitle($tab, $tab.find('.user-public-name:eq(0) > .first-name').text());
             }
         });
     } else

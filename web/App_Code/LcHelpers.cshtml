@@ -662,6 +662,12 @@
         if (row == null) { return ""; }
         return (row[fieldPrefix + "FirstName"] ?? "") + "\xA0" + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
     }
+    public static string GetUserDisplayNameHtml(dynamic row, string fieldPrefix) {
+        if (row == null) { return ""; }
+        return "<span class='first-name'>" + (row[fieldPrefix + "FirstName"] ?? "") + "</span>"
+            + "&nbsp;"
+            + "<span class='last-name-initial'>" + GetInitialLetter(row[fieldPrefix + "LastName"]) + "." + "</span>";
+    }
 }
 @helper PrintTextAsHtml(string text){
     if (text != null) {

@@ -54,7 +54,7 @@
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
     string getNamePosition(dynamic data, string dataPrefix, dynamic positionData) {
-        return LcHelpers.GetUserDisplayName(data, dataPrefix) + (positionData == null ? "" : " - " + positionData.PositionSingular);
+        return LcHelpers.GetUserDisplayNameHtml(data, dataPrefix) + (positionData == null ? "" : " - " + positionData.PositionSingular);
     }
 }
 @helper printProfileLinkUrl(dynamic data, string dataPrefix, string urlBase) {
@@ -67,11 +67,11 @@
     <h5 class="user-public-name">
         @if (linkInName)
         {
-            <a target="_blank" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@getNamePosition(data, dataPrefix, positionData)</a>
+            <a target="_blank" href="@printProfileLinkUrl(data, dataPrefix, urlBase)">@Html.Raw(getNamePosition(data, dataPrefix, positionData))</a>
         }
         else
         {
-            @getNamePosition(data, dataPrefix, positionData)
+            @Html.Raw(getNamePosition(data, dataPrefix, positionData))
         }
     </h5>
 }
