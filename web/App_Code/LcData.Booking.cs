@@ -114,12 +114,26 @@ public static partial class LcData
         public static dynamic GetBooking(int BookingID)
         {
             var sqlGetBooking = @"
+                DECLARE @PeRevision int
+                SELECT  TOP 1 @PeRevision = PricingEstimateRevision
+                FROM    PricingEstimate
+                WHERE   PricingEstimateID = (
+                        SELECT  PricingEstimateID
+                        FROM    BookingRequest
+                                 INNER JOIN
+                                Booking
+                                  ON BookingRequest.BookingRequestID = Booking.BookingRequestID
+                        WHERE   Booking.BookingID = @0
+                    )
+                ORDER BY PricingEstimateRevision DESC
+
                 SELECT  R.BookingRequestID,
                         B.BookingID,
                         R.ProviderUserID,
                         R.CustomerUserID,
                         R.PositionID,
                         R.PricingEstimateID,
+                        Pr.PricingEstimateRevision,
                         R.BookingRequestStatusID,
                         B.BookingStatusID,
 
@@ -163,6 +177,7 @@ public static partial class LcData
                          INNER JOIN
                         PricingEstimate As Pr
                           ON Pr.PricingEstimateID = R.PricingEstimateID
+                            AND Pr.PricingEstimateRevision = @PeRevision
                          INNER JOIN
                         Users As UC
                           ON UC.UserID = R.CustomerUserID
@@ -186,11 +201,25 @@ public static partial class LcData
         public static dynamic GetBookingForUser(int BookingID, int UserID, bool IsAdmin)
         {
             var sqlGetBooking = @"
+                DECLARE @PeRevision int
+                SELECT  TOP 1 @PeRevision = PricingEstimateRevision
+                FROM    PricingEstimate
+                WHERE   PricingEstimateID = (
+                        SELECT  PricingEstimateID
+                        FROM    BookingRequest
+                                 INNER JOIN
+                                Booking
+                                  ON BookingRequest.BookingRequestID = Booking.BookingRequestID
+                        WHERE   Booking.BookingID = @0
+                    )
+                ORDER BY PricingEstimateRevision DESC
+
                 SELECT  R.BookingRequestID,
                         B.BookingID,
                         R.ProviderUserID,
                         R.CustomerUserID,
                         R.PricingEstimateID,
+                        P.PricingEstimateRevision,
                         R.SpecialRequests,
                         R.CreatedDate As RequestDate,
                         B.CreatedDate As BookingDate,
@@ -243,6 +272,7 @@ public static partial class LcData
                          INNER JOIN
                         PricingEstimate As P
                           ON P.PricingEstimateID = R.PricingEstimateID
+                            AND P.PricingEstimateRevision = @PeRevision
                          LEFT JOIN
                         Address As L
                           ON R.AddressID = L.AddressID
@@ -279,6 +309,16 @@ public static partial class LcData
         public static dynamic GetBookingRequestForUser(int BookingRequestID, int UserID, bool IsAdmin)
         {
             var sqlGetBookingRequest = @"
+                DECLARE @PeRevision int
+                SELECT  TOP 1 @PeRevision = PricingEstimateRevision
+                FROM    PricingEstimate
+                WHERE   PricingEstimateID = (
+                        SELECT  PricingEstimateID
+                        FROM    BookingRequest
+                        WHERE   BookingRequestID = @0
+                    )
+                ORDER BY PricingEstimateRevision DESC
+
                 SELECT  R.BookingRequestID,
                         0 As BookingID,
                         R.ProviderUserID,
@@ -316,6 +356,7 @@ public static partial class LcData
                          INNER JOIN
                         PricingEstimate As P
                           ON P.PricingEstimateID = R.PricingEstimateID
+                            AND P.PricingEstimateRevision = @PeRevision
                          LEFT JOIN
                         Address As L
                           ON R.AddressID = L.AddressID
