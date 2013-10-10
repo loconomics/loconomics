@@ -22,8 +22,8 @@
         if (booking.AlternativeDate2Start is DateTime && booking.AlternativeDate2End is DateTime)
         {
             <h5 class="w-BookingRequestedTimes-optionTitle">Third choice:</h5>
-            <button type="button" class="action booking-request-action button-decline-booking" data-booking-request-id="@booking.BookingRequestID">
-                Decline booking request. You can offer alternative times, if you’d like.
+            <button type="button" class="action booking-request-action button-confirm-datetime" data-booking-request-id="@booking.BookingRequestID" data-date-type="alternative2">
+                Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
             </button>
         }
 
