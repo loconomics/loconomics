@@ -2201,6 +2201,10 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingDetails p {
     margin: 0;
 }
+.w-BookingDetails .w-BookingDetails-actions {
+    float: none !important;
+    text-align: left !important;
+}
 
 /*= w-UserInfo in w-BookingDetails */
 .w-BookingDetails .w-UserInfo {

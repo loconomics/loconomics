@@ -729,35 +729,41 @@ public static partial class LcData
         /// <param name="booking"></param>
         /// <param name="userType"></param>
         /// <returns></returns>
-        public static string GetBookingPaymentInformation(dynamic booking, string userType)
+        public static string GetBookingPaymentInformation(dynamic booking, LcData.UserInfo.UserType userType, bool isRequest = true, dynamic itsUserData = null)
         {
-            return GetBookingPaymentInformation(booking, LcData.UserInfo.ParseUserType(userType));
-        }
-        /// <summary>
-        /// Get the text with payment information for a booking to be showed to the requested user-type
-        /// </summary>
-        /// <param name="booking"></param>
-        /// <param name="userType"></param>
-        /// <returns></returns>
-        public static string GetBookingPaymentInformation(dynamic booking, LcData.UserInfo.UserType userType)
-        {
-            switch (userType)
+            if (isRequest)
             {
-                case UserInfo.UserType.Provider:
-                    return String.Format(
-                        "Payment (direct deposit scheduled for {0:d}) to checking account ****{1})",
-                        booking.PaymentDate ?? "<date not available>",
-                        LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));
-                case UserInfo.UserType.Customer:
-                    return String.Format(
-                        "Payment (scheduled for {0:d} from credit card ****{1})",
-                        booking.PaymentDate ?? "<date not available>",
-                        LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits));
-                default:
-                    return String.Format(
-                        "Total to be paid on {0:d}",
-                        booking.PaymentDate ?? "<date not available>");
+                switch (userType)
+                {
+                    case UserInfo.UserType.Provider:
+                        return String.Format(
+                            "Payment (direct deposit scheduled for {0:d}) to checking account ****{1})",
+                            booking.PaymentDate ?? "<date not available>",
+                            LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));
+                    case UserInfo.UserType.Customer:
+                        return String.Format(
+                            "Payment (scheduled for {0:d} from credit card ****{1})",
+                            booking.PaymentDate ?? "<date not available>",
+                            LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits));
+                }
             }
+            else
+            {
+                switch (userType)
+                {
+                    case UserInfo.UserType.Provider:
+                        return "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
+                    case UserInfo.UserType.Customer:
+                        return String.Format(
+                            "Your payment of {0:c} has been successfully received. Payment will be with-held to {1} until after each appointment is successfully completed.",
+                            booking.TotalPrice,
+                            (itsUserData == null ? "your provider" : itsUserData.FirstName));
+                }
+            }
+            return String.Format(
+                "Total to be paid on {0:d}",
+                booking.PaymentDate ?? "<date not available>"
+            );
         }
         /// <summary>
         /// Get a string in text-only format to be used as the CalendarEvent Description field with the
