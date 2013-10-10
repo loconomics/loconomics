@@ -3,9 +3,6 @@
  */
 @import url('Pricing.css');
 
-ul.attributes-list li {
-    list-style: disc inside url("../img/theme/bullet.png") !important;
-}
 /* Extra padding to avoid collision with possible upper message and upper-right utility button */
 .dashboard .folders > .tab-body {
     padding-top: 35px;

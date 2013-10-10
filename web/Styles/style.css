@@ -2275,7 +2275,9 @@ html.boxshadow #loginBox .field-validation-error{
     width: 200px !important;
     text-overflow: ellipsis;
     float: left;
-    list-style: disc inside url("../img/theme/bullet.png") !important;
+    list-style: none !important;
+    background: url('../img/theme/bullet.png') no-repeat left center;
+    padding-left: 14px;
 }
 
 /*= w-ProviderPackage inside w-BookingDetails */
@@ -3125,8 +3127,10 @@ input.search-data {
 
 /* attributes */
 ul.attributes-list li {
-    list-style-position: inside;
-    list-style-image: url('../img/theme/bullet.png');
+    /*list-style: disc inside url("../img/theme/bullet.png") !important;*/
+    list-style: none !important;
+    background: url('../img/theme/bullet.png') no-repeat left center;
+    padding-left: 14px;
 }
 
 /* ==|== media queries ======================================================
