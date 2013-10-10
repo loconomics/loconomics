@@ -1371,6 +1371,15 @@ table .number{
     position: relative;
     z-index: 1000;
 }
+.full-block {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto !important;
+    height: auto !important;
+}
 .full-block .smooth-box-block-element {
     margin: 0;
 }
@@ -2351,6 +2360,9 @@ html.boxshadow #loginBox .field-validation-error{
 .button-decline-booking {
     background: #e95d0f !important;
 }
+.propose-booking-times-action {
+    background: #f2a600 !important;
+}
 .button-confirm-datetime:hover {
     box-shadow: 0 0 5px 2px #99C027;
     -moz-box-shadow: 0 0 5px 2px #99C027;
@@ -2362,6 +2374,12 @@ html.boxshadow #loginBox .field-validation-error{
     -moz-box-shadow: 0 0 5px 2px #e95d0f;
     -o-box-shadow: 0 0 5px 2px #e95d0f;
     -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+}
+.propose-booking-times-action:hover {
+    box-shadow: 0 0 5px 2px #f2a600;
+    -moz-box-shadow: 0 0 5px 2px #f2a600;
+    -o-box-shadow: 0 0 5px 2px #f2a600;
+    -webkit-box-shadow: 0 0 5px 2px #f2a600;
 }
 
 /* Booking (booking request confirmed) */

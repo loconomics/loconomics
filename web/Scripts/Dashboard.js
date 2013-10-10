@@ -250,6 +250,9 @@ $(document).ready(function () {
                 url = 'Booking/$CancelBooking/';
             else
                 url = 'Booking/$CancelBookingRequest/';
+        } else if ($t.hasClass('propose-booking-times-action')) {
+            LC.messagePopup('Not Implemented Yet :-(');
+            return;
         } else {
             // Bad handler:
             return;

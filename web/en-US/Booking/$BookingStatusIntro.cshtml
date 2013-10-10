@@ -38,7 +38,7 @@
         else
         {
             <p>
-                Congratulations, you're all set for @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData)'s <em><strong>@booking.PositionSingular</strong></em>
+                Congratulations, you're all set for @(itsUserData.FirstName)'s <em><strong>@booking.PositionSingular</strong></em>
                 services to be performed on <em><strong>@printConfirmedDate(booking)</strong></em>.
             </p>
         }
@@ -57,17 +57,17 @@
         if(isRequest)
         {
             <p>
-                @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData) 
-                has booked you as a <em><strong>@booking.PositionSingular</strong></em>.
-                @(itsUserData.FirstName) has chosen the following times for you to meet up for an appointment.
-                In order to accept the booking, choose one of the time preferences <strong>within @LcData.Booking.BookingRequestConfirmationLimitHours hours</strong>
-                from now (<strong>by @confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong>).
+                @itsUserData.FirstName
+                has booked your <strong>@booking.PositionSingular</strong> services!
+                @(itsUserData.FirstName)'s chosen the following times for you to meet up for an appointment.
+                In order to accept the booking, choose one of these time slots before <em><strong>@confirmationLimitDate.ToShortTimeString(), @confirmationLimitDate.ToLongDateString()</strong></em>
+                to confirm one of your appointment times. We'll then follow up with his contact information.
             </p>
         }
         else
         {
             <p>
-                Congratulations, you're all set to perform <em><strong>@booking.PositionSingular</strong></em> services for @LcEmailTemplateHelper.PrintUserProfileLink(itsUserData)
+                Congratulations, you're all set to perform <em><strong>@booking.PositionSingular</strong></em> services for @(itsUserData.FirstName)
                 on <strong>@printConfirmedDate(booking)</strong>.
             </p>
         }

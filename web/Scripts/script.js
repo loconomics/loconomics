@@ -2261,6 +2261,13 @@ function escapeJQuerySelectorValue(str) {
     return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
 }
 
+/* Some popup utilitites/shorthands */
+LC.messagePopup = function LC_messagePopup(message, container) {
+    container = $(container || 'body');
+    var content = $('<div/>').text(message);
+    smoothBoxBlock(content, container, 'message-popup full-block', { closable: true, center: true, autofocus: false });
+};
+
 /*------------
     Several functions to manage
     numbers, prices, money
