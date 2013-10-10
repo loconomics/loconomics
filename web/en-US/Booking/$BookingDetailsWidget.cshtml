@@ -204,9 +204,12 @@ else
         </div>
 
         <h4 class="c-SectionTitle">Reminders</h4>
-        @RenderPage("$BookingRemindersWidget.cshtml", myUserType)
+        @RenderPage("$BookingRemindersWidget.cshtml", new {
+            UserType = myUserType,
+            ItsFirstName = itsUserData.FirstName
+        })
 
-        <h4 class="c-SectionTitle">Need help</h4>
+        <h4 class="c-SectionTitle">Need help?</h4>
         @RenderPage("$NeedHelpFooterWidget.cshtml", new {
             BookingRequestID = booking.BookingRequestID,
             BookingID = isRequest ? null : booking.BookingID

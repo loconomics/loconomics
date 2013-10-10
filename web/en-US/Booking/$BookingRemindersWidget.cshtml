@@ -2,25 +2,28 @@
     LcData.UserInfo.UserType userType = PageData["UserType"] is LcData.UserInfo.UserType 
         ? PageData["UserType"] 
         : LcData.UserInfo.ParseUserType(PageData["UserType"], LcData.UserInfo.UserType.Anonymous);
+    var itsFirstName = PageData["ItsFirstName"];
 }
     <div class="reminders w-BookingReminders @userType.ToString().ToLower()">
         <ol>
             @if (userType == LcData.UserInfo.UserType.Provider)
             {
-            <li>Review the pricing and services with the client before starting the work</li>
+            <li>Review the cost estimate with the client before starting work</li>
             <li>You will be paid after the service is successfully completed</li>
             <li>Arrive at least five minutes before the booking time</li>
             <li>Dress appropriately for the task at hand</li>
-            <li>Present your identification and, if necessary, your license</li>
+            <li>Present your identification and, if necessary, your professional license</li>
             <li>Call or email Loconomics with questions</li>
             <li>Have fun!</li>
             }
             else
             {
-            <li>Review the pricing and services with the provider before the service begins</li>
-            <li>Provider will be paid only after the service is successfully completed</li>
-            <li>Please contact us immediately with any issues or no-shows--we're here to help</li>
-            <li>Have fun!</li>
+            <li>Please be at the location five minutes before the scheduled booking time</li>
+            <li>Review the pricing and services before @itsFirstName starts the work</li>
+            <li>Feel free to ask for identification and professional licenses (if applicable)</li>
+            <li>Contact us within 24 hours (preferable inmediately) if something goes wrong</li>
+            <li>Call or e-mail us with any questions</li>
+            <li>Enjoy!</li>
             }
         </ol>
     </div>
