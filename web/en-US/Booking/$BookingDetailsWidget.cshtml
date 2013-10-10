@@ -61,10 +61,13 @@
                 : LcData.UserInfo.GetUserRowWithContactData(itsUserID);
 
             // Some labels
-            title = isRequest
+            // Fixed title right now, instead of the one depending on state and users
+            title = "Booking Summary";
+            /*title = isRequest
                 ? LcData.Booking.GetBookingRequestTitleFor(booking.BookingRequestStatusID, itsUserData, itsUserType)
                 : LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, itsUserType);
-            
+            */
+
             // Expected booking date, for use on several languages
             bookingDate = isRequest
                 ? booking.PreferredDateStart
