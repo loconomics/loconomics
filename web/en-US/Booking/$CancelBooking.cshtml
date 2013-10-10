@@ -32,7 +32,7 @@
 
                 if (Request.IsAjaxRequest()){
                     LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
-                        "Booking/$BookingDetails/?BookingID={0}", bID ));
+                        "Booking/$BookingDetailsWidget/?BookingID={0}", bID ));
                 } else {
                     Response.Redirect(LcUrl.LangPath + String.Format(
                         "Dashboard/Bookings/#!Booking-{0}", bID));

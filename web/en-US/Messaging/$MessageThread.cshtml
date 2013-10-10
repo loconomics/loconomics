@@ -180,7 +180,11 @@ else
         </ul>
 
         <h4>Reminders</h4>
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", myUserType)
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", new
+           {
+               UserType = myUserType,
+               ItsFirstName = itsUserData.FirstName
+           })
     </div>
     </div>
 }

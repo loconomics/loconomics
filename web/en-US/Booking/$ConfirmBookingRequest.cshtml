@@ -179,7 +179,7 @@
                 
                     if (Request.IsAjaxRequest()) {
                         LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
-                            "Booking/$BookingDetails/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
+                            "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
                     } else {
                         Response.Redirect(LcUrl.LangPath + String.Format(
                             "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));

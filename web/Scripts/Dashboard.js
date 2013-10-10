@@ -764,11 +764,10 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
     var brid = bookingRequestID;
     var data = extraData || {};
     data.BookingRequestID = brid;
-    var url = "Booking/$BookingRequestDetails/";
+    var url = "Booking/$BookingDetailsWidget/";
     var tabId = 'bookingRequestID' + brid;
 
     if (bid && bid > 0) {
-        url = "Booking/$BookingDetails/";
         data.BookingID = bid;
         tabId = 'bookingID' + bid;
 
