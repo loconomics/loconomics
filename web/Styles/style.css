@@ -2205,6 +2205,12 @@ html.boxshadow #loginBox .field-validation-error{
     float: none !important;
     text-align: left !important;
 }
+.w-BookingDetails .w-BookingDetails-actions .item-action {
+    background-color: #E44600 !important;
+}
+.w-BookingDetails .w-BookingDetails-actions .item-action:hover {
+    box-shadow: 0 0 5px 2px #E44600;
+}
 
 /*= w-UserInfo in w-BookingDetails */
 .w-BookingDetails .w-UserInfo {
