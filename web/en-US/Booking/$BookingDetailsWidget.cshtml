@@ -169,7 +169,17 @@ else
         </div>
 
         @if (!String.IsNullOrWhiteSpace(booking.SpecialRequests)) {
-            <h4 class="c-SectionTitle">Notes for @LcData.UserInfo.GetUserRow(booking.ProviderUserID).FirstName</h4>
+            var label = "";
+            switch (myUserType)
+            {
+                case LcData.UserInfo.UserType.Provider:
+                    label = "Notes from";
+                    break;
+                case LcData.UserInfo.UserType.Customer:
+                    label = "Notes for";
+                    break;
+            }
+            <h4 class="c-SectionTitle">@label @itsUserData.FirstName</h4>
             <p class="special-instructions">@booking.SpecialRequests</p>
         }
         
