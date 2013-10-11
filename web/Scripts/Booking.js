@@ -7,9 +7,9 @@ function bookingChangeLocation() {
     // :hidden selectors is a hack because jQuery doesn't
     // hide elements that are inside a hidden parent.
     if (sel.val() == "0") {
-        sel.siblings('.enter-new-location').show('fast');
+        sel.siblings('.enter-new-location').slideDown('fast');
     } else {
-        sel.siblings('.enter-new-location, .enter-new-location:hidden').hide('fast');
+        sel.siblings('.enter-new-location, .enter-new-location:hidden').slideUp('fast');
     }
 }
 /* DEPRECATED: use LC.timeSpan defined at script.js, ever available */
@@ -231,6 +231,20 @@ LC.setupServiceMap = function () {
     });
 };
 
+LC.setupLocations = function LC_setupLocations() {
+    var applying = false;
+    $('[name=selected-provider-location],[name=select-location]').on('change', function () {
+        if (applying) return;
+        applying = true;
+        if ($(this).attr('name') == 'select-location') {
+            $('[name=selected-provider-location]').prop('checked', false).trigger('change');
+        } else {
+            $('[name=select-location]').prop('selectedIndex', 0).trigger('change');
+        }
+        applying = false;
+    });
+};
+
 LC.initScheduleStep = function () {
     var tab = $('#schedule');
 
@@ -256,6 +270,8 @@ LC.initScheduleStep = function () {
         LC.showDateHours(date);
         LC.showWeek(date);
     });
+
+    LC.setupLocations();
 
     LC.setupScheduleCalendar();
 

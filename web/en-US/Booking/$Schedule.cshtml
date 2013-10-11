@@ -45,7 +45,6 @@
     /* NOTE: from 20120906, issue #117, end times are automatically calculated, no more selected by customer */
     Validation.RequireField("first-date", "You must specify a first choice");
     if (!withoutLocation) {
-        Validation.Add("select-location", Validator.Integer("Invalid selected location"));
         Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address line 1 must be fewer than 100 characters."));
         Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address line 2 must be fewer than 100 characters."));
         Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
@@ -91,8 +90,11 @@
         
         if (!withoutLocation) {
             // Check if a location was selected or new location must be validated:
-            locationID = Request["select-location"].AsInt();
-            if (Request["select-location"].IsEmpty()) {
+            locationID = Request["selected-provider-location"].AsInt(-1);
+            if (locationID == -1) {
+                locationID = Request["select-location"].AsInt(-1);
+            }
+            if (locationID == -1) {
                 ModelState.AddFormError("You must specify a location");
             } else if (locationID == 0) {
                 if (Request["street-address-line-1"].IsEmpty()) {
