@@ -137,7 +137,7 @@
                 </tr>
             }
             </tbody>
-            <tfoot class="total">
+            <tfoot class="foot">
                 <tr class="separator">
                     @if (withRowSelectionColumn) { <td></td> }
                     <td class="separator" colspan="2"></td>
@@ -147,9 +147,9 @@
                     <th class="name">Total price*</th>
                     <td class="calculation-summary-total price total-price">@summary.TotalPrice.ToString("c")</td>
                 </tr>
-                <tr class="fees">
+                <tr class="fees-note">
                     @if (withRowSelectionColumn) { <td></td> }
-                    <th colspan="2">*includes a <span class="calculation-summary-fee">@summary.FeePrice.ToString("c")</span> Loconomics service fee</th>
+                    <td colspan="2">*includes a <span class="calculation-summary-fee">@summary.FeePrice.ToString("c")</span> Loconomics service fee</td>
                 </tr>
             </tfoot>
         </table>
@@ -205,7 +205,7 @@
 
             <tr class="fees">
                 @if (withRowSelectionColumn) { <td></td> }
-                <td>Loconomics service fee (includes credit card processing costs)</td>
+                <td>Loconomics Service Fee*</td>
                 @* As opposite to CustomerPricingSummary, here we show PFeePrice instead of FeePrice, and must be showed as a negative number,
                     because is substracted from previous lines prices *@
                 <td class="price">@((0 - summary.PFeePrice).ToString("c"))</td>
@@ -221,6 +221,10 @@
                 @* Provider price to be paid is subtotal less payment processing fees (pfees) 
                 *@
                 <td class="price total-price">@((summary.SubtotalPrice - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+            <tr class="fees-note">
+                @if (withRowSelectionColumn) { <td></td> }
+                <td colspan="2">*Loconomics deducts a 3% fee to cover credit card processing costs</td>
             </tr>
         </table>
     </div>
