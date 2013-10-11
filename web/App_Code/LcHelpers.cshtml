@@ -727,3 +727,45 @@
 @helper PrintGoogleLink(string location, string label = "view map and directions"){
     <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">@label</a>
 }
+
+@* Prints the HTML with the tagged contact information for the user at data.
+    TODO: International Phone Prefix.
+ *@
+@helper PrintContactInfo(dynamic data, string dataPrefix = "", bool withAddress = false) {
+    <div class="user-contact-data">
+        <div class="user-full-name"><span class="value">@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
+        @if(withAddress && data[dataPrefix + "StateProvinceCode"] != null) {
+            <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
+            <div class="user-location">@JoinNotEmptyStrings(", ", data[dataPrefix + "City"], data[dataPrefix + "StateProvinceCode"], data[dataPrefix + "PostalCode"])</div>
+        }
+        @{
+            var mobile = data[dataPrefix + "MobilePhone"];
+            var alternate = data[dataPrefix + "AlternatePhone"];
+            if (!String.IsNullOrEmpty(mobile) || !String.IsNullOrEmpty(alternate)) {
+                <div class="user-phones">Phone:
+                    @if(!String.IsNullOrEmpty(mobile)) {
+                        <span class="user-mobile-phone"><span class="value">+1 @mobile</span> (mobile)</span>
+                    }
+                    @if (!String.IsNullOrEmpty(mobile) && !String.IsNullOrEmpty(alternate)) {
+                        <span class="user-or-phone">or</span>   
+                    }
+                    @if(!String.IsNullOrEmpty(alternate)) {
+                        <span class="user-alternate-phone"><span class="value">+1 @alternate</span> (other)</span>
+                    }
+                </div>
+            }
+        }
+        @{
+            var email = data[dataPrefix + "Email"];
+            if (!String.IsNullOrEmpty(email)) {
+                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@email</a></span></div>
+            }
+        }
+        @{
+            var website = data[dataPrefix + "ProviderWebsiteURL"];
+            if (!String.IsNullOrEmpty(website)) {
+                <div class="user-website">Website: <span class="value"><a href="@website" target="_blank">@website</a></span></div>
+            }
+        }
+    </div>
+}

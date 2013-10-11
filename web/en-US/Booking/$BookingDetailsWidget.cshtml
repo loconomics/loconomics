@@ -172,6 +172,12 @@ else
             <h4 class="c-SectionTitle">Notes for @LcData.UserInfo.GetUserRow(booking.ProviderUserID).FirstName</h4>
             <p class="special-instructions">@booking.SpecialRequests</p>
         }
+        
+        @if (!isRequest)
+        {
+            <h4 class="c-SectionTitle">@(itsUserData.FirstName)'s Contact Information</h4>
+            @LcHelpers.PrintContactInfo(itsUserData)
+        }
 
         @if (!isRequest)
         {
