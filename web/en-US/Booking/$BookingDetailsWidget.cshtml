@@ -150,7 +150,7 @@ else
             @LcData.Booking.GetBookingPaymentInformation(booking, myUserType, isRequest, itsUserData)
         </div>
 
-        <h4 class="c-SectionTitle">Pricing Summary</h4>
+        <h4 class="c-SectionTitle">Payment Summary</h4>
         @if (myUserType == LcData.UserInfo.UserType.Provider)
         {
             @LcPricingView.ProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
