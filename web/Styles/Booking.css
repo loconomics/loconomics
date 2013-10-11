@@ -372,6 +372,8 @@
 }
 #booking-schedule .available-provider-locations .serviceRadiusMap {
     margin-bottom: .5em;
+}
+#booking-schedule .serviceRadiusMap {
     border: 1px solid black;
 }
 #booking-schedule .available-provider-locations label {
