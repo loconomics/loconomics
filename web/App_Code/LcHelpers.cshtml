@@ -694,9 +694,31 @@
         }
     </div>
 }
+@helper PrintAddressInLink(LcData.Address address) {
+    <div class="address">
+        @PrintGoogleLink(GetLocationForGoogleMaps(address), GetOneLineAddress(address))
+        @(String.IsNullOrWhiteSpace(address.SpecialInstructions)
+            ? ""
+            : "(" + address.SpecialInstructions + ")")
+    </div>
+}
 @functions {
     public static string GetLocationForGoogleMaps(dynamic data){
         return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+    public static string GetOneLineAddress(LcData.Address address, bool withSpecialInstructions = false) {
+        return JoinNotEmptyStrings(", ",
+            address.AddressLine1,
+            address.AddressLine2,
+            address.City,
+            address.StateProvinceCode,
+            address.Country
+        )
+        + 
+        (!withSpecialInstructions || String.IsNullOrWhiteSpace(address.SpecialInstructions)
+                ? ""
+                : "(" + address.SpecialInstructions + ")"
+        );
     }
 }
 @helper PrintGoogleMap(string location){

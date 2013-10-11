@@ -244,6 +244,7 @@ public static partial class LcData
                         L.City,
                         SP.StateProvinceName, SP.StateProvinceCode,
                         PC.PostalCode,
+                        L.CountryID,
                         L.SpecialInstructions As LocationSpecialInstructions,
 
                         E.StartTime As ConfirmedDateStart, E.EndTime As ConfirmedDateEnd,

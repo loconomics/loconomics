@@ -179,10 +179,7 @@ else
             if (booking.StateProvinceCode != null)
             {
             <div class="location">
-                @LcHelpers.PrintAddress(address, false)
-
-                <!--<a target="_blank" class="view-directions" href="http://maps.google.com/?q=@LcHelpers.GetLocationForGoogleMaps(booking)">View directions</a>-->
-                @LcHelpers.PrintGoogleLink(LcHelpers.GetLocationForGoogleMaps(booking))
+                @LcHelpers.PrintAddressInLink(address)
             </div>
             }
             else

@@ -29,6 +29,12 @@ public static partial class LcData
                 StateProvinceCode = (string)dbdata["StateProvinceCode"];
             if (dbdata.Columns.Contains("PostalCode"))
                 PostalCode = (string)dbdata["PostalCode"];
+            if (dbdata.Columns.Contains("LocationSpecialInstructions"))
+                SpecialInstructions = (string)dbdata["LocationSpecialInstructions"];
+            else if (dbdata.Columns.Contains("SpecialInstructions"))
+                SpecialInstructions = (string)dbdata["SpecialInstructions"];
+            if (dbdata.Columns.Contains("CountryID"))
+                CountryID = (int)dbdata["CountryID"];
         }
 
         public string Name;
@@ -37,5 +43,26 @@ public static partial class LcData
         public string City;
         public string StateProvinceCode;
         public string PostalCode;
+        public string SpecialInstructions;
+        public int CountryID;
+        /// <summary>
+        /// Get the country name.
+        /// TODO: Need to be localizable, and cached table lookup instead of hardcoded.
+        /// </summary>
+        public string Country
+        {
+            get
+            {
+                switch (CountryID)
+                {
+                    case 1:
+                        return "United States";
+                    case 2:
+                        return "Spain";
+                    default:
+                        return "";
+                }
+            }
+        }
     }
 }
