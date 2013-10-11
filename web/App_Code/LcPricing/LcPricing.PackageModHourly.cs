@@ -499,21 +499,21 @@ public static partial class LcPricingModel
             }
             if (hIncludes.Length > 0)
             {
-                s.Append("<h5>Includes:</h5>");
+                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Includes:</h5>");
                 s.Append("<ul class='var-includes'>");
                 s.Append(hIncludes);
                 s.Append("</ul>");
             }
             if (hSurcharges.Length > 0)
             {
-                s.Append("<h5>Hourly surcharge(s):</h5>");
+                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Hourly surcharge(s):</h5>");
                 s.Append("<ul class='var-surcharges'>");
                 s.Append(hSurcharges);
                 s.Append("</ul>");
             }
             if (hRestrictions.Length > 0)
             {
-                s.Append("<h5>Booking restrictions:</h5>");
+                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Booking restrictions:</h5>");
                 s.Append("<ul class='var-restrictions'>");
                 s.Append(hRestrictions);
                 s.Append("</ul>");
