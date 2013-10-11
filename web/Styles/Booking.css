@@ -331,6 +331,31 @@
     text-align: center;
     display: block;
 }
+#booking-schedule .location h3 {
+    margin: 1em 0;
+    color: #97BF2E;
+}
+#booking-schedule .location .subtitle {
+    margin: -1em 0 1em;
+}
+
+#booking-schedule .available-provider-locations ul {
+    letter-spacing: 68px;
+}
+#booking-schedule .available-provider-locations li {
+    display: inline-block;
+    margin: 0 0 1em 0;
+    text-align: center;
+    letter-spacing: normal;
+}
+#booking-schedule .available-provider-locations .serviceRadiusMap {
+    margin-bottom: .5em;
+    border: 1px solid black;
+}
+#booking-schedule .available-provider-locations label {
+    padding: 0;
+    margin: auto;
+}
 
 #booking-schedule #showDate {
     background: url('../img/theme/icon-calendar.png') 202px center no-repeat;

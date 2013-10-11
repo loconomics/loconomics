@@ -223,7 +223,7 @@
         if (!withoutLocation) {
             // Provider locations
             providerLocations = db.Query(@"
-                SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType
+                SELECT  DISTINCT L.AddressID, L.AddressName, AT.AddressType, L.Latitude, L.Longitude
                 FROM    ServiceAddress As SA
                          INNER JOIN
                         Address As L
@@ -386,6 +386,41 @@
     {
         <fieldset class="location step-block">
             <legend>Select the location where your service will be performed</legend>
+            @if (providerLocations != null && providerLocations.Count > 0)
+            {
+            <div class="available-provider-locations">
+                <h3>Select one of @(p.FirstName)'s prefererd location below</h3>
+                <p class="subtitle">The full address will be disclosed after @p.FirstName accepts. <a data-tooltip-url="#whyHiddenLocations" class="has-tooltip">Learn why</a></p>
+                <div class="popups">
+                    <div id="whyHiddenLocations">
+                        The full address will be disclosed after the provider confirms an appointment.
+                        This is to ensure everyone's safety.
+                        The maps below show an approximation of the appointment address
+                        withing one mile.
+                   </div>
+                </div>
+                <ul>
+                        @foreach (var ploc in providerLocations)
+                        {
+                            // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
+                            <li>
+                                <label>
+                                    <div class="serviceRadiusMap" style="width: 220px; height: 160px"
+                                        data-latitude="@ploc.Latitude"
+                                        data-longitude="@ploc.Longitude"
+                                        data-service-radius="1"></div>
+                                    <input type="radio" name="selected-provider-location"
+                                        @LcHelpers.IsSelected(Request["selected-provider-location"], ploc.AddressID)
+                                        value="@ploc.AddressID" />
+                                    @ploc.AddressType
+                                </label>
+                            </li>
+                        }
+                    
+                </ul>
+            </div>
+            }
+            <h3>OR select a location within @(p.FirstName)'s service radius</h3>
             <div class="available-locations">
                 <select name="select-location" class="select-location">
                     <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
@@ -393,7 +428,7 @@
                     {
                     <option value="0" @LcHelpers.IsSelected(Request["select-location"], "0")>Enter new location</option>
                     }
-                    @if (providerLocations != null && providerLocations.Count > 0)
+                    @*@if (providerLocations != null && providerLocations.Count > 0)
                     {
                         <optgroup label="Provider perform services at following locations">
                             @foreach (var ploc in providerLocations)
@@ -402,15 +437,15 @@
                                 <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressType</option>
                             }
                         </optgroup>
-                    }
+                    }*@
                     @if (customerLocations != null && customerLocations.Count > 0)
                     {
-                        <optgroup label="Your locations">
-                            @foreach (var ploc in customerLocations)
+                        @*<optgroup label="Your locations">*@
+                            foreach (var ploc in customerLocations)
                             {
                                 <option @LcHelpers.IsSelected(Request["select-location"], ploc.AddressID) value="@ploc.AddressID">@ploc.AddressName</option>
                             }
-                        </optgroup>
+                        @*</optgroup>*@
                     }
                 </select>
                 <ul class="enter-new-location" style="display: none">
@@ -439,8 +474,8 @@
             @if (providerTravelLocation != null && providerTravelLocation.Latitude != 0 && providerTravelLocation.Longitude != 0)
             {
                 <div class="service-radius">
-                    <strong>@(p.FirstName)'s service radius</strong>
                     <div class="serviceRadiusMap" style="width: 370px; height: 300px" data-latitude="@providerTravelLocation.Latitude" data-longitude="@providerTravelLocation.Longitude" data-service-radius="@providerTravelLocation.ServiceRadiusFromLocation"></div>
+                    <strong>@(p.FirstName)'s service radius</strong>
                 </div>
             }
         </fieldset>
