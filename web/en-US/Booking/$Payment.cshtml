@@ -251,7 +251,7 @@
                              */
                         
                             // Find or create Customer on Braintree
-                            string customerIdOnBraintree = LcHelpers.Channel + "_" + c.UserID.ToString();
+                            string customerIdOnBraintree = LcPayment.GetCustomerId(c.UserID);
                             string customerCreditCardToken = customerIdOnBraintree + "_CreditCard1";
                             try{
                                 var gc = gateway.Customer.Find(customerIdOnBraintree);
@@ -394,6 +394,15 @@
     using (var db = Database.Open("sqlloco")) {
         billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
     }
+    Braintree.CreditCard[] savedCards = null;
+    {
+        var gateway = LcPayment.NewBraintreeGateway();
+        try{
+            var gc = gateway.Customer.Find(LcPayment.GetCustomerId((int)c.UserID));
+            savedCards = gc.CreditCards;
+        } catch (Braintree.Exceptions.NotFoundException ex) {
+        }
+    }
 }
 
 @helper printDate(DateTime? date, DateTime? end) {
@@ -410,15 +419,29 @@
 
 <h2>Payment</h2>
 <p class="info">
-    <srong>Visa, Mastercard, or American Express will do nicely, thank you</srong>
+    <strong>Visa, Mastercard, or American Express will do nicely, thank you</strong>
 </p>
 <form action="@(LcUrl.LangPath)Booking/$Payment/@Request.Url.Query" method="post" class="payment" id="booking-payment">
     <input type="hidden" name="providerid" value="@p.UserID"/>
     <input type="hidden" name="positionid" value="@pos.PositionID"/>
     @LcHelpers.GetValidationScripts()
-    @*LcHelpers.SetupStarRatingPlugin()*@
+
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
     <fieldset class="billing-info step-block">
+
+        @if (savedCards != null && savedCards.Length > 0)
+        {
+            <div class="saved-cards">
+                <strong>Your saved payment options</strong>
+                <ul>
+                    @foreach (var card in savedCards)
+                    {
+                        <li><label><input type="radio" name="credit-card" value="@card.Token" /> @card.CardType.ToString()</label> ending in @card.LastFour expires on @card.ExpirationDate, token @card.Token, UID: @card.UniqueNumberIdentifier</li>
+                    }
+                </ul>
+            </div>
+        }
+
         <ul>
             <li class="name-on-card">
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
