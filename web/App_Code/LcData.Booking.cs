@@ -238,7 +238,6 @@ public static partial class LcData
                         Pos.PositionSingular,
 
                         L.UserID As LocationUserID,
-                        LU.FirstName As LocationUserFirstName,
                         L.AddressName As LocationName,
                         L.AddressLine1, L.AddressLine2,
                         L.City,
@@ -280,9 +279,6 @@ public static partial class LcData
                          LEFT JOIN
                         ServiceAddress As SA
                           ON L.AddressID = SA.AddressID
-                         LEFT JOIN
-                        Users As LU
-                          ON L.UserID = LU.UserID
                          LEFT JOIN
                         StateProvince As SP
                           ON SP.StateProvinceID = L.StateProvinceID
@@ -341,8 +337,14 @@ public static partial class LcData
 
                         Pos.PositionSingular,
 
-                        L.AddressLine1, L.AddressLine2, L.City, L.PostalCodeID, L.CountryID,
+                        L.UserID As LocationUserID,
+                        L.AddressName As LocationName,
+                        L.AddressLine1, L.AddressLine2,
+                        L.City,
                         SP.StateProvinceName, SP.StateProvinceCode,
+                        PC.PostalCode,
+                        L.CountryID,
+                        L.SpecialInstructions As LocationSpecialInstructions,
 
                         E1.StartTime As PreferredDateStart, E1.EndTime As PreferredDateEnd,
                         E2.StartTime As AlternativeDate1Start, E2.EndTime As AlternativeDate1End,
@@ -380,6 +382,9 @@ public static partial class LcData
                          LEFT JOIN
                         StateProvince As SP
                           ON SP.StateProvinceID = L.StateProvinceID
+                         LEFT JOIN
+                        PostalCode As PC
+                          ON PC.PostalCodeID = L.PostalCodeID
                 WHERE   R.BookingRequestID = @0
                          AND
                         (R.ProviderUserID = @1 OR R.CustomerUserID = @1 OR 1=@4)

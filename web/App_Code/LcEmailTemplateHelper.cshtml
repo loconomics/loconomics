@@ -205,13 +205,6 @@
         };
     }
     
-    public static string GetLocationName(dynamic data){
-        if (String.IsNullOrWhiteSpace(data.LocationName)) {
-            return "";
-        } else {
-            return data.LocationUserFirstName + "'s " + data.LocationName;
-        }
-    }
     public static string GetLocationForGoogleMaps(dynamic data){
         return LcHelpers.JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
     }
@@ -252,7 +245,6 @@
     {
         <div>
             @PrintAddress(new {
-                Name = GetLocationName(data),
                 Location = data.AddressLine1 + " " + data.AddressLine2,
                 City = data.City, 
                 State = data.StateProvinceCode,

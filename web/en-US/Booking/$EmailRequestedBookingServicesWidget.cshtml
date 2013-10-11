@@ -35,7 +35,7 @@
         {
             <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Payment:</h5>
             <div>
-                @LcData.Booking.GetBookingPaymentInformation(booking, myUserType)
+                @LcData.Booking.GetBookingPaymentInformation(booking, LcData.UserInfo.ParseUserType(myUserType))
             </div>
         }
 

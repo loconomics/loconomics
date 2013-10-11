@@ -1,0 +1,48 @@
+﻿@{
+    var booking = PageData["BookingData"];
+    var address = (LcData.Address)PageData["Address"];
+    var isRequest = (bool)PageData["IsRequest"];
+    var myUserData = PageData["MyUserData"];
+    var myUserType = (LcData.UserInfo.UserType)PageData["MyUserType"];
+    var itsUserData = PageData["ItsUserData"];
+}
+<div class="location">
+@if (isRequest)
+{
+    // Is a location owned by current user
+    if (booking.LocationUserID == myUserData.UserID)
+    {
+        @LcHelpers.PrintAddressInLink(address)
+    }
+    else
+    {
+        // Its the other user location: message depends on current user type
+        switch (myUserType) {
+            case LcData.UserInfo.UserType.Customer:
+                <div>
+                    @address.Name (@(itsUserData.FirstName)'s preferred location). Full details will be
+                    disclosed after @itsUserData.FirstName accepts.
+                </div>
+                break;
+            case LcData.UserInfo.UserType.Provider:
+                <div>
+                    Client's location is withing your service radius.
+                    Full details will be released once you confirm a time preference.
+                </div>
+                break;
+        }
+    }
+}
+else
+{
+    if (booking.StateProvinceCode != null)
+    {
+        @LcHelpers.PrintAddressInLink(address)
+    }
+    else
+    {
+        // Null, no location
+        <div>Please contact your provider for location details.</div>
+    }
+}
+</div>
