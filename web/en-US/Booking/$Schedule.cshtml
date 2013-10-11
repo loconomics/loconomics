@@ -194,7 +194,7 @@
                             LcData.GetCurrentCountryID(),
                             locationNickName,
                             12 /*AddressType: Other*/,
-                            null, /* special instructions */
+                            Request["special-instructions"],
                             null, null, null, /* latitude, longitude, googlemapsurl */
                             0 /*Position Zero, customer*/,
                             true /*Service performed at this location*/,
@@ -467,9 +467,12 @@
                     <li class="zip">
                         <label>Zip Code:<input type="text" data-val-postalcode="Postal Code is not valid" value="@Request["zip"]" name="zip" @Validation.GetHtml("zip")/></label>
                     </li>
+                    <li class="special-instructions">
+                        <label>Special instructions: <textarea rows="3" name="special-instructions" @Validation.GetHtml("special-instructions") placeholder="E.g., use the side gate and knock three times.">@(Request["special-instructions"])</textarea></label>
+                    </li>
                     <li class="save-to-my-locations">
                         <label class="save"><input type="checkbox" @LcHelpers.IsChecked(Request["save-location"], "true") value="true" name="save-location"/>Save</label>
-                        <label>to my locations as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
+                        <label class="location-name">location as:<input type="text" value="@Request["save-location-as"]" name="save-location-as" @Validation.GetHtml("save-location-as")/></label>
                     </li>
                 </ul>
             </div>

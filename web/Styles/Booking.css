@@ -290,25 +290,50 @@
     display: block;
     clear: both;
 }
+#booking-schedule .location label {
+    padding: 0;
+    margin: 0;
+}
+#booking-schedule .location input {
+    margin: 0 0 0 5px;
+}
 #booking-schedule .location li {
-    margin: 2px 0;
+    margin: 8px 0;
+    position: relative;
 }
 #booking-schedule .location .street-address-line-1 input,
-#booking-schedule .location .street-address-line-2 input{
+#booking-schedule .location .street-address-line-2 input,
+#booking-schedule .location .city input,
+#booking-schedule .location .save-to-my-locations .location-name input {
     width: 210px;
+    position: absolute;
+    right: 0;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #booking-schedule .location .state,
 #booking-schedule .location .zip {
     display: inline-block;
 }
-#booking-schedule .location .city input{
-    width: 307px;
+#booking-schedule .location .state select {
+    width: 170px;
+    margin-left: .5em;
 }
-#booking-schedule .location .state select{
-    width: 160px;
+#booking-schedule .location .zip {
+    float: right;
+    clear: right;
 }
 #booking-schedule .location .zip input {
-    width: 60px;
+    width: 5em;
+}
+#booking-schedule .location .special-instructions textarea {
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #booking-schedule .location .save-to-my-locations{
     margin-top: 6px;
@@ -317,11 +342,8 @@
     padding: 0;
     margin: 0;
 }
-#booking-schedule .location .save-to-my-locations label.save{
-    padding-left: 5px;
-}
-#booking-schedule .location .save-to-my-locations input[type="text"]{
-    width: 174px;
+#booking-schedule .location .save-to-my-locations label.save input {
+    margin-right: 5px;
 }
 #booking-schedule .service-radius {
     width: 370px;
