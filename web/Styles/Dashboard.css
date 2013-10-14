@@ -173,7 +173,7 @@
 }
 /*** Profile Menu ***/
 .dashboard #profile-menu li.admin {
-    background: #8B2143 !important;
+    background: #E44600 !important;
 }
 .dashboard #profile-menu li.admin a {
     color: white !important;
@@ -332,13 +332,13 @@
 .dashboard .preferences .my-account a,
 .dashboard .preferences .my-account a:link,
 .dashboard .preferences .my-account a:visited {
-    color: #8b2143;
+    color: #E44600;
     margin-left: 10px;
 }
 .dashboard .preferences .personal-data-info .note a,
 .dashboard .preferences .personal-data-info .note a:link,
 .dashboard .preferences .personal-data-info .note a:visited {
-    color: #8b2143;
+    color: #E44600;
 }
 #preferences-privacy-policy h1,
 #account-terms h1 {
@@ -1546,7 +1546,7 @@ form#personal li > label.gender {
     color: #6c6c6c;
 }
 .items-groups-list > li > h3 > .items-count {
-    color: #8B2143;
+    color: #E44600;
 }
 /* items-list */
 .items-list > li {
@@ -1594,7 +1594,7 @@ form#personal li > label.gender {
     height: 40px;
 }
 .item-summary > li > h5 {
-    color: #8B2143;
+    color: #E44600;
     display: inline;
     font-size: 1em;
     line-height: 1em;

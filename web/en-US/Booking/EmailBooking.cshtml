@@ -97,7 +97,7 @@
 
     @if (info.Booking.BookingStatusID != 1)
     {
-        <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
+        <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>@info.PairUserType information</h4>
         @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
             {"Data", info.PairUser},
@@ -107,7 +107,7 @@
         })
     }
 
-    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Booking time and location</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>Booking time and location</h4>
     <div style="@LcEmailTemplateHelper.StyleMessageSection()">
         <h5 @LcEmailTemplateHelper.StyleH5("font-size: 1.1em;margin: 8px 0 0;color: #6c6c6c;")>Position: </h5>
         <span>@info.Booking.PositionSingular</span>
@@ -123,11 +123,11 @@
 
     </div>
 
-    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Requested services and pricing estimate</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>Requested services and pricing estimate</h4>
     @{ PageData["BookingDate"] = info.Booking.ConfirmedDateStart; }
     @RenderPage("$EmailRequestedBookingServicesWidget.cshtml", info.Booking, info.SentTo.ToString().ToLower())
 
-    <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>Reminders</h4>
+    <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>Reminders</h4>
     @RenderPage("$EmailBookingRemindersWidget.cshtml", info.SentTo.ToString().ToLower())
 
     <p>

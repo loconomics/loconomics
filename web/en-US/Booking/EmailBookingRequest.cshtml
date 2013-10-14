@@ -112,7 +112,7 @@
     }
     else
     {
-        <h4 @LcEmailTemplateHelper.StyleH4("color: #8B2143;")>@info.PairUserType information</h4>
+        <h4 @LcEmailTemplateHelper.StyleH4("color: #E44600;")>@info.PairUserType information</h4>
         @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
             {"Data", info.PairUser},
