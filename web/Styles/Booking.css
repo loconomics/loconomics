@@ -357,6 +357,9 @@
     margin: 1em 0;
     color: #97BF2E;
 }
+#booking-schedule .location h3:first-letter {
+    text-transform: uppercase;
+}
 #booking-schedule .location .subtitle {
     margin: -1em 0 1em;
 }

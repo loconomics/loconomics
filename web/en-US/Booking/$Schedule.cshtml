@@ -388,41 +388,45 @@
     {
         <fieldset class="location step-block">
             <legend>Select the location where your service will be performed</legend>
-            @if (providerLocations != null && providerLocations.Count > 0)
-            {
-            <div class="available-provider-locations">
-                <h3>Select one of @(p.FirstName)'s prefererd location below</h3>
-                <p class="subtitle">The full address will be disclosed after @p.FirstName accepts. <a data-tooltip-url="#whyHiddenLocations" class="has-tooltip">Learn why</a></p>
-                <div class="popups">
-                    <div id="whyHiddenLocations">
-                        The full address will be disclosed after the provider confirms an appointment.
-                        This is to ensure everyone's safety.
-                        The maps below show an approximation of the appointment address
-                        withing one mile.
-                   </div>
-                </div>
-                <ul>
-                        @foreach (var ploc in providerLocations)
-                        {
-                            // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
-                            <li>
-                                <label>
-                                    <div class="serviceRadiusMap" style="width: 220px; height: 160px"
-                                        data-latitude="@ploc.Latitude"
-                                        data-longitude="@ploc.Longitude"
-                                        data-service-radius="1"></div>
-                                    <input type="radio" name="selected-provider-location"
-                                        @LcHelpers.IsSelected(Request["selected-provider-location"], ploc.AddressID)
-                                        value="@ploc.AddressID" />
-                                    @ploc.AddressType
-                                </label>
-                            </li>
-                        }
+            @{
+                bool withProviderLocations = false;
+                if (providerLocations != null && providerLocations.Count > 0)
+                {
+                    withProviderLocations = true;
+                <div class="available-provider-locations">
+                    <h3>Select one of @(p.FirstName)'s preferred locations below</h3>
+                    <p class="subtitle">The full address will be disclosed after @p.FirstName accepts. <a data-tooltip-url="#whyHiddenLocations" class="has-tooltip">Learn why</a></p>
+                    <div class="popups">
+                        <div id="whyHiddenLocations">
+                            The full address will be disclosed after the provider confirms an appointment.
+                            This is to ensure everyone's safety.
+                            The maps below show an approximation of the appointment address
+                            withing one mile.
+                       </div>
+                    </div>
+                    <ul>
+                            @foreach (var ploc in providerLocations)
+                            {
+                                // Since 2012-12-05, issue #157 point 7, providers locations shows its Type instead its Name:
+                                <li>
+                                    <label>
+                                        <div class="serviceRadiusMap" style="width: 220px; height: 160px"
+                                            data-latitude="@ploc.Latitude"
+                                            data-longitude="@ploc.Longitude"
+                                            data-service-radius="1"></div>
+                                        <input type="radio" name="selected-provider-location"
+                                            @LcHelpers.IsSelected(Request["selected-provider-location"], ploc.AddressID)
+                                            value="@ploc.AddressID" />
+                                        @ploc.AddressType
+                                    </label>
+                                </li>
+                            }
                     
-                </ul>
-            </div>
+                    </ul>
+                </div>
+                }
             }
-            <h3>OR select a location within @(p.FirstName)'s service radius</h3>
+            <h3>@(withProviderLocations ? "OR" : "") select a location within @(p.FirstName)'s service radius</h3>
             <div class="available-locations">
                 <select name="select-location" class="select-location">
                     <option value="" @LcHelpers.IsSelected(Request["select-location"], "")>Select a location</option>
