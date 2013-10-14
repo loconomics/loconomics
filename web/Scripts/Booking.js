@@ -212,7 +212,7 @@ LC.setupServiceMap = function () {
             var latlng = new google.maps.LatLng(parseFloat(m.data('latitude')), parseFloat(m.data('longitude')));
             //latlng = new google.maps.LatLng(37.75334439226298, -122.4254606035156);
             var mapOptions = {
-                zoom: 10,
+                zoom: 14,
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             }
