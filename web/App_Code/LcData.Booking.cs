@@ -741,31 +741,34 @@ public static partial class LcData
             {
                 switch (userType)
                 {
-                    case UserInfo.UserType.Provider:
+                    /*case UserInfo.UserType.Provider:
                         return String.Format(
                             "Payment (direct deposit scheduled for {0:d}) to checking account ****{1})",
                             booking.PaymentDate ?? "<date not available>",
-                            LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));
+                            LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));*/
                     case UserInfo.UserType.Customer:
                         return String.Format(
-                            "Payment (scheduled for {0:d} from credit card ****{1})",
-                            booking.PaymentDate ?? "<date not available>",
-                            LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits));
-                }
-            }
-            else
-            {
-                switch (userType)
-                {
-                    case UserInfo.UserType.Provider:
-                        return "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
-                    case UserInfo.UserType.Customer:
-                        return String.Format(
-                            "Your payment of {0:c} has been successfully received. Payment will be with-held to {1} until after each appointment is successfully completed.",
+                            "Your card ending in {1} has been authorized for {0:c}. " + 
+                            "You will be charged this amount after {2} accepts one of your time preferences. " + 
+                            "if he is unable to accept one of these times, your card will not be charged. " +
+                            "We'll withhold payment to {2} until after the service is completed.",
                             booking.TotalPrice,
+                            LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits),
                             (itsUserData == null ? "your provider" : itsUserData.FirstName));
                 }
             }
+
+            switch (userType)
+            {
+                case UserInfo.UserType.Provider:
+                    return "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
+                case UserInfo.UserType.Customer:
+                    return String.Format(
+                        "Your payment of {0:c} has been successfully received. Payment will be withheld to {1} until after each appointment is successfully completed.",
+                        booking.TotalPrice,
+                        (itsUserData == null ? "your provider" : itsUserData.FirstName));
+            }
+
             return String.Format(
                 "Total to be paid on {0:d}",
                 booking.PaymentDate ?? "<date not available>"

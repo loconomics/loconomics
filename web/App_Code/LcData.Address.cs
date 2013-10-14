@@ -34,7 +34,7 @@ public static partial class LcData
             else if (dbdata.Columns.Contains("SpecialInstructions"))
                 SpecialInstructions = (string)dbdata["SpecialInstructions"];
             if (dbdata.Columns.Contains("CountryID"))
-                CountryID = (int)dbdata["CountryID"];
+                CountryID = (int)(dbdata["CountryID"] ?? 1);
         }
 
         public string Name;

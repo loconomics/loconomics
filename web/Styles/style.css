@@ -2250,6 +2250,10 @@ html.boxshadow #loginBox .field-validation-error{
     font-style: italic;
     font-size: 0.83em;
     font-weight: normal !important;
+    text-align: left !important;
+}
+.w-PricingSummary tr.fees .concept {
+    text-align: left !important;
 }
 
 /*= w-BookingRequestedTimes */
