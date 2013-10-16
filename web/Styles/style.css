@@ -2246,7 +2246,7 @@ html.boxshadow #loginBox .field-validation-error{
     height: 0;
     padding: 1px !important;
 }
-.w-PricingSummary tr.fees-note {
+.w-PricingSummary tr.fees-note * {
     font-style: italic;
     font-size: 0.83em;
     font-weight: normal !important;
