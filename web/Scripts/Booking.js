@@ -210,9 +210,10 @@ LC.setupServiceMap = function () {
             var m = $(this);
             var radius = m.data('service-radius');
             var latlng = new google.maps.LatLng(parseFloat(m.data('latitude')), parseFloat(m.data('longitude')));
+            var zoom = m.data('map-zoom-level') || 13;
             //latlng = new google.maps.LatLng(37.75334439226298, -122.4254606035156);
             var mapOptions = {
-                zoom: 14,
+                zoom: zoom,
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             }
