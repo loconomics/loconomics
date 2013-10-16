@@ -735,40 +735,105 @@ public static partial class LcData
         /// <param name="booking"></param>
         /// <param name="userType"></param>
         /// <returns></returns>
-        public static string GetBookingPaymentInformation(dynamic booking, LcData.UserInfo.UserType userType, bool isRequest = true, dynamic itsUserData = null)
+        public static string GetBookingPaymentInformation(dynamic booking, LcData.UserInfo.UserType userType, dynamic itsUserData = null)
         {
-            if (isRequest)
-            {
-                switch (userType)
-                {
-                    /*case UserInfo.UserType.Provider:
-                        return String.Format(
-                            "Payment (direct deposit scheduled for {0:d}) to checking account ****{1})",
-                            booking.PaymentDate ?? "<date not available>",
-                            LcEncryptor.Decrypt(booking.PaymentProviderAccountLastDigits));*/
-                    case UserInfo.UserType.Customer:
-                        return String.Format(
-                            "Your card ending in {1} has been authorized for {0:c}. " + 
-                            "You will be charged this amount after {2} accepts one of your time preferences. " + 
-                            "if he is unable to accept one of these times, your card will not be charged. " +
-                            "We'll withhold payment to {2} until after the service is completed.",
-                            booking.TotalPrice,
-                            LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits),
-                            (itsUserData == null ? "your provider" : itsUserData.FirstName));
-                }
-            }
+            string msg = "";
 
             switch (userType)
             {
                 case UserInfo.UserType.Provider:
-                    return "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
-                case UserInfo.UserType.Customer:
-                    return String.Format(
-                        "Your payment of {0:c} has been successfully received. Payment will be withheld to {1} until after each appointment is successfully completed.",
+
+                    // There is no message on Cancelled, what means nothing must be showed:
+                    const string msgProviderCancelled = "";
+                    // Message for request or confirmed but not payed.
+                    const string msgProviderNotPayed = "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
+
+                    switch ((int)booking.BookingRequestStatusID)
+                    {
+                        // Request complete, waiting for provider response
+                        case 2:
+                            msg = msgProviderNotPayed;
+                            break;
+                        // Request accepted, is a confirmed booking
+                        case 7:
+                            switch ((int)booking.BookingStatusID)
+                            {
+                                // Its a confirmed booking, but still not payed (waiting for work, performed or in dispute)
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 5:
+                                    msg = msgProviderNotPayed;
+                                    break;
+                                // Completed and payed
+                                case 4:
+                                    msg = "{0:c} transfer to checking account ending in scheduled for {1:d}";
+                                    break;
+                                // Cancelled
+                                case 6:
+                                    msg = msgProviderCancelled;
+                                    break;
+                            }
+                            break;
+                        // Any other case: incomplete request, expired, denied or cancelled:
+                        default:
+                            msg = msgProviderCancelled;
+                            break;
+                    }
+
+                    return String.Format(msg,
                         booking.TotalPrice,
-                        (itsUserData == null ? "your provider" : itsUserData.FirstName));
+                        booking.PaymentDate ?? "<date not available>"
+                    );
+                
+                case UserInfo.UserType.Customer:
+
+                    const string msgCustomerCancelled = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
+
+                    switch ((int)booking.BookingRequestStatusID)
+                    {
+                        // Request complete, waiting for provider response
+                        case 2:
+                            msg = @"Your card ending in {2} has been authorized for {0:c}. 
+                            You will be charged this amount only after {1} accepts one of your time preferences. 
+                            If he is unable to accept one of these times, your card will not be charged.
+                            We'll withhold payment to {1} until after the service is completed.";
+                            break;
+                        // Request accepted, is a confirmed booking
+                        case 7:
+                            switch ((int)booking.BookingStatusID)
+                            {
+                                // Its a confirmed booking, but still not payed (waiting for work, performed or in dispute)
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 5:
+                                    msg = "Your payment of {0:c} has been successfully received. Payment will be withheld to {1} until after each appointment is successfully completed.";
+                                    break;
+                                // Completed and payed
+                                case 4:
+                                    msg = "Your payment of {0:c} has been successfully received, and all payments have been released to {1}";
+                                    break;
+                                // Cancelled
+                                case 6:
+                                    msg = msgCustomerCancelled;
+                                    break;
+                            }
+                            break;
+                        // Any other case: incomplete request, expired, denied or cancelled:
+                        default:
+                            msg = msgCustomerCancelled;
+                            break;
+                    }
+                    return String.Format(
+                        msg,
+                        booking.TotalPrice,
+                        (itsUserData == null ? "your provider" : itsUserData.FirstName),
+                        LcEncryptor.Decrypt(booking.PaymentCustomerCardLastDigits)
+                    );
             }
 
+            // Generic message on any other case (if all is complete, never must be showed):
             return String.Format(
                 "Total to be paid on {0:d}",
                 booking.PaymentDate ?? "<date not available>"

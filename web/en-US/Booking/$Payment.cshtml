@@ -434,6 +434,7 @@
             <div class="saved-cards">
                 <strong>Your saved payment options</strong>
                 <ul>
+                    @* Example: MasterCard ending in 9781 expires on 06/2015, token dev_299_CreditCard1, UID: 903e9d3146b27bd6af9a2757d9051238 *@
                     @foreach (var card in savedCards)
                     {
                         <li><label><input type="radio" name="credit-card" value="@card.Token" /> @card.CardType.ToString()</label> ending in @card.LastFour expires on @card.ExpirationDate, token @card.Token, UID: @card.UniqueNumberIdentifier</li>

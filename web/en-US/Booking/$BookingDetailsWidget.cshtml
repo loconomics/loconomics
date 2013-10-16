@@ -103,48 +103,58 @@ else
         <h3 class="w-BookingDetails-title">@title</h3>
         @*<span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
 
-        @RenderPage("$BookingActions.cshtml", new {
-            MyUserType = myUserType,
-            BookingData = booking,
-            IdPrefix = prefix,
-            IsRequest = isRequest
-        })
+        @RenderPage("$BookingActions.cshtml", new
+   {
+       MyUserType = myUserType,
+       BookingData = booking,
+       IdPrefix = prefix,
+       IsRequest = isRequest
+   })
 
-        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new { 
-            Data = itsUserData,
-            Size = "mini-position",
-            UserType = itsUserType,
-            WithContactData = false,
-            WithLinkInName = true,
-            PositionData = itsPositionData
-        })
+        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new
+   {
+       Data = itsUserData,
+       Size = "mini-position",
+       UserType = itsUserType,
+       WithContactData = false,
+       WithLinkInName = true,
+       PositionData = itsPositionData
+   })
     </div>
     <div class="w-BookingDetails-content">
 
         <h4 class="c-SectionTitle">Status</h4>
-        @RenderPage("$BookingStatusIntro.cshtml", new {
-            BookingData = booking,
-            MyUserType = myUserType,
-            ItsUserData = itsUserData,
-            MyUserData = u,
-            ConfirmationLimitDate = confirmationLimitDate,
-            ShowGreetings = false,
-            IsRequest = isRequest
-        })
+        @RenderPage("$BookingStatusIntro.cshtml", new
+   {
+       BookingData = booking,
+       MyUserType = myUserType,
+       ItsUserData = itsUserData,
+       MyUserData = u,
+       ConfirmationLimitDate = confirmationLimitDate,
+       ShowGreetings = false,
+       IsRequest = isRequest
+   })
 
         @if (isRequest)
         {
             <h4 class="c-SectionTitle">Time preferences</h4>
-            @RenderPage("$BookingRequestedTimes.cshtml", new {
-                BookingData = booking,
-                MyUserType = myUserType
-            })
+            @RenderPage("$BookingRequestedTimes.cshtml", new
+       {
+           BookingData = booking,
+           MyUserType = myUserType
+       })
         }
 
-        <h4 class="c-SectionTitle">Payment</h4>
-        <div class="payment">
-            @LcData.Booking.GetBookingPaymentInformation(booking, myUserType, isRequest, itsUserData)
-        </div>
+        @{
+            var paymentInfoText = LcData.Booking.GetBookingPaymentInformation(booking, myUserType, itsUserData);
+            if (!String.IsNullOrEmpty(paymentInfoText))
+            {
+                <h4 class="c-SectionTitle">Payment</h4>
+                <div class="payment">
+                    @Html.Raw(paymentInfoText)
+                </div>
+            }
+        }
 
         <h4 class="c-SectionTitle">@(myUserType == LcData.UserInfo.UserType.Provider ? "Payment" : "Pricing") Summary</h4>
         @if (myUserType == LcData.UserInfo.UserType.Provider)
