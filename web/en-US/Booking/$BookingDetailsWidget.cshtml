@@ -125,24 +125,23 @@ else
 
         <h4 class="c-SectionTitle">Status</h4>
         @RenderPage("$BookingStatusIntro.cshtml", new
-   {
-       BookingData = booking,
-       MyUserType = myUserType,
-       ItsUserData = itsUserData,
-       MyUserData = u,
-       ConfirmationLimitDate = confirmationLimitDate,
-       ShowGreetings = false,
-       IsRequest = isRequest
-   })
+        {
+            BookingData = booking,
+            MyUserType = myUserType,
+            ItsUserData = itsUserData,
+            MyUserData = u,
+            ConfirmationLimitDate = confirmationLimitDate,
+            ShowGreetings = false
+        })
 
         @if (isRequest)
         {
             <h4 class="c-SectionTitle">Time preferences</h4>
             @RenderPage("$BookingRequestedTimes.cshtml", new
-       {
-           BookingData = booking,
-           MyUserType = myUserType
-       })
+            {
+                BookingData = booking,
+                MyUserType = myUserType
+            })
         }
 
         @{

@@ -744,7 +744,7 @@ public static partial class LcData
                 case UserInfo.UserType.Provider:
 
                     // There is no message on Cancelled, what means nothing must be showed:
-                    const string msgProviderCancelled = "";
+                    const string msgProviderCanceled = "";
                     // Message for request or confirmed but not payed.
                     const string msgProviderNotPayed = "We have received payment from the client. You'll receive payment after the appointment is successfully completed.";
 
@@ -769,15 +769,15 @@ public static partial class LcData
                                 case 4:
                                     msg = "{0:c} transfer to checking account ending in scheduled for {1:d}";
                                     break;
-                                // Cancelled
+                                // Cancelled by customer
                                 case 6:
-                                    msg = msgProviderCancelled;
+                                    msg = msgProviderCanceled;
                                     break;
                             }
                             break;
                         // Any other case: incomplete request, expired, denied or cancelled:
                         default:
-                            msg = msgProviderCancelled;
+                            msg = msgProviderCanceled;
                             break;
                     }
 
@@ -788,7 +788,7 @@ public static partial class LcData
                 
                 case UserInfo.UserType.Customer:
 
-                    const string msgCustomerCancelled = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
+                    const string msgCustomerCanceled = "<em><strong>Your credit card has not been charged</strong></em> and the authorization should expire shortly.";
 
                     switch ((int)booking.BookingRequestStatusID)
                     {
@@ -814,15 +814,15 @@ public static partial class LcData
                                 case 4:
                                     msg = "Your payment of {0:c} has been successfully received, and all payments have been released to {1}";
                                     break;
-                                // Cancelled
+                                // Cancelled by customer
                                 case 6:
-                                    msg = msgCustomerCancelled;
+                                    msg = msgCustomerCanceled;
                                     break;
                             }
                             break;
                         // Any other case: incomplete request, expired, denied or cancelled:
                         default:
-                            msg = msgCustomerCancelled;
+                            msg = msgCustomerCanceled;
                             break;
                     }
                     return String.Format(
