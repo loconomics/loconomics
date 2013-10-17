@@ -577,6 +577,17 @@
     color: #eb6e42;
 }
 
+#booking-payment .saved-cards table {
+    width: 100%;
+}
+#booking-payment .saved-cards table td,
+#booking-payment .saved-cards table th {
+    text-align: left;
+}
+#booking-payment .saved-cards table label {
+    padding: 0;
+}
+
 /* redesign */
 /* page */
 .booking #main {

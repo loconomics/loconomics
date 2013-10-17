@@ -432,14 +432,42 @@
         @if (savedCards != null && savedCards.Length > 0)
         {
             <div class="saved-cards">
-                <strong>Your saved payment options</strong>
-                <ul>
-                    @* Example: MasterCard ending in 9781 expires on 06/2015, token dev_299_CreditCard1, UID: 903e9d3146b27bd6af9a2757d9051238 *@
+                <table>
+                    <tr>
+                        <th>Your saved payment options</th>
+                        <th>Ending in</th>
+                        <th>Expires on</th>
+                    </tr>
+                    @* 
+                        @card.CardType.ToString() ending in @card.LastFour, token @card.Token, UID: @card.UniqueNumberIdentifier
+                        Example: MasterCard ending in 9781 expires on 06/2015, token dev_299_CreditCard1, UID: 903e9d3146b27bd6af9a2757d9051238
+                    *@
                     @foreach (var card in savedCards)
                     {
-                        <li><label><input type="radio" name="credit-card" value="@card.Token" /> @card.CardType.ToString()</label> ending in @card.LastFour expires on @card.ExpirationDate, token @card.Token, UID: @card.UniqueNumberIdentifier</li>
+                        <tr>
+                            <td class="name">
+                                <label>
+                                    <input type="radio" name="credit-card" value="@card.Token" />
+                                    @card.CardType.ToString()
+                                </label>
+                            </td>
+                            <td>
+                                @card.LastFour
+                            </td>
+                            <td>
+                                @card.ExpirationDate
+                            </td>
+                        </tr>
                     }
-                </ul>
+                    <tr>
+                        <td colspan="3">
+                            <label>
+                                <input type="radio" name="credit-card" value="" />
+                                Enter a new card
+                            </label>
+                        </td>
+                    </tr>
+                </table>
             </div>
         }
 
