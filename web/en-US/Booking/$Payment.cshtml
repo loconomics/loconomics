@@ -476,8 +476,8 @@
                 <label>Security Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save</label>
-                <label class="save-as">card details as:<input type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/></label>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save card details as:</label>
+                <input class="save-as" type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/>
             </li>
         </ul>
     </fieldset>

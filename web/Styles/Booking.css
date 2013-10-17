@@ -426,6 +426,11 @@
     -o-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
+#booking-payment .agreement {
+    clear: both;
+    float: right;
+    margin: 1em;
+}
 #booking-payment .order-summary h4 {
     font-size: 1.2em;
     color: #747474;
@@ -491,7 +496,8 @@
 }
 #booking-payment .billing-info .name-on-card input,
 #booking-payment .billing-info .street-address-line-1 input,
-#booking-payment .billing-info .street-address-line-2 input {
+#booking-payment .billing-info .street-address-line-2 input,
+#booking-payment .billing-info .save-to-my-payments input.save-as {
     width: 220px;
     float: right;
 }
@@ -513,18 +519,21 @@
 #booking-payment .billing-info .zip {
     display: inline-block;
 }
+#booking-payment .billing-info .zip {
+    float: right;
+}
 #booking-payment .billing-info .zip label {
     padding-right: 0;
 }
 #booking-payment .billing-info .zip input{
-    width: 50px;
+    width: 44px;
 }
 #booking-payment .billing-info .save-to-my-payments label{
     display: inline-block;
     padding: 0;
 }
-#booking-payment .billing-info .save-to-my-payments .save-as input{
-    width: 167px;
+#booking-payment .billing-info .save-to-my-payments input.save-as {
+    margin: 0 5px;
 }
 #booking-payment .billing-info .card-number input{
     float: right;
