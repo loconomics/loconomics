@@ -468,6 +468,7 @@
         @if (savedCards != null && savedCards.Length > 0)
         {
             <div class="saved-cards">
+                <input type="hidden" name="update-credit-card" value="false" />
                 <table>
                     <tr>
                         <th>Your saved payment options</th>
@@ -480,11 +481,15 @@
                     *@
                     @foreach (var card in savedCards)
                     {
-                        <tr>
+                        <tr class="card">
                             <td class="name">
                                 <label>
                                     <input type="radio" @LcHelpers.IsChecked(Request["credit-card"], card.Token) name="credit-card" value="@card.Token" />
                                     @card.CardType.ToString()
+                                    <a href='#update-card' class="update-credit-card">
+                                        <span class="update-label">update</span>
+                                        <span class="cancel-label">cancel update</span>
+                                    </a>
                                 </label>
                             </td>
                             <td>
@@ -495,7 +500,7 @@
                             </td>
                         </tr>
                     }
-                    <tr>
+                    <tr class="card">
                         <td colspan="3">
                             <label>
                                 <input type="radio" name="credit-card" value="" @LcHelpers.IsChecked(Request["credit-card"], "") />
@@ -507,7 +512,7 @@
             </div>
         }
 
-        <ul>
+        <ul class="edit-card">
             <li class="name-on-card">
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
             </li>

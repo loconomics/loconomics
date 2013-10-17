@@ -513,6 +513,42 @@ LC.packageQuickView = function LC_packageQuickView(id) {
     return false;
 };
 
+LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
+    var $edit = $c.find('.edit-card');
+    var $update = $c.find('[name=update-credit-card]');
+    function updateUpdateFlagWith($card) {
+        var flag =
+            $card.find('.update-credit-card').hasClass('cancel-update')
+            ||
+            $card.find('[name=credit-card]').val() == '';
+        if (flag) {
+            $update.val('true');
+            $edit.slideDown();
+        } else {
+            $update.val('false');
+            $edit.slideUp();
+        }
+    }
+
+    $c.on('change', '[name=credit-card]', function () {
+        var $t = $(this);
+        updateUpdateFlagWith($t.closest('.card'));
+    });
+    $c.on('click', '.update-credit-card', function () {
+        var $t = $(this);
+        $t.toggleClass('cancel-update');
+        var $card = $t.closest('.card');
+        $card.find('input').prop('checked', true);
+        updateUpdateFlagWith($card);
+    });
+
+    // First update on load
+    updateUpdateFlagWith(
+        $c.find('[name=credit-card]:checked').trigger('change')
+        .closest('.card')
+    );
+};
+
 $(document).ready(function () {
     LC.initCustomerPackageSliders();
 
@@ -571,6 +607,7 @@ $(document).ready(function () {
             success: function (data, text, jx) {
                 // load tab content
                 paymentTab.html(data);
+                LC.initCreditCardEdition(paymentTab);
             },
             error: ajaxErrorPopupHandler,
             complete: function () {

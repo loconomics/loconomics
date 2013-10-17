@@ -588,6 +588,19 @@
     padding: 0;
 }
 
+#booking-payment .saved-cards .update-credit-card {
+}
+#booking-payment .saved-cards .update-credit-card .cancel-label {
+    display: none;
+}
+#booking-payment .saved-cards .update-credit-card.cancel-update .cancel-label {
+    display: inline;
+}
+#booking-payment .saved-cards .update-credit-card.cancel-update .update-label {
+    display: none
+}
+
+
 /* redesign */
 /* page */
 .booking #main {
