@@ -57,7 +57,7 @@
         feesSet = editable ?
             null :
             LcPricingModel.GetFeesSetFor(customerUserID, pak.ProviderUserID, pak.PricingTypeID, pak.PositionID);
-    } else {
+    } else if (pricingEstimateID != 0 || !showPrices) {
         feesSet = null;
     }
     // Getting the correct fees for the package
