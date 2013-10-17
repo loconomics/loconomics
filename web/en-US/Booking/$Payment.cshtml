@@ -50,15 +50,6 @@
     /*
      * Validation
      */
-    Validation.RequireField("name-on-card", "'Name as on card' is required");
-    Validation.RequireField("street-address-line-1", "Street address is required");
-    Validation.RequireField("city", "City is required");
-    Validation.RequireField("state", "State is required");
-    Validation.RequireField("zip", "Zip Postal Code is required");
-    Validation.RequireField("card-number", "Card number is required");
-    Validation.RequireField("cvv", "CVV code is required");
-    Validation.RequireField("card-exp-month", "Card expiration month is required");
-    Validation.RequireField("card-exp-year", "Card expiration year is required");
     Validation.Add("zip", Validator.Integer("Zip postal code must be a valid number"));
     Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
     Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
@@ -72,11 +63,59 @@
     
     if (IsPost && Validation.IsValid()){
         /*
-         * Complext validations
+         * Dependency validations
          */
-        if (Request["save-payment"] == "true" && Request["save-payment-as"].IsEmpty()){
-            ModelState.AddError("save-payment-as", "To save the payment is required a name");
+        var creditCardToken = Request["credit-card"];
+        var createCard = String.IsNullOrWhiteSpace(creditCardToken) || Request["update-credit-card"].AsBool();
+        if (createCard) {
+            // Validate fields for credit card creation
+            if (Request["name-on-card"].IsEmpty()){
+                ModelState.AddError("name-on-card", "'Name as on card' is required");
+            }
+            if (Request["card-number"].IsEmpty()){
+                ModelState.AddError("card-number", "Card number is required");
+            }
+            if (Request["cvv"].IsEmpty()){
+                ModelState.AddError("cvv", "CVV code is required");
+            }
+            if (Request["card-exp-month"].IsEmpty()){
+                ModelState.AddError("card-exp-month", "Card expiration month is required");
+            }
+            if (Request["card-exp-year"].IsEmpty()){
+                ModelState.AddError("card-exp-year", "Card expiration year is required");
+            }
         }
+
+        /*
+         * User wants to save as 'my location'?
+         */
+        string paymentNickName = null;
+        bool createAddress = Request["save-payment"].AsBool();
+        if (createAddress || createCard) {
+            // Validate fields for address creation, for address-only saving or card creation
+            if (Request["save-payment-as"].IsEmpty()){
+                ModelState.AddError("save-payment-as", "To save the payment is required a name");
+            }
+            else {
+                paymentNickName = Request["save-payment-as"];
+            }
+            if (Request["street-address-line-1"].IsEmpty()){
+                ModelState.AddError("street-address-line-1", "Street address is required");
+            }
+            if (Request["city"].IsEmpty()){
+                ModelState.AddError("city", "City is required");
+            }
+            if (Request["state"].IsEmpty()){
+                ModelState.AddError("state", "State is required");
+            }
+            if (Request["zip"].IsEmpty()){
+                ModelState.AddError("zip", "Zip Postal Code is required");
+            }
+        }
+        
+        /* 
+         * DB validations and Saving
+         */
         using (var db = Database.Open("sqlloco")) {
 
             // Validate that Zip Postal Code is valid, and get the matching ID to be used later
@@ -106,15 +145,8 @@
                     var TotalPrice = db.QueryValue(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     
 
-                    /*
-                     * User wants to save as 'my location'?
-                     */
-                    string paymentNickName = null;
-                    if (Request["save-payment"] == "true" &&
-                        !String.IsNullOrWhiteSpace(Request["save-payment-as"])) {
-                        paymentNickName = Request["save-payment-as"];
-                    }
-                    if (paymentNickName != null) {
+                    // Save payment address
+                    if (createAddress) {
                         // Check if there is already a 'billing' address (only can exists one) and get its AddressID
                         // to update it with the new data - or inserts one new if AddressID=0
                         int billingAddressID = db.QueryValue(@"
@@ -252,7 +284,6 @@
                         
                             // Find or create Customer on Braintree
                             string customerIdOnBraintree = LcPayment.GetCustomerId(c.UserID);
-                            string customerCreditCardToken = customerIdOnBraintree + "_CreditCard1";
                             try{
                                 var gc = gateway.Customer.Find(customerIdOnBraintree);
                             } catch (Braintree.Exceptions.NotFoundException ex) {
@@ -269,15 +300,16 @@
                                     }
                                 }
                             }
+                            
                         
-                        
-                            // Find or create the payment method (credit card) for the customer
-                            if (ModelState.IsValid) {
+                            // Find or create/update the payment method (credit card) for the customer
+                            if (ModelState.IsValid && createCard) {
+
+                                // Create credit card if was requested or use current token
 
                                 var creditCardRequest = new CreditCardRequest
                                 {
                                     CustomerId = customerIdOnBraintree,
-                                    Token = customerCreditCardToken,
                                     CardholderName = Request["name-on-card"],
                                     Number = Request["card-number"],
                                     ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
@@ -297,17 +329,21 @@
 
                                 try{
                                     // Find the card
-                                    gateway.CreditCard.Find(customerCreditCardToken);
+                                    gateway.CreditCard.Find(creditCardToken);
                                     
                                     // Update it:
-                                    resultCreditCard = gateway.CreditCard.Update(customerCreditCardToken, creditCardRequest);
+                                    resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
 
                                 } catch (Braintree.Exceptions.NotFoundException ex) {
                                     // Credit card for customer doesn't exist, create it:
                                     resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
                                 }
                                 
-                                if (!resultCreditCard.IsSuccess()) {
+                                if (resultCreditCard.IsSuccess()) {
+                                    // New Token, for the payment transaction
+                                    creditCardToken = resultCreditCard.Target.Token;
+                                }
+                                else {
                                     ModelState.AddFormError(resultCreditCard.Message);
                                     foreach (var error in resultCreditCard.Errors.All()) {
                                         ModelState.AddFormError(error.Message);
@@ -321,7 +357,7 @@
                                 {
                                     Amount = TotalPrice,
                                     CustomerId = customerIdOnBraintree,
-                                    PaymentMethodToken = customerCreditCardToken
+                                    PaymentMethodToken = creditCardToken
                                 };
                                 if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
                                     request.DeviceData = Request.Form["device_data"];
@@ -347,7 +383,7 @@
                             }
                             
                         } catch (Braintree.Exceptions.BraintreeException ex) {
-                            ModelState.AddFormError(ex.Message);
+                            ModelState.AddFormError(ex.Message + "(<a target='_blank' href='" + ex.HelpLink + "'>More info</a>)");
                         }
                     }
                     
@@ -447,7 +483,7 @@
                         <tr>
                             <td class="name">
                                 <label>
-                                    <input type="radio" name="credit-card" value="@card.Token" />
+                                    <input type="radio" @LcHelpers.IsChecked(Request["credit-card"], card.Token) name="credit-card" value="@card.Token" />
                                     @card.CardType.ToString()
                                 </label>
                             </td>
@@ -462,7 +498,7 @@
                     <tr>
                         <td colspan="3">
                             <label>
-                                <input type="radio" name="credit-card" value="" />
+                                <input type="radio" name="credit-card" value="" @LcHelpers.IsChecked(Request["credit-card"], "") />
                                 Enter a new card
                             </label>
                         </td>
