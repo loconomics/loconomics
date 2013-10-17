@@ -121,6 +121,8 @@
                     try{
                         LcCalendar.Import(u.UserID, programURL);
                     }catch{}
+                } else {
+                    LcCalendar.RemoveImportedEventsForUser(u.UserID);
                 }
 
                 // Show the profile activation popup with 'next-step' buttons and progress information when need,

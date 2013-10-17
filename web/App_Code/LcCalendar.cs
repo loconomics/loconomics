@@ -473,10 +473,14 @@ public static class LcCalendar
 
         using (var db = Database.Open("sqlloco"))
         {
-            foreach (var p in db.Query("SELECT UserID, CalendarURL FROM CalendarProviderAttributes WHERE dbo.fx_IfNW(CalendarURL, null) is not null"))
+            foreach (var p in db.Query("SELECT UserID, CalendarURL FROM CalendarProviderAttributes")) // WHERE dbo.fx_IfNW(CalendarURL, null) is not null"))
             {
                 if (!LcValidators.IsUrl(p.CalendarURL))
                 {
+                    // Remove old events, to avoid persist bad data
+                    RemoveImportedEventsForUser(p.UserID);
+
+                    // Return error
                     yield return new Exception(String.Format("Calendar Import error on UserID:{0} : URL is not valid '{1}'", p.UserID, p.CalendarURL));
                     continue;
                 }
@@ -531,6 +535,18 @@ public static class LcCalendar
             calUser.DefaultTimeZone = tz;
         }
         return libCalendarUtils.PrepareExportDataForUser(calUser);
+    }
+
+    /// <summary>
+    /// Remove all imported events of the userID
+    /// </summary>
+    /// <param name="userID"></param>
+    public static void RemoveImportedEventsForUser(int userID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute("DELETE FROM CalendarEvents WHERE UserID=@0 AND EventType=@1", userID, 4);
+        }
     }
     #endregion
 

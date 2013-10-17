@@ -678,7 +678,7 @@ $(document).ready(function () {
     (function () {
         // Refresh provider availability calendar on any focus of the tab #319
         $('#availabilityCalendar').on('tabFocused', function () {
-            console.log('focused', $('.availability-calendar .calendar-container', this));
+            //console.log('focused', $('.availability-calendar .calendar-container', this));
             $('.availability-calendar .calendar-container', this).reload();
         });
         // Setup availability form
