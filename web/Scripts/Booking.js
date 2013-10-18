@@ -514,6 +514,9 @@ LC.packageQuickView = function LC_packageQuickView(id) {
 };
 
 LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
+    if ($c.find('.saved-cards').length == 0)
+        // There are not saved cards
+        return;
     var $edit = $c.find('.edit-card');
     var $update = $c.find('[name=update-credit-card]');
     function updateUpdateFlagWith($card) {
@@ -530,11 +533,11 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
         }
     }
 
-    $c.on('change', '[name=credit-card]', function () {
+    $c.find('[name=credit-card]').on('change', function () {
         var $t = $(this);
         updateUpdateFlagWith($t.closest('.card'));
     });
-    $c.on('click', '.update-credit-card', function () {
+    $c.find('.update-credit-card').on('click', function () {
         var $t = $(this);
         $t.toggleClass('cancel-update');
         var $card = $t.closest('.card');

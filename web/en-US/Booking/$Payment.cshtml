@@ -468,6 +468,7 @@
         @if (savedCards != null && savedCards.Length > 0)
         {
             <div class="saved-cards">
+                @*(Request["update-credit-card"].AsBool(false))*@
                 <input type="hidden" name="update-credit-card" value="false" />
                 <table>
                     <tr>
@@ -622,6 +623,10 @@
     @if (LcPayment.BraintreeFraudProtectionToolsEnabled)
     {
     <script type="text/javascript">
+        @if (IsPost) {
+            <text>LC.initCreditCardEdition($('#payment'));</text>
+        }
+
         function LC_BookingPayment() {
             @*var braintree = Braintree.create("MIIBCgKCAQEA780LkpinVrfWoCS/l3wieLlyE8S7zsPh2yMDNjWhIwVVIz3K8ahi61Rl1U5t1IGFiRC43nGU4i8iUV2UPrOyATP9Ye5jfQ20R7l9JY/Gm8yf5y97k3FkdMcyICCK5jvbMY9beNtMLg2p2YM+YgMlZkZEu+rjeR6Ru+bq4fgyWj8U63CyEKRVPr8GSFlqOoB9gt0NA/uSG2oEOZUDmAD06iJ7XSNjfqrePl7r0SG5a8zpG3eXqM8+3IDs8DUk8ByhBy6ui+0Ojka0Ot4qXbrZ5/S+Is9lBCAHqmCAQBaILkCMVx4INJPXlKzdj2JAKf+OZpCd1uqeeaoBFcR/jK7LbQIDAQAB");*@
             BraintreeData.setup('@(LcPayment.BraintreeMerchantId)', 'booking-payment', BraintreeData.environments.@(LcPayment.BraintreeJsEnvironment));
