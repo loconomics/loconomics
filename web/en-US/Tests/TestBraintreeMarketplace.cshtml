@@ -6,6 +6,8 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
     
+    bool? merchantCreated = null;
+    
     if (IsPost) {
         if (Request.Form.AllKeys.Contains<string>("create_submerchant_form")) {
             // Create SubMerchant (provider account at Braintree Marketplace)
@@ -18,8 +20,10 @@
                 
                 var gateway = LcPayment.NewBraintreeGateway();
                 
-                createSubMerchant(provider, address, bank, gateway);
+                merchantCreated = createSubMerchant(provider, address, bank, gateway);
                 
+            } else {
+                merchantCreated = false;
             }
         }
     }
@@ -34,7 +38,7 @@
         using (var db = Database.Open("sqlloco")) {
             var add = db.QuerySingle(
                 LcData.sqlGetAddresses +
-                " AND AddressTypeID = @1 ORDER BY L.UpdatedDate ASC",
+                " AND L.AddressTypeID = @1 ORDER BY L.UpdatedDate ASC",
                 userID, (short)addressType
             );
             if (add != null)
@@ -69,8 +73,12 @@
         string tin = null;
         string accountNumber = null;
         if (braintreeCustomer != null) {
-            tin = braintreeCustomer.CustomFields["loco_tin"];
-            accountNumber = braintreeCustomer.CustomFields["loco_bank_account"];
+            tin = braintreeCustomer.CustomFields.ContainsKey("loco_tin")
+                ? braintreeCustomer.CustomFields["loco_tin"]
+                : null;
+            accountNumber = braintreeCustomer.CustomFields.ContainsKey("loco_bank_account")
+                ? braintreeCustomer.CustomFields["loco_bank_account"]
+                : null;
         }
         
         MerchantAccountRequest request = new MerchantAccountRequest
@@ -99,20 +107,30 @@
           Id = LcPayment.GetCustomerId(user.UserID)
         };
 
-        Result<MerchantAccount> result = gateway.MerchantAccount.Create(request);
-
+        try{
+            Result<MerchantAccount> result = gateway.MerchantAccount.Create(request);
+            ModelState.AddFormError(result.Message);
         return result.IsSuccess();
+        } catch (Braintree.Exceptions.AuthorizationException ex) {
+            ModelState.AddFormError(ex.Message);
+            return false;   
+        }
     }
 }
 <div class="btmarket">
 
-    <form method="post" name="create_submerchant_form">
+    <form method="post">
         <fieldset>
             <legend>Create SubMerchant: provider account at Braintree Marketplace</legend>
             <label>Provider UserID: <input type="text" name="providerID" value="@Request["providerID"]" /></label>
             <div class="actions">
-                <input type="submit" class="main-action action" value="Create" />
+                <input type="submit" class="main-action action" value="Create" name="create_submerchant_form" />
             </div>
+            @Html.ValidationSummary()
+            @if (merchantCreated.HasValue)
+            {
+                <div class="message info">@(merchantCreated.Value ? "Created successfully" : "Error on creating account")</div>
+            }
         </fieldset>
     </form>
 
