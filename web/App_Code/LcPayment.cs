@@ -11,6 +11,10 @@ using System.Web.WebPages;
 /// </summary>
 public static class LcPayment
 {
+    public static BraintreeGateway NewBraintreeGateway(BraintreeGateway gateway)
+    {
+        return gateway == null ? gateway : NewBraintreeGateway();
+    }
     public static BraintreeGateway NewBraintreeGateway()
     {
         BraintreeGateway gateway;

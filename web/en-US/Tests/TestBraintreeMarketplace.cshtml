@@ -1,0 +1,119 @@
+﻿@* It serves as a dev&test page for the integration of the 
+    Braintree Marketplace API (#408).
+ *@
+@using Braintree;
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    if (IsPost) {
+        if (Request.Form.AllKeys.Contains<string>("create_submerchant_form")) {
+            // Create SubMerchant (provider account at Braintree Marketplace)
+            var providerID = Request["providerID"].AsInt();
+            var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
+            var address = getFirstUserAddressOfType(providerID, AddressType.Billing);
+            var bank = GetUserBankInfo(providerID);
+            if (provider != null && address != null) {
+                
+                
+                var gateway = LcPayment.NewBraintreeGateway();
+                
+                createSubMerchant(provider, address, bank, gateway);
+                
+            }
+        }
+    }
+}
+@functions {
+    enum AddressType : short {
+        Home = 1,
+        Billing = 13,
+        Other = 12
+    }
+    LcData.Address getFirstUserAddressOfType(int userID, AddressType addressType) {
+        using (var db = Database.Open("sqlloco")) {
+            var add = db.QuerySingle(
+                LcData.sqlGetAddresses +
+                " AND AddressTypeID = @1 ORDER BY L.UpdatedDate ASC",
+                userID, (short)addressType
+            );
+            if (add != null)
+                return new LcData.Address(add);
+            return null;
+        }
+    }
+    dynamic GetUserBankInfo(int userID) {
+        using (var db = Database.Open("sqlloco")) {
+            return db.QuerySingle(@"
+                SELECT  TOP 1 P.*,
+                        (SELECT TOP 1 DependsOnID FROM ProviderPaymentPreferenceType As T
+                         WHERE T.ProviderPaymentPreferenceTypeID = P.ProviderPaymentPreferenceTypeID
+                        ) As ProviderPaymentPreferenceTypeDependsOnID
+                FROM    providerpaymentpreference As P
+                WHERE   ProviderUserID = @0
+            ", userID);
+        }
+    }
+    Braintree.Customer GetBraintreeCustomer(int userID, BraintreeGateway gateway = null) {
+        gateway = LcPayment.NewBraintreeGateway(gateway);
+        try{
+            return gateway.Customer.Find(LcPayment.GetCustomerId(userID));
+        } catch (Braintree.Exceptions.NotFoundException ex) {
+        }
+        return null;
+    }
+    bool createSubMerchant(dynamic user, LcData.Address address, dynamic bank, BraintreeGateway gateway) {
+        gateway = LcPayment.NewBraintreeGateway(gateway);
+        
+        var braintreeCustomer = GetBraintreeCustomer((int)user.UserID, gateway);
+        string tin = null;
+        string accountNumber = null;
+        if (braintreeCustomer != null) {
+            tin = braintreeCustomer.CustomFields["loco_tin"];
+            accountNumber = braintreeCustomer.CustomFields["loco_bank_account"];
+        }
+        
+        MerchantAccountRequest request = new MerchantAccountRequest
+        {
+            ApplicantDetails = new ApplicantDetailsRequest
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.MobilePhone,
+                Address = new AddressRequest
+                {
+                    StreetAddress = address.AddressLine1,
+                    PostalCode = address.PostalCode,
+                    Locality = address.City,
+                    Region = address.StateProvinceCode,
+                },
+                // TODO: We have not user birth date
+                DateOfBirth = "1980-10-09",
+                Ssn = tin,
+                RoutingNumber = bank.ABANumber,
+                AccountNumber = accountNumber
+          },
+          TosAccepted = true,
+          MasterMerchantAccountId = LcPayment.BraintreeMerchantId,
+          Id = LcPayment.GetCustomerId(user.UserID)
+        };
+
+        Result<MerchantAccount> result = gateway.MerchantAccount.Create(request);
+
+        return result.IsSuccess();
+    }
+}
+<div class="btmarket">
+
+    <form method="post" name="create_submerchant_form">
+        <fieldset>
+            <legend>Create SubMerchant: provider account at Braintree Marketplace</legend>
+            <label>Provider UserID: <input type="text" name="providerID" value="@Request["providerID"]" /></label>
+            <div class="actions">
+                <input type="submit" class="main-action action" value="Create" />
+            </div>
+        </fieldset>
+    </form>
+
+</div>
