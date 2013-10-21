@@ -1,6 +1,7 @@
 ﻿@* It serves as a dev&test page for the integration of the 
     Braintree Marketplace API (#408).
  *@
+@using WebMatrix.Data;
 @using Braintree;
 @{
     LcHelpers.TestArea();
@@ -13,7 +14,7 @@
             // Create SubMerchant (provider account at Braintree Marketplace)
             var providerID = Request["providerID"].AsInt();
             var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
-            var address = getFirstUserAddressOfType(providerID, AddressType.Billing);
+            var address = getFirstUserAddressOfType(providerID, LcData.Address.AddressType.Billing);
             var bank = GetUserBankInfo(providerID);
             if (provider != null && address != null) {
                 
@@ -29,12 +30,7 @@
     }
 }
 @functions {
-    enum AddressType : short {
-        Home = 1,
-        Billing = 13,
-        Other = 12
-    }
-    LcData.Address getFirstUserAddressOfType(int userID, AddressType addressType) {
+    LcData.Address getFirstUserAddressOfType(int userID, LcData.Address.AddressType addressType) {
         using (var db = Database.Open("sqlloco")) {
             var add = db.QuerySingle(
                 LcData.sqlGetAddresses +

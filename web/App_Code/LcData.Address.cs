@@ -14,6 +14,12 @@ public static partial class LcData
     /// </summary>
     public class Address
     {
+        public enum AddressType : short {
+            Home = 1,
+            Billing = 13,
+            Other = 12
+        }
+
         public Address(){}
         public Address(DynamicRecord dbdata)
         {

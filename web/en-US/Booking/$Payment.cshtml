@@ -54,7 +54,6 @@
     Validation.Add("street-address-line-1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
     Validation.Add("street-address-line-2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
     Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
-    Validation.Add("save-payment-as", Validator.StringLength(50, 0, "Card nickname must be fewer than 50 characters."));
     
     if (priceIsEstimated) {
         Validation.RequireField("agree-estimate", "You must agree the pricing estimate");
@@ -89,16 +88,8 @@
         /*
          * User wants to save as 'my location'?
          */
-        string paymentNickName = null;
         bool createAddress = Request["save-payment"].AsBool();
         if (createAddress || createCard) {
-            // Validate fields for address creation, for address-only saving or card creation
-            if (Request["save-payment-as"].IsEmpty()){
-                ModelState.AddError("save-payment-as", "To save the payment is required a name");
-            }
-            else {
-                paymentNickName = Request["save-payment-as"];
-            }
             if (Request["street-address-line-1"].IsEmpty()){
                 ModelState.AddError("street-address-line-1", "Street address is required");
             }
@@ -167,8 +158,9 @@
                             Request["state"].AsInt(),
                             postalCodeID,
                             LcData.GetCurrentCountryID(),
-                            paymentNickName,
-                            13 /*AddressType: Billing*/,
+                            // Automatic address name, just the address type
+                            LcRessources.GetText("Billing"),
+                            (int)LcData.Address.AddressType.Billing,
                             null, // special instructions
                             null, null, null /* coordinates and googlemaps */);
                     }
@@ -275,9 +267,7 @@
                             try{
                                 // REAL Braintree Code
                                 BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
-                        
-                                //string credidtCardToken = c.UserID.ToString() + ":creditcard:" + LcHelpers.ConvertToBraintreeToken(paymentNickName);
-                        
+                       
                                 /*
                                  * Send customer payment data to Braintree,
                                  * using our UserID as identifier.
@@ -548,8 +538,7 @@
                 <label>Security Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save card details as:</label>
-                <input class="save-as" type="text" value="@(Request["save-payment-as"] ?? (billingAddress == null ? null : billingAddress.AddressName))" name="save-payment-as" @Validation.GetHtml("save-payment-as")/>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save payment details</label>
             </li>
         </ul>
     </fieldset>

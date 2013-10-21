@@ -496,8 +496,7 @@
 }
 #booking-payment .billing-info .name-on-card input,
 #booking-payment .billing-info .street-address-line-1 input,
-#booking-payment .billing-info .street-address-line-2 input,
-#booking-payment .billing-info .save-to-my-payments input.save-as {
+#booking-payment .billing-info .street-address-line-2 input {
     width: 220px;
     float: right;
 }
@@ -531,9 +530,6 @@
 #booking-payment .billing-info .save-to-my-payments label{
     display: inline-block;
     padding: 0;
-}
-#booking-payment .billing-info .save-to-my-payments input.save-as {
-    margin: 0 5px;
 }
 #booking-payment .billing-info .card-number input{
     float: right;
