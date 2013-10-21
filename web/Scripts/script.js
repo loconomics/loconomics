@@ -2136,9 +2136,9 @@ LC.toggleElement = function (element, toggle, options) {
         });
     }
     if (toggle)
-        showElement(element, options);
+        LC.showElement(element, options);
     else
-        hideElement(element, options);
+        LC.hideElement(element, options);
 }
 /** toggleElement as a jQuery method: xtoggle
  **/

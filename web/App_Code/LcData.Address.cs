@@ -47,7 +47,23 @@ public static partial class LcData
         public string AddressLine1;
         public string AddressLine2;
         public string City;
-        public string StateProvinceCode;
+        public int StateProvinceID;
+        private string stateProvinceCode;
+        public string StateProvinceCode
+        {
+            get
+            {
+                if (stateProvinceCode == null &&
+                    StateProvinceID > 0)
+                    stateProvinceCode = LcData.GetStateProvinceCode(StateProvinceID);
+                return stateProvinceCode;
+            }
+            set
+            {
+                stateProvinceCode = value;
+            }
+        }
+        public int PostalCodeID;
         public string PostalCode;
         public string SpecialInstructions;
         public int CountryID;
@@ -65,6 +81,25 @@ public static partial class LcData
                         return "United States";
                     case 2:
                         return "Spain";
+                    default:
+                        return "";
+                }
+            }
+        }
+        /// <summary>
+        /// Get the country code in format 'alpha2' (2 letters).
+        /// TODO: Need to be localizable, and cached table lookup instead of hardcoded.
+        /// </summary>
+        public string CountryCodeAlpha2
+        {
+            get
+            {
+                switch (CountryID)
+                {
+                    case 1:
+                        return "US";
+                    case 2:
+                        return "ES";
                     default:
                         return "";
                 }

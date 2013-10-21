@@ -515,7 +515,7 @@ LC.packageQuickView = function LC_packageQuickView(id) {
 
 LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
     if ($c.find('.saved-cards').length == 0)
-        // There are not saved cards
+    // There are not saved cards
         return;
     var $edit = $c.find('.edit-card');
     var $update = $c.find('[name=update-credit-card]');
@@ -543,6 +543,7 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
         var $card = $t.closest('.card');
         $card.find('input').prop('checked', true);
         updateUpdateFlagWith($card);
+        return false;
     });
 
     // First update on load
@@ -550,6 +551,17 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
         $c.find('[name=credit-card]:checked').trigger('change')
         .closest('.card')
     );
+};
+
+LC.initPaymentAddress = function LC_initPaymentAddress($c) {
+    $c.find('[name=use-scheduled-address]').on('change', function () {
+        var $t = $(this),
+            $a = $c.find('.is-addressField');
+        $a.xtoggle(!$t.prop('checked'), {
+            effect: 'height',
+            duration: 300
+        });
+    }).trigger('change');
 };
 
 $(document).ready(function () {
@@ -611,6 +623,7 @@ $(document).ready(function () {
                 // load tab content
                 paymentTab.html(data);
                 LC.initCreditCardEdition(paymentTab);
+                LC.initPaymentAddress(paymentTab);
             },
             error: ajaxErrorPopupHandler,
             complete: function () {

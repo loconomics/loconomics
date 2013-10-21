@@ -46,6 +46,11 @@
             LcUrl.LangPath + "Booking/?ProviderID=" + p.UserID.ToString() +
             "&PositionID=" + pos.PositionID.ToString());
     }
+    
+    /*
+     * Get Booking Request information
+     */
+    dynamic summary = LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
 
     /*
      * Validation
@@ -88,15 +93,17 @@
         /*
          * User wants to save as 'my location'?
          */
+        bool useScheduledAddress = Request["use-scheduled-address"].AsBool();
         bool createAddress = Request["save-payment"].AsBool();
-        if (createAddress || createCard) {
+        LcData.Address address = null;
+        if (!useScheduledAddress && (createAddress || createCard)) {
             if (Request["street-address-line-1"].IsEmpty()){
                 ModelState.AddError("street-address-line-1", "Street address is required");
             }
             if (Request["city"].IsEmpty()){
                 ModelState.AddError("city", "City is required");
             }
-            if (Request["state"].IsEmpty()){
+            if (Request["state"].IsInt()){
                 ModelState.AddError("state", "State is required");
             }
             if (Request["zip"].IsEmpty()){
@@ -109,12 +116,34 @@
          */
         using (var db = Database.Open("sqlloco")) {
 
-            // Validate that Zip Postal Code is valid, and get the matching ID to be used later
-            var postalCodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
-            if (postalCodeID == 0) {
-                ModelState.AddError("zip", "Zip Postal Code is not valid");
+            if (!useScheduledAddress && (createAddress || createCard)) {
+                // Validate that Zip Postal Code is valid, and get the matching ID to be used later
+                var postalCodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
+                if (postalCodeID == 0) {
+                    ModelState.AddError("zip", "Zip Postal Code is not valid");
+                } else {
+                    address = new LcData.Address {
+                        AddressLine1 = Request["street-address-line-1"],
+                        AddressLine2 = Request["street-address-line-2"],
+                        City = Request["city"],
+                        StateProvinceID = Request["state"].AsInt(),
+                        PostalCode = Request["zip"],
+                        PostalCodeID = postalCodeID,
+                        CountryID = LcData.GetCurrentCountryID()
+                    };
+                }
+            } else if (useScheduledAddress && (createAddress || createCard)) {
+                // The scheduled address is in the booking request information record:
+                address = new LcData.Address {
+                    AddressLine1 = summary.AddressLine1,
+                    AddressLine2 = summary.AddressLine2,
+                    City = summary.City,
+                    StateProvinceID = summary.StateProvinceID,
+                    PostalCode = summary.PostalCode,
+                    PostalCodeID = summary.PostalCodeID,
+                    CountryID = LcData.GetCurrentCountryID()
+                };
             }
-            var stateProvinceCode = LcData.GetStateProvinceCode(Request["state"].AsInt());
 
             if (ModelState.IsValid){
                 try {
@@ -137,32 +166,8 @@
                     
 
                     // Save payment address
-                    if (createAddress) {
-                        // Check if there is already a 'billing' address (only can exists one) and get its AddressID
-                        // to update it with the new data - or inserts one new if AddressID=0
-                        int billingAddressID = db.QueryValue(@"
-                            SELECT  AddressID
-                            FROM    Address
-                            WHERE   AddressTypeID = 13 -- 'billing' type
-                                     AND
-                                    UserID = @0
-                        ", c.UserID) ?? 0;
-                        
-                        // Save location as service location
-                        db.Execute(LcData.sqlSetAddress,
-                            billingAddressID,
-                            c.UserID,
-                            Request["street-address-line-1"],
-                            Request["street-address-line-2"],
-                            Request["city"],
-                            Request["state"].AsInt(),
-                            postalCodeID,
-                            LcData.GetCurrentCountryID(),
-                            // Automatic address name, just the address type
-                            LcRessources.GetText("Billing"),
-                            (int)LcData.Address.AddressType.Billing,
-                            null, // special instructions
-                            null, null, null /* coordinates and googlemaps */);
+                    if (createAddress && address != null) {
+                        CreateBillingAddress(address, c.UserID, db);
                     }
                     
                     /*
@@ -175,70 +180,15 @@
                      */
                     if (ModelState.IsValid) {
                         
-                        /*
-                         * Check if there are not events on the booking request, because this is
-                         * the first attempt and not a save-after-error 
-                         */
-                        if (0 == (int)db.QueryValue(@"
-                                SELECT  count(*)
-                                FROM    BookingRequest
-                                WHERE   BookingRequestID = @0
-                                        AND PreferredDateID is not null
-                            ", bookingRequestID)) {
-                        
-                            /*
-                             * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
-                             * looking in our Postal Codes table.
-                             */
-                            var sqlGetTimeZone = @"
-                                SELECT  TimeZone
-                                FROM    PostalCode
-                                WHERE   PostalCodeID = @0
-                            ";
-                            var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
-                            // Save date-times as 'tentative' provider Events
-                            int? dt1ID, dt2ID, dt3ID;
-                            dt1ID = dt2ID = dt3ID = null;
-                            string eventSummary = String.Format("{0} services for {1}", pos.PositionSingular, LcHelpers.GetUserDisplayName(c));
-                            string eventDesc = LcData.Booking.GetBookingRequestEventDescription(bookingRequestID);
-                            if (dt1Start.HasValue && dt1End.HasValue) {
-                                dt1ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
-                                    3, // Availability is 'Tentative'
-                                    eventSummary, eventDesc,
-                                    dt1Start, dt1End, timeZone);
-                            }
-                            if (dt2Start.HasValue && dt2End.HasValue) {
-                                dt2ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
-                                    3, // Availability is 'Tentative'
-                                    eventSummary, eventDesc,
-                                    dt2Start, dt2End, timeZone);
-                            }
-                            if (dt3Start.HasValue && dt3End.HasValue) {
-                                dt3ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
-                                    3, // Availability is 'Tentative'
-                                    eventSummary, eventDesc,
-                                    dt3Start, dt3End, timeZone);
-                            }
+                        SaveDatesToBookingRequest(
+                            bookingRequestID,
+                            address.PostalCodeID,
+                            c, p, pos,
+                            dt1Start, dt1End,
+                            dt2Start, dt2End,
+                            dt3Start, dt3End,
+                            db);
 
-                            /*
-                             * Save event IDs and preferences
-                             * State is still 1:created
-                             */
-                            db.Execute(@"
-                                UPDATE  BookingRequest
-                                SET     
-                                        PreferredDateID = @1
-                                        ,AlternativeDate1ID = @2
-                                        ,AlternativeDate2ID = @3
-                                        ,SendReminder = @4
-                                        ,SendPromotional = @5
-                                WHERE   BookingRequestID = @0
-                            ", bookingRequestID, 
-                             dt1ID, dt2ID, dt3ID,
-                             Request["send-reminder"].AsBool(),
-                             Request["send-promotional"].AsBool());
-                        }
-                        
                         /*
                          * Save last card number digits encrypted
                          * State is still 1:created
@@ -247,9 +197,13 @@
                             UPDATE  BookingRequest
                             SET     
                                     PaymentLastFourCardNumberDigits = @1
+                                    ,SendReminder = @2
+                                    ,SendPromotional = @3
                             WHERE   BookingRequestID = @0
                         ", bookingRequestID, 
-                            LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)));
+                            LcEncryptor.Encrypt(LcHelpers.GetLastStringChars(Request["card-number"], 4)),
+                            Request["send-reminder"].AsBool(),
+                            Request["send-promotional"].AsBool());
                     }
 
 
@@ -307,12 +261,12 @@
                                         CVV = Request["cvv"],
                                         BillingAddress = new CreditCardAddressRequest
                                         {
-                                            StreetAddress = Request["street-address-line-1"],
-                                            ExtendedAddress = Request["street-address-line-2"],
-                                            Locality = Request["city"],
-                                            Region = stateProvinceCode,
-                                            PostalCode = Request["zip"],
-                                            CountryCodeAlpha2 = "US"
+                                            StreetAddress = address.AddressLine1,
+                                            ExtendedAddress = address.AddressLine2,
+                                            Locality = address.City,
+                                            Region = address.StateProvinceCode,
+                                            PostalCode = address.PostalCode,
+                                            CountryCodeAlpha2 = address.CountryCodeAlpha2
                                         }
                                     };
                                 
@@ -414,7 +368,6 @@
     /*
      * Get Data
      */
-    dynamic summary = LcData.Booking.GetBookingRequestForUser(bookingRequestID, c.UserID, c.IsAdmin);
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     var pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
@@ -430,6 +383,111 @@
             savedCards = gc.CreditCards;
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
+    }
+    // Option: copy address from step-2 schedule, only if is a customer address
+    var allowUseScheduledAddress = summary.LocationUserID == c.UserID;
+}
+
+@functions{
+    void SaveDatesToBookingRequest(
+        int bookingRequestID,
+        int postalCodeID, 
+        dynamic c,
+        dynamic p,
+        dynamic pos,
+        DateTime? dt1Start,
+        DateTime? dt1End, 
+        DateTime? dt2Start, 
+        DateTime? dt2End, 
+        DateTime? dt3Start, 
+        DateTime? dt3End,
+        Database db) {
+        /*
+        * Check if there are not events on the booking request, because this is
+        * the first attempt and not a save-after-error 
+        */
+        if (0 == (int)db.QueryValue(@"
+                SELECT  count(*)
+                FROM    BookingRequest
+                WHERE   BookingRequestID = @0
+                        AND PreferredDateID is not null
+            ", bookingRequestID)) {
+                        
+            /*
+                * Creating events with the passed data by the user for this Booking setting the Time Zone we found 
+                * looking in our Postal Codes table.
+                */
+            var sqlGetTimeZone = @"
+                SELECT  TimeZone
+                FROM    PostalCode
+                WHERE   PostalCodeID = @0
+            ";
+            var timeZone = db.QueryValue(sqlGetTimeZone, postalCodeID);
+            // Save date-times as 'tentative' provider Events
+            int? dt1ID, dt2ID, dt3ID;
+            dt1ID = dt2ID = dt3ID = null;
+            string eventSummary = String.Format("{0} services for {1}", pos.PositionSingular, LcHelpers.GetUserDisplayName(c));
+            string eventDesc = LcData.Booking.GetBookingRequestEventDescription(bookingRequestID);
+            if (dt1Start.HasValue && dt1End.HasValue) {
+                dt1ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    eventSummary, eventDesc,
+                    dt1Start, dt1End, timeZone);
+            }
+            if (dt2Start.HasValue && dt2End.HasValue) {
+                dt2ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    eventSummary, eventDesc,
+                    dt2Start, dt2End, timeZone);
+            }
+            if (dt3Start.HasValue && dt3End.HasValue) {
+                dt3ID = db.QueryValue(LcCalendar.sqlInsBookingEvent, p.UserID,
+                    3, // Availability is 'Tentative'
+                    eventSummary, eventDesc,
+                    dt3Start, dt3End, timeZone);
+            }
+
+            /*
+                * Save event IDs and preferences
+                * State is still 1:created
+                */
+            db.Execute(@"
+                UPDATE  BookingRequest
+                SET     
+                        PreferredDateID = @1
+                        ,AlternativeDate1ID = @2
+                        ,AlternativeDate2ID = @3
+                WHERE   BookingRequestID = @0
+            ", bookingRequestID, 
+                dt1ID, dt2ID, dt3ID);
+        }
+    }
+    void CreateBillingAddress(LcData.Address address, int userID, Database db) {
+        // Check if there is already a 'billing' address (only can exists one) and get its AddressID
+        // to update it with the new data - or inserts one new if AddressID=0
+        int billingAddressID = db.QueryValue(@"
+            SELECT  AddressID
+            FROM    Address
+            WHERE   AddressTypeID = 13 -- 'billing' type
+                        AND
+                    UserID = @0
+        ", userID) ?? 0;
+                        
+        // Save location as service location
+        db.Execute(LcData.sqlSetAddress,
+            billingAddressID,
+            userID,
+            address.AddressLine1,
+            address.AddressLine2,
+            address.City,
+            address.StateProvinceID,
+            address.PostalCodeID,
+            address.CountryID,
+            // Automatic address name, just the address type
+            LcRessources.GetText("Billing"),
+            (int)LcData.Address.AddressType.Billing,
+            null, // special instructions
+            null, null, null /* coordinates and googlemaps */);
     }
 }
 
@@ -506,23 +564,29 @@
         }
 
         <ul class="edit-card">
+            @if (allowUseScheduledAddress)
+            {
+                <li class="copy-address">
+                    <label><input type="checkbox" @LcHelpers.IsChecked(Request["use-scheduled-address"], "true")) value="true" name="use-scheduled-address" /> My billing address is the same as I entered in step 2</label>
+                </li>
+            }
             <li class="name-on-card">
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
             </li>
-            <li class="street-address-line-1">
+            <li class="street-address-line-1 is-addressField">
                 <label>Street address line 1:<input type="text" name="street-address-line-1" value="@(Request["street-address-line-1"] ?? (billingAddress == null ? null : billingAddress.AddressLine1) )" @Validation.GetHtml("street-address-line-1")/></label>
             </li>
-            <li class="street-address-line-2">
+            <li class="street-address-line-2 is-addressField">
                 <label>Street address line 2:<input type="text" name="street-address-line-2" value="@(Request["street-address-line-2"] ?? (billingAddress == null ? null : billingAddress.AddressLine2) ) " @Validation.GetHtml("street-address-line-2")/></label>
             </li>
-            <li class="city">
+            <li class="city is-addressField">
                 <label>City:<input type="text" name="city" value="@(Request["city"] ?? (billingAddress == null ? null : billingAddress.City) )" @Validation.GetHtml("city")/></label>
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
-            <li class="state"><label>State:<select name="state" @Validation.GetHtml("state")>
+            <li class="state is-addressField"><label>State:<select name="state" @Validation.GetHtml("state")>
                         @LcHelpers.StateProvinceOptions(Request["state"] ?? (billingAddress == null ? null : billingAddress.StateProvinceID) )
                     </select></label></li>
-            <li class="zip">
+            <li class="zip is-addressField">
                 <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@(Request["zip"] ?? (billingAddress == null ? null : billingAddress.PostalCode) )" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="card-number">
@@ -615,7 +679,10 @@
     {
     <script type="text/javascript">
         @if (IsPost) {
-            <text>LC.initCreditCardEdition($('#payment'));</text>
+            <text>
+            LC.initCreditCardEdition($('#payment'));
+            LC.initPaymentAddress($('#payment'));
+            </text>
         }
 
         function LC_BookingPayment() {
