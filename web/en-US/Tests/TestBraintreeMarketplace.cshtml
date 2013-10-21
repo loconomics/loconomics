@@ -95,13 +95,17 @@
                 // TODO: We have not user birth date
                 DateOfBirth = "1980-10-09",
                 Ssn = tin,
-                RoutingNumber = bank.ABANumber,
+                RoutingNumber = (bank.ABANumber ?? 0).ToString(),
                 AccountNumber = accountNumber
           },
           TosAccepted = true,
           MasterMerchantAccountId = LcPayment.BraintreeMerchantId,
           Id = LcPayment.GetCustomerId(user.UserID)
         };
+        
+        ModelState.AddFormError("BT customer: " + Json.Encode(braintreeCustomer));
+        ModelState.AddFormError("account number " + accountNumber);
+        ModelState.AddFormError(request.ToXml());
 
         try{
             Result<MerchantAccount> result = gateway.MerchantAccount.Create(request);

@@ -112,23 +112,23 @@
                 }
                 
                 // Save TIN number on Braintree
+                var btCustomerID = LcPayment.GetCustomerId(user.UserID);
                 CustomerRequest request = new CustomerRequest{
                     //need to pass in the userid from the cookie
-                    Id = user.UserID.ToString(),
-                    CustomerId = user.UserID.ToString(),
+                    Id = btCustomerID,
                     CustomFields = new Dictionary<string,string> {
                         { "loco_tin", tinNumber }
-                    }
+                    },
                 };
                 // Check if user exists and must be updated, or be created
                 Customer customer = null;
                 try {
-                    customer = gateway.Customer.Find(user.UserID.ToString());
+                    customer = gateway.Customer.Find(btCustomerID);
                 } catch (Braintree.Exceptions.NotFoundException ex){
                 }
                 Result<Customer> result = null;
                 if (customer != null) {
-                    result = gateway.Customer.Update(user.UserID.ToString(), request);
+                    result = gateway.Customer.Update(btCustomerID, request);
                 } else {
                     result = gateway.Customer.Create(request);
                 }
