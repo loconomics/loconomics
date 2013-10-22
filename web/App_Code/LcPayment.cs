@@ -11,6 +11,7 @@ using System.Web.WebPages;
 /// </summary>
 public static class LcPayment
 {
+    #region Gateway and config
     public static BraintreeGateway NewBraintreeGateway(BraintreeGateway gateway)
     {
         return gateway == null ? NewBraintreeGateway() : gateway;
@@ -56,6 +57,15 @@ public static class LcPayment
                 : ConfigurationManager.AppSettings["Braintree.Production.MerchantId"];
         }
     }
+    public static string BraintreeMerchantAccountId
+    {
+        get
+        {
+            return ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()
+                ? ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantAccountId"]
+                : ConfigurationManager.AppSettings["Braintree.Production.MerchantAccountId"];
+        }
+    }
     public static bool BraintreeFraudProtectionToolsEnabled
     {
         get
@@ -63,6 +73,9 @@ public static class LcPayment
             return ConfigurationManager.AppSettings["Braintree.FraudProtectionTools.Enabled"].AsBool();
         }
     }
+    #endregion
+
+    #region Actions: Refund
     /// <summary>
     /// Full refund a transaction ensuring that will be no charge to the customer
     /// or will be refunded if there was.
@@ -214,6 +227,9 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+    #endregion
+
+    #region Actions: Confirming payment
     /// <summary>
     /// Submit to settlement a transaction to be full charged its authorized
     /// amount.
@@ -237,7 +253,9 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+    #endregion
 
+    #region Customer information
     /// <summary>
     /// Get the payment gateway ID for a customer based on our userID
     /// </summary>
@@ -263,9 +281,11 @@ public static class LcPayment
         }
         return null;
     }
+    #endregion
 
     #region Marketplace
 
+    #region Provier information
     /// <summary>
     /// Get the AccountId (where to pay) on the payment gateway
     /// for a provider user.
@@ -276,7 +296,9 @@ public static class LcPayment
     {
         return "Marketplace_" + GetCustomerId(userID);
     }
+    #endregion
 
+    #region Create Payment Account (Merchant Account)
     /// <summary>
     /// Create the payment account for the provider at the payment gateway (Braintree) given
     /// its Loconomics UserID.
@@ -349,7 +371,7 @@ public static class LcPayment
                 AccountNumber = accountNumber
           },
           TosAccepted = true,
-          MasterMerchantAccountId = "LoconomicsInc",
+          MasterMerchantAccountId = BraintreeMerchantAccountId,
           Id = LcPayment.GetProviderPaymentAccountId(user.UserID)
         };
 
@@ -359,6 +381,7 @@ public static class LcPayment
             return null;
         }
     }
+    #endregion
 
     #endregion
 }
