@@ -237,6 +237,7 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+
     /// <summary>
     /// Get the payment gatewaye ID for a customer based on our userID
     /// </summary>
