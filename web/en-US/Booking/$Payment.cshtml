@@ -251,7 +251,7 @@
                              */
                         
                             // Find or create Customer on Braintree
-                            string customerIdOnBraintree = LcHelpers.Channel + "_" + c.UserID.ToString();
+                            string customerIdOnBraintree = LcPayment.GetCustomerId(c.UserID);
                             string customerCreditCardToken = customerIdOnBraintree + "_CreditCard1";
                             try{
                                 var gc = gateway.Customer.Find(customerIdOnBraintree);

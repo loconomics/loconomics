@@ -233,4 +233,14 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+
+    /// <summary>
+    /// Get the payment gatewaye ID for a customer based on our userID
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static string GetCustomerId(int userID)
+    {
+        return ASP.LcHelpers.Channel + "_" + userID.ToString();
+    }
 }
