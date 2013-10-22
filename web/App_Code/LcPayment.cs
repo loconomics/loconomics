@@ -13,7 +13,7 @@ public static class LcPayment
 {
     public static BraintreeGateway NewBraintreeGateway(BraintreeGateway gateway)
     {
-        return gateway == null ? gateway : NewBraintreeGateway();
+        return gateway == null ? NewBraintreeGateway() : gateway;
     }
     public static BraintreeGateway NewBraintreeGateway()
     {
@@ -239,7 +239,7 @@ public static class LcPayment
     }
 
     /// <summary>
-    /// Get the payment gatewaye ID for a customer based on our userID
+    /// Get the payment gateway ID for a customer based on our userID
     /// </summary>
     /// <param name="userID"></param>
     /// <returns></returns>
@@ -247,4 +247,118 @@ public static class LcPayment
     {
         return ASP.LcHelpers.Channel + "_" + userID.ToString();
     }
+
+    /// <summary>
+    /// Returns the customer information on Braintree for the given userID,
+    /// or null if not exists.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="gateway">Optional, to reuse an opened gateway, else a new one is transparently created</param>
+    /// <returns></returns>
+    public static Braintree.Customer GetBraintreeCustomer(int userID, BraintreeGateway gateway = null) {
+        gateway = LcPayment.NewBraintreeGateway(gateway);
+        try{
+            return gateway.Customer.Find(GetCustomerId(userID));
+        } catch (Braintree.Exceptions.NotFoundException ex) {
+        }
+        return null;
+    }
+
+    #region Marketplace
+
+    /// <summary>
+    /// Get the AccountId (where to pay) on the payment gateway
+    /// for a provider user.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static string GetProviderPaymentAccountId(int userID)
+    {
+        return "Marketplace_" + GetCustomerId(userID);
+    }
+
+    /// <summary>
+    /// Create the payment account for the provider at the payment gateway (Braintree) given
+    /// its Loconomics UserID.
+    /// On Braintree Marketplace, this is called 'Create a Sub Merchant'
+    /// </summary>
+    /// <param name="providerID"></param>
+    /// <param name="gateway"></param>
+    /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
+    /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched) or there is
+    /// not enough information for that userID, both cases it means the details are not complete or malformed.</returns>
+    public static Result<MerchantAccount> CreateProviderPaymentAccount(int providerID, BraintreeGateway gateway = null)
+    {
+        gateway = NewBraintreeGateway(gateway);
+        var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
+        var address = LcData.GetFirstUserAddressOfType(providerID, LcData.Address.AddressType.Billing);
+        var bank = LcData.UserInfo.GetUserBankInfo(providerID);
+        if (provider != null && address != null)
+        {
+            return CreateProviderPaymentAccount(provider, address, bank, gateway);
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Create the payment account for the provider at the payment gateway (Braintree) given
+    /// that user information.
+    /// On Braintree Marketplace, this is called 'Create a Sub Merchant'
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="address"></param>
+    /// <param name="bank"></param>
+    /// <param name="gateway"></param>
+    /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
+    /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched),
+    /// it means the details are not complete or malformed.</returns>
+    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, BraintreeGateway gateway = null) {
+        gateway = NewBraintreeGateway(gateway);
+        
+        var braintreeCustomer = GetBraintreeCustomer((int)user.UserID, gateway);
+        string tin = null;
+        string accountNumber = null;
+        if (braintreeCustomer != null) {
+            tin = braintreeCustomer.CustomFields.ContainsKey("loco_tin")
+                ? braintreeCustomer.CustomFields["loco_tin"]
+                : null;
+            accountNumber = braintreeCustomer.CustomFields.ContainsKey("loco_bank_account")
+                ? braintreeCustomer.CustomFields["loco_bank_account"]
+                : null;
+        }
+        
+        MerchantAccountRequest request = new MerchantAccountRequest
+        {
+            ApplicantDetails = new ApplicantDetailsRequest
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.MobilePhone,
+                Address = new AddressRequest
+                {
+                    StreetAddress = address.AddressLine1,
+                    PostalCode = address.PostalCode,
+                    Locality = address.City,
+                    Region = address.StateProvinceCode,
+                },
+                // TODO: We have not user birth date
+                DateOfBirth = "1980-10-09",
+                Ssn = tin,
+                RoutingNumber = (bank.ABANumber ?? 0).ToString(),
+                AccountNumber = accountNumber
+          },
+          TosAccepted = true,
+          MasterMerchantAccountId = "LoconomicsInc",
+          Id = LcPayment.GetProviderPaymentAccountId(user.UserID)
+        };
+
+        try{
+            return gateway.MerchantAccount.Create(request);
+        } catch (Braintree.Exceptions.AuthorizationException ex) {
+            return null;
+        }
+    }
+
+    #endregion
 }

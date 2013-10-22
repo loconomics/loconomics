@@ -322,6 +322,28 @@ public static partial class LcData
             db.Execute(sqlSetHomeAddress, userID, addressLine1, addressLine2, city, stateProvinceID, postalCodeID, countryID, languageID);
         }
     }
+    
+    /// <summary>
+    /// Get the first user address of the given type from database.
+    /// Useful for special address types that can be only one per user, but can be used with anyone.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="addressType"></param>
+    /// <returns></returns>
+    public static LcData.Address GetFirstUserAddressOfType(int userID, LcData.Address.AddressType addressType) {
+        using (var db = Database.Open("sqlloco")) {
+            var add = db.QuerySingle(
+                LcData.sqlGetAddresses +
+                " AND L.AddressTypeID = @1 ORDER BY L.UpdatedDate ASC",
+                userID, (short)addressType
+            );
+            if (add != null)
+                return new LcData.Address(add);
+            return null;
+        }
+    }
+
+    #region SQLs
     public const string sqlGetAddresses = @"
         SELECT  L.AddressID
                 ,L.UserID
@@ -611,6 +633,8 @@ public static partial class LcData
         -- Test Alert
         EXEC TestAlertLocation @1, @2
     ";
+    #endregion
+
     #endregion
 
     #region Pricing Wizard

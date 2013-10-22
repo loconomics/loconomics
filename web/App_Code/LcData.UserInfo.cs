@@ -770,5 +770,25 @@ public static partial class LcData
             }
         }
         #endregion
+
+        #region Bank Info
+        /// <summary>
+        /// Get a record with the Bank Info (AKA Provider Payment Preference) of a user.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static dynamic GetUserBankInfo(int userID) {
+            using (var db = Database.Open("sqlloco")) {
+                return db.QuerySingle(@"
+                    SELECT  TOP 1 P.*,
+                            (SELECT TOP 1 DependsOnID FROM ProviderPaymentPreferenceType As T
+                             WHERE T.ProviderPaymentPreferenceTypeID = P.ProviderPaymentPreferenceTypeID
+                            ) As ProviderPaymentPreferenceTypeDependsOnID
+                    FROM    providerpaymentpreference As P
+                    WHERE   ProviderUserID = @0
+                ", userID);
+            }
+        }
+        #endregion
     }
 }

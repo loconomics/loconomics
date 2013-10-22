@@ -13,110 +13,22 @@
         if (Request.Form.AllKeys.Contains<string>("create_submerchant_form")) {
             // Create SubMerchant (provider account at Braintree Marketplace)
             var providerID = Request["providerID"].AsInt();
-            var provider = LcData.UserInfo.GetUserRowWithContactData(providerID);
-            var address = getFirstUserAddressOfType(providerID, LcData.Address.AddressType.Billing);
-            var bank = GetUserBankInfo(providerID);
-            if (provider != null && address != null) {
-                
-                
-                var gateway = LcPayment.NewBraintreeGateway();
-                
-                merchantCreated = createSubMerchant(provider, address, bank, gateway);
-                
+            
+            var result = LcPayment.CreateProviderPaymentAccount(providerID);
+            
+            if (result != null && result.IsSuccess()) {
+                merchantCreated = true;
             } else {
                 merchantCreated = false;
+                ModelState.AddFormError(result.Message);
+                foreach(var err in result.Errors.All()){
+                    ModelState.AddFormError(err.Message);
+                }
             }
         }
     }
 }
-@functions {
-    LcData.Address getFirstUserAddressOfType(int userID, LcData.Address.AddressType addressType) {
-        using (var db = Database.Open("sqlloco")) {
-            var add = db.QuerySingle(
-                LcData.sqlGetAddresses +
-                " AND L.AddressTypeID = @1 ORDER BY L.UpdatedDate ASC",
-                userID, (short)addressType
-            );
-            if (add != null)
-                return new LcData.Address(add);
-            return null;
-        }
-    }
-    dynamic GetUserBankInfo(int userID) {
-        using (var db = Database.Open("sqlloco")) {
-            return db.QuerySingle(@"
-                SELECT  TOP 1 P.*,
-                        (SELECT TOP 1 DependsOnID FROM ProviderPaymentPreferenceType As T
-                         WHERE T.ProviderPaymentPreferenceTypeID = P.ProviderPaymentPreferenceTypeID
-                        ) As ProviderPaymentPreferenceTypeDependsOnID
-                FROM    providerpaymentpreference As P
-                WHERE   ProviderUserID = @0
-            ", userID);
-        }
-    }
-    Braintree.Customer GetBraintreeCustomer(int userID, BraintreeGateway gateway = null) {
-        gateway = LcPayment.NewBraintreeGateway(gateway);
-        try{
-            return gateway.Customer.Find(LcPayment.GetCustomerId(userID));
-        } catch (Braintree.Exceptions.NotFoundException ex) {
-        }
-        return null;
-    }
-    bool createSubMerchant(dynamic user, LcData.Address address, dynamic bank, BraintreeGateway gateway) {
-        gateway = LcPayment.NewBraintreeGateway(gateway);
-        
-        var braintreeCustomer = GetBraintreeCustomer((int)user.UserID, gateway);
-        string tin = null;
-        string accountNumber = null;
-        if (braintreeCustomer != null) {
-            tin = braintreeCustomer.CustomFields.ContainsKey("loco_tin")
-                ? braintreeCustomer.CustomFields["loco_tin"]
-                : null;
-            accountNumber = braintreeCustomer.CustomFields.ContainsKey("loco_bank_account")
-                ? braintreeCustomer.CustomFields["loco_bank_account"]
-                : null;
-        }
-        
-        MerchantAccountRequest request = new MerchantAccountRequest
-        {
-            ApplicantDetails = new ApplicantDetailsRequest
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Phone = user.MobilePhone,
-                Address = new AddressRequest
-                {
-                    StreetAddress = address.AddressLine1,
-                    PostalCode = address.PostalCode,
-                    Locality = address.City,
-                    Region = address.StateProvinceCode,
-                },
-                // TODO: We have not user birth date
-                DateOfBirth = "1980-10-09",
-                Ssn = tin,
-                RoutingNumber = (bank.ABANumber ?? 0).ToString(),
-                AccountNumber = accountNumber
-          },
-          TosAccepted = true,
-          MasterMerchantAccountId = LcPayment.BraintreeMerchantId,
-          Id = LcPayment.GetCustomerId(user.UserID)
-        };
-        
-        ModelState.AddFormError("BT customer: " + Json.Encode(braintreeCustomer));
-        ModelState.AddFormError("account number " + accountNumber);
-        ModelState.AddFormError(request.ToXml());
 
-        try{
-            Result<MerchantAccount> result = gateway.MerchantAccount.Create(request);
-            ModelState.AddFormError(result.Message);
-        return result.IsSuccess();
-        } catch (Braintree.Exceptions.AuthorizationException ex) {
-            ModelState.AddFormError(ex.Message);
-            return false;   
-        }
-    }
-}
 <div class="btmarket">
 
     <form method="post">
