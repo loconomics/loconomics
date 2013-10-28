@@ -69,6 +69,7 @@
         /*
          * Dependency validations
          */
+        bool savePayment = Request["save-payment"].AsBool();
         var creditCardToken = Request["credit-card"];
         var createCard = String.IsNullOrWhiteSpace(creditCardToken) || Request["update-credit-card"].AsBool();
         if (createCard) {
@@ -94,9 +95,8 @@
          * User wants to save as 'my location'?
          */
         bool useScheduledAddress = Request["use-scheduled-address"].AsBool();
-        bool createAddress = Request["save-payment"].AsBool();
         LcData.Address address = null;
-        if (!useScheduledAddress && (createAddress || createCard)) {
+        if (!useScheduledAddress && createCard) {
             if (Request["street-address-line-1"].IsEmpty()){
                 ModelState.AddError("street-address-line-1", "Street address is required");
             }
@@ -116,7 +116,7 @@
          */
         using (var db = Database.Open("sqlloco")) {
 
-            if (!useScheduledAddress && (createAddress || createCard)) {
+            if (!useScheduledAddress && createCard) {
                 // Validate that Zip Postal Code is valid, and get the matching ID to be used later
                 var postalCodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
                 if (postalCodeID == 0) {
@@ -132,7 +132,7 @@
                         CountryID = LcData.GetCurrentCountryID()
                     };
                 }
-            } else if (useScheduledAddress && (createAddress || createCard)) {
+            } else if (useScheduledAddress && createCard) {
                 // The scheduled address is in the booking request information record:
                 address = new LcData.Address {
                     AddressLine1 = summary.AddressLine1,
@@ -164,12 +164,7 @@
                     ";
                     var TotalPrice = db.QueryValue(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
                     
-
-                    // Save payment address
-                    if (createAddress && address != null) {
-                        CreateBillingAddress(address, c.UserID, db);
-                    }
-                    
+                   
                     /*
                      * Saving booking data from form and previous lookups.
                      * State will still be '1:created' and not '2:complete' because
@@ -247,19 +242,64 @@
                                 }
                             
                         
-                                // Find or create/update the payment method (credit card) for the customer
+                                TransactionCreditCardRequest transactionCreditCard = null;
+                                AddressRequest transactionAddress = null;
                                 if (ModelState.IsValid && createCard) {
+                                    
+                                    if (savePayment) {
+                                        // Create credit card saving in vault
+                                        var creditCardRequest = new CreditCardRequest
+                                        {
+                                            CustomerId = customerIdOnBraintree,
+                                            CardholderName = Request["name-on-card"],
+                                            Number = Request["card-number"],
+                                            ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
+                                            CVV = Request["cvv"],
+                                            BillingAddress = new CreditCardAddressRequest
+                                            {
+                                                StreetAddress = address.AddressLine1,
+                                                ExtendedAddress = address.AddressLine2,
+                                                Locality = address.City,
+                                                Region = address.StateProvinceCode,
+                                                PostalCode = address.PostalCode,
+                                                CountryCodeAlpha2 = address.CountryCodeAlpha2
+                                            }
+                                        };
+                                
+                                        Result<CreditCard> resultCreditCard = null;
 
-                                    // Create credit card if was requested or use current token
+                                        // Find or create/update the payment method (credit card) for the customer
+                                        try{
+                                            // Find the card
+                                            gateway.CreditCard.Find(creditCardToken);
+                                    
+                                            // Update it:
+                                            resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
 
-                                    var creditCardRequest = new CreditCardRequest
-                                    {
-                                        CustomerId = customerIdOnBraintree,
-                                        CardholderName = Request["name-on-card"],
-                                        Number = Request["card-number"],
-                                        ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
-                                        CVV = Request["cvv"],
-                                        BillingAddress = new CreditCardAddressRequest
+                                        } catch (Braintree.Exceptions.NotFoundException ex) {
+                                            // Credit card for customer doesn't exist, create it:
+                                            resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
+                                        }
+                                
+                                        if (resultCreditCard.IsSuccess()) {
+                                            // New Token, for the payment transaction
+                                            creditCardToken = resultCreditCard.Target.Token;
+                                        }
+                                        else {
+                                            ModelState.AddFormError(resultCreditCard.Message);
+                                            foreach (var error in resultCreditCard.Errors.All()) {
+                                                ModelState.AddFormError(error.Message);
+                                            }
+                                        }
+                                    } else {
+                                        // Card details for the transaction without being saved on Vault
+                                        transactionCreditCard = new TransactionCreditCardRequest {
+                                            CardholderName = Request["name-on-card"],
+                                            Number = Request["card-number"],
+                                            ExpirationDate = Request["card-exp-month"] + "/" + Request["card-exp-year"],
+                                            CVV = Request["cvv"]
+                                        };
+                                        transactionAddress = new AddressRequest
                                         {
                                             StreetAddress = address.AddressLine1,
                                             ExtendedAddress = address.AddressLine2,
@@ -267,32 +307,7 @@
                                             Region = address.StateProvinceCode,
                                             PostalCode = address.PostalCode,
                                             CountryCodeAlpha2 = address.CountryCodeAlpha2
-                                        }
-                                    };
-                                
-                                    Result<CreditCard> resultCreditCard = null;
-
-                                    try{
-                                        // Find the card
-                                        gateway.CreditCard.Find(creditCardToken);
-                                    
-                                        // Update it:
-                                        resultCreditCard = gateway.CreditCard.Update(creditCardToken, creditCardRequest);
-
-                                    } catch (Braintree.Exceptions.NotFoundException ex) {
-                                        // Credit card for customer doesn't exist, create it:
-                                        resultCreditCard = gateway.CreditCard.Create(creditCardRequest);
-                                    }
-                                
-                                    if (resultCreditCard.IsSuccess()) {
-                                        // New Token, for the payment transaction
-                                        creditCardToken = resultCreditCard.Target.Token;
-                                    }
-                                    else {
-                                        ModelState.AddFormError(resultCreditCard.Message);
-                                        foreach (var error in resultCreditCard.Errors.All()) {
-                                            ModelState.AddFormError(error.Message);
-                                        }
+                                        };
                                     }
                                 }
                         
@@ -306,8 +321,12 @@
                                         MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
                                         Options = new TransactionOptionsRequest
                                         {
-                                            SubmitForSettlement = false
-                                        }
+                                            SubmitForSettlement = false,
+                                            StoreInVaultOnSuccess = savePayment,
+                                            AddBillingAddressToPaymentMethod = savePayment
+                                        },
+                                        CreditCard = transactionCreditCard,
+                                        BillingAddress = transactionAddress
                                     };
                                     if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
                                         request.DeviceData = Request.Form["device_data"];
@@ -376,10 +395,6 @@
     var pricingSummary = LcData.Booking.GetPricingSummary(summary);
     //var pricingSummaryGroups = LcData.Booking.GetPricingSummaryGroups(summary.PricingEstimateID, summary);
     var pricingSummaryDetails = LcData.Booking.GetPricingSummaryDetails(summary.PricingEstimateID, summary.PricingEstimateRevision);
-    dynamic billingAddress = null;
-    using (var db = Database.Open("sqlloco")) {
-        billingAddress = db.QuerySingle(LcData.sqlGetAddresses + " AND L.AddressTypeID = 13 -- Billing address", c.UserID);
-    }
     Braintree.CreditCard[] savedCards = null;
     {
         var gateway = LcPayment.NewBraintreeGateway();
@@ -467,33 +482,6 @@
                 dt1ID, dt2ID, dt3ID);
         }
     }
-    void CreateBillingAddress(LcData.Address address, int userID, Database db) {
-        // Check if there is already a 'billing' address (only can exists one) and get its AddressID
-        // to update it with the new data - or inserts one new if AddressID=0
-        int billingAddressID = db.QueryValue(@"
-            SELECT  AddressID
-            FROM    Address
-            WHERE   AddressTypeID = 13 -- 'billing' type
-                        AND
-                    UserID = @0
-        ", userID) ?? 0;
-                        
-        // Save location as service location
-        db.Execute(LcData.sqlSetAddress,
-            billingAddressID,
-            userID,
-            address.AddressLine1,
-            address.AddressLine2,
-            address.City,
-            address.StateProvinceID,
-            address.PostalCodeID,
-            address.CountryID,
-            // Automatic address name, just the address type
-            LcRessources.GetText("Billing"),
-            (int)LcData.Address.AddressType.Billing,
-            null, // special instructions
-            null, null, null /* coordinates and googlemaps */);
-    }
 }
 
 @helper printDate(DateTime? date, DateTime? end) {
@@ -579,20 +567,20 @@
                 <label>Name as on card:<input type="text" name="name-on-card" value="@Request["name-on-card"]" @Validation.GetHtml("name-on-card")/></label>
             </li>
             <li class="street-address-line-1 is-addressField">
-                <label>Street address line 1:<input type="text" name="street-address-line-1" value="@(Request["street-address-line-1"] ?? (billingAddress == null ? null : billingAddress.AddressLine1) )" @Validation.GetHtml("street-address-line-1")/></label>
+                <label>Street address line 1:<input type="text" name="street-address-line-1" value="@(Request["street-address-line-1"])" @Validation.GetHtml("street-address-line-1")/></label>
             </li>
             <li class="street-address-line-2 is-addressField">
-                <label>Street address line 2:<input type="text" name="street-address-line-2" value="@(Request["street-address-line-2"] ?? (billingAddress == null ? null : billingAddress.AddressLine2) ) " @Validation.GetHtml("street-address-line-2")/></label>
+                <label>Street address line 2:<input type="text" name="street-address-line-2" value="@(Request["street-address-line-2"]) " @Validation.GetHtml("street-address-line-2")/></label>
             </li>
             <li class="city is-addressField">
-                <label>City:<input type="text" name="city" value="@(Request["city"] ?? (billingAddress == null ? null : billingAddress.City) )" @Validation.GetHtml("city")/></label>
+                <label>City:<input type="text" name="city" value="@(Request["city"])" @Validation.GetHtml("city")/></label>
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="state is-addressField"><label>State:<select name="state" @Validation.GetHtml("state")>
-                        @LcHelpers.StateProvinceOptions(Request["state"] ?? (billingAddress == null ? null : billingAddress.StateProvinceID) )
+                        @LcHelpers.StateProvinceOptions(Request["state"])
                     </select></label></li>
             <li class="zip is-addressField">
-                <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@(Request["zip"] ?? (billingAddress == null ? null : billingAddress.PostalCode) )" @Validation.GetHtml("zip")/></label>
+                <label>Zip Code:<input type="text" name="zip" data-val-postalcode="Postal Code is not valid" value="@(Request["zip"])" @Validation.GetHtml("zip")/></label>
             </li>
             <li class="card-number">
                 <label>Card number:<input type="text" name="card-number" value="@Request["card-number"]" @Validation.GetHtml("card-number")/></label>
@@ -607,7 +595,7 @@
                 <label>Security Code:<input type="text" name="cvv" value="@Request["cvv"]" @Validation.GetHtml("cvv")/></label>
             </li>
             <li class="save-to-my-payments">
-                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"] ?? (billingAddress != null ? "true" : "false")) name="save-payment" value="true" />Save payment details</label>
+                <label class="save"><input type="checkbox" @LcHelpers.IsChecked("true", Request["save-payment"]) name="save-payment" value="true" />Save payment details</label>
             </li>
         </ul>
     </fieldset>
