@@ -94,9 +94,8 @@
         /*
          * User wants to save as 'my location'?
          */
-        bool useScheduledAddress = Request["use-scheduled-address"].AsBool();
         LcData.Address address = null;
-        if (!useScheduledAddress && createCard) {
+        if (createCard) {
             if (Request["street-address-line-1"].IsEmpty()){
                 ModelState.AddError("street-address-line-1", "Street address is required");
             }
@@ -116,7 +115,7 @@
          */
         using (var db = Database.Open("sqlloco")) {
 
-            if (!useScheduledAddress && createCard) {
+            if (createCard) {
                 // Validate that Zip Postal Code is valid, and get the matching ID to be used later
                 var postalCodeID = LcData.GetPostalCodeID(Request["zip"], Request["state"].AsInt());
                 if (postalCodeID == 0) {
@@ -132,17 +131,6 @@
                         CountryID = LcData.GetCurrentCountryID()
                     };
                 }
-            } else if (useScheduledAddress && createCard) {
-                // The scheduled address is in the booking request information record:
-                address = new LcData.Address {
-                    AddressLine1 = summary.AddressLine1,
-                    AddressLine2 = summary.AddressLine2,
-                    City = summary.City,
-                    StateProvinceID = summary.StateProvinceID,
-                    PostalCode = summary.PostalCode,
-                    PostalCodeID = summary.PostalCodeID,
-                    CountryID = LcData.GetCurrentCountryID()
-                };
             }
 
             if (ModelState.IsValid){
@@ -559,7 +547,13 @@
         <ul class="edit-card">
             @if (allowUseScheduledAddress)
             {
-                <li class="copy-address">
+                <li class="copy-address"
+                    data-address-line1="@summary.AddressLine1"
+                    data-address-line2="@summary.AddressLine2"
+                    data-address-city="@summary.City"
+                    data-address-stateprovinceid="@summary.StateProvinceID"
+                    data-address-postalcode="@summary.PostalCode"
+                    >
                     <label><input type="checkbox" @LcHelpers.IsChecked(Request["use-scheduled-address"], "true")) value="true" name="use-scheduled-address" /> My billing address is the same as I entered in step 2</label>
                 </li>
             }

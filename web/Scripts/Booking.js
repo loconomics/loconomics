@@ -556,14 +556,25 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
 };
 
 LC.initPaymentAddress = function LC_initPaymentAddress($c) {
-    $c.find('[name=use-scheduled-address]').on('change', function () {
+    var working = false;
+    var $use = $c.find('[name=use-scheduled-address]').on('change', function () {
+        working = true;
         var $t = $(this),
-            $a = $c.find('.is-addressField');
-        $a.xtoggle(!$t.prop('checked'), {
-            effect: 'height',
-            duration: 300
-        });
+            $copy = $t.closest('.copy-address');
+        if ($t.is(':checked')) {
+            $c.find('[name=street-address-line-1]').val($copy.data('address-line1')).trigger('change');
+            $c.find('[name=street-address-line-2]').val($copy.data('address-line2')).trigger('change');
+            $c.find('[name=city]').val($copy.data('address-city')).trigger('change');
+            $c.find('[name=state]').val($copy.data('address-stateprovinceid')).trigger('change');
+            $c.find('[name=zip]').val($copy.data('address-postalcode')).trigger('change');
+        }
+        working = false;
     }).trigger('change');
+    // On any address field change -except from the copy-, uncheck
+    $c.find('.is-addressField').on('change', function () {
+        if (!working)
+            $use.prop('checked', false);
+    });
 };
 
 $(document).ready(function () {
