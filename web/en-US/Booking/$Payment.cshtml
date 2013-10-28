@@ -587,7 +587,7 @@
             </li>
             <!-- Collapsed next elements code to avoid white spaces that create excesive width on IE -->
             <li class="card-exp"><label>Expiration Date<select name="card-exp-month" @Validation.GetHtml("card-exp-month")>
-                        @LcHelpers.MonthOptions(Request["card-exp-month"])
+                        @LcHelpers.MonthOptions(Request["card-exp-month"] ?? DateTime.Today.Month.ToString())
                     </select></label><select name="card-exp-year">
                         @LcHelpers.CardYearOptions(Request["card-exp-year"])
                     </select></li>
