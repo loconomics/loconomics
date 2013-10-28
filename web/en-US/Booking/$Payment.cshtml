@@ -302,7 +302,12 @@
                                     {
                                         Amount = TotalPrice,
                                         CustomerId = customerIdOnBraintree,
-                                        PaymentMethodToken = creditCardToken
+                                        PaymentMethodToken = creditCardToken,
+                                        MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                                        Options = new TransactionOptionsRequest
+                                        {
+                                            SubmitForSettlement = false
+                                        }
                                     };
                                     if (LcPayment.BraintreeFraudProtectionToolsEnabled) {
                                         request.DeviceData = Request.Form["device_data"];
