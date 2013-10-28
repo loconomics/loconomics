@@ -547,10 +547,12 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
     });
 
     // First update on load
-    updateUpdateFlagWith(
-        $c.find('[name=credit-card]:checked').trigger('change')
-        .closest('.card')
-    );
+    var preCheckedCard = $c.find('[name=credit-card]:checked');
+    if (preCheckedCard.length) {
+        if (/true/i.test($update.val()))
+            preCheckedCard.closest('.card').find('.update-credit-card').addClass('cancel-update');
+        preCheckedCard.trigger('change');
+    }
 };
 
 LC.initPaymentAddress = function LC_initPaymentAddress($c) {

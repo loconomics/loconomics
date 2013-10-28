@@ -512,7 +512,7 @@
         {
             <div class="saved-cards">
                 @*(Request["update-credit-card"].AsBool(false))*@
-                <input type="hidden" name="update-credit-card" value="false" />
+                <input type="hidden" name="update-credit-card" value="@(Request["update-credit-card"] ?? "false")" />
                 <table>
                     <tr>
                         <th>Your saved payment options</th>
