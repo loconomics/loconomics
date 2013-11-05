@@ -1440,6 +1440,21 @@ form#personal li > label.gender {
     width: 94% !important;
 }
 
+/**** Form: Payment Account ****/
+#account-paymentaccount-form fieldset input,
+#account-paymentaccount-form fieldset select {
+    width: 70% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+#account-paymentaccount-form .terms-of-service label input {
+    width: auto !important;
+    vertical-align: middle;
+}
+
 /**** Form: Billing Address ****/
 .billing-address-form .location-data label {
     display: block;

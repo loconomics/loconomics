@@ -306,6 +306,19 @@
         }
     }
 }
+@helper StateProvinceCodeOptions(string selectedStateCode){
+    var sql = @"
+        SELECT StateProvinceName, StateProvinceCode
+        FROM    StateProvince
+        WHERE   CountryID=@0
+        ORDER BY StateProvinceName
+    ";
+    using (var db = Database.Open("sqlloco")){
+        foreach (var state in db.Query(sql, LcData.GetCurrentCountryID())){
+            <option value="@state.StateProvinceCode" @IsSelected(selectedStateCode, state.StateProvinceCode)>@state.StateProvinceName</option>
+        }
+    }
+}
 @helper MonthOptions(string selectedMonth){
     for (var i = 1; i < 13; i++) {
         <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>

@@ -334,7 +334,7 @@ public static class LcPayment
     /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
     /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched),
     /// it means the details are not complete or malformed.</returns>
-    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, BraintreeGateway gateway = null) {
+    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, string ABANumber, BraintreeGateway gateway = null) {
         gateway = NewBraintreeGateway(gateway);
         
         var braintreeCustomer = GetBraintreeCustomer((int)user.UserID, gateway);
@@ -348,6 +348,30 @@ public static class LcPayment
                 ? braintreeCustomer.CustomFields["loco_bank_account"]
                 : null;
         }
+
+        dynamic bank = new {
+            RoutingNumber = ABANumber,
+            Ssn = tin,
+            AccountNumber = accountNumber
+        };
+
+        return CreateProviderPaymentAccount(user, address, bank, DateTime.Today.AddYears(-30));
+    }
+
+    /// <summary>
+    /// Create the payment account for the provider at the payment gateway (Braintree) given
+    /// that user information.
+    /// On Braintree Marketplace, this is called 'Create a Sub Merchant'
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="address"></param>
+    /// <param name="bank"></param>
+    /// <param name="gateway"></param>
+    /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
+    /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched),
+    /// it means the details are not complete or malformed.</returns>
+    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, BraintreeGateway gateway = null) {
+        gateway = NewBraintreeGateway(gateway);
         
         MerchantAccountRequest request = new MerchantAccountRequest
         {
@@ -364,11 +388,10 @@ public static class LcPayment
                     Locality = address.City,
                     Region = address.StateProvinceCode,
                 },
-                // TODO: We have not user birth date
-                DateOfBirth = "1980-10-09",
-                Ssn = tin,
-                RoutingNumber = (bank.ABANumber ?? 0).ToString(),
-                AccountNumber = accountNumber
+                DateOfBirth = BirthDate.ToString("yyyy-MM-dd"),
+                Ssn = bank.Ssn,
+                RoutingNumber = bank.RoutingNumber,
+                AccountNumber = bank.AccountNumber
           },
           TosAccepted = true,
           MasterMerchantAccountId = BraintreeMerchantAccountId,

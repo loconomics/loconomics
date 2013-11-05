@@ -48,7 +48,7 @@
             <ul class="tabs">
                 @if (u.IsProvider)
                 {
-                <li><a class="button profile fanciful" href="#account-payments-bankinfo">Bank Account</a></li>
+                <li><a class="button profile fanciful" href="#account-paymentaccount">Payment Account</a></li>
                 }
                 @if (u.IsCustomer)
                 {
@@ -59,9 +59,9 @@
             
             @if (u.IsProvider)
             {
-            <div id="account-payments-bankinfo" class="tab-body">
-                @RenderPage("$AccountPaymentsBankInfo.cshtml")
-            </div><!-- #account-payments-bankinfo -->
+            <div id="account-paymentaccount" class="tab-body">
+                @RenderPage("$AccountPaymentAccount.cshtml")
+            </div><!-- #account-paymentaccount -->
             }
             @if (u.IsCustomer)
             {
@@ -74,9 +74,9 @@
             </div><!-- #account-payments-transactionhistory -->
 		</div><!-- #account-payments -->
 
-		<div id="account-taxes" class="tab-body fancy buttons">
+		@*<div id="account-taxes" class="tab-body fancy buttons">
             @RenderPage("$AccountTaxes.cshtml")
-		</div><!-- #account-taxes -->
+		</div><!-- #account-taxes -->*@
         
         <div id="account-terms" class="tab-body fancy">
             @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$TermsOfUse.cshtml")
