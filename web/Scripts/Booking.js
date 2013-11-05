@@ -517,6 +517,8 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
     if ($c.find('.saved-cards').length == 0)
     // There are not saved cards
         return;
+    // Duration is 0 for first animation
+    var anim_duration = 0;
     var $edit = $c.find('.edit-card');
     var $update = $c.find('[name=update-credit-card]');
     function updateUpdateFlagWith($card) {
@@ -526,10 +528,10 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
             $card.find('[name=credit-card]').val() == '';
         if (flag) {
             $update.val('true');
-            $edit.slideDown();
+            $edit.slideDown(anim_duration);
         } else {
             $update.val('false');
-            $edit.slideUp();
+            $edit.slideUp(anim_duration);
         }
     }
 
@@ -548,11 +550,14 @@ LC.initCreditCardEdition = function LC_initCreditCardEdition($c) {
 
     // First update on load
     var preCheckedCard = $c.find('[name=credit-card]:checked');
+    if (!preCheckedCard.length) preCheckedCard = $c.find('[name=credit-card][value=""]');
     if (preCheckedCard.length) {
         if (/true/i.test($update.val()))
             preCheckedCard.closest('.card').find('.update-credit-card').addClass('cancel-update');
         preCheckedCard.trigger('change');
     }
+    // Normal animation duration
+    anim_duration = 400;
 };
 
 LC.initPaymentAddress = function LC_initPaymentAddress($c) {

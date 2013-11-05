@@ -392,6 +392,16 @@
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
     }
+    // No selected credit card (new one)
+    var selectedCreditCard = "";
+    if (IsPost) {
+        selectedCreditCard = Request["credit-card"];
+    } else {
+        // First saved card, if there is any
+        if (savedCards != null && savedCards.Length > 0) {
+            selectedCreditCard = savedCards[0].Token;
+        }
+    }
     // Option: copy address from step-2 schedule, only if is a customer address
     var allowUseScheduledAddress = summary.LocationUserID == c.UserID;
 }
@@ -516,7 +526,7 @@
                         <tr class="card">
                             <td class="name">
                                 <label>
-                                    <input type="radio" @LcHelpers.IsChecked(Request["credit-card"], card.Token) name="credit-card" value="@card.Token" />
+                                    <input type="radio" @LcHelpers.IsChecked(selectedCreditCard, card.Token) name="credit-card" value="@card.Token" />
                                     @card.CardType.ToString()
                                     <a href='#update-card' class="update-credit-card">
                                         <span class="update-label">update</span>
@@ -535,7 +545,7 @@
                     <tr class="card">
                         <td colspan="3">
                             <label>
-                                <input type="radio" name="credit-card" value="" @LcHelpers.IsChecked(Request["credit-card"], "") />
+                                <input type="radio" name="credit-card" value="" @LcHelpers.IsChecked(selectedCreditCard, "") />
                                 Enter a new card
                             </label>
                         </td>
