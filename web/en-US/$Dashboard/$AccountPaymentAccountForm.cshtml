@@ -4,8 +4,6 @@
     var idprefix = "account-paymentaccount";
     var user = LcData.UserInfo.GetUserRowWithContactData();
     
-    var paymentFee = 2.9;
-    
     // Data
     string FirstName, LastName, MobilePhone, Street1, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
@@ -68,8 +66,8 @@
         }
         
         if (ModelState.IsValid) {
-            // Create account at Braintree
             try{
+                // Create account at Braintree
                 var result = LcPayment.CreateProviderPaymentAccount(new {
                     FirstName = FirstName,
                     LastName = LastName,
@@ -85,10 +83,11 @@
                     RoutingNumber = Aba,
                     AccountNumber = AccountNumber
                 }, BirthDate.Value
-                );
+                );                    
                 
                 if (result.IsSuccess()) {
-                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                    //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                    LcHelpers.ReturnJsonResult(3, null);
                 } else {
                     ModelState.AddFormError(result.Message);
                     foreach (var err in result.Errors.All()) {
@@ -104,12 +103,12 @@
 }
 <p class="setting-instructions">
     Getting paid is the easy part.
-    We accept payments on  your behalf, and Braintree processes them with a deposit directly to your bank account for a small fee (@paymentFee)%).
+    We accept payments on  your behalf, and Braintree processes them with a deposit directly to your bank account for a small fee (@LcPayment.MarketplaceProviderFee)%).
     Easy, right?
     Complete the information below and, as always, let us know if you have questions.
 </p>
 <div>
-<form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountPaymentAccount/" class="ajax ajax-box">
+<form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountPaymentAccount/" class="ajax">
 
     <fieldset>
         <legend>My contact information</legend>

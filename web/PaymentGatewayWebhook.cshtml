@@ -1,0 +1,28 @@
+﻿@{
+    var response = "";
+    var gw = LcPayment.NewBraintreeGateway();
+    
+    if (!IsPost) {
+        response = gw.WebhookNotification.Verify(Request["bt_challenge"]);
+    } else {
+        var signature = Request["bt_signature"];
+        var payload = Request["bt_payload"];
+        var notification = gw.WebhookNotification.Parse(signature, payload);
+
+        // Doing the action that fits better:
+        //
+        
+        // Marketplace Merchant Accounts
+        if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_APPROVED ||
+            notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED) {
+            LcPayment.RegisterProviderPaymentAccountCreationNotification(notification, signature, payload);
+        }
+        if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED) {
+            var providerID = LcUtils.ExtractInt(notification.MerchantAccount.Id, 0);
+            LcMessaging.SendMerchantAccountNotification(providerID);
+        }
+        
+        // Other...
+    }
+}
+@response

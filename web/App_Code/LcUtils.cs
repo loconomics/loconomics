@@ -199,6 +199,27 @@ public static class LcUtils
     }
     #endregion
 
+    #region Partial string parsing
+    /// <summary>
+    /// It extracts the first integer number found in the text, or the alternative one
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public static int ExtractInt(string text, int alt)
+    {
+        var r = new System.Text.RegularExpressions.Regex("(\\d+)");
+        var m = r.Match(text);
+        if (m.Success && m.Captures.Count > 0)
+        {
+            return GetTypedValue<int>(m.Captures[0].Value, alt);
+        }
+        else
+        {
+            return alt;
+        }
+    }
+    #endregion
+
     #region Html
     public static string EncodeForHtml(string s)
     {

@@ -285,7 +285,9 @@ public static class LcPayment
 
     #region Marketplace
 
-    #region Provier information
+    public const decimal MarketplaceProviderFee = 2.9m;
+
+    #region Provider information
     /// <summary>
     /// Get the AccountId (where to pay) on the payment gateway
     /// for a provider user.
@@ -399,11 +401,65 @@ public static class LcPayment
         };
 
         try{
-            return gateway.MerchantAccount.Create(request);
+            var ret = gateway.MerchantAccount.Create(request);
+
+            // All Ok, register on database
+            LcData.SetProviderPaymentAccount(
+                user.UserID,
+                request.Id,
+                "pending",
+                null,
+                null,
+                null
+            );
+
+            return ret;
+
         } catch (Braintree.Exceptions.AuthorizationException ex) {
             return null;
         }
     }
+
+    /// <summary>
+    /// Saves on database the updated information for a payment account with the notified information that
+    /// means an change on the payment gateway for that object.
+    /// Braintree sends notifications through Webhooks to a configured URL, our page at that address
+    /// manage it and call this when matched the Kind of notification related to the creation request
+    /// for a Sub-merchant or Merchant account (aka provider payment account).
+    /// </summary>
+    /// <param name="notification"></param>
+    public static void RegisterProviderPaymentAccountCreationNotification(WebhookNotification notification, string signature, string payload)
+    {
+        // If is not a SubMerchant creation, skip (maybe a new main merchant account was created)
+        if (!notification.MerchantAccount.IsSubMerchant)
+            return;
+
+        var providerID = LcUtils.ExtractInt(notification.MerchantAccount.Id, 0);
+        // Is not valid user
+        if (providerID == 0)
+        {
+            using (var logger = new LcLogger("PaymentGatewayWebhook"))
+            {
+                logger.Log("SubMerchantAccount:: Impossible to get the provider UserID from next MerchantAccountID: {0}", notification.MerchantAccount.Id);
+                logger.Log("SubMerchantAccount:: Follows signature and payload");
+                logger.LogData(signature);
+                logger.LogData(payload);
+                logger.Save();
+            }
+            return;
+        }
+
+        LcData.SetProviderPaymentAccount(
+            providerID,
+            notification.MerchantAccount.Id,
+            notification.MerchantAccount.Status.ToString(),
+            notification.Message,
+            signature,
+            payload
+        );
+    }
+
+
     #endregion
 
     #endregion

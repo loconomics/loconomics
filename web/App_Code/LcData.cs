@@ -1298,4 +1298,67 @@ public static partial class LcData
         }
     }
     #endregion
+
+    #region Payment gateway local data
+    public static dynamic GetProviderPaymentAccount(int userID)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            return db.QuerySingle("SELECT * FROM ProviderPaymentAccount WHERE ProviderUserID=@0", userID);
+        }
+    }
+    public static void SetProviderPaymentAccount(
+        int providerID,
+        string merchantAccountID,
+        string status,
+        string message,
+        string signature,
+        string payload)
+    {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(@"
+                IF EXISTS (SELECT * FROM ProviderPaymentAccount WHERE ProviderUserID = @0)
+                    UPDATE ProviderPaymentAccount SET
+                        MerchantAccountID = @1
+                        , Status = @2
+                        , Message = @3
+                        , bt_signature = @4
+                        , bt_payload = @5
+                        , UpdatedDate = getdate()
+                        , ModifiedBy = 'braintree'
+                    WHERE ProviderUserID = @0
+                ELSE
+                    INSERT INTO ProviderPaymentAccount (
+                        ProviderUserID
+                        , MerchantAccountID
+                        , Status
+                        , Message
+                        , bt_signature
+                        , bt_payload
+                        , CreatedDate
+                        , UpdatedDate
+                        , ModifiedBy
+                    ) VALUES (
+                        @0
+                        , @1
+                        , @2
+                        , @3
+                        , @4
+                        , @5
+                        , getdate()
+                        , getdate()
+                        , 'braintree'
+                    )
+                ",
+                    providerID,
+                    merchantAccountID,
+                    status,
+                    message,
+                    signature,
+                    payload
+                );
+        }
+    }
+    #endregion
 }

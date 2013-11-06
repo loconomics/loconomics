@@ -1,0 +1,24 @@
+﻿@using WebMatrix.Data;
+@{
+    LcMessaging.SecureTemplate();
+    
+    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+    Page.Title = "Loconomics.com - Provider Payment Account Notification";
+    
+    var providerID = Request["ProviderID"].AsInt();
+    
+    var account = LcData.GetProviderPaymentAccount(providerID);
+    
+    // Data for the EmailLayout:
+    PageData["messageTitle"] = "Provider Payment Account Notification";
+    // Create URL:
+    PageData["viewOnSiteUrl"] = LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(providerID);
+}
+<div>
+    <ul>
+        <li><strong>Provider User ID:</strong> @account.ProviderUserID</li>
+        <li><strong>Provider ID at Braintree (MerchantAccountId):</strong> @account.MerchantAccountID</li>
+        <li><strong>Status:</strong> @account.Status</li>
+        <li><strong>Braintree Message:</strong> @account.Message</li>
+    </ul>
+</div>

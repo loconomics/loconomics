@@ -102,7 +102,7 @@
             if (Request["city"].IsEmpty()){
                 ModelState.AddError("city", "City is required");
             }
-            if (Request["state"].IsInt()){
+            if (!Request["state"].IsInt()){
                 ModelState.AddError("state", "State is required");
             }
             if (Request["zip"].IsEmpty()){

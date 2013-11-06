@@ -581,6 +581,18 @@ public class LcMessaging
     }
     #endregion
 
+    #region Type:MerchantAccountNotification
+    public static void SendMerchantAccountNotification(int providerUserID)
+    {
+        SendMail("support@loconomics.com", "Marketplace: Merchant Account Notification",
+            ApplyTemplate(LcUrl.LangPath + "Email/EmailProviderPaymentAccountNotification/",
+            new Dictionary<string,object> {
+                { "ProviderID", providerUserID},
+                { "EmailTo", "support@loconomics.com" }
+         }));
+    }
+    #endregion
+
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
