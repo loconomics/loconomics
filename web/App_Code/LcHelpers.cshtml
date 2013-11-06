@@ -567,9 +567,19 @@
     }
     public static string NameValueToString(System.Collections.Specialized.NameValueCollection collection){
         var str = "";
+        if (collection.AllKeys != null)
         foreach(var n in collection.AllKeys){
             var v = collection.GetValues(n);
-            str += String.Format("{0}={1}\n", n, (v.Length > 1 ? Json.Encode(v) : collection[n]));
+            var sv = "";
+            if (v == null)
+                sv = "NULL";
+            else
+                try {
+                    sv = (v.Length > 1 ? Json.Encode(v) : collection[n]);
+                } catch {
+                    sv = "{{ Can not be read }}";
+                }
+            str += String.Format("{0}={1}\n", n, sv);
         }
         return str;
     }

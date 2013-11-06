@@ -165,7 +165,7 @@
                         
                         SaveDatesToBookingRequest(
                             bookingRequestID,
-                            address.PostalCodeID,
+                            address == null ? 0 : address.PostalCodeID,
                             c, p, pos,
                             dt1Start, dt1End,
                             dt2Start, dt2End,
@@ -359,8 +359,10 @@
                     }                    
                     
                 } catch (Exception ex) {
-                    if (!LcHelpers.InLive) {
-                        throw ex;
+                    using (var logger = new LcLogger("aspnet-errors"))
+                    {
+                        logger.LogEx("Error processing Booking/Payment POST, error:", ex);
+                        logger.Save();
                     }
                     LcHelpers.ReturnJsonError(-1, ex.Message);
                 }
