@@ -123,7 +123,7 @@
         public dynamic PairUser {
             get {
                 if (pairUser == null) 
-                    pairUser = LcData.UserInfo.GetUserRow(PairUserID);
+                    pairUser = LcData.UserInfo.GetUserRowWithContactData(PairUserID);
                 return pairUser;
             }
         }
