@@ -176,7 +176,7 @@ public class LcMessaging
             int threadID = CreateThread(CustomerUserID, ProviderUserID, PositionID, subject, 4, message, BookingRequestID, "BookingRequest");
 
             SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(2, customer, LcData.UserInfo.UserType.Provider), 
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Provider" }
@@ -185,7 +185,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, LcData.Booking.GetBookingRequestTitleFor(2, provider, LcData.UserInfo.UserType.Customer),
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBookingRequest/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingRequestID", BookingRequestID }
                 ,{ "SentTo", "Customer" }
@@ -226,7 +226,7 @@ public class LcMessaging
             int messageID = CreateMessage(thread.ThreadID, 2, 7, message, BookingID, "Booking", subject);
 
             SendMail(provider.Email, LcData.Booking.GetBookingTitleFor(1, customer, LcData.UserInfo.UserType.Provider), 
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
@@ -236,7 +236,7 @@ public class LcMessaging
                 ,{ "EmailTo", provider.Email }
             }));
             SendMail(customer.Email, LcData.Booking.GetBookingTitleFor(1, provider, LcData.UserInfo.UserType.Customer),
-                ApplyTemplate(LcUrl.LangPath + "Booking/EmailBooking/",
+                ApplyTemplate(LcUrl.LangPath + "Booking/Email/EmailBookingDetailsPage/",
                 new Dictionary<string, object> {
                 { "BookingID", BookingID }
                 ,{ "BookingRequestID", BookingRequestID }
@@ -285,16 +285,7 @@ public class LcMessaging
             int messageID = CreateMessage(thread.ThreadID, threadStatusID, messageTypeID, message, BookingRequestID, "BookingRequest");
 
             // default value and explicit value for Status:2
-            string emailTemplatePath = "Booking/EmailBookingRequest/";
-            switch ((int)bookingRequest.BookingRequestStatusID)
-            {
-                case 5:
-                    emailTemplatePath = "Booking/EmailBookingRequestDeclined/";
-                    break;
-                case 6:
-                    emailTemplatePath = "Booking/EmailBookingRequestExpired/";
-                    break;
-            }
+            string emailTemplatePath = "Booking/Email/EmailBookingDetailsPage/";
 
             SendMail(provider.Email, LcData.Booking.GetBookingRequestTitleFor(bookingRequest.BookingRequestStatusID, customer, LcData.UserInfo.UserType.Provider),
                 ApplyTemplate(LcUrl.LangPath + emailTemplatePath,
@@ -351,7 +342,7 @@ public class LcMessaging
             int messageID = CreateMessage(thread.ThreadID, 2, messageType, message, BookingID, "Booking", subject);
 
             // default value and explicit value for Status:1
-            string emailTemplatePath = "Booking/EmailBooking/";
+            string emailTemplatePath = "Booking/Email/EmailBookingDetailsPage/";
             if (reminderType == null)
             {
                 switch ((int)booking.BookingStatusID)
