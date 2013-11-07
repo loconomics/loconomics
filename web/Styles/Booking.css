@@ -685,12 +685,6 @@
 .booking-confirmation h2 {
     margin: 0 0 20px;
 }
-.booking-confirmation .last-note {
-    font-size: 1.5em;
-}
-.booking-confirmation .last-note .sign {
-    font-size: .8em;
-}
 .booking-confirmation .help {
     border-top: 1px solid #dcdcdc;
     margin-top: 20px;
