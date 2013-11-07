@@ -404,14 +404,15 @@ public static class LcPayment
             var ret = gateway.MerchantAccount.Create(request);
 
             // All Ok, register on database
-            LcData.SetProviderPaymentAccount(
-                user.UserID,
-                request.Id,
-                "pending",
-                null,
-                null,
-                null
-            );
+            if (ret.IsSuccess())
+                LcData.SetProviderPaymentAccount(
+                    user.UserID,
+                    request.Id,
+                    "pending",
+                    null,
+                    null,
+                    null
+                );
 
             return ret;
 
@@ -459,6 +460,15 @@ public static class LcPayment
         );
     }
 
+    #region BankInfo Class
+    public class BankInfo
+    {
+        public BankInfo() { }
+        public string Ssn;
+        public string RoutingNumber;
+        public string AccountNumber;
+    }
+    #endregion
 
     #endregion
 

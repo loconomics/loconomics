@@ -21,7 +21,7 @@ public static partial class LcData
     /// RenderPage). Still, in a more ajax based environment, this per execution cache has not benefits, a better cache
     /// with Cache object, times and deprecations is need it.
     /// </summary>
-    public static class UserInfo
+    public class UserInfo
     {
         #region User Type
         public enum UserType : int
@@ -65,6 +65,19 @@ public static partial class LcData
                 default:
                     return defaultTo;
             }
+        }
+        #endregion
+
+        #region Model class (incomplete; required use for not allowed inter-dll dynamic anonymous types)
+        public int UserID;
+        public string FirstName;
+        public string LastName;
+        public string MiddleInitial;
+        public string SecondLastName;
+        public string Email;
+        public string MobilePhone;
+        public UserInfo()
+        {
         }
         #endregion
 

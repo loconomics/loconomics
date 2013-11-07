@@ -13,7 +13,7 @@
         } catch {}
     }
 }
-<div class="ajax-box" data-source-url="@(LcUrl.LangPath)$Dashboard/$AccountPaymentAccount/">
+<div data-source-url="@(LcUrl.LangPath)$Dashboard/$AccountPaymentAccount/">
 @if (account == null)
 {
     @RenderPage("$AccountPaymentAccountForm.cshtml")
@@ -26,6 +26,7 @@ else
         Easy, right?
     </p>
     <div>
+    <h4>Status</h4>
     @switch ((string)account.Status)
     {
         case "active": //Braintree.MerchantAccountStatus.ACTIVE:
