@@ -1,4 +1,7 @@
 ﻿@{
+    // The read-only view is available for email templating
+    var forEmail = PageData["ForEmail"] ?? false;
+    
     // Widget variables and default values
     LcPricingModel.PackageBaseData pak = null;
     List<LcPricingModel.PackageServiceAttribute> atts = null;
@@ -83,7 +86,7 @@
 {
     @Html.Raw(String.Format("<{0} class='{1}'>", containerTag, containerClasses));
 }
-    <h4 class="w-ProviderPackage-name">@pak.Name</h4>
+    <h4 class="w-ProviderPackage-name" @if(forEmail) { @LcEmailTemplateHelper.StyleH4("margin-top:0;"); }>@pak.Name</h4>
     <div class="provider-package-service-summary w-ProviderPackage-serviceSummary">
         @{
             var inpersonphone = "in-person";
@@ -175,9 +178,9 @@
     }
     @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)
     {
-        <h5 class="w-ProviderPackage-sectionTitle">@config.FirstTimeClientsOnlyListText</h5>
+        <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.FirstTimeClientsOnlyListText</h5>
     }
-    <h5 class="w-ProviderPackage-sectionTitle">Description:</h5>
+    <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Description:</h5>
     <div class="provider-package-description w-ProviderPackage-description">
         @LcHelpers.PrintTextAsHtml(pak.Description)
     </div>
@@ -194,7 +197,7 @@
             // fees apply with 1 decimal for the case of hourly-rates:
             priceRateWithFees = new LcPricingModel.Price(pak.PriceRate ?? 0M, rateFee, 1);
         }
-        <h5 class="price-rate w-ProviderPackage-sectionTitle">@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
+        <h5 class="price-rate w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.PriceRateQuantityListLabel @priceRateWithFees.TotalPrice.ToString("c")
             @if (config.PriceRateUnitListLabel != null)
             {
                 <span class="price-rate-unit">@config.PriceRateUnitListLabel @pak.PriceRateUnit</span>
@@ -203,7 +206,7 @@
     }
     @if (showPrices && config.NoPriceRateListMessage != null && N.D(pak.PriceRate) == null)
     {
-        <h5 class="w-ProviderPackage-sectionTitle">@config.NoPriceRateListMessage</h5>
+        <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>@config.NoPriceRateListMessage</h5>
     }
     @if (config.IncludeServiceAttributes)
     {
@@ -212,11 +215,11 @@
             || (config.WithoutServiceAttributesProviderMessage != null && editable)
             )
         {
-            <h5 class="w-ProviderPackage-sectionTitle">Services included:</h5>
-            <ul class="provider-package-services attributes-list service-attributes-list w-ProviderPackage-serviceAttributes">
+            <h5 class="w-ProviderPackage-sectionTitle" @if(forEmail) { @LcEmailTemplateHelper.StyleH5(); }>Services included:</h5>
+            <ul class="provider-package-services attributes-list service-attributes-list w-ProviderPackage-serviceAttributes" @if(forEmail) { @LcEmailTemplateHelper.StyleUlOl(true, "overflow:hidden;"); }>
                 @foreach (var ser in atts)
                 {
-                    <li title="@ser.Name" data-description="@ser.Description" data-service-attribute-id="@ser.ID">@ser.Name</li>
+                    <li title="@ser.Name" data-description="@ser.Description" data-service-attribute-id="@ser.ID" @if(forEmail) { @LcEmailTemplateHelper.PrintStyle("float:left;width:200px !important;padding-left:8px;list-style-type:square;"); }>@ser.Name</li>
                 }
                 @if (atts.Count == 0)
                 {

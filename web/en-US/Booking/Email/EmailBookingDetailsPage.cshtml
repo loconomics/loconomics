@@ -138,7 +138,8 @@
         <div class="w-BookingDetails-packages">
             @RenderPage("../$BookingPricingPackages.cshtml", new
                {
-                   BookingData = info.Booking
+                   BookingData = info.Booking,
+                   ForEmail = true
                })
         </div>
 
