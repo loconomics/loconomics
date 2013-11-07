@@ -3,7 +3,10 @@
     var gw = LcPayment.NewBraintreeGateway();
     
     if (!IsPost) {
-        response = gw.WebhookNotification.Verify(Request["bt_challenge"]);
+        var challenge = Request["bt_challenge"];
+        if (!String.IsNullOrWhiteSpace(challenge)) {
+            response = gw.WebhookNotification.Verify(Request["bt_challenge"]);
+        }
     } else {
         var signature = Request["bt_signature"];
         var payload = Request["bt_payload"];
