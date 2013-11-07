@@ -156,6 +156,22 @@
     <div class="actions">
         <input type="submit" class="action main-action" value="I'm done" />
     </div>
-
+    <script type="text/javascript">
+        @if (!IsPost) {
+            <text>$(function(){</text>
+        }
+        $('[name="birthdate"]').formatter({
+            'pattern': '{{99}}/{{99}}/{{9999}}',
+            'persistent': false
+        });
+        $('[name="ssn"]').formatter({
+            'pattern': '{{999}}-{{99}}-{{9999}}',
+            'persistent': false
+        });
+        @if (!IsPost)
+        {
+            <text>});</text>
+        }
+    </script>
 </form>
 </div>
