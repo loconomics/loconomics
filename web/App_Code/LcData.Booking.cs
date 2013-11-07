@@ -968,6 +968,11 @@ public static partial class LcData
                         // policy sets no refund), execute payment partial refund only with no zero values
                         if (refund.TotalRefunded != 0)
                             result = LcPayment.RefundTransaction(tranID, refund.TotalRefunded);
+
+                        // Marketplace #408: just after refund to the customer its amount, pay the rest amount
+                        // to the provider (and fees to us)
+                        if (result == null)
+                            result = LcPayment.ReleaseTransactionFromEscrow(tranID);
                     }
 
                     if (result != null)

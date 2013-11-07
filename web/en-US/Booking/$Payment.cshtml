@@ -143,6 +143,7 @@
                     var sqlGetBookingPrice = @"
                         SELECT  TOP 1
                                 P.TotalPrice
+                                ,P.PFeePrice
                         FROM    BookingRequest As B
                                  INNER JOIN
                                 PricingEstimate As P
@@ -150,7 +151,9 @@
                         WHERE   B.CustomerUserID = @0 AND B.ProviderUserID = @1
                                  AND B.PositionID = @2 AND B.BookingRequestID = @3
                     ";
-                    var TotalPrice = db.QueryValue(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                    var bookingPrices = db.QuerySingle(sqlGetBookingPrice, c.UserID, p.UserID, pos.PositionID, bookingRequestID);
+                    var TotalPrice = bookingPrices.TotalPrice;
+                    var ProviderFees = bookingPrices.PFeePrice;
                     
                    
                     /*
@@ -306,9 +309,17 @@
                                         Amount = TotalPrice,
                                         CustomerId = customerIdOnBraintree,
                                         PaymentMethodToken = creditCardToken,
-                                        MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                                        // Now, with Marketplace #408, the receiver of the money for each transaction is
+                                        // the provider through account at Braintree, and not the Loconomics account:
+                                        //MerchantAccountId = LcPayment.BraintreeMerchantAccountId,
+                                        MerchantAccountId = LcPayment.GetProviderPaymentAccountId(p.UserID),
+                                        // Marketplace #408: since provider receive the money directly, Braintree must discount
+                                        // the next amount in concept of fees and pay that to the Marketplace Owner (us, Loconomics ;-)
+                                        ServiceFeeAmount = ProviderFees,
                                         Options = new TransactionOptionsRequest
                                         {
+                                            // Marketplace #408: don't pay provider still, wait for the final confirmation 'release scrow'
+                                            HoldInEscrow = true,
                                             SubmitForSettlement = false,
                                             StoreInVaultOnSuccess = savePayment,
                                             AddBillingAddressToPaymentMethod = savePayment

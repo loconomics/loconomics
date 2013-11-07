@@ -253,6 +253,32 @@ public static class LcPayment
 
         return (r == null || r.IsSuccess() ? null : r.Message);
     }
+    /// <summary>
+    /// On Marketplace, this sends a request to pay the amount 
+    /// in the transaction to the Merchant Account (Provider)
+    /// and the fees to the Marketplace Owner (us).
+    /// A call for SettleTransaction there was need previous to this with enough
+    /// time in advance.
+    /// </summary>
+    /// <param name="transactionID"></param>
+    /// <returns></returns>
+    public static string ReleaseTransactionFromEscrow(string transactionID)
+    {
+        Result<Transaction> r = null;
+
+        try
+        {
+            var gateway = NewBraintreeGateway();
+
+            r = gateway.Transaction.ReleaseFromEscrow(transactionID);
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+
+        return (r == null || r.IsSuccess() ? null : r.Message);
+    }
     #endregion
 
     #region Customer information

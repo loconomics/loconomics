@@ -335,6 +335,68 @@
         logger.Log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
+        
+        /*
+         * Check:: Release Payment for Service Complete: 5 full days after the service is performed
+         * If:: Performed bookings only, without pricing adjustment
+         * If:: Current time is 5 days after Confirmed Service EndTime
+         * Action:: set booking status as 'performed without pricing adjustment',
+         *          send a message to the provider notifying that payment is released.
+         */
+//        messages = 0;
+//        items = 0;
+//        {
+//            // Get bookings affected by conditions
+//            var sqlGet = @"
+//                SELECT  BookingID
+//                FROM    Booking As B
+//                         INNER JOIN
+//                        CalendarEvents As E
+//                          ON B.ConfirmedDateID = E.Id
+//                WHERE   BookingStatusID = 2 -- performed without pricing adjustment, not cancelled and not other changes
+//                         AND
+//                        -- at 120 hours, 5 days, after service ended (more than that is fine)
+//                        getdate() >= dateadd(hh, 120, E.EndTime)
+//                        /* AND
+//                         getdate() < dateadd(hh, 121, E.EndTime)
+//                        */
+//            ";
+//            var bookings = db.Query(sqlGet);
+//            // Update bookings affected by conditions to 
+//            // StatusID:4, complete (payed).
+//            // We do this operation as a unique SQL operation because is faster than performs
+//            // it per booking in the loop.
+//            db.Execute(@"
+//                UPDATE  Booking
+//                SET     BookingStatusID = 4
+//                        ,UpdatedDate = getdate()
+//                WHERE   BookingID IN (
+//            " + sqlGet + 
+//            " ) ");
+            
+//            foreach (var b in bookings){
+//                try {               
+//                    // Send messages
+//                    // Notify Loconomics Staff Users requesting 
+//                    // the manual payment and other tasks:
+//                    LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
+                    
+//                    // Notify customer and provider with an updated booking details:
+//                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+//                    // Update MessagingLog for the booking
+//                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Performed]");
+
+//                    items++;
+//                    messages += 3;
+//                } catch (Exception ex){
+//                    logger.LogEx("Booking 48H Service Performed", ex);
+//                }
+//            }
+//        }
+//        logger.Log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
+//        totalitems += items;
+//        totalmessages += messages;
     }
     
     logger.Log("Elapsed time {0}, for {1} bookings affected and {2} messages sent", DateTime.Now - elapsedTime, totalitems, totalmessages);
