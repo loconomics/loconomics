@@ -8,6 +8,8 @@
     var forUserType = PageData["DisplayForUserType"] ?? Request["DisplayForUserType"] ?? "customer";
     var bookingDate = PageData["BookingDate"];
     var customerName = PageData["DisplayedCustomerName"] ?? "the customer";
+    
+    var forEmail = PageData["ForEmail"] ?? false;
 
     dynamic policy = null;
     using (var db = Database.Open("sqlloco")) {
@@ -58,7 +60,7 @@
                 </span>
             }
         </em>
-        <ul>
+        <ul @if(forEmail) { @LcEmailTemplateHelper.StyleUlOl(true); }>
             <li>The Loconomics service fee is non-refundable.</li>
             <li>Loconomics must be notified of any no-shows or complaints by either party within 24 hours after a booking is scheduled to end.</li>
             <li>Loconomics will help faciliate dispute resolution but has the final say should a dispute not be resolved between parties.</li>

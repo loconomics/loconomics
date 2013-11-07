@@ -32,8 +32,8 @@
             </div>
         }
     }
-    else
-    {
+
+    @{
         // REVIEW ACTIONS
         // When booking is not cancelled and service date is passed, show Review options:
         if (!isRequest && booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)

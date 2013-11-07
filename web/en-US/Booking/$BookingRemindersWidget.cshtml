@@ -3,9 +3,16 @@
         ? PageData["UserType"] 
         : LcData.UserInfo.ParseUserType(PageData["UserType"], LcData.UserInfo.UserType.Anonymous);
     var itsFirstName = PageData["ItsFirstName"];
+    
+    var forEmail = PageData["ForEmail"] ?? false;
+    
+    var atts = "class='reminders w-BookingReminders " + userType.ToString().ToLower() + "'";
+    if (forEmail) {
+        atts = "style=''";
+    }
 }
-    <div class="reminders w-BookingReminders @userType.ToString().ToLower()">
-        <ol>
+    <div @Html.Raw(atts)>
+        <ol @if(forEmail){ @LcEmailTemplateHelper.StyleUlOl(true); }>
             @if (userType == LcData.UserInfo.UserType.Provider)
             {
             <li>Review the cost estimate with the client before starting work</li>

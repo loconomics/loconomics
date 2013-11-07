@@ -20,7 +20,7 @@
     @PrintStyle("color: #5a5b5b !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss)
 }
 @helper StyleH4(string addCss = null) {
-    @PrintStyle("color: #5a5b5b !important;line-height:100%;margin:15px 0;font-size:17px;" + addCss)
+    @PrintStyle("color: #5a5b5b !important;line-height:100%;margin:15px 0 6px;font-size:17px;" + addCss)
 }
 @helper StyleH5(string addCss = null) {
     @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
@@ -102,6 +102,8 @@
         public LcData.UserInfo.UserType PairUserType;
         public int PairUserID;
         public string ViewOnSiteURL;
+        public DateTime ConfirmationLimitDate;
+        public bool IsRequest;
         
         private dynamic sentToUser, sentByUser, pairUser;
         public dynamic SentToUser {
@@ -149,16 +151,22 @@
         var sentTo = LcData.UserInfo.UserType.None;
         var sentBy = LcData.UserInfo.UserType.System;
         var pairType = LcData.UserInfo.UserType.None;
+        bool isRequest = false;
         var bID = Request["BookingID"].AsInt();
         var brID = Request["BookingRequestID"].AsInt();
         if (!Enum.TryParse<LcData.UserInfo.UserType> (Request["SentTo"], out sentTo)) {
             throw new ArgumentException("Invalid value for url request parameter SentTo: " + Request["SentTo"]);
         }
         Enum.TryParse<LcData.UserInfo.UserType> (Request["SentBy"], out sentBy);
+        DateTime confirmationLimitDate = DateTime.MaxValue;
 
         if (bID == 0) {
             b = LcData.Booking.GetBookingRequestForUser(brID, 0, true);
+            isRequest = true;
             viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBookingRequest(brID);
+            if (b != null) {
+                confirmationLimitDate = b.UpdatedDate.AddHours(LcData.Booking.ConfirmationLimitInHours);
+            }
         } else {
             b = LcData.Booking.GetBookingForUser(bID, 0, true);
             viewURL = LcUrl.LangUrl + LcData.Booking.GetUrlPathForBooking(bID, brID);
@@ -194,6 +202,7 @@
             BookingRequestID = brID
             ,BookingID = bID
             ,Booking = b
+            ,IsRequest = isRequest
             ,SentTo = sentTo
             ,SentToUserID = toUserID
             ,SentBy = sentBy
@@ -202,6 +211,7 @@
             ,PairUserID = pairUserID
             ,PairUserType = pairType
             ,ViewOnSiteURL = viewURL
+            ,ConfirmationLimitDate = confirmationLimitDate
         };
     }
     

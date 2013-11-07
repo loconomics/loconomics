@@ -6,6 +6,8 @@
     DateTime confirmationLimitDate = PageData["ConfirmationLimitDate"];
     bool showGreetings = PageData["ShowGreetings"];
     
+    var forEmail = PageData["ForEmail"] ?? false;
+    
     // TODO Know if is a multiappointment booking (or pass by parameter)
     var isMultiappointment = false;
 }

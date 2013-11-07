@@ -121,7 +121,7 @@
                         If you have a question or need to report a problem, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">send us a note</a> or call us at <span style="white-space:nowrap">1 (415) 735-6025</span>.
                         @if (!String.IsNullOrEmpty(helpReference))
                         {
-                            <span>Please reference @(helpReference).</span>
+                            <span>Please reference <strong>@(helpReference)</strong>.</span>
                         }
                     </td>
                 </tr>
@@ -132,7 +132,7 @@
                     @if (!isNotAUser) {
                     <text>Visit <a href="@(LcUrl.LangUrl)Dashboard/Preferences/">alert preferences</a> to manage your email and mobile alerts. </text><br />
                     }
-                    Please add automated@loconomics.com to your address book to ensure delivery of our emails. <br />
+                    Please add <a href="mailto:automated@loconomics.com">automated@loconomics.com</a> to your address book to ensure delivery of our emails. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
                     3150 18th Street Suite 438, Mailbox 208, San Francisco, CA 94110 <br />
                     <a href="@(LcUrl.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a href="@(LcUrl.LangUrl)About/TermsOfUse/">Terms of Use</a>
