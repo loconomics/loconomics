@@ -340,7 +340,8 @@
         totalmessages += messages;
         
         /*
-         * Check:: Release Payment for Service Complete: 5 full days after the service is performed
+         * Check:: Release Payment for New Providers: 5 full days after the service is performed
+         * If:: If provider is a new provider (it has not previous completed bookings)
          * If:: Performed bookings only, without pricing adjustment
          * If:: Current time is 5 days after Confirmed Service EndTime
          * Action:: set booking status as 'performed without pricing adjustment',
@@ -367,6 +368,14 @@
                         /* AND
                          getdate() < dateadd(hh, 121, E.EndTime)
                         */
+                         AND
+                        (SELECT count(*)
+                         FROM Booking As B2 INNER JOIN BookingRequest As BR2 ON BR2.BookingRequestID = B2.BookingRequestID
+                         WHERE
+                            BR2.ProviderUserID = BR.ProviderUserID
+                             AND
+                            B2.BookingStatusID = 4 --Complete bookings
+                        ) = 0 -- There is no complete bookings
             ";
             var bookings = db.Query(sqlGet);
 
@@ -387,16 +396,87 @@
                     LcMessaging.SendBookingUpdate(b.BookingID, 's');
                     
                     // Update MessagingLog for the booking
-                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment after 120H]");
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 120H New Provider]");
 
                     items++;
                     messages += 2;
                 } catch (Exception ex){
-                    logger.LogEx("Booking Release Payment after 120H", ex);
+                    logger.LogEx("Booking Release Payment after 120H for new providers", ex);
                 }
             }
         }
-        logger.Log("Total of Booking Release Payment after 120H: {0}, messages sent: {1}", items, messages);
+        logger.Log("Total of Booking Release Payment after 120H for new providers: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
+        
+        
+        /*
+         * Check:: Release Payment for Service Complete: 1 day after the service is performed
+         * If:: Provider has already completed bookings (is not a new provider)
+         * If:: Performed bookings only, without pricing adjustment
+         * If:: Current time is 5 days after Confirmed Service EndTime
+         * Action:: set booking status as 'performed without pricing adjustment',
+         *          send a message to the provider notifying that payment is released.
+         */
+        messages = 0;
+        items = 0;
+        {
+            // Get bookings affected by conditions
+            var sqlGet = @"
+                SELECT  B.BookingID
+                        ,BR.PaymentTransactionID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                         INNER JOIN
+                        BookingRequest As BR
+                          ON BR.BookingRequestID = B.BookingRequestID
+                WHERE   BookingStatusID = 2 -- performed without pricing adjustment, not cancelled and not other changes
+                         AND
+                        -- at 24 hours, 1 day, after service ended (more than that is fine)
+                        getdate() >= dateadd(hh, 24, E.EndTime)
+                        /* AND
+                         getdate() < dateadd(hh, 25, E.EndTime)
+                        */
+                         AND
+                        (SELECT count(*)
+                         FROM Booking As B2 INNER JOIN BookingRequest As BR2 ON BR2.BookingRequestID = B2.BookingRequestID
+                         WHERE
+                            BR2.ProviderUserID = BR.ProviderUserID
+                             AND
+                            B2.BookingStatusID = 4 --Complete bookings
+                        ) > 0 -- There are complete bookings (almost 1)
+            ";
+            var bookings = db.Query(sqlGet);
+
+            foreach (var b in bookings){
+                try {
+                    // Release the payment
+                    LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
+                    // Mark as payed (StatusID:4 'complete')
+                    db.Execute(@"
+                        UPDATE  Booking
+                        SET     BookingStatusID = 4
+                                ,UpdatedDate = getdate()
+                        WHERE   BookingID = @0", b.BookingID);
+                    
+                    // Send messages
+                    
+                    // Notify customer and provider with an updated booking details:
+                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+                    // Update MessagingLog for the booking
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment 24H]");
+
+                    items++;
+                    messages += 2;
+                } catch (Exception ex){
+                    logger.LogEx("Booking Release Payment 24H", ex);
+                }
+            }
+        }
+        logger.Log("Total of Booking Release Payment after 24H: {0}, messages sent: {1}", items, messages);
         totalitems += items;
         totalmessages += messages;
         
