@@ -5,40 +5,64 @@
     with the desired css attributes for some general classes and tag styles.
 *@
 
-@helper PrintStyle(string styleContent) {
-    <text>style="@styleContent"</text>
-}
-
 @*=== Elements/tags *@
-@helper StyleH1(string addCss = null) {
-    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
-}
-@helper StyleH2(string addCss = null) {
-    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
-}
-@helper StyleH3(string addCss = null) {
-    @PrintStyle("color: #5a5b5b !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss)
-}
-@helper StyleH4(string addCss = null) {
-    @PrintStyle("color: #5a5b5b !important;line-height:100%;margin:15px 0 6px;font-size:17px;" + addCss)
-}
-@helper StyleH5(string addCss = null) {
-    @PrintStyle("color:#5a5b5b !important;line-height:100%;margin:7px 0 2px;font-size:13px;font-weight:bold;" + addCss)
-}
-@helper StyleH6(string addCss = null) {
-    @PrintStyle("color:#5a5b5b !important;line-height:100%;" + addCss)
+@helper PrintStyle(string styleContent) {
+    <text>style="@styleContent"</text>;
 }
 @helper StyleUlOl(bool withListStyle = false, string addCss = null) {
-    @PrintStyle((withListStyle ? "list-style-position:inside" : "list-style:none inside none") + ";margin:0;padding:0;" + addCss)
+    @PrintStyle(ClassUlOl(withListStyle, addCss));
+}
+@helper StyleH1(string addCss = null) {
+    @PrintStyle(ClassH1(addCss))
+}
+@helper StyleH2(string addCss = null) {
+    @PrintStyle(ClassH2(addCss))
+}
+@helper StyleH3(string addCss = null) {
+    @PrintStyle(ClassH3(addCss))
+}
+@helper StyleH4(string addCss = null) {
+    @PrintStyle(ClassH4(addCss))
+}
+@helper StyleH5(string addCss = null) {
+    @PrintStyle(ClassH5(addCss))
+}
+@helper StyleH6(string addCss = null) {
+    @PrintStyle(ClassH6(addCss))
 }
 
 @*=== Resets *@
 @helper StyleResetP(string addCss = null) {
-    @PrintStyle("margin:0;padding:0;" + addCss)
+    @PrintStyle(ClassResetP(addCss))
 }
 
 @*=== Classes *@
 @functions{
+    public static string ClassUlOl(bool withListStyle = false, string addCss = null) {
+        return (withListStyle ? "list-style-position:inside" : "list-style:none inside none") + ";margin:0;padding:0;" + addCss;
+    }
+    public static string ClassH1(string addCss = null) {
+        return "color:#5a5b5b !important;line-height:100%;" + addCss;
+    }
+    public static string ClassH2(string addCss = null) {
+        return "color:#5a5b5b !important;line-height:100%;" + addCss;
+    }
+    public static string ClassH3(string addCss = null) {
+        return "color: #5a5b5b !important;line-height:100%;font-size:20px;margin:0;font-weight:bold;" + addCss;
+    }
+    public static string ClassH4(string addCss = null) {
+        return "color: #5a5b5b !important;line-height:100%;margin:15px 0 6px;font-size:17px;" + addCss;
+    }
+    public static string ClassH5(string addCss = null) {
+        return "color:#5a5b5b !important;line-height:100%;margin:7px 0 2px;font-size:13px;font-weight:bold;" + addCss;
+    }
+    public static string ClassH6(string addCss = null) {
+        return "color:#5a5b5b !important;line-height:100%;" + addCss;
+    }
+    public static string ClassResetP(string addCss = null) {
+        return "margin:0;padding:0;" + addCss;
+    }
+
     public static string StyleButton() {
         return "background:none repeat scroll 0 0 #99C027;border-radius:4px 4px 4px 4px;-o-border-radius:4px 4px 4px 4px;-webkit-border-radius:4px 4px 4px 4px;-moz-border-radius:4px 4px 4px 4px;color:White;padding:.4em 1em;display:inline-block;text-decoration:none;";
     }

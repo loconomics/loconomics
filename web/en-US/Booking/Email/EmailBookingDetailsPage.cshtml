@@ -13,6 +13,7 @@
     var title = "";
     DateTime? bookingDate = null;
     dynamic pricingSummary = null, pricingSummaryDetails = null;
+    bool showBookingDetails = true;
     
     // Setting up data
     {
@@ -99,109 +100,113 @@
 	The Loconomics team
     </p>
 
-    <h2 @LcEmailTemplateHelper.StyleH2("margin-top:40px")>@title</h2>
+    @if(showBookingDetails) {
 
-    <div>
+        <h2 @LcEmailTemplateHelper.StyleH2("margin-top:40px")>@title</h2>
 
-        @if (info.IsRequest)
-        {
-            <h4 @LcEmailTemplateHelper.StyleH4()>Time preferences</h4>
-            @RenderPage("$EmailBookingRequestedTimes.cshtml", new
+        <div>
+
+            @if (info.IsRequest)
             {
-                BookingData = info.Booking,
-                MyUserType = info.SentTo
+                <h4 @LcEmailTemplateHelper.StyleH4()>Time preferences</h4>
+                @RenderPage("$EmailBookingRequestedTimes.cshtml", new
+                {
+                    BookingData = info.Booking,
+                    MyUserType = info.SentTo
+                })
+            }
+
+            @{
+                var paymentInfoText = LcData.Booking.GetBookingPaymentInformation(info.Booking, info.SentTo, info.PairUser);
+                if (!String.IsNullOrEmpty(paymentInfoText))
+                {
+                    <h4 @LcEmailTemplateHelper.StyleH4()>Payment</h4>
+                    <div>
+                        @Html.Raw(paymentInfoText)
+                    </div>
+                }
+            }
+
+            <h4 @LcEmailTemplateHelper.StyleH4()>@(info.SentTo == LcData.UserInfo.UserType.Provider ? "Payment" : "Pricing") Summary</h4>
+            @if (info.SentTo == LcData.UserInfo.UserType.Provider)
+            {
+                @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            }
+            else if (info.SentTo == LcData.UserInfo.UserType.Customer)
+            {
+                @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
+            }
+
+            <h4 @LcEmailTemplateHelper.StyleH4()>Services Requested</h4>
+            <div class="w-BookingDetails-packages">
+                @RenderPage("../$BookingPricingPackages.cshtml", new
+                   {
+                       BookingData = info.Booking,
+                       ForEmail = true
+                   })
+            </div>
+
+            @if (!String.IsNullOrWhiteSpace(info.Booking.SpecialRequests)) {
+                var label = "";
+                switch (info.SentTo)
+                {
+                    case LcData.UserInfo.UserType.Provider:
+                        label = "Notes from";
+                        break;
+                    case LcData.UserInfo.UserType.Customer:
+                        label = "Notes for";
+                        break;
+                }
+                <h4 @LcEmailTemplateHelper.StyleH4()>@label @info.PairUser.FirstName</h4>
+                <p @LcEmailTemplateHelper.StyleResetP()>@info.Booking.SpecialRequests</p>
+            }
+        
+            @if (!info.IsRequest)
+            {
+                <h4 @LcEmailTemplateHelper.StyleH4()>@(info.PairUser.FirstName)'s Contact Information</h4>
+                @LcHelpers.PrintContactInfo(info.PairUser)
+            }
+        
+            @*
+            @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
+                {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
+                {"Data", info.PairUser},
+                {"DataPrefix", ""},
+                {"Size", "medium"},
+                {"UserType", info.PairUserType.ToString().ToLower()}
             })
-        }
+            *@
 
-        @{
-            var paymentInfoText = LcData.Booking.GetBookingPaymentInformation(info.Booking, info.SentTo, info.PairUser);
-            if (!String.IsNullOrEmpty(paymentInfoText))
-            {
-                <h4 @LcEmailTemplateHelper.StyleH4()>Payment</h4>
-                <div>
-                    @Html.Raw(paymentInfoText)
-                </div>
-            }
-        }
+            <h4 @LcEmailTemplateHelper.StyleH4()>Location</h4>
+            @RenderPage("../$BookingLocation.cshtml", new {
+                BookingData = info.Booking,
+                Address = address,
+                IsRequest = info.IsRequest,
+                MyUserData = info.SentToUser,
+                MyUserType = info.SentTo,
+                ItsUserData = info.PairUser,
+                ForEmail = true
+            })
 
-        <h4 @LcEmailTemplateHelper.StyleH4()>@(info.SentTo == LcData.UserInfo.UserType.Provider ? "Payment" : "Pricing") Summary</h4>
-        @if (info.SentTo == LcData.UserInfo.UserType.Provider)
-        {
-            @LcPricingView.EmailProviderPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
-        }
-        else if (info.SentTo == LcData.UserInfo.UserType.Customer)
-        {
-            @LcPricingView.EmailCustomerPricingSummaryDetailed(pricingSummary, pricingSummaryDetails)
-        }
+            <h4 @LcEmailTemplateHelper.StyleH4()>@(info.SentTo == LcData.UserInfo.UserType.Provider ? "My" : info.PairUser.FirstName + "'s") cancellation policy</h4>
+            <div class="cancellation-policy">
+                @RenderPage("../$CancellationPolicyInfoWidget.cshtml", new
+                {
+                    CancellationPolicyID = info.Booking.CancellationPolicyID,
+                    DisplayForUserType = info.SentTo.ToString(),
+                    BookingDate = bookingDate,
+                    DisplayedCustomerName = LcData.UserInfo.GetUserRow(info.Booking.CustomerUserID).FirstName,
+                    ForEmail = true
+                })
+            </div>
 
-        <h4 @LcEmailTemplateHelper.StyleH4()>Services Requested</h4>
-        <div class="w-BookingDetails-packages">
-            @RenderPage("../$BookingPricingPackages.cshtml", new
-               {
-                   BookingData = info.Booking,
-                   ForEmail = true
-               })
-        </div>
-
-        @if (!String.IsNullOrWhiteSpace(info.Booking.SpecialRequests)) {
-            var label = "";
-            switch (info.SentTo)
-            {
-                case LcData.UserInfo.UserType.Provider:
-                    label = "Notes from";
-                    break;
-                case LcData.UserInfo.UserType.Customer:
-                    label = "Notes for";
-                    break;
-            }
-            <h4 @LcEmailTemplateHelper.StyleH4()>@label @info.PairUser.FirstName</h4>
-            <p @LcEmailTemplateHelper.StyleResetP()>@info.Booking.SpecialRequests</p>
-        }
-        
-        @if (!info.IsRequest)
-        {
-            <h4 @LcEmailTemplateHelper.StyleH4()>@(info.PairUser.FirstName)'s Contact Information</h4>
-            @LcHelpers.PrintContactInfo(info.PairUser)
-        }
-        
-        @*
-        @RenderPage(LcUrl.RenderLangPath + "Email/$EmailUserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"AddContainerStyle", LcEmailTemplateHelper.StyleMessageSection()},        
-            {"Data", info.PairUser},
-            {"DataPrefix", ""},
-            {"Size", "medium"},
-            {"UserType", info.PairUserType.ToString().ToLower()}
-        })
-        *@
-
-        <h4 @LcEmailTemplateHelper.StyleH4()>Location</h4>
-        @RenderPage("../$BookingLocation.cshtml", new {
-            BookingData = info.Booking,
-            Address = address,
-            IsRequest = info.IsRequest,
-            MyUserData = info.SentToUser,
-            MyUserType = info.SentTo,
-            ItsUserData = info.PairUser,
-            ForEmail = true
-        })
-
-        <h4 @LcEmailTemplateHelper.StyleH4()>@(info.SentTo == LcData.UserInfo.UserType.Provider ? "My" : info.PairUser.FirstName + "'s") cancellation policy</h4>
-        <div class="cancellation-policy">
-            @RenderPage("../$CancellationPolicyInfoWidget.cshtml", new
-            {
-                CancellationPolicyID = info.Booking.CancellationPolicyID,
-                DisplayForUserType = info.SentTo.ToString(),
-                BookingDate = bookingDate,
-                DisplayedCustomerName = LcData.UserInfo.GetUserRow(info.Booking.CustomerUserID).FirstName,
+            <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
+            @RenderPage("../$BookingRemindersWidget.cshtml", new {
+                UserType = info.SentTo,
+                ItsFirstName = info.PairUser.FirstName,
                 ForEmail = true
             })
         </div>
-
-        <h4 @LcEmailTemplateHelper.StyleH4()>Reminders</h4>
-        @RenderPage("../$BookingRemindersWidget.cshtml", new {
-            UserType = info.SentTo,
-            ItsFirstName = info.PairUser.FirstName,
-            ForEmail = true
-        })
-    </div>
+        
+    }
 </div>

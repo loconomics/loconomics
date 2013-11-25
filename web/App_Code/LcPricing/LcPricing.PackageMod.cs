@@ -43,6 +43,6 @@ public static partial class LcPricingModel
         /// <param name="package"></param>
         /// <param name="viewedBy"></param>
         /// <returns></returns>
-        string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet);
+        string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet, bool forEmail = false);
     }
 }

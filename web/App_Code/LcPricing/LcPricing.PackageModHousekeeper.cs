@@ -157,7 +157,7 @@ public static partial class LcPricingModel
         }
         #endregion
         #region Package View
-        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet)
+        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet, bool forEmail = false)
         {
             // Nothing specific is required for housekeeper on the view
             return "";

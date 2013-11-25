@@ -403,7 +403,7 @@ public static partial class LcPricingModel
         }
         #endregion
         #region Package View
-        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet)
+        public string GetPackageViewHtml(PackageBaseData package, Dictionary<string, LcPricingModel.FeeRate> feesSet, bool forEmail = false)
         {
             // NOTE: It follows the same base code than GetProviderHtml but replacing form elements by div/span and appling fees when customer
 
@@ -493,28 +493,28 @@ public static partial class LcPricingModel
             s.Append("<div class='hourly-pricing'>");
             if (hValues.Length > 0)
             {
-                s.Append("<ul class='var-values'>");
+                s.AppendFormat("<ul class='var-values' style='{0}'>", forEmail ? ASP.LcEmailTemplateHelper.ClassUlOl(false) : "");
                 s.Append(hValues);
                 s.Append("</ul>");
             }
             if (hIncludes.Length > 0)
             {
-                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Includes:</h5>");
-                s.Append("<ul class='var-includes'>");
+                s.AppendFormat("<h5 class='w-ProviderPackage-sectionTitle' style='{0}'>Includes:</h5>", forEmail ? ASP.LcEmailTemplateHelper.ClassH5() : "");
+                s.AppendFormat("<ul class='var-includes' style='{0}'>", forEmail ? ASP.LcEmailTemplateHelper.ClassUlOl(false) : "");
                 s.Append(hIncludes);
                 s.Append("</ul>");
             }
             if (hSurcharges.Length > 0)
             {
-                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Hourly surcharge(s):</h5>");
-                s.Append("<ul class='var-surcharges'>");
+                s.AppendFormat("<h5 class='w-ProviderPackage-sectionTitle' style='{0}'>Hourly surcharge(s):</h5>", forEmail ? ASP.LcEmailTemplateHelper.ClassH5() : "");
+                s.AppendFormat("<ul class='var-surcharges' style='{0}'>", forEmail ? ASP.LcEmailTemplateHelper.ClassUlOl(false) : "");
                 s.Append(hSurcharges);
                 s.Append("</ul>");
             }
             if (hRestrictions.Length > 0)
             {
-                s.Append("<h5 class='w-ProviderPackage-sectionTitle'>Booking restrictions:</h5>");
-                s.Append("<ul class='var-restrictions'>");
+                s.AppendFormat("<h5 class='w-ProviderPackage-sectionTitle' style='{0}'>Booking restrictions:</h5>", forEmail ? ASP.LcEmailTemplateHelper.ClassH5() : "");
+                s.AppendFormat("<ul class='var-restrictions' style='{0}'>", forEmail ? ASP.LcEmailTemplateHelper.ClassUlOl(false) : "");
                 s.Append(hRestrictions);
                 s.Append("</ul>");
             }

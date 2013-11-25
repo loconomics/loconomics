@@ -185,7 +185,7 @@
         @LcHelpers.PrintTextAsHtml(pak.Description)
     </div>
 	@if (config.Mod != null) {
-		@Html.Raw(config.Mod.GetPackageViewHtml(pak, feesSet));
+		@Html.Raw(config.Mod.GetPackageViewHtml(pak, feesSet, forEmail));
 	}
     @if (showPrices && config.PriceRateQuantityListLabel != null && pak.PriceRate is decimal)
     {
