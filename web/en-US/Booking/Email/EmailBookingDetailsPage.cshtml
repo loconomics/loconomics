@@ -29,6 +29,26 @@
                 ? LcData.Booking.GetBookingRequestTitleFor(booking.BookingRequestStatusID, itsUserData, itsUserType)
                 : LcData.Booking.GetBookingTitleFor(booking.BookingStatusID, itsUserData, itsUserType);
             */
+            
+            // Full details are showed only on useful states, mostly when is 'active' in some way;
+            // by default is showed but on specific states is not:
+            if (info.IsRequest) {
+                var excluded = new int[] {
+                    1 // Incomplete
+                    ,3 // Timed-out
+                    ,4 // Cancelled by customer
+                    ,5 // Declined by provider
+                    ,6 // Expired
+                    ,8 // Declined with alternatives
+                };
+                showBookingDetails = !excluded.Contains((int)info.Booking.BookingRequestStatusID);
+            } else {
+                var excluded = new int[] {
+                    4 // Completed (performed and payed)
+                    ,6 // Cancelled by customer
+                };
+                showBookingDetails = !excluded.Contains((int)info.Booking.BookingStatusID);
+            }
 
             // Expected booking date, for use on several languages
             bookingDate = info.IsRequest

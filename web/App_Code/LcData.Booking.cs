@@ -976,7 +976,7 @@ public static partial class LcData
                     }
 
                     if (result != null)
-                        return (dynamic)new { Error = -9999, ErrorMessage = result };
+                        return (dynamic)new { Error = 9999, ErrorMessage = result };
                 }
 
                 // All goes fine with payment proccessing, continue
@@ -990,7 +990,18 @@ public static partial class LcData
                     BookingRequestStatusID);
             }
         }
-        public static dynamic InvalidateBooking(int BookingID, int BookingStatusID)
+        public class InvalidateBookingResult
+        {
+            public int Error = 0;
+            public string ErrorMessage = "";
+            public InvalidateBookingResult() { }
+            public InvalidateBookingResult(dynamic record)
+            {
+                Error = record.Error;
+                ErrorMessage = record.ErrorMessage;
+            }
+        }
+        public static InvalidateBookingResult InvalidateBooking(int BookingID, int BookingStatusID)
         {
             if (!(new int[] { 6, 7 }).Contains<int>(BookingStatusID))
             {
@@ -1065,7 +1076,7 @@ public static partial class LcData
                     COMMIT TRAN
 
                     -- We return sucessful operation with Error=0
-                    SELECT 0 As Error
+                    SELECT 0 As Error, null As ErrorMessage
                 END TRY
                 BEGIN CATCH
                     IF @@TRANCOUNT > 0
@@ -1100,7 +1111,7 @@ public static partial class LcData
                     }
 
                     if (result != null)
-                        return (dynamic)new { Error = -9999, ErrorMessage = result };
+                        return new InvalidateBookingResult{ Error = 9999, ErrorMessage = result };
                 }
 
                 // All goes fine with payment proccessing, continue
@@ -1109,9 +1120,12 @@ public static partial class LcData
                 SaveRefundAmounts(refund, db);
 
                 // Invalidate in database the booking:
-                return db.QuerySingle(sqlInvalidateBooking,
-                    BookingID,
-                    BookingStatusID);
+                return new InvalidateBookingResult(
+                    db.QuerySingle(sqlInvalidateBooking,
+                        BookingID,
+                        BookingStatusID
+                    )
+                );
             }
         }
         public static void UpdateBookingTransactionID(string oldTranID, string newTranID)
