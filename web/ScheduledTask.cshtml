@@ -278,7 +278,7 @@
          * If:: Confirmated bookings only, not cancelled, not set as performed, complete or dispute
          * If:: Current time is 48 hours after Confirmed Service EndTime
          * Action:: set booking status as 'performed without pricing adjustment',
-         *          send a message to Loconomics Stuff Users requesting manual payment to provider,
+         *          // Not with Marketplace: send a message to Loconomics Stuff Users requesting manual payment to provider,
          *          and a message to customer and provider notifying that booking is set as 'performed'.
          */
         messages = 0;
@@ -315,9 +315,11 @@
             foreach (var b in bookings){
                 try {               
                     // Send messages
+                    
+                    // With Braintree Marketplace, this is not need:
                     // Notify Loconomics Staff Users requesting 
                     // the manual payment and other tasks:
-                    LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
+                    //LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
                     
                     // Notify customer and provider with an updated booking details:
                     LcMessaging.SendBookingUpdate(b.BookingID, 's');
@@ -326,7 +328,8 @@
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Performed]");
 
                     items++;
-                    messages += 3;
+                    // Before Marketplace: messages += 3;
+                    messages += 2;
                 } catch (Exception ex){
                     logger.LogEx("Booking 48H Service Performed", ex);
                 }
@@ -343,60 +346,62 @@
          * Action:: set booking status as 'performed without pricing adjustment',
          *          send a message to the provider notifying that payment is released.
          */
-//        messages = 0;
-//        items = 0;
-//        {
-//            // Get bookings affected by conditions
-//            var sqlGet = @"
-//                SELECT  BookingID
-//                FROM    Booking As B
-//                         INNER JOIN
-//                        CalendarEvents As E
-//                          ON B.ConfirmedDateID = E.Id
-//                WHERE   BookingStatusID = 2 -- performed without pricing adjustment, not cancelled and not other changes
-//                         AND
-//                        -- at 120 hours, 5 days, after service ended (more than that is fine)
-//                        getdate() >= dateadd(hh, 120, E.EndTime)
-//                        /* AND
-//                         getdate() < dateadd(hh, 121, E.EndTime)
-//                        */
-//            ";
-//            var bookings = db.Query(sqlGet);
-//            // Update bookings affected by conditions to 
-//            // StatusID:4, complete (payed).
-//            // We do this operation as a unique SQL operation because is faster than performs
-//            // it per booking in the loop.
-//            db.Execute(@"
-//                UPDATE  Booking
-//                SET     BookingStatusID = 4
-//                        ,UpdatedDate = getdate()
-//                WHERE   BookingID IN (
-//            " + sqlGet + 
-//            " ) ");
-            
-//            foreach (var b in bookings){
-//                try {               
-//                    // Send messages
-//                    // Notify Loconomics Staff Users requesting 
-//                    // the manual payment and other tasks:
-//                    LcMessaging.SendProviderPaymentRequestToLoconomics(b.BookingID);
-                    
-//                    // Notify customer and provider with an updated booking details:
-//                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
-                    
-//                    // Update MessagingLog for the booking
-//                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Performed]");
+        messages = 0;
+        items = 0;
+        {
+            // Get bookings affected by conditions
+            var sqlGet = @"
+                SELECT  B.BookingID
+                        ,BR.PaymentTransactionID
+                FROM    Booking As B
+                         INNER JOIN
+                        CalendarEvents As E
+                          ON B.ConfirmedDateID = E.Id
+                         INNER JOIN
+                        BookingRequest As BR
+                          ON BR.BookingRequestID = B.BookingRequestID
+                WHERE   BookingStatusID = 2 -- performed without pricing adjustment, not cancelled and not other changes
+                         AND
+                        -- at 120 hours, 5 days, after service ended (more than that is fine)
+                        getdate() >= dateadd(hh, 120, E.EndTime)
+                        /* AND
+                         getdate() < dateadd(hh, 121, E.EndTime)
+                        */
+            ";
+            var bookings = db.Query(sqlGet);
 
-//                    items++;
-//                    messages += 3;
-//                } catch (Exception ex){
-//                    logger.LogEx("Booking 48H Service Performed", ex);
-//                }
-//            }
-//        }
-//        logger.Log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
-//        totalitems += items;
-//        totalmessages += messages;
+            foreach (var b in bookings){
+                try {
+                    // Release the payment
+                    LcPayment.ReleaseTransactionFromEscrow(b.PaymentTransactionID);
+                    // Mark as payed (StatusID:4 'complete')
+                    db.Execute(@"
+                        UPDATE  Booking
+                        SET     BookingStatusID = 4
+                                ,UpdatedDate = getdate()
+                        WHERE   BookingID = @0", b.BookingID);
+                    
+                    // Send messages
+                    
+                    // Notify customer and provider with an updated booking details:
+                    LcMessaging.SendBookingUpdate(b.BookingID, 's');
+                    
+                    // Update MessagingLog for the booking
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[Release Payment after 120H]");
+
+                    items++;
+                    messages += 2;
+                } catch (Exception ex){
+                    logger.LogEx("Booking Release Payment after 120H", ex);
+                }
+            }
+        }
+        logger.Log("Total of Booking Release Payment after 120H: {0}, messages sent: {1}", items, messages);
+        totalitems += items;
+        totalmessages += messages;
+        
+        
+        // Ending work with database
     }
     
     logger.Log("Elapsed time {0}, for {1} bookings affected and {2} messages sent", DateTime.Now - elapsedTime, totalitems, totalmessages);

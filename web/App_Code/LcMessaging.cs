@@ -561,6 +561,15 @@ public class LcMessaging
     #endregion
 
     #region Type:Request provider payment to Loconomics Stuff Users
+    /// <summary>
+    /// OBSOLETE.
+    /// This email was used before the integration of Braintree Marketplace, to report about the
+    /// need for manual paymento to providers. Now payment is automatic, triggered by a refund or the ScheduledTask
+    /// that asks Braintree to proceed with the payment.
+    /// Then this email is not need, Loconomics stuff doesn't need to do anything for payment and this is just
+    /// informational.
+    /// </summary>
+    /// <param name="bookingID"></param>
     public static void SendProviderPaymentRequestToLoconomics(int bookingID)
     {
         SendMail("support@loconomics.com", "Provider Payment Request",
