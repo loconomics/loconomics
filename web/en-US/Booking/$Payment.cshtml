@@ -351,7 +351,8 @@
                                 }
                             
                             } catch (Braintree.Exceptions.BraintreeException ex) {
-                                ModelState.AddFormError(ex.Message + "(<a target='_blank' href='" + ex.HelpLink + "'>More info</a>)");
+                                //ModelState.AddFormError(ex.Message + "(<a target='_blank' href='" + ex.HelpLink + "'>More info</a>)");
+                                ModelState.AddFormError("Braintree: " + ex.Message);
                             }
                         }
 
