@@ -28,7 +28,8 @@
                 E.EndTime,
                 E.TimeZone,
                 Pos.PositionSingular,
-                Pr.TotalPrice
+                Pr.TotalPrice As CustomerPrice,
+                (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
         FROM    BookingRequest As R
                  INNER JOIN
                 PricingEstimate As Pr
@@ -95,7 +96,8 @@
                 E.EndTime,
                 E.TimeZone,
                 Pos.PositionSingular,
-                Pr.TotalPrice
+                Pr.TotalPrice As CustomerPrice,
+                (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
         FROM    Booking As B
                  INNER JOIN
                 BookingRequest As R
@@ -183,11 +185,13 @@
 @helper printItem(dynamic item) {
     
     // Checking item: user type of the other user, not current user
+    var myUserType = LcData.UserInfo.UserType.Customer;
     string itsUserType = "provider";
     string itsUserPrefix = "Provider";
     //string myUserType = "customer";
     //string myUserPrefix = "Customer";
     if (WebSecurity.CurrentUserId == item.ProviderUserID) {
+        myUserType = LcData.UserInfo.UserType.Provider;
         itsUserType = "customer";
         itsUserPrefix = "Customer";
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
@@ -271,7 +275,13 @@
             }
         }
         <button class="item-action @buttonAction" data-booking-id="@item.BookingID" data-booking-request-id="@item.BookingRequestID">@buttonLabel</button>
-        <div class="total-price item-extra-info">$@item.TotalPrice</div>
+        <div class="total-price item-extra-info">
+            @if (myUserType == LcData.UserInfo.UserType.Provider) {
+                <text>@item.ProviderPrice.ToString("c")</text>
+            } else {
+                <text>@item.CustomerPrice.ToString("c")</text>
+            }                
+        </div>
     </div>
   </li>
 }
