@@ -311,7 +311,7 @@ public static class LcPayment
 
     #region Marketplace
 
-    public const decimal MarketplaceProviderFee = 3m;
+    public const string MarketplaceProviderFee = "2.9%+0.30";
 
     #region Provider information
     /// <summary>

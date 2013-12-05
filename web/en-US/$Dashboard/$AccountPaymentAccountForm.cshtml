@@ -7,6 +7,7 @@
     // Data
     string FirstName, LastName, MobilePhone, Street, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
+
     if (IsPost) {
         FirstName = Request["firstname"];
         LastName = Request["lastname"];
@@ -55,7 +56,8 @@
         Validation.RequireField("city", LcRessources.RequiredField("City"));
     }
     
-    if (IsPost && Validation.IsValid()) { 
+    if (IsPost && Validation.IsValid()) {
+
         if (!BirthDate.HasValue) {
             ModelState.AddError("birhtdate", LcRessources.RequiredField("Date of Birth"));
         }
@@ -100,10 +102,12 @@
             }
         }
     }
+        
+    
 }
 <p class="setting-instructions">
     Getting paid is the easy part.
-    We accept payments on  your behalf, and Braintree processes them with a deposit directly to your bank account.  There is a @(LcPayment.MarketplaceProviderFee)% fee subtracted from your payment to cover processing costs.
+    We accept payments on  your behalf, and Braintree processes them with a deposit directly to your bank account.  There is a @(LcPayment.MarketplaceProviderFee) fee subtracted from your payment to cover processing costs.
     Easy, right?
     Complete the information below and, as always, let us know if you have questions.
 </p>
@@ -111,6 +115,7 @@
 <form method="post" id="@idprefix-form" action="@(LcUrl.LangPath)$Dashboard/$AccountPaymentAccountForm/" class="ajax ajax-box">
     @LcHelpers.GetValidationScripts()
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
     <fieldset>
         <legend>My contact information</legend>
         <ul>
@@ -139,13 +144,14 @@
 
     <fieldset>
         <legend>My bank information</legend>
+        <div>Bank information is optional: if you don't fill it, a <a href="https://venmo.com" target="_blank">Venmo</a> account is created linked to your email and the money is disbursed there.</div>
         <ul>
             <li><input placeholder="ABA routing number" type="text" name="aba" value="@Aba" @Validation.GetHtml("aba") /></li>
             <li><input placeholder="Account number" type="text" name="accountnumber" value="@AccountNumber" @Validation.GetHtml("accountnumber") /></li>
         </ul>
     </fieldset>
 
-    <fieldset class="terms-of-service">
+    <fieldset id="@(idprefix)_termsofservice" class="terms-of-service">
         <legend>Terms of service</legend>
         <p>
             Loconomics, Inc. (Loconomics) uses Braintree Payment Solutions LLC (Braintree) for payment processing. In order for you to use Braintree's payment processing services, you must enter into the Merchant Services Agreement (MSA) with Braintree and its sponsoring bank. The MSA is available at <a href="http://www.braintreepayments.com/agreements/merchant/" target="_blank">www.braintreepayments.com/agreements/merchant</a>. By accepting this Agreement, you agree: (a) that you have downloaded or printed the MSA, and (b) that you have reviewed and agree to the MSA. Please note that Loconomics is not a party to the MSA and that you, Braintree and Braintree's sponsoring bank are the three parties to the MSA and that Loconomics has no obligations or liability to you under the MSA. If you have questions regarding the MSA, please contact Braintree at 877.434.2894.
