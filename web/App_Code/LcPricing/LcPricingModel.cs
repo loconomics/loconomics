@@ -32,19 +32,7 @@ public static partial class LcPricingModel
     /// <returns></returns>
     public static FeeRate GetFee(dynamic feeData)
     {
-        decimal feePercentage = 0M, feeCurrency = 0M;
-        if (feeData.ServiceFeeCurrency)
-        {
-            feeCurrency = feeData.ServiceFeeAmount;
-        }
-        if (feeData.ServiceFeePercentage)
-        {
-            feePercentage = feeData.ServiceFeeAmount;
-        }
-        return new FeeRate {
-            Percentage = feePercentage,
-            Currency = feeCurrency
-        };
+        return FeeRate.FromDatabaseCustomerFees(feeData);
     }
     /// <summary>
     /// As GetFee, returns the same structure for 
@@ -55,10 +43,7 @@ public static partial class LcPricingModel
     /// <returns></returns>
     public static FeeRate GetPFee(dynamic feeData)
     {
-        return new FeeRate {
-            Percentage = feeData.PaymentProcessingFee,
-            Currency = 0
-        };
+        return FeeRate.FromDatabaseProviderFees(feeData);
     }
     /// <summary>
     /// Gets a set of fees that can be applied to the given parameters,

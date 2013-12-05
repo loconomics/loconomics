@@ -1,0 +1,24 @@
+INSERT INTO [bookingtype]
+   ([BookingTypeID]
+   ,[BookingTypeName]
+   ,[BookingTypeDescription]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[ServiceFeeFixed]
+   ,[ServiceFeePercentage]
+   ,[PaymentProcessingFeePercentage]
+   ,[PaymentProcessingFeeFixed])
+VALUES
+   (@BookingTypeID
+   ,@BookingTypeName
+   ,@BookingTypeDescription
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@ServiceFeeFixed
+   ,@ServiceFeePercentage
+   ,@PaymentProcessingFeePercentage
+   ,@PaymentProcessingFeeFixed)
