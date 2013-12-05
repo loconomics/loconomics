@@ -224,7 +224,7 @@
             </tr>
             <tr class="fees-note">
                 @if (withRowSelectionColumn) { <td></td> }
-                <td colspan="2">*Loconomics deducts a 3% fee to cover credit card processing costs</td>
+                <td colspan="2">*Loconomics deducts a 2.9%+0.30 fee to cover credit card processing costs</td>
             </tr>
         </table>
     </div>
@@ -324,7 +324,7 @@
             }
 
             <tr class="fees">
-                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Loconomics service fee (includes credit card processing costs)</th>
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Loconomics Service Fee*</th>
                 @* As opposite to CustomerPricingSummary, here we show PFeePrice instead of FeePrice, and must be showed as a negative number,
                     because is substracted from previous lines prices *@
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((0 - summary.PFeePrice).ToString("c"))</td>
@@ -334,10 +334,15 @@
                 <td style="@LcEmailTemplateHelper.StylePricingSummarySeparator()" colspan="2"></td>
             </tr>
             <tr class="total">
-                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Total price</th>
+                <th style="@LcEmailTemplateHelper.StylePricingSummaryConcept()">Total payment</th>
                 @* Provider price to be paid is subtotal less payment processing fees (pfees) 
                 *@
                 <td style="@LcEmailTemplateHelper.StylePricingSummaryPrice()">@((summary.SubtotalPrice - summary.PFeePrice).ToString("c"))</td>
+            </tr>
+            <tr class="fees-note">
+                <td colspan="2" style="font-style: italic;font-size: 0.83em;font-weight: normal !important;text-align: left !important;">
+                    *Loconomics deducts a 2.9%+0.30 fee to cover credit card processing costs
+                </td>
             </tr>
         </table>
     </div>
