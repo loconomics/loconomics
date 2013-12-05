@@ -1587,12 +1587,7 @@ public static partial class LcData
                     {
                         // Matchs! Use the special Fees record for this cases (ID=7)
                         var codeFees = db.QuerySingle(@"
-                            SELECT 
-                                BookingTypeID
-                                ,ServiceFeeAmount
-                                ,ServiceFeeCurrency
-                                ,ServiceFeePercentage
-                                ,PaymentProcessingFee
+                            SELECT  *
                             FROM    BookingType
                             WHERE   BookingTypeID = 7
                                      AND Active = 1
@@ -1609,14 +1604,9 @@ public static partial class LcData
                 // If the customer already booked provider, use the 'repeat booking' fees (ID:2)
                 // else use the standard fees (ID:1)
                 return db.QuerySingle(@"
-                    SELECT 
-                        BookingTypeID
-                        ,ServiceFeeAmount
-                        ,ServiceFeeCurrency
-                        ,ServiceFeePercentage
-                        ,PaymentProcessingFee
-                    FROM BookingType
-                    WHERE BookingTypeID = (
+                    SELECT  *
+                    FROM    BookingType
+                    WHERE   BookingTypeID = (
                         SELECT TOP 1 CASE
                             WHEN EXISTS (SELECT * FROM BookingRequest As B 
                                 WHERE B.BookingRequestStatusID = 7 AND B.CustomerUserID = @0 AND B.ProviderUserID = @1)
@@ -1641,14 +1631,9 @@ public static partial class LcData
             {
                 // Find fees for 'estimate booking' (ID:4), AKA Free package booking (flat fees)
                 return db.QuerySingle(@"
-                    SELECT 
-                        BookingTypeID
-                        ,ServiceFeeAmount
-                        ,ServiceFeeCurrency
-                        ,ServiceFeePercentage
-                        ,PaymentProcessingFee
-                    FROM BookingType
-                    WHERE BookingTypeID = 4
+                    SELECT  *
+                    FROM    BookingType
+                    WHERE   BookingTypeID = 4
                 ");
             }
         }
