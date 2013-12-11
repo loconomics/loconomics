@@ -1350,6 +1350,9 @@ public static partial class LcData
                         , getdate()
                         , 'braintree'
                     )
+
+                -- We need to recheck the alert
+                EXEC TestAlertPayment @0
                 ",
                     providerID,
                     merchantAccountID,
