@@ -144,7 +144,7 @@
 
     <fieldset>
         <legend>My bank information</legend>
-        <div>Bank information is optional: if you don't fill it, a <a href="https://venmo.com" target="_blank">Venmo</a> account is created linked to your email and the money is disbursed there.</div>
+        <div>If you choose not to enter your bank information, a <a href="https://venmo.com" target="_blank">Venmo</a> account will be created and linked to your email. You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.</div>
         <ul>
             <li><input placeholder="ABA routing number" type="text" name="aba" value="@Aba" @Validation.GetHtml("aba") /></li>
             <li><input placeholder="Account number" type="text" name="accountnumber" value="@AccountNumber" @Validation.GetHtml("accountnumber") /></li>
