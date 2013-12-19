@@ -1,6 +1,8 @@
 ﻿@using Braintree;
 @using WebMatrix.Data;
 @{
+    LcHelpers.SecurePage();
+
     var idprefix = "account-paymentaccount";
     var user = LcData.UserInfo.GetUserRowWithContactData();
     
