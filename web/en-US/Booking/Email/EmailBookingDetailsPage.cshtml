@@ -79,7 +79,9 @@
     PageData["messageTitle"] = LcData.Booking.GetBookingRequestTitleFor(info.Booking.BookingRequestStatusID, info.PairUser, info.SentTo);
     PageData["messageSubtitle"] = LcEmailTemplateHelper.GetLastUpdateText(info.Booking.UpdatedDate);
     PageData["showSign"] = false; // We have the sign already on this page, upper than normal
-    PageData["helpReference"] = "Booking Request #" + info.BookingRequestID.ToString();
+    PageData["helpReference"] = info.IsRequest
+        ? "Booking Request #" + info.BookingRequestID.ToString()
+        : "Booking #" + info.BookingID.ToString();
     PageData["autologinQuery"] = "";
     switch (info.SentTo) {
         case LcData.UserInfo.UserType.Provider:
