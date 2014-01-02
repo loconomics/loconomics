@@ -6,6 +6,9 @@ require('jquery-ui');
 function setupDatePicker() {
     // Date Picker
     $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+    $('.date-pick', document).datepicker({
+        showAnim: 'blind'
+    });
     applyDatePicker();
 }
 function applyDatePicker(element) {

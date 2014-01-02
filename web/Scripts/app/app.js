@@ -42,7 +42,8 @@ $.blockUI.defaults.onBlock = function () {
     LC.moveFocusTo(this);
 };
 
-LC.load = require('../LC/loader');
+var loader = require('../LC/loader');
+LC.load = loader.load;
 
 var blocks = LC.blockPresets = require('../LC/blockPresets');
 //{TEMP
@@ -171,6 +172,8 @@ var tabbedNotifications = require('../LC/TabbedUX.changesNotification');
 
 var tabsAutoload = require('../LC/TabbedUX.autoload');
 
+var homePage = require('./home');
+
 /**
  ** Init code
 ***/
@@ -262,6 +265,8 @@ $(function () {
             }
         });
 
+    // HOME PAGE / SEARCH STUFF
+    homePage.init();
 
     // TODO: used some time? still required using modules?
     /*

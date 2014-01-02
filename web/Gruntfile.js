@@ -22,7 +22,12 @@
         'src': [
           './Scripts/jquery/jquery-1.7.2.min.js',
           './Scripts/jquery/jquery-ui-1.8.21.custom.min.js',
-          './Scripts/libs/modernizr.custom.2.6.2.js'
+          './Scripts/jquery/jquery.ui.datepicker-es.js',
+          './Scripts/libs/modernizr.custom.2.6.2.js',
+          './Scripts/jquery/jQuery.blockUI.js',
+          './Scripts/jquery/jquery.ba-hashchange.min.js',
+          // Its in use?
+          './Scripts/jquery/jquery.formatter.min.js'
          ],
         'dest': './Scripts/libs.js',
         'options': {
@@ -55,7 +60,8 @@
           'external': [
             'jquery',
             'jquery-ui',
-            'modernizr'
+            'modernizr',
+            'jQuery.blockUI'
           ],
           alias: [
             './Scripts/LC/StringFormat:StringFormat'
