@@ -1,7 +1,7 @@
 ﻿/***** AVAILABILITY CALENDAR WIDGET *****/
 var $ = require('jquery'),
-    smoothBoxBlock = require('LC/smoothBoxBlock')
-    dateToInterchangeableString = require('LC/dateToInterchangeableString');
+    smoothBoxBlock = require('../LC/smoothBoxBlock'),
+    dateToInterchangeableString = require('../LC/dateToInterchangeableString');
 
 exports.init = function initAvailabilityCalendarWidget(baseUrl) {
     $(document).on('click', '.calendar-controls .action', function () {

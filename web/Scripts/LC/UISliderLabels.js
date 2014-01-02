@@ -2,9 +2,9 @@
    API for automatic creation of labels for UI Sliders (jquery-ui)
 **/
 var $ = require('jquery'),
-    tooltips = require('tooltips'),
-    mu = require('mathUtils')
-    TimeSpan = require('TimeSpan');
+    tooltips = require('./tooltips'),
+    mu = require('./mathUtils'),
+    TimeSpan = require('./TimeSpan');
 require('jquery-ui');
 
 /** Create labels for a jquery-ui-slider.
@@ -54,10 +54,10 @@ for the required percentage-width @sw
 **/
 function positionate(lbl, i, steps) {
     var sw = 100 / steps;
-    var left = i * sw - sw * .5,
+    var left = i * sw - sw * 0.5,
         right = 100 - left - sw,
         align = 'center';
-    if (i == 0) {
+    if (i === 0) {
         align = 'left';
         left = 0;
     } else if (i == steps) {
@@ -87,13 +87,13 @@ function update(slider) {
 
     // Get and apply layout
     var layout_name = slider.data('slider-labels-layout') || 'standard',
-        layout = layout_name in layouts ? layouts[layout_name] : layouts['standard'];
+        layout = layout_name in layouts ? layouts[layout_name] : layouts.standard;
     labels_c.addClass('layout-' + layout_name);
     layout(slider, labels_c, labels);
 
     // Update tooltips
     tooltips.createTooltip(labels_c.children(), {
-        title: function () { return $(this).text() }
+        title: function () { return $(this).text(); }
         , persistent: true
     });
 }
@@ -123,7 +123,7 @@ var layouts = {};
 the last label that is ensured to be showed even if it creates
 a higher gap with the previous one.
 **/
-layouts['standard'] = function standard_layout(slider, labels_c, labels) {
+layouts.standard = function standard_layout(slider, labels_c, labels) {
     // Check if there are more labels than available space
     // Get maximum label width
     var item_width = 0;
@@ -154,14 +154,14 @@ layouts['standard'] = function standard_layout(slider, labels_c, labels) {
                     // positionate(parent, newi, labels_steps);
                     newi++;
                 }
-            };
+            }
         }
     }
 };
 /** Show labels number values formatted as hours, with only
 integer hours being showed, the maximum number of it.
 **/
-layouts['hours'] = function hours_layout(slider, labels_c, labels, show_all) {
+layouts.hours = function hours_layout(slider, labels_c, labels, show_all) {
     var intLabels = slider.find('.integer-hour');
     if (!intLabels.length) {
         labels.each(function () {
@@ -172,7 +172,7 @@ layouts['hours'] = function hours_layout(slider, labels_c, labels, show_all) {
                     v = mu.roundTo(v, 2);
                     if (v % 1 > 0) {
                         $t.addClass('decimal-hour').hide().parent().removeClass('visible');
-                        if (v % .5 == 0)
+                        if (v % 0.5 === 0)
                             $t.parent().addClass('strong');
                         $t.text(TimeSpan.fromHours(v).toShortString());
                     } else {
@@ -185,7 +185,7 @@ layouts['hours'] = function hours_layout(slider, labels_c, labels, show_all) {
         });
     }
     if (show_all !== true)
-        layouts['standard'](slider, intLabels.parent(), intLabels);
+        layouts.standard(slider, intLabels.parent(), intLabels);
 };
 layouts['all-values'] = function all_layout(slider, labels_c, labels) {
     // Showing all labels
@@ -193,8 +193,8 @@ layouts['all-values'] = function all_layout(slider, labels_c, labels) {
 };
 layouts['all-hours'] = function all_hours_layout() {
     // Just use hours layout but showing all integer hours
-    Array.prototype.push.call(arguments, true)
-    layouts['hours'].apply(this, arguments);
+    Array.prototype.push.call(arguments, true);
+    layouts.hours.apply(this, arguments);
 };
 
 module.exports = {

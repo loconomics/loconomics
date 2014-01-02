@@ -11,10 +11,10 @@ function sanitizeWhitespaces(text) {
     // Replace any kind of contiguous whitespaces characters by a single normal white-space
     // (thats include replace enconded non-breaking-spaces,
     // and duplicated-repeated appearances)
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, ' ');
     // Remove starting and ending whitespaces
     return $.trim(text);
-};
+}
 
 // Module
 if (typeof module !== 'undefined' && module.exports)

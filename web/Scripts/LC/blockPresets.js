@@ -3,11 +3,11 @@ var loadingBlock = { message: '<img class="loading-indicator" src="' + LcUrl.App
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),
-        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">There was an error'
-            + (error ? ': ' + error : '')
-            + (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '')
-            + '</div>'
-    }
+        message: '<a class="close-popup" href="#close-popup">X</a><div class="info">There was an error' +
+            (error ? ': ' + error : '') +
+            (reload ? ' <a href="javascript: ' + reload + ';">Click to reload</a>' : '') +
+            '</div>'
+    };
 };
 var infoBlock = function (message, options) {
     return $.extend({
@@ -15,7 +15,7 @@ var infoBlock = function (message, options) {
         /*,css: { cursor: 'default' }*/
         , overlayCSS: { cursor: 'default' }
     }, options);
-}
+};
 
 // Module:
 if (typeof module !== 'undefined' && module.exports) {

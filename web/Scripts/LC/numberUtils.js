@@ -1,8 +1,8 @@
 ﻿/* Some utilities to format and extract numbers, from text or DOM.
  */
 var jQuery = require('jquery'),
-    i18n = require('i18n'),
-    mu = require('mathUtils');
+    i18n = require('./i18n'),
+    mu = require('./mathUtils');
 
 function getMoneyNumber(v, alt) {
     alt = alt || 0;
@@ -13,7 +13,7 @@ function getMoneyNumber(v, alt) {
         .replace(new RegExp(LC.numericMilesSeparator[i18n.getCurrentCulture().culture], 'g'), '')
     );
     return isNaN(v) ? alt : v;
-};
+}
 function numberToTwoDecimalsString(v) {
     var culture = i18n.getCurrentCulture().culture;
     // First, round to 2 decimals
@@ -28,13 +28,13 @@ function numberToTwoDecimalsString(v) {
     // Decimals, ever two digits
         Math.floor(rest / 10) + rest % 10
     );
-};
+}
 function numberToMoneyString(v) {
     var country = i18n.getCurrentCulture().country;
     // Two digits in decimals for rounded value with money symbol as for
     // current locale
     return (i18n.moneySymbolPrefix[country] + numberToTwoDecimalsString(v) + i18n.moneySymbolSufix[country]);
-};
+}
 function setMoneyNumber(v, el) {
     // Get value in money format:
     v = numberToMoneyString(v);
@@ -45,7 +45,7 @@ function setMoneyNumber(v, el) {
         else
             el.text(v);
     return v;
-};
+}
 
 if (typeof module !== 'undefined' && module.exports)
     module.exports = {

@@ -21,7 +21,7 @@ exports.init = function (options) {
                 cache: true,
                 dataType: 'JSON',
                 success: function (data) {
-                    if (data && data.Code == 0)
+                    if (data && data.Code === 0)
                         if (data.Result.IsValid) {
                             $t.removeClass('input-validation-error').addClass('valid');
                             $t.siblings('.field-validation-error')

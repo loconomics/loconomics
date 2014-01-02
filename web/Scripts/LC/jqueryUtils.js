@@ -2,7 +2,7 @@
     that are not plugins.
 */
 function escapeJQuerySelectorValue(str) {
-    return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1')
+    return str.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/])/g, '\\$1');
 }
 
 if (typeof module !== 'undefined' && module.exports)

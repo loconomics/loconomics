@@ -9,8 +9,8 @@
     AKA: Don't lost data! warning message ;-)
 **/
 var $ = require('jquery'),
-    smoothBoxBlock = require('smoothBoxBlock'),
-    changesNotification = require('changesNotification');
+    smoothBoxBlock = require('./smoothBoxBlock'),
+    changesNotification = require('./changesNotification');
 
 // TabbedUX dependency as DI
 exports.init = function (TabbedUX, targetSelector) {

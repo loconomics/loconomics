@@ -12,7 +12,7 @@ var Enum = {
                 return enumType[e];
         return null;
     }
-}
+};
 
 if (typeof module !== 'undefined' && module.exports)
     module.exports = Enum;

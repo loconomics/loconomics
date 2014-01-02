@@ -10,7 +10,7 @@ var Modernizr = require('modernizr');
 
 function setupValidation(reapplyOnlyTo) {
     reapplyOnlyTo = reapplyOnlyTo || document;
-    if (!window['jqueryValidateUnobtrusiveLoaded']) window['jqueryValidateUnobtrusiveLoaded'] = false;
+    if (!window.jqueryValidateUnobtrusiveLoaded) window.jqueryValidateUnobtrusiveLoaded = false;
     if (!jqueryValidateUnobtrusiveLoaded) {
         jqueryValidateUnobtrusiveLoaded = true;
         

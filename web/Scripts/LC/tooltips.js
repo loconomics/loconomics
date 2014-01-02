@@ -4,7 +4,7 @@
 ** additional description or external tooltip content.
 **/
 var $ = require('jquery'),
-    sanitizeWhitespaces = require('sanitizeWhitespaces');
+    sanitizeWhitespaces = require('./sanitizeWhitespaces');
 
 // Main internal properties
 var posoffset = { x: 16, y: 8 };
@@ -33,7 +33,7 @@ function pos(t, e, l) {
 /** Get or create, and returns, the tooltip content for the element
 **/
 function con(l) {
-    if (l.length == 0) return null;
+    if (l.length === 0) return null;
     var c = l.data('tooltip-content'),
         persistent = l.data('persistent-tooltip');
     if (!c) {
@@ -154,7 +154,7 @@ function init() {
     // Listen event for clickable popup-tooltips
     .on('click', '[title].has-popup-tooltip', showTooltip)
     // Allowing buttons inside the tooltip
-    .on('click', '.tooltip-button', function () { return false })
+    .on('click', '.tooltip-button', function () { return false; })
     // Adding close-tooltip handler for popup-tooltips (click on any element except the tooltip itself)
     .on('click', function (e) {
         var t = $('.popup-tooltip:visible').get(0);

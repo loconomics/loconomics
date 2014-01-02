@@ -1,7 +1,7 @@
 ﻿/* Assets loader with loading confirmation (mainly for scripts)
     based on Modernizr/yepnope loader.
 */
-var Modernizr = require('Modernizr');
+var Modernizr = require('modernizr');
 
 exports.load = function (opts) {
     opts = $.extend(true, {

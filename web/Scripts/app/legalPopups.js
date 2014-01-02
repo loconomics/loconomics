@@ -12,5 +12,5 @@ exports.enable = function (baseUrl) {
     .on('click', '.view-terms-of-use', function () {
         popup(baseUrl + 'HelpCenter/$TermsOfUse/', 'large');
         return false;
-    })
+    });
 };

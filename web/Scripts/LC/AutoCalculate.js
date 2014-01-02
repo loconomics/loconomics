@@ -1,6 +1,6 @@
 ﻿/* Auto calculate summary on DOM tagging with classes the elements involved.
  */
-var nu = require('numberUtils');
+var nu = require('./numberUtils');
 
 function setupCalculateTableItemsTotals() {
     $('table.calculate-items-totals').each(function () {
@@ -62,7 +62,7 @@ function setupCalculateSummary(force) {
         calc();
         c.data('calculate-summary-initializated', true);
     });
-};
+}
 
 /** Update the detail of a pricing summary, one detail line per selected item
 **/
@@ -96,7 +96,7 @@ function updateDetailedPricingSummary() {
             }
         });
     });
-};
+}
 function setupUpdateDetailedPricingSummary() {
     var $c = $('.pricing-summary.detailed').closest('form');
     // Initial calculation
@@ -105,7 +105,7 @@ function setupUpdateDetailedPricingSummary() {
     $c.find('.pricing-summary-item-checked').change(updateDetailedPricingSummary);
     // Support for lcSetupCalculateTableItemsTotals event
     $c.on('lcCalculatedItemTotal', updateDetailedPricingSummary);
-};
+}
 
 
 if (typeof module !== 'undefined' && module.exports)

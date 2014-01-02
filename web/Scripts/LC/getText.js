@@ -4,7 +4,7 @@ other parameters.
     TODO: RE-IMPLEMENT not using jQuery nelse DOM elements, or almost not elements inside body
 **/
 var $ = require('jquery');
-var escapeJQuerySelectorValue = require('jqueryUtils').escapeJQuerySelectorValue;
+var escapeJQuerySelectorValue = require('./jqueryUtils').escapeJQuerySelectorValue;
 
 function getText() {
     var args = arguments;
@@ -19,7 +19,7 @@ function getText() {
         formatted = formatted.replace(regexp, args[i + 1]);
     }
     return formatted;
-};
+}
 
 if (typeof module !== 'undefined' && module.exports)
     module.exports = getText;

@@ -1,7 +1,7 @@
 ﻿/* Extra utilities and methods 
  */
-var TimeSpan = require('TimeSpan');
-var nu = require('numberUtils');
+var TimeSpan = require('./TimeSpan');
+var nu = require('./numberUtils');
 
 /** Shows time as a large string with units names for values different than zero.
  **/
@@ -34,7 +34,7 @@ function smartTime(time) {
 @roundTo specify the LC.roundingTypeEnum about how to round the time (down, nearest or up)
 **/
 function roundTimeToQuarterHour(/* TimeSpan */time, /* LC.roundingTypeEnum */roundTo) {
-    var restFromQuarter = time.totalHours() % .25;
+    var restFromQuarter = time.totalHours() % 0.25;
     var hours = time.totalHours();
     if (restFromQuarter > 0.0) {
         switch (roundTo) {
@@ -43,20 +43,20 @@ function roundTimeToQuarterHour(/* TimeSpan */time, /* LC.roundingTypeEnum */rou
                 break;
             default:
             case nu.roundingTypeEnum.Nearest:
-                var limit = .25 / 2;
+                var limit = 0.25 / 2;
                 if (restFromQuarter >= limit) {
-                    hours += (.25 - restFromQuarter);
+                    hours += (0.25 - restFromQuarter);
                 } else {
                     hours -= restFromQuarter;
                 }
                 break;
             case nu.roundingTypeEnum.Up:
-                hours += (.25 - restFromQuarter);
+                hours += (0.25 - restFromQuarter);
                 break;
         }
     }
     return TimeSpan.fromHours(hours);
-};
+}
 
 // Extend a given TimeSpan object with the Extra methods
 function plugIn(TimeSpan) {

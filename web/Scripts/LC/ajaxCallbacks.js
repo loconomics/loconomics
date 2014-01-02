@@ -1,13 +1,13 @@
 ﻿/* Set of common LC callbacks for most Ajax operations
  */
 var $ = require('jquery');
-require('jquery/jQuery.blockUI');
-var popup = require('popup'),
-    validation = require('validationHelper'),
-    changesNotification = require('changesNotification'),
-    createIframe = require('createIframe'),
-    redirectTo = require('redirectTo'),
-    autoFocus = require('autoFocus');
+require('../jquery/jQuery.blockUI');
+var popup = require('./popup'),
+    validation = require('./validationHelper'),
+    changesNotification = require('./changesNotification'),
+    createIframe = require('./createIframe'),
+    redirectTo = require('./redirectTo'),
+    autoFocus = require('./autoFocus');
 
 // AKA: ajaxErrorPopupHandler
 function lcOnError(jx, message, ex) {
@@ -22,7 +22,7 @@ function lcOnError(jx, message, ex) {
     size = popup.size('large');
     size.height -= 34;
     if (m == 'error') {
-        var iframe = createIframe(data, size);
+        iframe = createIframe(data, size);
         iframe.attr('id', 'blockUIIframe');
         m = null;
     }  else
@@ -82,7 +82,7 @@ function lcOnSuccess(data, text, jx) {
         var jb = newhtml;
         if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
             jb = newhtml.find('.ajax-box:eq(0)');
-        if (!jb || jb.length == 0) {
+        if (!jb || jb.length === 0) {
             // There is no ajax-box, use all element returned:
             jb = newhtml;
         }
@@ -119,7 +119,7 @@ function showSuccessMessage(ctx, message) {
     // Unblock loading:
     ctx.box.unblock();
     // Block with message:
-    var message = message || ctx.form.data('success-post-message') || 'Done!';
+    message = message || ctx.form.data('success-post-message') || 'Done!';
     ctx.box.block(infoBlock(message, {
         css: popup.style(popup.size('small'))
     }))
@@ -167,7 +167,7 @@ function doJSONAction(data, ctx) {
         // Clean previous validation errors
         validation.setValidationSummaryAsValid(ctx.box);
 
-        if (data.Code == 0) {
+        if (data.Code === 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
             showSuccessMessage(ctx, data.Result);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);

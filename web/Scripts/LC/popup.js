@@ -1,22 +1,22 @@
 ﻿/* Popup functions
  */
 var $ = require('jquery'),
-    createIframe = require('createIframe'),
-    autoFocus = require('autoFocus');
-require('jquery/jQuery.blockUI');
-require('smoothBoxBlock');
+    createIframe = require('./createIframe'),
+    autoFocus = require('./autoFocus');
+require('../jquery/jQuery.blockUI');
+require('./smoothBoxBlock');
 
 /*******************
 * Popup related 
 * functions
 */
 function popupSize(size) {
-    var s = (size == 'large' ? .8 : (size == 'medium' ? .5 : (size == 'small' ? .2 : size || .5)));
+    var s = (size == 'large' ? 0.8 : (size == 'medium' ? 0.5 : (size == 'small' ? 0.2 : size || 0.5)));
     return {
         width: Math.round($(window).width() * s),
         height: Math.round($(window).height() * s),
         sizeFactor: s
-    }
+    };
 }
 function popupStyle(size) {
     return {
@@ -55,7 +55,7 @@ function popup(url, size, complete, loadingText, options) {
 
     // Prepare size and loading
     options.loadingText = options.loadingText || '';
-    if (typeof (options.size["width"]) === 'undefined')
+    if (typeof (options.size.width) === 'undefined')
         options.size = popupSize(options.size);
 
     $.blockUI({
@@ -149,7 +149,7 @@ function messagePopup(message, container) {
     container = $(container || 'body');
     var content = $('<div/>').text(message);
     smoothBoxBlock(content, container, 'message-popup full-block', { closable: true, center: true, autofocus: false });
-};
+}
 
 function connectPopupAction(applyToSelector) {
     applyToSelector = applyToSelector || '.popup-action';

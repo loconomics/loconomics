@@ -4,7 +4,7 @@
 **/
 var $ = jQuery || require('jquery');
 $.fn.outerHtml = function () {
-    if (!this || this.length == 0) return '';
+    if (!this || this.length === 0) return '';
     var el = this.get(0);
     var html = '';
     if (el.outerHTML)

@@ -1,10 +1,10 @@
 ﻿/** Custom Loconomics 'like blockUI' popups
 **/
 var $ = require('jquery'),
-    escapeJQuerySelectorValue = require('jqueryUtils').escapeJQuerySelectorValue
-    autoFocus = require('autoFocus'),
-    moveFocusTo = require('moveFocusTo');
-require('jquery.xtsh').plugIn($);
+    escapeJQuerySelectorValue = require('./jqueryUtils').escapeJQuerySelectorValue,
+    autoFocus = require('./autoFocus'),
+    moveFocusTo = require('./moveFocusTo');
+require('./jquery.xtsh').plugIn($);
 
 function smoothBoxBlock(contentBox, blocked, addclass, options) {
     // Load options overwriting defaults
@@ -41,12 +41,13 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
     blocked.data('smooth-box-block-id', bID);
     var box = $('#' + escapeJQuerySelectorValue(bID));
     // Hiding box:
-    if (contentBox.length == 0) {
+    if (contentBox.length === 0) {
         box.xhide(options.closeOptions);
         return;
     }
-    if (box.length == 0) {
-        var boxc = $('<div class="smooth-box-block-element"/>');
+    var boxc;
+    if (box.length === 0) {
+        boxc = $('<div class="smooth-box-block-element"/>');
         box = $('<div class="smooth-box-block-overlay"></div>');
         box.addClass(addclass);
         if (full) box.addClass('full-block');
@@ -57,7 +58,7 @@ function smoothBoxBlock(contentBox, blocked, addclass, options) {
         else
             $('body').append(box);
     } else {
-        var boxc = box.children('.smooth-box-block-element');
+        boxc = box.children('.smooth-box-block-element');
     }
     // Hidden for user, but available to compute:
     contentBox.show();

@@ -1,7 +1,7 @@
 ﻿/* Loconomics specific Price, fees and hour-price calculation
     using some static methods and the Price class.
 */
-var mu = require('mathUtils');
+var mu = require('./mathUtils');
 
 /* Class Price to calculate a total price based on fees information (fixed and rate)
     and desired decimals for approximations.
@@ -11,9 +11,9 @@ function Price(basePrice, fee, roundedDecimals) {
     // that includes both a feeRate and a fixedFeeAmount
     // Extracting fee values into local vars:
     var feeRate = 0, fixedFeeAmount = 0;
-    if (fee['fixedFeeAmount'] || fee['feeRate']) {
-        fixedFeeAmount = fee.fixedFeeAmount || .0;
-        feeRate = fee.feeRate || .0;
+    if (fee.fixedFeeAmount || fee.feeRate) {
+        fixedFeeAmount = fee.fixedFeeAmount || 0;
+        feeRate = fee.feeRate || 0;
     } else
         feeRate = fee;
 
@@ -32,7 +32,7 @@ function Price(basePrice, fee, roundedDecimals) {
     this.roundedDecimals = roundedDecimals;
     this.totalPrice = totalPrice;
     this.feePrice = feePrice;
-};
+}
 
 /** Calculate and returns the price and relevant data as an object for
 time, hourlyRate (with fees) and the hourlyFee.

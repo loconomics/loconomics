@@ -7,8 +7,8 @@
 * or saving.
 */
 var $ = require('jquery'),
-    getXPath = require('getXPath'),
-    escapeJQuerySelectorValue = require('jqueryUtils').escapeJQuerySelectorValue;
+    getXPath = require('./getXPath'),
+    escapeJQuerySelectorValue = require('./jqueryUtils').escapeJQuerySelectorValue;
 
 var changesNotification = {
     changesList: {},
@@ -31,7 +31,7 @@ var changesNotification = {
         if (options.genericChangeSupport)
             $(options.target).on('change', 'form:not(.changes-notification-disabled) :input[name]', function () {
                 changesNotification.registerChange($(this).closest('form').get(0), this);
-            })
+            });
         if (options.genericSubmitSupport)
             $(options.target).on('submit', 'form:not(.changes-notification-disabled)', function () {
                 changesNotification.registerSave(this);
@@ -57,10 +57,10 @@ var changesNotification = {
         if (typeof (e) !== 'string') {
             n = e.name;
             // Check if really there was a change checking default element value
-            if (typeof (e.defaultValue) != 'undefined'
-                 && typeof (e.checked) == 'undefined'
-                 && typeof (e.selected) == 'undefined'
-                 && e.value == e.defaultValue) {
+            if (typeof (e.defaultValue) != 'undefined' &&
+                typeof (e.checked) == 'undefined' &&
+                typeof (e.selected) == 'undefined' &&
+                e.value == e.defaultValue) {
                 // There was no change, no continue
                 // and maybe is a regression from a change and now the original value again
                 // try to remove from changes list doing registerSave
@@ -84,7 +84,7 @@ var changesNotification = {
         if (els) {
             this.changesList[fname] = $.grep(this.changesList[fname], function (el) { return ($.inArray(el, els) == -1); });
             // Don't remove 'f' list if is not empty
-            r = this.changesList[fname].length == 0;
+            r = this.changesList[fname].length === 0;
         }
         if (r) {
             $(f).removeClass(this.defaults.changedFormClass);
@@ -95,7 +95,7 @@ var changesNotification = {
         // pass data: form, elements registered as save (this can be null), and 'form fully saved' as third param (bool)
         $(f).trigger('lcChangesNotificationSaveRegistered', [f, els, r]);
         var lchn = this;
-        if (els) $.each(els, function () { $('[name="' + escapeJQuerySelectorValue(this) + '"]').removeClass(lchn.defaults.changedElementClass) });
+        if (els) $.each(els, function () { $('[name="' + escapeJQuerySelectorValue(this) + '"]').removeClass(lchn.defaults.changedElementClass); });
         return prevEls;
     }
 };

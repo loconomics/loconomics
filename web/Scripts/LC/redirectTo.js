@@ -2,7 +2,7 @@
 page, it forces a page reload for the given URL.
 **/
 var $ = require('jquery');
-require('jquery/jQuery.blockUI');
+require('../jquery/jQuery.blockUI');
 
 module.exports = function redirectTo(url) {
     // Block to avoid more user interactions:

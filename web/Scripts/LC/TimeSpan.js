@@ -103,11 +103,11 @@ TimeSpan.parse = function (strtime) {
 TimeSpan.zero = new TimeSpan(0, 0, 0, 0, 0);
 TimeSpan.prototype.isZero = function timeSpan_proto_isZero() {
     return (
-        this.days == 0 &&
-        this.hours == 0 &&
-        this.minutes == 0 &&
-        this.seconds == 0 &&
-        this.milliseconds == 0
+        this.days === 0 &&
+        this.hours === 0 &&
+        this.minutes === 0 &&
+        this.seconds === 0 &&
+        this.milliseconds === 0
     );
 };
 TimeSpan.prototype.totalMilliseconds = function timeSpan_proto_totalMilliseconds() {

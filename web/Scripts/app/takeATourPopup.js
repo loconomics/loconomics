@@ -1,8 +1,8 @@
 ﻿/**
 * Take a tour
 */
-var Cookie = require('LC/Cookie');
-var popup = require('LC/popup');
+var Cookie = require('../LC/Cookie');
+var popup = require('../LC/popup');
 
 exports.show = function takeATour() {
     // Check the cookie:

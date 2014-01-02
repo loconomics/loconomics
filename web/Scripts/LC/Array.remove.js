@@ -6,7 +6,7 @@ function arrayRemove(anArray, from, to) {
     var rest = anArray.slice((to || from) + 1 || anArray.length);
     anArray.length = from < 0 ? anArray.length + from : from;
     return anArray.push.apply(anArray, rest);
-};
+}
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = arrayRemove;

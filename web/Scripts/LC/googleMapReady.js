@@ -2,7 +2,7 @@
 // map environment is ready (when google maps api and script is
 // loaded and ready to use, or inmediately if is already loaded).
 
-var loader = require('loader');
+var loader = require('./loader');
 
 module.exports = function googleMapReady(ready) {
     var stack = googleMapReady.stack || [];
@@ -15,7 +15,7 @@ module.exports = function googleMapReady(ready) {
         googleMapReady.isLoading = true;
         loader.load({
             scripts: ["https://www.google.com/jsapi"],
-            completeVerification: function () { return !!window['google'] },
+            completeVerification: function () { return !!window.google; },
             complete: function () {
                 google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
                     googleMapReady.isReady = true;

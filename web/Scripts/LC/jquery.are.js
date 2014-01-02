@@ -30,7 +30,7 @@ $.fn.are = function (selector, modifier) {
                 percentage: count / this.length,
                 total: this.length
             };
-        default: 
+        default:
             {
                 if ('just' in modifier &&
                 modifier.just != count)
@@ -44,4 +44,4 @@ $.fn.are = function (selector, modifier) {
                 return true;
             }
     }
-}
+};

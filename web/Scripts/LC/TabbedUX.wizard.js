@@ -6,12 +6,12 @@
     Require TabbedUX via DI on 'init'
  **/
 var $ = require('jquery'),
-    validation = require('validationHelper'),
-    changesNotification = require('changesNotification'),
-    requirectTo = require('redirectTo'),
-    popup = require('popup'),
-    ajaxCallbacks = require('ajaxCallbacks');
-require('jquery/jQuery.blockUI');
+    validation = require('./validationHelper'),
+    changesNotification = require('./changesNotification'),
+    requirectTo = require('./redirectTo'),
+    popup = require('./popup'),
+    ajaxCallbacks = require('./ajaxCallbacks');
+require('../jquery/jQuery.blockUI');
 
 exports.init = function initTabbedWizard(TabbedUX, options) {
     options = $.extend(true, {
@@ -35,7 +35,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
 
         // First at all, if unobtrusive validation is enabled, validate
         var valobject = form.data('unobtrusiveValidation');
-        if (valobject && valobject.validate() == false) {
+        if (valobject && valobject.validate() === false) {
             validation.goToSummaryErrors(form);
             // Validation is actived, was executed and the result is 'false': bad data, stop Post:
             return false;
@@ -43,7 +43,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
 
         // If custom validation is enabled, validate
         var cusval = form.data('customValidation');
-        if (cusval && cusval.validate && cusval.validate() == false) {
+        if (cusval && cusval.validate && cusval.validate() === false) {
             validation.goToSummaryErrors(form);
             // custom validation not passed, out!
             return false;

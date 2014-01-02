@@ -5,7 +5,7 @@
     must return text/html content.
 **/
 var $ = jQuery || require('jquery');
-var smoothBoxBlock = require('smoothBoxBlock');
+var smoothBoxBlock = require('./smoothBoxBlock');
 
 // Default success callback and public utility, basic how-to replace element content with fetched html
 function updateElement(htmlContent, context) {

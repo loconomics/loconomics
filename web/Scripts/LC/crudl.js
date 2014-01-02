@@ -1,8 +1,8 @@
 ﻿/* CRUDL Helper */
 var $ = require('jquery');
-var smoothBoxBlock = require('smoothBoxBlock');
-var changesNotification = require('changesNotification');
-require('jquery.xtsh').plugIn('jquery');
+var smoothBoxBlock = require('./smoothBoxBlock');
+var changesNotification = require('./changesNotification');
+require('./jquery.xtsh').plugIn($);
 
 exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
     return {
@@ -73,12 +73,12 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                             $.ajax({
                                 url: dtr.attr('data-source-url') + '?' + $.param(formpars) + xq,
                                 success: function (data, text, jx) {
-                                    if (data && data.Code == 0) {
+                                    if (data && data.Code === 0) {
                                         smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
                                             closable: true,
                                             closeOptions: {
                                                 complete: function () {
-                                                    item.fadeOut('slow', function () { item.remove() });
+                                                    item.fadeOut('slow', function () { item.remove(); });
                                                 }
                                             }
                                         });
@@ -112,7 +112,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                     .on('click', '.crudl-cancel', finishEdit)
                     .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
                     .on('ajaxSuccessPost', 'form', function (e, data) {
-                        if (data.Code == 0 || data.Code == 5 || data.Code == 6) {
+                        if (data.Code === 0 || data.Code == 5 || data.Code == 6) {
                             // Show viewer and reload list:
                             //vwr.slideDown('slow')
                             vwr.xshow({ effect: 'height', duration: 'slow' })
@@ -125,5 +125,5 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                 crudl.data('__crudl_initialized__', true);
             });
         }
-    }
+    };
 };

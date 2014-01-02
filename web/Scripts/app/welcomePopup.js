@@ -6,7 +6,7 @@ var $ = require('jquery');
 
 exports.show = function welcomePopup() {
     var c = $('#welcomepopup');
-    if (c.length == 0) return;
+    if (c.length === 0) return;
     var skipStep1 = c.hasClass('select-position');
 
     // Init
@@ -74,4 +74,4 @@ exports.show = function welcomePopup() {
 
     // If profile type is prefilled by request:
     c.find('.profile-choice [name=profile-type]:checked').change();
-}
+};

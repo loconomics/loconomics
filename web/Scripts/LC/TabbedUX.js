@@ -3,7 +3,7 @@ container, the object provides the full API to manipulate tabs and its setup
 listeners to perform logic on user interaction.
 **/
 var $ = jQuery || require('jquery');
-require('jquery.hasScrollBar');
+require('./jquery.hasScrollBar');
 
 var TabbedUX = {
     init: function () {
@@ -19,7 +19,7 @@ var TabbedUX = {
         .delegate('.tabbed > .tabs-slider > a', 'mousedown', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider > a', 'mouseup mouseleave', TabbedUX.endMoveTabsSlider)
         // the click return false is to disable standar url behavior
-        .delegate('.tabbed > .tabs-slider > a', 'click', function () { return false })
+        .delegate('.tabbed > .tabs-slider > a', 'click', function () { return false; })
         .delegate('.tabbed > .tabs-slider-limit', 'mouseenter', TabbedUX.startMoveTabsSlider)
         .delegate('.tabbed > .tabs-slider-limit', 'mouseleave', TabbedUX.endMoveTabsSlider)
         .delegate('.tabbed > .tabs > li.removable', 'click', function (e) {
@@ -33,7 +33,7 @@ var TabbedUX = {
         $('.tabbed').each(function () {
             var $t = $(this);
             // Consistence check: this must be a valid container, this is, must have .tabs
-            if ($t.children('.tabs').length == 0)
+            if ($t.children('.tabs').length === 0)
                 return;
             // Init slider
             TabbedUX.setupSlider($t);
@@ -59,16 +59,17 @@ var TabbedUX = {
         var tabs = t.closest('.tabbed').children('.tabs:eq(0)');
         // Stop previous animations:
         tabs.stop(true);
-        var speed = .3; /* speed unit: pixels/miliseconds */
-        var fxa = function () { TabbedUX.checkTabSliderLimits(tabs.parent(), tabs) };
+        var speed = 0.3; /* speed unit: pixels/miliseconds */
+        var fxa = function () { TabbedUX.checkTabSliderLimits(tabs.parent(), tabs); };
+        var time;
         if (t.hasClass('right')) {
             // Calculate time based on speed we want and how many distance there is:
-            var time = (tabs[0].scrollWidth - tabs[0].scrollLeft - tabs.width()) * 1 / speed;
+            time = (tabs[0].scrollWidth - tabs[0].scrollLeft - tabs.width()) * 1 / speed;
             tabs.animate({ scrollLeft: tabs[0].scrollWidth - tabs.width() },
             { duration: time, step: fxa, complete: fxa, easing: 'swing' });
         } else {
             // Calculate time based on speed we want and how many distance there is:
-            var time = tabs[0].scrollLeft * 1 / speed;
+            time = tabs[0].scrollLeft * 1 / speed;
             tabs.animate({ scrollLeft: 0 },
             { duration: time, step: fxa, complete: fxa, easing: 'swing' });
         }
@@ -89,9 +90,9 @@ var TabbedUX = {
     },
     setupSlider: function (tabContainer) {
         var ts = tabContainer.children('.tabs-slider');
-        if (tabContainer.children('.tabs').hasScrollBar({ x: -2 }).horizontal == true) {
+        if (tabContainer.children('.tabs').hasScrollBar({ x: -2 }).horizontal) {
             tabContainer.addClass('has-tabs-slider');
-            if (ts.length == 0) {
+            if (ts.length === 0) {
                 ts = document.createElement('div');
                 ts.className = 'tabs-slider';
                 $(ts)
@@ -146,8 +147,10 @@ var TabbedUX = {
         return { tab: tab, menuanchor: ma, menuitem: mi, tabContainer: tabContainer };
     },
     checkTabContext: function (ctx, functionname, args, isTest) {
-        if (!ctx.tab || ctx.tab.length != 1 || !ctx.menuitem || ctx.menuitem.length != 1
-            || !ctx.tabContainer || ctx.tabContainer.length != 1 || !ctx.menuanchor || ctx.menuanchor.length != 1) {
+        if (!ctx.tab || ctx.tab.length != 1 ||
+            !ctx.menuitem || ctx.menuitem.length != 1 ||
+            !ctx.tabContainer || ctx.tabContainer.length != 1 || 
+            !ctx.menuanchor || ctx.menuanchor.length != 1) {
             if (!isTest && console && console.error)
                 console.error('TabbedUX.' + functionname + ', bad arguments: ' + Array.join(args, ', '));
             return false;
@@ -241,7 +244,7 @@ var TabbedUX = {
         // tabContainer must be only one and valid container
         // and idName must not exists
         if (tabContainer.length == 1 && tabContainer.is('.tabbed') &&
-            document.getElementById(idName) == null) {
+            document.getElementById(idName) === null) {
             // Create tab div:
             var tab = document.createElement('div');
             tab.id = idName;
@@ -327,7 +330,7 @@ TabbedUX.focusCurrentLocation = function () {
 TabbedUX.checkVolatileTabs = function () {
     $('.tabbed > .tabs > .volatile').each(function () {
         var tab = TabbedUX.getTab(null, this);
-        if (tab && ($(tab).children().length == 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length)) {
+        if (tab && ($(tab).children().length === 0 || $(tab).find(':not(.tabbed) .volatize-my-tab').length)) {
             TabbedUX.removeTab(tab);
         }
     });

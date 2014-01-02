@@ -2,17 +2,17 @@
 * Cookies management.
 * Most code from http://stackoverflow.com/a/4825695/1622346
 */
-var Cookie;
+var Cookie = {};
 
 Cookie.set = function setCookie(name, value, days) {
+    var expires = "";
     if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        var expires = "; expires=" + date.toGMTString();
+        expires = "; expires=" + date.toGMTString();
     }
-    else var expires = "";
     document.cookie = name + "=" + value + expires + "; path=/";
-}
+};
 Cookie.get = function getCookie(c_name) {
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(c_name + "=");
@@ -26,7 +26,7 @@ Cookie.get = function getCookie(c_name) {
         }
     }
     return "";
-}
+};
 
 if (typeof module !== 'undefined' && module.exports)
     module.exports = Cookie;

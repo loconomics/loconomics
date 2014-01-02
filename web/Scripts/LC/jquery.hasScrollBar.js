@@ -14,7 +14,7 @@ $.fn.hasScrollBar = function (extragap) {
         x: 0,
         y: 0
     }, extragap);
-    if (!this || this.length == 0) return { vertical: false, horizontal: false };
+    if (!this || this.length === 0) return { vertical: false, horizontal: false };
     //note: clientHeight= height of holder
     //scrollHeight= we have content till this height
     var t = this.get(0);

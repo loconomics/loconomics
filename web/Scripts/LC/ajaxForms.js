@@ -1,7 +1,7 @@
 ﻿/* Forms submitted via AJAX */
 var $ = jQuery || require('jquery');
-var callbacks = require('ajaxCallbacks');
-var changesNotification = require('changesNotification');
+var callbacks = require('./ajaxCallbacks');
+var changesNotification = require('./changesNotification');
 
 // Adapted callbacks
 function ajaxFormsCompleteHandler() {
@@ -47,7 +47,7 @@ function ajaxFormsSubmitHandler(event) {
 
     // First at all, if unobtrusive validation is enabled, validate
     var valobject = ctx.form.data('unobtrusiveValidation');
-    if (valobject && valobject.validate() == false) {
+    if (valobject && valobject.validate() === false) {
         goToSummaryErrors(ctx.form);
         // Validation is actived, was executed and the result is 'false': bad data, stop Post:
         return;
@@ -55,7 +55,7 @@ function ajaxFormsSubmitHandler(event) {
 
     // If custom validation is enabled, validate
     var cusval = ctx.form.data('customValidation');
-    if (cusval && cusval.validate && cusval.validate() == false) {
+    if (cusval && cusval.validate && cusval.validate() === false) {
         goToSummaryErrors(ctx.form);
         // custom validation not passed, out!
         return false;

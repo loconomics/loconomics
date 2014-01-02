@@ -34,7 +34,7 @@ number of decimals.
 function nearestTo(number, decimals) {
     var tens = Math.pow(10, decimals);
     return Math.round(number * tens) / tens;
-};
+}
 
 /** Round Up a number to the specified number of decimals.
 Its similar to roundTo, but the number is ever rounded up,
@@ -43,7 +43,7 @@ to the lower integer greater or equals to the number.
 function ceilTo(number, decimals) {
     var tens = Math.pow(10, decimals);
     return Math.ceil(number * tens) / tens;
-};
+}
 
 /** Round Down a number to the specified number of decimals.
 Its similar to roundTo, but the number is ever rounded down,
@@ -52,7 +52,7 @@ to the bigger integer lower or equals to the number.
 function floorTo(number, decimals) {
     var tens = Math.pow(10, decimals);
     return Math.floor(number * tens) / tens;
-};
+}
 
 // Module
 if (typeof module !== 'undefined' && module.exports)

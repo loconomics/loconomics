@@ -42,7 +42,7 @@ i18n.convertMilesKm = function convertMilesKm(q, unit) {
         return q / MILES_TO_KM;
     if (console && console.log) console.log('convertMilesKm: Unrecognized unit ' + unit);
     return 0;
-}
+};
 
 if (typeof module !== 'undefined' && module.exports)
     module.exports = i18n;
