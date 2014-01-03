@@ -12,6 +12,20 @@
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
     
+    // Main assets paths that allow minification
+    var scriptJs = "Scripts/script";
+    var libsJs = "Scripts/libs";
+    var styleCss = "Styles/style.css";
+    if (!LcHelpers.InLive) {
+        scriptJs += ".js";
+        libsJs += ".js";
+        //stylesCss += ".css";
+    } else {
+        scriptJs += ".min.js";
+        libsJs += ".min.js";
+        //stylesCss += ".min.css";
+    }
+    
     var onBehalfOf = LcHelpers.OnBehalfOf();
     
     // Show welcome popup depending on the parameter passed from the page or
@@ -47,9 +61,9 @@
           <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
           <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
            @* Our styles *@
-           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
+           @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
            @LcAssets.GetStylesTags()
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs.js")" type="text/javascript"></script>
+           @LcAssets.PrintScriptTag(LcUrl.AppPath + libsJs)
            <script type="text/javascript">
                @* Our LcUrl class *@
                @Html.Raw(LcUrl.ToJsVar())
@@ -61,7 +75,7 @@
                     nope: LcUrl.AppPath + "Scripts/libs/json2.js"
                 });
             </script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/script.js")" type="text/javascript"></script>
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + scriptJs)
            
             @if(isIE){
             <!--[if lt IE 9]>
