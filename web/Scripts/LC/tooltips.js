@@ -5,6 +5,8 @@
 **/
 var $ = require('jquery'),
     sanitizeWhitespaces = require('./sanitizeWhitespaces');
+require('./jquery.outerHtml');
+require('./jquery.isChildOf');
 
 // Main internal properties
 var posoffset = { x: 16, y: 8 };

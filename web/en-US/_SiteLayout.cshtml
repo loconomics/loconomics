@@ -49,6 +49,7 @@
            @* Our styles *@
            @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
            @LcAssets.GetStylesTags()
+           <script src="@Href(LcUrl.AppPath + "Scripts/libs.js")" type="text/javascript"></script>
            <script type="text/javascript">
                @* Our LcUrl class *@
                @Html.Raw(LcUrl.ToJsVar())
@@ -60,7 +61,6 @@
                     nope: LcUrl.AppPath + "Scripts/libs/json2.js"
                 });
             </script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs.js")" type="text/javascript"></script>
            <script src="@Href(LcUrl.AppPath + "Scripts/script.js")" type="text/javascript"></script>
            
             @if(isIE){
