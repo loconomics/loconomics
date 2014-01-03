@@ -16,7 +16,7 @@
     var scriptJs = "Scripts/script";
     var libsJs = "Scripts/libs";
     var styleCss = "Styles/style.css";
-    if (!LcHelpers.InLive) {
+    if (LcHelpers.InLive) {
         scriptJs += ".js";
         libsJs += ".js";
         //stylesCss += ".css";
