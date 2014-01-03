@@ -7,7 +7,8 @@ var popup = require('./popup'),
     changesNotification = require('./changesNotification'),
     createIframe = require('./createIframe'),
     redirectTo = require('./redirectTo'),
-    autoFocus = require('./autoFocus');
+    autoFocus = require('./autoFocus'),
+    smoothBoxBlock = require('./smoothBoxBlock');
 
 // AKA: ajaxErrorPopupHandler
 function lcOnError(jx, message, ex) {
@@ -42,7 +43,7 @@ function lcOnComplete() {
     // Unblock
     if (this.autoUnblockLoading) {
         // Double un-lock, because any of the two systems can being used:
-        smoothBoxBlock(null, this.box);
+        smoothBoxBlock.close(this.box);
         this.box.unblock();
     }
 }
@@ -65,9 +66,9 @@ function lcOnSuccess(data, text, jx) {
         try {
             // parseHTML since jquery-1.8 is more secure:
             if (typeof ($.parseHTML) === 'function')
-                newhtml = $($.parseHTML(htmlContent));
+                newhtml = $($.parseHTML(data));
             else
-                newhtml = $(htmlContent);
+                newhtml = $(data);
         } catch (ex) {
             if (console && console.error)
                 console.error(ex);
@@ -149,7 +150,7 @@ function showOkGoPopup(ctx, data) {
 
     content.append($('<div class="actions clearfix"/>').append(okBtn).append(goBtn));
 
-    smoothBoxBlock(content, ctx.box, null, {
+    smoothBoxBlock.open(content, ctx.box, null, {
         closeOptions: {
             complete: function () {
                 ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]);
@@ -231,7 +232,7 @@ function doJSONAction(data, ctx) {
             ctx.box.unblock();
             // Block with message:
             var message = "Error: " + data.Code + ": " + JSON.stringify(data.Result ? (data.Result.ErrorMessage ? data.Result.ErrorMessage : data.Result) : '');
-            smoothBoxBlock($('<div/>').append(message), ctx.box, null, { closable: true });
+            smoothBoxBlock.open($('<div/>').append(message), ctx.box, null, { closable: true });
 
             // Do not unblock in complete function!
             ctx.autoUnblockLoading = false;

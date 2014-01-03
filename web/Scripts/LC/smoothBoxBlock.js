@@ -120,6 +120,7 @@ function smoothBoxBlockCloseAll(container) {
 // Module
 if (typeof module !== 'undefined' && module.exports)
     module.exports = {
-        smoothBoxBlock: smoothBoxBlock,
-        smoothBoxBlockCloseAll: smoothBoxBlockCloseAll
+        open: smoothBoxBlock,
+        close: function(blocked, addclass, options) { smoothBoxBlock(null, blocked, addclass, options); },
+        closeAll: smoothBoxBlockCloseAll
     };

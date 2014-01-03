@@ -48,15 +48,15 @@ exports.init = function (TabbedUX, targetSelector) {
                 .replace(/@1/g, LC.getText('tab-has-changes-stay-on'))
                 .replace(/@2/g, LC.getText('tab-has-changes-continue-without-change')));
             d.on('click', '.stop', function () {
-                smoothBoxBlock(null, window);
+                smoothBoxBlock.close(window);
             })
             .on('click', '.continue', function () {
-                smoothBoxBlock(null, window);
+                smoothBoxBlock.close(window);
                 // Remove 'has-changes' to avoid future blocks (until new changes happens of course ;-)
                 mi.removeClass('has-changes');
                 TabbedUX.focusTab(focusedCtx.tab.get(0));
             });
-            smoothBoxBlock(d, window, 'not-saved-popup', { closable: false, center: true });
+            smoothBoxBlock.open(d, window, 'not-saved-popup', { closable: false, center: true });
 
             // Ever return false to stop current tab focus
             return false;

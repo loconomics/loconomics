@@ -1,11 +1,21 @@
 ﻿/* Forms submitted via AJAX */
-var $ = jQuery || require('jquery');
-var callbacks = require('./ajaxCallbacks');
-var changesNotification = require('./changesNotification');
+var $ = jQuery || require('jquery'),
+    callbacks = require('./ajaxCallbacks'),
+    changesNotification = require('./changesNotification'),
+    blockPresets = require('./blockPresets');
+
+// Global settings, will be updated on init but is accessed
+// through closure from all functions.
+// NOTE: is static, doesn't allows multiple configuration, one init call replace previous
+// Defaults:
+var settings = {
+    loadingDelay: 0,
+    element: document
+};
 
 // Adapted callbacks
 function ajaxFormsCompleteHandler() {
-    callbacks.complete.call(this, arguments);
+    callbacks.complete.apply(this, arguments);
 }
 
 function ajaxErrorPopupHandler(jx, message, ex) {
@@ -18,11 +28,11 @@ function ajaxErrorPopupHandler(jx, message, ex) {
     ctx.autoUnblockLoading = true;
 
     // Common logic
-    callbacks.error.call(ctx, arguments);
+    callbacks.error.apply(ctx, arguments);
 }
 
 function ajaxFormsSuccessHandler() {
-    callbacks.success.call(this, arguments);
+    callbacks.success.apply(this, arguments);
 }
 
 /*******************************
@@ -66,8 +76,8 @@ function ajaxFormsSubmitHandler(event) {
 
     // Loading, with retard
     ctx.loadingtimer = setTimeout(function () {
-        ctx.box.block(loadingBlock);
-    }, gLoadingRetard);
+        ctx.box.block(blockPresets.loading);
+    }, settings.loadingDelay);
     ctx.autoUnblockLoading = true;
 
     // Do the Ajax post
@@ -86,12 +96,13 @@ function ajaxFormsSubmitHandler(event) {
 }
 
 // Public initialization
-function initAjaxForms(element) {
-    element = element || document;
+function initAjaxForms(options) {
+    $.extend(true, settings, options);
+
     /* Attach a delegated handler to manage ajax forms */
-    $(element).on('submit', 'form.ajax', ajaxFormsSubmitHandler);
+    $(settings.element).on('submit', 'form.ajax', ajaxFormsSubmitHandler);
     /* Attach a delegated handler for a special ajax form case: subforms, using fieldsets. */
-    $(element).on('click', 'fieldset.ajax .ajax-fieldset-submit',
+    $(settings.element).on('click', 'fieldset.ajax .ajax-fieldset-submit',
         function (event) {
             var form = $(this).closest('fieldset.ajax');
             event.data = {

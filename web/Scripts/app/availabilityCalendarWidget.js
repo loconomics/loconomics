@@ -12,7 +12,7 @@ exports.init = function initAvailabilityCalendarWidget(baseUrl) {
             c.css('font-size', '2px');
             var tab = $t.closest('.tab-body');
             c.data('popup-container', tab);
-            smoothBoxBlock(c, tab, 'availability-calendar', { closable: true });
+            smoothBoxBlock.open(c, tab, 'availability-calendar', { closable: true });
             // Nothing more
             return;
         }

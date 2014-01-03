@@ -138,7 +138,7 @@ LC.goToSummaryErrors = validationHelper.goToSummaryErrors;
 
 LC.placeHolder = require('../LC/placeholder-polyfill').init;
 
-LC.googleMapReady = require('../LC/googleMapReady');
+LC.mapReady = require('../LC/googleMapReady');
 
 window.isEmptyString = require('../LC/isEmptyString');
 
@@ -192,6 +192,8 @@ $(function () {
 
     // Generic script for enhanced tooltips and element descriptions
     LC.initTooltips();
+
+    ajaxForms.init();
 
     //takeATourPopup.show();
     welcomePopup.show();

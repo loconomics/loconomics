@@ -38,7 +38,7 @@ function updateElement(htmlContent, context) {
 // Default complete callback and public utility
 function stopLoadingSpinner() {
     clearTimeout(this.loadingTimer);
-    smoothBoxBlock(null, this.element);
+    smoothBoxBlock.close(this.element);
 }
 
 // Defaults
@@ -107,14 +107,14 @@ var reload = $.fn.reload = function () {
                     // Creating content using a fake temp parent element to preload image and to get real message width:
                     var loadingcontent = $('<div/>')
                     .append(options.loading.message ? $('<div class="loading-message"/>').append(options.loading.message) : null)
-                    .append(options.loading.showLoadingIndicator ? loadingBlock.message : null);
+                    .append(options.loading.showLoadingIndicator ? options.loading.message : null);
                     loadingcontent.css({ position: 'absolute', left: -99999 }).appendTo('body');
                     var w = loadingcontent.width();
                     loadingcontent.detach();
                     // Locking:
                     options.loading.lockOptions.autofocus = options.autofocus;
                     options.loading.lockOptions.width = w;
-                    smoothBoxBlock(loadingcontent.html(), $t, options.loading.message ? 'custom-loading' : 'loading', options.loading.lockOptions);
+                    smoothBoxBlock.open(loadingcontent.html(), $t, options.loading.message ? 'custom-loading' : 'loading', options.loading.lockOptions);
                 }, options.loading.delay)
                 : null;
 

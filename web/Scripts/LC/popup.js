@@ -148,7 +148,7 @@ function popup(url, size, complete, loadingText, options) {
 function messagePopup(message, container) {
     container = $(container || 'body');
     var content = $('<div/>').text(message);
-    smoothBoxBlock(content, container, 'message-popup full-block', { closable: true, center: true, autofocus: false });
+    smoothBoxBlock.open(content, container, 'message-popup full-block', { closable: true, center: true, autofocus: false });
 }
 
 function connectPopupAction(applyToSelector) {
@@ -156,7 +156,7 @@ function connectPopupAction(applyToSelector) {
     $(document).on('click', applyToSelector, function () {
         var c = $($(this).attr('href')).clone();
         if (c.length == 1)
-            smoothBoxBlock(c, document, null, { closable: true, center: true });
+            smoothBoxBlock.open(c, document, null, { closable: true, center: true });
         return false;
     });
 }

@@ -102,9 +102,9 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
                     try {
                         // parseHTML since jquery-1.8 is more secure:
                         if (typeof ($.parseHTML) === 'function')
-                            newhtml = $($.parseHTML(htmlContent));
+                            newhtml = $($.parseHTML(data));
                         else
-                            newhtml = $(htmlContent);
+                            newhtml = $(data);
                     } catch (ex) {
                         if (console && console.error)
                             console.error(ex);

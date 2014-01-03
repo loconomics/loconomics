@@ -66,7 +66,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                         var itemid = item.data('crudl-item-id');
 
                         if (confirm(LC.getText('confirm-delete-crudl-item-message:' + dctx))) {
-                            smoothBoxBlock('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
+                            smoothBoxBlock.open('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
                             formpars[iidpar] = itemid;
                             formpars.action = 'delete';
                             var xq = getExtraQuery($(this));
@@ -74,7 +74,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                                 url: dtr.attr('data-source-url') + '?' + $.param(formpars) + xq,
                                 success: function (data, text, jx) {
                                     if (data && data.Code === 0) {
-                                        smoothBoxBlock('<div>' + data.Result + '</div>', item, null, {
+                                        smoothBoxBlock.open('<div>' + data.Result + '</div>', item, null, {
                                             closable: true,
                                             closeOptions: {
                                                 complete: function () {
@@ -87,7 +87,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                                 },
                                 error: function (jx, message, ex) {
                                     onError(jx, message, ex);
-                                    smoothBoxBlock(null, item);
+                                    smoothBoxBlock.close(item);
                                 },
                                 complete: onComplete
                             });
