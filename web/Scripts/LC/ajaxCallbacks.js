@@ -1,7 +1,7 @@
 ﻿/* Set of common LC callbacks for most Ajax operations
  */
 var $ = require('jquery');
-require('../jquery/jQuery.blockUI');
+require('jquery.blockUI');
 var popup = require('./popup'),
     validation = require('./validationHelper'),
     changesNotification = require('./changesNotification'),

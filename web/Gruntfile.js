@@ -22,23 +22,34 @@
         'src': [
           './Scripts/jquery/jquery-1.7.2.min.js',
           './Scripts/jquery/jquery-ui-1.8.21.custom.min.js',
-          './Scripts/jquery/jquery.ui.datepicker-es.js',
+          // We don't need ES locale support right now:
+          //'./Scripts/jquery/jquery.ui.datepicker-es.js',
           './Scripts/libs/modernizr.custom.2.6.2.js',
           './Scripts/jquery/jQuery.blockUI.js',
           './Scripts/jquery/jquery.ba-hashchange.min.js',
-          // Its in use?
-          './Scripts/jquery/jquery.formatter.min.js'
+          // TODO Investigate for what was used:
+          //'./Scripts/jquery/jquery.formatter.min.js'
          ],
         'dest': './Scripts/libs.js',
         'options': {
+          // Despite that plugins and some other modules doesn't return itselfs,
+          // we still need the alias to be localizable by the 'require' calls
+          // in other bundles (must replicate alias in its 'external' option)
+          // Shim generates already alias for each key.
           'alias': [
             './Scripts/jquery/jquery-ui-1.8.21.custom.min.js:jquery-ui',
+            './Scripts/jquery/jQuery.blockUI.js:jquery.blockUI',
+            './Scripts/jquery/jquery.ba-hashchange.min.js:jquery.ba-hashchange',
+            //'./Scripts/jquery/jquery.formatter.min.js:jquery.formatter'
           ],
           'noParse': [
             './Scripts/jquery/*.js',
             './Scripts/libs/*.js'
           ],
           shim: {
+            // Using a shim we avoid jquery to detect the CommonJS loader and 
+            // it attachs itself to the global namespace (window) what let
+            // the plugins works fine.
             jquery: {
               path: './Scripts/jquery/jquery-1.7.2.min.js',
               exports: 'jQuery'
@@ -61,7 +72,9 @@
             'jquery',
             'jquery-ui',
             'modernizr',
-            'jQuery.blockUI'
+            'jquery.blockUI',
+            'jquery.ba-hashchange',
+            'jquery.formatter'
           ],
           alias: [
             './Scripts/LC/StringFormat:StringFormat'
@@ -82,7 +95,7 @@
         },
         'files': {
           //'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-          'WebScript/script.min.js': ['<%= browserify.app.dest %>']
+          'Scripts/script.min.js': ['<%= browserify.app.dest %>']
         }
       }
     },
@@ -171,9 +184,9 @@
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['stylus', 'cssmin', 'browserify', 'uglify']);
-  grunt.registerTask('build-dev', ['stylus', 'browserify']);
+  grunt.registerTask('build', ['browserify', 'uglify']); // 'stylus', 'cssmin', 
+  grunt.registerTask('build-dev', ['browserify']); // 'stylus', 
 
-  grunt.registerTask('default', ['stylus', 'browserify', 'test', 'uglify']);
+  grunt.registerTask('default', ['build', 'test']);
 
 };

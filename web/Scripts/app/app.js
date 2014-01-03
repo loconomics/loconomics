@@ -17,6 +17,8 @@ var gLoadingRetard = 300;
 /* jQuery and our additions (small plugins), they are automatically plug-ed on require */
 var $ = window.$ = window.jQuery = require('jquery');
 require('../LC/jquery.hasScrollBar');
+require('jquery.ba-hashchange');
+require('jquery.blockUI');
 
 // General callbacks for AJAX events with common logic
 var ajaxCallbacks = require('../LC/ajaxCallbacks');

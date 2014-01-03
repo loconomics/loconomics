@@ -11,7 +11,7 @@ var $ = require('jquery'),
     requirectTo = require('./redirectTo'),
     popup = require('./popup'),
     ajaxCallbacks = require('./ajaxCallbacks');
-require('../jquery/jQuery.blockUI');
+require('jquery.blockUI');
 
 exports.init = function initTabbedWizard(TabbedUX, options) {
     options = $.extend(true, {

@@ -3,7 +3,7 @@
 var $ = require('jquery'),
     createIframe = require('./createIframe'),
     autoFocus = require('./autoFocus');
-require('../jquery/jQuery.blockUI');
+require('jquery.blockUI');
 require('./smoothBoxBlock');
 
 /*******************
