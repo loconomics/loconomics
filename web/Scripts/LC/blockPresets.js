@@ -1,5 +1,5 @@
 ﻿/* Generic blockUI options sets */
-var loadingBlock = { message: '<img class="loading-indicator" src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
+var loadingBlock = { message: '<img width="48px" height="48px" class="loading-indicator" src="' + LcUrl.AppPath + 'img/theme/loading.gif"/>' };
 var errorBlock = function (error, reload, style) {
     return {
         css: $.extend({ cursor: 'default' }, style || {}),

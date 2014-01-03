@@ -14,6 +14,8 @@ window.gLoadingRetard = 300;
 //TODO: Clean dependencies, remove all that not used directly in this file, any other file
 // or page must require its dependencies.
 
+window.LcUrl = require('../LC/LcUrl');
+
 /* jQuery, some vendor plugins (from bundle) and our additions (small plugins), they are automatically plug-ed on require */
 var $ = window.$ = window.jQuery = require('jquery');
 require('../LC/jquery.hasScrollBar');

@@ -46,44 +46,39 @@
                             </dl>
                         </li>
 }
+@* html attributes: data-base-url and data-culture are used by LcUrl.js. Data-culture is used by i18n.js too. *@
 <!doctype html>
     <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture"> <!--<![endif]-->
-     <head>
-          <meta charset="utf-8"/>
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-          <title>Loconomics - @Page.Title</title>
-          <meta name="description" content="Find service providers to do the job right. At your service!"/>
-          <meta name="author" content="Loconomics Inc."/>
-          @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
-          <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
-          <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-           @* Our styles *@
-           @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
-           @LcAssets.GetStylesTags()
-           @LcAssets.PrintScriptTag(LcUrl.AppPath + libsJs)
-           <script type="text/javascript">
-               @* Our LcUrl class *@
-               @Html.Raw(LcUrl.ToJsVar())
-               @* OUR namespace (abbreviated Loconomics) *@
-               var LC = window['LC'] || {};
+    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>Loconomics - @Page.Title</title>
+        <meta name="description" content="Find service providers to do the job right. At your service!"/>
+        <meta name="author" content="Loconomics Inc."/>
+        @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: 
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        *@
+        <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
 
-                yepnope({
-                    test: typeof JSON === 'object',
-                    nope: LcUrl.AppPath + "Scripts/libs/json2.js"
-                });
-            </script>
-            @LcAssets.PrintScriptTag(LcUrl.AppPath + scriptJs)
-           
-            @if(isIE){
-            <!--[if lt IE 9]>
-            <style type="text/css">
-                body,html,iframe{overflow: hidden; overflow:hidden !important;}
-            </style>
-            <![endif]-->
-            }
+        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
+        @* Our styles *@
+        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @LcAssets.GetStylesTags()
+
+        @LcAssets.PrintScriptTag(LcUrl.AppPath + libsJs)
+        @LcAssets.PrintScriptTag(LcUrl.AppPath + scriptJs)
+        @* GetScriptsTags at the end of the document to delay load *@
+
+        @if(isIE){
+        <!--[if lt IE 9]>
+        <style type="text/css">
+            body,html,iframe{overflow: hidden; overflow:hidden !important;}
+        </style>
+        <![endif]-->
+        }
     </head>
     <body class="@PageData["BodyClass"]">
         @if (showWelcomePopup)
