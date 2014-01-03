@@ -59,6 +59,7 @@ Below you can find out if you're within this provider's service radius and/or at
         var positionedByUser = false;
         // Some confs
         var radiusUnit = '@(LcData.GetCurrentCountryID() == 1 ? "miles" : "km")';
+
         var generalZoomLevel = 11;
         var addresses = [null
         @foreach (var add in addresses)
@@ -75,7 +76,6 @@ Below you can find out if you're within this provider's service radius and/or at
         // First address position is null, delete
         //addresses.remove(0);
         Array.remove(addresses, 0);
-
         // If there is no address, nothing!
         if (addresses.length == 0) return;
 
@@ -110,7 +110,7 @@ Below you can find out if you're within this provider's service radius and/or at
                 center: new google.maps.LatLng(addresses[i].lat, addresses[i].lng),
                 map: map,
                 clickable: false,
-                radius: (radiusUnit == 'miles' ? convertMilesKm(addresses[i].radius, radiusUnit) : addresses[i].radius) * 1000, // in meters
+                radius: (radiusUnit == 'miles' ? LC.i18n.convertMilesKm(addresses[i].radius, radiusUnit) : addresses[i].radius) * 1000, // in meters
                 fillColor: addresses[i].workplace ? '#5F2393' : '#00989A',
                 fillOpacity: .3,
                 strokeWeight: 0

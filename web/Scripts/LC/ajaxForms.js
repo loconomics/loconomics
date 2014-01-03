@@ -21,6 +21,7 @@ function ajaxFormsCompleteHandler() {
 function ajaxErrorPopupHandler(jx, message, ex) {
     var ctx = this;
     if (!ctx.form) ctx.form = $(this);
+    if (!ctx.box) ctx.box = ctx.form;
     // Data not saved:
     if (ctx.changedElements)
         changesNotification.registerChange(ctx.form, ctx.changedElements);

@@ -27,8 +27,7 @@
           './Scripts/libs/modernizr.custom.2.6.2.js',
           './Scripts/jquery/jQuery.blockUI.js',
           './Scripts/jquery/jquery.ba-hashchange.min.js',
-          // TODO Investigate for what was used:
-          //'./Scripts/jquery/jquery.formatter.min.js'
+          './Scripts/jquery/jquery.formatter.min.js'
          ],
         'dest': './Scripts/libs.js',
         'options': {
@@ -40,7 +39,7 @@
             './Scripts/jquery/jquery-ui-1.8.21.custom.min.js:jquery-ui',
             './Scripts/jquery/jQuery.blockUI.js:jquery.blockUI',
             './Scripts/jquery/jquery.ba-hashchange.min.js:jquery.ba-hashchange',
-            //'./Scripts/jquery/jquery.formatter.min.js:jquery.formatter'
+            './Scripts/jquery/jquery.formatter.min.js:jquery.formatter'
           ],
           'noParse': [
             './Scripts/jquery/*.js',

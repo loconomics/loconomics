@@ -2,8 +2,9 @@
 */
 var $ = require('jquery');
 
-function createIframe(content, size) {
-    var iframe = $('<iframe width="' + size.width + '" height="' + size.height + '" style="border:none;"></iframe>').get(0);
+module.exports = function createIframe(content, size) {
+    var $iframe = $('<iframe width="' + size.width + '" height="' + size.height + '" style="border:none;"></iframe>');
+    var iframe = $iframe.get(0);
     // When the iframe is ready
     var iframeloaded = false;
     iframe.onload = function () {
@@ -13,8 +14,8 @@ function createIframe(content, size) {
             injectIframeHtml(iframe, content);
         }
     };
-    return iframe;
-}
+    return $iframe;
+};
 
 /* Puts full html inside the iframe element passed in a secure and compliant mode */
 function injectIframeHtml(iframe, html) {

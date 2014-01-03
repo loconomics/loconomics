@@ -2,6 +2,7 @@
 var $ = require('jquery'),
     smoothBoxBlock = require('../LC/smoothBoxBlock'),
     dateToInterchangeableString = require('../LC/dateToInterchangeableString');
+require('../LC/jquery.reload');
 
 exports.init = function initAvailabilityCalendarWidget(baseUrl) {
     $(document).on('click', '.calendar-controls .action', function () {
@@ -32,7 +33,7 @@ exports.init = function initAvailabilityCalendarWidget(baseUrl) {
         var url = baseUrl + "Profile/$AvailabilityCalendarWidget/Week/" + encodeURIComponent(strdate) + "/?UserID=" + userId;
         calcont.reload(url, function () {
             // get the new object:
-            var cal = $(this).children('.calendar');
+            var cal = $('.calendar', this.element);
             calinfo.find('.year-week').text(cal.data('showed-week'));
             calinfo.find('.first-week-day').text(cal.data('showed-first-day'));
             calinfo.find('.last-week-day').text(cal.data('showed-last-day'));

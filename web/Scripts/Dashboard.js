@@ -116,7 +116,7 @@ $(document).ready(function () {
         var $t = $(this);
         var form = $t.closest('form');
         var editPanel = $('.positionphotos-edit', form);
-        smoothBoxBlockCloseAll(form);
+        smoothBoxBlock.closeAll(form);
         // Set this photo as selected
         var selected = $t.closest('li');
         selected.addClass('selected').siblings().removeClass('selected');
@@ -261,7 +261,7 @@ $(document).ready(function () {
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -424,7 +424,7 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0 || data.Code == 5 || data.Code == 6)
+                if (data.Code === 0 || data.Code == 5 || data.Code == 6)
                     vp.show('fast', function () { vp.reload({ autofocus: true }) });
                 if (data.Code == 5)
                     setTimeout(closeAndClearEditPanel, 1500);
@@ -792,7 +792,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -829,7 +829,7 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -926,7 +926,7 @@ function reloadUserPhoto() {
     });
 }
 function deleteUserPhoto() {
-    $.blockUI(loadingBlock);
+    $.blockUI(LC.blockPresets.loading);
     jQuery.ajax({
         url: LcUrl.LangUrl + "Dashboard/ChangePhoto/?delete=true",
         method: "GET",

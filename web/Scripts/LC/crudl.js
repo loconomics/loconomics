@@ -3,6 +3,7 @@ var $ = require('jquery');
 var smoothBoxBlock = require('./smoothBoxBlock');
 var changesNotification = require('./changesNotification');
 require('./jquery.xtsh').plugIn($);
+var getText = require('./getText');
 
 exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
     return {
@@ -65,8 +66,8 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                         var item = $t.closest('.crudl-item');
                         var itemid = item.data('crudl-item-id');
 
-                        if (confirm(LC.getText('confirm-delete-crudl-item-message:' + dctx))) {
-                            smoothBoxBlock.open('<div>' + LC.getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
+                        if (confirm(getText('confirm-delete-crudl-item-message:' + dctx))) {
+                            smoothBoxBlock.open('<div>' + getText('delete-crudl-item-loading-message:' + dctx) + '</div>', item);
                             formpars[iidpar] = itemid;
                             formpars.action = 'delete';
                             var xq = getExtraQuery($(this));
@@ -98,7 +99,8 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
                     dtr.slideUp('slow', function () {
                         // Show again the Viewer
                         //vwr.slideDown('slow');
-                        vwr.xshow({ effect: 'height', duration: 'slow' });
+                        if (!vwr.is(':visible'))
+                            vwr.xshow({ effect: 'height', duration: 'slow' });
                         // Mark the form as unchanged to avoid persisting warnings
                         changesNotification.registerSave(dtr.find('form').get(0));
                         // Avoid cached content on the Editor

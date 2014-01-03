@@ -23,7 +23,7 @@ function lcOnError(jx, message, ex) {
     size = popup.size('large');
     size.height -= 34;
     if (m == 'error') {
-        iframe = createIframe(data, size);
+        iframe = createIframe(jx.responseText, size);
         iframe.attr('id', 'blockUIIframe');
         m = null;
     }  else
@@ -51,32 +51,38 @@ function lcOnComplete() {
 // AKA: ajaxFormsSuccessHandler
 function lcOnSuccess(data, text, jx) {
     var ctx = this;
+    // Supported the generic ctx.element from jquery.reload
+    if (ctx.element) ctx.form = ctx.element;
+    // Specific stuff of ajaxForms
     if (!ctx.form) ctx.form = $(this);
     if (!ctx.box) ctx.box = ctx.form;
     ctx.autoUnblockLoading = true;
 
     // Do JSON action but if is not JSON or valid, manage as HTML:
-    if (!doJSONAction(data, ctx)) {
+    if (!doJSONAction(data, text, jx, ctx)) {
         // Post 'maybe' was wrong, html was returned to replace current 
         // form container: the ajax-box.
 
         // create jQuery object with the HTML
         var newhtml = new jQuery();
-        // Try-catch to avoid errors when an empty document or malformed is returned:
-        try {
-            // parseHTML since jquery-1.8 is more secure:
-            if (typeof ($.parseHTML) === 'function')
-                newhtml = $($.parseHTML(data));
-            else
-                newhtml = $(data);
-        } catch (ex) {
-            if (console && console.error)
-                console.error(ex);
-            return;
+        // Avoid empty documents being parsed (raise error)
+        if ($.trim(data)) {
+            // Try-catch to avoid errors when a malformed document is returned:
+            try {
+                // parseHTML since jquery-1.8 is more secure:
+                if (typeof ($.parseHTML) === 'function')
+                    newhtml = $($.parseHTML(data));
+                else
+                    newhtml = $(data);
+            } catch (ex) {
+                if (console && console.error)
+                    console.error(ex);
+                return;
+            }
         }
 
         // For 'reload' support, check too the context.mode
-        ctx.boxIsContainer = ctx.boxIsContainer || (ctx.options && ctx.options.mode === 'replace-me');
+        ctx.boxIsContainer = ctx.boxIsContainer || (ctx.options && ctx.options.mode === 'replace-content');
 
         // Check if the returned element is the ajax-box, if not, find
         // the element in the newhtml:
@@ -116,7 +122,7 @@ function lcOnSuccess(data, text, jx) {
 
 /* Utility for JSON actions
  */
-function showSuccessMessage(ctx, message) {
+function showSuccessMessage(ctx, message, data) {
     // Unblock loading:
     ctx.box.unblock();
     // Block with message:
@@ -124,7 +130,11 @@ function showSuccessMessage(ctx, message) {
     ctx.box.block(infoBlock(message, {
         css: popup.style(popup.size('small'))
     }))
-            .on('click', '.close-popup', function () { ctx.box.unblock(); ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]); return false; });
+    .on('click', '.close-popup', function () {
+        ctx.box.unblock();
+        ctx.box.trigger('ajaxSuccessPostMessageClosed', [data]);
+        return false; 
+    });
     // Do not unblock in complete function!
     ctx.autoUnblockLoading = false;
 }
@@ -162,7 +172,7 @@ function showOkGoPopup(ctx, data) {
     ctx.autoUnblockLoading = false;
 }
 
-function doJSONAction(data, ctx) {
+function doJSONAction(data, text, jx, ctx) {
     // If is a JSON result:
     if (typeof (data) === 'object') {
         // Clean previous validation errors
@@ -170,7 +180,7 @@ function doJSONAction(data, ctx) {
 
         if (data.Code === 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'
-            showSuccessMessage(ctx, data.Result);
+            showSuccessMessage(ctx, data.Result, data);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
             // Special Code 1: do a redirect
         } else if (data.Code == 1) {
@@ -191,7 +201,7 @@ function doJSONAction(data, ctx) {
             ctx.box.on('ajaxSuccessPostMessageClosed', function () {
                 redirectTo(data.Result.RedirectURL);
             });
-            showSuccessMessage(ctx, data.Result.SuccessMessage);
+            showSuccessMessage(ctx, data.Result.SuccessMessage, data);
         } else if (data.Code == 5) {
             // Change main-action button message:
             var btn = ctx.form.find('.main-action');
@@ -216,7 +226,7 @@ function doJSONAction(data, ctx) {
             // This code allow attach additional information in data.Result to distinguish
             // different results all showing a message but maybe not being a success at all
             // and maybe doing something more in the triggered event with the data object.
-            showSuccessMessage(ctx, data.Result.Message);
+            showSuccessMessage(ctx, data.Result.Message, data);
             ctx.form.trigger('ajaxSuccessPost', [data, text, jx]);
         } else if (data.Code > 100) {
             // User Code: trigger custom event to manage results:

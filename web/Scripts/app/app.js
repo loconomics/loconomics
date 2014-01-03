@@ -6,7 +6,7 @@ window.LC = window.LC || {};
 // LcUrl is server-side generated and wrote in a Layout script-tag.
 
 // Global settings
-var gLoadingRetard = 300;
+window.gLoadingRetard = 300;
 
 /***
  ** Loading modules
@@ -14,11 +14,14 @@ var gLoadingRetard = 300;
 //TODO: Clean dependencies, remove all that not used directly in this file, any other file
 // or page must require its dependencies.
 
-/* jQuery and our additions (small plugins), they are automatically plug-ed on require */
+/* jQuery, some vendor plugins (from bundle) and our additions (small plugins), they are automatically plug-ed on require */
 var $ = window.$ = window.jQuery = require('jquery');
 require('../LC/jquery.hasScrollBar');
 require('jquery.ba-hashchange');
 require('jquery.blockUI');
+require('../LC/jquery.are');
+// Masked input, for dates -at my-account-.
+require('jquery.formatter');
 
 // General callbacks for AJAX events with common logic
 var ajaxCallbacks = require('../LC/ajaxCallbacks');
@@ -49,13 +52,23 @@ LC.load = loader.load;
 
 var blocks = LC.blockPresets = require('../LC/blockPresets');
 //{TEMP
-var loadingBlock = blocks.loading,
-    infoBlock = blocks.info,
-    errorBlock = blocks.info;
+window.loadingBlock = blocks.loading;
+window.infoBlock = blocks.info;
+window.errorBlock = blocks.info;
 //}
 
 Array.remove = require('../LC/Array.remove');
 require('../LC/String.prototype.contains');
+
+LC.getText = require('../LC/getText');
+
+var TimeSpan = LC.timeSpan = require('../LC/TimeSpan');
+var timeSpanExtra = require('../LC/TimeSpanExtra');
+timeSpanExtra.plugIn(TimeSpan);
+//{TEMP  old aliases
+LC.smartTime = timeSpanExtra.smartTime;
+LC.roundTimeToQuarterHour = timeSpanExtra.roundToQuarterHour;
+//}
 
 LC.ChangesNotification = require('../LC/changesNotification');
 window.TabbedUX = require('../LC/TabbedUX');
@@ -63,6 +76,7 @@ var sliderTabs = require('../LC/TabbedUX.sliderTabs');
 
 // Popup APIs
 window.smoothBoxBlock = require('../LC/smoothBoxBlock');
+
 var popup = require('../LC/popup');
 //{TEMP
 var popupStyle = popup.style,
@@ -84,8 +98,13 @@ var stringFormat = require('../LC/StringFormat');
 // Expanding exported utilites from modules directly as LC members:
 $.extend(LC, require('../LC/Price'));
 $.extend(LC, require('../LC/mathUtils'));
+$.extend(LC, require('../LC/numberUtils'));
 $.extend(LC, require('../LC/tooltips'));
-$.extend(LC, require('../LC/i18n'));
+var i18n = LC.i18n = require('../LC/i18n');
+//{TEMP old alises on LC and global
+$.extend(LC, i18n);
+$.extend(window, i18n);
+//}
 
 // xtsh: pluged into jquery and part of LC
 var xtsh = require('../LC/jquery.xtsh');
@@ -111,8 +130,8 @@ var getCookie = Cookie.get,
 
 LC.datePicker = require('../LC/datePicker');
 //{TEMP   old alias
-LC.setupDatePicker = LC.datePicker.init;
-LC.applyDatePicker = LC.datePicker.apply;
+window.setupDatePicker = LC.setupDatePicker = LC.datePicker.init;
+window.applyDatePicker = LC.applyDatePicker = LC.datePicker.apply;
 //}
 
 LC.autoFocus = require('../LC/autoFocus');
@@ -176,6 +195,10 @@ var tabsAutoload = require('../LC/TabbedUX.autoload');
 
 var homePage = require('./home');
 
+//{TEMP remove global dependency for this
+window.escapeJQuerySelectorValue = require('../LC/jqueryUtils').escapeJQuerySelectorValue;
+//}
+
 /**
  ** Init code
 ***/
@@ -218,6 +241,7 @@ $(function () {
     postalCodeValidation.init({ baseUrl: LcUrl.LangPath });
 
     // Tabbed interface
+    tabsAutoload.init(TabbedUX);
     TabbedUX.init();
     TabbedUX.focusCurrentLocation();
     TabbedUX.checkVolatileTabs();
@@ -228,8 +252,6 @@ $(function () {
     });
 
     tabbedNotifications.init(TabbedUX);
-
-    tabsAutoload.init(TabbedUX);
 
     autofillSubmenu();
 

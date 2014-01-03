@@ -8,9 +8,10 @@
 var $ = require('jquery'),
     validation = require('./validationHelper'),
     changesNotification = require('./changesNotification'),
-    requirectTo = require('./redirectTo'),
+    redirectTo = require('./redirectTo'),
     popup = require('./popup'),
-    ajaxCallbacks = require('./ajaxCallbacks');
+    ajaxCallbacks = require('./ajaxCallbacks'),
+    blockPresets = require('./blockPresets');
 require('jquery.blockUI');
 
 exports.init = function initTabbedWizard(TabbedUX, options) {
@@ -54,7 +55,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            currentStep.block(loadingBlock);
+            currentStep.block(blockPresets.loading);
         }, options.loadingDelay);
         
         ctx.autoUnblockLoading = true;
@@ -92,7 +93,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
                 });
 
                 // Do JSON action but if is not JSON or valid, manage as HTML:
-                if (!ajaxCallbacks.doJSONAction(data, ctx)) {
+                if (!ajaxCallbacks.doJSONAction(data, text, jx, ctx)) {
                     // Post 'maybe' was wrong, html was returned to replace current 
                     // form container: the ajax-box.
 
@@ -120,7 +121,7 @@ exports.init = function initTabbedWizard(TabbedUX, options) {
                     // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
                     changesNotification.registerChange(
                         newForm.get(0),
-                        changedElements
+                        ctx.changedElements
                     );
 
                     currentStep.trigger('reloadedHtmlWizardStep');
