@@ -16,13 +16,20 @@
     var scriptJs = "Scripts/script";
     var libsJs = "Scripts/libs";
     var styleCss = "Styles/style.css";
-    if (LcHelpers.InLive) {
+    // Enabled only on dev (for now to test on dev.loconomics.com, only localdev)
+    if (LcHelpers.Channel == "localdev" /*LcHelpers.InDev*/) {
         scriptJs += ".js";
         libsJs += ".js";
         //stylesCss += ".css";
     } else {
         scriptJs += ".min.js";
-        libsJs += ".min.js";
+        // NOTE: 2014-01-03 For some unknow reason, the minified version of the libs is not being
+        // gzipped by the winhost server (dev.loconomics.com), what means the downloaded size
+        // is greater for the minified version (316KB) than for the non-minified (332KB gzipped to 96.7KB)
+        // For script.js, it happens the same about not being gzipped, but minified is still a bit smaller.
+        // (Maybe is because minified are -close to- one-line files and IIS doesn't support it well?).
+        //libsJs += ".min.js";
+        libsJs += ".js";
         //stylesCss += ".min.css";
     }
     

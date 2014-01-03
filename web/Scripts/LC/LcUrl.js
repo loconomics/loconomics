@@ -8,7 +8,7 @@
 
 var base = document.documentElement.getAttribute('data-base-url'),
     lang = document.documentElement.getAttribute('data-culture'),
-    l = window.location
+    l = window.location,
     url = l.protocol + '//' + l.host;
 // location.host includes port, if is not the default, vs location.hostname
 
