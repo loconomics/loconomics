@@ -1,4 +1,20 @@
-﻿module.exports = function(grunt) {
+﻿/*** Some custom tasks ***/
+
+/**
+  Fix well-know images routes for some vendor files to let they still work as
+  expected in the destination file (for concatenated files that goes to
+  a different folder, like jquery-ui theme).
+**/
+function fixCssImageRoutes(src, filepath) {
+  if (/smoothness\/jquery-ui/i.test(filepath)) {
+    return src.replace(/images\//gi, 'smoothness/images/');
+  }
+  return src;
+}
+
+/** Grunt tasks configuration
+**/
+module.exports = function(grunt) {
 
   var assetsBannerTpl =
     '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -15,6 +31,13 @@
       'js-common': {
         src: ['./Scripts/libs.min.js', './Scripts/app.min.js'],
         dest: './Scripts/common.min.js'
+      },
+      'css-common': {
+        src: ['./Styles/app/app.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
+        dest: './Styles/common.css',
+        options: {
+          process: fixCssImageRoutes
+        }
       }
     },
 
@@ -139,8 +162,7 @@
           ]*/
         },
         files: {
-          'Styles/style.css': 'Styles/home.styl' // 1:1 compile
-          //,'path/to/another.css': ['path/to/sources/*.styl', 'path/to/more/*.styl'] // compile and concat into single file
+          'Styles/app.css': ['Styles/app/app.styl']
         }
       },
     },
@@ -154,7 +176,7 @@
           banner: assetsBannerTpl
         },
         files: {
-          'Styles/style.min.css': ['Styles/style.css']
+          'Styles/common.min.css': ['Styles/common.css']
         }
       }
     },
@@ -165,8 +187,12 @@
         tasks: ['jshint', 'browserify'] // 'qunit', 'uglify'
       },
       css: {
-        files: ['Stylus/**/*.styl'],
+        files: ['Styles/**/*.styl'],
         tasks: ['stylus'] // 'cssmin'
+      },
+      'plain-css': {
+        files: ['Styles/App/*.css'],
+        tasks: ['concat:css-common', 'cssmin']
       }
     }
   });
@@ -181,7 +207,7 @@
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['browserify', 'uglify', 'cssmin', 'concat']); // 'stylus', 'cssmin', 
+  grunt.registerTask('build', ['browserify', 'uglify', 'concat:js-common', 'concat:css-common', 'cssmin']); // 'stylus', 'concat:css-common', 'cssmin'
   grunt.registerTask('build-dev', ['browserify']); // 'stylus', 
 
   grunt.registerTask('default', ['build', 'test']);

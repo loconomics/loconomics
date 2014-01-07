@@ -13,7 +13,7 @@
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
     
     // Main assets that allow minification
-    var styleCss = "Styles/style";
+    var styleCss = "Styles/common";
     var loadScripts = new List<string>();
     // Enabled only on dev
     if (LcHelpers.Channel == "localdev" /*LcHelpers.InDev*/) {
@@ -62,7 +62,6 @@
         *@
         <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
 
-        <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
         @* Our styles *@
         @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
         @LcAssets.GetStylesTags()
