@@ -7,15 +7,16 @@
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     
-//    concat: {
-//      options: {
-//        separator: ';'
-//      },
-//      dist: {
-//        src: ['src/**/*.js'],
-//        dest: 'dist/<%= pkg.name %>.js'
-//      }
-//    },
+    concat: {
+      options: {
+        separator: ';',
+        'banner': assetsBannerTpl
+      },
+      'js-common': {
+        src: ['./Scripts/libs.min.js', './Scripts/app.min.js'],
+        dest: './Scripts/common.min.js'
+      }
+    },
 
     browserify: {
       'libs': {
@@ -62,7 +63,7 @@
       },
       'app': {
         'src': './Scripts/app/app.js',
-        'dest': './Scripts/script.js',
+        'dest': './Scripts/app.js',
         'options': {
           // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
           'debug': true,
@@ -89,12 +90,9 @@
         }
       },
       'app': {
-        'options': {
-          'banner': assetsBannerTpl
-        },
         'files': {
           //'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-          'Scripts/script.min.js': ['<%= browserify.app.dest %>']
+          'Scripts/app.min.js': ['<%= browserify.app.dest %>']
         }
       }
     },
@@ -177,13 +175,13 @@
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  //grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['browserify', 'uglify']); // 'stylus', 'cssmin', 
+  grunt.registerTask('build', ['browserify', 'uglify', 'cssmin', 'concat']); // 'stylus', 'cssmin', 
   grunt.registerTask('build-dev', ['browserify']); // 'stylus', 
 
   grunt.registerTask('default', ['build', 'test']);
