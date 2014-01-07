@@ -43,13 +43,13 @@ $(document).ready(function () {
     $('.delete-position a').click(function () {
         var c = $(this).closest('.tab-body');
         c.on('click', '.cancel-action', function () {
-            smoothBoxBlock(null, c);
+            smoothBoxBlock.close(c);
         });
         var lres = c.find('.position-ressources');
         c.on('ajaxSuccessPostMessageClosed', '.ajax-box', function () {
             window.location.reload();
         });
-        var b = smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
+        var b = smoothBoxBlock.open(lres.children('.delete-message-confirm').clone(), c);
         if (b) {
             $('html,body').stop(true, true).animate({ scrollTop: b.offset().top }, 500, null);
         }
@@ -74,7 +74,7 @@ $(document).ready(function () {
                         // Show message:
                         ctx.autoUnblockLoading = false;
                         var msg = $('<div class="info"/>').append(data.Result.Message);
-                        smoothBoxBlock(msg, pos, 'position-state-change', { closable: true, center: false, autofocus: false });
+                        smoothBoxBlock.open(msg, pos, 'position-state-change', { closable: true, center: false, autofocus: false });
                     }
                 }
             })
@@ -116,7 +116,7 @@ $(document).ready(function () {
         var $t = $(this);
         var form = $t.closest('form');
         var editPanel = $('.positionphotos-edit', form);
-        smoothBoxBlockCloseAll(form);
+        smoothBoxBlock.closeAll(form);
         // Set this photo as selected
         var selected = $t.closest('li');
         selected.addClass('selected').siblings().removeClass('selected');
@@ -229,7 +229,7 @@ $(document).ready(function () {
                 if (confirmbox.length == 1) {
                     confirmbox = confirmbox.clone();
                     if (confirmbox.length == 1)
-                        smoothBoxBlock(confirmbox, document, null, { closable: true, center: true });
+                        smoothBoxBlock.open(confirmbox, document, null, { closable: true, center: true });
 
                     confirmbox.on('click', 'a', function () {
                         var l = $(this).attr('href');
@@ -238,7 +238,7 @@ $(document).ready(function () {
                                 $.proxy(performBookingRequestAction, $t)(null, true);
                                 break;
                         }
-                        smoothBoxBlock(null, document);
+                        smoothBoxBlock.close(document);
 
                         return false;
                     });
@@ -261,7 +261,7 @@ $(document).ready(function () {
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -389,16 +389,16 @@ $(document).ready(function () {
                 var res = vp.find('.lc-ressources');
                 var loc = $(this).closest('.address');
                 if (confirm(res.children('.confirm-delete-location-message').text())) {
-                    smoothBoxBlock(res.children('.delete-location-loading-message'), loc);
+                    smoothBoxBlock.open(res.children('.delete-location-loading-message'), loc);
                     var luse = loc.closest('.locations-set').data('location-use');
                     $.ajax({
                         url: ep.attr('data-source-url').replace('LocationID=0', 'LocationID=' + loc.data('location-id')) + '&action=delete&use=' + luse,
                         //LcUrl.LangPath + 'Dashboard/$PositionsLocationEdit/?action=delete&LocationID=' + loc.data('location-id'),
                         success: function (data) {
                             if (data && data.Code == 0) {
-                                smoothBoxBlock('<div>' + data.Result + '</div>', loc);
+                                smoothBoxBlock.open('<div>' + data.Result + '</div>', loc);
                                 loc.click(function () {
-                                    smoothBoxBlock(null, loc);
+                                    smoothBoxBlock.close(loc);
                                     loc.hide('slow', function () { loc.remove() });
                                     // Show again addlocation button (only is hide on travel locations)
                                     vp.find('.positionlocations-itravel .addlocation').removeClass('hidden');
@@ -407,7 +407,7 @@ $(document).ready(function () {
                         },
                         error: function (jx, message, ex) {
                             ajaxErrorPopupHandler(jx, message, ex);
-                            smoothBoxBlock(null, loc);
+                            smoothBoxBlock.close(loc);
                         }
                     });
                 }
@@ -424,7 +424,7 @@ $(document).ready(function () {
             }
             ep.on('click', '.cancel-action', closeAndClearEditPanel)
             .on('ajaxSuccessPost', 'form', function (e, data) {
-                if (data.Code == 0 || data.Code == 5 || data.Code == 6)
+                if (data.Code === 0 || data.Code == 5 || data.Code == 6)
                     vp.show('fast', function () { vp.reload({ autofocus: true }) });
                 if (data.Code == 5)
                     setTimeout(closeAndClearEditPanel, 1500);
@@ -618,15 +618,15 @@ $(document).ready(function () {
         f.find('[name=BackgroundCheckID]').val(bcid);
         f.find('.main-action').val($(this).text());
 
-        smoothBoxBlock(ps1, cont, 'background-check');
+        smoothBoxBlock.open(ps1, cont, 'background-check');
         return false;
     })
     .on('ajaxFormReturnedHtml', '.popup.buy-step-1 form', function (e, ajaxBox, ajaxForm, jx) {
         var cont = ajaxForm.closest('.position-background-check');
-        smoothBoxBlock(null, cont);
+        smoothBoxBlock.close(cont);
         var ps2 = cont.find('.popup.buy-step-2');
         setTimeout(function () {
-            smoothBoxBlock(ps2, cont, 'background-check');
+            smoothBoxBlock.open(ps2, cont, 'background-check');
         }, 100);
     });
 
@@ -636,7 +636,7 @@ $(document).ready(function () {
     $('.preferences').on('click', '.my-account a', function () {
         var c = $(this).closest('.tab-body');
         c.on('click', '.cancel-action', function () {
-            smoothBoxBlock(null, c);
+            smoothBoxBlock.close(c);
         });
         var lres = c.find('.my-account-ressources');
         c.on('ajaxSuccessPostMessageClosed', '.ajax-box', function () {
@@ -645,13 +645,13 @@ $(document).ready(function () {
         var b;
         switch ($(this).attr('href')) {
             case '#delete-my-account':
-                b = smoothBoxBlock(lres.children('.delete-message-confirm').clone(), c);
+                b = smoothBoxBlock.open(lres.children('.delete-message-confirm').clone(), c);
                 break;
             case '#deactivate-my-account':
-                b = smoothBoxBlock(lres.children('.deactivate-message-confirm').clone(), c);
+                b = smoothBoxBlock.open(lres.children('.deactivate-message-confirm').clone(), c);
                 break;
             case '#reactivate-my-account':
-                b = smoothBoxBlock(lres.children('.reactivate-message-confirm').clone(), c);
+                b = smoothBoxBlock.open(lres.children('.reactivate-message-confirm').clone(), c);
                 break;
             default:
                 return true;
@@ -792,7 +792,7 @@ function openBookingInTab(bookingRequestID, bookingID, tabTitle, openReview, ext
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -829,7 +829,7 @@ function openMessageThreadInTab(threadId, tabTitle, highlightMessageId) {
 
         // Loading, with retard
         ctx.loadingtimer = setTimeout(function () {
-            $tab.block(loadingBlock);
+            $tab.block(LC.blockPresets.loading);
         }, gLoadingRetard);
 
         // Do the Ajax post
@@ -891,9 +891,9 @@ function initPositionPhotos() {
             editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
         } else {
             if (form.find('.positionphotos-gallery > ol > li').length == 0) {
-                smoothBoxBlock(form.find('.no-photos'), editPanel);
+                smoothBoxBlock.open(form.find('.no-photos'), editPanel);
             } else {
-                smoothBoxBlock(form.find('.no-primary-photo'), editPanel);
+                smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel);
             }
             // Reset hidden fields manually to avoid browser memory breaking things
             editPanel.find('[name=PhotoID]').val('');
@@ -926,7 +926,7 @@ function reloadUserPhoto() {
     });
 }
 function deleteUserPhoto() {
-    $.blockUI(loadingBlock);
+    $.blockUI(LC.blockPresets.loading);
     jQuery.ajax({
         url: LcUrl.LangUrl + "Dashboard/ChangePhoto/?delete=true",
         method: "GET",

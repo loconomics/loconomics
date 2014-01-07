@@ -7,10 +7,23 @@
     var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     // Updated assets version, to avoid problems with cache of css & js assets
-    LcAssets.AssetsVersion = "20131127";
+    LcAssets.AssetsVersion = "201401065";
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident") : false;
+    
+    // Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.Channel == "localdev" /*LcHelpers.InDev*/) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }
     
     var onBehalfOf = LcHelpers.OnBehalfOf();
     
@@ -32,69 +45,40 @@
                             </dl>
                         </li>
 }
+@* html attributes: data-base-url and data-culture are used by LcUrl.js. Data-culture is used by i18n.js too. *@
 <!doctype html>
     <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if IE 8]>    <html class="no-js ie ie8 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
     <!--[if gt IE 8]> <html class="no-js ie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
-    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture"> <!--<![endif]-->
-     <head>
-          <meta charset="utf-8"/>
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-          <title>Loconomics - @Page.Title</title>
-          <meta name="description" content="Find service providers to do the job right. At your service!"/>
-          <meta name="author" content="Loconomics Inc."/>
-          @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
-          <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
-          <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-           @* Our styles *@
-           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
-           @LcAssets.GetStylesTags()
-           <script type="text/javascript">var LC = window['LC'] || {};</script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/libs/modernizr.custom.2.6.2.js")" type="text/javascript"></script>
-           <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-1.7.2.min.js")" type="text/javascript"></script>
-           <script type="text/javascript">
-                @* Our LcUrl class *@
-                @Html.Raw(LcUrl.ToJsVar())
-                @* OUR namespace (abbreviated Loconomics) *@
-                var LC = window['LC'] || {};
-                @* OUR Loader *@
-                LC.load = function(opts) {
-                    opts = $.extend(true, {
-                        scripts: [],
-                        complete: null,
-                        completeVerification: null,
-                        loadDelay: 0,
-                        trialsInterval: 500
-                    }, opts);
-                    if (!opts.scripts.length) return;
-                    function performComplete() {
-                        if (typeof(opts.completeVerification) !== 'function' || opts.completeVerification())
-                            opts.complete();
-                        else {
-                            setTimeout(performComplete, opts.trialsInterval);
-                            if (console && console.warn)
-                                console.warn('LC.load.completeVerification failed for ' + opts.scripts[0] + ' retrying it in ' + opts.trialsInterval + 'ms');
-                        }
-                    }
-                    function load() {
-                        Modernizr.load({
-                            load: opts.scripts,
-                            complete: opts.complete ? performComplete : null
-                        });
-                    }
-                    if (opts.loadDelay)
-                        setTimeout(load, opts.loadDelay);
-                    else
-                        load();
-                }
-            </script>
-            @if(isIE){
-            <!--[if lt IE 9]>
-            <style type="text/css">
-                body,html,iframe{overflow: hidden; overflow:hidden !important;}
-            </style>
-            <![endif]-->
-            }
+    <!--[if !IE]><!--> <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>Loconomics - @Page.Title</title>
+        <meta name="description" content="Find service providers to do the job right. At your service!"/>
+        <meta name="author" content="Loconomics Inc."/>
+        @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: 
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        *@
+        <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+
+        @* Our styles *@
+        @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @LcAssets.GetStylesTags()
+
+        @foreach (var js in loadScripts)
+        {
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+        }
+        @* GetScriptsTags at the end of the document to delay load *@
+
+        @if(isIE){
+        <!--[if lt IE 9]>
+        <style type="text/css">
+            body,html,iframe{overflow: hidden; overflow:hidden !important;}
+        </style>
+        <![endif]-->
+        }
     </head>
     <body class="@PageData["BodyClass"]">
         @if (showWelcomePopup)
@@ -191,101 +175,6 @@
             <div class="site-links"><a href="@(LcUrl.LangPath)About/">About</a>|<a href="@(LcUrl.LangPath)About/TermsOfUse/">Terms of Use</a>|<a href="@(LcUrl.LangPath)About/PrivacyPolicy/">Privacy Policy</a>|<a href="@Href(LcUrl.LangPath + "HelpCenter/")">FAQs</a>|<a href="http://blog.loconomics.com/">Blog</a></div>
         </footer>
         <div class="scripts">           
-            <script type="text/javascript">
-                yepnope({
-                    test: typeof JSON === 'object',
-                    nope: LcUrl.AppPath + "Scripts/libs/json2.js"
-                });
-            </script>
-            @if (isHomePage)
-            {
-                @* Loading blockUI jquery-plugin and our script in a delayed way only on Home Page, to be faster loading *@
-                <script type="text/javascript">
-                    LC.load({
-                        scripts: [
-                            LcUrl.AppPath + 'Scripts/jquery/jquery-ui-1.8.21.custom.min.js'
-                            @if (LcData.GetCurrentLanguageID() == 2)
-                            {
-                            <text>,LcUrl.AppPath + 'Scripts/jquery/jquery.ui.datepicker-es.js'</text>
-                            }
-                        ],
-                        trialsInterval: 200,
-                        completeVerification: function () {
-                            return !!$.datepicker;
-                        },
-                        complete: function () {
-                            $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
-                            $('.date-pick', document).datepicker({
-                                showAnim: 'blind'
-                            });
-                            // Location js-dropdown
-                            var s = $('#search-location');
-                            s.prop('readonly', true);
-                            s.autocomplete({
-                                source: LC.searchLocations
-                                , autoFocus: true
-                                , minLength: 0
-                                , select: function () {
-                                    return false;
-                                }
-                            });
-                            s.on('focus click', function () { s.autocomplete('search', '') });
-
-                            /* Positions autocomplete */
-                            var positionsAutocomplete = $('#search-service').autocomplete({
-                                source: LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                                autoFocus: false,
-                                minLength: 0,
-                                select: function (event, ui) {
-                                    // We want show the label (position name) in the textbox, not the id-value
-                                    //$(this).val(ui.item.label);
-                                    $(this).val(ui.item.positionSingular);
-                                    return false;
-                                },
-                                focus: function (event, ui) {
-                                    if (!ui || !ui.item || !ui.item.positionSingular);
-                                    // We want the label in textbox, not the value
-                                    //$(this).val(ui.item.label);
-                                    $(this).val(ui.item.positionSingular);
-                                    return false;
-                                }
-                            });
-                            // Load all positions in background to replace the autocomplete source (avoiding multiple, slow look-ups)
-                            /*$.getJSON(LcUrl.JsonPath + 'GetPositions/Autocomplete/',
-                                function (data) {
-                                    positionsAutocomplete.autocomplete('option', 'source', data);
-                                }
-                            );*/
-                            // More to load:
-                            LC.load({
-                                scripts: [
-                                    LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js",
-                                    LcUrl.AppPath + "@LcAssets.AddVersion("Scripts/script.js", ".js")"
-                                ]
-                            });
-                        }
-                    });
-                </script>
-            } else {
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery-ui-1.8.21.custom.min.js")" type="text/javascript"></script>
-                if (LcData.GetCurrentLanguageID() == 2)
-                {
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ui.datepicker-es.js")" type="text/javascript"></script>
-                }
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.ba-hashchange.min.js")" type="text/javascript"></script>
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.formatter.min.js")" type="text/javascript"></script>
-                @* IagoSRL: Disable to investigate if really are being used this scripts from old code:
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery.selectboxes.pack.js")" type="text/javascript"></script>
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery.backgroundPosition.js")" type="text/javascript"></script>*@
-                @*
-                IagoSRL: The author recommends replace the autocomplete plugin by the autocomplete widget included in jQuery.UI
-                Original author migration guide: http://www.learningjquery.com/2010/06/autocomplete-migration-guide
-                <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jquery.autocomplete.js")" type="text/javascript"></script>
-                *@
-		        <script src="@Href(LcUrl.AppPath + "Scripts/jquery/jQuery.blockUI.js")" type="text/javascript"></script>
-                @* Our scripts *@
-                @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/script.js")
-            }
             @* Javascript linked from asp.net *@
             @LcAssets.GetScriptsTags()
             @if (PageData["InlineScript"] != null)

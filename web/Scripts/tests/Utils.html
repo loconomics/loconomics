@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test: Utils</title>
+  <!-- Load local QUnit. -->
+  <link rel="stylesheet" href="libs/qunit.css" media="screen">
+  <script src="libs/qunit.js"></script>
+  <!-- App script to test. -->
+  <script>
+    // For now using the localdev URL settings, where is normally tested; better way to manage URLs must be find avoiding this and other on production practices (use BASE?).
+    var LcUrl = { "SiteUrl": "http://localhost", "AppPath": "/source/", "AppUrl": "http://localhost/source/", "LangPath": "/source/en-US/", "LangUrl": "http://localhost/source/en-US/", "LangId": "en-US", "JsonPath": "/source/en-US/JSON/", "JsonUrl": "http://localhost/source/en-US/JSON/" };
+  </script>
+  <script src="../libs.js"></script>
+  <script src="../script.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="Utils.js"></script>
+</body>
+</html>
