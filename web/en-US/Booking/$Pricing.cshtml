@@ -187,7 +187,7 @@
         // Return data out of try-catch block to don't break the Thread
         if (mustSave && ModelState.IsValid) {
             // All fine, continue wizard next step:
-            LcHelpers.ReturnJsonResult(0, null);
+            LcHelpers.ReturnJsonResult(101, null);
         }
         
         return rtn;
