@@ -1,0 +1,64 @@
+﻿@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    Page.Title = "Make your life better!";
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    /*
+     * Selecting page to render dynamically
+     */
+    var page = UrlData[0].ToLower();
+    var fileToRender = "";
+    
+    if (String.IsNullOrEmpty(page)) {
+        page = "default";
+    }
+
+    var pages = new List<string> {
+        "default", "calendar", "promote", "positions", "about-you",
+        "payments", "privacy"
+    };
+    if (pages.Contains(page)) {
+        fileToRender = LcUrl.RenderLangPath + "$NewDashboard/$" + page + ".cshtml";
+        // Set menu option selected
+        PageData["menu-item"] = page;
+    } else {
+        string folder = "$NewDashboard/";
+        string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
+        if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
+            if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
+                @RenderPage(LcUrl.RenderLangPath + folder + file);
+                return;
+            } else {
+                fileToRender = LcUrl.RenderLangPath + folder + file;
+            }
+        } else {
+            throw new HttpException(404, "Page not found");
+        }
+    }
+    // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/new-dashboard", !LcHelpers.InDev);
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
+}
+@helper menu(string item){
+    @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
+}
+        <!-- Dashboard -->
+        <div class="DashboardSection changes-notification-enabled js-changes-notification-enabled">
+            <div id="container" class="clearfix">
+
+                <div class="DashboardSection-sidebar">
+                    <ul class="DashboardSection-sidebar-menu">
+
+                    </ul>
+                </div>
+
+                <div id="main" class="DashboardSection-page">
+                    @RenderPage(fileToRender)        
+                </div><!-- #main -->
+            
+            </div><!-- container -->
+        </div><!-- Dashboard -->

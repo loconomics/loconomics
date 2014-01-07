@@ -103,6 +103,14 @@ module.exports = function(grunt) {
             './Scripts/LC/StringFormat:StringFormat'
           ]
         }
+      },
+      'dashboard': {
+        'src': './Scripts/app/new-dashboard.js',
+        'dest': './Scripts/new-dashboard.js',
+        'options': {
+          'debug': true,
+          'external': ['<%= browserify.app.options.external %>']
+        }
       }
     },
     
@@ -114,8 +122,12 @@ module.exports = function(grunt) {
       },
       'app': {
         'files': {
-          //'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
           'Scripts/app.min.js': ['<%= browserify.app.dest %>']
+        }
+      },
+      'dashboard': {
+        'files': {
+          'Scripts/new-dashboard.min.js': ['<%= browserify.dashboard.dest %>']
         }
       }
     },
@@ -162,7 +174,8 @@ module.exports = function(grunt) {
           ]*/
         },
         files: {
-          'Styles/app.css': ['Styles/app/app.styl']
+          //'Styles/app.css': ['Styles/app/app.styl']
+          'Styles/new-dashboard.css': ['Styles/app/new-dashboard.styl']
         }
       },
     },
@@ -176,7 +189,8 @@ module.exports = function(grunt) {
           banner: assetsBannerTpl
         },
         files: {
-          'Styles/common.min.css': ['Styles/common.css']
+          'Styles/common.min.css': ['Styles/common.css'],
+          'Styles/new-dashboard.min.css': ['Styles/new-dashboard.css']
         }
       }
     },
@@ -207,8 +221,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['browserify', 'uglify', 'concat:js-common', 'concat:css-common', 'cssmin']); // 'stylus', 'concat:css-common', 'cssmin'
-  grunt.registerTask('build-dev', ['browserify']); // 'stylus', 
+  grunt.registerTask('build', ['browserify', 'uglify', 'concat:js-common', 'stylus', 'concat:css-common', 'cssmin']);
+  grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common']);
 
   grunt.registerTask('default', ['build', 'test']);
 

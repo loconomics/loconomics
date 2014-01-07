@@ -16,7 +16,7 @@
     var styleCss = "Styles/common";
     var loadScripts = new List<string>();
     // Enabled only on dev
-    if (LcHelpers.Channel == "localdev" /*LcHelpers.InDev*/) {
+    if (LcHelpers.InDev) {
         loadScripts.Add("libs.js");
         loadScripts.Add("app.js");
         styleCss += ".css";
