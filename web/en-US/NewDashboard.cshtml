@@ -15,13 +15,13 @@
     }
 
     var pages = new List<string> {
-        "default", "calendar", "promote", "positions", "about-you",
+        "default", "calendar", "promote", "your-work", "about-you",
         "payments", "privacy"
     };
     if (pages.Contains(page)) {
         fileToRender = LcUrl.RenderLangPath + "$NewDashboard/$" + page + ".cshtml";
-        // Set menu option selected
-        PageData["menu-item"] = page;
+        //// Set menu option selected
+        //PageData["menu-item"] = page;
     } else {
         string folder = "$NewDashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
@@ -43,57 +43,23 @@
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
     
     // Layout data
-    var u = LcData.UserInfo.GetUserRow();
-    var poss = LcData.UserInfo.GetUserPos();
+    //var u = LcData.UserInfo.GetUserRow();
     
     // Some layout configurations
     var activeProfile = true;
     var baseUrl = LcUrl.LangPath + "NewDashboard/";
-}
-@helper menu(string item){
-    @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
+    
+    // SelectedPage: use page as value, changing default by dashboard.
+    var selectedPage = page == "default" ? "dashboard" : page;
 }
 
 <div id="container" class="DashboardSection changes-notification-enabled js-changesNotificationEnabled clearfix">
-    <div class="DashboardSection-sidebar @(activeProfile ? "is-enabled" : "is-disabled")">
-        @if (activeProfile)
-        {
-            <a href="@LcData.UserInfo.GetMyPublicURL()" class="action go-publicProfile">View my public profile</a>
-        }
-        else
-        {
-            <div class="InformativeBalloon">These features will become available once you finish activating your profile.</div>
-        }
-        <div class="DashboardSection-sidebar-menu">
-            <h1>Tools</h1>
-            <ul>
-                <li class="u-withIcon go-dashboard"><a href="@(baseUrl)">Dashboard</a></li>
-                <li class="u-withIcon go-dashboardCalendar"><a href="@(baseUrl)calendar/">Calendar</a></li>
-                <li class="u-withIcon go-dashboardPromote"><a href="@(baseUrl)promote/">Promote</a></li>
-            </ul>
-        </div>
-        <div class="DashboardSection-sidebar-menu">
-            <h1>Your work</h1>
-            <ul>
-                @foreach (var position in poss)
-                {
-                    <li>
-                        <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
-                        <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
-                    </li>
-                }
-                <li class="u-withIcon go-dashboardYourWork"><a href="@(baseUrl)your-work/">Add position</a></li>
-            </ul>
-        </div>
-        <div class="DashboardSection-sidebar-menu">
-            <h1>Account</h1>
-            <ul>
-                <li class="u-withIcon go-dashboardAboutYou"><a href="@(baseUrl)about-you/">About you</a></li>
-                <li class="u-withIcon go-dashboardPayments"><a href="@(baseUrl)payments/">Payments</a></li>
-                <li class="u-withIcon go-dashboardPrivacy"><a href="@(baseUrl)privacy/">Privacy</a></li>
-            </ul>
-        </div>
-    </div>
+    
+    @RenderPage("$NewDashboard/_$Sidebar.cshtml", new {
+        BaseUrl = baseUrl,
+        ActiveProfile = activeProfile,
+        SelectedPage = selectedPage
+    })
 
     <div id="main" class="DashboardSection-page">
         @RenderPage(fileToRender)        
