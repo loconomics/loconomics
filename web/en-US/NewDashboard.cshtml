@@ -4,8 +4,6 @@
     
     Page.Title = "Make your life better!";
     
-    var u = LcData.UserInfo.GetUserRow();
-    
     /*
      * Selecting page to render dynamically
      */
@@ -38,27 +36,61 @@
             throw new HttpException(404, "Page not found");
         }
     }
+    
     // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/new-dashboard", !LcHelpers.InDev);
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
+    
+    // Layout data
+    var u = LcData.UserInfo.GetUserRow();
+    var poss = LcData.UserInfo.GetUserPos();
+    
+    // Some layout configurations
+    var activeProfile = true;
+    var baseUrl = LcUrl.LangPath + "NewDashboard/";
 }
 @helper menu(string item){
     @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
 }
-        <!-- Dashboard -->
-        <div class="DashboardSection changes-notification-enabled js-changes-notification-enabled">
-            <div id="container" class="clearfix">
 
-                <div class="DashboardSection-sidebar">
-                    <ul class="DashboardSection-sidebar-menu">
+<div id="container" class="DashboardSection changes-notification-enabled js-changesNotificationEnabled clearfix">
+    <div class="DashboardSection-sidebar">
+        @if (activeProfile)
+        {
+            <a href="@LcData.UserInfo.GetMyPublicURL()" class="action go-publicProfile">View my public profile</a>
+        }
+        else
+        {
+            <div class="InformativeBalloon">These features will become available once you finish activating your profile.</div>
+        }
+        <h1 class="DashboardSection-sidebar-menuHeader">Tools</h1>
+        <ul class="DashboardSection-sidebar-menu">
+            <li class="u-withIcon go-dashboard"><a href="@(baseUrl)">Dashboard</a></li>
+            <li class="u-withIcon go-dashboardCalendar"><a href="@(baseUrl)calendar/">Calendar</a></li>
+            <li class="u-withIcon go-dashboardPromote"><a href="@(baseUrl)promote/">Promote</a></li>
+        </ul>
+        <h1 class="DashboardSection-sidebar-menuHeader">Your work</h1>
+        <ul class="DashboardSection-sidebar-menu">
+            @foreach (var position in poss)
+            {
+                <li>
+                    <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
+                    <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
+                </li>
+            }
+            <li class="u-withIcon go-yourWork"><a href="@(baseUrl)your-work/">Add position</a></li>
+        </ul>
+        <h1 class="DashboardSection-sidebar-menuHeader">Account</h1>
+        <ul class="DashboardSection-sidebar-menu">
+            <li class="u-withIcon go-dashboardAboutYou"><a href="@(baseUrl)about-you/">About you</a></li>
+            <li class="u-withIcon go-dashboardPayments"><a href="@(baseUrl)payments/">Payments</a></li>
+            <li class="u-withIcon go-dashboardPrivacy"><a href="@(baseUrl)privacy/">Privacy</a></li>
+        </ul>
+    </div>
 
-                    </ul>
-                </div>
+    <div id="main" class="DashboardSection-page">
+        @RenderPage(fileToRender)        
+    </div><!-- #main -->
 
-                <div id="main" class="DashboardSection-page">
-                    @RenderPage(fileToRender)        
-                </div><!-- #main -->
-            
-            </div><!-- container -->
-        </div><!-- Dashboard -->
+</div>

@@ -1,14 +1,131 @@
-﻿.DashboardSection {
+﻿/* Color Vars: is not the best naming use color names but for now is the
+    quick way
+*/
+$colorTeal =	#00989A
+$colorLtTeal =  #b5e1e2
+$colorGreen =	#99C027
+$colorRed = 	#E44600
+$colorPurple = 	#461864
+$colorBlue = 	#006A8D
+$colorOrange = 	#E95D0F
+$colorYellow = 	#F0B600
+$colorGray =    #737373
+
+.DashboardSection {
 	color: #333;
+	margin-top: 26px;
+	
+	.go-publicProfile {
+	    display: block;
+	    padding: .6em;
+	    font-weight: bold;
+	    text-transform: lowercase;
+	    text-align: center;
+    }
 
 	.DashboardSection-sidebar {
+        padding: 0;
+        float: left;
+        overflow: hidden;
+        width: 200px;
 
 		.DashboardSection-sidebar-menu {
 
 		}
+		
+		.DashboardSection-sidebar-menuHeader,
+		.DashboardSection-sidebar-menu,
+		.DashboardSection-sidebar-menu a,
+		.DashboardSection-sidebar-menu a:link,
+		.DashboardSection-sidebar-menu a:visited {
+		    text-transform: lowercase;
+		    color: $colorGray;
+		    font-size: 1em;
+		    font-weight: bold;
+		    text-decoration: none;
+		}
+
+		.DashboardSection-sidebar-menuHeader {	    
+		    text-indent: 1em;
+		    border-bottom: 1px solid $colorGray;
+		    padding: 1em 0 .3em;
+		    margin: 0;
+		}
+		
+		.DashboardSection-sidebar-menu li {
+		    text-align: right;
+		    padding: 0;
+		    margin: 3px 0 0;
+		    position: relative;
+
+		    a {
+		        display: block;
+		        /* Height as icons */
+		        line-height: 24px;
+                /* For icons of size 24x24px, plus separation */
+		        padding-right: 24px + 10px;
+		    }
+
+		    /* The toggle link must fit in the icon reserved space */
+		    .js-togglePositionState {
+		        width: 24px;
+		        overflow: hidden;
+		        position: absolute;
+		        right: 0;
+		        top: 0;
+		        bottom: 0;
+		        padding-right: 0;
+		    }
+
+		    &.u-withIcon {
+		        background: transparent no-repeat right center;
+		        
+		        &.go-dashboard {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardCalendar {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardPromote {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardYourWork {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardAboutYou {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardPayments {
+		            background-position: 0 0;
+		        }
+		        
+		        &.go-dashboardPrivacy {
+		            background-position: 0 0;
+		        }
+		    }
+		}
 	}
 
-	.DashboardSection-page {
+	#main.DashboardSection-page {
+		padding: 20px;
+		/* fullsize - h-padding - border */
+		width: 735px - 40px - 4px;
+		float: left;
+		margin-left: 25px;
+		border: 2px solid $colorTeal;
+		border-radius: 12px;
 		
+		.DashboardSection-page-header {
+		    margin: 1em 0 0;
+		    padding: 0 0 4px;
+		    color: $colorTeal;
+		    font-size: 2em;
+		    border-bottom: 4px solid $colorTeal;
+	    }
 	}
 }
