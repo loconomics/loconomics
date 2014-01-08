@@ -9,7 +9,8 @@ $colorPurple = 	#461864
 $colorBlue = 	#006A8D
 $colorOrange = 	#E95D0F
 $colorYellow = 	#F0B600
-$colorGray =    #737373
+$colorGray =    #747474
+$colorLtGray =  #cccccc
 
 .DashboardSection {
 	color: #333;
@@ -28,84 +29,268 @@ $colorGray =    #737373
         float: left;
         overflow: hidden;
         width: 200px;
+        position: relative;
 
 		.DashboardSection-sidebar-menu {
 
-		}
-		
-		.DashboardSection-sidebar-menuHeader,
-		.DashboardSection-sidebar-menu,
-		.DashboardSection-sidebar-menu a,
-		.DashboardSection-sidebar-menu a:link,
-		.DashboardSection-sidebar-menu a:visited {
-		    text-transform: lowercase;
-		    color: $colorGray;
-		    font-size: 1em;
-		    font-weight: bold;
-		    text-decoration: none;
-		}
-
-		.DashboardSection-sidebar-menuHeader {	    
-		    text-indent: 1em;
-		    border-bottom: 1px solid $colorGray;
-		    padding: 1em 0 .3em;
-		    margin: 0;
-		}
-		
-		.DashboardSection-sidebar-menu li {
-		    text-align: right;
-		    padding: 0;
-		    margin: 3px 0 0;
-		    position: relative;
-
-		    a {
-		        display: block;
-		        /* Height as icons */
-		        line-height: 24px;
-                /* For icons of size 24x24px, plus separation */
-		        padding-right: 24px + 10px;
+		    > h1,
+		    a,
+		    a:link,
+		    a:visited {
+		        text-transform: lowercase;
+		        color: $colorGray;
+		        font-size: 1em;
+		        font-weight: bold;
+		        text-decoration: none;
 		    }
 
-		    /* The toggle link must fit in the icon reserved space */
-		    .js-togglePositionState {
-		        width: 24px;
-		        overflow: hidden;
-		        position: absolute;
-		        right: 0;
-		        top: 0;
-		        bottom: 0;
-		        padding-right: 0;
+		    > h1 {
+		        text-indent: 1em;
+		        border-bottom: 1px solid $colorGray;
+		        padding: 1em 0 .3em;
+		        margin: 0;
+		    }
+		    
+		    > ul {
+		        padding: 0px 6px;
+
+		        > li {
+		            text-align: right;
+		            padding: 0;
+		            margin: 7px 0 0;
+		            position: relative;
+
+		            a {
+		                display: block;
+		                /* Height as icons */
+		                line-height: 24px;
+                        /* For icons of size 24x24px, plus separation */
+		                padding-right: 24px + 10px;
+		            }
+
+		            /* The toggle link must fit in the icon reserved space */
+		            .js-togglePositionState {
+		                width: 24px;
+		                overflow: hidden;
+		                position: absolute;
+		                right: 0;
+		                top: 0;
+		                bottom: 0;
+		                padding-right: 0;
+		                text-align: center;
+		            }
+
+		            &.u-withIcon:before {
+		                /* 
+                            Icons applied on a li:before pseudo-element with limited size and icon as background.
+                        */
+                        content: ' ';
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        /* Below the link, but still visible */
+                        z-index: -1;
+                        width: 24px;
+                        height: 24px;
+		        
+                        /*
+                            Sprite of 24x24px images with 1px gap between each except the images limits.
+                            Differente icons on rows and differents states on columns.
+                            The first sprite column is for 'inactive' images, the default ones.
+                            Second for actives
+                            Third for hover
+                            Four for disabled/onboarding
+                        */
+		                background: url('../img/theme/dashboard-icons.png') transparent no-repeat right center;
+		            }
+            
+                    &.u-withIcon {
+		                &.go-dashboard:before {
+		                    background-position: 0 0;
+		                }
+		        
+		                &.go-dashboardCalendar:before {
+		                    background-position: 0 -25px;
+		                }
+		        
+		                &.go-dashboardPromote:before {
+		                    background-position: 0 -50px;
+		                }
+		        
+		                &.go-dashboardAboutYou:before {
+		                    background-position: 0 -75px;
+		                }
+		        
+		                &.go-dashboardPayments:before {
+		                    background-position: 0 -100px;
+		                }
+		        
+		                &.go-dashboardPrivacy:before {
+		                    background-position: 0 -125px;
+		                }
+		        
+		                &.go-dashboardYourWork:before {
+		                    background: none;
+		                    content: '+';
+		                    text-align: center;
+		                    font-size: 20px;
+		                }
+		            }
+		        }
+            }
+		}
+		
+		/* Colors and images for the four differents states of the sidebar:
+            - under .is-enabled:
+              - inactive: the default one, already set in the previous rules
+              - hover: on :hover
+              - active: on .is-current
+            - under .is-disabled:
+              - onboarding: all access is disabled
+         */
+		
+		&.is-enabled .DashboardSection-sidebar-menu {
+		    
+		    &:hover > h1 {
+		        color: $colorOrange;
+		        border-bottom-color: $colorOrange;
 		    }
 
-		    &.u-withIcon {
-		        background: transparent no-repeat right center;
-		        
-		        &.go-dashboard {
-		            background-position: 0 0;
+		    > ul > li:hover {
+		        a:hover {
+		            color: $colorOrange;
 		        }
 		        
-		        &.go-dashboardCalendar {
-		            background-position: 0 0;
+		        &.u-withIcon {	        
+		            &.go-dashboard:before {
+		                background-position: -50px 0;
+		            }
+		        
+		            &.go-dashboardCalendar:before {
+		                background-position: -50px -25px;
+		            }
+		        
+		            &.go-dashboardPromote:before {
+		                background-position: -50px -50px;
+		            }
+		        
+		            &.go-dashboardAboutYou:before {
+		                background-position: -50px -75px;
+		            }
+		        
+		            &.go-dashboardPayments:before {
+		                background-position: -50px -100px;
+		            }
+		        
+		            &.go-dashboardPrivacy:before {
+		                background-position: -50px -125px;
+		            }
+		            
+		            &.go-dashboardYourWork:before {
+		                color: $colorOrange;
+		            }
+		        }
+		    }
+		    
+		    &.is-current > h1 {
+		        color: $colorTeal;
+		        border-bottom-color: $colorTeal;
+		    }
+		    
+		    > ul > li.is-current {
+		        a,
+		        a:link,
+		        a:visited {
+		            color: $colorTeal;
 		        }
 		        
-		        &.go-dashboardPromote {
-		            background-position: 0 0;
-		        }
+		        &.u-withIcon {	        
+		            &.go-dashboard:before {
+		                background-position: -25px 0;
+		            }
 		        
-		        &.go-dashboardYourWork {
-		            background-position: 0 0;
-		        }
+		            &.go-dashboardCalendar:before {
+		                background-position: -25px -25px;
+		            }
 		        
-		        &.go-dashboardAboutYou {
-		            background-position: 0 0;
-		        }
+		            &.go-dashboardPromote:before {
+		                background-position: -25px -50px;
+		            }
 		        
-		        &.go-dashboardPayments {
-		            background-position: 0 0;
-		        }
+		            &.go-dashboardAboutYou:before {
+		                background-position: -25px -75px;
+		            }
 		        
-		        &.go-dashboardPrivacy {
-		            background-position: 0 0;
+		            &.go-dashboardPayments:before {
+		                background-position: -25px -100px;
+		            }
+		        
+		            &.go-dashboardPrivacy:before {
+		                background-position: -25px -125px;
+		            }
+		            
+		            &.go-dashboardYourWork:before {
+		                color: $colorTeal;
+		            }
+		        }
+		    }
+		}
+		
+		&.is-disabled {
+		    /* Add a transparent layer that avoids any interaction with the
+                sidebar content, like links.
+             */
+            &:before {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                content: ' ';
+                z-index: 1000;
+		    }
+		    
+		    .DashboardSection-sidebar-menu {
+		    
+		        > h1,
+		        a,
+		        a:link,
+		        a:visited {
+		            color: $colorLtGray;
+		        }
+		    
+		        > h1 {	    
+		            border-bottom-color: $colorLtGray;
+		        }
+		    
+		        > ul > li.u-withIcon {
+		            &.go-dashboard:before {
+		                background-position: -75px 0;
+		            }
+		        
+		            &.go-dashboardCalendar:before {
+		                background-position: -75px -25px;
+		            }
+		        
+		            &.go-dashboardPromote:before {
+		                background-position: -75px -50px;
+		            }
+		        
+		            &.go-dashboardAboutYou:before {
+		                background-position: -75px -75px;
+		            }
+		        
+		            &.go-dashboardPayments:before {
+		                background-position: -75px -100px;
+		            }
+		        
+		            &.go-dashboardPrivacy:before {
+		                background-position: -75px -125px;
+		            }
+		        
+		            &.go-dashboardYourWork:before {
+		                color: $colorLtGray;
+		            }
 		        }
 		    }
 		}

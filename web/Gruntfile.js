@@ -206,7 +206,7 @@ module.exports = function(grunt) {
       },
       'plain-css': {
         files: ['Styles/App/*.css'],
-        tasks: ['concat:css-common', 'cssmin']
+        tasks: ['concat:css-common'] // 'cssmin'
       }
     }
   });
@@ -221,8 +221,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['browserify', 'uglify', 'concat:js-common', 'stylus', 'concat:css-common', 'cssmin']);
+  grunt.registerTask('build-js', ['browserify', 'uglify', 'concat:js-common']);
+  grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin']);
   grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common']);
+  grunt.registerTask('build', ['build-js', 'build-css']);
 
   grunt.registerTask('default', ['build', 'test']);
 
