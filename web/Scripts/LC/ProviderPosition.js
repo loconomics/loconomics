@@ -33,12 +33,12 @@ ProviderPosition.prototype = {
   @state: 'on' or 'off'
 **/
 ProviderPosition.prototype.changeState = function changePositionState(state) {
-  var page = state == 'on' ? '$ReactivatePosition' : '$DeactivatePosition';
+  var page = state == 'on' ? '$Reactivate' : '$Deactivate';
   var $d = $(document);
   var that = this;
   var ctx = { form: $d, box: $d };
   $.ajax({
-    url: LcUrl.LangPath + 'Dashboard/' + page + '/?PositionID=' + this.positionId,
+    url: LcUrl.LangPath + 'NewDashboard/Position/' + page + '/?PositionID=' + this.positionId,
     context: ctx,
     error: ajaxCallbacks.error,
     success: function (data, text, jx) {
