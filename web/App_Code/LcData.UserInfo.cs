@@ -120,7 +120,9 @@ public static partial class LcData
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                    SELECT count(*) FROM UserProfilePositions As UPS
+                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
+                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
@@ -197,7 +199,9 @@ public static partial class LcData
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                    SELECT count(*) FROM UserProfilePositions As UPS
+                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
+                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider

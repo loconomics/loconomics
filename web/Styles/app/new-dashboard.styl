@@ -1,4 +1,6 @@
-﻿/* Color Vars: is not the best naming use color names but for now is the
+﻿@import "c-arrow"
+
+/* Color Vars: is not the best naming use color names but for now is the
     quick way
 */
 $colorTeal =	#00989A
@@ -29,6 +31,15 @@ $colorLtGray =  #cccccc
         float: left;
         width: 200px;
         position: relative;
+        
+        .DashboardSection-sidebar-onboardingMessage {
+            background: $colorLtGray;
+            color: White;
+            font-size: .7em;
+            line-height: normal;
+            padding: 12px;
+            down-arrow(10px, 0, transparent, $colorLtGray, 18px);
+	    }
 
 		.DashboardSection-sidebar-menu {
 

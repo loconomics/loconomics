@@ -43,10 +43,10 @@
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
     
     // Layout data
-    //var u = LcData.UserInfo.GetUserRow();
+    var u = LcData.UserInfo.GetUserRow();
     
     // Some layout configurations
-    var activeProfile = true;
+    var activeProfile = u.IsActiveProvider;
     var baseUrl = LcUrl.LangPath + "NewDashboard/";
     
     // SelectedPage: use page as value, changing default by dashboard.
