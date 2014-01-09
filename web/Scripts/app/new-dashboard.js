@@ -16,8 +16,9 @@ $(function () {
       n = toggle(v, ['on', 'off']),
       positionId = $t.closest('[data-position-id]').data('position-id');
 
-    new ProviderPosition(positionId)
-    .on(ProviderPosition.prototype.stateChangedEvent, function (state) {
+    var pos = new ProviderPosition(positionId);
+    pos
+    .on(pos.stateChangedEvent, function (state) {
       $t.text(state);
     })
     .changeState(n);
