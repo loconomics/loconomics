@@ -3,7 +3,8 @@
     var baseUrl = (string)PageData["BaseUrl"];
     var activeProfile = (bool)PageData["ActiveProfile"];
     
-    var poss = LcData.UserInfo.GetUserPos();
+    var u = LcData.UserInfo.GetUserRow();
+    var poss = u.IsProvider ? LcData.UserInfo.GetUserPos() : null;
     
     // Relation of menu groups and its links, to detect what group must be 
     // marked as 'is-current'
@@ -48,28 +49,37 @@
         <h1>Tools</h1>
         <ul>
             <li class="u-withIcon go-dashboard @(menu("dashboard", selectedPage))"><a href="@(baseUrl)">Dashboard</a></li>
-            <li class="u-withIcon go-dashboardCalendar @(menu("calendar", selectedPage))"><a href="@(baseUrl)calendar/">Calendar</a></li>
-            <li class="u-withIcon go-dashboardPromote @(menu("promote", selectedPage))"><a href="@(baseUrl)promote/">Promote</a></li>
-        </ul>
-    </div>
-    <div class="DashboardSection-sidebar-menu @(menu("your-work", selectedGroup))">
-        <h1>Your work</h1>
-        <ul>
-            @foreach (var position in poss)
+            @if (u.IsProvider)
             {
-                <li class="@(menu("your-work/" + position.PositionID, selectedPage))">
-                    <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
-                    <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
-                </li>
+                <li class="u-withIcon go-dashboardCalendar @(menu("calendar", selectedPage))"><a href="@(baseUrl)calendar/">Calendar</a></li>
+                <li class="u-withIcon go-dashboardPromote @(menu("promote", selectedPage))"><a href="@(baseUrl)promote/">Promote</a></li>
             }
-            <li class="u-withIcon go-dashboardYourWork @(menu("your-work", selectedPage))"><a href="@(baseUrl)your-work/">Add position</a></li>
         </ul>
     </div>
+    @if (u.IsProvider)
+    {
+        <div class="DashboardSection-sidebar-menu @(menu("your-work", selectedGroup))">
+            <h1>Your work</h1>
+            <ul>
+                @foreach (var position in poss)
+                {
+                    <li class="@(menu("your-work/" + position.PositionID, selectedPage))">
+                        <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
+                        <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
+                    </li>
+                }
+                <li class="u-withIcon go-dashboardYourWork @(menu("your-work", selectedPage))"><a href="@(baseUrl)your-work/">Add position</a></li>
+            </ul>
+        </div>
+    }
     <div class="DashboardSection-sidebar-menu @(menu("account", selectedGroup))">
         <h1>Account</h1>
         <ul>
             <li class="u-withIcon go-dashboardAboutYou @(menu("about-you", selectedPage))"><a href="@(baseUrl)about-you/">About you</a></li>
-            <li class="u-withIcon go-dashboardPayments @(menu("payments", selectedPage))"><a href="@(baseUrl)payments/">Payments</a></li>
+            @if (u.IsProvider)
+            {
+                <li class="u-withIcon go-dashboardPayments @(menu("payments", selectedPage))"><a href="@(baseUrl)payments/">Payments</a></li>
+            }
             <li class="u-withIcon go-dashboardPrivacy @(menu("privacy", selectedPage))"><a href="@(baseUrl)privacy/">Privacy</a></li>
         </ul>
     </div>
