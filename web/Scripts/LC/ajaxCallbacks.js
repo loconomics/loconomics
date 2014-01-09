@@ -175,8 +175,9 @@ function showOkGoPopup(ctx, data) {
 function doJSONAction(data, text, jx, ctx) {
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        // Clean previous validation errors
-        validation.setValidationSummaryAsValid(ctx.box);
+        if (ctx.box)
+            // Clean previous validation errors
+            validation.setValidationSummaryAsValid(ctx.box);
 
         if (data.Code === 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'

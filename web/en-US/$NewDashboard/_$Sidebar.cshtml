@@ -63,7 +63,7 @@
             <ul>
                 @foreach (var position in poss)
                 {
-                    <li class="@(menu("your-work/" + position.PositionID, selectedPage))">
+                    <li class="@(menu("your-work/" + position.PositionID, selectedPage))" data-position-id="@(position.PositionID)">
                         <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
                         <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
                     </li>
