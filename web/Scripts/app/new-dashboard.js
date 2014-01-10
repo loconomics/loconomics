@@ -1,14 +1,15 @@
 ﻿/**
     User private dashboard section
 **/
-var 
-  $ = require('jquery'),
-  toggle = require('../LC/toggle'),
-  ProviderPosition = require('../LC/ProviderPosition');
+var $ = require('jquery');
 
 // Code on page ready
 $(function () {
-  /* Change position state on sidebar links */
+  /* Sidebar */
+  var 
+    toggle = require('../LC/toggle'),
+    ProviderPosition = require('../LC/ProviderPosition');
+  // Attaching 'change position' action to the sidebar links
   $(document).on('click', '[href = "#togglePositionState"]', function () {
     var 
       $t = $(this),
@@ -25,4 +26,8 @@ $(function () {
 
     return false;
   });
+
+  /* Promote */
+  var generateBookNowButton = require('./dashboard/generateBookNowButton');
+  generateBookNowButton.on('.DashboardBookNowButton');
 });

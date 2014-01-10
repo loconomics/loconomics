@@ -2,8 +2,24 @@
     // Tools/Promote
 }
 <h1 class="DashboardSection-page-header">Promote your services</h1>
-<div class="DashboardSection-page-section">
-    <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
-    @RenderPage("Promote/_$BookNowButton.cshtml", new { IncludeForm = false })
+<p class="DashboardSection-page-introduction">
+Spreading the word of your great work couldn't be easier.
+Create a custom URL to direct clients direclty to your profile and use it to promote
+yourself anytime, anywhere.
+If you already have a website, you can add booking functionality for free.
+Pretty cool, right?
+</p>
 
+<div class="DashboardSection-page-section DashboardPromote">
+
+    <form class="BasicForm">
+
+        <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
+        @RenderPage("Promote/_$BookNowButton.cshtml", new { IncludeForm = false })
+
+        <div class="actions">
+            <input type="submit" class="main-action" value="Save" />
+        </div>
+
+    </form>
 </div>

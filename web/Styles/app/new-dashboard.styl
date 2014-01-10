@@ -32,16 +32,36 @@ $colorLtGray =  #cccccc
 		margin-left: 25px;
 		border: 2px solid $colorTeal;
 		border-radius: 12px;
+		background: White;
 		
 		.DashboardSection-page-header {
 		    margin: 1em 0 0;
 		    padding: 0 0 4px;
+		    line-height: 1em;
 		    color: $colorTeal;
 		    font-size: 2em;
 		    border-bottom: 4px solid $colorTeal;
 	    }
+	    
+        .DashboardSection-page-section {
+            color: $colorGray;
+
+            .DashboardSection-page-section-header {
+                color: $colorTeal;
+                margin: .5em 0 0;
+                padding: 0 0 4px;
+                line-height: 1em;
+                font-size: 1.8em;
+                font-weight: normal;
+                border-bottom: 3px solid $colorTeal;
+            }
+    
+            .DashboardSection-page-section-introduction {
+            }
+        }
 	}
 
 }
 
 @import("dashboard/sidebar")
+@import("dashboard/promote")
