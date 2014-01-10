@@ -20,7 +20,7 @@ Pretty cool, right?
         @RenderPage("Promote/_$CustomUrl.cshtml", new { PageState = ModelState })
 
         <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
-        @RenderPage("Promote/_$BookNowButton.cshtml", new { IncludeForm = false })
+        @RenderPage("Promote/_$BookNowButton.cshtml", new { PageState = ModelState })
         
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         
