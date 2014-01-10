@@ -319,29 +319,6 @@
     padding: 0;
     width: 120px;
 }
-.dashboard .preferences li label {
-    width: auto;
-}
-.dashboard .preferences .personal-data-info ul > li {
-    list-style: disc inside none;
-}
-.dashboard .preferences .personal-data-info .note,
-.dashboard .preferences .my-account a,
-.dashboard .preferences .my-account a:link,
-.dashboard .preferences .my-account a:visited {
-    color: #E44600;
-    margin-left: 10px;
-}
-.dashboard .preferences .personal-data-info .note a,
-.dashboard .preferences .personal-data-info .note a:link,
-.dashboard .preferences .personal-data-info .note a:visited {
-    color: #E44600;
-}
-#preferences-privacy-policy h1,
-#account-terms h1 {
-    margin: 0;
-    font-size: 1.5em;
-}
 .dashboard form li input[type="text"],
 .dashboard form li input[type="password"],
 .dashboard form li select{
@@ -370,6 +347,31 @@
 .dashboard form a:link,
 .dashboard form a:visited{
     color: #3baeb0;
+}
+
+/* Form: Preferences */
+.dashboard .preferences li label {
+    width: auto;
+}
+.dashboard .preferences .personal-data-info ul > li {
+    list-style: disc inside none;
+}
+.dashboard .preferences .personal-data-info .note,
+.dashboard .preferences .my-account a,
+.dashboard .preferences .my-account a:link,
+.dashboard .preferences .my-account a:visited {
+    color: #E44600;
+    margin-left: 10px;
+}
+.dashboard .preferences .personal-data-info .note a,
+.dashboard .preferences .personal-data-info .note a:link,
+.dashboard .preferences .personal-data-info .note a:visited {
+    color: #E44600;
+}
+#preferences-privacy-policy h1,
+#account-terms h1 {
+    margin: 0;
+    font-size: 1.5em;
 }
 
 /** Form: personal **/

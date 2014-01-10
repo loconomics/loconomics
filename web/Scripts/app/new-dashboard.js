@@ -32,4 +32,8 @@ $(function () {
   // Listen on DashboardPromote instead of the more close container DashboardBookNowButton
   // allows to continue working without re-attachment after html-ajax-reloads from ajaxForm.
   generateBookNowButton.on('.DashboardPromote'); //'.DashboardBookNowButton'
+
+  /* Privacy */
+  var privacySettings = require('./dashboard/privacySettings');
+  privacySettings.on('.DashboardPrivacy');
 });

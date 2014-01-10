@@ -12,15 +12,19 @@ If you already have a website, you can add booking functionality for free.
 Pretty cool, right?
 </p>
 
-<div class="DashboardSection-page-section DashboardPromote">
+<div class="DashboardPromote">
 
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$promote/">
 
-        <h2 class="DashboardSection-page-section-header">Create your own custom URL</h2>
-        @RenderPage("Promote/_$CustomUrl.cshtml", new { PageState = ModelState })
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Create your own custom URL</h2>
+            @RenderPage("Promote/_$CustomUrl.cshtml", new { PageState = ModelState })
+        </div>
 
-        <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
-        @RenderPage("Promote/_$BookNowButton.cshtml", new { PageState = ModelState })
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
+            @RenderPage("Promote/_$BookNowButton.cshtml", new { PageState = ModelState })
+        </div>
         
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         

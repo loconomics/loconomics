@@ -2,6 +2,8 @@
   GenerateBookNowButton: with the proper html and form
   regenerates the button source-code and preview automatically.
 **/
+var $ = require('jquery');
+
 exports.on = function (containerSelector) {
   var c = $(containerSelector);
 
