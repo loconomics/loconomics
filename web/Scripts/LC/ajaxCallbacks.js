@@ -7,7 +7,7 @@ var popup = require('./popup'),
     changesNotification = require('./changesNotification'),
     createIframe = require('./createIframe'),
     redirectTo = require('./redirectTo'),
-    autoFocus = require('./autoFocus'),
+    moveFocusTo = require('./moveFocusTo'),
     smoothBoxBlock = require('./smoothBoxBlock');
 
 // AKA: ajaxErrorPopupHandler
@@ -115,7 +115,8 @@ function lcOnSuccess(data, text, jx) {
                 ctx.changedElements
             );
 
-        autoFocus(jb);
+        // Move focus to the errors appeared on the page:
+        moveFocusTo(jb.find('.validation-summary-errors'));
         ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }

@@ -1,5 +1,7 @@
 ﻿@{
     // Tools/Promote
+    
+    // Errors are managed through this page ModelState offered to imported pages as PageState
 }
 <h1 class="DashboardSection-page-header">Promote your services</h1>
 <p class="DashboardSection-page-introduction">
@@ -15,14 +17,23 @@ Pretty cool, right?
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$promote/">
 
         <h2 class="DashboardSection-page-section-header">Create your own custom URL</h2>
-        @RenderPage("Promote/_$CustomUrl.cshtml", new { IncludeForm = false })
+        @RenderPage("Promote/_$CustomUrl.cshtml", new { PageState = ModelState })
 
         <h2 class="DashboardSection-page-section-header">Add booking functionality to your website</h2>
         @RenderPage("Promote/_$BookNowButton.cshtml", new { IncludeForm = false })
-
+        
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        
         <div class="actions">
             <button class="main-action" type="submit">Save</button>
         </div>
 
     </form>
 </div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+    }
+}

@@ -3,12 +3,14 @@
     
     var u = LcData.UserInfo.GetUserRowWithContactData();
     var ProfileUrl = Request["profile-url"] ?? u.ProviderProfileURL;
-    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
     Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
-    
+
     if (IsPost && Validation.IsValid()) {
         using (var db = Database.Open("sqlloco")){
-            if (ModelState.IsValid) {
+            if (PageState.IsValid) {
                 // Check that profile-url is not in use by other provider, but discarding in the check the own provider
                 if (!String.IsNullOrEmpty(ProfileUrl) && 
                     db.QueryValue(@"
@@ -17,10 +19,10 @@
                     WHERE   UserID <> @0
                             AND ProviderProfileURL like @1
                 ", u.UserID, ProfileUrl) > 0) {
-                    ModelState.AddError("profile-url", "We're sorry, that URL is unavailable, please choose other.");
+                    PageState.AddError("profile-url", "We're sorry, that URL is unavailable, please choose other.");
                 }
             }
-            if (ModelState.IsValid) {
+            if (PageState.IsValid) {
                 // Check what data changes to revoke verifications and update data:
                 db.Execute(@"
                     DECLARE 
@@ -45,7 +47,9 @@
                  u.UserID,
                  (u.IsProvider ? ProfileUrl : null));
 
-                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                if (doReturn) {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
             }
         }
     }
