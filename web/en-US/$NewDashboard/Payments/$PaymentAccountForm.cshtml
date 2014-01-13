@@ -70,8 +70,37 @@
             PageState.AddError("agree", "You must agree the terms of service");
         }
         
+        // Gathering state and postal IDs and verifying they match
+        var stateId = LcData.GetStateFromZipCode(PostalCode);
+        var postalCodeId = LcData.GetPostalCodeID(PostalCode, stateId);
+        if (LcData.GetStateProvinceCode(stateId) != StateCode) {
+            PageState.AddError("postalcode", "Zip Code is not valid for that state.");
+        }
+
         if (PageState.IsValid) {
             try{
+                // Save peronal data to our database that replaces the need for a separate
+                // form under 'about you'
+                // (Nothing about payment, bank account.. thats only on Braintree)
+                
+                LcData.UserInfo.UpdatePersonalAndContactData(
+                    user.UserID,
+                    FirstName,
+                    null,
+                    LastName,
+                    null,
+                    MobilePhone,
+                    null,
+                    Street,
+                    null,
+                    City,
+                    stateId,
+                    postalCodeId,
+                    LcData.GetCurrentCountryID(),
+                    LcData.GetCurrentLanguageID(),
+                    null
+                );
+                
                 // Create account at Braintree
                 var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
                     UserID = user.UserID,
@@ -130,7 +159,7 @@
                 @LcHelpers.StateProvinceCodeOptions(StateCode)
             </select>
         </li>
-        <li><input placeholder="Zip code" type="text" name="postalcode" value="@PostalCode" @Validation.GetHtml("postalcode")/>
+        <li><input placeholder="Zip code" type="text" name="postalcode" value="@PostalCode" @Validation.GetHtml("postalcode") data-val-postalcode="Postal Code is not valid"/>
         </li>
         <li><input placeholder="Date of birth" type="text" name="birthdate" value="@(BirthDate.HasValue ? BirthDate.Value.ToShortDateString() : "" )" @Validation.GetHtml("birthdate") /></li>
         <li><input placeholder="SSN" type="text" name="ssn" value="@Ssn" @Validation.GetHtml("ssn") /></li>
