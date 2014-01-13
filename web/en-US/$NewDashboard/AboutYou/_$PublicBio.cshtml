@@ -1,0 +1,54 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+    
+    var Bio = Request["publicbio"] ?? u.PublicBio;
+    
+    Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
+    
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(@"
+                DECLARE 
+                @UserID int
+                ,@PublicBio varchar(4000)
+
+                SET @UserID = @0
+                SET @PublicBio = @1
+
+                BEGIN TRAN
+
+                /* Update User Personal Data */
+                UPDATE	Users
+                SET     
+		                PublicBio = @PublicBio
+
+                        ,UpdatedDate = getdate()
+                        ,ModifiedBy = 'sys'
+                WHERE   UserId = @UserID
+
+                -- Check Alerts related:
+                EXEC TestAlertPublicBio @UserID
+
+                COMMIT TRAN
+            ", u.UserID, Bio);
+            
+            if (doReturn) {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+}
+<fieldset class="DashboardPublicBio">
+    <div class="DashboardPublicBio-photo">
+    
+    </div>
+    <div class="DashboardPublicBio-bio">
+        <textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community about yourself." @Validation.GetHtml("publicbio")>@Bio</textarea>
+        @Html.ValidationMessage("publicbio")
+    </div>
+</fieldset>

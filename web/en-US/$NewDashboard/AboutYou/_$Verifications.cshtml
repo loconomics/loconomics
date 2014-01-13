@@ -1,0 +1,27 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+    
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco"))
+        {
+            
+            if (doReturn) {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }            
+        }
+    }
+}
+<fieldset class="DashboardVerifications crudl">
+    <div class="crudl-editor">
+    
+    </div>
+    <ul class="crudl-viewer">
+        <li>
+            
+        </li>
+    </ul>
+</fieldset>
