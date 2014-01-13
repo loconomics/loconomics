@@ -59,7 +59,7 @@ var blocks = LC.blockPresets = require('../LC/blockPresets');
 //{TEMP
 window.loadingBlock = blocks.loading;
 window.infoBlock = blocks.info;
-window.errorBlock = blocks.info;
+window.errorBlock = blocks.error;
 //}
 
 Array.remove = require('../LC/Array.remove');

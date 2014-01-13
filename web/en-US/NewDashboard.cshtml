@@ -26,7 +26,7 @@
         string folder = "$NewDashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
-            if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
+            if (file.StartsWith("$") || file == "AboutYou/ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
                 @RenderPage(LcUrl.RenderLangPath + folder + file);
                 return;
             } else {

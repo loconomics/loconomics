@@ -40,4 +40,8 @@ $(function () {
   /* Payments */
   var paymentAccount = require('./dashboard/paymentAccount');
   paymentAccount.on('.DashboardPayments');
+
+  /* Profile photo */
+  var changeProfilePhoto = require('./dashboard/changeProfilePhoto');
+  changeProfilePhoto.on('.DashboardAboutYou');
 });

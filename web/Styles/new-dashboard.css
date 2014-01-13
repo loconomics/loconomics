@@ -100,7 +100,7 @@
 /* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section .DashboardSection-page-section-header {
   color: #00989a;
-  margin: 0.5em 0 14px;
+  margin: 1em 0 14px;
   padding: 0 0 4px;
   line-height: 1em;
   font-size: 1.6em;
@@ -909,7 +909,7 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1016,18 +1016,65 @@
 
 /* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 
-/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
-
 /* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
-
-/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardPublicBio .DashboardPublicBio-photo {
+  float: left;
+/* position context */
+  position: relative;
+}
 
 /* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardPublicBio .DashboardPublicBio-photo img {
+  border: 1px solid #ccc9c9;
+  -webkit-border-radius: 4px 4px 4px 4px;
+  border-radius: 4px 4px 4px 4px;
+  width: 144px;
+  height: 150px;
+  display: block;
+}
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardPublicBio .DashboardPublicBio-photo .DashboardPublicBio-photo-changeAction {
+  background-color: rgba(255,255,255,0.65);
+  -webkit-border-radius: 25px 25px 25px 25px;
+  border-radius: 25px 25px 25px 25px;
+  color: #000;
+  display: block;
+  font-size: 0.8em;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 0 15px;
+  position: absolute;
+  text-decoration: none;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardPublicBio .DashboardPublicBio-photo .DashboardPublicBio-photo-changeAction:hover {
+  background-color: White;
+}
+
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardPublicBio .DashboardPublicBio-bio {
+/* We put the bio block on the right of the photo, that is floated, 
+                then we add a left margin of the photo size plus a margin.
+                photo width + border + margin
+            */
+  margin-left: 154px;
+/* Same height than image to be aligned */
+  height: 152px;
+}
+
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 .DashboardAboutYou .DashboardPersonalWebsite fieldset {
   padding: 0 10px;
 }
 
-/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 .DashboardAboutYou .DashboardPersonalWebsite fieldset input {
   width: 100%;
   -webkit-box-sizing: border-box;

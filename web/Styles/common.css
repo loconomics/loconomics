@@ -1345,6 +1345,7 @@ table .number{
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     -o-border-radius: 4px;
+    min-height: 30px;
 }
 .smooth-box-block-overlay.full-block {
     border-radius: 0;

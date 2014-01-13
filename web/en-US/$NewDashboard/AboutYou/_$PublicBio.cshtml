@@ -45,7 +45,9 @@
 }
 <fieldset class="DashboardPublicBio">
     <div class="DashboardPublicBio-photo">
-    
+        <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
+        <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
+        <a class="DashboardPublicBio-photo-changeAction" href="#change-profile-photo">Change photo</a>
     </div>
     <div class="DashboardPublicBio-bio">
         <textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community about yourself." @Validation.GetHtml("publicbio")>@Bio</textarea>
