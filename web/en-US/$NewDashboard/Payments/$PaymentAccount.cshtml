@@ -17,10 +17,11 @@
     }
 }
 
-<div class="DashboardPaymentAccount" data-source-url="@(LcUrl.LangPath)$Dashboard/Payments/$PaymentAccount/">
+<div class="DashboardPaymentAccount">
 @if (account == null)
 {
     returns["NeedsForm"] = true;
+    returns["HasRequiredSections"] = true;
     @RenderPage("$PaymentAccountForm.cshtml", new { PageState = PageState })
 }
 else

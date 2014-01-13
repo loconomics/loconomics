@@ -3,7 +3,8 @@
     LcHelpers.ProviderPage();
     
     var returns = new Dictionary<string, object> {
-        { "NeedsForm", false }
+        { "NeedsForm", false },
+        { "HasRequiredSections", false }
     };
 }
 <h1 class="DashboardSection-page-header">Payment processing setup</h1>
@@ -31,6 +32,12 @@
         }
     </form>
 </div>
+
+@if ((bool)returns["HasRequiredSections"]) {
+    <div class="InlineNotification InlineNotification--hasRequiredSections">
+        Required sections
+    </div>
+}
 
 @{
     // On Post check validation status, returning a Json response or html

@@ -74,9 +74,14 @@
   -webkit-border-radius: 12px;
   border-radius: 12px;
   background: White;
+/* Its a position context */
+  position: relative;
+/* A page can contain the reusable component InlineNotification,
+            that we specifically place on top-right
+        */
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-header {
   margin: 1em 0 0;
   padding: 0 0 4px;
@@ -84,14 +89,15 @@
   color: #00989a;
   font-size: 2em;
   border-bottom: 4px solid #00989a;
+  display: block;
 }
 
-/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section {
   color: #747474;
 }
 
-/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section .DashboardSection-page-section-header {
   color: #00989a;
   margin: 0.5em 0 14px;
@@ -100,11 +106,42 @@
   font-size: 1.8em;
   font-weight: normal;
   border-bottom: 3px solid #00989a;
+/* Most times, next 'reset' attributes are not need -default H* elements- but
+                    on cases like fieldset legends or element presets it put everything in place
+                */
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section .DashboardSection-page-section-introduction {
   margin-top: 0;
+}
+
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection #main.DashboardSection-page .DashboardSection-page-section.is-required .DashboardSection-page-section-header {
+  color: #e95d0f;
+  border-bottom-color: #e95d0f;
+}
+
+/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection #main.DashboardSection-page > .InlineNotification {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 0.92em;
+  text-transform: lowercase;
+}
+
+/* line 93 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection #main.DashboardSection-page > .InlineNotification--hasRequiredSections {
+  color: #e95d0f;
+  font-style: italic;
 }
 
 /* line 273 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
