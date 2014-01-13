@@ -1,6 +1,5 @@
 ﻿/**
-  GenerateBookNowButton: with the proper html and form
-  regenerates the button source-code and preview automatically.
+  privacySettings: Setup for the specific page-form dashboard/privacy/privacysettings
 **/
 var $ = require('jquery');
 // TODO Implement dependencies comming from app.js instead of direct link

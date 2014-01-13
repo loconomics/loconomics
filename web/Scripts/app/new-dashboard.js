@@ -36,4 +36,8 @@ $(function () {
   /* Privacy */
   var privacySettings = require('./dashboard/privacySettings');
   privacySettings.on('.DashboardPrivacy');
+
+  /* Payments */
+  var paymentAccount = require('./dashboard/paymentAccount');
+  paymentAccount.on('.DashboardPayments');
 });

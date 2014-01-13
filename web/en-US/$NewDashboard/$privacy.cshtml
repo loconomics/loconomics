@@ -1,5 +1,7 @@
 ﻿@{
     // Account/Privacy
+    LcHelpers.SecurePage();
+
     var u = LcData.UserInfo.GetUserRow();
 }
 <h1 class="DashboardSection-page-header">Privacy settings</h1>
@@ -13,7 +15,7 @@ and <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_bla
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$privacy/">
 
         <div class="DashboardSection-page-section">
-            @RenderPage("Promote/_$PrivacySettings.cshtml", new { PageState = ModelState })
+            @RenderPage("Privacy/_$PrivacySettings.cshtml", new { PageState = ModelState })
         </div>
 
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -1,5 +1,5 @@
 ﻿/**
-  GenerateBookNowButton: with the proper html and form
+  generateBookNowButton: with the proper html and form
   regenerates the button source-code and preview automatically.
 **/
 var $ = require('jquery');
