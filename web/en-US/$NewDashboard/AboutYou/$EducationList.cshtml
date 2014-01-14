@@ -30,8 +30,8 @@ else
         <ul>
             @foreach (var e in education)
             {
-                <li class="education-item crudl-item" data-crudl-item-id="@e.UserEducationId">
-                    <h4>@e.InstitutionName</h4>
+                <li class="DashboardEducation-list-item ItemBox crudl-item" data-crudl-item-id="@e.UserEducationId">
+                    <h1 class="ItemBox-name">@e.InstitutionName</h1>
                     @{
                         var check = 0;
                         check += String.IsNullOrEmpty(e.DegreeCertificate) ? 0 : 1;
@@ -46,7 +46,7 @@ else
                         <p class="years-attended">@e.FromYearAttended - @e.ToYearAttended</p>
                     }
                     
-                    <div class="actions">
+                    <div class="actions ItemBox-actions">
                         <a href="#delete" class="delete-action crudl-delete">Delete</a>
                         <a href="#edit" class="edit-action crudl-update">Edit</a>
                     </div>

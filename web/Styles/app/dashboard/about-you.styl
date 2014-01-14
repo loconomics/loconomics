@@ -1,6 +1,9 @@
 /** Promote
 **/
 @import "../utils/BasicForm"
+@import "../utils/Crudl--basicStyle"
+@import "../utils/ItemBox"
+@import "../utils/ActionBox"
 
 .DashboardAboutYou {
     .DashboardPublicBio {
@@ -60,6 +63,35 @@
             input {
                 width: 100%;
                 box-sizing: border-box;
+            }
+        }
+    }
+    
+    .DashboardEducation {
+        .DashboardEducation-editor {
+            input {
+                width: 300px;
+            }
+            
+            select {
+                width: 60px;
+            }
+            
+            label {
+                width: 150px;
+                display: inline-block;
+            }
+        }
+        
+        DashboardEducation-list {
+            DashboardEducation-list-item {           
+                p {
+                    margin: 0;    
+                }
+
+                .years-attended {
+                    color: #828282;
+                }
             }
         }
     }

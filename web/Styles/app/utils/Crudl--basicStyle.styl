@@ -1,0 +1,27 @@
+/**
+  Crudl--basicStyle mixin-component styles.
+  It is an style or theme for the Crudl component.
+**/
+@import "nib"
+
+.Crudl--basicStyle {
+    .crudl-list li.crudl-item {
+        position: relative;
+        margin-bottom: 20px;
+        
+        .actions {
+            position: absolute;
+            right: 15px;
+            top: 0;
+            
+            a {
+                color: #00989A;
+                text-decoration: none;
+                
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
