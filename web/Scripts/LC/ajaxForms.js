@@ -62,7 +62,24 @@ function ajaxFormsSubmitHandler(event) {
     // To support sub-forms throuh fieldset.ajax, we must execute validations and verification
     // in two steps and using the real form to let validation mechanism work
     var isSubform = ctx.form.is('fieldset.ajax');
-    var actualForm = isSubform ? ctx.form.closest('form') : ctx.form;
+    var actualForm = isSubform ? ctx.form.closest('form') : ctx.form,
+      disabledSummaries = new jQuery();
+
+    // On subform validation, we don't want the form validation-summary controls to be affected
+    // by this validation (to avoid to show errors there that doesn't interest to the rest of the form)
+    // To fullfill this requisit, we need to hide it for the validator for a while and let only affect
+    // any local summary (inside the subform).
+    if (isSubform) {
+      disabledSummaries = actualForm
+      .find('[data-valmsg-summary=true]')
+      .filter(function () {
+        // Only those that are outside the subform
+        return !$.contains(ctx.form.get(0), this);
+      })
+      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+      // (in other words, using 'data' will not work)
+      .attr('data-valmsg-summary', 'false');
+    }
 
     // First at all, if unobtrusive validation is enabled, validate
     var valobject = actualForm.data('unobtrusiveValidation');
@@ -82,7 +99,14 @@ function ajaxFormsSubmitHandler(event) {
     // subform and not in other elements, to don't stop submit on not related errors.
     // Just look for marked elements:
     if (isSubform && ctx.form.find('.input-validation-error').length)
-        validationPassed = false;
+      validationPassed = false;
+
+    // Re-enable again that summaries previously disabled
+    if (isSubform) {
+      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+      // (in other words, using 'data' will not work)
+      disabledSummaries.attr('data-valmsg-summary', 'true');
+    }
 
     // Check validation status
     if (validationPassed === false) {     
