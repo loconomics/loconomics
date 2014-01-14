@@ -123,16 +123,16 @@ function initAjaxForms(options) {
     /* Attach a delegated handler for a special ajax form case: subforms, using fieldsets. */
     $(settings.element).on('click', 'fieldset.ajax .ajax-fieldset-submit',
         function (event) {
-            var form = $(this).closest('fieldset.ajax')
+          var form = $(this).closest('fieldset.ajax');
 
-            event.data = {
-                form: form,
-                box: form.closest('.ajax-box'),
-                action: form.data('ajax-fieldset-action'),
-                // Data saved:
-                changedElements: changesNotification.registerSave(form.get(0), form.find(':input[name]'))
-            };
-            return ajaxFormsSubmitHandler(event);
+          event.data = {
+            form: form,
+            box: form.closest('.ajax-box'),
+            action: form.data('ajax-fieldset-action'),
+            // Data saved:
+            changedElements: changesNotification.registerSave(form.get(0), form.find(':input[name]'))
+          };
+          return ajaxFormsSubmitHandler(event);
         }
     );
 }

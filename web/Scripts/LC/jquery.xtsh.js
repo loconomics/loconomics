@@ -120,7 +120,7 @@
 
             /** showElement as a jQuery method: xhide
             **/
-            jQuery.fn.xshow = function xhide(options) {
+            jQuery.fn.xshow = function xshow(options) {
                 showElement(this, options);
                 return this;
             };

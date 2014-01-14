@@ -115,8 +115,10 @@ function lcOnSuccess(data, text, jx) {
                 ctx.changedElements
             );
 
-        // Move focus to the errors appeared on the page:
-        moveFocusTo(jb.find('.validation-summary-errors'));
+        // Move focus to the errors appeared on the page (if there are):
+        var validationSummary = jb.find('.validation-summary-errors');
+        if (validationSummary.length)
+          moveFocusTo(validationSummary);
         ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }
