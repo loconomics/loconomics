@@ -1,0 +1,86 @@
+﻿@{
+    var selectedPage = (string)PageData["SelectedPage"];
+    var baseUrl = (string)PageData["BaseUrl"];
+    var activeProfile = (bool)PageData["ActiveProfile"];
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var poss = u.IsProvider ? LcData.UserInfo.GetUserPos() : null;
+    
+    // Relation of menu groups and its links, to detect what group must be 
+    // marked as 'is-current'
+    var selectedGroup = "";
+    switch (selectedPage) {
+        case "dashboard":
+        case "calendar":
+        case "promote":
+            selectedGroup = "tools";
+            break;
+        case "your-work":
+            selectedGroup = "your-work";
+            break;
+        case "about-you":
+        case "payments":
+        case "privacy":
+            selectedGroup = "account";
+            break;
+    }
+    
+    // Update selectedPage to include the positionID in the route for the your-work URLs.
+    // Since the first UrlData is the page itself, look up the second param
+    if (selectedPage == "your-work" && !UrlData[1].IsEmpty()) {
+        selectedPage += "/" + UrlData[1];
+    }
+}
+
+@helper menu(string a, string b) {
+    @(LcHelpers.CssCurrent(a, b, "is-current"))
+}
+
+<div class="DashboardSection-sidebar @(activeProfile ? "is-enabled" : "is-disabled")">
+    @if (activeProfile)
+    {
+        <a href="@LcData.UserInfo.GetMyPublicURL()" class="action go-publicProfile">View my public profile</a>
+    }
+    else
+    {
+        <div class="DashboardSection-sidebar-onboardingMessage">These features will become available once you finish activating your profile.</div>
+    }
+    <div class="DashboardSection-sidebar-menu @(menu("tools", selectedGroup))">
+        <h1>Tools</h1>
+        <ul>
+            <li class="u-withIcon go-dashboard @(menu("dashboard", selectedPage))"><a href="@(baseUrl)">Dashboard</a></li>
+            @if (u.IsProvider)
+            {
+                <li class="u-withIcon go-dashboardCalendar @(menu("calendar", selectedPage))"><a href="@(baseUrl)calendar/">Calendar</a></li>
+                <li class="u-withIcon go-dashboardPromote @(menu("promote", selectedPage))"><a href="@(baseUrl)promote/">Promote</a></li>
+            }
+        </ul>
+    </div>
+    @if (u.IsProvider)
+    {
+        <div class="DashboardSection-sidebar-menu @(menu("your-work", selectedGroup))">
+            <h1>Your work</h1>
+            <ul>
+                @foreach (var position in poss)
+                {
+                    <li class="@(menu("your-work/" + position.PositionID, selectedPage))" data-position-id="@(position.PositionID)">
+                        <a href="@(baseUrl)your-work/@(position.PositionID)/">@(position.PositionSingular)</a>
+                        <a href="#togglePositionState" class="js-togglePositionState">@(position.StatusID == 1 ? "on" : "off")</a>
+                    </li>
+                }
+                <li class="u-withIcon go-dashboardYourWork @(menu("your-work", selectedPage))"><a href="@(baseUrl)your-work/">Add position</a></li>
+            </ul>
+        </div>
+    }
+    <div class="DashboardSection-sidebar-menu @(menu("account", selectedGroup))">
+        <h1>Account</h1>
+        <ul>
+            <li class="u-withIcon go-dashboardAboutYou @(menu("about-you", selectedPage))"><a href="@(baseUrl)about-you/">About you</a></li>
+            @if (u.IsProvider)
+            {
+                <li class="u-withIcon go-dashboardPayments @(menu("payments", selectedPage))"><a href="@(baseUrl)payments/">Payments</a></li>
+            }
+            <li class="u-withIcon go-dashboardPrivacy @(menu("privacy", selectedPage))"><a href="@(baseUrl)privacy/">Privacy</a></li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@{
+    // Account/About-you
+    LcHelpers.SecurePage();
+    
+    // Errors are managed through this page ModelState offered to imported pages as PageState
+}
+<h1 class="DashboardSection-page-header">About you</h1>
+<p class="DashboardSection-page-introduction">
+    Loconomics is made up of your neighbors--some you know, some you don't. For those that don't know you,
+    let them know who you are by sharing a little about yourself outside of your professional life.
+</p>
+
+<div class="DashboardAboutYou">
+
+    <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$about-you/">
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Fill in your public bio</h2>
+            @RenderPage("AboutYou/_$PublicBio.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Add your personal website</h2>
+            @RenderPage("AboutYou/_$PersonalWebsite.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Add any relevant education</h2>
+            @RenderPage("AboutYou/_$Education.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Add verifications</h2>
+            @RenderPage("AboutYou/_$Verifications.cshtml", new { PageState = ModelState })
+        </div>
+        
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        
+        <div class="actions">
+            <button class="main-action" type="submit">Save</button>
+        </div>
+
+    </form>
+</div>
+
+<div class="InlineNotification InlineNotification--hasRequiredSections">
+    Required sections
+</div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+    }
+}

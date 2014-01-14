@@ -1,0 +1,86 @@
+﻿@* Page part to show and generate the code of the provider 'book-now'.
+    Does not process post data.
+*@
+@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.ProviderPage();
+    var u = LcData.UserInfo.GetUserRow();
+    
+    //var PageState = PageData["PageState"] ?? ModelState;
+    //var doReturn = PageState == ModelState;
+    
+    // Get User Book Code
+    string bookCode = "";
+    using (var db = Database.Open("sqlloco")) {
+        bookCode = (string)N.D(db.QueryValue("SELECT BookCode FROM users WHERE UserID = @0", WebSecurity.CurrentUserId));
+        // If there is no book code (minor cases), auto generate one
+        if (String.IsNullOrWhiteSpace(bookCode)) {
+            bookCode = LcData.UserInfo.GenerateBookCode(WebSecurity.CurrentUserId);
+            db.Execute("UPDATE Users SET BookCode = @1 WHERE UserID = @0", WebSecurity.CurrentUserId, bookCode);
+        }
+    }
+    // Get provider positions
+    var positions = LcData.UserInfo.GetUserPos(false);
+
+    var selectedSize = Request["size"] ?? "medium.png";
+    var selectedPosition = Request["positionid"] ?? "";
+    if (positions != null && positions.Count > 0) {
+        selectedPosition = positions[0].PositionID.ToString();
+    }
+    
+    var buttonText = "Click here to book now (on loconomics.com)";
+}
+<div class="DashboardBookNowButton">
+    <p class="DashboardSection-page-section-introduction">
+        You can easily add booking to your current website and allow your visitors to book and pay for your services
+        using our booking engine. We do not charge any booking fees to your customers if they click on the button
+        below from your website. Ask your web developer if you need help inputting the code.
+    </p>
+
+    <fieldset class="DashboardBookNowButton-buttonSizes">
+        <legend>Select a button size:</legend>
+        <div class="DashboardBookNowButton-buttonSizes-selection">
+            <label><input type="radio" name="size" value="small.png" @LcHelpers.IsChecked(selectedSize, "small.png") /> Small</label>
+            <label><input type="radio" name="size" value="medium.png" @LcHelpers.IsChecked(selectedSize, "medium.png") /> Medium</label>
+            <label><input type="radio" name="size" value="large.png" @LcHelpers.IsChecked(selectedSize, "large.png") /> Large</label>
+            <label><input type="radio" name="size" value="link-only" @LcHelpers.IsChecked(selectedSize, "link-only") /> Link only (no button)</label>
+        </div>
+        <p>Preview (actual size):</p>
+        <div class="DashboardBookNowButton-buttonSizes-preview"></div>
+    </fieldset>
+    <fieldset class="DashboardBookNowButton-buttonUrl">
+        <legend>Select where you'd like the button to link to (you can create multiple buttons if you'd like):</legend>
+        <ul>
+            @foreach (var pos in positions)
+            {
+                <li><label><input type="radio" name="positionid" value="@(pos.PositionID)" @LcHelpers.IsChecked(selectedPosition, pos.PositionID) />My @pos.PositionSingular booking page
+                    @if (pos.StatusID > 1)
+                    {
+                        <span>(<strong>This position is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                    }
+                </label></li>
+            }
+            <li><label><input type="radio" name="positionid" value="" @LcHelpers.IsChecked(selectedPosition, "") />My general profile
+                @if (!u.IsActiveProvider)
+                {
+                    <span>(<strong>This profile is not yet active</strong>--please visit the <a href="@(LcUrl.LangPath)Dashboard/Alerts/">alerts</a> section to complete it)</span>
+                }
+            </label></li>
+        </ul>
+    </fieldset>
+    <fieldset class="DashboardBookNowButton-buttonCode" data-base-url="@(LcUrl.AppUrl)book/@(bookCode)/" data-base-src="@(LcUrl.AppUrl)img/extern/book-me-button-">
+        <legend>Using "Source" or "Code" view in your website editor, copy the code below and paste it into yours:</legend>
+        <textarea name="button-source-code" readonly></textarea>
+        <script class="template DashboardBookNowButton-buttonCode-buttonTemplate" type="text/x-template">
+<!-- begin Loconomics book-me-button -->
+<a style="display:inline-block"><img alt="@buttonText" style="border:none" /></a>
+<!-- end Loconomics book-me-button -->
+        </script>
+        <script class="template DashboardBookNowButton-buttonCode-linkTemplate" type="text/x-template">
+<!-- begin Loconomics book-me-button -->
+<a>@buttonText</a>
+<!-- end Loconomics book-me-button -->
+        </script>
+    </fieldset>
+</div>

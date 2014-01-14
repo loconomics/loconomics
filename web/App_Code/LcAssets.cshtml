@@ -12,18 +12,22 @@
     }
     static public string AddVersion(string file, string extension) {
         if (!String.IsNullOrEmpty(AssetsVersion)) {
-            return file.Replace(extension, "." + AssetsVersion + extension);
+            if (file.EndsWith(extension)) {
+                return file.Replace(extension, "." + AssetsVersion + extension);
+            } else {
+                return file + "." + AssetsVersion + extension;
+            }
         }
         return file;
     }
 }
 
-@functions{ static public void AddStyle(string cssFile){
+@functions{ static public void AddStyle(string cssFile, bool useMinified = false){
     var p = ScopeStorage.CurrentScope;
     if (p["__LcStyles"] == null){
         p["__LcStyles"] = new List<string>();
     }
-    ((List<string>)p["__LcStyles"]).Add(cssFile);
+    ((List<string>)p["__LcStyles"]).Add(cssFile + (useMinified ? ".min" : ""));
 }}
 @helper GetStylesTags(){
     var p = ScopeStorage.CurrentScope;
@@ -37,12 +41,12 @@
     <link rel="stylesheet" href="@AddVersion(f, ".css")"/>
 }
 
-@functions{ static public void AddScript(string file){
+@functions{ static public void AddScript(string file, bool useMinified = false){
     var p = ScopeStorage.CurrentScope;
     if (p["__LcScripts"] == null){
         p["__LcScripts"] = new List<string>();
     }
-    ((List<string>)p["__LcScripts"]).Add(file);
+    ((List<string>)p["__LcScripts"]).Add(file + (useMinified ? ".min" : ""));
 }}
 @helper GetScriptsTags(){
     var p = ScopeStorage.CurrentScope;

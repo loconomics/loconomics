@@ -1,0 +1,66 @@
+/** Promote
+**/
+@import "../utils/BasicForm"
+
+.DashboardAboutYou {
+    .DashboardPublicBio {
+        
+        $photoWidth = 144px; /* 112px in public */
+        $photoHeight = 150px; /* 118px in public */
+    
+        .DashboardPublicBio-photo {
+            float: left;
+            /* position context */
+            position: relative;
+        
+            img {
+                border: 1px solid #CCC9C9;
+                border-radius: 4px 4px 4px 4px;
+                width: $photoWidth;
+                height: $photoHeight;
+                display: block;
+            }
+            
+            .DashboardPublicBio-photo-changeAction {
+                background-color: rgba(255, 255, 255, 0.65);
+                border-radius: 25px 25px 25px 25px;
+                color: black;
+                display: block;
+                font-size: 0.8em;
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                padding: 0 15px;
+                position: absolute;
+                text-decoration: none;
+                text-align: center;
+                text-transform: lowercase;
+                
+                &:hover {
+                    background-color: White;
+                }
+            }
+        }
+        
+        .DashboardPublicBio-bio {
+            /* We put the bio block on the right of the photo, that is floated, 
+                then we add a left margin of the photo size plus a margin.
+                photo width + border + margin
+            */
+            margin-left: $photoWidth + 2px + 8px;
+            /* Same height than image to be aligned */
+            height: $photoHeight + 2px;
+        }
+    }
+    
+    .DashboardPersonalWebsite {
+        fieldset {
+            padding: 0 10px;
+            
+            input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    }
+}

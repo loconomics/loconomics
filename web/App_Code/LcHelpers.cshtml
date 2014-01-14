@@ -341,9 +341,9 @@
         @Html.Raw("selected='selected'")
     }
 }
-@helper CssCurrent(string a, string b){
+@helper CssCurrent(string a, string b, string className = "current"){
     if (LcUtils.AreEquivalents(a, b)) {
-        @("current")
+        @(className)
     }
 }
 @functions{

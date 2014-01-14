@@ -2,7 +2,7 @@
  */
 var $ = require('jquery'),
     createIframe = require('./createIframe'),
-    autoFocus = require('./autoFocus');
+    moveFocusTo = require('./moveFocusTo');
 require('jquery.blockUI');
 require('./smoothBoxBlock');
 
@@ -93,7 +93,7 @@ function popup(url, size, complete, loadingText, options) {
                 if (/((^\$)|(\/\$))/.test(options.url)) {
                     contentHolder.append(data);
                     if (options.autoFocus)
-                        autoFocus(contentHolder);
+                        moveFocusTo(contentHolder);
                     if (options.autoSize) {
                         // Avoid miscalculations
                         var prevWidth = contentHolder[0].style.width;
@@ -127,7 +127,7 @@ function popup(url, size, complete, loadingText, options) {
                     contentHolder.remove();
                     $('.blockMsg').append(iframe);
                     if (options.autoFocus)
-                        autoFocus(iframe);
+                        moveFocusTo(iframe);
                 }
             }
         }, error: function (j, t, ex) {

@@ -1,0 +1,49 @@
+/**
+  BasicForm mixin-component styles.
+**/
+@import "nib"
+
+.BasicForm {
+    legend {
+        font-weight: bold;
+    }
+    
+    > ul > li,
+    fieldset > ul > li {
+        padding: 0px 10px;
+        margin: 6px 0px;
+        
+        input[type="radio"],
+        input[type="checkbox"]{
+            margin: 0 6px;
+        }
+        
+        > input[type="radio"]:first-child,
+        > input[type="checkbox"]:first-child{
+            margin: 0 6px 0 0;
+        }
+        
+        label {
+            padding: 0;
+        }
+    }
+    
+    fieldset {
+        margin: 0px 0px 10px;
+        padding: 0px;
+    }
+    
+    label {
+        padding: 0 10px;
+    }
+    
+    textarea {
+        width: 100%;
+    }
+    
+    textarea,
+    input[type=text],
+    select {
+        box-sizing: border-box;
+    }
+}

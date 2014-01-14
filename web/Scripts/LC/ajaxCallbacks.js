@@ -7,7 +7,7 @@ var popup = require('./popup'),
     changesNotification = require('./changesNotification'),
     createIframe = require('./createIframe'),
     redirectTo = require('./redirectTo'),
-    autoFocus = require('./autoFocus'),
+    moveFocusTo = require('./moveFocusTo'),
     smoothBoxBlock = require('./smoothBoxBlock');
 
 // AKA: ajaxErrorPopupHandler
@@ -115,7 +115,8 @@ function lcOnSuccess(data, text, jx) {
                 ctx.changedElements
             );
 
-        autoFocus(jb);
+        // Move focus to the errors appeared on the page:
+        moveFocusTo(jb.find('.validation-summary-errors'));
         ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }
@@ -175,8 +176,9 @@ function showOkGoPopup(ctx, data) {
 function doJSONAction(data, text, jx, ctx) {
     // If is a JSON result:
     if (typeof (data) === 'object') {
-        // Clean previous validation errors
-        validation.setValidationSummaryAsValid(ctx.box);
+        if (ctx.box)
+            // Clean previous validation errors
+            validation.setValidationSummaryAsValid(ctx.box);
 
         if (data.Code === 0) {
             // Special Code 0: general success code, show message saying that 'all was fine'

@@ -81,7 +81,8 @@ public static partial class LcData
         }
         #endregion
 
-        #region Basic Account Info
+        #region Account personal data
+        #region Query Basic Account Info
 
         /* Get a data row with the User information identified with 'userId' from the database
         */
@@ -120,7 +121,9 @@ public static partial class LcData
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                    SELECT count(*) FROM UserProfilePositions As UPS
+                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
+                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
@@ -197,7 +200,9 @@ public static partial class LcData
 
                                 -- Only Providers:
                                 ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS WHERE UPS.UserID = A.UserID AND UPS.Active=1
+                                    SELECT count(*) FROM UserProfilePositions As UPS
+                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
+                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
@@ -305,6 +310,192 @@ public static partial class LcData
             return u;
         }
 
+        #endregion
+
+        #region Update personal data
+        public static void UpdatePersonalAndContactData(
+            int userId,
+            string firstName,
+            string middleInitial,
+            string lastName,
+            string secondLastName,
+            string mobilePhone,
+            string alternatePhone,
+            string street1,
+            string street2,
+            string city,
+            int stateId,
+            int postalCodeId,
+            int countryId,
+            int languageId,
+            int? genderId)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Check what data changes to revoke verifications and update data:
+                db.Execute(@"
+                    DECLARE 
+                    @UserID int
+                    ,@FirstName varchar(50)
+                    ,@MiddleIn varchar(1)
+                    ,@LastName varchar(145)
+                    ,@SecondLastName varchar(145)
+                    ,@MobilePhone varchar(20)
+                    ,@AlternatePhone varchar(20)
+                    ,@AddressLine1 varchar(145)
+                    ,@AddressLine2 varchar(145)
+                    ,@City varchar(145)
+                    ,@StateProvinceID int
+                    ,@PostalCodeID int
+                    ,@CountryID int
+                    ,@GenderID int
+                    ,@LanguageID int
+
+                    SET @UserID = @0
+                    SET @FirstName = @1
+                    SET @MiddleIn = @2
+                    SET @LastName = @3
+                    SET @SecondLastName = @4
+                    SET @MobilePhone = @5
+                    SET @AlternatePhone = @6
+                    SET @AddressLine1 = @7
+                    SET @AddressLine2 = @8
+                    SET @City = @9
+                    SET @StateProvinceID = @10
+                    SET @PostalCodeID = @11
+                    SET @CountryID = @12
+                    SET @GenderID = @13
+                    SET @LanguageID = @14
+
+                    -- Getting the original data for that optional fields that
+                    -- passed as NULL instead of Empty.
+                    SELECT
+                        @MiddleIn = coalesce(@MiddleIn, MiddleIn)
+                        ,@SecondLastName = coalesce(@SecondLastName, SecondLastName)
+                        ,@AlternatePhone = coalesce(@AlternatePhone, AlternatePhone)
+                        ,@GenderID = coalesce(@GenderID, GenderID)
+                    FROM users
+                    WHERE UserId = @UserID
+                    
+                    SELECT  @AddressLine2 = coalesce(@AddressLine2, AddressLine2)
+                    FROM    Address
+                    WHERE   UserID = @UserID
+                            AND AddressTypeID = 1 -- Home address
+
+                    -- Saving all the data and updating verifications
+                    BEGIN TRAN
+
+                    /* Do checks to revoke verifications on some changes */
+                    -- @c var allow us check if data is equals (=1) or was changed (=0)
+                    DECLARE @c int
+
+                    -- Checking Full Name
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                                AND
+                            FirstName = @FirstName AND MiddleIn = @MiddleIn AND LastName = @LastName AND SecondLastName = @SecondLastName
+                    IF @c = 0 BEGIN
+                        -- Revoke social verifications (all VerificationCategoryID = 3)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID IN (
+                                    SELECT VerificationID
+                                    FROM    Verification
+                                    WHERE   VerificationCategoryID = 3
+                                )
+
+                        -- Revoke name verification (VerificationID=1)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 1
+
+                        -- Revoke background check verification (VerificationID=7)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 7
+                    END
+
+                    -- Checking Address
+                    SELECT  @c = count(*)
+                    FROM    Address
+                    WHERE   UserID = @UserID
+                            AND AddressTypeID = 1 -- Must be the type 1, its personal-home address
+                            AND AddressLine1 = @AddressLine1
+                            AND AddressLine2 = @AddressLine2
+                            AND City = @City
+                            AND StateProvinceID = @StateProvinceID
+                            AND PostalCodeID = @PostalCodeID
+                            AND CountryID = @CountryID
+                    IF @c = 0 BEGIN
+                        -- Revoke address verification (VerificationID=2)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 2
+                    END
+
+                    -- Checking Phone
+                    SELECT  @c = count(*)
+                    FROM    Users
+                    WHERE   UserID = @UserID
+                            AND MobilePhone = @MobilePhone
+                            AND AlternatePhone = @AlternatePhone
+                    IF @c = 0 BEGIN
+                        -- Revoke phone verification (VerificationID=4)
+                        UPDATE  UserVerification SET
+                            VerificationStatusID = 3, -- revoked status
+                            UpdatedDate = getdate()
+                        WHERE   VerificationID = 4
+                    END
+
+
+                    /** UPSERT Personal Address **/
+                    EXEC SetHomeAddress @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
+
+
+                    /* Update User Personal Data */
+                    UPDATE	Users
+                    SET     FirstName = @FirstName
+		                    ,MiddleIn = @MiddleIn
+		                    ,LastName = @LastName
+		                    ,SecondLastName = @SecondLastName
+		                    ,MobilePhone = @MobilePhone
+		                    ,AlternatePhone = @AlternatePhone
+
+		                    ,GenderID = @GenderID
+
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    -- A lot of direct and indirect alerts depend on contact info,
+                    -- execute all its alerts for all its positions
+                    EXEC TestAllUserAlerts @UserID
+
+                    COMMIT TRAN
+                ", userId,
+                 firstName,
+                 middleInitial,
+                 lastName,
+                 secondLastName,
+                 mobilePhone,
+                 alternatePhone,
+                 street1,
+                 street2,
+                 city,
+                 stateId,
+                 postalCodeId,
+                 countryId,
+                 genderId,
+                 languageId
+                );
+            }
+        }
+        #endregion
         #endregion
 
         #region Provider Position

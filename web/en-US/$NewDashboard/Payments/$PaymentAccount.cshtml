@@ -1,0 +1,60 @@
+﻿@{
+    LcHelpers.ProviderPage();
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var returns = (Dictionary<string, object>)PageData["Returns"] ?? new Dictionary<string, object>();
+    var doReturn = PageState == ModelState;
+
+    Braintree.WebhookNotification notification = null;
+    dynamic account = LcData.GetProviderPaymentAccount(WebSecurity.CurrentUserId);
+
+    if (account != null) {    
+        var gw = LcPayment.NewBraintreeGateway();
+            
+        try {
+            notification = gw.WebhookNotification.Parse(account.bt_signature, account.bt_payload);
+        } catch {}
+    }
+}
+
+<div class="DashboardPaymentAccount">
+@if (account == null)
+{
+    returns["NeedsForm"] = true;
+    returns["HasRequiredSections"] = true;
+    @RenderPage("$PaymentAccountForm.cshtml", new { PageState = PageState })
+}
+else
+{
+    <div class="DashboardSection-page-section">
+        <h2 class="DashboardSection-page-section-header">Account Status</h2>
+        @switch ((string)account.Status)
+        {
+            case "active": //Braintree.MerchantAccountStatus.ACTIVE:
+                <p>You're all set up with Braintree payments</p>
+                <p>If you need to update your personal or bank account information, please contact Braintree at 877.434.2894.</p>
+                break;
+            case "pending": //Braintree.MerchantAccountStatus.PENDING.ToString():
+                <p>Braintree is working on creating your account.</p>
+                break;
+            case "suspended": //Braintree.MerchantAccountStatus.SUSPENDED.ToString():
+                <p>There was an error in processing your Braintree application. Please contact Braintree at 877.434.2894.</p>
+                if (!String.IsNullOrEmpty(account.Message) || (notification != null && notification.Errors.Count > 0))
+                {
+                <p>Error(s) communicated by Braintree:</p>
+                <ul>
+                    @if (!string.IsNullOrEmpty(account.Message)) {
+                        <li>@account.Message</li>
+                    }
+                    @if (notification != null) {
+                        foreach(var err in notification.Errors.All()) {
+                            <li><span>(@(err.Code))</span> @err.Message</li>
+                        }
+                    }
+                </ul>
+                }
+                break;
+        }
+    </div>
+}
+</div>

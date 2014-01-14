@@ -103,6 +103,14 @@ module.exports = function(grunt) {
             './Scripts/LC/StringFormat:StringFormat'
           ]
         }
+      },
+      'dashboard': {
+        'src': './Scripts/app/new-dashboard.js',
+        'dest': './Scripts/new-dashboard.js',
+        'options': {
+          'debug': true,
+          'external': ['<%= browserify.app.options.external %>']
+        }
       }
     },
     
@@ -114,8 +122,12 @@ module.exports = function(grunt) {
       },
       'app': {
         'files': {
-          //'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
           'Scripts/app.min.js': ['<%= browserify.app.dest %>']
+        }
+      },
+      'dashboard': {
+        'files': {
+          'Scripts/new-dashboard.min.js': ['<%= browserify.dashboard.dest %>']
         }
       }
     },
@@ -126,7 +138,7 @@ module.exports = function(grunt) {
 
     jshint: {
       all: {
-        files: { src: ['Gruntfile.js', 'Scripts/app/*.js', 'Scripts/LC/*.js', 'Scripts/tests/**/*.js'] },
+        files: { src: ['Gruntfile.js', 'Scripts/app/**/*.js', 'Scripts/LC/**/*.js', 'Scripts/tests/**/*.js'] },
         options: {
           ignores: ['Scripts/tests/libs/*.js'],
           // options here to override JSHint defaults
@@ -152,17 +164,17 @@ module.exports = function(grunt) {
           //paths: ['path/to/import', 'another/to/import'],
           // use embedurl('test.png') in our code to trigger Data URI embedding
           urlfunc: 'embedurl',
+          'include css': true,
           banner: assetsBannerTpl
-          /*use: [
-            require('fluidity') // use stylus plugin at compile time
-          ],
+          /*
           import: [      //  @import 'foo', 'bar/moo', etc. into every .styl file
             'foo',       //  that is compiled. These might be findable based on values you gave
             'bar/moo'    //  to `paths`, or a plugin you added under `use`
           ]*/
         },
         files: {
-          'Styles/app.css': ['Styles/app/app.styl']
+          //'Styles/app.css': ['Styles/app/app.styl']
+          'Styles/new-dashboard.css': ['Styles/app/new-dashboard.styl']
         }
       },
     },
@@ -173,10 +185,15 @@ module.exports = function(grunt) {
           // Eliminamos todos los comentarios incluso el banner original
           keepSpecialComments: 0,
           // Se añade el banner de nuevo, que incluye un salto de línea antes del código
-          banner: assetsBannerTpl
+          banner: assetsBannerTpl,
+          /* NOTE: Disabled the advanced mode because causes next know problems with our code:
+            - html:before{ background gradient }  it gets removed some rules, letting background white
+           */
+          noAdvanced: true
         },
         files: {
-          'Styles/common.min.css': ['Styles/common.css']
+          'Styles/common.min.css': ['Styles/common.css'],
+          'Styles/new-dashboard.min.css': ['Styles/new-dashboard.css']
         }
       }
     },
@@ -192,7 +209,7 @@ module.exports = function(grunt) {
       },
       'plain-css': {
         files: ['Styles/App/*.css'],
-        tasks: ['concat:css-common', 'cssmin']
+        tasks: ['concat:css-common'] // 'cssmin'
       }
     }
   });
@@ -207,8 +224,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['browserify', 'uglify', 'concat:js-common', 'concat:css-common', 'cssmin']); // 'stylus', 'concat:css-common', 'cssmin'
-  grunt.registerTask('build-dev', ['browserify']); // 'stylus', 
+  grunt.registerTask('build-js', ['browserify', 'uglify', 'concat:js-common']);
+  grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin']);
+  grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common']);
+  grunt.registerTask('build', ['build-js', 'build-css']);
 
   grunt.registerTask('default', ['build', 'test']);
 
