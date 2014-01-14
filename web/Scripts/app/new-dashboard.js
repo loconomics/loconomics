@@ -44,4 +44,8 @@ $(function () {
   /* Profile photo */
   var changeProfilePhoto = require('./dashboard/changeProfilePhoto');
   changeProfilePhoto.on('.DashboardAboutYou');
+
+  /* About you / education */
+  var education = require('./dashboard/educationCrudl');
+  education.on('.DashboardAboutYou');
 });

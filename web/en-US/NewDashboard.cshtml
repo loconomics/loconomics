@@ -1,4 +1,5 @@
 ﻿@using WebMatrix.WebData;
+@using System.Text.RegularExpressions;
 @{
     LcHelpers.SecurePage();
     
@@ -26,7 +27,7 @@
         string folder = "$NewDashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
-            if (file.StartsWith("$") || file == "AboutYou/ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
+            if (Regex.IsMatch(file, @"\/\$") || file.StartsWith("$") || file == "AboutYou/ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
                 @RenderPage(LcUrl.RenderLangPath + folder + file);
                 return;
             } else {

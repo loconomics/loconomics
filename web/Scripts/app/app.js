@@ -305,7 +305,7 @@ $(function () {
   // almost for most of the case.
   function autoSetupValidation() {
     if ($(document).has('form').length)
-      validationHelper.setup();
+      validationHelper.setup('form');
   }
   autoSetupValidation();
   $(document).ajaxComplete(autoSetupValidation);

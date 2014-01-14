@@ -25,8 +25,8 @@ function setupValidation(reapplyOnlyTo) {
         // but without validation being already loaded and enabled)
         if ($ && $.validator && $.validator.unobtrusive) {
             // Apply the validation rules to the new elements
-            $(document).removeData('validator');
-            $(document).removeData('unobtrusiveValidation');
+            $(reapplyOnlyTo).removeData('validator');
+            $(reapplyOnlyTo).removeData('unobtrusiveValidation');
             $.validator.unobtrusive.parse(reapplyOnlyTo);
         }
     }

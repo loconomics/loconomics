@@ -34,7 +34,10 @@
             @RenderPage("AboutYou/_$Verifications.cshtml", new { PageState = ModelState })
         </div>
 
-        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        @* Light wrapper to avoid visibility problems (applying javascript educationCrudl *@
+        <div>
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        </div>
 
         <div class="actions">
             <button class="main-action" type="submit">Save</button>

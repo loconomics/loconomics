@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-01-13
+/*! Loconomics.com 2014-01-14
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -822,14 +822,14 @@ img.ui-datepicker-trigger{
 }
 /* .actions: container for buttons -actions, tasks, calculations, etc- */
 .actions {
-    text-align: right !important;
-    display: block !important;
+    text-align: right;
+    display: block;
     clear: both;
 }
 td.actions, th.actions {
     display: table-cell !important;
     clear: none;
-    text-align: center !important;
+    text-align: center;
 }
 form fieldset.actions{
     margin: 10px 0 !important;

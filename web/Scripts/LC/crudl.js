@@ -61,8 +61,13 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = 0;
           formpars.action = 'create';
           var xq = getExtraQuery($(this));
-          dtr.xshow(instance.settings.effects['show-editor']).reload(function (url, defaultUrl) {
-            return defaultUrl + '?' + $.param(formpars) + xq;
+          dtr.reload({
+            url: function (url, defaultUrl) {
+              return defaultUrl + '?' + $.param(formpars) + xq;
+            },
+            success: function() {
+              dtr.xshow(instance.settings.effects['show-editor']);
+            }
           });
           // Hide viewer when in editor:
           vwr.xhide(instance.settings.effects['hide-viewer']);
@@ -81,8 +86,13 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = itemid;
           formpars.action = 'update';
           var xq = getExtraQuery($(this));
-          dtr.xshow(instance.settings.effects['show-editor']).reload(function (url, defaultUrl) {
-            return defaultUrl + '?' + $.param(formpars) + xq;
+          dtr.reload({
+            url: function (url, defaultUrl) {
+              return defaultUrl + '?' + $.param(formpars) + xq;
+            },
+            success: function(){
+              dtr.xshow(instance.settings.effects['show-editor']);
+            }
           });
           // Hide viewer when in editor:
           vwr.xhide(instance.settings.effects['hide-viewer']);
@@ -126,7 +136,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           }
 
           // Custom event
-          crudl.trigger(instance.settings.events.delete);
+          crudl.trigger(instance.settings.events['delete']);
 
           return false;
         });
@@ -168,7 +178,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         dtr
         .on('click', '.crudl-cancel', finishEdit)
         .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
-        .on('ajaxSuccessPost', 'form', function (e, data) {
+        .on('ajaxSuccessPost', 'form, fieldset', function (e, data) {
           if (data.Code === 0 || data.Code == 5 || data.Code == 6) {
             // Show viewer and reload list:
             vwr.xshow(instance.settings.effects['show-viewer'])
