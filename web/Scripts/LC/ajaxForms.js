@@ -57,19 +57,36 @@ function ajaxFormsSubmitHandler(event) {
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
     var data = ctx.form.find(':input').serialize();
 
+    // Validations
+    var validationPassed = true;
+    // To support sub-forms throuh fieldset.ajax, we must execute validations and verification
+    // in two steps and using the real form to let validation mechanism work
+    var isSubform = ctx.form.is('fieldset.ajax');
+    var actualForm = isSubform ? ctx.form.closest('form') : ctx.form;
+
     // First at all, if unobtrusive validation is enabled, validate
-    var valobject = ctx.form.data('unobtrusiveValidation');
+    var valobject = actualForm.data('unobtrusiveValidation');
     if (valobject && valobject.validate() === false) {
       validationHelper.goToSummaryErrors(ctx.form);
-      // Validation is actived, was executed and the result is 'false': bad data, stop Post:
-      return;
+      validationPassed = false;
     }
 
     // If custom validation is enabled, validate
-    var cusval = ctx.form.data('customValidation');
+    var cusval = actualForm.data('customValidation');
     if (cusval && cusval.validate && cusval.validate() === false) {
       validationHelper.goToSummaryErrors(ctx.form);
-      // custom validation not passed, out!
+      validationPassed = false;
+    }
+
+    // To support sub-forms, we must check that validations errors happened inside the
+    // subform and not in other elements, to don't stop submit on not related errors.
+    // Just look for marked elements:
+    if (isSubform && ctx.form.find('.input-validation-error').length)
+        validationPassed = false;
+
+    // Check validation status
+    if (validationPassed === false) {     
+      // Validation failed, submit cannot continue, out!
       return false;
     }
 
