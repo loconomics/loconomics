@@ -68,7 +68,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           vwr.xhide(instance.settings.effects['hide-viewer']);
           // Custom event
           crudl.trigger(instance.settings.events['edit-starts'])
-          .trigger(instance.settings.events['create']);
+          .trigger(instance.settings.eventscreate);
 
           return false;
         });
@@ -88,7 +88,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           vwr.xhide(instance.settings.effects['hide-viewer']);
           // Custom event
           crudl.trigger(instance.settings.events['edit-starts'])
-          .trigger(instance.settings.events['update']);
+          .trigger(instance.settings.eventsupdate);
 
           return false;
         })
@@ -124,9 +124,9 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               complete: onComplete
             });
           }
-          
+
           // Custom event
-          crudl.trigger(instance.settings.events['delete'])
+          crudl.trigger(instance.settings.eventsdelete);
 
           return false;
         });

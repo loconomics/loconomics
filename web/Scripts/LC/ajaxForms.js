@@ -2,7 +2,8 @@
 var $ = jQuery || require('jquery'),
     callbacks = require('./ajaxCallbacks'),
     changesNotification = require('./changesNotification'),
-    blockPresets = require('./blockPresets');
+    blockPresets = require('./blockPresets'),
+    validationHelper = require('./validationHelper');
 
 // Global settings, will be updated on init but is accessed
 // through closure from all functions.
@@ -54,30 +55,22 @@ function ajaxFormsSubmitHandler(event) {
     ctx.form = (event.data ? event.data.form : null) || $(this);
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
-    // The multi-form-selector attribute allows set a css-selector to find forms or containers
-    // under the 'box' that will be sent in the POST, and not only the elements inside the 
-    // source 'form' (this last is the default behavior if not selector is specified -- single-form mode).
-    var multiFormSelector = ctx.form.data('multi-form-selector');
-    var data;
-    if (multiFormSelector)
-      data = ctx.box.find(multiFormSelector).find(':input').serialize();
-    else
-      data = ctx.form.find(':input').serialize();
+    var data = ctx.form.find(':input').serialize();
 
     // First at all, if unobtrusive validation is enabled, validate
     var valobject = ctx.form.data('unobtrusiveValidation');
     if (valobject && valobject.validate() === false) {
-        goToSummaryErrors(ctx.form);
-        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
-        return;
+      validationHelper.goToSummaryErrors(ctx.form);
+      // Validation is actived, was executed and the result is 'false': bad data, stop Post:
+      return;
     }
 
     // If custom validation is enabled, validate
     var cusval = ctx.form.data('customValidation');
     if (cusval && cusval.validate && cusval.validate() === false) {
-        goToSummaryErrors(ctx.form);
-        // custom validation not passed, out!
-        return false;
+      validationHelper.goToSummaryErrors(ctx.form);
+      // custom validation not passed, out!
+      return false;
     }
 
     // Data saved:
@@ -113,7 +106,8 @@ function initAjaxForms(options) {
     /* Attach a delegated handler for a special ajax form case: subforms, using fieldsets. */
     $(settings.element).on('click', 'fieldset.ajax .ajax-fieldset-submit',
         function (event) {
-            var form = $(this).closest('fieldset.ajax');
+            var form = $(this).closest('fieldset.ajax')
+
             event.data = {
                 form: form,
                 box: form.closest('.ajax-box'),
