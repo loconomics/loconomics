@@ -54,7 +54,15 @@ function ajaxFormsSubmitHandler(event) {
     ctx.form = (event.data ? event.data.form : null) || $(this);
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
-    var data = ctx.form.find(':input').serialize();
+    // The multi-form-selector attribute allows set a css-selector to find forms or containers
+    // under the 'box' that will be sent in the POST, and not only the elements inside the 
+    // source 'form' (this last is the default behavior if not selector is specified -- single-form mode).
+    var multiFormSelector = ctx.form.data('multi-form-selector');
+    var data;
+    if (multiFormSelector)
+      data = ctx.box.find(multiFormSelector).find(':input').serialize();
+    else
+      data = ctx.form.find(':input').serialize();
 
     // First at all, if unobtrusive validation is enabled, validate
     var valobject = ctx.form.data('unobtrusiveValidation');
