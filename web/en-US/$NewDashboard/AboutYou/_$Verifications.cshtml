@@ -6,6 +6,11 @@
     var doReturn = PageState == ModelState;
     
     var hasEmailVerification = LcData.UserInfo.HasEmailVerification(u.UserID);
+    
+    // Code for tests: testing the confirm-email button independant of the real state
+    if (!LcHelpers.InLive && Request["confirmemail"].AsBool()){
+        hasEmailVerification = false;
+    }
 }
 @* CRUDL: Right now, Crudl is disabled because there is no need for it and no editor pages (there is not edition capability for verifications) *@
 <fieldset class="DashboardVerifications"> @* crudl *@
@@ -25,7 +30,7 @@
             <div class="ActionBox">
                 <a href="#confirm-email">Confirm e-mail</a>
                 <p>
-                    We will re-send you the verification e-mail to let you confirm your address.
+                    We will send you a verification e-mail to let you confirm your address.
                 </p>
             </div>
         }

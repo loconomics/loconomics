@@ -2,10 +2,11 @@
     LcHelpers.SecurePage();
     
     var headerHtml = PageData["HeaderHtml"];
-    
+    var doNow = UrlData[0] == "now";
+
     var okMsg = "A verification e-mail has been re-sent and may take a few minutes to arrive. Please check both your inbox and spam folders. If you don't receive the e-mail, please click on the orange feedback tab on the left of the screen and let us know.";
 
-    if (IsPost) {
+    if (IsPost || doNow) {
         using(var db = Database.Open("sqlloco")) {
             var conf = db.QuerySingle(@"
                 SELECT  M.ConfirmationToken,
@@ -27,8 +28,7 @@
                 LcAuth.SendRegisterUserEmail(reg);
                 
                 if (Request.IsAjaxRequest()){
-                    LcHelpers.ReturnJsonResult(0, 
-                        okMsg);
+                    LcHelpers.ReturnJsonResult(0, okMsg);
                 }
             } else {
                 ModelState.AddFormError("We're sorry, we weren't able to send you your verification email. Please contact support@loconomics.com for assistance.");

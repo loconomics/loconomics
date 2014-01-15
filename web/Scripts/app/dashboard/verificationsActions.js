@@ -8,15 +8,6 @@ require('jquery.blockUI');
 var actions = exports.actions = {};
 
 actions.facebook = function () {
-  /*var fbpop = popup(LcUrl.LangPath + 'Account/$ConnectWithFacebook/', popup.size('small'), function () {
-  // On popup loaded
-  $(document).one('connectedToFacebook', function () {
-  fbpop.on('popup-closed', function () {
-  location.reload();
-  });
-  });
-  });
-  */
   /* Facebook connect */
   var FacebookConnect = require('LC/FacebookConnect');
   var fb = new FacebookConnect({
@@ -35,7 +26,7 @@ actions.facebook = function () {
 };
 
 actions.email = function () {
-  popup(LcUrl.LangPath + 'Account/$ResendConfirmationEmail/', popup.size('small'));
+  popup(LcUrl.LangPath + 'Account/$ResendConfirmationEmail/now/', popup.size('small'));
 };
 
 var links = exports.links = {
