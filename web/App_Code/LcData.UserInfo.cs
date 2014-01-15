@@ -894,6 +894,13 @@ public static partial class LcData
                 ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
             }
         }
+
+        public static bool HasEmailVerification(int userID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                return N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", userID)) == null;
+            }
+        }
         #endregion
 
         #region Stats

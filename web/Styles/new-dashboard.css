@@ -918,7 +918,7 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 
-/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1424,4 +1424,44 @@
 /* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 .DashboardAboutYou .DashboardEducation DashboardEducation-list DashboardEducation-list-item .years-attended {
   color: #828282;
+}
+
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 100 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-item .DashboardVerifications-list-item-status {
+  color: Red;
+}
+
+/* line 106 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-item .DashboardVerifications-list-item-status--confirmed {
+  color: Green;
+}
+
+/* line 111 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 112 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-icons li {
+  background: no-repeat center left;
+  padding: 0 0 0 30px;
+  margin: 6px 0;
+}
+
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-icons li.license {
+  background-image: url("../img/theme/icon-licenses.png");
+}
+
+/* line 121 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-icons li.verification {
+  background-image: url("../img/theme/icon-verifications.png");
+}
+
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-icons li.share {
+  background-image: url("../img/theme/icon-share-medium.png");
 }

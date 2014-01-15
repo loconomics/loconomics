@@ -48,4 +48,7 @@ $(function () {
   /* About you / education */
   var education = require('./dashboard/educationCrudl');
   education.on('.DashboardAboutYou');
+
+  /* About you / verifications */
+  require('./dashboard/verificationsActions').on('.DashboardVerifications');
 });

@@ -136,10 +136,16 @@ function popup(url, size, complete, loadingText, options) {
         }, complete: options.complete
     });
 
-    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
     var returnedBlock = $('.blockUI');
+
+    returnedBlock.on('click', '.close-popup', function () {
+      $.unblockUI();
+      returnedBlock.trigger('popup-closed');
+      return false;
+    });
+    
     returnedBlock.closePopup = function () {
-        $.unblockUI();
+      $.unblockUI();
     };
     return returnedBlock;
 }

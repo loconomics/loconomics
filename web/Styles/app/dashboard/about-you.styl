@@ -95,4 +95,38 @@
             }
         }
     }
+    
+    .DashboardVerifications {      
+        .DashboardVerifications-list {
+            .DashboardVerifications-list-item {
+                .DashboardVerifications-list-item-status {
+                    color: Red;
+                }
+                
+                .DashboardVerifications-list-item-status--confirmed{
+                    color: Green;
+                }
+            }
+
+            .DashboardVerifications-list-icons {
+                li{
+                    background: no-repeat center left;
+                    padding: 0 0 0 30px;
+                    margin: 6px 0;
+
+                    &.license{
+                        background-image: url('../img/theme/icon-licenses.png');
+                    }
+                
+                    &.verification{
+                        background-image: url('../img/theme/icon-verifications.png');
+                    }
+                
+                    &.share{
+                        background-image: url('../img/theme/icon-share-medium.png');
+                    }
+                }
+            }
+        }
+    }
 }

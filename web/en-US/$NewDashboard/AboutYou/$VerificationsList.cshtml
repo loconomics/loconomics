@@ -1,0 +1,66 @@
+﻿@*
+    List user verifications
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
+    
+    var newWay = PageData["NewDesign"] ?? false;
+    
+    var hasEmailVerification = PageData["HasEmailVerification"] ?? LcData.UserInfo.HasEmailVerification(u.UserID);
+}
+@if (verifications != null && verifications.Count > 0)
+{
+    <div class="@(newWay ? "" : "DashboardVerifications-list-icons")">
+        <ul>
+            @if (newWay)
+            {
+                if (hasEmailVerification)
+                {
+                    <li class="DashboardVerifications-list-item ItemBox">
+                        <h1 class="ItemBox-name">Email</h1>
+
+                        <p><span class="DashboardVerifications-list-item-status DashboardVerifications-list-item-status--confirmed">Confirmed</span></p>
+                    </li>
+                }
+                foreach (var v in verifications)
+                {
+                    <li class="DashboardVerifications-list-item ItemBox crudl-item" data-crudl-item-id="@v.VerificationID">
+                        <h1 class="ItemBox-name">@v.VerificationType</h1>
+                    
+                        <p><span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">@v.VerificationStatusName</span> on @v.LastVerifiedDate</p>
+                      
+                        @* There is no way to edit verifications right now
+                        <div class="actions ItemBox-actions">
+                            <a href="#delete" class="crudl-delete">Delete</a>
+                            <a href="#edit" class="crudl-update">Edit</a>
+                        </div>
+                        *@
+                    </li>
+                }
+            }
+            else
+            {
+                if (hasEmailVerification)
+                {
+                    <li class="DashboardVerifications-list-item verification">
+                        Email: <span class="DashboardVerifications-list-item-status DashboardVerifications-list-item-status--confirmed">Confirmed</span>
+                    </li>
+                }
+                foreach (var v in verifications)
+                {
+                    <li class="DashboardVerifications-list-item @v.Icon">
+                        @v.VerificationType:
+                        <span class="DashboardVerifications-list-item-status @(v.VerificationStatusID == 1 ? "DashboardVerifications-list-item-status--confirmed" : "")">
+                            @v.VerificationStatusName
+                        </span> on @v.LastVerifiedDate
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}

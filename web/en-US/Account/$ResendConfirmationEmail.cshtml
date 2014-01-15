@@ -36,11 +36,7 @@
         }
     }
     
-    var needVerification = false;
-    
-    using (var db = Database.Open("sqlloco")) {
-        needVerification = N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", WebSecurity.CurrentUserId)) != null;
-    }
+    var needVerification = !LcData.UserInfo.HasEmailVerification(WebSecurity.CurrentUserId);
 }
 @Html.Raw(headerHtml)
 @if (needVerification)
