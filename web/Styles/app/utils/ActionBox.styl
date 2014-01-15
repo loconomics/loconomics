@@ -12,17 +12,18 @@
 /* General Mixim for use inside ActionBox and outside, common add-item icon applied to links */
 AddItemIconLink() {
     background: url('../img/theme/add-new-button.png') no-repeat right center;
-    min-height: 23px;
-    padding-right: 34px;
+    /* Image size is 28x28px */
+    line-height: 28px;
+    /* Width with 6px of left-margin */
+    padding-right: 28px + 6px;
     display: block;
     color: Black;
     text-decoration: none;
 }
 
 .ActionBox {
-    border: 1px solid black;
-    border-radius: 12px;
-    padding: 8px 14px;
+    border: 1px solid $colorGray;
+    padding: 20px 18px 28px 26px;
     display: inline-block;
     vertical-align: top;
     width: 314px;
@@ -42,8 +43,17 @@ AddItemIconLink() {
     
     > p {
         margin: 0;
+        /* Left the right space empty under the icon */
+        padding-right: 28px + 6px;
         color: Black;
         text-align: justify;
+    }
+
+    /** Themes **/
+    &.ActionBox--rounded {
+        border-color: Black;
+        border-radius: 12px;
+        padding: 8px 14px;        
     }
 }
 

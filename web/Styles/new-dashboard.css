@@ -1240,12 +1240,10 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionBox {
-  border: 1px solid #000;
-  -webkit-border-radius: 12px;
-  border-radius: 12px;
-  padding: 8px 14px;
+  border: 1px solid #747474;
+  padding: 20px 18px 28px 26px;
   display: inline-block;
   vertical-align: top;
   width: 314px;
@@ -1254,12 +1252,15 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+/** Themes **/
 }
 
-/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionBox > a {
   background: url("../img/theme/add-new-button.png") no-repeat right center;
-  min-height: 23px;
+/* Image size is 28x28px */
+  line-height: 28px;
+/* Width with 6px of left-margin */
   padding-right: 34px;
   display: block;
   color: Black;
@@ -1271,14 +1272,24 @@
   text-align: left;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionBox > p {
   margin: 0;
+/* Left the right space empty under the icon */
+  padding-right: 34px;
   color: Black;
   text-align: justify;
 }
 
 /* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionBox.ActionBox--rounded {
+  border-color: Black;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionsBoxList {
   zoom: 1;
 }
@@ -1295,16 +1306,16 @@
   clear: both;
 }
 
-/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
-/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionsBoxList .ActionBox:nth-child(odd) {
   float: left;
   clear: left;
   margin-right: 0;
 }
 
-/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionsBoxList .ActionBox:nth-child(even) {
   float: right;
   clear: right;

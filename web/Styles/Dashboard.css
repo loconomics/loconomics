@@ -1157,7 +1157,7 @@ html.js .user-verified-licenses h5 {
 .package-pricing-type .add-package > a,
 .add-package-action {
     background: url('../img/theme/add-new-button.png') no-repeat right center;
-    min-height: 23px;
+    line-height: 28px;
     padding-right: 34px;
     display: block;
     color: Black;
