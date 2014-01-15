@@ -8,14 +8,30 @@ require('jquery.blockUI');
 var actions = exports.actions = {};
 
 actions.facebook = function () {
-  var fbpop = popup(LcUrl.LangPath + 'Account/$ConnectWithFacebook/', popup.size('small'), function () {
-    // On popup loaded
-    $(document).one('connectedToFacebook', function () {
-      fbpop.on('popup-closed', function () {
-        location.reload();
-      });
+  /*var fbpop = popup(LcUrl.LangPath + 'Account/$ConnectWithFacebook/', popup.size('small'), function () {
+  // On popup loaded
+  $(document).one('connectedToFacebook', function () {
+  fbpop.on('popup-closed', function () {
+  location.reload();
+  });
+  });
+  });
+  */
+  /* Facebook connect */
+  var FacebookConnect = require('LC/FacebookConnect');
+  var fb = new FacebookConnect({
+    resultType: 'json',
+    urlSection: 'Verify',
+    appId: $('html').data('fb-appid'),
+    permissions: 'email,user_about_me',
+    loadingText: 'Verifing'
+  });
+  $(document).on(fb.connectedEvent, function () {
+    $(document).on('popup-closed', function () {
+      location.reload();
     });
   });
+  fb.connect();
 };
 
 actions.email = function () {

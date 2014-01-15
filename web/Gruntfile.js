@@ -85,7 +85,10 @@ module.exports = function(grunt) {
         }
       },
       'app': {
-        'src': './Scripts/app/app.js',
+        'src': [
+          './Scripts/app/app.js',
+          './Scripts/LC/FacebookConnect.js'
+        ],
         'dest': './Scripts/app.js',
         'options': {
           // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
@@ -100,7 +103,8 @@ module.exports = function(grunt) {
             'jquery.formatter'
           ],
           alias: [
-            './Scripts/LC/StringFormat:StringFormat'
+            './Scripts/LC/StringFormat:StringFormat',
+            './Scripts/LC/FacebookConnect.js:LC/FacebookConnect'
           ]
         }
       },
@@ -109,7 +113,7 @@ module.exports = function(grunt) {
         'dest': './Scripts/new-dashboard.js',
         'options': {
           'debug': true,
-          'external': ['<%= browserify.app.options.external %>']
+          'external': ['<%= browserify.app.options.external %>', 'LC/FacebookConnect']
         }
       }
     },

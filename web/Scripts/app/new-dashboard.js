@@ -51,4 +51,5 @@ $(function () {
 
   /* About you / verifications */
   require('./dashboard/verificationsActions').on('.DashboardVerifications');
+
 });
