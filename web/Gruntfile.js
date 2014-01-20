@@ -184,20 +184,24 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
-      all: {
-        options: {
-          // Eliminamos todos los comentarios incluso el banner original
-          keepSpecialComments: 0,
-          // Se añade el banner de nuevo, que incluye un salto de línea antes del código
-          banner: assetsBannerTpl,
-          /* NOTE: Disabled the advanced mode because causes next know problems with our code:
-            - html:before{ background gradient }  it gets removed some rules, letting background white
-           */
-          noAdvanced: true
-        },
+      options: {
+        // Eliminamos todos los comentarios incluso el banner original
+        keepSpecialComments: 0,
+        // Se añade el banner de nuevo, que incluye un salto de línea antes del código
+        banner: assetsBannerTpl,
+        /* NOTE: Disabled the advanced mode because causes next know problems with our code:
+          - html:before{ background gradient }  it gets removed some rules, letting background white
+          */
+        noAdvanced: true
+      },
+      css: {
         files: {
-          'Styles/common.min.css': ['Styles/common.css'],
           'Styles/new-dashboard.min.css': ['Styles/new-dashboard.css']
+        }
+      },
+      'plain-css': {
+        files: {
+          'Styles/common.min.css': ['Styles/common.css']
         }
       }
     },
@@ -205,15 +209,15 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['<%= jshint.all.files.src %>'],
-        tasks: ['jshint', 'browserify'] // 'qunit', 'uglify'
+        tasks: ['jshint', 'browserify', 'qunit', 'uglify']
       },
       css: {
         files: ['Styles/**/*.styl'],
-        tasks: ['stylus'] // 'cssmin'
+        tasks: ['stylus', 'cssmin:css']
       },
       'plain-css': {
         files: ['Styles/App/*.css'],
-        tasks: ['concat:css-common'] // 'cssmin'
+        tasks: ['concat:css-common', 'cssmin:plain-css']
       }
     }
   });
