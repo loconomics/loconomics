@@ -9,14 +9,16 @@
     var user = LcData.UserInfo.GetUserRowWithContactData();
     
     // Data
-    string FirstName, LastName, MobilePhone, Street, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
+    string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
     DateTime? BirthDate = null;
 
     if (IsPost) {
         FirstName = Request["firstname"];
         LastName = Request["lastname"];
         MobilePhone = Request["mobilephone"];
-        Street = Request["streetaddress"];
+        AlternatePhone = Request["alternatephone"];
+        AddressLine1 = Request["addressline1"];
+        AddressLine2 = Request["addressline2"];
         City = Request["city"];
         PostalCode = Request["postalcode"];
         StateCode = Request["state"];
@@ -29,7 +31,9 @@
         FirstName = user.FirstName;
         LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
         MobilePhone = user.MobilePhone;
-        Street = user.AddressLine1;
+        AlternatePhone = user.AlternatePhone;
+        AddressLine1 = user.AddressLine1;
+        AddressLine2 = user.AddressLine2;
         City = user.City;
         PostalCode = user.PostalCode;
         StateCode = user.StateProvinceCode;
@@ -90,9 +94,9 @@
                     LastName,
                     null,
                     MobilePhone,
-                    null,
-                    Street,
-                    null,
+                    AlternatePhone,
+                    AddressLine1,
+                    AddressLine2,
                     City,
                     stateId,
                     postalCodeId,
@@ -109,7 +113,8 @@
                     Email = user.Email,
                     MobilePhone = MobilePhone
                 }, new LcData.Address {
-                    AddressLine1 = Street,
+                    AddressLine1 = AddressLine1,
+                    AddressLine2 = AddressLine2,
                     PostalCode = PostalCode,
                     City = City,
                     StateProvinceCode = StateCode
@@ -149,7 +154,11 @@
         </li>
         <li><input placeholder="Mobile phone number" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
         </li>
-        <li><input placeholder="Street address" type="text" name="streetaddress" value="@Street" @Validation.GetHtml("streetaddress")/>
+        <li><input placeholder="Alternate phone number" type="text" name="alternatephone" value="@AlternatePhone" @Validation.GetHtml("alternatephone")/>
+        </li>
+        <li><input placeholder="Address line 1" type="text" name="addressline1" value="@AddressLine1" @Validation.GetHtml("addressline1")/>
+        </li>
+        <li><input placeholder="Address line 2" type="text" name="addressline2" value="@AddressLine2" @Validation.GetHtml("addressline2")/>
         </li>
         <li><input placeholder="City" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
         </li>

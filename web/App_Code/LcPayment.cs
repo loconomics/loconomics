@@ -412,6 +412,7 @@ public static class LcPayment
                 Address = new AddressRequest
                 {
                     StreetAddress = address.AddressLine1,
+                    ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,
