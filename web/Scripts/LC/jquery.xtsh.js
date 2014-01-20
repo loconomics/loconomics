@@ -99,7 +99,7 @@
                 // then detection and action must be done per element:
                 $(element).each(function () {
                     // Reusing function, with explicit toggle value
-                    LC.toggleElement(this, $(this).is(':visible'), options);
+                    toggleElement(this, !$(this).is(':visible'), options);
                 });
             }
             if (toggle)
