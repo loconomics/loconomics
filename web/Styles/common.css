@@ -205,7 +205,7 @@ Yellow 	#F0B600
 */
 
 body {
-    color: #747474;
+    color: #333333;
     font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
     font-size: .9em;
     line-height: 150%;
@@ -283,7 +283,7 @@ form textarea {
     padding: 0.31em 0.47em;   
     font-size: .9em;
     background-color: #f5f5f5;
-    color: #747474;
+    color: #333333;
     /*box-shadow: 0 0 0.1em 0.18em #FFFFFF inset, 0 0 0 0.1em #C9C9C9 inset;*/
     box-shadow: 0 0 2px 2px #FFFFFF inset;
     -moz-box-shadow: 0 0 2px 2px #FFFFFF inset;
@@ -305,7 +305,7 @@ form textarea{
 form input[type="text"]:focus,
 form input[type="password"]:focus,
 form textarea:focus{
-    border-color: #747474;
+    border-color: #333333;
     outline: none;
 }
 form input[type="text"].error, form input[type="password"].error {
@@ -315,10 +315,10 @@ form input[type="text"].error, form input[type="password"].error {
 form select:focus,
 form input[type="checkbox"]:focus,
 form input[type="radio"]:focus {
-    box-shadow: 0 0 0 1px #747474;
-    -moz-box-shadow: 0 0 0 1px #747474;
-    -o-box-shadow: 0 0 0 1px #747474;
-    -webkit-box-shadow: 0 0 0 1px #747474;
+    box-shadow: 0 0 0 1px #333333;
+    -moz-box-shadow: 0 0 0 1px #333333;
+    -o-box-shadow: 0 0 0 1px #333333;
+    -webkit-box-shadow: 0 0 0 1px #333333;
     outline: none;
 }
 
@@ -499,6 +499,7 @@ div.scripts { display: none; }
     text-align: center;
     top: 17px;
     width: 100%;
+    color: #747474;
 }
 #site-header .wrap { position: relative; width: 960px; margin: 0 auto; }
 #site-header a.button { color: #fff; }
@@ -919,7 +920,7 @@ form.has-changes .actions .main-action:hover,
     box-shadow: 0 0 5px 2px #00989a;
 }
 .report-action {
-    color: #747474;
+    color: #333333;
     text-decoration: none;
     margin: 0 5px;
 }
@@ -1992,7 +1993,7 @@ html.boxshadow #loginBox .field-validation-error{
     background: #88cfd0;
 }
 .tabbed.wizard > .tabs > li.current a .label {
-    color: #747474;
+    color: #333333;
 }
 
 /*
@@ -2186,11 +2187,11 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingDetails .w-BookingDetails-title {
     margin: 0 0 .3em;
     font-size: 1.5em;
-    color: #747474;
+    color: #333333;
 }
 .w-BookingDetails .c-SectionTitle {
     font-weight: bold;
-    color: #747474;
+    color: #333333;
     margin: 1em 0 0 !important;
     font-size: 1.1em;
 }
@@ -2262,7 +2263,7 @@ html.boxshadow #loginBox .field-validation-error{
 /*= w-BookingRequestedTimes */
 .w-BookingRequestedTimes .w-BookingRequestedTimes-optionTitle {
     font-size: .9em;
-    color: #747474;
+    color: #333333;
     font-weight: normal;
     margin: 4px 0 0;
     line-height: 1em;
@@ -2273,7 +2274,7 @@ html.boxshadow #loginBox .field-validation-error{
 
 /*= w-ProviderPackage */
 .w-ProviderPackage {
-    color: #747474;
+    color: #333333;
 
     background: none repeat scroll 0 0 white;
     border: 3px solid #61bdbe;
@@ -2314,7 +2315,7 @@ html.boxshadow #loginBox .field-validation-error{
 /*= w-ProviderPackage inside w-BookingDetails */
 .w-BookingDetails .w-ProviderPackage {
     border-radius: 0;
-    border: 1px solid #747474;
+    border: 1px solid #333333;
     background: #F4F4F4;
 }
 .w-BookingDetails .w-ProviderPackage-name {
@@ -2623,12 +2624,12 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories ul > li > .details > .description {
     background: white;
     border-radius: 4px;
-    border: 2px solid #747474;
+    border: 2px solid #333333;
     padding: 10px;
-    box-shadow: 0 5px 7px -3px #747474;
-    -moz-box-shadow: 0 5px 7px -3px #747474;
-    -o-box-shadow: 0 5px 7px -3px #747474;
-    -webkit-box-shadow: 0 5px 7px -3px #747474;
+    box-shadow: 0 5px 7px -3px #333333;
+    -moz-box-shadow: 0 5px 7px -3px #333333;
+    -o-box-shadow: 0 5px 7px -3px #333333;
+    -webkit-box-shadow: 0 5px 7px -3px #333333;
 }
 .search-categories ul > li > .details > .description > h5 {
     margin: 0;
@@ -2664,7 +2665,7 @@ html.boxshadow #loginBox .field-validation-error{
     display: inline-block;
     position: absolute;
 
-    border-bottom-color: #747474;
+    border-bottom-color: #333333;
     left: 33px;
     top: -8px;
 }
@@ -3118,7 +3119,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 }
 #welcomepopup a.login {
     background-color: #f5f5f5;
-    color: #747474 !important;
+    color: #333333 !important;
     border: 1px solid #ababab !important;
     margin: 0 1em;
 }

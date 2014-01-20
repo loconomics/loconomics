@@ -91,7 +91,7 @@
 
 /* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section {
-  color: #747474;
+  color: #333;
 }
 
 /* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
@@ -1135,7 +1135,7 @@
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
 .ItemBox {
-  color: #747474;
+  color: #333;
   background: none repeat scroll 0 0 #fff;
   border: 3px solid #61bdbe;
   -webkit-border-radius: 15px 15px 15px 15px;
@@ -1196,7 +1196,7 @@
   top: 15px !important;
 }
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1242,7 +1242,7 @@
 
 /* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 .ActionBox {
-  border: 1px solid #747474;
+  border: 1px solid #333;
   padding: 20px 18px 28px 26px;
   display: inline-block;
   vertical-align: top;
