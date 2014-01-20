@@ -6,6 +6,7 @@
     var doReturn = PageState == ModelState;
     
     var Bio = Request["publicbio"] ?? u.PublicBio;
+    var GenderID = Request["genderid"] ?? u.GenderID;
     
     Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
     
@@ -16,9 +17,11 @@
                 DECLARE 
                 @UserID int
                 ,@PublicBio varchar(4000)
+                ,@GenderID int
 
                 SET @UserID = @0
                 SET @PublicBio = @1
+                SET @GenderID = @2
 
                 BEGIN TRAN
 
@@ -26,6 +29,7 @@
                 UPDATE	Users
                 SET     
 		                PublicBio = @PublicBio
+                        ,GenderID = @GenderID
 
                         ,UpdatedDate = getdate()
                         ,ModifiedBy = 'sys'
@@ -42,6 +46,15 @@
             }
         }
     }
+    
+    dynamic genders = null;
+    using (var db = Database.Open("sqlloco")){
+        genders = db.Query(@"
+            SELECT  GenderID, GenderSingular
+            FROM    Gender
+            WHERE   LanguageID=@0 AND CountryID=@1 AND GenderID > 0
+        ", 1, 1);
+    }
 }
 <fieldset class="DashboardPublicBio">
     <div class="DashboardPublicBio-photo">
@@ -52,5 +65,13 @@
     <div class="DashboardPublicBio-bio">
         <textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community about yourself." @Validation.GetHtml("publicbio")>@Bio</textarea>
         @Html.ValidationMessage("publicbio")
+    </div>
+    <div class="DashboardPublicBio-gender">
+        <span class="DashboardPublicBio-gender-label">Gender Identity:</span>
+        @foreach (var gender in genders)
+        {
+            <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
+        }
+        @Html.ValidationMessage("gender")
     </div>
 </fieldset>
