@@ -918,7 +918,7 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1478,4 +1478,17 @@
 /* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
 .DashboardAboutYou .DashboardVerifications .DashboardVerifications-list .DashboardVerifications-list-icons li.share {
   background-image: url("../img/theme/icon-share-medium.png");
+}
+
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 144 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+
+/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\about-you.styl */
+.DashboardAboutYou .DashboardContactInfo li input,
+.DashboardAboutYou .DashboardContactInfo li select {
+  width: 70% !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }

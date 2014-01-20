@@ -3,6 +3,8 @@
     LcHelpers.SecurePage();
     
     // Errors are managed through this page ModelState offered to imported pages as PageState
+    
+    var u = LcData.UserInfo.GetUserRow();
 }
 <h1 class="DashboardSection-page-header">About you (outside of work)</h1>
 <p class="DashboardSection-page-introduction">
@@ -13,6 +15,13 @@
 <div class="DashboardAboutYou BasicForm ajax-box">
 
     <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$NewDashboard/$about-you/">
+
+        @if (u.IsCustomer && !u.IsProvider) {
+            <div class="DashboardSection-page-section is-required">
+                <h2 class="DashboardSection-page-section-header">Add your contact information</h2>
+                @RenderPage("AboutYou/_$ContactInfo.cshtml", new { PageState = ModelState })
+            </div>
+        }
 
         <div class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Fill in your public bio</h2>

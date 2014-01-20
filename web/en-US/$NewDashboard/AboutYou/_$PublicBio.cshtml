@@ -39,7 +39,7 @@
                 EXEC TestAlertPublicBio @UserID
 
                 COMMIT TRAN
-            ", u.UserID, Bio);
+            ", u.UserID, Bio, GenderID);
             
             if (doReturn) {
                 LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
