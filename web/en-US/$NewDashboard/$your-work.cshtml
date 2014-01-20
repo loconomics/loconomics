@@ -1,5 +1,43 @@
 ﻿@{
     // Your-work(/positionID)
     LcHelpers.ProviderPage();
+    var posID = UrlData[1].AsInt();
+    
+    var p = LcData.UserInfo.GetUserPos(WebSecurity.CurrentUserId, posID);
 }
-<h1 class="DashboardSection-page-header">Your work @UrlData[1]</h1>
+<h1 class="DashboardSection-page-header">About Your Services (@p.PositionSingular)</h1>
+
+<p class="DashboardSection-page-introduction">
+    Your profile is your portal to communicating your services to potential clients in the marketplace.
+    We're here to help you along with anything you need to put your best face forward so please don't hesitate
+    to ask for help or send use feedback.
+</p>
+
+<div class="DashboardYourWork ajax-box">
+    <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$NewDashboard/$your-work/@(posID)/">
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Describe your services</h2>
+            @RenderPage("YourWork/_$Services.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
+        <div>
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        </div>
+
+        <div class="actions">
+            <button class="main-action" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<div class="InlineNotification InlineNotification--hasRequiredSections">
+    Required sections
+</div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+    }
+}

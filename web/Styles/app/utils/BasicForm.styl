@@ -49,3 +49,11 @@
         box-sizing: border-box;
     }
 }
+
+/* Fixing the buggy browsers implementation of legend element */
+normalizeLegend() {
+    clear: both;
+    float: left;
+    overflow: hidden;
+    width: auto;
+}

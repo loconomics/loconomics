@@ -1,0 +1,380 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+    var pos = PageData["Position"];
+
+    var idprefix = "position#" + pos.PositionID + "-services";
+    
+    var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
+    var tplCatName = "positionservices-category[{0}]";
+    
+    var specialCatIDs = LcData.SpecialServicesAttCats;
+    var dataCats = LcData.GetServiceCatsAndItsAttributes(pos.PositionID, "provider-services-without-virtual-cats", pos.UserID);
+    
+    if (Validation.GetHtml("position-intro") == null) {
+        Validation.Add("position-intro", Validator.StringLength(2000, 0, "Position introduction must be fewer than 2000 characters"));
+    }
+    
+    if (IsPost && Validation.IsValid()) {
+        var sqlSetPosIntro = @"
+            UPDATE  UserProfilePositions
+            SET     PositionIntro = @2
+            WHERE   UserID = @0 AND PositionID = @1
+        ";
+        var sqlSetAttribute = @"
+            BEGIN TRAN
+                UPDATE  userprofileserviceattributes WITH (serializable)
+                SET     Active = 1,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeCategoryID = @2
+                         AND ServiceAttributeID = @3
+                         AND LanguageID = @4 AND CountryID = @5
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO userprofileserviceattributes (UserID,
+                        PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                        ModifiedBy, Active)
+                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys', 1)
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelAttribute = @"
+            DELETE FROM userprofileserviceattributes
+            WHERE       UserID = @0 AND PositionID = @1
+                         AND ServiceAttributeCategoryID = @2
+                         AND ServiceAttributeID = @3
+                         AND LanguageID = @4 AND CountryID = @5
+        ";
+        var sqlSetLangLevel = @"
+            BEGIN TRAN
+                UPDATE  ServiceAttributeLanguageLevel WITH (serializable)
+                SET     LanguageLevelID = @5,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO ServiceAttributeLanguageLevel (UserID,
+                        PositionID, ServiceAttributeID, LanguageID, CountryID, LanguageLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelLangLevel = @"
+            DELETE FROM ServiceAttributeLanguageLevel
+            WHERE   UserId = @0 AND PositionID = @1
+                         AND ServiceAttributeID = @2
+                         AND LanguageID = @3 AND CountryID = @4
+        ";
+        var sqlSetExpLevel = @"
+            BEGIN TRAN
+                UPDATE  ServiceAttributeExperienceLevel WITH (serializable)
+                SET     ExperienceLevelID = @4,
+                        UpdatedDate = getdate(),
+                        ModifiedBy = 'sys'
+                WHERE   UserId = @0 AND PositionID = @1
+                         AND LanguageID = @2 AND CountryID = @3
+
+                IF @@rowcount = 0
+                BEGIN
+                    INSERT INTO ServiceAttributeExperienceLevel (UserID,
+                        PositionID, LanguageID, CountryID, ExperienceLevelID,
+                        CreatedDate, UpdatedDate, ModifiedBy)
+                    VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+                END
+            COMMIT TRAN
+        ";
+        var sqlDelExpLevel = @"
+            DELETE FROM ServiceAttributeExperienceLevel
+            WHERE   UserId = @0 AND PositionID = @1
+                         AND LanguageID = @2 AND CountryID = @3
+        ";
+        
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Save position-intro
+            db.Execute(sqlSetPosIntro, pos.UserID, pos.PositionID, Request["position-intro"]);
+            
+            // Iterate categories and attributes, save what are checked and remove what not
+            foreach (var cat in dataCats) {
+                switch ((int)cat.Key) {
+                    // Simple Check attributes:
+                    default:
+                        foreach (var att in cat.Value["ServiceAttributes"]) {
+                            // Check if selection changes
+                            bool wasChecked = (Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID)] != null);
+                            // We check previous value with current to avoid do unneeded Database calls
+                            // Except for Language to save the Language Level, we need do it anyway
+                            if (att.UserChecked != wasChecked || (int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                                // Value changed, update database
+                                if (wasChecked) {
+                                    // Set record (insert or update)
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                                        // If is language, we must save the Language Level value too
+                                        // name: positionservices-category[@(cat["ServiceAttributeCategoryID"])-attribute[@(att.ServiceAttributeID)]-level
+                                        var langlevel = Request[String.Format(tplAttName, cat.Key, att.ServiceAttributeID) + "-level"];
+                                        db.Execute(sqlSetLangLevel, pos.UserID, pos.PositionID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                                            langlevel);
+                                    }
+                                } else {
+                                    // Delete record
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    if ((int)cat.Key == LcData.ServiceAttCatIDLanguages) {
+                                        db.Execute(sqlDelLangLevel, pos.UserID, pos.PositionID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    // Select One attributes
+                    /*case LcData.ServiceAttCatIDExperience:
+                    //case LcData.ServiceAttCatIDExperienceLevel:
+                        // Get value selected by user
+                        int selectedAttID = Request[String.Format(tplCatName, cat.Key)].AsInt();
+                        // Iterate every attribute in category to unchecked except one was selected
+                        foreach (var att in cat.Value) {
+                            // We check previous value with current to avoid do unneded Database calls
+                            // if value was checked previously and is the same as now, no call is needed
+                            // if value was not checked previously and is not what was selected now, no call is needed
+                            if (!att.UserChecked && att.ServiceAttributeID == selectedAttID ||
+                                att.UserChecked && att.ServiceAttributeID != selectedAttID) {
+                                if (att.ServiceAttributeID == selectedAttID) {
+                                    db.Execute(sqlSetAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                } else {
+                                    db.Execute(sqlDelAttribute, pos.UserID, pos.PositionID, att.ServiceAttributeCategoryID, att.ServiceAttributeID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                                }
+                            }
+                        }
+                        break;
+                    */
+                }
+            }
+            
+            // Since ExperienceLevel is not a service category anymore else an independent table, we need
+            // specific code to save its data.
+            var selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
+            if (!String.IsNullOrEmpty(selExpLevel)) {
+                db.Execute(sqlSetExpLevel, pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    selExpLevel);
+            } else {
+                db.Execute(sqlDelExpLevel, pos.UserID, pos.PositionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+
+            // Check alert
+            db.Execute("EXEC TestAlertPositionServices @0, @1", pos.UserID, pos.PositionID);
+            
+            try{
+                // Check request-more-attributes and send email to loconomics if there is something
+                if (!Request.Form["request-more-attributes"].IsEmpty()) {
+                        LcMessaging.SendMail("providerhelp@loconomics.com",
+                        "Loconomics.com: Provider request more service attributes",
+                        LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailRequestMoreServiceAttributes/",
+                            new Dictionary<string, object> { 
+                                { "ProviderUserID", pos.UserID },
+                                { "PositionID", pos.PositionID },
+                                { "RequestedAttributes", Request.Form["request-more-attributes"] }
+                    }));
+                }
+            } catch {}
+        }
+            
+        if (doReturn) {
+            LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+        }
+    }
+    
+    /* Language Levels */
+    dynamic langLevels = LcData.GetLanguageLevels();
+    var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
+    /* Experience Levels */
+    dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);
+}
+@helper getChecked(dynamic att){
+    if (att["UserChecked"]) {
+        @Html.Raw("checked='checked'")
+    }
+}
+@helper printSelected(dynamic att, string valueA = null, string valueB = null){
+    if ((valueA != null && valueB != null && valueA == valueB) || att["UserChecked"]) {
+        @Html.Raw("selected='selected'")
+    }
+}
+@helper printAttCheckList(int catId, dynamic atts){
+    <ul>
+        @foreach(var att in atts){
+            <li>@printAttCheck(catId, att)</li>
+        }
+    </ul>
+}
+@helper printAttCheck(int catId, dynamic att){
+    <label class="has-tooltip" title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]"><input type="checkbox" @getChecked(att) name="positionservices-category[@(catId)]-attribute[@(att["ServiceAttributeID"])]"/>@att["ServiceAttribute"]</label>
+}
+@helper printAttSelect(dynamic cat){
+    <select title="@cat["ServiceAttributeCategoryName"]" 
+    data-description="@cat["ServiceAttributeCategoryDescription"]" 
+    name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]">
+        @foreach (var att in cat["ServiceAttributes"]){
+        <option @getChecked(att) title="@att["ServiceAttribute"]" data-description="@att["ServiceAttributeDescription"]" value="@att["ServiceAttributeID"]">@att["ServiceAttribute"]</option>
+        }
+    </select>
+}
+@helper printCatLegend(dynamic cat){
+    string tittle, desc;
+    desc = cat["ServiceAttributeCategoryDescription"];
+    if (String.IsNullOrWhiteSpace(desc)) {
+        desc = tittle = "";
+    } else {
+        tittle = cat["ServiceAttributeCategoryName"];
+    }
+    <legend class="has-popup-tooltip" data-description="@desc" title="@tittle">@cat["ServiceAttributeCategoryName"]:</legend>
+}
+@helper printExperienceLevelCat(dynamic expLevels, string tplCatName){
+    if (expLevels != null && expLevels.Count > 0)
+    {
+        string selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
+
+        <fieldset class="positionservices-experiencelevel validation-select-one required-attribute-category">
+            <legend title="@LcRessources.GetText("Experience Level")" data-description="@LcRessources.GetText("Experience Level Description")">@LcRessources.GetText("Experience Level")</legend>
+            <select title="Experience Level" name="positionservices-category[@LcData.ServiceAttCatIDExperienceLevel]-level">
+                    <option value=""></option>
+                @foreach (var level in expLevels)
+                {
+                    <option @printSelected(level, level.ExperienceLevelID.ToString(), selExpLevel) value="@level.ExperienceLevelID" data-description="@level.ExperienceLevelDescription" title="@level.ExperienceLevelName">@level.ExperienceLevelName</option>
+                }
+            </select>
+        </fieldset>
+    }
+}
+@helper printLanguagesCat(dynamic cat, dynamic langLevels, dynamic userLangLevels, string tplAttName){
+    <fieldset class="DashboardServices-attributes-languages @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+        @printCatLegend(cat)
+        <ul>
+            @foreach (var att in cat["ServiceAttributes"])
+            {
+                string selLangLevel = 
+                    Request[String.Format(tplAttName, LcData.ServiceAttCatIDLanguages, att.ServiceAttributeID) + "-level"] ??
+                    (userLangLevels.ContainsKey(att.ServiceAttributeID) ? userLangLevels[att.ServiceAttributeID] : 0).ToString();
+                        
+            <li>@printAttCheck(LcData.ServiceAttCatIDLanguages, att)
+                <select name="positionservices-category[@(cat["ServiceAttributeCategoryID"])]-attribute[@(att.ServiceAttributeID)]-level">
+                    @foreach (var level in langLevels)
+                    {
+                        <option @LcHelpers.IsSelected(level.LanguageLevelID, selLangLevel) value="@level.LanguageLevelID" data-description="@level.LanguageLevelDescription" title="@level.LanguageLevelName">@level.LanguageLevelName</option>
+                    }
+                </select>
+            </li>
+            }
+        </ul>
+    </fieldset>
+}
+<fieldset class="DashboardServices">
+    <p class="DashboardSection-page-section-introduction">
+        Fill us in on the services you provide. By conveying your job, experience, and passion with genuine feeling, you’ll attract the type of customers you want.
+        Make sure to be clear about what tasks future clients can expect you to perform.
+        If we've missed something, <a href="https://loconomics.zendesk.com/anonymous_requests/new" target="_blank">let us know</a>.
+    </p>
+    <ul class="lc-ressources">
+        <li id="lcres-required-attribute-category-error">"{0}" requires at least one selection</li>
+    </ul>
+
+    <div class="DashboardServices-attributes">
+        @foreach (var cat in dataCats)
+        {
+            if (!specialCatIDs.Contains(cat.Key) && cat.Value["SideBarCategory"] == false)
+            {
+                if (cat.Value["ServiceAttributes"].Count > 0)
+                {
+                    <fieldset class="@(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                        @printCatLegend(cat.Value)
+                        @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
+                    </fieldset>
+                }
+            }
+        }
+
+        <div class="DashboardServices-sidebar">
+            @* Because experience level attributes are get from a lookup table, not attributes table, cannot be linked
+                to positions, and will never be retrieved in dataCats collection; for that, and because is a general
+                category, is append ever for every position, at top of sidebar;
+                if this changes in a future, and normal-attributes are used instead lookup, in the foreach there are already
+                -commented- code for check its ID, maybe the helper needs redone. *@
+            @printExperienceLevelCat(expLevels, tplCatName)
+
+            @foreach (var cat in dataCats)
+            {
+                if ((specialCatIDs.Contains(cat.Key) || cat.Value["SideBarCategory"] == true) &&
+                    cat.Value["ServiceAttributes"].Count > 0)
+                {
+                    switch ((int)cat.Key)
+                    {
+                        /*case LcData.ServiceAttCatIDExperienceLevel:
+                            @printExperienceLevelCat(expLevels, tplCatName)
+                            break;*/
+                        case LcData.ServiceAttCatIDLanguages:
+                            /* Out of sidebar, after it */
+                            break;
+                        default:
+                            <fieldset class="@(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                                @printCatLegend(cat.Value)
+                                @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
+                            </fieldset>
+                            break;
+                    }
+                }
+            }
+        
+            @* OBSOLETE CODE *@
+            @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
+            {
+                var cat = dataCats[LcData.ServiceAttCatIDExperience];
+            <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+                @*<legend>Years Experience</legend>* @
+                @printCatLegend(cat)
+                @printAttSelect(cat["ServiceAttributes"])
+                @*
+                <select name="positionservices-yearsexperience">
+                    <option>+10 years</option>
+                    <option>5 years</option>
+                    <option>1.5 years</option>
+                    <option>1 year</option>
+                    <option>-1 year</option>
+                </select>* @
+            </fieldset>
+            }*@
+            @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
+            {
+                var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
+            <fieldset class="positionservices-clientstypes @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+                @printCatLegend(cat)
+                @printAttCheckList(LcData.ServiceAttCatIDClientTypes, dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"])
+            </fieldset>
+            }*@
+        </div>
+
+        @if (dataCats.ContainsKey(LcData.ServiceAttCatIDLanguages))
+        {
+            @printLanguagesCat(dataCats[LcData.ServiceAttCatIDLanguages], langLevels, userLangLevels, tplAttName)            
+        }
+    </div>
+
+    <fieldset class="DashboardServices-positionIntro">
+        <legend>Position introduction</legend>
+        <textarea rows="4" name="position-intro" @Validation.GetHtml("position-intro") placeholder="What makes your @pos.PositionSingular services special? Avoid listing things you’ve selected above.">@(Request["position-intro"] ?? pos.PositionIntro)</textarea>
+    </fieldset>
+
+    <fieldset class="DashboardServices-requestAttributes">
+        <legend>Did we miss something?</legend>
+        <textarea rows="4" name="request-more-attributes" placeholder="Please list anything we’ve missed, and we’ll ensure we get it added to your profile right away."></textarea>
+    </fieldset>
+</fieldset>
