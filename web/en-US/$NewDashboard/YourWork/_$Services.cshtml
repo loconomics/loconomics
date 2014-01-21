@@ -199,6 +199,8 @@
     var userLangLevels = LcData.GetUserLanguageLevels(pos.UserID, pos.PositionID);
     /* Experience Levels */
     dynamic expLevels = LcData.GetExperienceLevels(pos.UserID, pos.PositionID);
+    
+    const string reqCatClass = "is-required";
 }
 @helper getChecked(dynamic att){
     if (att["UserChecked"]) {
@@ -244,7 +246,7 @@
     {
         string selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
 
-        <fieldset class="positionservices-experiencelevel validation-select-one required-attribute-category">
+        <fieldset class="positionservices-experiencelevel js-validationSelectOne @*reqCatClass*@ is-required">
             <legend title="@LcRessources.GetText("Experience Level")" data-description="@LcRessources.GetText("Experience Level Description")">@LcRessources.GetText("Experience Level")</legend>
             <select title="Experience Level" name="positionservices-category[@LcData.ServiceAttCatIDExperienceLevel]-level">
                     <option value=""></option>
@@ -257,7 +259,7 @@
     }
 }
 @helper printLanguagesCat(dynamic cat, dynamic langLevels, dynamic userLangLevels, string tplAttName){
-    <fieldset class="DashboardServices-attributes-languages @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+    <fieldset class="DashboardServices-attributes-languages @(cat["RequiredInput"] ? "is-required" /*reqCatClass*/ : "")">
         @printCatLegend(cat)
         <ul>
             @foreach (var att in cat["ServiceAttributes"])
@@ -295,7 +297,7 @@
             {
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
-                    <fieldset class="@(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                    <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "")">
                         @printCatLegend(cat.Value)
                         @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                     </fieldset>
@@ -325,7 +327,7 @@
                             /* Out of sidebar, after it */
                             break;
                         default:
-                            <fieldset class="@(cat.Value["RequiredInput"] ? "required-attribute-category" : "")">
+                            <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "")">
                                 @printCatLegend(cat.Value)
                                 @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                             </fieldset>
@@ -338,7 +340,7 @@
             @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDExperience) && dataCats[LcData.ServiceAttCatIDExperience]["ServiceAttributes"].Count > 0)
             {
                 var cat = dataCats[LcData.ServiceAttCatIDExperience];
-            <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+            <fieldset class="positionservices-yearsexperience @(cat["RequiredInput"] ? reqCatClass : "")">
                 @*<legend>Years Experience</legend>* @
                 @printCatLegend(cat)
                 @printAttSelect(cat["ServiceAttributes"])
@@ -355,7 +357,7 @@
             @*if (dataCats.ContainsKey(LcData.ServiceAttCatIDClientTypes) && dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"].Count > 0)
             {
                 var cat = dataCats[LcData.ServiceAttCatIDClientTypes];
-            <fieldset class="positionservices-clientstypes @(cat["RequiredInput"] ? "required-attribute-category" : "")">
+            <fieldset class="positionservices-clientstypes @(cat["RequiredInput"] ? reqCatClass : "")">
                 @printCatLegend(cat)
                 @printAttCheckList(LcData.ServiceAttCatIDClientTypes, dataCats[LcData.ServiceAttCatIDClientTypes]["ServiceAttributes"])
             </fieldset>

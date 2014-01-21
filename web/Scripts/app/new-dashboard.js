@@ -52,4 +52,7 @@ $(function () {
   /* About you / verifications */
   require('./dashboard/verificationsActions').on('.DashboardVerifications');
 
+  /* Your work / services */
+  require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
+
 });

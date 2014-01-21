@@ -104,7 +104,10 @@ module.exports = function(grunt) {
           ],
           alias: [
             './Scripts/LC/StringFormat:StringFormat',
-            './Scripts/LC/FacebookConnect.js:LC/FacebookConnect'
+            './Scripts/LC/FacebookConnect.js:LC/FacebookConnect',
+            './Scripts/LC/getText.js:LC/getText',
+            './Scripts/LC/validationHelper.js:LC/validationHelper',
+            './Scripts/LC/jqueryUtils.js:LC/jqueryUtils'
           ]
         }
       },
@@ -113,7 +116,13 @@ module.exports = function(grunt) {
         'dest': './Scripts/new-dashboard.js',
         'options': {
           'debug': true,
-          'external': ['<%= browserify.app.options.external %>', 'LC/FacebookConnect']
+          'external': [
+            '<%= browserify.app.options.external %>',
+            'LC/FacebookConnect',
+            'LC/getText',
+            'LC/validationHelper',
+            'LC/jqueryUtils'
+          ]
         }
       }
     },
