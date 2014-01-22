@@ -6,7 +6,7 @@
     var doReturn = PageState == ModelState;
     var pos = PageData["Position"];
 
-    var idprefix = "position#" + pos.PositionID + "-services";
+    var idprefix = "position-" + pos.PositionID + "-services";
     
     var tplAttName = "positionservices-category[{0}]-attribute[{1}]";
     var tplCatName = "positionservices-category[{0}]";
@@ -246,7 +246,7 @@
     {
         string selExpLevel = Request[String.Format(tplCatName, LcData.ServiceAttCatIDExperienceLevel) + "-level"];
 
-        <fieldset class="positionservices-experiencelevel js-validationSelectOne @*reqCatClass*@ is-required">
+        <fieldset class="positionservices-experiencelevel DashboardServices-attributes-category js-validationSelectOne @*reqCatClass*@ is-required">
             <legend title="@LcRessources.GetText("Experience Level")" data-description="@LcRessources.GetText("Experience Level Description")">@LcRessources.GetText("Experience Level")</legend>
             <select title="Experience Level" name="positionservices-category[@LcData.ServiceAttCatIDExperienceLevel]-level">
                     <option value=""></option>
@@ -259,7 +259,7 @@
     }
 }
 @helper printLanguagesCat(dynamic cat, dynamic langLevels, dynamic userLangLevels, string tplAttName){
-    <fieldset class="DashboardServices-attributes-languages @(cat["RequiredInput"] ? "is-required" /*reqCatClass*/ : "")">
+    <fieldset class="DashboardServices-attributes-languages DashboardServices-attributes-category @(cat["RequiredInput"] ? "is-required" /*reqCatClass*/ : "")">
         @printCatLegend(cat)
         <ul>
             @foreach (var att in cat["ServiceAttributes"])
@@ -297,7 +297,7 @@
             {
                 if (cat.Value["ServiceAttributes"].Count > 0)
                 {
-                    <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "")">
+                    <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
                         @printCatLegend(cat.Value)
                         @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                     </fieldset>
@@ -327,7 +327,7 @@
                             /* Out of sidebar, after it */
                             break;
                         default:
-                            <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "")">
+                            <fieldset class="@(cat.Value["RequiredInput"] ? reqCatClass : "") DashboardServices-attributes-category">
                                 @printCatLegend(cat.Value)
                                 @printAttCheckList(cat.Key, cat.Value["ServiceAttributes"])
                             </fieldset>

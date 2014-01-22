@@ -107,7 +107,10 @@ module.exports = function(grunt) {
             './Scripts/LC/FacebookConnect.js:LC/FacebookConnect',
             './Scripts/LC/getText.js:LC/getText',
             './Scripts/LC/validationHelper.js:LC/validationHelper',
-            './Scripts/LC/jqueryUtils.js:LC/jqueryUtils'
+            './Scripts/LC/jqueryUtils.js:LC/jqueryUtils',
+            './Scripts/LC/TimeSpan.js:LC/TimeSpan',
+            './Scripts/LC/TimeSpanExtra.js:LC/TimeSpanExtra',
+            './Scripts/LC/tooltips.js:LC/tooltips'
           ]
         }
       },
@@ -121,7 +124,10 @@ module.exports = function(grunt) {
             'LC/FacebookConnect',
             'LC/getText',
             'LC/validationHelper',
-            'LC/jqueryUtils'
+            'LC/jqueryUtils',
+            'LC/TimeSpan',
+            'LC/TimeSpanExtra',
+            'LC/tooltips'
           ]
         }
       }

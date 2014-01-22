@@ -15,6 +15,7 @@ exports.defaultSettings = {
   events: {
     'edit-ends': 'crudl-edit-ends',
     'edit-starts': 'crudl-edit-starts',
+    'edit-ready': 'crudl-edit-ready',
     'create': 'crudl-create',
     'update': 'crudl-update',
     'delete': 'crudl-delete'
@@ -65,7 +66,9 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
             url: function (url, defaultUrl) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
-            success: function() {
+            success: function () {
+              // Custom event
+              crudl.trigger(instance.settings.events['edit-ready'], [dtr]);
               dtr.xshow(instance.settings.effects['show-editor']);
             }
           });
@@ -90,7 +93,9 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
             url: function (url, defaultUrl) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
-            success: function(){
+            success: function () {
+              // Custom event
+              crudl.trigger(instance.settings.events['edit-ready'], [dtr]);
               dtr.xshow(instance.settings.effects['show-editor']);
             }
           });

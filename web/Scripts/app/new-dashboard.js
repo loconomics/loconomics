@@ -55,4 +55,7 @@ $(function () {
   /* Your work / services */
   require('./dashboard/serviceAttributesValidation').setup($('.DashboardYourWork form'));
 
+  /* Your work / pricing */
+  require('./dashboard/pricingCrudl').on('.DashboardYourWork');
+
 });

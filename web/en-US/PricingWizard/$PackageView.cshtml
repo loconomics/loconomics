@@ -1,4 +1,9 @@
-﻿@{
+﻿@* Pricing Item View: visualize in read-only the pricing package details,
+    with editable mode to show edit/delete buttons and fees-free prices for providers,
+    and non editable for customers; it works too as email template providing
+    the parameter ForEmail=true
+*@
+@{
     // The read-only view is available for email templating
     var forEmail = PageData["ForEmail"] ?? false;
     
@@ -172,8 +177,8 @@
     @if (editable)
     {
     <div class="actions">
-        <a href="#delete" class="delete-action crudl-delete">Delete</a>
-        <a href="#edit" class="edit-action crudl-update">Edit</a>
+        <a href="#delete" class="crudl-delete">Delete</a>
+        <a href="#edit" class="crudl-update">Edit</a>
     </div>
     }
     @if (config.FirstTimeClientsOnlyListText != null && pak.FirstTimeClientsOnly)

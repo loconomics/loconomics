@@ -13,7 +13,7 @@ var escapeJQuerySelectorValue = require('LC/jqueryUtils').escapeJQuerySelectorVa
 exports.setup = function setupServiceAttributesValidation(containerSelector, options) {
   var $c = $(containerSelector);
   options = $.extend({
-    requiredCatClass: 'is-required',
+    requiredSelector: '.DashboardServices-attributes-category.is-required',
     selectOneClass: 'js-validationSelectOne',
     groupErrorClass: 'is-error',
     valErrorTextKey: 'required-attribute-category-error'
@@ -31,7 +31,7 @@ exports.setup = function setupServiceAttributesValidation(containerSelector, opt
         var valid = true, lastValid = true;
         var v = vh.findValidationSummary(f);
 
-        f.find('.' + options.requiredCatClass).each(function () {
+        f.find(options.requiredSelector).each(function () {
           var fs = $(this);
           var cat = fs.children('legend').text();
           // What type of validation apply?

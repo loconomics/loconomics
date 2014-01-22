@@ -1,16 +1,20 @@
 ﻿@*
+    List provider pricings (package):
+ 
     List all packages for a given pricing type (PricingTypeID), provider (ProviderUserID) and position (PositionID)
     List can be showed for edition by the ProviderUserID or as a read only list to pick a pricing type for booking (from a customer)
 *@
+@using WebMatrix.Data;
 @{
     LcData.ProviderPackagesView data = PageData["data"];
-    bool editable = PageData["editable"] ?? Request["editable"].AsBool();
+    bool editable = PageData["Editable"] ?? Request["Editable"].AsBool();
     int pricingTypeID = PageData["PricingTypeID"] ?? Request["PricingTypeID"].AsInt();
     int providerUserID = PageData["ProviderUserID"] ?? Request["ProviderUserID"].AsInt();
     if (providerUserID == 0) {
         providerUserID = WebSecurity.CurrentUserId;
     }
     int positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+    // Customer for non-editable view with fees on prices:
     var customer = PageData["Customer"] ?? LcData.UserInfo.GetUserRow();
     if (!LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pricingTypeID)) {
         // WITHOUT Config, there is nothing to display (is not a package-based pricing type)

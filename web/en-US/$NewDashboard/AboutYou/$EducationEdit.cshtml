@@ -7,7 +7,7 @@
     
     var isSubform = PageData["IsSubform"] ?? Request["subform"].AsBool();
 
-    var u = LcData.UserInfo.GetUserRowWithContactData();
+    var u = LcData.UserInfo.GetUserRow();
     var educationID = Request["EducationID"].AsInt();
     var idprefix = "editEducation" + educationID.ToString();
 
