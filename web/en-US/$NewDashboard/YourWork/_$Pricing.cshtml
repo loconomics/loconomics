@@ -49,7 +49,7 @@
             {
                 var config = LcPricingModel.PackageBasePricingTypeConfigs[(int)pricingType.PricingTypeID];
                 <div class="crudl-list" data-crudl-extra-query="PricingTypeID=@(pricingType.PricingTypeID)" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
-                    @RenderPage(LcUrl.LangPath + "PricingWizard/$PricingList.cshtml",
+                    @RenderPage(LcUrl.RenderLangPath + "PricingWizard/$PricingList.cshtml",
                        new {
                            Data = data,
                            Editable = true,
