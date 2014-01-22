@@ -50,15 +50,18 @@
                         ? data.PackagesDetailsByPackage[pak.ProviderPackageID]
                         : null;
 
-            <li class="crudl-item @(editable ? "" : "view")" data-crudl-item-id="@pak.ProviderPackageID">
+            @*<li class="crudl-item ItemBox @(editable ? "" : "view")" data-crudl-item-id="@pak.ProviderPackageID">*@
                 @RenderPage("$PackageView.cshtml", new { 
                     Package = pak,
                     ServiceAttributes = details,
                     EditableView = editable,
                     Customer = customer,
-                    FeesSet = feesSet
+                    FeesSet = feesSet,
+                    ContainerTag = "li",
+                    ContainerClasses = "crudl-item ItemBox " + (editable ? "" : "view"),
+                    ContainerExtraAttributes = "data-crudl-item-id=" + pak.ProviderPackageID
                 })
-            </li>
+            @*</li>*@
         }
     </ul>
 }

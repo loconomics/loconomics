@@ -335,9 +335,9 @@
 }
 
 @if (isSubform) {
-    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" class="crudl-form ajax ajax-box"></text>
+    @Html.Raw("<")<text>fieldset data-ajax-fieldset-action="@(formAction)&subform=true" class="crudl-form ajax ajax-box  @config.ClassName"></text>
 } else {
-    @Html.Raw("<")<text>form action="@formAction" method="post" class="crudl-form ajax ajax-box"></text>
+    @Html.Raw("<")<text>form action="@formAction" method="post" class="crudl-form ajax ajax-box  @config.ClassName"></text>
 }
 
     @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -33,7 +33,7 @@ module.exports = function(grunt) {
         dest: './Scripts/common.min.js'
       },
       'css-common': {
-        src: ['./Styles/app/app.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
+        src: ['./Styles/app/app.css', './Styles/app/w-ProviderPackage.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
         dest: './Styles/common.css',
         options: {
           process: fixCssImageRoutes

@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-01-21
+/*! Loconomics.com 2014-01-22
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -140,6 +140,17 @@
   color: #e95d0f;
   font-style: italic;
 }
+
+/* line 88 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/***TEMP RULES: avoiding some inherit things for bad common.css rules***/
+
+/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+form ul li {
+  padding: 0;
+}
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/***TEMP RULES: END ***/
 
 /* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
@@ -1495,7 +1506,7 @@
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1972,4 +1983,209 @@
   overflow: hidden;
   line-height: normal;
   vertical-align: middle;
+}
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+
+/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor {
+  display: none;
+  min-height: 160px;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .crudl-form {
+  position: relative;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor h5 {
+  color: #6c6c6c;
+  font-size: 1.1em;
+  margin: 8px 0px 4px;
+  display: block !important;
+}
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor label {
+  padding: 0;
+}
+
+/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .label-text {
+  display: none;
+}
+
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .provider-package-services {
+  max-height: 160px;
+  overflow: auto;
+}
+
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .provider-package-services li {
+  float: left;
+  margin: 0;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .provider-package-services li > label {
+  width: 200px !important;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .show-more-attributes {
+  margin: 10px 0 0 13px;
+  color: #747474;
+}
+
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data label {
+  display: block;
+  margin: 2px 0;
+}
+
+/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-name input {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-sessions,
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-price {
+  width: auto;
+  display: inline-block;
+}
+
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-sessions input {
+  width: 3em;
+}
+
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-price input {
+  width: 6em;
+}
+
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-duration input {
+  width: 4em;
+}
+
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .package-data .package-description textarea {
+  height: 8em;
+}
+
+/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .learn-more span {
+  text-decoration: underline;
+  color: #00989a;
+}
+
+/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .fs-price-rate .learn-more {
+  display: inline;
+}
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .fs-price-rate label {
+  padding: 0;
+}
+
+/* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .fs-price-rate .price-rate input {
+  width: 4em;
+}
+
+/* line 98 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .fs-price-rate .price-rate-unit input {
+  width: 5em;
+}
+
+/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .fs-price-rate .no-price-rate {
+  margin-top: 0.5em;
+}
+
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .crudl-editor .inperson-phone label {
+  display: inline;
+}
+
+/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .provider-average-time {
+  position: relative;
+  height: 65px;
+}
+
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .provider-average-time > label {
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .provider-average-time .average-label {
+  position: absolute;
+  left: 36%;
+  right: 36%;
+  width: auto;
+  text-align: center;
+}
+
+/* line 125 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .provider-average-time .below-average-label {
+  position: absolute;
+  left: 0;
+  right: 64%;
+}
+
+/* line 130 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .provider-average-time .above-average-label {
+  position: absolute;
+  right: 0;
+  left: 64%;
+  text-align: right;
+}
+
+/* line 136 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .housekeeper-pricing {
+  margin: 1em 0;
+}
+
+/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .housekeeper-pricing > div {
+  width: 30%;
+  margin-right: 3%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .housekeeper-pricing > .preview {
+  margin-right: 0;
+}
+
+/* line 148 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .housekeeperservices .fs-price-rate {
+  position: absolute;
+  top: 0;
+  right: 0;
+  max-width: 34%;
+}
+
+/* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+.DashboardYourWork .DashboardPricing .housekeeperservices .package-data > .package-name {
+  width: 70% !important;
 }

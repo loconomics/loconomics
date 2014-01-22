@@ -4,7 +4,7 @@
 .DashboardSection {
 	color: #333;
 	margin-top: 26px;
-	
+		
 	.go-publicProfile {
 	    display: block;
 	    padding: .6em;
@@ -84,6 +84,12 @@
 	}
 
 }
+
+/***TEMP RULES: avoiding some inherit things for bad common.css rules***/
+form ul li {
+	padding: 0;
+}
+/***TEMP RULES: END ***/
 
 @import("dashboard/sidebar")
 @import("dashboard/promote")

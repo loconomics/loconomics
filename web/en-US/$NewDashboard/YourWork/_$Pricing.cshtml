@@ -25,11 +25,10 @@
         We strive for transparenc--our fees are show below.
     </p>
 
-    @*class: package-pricing-type provider-pricing-types *@
     <fieldset class="DashboardPricing crudl Crudl--basicStyle" data-crudl-context="@datacontext" data-crudl-item-id-parameter="ProviderPackageID" data-crudl-extra-query="subform=true&PositionID=@positionID">
         <div class="DashboardPricing-editor crudl-editor BasicForm" data-source-url="@(LcUrl.LangUrl)$NewDashboard/YourWork/$PricingItemEdit/">
         </div>
-        <div class="DashboardPricing-list crudl-viewer"> @* pricing-types-list *@
+        <div class="DashboardPricing-list crudl-viewer">
             <div class="lc-ressources">
                 <div id="lcres-confirm-delete-crudl-item-message:@datacontext">Do you want to delete this?</div>
                 <div id="lcres-delete-crudl-item-loading-message:@datacontext">Deleting</div>
