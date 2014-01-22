@@ -34,6 +34,11 @@
             @RenderPage("YourWork/_$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
         </div>
 
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Set your service location(s)</h2>
+            @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
         <div>
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         </div>

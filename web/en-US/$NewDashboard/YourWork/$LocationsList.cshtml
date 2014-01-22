@@ -1,0 +1,70 @@
+﻿@*
+    List user locations
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+
+    dynamic workLocations = null, travelLocations = null;
+
+    var sqlcondWorkLocations = " AND ServicesPerformedAtLocation = 1";
+    var sqlcondTravelLocations = " AND TravelFromLocation = 1";
+
+    using (var db = Database.Open("sqlloco")) {
+        workLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondWorkLocations, u.UserID, positionID,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        travelLocations = db.Query(LcData.sqlGetServiceAddresses + sqlcondTravelLocations, u.UserID, positionID,
+            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+    }
+    
+    var thereIsData = (workLocations != null && workLocations.Count > 0) || (travelLocations != null && travelLocations.Count > 0);
+    
+    if (!thereIsData && IsPost) {
+        ModelState.AddFormError("Please enter at least one location that you travel from or at which you perform services");
+    }
+}
+@helper printLocation(dynamic location){
+    <li class="DashboardLocation-list-item ItemBox crudl-item Location" data-crudl-item-id="@location.AddressID">
+        <h1 class="ItemBox-name Location-name">@location.AddressName</h1>
+        <span class="Location-line">
+            <span class="Location-line1">@location.AddressLine1</span>
+            <span class="Location-line2">@location.AddressLine2</span>
+        </span>
+        <span class="Location-city">@location.City</span>
+        <span class="Location-state">@location.StateProvinceCode</span>
+        <span class="Location-zipcode">@location.PostalCode</span>
+        @if (location.ServicesPerformedAtLocation) {
+            <span class="Location-serviceLocation">I perform services here</span>
+        }
+        @if (location.TravelFromLocation) {
+        <div class="Location-serviceRadius">
+            <span class="Location-travel-radius-label">I will travel up to <span class="Location-travel-radius">@location.ServiceRadiusFromLocation</span> mile(s) from here</span>
+            <span class="Location-travel-transport-label">I travel by: <span class="Location-travel-transport">@location.TransportTypeName</span></span>
+        </div>
+        }
+        <div class="actions ItemBox-actions">
+            <a href="#delete" class="crudl-delete">Delete</a>
+            <a href="#edit" class="crudl-update">Edit</a>
+        </div>
+    </li>
+}
+@if (thereIsData)
+{
+    <div>
+        <ul class="DashboardLocations-list-serviceRadius">
+            @foreach (var location in travelLocations)
+            {
+                @printLocation(location)
+            }
+        </ul>
+        <ul class="DashboardLocations-list-serviceLocation">
+            @foreach (var location in workLocations)
+            {
+                @printLocation(location)
+            }
+        </ul>
+    </div>
+}

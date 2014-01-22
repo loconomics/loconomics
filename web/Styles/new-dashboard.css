@@ -1506,7 +1506,7 @@ form ul li {
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -2195,4 +2195,474 @@ form ul li {
 /* line 154 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
 .DashboardYourWork .DashboardPricing .housekeeperservices .package-data > .package-name {
   width: 70% !important;
+}
+
+/* line 158 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+
+/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\flex.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\size.styl */
+
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+.Crudl--basicStyle .crudl-list li.crudl-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+.Crudl--basicStyle .crudl-list li.crudl-item .actions {
+  position: absolute;
+  right: 15px;
+  top: 0;
+}
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+.Crudl--basicStyle .crudl-list li.crudl-item .actions a {
+  color: #00989a;
+  text-decoration: none;
+}
+
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Crudl--basicStyle.styl */
+.Crudl--basicStyle .crudl-list li.crudl-item .actions a:hover {
+  text-decoration: underline;
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\flex.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox {
+  color: #333;
+  background: none repeat scroll 0 0 #fff;
+  border: 3px solid #61bdbe;
+  -webkit-border-radius: 15px 15px 15px 15px;
+  border-radius: 15px 15px 15px 15px;
+  padding: 15px;
+  margin: 0 0 10px 0;
+  position: relative;
+  text-align: left;
+}
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox p {
+  margin: 0;
+}
+
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-name {
+  margin: 0 0 8px;
+  font-size: 1.5em !important;
+  color: #00989a !important;
+  max-width: 500px;
+}
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-sectionTitle {
+  display: block;
+  color: #6c6c6c;
+  font-size: 1em;
+  margin: 5px 0px;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-important {
+  color: #00989a;
+  font-size: 1.3em;
+}
+
+/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-subitemsList {
+  overflow: hidden;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-subitemsList > li {
+  width: 200px;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  float: left;
+  list-style: none;
+  background: url("../img/theme/bullet.png") no-repeat left center;
+  padding-left: 14px;
+}
+
+/* line 60 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemBox.styl */
+.ItemBox .ItemBox-actions {
+  position: absolute;
+  right: 15px !important;
+  top: 15px !important;
+}
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\flex.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionBox {
+  border: 1px solid #333;
+  padding: 20px 18px 28px 26px;
+  display: inline-block;
+  vertical-align: top;
+  width: 314px;
+  margin-right: 25px;
+  margin-bottom: 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+/** Themes **/
+}
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionBox > a {
+  background: url("../img/theme/add-new-button.png") no-repeat right center;
+/* Image size is 28x28px */
+  line-height: 28px;
+/* Width with 6px of left-margin */
+  padding-right: 34px;
+  display: block;
+  color: Black;
+  text-decoration: none;
+  color: Black;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+}
+
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionBox > p {
+  margin: 0;
+/* Left the right space empty under the icon */
+  padding-right: 34px;
+  color: Black;
+  text-align: justify;
+}
+
+/* line 53 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionBox.ActionBox--rounded {
+  border-color: Black;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionsBoxList {
+  zoom: 1;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.ActionsBoxList:before,
+.ActionsBoxList:after {
+  content: "";
+  display: table;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.ActionsBoxList:after {
+  clear: both;
+}
+
+/* line 66 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionsBoxList .ActionBox:nth-child(odd) {
+  float: left;
+  clear: left;
+  margin-right: 0;
+}
+
+/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+.ActionsBoxList .ActionBox:nth-child(even) {
+  float: right;
+  clear: right;
+  margin-right: 0;
+}
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\flex.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\size.styl */
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+.Location {
+  position: relative;
+  line-height: 1.3em;
+}
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+.Location .Location-name,
+.Location .Location-line,
+.Location .Location-serviceRadius,
+.Location .Location-serviceLocation {
+  display: block;
+}
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+.Location .Location-serviceRadius,
+.Location .Location-serviceLocation {
+  margin-top: 0.4em;
+}
+
+/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+.Location .Location-city:after {
+  content: ', ';
+}
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+.Location .Location-travel-transport-label {
+  display: block;
+}
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor {
+  display: none;
+  min-height: 150px;
+}
+
+/* line 20 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .crudl-form {
+  position: relative;
+}
+
+/* line 24 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .location-preferredaddress {
+  clear: both;
+  padding-top: 10px;
+}
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul > li label {
+  width: auto;
+}
+
+/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .copy-location {
+  margin: 10px 0 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .copy-location select {
+  font-weight: normal;
+  text-align: left;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-data label,
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map label {
+  display: block;
+  clear: both;
+}
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map {
+  margin: 0 0 25px 0;
+}
+
+/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map .advice,
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map .find-address-geocode {
+  display: none;
+}
+
+/* line 52 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map .map-selector > .google-map {
+  height: 300px;
+  width: 100%;
+}
+
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .location-map .gps-lat,
+.DashboardYourWork .DashboardLocations .crudl-editor .location-map .gps-lng {
+  display: none;
+}
+
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-data input,
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-data select,
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-data textarea,
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-map input {
+  width: 470px !important;
+  float: right;
+}
+
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.travel-options label {
+  width: auto !important;
+  float: none;
+}
+
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor ul.location-data li.input-option input {
+  width: auto !important;
+  float: none;
+}
+
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\locations.styl */
+.DashboardYourWork .DashboardLocations .crudl-editor .location-travel legend {
+  font-weight: normal;
 }

@@ -58,4 +58,7 @@ $(function () {
   /* Your work / pricing */
   require('./dashboard/pricingCrudl').on('.DashboardYourWork');
 
+  /* Your work / locations */
+  require('./dashboard/locationsCrudl').on('.DashboardYourWork');
+
 });

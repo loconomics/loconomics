@@ -1,0 +1,81 @@
+/** Your work / locations
+**/
+/*@import "../utils/BasicForm"*/
+@import "../utils/Crudl--basicStyle"
+@import "../utils/ItemBox"
+@import "../utils/ActionBox"
+@import "../utils/ColorsPalette"
+@import "../utils/Location"
+
+/* TODO: Refactoring NOT complete, needs apply new naming convention, use dashboard variables,
+    and reuse styles like BasicForm
+*/
+
+.DashboardYourWork .DashboardLocations {
+
+    .crudl-editor {
+        display: none;
+        min-height: 150px;
+        
+        .crudl-form {
+            position: relative;
+        }
+       
+        .location-preferredaddress {
+            clear: both;
+            padding-top: 10px;
+        }
+        
+        ul > li label {
+            width: auto;
+        }
+        .copy-location {
+            margin: 10px 0 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .copy-location select {
+            font-weight: normal;
+            text-align: left;
+        }
+        ul.location-data label,
+        ul.location-map label {
+            display: block;
+            clear: both;
+        }
+        ul.location-map {
+            margin: 0 0 25px 0;
+        }
+        ul.location-map .advice,
+        ul.location-map .find-address-geocode {
+            display: none;
+        }
+        ul.location-map .map-selector > .google-map {
+            height: 300px;
+            width: 100%;
+        }
+        .location-map .gps-lat,
+        .location-map .gps-lng {
+            display: none;
+        }
+        ul.location-data input,
+        ul.location-data select,
+        ul.location-data textarea,
+        ul.location-map input {
+            width: 470px !important;
+            float: right;
+        }
+        ul.travel-options label {
+            width: auto !important;
+            float: none;
+        }
+        ul.location-data li.input-option input {
+            width: auto !important;
+            float: none;
+        }
+        .location-travel legend {
+            font-weight: normal;
+        }
+    }
+
+}
