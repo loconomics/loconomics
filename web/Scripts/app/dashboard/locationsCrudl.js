@@ -1,8 +1,6 @@
 ﻿/** Locations page setup for CRUDL use
 **/
 var $ = require('jquery');
-require('jquery.blockUI');
-var updateTooltips = require('LC/tooltips').updateTooltips;
 var mapReady = require('LC/googleMapReady');
 // Indirectly used: require('LC/hasConfirmSupport');
 

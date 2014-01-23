@@ -1506,7 +1506,7 @@ form ul li {
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1990,6 +1990,33 @@ form ul li {
 /* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardCancellationPolicy .DashboardCancellationPolicy-info {
   text-decoration: underline;
+}
+
+/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+
+/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardLicenses .DashboardLicense-licenseDetails ul {
+/* To compensate the dual 6px margin of this last li element
+                    and the DashboardLicense-request first li element */
+  margin-bottom: -6px;
+}
+
+/* line 83 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardLicenses .DashboardLicense-licenseDetails ul li {
+  margin: 6px 0px;
+  padding: 0px 10px;
+}
+
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardLicenses .DashboardLicense-request li label {
+  font-weight: bold;
+  min-width: 230px;
+  width: auto;
+  display: inline-block;
 }
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */

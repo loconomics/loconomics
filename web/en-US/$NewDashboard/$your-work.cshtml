@@ -39,6 +39,11 @@
             @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p })
         </div>
 
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Verify your professional certification(s)</h2>
+            @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
         <div>
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         </div>

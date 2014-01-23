@@ -61,4 +61,6 @@ $(function () {
   /* Your work / locations */
   require('./dashboard/locationsCrudl').on('.DashboardYourWork');
 
+  /* Your work / licenses */
+  require('./dashboard/licensesCrudl').on('.DashboardYourWork');
 });

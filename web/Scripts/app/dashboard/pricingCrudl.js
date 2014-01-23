@@ -1,7 +1,6 @@
 ﻿/** Pricing page setup for CRUDL use
 **/
 var $ = require('jquery');
-require('jquery.blockUI');
 var TimeSpan = require('LC/TimeSpan');
 require('LC/TimeSpanExtra').plugIn(TimeSpan);
 var updateTooltips = require('LC/tooltips').updateTooltips;

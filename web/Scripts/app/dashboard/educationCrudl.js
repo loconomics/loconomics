@@ -1,7 +1,7 @@
 ﻿/** Education page setup for CRUDL use
 **/
 var $ = require('jquery');
-require('jquery.blockUI');
+//require('LC/jquery.xtsh');
 require('jquery-ui');
 
 // TODO: Replace by real require and not global LC:

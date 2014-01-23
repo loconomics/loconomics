@@ -72,6 +72,30 @@
             text-decoration: underline;
         }
     }
+    
+    .DashboardLicenses {
+        .DashboardLicense-licenseDetails {
+            ul {
+                /* To compensate the dual 6px margin of this last li element
+                    and the DashboardLicense-request first li element */
+                margin-bottom: -6px;
+
+                li {
+                    margin: 6px 0px;
+                    padding: 0px 10px;
+                }
+            }
+        }
+        
+        .DashboardLicense-request {
+            li label {
+                font-weight: bold;
+                min-width: 230px;
+                width: auto;
+                display: inline-block;
+            }
+        }
+    }
 }
 
 /* DashboardPricing on external sheet */
