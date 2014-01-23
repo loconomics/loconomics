@@ -2,6 +2,7 @@
 **/
 var $ = require('jquery');
 require('jquery.blockUI');
+require('jquery-ui');
 
 // TODO: Replace by real require and not global LC:
 //var ajaxForms = require('../LC/ajaxForms');
@@ -23,5 +24,14 @@ exports.on = function (containerSelector) {
   })
   .on(crudl.settings.events['edit-ends'], function () {
     $others.xshow({ effect: 'height', duraction: 'slow' });
+  })
+  .on(crudl.settings.events['edit-ready'], function (e, $editor) {
+    // Setup autocomplete
+    $editor.find('[name=institution]').autocomplete({
+      source: LcUrl.JsonPath + 'GetInstitutions/Autocomplete/',
+      autoFocus: false,
+      delay: 200,
+      minLength: 5
+    });
   });
 };

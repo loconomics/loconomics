@@ -501,8 +501,6 @@ function sz(el, p) {
 
 },{}],"jquery.blockUI":[function(require,module,exports){
 module.exports=require('wGt3pN');
-},{}],"jquery":[function(require,module,exports){
-module.exports=require('fHei1a');
 },{}],"fHei1a":[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};(function browserifyShim(module, exports, define, browserify_shim__define__module__export__) {
 /*! jQuery v1.7.2 jquery.com | jquery.org/license */
@@ -513,6 +511,10 @@ a){var b=F.exec(a);b&&(b[1]=(b[1]||"").toLowerCase(),b[3]=b[3]&&new RegExp("(?:^
 
 }).call(global, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
+},{}],"jquery":[function(require,module,exports){
+module.exports=require('fHei1a');
+},{}],"jquery-ui":[function(require,module,exports){
+module.exports=require('fScm4G');
 },{}],"fScm4G":[function(require,module,exports){
 /*! jQuery UI - v1.8.21 - 2012-06-05
 * https://github.com/jquery/jquery-ui
@@ -639,8 +641,6 @@ jQuery.effects||function(a,b){function c(b){var c;return b&&b.constructor==Array
 * Includes: jquery.effects.transfer.js
 * Copyright (c) 2012 AUTHORS.txt; Licensed MIT, GPL */
 (function(a,b){a.effects.transfer=function(b){return this.queue(function(){var c=a(this),d=a(b.options.to),e=d.offset(),f={top:e.top,left:e.left,height:d.innerHeight(),width:d.innerWidth()},g=c.offset(),h=a('<div class="ui-effects-transfer"></div>').appendTo(document.body).addClass(b.options.className).css({top:g.top,left:g.left,height:c.innerHeight(),width:c.innerWidth(),position:"absolute"}).animate(f,b.duration,b.options.easing,function(){h.remove(),b.callback&&b.callback.apply(c[0],arguments),c.dequeue()})})}})(jQuery);;
-},{}],"jquery-ui":[function(require,module,exports){
-module.exports=require('fScm4G');
 },{}],"Pvilyi":[function(require,module,exports){
 /*
  * jQuery hashchange event - v1.3 - 7/21/2010

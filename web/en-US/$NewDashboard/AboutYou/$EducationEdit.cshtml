@@ -7,7 +7,7 @@
     
     var isSubform = PageData["IsSubform"] ?? Request["subform"].AsBool();
 
-    var u = LcData.UserInfo.GetUserRow();
+    var u = LcData.UserInfo.GetUserRowWithContactData();
     var educationID = Request["EducationID"].AsInt();
     var idprefix = "editEducation" + educationID.ToString();
 
@@ -190,17 +190,6 @@
         <button type="button" class="button cancel-action crudl-cancel">Cancel</button>
         <button class="button main-action crudl-save @(isSubform ? "ajax-fieldset-submit" : "")">Save</button>
     </div>
-
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $('[name=institution]').autocomplete({
-                source: LcUrl.JsonPath + 'GetInstitutions/Autocomplete/',
-                autoFocus: false,
-                delay: 200,
-                minLength: 5
-            });
-        });
-    </script>
 
 @if(isSubform) {
     @Html.Raw("</fieldset>")
