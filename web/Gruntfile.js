@@ -110,7 +110,8 @@ module.exports = function(grunt) {
             './Scripts/LC/jqueryUtils.js:LC/jqueryUtils',
             './Scripts/LC/TimeSpan.js:LC/TimeSpan',
             './Scripts/LC/TimeSpanExtra.js:LC/TimeSpanExtra',
-            './Scripts/LC/tooltips.js:LC/tooltips'
+            './Scripts/LC/tooltips.js:LC/tooltips',
+            './Scripts/LC/googleMapReady.js:LC/googleMapReady'
           ]
         }
       },
@@ -127,7 +128,8 @@ module.exports = function(grunt) {
             'LC/jqueryUtils',
             'LC/TimeSpan',
             'LC/TimeSpanExtra',
-            'LC/tooltips'
+            'LC/tooltips',
+            'LC/googleMapReady'
           ]
         }
       }

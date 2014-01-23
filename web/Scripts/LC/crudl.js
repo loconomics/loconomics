@@ -15,7 +15,8 @@ exports.defaultSettings = {
   events: {
     'edit-ends': 'crudl-edit-ends',
     'edit-starts': 'crudl-edit-starts',
-    'edit-ready': 'crudl-edit-ready',
+    'editor-ready': 'crudl-editor-ready',
+    'editor-showed': 'crudl-editor-showed',
     'create': 'crudl-create',
     'update': 'crudl-update',
     'delete': 'crudl-delete'
@@ -69,7 +70,11 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
             success: function () {
-              dtr.xshow(instance.settings.effects['show-editor']);
+              dtr.xshow(instance.settings.effects['show-editor'])
+              .queue(function () {
+                crudl.trigger(instance.settings.events['editor-showed'], [dtr]);
+                dtr.dequeue();
+              });
             }
           });
           // Hide viewer when in editor:
@@ -95,7 +100,11 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
             success: function () {
-              dtr.xshow(instance.settings.effects['show-editor']);
+              dtr.xshow(instance.settings.effects['show-editor'])
+              .queue(function () {
+                crudl.trigger(instance.settings.events['editor-showed'], [dtr]);
+                dtr.dequeue();
+              });
             }
           });
           // Hide viewer when in editor:
@@ -194,12 +203,12 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
             setTimeout(finishEdit, 1500);
         })
         .on('ajaxFormReturnedHtml', 'form, fieldset', function (jb, form, jx) {
-          // Emit the 'edit-ready' event on editor Html being replaced
+          // Emit the 'editor-ready' event on editor Html being replaced
           // (first load or next loads because of server-side validation errors)
           // to allow listeners to do any work over its (new) DOM elements.
           // The second custom parameter passed means is mean to
           // distinguish the first time content load and successive updates (due to validation errors).
-          crudl.trigger(instance.settings.events['edit-ready'], [dtr, editorInitialLoad]);
+          crudl.trigger(instance.settings.events['editor-ready'], [dtr, editorInitialLoad]);
 
           // Next times:
           editorInitialLoad = false;

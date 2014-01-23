@@ -3,6 +3,7 @@
 var $ = require('jquery');
 require('jquery.blockUI');
 var updateTooltips = require('LC/tooltips').updateTooltips;
+var mapReady = require('LC/googleMapReady');
 // Indirectly used: require('LC/hasConfirmSupport');
 
 // TODO: Replace by real require and not global LC:
@@ -10,8 +11,6 @@ var updateTooltips = require('LC/tooltips').updateTooltips;
 //var crudl = require('../LC/crudl').setup(ajaxForms.onSuccess, ajaxForms.onError, ajaxForms.onComplete);
 //LC.initCrudl = crudl.on;
 var initCrudl = LC.initCrudl;
-// TODO: replae by real require
-var mapReady = LC.mapReady;
 
 exports.on = function (containerSelector) {
   var $c = $(containerSelector),
@@ -21,6 +20,8 @@ exports.on = function (containerSelector) {
 
   var crudl = initCrudl(locationsSelector);
 
+  var locationMap;
+
   crudl.elements
   .on(crudl.settings.events['edit-starts'], function () {
     $others.xhide({ effect: 'height', duraction: 'slow' });
@@ -28,12 +29,15 @@ exports.on = function (containerSelector) {
   .on(crudl.settings.events['edit-ends'], function () {
     $others.xshow({ effect: 'height', duraction: 'slow' });
   })
-  .on(crudl.settings.events['edit-ready'], function (e, $editor) {
+  .on(crudl.settings.events['editor-ready'], function (e, $editor) {
     //Force execution of the 'has-confirm' script
     $editor.find('fieldset.has-confirm > .confirm input').change();
 
-    setupGeopositioning($editor);
-
+    locationMap = setupGeopositioning($editor);
+  })
+  .on(crudl.settings.events['editor-showed'], function (e, $editor) {
+    if (locationMap)
+      mapReady.refreshMap(locationMap);
   });
 };
 
@@ -41,6 +45,7 @@ exports.on = function (containerSelector) {
   browser and Google Maps services.
 **/
 function setupGeopositioning($editor) {
+  var map;
   mapReady(function () {
 
     // Register if user selects or writes a position (to not overwrite it with automatic positioning)
@@ -82,7 +87,7 @@ function setupGeopositioning($editor) {
       center: myLatlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(m, mapOptions);
+    map = new google.maps.Map(m, mapOptions);
     // Create the position marker
     var marker = new google.maps.Marker({
       position: myLatlng,
@@ -310,4 +315,6 @@ function setupGeopositioning($editor) {
       return false;
     });
   });
+
+  return map;
 }

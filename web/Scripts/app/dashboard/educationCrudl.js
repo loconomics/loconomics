@@ -25,7 +25,7 @@ exports.on = function (containerSelector) {
   .on(crudl.settings.events['edit-ends'], function () {
     $others.xshow({ effect: 'height', duraction: 'slow' });
   })
-  .on(crudl.settings.events['edit-ready'], function (e, $editor) {
+  .on(crudl.settings.events['editor-ready'], function (e, $editor) {
     // Setup autocomplete
     $editor.find('[name=institution]').autocomplete({
       source: LcUrl.JsonPath + 'GetInstitutions/Autocomplete/',
