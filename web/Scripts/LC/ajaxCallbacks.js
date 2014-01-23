@@ -102,10 +102,14 @@ function lcOnSuccess(data, text, jx) {
             // and refresh the reference to box with the new element
             ctx.box = jb;
         }
-        if (ctx.box.is('form'))
-            ctx.form = ctx.box;
-        else
-            ctx.form = ctx.box.find('form:eq(0)');
+        // It supports normal ajax forms and subforms through fieldset.ajax
+        if (ctx.box.is('form.ajax') || ctx.box.is('fieldset.ajax'))
+          ctx.form = ctx.box;
+        else {
+          ctx.form = ctx.box.find('form.ajax:eq(0)');
+          if (ctx.form.length === 0)
+            ctx.form = ctx.box.find('fieldset.ajax:eq(0)');
+        }
 
         // Changesnotification after append element to document, if not will not work:
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):

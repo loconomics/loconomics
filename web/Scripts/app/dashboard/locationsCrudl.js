@@ -3,6 +3,7 @@
 var $ = require('jquery');
 require('jquery.blockUI');
 var updateTooltips = require('LC/tooltips').updateTooltips;
+// Indirectly used: require('LC/hasConfirmSupport');
 
 // TODO: Replace by real require and not global LC:
 //var ajaxForms = require('../LC/ajaxForms');
@@ -28,7 +29,6 @@ exports.on = function (containerSelector) {
     $others.xshow({ effect: 'height', duraction: 'slow' });
   })
   .on(crudl.settings.events['edit-ready'], function (e, $editor) {
-
     //Force execution of the 'has-confirm' script
     $editor.find('fieldset.has-confirm > .confirm input').change();
 

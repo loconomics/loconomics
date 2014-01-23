@@ -43,6 +43,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         var iidpar = crudl.data('crudl-item-id-parameter') || 'ItemID';
         var formpars = { action: 'create' };
         formpars[iidpar] = 0;
+        var editorInitialLoad = true;
 
         function getExtraQuery(el) {
           // Get extra query of the element, if any:
@@ -62,13 +63,12 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = 0;
           formpars.action = 'create';
           var xq = getExtraQuery($(this));
+          editorInitialLoad = true;
           dtr.reload({
             url: function (url, defaultUrl) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
             success: function () {
-              // Custom event
-              crudl.trigger(instance.settings.events['edit-ready'], [dtr]);
               dtr.xshow(instance.settings.effects['show-editor']);
             }
           });
@@ -89,13 +89,12 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = itemid;
           formpars.action = 'update';
           var xq = getExtraQuery($(this));
+          editorInitialLoad = true;
           dtr.reload({
             url: function (url, defaultUrl) {
               return defaultUrl + '?' + $.param(formpars) + xq;
             },
             success: function () {
-              // Custom event
-              crudl.trigger(instance.settings.events['edit-ready'], [dtr]);
               dtr.xshow(instance.settings.effects['show-editor']);
             }
           });
@@ -193,6 +192,17 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           // hide it (because is inside the editor)
           if (data.Code == 5)
             setTimeout(finishEdit, 1500);
+        })
+        .on('ajaxFormReturnedHtml', 'form, fieldset', function (jb, form, jx) {
+          // Emit the 'edit-ready' event on editor Html being replaced
+          // (first load or next loads because of server-side validation errors)
+          // to allow listeners to do any work over its (new) DOM elements.
+          // The second custom parameter passed means is mean to
+          // distinguish the first time content load and successive updates (due to validation errors).
+          crudl.trigger(instance.settings.events['edit-ready'], [dtr, editorInitialLoad]);
+
+          // Next times:
+          editorInitialLoad = false;
         });
 
         crudl.data('__crudl_initialized__', true);

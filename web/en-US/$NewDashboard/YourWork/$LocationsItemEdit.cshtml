@@ -53,7 +53,7 @@
             // Validate that almost one of the 'location service-type' must be selected
             if (!Request["iworkon"].AsBool() &&
                 !Request["itravel"].AsBool()) {
-                ModelState.AddFormError("Please add at least one location");
+                ModelState.AddFormError("Please select almost one option from: 'I perform services here' or 'I travel to clients from here'.");
             }
             
             // Validate that 'travel from location' is unique
