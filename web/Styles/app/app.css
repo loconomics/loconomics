@@ -2370,7 +2370,6 @@ html.boxshadow #loginBox .field-validation-error{
     width: auto;
 }
 .helpcenter form.requesthelp .message-body textarea{
-    width: 630px;
     height: 20em;
     border: none;
     background: none;

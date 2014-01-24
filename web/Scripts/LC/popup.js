@@ -147,6 +147,9 @@ function popup(url, size, complete, loadingText, options) {
     returnedBlock.closePopup = function () {
       $.unblockUI();
     };
+    returnedBlock.getBlockElement = function getBlockElement() { return returnedBlock.filter('.blockMsg'); };
+    returnedBlock.getContentElement = function getContentElement() { return returnedBlock.find('.content'); };
+    returnedBlock.getOverlayElement = function getOverlayElement() { return returnedBlock.filter('.blockOverlay'); };
     return returnedBlock;
 }
 
