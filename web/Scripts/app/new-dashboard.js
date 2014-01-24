@@ -72,10 +72,13 @@ $(function () {
     // Reseting the email addresses on success to avoid resend again messages because
     // mistake of a second submit.
     var tb = $('.DashboardReviews [name=clientsemails]');
-    tb
-    .val('')
-    .attr('placeholder', tb.data('success-message'))
-    // support for IE, 'non-placeholder-browsers'
-    .placeholder();
+    // Only if there was a value:
+    if (tb.val()) {
+      tb
+      .val('')
+      .attr('placeholder', tb.data('success-message'))
+      // support for IE, 'non-placeholder-browsers'
+      .placeholder();
+    }
   });
 });

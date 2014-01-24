@@ -12,12 +12,11 @@
 
     var idprefix = "position-" + positionID + "-reviews";
     
-    if (Validation.GetHtml("clientsemails") == null) {
-        Validation.RequireField("clientsemails", LcRessources.RequiredField("Email addresses list"));
-    }
+    // Cannot be mandatory all the time in the dashboard/your-work/ because stops all other shared forms
+    //Validation.RequireField("clientsemails", LcRessources.RequiredField("Email addresses list"));
     
-    if (IsPost && Validation.IsValid()) {
-        
+    if (IsPost && Validation.IsValid() && !String.IsNullOrWhiteSpace(Request["clientsemails"])) {
+
         var emails = LcValidators.ReadEmailAddressList(Request["clientsemails"]);
         if (emails == null){
             PageState.AddError("clientsemails", "There are errors in the email list. Please, use a comma to separate emails and verify all are valid addresses.");

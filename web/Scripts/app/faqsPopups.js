@@ -36,7 +36,12 @@ function popupFaqs(url) {
 
   if (urlsection) {
     var pup = popup(faqsBaseUrl + urlsection, 'large', function () {
-      pup.getContentElement().scrollTop($(url).position().top - 50);
+      var d = $(url),
+        pel = pup.getContentElement();
+      pel.scrollTop(pel.scrollTop() + d.position().top - 50);
+      setTimeout(function () {
+        d.effect("highlight", {}, 2000);
+      }, 400);
     });
   }
   return false;
