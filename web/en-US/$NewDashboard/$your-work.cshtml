@@ -49,6 +49,11 @@
             @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
         </div>
 
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Ask for reviews from past clients</h2>
+            @RenderPage("YourWork/_$Reviews.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+        </div>
+
         <div>
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         </div>

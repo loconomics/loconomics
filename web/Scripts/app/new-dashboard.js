@@ -66,4 +66,16 @@ $(function () {
 
   /* Your work / photos */
   require('./dashboard/managePhotosUI').on('.DashboardYourWork');
+
+  /* Your work / reviews */
+  $('.DashboardYourWork').on('ajaxSuccessPost', 'form', function (event, data) {
+    // Reseting the email addresses on success to avoid resend again messages because
+    // mistake of a second submit.
+    var tb = $('.DashboardReviews [name=clientsemails]');
+    tb
+    .val('')
+    .attr('placeholder', tb.data('success-message'))
+    // support for IE, 'non-placeholder-browsers'
+    .placeholder();
+  });
 });
