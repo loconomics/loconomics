@@ -111,7 +111,10 @@ module.exports = function(grunt) {
             './Scripts/LC/TimeSpan.js:LC/TimeSpan',
             './Scripts/LC/TimeSpanExtra.js:LC/TimeSpanExtra',
             './Scripts/LC/tooltips.js:LC/tooltips',
-            './Scripts/LC/googleMapReady.js:LC/googleMapReady'
+            './Scripts/LC/googleMapReady.js:LC/googleMapReady',
+            './Scripts/LC/smoothBoxBlock.js:LC/smoothBoxBlock',
+            './Scripts/LC/moveFocusTo.js:LC/moveFocusTo',
+            './Scripts/LC/changesNotification.js:LC/changesNotification',
           ]
         }
       },
@@ -129,7 +132,10 @@ module.exports = function(grunt) {
             'LC/TimeSpan',
             'LC/TimeSpanExtra',
             'LC/tooltips',
-            'LC/googleMapReady'
+            'LC/googleMapReady',
+            'LC/smoothBoxBlock',
+            'LC/moveFocusTo',
+            'LC/changesNotification'
           ]
         }
       }

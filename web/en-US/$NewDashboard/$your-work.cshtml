@@ -44,6 +44,11 @@
             @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p })
         </div>
 
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Upload up to 10 images of your work</h2>
+            @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+        </div>
+
         <div>
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         </div>

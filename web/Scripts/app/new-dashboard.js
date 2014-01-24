@@ -63,4 +63,7 @@ $(function () {
 
   /* Your work / licenses */
   require('./dashboard/licensesCrudl').on('.DashboardYourWork');
+
+  /* Your work / photos */
+  require('./dashboard/managePhotosUI').on('.DashboardYourWork');
 });

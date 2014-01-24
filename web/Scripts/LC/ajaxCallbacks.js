@@ -81,19 +81,29 @@ function lcOnSuccess(data, text, jx) {
             }
         }
 
-        // For 'reload' support, check too the context.mode
-        ctx.boxIsContainer = ctx.boxIsContainer || (ctx.options && ctx.options.mode === 'replace-content');
+        // For 'reload' support, check too the context.mode, and both reload or ajaxForms check data attribute too
+        ctx.boxIsContainer = ctx.boxIsContainer;
+        var replaceBoxContent =
+          (ctx.options && ctx.options.mode === 'replace-content') ||
+          ctx.box.data('reload-mode') === 'replace-content';
 
         // Check if the returned element is the ajax-box, if not, find
         // the element in the newhtml:
-        var jb = newhtml;
-        if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
+        var jb = newhtml.filter('.ajax-box');
+        if (jb.length === 0)
+          jb = newhtml;
+        if (!ctx.boxIsContainer && !jb.is('.ajax-box'))
             jb = newhtml.find('.ajax-box:eq(0)');
         if (!jb || jb.length === 0) {
             // There is no ajax-box, use all element returned:
             jb = newhtml;
         }
-        if (ctx.boxIsContainer) {
+
+        if (replaceBoxContent) {
+          // Replace the box content with the content of the returned box
+          // or all if there is no ajax-box in the result.
+          ctx.box.empty().append(jb.is('.ajax-box') ? jb.contents() : jb);
+        } else if (ctx.boxIsContainer) {
             // jb is content of the box container:
             ctx.box.html(jb);
         } else {
@@ -102,6 +112,7 @@ function lcOnSuccess(data, text, jx) {
             // and refresh the reference to box with the new element
             ctx.box = jb;
         }
+
         // It supports normal ajax forms and subforms through fieldset.ajax
         if (ctx.box.is('form.ajax') || ctx.box.is('fieldset.ajax'))
           ctx.form = ctx.box;
@@ -123,6 +134,9 @@ function lcOnSuccess(data, text, jx) {
         var validationSummary = jb.find('.validation-summary-errors');
         if (validationSummary.length)
           moveFocusTo(validationSummary);
+        // TODO: It seems that it returns a document-fragment instead of a element already in document
+        // for ctx.form (maybe jb too?) when using * ctx.box.data('reload-mode') === 'replace-content' * 
+        // (maybe on other cases too?).
         ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }
