@@ -1,0 +1,122 @@
+/**
+  AvailabilityCalendar component styles.
+**/
+@import "nib"
+@import "ColorsPalette"
+
+$colorUnavailable = White;
+$colorAvailable = #DDEAB8;
+$colorBounds = #C3C3C3;
+$colorSmoothBounds = #EEE;
+
+.AvailabilityCalendar {
+    
+    .AvailabilityCalendar-legend {
+    
+        margin: 1.5em 8em;
+    
+        ul li {
+            display: inline-block;
+            margin-right: 5em;
+        }
+    
+        .AvailabilityCalendar-legend-example {
+            border: 1px solid $colorBounds;
+            display: inline-block;
+            width: 3em;
+            height: 1em;
+            vertical-align: middle;
+            margin-right: 1em;
+        }
+    
+        .AvailabilityCalendar-legend-available .AvailabilityCalendar-legend-example {
+            background: $colorAvailable;
+        }
+        
+        .AvailabilityCalendar-legend-unavailable .AvailabilityCalendar-legend-example {
+            background: $colorUnavailable;
+        }
+    }
+  
+    &.AvailabilityCalendar--weekly {
+    
+        .AvailabilityCalendar-actions {
+            
+        }
+  
+        table {
+            width: 100%;
+            min-width: 600px;
+            
+            th {
+                font-weight: normal;
+            }
+            
+            /* Default cells color: unavailable */
+            td,
+            td.is-unavailable {
+                background-color: $colorUnavailable;
+            }
+
+            td.is-available {
+                background-color: $colorAvailable;
+            }
+
+            .AvailabilityCalendar-days {
+                text-align: center;
+                text-transform: uppercase;
+                
+                th {
+                    width: 13%;
+                }
+            }
+        
+            .AvailabilityCalendar-slots {
+                
+                th,
+                td {
+                    border-right: 1px solid $colorSmoothBounds;
+                }
+                
+                td {
+                    height: 5px;
+                }
+            
+                .AvailabilityCalendar-hour {
+                
+                    th {
+                        text-align: right;    
+                        padding: 0 .5em;
+                        min-width: 45px;
+                    }
+            
+                    /* Border on hour cells but not the header: */
+                    td {
+                        border-top: 1px solid $colorSmoothBounds;
+                    }
+                    
+                    &.AvailabilityCalendar-hour--noon td {
+                        border-top-color: $colorBounds;
+                    }
+            
+                }
+                
+                td:last-child {
+                    border-right: 1px solid $colorBounds;
+                }
+                
+                tr:first-child td {
+                    border-top: 1px solid $colorBounds;
+                }
+                
+                tr:last-child td {
+                    border-bottom: 1px solid $colorBounds;
+                }
+            
+            }
+            
+        }
+        
+    }
+    
+}

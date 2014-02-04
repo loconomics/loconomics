@@ -14,7 +14,7 @@ function fixCssImageRoutes(src, filepath) {
 
 /** Grunt tasks configuration
 **/
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   var assetsBannerTpl =
     '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -22,18 +22,18 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
+
     concat: {
       options: {
-        separator: ';',
         'banner': assetsBannerTpl
       },
       'js-common': {
+        options: { separator: ';' },
         src: ['./Scripts/libs.min.js', './Scripts/app.min.js'],
         dest: './Scripts/common.min.js'
       },
       'css-common': {
-        src: ['./Styles/app/app.css', './Styles/app/w-ProviderPackage.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
+        src: ['./Styles/app/app.css', './Styles/app-includes.css', './Styles/app/w-ProviderPackage.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
         dest: './Styles/common.css',
         options: {
           process: fixCssImageRoutes
@@ -46,8 +46,8 @@ module.exports = function(grunt) {
         'src': [
           './Scripts/jquery/jquery-1.7.2.min.js',
           './Scripts/jquery/jquery-ui-1.8.21.custom.min.js',
-          // We don't need ES locale support right now:
-          //'./Scripts/jquery/jquery.ui.datepicker-es.js',
+        // We don't need ES locale support right now:
+        //'./Scripts/jquery/jquery.ui.datepicker-es.js',
           './Scripts/libs/modernizr.custom.2.6.2.js',
           './Scripts/jquery/jQuery.blockUI.js',
           './Scripts/jquery/jquery.ba-hashchange.min.js',
@@ -140,7 +140,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     uglify: {
       'libs': {
         'files': {
@@ -158,7 +158,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     qunit: {
       all: ['Scripts/tests/**/*.html']
     },
@@ -183,27 +183,32 @@ module.exports = function(grunt) {
     },
 
     stylus: {
-      all: {
-        options: {
-          // Se usa cssmin para compresión, éste sin comprimir y con información de depuración
-          compress: false,
-          linenos: true,
-          //paths: ['path/to/import', 'another/to/import'],
-          // use embedurl('test.png') in our code to trigger Data URI embedding
-          urlfunc: 'embedurl',
-          'include css': true,
-          banner: assetsBannerTpl
-          /*
-          import: [      //  @import 'foo', 'bar/moo', etc. into every .styl file
-            'foo',       //  that is compiled. These might be findable based on values you gave
-            'bar/moo'    //  to `paths`, or a plugin you added under `use`
-          ]*/
-        },
+      options: {
+        // Se usa cssmin para compresión, éste sin comprimir y con información de depuración
+        compress: false,
+        linenos: true,
+        //paths: ['path/to/import', 'another/to/import'],
+        // use embedurl('test.png') in our code to trigger Data URI embedding
+        urlfunc: 'embedurl',
+        'include css': true,
+        banner: assetsBannerTpl
+        /*
+        import: [      //  @import 'foo', 'bar/moo', etc. into every .styl file
+        'foo',       //  that is compiled. These might be findable based on values you gave
+        'bar/moo'    //  to `paths`, or a plugin you added under `use`
+        ]*/
+      },
+      dashboard: {
         files: {
           //'Styles/app.css': ['Styles/app/app.styl']
           'Styles/new-dashboard.css': ['Styles/app/new-dashboard.styl']
         }
       },
+      'app-includes': {
+        files: {
+          'Styles/app-includes.css': ['Styles/app/app-includes.styl']
+        }
+      }
     },
 
     cssmin: {
@@ -213,8 +218,8 @@ module.exports = function(grunt) {
         // Se añade el banner de nuevo, que incluye un salto de línea antes del código
         banner: assetsBannerTpl,
         /* NOTE: Disabled the advanced mode because causes next know problems with our code:
-          - html:before{ background gradient }  it gets removed some rules, letting background white
-          */
+        - html:before{ background gradient }  it gets removed some rules, letting background white
+        */
         noAdvanced: true
       },
       css: {
@@ -228,7 +233,11 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
+    clean: {
+      'css-app-includes': ['Styles/app-includes.css']
+    },
+
     watch: {
       js: {
         files: ['<%= jshint.all.files.src %>'],
@@ -236,11 +245,11 @@ module.exports = function(grunt) {
       },
       css: {
         files: ['Styles/**/*.styl'],
-        tasks: ['stylus', 'cssmin:css']
+        tasks: ['build-css']
       },
       'plain-css': {
-        files: ['Styles/App/*.css'],
-        tasks: ['concat:css-common', 'cssmin:plain-css']
+        files: ['Styles/app/*.css'],
+        tasks: ['concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
       }
     }
   });
@@ -253,11 +262,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   grunt.registerTask('test', ['jshint', 'qunit']);
   grunt.registerTask('build-js', ['browserify', 'uglify', 'concat:js-common']);
-  grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin']);
-  grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common']);
+  grunt.registerTask('build-css', ['stylus', 'concat:css-common', 'cssmin', 'clean:css-app-includes']);
+  grunt.registerTask('build-dev', ['browserify', 'stylus', 'concat:css-common', 'clean:css-app-includes']);
   grunt.registerTask('build', ['build-js', 'build-css']);
 
   grunt.registerTask('default', ['build', 'test']);
