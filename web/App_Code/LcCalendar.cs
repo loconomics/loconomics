@@ -44,6 +44,21 @@ public static class LcCalendar
     #endregion
 
     #region Availability
+
+    /// <summary>
+    /// Fixed values for each type syncrhonized with the database values
+    /// for the table CalendarAvailabilityType
+    /// </summary>
+    public enum AvailabilityType : short
+    {
+        //"unavailable", "free", "busy", "tentative", "offline"
+        Unavailable = 0,
+        Free = 1,
+        Busy = 2,
+        Tentative = 3,
+        Offline = 4
+    }
+
     /// <summary>
     /// Get availability table for the user between given date and times
     /// </summary>

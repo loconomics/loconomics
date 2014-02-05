@@ -184,7 +184,10 @@ var faqsPopups = require('./faqsPopups');
 var accountPopups = require('./accountPopups');
 var legalPopups = require('./legalPopups');
 
+// Old availablity calendar
 var availabilityCalendarWidget = require('./availabilityCalendarWidget');
+// New availability calendar
+var availabilityCalendar = require('../LC/availabilityCalendar');
 
 var autofillSubmenu = require('../LC/autofillSubmenu');
 
@@ -230,7 +233,10 @@ $(function () {
   accountPopups.enable(LcUrl.LangPath);
   legalPopups.enable(LcUrl.LangPath);
 
+  // Old availability calendar
   availabilityCalendarWidget.init(LcUrl.LangPath);
+  // New availability calendar
+  availabilityCalendar.on();
 
   popup.connectAction();
 

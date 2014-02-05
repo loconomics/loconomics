@@ -1,5 +1,5 @@
 ﻿@{
-    
+    var user = PageData["User"] ?? Request["user"];
 }
 @functions {
     /// <summary>
@@ -24,7 +24,7 @@
         }
     }
 }
-<div class="AvailabilityCalendar AvailabilityCalendar--weekly">
+<div class="AvailabilityCalendar AvailabilityCalendar--weekly" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
     <div class="Actions AvailabilityCalendar-actions">
         <button type="button" class="Actions-move Actions-prev">Previous week</button>
         <button type="button" class="Actions-move Actions-next">Next week</button>

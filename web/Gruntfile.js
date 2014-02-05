@@ -87,7 +87,8 @@ module.exports = function (grunt) {
       'app': {
         'src': [
           './Scripts/app/app.js',
-          './Scripts/LC/FacebookConnect.js'
+          './Scripts/LC/FacebookConnect.js',
+          './Scripts/LC/dateISO8601.js'
         ],
         'dest': './Scripts/app.js',
         'options': {
@@ -115,6 +116,7 @@ module.exports = function (grunt) {
             './Scripts/LC/smoothBoxBlock.js:LC/smoothBoxBlock',
             './Scripts/LC/moveFocusTo.js:LC/moveFocusTo',
             './Scripts/LC/changesNotification.js:LC/changesNotification',
+            './Scripts/LC/dateISO8601.js:LC/dateISO8601'
           ]
         }
       },
@@ -135,7 +137,8 @@ module.exports = function (grunt) {
             'LC/googleMapReady',
             'LC/smoothBoxBlock',
             'LC/moveFocusTo',
-            'LC/changesNotification'
+            'LC/changesNotification',
+            'LC/dateISO8601'
           ]
         }
       }
