@@ -10,6 +10,20 @@ $colorAvailable = #DDEAB8;
 $colorBounds = #C3C3C3;
 $colorSmoothBounds = #EEE;
 
+disabled($color = White, $opacity = .5) {
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        background: $color;
+        opacity: $opacity;
+    }
+}
+
 .AvailabilityCalendar {
     position: relative;
     
@@ -27,16 +41,23 @@ $colorSmoothBounds = #EEE;
         }
         
         /* Disabling actions to avoid new requests */
-        .AvailabilityCalendar-actions:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            background: White;
-            opacity: .3;
+        .AvailabilityCalendar-actions {
+            disabled();
+        }
+    }
+    
+    &.is-currentWeek {
+        /* Button previous gets disabled */
+        .Actions-prev {
+            position: relative;
+            disabled();
+        }
+    }
+    
+    &.is-preloading {
+        /* Button next is on the work to have more data */
+        .Actions-next {
+            border-bottom-color: $colorLtTeal !important;
         }
     }
     

@@ -7,6 +7,8 @@ var $ = require('jquery'),
 var classes = {
   calendar: 'AvailabilityCalendar',
   loading: 'is-loading',
+  preloading: 'is-preloading',
+  currentWeek: 'is-currentWeek',
   actions: 'AvailabilityCalendar-actions',
   prevAction: 'Actions-prev',
   nextAction: 'Actions-next',
@@ -38,8 +40,9 @@ function on(selector, options) {
     if (typeof(dataSource) == 'string')
       dataSource = JSON.parse(dataSource);
 
-    function fetchData(start, end) {
-      calendar.addClass(options.classes.loading);
+    function fetchData(start, end, preloading) {
+      var fetchStateClass = preloading ? options.classes.preloading : options.classes.loading;
+      calendar.addClass(fetchStateClass);
       return $.getJSON(dataSourceUrl,
         {
           user: user,
@@ -49,7 +52,7 @@ function on(selector, options) {
         function(data){
           if (data && data.Code === 0) {
             $.extend(true, dataSource, data.Result);
-            calendar.removeClass(options.classes.loading);
+            calendar.removeClass(fetchStateClass);
           } else {
             // TODO Manage error
             if (console && console.error) console.error('AvailabilityCalendar fetch data error %o', data);
@@ -58,10 +61,32 @@ function on(selector, options) {
       );
     }
 
+    // Fetch current week
+    var start = getFirstWeekDate(new Date()),
+        end = getLastWeekDate(new Date());
+
+    var request = fetchData(start, end).done(function(){
+      bindData(calendar, dataSource, options, start, end);
+      // Prefetching 3 weeks in advance
+      request = fetchData(addDays(start, 7), addDays(end, 21), true);
+    });
+    checkCurrentWeek(calendar, start, options);
+
     function moveBindRangeInDays(days) {
       var
         start = addDays( calendar.data('calendar-start-date'), days ),
         end = addDays( calendar.data('calendar-end-date'), days );
+
+      // Support for prefetching:
+      if (request && request.status != 200) {
+        // Wait for the fetch to perform and sets loading to notify user
+        calendar.addClass(options.classes.loading);
+        request.done(function(){
+          moveBindRangeInDays(days);
+          calendar.removeClass(options.classes.loading);
+        });
+        return;
+      }
 
       // Check cache: if there is almost one date in the range
       // without data, we set inCache as false and fetch the data:
@@ -91,14 +116,6 @@ function on(selector, options) {
     calendar.on('click', '.' + options.classes.nextAction, function next(){
       moveBindRangeInDays(7);
     });
-
-    // Fetch current week
-    var start = getFirstWeekDate(new Date()),
-      end = getLastWeekDate(new Date());
-
-    fetchData(start, end).done(function(){
-      bindData(calendar, dataSource, options, start, end);
-    });
   });
 }
 
@@ -109,6 +126,8 @@ function bindData(calendar, dataSource, options, start, end) {
   // Save the date range being showed in the calendar instance
   calendar.data('calendar-start-date', start);
   calendar.data('calendar-end-date', end);
+
+  checkCurrentWeek(calendar, start, options);
 
   updateLabels(calendar, options);
 
@@ -157,6 +176,16 @@ function findSlotCell(slotsContainer, day, slot) {
   return tr.children(':eq(' + dayOffset + ')');
 }
 
+/**
+  Mark calendar as current-week and disable prev button,
+  or remove the mark and enable it if is not.
+**/
+function checkCurrentWeek(calendar, date, options) {
+    var yep = isInCurrentWeek(date);
+    calendar.toggleClass(options.classes.currentWeek, yep);
+    calendar.find('.' + options.classes.prevAction).prop('disabled', yep);
+}
+
 function getFirstWeekDate(date) {
   var d = new Date(date);
   d.setDate( d.getDate() - d.getDay() );
@@ -167,6 +196,10 @@ function getLastWeekDate(date) {
   var d = new Date(date);
   d.setDate( d.getDate() + (7 - d.getDay()) );
   return d;
+}
+
+function isInCurrentWeek(date) {
+  return dateISO.dateLocal(getFirstWeekDate(date)) == dateISO.dateLocal(getFirstWeekDate(new Date()));
 }
 
 function addDays(date, days) {

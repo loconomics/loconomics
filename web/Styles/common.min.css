@@ -2930,7 +2930,9 @@ label.visuallyhidden-with-placeholder{
 }
 
 
-.AvailabilityCalendar.is-loading .AvailabilityCalendar-actions:before {
+
+
+.AvailabilityCalendar.is-loading .AvailabilityCalendar-actions:after {
   content: '';
   position: absolute;
   top: 0;
@@ -2939,9 +2941,38 @@ label.visuallyhidden-with-placeholder{
   left: 0;
   z-index: 100;
   background: White;
-  opacity: 0.3;
-  -ms-filter: "alpha(Opacity=30)";
-  filter: alpha(opacity=30);
+  opacity: 0.5;
+  -ms-filter: "alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
+
+
+
+
+.AvailabilityCalendar.is-currentWeek .Actions-prev {
+  position: relative;
+}
+
+
+.AvailabilityCalendar.is-currentWeek .Actions-prev:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background: White;
+  opacity: 0.5;
+  -ms-filter: "alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
+
+
+
+
+.AvailabilityCalendar.is-preloading .Actions-next {
+  border-bottom-color: #b5e1e2 !important;
 }
 
 
