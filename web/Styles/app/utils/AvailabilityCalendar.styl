@@ -156,6 +156,17 @@ disabled($color = White, $opacity = .5) {
                 font-weight: normal;
             }
             
+            th,
+            td {
+                /* All equally distributed, except the first */
+                width: 14%;
+                    
+                &:first-child {
+                    width: 2%;
+                    white-space: nowrap;
+                }
+            }
+            
             /* Default cells color: unavailable */
             td,
             td.is-unavailable {
@@ -169,11 +180,6 @@ disabled($color = White, $opacity = .5) {
             .AvailabilityCalendar-days {
                 text-align: center;
                 text-transform: uppercase;
-                
-                th {
-                    /* All equally distributed */
-                    width: 12%;
-                }
             }
         
             .AvailabilityCalendar-slots {
@@ -184,7 +190,7 @@ disabled($color = White, $opacity = .5) {
                 }
                 
                 td {
-                    height: 5px;
+                    height: 4px;
                 }
             
                 .AvailabilityCalendar-hour {
