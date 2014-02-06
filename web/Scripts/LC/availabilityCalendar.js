@@ -43,8 +43,8 @@ function on(selector, options) {
       return $.getJSON(dataSourceUrl,
         {
           user: user,
-          start: start,
-          end: end
+          start: dateISO.datetimeLocal(start, true),
+          end: dateISO.datetimeLocal(end, true)
         },
         function(data){
           if (data && data.Code === 0) {
@@ -58,10 +58,38 @@ function on(selector, options) {
       );
     }
 
-    calendar.on('click', options.classes.prevAction, function prev(){
+    function moveBindRangeInDays(days) {
+      var
+        start = addDays( calendar.data('calendar-start-date'), days ),
+        end = addDays( calendar.data('calendar-end-date'), days );
+
+      // Check cache: if there is almost one date in the range
+      // without data, we set inCache as false and fetch the data:
+      var inCache = true;
+      eachDateInRange(start, end, function(date) {
+        var datekey = dateISO.dateLocal(date, true);
+        if (!dataSource.slots[datekey]) {
+          inCache = false;
+          return false;
+        }
+      });
+
+      if (inCache)
+        // Just show the data
+        bindData(calendar, dataSource, options, start, end);
+      else
+        // Fetch (download) the data and show on ready:
+        fetchData(start, end).done(function(){
+          bindData(calendar, dataSource, options, start, end);
+        });
+    }
+
+    calendar.on('click', '.' + options.classes.prevAction, function prev(){
+      moveBindRangeInDays(-7);
     });
 
-    calendar.on('click', options.classes.nextAction, function next(){
+    calendar.on('click', '.' + options.classes.nextAction, function next(){
+      moveBindRangeInDays(7);
     });
 
     // Fetch current week
@@ -78,6 +106,12 @@ function bindData(calendar, dataSource, options, start, end) {
   var slotsContainer = calendar.find('.' + options.classes.slots),
     slots = slotsContainer.find('td');
 
+  // Save the date range being showed in the calendar instance
+  calendar.data('calendar-start-date', start);
+  calendar.data('calendar-end-date', end);
+
+  updateLabels(calendar, options);
+
   // Remove any previous status class from all slots
   for (var s = 0; s < statusTypes.length; s++) {
     slots.removeClass( options.classes.slotStatusPrefix + statusTypes[s] );
@@ -86,9 +120,8 @@ function bindData(calendar, dataSource, options, start, end) {
   // Set all slots with default status
   slots.addClass( options.classes.slotStatusPrefix + dataSource.defaultStatus );
 
-  var date = new Date(start);
-  for (var i = 0; i < 7; i++) {
-    var datekey = dateISO.dateLocal(date);
+  eachDateInRange(start, end, function(date, i) {
+    var datekey = dateISO.dateLocal(date, true);
     var dateSlots = dataSource.slots[datekey];
     if (dateSlots) {
       for (s = 0; s < dateSlots.length; s++) {
@@ -100,10 +133,14 @@ function bindData(calendar, dataSource, options, start, end) {
         slotCell.addClass( options.classes.slotStatusPrefix + dataSource.status );
       }
     }
+  });
+}
 
-    // Next date:
-    date.setDate(date.getDate() + 1);
-  }
+function updateLabels(calendar, options) {
+  var start = calendar.data('calendar-start-date'),
+      end = calendar.data('calendar-end-date');
+
+  // TODO
 }
 
 function findSlotCell(slotsContainer, day, slot) {
@@ -130,6 +167,26 @@ function getLastWeekDate(date) {
   var d = new Date(date);
   d.setDate( d.getDate() + (7 - d.getDay()) );
   return d;
+}
+
+function addDays(date, days) {
+  var d = new Date(date);
+  d.setDate( d.getDate() + days );
+  return d;
+}
+
+function eachDateInRange(start, end, fn) {
+  if (!fn.call) throw new Error('fn must be a function or "call"able object');
+  var date = new Date(start);
+  var i = 0, ret;
+  while (date <= end) {
+    ret = fn.call(fn, date, i);
+    // Allow fn to cancel the loop with strict 'false'
+    if (ret === false)
+      break;
+    date.setDate(date.getDate() + 1);
+    i++;
+  }
 }
 
 // Public API:

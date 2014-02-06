@@ -40,7 +40,10 @@ exports.dateLocal = function dateLocal(date, extended) {
   if (d.length == 1)
     d = '0' + d;
 
-  return y + '-' + m + '-' + d;
+  if (extended)
+    return y + '-' + m + '-' + d;
+  else
+    return y + m + d;
 };
 
 /**
