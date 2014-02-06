@@ -26,6 +26,14 @@ var statusTypes = ['unavailable', 'available'];
 var defaults = {
   classes: classes,
   dataSourceUrl: '/calendar/get-availability/',
+  texts: {
+    abbrWeekDays: [
+      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+    ],
+    today: 'Today',
+    // Allowed special values: M:month, D:day
+    abbrDateFormat: 'M/D'
+  }
 };
 
 function on(selector, options) {
@@ -160,6 +168,22 @@ function updateLabels(calendar, options) {
       end = calendar.data('calendar-end-date');
 
   // TODO
+  var days = calendar.find('.' + options.classes.days + ' th');
+  var today = dateISO.dateLocal(new Date());
+  // First cell is empty ('the cross headers cell'), then offset is 1
+  var offset = 1;
+  eachDateInRange(start, end, function (date, i) {
+    var cell = $(days.get(offset + i)),
+        sdate = dateISO.dateLocal(date),
+        label = sdate;
+
+    if (today == sdate)
+      label = options.texts.today;
+    else
+      label = options.texts.abbrWeekDays[date.getDay()] + ' ' + formatDate(date, options.texts.abbrDateFormat);
+
+    cell.text(label);
+  });
 }
 
 function findSlotCell(slotsContainer, day, slot) {
@@ -184,7 +208,7 @@ function checkCurrentWeek(calendar, date, options) {
     var yep = isInCurrentWeek(date);
     calendar.toggleClass(options.classes.currentWeek, yep);
     calendar.find('.' + options.classes.prevAction).prop('disabled', yep);
-}
+  }
 
 function getFirstWeekDate(date) {
   var d = new Date(date);
@@ -220,6 +244,21 @@ function eachDateInRange(start, end, fn) {
     date.setDate(date.getDate() + 1);
     i++;
   }
+}
+
+/** Very simple custom-format function to allow 
+  l10n of texts.
+  Cover cases:
+  - M for month
+  - D for day
+**/
+function formatDate(date, format) {
+  var s = format,
+      M = date.getMonth() + 1,
+      D = date.getDate();
+  s = s.replace(/M/g, M);
+  s = s.replace(/D/g, D);
+  return s;
 }
 
 // Public API:
