@@ -236,7 +236,7 @@ $(function () {
   // Old availability calendar
   availabilityCalendarWidget.init(LcUrl.LangPath);
   // New availability calendar
-  availabilityCalendar.on();
+  availabilityCalendar.Weekly.enableAll();
 
   popup.connectAction();
 

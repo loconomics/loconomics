@@ -2,10 +2,20 @@
   AvailabilityCalendar Module
 **/
 var $ = require('jquery'),
-  dateISO = require('LC/dateISO8601');
+  dateISO = require('LC/dateISO8601'),
+  LcWidget = require('./CX/LcWidget');
 
-var classes = {
+/**-----------------------
+Common private utilities
+-----------------------**/
+
+/*------ CONSTANTS ---------*/
+var statusTypes = ['unavailable', 'available'];
+
+/*--------- CONFIG - INSTANCE ----------*/
+var weeklyClasses = {
   calendar: 'AvailabilityCalendar',
+  weeklyCalendar: 'AvailabilityCalendar--weekly',
   loading: 'is-loading',
   preloading: 'is-preloading',
   currentWeek: 'is-currentWeek',
@@ -21,153 +31,69 @@ var classes = {
   legendUnavailable: 'AvailabilityCalendar-legend-unavailable'
 };
 
-var statusTypes = ['unavailable', 'available'];
-
-var defaults = {
-  classes: classes,
-  dataSourceUrl: '/calendar/get-availability/',
-  texts: {
-    abbrWeekDays: [
-      'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
-    ],
-    today: 'Today',
-    // Allowed special values: M:month, D:day
-    abbrDateFormat: 'M/D'
-  }
+var weeklyTexts = {
+  abbrWeekDays: [
+    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+  ],
+  today: 'Today',
+  // Allowed special values: M:month, D:day
+  abbrDateFormat: 'M/D'
 };
 
-function on(selector, options) {
-  options = $.extend(true, {}, defaults, options);
-  selector = selector || '.' + options.classes.calendar;
+/*----------- VIEW ----------------*/
 
-  $(selector).each(function () {
-    var calendar = $(this);
-    var user = calendar.data('calendar-user');
-    var dataSourceUrl = calendar.data('source-url') || options.dataSourceUrl;
-    var dataSource = calendar.data('source') || {};
-    if (typeof(dataSource) == 'string')
-      dataSource = JSON.parse(dataSource);
+function moveBindRangeInDays(weekly, days) {
+  var 
+    start = addDays(weekly.datesRange.start, days),
+    end = addDays(weekly.datesRange.end, days),
+    datesRange = datesToQuery(start, end);
 
-    function fetchData(start, end, preloading) {
-      var fetchStateClass = preloading ? options.classes.preloading : options.classes.loading;
-      calendar.addClass(fetchStateClass);
-      return $.getJSON(dataSourceUrl,
-        {
-          user: user,
-          start: dateISO.datetimeLocal(start, true),
-          end: dateISO.datetimeLocal(end, true)
-        },
-        function(data){
-          if (data && data.Code === 0) {
-            $.extend(true, dataSource, data.Result);
-            calendar.removeClass(fetchStateClass);
-          } else {
-            // TODO Manage error
-            if (console && console.error) console.error('AvailabilityCalendar fetch data error %o', data);
-          }
-        }
-      );
-    }
+  // Support for prefetching:
+  // Its avoided if there are requests in course, since
+  // that will be a prefetch for the same data.
+  if (this.fetchData.requests.length) {
+    // The last request in the pool *must* be the last in finish
+    // (must be only one if all goes fine):
+    var request = this.fetchData.requests[this.fetchData.requests.length - 1];
 
-    // Fetch current week
-    var start = getFirstWeekDate(new Date()),
-        end = getLastWeekDate(new Date());
-
-    var request = fetchData(start, end).done(function(){
-      bindData(calendar, dataSource, options, start, end);
-      // Prefetching 3 weeks in advance
-      request = fetchData(addDays(start, 7), addDays(end, 21), true);
+    // Wait for the fetch to perform and sets loading to notify user
+    weekly.$el.addClass(weekly.classes.loading);
+    request.done(function () {
+      moveBindRangeInDays(weekly, days);
+      weekly.$el.removeClass(weekly.classes.loading);
     });
-    checkCurrentWeek(calendar, start, options);
-
-    function moveBindRangeInDays(days) {
-      var
-        start = addDays( calendar.data('calendar-start-date'), days ),
-        end = addDays( calendar.data('calendar-end-date'), days );
-
-      // Support for prefetching:
-      if (request && request.status != 200) {
-        // Wait for the fetch to perform and sets loading to notify user
-        calendar.addClass(options.classes.loading);
-        request.done(function(){
-          moveBindRangeInDays(days);
-          calendar.removeClass(options.classes.loading);
-        });
-        return;
-      }
-
-      // Check cache: if there is almost one date in the range
-      // without data, we set inCache as false and fetch the data:
-      var inCache = true;
-      eachDateInRange(start, end, function(date) {
-        var datekey = dateISO.dateLocal(date, true);
-        if (!dataSource.slots[datekey]) {
-          inCache = false;
-          return false;
-        }
-      });
-
-      if (inCache)
-        // Just show the data
-        bindData(calendar, dataSource, options, start, end);
-      else
-        // Fetch (download) the data and show on ready:
-        fetchData(start, end).done(function(){
-          bindData(calendar, dataSource, options, start, end);
-        });
-    }
-
-    calendar.on('click', '.' + options.classes.prevAction, function prev(){
-      moveBindRangeInDays(-7);
-    });
-
-    calendar.on('click', '.' + options.classes.nextAction, function next(){
-      moveBindRangeInDays(7);
-    });
-  });
-}
-
-function bindData(calendar, dataSource, options, start, end) {
-  var slotsContainer = calendar.find('.' + options.classes.slots),
-    slots = slotsContainer.find('td');
-
-  // Save the date range being showed in the calendar instance
-  calendar.data('calendar-start-date', start);
-  calendar.data('calendar-end-date', end);
-
-  checkCurrentWeek(calendar, start, options);
-
-  updateLabels(calendar, options);
-
-  // Remove any previous status class from all slots
-  for (var s = 0; s < statusTypes.length; s++) {
-    slots.removeClass( options.classes.slotStatusPrefix + statusTypes[s] );
+    return;
   }
 
-  // Set all slots with default status
-  slots.addClass( options.classes.slotStatusPrefix + dataSource.defaultStatus );
-
-  eachDateInRange(start, end, function(date, i) {
+  // Check cache: if there is almost one date in the range
+  // without data, we set inCache as false and fetch the data:
+  var inCache = true;
+  eachDateInRange(start, end, function (date) {
     var datekey = dateISO.dateLocal(date, true);
-    var dateSlots = dataSource.slots[datekey];
-    if (dateSlots) {
-      for (s = 0; s < dateSlots.length; s++) {
-        var slot = dateSlots[s];
-        var slotCell = findSlotCell(slotsContainer, i, slot);
-        // Remove default status
-        slotCell.removeClass( options.classes.slotStatusPrefix + dataSource.defaultStatus );
-        // Adding status class
-        slotCell.addClass( options.classes.slotStatusPrefix + dataSource.status );
-      }
+    if (!weekly.data.slots[datekey]) {
+      inCache = false;
+      return false;
     }
   });
+
+  if (inCache)
+  // Just show the data
+    weekly.bindData(datesRange);
+  else
+  // Fetch (download) the data and show on ready:
+    weekly
+    .fetchData(datesRange)
+    .done(function () {
+      weekly.bindData(datesRange);
+    });
 }
 
-function updateLabels(calendar, options) {
-  var start = calendar.data('calendar-start-date'),
-      end = calendar.data('calendar-end-date');
+/** Update the view labels for the week-days (table headers)
+**/
+function updateLabels(datesRange, calendar, options) {
+  var start = datesRange.start,
+      end = datesRange.end;
 
-  // TODO
   var days = calendar.find('.' + options.classes.days + ' th');
   var today = dateISO.dateLocal(new Date());
   // First cell is empty ('the cross headers cell'), then offset is 1
@@ -188,37 +114,73 @@ function updateLabels(calendar, options) {
 
 function findSlotCell(slotsContainer, day, slot) {
   slot = dateISO.parse(slot);
-  var
-    x = Math.round( slot.getHours() ),
-    // Time frames (slots) are 15 minutes divisions
-    y = Math.round( slot.getMinutes() / 15 ),
-    tr = slotsContainer.children(':eq(' + Math.round( x * 4 + y ) + ')' );
-  
+  var 
+    x = Math.round(slot.getHours()),
+  // Time frames (slots) are 15 minutes divisions
+    y = Math.round(slot.getMinutes() / 15),
+    tr = slotsContainer.children(':eq(' + Math.round(x * 4 + y) + ')');
+
   // Slot cell for o'clock hours is at 1 position offset
   // because of the row-head cell
-  var dayOffset = ( y === 0 ? day + 1 : day );
+  var dayOffset = (y === 0 ? day + 1 : day);
   return tr.children(':eq(' + dayOffset + ')');
 }
 
 /**
-  Mark calendar as current-week and disable prev button,
-  or remove the mark and enable it if is not.
+Mark calendar as current-week and disable prev button,
+or remove the mark and enable it if is not.
 **/
 function checkCurrentWeek(calendar, date, options) {
-    var yep = isInCurrentWeek(date);
-    calendar.toggleClass(options.classes.currentWeek, yep);
-    calendar.find('.' + options.classes.prevAction).prop('disabled', yep);
+  var yep = isInCurrentWeek(date);
+  calendar.toggleClass(options.classes.currentWeek, yep);
+  calendar.find('.' + options.classes.prevAction).prop('disabled', yep);
+}
+
+/** Get query object with the date range specified:
+**/
+function datesToQuery(start, end) {
+  // Unique param with both propierties:
+  if (start.end) {
+    end = start.end;
+    start = start.start;
   }
+  return {
+    start: dateISO.datetimeLocal(start, true),
+    end: dateISO.datetimeLocal(end, true)
+  };
+}
+
+/*----------- DATES (generic functions) ---------------*/
+
+function currentWeek() {
+  return {
+    start: getFirstWeekDate(new Date()),
+    end: getLastWeekDate(new Date())
+  };
+}
+function nextWeek(start, end) {
+  // Unique param with both propierties:
+  if (start.end) {
+    end = start.end;
+    start = start.start;
+  }
+  // Optional end:
+  end = end || addDays(start, 7);
+  return {
+    start: addDays(start, 7),
+    end: addDays(end, 7)
+  };
+}
 
 function getFirstWeekDate(date) {
   var d = new Date(date);
-  d.setDate( d.getDate() - d.getDay() );
+  d.setDate(d.getDate() - d.getDay());
   return d;
 }
 
 function getLastWeekDate(date) {
   var d = new Date(date);
-  d.setDate( d.getDate() + (7 - d.getDay()) );
+  d.setDate(d.getDate() + (7 - d.getDay()));
   return d;
 }
 
@@ -228,7 +190,7 @@ function isInCurrentWeek(date) {
 
 function addDays(date, days) {
   var d = new Date(date);
-  d.setDate( d.getDate() + days );
+  d.setDate(d.getDate() + days);
   return d;
 }
 
@@ -247,10 +209,10 @@ function eachDateInRange(start, end, fn) {
 }
 
 /** Very simple custom-format function to allow 
-  l10n of texts.
-  Cover cases:
-  - M for month
-  - D for day
+l10n of texts.
+Cover cases:
+- M for month
+- D for day
 **/
 function formatDate(date, format) {
   var s = format,
@@ -261,6 +223,121 @@ function formatDate(date, format) {
   return s;
 }
 
-// Public API:
-exports.defaults = defaults;
-exports.on = on;
+/**
+  Weekly calendar, inherits from LcWidget
+**/
+var Weekly = LcWidget.extend(
+// Prototype
+{
+classes: weeklyClasses,
+url: '/calendar/get-availability/',
+
+// Our 'view' will be a subset of the data,
+// delimited by the next property, a dates range:
+datesRange: { start: null, end: null },
+bindData: function bindDataWeekly(datesRange) {
+  this.datesRange = datesRange = datesRange || this.datesRange;
+  var 
+      slotsContainer = calendar.find('.' + this.classes.slots),
+      slots = slotsContainer.find('td');
+
+  checkCurrentWeek(this.$el, datesRange.start, this);
+
+  updateLabels(datesRange, this.$el, this);
+
+  // Remove any previous status class from all slots
+  for (var s = 0; s < statusTypes.length; s++) {
+    slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s]);
+  }
+
+  // Set all slots with default status
+  slots.addClass(this.classes.slotStatusPrefix + this.data.defaultStatus);
+
+  var that = this;
+  eachDateInRange(datesRange.start, datesRange.end, function (date, i) {
+    var datekey = dateISO.dateLocal(date, true);
+    var dateSlots = that.data.slots[datekey];
+    if (dateSlots) {
+      for (s = 0; s < dateSlots.length; s++) {
+        var slot = dateSlots[s];
+        var slotCell = findSlotCell(slotsContainer, i, slot);
+        // Remove default status
+        slotCell.removeClass(that.classes.slotStatusPrefix + that.data.defaultStatus);
+        // Adding status class
+        slotCell.addClass(that.classes.slotStatusPrefix + that.data.status);
+      }
+    }
+  });
+}
+},
+// Constructor:
+function Weekly(element, options) {
+  // Reusing base constructor too for initializing:
+  LcWidget.call(this, element, options);
+  // To use this in closures:
+  var that = this;
+
+  this.user = this.$el.data('calendar-user');
+  this.query = {
+    user: user,
+    type: 'weekly'
+  };
+
+  // Start fetching current week
+  var firstDates = currentWeek();
+  var request = this.fetchData(datesToQuery(firstDates)).done(function () {
+    that.bindData(firstDates);
+    // Prefetching 3 weeks in advance
+    request = that.fetchData(datesToQuery(addDays(firstDates.start, 7), addDays(firstDates.end, 21), true));
+  });
+  checkCurrentWeek(this.$el, firstDates.start, this);
+
+  // Set handlers for prev-next actions:
+  calendar.on('click', '.' + this.classes.prevAction, function prev() {
+    moveBindRangeInDays(that, -7);
+  });
+  calendar.on('click', '.' + this.classes.nextAction, function next() {
+    moveBindRangeInDays(that, 7);
+  });
+
+});
+
+/** Static utility: found all components with the Weekly calendar class
+and enable it
+**/
+Weekly.enableAll = function on(options) {
+  $('.' + Weekly.prototype.classes.weeklyCalendar).each(function () {
+    var weekly = new Weekly(this, options);
+  });
+};
+
+
+/**
+    Work hours calendar, inherits from LcWidget
+**/
+var WorkHours = LcWidget.extend(
+// Prototype
+{
+  bindData: function bindDataWeekly() {
+    // TODO
+  }
+},
+// Constructor:
+function WorkHours(element, options) {
+  LcWidget.call(this, element, options);
+
+  this.user = this.$el.data('calendar-user');
+
+  this.query = {
+    user: user,
+    type: 'workhours'
+  };
+
+});
+
+
+/**
+   Public API:
+**/
+exports.Weekly = Weekly;
+exports.WorkHours = WorkHours;
