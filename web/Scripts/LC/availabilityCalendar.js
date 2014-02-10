@@ -16,8 +16,6 @@ var statusTypes = ['unavailable', 'available'];
 var weeklyClasses = {
   calendar: 'AvailabilityCalendar',
   weeklyCalendar: 'AvailabilityCalendar--weekly',
-  loading: 'is-loading',
-  preloading: 'is-preloading',
   currentWeek: 'is-currentWeek',
   actions: 'AvailabilityCalendar-actions',
   prevAction: 'Actions-prev',
@@ -46,21 +44,21 @@ function moveBindRangeInDays(weekly, days) {
   var 
     start = addDays(weekly.datesRange.start, days),
     end = addDays(weekly.datesRange.end, days),
-    datesRange = datesToQuery(start, end);
+    datesRange = datesToRange(start, end);
 
   // Support for prefetching:
   // Its avoided if there are requests in course, since
   // that will be a prefetch for the same data.
-  if (this.fetchData.requests.length) {
+  if (weekly.fetchData.requests.length) {
     // The last request in the pool *must* be the last in finish
     // (must be only one if all goes fine):
-    var request = this.fetchData.requests[this.fetchData.requests.length - 1];
+    var request = weekly.fetchData.requests[weekly.fetchData.requests.length - 1];
 
     // Wait for the fetch to perform and sets loading to notify user
-    weekly.$el.addClass(weekly.classes.loading);
+    weekly.$el.addClass(weekly.classes.fetching);
     request.done(function () {
       moveBindRangeInDays(weekly, days);
-      weekly.$el.removeClass(weekly.classes.loading);
+      weekly.$el.removeClass(weekly.classes.fetching || '_');
     });
     return;
   }
@@ -82,7 +80,7 @@ function moveBindRangeInDays(weekly, days) {
   else
   // Fetch (download) the data and show on ready:
     weekly
-    .fetchData(datesRange)
+    .fetchData(datesToQuery(datesRange))
     .done(function () {
       weekly.bindData(datesRange);
     });
@@ -145,8 +143,18 @@ function datesToQuery(start, end) {
     start = start.start;
   }
   return {
-    start: dateISO.datetimeLocal(start, true),
-    end: dateISO.datetimeLocal(end, true)
+    start: dateISO.dateLocal(start, true),
+    end: dateISO.dateLocal(end, true)
+  };
+}
+
+/** Pack two dates in a simple but useful
+  structure { start, end }
+**/
+function datesToRange(start, end) {
+  return {
+    start: start,
+    end: end
   };
 }
 
@@ -180,7 +188,7 @@ function getFirstWeekDate(date) {
 
 function getLastWeekDate(date) {
   var d = new Date(date);
-  d.setDate(d.getDate() + (7 - d.getDay()));
+  d.setDate(d.getDate() + (6 - d.getDay()));
   return d;
 }
 
@@ -230,6 +238,7 @@ var Weekly = LcWidget.extend(
 // Prototype
 {
 classes: weeklyClasses,
+texts: weeklyTexts,
 url: '/calendar/get-availability/',
 
 // Our 'view' will be a subset of the data,
@@ -238,7 +247,7 @@ datesRange: { start: null, end: null },
 bindData: function bindDataWeekly(datesRange) {
   this.datesRange = datesRange = datesRange || this.datesRange;
   var 
-      slotsContainer = calendar.find('.' + this.classes.slots),
+      slotsContainer = this.$el.find('.' + this.classes.slots),
       slots = slotsContainer.find('td');
 
   checkCurrentWeek(this.$el, datesRange.start, this);
@@ -247,7 +256,7 @@ bindData: function bindDataWeekly(datesRange) {
 
   // Remove any previous status class from all slots
   for (var s = 0; s < statusTypes.length; s++) {
-    slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s]);
+    slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s] || '_');
   }
 
   // Set all slots with default status
@@ -262,7 +271,7 @@ bindData: function bindDataWeekly(datesRange) {
         var slot = dateSlots[s];
         var slotCell = findSlotCell(slotsContainer, i, slot);
         // Remove default status
-        slotCell.removeClass(that.classes.slotStatusPrefix + that.data.defaultStatus);
+        slotCell.removeClass(that.classes.slotStatusPrefix + that.data.defaultStatus || '_');
         // Adding status class
         slotCell.addClass(that.classes.slotStatusPrefix + that.data.status);
       }
@@ -279,7 +288,7 @@ function Weekly(element, options) {
 
   this.user = this.$el.data('calendar-user');
   this.query = {
-    user: user,
+    user: this.user,
     type: 'weekly'
   };
 
@@ -288,15 +297,16 @@ function Weekly(element, options) {
   var request = this.fetchData(datesToQuery(firstDates)).done(function () {
     that.bindData(firstDates);
     // Prefetching 3 weeks in advance
-    request = that.fetchData(datesToQuery(addDays(firstDates.start, 7), addDays(firstDates.end, 21), true));
+    var threeWeeks = datesToQuery(addDays(firstDates.start, 7), addDays(firstDates.end, 21));
+    request = that.fetchData(threeWeeks, null, true);
   });
   checkCurrentWeek(this.$el, firstDates.start, this);
 
   // Set handlers for prev-next actions:
-  calendar.on('click', '.' + this.classes.prevAction, function prev() {
+  this.$el.on('click', '.' + this.classes.prevAction, function prev() {
     moveBindRangeInDays(that, -7);
   });
-  calendar.on('click', '.' + this.classes.nextAction, function next() {
+  this.$el.on('click', '.' + this.classes.nextAction, function next() {
     moveBindRangeInDays(that, 7);
   });
 

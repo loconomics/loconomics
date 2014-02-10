@@ -2,10 +2,7 @@
   the logic and behavior around
   a DOM element
 **/
-var extendApi = require('./extend'),
-  extend = extendApi.extend;
-// We want to be able to real clone functions too on extending:
-require('./Object.clone');
+var extend = require('./extend');
 
 function Component(element, options) {
   this.el = element;
@@ -16,6 +13,7 @@ function Component(element, options) {
   this.$el.data('component');
 }
 
-extendApi.plugIn(Component.prototype);
+extend.plugIn(Component);
+extend.plugIn(Component.prototype);
 
 module.exports = Component;

@@ -4,12 +4,15 @@
   if you need the non-owned properties to in the object,
   consider extend from the source prototype too (and maybe to
   the destination prototype instead of the instance, but up to too).
-
-  If function objects include a 'clone' method, that will be used instead
-  of the default reference copy.
-  Its recommended install a Function.prototype.clone, by the way.
 **/
-function extend(destination, source) {
+
+/* jquery implementation:
+var $ = require('jquery');
+extend = function () {
+return $.extend.apply(this, [true].concat(Array.prototype.slice.call(arguments, 0))); 
+};*/
+
+var extend = function extend(destination, source) {
   for (var property in source) {
     if (!source.hasOwnProperty(property))
       continue;
@@ -20,8 +23,8 @@ function extend(destination, source) {
     else if (typeof destination[property] == 'function' &&
                  typeof source[property] == 'function') {
       var orig = destination[property];
-      // Allow the Function.clone method (if exist or was polyfilled)
-      var sour = (typeof (source[property].clone) == 'function') ? source[property].clone() : source[property];
+      // Clone function
+      var sour = cloneFunction(source[property]);
       destination[property] = sour;
       // Any previous attached property
       extend(destination[property], orig);
@@ -40,39 +43,113 @@ function extend(destination, source) {
   }
 
   return destination;
+};
+
+extend.plugIn = function plugIn(obj) {
+  obj = obj || Object.prototype;
+  obj.extendMe = function extendMe() {
+    extend.apply(this, [this].concat(Array.prototype.slice.call(arguments)));
+  };
+  obj.extend = function extendInstance() {
+    var args = Array.prototype.slice.call(arguments),
+      // If the object used to extend from is a function, is considered
+      // a constructor, then we extend from its prototype, otherwise itself.
+      constructorA = typeof this == 'function' ? this : null,
+      baseA = constructorA ? this.prototype : this,
+      // If last argument is a function, is considered a constructor
+      // of the new class/object then we extend its prototype.
+      // We use an empty object otherwise.
+      constructorB = typeof args[args.length - 1] == 'function' ?
+        args.splice(args.length - 1)[0] :
+        null,
+      baseB = constructorB ? constructorB.prototype : {};
+
+    var extendedResult = extend.apply(this, [baseB, baseA].concat(args));
+    // If both are constructors, we want the static methods to be copied too:
+    if (constructorA && constructorB)
+      extend(constructorB, constructorA);
+
+    // If we are extending a constructor, we return that, otherwise the result
+    return constructorB || extendedResult;
+  };
+};
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = extend;
+} else {
+  // global scope
+  extend.plugIn();
 }
 
-(function() {
-  function plugIn(obj) {
-    obj = Object.prototype;
-    obj.extendMe = function extendMe() {
-      extend.apply(this, [this].concat(Array.prototype.slice.call(arguments)));
-    };
-    obj.extend = function extendInstance() {
-      var args = Array.prototype.slice.call(arguments),
-        // If last argument is a function, is considered a constructor
-        // of the new class/object then we extend its prototype.
-        // We use an empty object otherwise.
-        theConstructor = typeof args[args.length - 1] == 'function' ?
-          args.splice(args.length - 1)[0] :
-          null,
-        base = theConstructor ? theConstructor.prototype : {},
-        // If the object used to extend from is a function, is considered
-        // a constructor, then we extend from its prototype, otherwise itself.
-        extended = typeof this == 'function' ?
-          this.prototype :
-          this;
+/*-------------------------
+  Clone Utils
+*/
+function cloneObject(obj) {
+  return extend({}, obj);
+}
 
-      var newBase = extend.apply(this, [base, extended].concat(args));
-      return theConstructor || newBase;
-    };
-  }
+// Testing if a string seems a function source code:
+// We test agains a simplisic regular expresion that match
+// a common start of function declaration.
+// Other ways to do this is at inverser, by checking
+// that the function toString is not a knowed text
+// as '[object Function]' or '[native code]', but
+// since tha can changes between browsers, is more conservative
+// check against a common construct an fallback on the
+// common solution if not matches.
+var testFunction = /^\s*function[^\(]\(/;
 
-  if (typeof module !== 'undefined' && module.exports) {
-    exports.extend = extend;
-    exports.plugIn = plugIn;
+function cloneFunction(fn) {
+  var temp;
+  var contents = fn.toString();
+  // Copy to a new instance of the same prototype, for the not 'owned' properties.
+  // Assinged at the end
+  var tempProto = Object.create(fn.prototype);
+
+  // DISABLED the contents-copy part because it fails with closures
+  // generated by the original function, using the sub-call way ever
+  if (true || !testFunction.test(contents)) {
+    // Check if is already a cloned copy, to
+    // reuse the original code and avoid more than
+    // one depth in stack calls (great!)
+    if (typeof fn.prototype.___cloned_of == 'function')
+      fn = fn.prototype.___cloned_of;
+
+    temp = function () { return fn.apply(this, Array.prototype.slice.call(arguments)); };
+
+    // Save mark as cloned. Done in its prototype
+    // to not appear in the list of 'owned' properties.
+    tempProto.___cloned_of = fn;
+    // Replace toString to return the original source:
+    tempProto.toString = function () {
+      return fn.toString();
+    };
+    // The name cannot be set, will just be anonymous
+    //temp.name = that.name;
   } else {
-    // global scope
-    plugIn();
+    // This way on capable browsers preserve the original name,
+    // do a real independent copy and avoid function subcalls that
+    // can degrate performance after lot of 'clonning'.
+    var f = Function;
+    temp = (new f('return ' + contents))();
   }
-})();
+
+  temp.prototype = tempProto;
+  // Copy any properties it owns
+  extend(temp, fn);
+
+  return temp;
+}
+
+function clonePlugIn() {
+  if (typeof Function.prototype.clone !== 'function') {
+    Function.prototype.clone = function clone() { return cloneFunction(this); };
+  }
+  if (typeof Object.prototype.clone !== 'function') {
+    Ojbect.prototype.clone = function clone() { return cloneObject(this); };
+  }
+}
+
+extend.cloneObject = cloneObject;
+extend.cloneFunction = cloneFunction;
+extend.clonePlugIn = clonePlugIn;

@@ -6,19 +6,45 @@ var DataSource = require('./DataSource');
 var Component = require('./Component');
 var extend = require('./extend').extend;
 
-function BindableComponent(element, options) {
-  Component.call(this, element, options);
+/**
+Reusing the original fetchData method but adding classes to our
+component element for any visual notification of the data loading.
+Method get extended with isPrefetching method for different
+classes/notifications dependant on that flag, by default false:
+**/
+var componentFetchData = function bindableComponentFetchData(queryData, mode, isPrefetching) {
+  var cl = isPrefetching ? this.classes.prefetching : this.classes.fetching;
+  this.$el.addClass(cl);
+  var that = this;
 
-  this.data = this.$el.data('source') || this.data || {};
-  if (typeof (this.data) == 'string')
-    this.data = JSON.parse(this.data);
+  var req = DataSource.prototype.fetchData.call(this, queryData, mode)
+  .done(function () {
+    that.$el.removeClass(cl || '_')
+    // Remove error class too (to fill the case of a previous error)
+    .removeClass(that.classes.hasDataError || '_');
+  });
 
-  // TODO: 'change' event handlers on forms with data-bind to update its value at this.data
-  // TODO: auto 'bindData' on fetchData ends? configurable, bindDataMode{ inmediate, notify }
-}
-extend(BindableComponent.prototype,
-  Component.prototype,
+  return req;
+};
+/**
+Replacing, but reusing internals, the default onerror callback for the
+fetchData function to add notification classes to our component model
+**/
+componentFetchData.onerror = function bindableComponentFechDataOnerror(x, s, e) {
+  DataSource.prototype.fetchError.call(x, s, e);
+  // Add error class:
+  this.$el
+  .addClass(this.classes.hasDataError)
+  .removeClass(this.classes.fetching || '_')
+  .removeClass(this.classes.prefetching || '_');
+};
+
+/**
+  BindableComponent class
+**/
+var BindableComponent = Component.extend(
   DataSource.prototype,
+  // Prototype
   {
     classes: {
       fetching: 'is-loading',
@@ -55,38 +81,22 @@ extend(BindableComponent.prototype,
           $t.text(bindedValue);
       });
     }
+  },
+  // Constructor
+  function BindableComponent(element, options) {
+    Component.call(this, element, options);
+
+    this.data = this.$el.data('source') || this.data || {};
+    if (typeof (this.data) == 'string')
+      this.data = JSON.parse(this.data);
+
+    // On html source url configuration:
+    this.url = this.$el.data('source-url') || this.url;
+
+    // TODO: 'change' event handlers on forms with data-bind to update its value at this.data
+    // TODO: auto 'bindData' on fetchData ends? configurable, bindDataMode{ inmediate, notify }
   }
 );
-
-/**
-  Reusing the original fetchData method but adding classes to our
- component element for any visual notification of the data loading.
- Method get extended with isPrefetching method for different
- classes/notifications dependant on that flag, by default false:
-**/
-var componentFetchData = function bindableComponentFetchData(queryData, mode, isPrefetching) {
-  var cl = isPrefetching ? this.classes.prefetching : this.classes.fetching;
-  this.$el.addClass(cl);
-  var that = this;
-
-  var req = DataSource.prototype.fetchData.call(this, queryData, mode)
-  .done(function () {
-    that.$el.removeClass(cl)
-    // Remove error class too (to fill the case of a previous error)
-    .removeClass(that.classes.hasDataError);
-  });
-
-  return req;
-};
-/**
-  Replacing, but reusing internals, the default onerror callback for the
-  fetchData function to add notification classes to our component model
-**/
-componentFetchData.onerror = function bindableComponentFechDataOnerror(x, s, e) {
-  DataSource.prototype.fetchError.call(x, s, e);
-  // Add error class:
-  this.$el.addClass(this.classes.hasDataError);
-};
 
 // Public module:
 module.exports = BindableComponent;

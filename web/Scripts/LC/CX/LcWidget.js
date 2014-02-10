@@ -6,13 +6,9 @@
 **/
 var DataSource = require('./DataSource');
 var BindableComponent = require('./BindableComponent');
-var extend = require('./extend').extend;
 
-function LcWidget(element, options) {
-  BindableComponent.call(this, element, options);
-}
-extend(LcWidget.prototype,
-  BindableComponent.prototype,
+var LcWidget = BindableComponent.extend(
+  // Prototype
   {
     // Replacing updateData to implement the particular
     // JSON scheme of Loconomics, but reusing original
@@ -24,6 +20,10 @@ extend(LcWidget.prototype,
         this.fetchData.onerror(null, 'error', { name: 'data-format', message: data.ErrorMessage });
       }
     }
+  },
+  // Constructor
+  function LcWidget(element, options) {
+    BindableComponent.call(this, element, options);
   }
 );
 
