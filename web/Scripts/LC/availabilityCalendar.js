@@ -346,9 +346,11 @@ function Weekly(element, options) {
 and enable it
 **/
 Weekly.enableAll = function on(options) {
+  var list = [];
   $('.' + Weekly.prototype.classes.weeklyCalendar).each(function () {
-    var weekly = new Weekly(this, options);
+    list.push(new Weekly(this, options));
   });
+  return list;
 };
 
 /**
@@ -546,9 +548,11 @@ function WorkHours(element, options) {
 and enable it
 **/
 WorkHours.enableAll = function on(options) {
+  var list = [];
   $('.' + WorkHours.prototype.classes.workHoursCalendar).each(function () {
-    var workhours = new WorkHours(this, options);
+    list.push(new WorkHours(this, options));
   });
+  return list;
 };
 
 

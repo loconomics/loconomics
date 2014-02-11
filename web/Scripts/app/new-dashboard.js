@@ -84,5 +84,16 @@ $(function () {
 
   /* Calendar */
   var availabilityCalendar = require('LC/availabilityCalendar');
-  availabilityCalendar.WorkHours.enableAll();
+  var workHoursList = availabilityCalendar.WorkHours.enableAll();
+  // Setuping the WorkHours calendar data save when the form is submitted
+  $.each(workHoursList, function (i, v) {
+    var workhours = this;
+    var form = workhours.$el.closest('form.ajax, fieldset.ajax');
+    var field = form.find('[name=workhours]');
+    if (field.length === 0)
+      field = $('<input type="hidden" name="workhours" />').appendTo(form);
+    form.on('presubmit', function () {
+      field.val(JSON.stringify(workhours.data));
+    });
+  });
 });

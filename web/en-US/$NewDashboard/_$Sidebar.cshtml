@@ -11,7 +11,7 @@
     var selectedGroup = "";
     switch (selectedPage) {
         case "dashboard":
-        case "calendar":
+        case "availability":
         case "promote":
             selectedGroup = "tools";
             break;
@@ -51,7 +51,7 @@
             <li class="u-withIcon go-dashboard @(menu("dashboard", selectedPage))"><a href="@(baseUrl)">Dashboard</a></li>
             @if (u.IsProvider)
             {
-                <li class="u-withIcon go-dashboardCalendar @(menu("calendar", selectedPage))"><a href="@(baseUrl)calendar/">Calendar</a></li>
+                <li class="u-withIcon go-dashboardAvailability @(menu("availability", selectedPage))"><a href="@(baseUrl)availability/">Availability</a></li>
                 <li class="u-withIcon go-dashboardPromote @(menu("promote", selectedPage))"><a href="@(baseUrl)promote/">Promote</a></li>
             }
         </ul>

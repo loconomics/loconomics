@@ -55,7 +55,6 @@ function ajaxFormsSubmitHandler(event) {
     ctx.form = (event.data ? event.data.form : null) || $(this);
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
-    var data = ctx.form.find(':input').serialize();
 
     // Validations
     var validationPassed = true;
@@ -109,7 +108,7 @@ function ajaxFormsSubmitHandler(event) {
     }
 
     // Check validation status
-    if (validationPassed === false) {     
+    if (validationPassed === false) {
       // Validation failed, submit cannot continue, out!
       return false;
     }
@@ -117,11 +116,16 @@ function ajaxFormsSubmitHandler(event) {
     // Data saved:
     ctx.changedElements = (event.data ? event.data.changedElements : null) || changesNotification.registerSave(ctx.form.get(0));
 
+    // Notification event to allow scripts to hook additional tasks before send data
+    ctx.form.trigger('presubmit', [ctx]);
+
     // Loading, with retard
     ctx.loadingtimer = setTimeout(function () {
         ctx.box.block(blockPresets.loading);
     }, settings.loadingDelay);
     ctx.autoUnblockLoading = true;
+
+    var data = ctx.form.find(':input').serialize();
 
     // Do the Ajax post
     $.ajax({
