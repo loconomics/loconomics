@@ -7,5 +7,28 @@
     What hours do you keep? We'd like to know when we can generally expect to schedule
     your appointments. You can add client bookings and other appointments that you have
     outside of Loconomics by clicking the Appointments tab.
-    Watch <a href="https://loconomics.zendesk.com/entries/24007951-Adding-Updating-your-general-availability">this short video</a> if you need help.
+    Watch <a target="_blank" href="https://loconomics.zendesk.com/entries/24007951-Adding-Updating-your-general-availability">this short video</a> if you need help.
 </p>
+
+<div class="DashboardAvailability">
+    <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$availability/">
+
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>
+            @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
+        </div>
+
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        
+        <div class="actions">
+            <button class="main-action" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+    }
+}

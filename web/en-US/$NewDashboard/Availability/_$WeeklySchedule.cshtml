@@ -1,0 +1,102 @@
+﻿@using Braintree;
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
+    var userId = WebSecurity.CurrentUserId;
+    
+    // Data
+    
+    if (IsPost && Validation.IsValid()) {
+        //var workhours = Json.Decode(Request["workhours"]);
+        dynamic workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"]);
+
+        if (workhours.status != "available") {
+            ModelState.AddFormError("Work hours availability information: status not allowed");
+        }
+
+        if (PageState.IsValid) {
+            
+            var slotsGap = TimeSpan.FromMinutes(15);
+            var slotsRanges = new List<LcCalendar.WorkHoursDay>();
+
+            foreach (DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
+                var wday = wk.ToString().ToLower();
+
+                if (workhours.slots[wday] != null) {
+
+                    var slots = new List<string>();
+                    slots.AddRange(workhours.slots[wday].Values<string>());
+                    slots.Sort();
+                    
+                    var firstSlot = TimeSpan.MinValue;
+                    var lastSlot = TimeSpan.MinValue;
+                    foreach(var slot in slots) {
+                        var slotTime = TimeSpan.Parse(slot);
+                        
+                        // first time
+                        if (firstSlot == TimeSpan.MinValue) {
+                            firstSlot = slotTime;
+                            lastSlot = firstSlot;
+                        }
+                        else {
+
+                            // If the expected end slot is not current
+                            // then the range ended
+                            if (slotTime > lastSlot) {
+                                // Add range to the list
+                                slotsRanges.Add(new LcCalendar.WorkHoursDay {
+                                    DayOfWeek = wk,
+                                    StartTime = firstSlot,
+                                    EndTime = lastSlot
+                                });
+
+                                // New range starts
+                                firstSlot = slotTime;
+                                lastSlot = slotTime;
+                            }
+                        }
+                        // Calculate end-range slot
+                        lastSlot = lastSlot.Add(slotsGap);
+                    }
+                    // Last range in the list (if there was something)
+                    if (firstSlot != TimeSpan.MinValue) {
+                        slotsRanges.Add(new LcCalendar.WorkHoursDay {
+                            DayOfWeek = wk,
+                            StartTime = firstSlot,
+                            EndTime = lastSlot.Add(slotsGap)
+                        });
+                    }
+                }
+            }
+            
+            // Saving in database
+            LcCalendar.SetAllProviderWorkHours(userId, slotsRanges);
+                
+            // Testing the alert
+            using (var db = Database.Open("sqlloco")) {
+                db.Execute("EXEC TestAlertAvailability @0", userId);
+            }
+            
+            if (doReturn) {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+}
+<fieldset class="DashboardWeeklySchedule">
+
+    <label class="DashboardWeeklySchedule-allTime"><input type="checkbox" name="alltime" value="True" @LcHelpers.IsChecked(true, Request["alltime"]) /> All days/times</label>
+
+    @RenderPage(LcUrl.LangPath + "Calendar/$Weekly.cshtml", new { User = userId, Type = "workHours" })
+
+    <fieldset>
+        <legend>I require:</legend>
+
+
+    </fieldset>
+
+</fieldset>

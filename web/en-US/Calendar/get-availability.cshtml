@@ -44,9 +44,11 @@
             result["status"] = "available";
             
             foreach(var r in data) {
-                var wk = r.DayOfWeek.ToString(systemCulture).ToLower();
-                slots.Add(wk, new List<string>());
-                
+                var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
+                if (!slots.ContainsKey(wk)) {
+                    slots.Add(wk, new List<string>());
+                }
+
                 var forslot = r.StartTime;
                 while (forslot <= r.EndTime) {
                     slots[wk].Add(forslot.ToString(timeFormat));

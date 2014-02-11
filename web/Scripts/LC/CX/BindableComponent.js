@@ -31,7 +31,7 @@ Replacing, but reusing internals, the default onerror callback for the
 fetchData function to add notification classes to our component model
 **/
 componentFetchData.onerror = function bindableComponentFechDataOnerror(x, s, e) {
-  DataSource.prototype.fetchError.call(x, s, e);
+  DataSource.prototype.fetchData.onerror.call(this, x, s, e);
   // Add error class:
   this.$el
   .addClass(this.classes.hasDataError)
@@ -64,6 +64,7 @@ var BindableComponent = Component.extend(
     // This implementation works fine for data as plain object with 
     // simple types as properties (not objects or arrays inside them).
     bindData: function bindData() {
+      if (!this.data) return;
       // Check every element in the component with a bind
       // property and update it with the value of that property
       // from the data source

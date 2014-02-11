@@ -6,6 +6,9 @@ var $ = require('jquery');
 var fetchJSON = $.getJSON,
     extend = function () { return $.extend.apply(this, [true].concat(Array.prototype.slice.call(arguments, 0))); };
 
+// TODO: replace each property of functions by instance properties, since that properties become
+// shared between instances and is not wanted
+
 var reqModes = DataSource.requestModes = {
   // Parallel request, no matter of others
   multiple: 0,
@@ -32,7 +35,7 @@ Is decoupled from the prototype but
 it works only as part of a DataSource instance.
 **/
 function updateData(data, mode) {
-  switch (mode || updateData.defaultUpdateMode) {
+  switch (mode || this.updateData.defaultUpdateMode) {
 
     case updModes.replacement:
       this.data = data;
@@ -57,18 +60,18 @@ commodity, but it can works only as part of a DataSource instance.
 **/
 function fetchData(query, mode) {
   query = extend({}, this.query, query);
-  switch (mode || fetchData.defaultRequestMode) {
+  switch (mode || this.fetchData.defaultRequestMode) {
 
     case reqModes.single:
-      if (fetchData.requests.length) return null;
+      if (this.fetchData.requests.length) return null;
       break;
 
     case reqModes.replace:
-      for (var i = 0; i < this.requests.length; i++) {
+      for (var i = 0; i < this.fetchData.requests.length; i++) {
         try {
-          fetchData.requests[i].abort();
+          this.fetchData.requests[i].abort();
         } catch (ex) { }
-        fetchData.requests = [];
+        this.fetchData.requests = [];
       }
       break;
 
@@ -78,16 +81,26 @@ function fetchData(query, mode) {
   }
 
   var that = this;
-  var req = fetchData.proxy(
+  var req = this.fetchData.proxy(
     this.url,
     query,
-    function (data) {
-      that.updateData(data);
-      fetchData.requests.splice(fetchData.requests.indexOf(req), 1);
+    function (data, t, xhr) {
+      var ret = that.updateData(data);
+      that.fetchData.requests.splice(that.fetchData.requests.indexOf(req), 1);
       //delete fetchData.requests[fetchData.requests.indexOf(req)];
+
+      if (ret && ret.name) {
+        // Update data emits error, the Ajax still resolves as 'success' because of the request, but
+        // we need to execute the error, but we pipe it to ensure is done after other 'done' callbacks
+        req.always(function () {
+          that.fetchData.onerror.call(that, null, ret.name, ret);
+        });
+      }
+
     }
-  ).fail(fetchData.onerror);
-  fetchData.requests.push(req);
+  )
+  .fail($.proxy(this.fetchData.onerror, this));
+  this.fetchData.requests.push(req);
 
   return req;
 }
@@ -119,7 +132,7 @@ can be replaced.
 It receives the request object, status and error.
 */
 fetchData.onerror = function error(x, s, e) {
-  if (console && console.error) console.error('Fetch data error %s %o', e);
+  if (console && console.error) console.error('Fetch data error %o', e);
 };
 
 /**

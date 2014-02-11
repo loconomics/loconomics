@@ -288,8 +288,14 @@ bindData: function bindDataWeekly(datesRange) {
     slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s] || '_');
   }
 
+  if (!this.data || !this.data.defaultStatus)
+    return;
+
   // Set all slots with default status
   slots.addClass(this.classes.slotStatusPrefix + this.data.defaultStatus);
+
+  if (!this.data.slots || !this.data.status)
+    return;
 
   var that = this;
 
@@ -501,8 +507,14 @@ bindData: function bindDataWorkHours() {
     slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s] || '_');
   }
 
+  if (!this.data || !this.data.defaultStatus)
+    return;
+
   // Set all slots with default status
   slots.addClass(this.classes.slotStatusPrefix + this.data.defaultStatus);
+
+  if (!this.data.slots || !this.data.status)
+    return;
 
   var that = this;
   for (var wk = 0; wk < systemWeekDays.length; wk++) {

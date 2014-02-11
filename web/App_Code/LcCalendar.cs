@@ -140,11 +140,123 @@ public static class LcCalendar
             }
         }
     }
+
+    /// <summary>
+    /// Deletes current user work hours and set the new provided as a list
+    /// of day-slots work hours.
+    /// This allows multiple slots (or hours ranges) in the same day, being more
+    /// complete, detailed and versatile.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="workHoursList">In order to be more efficient on database, its expected
+    /// that the workHours list to be as reduced as possible, what implies concatenate every
+    /// 15 minutes time slot into hour-ranges of consecutive slots.</param>
+    public static void SetAllProviderWorkHours(int userID, List<WorkHoursDay> workHoursList) {
+        var ent = new loconomicsEntities();
+
+        // Deleting previous records of work-day events:
+        ent.Database.ExecuteSqlCommand("DELETE FROM CalendarEvents WHERE UserID = {0} AND EventType = 2", userID);
+
+        /* ITS BY FAR FASTER -and more simple- doing the previous one-line manual SQL to delete the records
+         * than the next -now commented- code that fetch, mark and remove the records in the EntityFramework way:
+ 
+        // Find user events of type 'work-hours'
+        var events = ent.CalendarEvents
+            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
+        // Remove that events: all will be replaced by the new ones
+        // We are marking for deletion (that happens on 'SaveChanges'), but
+        // still the extra 'ToList' is required to avoid an exception of kind 'collection modified in iterator'
+        foreach (var ev in events.ToList())
+        {
+            ent.CalendarEvents.Remove(ev);
+        }*/
+
+        // Create all the new ones events, it allows multiple hour-ranges
+        // in the same day.
+        foreach(var workHoursDay in workHoursList) {
+            var ev = CreateWorkHourEvent(userID, workHoursDay);
+            // Add it for database
+            ent.CalendarEvents.Add(ev);
+        }
+
+        // Send to database
+        ent.SaveChanges();
+    }
+
+    public static CalendarEvents CreateWorkHourEvent(int userID, WorkHoursDay workHoursDay)
+    {
+        // Start and End Dates are not used 'as is', they are
+        // treated in a special way when recurrence rules are present,
+        // for that we can use invented and convenient
+        // dates as 2006-01-01 (the year 2006 matchs the first day in the first week day--1:Sunday);
+        // the End Date will be greater thanks
+        // to the hour information gathered from the user generic work hours
+        var startDateTime = new DateTime(
+            2006,
+            1,
+            1,
+            workHoursDay.StartTime.Hours,
+            workHoursDay.StartTime.Minutes,
+            workHoursDay.StartTime.Seconds
+        );
+        var endDateTime = new DateTime(
+            2006,
+            1,
+            /* Must be the next day if end time is '00:00:00'; else the same day */
+            (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
+            workHoursDay.EndTime.Hours,
+            workHoursDay.EndTime.Minutes,
+            workHoursDay.EndTime.Seconds
+        );
+
+        var newevent = new CalendarDll.Data.CalendarEvents();
+        newevent.UserId = userID;
+        // Type work-hours: 2
+        newevent.EventType = 2;
+        // Automatic text, irrelevant
+        newevent.Summary = "Work hours";
+        //newevent.Description = "";
+        // free hours: 1
+        newevent.CalendarAvailabilityTypeID = 1;
+        newevent.Transparency = true;
+        newevent.StartTime = startDateTime;
+        newevent.EndTime = endDateTime;
+        newevent.IsAllDay = false;
+        newevent.UpdatedDate = DateTime.Now;
+        newevent.CreatedDate = DateTime.Now;
+        newevent.ModifyBy = "UserID:" + userID;
+
+        // Recurrence rule:
+        newevent.CalendarReccurrence.Add(new CalendarReccurrence
+        {
+            // Frequency Type Weekly:5
+            Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+            // Every 1 week (week determined by previous Frequency)
+            Interval = 1,
+            // We need save as reference, the first day of week for this rrule:
+            FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek,
+
+            CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
+            {
+                new CalendarReccurrenceFrequency
+                {
+                    ByDay = true,
+                    DayOfWeek = (int)workHoursDay.DayOfWeek,
+                    // FrequencyDay null, is for special values (first day on week, last,... not needed here)
+                    FrequencyDay = null
+                }
+            }
+        });
+
+        return newevent;
+    }
+
     /// <summary>
     /// Set a day work hours saving it as an Event on database
     /// </summary>
     /// <param name="userID"></param>
-    /// <param name="?"></param>
+    /// <param name="workHoursDay"></param>
+    [Obsolete]
     public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
         var ent = new loconomicsEntities();
 
@@ -243,6 +355,13 @@ public static class LcCalendar
         // Send to database
         ent.SaveChanges();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="dayOfWeek"></param>
+    [Obsolete]
     public static void DelProviderWorkHours(int userID, DayOfWeek dayOfWeek)
     {
         var ent = new loconomicsEntities();
