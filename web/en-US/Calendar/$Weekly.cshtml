@@ -1,5 +1,7 @@
 ﻿@{
     var user = PageData["User"] ?? Request["user"];
+    var type = PageData["Type"] ?? "weekly";
+    
 }
 @functions {
     /// <summary>
@@ -24,11 +26,14 @@
         }
     }
 }
-<div class="AvailabilityCalendar AvailabilityCalendar--weekly" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
+<div class="AvailabilityCalendar AvailabilityCalendar--@(type)" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
+    @if (type == "weekly")
+    {
     <div class="Actions AvailabilityCalendar-actions">
         <button type="button" class="Actions-move Actions-prev">Previous week</button>
         <button type="button" class="Actions-move Actions-next">Next week</button>
     </div>
+    }
     <table>
         <thead class="AvailabilityCalendar-days">
             <tr>

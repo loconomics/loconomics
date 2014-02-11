@@ -116,7 +116,8 @@ module.exports = function (grunt) {
             './Scripts/LC/smoothBoxBlock.js:LC/smoothBoxBlock',
             './Scripts/LC/moveFocusTo.js:LC/moveFocusTo',
             './Scripts/LC/changesNotification.js:LC/changesNotification',
-            './Scripts/LC/dateISO8601.js:LC/dateISO8601'
+            './Scripts/LC/dateISO8601.js:LC/dateISO8601',
+            './Scripts/LC/availabilityCalendar.js:LC/availabilityCalendar'
           ]
         }
       },
@@ -138,7 +139,8 @@ module.exports = function (grunt) {
             'LC/smoothBoxBlock',
             'LC/moveFocusTo',
             'LC/changesNotification',
-            'LC/dateISO8601'
+            'LC/dateISO8601',
+            'LC/availabilityCalendar'
           ]
         }
       }

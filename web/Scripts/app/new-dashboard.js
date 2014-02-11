@@ -81,4 +81,8 @@ $(function () {
       .placeholder();
     }
   });
+
+  /* Calendar */
+  var availabilityCalendar = require('LC/availabilityCalendar');
+  availabilityCalendar.WorkHours.enableAll();
 });

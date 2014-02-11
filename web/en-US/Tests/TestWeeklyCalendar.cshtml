@@ -2,7 +2,10 @@
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
     
-
+    var type = Request["type"];
+    
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/new-dashboard.css");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard.js");
 }
 
-@RenderPage(LcUrl.LangPath + "Calendar/$Weekly.cshtml", new { })
+@RenderPage(LcUrl.LangPath + "Calendar/$Weekly.cshtml", new { Type = type })

@@ -10,7 +10,7 @@ function Component(element, options) {
   extend(this, options);
   // Use the jQuery 'data' storage to preserve a reference
   // to this instance (useful to retrieve it from document)
-  this.$el.data('component');
+  this.$el.data('component', this);
 }
 
 extend.plugIn(Component);

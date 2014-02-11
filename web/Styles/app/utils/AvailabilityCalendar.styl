@@ -142,7 +142,9 @@ disabled($color = White, $opacity = .5) {
         }
     }
   
-    &.AvailabilityCalendar--weekly {
+    /* Weekly and Workhours share layout */
+    &.AvailabilityCalendar--weekly,
+    &.AvailabilityCalendar--workHours {
     
         .AvailabilityCalendar-actions {
             
@@ -228,6 +230,14 @@ disabled($color = White, $opacity = .5) {
             
         }
         
+    }
+    
+    /* Workhours specific stuff */
+    &.AvailabilityCalendar--workHours {
+        
+        .AvailabilityCalendar-slots td {
+            cursor: pointer;
+        }
     }
     
 }

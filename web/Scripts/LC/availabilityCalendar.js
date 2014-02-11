@@ -3,7 +3,8 @@
 **/
 var $ = require('jquery'),
   dateISO = require('LC/dateISO8601'),
-  LcWidget = require('./CX/LcWidget');
+  LcWidget = require('./CX/LcWidget'),
+  extend = require('./CX/extend');
 
 /**-----------------------
 Common private utilities
@@ -11,6 +12,17 @@ Common private utilities
 
 /*------ CONSTANTS ---------*/
 var statusTypes = ['unavailable', 'available'];
+// Week days names in english for internal system
+// use; NOT for localization/translation.
+var systemWeekDays = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday'
+];
 
 /*--------- CONFIG - INSTANCE ----------*/
 var weeklyClasses = {
@@ -110,7 +122,7 @@ function updateLabels(datesRange, calendar, options) {
   });
 }
 
-function findSlotCell(slotsContainer, day, slot) {
+function findCellBySlot(slotsContainer, day, slot) {
   slot = dateISO.parse(slot);
   var 
     x = Math.round(slot.getHours()),
@@ -122,6 +134,22 @@ function findSlotCell(slotsContainer, day, slot) {
   // because of the row-head cell
   var dayOffset = (y === 0 ? day + 1 : day);
   return tr.children(':eq(' + dayOffset + ')');
+}
+
+function findSlotByCell(slotsContainer, cell) {
+  var 
+    x = cell.siblings('td').andSelf().index(cell),
+    y = cell.closest('tr').index(),
+    fullMinutes = y * 15,
+    hours = Math.floor(fullMinutes / 60),
+    minutes = fullMinutes - (hours * 60),
+    slot = new Date();
+  slot.setHours(hours, minutes, 0, 0);
+
+  return {
+    day: x,
+    slot: slot
+  };
 }
 
 /**
@@ -263,13 +291,14 @@ bindData: function bindDataWeekly(datesRange) {
   slots.addClass(this.classes.slotStatusPrefix + this.data.defaultStatus);
 
   var that = this;
+
   eachDateInRange(datesRange.start, datesRange.end, function (date, i) {
     var datekey = dateISO.dateLocal(date, true);
     var dateSlots = that.data.slots[datekey];
     if (dateSlots) {
       for (s = 0; s < dateSlots.length; s++) {
         var slot = dateSlots[s];
-        var slotCell = findSlotCell(slotsContainer, i, slot);
+        var slotCell = findCellBySlot(slotsContainer, i, slot);
         // Remove default status
         slotCell.removeClass(that.classes.slotStatusPrefix + that.data.defaultStatus || '_');
         // Adding status class
@@ -328,22 +357,143 @@ Weekly.enableAll = function on(options) {
 var WorkHours = LcWidget.extend(
 // Prototype
 {
-  bindData: function bindDataWeekly() {
-    // TODO
+classes: extend({}, weeklyClasses, {
+  weeklyCalendar: undefined,
+  workHoursCalendar: 'AvailabilityCalendar--workHours'
+}),
+texts: weeklyTexts,
+url: '/calendar/get-availability/',
+bindData: function bindDataWorkHours() {
+  var 
+    slotsContainer = this.$el.find('.' + this.classes.slots),
+    slots = slotsContainer.find('td');
+
+  // Remove any previous status class from all slots
+  for (var s = 0; s < statusTypes.length; s++) {
+    slots.removeClass(this.classes.slotStatusPrefix + statusTypes[s] || '_');
   }
+
+  // Set all slots with default status
+  slots.addClass(this.classes.slotStatusPrefix + this.data.defaultStatus);
+
+  var that = this;
+  for (var wk = 0; wk < systemWeekDays.length; wk++) {
+    var dateSlots = that.data.slots[systemWeekDays[wk]];
+    if (dateSlots && dateSlots.length) {
+      for (s = 0; s < dateSlots.length; s++) {
+        var slot = dateSlots[s];
+        var slotCell = findCellBySlot(slotsContainer, wk, slot);
+        // Remove default status
+        slotCell.removeClass(that.classes.slotStatusPrefix + that.data.defaultStatus || '_');
+        // Adding status class
+        slotCell.addClass(that.classes.slotStatusPrefix + that.data.status);
+      }
+    }
+  }
+}
 },
 // Constructor:
 function WorkHours(element, options) {
   LcWidget.call(this, element, options);
+  var that = this;
 
   this.user = this.$el.data('calendar-user');
 
   this.query = {
-    user: user,
-    type: 'workhours'
+    user: this.user,
+    type: 'workHours'
   };
 
+  // Fetch the data: there is not a more specific query,
+  // it just get the hours for each week-day (data
+  // slots are per week-day instead of per date compared
+  // to *weekly*)
+  this.fetchData().done(function () {
+    that.bindData();
+  });
+
+  // Set handlers to switch status and update backend data
+  // with the user select cells
+  var slotsContainer = this.$el.find('.' + this.classes.slots);
+  function toggleCell(cell) {
+    // Find day and time of the cell:
+    var slot = findSlotByCell(slotsContainer, cell);
+    // Get week-day slots array:
+    var wkslots = that.data.slots[systemWeekDays[slot.day]] = that.data.slots[systemWeekDays[slot.day]] || [];
+    // If it has already the data.status, toggle to the defaultStatus
+    //  var statusClass = that.classes.slotStatusPrefix + that.data.status,
+    //      defaultStatusClass = that.classes.slotStatusPrefix + that.data.defaultStatus;
+    //if (cell.hasClass(statusClass
+    // Toggle from the array
+    var strslot = dateISO.timeLocal(slot.slot, true),
+      islot = wkslots.indexOf(strslot);
+    if (islot == -1)
+      wkslots.push(strslot);
+    else
+    //delete wkslots[islot];
+      wkslots.splice(islot, 1);
+  }
+
+  var dragging = {
+    first: null,
+    last: null
+  };
+  this.$el.find(slotsContainer).on('click', 'td', function () {
+    toggleCell($(this));
+
+    that.bindData();
+  }); /*
+  .on('mousedown', 'td', function () {
+    dragging.first = $(this);
+    dragging.last = null;
+    console.log('mousedown', dragging);
+  })
+  .on('mouseover', 'td', function () {
+    if (dragging.first) {
+      
+    }
+  })
+  .on('mouseup', 'td', function () {
+    dragging.last = $(this);
+    console.log('mouseup', dragging);
+    toggleCell(dragging.first);
+    toggleCell(dragging.last);
+    dragging.first = dragging.last = null;
+    that.bindData();
+  })
+  .find('td')
+  .attr('draggable', true); 
+  .on('dragstart', function (ev) {
+    console.log('dragstart');
+    //toggleCell($(this));
+    //that.bindData();
+    var slot = findSlotByCell(slotsContainer, $(this));
+    ev.dataTransfer.setData('custom', slot);
+    console.log('dragstart', slot);
+    return true;
+  })
+  .on('dragenter', function () {
+    console.log('draggenter');
+    return true;
+  })
+  .on('dragend', function (ev) {
+    console.log('dragout');
+    var startslot = ev.dataTransfer.getData('custom');
+    var endslot = findSlotByCell(slotsContainer, $(this));
+    console.log('dragout', startslot, endslot);
+    return true;
+  });*/
+
 });
+
+/** Static utility: found all components with the Workhours calendar class
+and enable it
+**/
+WorkHours.enableAll = function on(options) {
+  $('.' + WorkHours.prototype.classes.workHoursCalendar).each(function () {
+    var workhours = new WorkHours(this, options);
+  });
+};
 
 
 /**

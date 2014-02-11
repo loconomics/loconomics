@@ -5,6 +5,7 @@
         user
         start
         end
+        type
 *@
 @{
     // Prepare result struct
@@ -16,10 +17,12 @@
     // and precision to seconds.
     var dateFormat = "yyyy'-'MM'-'dd";
     var timeFormat = @"hh\:mm\:ss";
+    var systemCulture = System.Globalization.CultureInfo.InvariantCulture;
 
     try{
         // Defaults
         var userId = WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : 0;
+        var type = Request["type"] ?? "weekly";
         var defStart = LcHelpers.GetFirstWeekDay(DateTime.Today);
         var defEnd = LcHelpers.GetLastWeekDay(DateTime.Today);
 
@@ -29,37 +32,64 @@
         var endDate = Request["end"].AsDateTime(defEnd);
 
         // Get data
-        var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
-        
-        // Create result
-        var slots = new Dictionary<string, List<string>>();
-        // We prepare the slots with every date in the range, no matter
-        // if some dates ends up without data (empty value list) we need to be
-        // explicit about the returned dates.
-        var fordate = startDate;
-        while (fordate <= endDate) {
-            slots.Add(fordate.ToString(dateFormat), new List<string>());
-            // Next date
-            fordate = fordate.AddDays(1);
-        }
-        
-        // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
-        // as the default state, then we only return 'available' (free on database) slots
-        result["defaultStatus"] = "unavailable";
-        result["status"] = "available";
-        foreach(var ev in data) {
+        if (type == "workHours") {
+            var data = LcCalendar.GetProviderWorkHours(userId);
             
-            if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
-                // Result set is organized per dates,
-                var date = ev.DateSet.ToString(dateFormat);
-                // and inside, per time slot.
-                var slot = ev.TimeBlock.ToString(timeFormat);
-                // Added to the list
-                slots[date].Add(slot);
+            // Create result
+            var slots = new Dictionary<string, List<string>>();
+            
+            // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
+            // as the default state, then we only return 'available' (free on database) slots
+            result["defaultStatus"] = "unavailable";
+            result["status"] = "available";
+            
+            foreach(var r in data) {
+                var wk = r.DayOfWeek.ToString(systemCulture).ToLower();
+                slots.Add(wk, new List<string>());
+                
+                var forslot = r.StartTime;
+                while (forslot <= r.EndTime) {
+                    slots[wk].Add(forslot.ToString(timeFormat));
+                    // Next slot
+                    forslot = forslot.Add(TimeSpan.FromMinutes(15));
+                }
             }
-        }
+            
+            result["slots"] = slots;
+            
+        } else {
+            var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
 
-        result["slots"] = slots;
+            // Create result
+            var slots = new Dictionary<string, List<string>>();
+            // We prepare the slots with every date in the range, no matter
+            // if some dates ends up without data (empty value list) we need to be
+            // explicit about the returned dates.
+            var fordate = startDate;
+            while (fordate <= endDate) {
+                slots.Add(fordate.ToString(dateFormat), new List<string>());
+                // Next date
+                fordate = fordate.AddDays(1);
+            }
+        
+            // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
+            // as the default state, then we only return 'available' (free on database) slots
+            result["defaultStatus"] = "unavailable";
+            result["status"] = "available";
+            foreach(var ev in data) {
+            
+                if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                    // Result set is organized per dates,
+                    var date = ev.DateSet.ToString(dateFormat);
+                    // and inside, per time slot.
+                    var slot = ev.TimeBlock.ToString(timeFormat);
+                    // Added to the list
+                    slots[date].Add(slot);
+                }
+            }
+
+            result["slots"] = slots;
+        }
         
         //throw new Exception("Inside Test error");
         

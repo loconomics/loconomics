@@ -17,6 +17,14 @@ var extend = function extend(destination, source) {
     if (!source.hasOwnProperty(property))
       continue;
 
+    // Allow properties removal, if source contains value 'undefined'.
+    // There are no special considerations on Arrays, to don't get undesired
+    // results just the wanted is to replace specific positions, normally.
+    if (source[property] === undefined) {
+      delete destination[property];
+      continue;
+    }
+
     if (['object', 'function'].indexOf(typeof destination[property]) != -1 &&
             typeof source[property] == 'object')
       extend(destination[property], source[property]);
