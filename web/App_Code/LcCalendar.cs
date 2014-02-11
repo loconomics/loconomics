@@ -252,6 +252,75 @@ public static class LcCalendar
     }
 
     /// <summary>
+    /// It expectes the Json structure parsed created by calendar/get-availability?type=workHours
+    /// and updated by the javascript availabilityCalendar.WorkHours component, its
+    /// analized and saved into database reusing the other specific methods for save work hour events.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="workhours"></param>
+    public static void SaveWorkHoursJsonData(int userId, dynamic workhours)
+    {
+        var slotsGap = TimeSpan.FromMinutes(15);
+        var slotsRanges = new List<LcCalendar.WorkHoursDay>();
+
+        foreach (DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
+            var wday = wk.ToString().ToLower();
+
+            if (workhours.slots[wday] != null) {
+
+                var slots = new List<string>();
+                slots.AddRange(workhours.slots[wday].Values<string>());
+                slots.Sort();
+                    
+                var firstSlot = TimeSpan.MinValue;
+                var lastSlot = TimeSpan.MinValue;
+                foreach(var slot in slots) {
+                    var slotTime = TimeSpan.Parse(slot);
+                        
+                    // first time
+                    if (firstSlot == TimeSpan.MinValue) {
+                        firstSlot = slotTime;
+                        lastSlot = firstSlot;
+                    }
+                    else {
+                        var expectedSlot = lastSlot.Add(slotsGap);
+
+                        // If the expected end slot is not current
+                        // then the range ended
+                        if (slotTime > expectedSlot) {
+                            // Add range to the list
+                            slotsRanges.Add(new LcCalendar.WorkHoursDay {
+                                DayOfWeek = wk,
+                                StartTime = firstSlot,
+                                EndTime = lastSlot
+                            });
+
+                            // New range starts
+                            firstSlot = slotTime;
+                            lastSlot = slotTime;
+                        } else {
+                            // update last slot with the expected, contiguos slot
+                            // to continue building the range
+                            lastSlot = expectedSlot;
+                        }
+                    }
+                }
+                // Last range in the list (if there was something)
+                if (firstSlot != TimeSpan.MinValue) {
+                    slotsRanges.Add(new LcCalendar.WorkHoursDay {
+                        DayOfWeek = wk,
+                        StartTime = firstSlot,
+                        EndTime = lastSlot
+                    });
+                }
+            }
+        }
+            
+        // Saving in database
+        SetAllProviderWorkHours(userId, slotsRanges);
+    }
+
+    /// <summary>
     /// Set a day work hours saving it as an Event on database
     /// </summary>
     /// <param name="userID"></param>

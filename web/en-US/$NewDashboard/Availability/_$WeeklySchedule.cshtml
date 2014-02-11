@@ -11,6 +11,8 @@
     // Data
     
     if (IsPost && Validation.IsValid()) {
+        // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+        // breaking the code.
         //var workhours = Json.Decode(Request["workhours"]);
         dynamic workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"]);
 
@@ -20,61 +22,7 @@
 
         if (PageState.IsValid) {
             
-            var slotsGap = TimeSpan.FromMinutes(15);
-            var slotsRanges = new List<LcCalendar.WorkHoursDay>();
-
-            foreach (DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
-                var wday = wk.ToString().ToLower();
-
-                if (workhours.slots[wday] != null) {
-
-                    var slots = new List<string>();
-                    slots.AddRange(workhours.slots[wday].Values<string>());
-                    slots.Sort();
-                    
-                    var firstSlot = TimeSpan.MinValue;
-                    var lastSlot = TimeSpan.MinValue;
-                    foreach(var slot in slots) {
-                        var slotTime = TimeSpan.Parse(slot);
-                        
-                        // first time
-                        if (firstSlot == TimeSpan.MinValue) {
-                            firstSlot = slotTime;
-                            lastSlot = firstSlot;
-                        }
-                        else {
-
-                            // If the expected end slot is not current
-                            // then the range ended
-                            if (slotTime > lastSlot) {
-                                // Add range to the list
-                                slotsRanges.Add(new LcCalendar.WorkHoursDay {
-                                    DayOfWeek = wk,
-                                    StartTime = firstSlot,
-                                    EndTime = lastSlot
-                                });
-
-                                // New range starts
-                                firstSlot = slotTime;
-                                lastSlot = slotTime;
-                            }
-                        }
-                        // Calculate end-range slot
-                        lastSlot = lastSlot.Add(slotsGap);
-                    }
-                    // Last range in the list (if there was something)
-                    if (firstSlot != TimeSpan.MinValue) {
-                        slotsRanges.Add(new LcCalendar.WorkHoursDay {
-                            DayOfWeek = wk,
-                            StartTime = firstSlot,
-                            EndTime = lastSlot.Add(slotsGap)
-                        });
-                    }
-                }
-            }
-            
-            // Saving in database
-            LcCalendar.SetAllProviderWorkHours(userId, slotsRanges);
+            LcCalendar.SaveWorkHoursJsonData(userId, workhours);
                 
             // Testing the alert
             using (var db = Database.Open("sqlloco")) {
