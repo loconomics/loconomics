@@ -311,7 +311,7 @@ form ul li {
 }
 
 /* line 95 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
-.DashboardSection .DashboardSection-sidebar .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardCalendar:before {
+.DashboardSection .DashboardSection-sidebar .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardAvailability:before {
   background-position: 0 -25px;
 }
 
@@ -366,7 +366,7 @@ form ul li {
 }
 
 /* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
-.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardCalendar:before {
+.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardAvailability:before {
   background-position: -50px -25px;
 }
 
@@ -418,7 +418,7 @@ form ul li {
 }
 
 /* line 193 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
-.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardCalendar:before {
+.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardAvailability:before {
   background-position: -25px -25px;
 }
 
@@ -483,7 +483,7 @@ form ul li {
 }
 
 /* line 249 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
-.DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardCalendar:before {
+.DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardAvailability:before {
   background-position: -75px -25px;
 }
 
