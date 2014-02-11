@@ -5,6 +5,7 @@ var $ = require('jquery'),
   dateISO = require('LC/dateISO8601'),
   LcWidget = require('./CX/LcWidget'),
   extend = require('./CX/extend');
+require('./jquery.bounds');
 
 /**-----------------------
 Common private utilities
@@ -350,6 +351,131 @@ Weekly.enableAll = function on(options) {
   });
 };
 
+/**
+  Work hours private utils
+**/
+function setupEditWorkHours() {
+  var that = this;
+  // Set handlers to switch status and update backend data
+  // when the user select cells
+  var slotsContainer = this.$el.find('.' + this.classes.slots);
+  function toggleCell(cell) {
+    // Find day and time of the cell:
+    var slot = findSlotByCell(slotsContainer, cell);
+    // Get week-day slots array:
+    var wkslots = that.data.slots[systemWeekDays[slot.day]] = that.data.slots[systemWeekDays[slot.day]] || [];
+    // If it has already the data.status, toggle to the defaultStatus
+    //  var statusClass = that.classes.slotStatusPrefix + that.data.status,
+    //      defaultStatusClass = that.classes.slotStatusPrefix + that.data.defaultStatus;
+    //if (cell.hasClass(statusClass
+    // Toggle from the array
+    var strslot = dateISO.timeLocal(slot.slot, true),
+      islot = wkslots.indexOf(strslot);
+    if (islot == -1)
+      wkslots.push(strslot);
+    else
+    //delete wkslots[islot];
+      wkslots.splice(islot, 1);
+  }
+  function toggleCellRange(firstCell, lastCell) {
+    var 
+      x = firstCell.siblings('td').andSelf().index(firstCell),
+      y1 = firstCell.closest('tr').index(),
+    //x2 = lastCell.siblings('td').andSelf().index(lastCell),
+      y2 = lastCell.closest('tr').index();
+
+    if (y1 > y2) {
+      var y0 = y1;
+      y1 = y2;
+      y2 = y0;
+    }
+
+    toggleCell(firstCell);
+    for (var y = y1 + 1; y < y2; y++) {
+      var cell = firstCell.closest('tbody').children('tr:eq(' + y + ')').children('td:eq(' + x + ')');
+      toggleCell(cell);
+    }
+    toggleCell(lastCell);
+  }
+
+  this.$el.find(slotsContainer).on('click', 'td', function () {
+    toggleCell($(this));
+    that.bindData();
+    return false;
+  });
+
+  var dragging = {
+    first: null,
+    last: null,
+    selectionLayer: $('<div class="SelectionLayer" />').appendTo(this.$el)
+  };
+  function offsetToPosition(el, offset) {
+    var pb = $(el.offsetParent).bounds(),
+      s = {};
+
+    s.top = offset.top - pb.top;
+    s.left = offset.left - pb.left;
+
+    //s.bottom = pb.top - offset.bottom;
+    //s.right = offset.left - offset.right;
+    s.height = offset.bottom - offset.top;
+    s.width = offset.right - offset.left;
+
+    $(el).css(s);
+    return s;
+  }
+  function updateSelection(el) {
+    var a = dragging.first.bounds({ includeBorder: true });
+    var b = el.bounds({ includeBorder: true });
+    var s = dragging.selectionLayer.bounds({ includeBorder: true });
+
+    s.top = a.top < b.top ? a.top : b.top;
+    s.bottom = a.bottom > b.bottom ? a.bottom : b.bottom;
+
+    offsetToPosition(dragging.selectionLayer[0], s);
+  }
+
+  function finishDrag() {
+    if (dragging.first && dragging.last) {
+
+      toggleCellRange(dragging.first, dragging.last);
+
+      that.bindData();
+
+      dragging.first = dragging.last = null;
+    }
+    dragging.selectionLayer.hide();
+  }
+
+  this.$el.find(slotsContainer)
+  .on('mousedown', 'td', function () {
+    dragging.first = $(this);
+    dragging.last = null;
+    dragging.selectionLayer.show();
+
+    var s = dragging.first.bounds({ includeBorder: true });
+    //console.log('first bounds', s);
+    offsetToPosition(dragging.selectionLayer[0], s);
+
+    //console.log('mousedown', dragging);
+  })
+  .on('mouseenter', 'td', function () {
+    if (dragging.first) {
+      dragging.last = $(this);
+
+      updateSelection(dragging.last);
+
+      //console.log('mouseenter', dragging);
+    }
+  })
+  .on('mouseup', finishDrag)
+  .find('td')
+  .attr('draggable', true);
+  // This will not work with pointer-events:none, but on other
+  // cases (recentIE)
+  dragging.selectionLayer.on('mouseup', finishDrag)
+  .attr('draggable', true);
+}
 
 /**
     Work hours calendar, inherits from LcWidget
@@ -412,77 +538,7 @@ function WorkHours(element, options) {
     that.bindData();
   });
 
-  // Set handlers to switch status and update backend data
-  // with the user select cells
-  var slotsContainer = this.$el.find('.' + this.classes.slots);
-  function toggleCell(cell) {
-    // Find day and time of the cell:
-    var slot = findSlotByCell(slotsContainer, cell);
-    // Get week-day slots array:
-    var wkslots = that.data.slots[systemWeekDays[slot.day]] = that.data.slots[systemWeekDays[slot.day]] || [];
-    // If it has already the data.status, toggle to the defaultStatus
-    //  var statusClass = that.classes.slotStatusPrefix + that.data.status,
-    //      defaultStatusClass = that.classes.slotStatusPrefix + that.data.defaultStatus;
-    //if (cell.hasClass(statusClass
-    // Toggle from the array
-    var strslot = dateISO.timeLocal(slot.slot, true),
-      islot = wkslots.indexOf(strslot);
-    if (islot == -1)
-      wkslots.push(strslot);
-    else
-    //delete wkslots[islot];
-      wkslots.splice(islot, 1);
-  }
-
-  var dragging = {
-    first: null,
-    last: null
-  };
-  this.$el.find(slotsContainer).on('click', 'td', function () {
-    toggleCell($(this));
-
-    that.bindData();
-  }); /*
-  .on('mousedown', 'td', function () {
-    dragging.first = $(this);
-    dragging.last = null;
-    console.log('mousedown', dragging);
-  })
-  .on('mouseover', 'td', function () {
-    if (dragging.first) {
-      
-    }
-  })
-  .on('mouseup', 'td', function () {
-    dragging.last = $(this);
-    console.log('mouseup', dragging);
-    toggleCell(dragging.first);
-    toggleCell(dragging.last);
-    dragging.first = dragging.last = null;
-    that.bindData();
-  })
-  .find('td')
-  .attr('draggable', true); 
-  .on('dragstart', function (ev) {
-    console.log('dragstart');
-    //toggleCell($(this));
-    //that.bindData();
-    var slot = findSlotByCell(slotsContainer, $(this));
-    ev.dataTransfer.setData('custom', slot);
-    console.log('dragstart', slot);
-    return true;
-  })
-  .on('dragenter', function () {
-    console.log('draggenter');
-    return true;
-  })
-  .on('dragend', function (ev) {
-    console.log('dragout');
-    var startslot = ev.dataTransfer.getData('custom');
-    var endslot = findSlotByCell(slotsContainer, $(this));
-    console.log('dragout', startslot, endslot);
-    return true;
-  });*/
+  setupEditWorkHours.call(this);
 
 });
 

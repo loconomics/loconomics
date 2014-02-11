@@ -3543,6 +3543,16 @@ label.visuallyhidden-with-placeholder{
   cursor: pointer;
 }
 
+/* line 239 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\AvailabilityCalendar.styl */
+.AvailabilityCalendar .SelectionLayer {
+  position: absolute;
+  background: #006a8d;
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+  pointer-events: none;
+}
+
 /*= w-ProviderPackage */
 .w-ProviderPackage {
     color: #333333;
