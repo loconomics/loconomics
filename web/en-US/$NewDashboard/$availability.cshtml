@@ -13,9 +13,14 @@
 <div class="DashboardAvailability">
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$NewDashboard/$availability/">
 
-        <div class="DashboardSection-page-section">
+        <div class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>
             @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Sync your existing calendar(s)</h2>
+            @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState })
         </div>
 
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
@@ -24,6 +29,10 @@
             <button class="main-action" type="submit">Save</button>
         </div>
     </form>
+</div>
+
+<div class="InlineNotification InlineNotification--hasRequiredSections">
+    Required sections
 </div>
 
 @{

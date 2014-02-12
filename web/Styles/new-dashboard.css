@@ -559,56 +559,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
@@ -700,56 +719,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
@@ -846,56 +884,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
@@ -992,56 +1049,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
@@ -1569,56 +1645,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
@@ -3302,56 +3397,75 @@ form ul li {
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm legend {
+.BasicForm legend,
+.BasicForm .BasicForm-section-header {
   font-weight: bold;
+  display: block;
+  font-size: 1em;
+  color: #333;
+  text-align: left;
+  line-height: normal;
 }
 
-/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li,
-.BasicForm fieldset > ul > li {
+.BasicForm fieldset > ul > li,
+.BasicForm .BasicForm-section > ul > li {
   padding: 0px 10px;
   margin: 6px 0px;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li input[type="radio"],
 .BasicForm fieldset > ul > li input[type="radio"],
+.BasicForm .BasicForm-section > ul > li input[type="radio"],
 .BasicForm > ul > li input[type="checkbox"],
-.BasicForm fieldset > ul > li input[type="checkbox"] {
+.BasicForm fieldset > ul > li input[type="checkbox"],
+.BasicForm .BasicForm-section > ul > li input[type="checkbox"] {
   margin: 0 6px;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li > input[type="radio"]:first-child,
 .BasicForm fieldset > ul > li > input[type="radio"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="radio"]:first-child,
 .BasicForm > ul > li > input[type="checkbox"]:first-child,
-.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child {
+.BasicForm fieldset > ul > li > input[type="checkbox"]:first-child,
+.BasicForm .BasicForm-section > ul > li > input[type="checkbox"]:first-child {
   margin: 0 6px 0 0;
 }
 
-/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm > ul > li label,
-.BasicForm fieldset > ul > li label {
+.BasicForm fieldset > ul > li label,
+.BasicForm .BasicForm-section > ul > li label {
   padding: 0;
 }
 
-/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm fieldset {
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm fieldset,
+.BasicForm .BasicForm-section {
   margin: 0px 0px 10px;
   padding: 0px;
 }
 
-/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm label {
   padding: 0 10px;
 }
 
-/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
-.BasicForm textarea {
+/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+.BasicForm textarea,
+.BasicForm .BasicForm-fill {
   width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 .BasicForm textarea,
 .BasicForm input[type=text],
 .BasicForm select {
