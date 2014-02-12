@@ -27,6 +27,10 @@ disabled($color = White, $opacity = .5) {
 .AvailabilityCalendar {
     position: relative;
     
+    &.is-disabled {
+        disabled();
+    }
+    
     &.is-loading {
         /* Loading spinner */
         &:before {

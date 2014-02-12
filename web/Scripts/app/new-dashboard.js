@@ -95,5 +95,15 @@ $(function () {
     form.on('presubmit', function () {
       field.val(JSON.stringify(workhours.data));
     });
+
+
+    // Disabling calendar on field alltime
+    form.find('[name=alltime]').on('change', function () {
+      var $t = $(this),
+        cl = workhours.classes.disabled;
+      if (cl)
+        workhours.$el.toggleClass(cl, $t.prop('checked'));
+    });
+
   });
 });

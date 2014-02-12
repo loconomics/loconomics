@@ -49,6 +49,7 @@ var BindableComponent = Component.extend(
     classes: {
       fetching: 'is-loading',
       prefetching: 'is-preloading',
+      disabled: 'is-disabled',
       hasDataError: 'has-dataError'
     },
     fetchData: componentFetchData,

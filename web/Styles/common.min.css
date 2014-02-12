@@ -2920,6 +2920,23 @@ label.visuallyhidden-with-placeholder{
 
 
 
+.AvailabilityCalendar.is-disabled:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background: White;
+  opacity: 0.5;
+  -ms-filter: "alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+}
+
+
+
+
 .AvailabilityCalendar.is-loading:before {
   content: '';
   position: absolute;
