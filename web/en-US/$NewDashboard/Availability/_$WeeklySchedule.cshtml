@@ -11,15 +11,22 @@
     // Data
     var advanceTime = 24M;
     var betweenTime = 0M;
+    var allTime = false;
     
     if (IsPost && Validation.IsValid()) {
-        // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
-        // breaking the code.
-        //var workhours = Json.Decode(Request["workhours"]);
-        dynamic workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"]);
+        
+        allTime = Request["alltime"].AsBool();
+        dynamic workhours = null;
+        
+        if (!allTime) {
+            // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+            // breaking the code.
+            //workhours = Json.Decode(Request["workhours"]);
+            workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"]);
 
-        if (workhours.status != "available") {
-            ModelState.AddFormError("Work hours availability information: status not allowed");
+            if (workhours != null && workhours.status != "available") {
+                ModelState.AddFormError("Work hours availability information: status not allowed");
+            }
         }
 
         if (PageState.IsValid) {
@@ -33,8 +40,12 @@
             if (Request["between-time"].IsEmpty()) {
                 ModelState.AddError("between-time", LcRessources.RequiredField("Minimum time between bookings"));
             }
-
-            LcCalendar.SaveWorkHoursJsonData(userId, workhours);
+            
+            if (allTime) {
+                LcCalendar.SetAllTimeAvailability(userId);
+            } else {
+                LcCalendar.SaveWorkHoursJsonData(userId, workhours);
+            }
 
             // Testing the alert
             using (var db = Database.Open("sqlloco")) {

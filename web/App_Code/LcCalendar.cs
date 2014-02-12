@@ -110,6 +110,9 @@ public static class LcCalendar
         public TimeSpan StartTime;
         public TimeSpan EndTime;
     }
+
+    private static TimeSpan LastMinute = new TimeSpan(23, 59, 59);
+
     /// <summary>
     /// Retrieve a list of Events of type Work Hours of the provider
     /// </summary>
@@ -130,12 +133,32 @@ public static class LcCalendar
                     if (evrf.DayOfWeek.HasValue &&
                         evrf.DayOfWeek.Value > -1 &&
                         evrf.DayOfWeek.Value < 7)
+                    {
+                        // Getting startTime and endTime, being aware
+                        // to return correctly fixed times.
+                        var startTime = ev.StartTime.TimeOfDay;
+                        var endTime = ev.EndTime.TimeOfDay;
+
+                        // It must detects the all-day flag on the event
+                        // returning the proper time:
+                        if (ev.IsAllDay) {
+                            startTime = TimeSpan.Zero;
+                            endTime = LastMinute;
+                        }
+
+                        // If the end time is on the next day, is because
+                        // is was set next day at 00:00 as the finish,
+                        // support this by returning the correct last-day-time.
+                        if (ev.EndTime.Date > ev.StartTime.Date)
+                            endTime = LastMinute;
+
                         yield return new WorkHoursDay
                         {
                             DayOfWeek = (DayOfWeek)evrf.DayOfWeek.Value,
-                            StartTime = ev.StartTime.TimeOfDay,
-                            EndTime = ev.EndTime.TimeOfDay
+                            StartTime = startTime,
+                            EndTime = endTime
                         };
+                    }
                 }
             }
         }
@@ -185,6 +208,8 @@ public static class LcCalendar
 
     public static CalendarEvents CreateWorkHourEvent(int userID, WorkHoursDay workHoursDay)
     {
+        var allDay = workHoursDay.EndTime == TimeSpan.Zero && workHoursDay.StartTime == TimeSpan.Zero;
+
         // Start and End Dates are not used 'as is', they are
         // treated in a special way when recurrence rules are present,
         // for that we can use invented and convenient
@@ -221,7 +246,7 @@ public static class LcCalendar
         newevent.Transparency = true;
         newevent.StartTime = startDateTime;
         newevent.EndTime = endDateTime;
-        newevent.IsAllDay = false;
+        newevent.IsAllDay = allDay;
         newevent.UpdatedDate = DateTime.Now;
         newevent.CreatedDate = DateTime.Now;
         newevent.ModifyBy = "UserID:" + userID;
@@ -289,10 +314,12 @@ public static class LcCalendar
                         // then the range ended
                         if (slotTime > expectedSlot) {
                             // Add range to the list
+                            // Note: we have slots by its start-time, by the
+                            // range to save must include the end-time for the last slot
                             slotsRanges.Add(new LcCalendar.WorkHoursDay {
                                 DayOfWeek = wk,
                                 StartTime = firstSlot,
-                                EndTime = lastSlot
+                                EndTime = lastSlot.Add(slotsGap)
                             });
 
                             // New range starts
@@ -306,11 +333,19 @@ public static class LcCalendar
                     }
                 }
                 // Last range in the list (if there was something)
+                // Note: we have slots by its start-time, by the
+                // range to save must include the end-time for the last slot
                 if (firstSlot != TimeSpan.MinValue) {
+                    // Calculations can have precision errors, be aware to don't pass a time
+                    // after 24:00:00
+                    var finalEndTime = lastSlot.Add(slotsGap);
+                    if (finalEndTime.TotalHours >= 24.0)
+                        finalEndTime = TimeSpan.Zero;
+
                     slotsRanges.Add(new LcCalendar.WorkHoursDay {
                         DayOfWeek = wk,
                         StartTime = firstSlot,
-                        EndTime = lastSlot
+                        EndTime = finalEndTime
                     });
                 }
             }
@@ -318,6 +353,26 @@ public static class LcCalendar
             
         // Saving in database
         SetAllProviderWorkHours(userId, slotsRanges);
+    }
+
+    /// <summary>
+    /// It sets all time, all week days as available for the userId
+    /// </summary>
+    /// <param name="userId"></param>
+    public static void SetAllTimeAvailability(int userId)
+    {
+        // Adds slots ranges for all day time each week day
+        var workHoursList = new List<WorkHoursDay>();
+
+        foreach(DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
+            workHoursList.Add(new WorkHoursDay {
+                DayOfWeek = wk,
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.Zero
+            });
+        }
+        
+        SetAllProviderWorkHours(userId, workHoursList);
     }
 
     /// <summary>

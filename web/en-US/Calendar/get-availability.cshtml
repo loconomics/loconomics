@@ -50,7 +50,9 @@
                 }
 
                 var forslot = r.StartTime;
-                while (forslot <= r.EndTime) {
+                // Its less than EndTime, because EndTime is an inclusive time-range and we
+                // return only the start of each time-slot.
+                while (forslot < r.EndTime) {
                     slots[wk].Add(forslot.ToString(timeFormat));
                     // Next slot
                     forslot = forslot.Add(TimeSpan.FromMinutes(15));
