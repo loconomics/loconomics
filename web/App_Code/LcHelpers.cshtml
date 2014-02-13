@@ -102,6 +102,44 @@
             ,end
         );
     }
+    public static string GetShortestDateTimeRangeString(DateTime? start, DateTime? end,
+        string dateFormat = "dddd, MMM d",
+        string timeFormat = @"hh\:mm",
+        string dateTimeSeparator = " ",
+        string datesSeparator = " to ") {
+
+        var f = "";
+        if (start.HasValue) {
+            f += "{0:" + dateFormat + "}";
+            
+            if (start.Value.TimeOfDay != TimeSpan.Zero) {
+                f += dateTimeSeparator + "{1:" + timeFormat + "}";
+            }
+
+            if (end.HasValue && start != end) {
+                f += datesSeparator;
+                bool withEndDate = false;
+                if (start.Value.Date != end.Value.Date) {
+                    f += "{2:" + dateFormat + "}";
+                    withEndDate = true;
+                }
+                
+                if (end.Value.TimeOfDay != TimeSpan.Zero &&
+                    start.Value.TimeOfDay != TimeSpan.Zero) {
+                    if (withEndDate) {
+                        f += dateTimeSeparator;
+                    }
+                    f += "{3:" + timeFormat + "}";
+                }
+            }
+        }
+        return String.Format(f,
+            start.Value.Date,
+            start.Value.TimeOfDay,
+            end.Value.Date,
+            end.Value.TimeOfDay
+        );
+    }
     /// <summary>
     /// Get a TimeSpan for the given hours,
     /// rounding the result to Minutes unit

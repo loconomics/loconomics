@@ -68,6 +68,7 @@
         return ret;
     }
 }
+
 <div class="@idprefix">
 @if (list != null && list.Count > 0)
 {
@@ -82,7 +83,7 @@
                 <p>@item.CalendarEventType.DisplayName</p>
 
                 <h2 class="ItemBox-sectionTitle">When</h2>
-                <p>@item.StartTime - @item.EndTime</p>
+                <p>@LcHelpers.GetShortestDateTimeRangeString(item.StartTime, item.EndTime, dateFormat: "D", dateTimeSeparator: ", ")</p>
 
                 @foreach (var repetition in item.CalendarReccurrence)
                 {
