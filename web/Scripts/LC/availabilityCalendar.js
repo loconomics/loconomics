@@ -59,44 +59,71 @@ function moveBindRangeInDays(weekly, days) {
     end = addDays(weekly.datesRange.end, days),
     datesRange = datesToRange(start, end);
 
-  // Support for prefetching:
-  // Its avoided if there are requests in course, since
-  // that will be a prefetch for the same data.
-  if (weekly.fetchData.requests.length) {
-    // The last request in the pool *must* be the last in finish
-    // (must be only one if all goes fine):
-    var request = weekly.fetchData.requests[weekly.fetchData.requests.length - 1];
+  // Check cache before try to fetch
+  var inCache = weeklyIsDataInCache(weekly, datesRange);
 
-    // Wait for the fetch to perform and sets loading to notify user
-    weekly.$el.addClass(weekly.classes.fetching);
-    request.done(function () {
-      moveBindRangeInDays(weekly, days);
-      weekly.$el.removeClass(weekly.classes.fetching || '_');
+  if (inCache) {
+    // Just show the data
+    weekly.bindData(datesRange);
+    // Prefetch except if there is other request in course (can be the same prefetch,
+    // but still don't overload the server)
+    if (weekly.fetchData.requests.length === 0)
+      weeklyCheckAndPrefetch(weekly, datesRange);
+  } else {
+
+    // Support for prefetching:
+    // Its avoided if there are requests in course, since
+    // that will be a prefetch for the same data.
+    if (weekly.fetchData.requests.length) {
+      // The last request in the pool *must* be the last in finish
+      // (must be only one if all goes fine):
+      var request = weekly.fetchData.requests[weekly.fetchData.requests.length - 1];
+
+      // Wait for the fetch to perform and sets loading to notify user
+      weekly.$el.addClass(weekly.classes.fetching);
+      request.done(function () {
+        moveBindRangeInDays(weekly, days);
+        weekly.$el.removeClass(weekly.classes.fetching || '_');
+      });
+      return;
+    }
+
+    // Fetch (download) the data and show on ready:
+    weekly
+    .fetchData(datesToQuery(datesRange))
+    .done(function () {
+      weekly.bindData(datesRange);
+      // Prefetch
+      weeklyCheckAndPrefetch(weekly, datesRange);
     });
-    return;
   }
+}
 
+function weeklyIsDataInCache(weekly, datesRange) {
   // Check cache: if there is almost one date in the range
   // without data, we set inCache as false and fetch the data:
   var inCache = true;
-  eachDateInRange(start, end, function (date) {
+  eachDateInRange(datesRange.start, datesRange.end, function (date) {
     var datekey = dateISO.dateLocal(date, true);
     if (!weekly.data.slots[datekey]) {
       inCache = false;
       return false;
     }
   });
+  return inCache;
+}
 
-  if (inCache)
-  // Just show the data
-    weekly.bindData(datesRange);
-  else
-  // Fetch (download) the data and show on ready:
-    weekly
-    .fetchData(datesToQuery(datesRange))
-    .done(function () {
-      weekly.bindData(datesRange);
-    });
+function weeklyCheckAndPrefetch(weekly, currentDatesRange) {
+  var nextDatesRange = datesToRange(
+    addDays(currentDatesRange.start, 7),
+    addDays(currentDatesRange.end, 7)
+  );
+
+  if (!weeklyIsDataInCache(weekly, nextDatesRange)) {
+    // Prefetching next week in advance
+    var prefetchQuery = datesToQuery(nextDatesRange);
+    weekly.fetchData(prefetchQuery, null, true);
+  }
 }
 
 /** Update the view labels for the week-days (table headers)
@@ -330,11 +357,10 @@ function Weekly(element, options) {
 
   // Start fetching current week
   var firstDates = currentWeek();
-  var request = this.fetchData(datesToQuery(firstDates)).done(function () {
+  this.fetchData(datesToQuery(firstDates)).done(function () {
     that.bindData(firstDates);
-    // Prefetching 3 weeks in advance
-    var threeWeeks = datesToQuery(addDays(firstDates.start, 7), addDays(firstDates.end, 21));
-    request = that.fetchData(threeWeeks, null, true);
+    // Prefetching next week in advance
+    weeklyCheckAndPrefetch(that, firstDates);
   });
   checkCurrentWeek(this.$el, firstDates.start, this);
 
