@@ -9,4 +9,4 @@
 </p>
 
 @*RenderPage("$AvailabilityCalendarWidget.cshtml", new Dictionary<string, object>{ { "AvailabilityCalendar.UserID", p.UserID } } )*@
-@RenderPage(LcUrl.LangPath + "Calendar/$Weekly.cshtml", new { User = p.UserID })
+@RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = p.UserID })

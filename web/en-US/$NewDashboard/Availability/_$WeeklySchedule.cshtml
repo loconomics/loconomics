@@ -124,7 +124,7 @@
 
     <label class="DashboardWeeklySchedule-allTime"><input type="checkbox" name="alltime" value="True" @LcHelpers.IsChecked(true, Request["alltime"]) /> All days/times</label>
 
-    @RenderPage(LcUrl.LangPath + "Calendar/$Weekly.cshtml", new { User = userId, Type = "workHours" })
+    @RenderPage(LcUrl.RenderLangPath + "Calendar/$Weekly.cshtml", new { User = userId, Type = "workHours" })
 
     <fieldset class="DashboardWeeklySchedule-require">
         <legend>I require:</legend>
