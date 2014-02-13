@@ -517,6 +517,9 @@ public static class LcCalendar
         {
             return ent.CalendarEvents
                 .Include("CalendarAvailabilityType")
+                .Include("CalendarEventType")
+                .Include("CalendarReccurrence")
+                .Include("CalendarReccurrence.CalendarReccurrenceFrequency")
                 .Where(c => c.UserId == userID && (c.EventType == 3 || c.EventType == 5))
                 .ToList();
         }
@@ -814,7 +817,67 @@ public static class LcCalendar
         public int ID;
         public string Name;
         public string UnitPlural;
+        public string UnitSingular;
     }
+    public static Dictionary<int, FrequencyTypeDescriptor> RecurrenceFrequencyTypesIndexed = new Dictionary<int,FrequencyTypeDescriptor>{
+        { 
+            (int)FrequencyType.Daily,
+            new FrequencyTypeDescriptor {
+                ID = (int)FrequencyType.Daily,
+                Name = "Daily",
+                UnitPlural = "Days",
+                UnitSingular = "Day"
+            }
+        },
+        { 
+            501,
+            new FrequencyTypeDescriptor {
+                ID = 501,
+                Name = "Every weekday (Monday to Friday)"
+            }
+        },
+        { 
+            502,
+            new FrequencyTypeDescriptor {
+                ID = 502,
+                Name = "Every Monday, Wednesday, and Friday"
+            }
+        },
+        { 
+            503,
+            new FrequencyTypeDescriptor {
+                ID = 503,
+                Name = "Every Tuesday, and Thursday"
+            }
+        },
+        {
+            (int)FrequencyType.Weekly,
+            new FrequencyTypeDescriptor {
+                ID = (int)FrequencyType.Weekly,
+                Name = "Weekly",
+                UnitPlural = "Weeks",
+                UnitSingular = "Week"
+            }
+        },
+        {
+            (int)FrequencyType.Monthly,
+            new FrequencyTypeDescriptor {
+                ID = (int)FrequencyType.Monthly,
+                Name = "Monthly",
+                UnitPlural = "Months",
+                UnitSingular = "Month"
+            }
+        },
+        {
+            (int)FrequencyType.Yearly,
+            new FrequencyTypeDescriptor {
+                ID = (int)FrequencyType.Yearly,
+                Name = "Yearly",
+                UnitPlural = "Years",
+                UnitSingular = "Year"
+            }
+        }
+    };
     /// <summary>
     /// Returns a list of frequency types to be displayed for user selection.
     /// It includes real frequencies and special ones that are modifications or presets
