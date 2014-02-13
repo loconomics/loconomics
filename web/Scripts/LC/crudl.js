@@ -202,7 +202,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           if (data.Code == 5)
             setTimeout(finishEdit, 1500);
         })
-        .on('ajaxFormReturnedHtml', 'form, fieldset', function (jb, form, jx) {
+        .on('ajaxFormReturnedHtml', 'form,fieldset', function (jb, form, jx) {
           // Emit the 'editor-ready' event on editor Html being replaced
           // (first load or next loads because of server-side validation errors)
           // to allow listeners to do any work over its (new) DOM elements.

@@ -37,10 +37,18 @@ window.ajaxFormsCompleteHandler = ajaxForms.onComplete;
 
 /* Reload */
 require('../LC/jquery.reload');
+// Wrapper function around onSuccess to mark operation as part of a 
+// reload avoiding some bugs (as replace-content on ajax-box, not wanted for
+// reload operations)
+function reloadSuccessWrapper() {
+  var context = $.isPlainObject(this) ? this : { element: this };
+  context.isReload = true;
+  ajaxForms.onSuccess.apply(context, Array.prototype.slice.call(arguments));
+}
 $.fn.reload.defaults = {
-    success: [ajaxForms.onSuccess],
-    error: [ajaxForms.onError],
-    delay: gLoadingRetard
+  success: [reloadSuccessWrapper],
+  error: [ajaxForms.onError],
+  delay: gLoadingRetard
 };
 
 LC.moveFocusTo = require('../LC/moveFocusTo');

@@ -19,6 +19,11 @@
         </div>
 
         <div class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Block off other times you're busy</h2>
+            @RenderPage("Availability/_$Appointments.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Sync your existing calendar(s)</h2>
             @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState })
         </div>

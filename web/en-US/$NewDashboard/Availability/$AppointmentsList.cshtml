@@ -1,0 +1,36 @@
+﻿@*
+    List user Calendar Appointments (events of that kind)
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var userId = WebSecurity.CurrentUserId;
+    var idprefix = "DashboardAppointments-list";
+
+    var list = LcCalendar.GetUserAppointments(userId);
+}
+<div class="@idprefix">
+@if (list != null && list.Count > 0)
+{
+    <div id="@idprefix">
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="DashboardAppointments-list-item ItemBox crudl-item" data-crudl-item-id="@item.Id">
+                    <h1 class="ItemBox-name">@item.Summary</h1>
+                    <p class="ItemBox-important">@item.CalendarAvailabilityType.CalendarAvailabilityTypeName</p>
+                    <p>@item.StartTime - @item.EndTime</p>
+
+                    <!-- More details -->
+
+                    <div class="actions ItemBox-actions">
+                        <a href="#delete" class="crudl-delete">Delete</a>
+                        <a href="#edit" class="crudl-update">Edit</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
+</div>

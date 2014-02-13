@@ -18,9 +18,9 @@ exports.on = function (containerSelector) {
 
   crudl.elements
   .on(crudl.settings.events['edit-starts'], function () {
-    $others.xhide({ effect: 'height', duraction: 'slow' });
+    $others.xhide({ effect: 'height', duration: 'slow' });
   })
   .on(crudl.settings.events['edit-ends'], function () {
-    $others.xshow({ effect: 'height', duraction: 'slow' });
+    $others.xshow({ effect: 'height', duration: 'slow' });
   });
 };

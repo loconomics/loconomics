@@ -13,17 +13,21 @@ function updateElement(htmlContent, context) {
 
     // create jQuery object with the HTML
     var newhtml = new jQuery();
-    // Try-catch to avoid errors when an empty document or malformed is returned:
-    try {
+    // Avoid empty documents being parsed (raise error)
+    htmlContent = $.trim(htmlContent);
+    if (htmlContent) {
+      // Try-catch to avoid errors when an empty document or malformed is returned:
+      try {
         // parseHTML since jquery-1.8 is more secure:
         if (typeof ($.parseHTML) === 'function')
-            newhtml = $($.parseHTML(htmlContent));
+          newhtml = $($.parseHTML(htmlContent));
         else
-            newhtml = $(htmlContent);
-    } catch (ex) {
+          newhtml = $(htmlContent);
+      } catch (ex) {
         if (console && console.error)
-            console.error(ex);
+          console.error(ex);
         return;
+      }
     }
 
     var element = context.element;

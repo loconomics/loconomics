@@ -87,22 +87,30 @@ function lcOnSuccess(data, text, jx) {
           (ctx.options && ctx.options.mode === 'replace-content') ||
           ctx.box.data('reload-mode') === 'replace-content';
 
-        // Check if the returned element is the ajax-box, if not, find
-        // the element in the newhtml:
-        var jb = newhtml.filter('.ajax-box');
-        if (jb.length === 0)
-          jb = newhtml;
-        if (!ctx.boxIsContainer && !jb.is('.ajax-box'))
+        // Support for reload, avoiding important bugs with reloading boxes that contains forms:
+        // If operation is a reload, don't check the ajax-box
+        var jb = newhtml;
+        if (!ctx.isReload) {
+          // Check if the returned element is the ajax-box, if not, find
+          // the element in the newhtml:
+          jb = newhtml.filter('.ajax-box');
+          if (jb.length === 0)
+            jb = newhtml;
+          if (!ctx.boxIsContainer && !jb.is('.ajax-box'))
             jb = newhtml.find('.ajax-box:eq(0)');
-        if (!jb || jb.length === 0) {
+          if (!jb || jb.length === 0) {
             // There is no ajax-box, use all element returned:
             jb = newhtml;
+          }
+
+          if (replaceBoxContent)
+            // Replace the box content with the content of the returned box
+            // or all if there is no ajax-box in the result.
+            jb = jb.is('.ajax-box') ? jb.contents() : jb;
         }
 
         if (replaceBoxContent) {
-          // Replace the box content with the content of the returned box
-          // or all if there is no ajax-box in the result.
-          ctx.box.empty().append(jb.is('.ajax-box') ? jb.contents() : jb);
+          ctx.box.empty().append(jb);
         } else if (ctx.boxIsContainer) {
             // jb is content of the box container:
             ctx.box.html(jb);
