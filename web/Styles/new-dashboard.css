@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-12
+/*! Loconomics.com 2014-02-13
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -3352,7 +3352,7 @@ form ul li {
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 122 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -3786,4 +3786,125 @@ form ul li {
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
 .DashboardAvailability .DashboardWeeklySchedule .DashboardWeeklySchedule-require li {
   margin-bottom: 1em;
+}
+
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li label {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+  margin-right: 5px;
+}
+
+/* line 33 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 35 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options label li,
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .repeat-ends ul li {
+  padding-left: 0;
+  font-weight: normal;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options label li label,
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .repeat-ends ul li label {
+  width: auto;
+  vertical-align: middle;
+}
+
+/* line 46 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .time-switchers {
+  margin: 4px 5px 4px 130px;
+}
+
+/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .time-switchers label {
+  width: auto;
+}
+
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-every .repeat-frequency-unit {
+  text-transform: lowercase;
+}
+
+/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options label {
+  font-weight: bold;
+}
+
+/* line 67 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options ul > li {
+  margin: 6px 0;
+}
+
+/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .repeat-ends > * {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* line 76 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .frequency-extra .week-days,
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .frequency-extra .monthly-options {
+  display: inline;
+}
+
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .frequency-extra .week-days .has-tooltip {
+  text-decoration: none;
+}
+
+/* line 85 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .frequency-extra .week-days label,
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li .time-options .repeat-options .frequency-extra .monthly-options label {
+  width: auto;
+}
+
+/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li input[type=text],
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li select,
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li textarea {
+  width: 400px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+/* line 99 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+
+/* line 100 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li.when input[type=text] {
+  width: 80px;
+}
+
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li.when .repeat-every input[type=text] {
+  width: 40px;
+}
+
+/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li.when .date[type="text"],
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li.when .time[type="text"] {
+  width: 6.3em;
+}
+
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
+.DashboardAvailability .DashboardAppointments .DashboardAppointments-editor ul > li.when select.time {
+  width: 5.7em;
 }

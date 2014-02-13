@@ -16,7 +16,7 @@ exports.on = function (containerSelector) {
     $others = $crudlContainer.siblings().add($crudlContainer.find('.DashboardSection-page-section-introduction'));
 
   var crudl = initCrudl(crudlSelector);
-  
+
   crudl.elements
   .on(crudl.settings.events['edit-starts'], function () {
     $others.xhide({ effect: 'height', duration: 'slow' });
@@ -25,13 +25,16 @@ exports.on = function (containerSelector) {
     $others.xshow({ effect: 'height', duration: 'slow' });
   })
   .on(crudl.settings.events['editor-ready'], function (e, editor) {
-    console.log('editor ready');
-    editFormSetup(editor);
+    // Done after a small delay to let the editor be visible
+    // and setup work as expected
+    setTimeout(function () {
+      editFormSetup(editor);
+    }, 100);
   });
 
 };
 
-function editFormSetup(f) {console.log('editor setup');
+function editFormSetup(f) {
   var repeat = f.find('[name=repeat]').change(function () {
     var a = f.find('.repeat-options');
     if (this.checked)
