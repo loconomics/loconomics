@@ -63,7 +63,8 @@
             
         } else {
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
-
+            //Response.Write(ObjectInfo.Print(data));
+            //Response.End();
             // Create result
             var slots = new Dictionary<string, List<string>>();
             // We prepare the slots with every date in the range, no matter

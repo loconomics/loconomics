@@ -127,6 +127,8 @@ public static partial class LcData
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
+
+                                ,OnboardingStep
                                 
                                 ,ProviderWebsiteURL
                                 ,ProviderProfileURL
@@ -206,6 +208,8 @@ public static partial class LcData
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
+
+                                ,OnboardingStep
 
                                 ,ProviderWebsiteURL
                                 ,ProviderProfileURL

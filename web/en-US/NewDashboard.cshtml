@@ -8,6 +8,8 @@
     /*
      * Selecting page to render dynamically
      */
+    var u = LcData.UserInfo.GetUserRow();
+    var isInOnboarding = false;
     var page = UrlData[0].ToLower();
     var fileToRender = "";
     
@@ -20,6 +22,9 @@
         "payments", "privacy"
     };
     if (pages.Contains(page)) {
+
+        isInOnboarding = checkOnboardingPage(u, page);
+        
         fileToRender = LcUrl.RenderLangPath + "$NewDashboard/$" + page + ".cshtml";
         //// Set menu option selected
         //PageData["menu-item"] = page;
@@ -42,23 +47,35 @@
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/new-dashboard", !LcHelpers.InDev);
     LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
-    
-    // Layout data
-    var u = LcData.UserInfo.GetUserRow();
-    
+   
     // Some layout configurations
-    var activeProfile = u.IsActiveProvider;
     var baseUrl = LcUrl.LangPath + "NewDashboard/";
     
     // SelectedPage: use page as value, changing default by dashboard.
     var selectedPage = page == "default" ? "dashboard" : page;
+}
+@functions {
+    bool checkOnboardingPage(dynamic u, string page){
+        var onboardingStep = (string)u.OnboardingStep;
+        
+        var onboardingSteps = new string[] { "your-work", "availability", "about-you", "payments" };
+        
+        var isInOnboarding = onboardingSteps.Contains<string>(onboardingStep);
+        
+        if (isInOnboarding &&
+            page != onboardingStep) {
+            Response.Redirect(LcUrl.LangPath + "NewDashboard/" + onboardingStep + "/");
+        }
+        
+        return isInOnboarding;
+    }
 }
 
 <div id="container" class="DashboardSection changes-notification-enabled js-changesNotificationEnabled clearfix">
     
     @RenderPage("$NewDashboard/_$Sidebar.cshtml", new {
         BaseUrl = baseUrl,
-        ActiveProfile = activeProfile,
+        ActiveProfile = !isInOnboarding,
         SelectedPage = selectedPage
     })
 

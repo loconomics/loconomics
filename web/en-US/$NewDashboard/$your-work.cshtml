@@ -5,7 +5,16 @@
     // UrlData position on Get and Post.
     var posID = (Request.Form["positionID"] ?? UrlData[1]).AsInt();
     
-    var p = LcData.UserInfo.GetUserPos(WebSecurity.CurrentUserId, posID);
+    // User Position record
+    dynamic p = null;
+    
+    // If there is no a positionID (as in Onboarding), get the first on the user list:
+    if (posID == 0) {
+        p = ((IEnumerable<dynamic>)LcData.UserInfo.GetUserPos()).First<dynamic>();
+    }
+    else {
+        p = LcData.UserInfo.GetUserPos(WebSecurity.CurrentUserId, posID);
+    }
 }
 <h1 class="DashboardSection-page-header">About Your Services (@p.PositionSingular)</h1>
 
