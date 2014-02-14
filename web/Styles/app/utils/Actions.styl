@@ -1,0 +1,60 @@
+/**
+  Action's classes, for buttons/links
+**/
+@import "nib"
+@import "ColorsPalette"
+
+/* General Mixim for actions */
+Action($backColor = $colorGreen) {
+    border-radius: 4px;
+    border: none;
+    
+    color: White;
+    background-color: $backColor;
+    display: inline-block;
+    
+    font-size: 1em;
+    padding: 0.4em 1em;
+    line-height: 1.3em;
+    
+    text-decoration: none;
+    text-transform: lowercase;
+    
+    transition: background-color 1s, box-shadow .5s, width 2s;
+
+    &:hover {
+        box-shadow: 0 0 5px 2px $backColor;
+    }
+}
+
+Action--mainPosition() {
+    float: right;
+    /* Discount the padding as margin to get the button in baseline with
+        any text on the same line */
+    margin-top: -0.4em;
+}
+
+Action--important() {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.begin-action {
+    Action($colorOrange);
+    Action--important();
+}
+
+.next-action,
+.finish-action {
+    Action($colorLtGreen);
+    Action--important();
+}
+
+/*
+    Actions container
+ */
+.Actions {
+    clearfix();
+    display: block;
+    clear: both;
+}

@@ -45,13 +45,134 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 4 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+
+/* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\border.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\flex.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\image.styl */
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\reset.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 2 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 574 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #e95d0f;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.begin-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e95d0f;
+  box-shadow: 0 0 5px 2px #e95d0f;
+}
+
+/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.next-action,
+.finish-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #e65a0f;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.next-action:hover,
+.finish-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #e65a0f;
+  box-shadow: 0 0 5px 2px #e65a0f;
+}
+
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.Actions {
+  zoom: 1;
+  display: block;
+  clear: both;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:before,
+.Actions:after {
+  content: "";
+  display: table;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.Actions:after {
+  clear: both;
+}
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection {
   color: #333;
   margin-top: 26px;
 }
 
-/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .go-publicProfile {
   display: block;
   padding: 0.6em;
@@ -60,7 +181,7 @@
   text-align: center;
 }
 
-/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page {
   padding: 20px;
 /* fullsize - h-padding - border */
@@ -78,7 +199,7 @@
         */
 }
 
-/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-header {
   margin: 1em 0 0;
   padding: 0 0 4px;
@@ -89,12 +210,12 @@
   display: block;
 }
 
-/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section {
   color: #333;
 }
 
-/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section .DashboardSection-page-section-header {
   color: #00989a;
   margin: 1em 0 14px;
@@ -113,20 +234,20 @@
   box-sizing: border-box;
 }
 
-/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section .DashboardSection-page-section-introduction {
   margin-top: 0;
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
-
 /* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page .DashboardSection-page-section.is-required .DashboardSection-page-section-header {
   color: #e95d0f;
   border-bottom-color: #e95d0f;
 }
 
-/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 73 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page > .InlineNotification {
   position: absolute;
   top: 20px;
@@ -135,21 +256,42 @@
   text-transform: lowercase;
 }
 
-/* line 80 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 81 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection #main.DashboardSection-page > .InlineNotification--hasRequiredSections {
   color: #e95d0f;
   font-style: italic;
 }
 
-/* line 88 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps {
+  margin-left: 225px;
+}
+
+/* line 90 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps .DashboardSection-onboardingSteps-welcome {
+  font-weight: bold;
+  font-size: 1.06em;
+  margin: 16px 0 25px 25px;
+}
+
+/* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps .begin-action {
+  float: right;
+/* Discount the padding as margin to get the button in baseline with
+        any text on the same line */
+  margin-top: -0.4em;
+  margin-top: -0.56em;
+}
+
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: avoiding some inherit things for bad common.css rules***/
 
-/* line 89 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 form ul li {
   padding: 0;
 }
 
-/* line 92 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: END ***/
 
 /* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
@@ -1301,7 +1443,7 @@ form ul li {
   top: 15px !important;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -1598,7 +1740,7 @@ form ul li {
   box-sizing: border-box;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
 /* line 123 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
@@ -1897,7 +2039,7 @@ form ul li {
   top: 15px !important;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -2023,7 +2165,7 @@ form ul li {
   margin-right: 0;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
@@ -2150,7 +2292,7 @@ form ul li {
   height: 7em;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
 
 /* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */
 
@@ -2532,7 +2674,7 @@ form ul li {
   top: 15px !important;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -2658,9 +2800,9 @@ form ul li {
   margin-right: 0;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -3002,7 +3144,7 @@ form ul li {
   top: 15px !important;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -3128,9 +3270,9 @@ form ul li {
   margin-right: 0;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Location.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -3649,7 +3791,7 @@ form ul li {
   top: 15px !important;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ActionBox.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -3775,7 +3917,7 @@ form ul li {
   margin-right: 0;
 }
 
-/* line 17 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
 /* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\availability.styl */
 
