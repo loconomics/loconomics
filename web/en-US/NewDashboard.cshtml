@@ -53,6 +53,8 @@
     
     // SelectedPage: use page as value, changing default by dashboard.
     var selectedPage = page == "default" ? "dashboard" : page;
+    
+    PageData["ShowWelcomeHeader"] = isInOnboarding;
 }
 @functions {
     bool checkOnboardingPage(dynamic u, string page){

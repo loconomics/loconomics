@@ -27,6 +27,8 @@
     
     var onBehalfOf = LcHelpers.OnBehalfOf();
     
+    bool showWelcomeHeader = PageData["ShowWelcomeHeader"] ?? false;
+
     // Show welcome popup depending on the parameter passed from the page or
     // detected automatically as true if anonymous user or provider without positions:
     var showWelcomePopup = PageData["ShowWelcomePopup"] ?? 
@@ -100,68 +102,82 @@
         <header id="site-header">
 		    <div class="wrap">
 			    <a id="logo" class="replace" href="@Href(LcUrl.LangPath)">Loconomics, at your service.</a>
-                @if (!WebSecurity.IsAuthenticated) {
-                <ul class="anonymous-tools">
-                        @howItWorksLi()
-                        <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
-                        <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
-                </ul>
-                }
-			    <ul class="user-tools">
-                    @if (WebSecurity.IsAuthenticated) {
-                        <li>
-					        <dl class="user-nav">
-                                @{
-                                    var usermenuGreeting = "Welcome, {0}!";
-                                    if (N.W(u.FirstName) == null) {
-                                        usermenuGreeting = "Welcome!";
-                                    } else {
-                                        usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
+                @if (showWelcomeHeader) {
+                    
+                    <div class="WelcomeHeader">
+                        <h1>Welcome to Loconomics.</h1>
+                        <span>We're glad you're here.</span>
+                    </div>
+                    
+                } else {
+                    if (!WebSecurity.IsAuthenticated)
+                    {
+                        <ul class="anonymous-tools">
+                                @howItWorksLi()
+                                <li><a class="register" href="@(LcUrl.LangPath)Account/Register/">Sign Up</a></li>
+                                <li><a class="login" href="@(LcUrl.LangPath)Account/Login/">Login</a></li>
+                        </ul>
+                    }
+			        <ul class="user-tools">
+                        @if (WebSecurity.IsAuthenticated)
+                        {
+                            <li>
+					            <dl class="user-nav">
+                                    @{
+                            var usermenuGreeting = "Welcome, {0}!";
+                            if (N.W(u.FirstName) == null)
+                            {
+                                usermenuGreeting = "Welcome!";
+                            }
+                            else
+                            {
+                                usermenuGreeting = String.Format(usermenuGreeting, u.FirstName);
+                            }
+						            <dt>@(usermenuGreeting) &#x25BC;</dt>
                                     }
-						        <dt>@(usermenuGreeting) &#x25BC;</dt>
-                                }
+						            <dd>
+                                        <ul>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/")">My Dashboard</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Alerts/")">Alerts</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Mailbox/")">Inbox</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Bookings/")">Bookings</a></li>
+                                            @if (u.IsProvider)
+                                            {
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Calendar/")">Calendar</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Positions/")">My Work</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Tools/")">Tools</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyClients/")">My Clients</a></li>
+                                            }
+                                            @if (u.IsCustomer)
+                                            {
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyProviders/")">My Providers</a></li>
+                                            }
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Preferences/")">Privacy Settings</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Dashboard/Account/")">My Profile</a></li>
+                                            <li><a href="@Href(LcData.UserInfo.GetMyPublicURL())">Public Profile</a></li>
+                                            <li><a href="@Href(LcUrl.LangPath + "Account/Logout/")">Logout</a></li>
+                                        </ul>
+						            </dd>
+					            </dl>
+				            </li>
+                            @howItWorksLi()
+                        }
+				        <li>
+					        <dl class="lang-country">
+						        <dt class="current-lang-country @LcUrl.LangId">English (US) &#x25BC;</dt>
 						        <dd>
                                     <ul>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/")">My Dashboard</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Alerts/")">Alerts</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Mailbox/")">Inbox</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Bookings/")">Bookings</a></li>
-                                        @if (u.IsProvider)
-                                        {
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Calendar/")">Calendar</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Positions/")">My Work</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Tools/")">Tools</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyClients/")">My Clients</a></li>
-                                        }
-                                        @if (u.IsCustomer)
-                                        {
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/MyProviders/")">My Providers</a></li>
-                                        }
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Preferences/")">Privacy Settings</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Dashboard/Account/")">My Profile</a></li>
-                                        <li><a href="@Href(LcData.UserInfo.GetMyPublicURL())">Public Profile</a></li>
-                                        <li><a href="@Href(LcUrl.LangPath + "Account/Logout/")">Logout</a></li>
+							            <li class="current"><a href="@Href(LcUrl.AppPath)en-US/">English (US)</a></li>
                                     </ul>
 						        </dd>
 					        </dl>
 				        </li>
-                        @howItWorksLi()
-                    }
-				    <li>
-					    <dl class="lang-country">
-						    <dt class="current-lang-country @LcUrl.LangId">English (US) &#x25BC;</dt>
-						    <dd>
-                                <ul>
-							        <li class="current"><a href="@Href(LcUrl.AppPath)en-US/">English (US)</a></li>
-                                </ul>
-						    </dd>
-					    </dl>
-				    </li>
-                    @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
-                    {
-			            <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)ProviderSignUp/">Become a provider</a></li>
-                    }
-			    </ul>
+                        @if (!WebSecurity.IsAuthenticated || !u.IsProvider)
+                        {
+			                <li class="actions"><a class="main-action" href="@(LcUrl.LangPath)ProviderSignUp/">Become a provider</a></li>
+                        }
+			        </ul>
+                }
                 @if (onBehalfOf != null)
                 {
                     <div style="float:right;clear:both;color:red;margin-top:5px;padding:0 5px;border:5px solid red;border-width:0 0 0 5px;">@onBehalfOf</div>
