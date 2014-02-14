@@ -22,7 +22,7 @@
             // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
             // breaking the code.
             //workhours = Json.Decode(Request["workhours"]);
-            workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"]);
+            workhours = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["workhours"] ?? "");
 
             if (workhours != null && workhours.status != "available") {
                 ModelState.AddFormError("Work hours availability information: status not allowed");

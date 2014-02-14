@@ -2,6 +2,8 @@
     // Account/Payments
     LcHelpers.ProviderPage();
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
     var returns = new Dictionary<string, object> {
         { "NeedsForm", false },
         { "HasRequiredSections", false }
@@ -23,11 +25,11 @@
         @* PaymentAccount and Form is internally divided in "DashboardSection-page-section" *@
         @RenderPage("Payments/$PaymentAccount.cshtml", new { PageState = ModelState, Returns = returns })
 
-        @if((bool)returns["NeedsForm"]) {
+        @if((bool)returns["NeedsForm"] || isInOnboarding) {
             @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         
             <div class="actions">
-                <button class="main-action" type="submit">Save</button>
+                <button class="main-action" type="submit">@(isInOnboarding ? "Finish" : "Save")</button>
             </div>
         }
     </form>
@@ -41,7 +43,7 @@
 
 @{
     // On Post check validation status, returning a Json response or html
-    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
+    if (LcHelpers.CheckDashboardSuccessPost("payments", true)) {
         // NOTE: For now, we have here only the provider payment-account here, then
         // instead of the default change-button-text result we force reload to show the
         // updated informational page:

@@ -1,0 +1,35 @@
+﻿@*
+    It shows the top bar for the steps during Onboarding phase
+*@
+@{
+    var step = (string)PageData["Step"];
+    var baseUrl = (string)PageData["BaseUrl"];
+}
+
+@helper menu(string a, string b) {
+    @(LcHelpers.CssCurrent(a, b, "is-current"))
+}
+
+<div class="DashboardSection-onboardingSteps">
+    @* There is only onboarding for providers right now
+    @if (u.IsProvider)
+    *@
+
+    @if (step == "welcome")
+    {
+        @* Especial bar for welcome step *@
+        <div class="DashboardSection-onboardingSteps-welcome">
+            Just a few steps left to get your profile active in the marketplace
+            <a class="action main-action begin-action" href="@(baseUrl)your-work/">Begin</a>
+        </div>
+    }
+    else
+    {
+        <ul>
+            <li class="@(menu("your-work", step))">Your services</li>
+            <li class="@(menu("availability", step))">Your availability</li>
+            <li class="@(menu("about-you", step))">About you</li>
+            <li class="@(menu("payments", step))">Getting paid</li>
+        </ul>
+    }
+</div>

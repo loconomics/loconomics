@@ -299,6 +299,75 @@
             return (Channel == "dev" || Channel == "localdev");
         }
     }
+    
+    /*
+     * Page helpers
+     * */
+    /// <summary>
+    /// General IsPost-IsValid-ReturnOrRedirect for new dashboard,
+    /// supporting OnBoarding (redirecto to next step, with @page being
+    /// current) and normal (returning JSON, setting button to 'save').
+    /// Must be executed on the 
+    /// </summary>
+    /// <param name="page">Current page name (single page url segment)</param>
+    public static bool CheckDashboardSuccessPost(string page, bool alternativeSuccess = false)
+    {       
+        var userId = WebMatrix.WebData.WebSecurity.CurrentUserId;
+        using (var db = Database.Open("sqlloco"))
+        {
+            var onboardingStep = N.DW(db.QueryValue("SELECT OnboardingStep FROM users WHERE userid = @0", userId)) ?? "";
+            var inOnboarding = !String.IsNullOrEmpty(onboardingStep);
+
+            // On Post check validation status, returning a Json response or html
+            if (IsPost && ModelState.IsValid)
+            {
+                if (inOnboarding)
+                {
+                    // Go next step
+                    var iNextStep = LcData.OnboardingSteps.IndexOf(page) + 1;
+                    var nextStep = "";
+                    if (iNextStep < LcData.OnboardingSteps.Count) {
+                        nextStep = LcData.OnboardingSteps[iNextStep];
+                    }
+
+                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                        userId,
+                        nextStep == "" ? null : nextStep
+                    );
+                    
+                    var url = LcUrl.LangPath + "NewDashboard/" + nextStep;
+                    if (Request.IsAjaxRequest()) {
+                        ReturnJsonResult(1, url);
+                    } else {
+                        Response.Redirect(url);
+                    }
+                }
+                else
+                {
+                    if (alternativeSuccess) {
+                        return true;
+                    } else {
+                        if (Request.IsAjaxRequest()) {
+                            ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                        }
+                    }
+                }
+            }
+            else if (IsPost)
+            {
+                // Save current as the OnboardingStep if in onboarding, no matters if there was
+                // error, just to track current status
+                if (inOnboarding)
+                {
+                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                        userId,
+                        page
+                    );
+                }
+            }
+        }
+        return false;
+    }
 }
 @*===============
  * Form Helpers

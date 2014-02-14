@@ -18,7 +18,7 @@
     }
 
     var pages = new List<string> {
-        "default", "availability", "promote", "your-work", "about-you",
+        "default", "welcome", "availability", "promote", "your-work", "about-you",
         "payments", "privacy"
     };
     if (pages.Contains(page)) {
@@ -57,14 +57,23 @@
 @functions {
     bool checkOnboardingPage(dynamic u, string page){
         var onboardingStep = (string)u.OnboardingStep;
+
+        var isInOnboarding = LcData.OnboardingSteps.Contains(onboardingStep);
         
-        var onboardingSteps = new string[] { "your-work", "availability", "about-you", "payments" };
-        
-        var isInOnboarding = onboardingSteps.Contains<string>(onboardingStep);
-        
+        // Redirect to the correct onboarding-step:
+        // - if is in onboarding
+        // - is the current onboarding page
+        // - except when current step is 'welcome' and requested is 'your-work', because
+        // 'welcome' page doesn't update the next step to 'your-work'
         if (isInOnboarding &&
-            page != onboardingStep) {
-            Response.Redirect(LcUrl.LangPath + "NewDashboard/" + onboardingStep + "/");
+            page != onboardingStep)
+        {
+            if (!(
+                page == "your-work" &&
+                onboardingStep == "welcome")
+            ) {
+                Response.Redirect(LcUrl.LangPath + "NewDashboard/" + onboardingStep + "/");
+            }
         }
         
         return isInOnboarding;
@@ -79,8 +88,16 @@
         SelectedPage = selectedPage
     })
 
+    @if (isInOnboarding)
+    {
+        @RenderPage("$NewDashboard/_$OnboardingSteps.cshtml", new {
+            BaseUrl = baseUrl,
+            Step = selectedPage
+        })
+    }
+
     <div id="main" class="DashboardSection-page">
-        @RenderPage(fileToRender)        
+        @RenderPage(fileToRender, new { IsInOnboarding = isInOnboarding })        
     </div><!-- #main -->
 
 </div>

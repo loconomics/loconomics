@@ -488,18 +488,14 @@ function setupEditWorkHours() {
     dragging.selectionLayer.show();
 
     var s = dragging.first.bounds({ includeBorder: true });
-    //console.log('first bounds', s);
     offsetToPosition(dragging.selectionLayer[0], s);
 
-    //console.log('mousedown', dragging);
   })
   .on('mouseenter', 'td', function () {
     if (dragging.first) {
       dragging.last = $(this);
 
       updateSelection(dragging.last);
-
-      //console.log('mouseenter', dragging);
     }
   })
   .on('mouseup', finishDrag)

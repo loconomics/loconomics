@@ -1366,4 +1366,8 @@ public static partial class LcData
         }
     }
     #endregion
+
+    #region Onboarding
+    public static List<string> OnboardingSteps = new List<string> { "welcome", "your-work", "availability", "about-you", "payments" };
+    #endregion
 }

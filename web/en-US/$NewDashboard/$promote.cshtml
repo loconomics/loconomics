@@ -2,6 +2,8 @@
     // Tools/Promote
     LcHelpers.ProviderPage();
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
     // Errors are managed through this page ModelState offered to imported pages as PageState
 }
 <h1 class="DashboardSection-page-header">Promote your services</h1>
@@ -30,7 +32,7 @@ Pretty cool, right?
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         
         <div class="actions">
-            <button class="main-action" type="submit">Save</button>
+            <button class="main-action" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
         </div>
 
     </form>
@@ -38,7 +40,5 @@ Pretty cool, right?
 
 @{
     // On Post check validation status, returning a Json response or html
-    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
-        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-    }
+    LcHelpers.CheckDashboardSuccessPost("promote");
 }

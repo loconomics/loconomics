@@ -9,7 +9,7 @@ var $ = require('jquery');
 var initCrudl = LC.initCrudl;
 
 exports.on = function (containerSelector) {
-  console.log('init crudl appoit', containerSelector);
+
   var $c = $(containerSelector),
     crudlSelector = '.DashboardAppointments',
     $crudlContainer = $c.find(crudlSelector).closest('.DashboardSection-page-section'),

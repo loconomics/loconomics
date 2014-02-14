@@ -3,6 +3,8 @@
 @{
     LcHelpers.ProviderPage();
     
+    var emulateBraintree = LcHelpers.Channel == "localdev";
+    
     var PageState = PageData["PageState"] ?? ModelState;
     var doReturn = PageState == ModelState;
 
@@ -106,35 +108,52 @@
                 );
                 
                 // Create account at Braintree
-                var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
-                    UserID = user.UserID,
-                    FirstName = FirstName,
-                    LastName = LastName,
-                    Email = user.Email,
-                    MobilePhone = MobilePhone
-                }, new LcData.Address {
-                    AddressLine1 = AddressLine1,
-                    AddressLine2 = AddressLine2,
-                    PostalCode = PostalCode,
-                    City = City,
-                    StateProvinceCode = StateCode
-                }, new LcPayment.BankInfo {
-                    Ssn = Ssn,
-                    RoutingNumber = Aba,
-                    AccountNumber = AccountNumber
-                }, BirthDate.Value
-                );                    
+                var success = false;
                 
-                if (result.IsSuccess()) {
-                    if (doReturn) {
-                        //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-                        LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "NewDashboard/Payments/");
+                // Emulating, to test on locale
+                if (emulateBraintree) {
+                    LcData.SetProviderPaymentAccount(
+                        user.UserID,
+                        "FAIK REQUEST ID: " + Guid.NewGuid(),
+                        "pending",
+                        null,
+                        null,
+                        null
+                    );
+                }
+                else {
+                    var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
+                        UserID = user.UserID,
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        Email = user.Email,
+                        MobilePhone = MobilePhone
+                    }, new LcData.Address {
+                        AddressLine1 = AddressLine1,
+                        AddressLine2 = AddressLine2,
+                        PostalCode = PostalCode,
+                        City = City,
+                        StateProvinceCode = StateCode
+                    }, new LcPayment.BankInfo {
+                        Ssn = Ssn,
+                        RoutingNumber = Aba,
+                        AccountNumber = AccountNumber
+                    }, BirthDate.Value
+                    );
+                
+                    if (result.IsSuccess()) {
+                        success = true;
+                    } else {
+                        PageState.AddFormError(result.Message);
+                        foreach (var err in result.Errors.All()) {
+                            PageState.AddFormError(err.Message);
+                        }
                     }
-                } else {
-                    PageState.AddFormError(result.Message);
-                    foreach (var err in result.Errors.All()) {
-                        PageState.AddFormError(err.Message);
-                    }
+                }
+                
+                if (success && doReturn) {
+                    //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                    LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "NewDashboard/Payments/");
                 }
 
             } catch (Exception ex) {

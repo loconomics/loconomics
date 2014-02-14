@@ -5,6 +5,8 @@
     // UrlData position on Get and Post.
     var posID = (Request.Form["positionID"] ?? UrlData[1]).AsInt();
     
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
     // User Position record
     dynamic p = null;
     
@@ -68,7 +70,7 @@
         </div>
 
         <div class="actions">
-            <button class="main-action" type="submit">Save</button>
+            <button class="main-action" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
         </div>
     </form>
 </div>
@@ -78,8 +80,5 @@
 </div>
 
 @{
-    // On Post check validation status, returning a Json response or html
-    if (IsPost && ModelState.IsValid && Request.IsAjaxRequest()) {
-        LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-    }
+    LcHelpers.CheckDashboardSuccessPost("your-work");
 }
