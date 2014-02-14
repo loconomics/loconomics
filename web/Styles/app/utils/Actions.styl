@@ -24,6 +24,7 @@ Action($backColor = $colorGreen) {
 
     &:hover {
         box-shadow: 0 0 5px 2px $backColor;
+        background-color: $backColor;
     }
 }
 
@@ -39,14 +40,30 @@ Action--important() {
     font-size: 1.2em;
 }
 
-.begin-action {
-    Action($colorOrange);
-    Action--important();
+Action--rightArrow($color) {
+    padding: 0.2em .6em;
+    line-height: 27px;
+    
+    &:after {
+        content: " ";
+        background: url('../img/theme/right-arrow.png') no-repeat center;
+        hr-image('../img/theme/right-arrow@2x.png', 29px, 27px);
+        width: 29px;
+        height: 27px;
+        line-height: 27px;
+        margin-left: .4em;
+        color: $color;
+        border-radius: 100%;
+        vertical-align: middle;
+        display: inline-block;
+    }
 }
 
+.begin-action,
 .next-action,
 .finish-action {
-    Action($colorLtGreen);
+    Action($colorOrange);
+    Action--rightArrow($colorOrange);
     Action--important();
 }
 

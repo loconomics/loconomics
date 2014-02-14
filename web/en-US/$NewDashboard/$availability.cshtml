@@ -33,7 +33,7 @@
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
         
         <div class="actions">
-            <button class="main-action" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
+            <button class="@(isInOnboarding ? "next-action" : "main-action")" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
         </div>
     </form>
 </div>
