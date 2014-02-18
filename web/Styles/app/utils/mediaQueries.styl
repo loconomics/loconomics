@@ -1,16 +1,14 @@
 /**
-  Mixims and functions to work with media queries or things that need media queries under the hood.
+  Mixims, vars and functions to work with media queries or things that need media queries under the hood.
 **/
+
+$highResolutionMedia = "print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi)"
 
 /** High-resolution image: add the media query code for @2x images with the background-image rule for the url provided and
     the given size
  **/
 hr-image($image, $width, $height) {
-  @media print,
-         (-webkit-min-device-pixel-ratio: 1.25),
-         (-o-min-device-pixel-ratio: 5/4),
-         (min--moz-device-pixel-ratio: 1.2),
-         (min-resolution: 120dpi) { 
+  @media $highResolutionMedia { 
     background-image: url($image);
     background-size: $width $height;
   }

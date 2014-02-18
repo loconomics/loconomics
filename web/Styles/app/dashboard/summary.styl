@@ -1,0 +1,74 @@
+/** Your work
+**/
+@import "../utils/ColorsPalette"
+@import "../utils/mediaQueries"
+
+/** Styles for Summary on Dashboard,
+    and shared styles for different summaries
+    showed there
+**/
+.DashboardSummary {
+    
+    .DashboarSummary-group {
+        position: relative;
+        margin-left: 1em;
+    
+        $groupImgSize = 96px
+        
+        background: none no-repeat left center;
+        @media $highResolutionMedia {
+            background-size: $groupImgSize $groupImgSize;
+        }
+
+        .DashboardSummary-group-iconlink {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: $groupImgSize;
+            text-indent: -9999px;
+        }
+    
+        .DashboardSummary-group-content {
+            margin-left: $groupImgSize;
+            padding-left: 2em;
+            
+            .DashboardSummary-group-listHeader {
+                font-weight: bold;
+                font-size: 1em;
+                color: Black;
+                margin: 0;
+            }
+            
+            .DashboardSummary-group-list {
+                margin-left: 1em;
+            }
+            
+        }
+    
+    }
+    
+    /** Some specifics summaries that rely/replace some
+        general defaults
+     **/
+    .DashboardMessages-summary {
+        background-image: url('../img/theme/mailbox-dashboard.png');
+        @media $highResolutionMedia {
+            background-image: url('../img/theme/mailbox-dashboard@2x.png');
+        }
+    }
+    
+    .DashboardBookings-summary {
+        background-image: url('../img/theme/reminders-dashboard.png');
+        @media $highResolutionMedia {
+            background-image: url('../img/theme/reminders-dashboard@2x.png');
+        }
+    }
+    
+    .DashboardAlerts-summary {
+        background-image: url('../img/theme/to-do-dashboard.png');
+        @media $highResolutionMedia {
+            background-image: url('../img/theme/to-do-dashboard@2x.png');
+        }
+    }
+}
