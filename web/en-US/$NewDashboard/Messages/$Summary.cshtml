@@ -9,8 +9,16 @@
 
     var newsCount = 2;
 }
-@helper showMessageSummary(dynamic r) {
-    <li>@r.LastMessageBodyText</li>
+
+@helper showReceivedMessageSummary(dynamic r) {
+    var s = new LcMessaging.MessageSummary(r, WebSecurity.CurrentUserId);
+    <li><a href="@(s.GetMessageUrl())">@s.GetMessageTypeLabel()</a>
+    from @s.GetThreadParticipantFirstName() @s.GetMessageTypeDependantSubject()</li>
+}
+@helper showSentMessageSummary(dynamic r) {
+    var s = new LcMessaging.MessageSummary(r, WebSecurity.CurrentUserId);
+    <li>To @s.GetThreadParticipantFirstName() about 
+    <a href="@(s.GetMessageUrl())">@s.GetMessageTypeDependantSubject()</a></li>
 }
 <div class="DashboardSection-page-section DashboardMessages">
     <h2 class="DashboardSection-page-section-header">Messages @(newsCount > 0 ? "(" + newsCount.ToString() + " new)" : "")</h2>
@@ -19,28 +27,25 @@
         <div class="DashboardMessages-summary-list DashboardSummary-group-content">
             <h3 class="DashboardSummary-group-listHeader">New</h3>
             <ul class="DashboardSummary-group-list">
-                <li>Booking request from Joshua for Housekeeper services</li>
                 @foreach (var r in messages["new"])
                 {
-                    @showMessageSummary(r)
+                    @showReceivedMessageSummary(r)
                 }
             </ul>
             
             <h3 class="DashboardSummary-group-listHeader">Read</h3>
             <ul class="DashboardSummary-group-list">
-                <li>Booking cancellation from Joshua for Housekeeper services</li>
                 @foreach (var r in messages["read"])
                 {
-                    @showMessageSummary(r)
+                    @showReceivedMessageSummary(r)
                 }
             </ul>
 
             <h3 class="DashboardSummary-group-listHeader">Sent</h3>
             <ul class="DashboardSummary-group-list">
-                <li>To Joshua about Massage Therapist services</li>
                 @foreach (var r in messages["sent"])
                 {
-                    @showMessageSummary(r)
+                    @showSentMessageSummary(r)
                 }
             </ul>
         </div>

@@ -229,6 +229,111 @@ public class LcMessaging
     }
     #endregion
 
+    #region Message Summary (building small reusable summaries, as of messages listings)
+    public class MessageSummary
+    {
+        private dynamic r;
+        private int displayToUserID;
+
+        public MessageSummary(dynamic messageRecord, int displayToUserID)
+        {
+            this.r = messageRecord;
+            this.displayToUserID = displayToUserID;
+        }
+
+        public static List<int> BookingRelatedMessageTypes = new List<int> {
+            4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 19, 17, 18
+        };
+
+        public string GetMessageTypeDependantSubject() {
+            var ret = "";
+            if (BookingRelatedMessageTypes.Contains((int)r.LastMessageTypeID)) {
+                ret = "for ";
+            } else {
+                ret = "about ";
+            }
+            ret += r.PositionSingular + " services";
+            return ret;
+        }
+
+        public string GetThreadParticipantFirstName() {
+            if (r.ProviderUserID == displayToUserID) {
+                return r.CustomerFirstName;
+            } else {
+                return r.ProviderFirstName;
+            }
+        }
+
+        public string GetMessageUrl(string baseUrl = null) {
+            if (baseUrl == null)
+            {
+                baseUrl = LcUrl.LangPath + "NewDashboard/";
+            }
+            var url = baseUrl;
+            switch ((string)r.LastMessageAuxT) {
+                default:
+                    url += "Messages/" + r.ThreadID + "/" + r.MessageID + "/";
+                    break;
+                case "Booking":
+                    url += "Bookings/Requests/" + r.LastMessageAuxID + "/";
+                    break;
+                case "BookingRequest":
+                    url += "Bookings/" + r.LastMessageAuxID + "/";
+                    break;
+            }
+            return url;
+        }
+
+        public string GetMessageTypeLabel() {
+            var ret = "";
+            switch((int)r.LastMessageTypeID) {
+                default:            
+                case 1:
+                case 2:
+                case 3:
+                    ret = "Message";
+                    break;
+                case 4:
+                case 5:
+                    ret = "Booking request";
+                    break;
+                case 6:
+                case 7:
+                    ret = "Booking confirmation";
+                    break;
+                case 8:
+                    ret = "Marketing";
+                    break;
+                case 9:
+                    ret = "Booking dispute";
+                    break;
+                case 10:
+                    ret = "Booking resolution";
+                    break;
+                case 12:
+                    ret = "Pricing adjustment";
+                    break;
+                case 13:
+                    ret = "Booking declined";
+                    break;
+                case 14:
+                    ret = "Booking cancelled";
+                    break;
+                case 15:
+                case 16:
+                case 19:
+                    ret = "Booking update";
+                    break;
+                case 17:
+                case 18:
+                    ret = "Booking review";
+                    break;
+            }
+            return ret;
+        }
+    }
+    #endregion
+
     #region Type:Booking and Booking Request
     /// <summary>
     /// A Booking Request is ever sent by a customer
