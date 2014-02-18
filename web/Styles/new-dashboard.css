@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-14
+/*! Loconomics.com 2014-02-18
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -277,15 +277,54 @@
   margin-top: -0.4em;
 }
 
-/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome {
+  padding-left: 370px;
+  background: url("../img/theme/providerwelcome/profile-elizabeth.png") no-repeat left center;
+  min-height: 375px;
+}
+
+/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome .begin-action {
+/* Aligned with stepsIntro texts, bullets on left */
+  margin-left: 30px;
+}
+
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro {
+  padding-top: 30px;
+}
+
+/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li {
+  background: url("../img/theme/teal-checkmark.png") no-repeat left center;
+  padding-left: 30px;
+  margin: 1.2em 0;
+}
+
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li h3 {
+  color: #00989a;
+  font-size: 1.3em;
+  font-weight: normal;
+  line-height: 1em;
+  margin: 0;
+}
+
+/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li p {
+  margin: 0;
+}
+
+/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: avoiding some inherit things for bad common.css rules***/
 
-/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 form ul li {
   padding: 0;
 }
 
-/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 146 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: END ***/
 
 /* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
