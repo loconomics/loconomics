@@ -269,6 +269,57 @@
 }
 
 /* line 96 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul {
+  border-top: 8px solid #ccc;
+  margin: 10px 0;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  letter-spacing: -4px;
+}
+
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul li {
+  display: inline-block;
+  width: 25%;
+  letter-spacing: normal;
+}
+
+/* line 107 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+
+/* line 108 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul li.is-current .DashboardSection-onboardingSteps-title {
+  color: #00989a;
+  font-size: 1.3em;
+  font-weight: normal;
+}
+
+/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul li.is-current .DashboardSection-onboardingSteps-index {
+  background-color: #00989a;
+}
+
+/* line 119 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul li .DashboardSection-onboardingSteps-title {
+  font-size: 1em;
+  color: #ccc;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+}
+
+/* line 127 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+.DashboardSection .DashboardSection-onboardingSteps ul li .DashboardSection-onboardingSteps-index {
+  display: block;
+  text-align: center;
+  margin: -15px auto 0px;
+  color: White;
+  background-color: #b5e1e2;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  width: 1.6em;
+}
+
+/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardSection-onboardingSteps .begin-action {
   float: right;
 /* Discount the padding as margin to get the button in baseline with
@@ -277,32 +328,32 @@
   margin-top: -0.4em;
 }
 
-/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome {
   padding-left: 370px;
   background: url("../img/theme/providerwelcome/profile-elizabeth.png") no-repeat left center;
   min-height: 375px;
 }
 
-/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome .begin-action {
 /* Aligned with stepsIntro texts, bullets on left */
   margin-left: 30px;
 }
 
-/* line 114 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 157 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro {
   padding-top: 30px;
 }
 
-/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 161 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li {
   background: url("../img/theme/teal-checkmark.png") no-repeat left center;
   padding-left: 30px;
   margin: 1.2em 0;
 }
 
-/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 167 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li h3 {
   color: #00989a;
   font-size: 1.3em;
@@ -311,20 +362,20 @@
   margin: 0;
 }
 
-/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 175 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 .DashboardSection .DashboardWelcome .DashboardWelcome-stepsIntro li p {
   margin: 0;
 }
 
-/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 185 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: avoiding some inherit things for bad common.css rules***/
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 186 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 form ul li {
   padding: 0;
 }
 
-/* line 146 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
+/* line 189 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: END ***/
 
 /* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */

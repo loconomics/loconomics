@@ -93,6 +93,49 @@
             margin: 16px 0 25px 25px;
 	    }
 	    
+	    ul {
+	        border-top: 8px solid $colorLtGray;
+	        margin: 10px 0;
+	        border-radius: 20px;
+	        letter-spacing: -4px;
+	        
+	        li {
+	            display: inline-block;
+	            width: 25%;
+                letter-spacing: normal;
+	            
+	            &.is-current {
+	                .DashboardSection-onboardingSteps-title {
+	                    color: $colorTeal;
+	                    font-size: 1.3em;
+	                    font-weight: normal;
+	                }
+	                
+	                .DashboardSection-onboardingSteps-index {
+	                    background-color: $colorTeal;
+	                }
+	            }
+
+	            .DashboardSection-onboardingSteps-title {
+	                font-size: 1em;
+	                color: $colorLtGray;
+	                text-align: center;
+	                display: block;
+	                font-weight: bold;
+	            }
+	            
+	            .DashboardSection-onboardingSteps-index {
+	                display: block;
+	                text-align: center;
+	                margin: -15px auto 0px;
+	                color: White;
+	                background-color: $colorLtTeal;
+	                border-radius: 100%;
+	                width: 1.6em;
+	            }
+	        }
+	    }
+	    
 	    .begin-action {
 	        Action--mainPosition();
 	        margin-top: -0.4em;
