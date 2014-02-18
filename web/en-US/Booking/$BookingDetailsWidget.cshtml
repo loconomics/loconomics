@@ -19,6 +19,13 @@
     DateTime? bookingDate = null;
     dynamic pricingSummary = null, pricingSummaryDetails = null;
     
+    var extraTitleClass = PageData["ExtraTitleClass"];
+    var useLinkActions = (bool)(PageData["UseLinkActions"] ?? false);
+    var actionsFileName = "$BookingActions.cshtml";
+    if (useLinkActions) {    
+        actionsFileName = "$BookingLinkActions.cshtml";
+    }
+    
     // Setting up data
     {
         var brID = Request["BookingRequestID"] ?? (string)PageData["BookingRequestID"];
@@ -100,10 +107,10 @@
 else
 {
     <div class="w-BookingDetails-header">
-        <h3 class="w-BookingDetails-title">@title</h3>
+        <h3 class="w-BookingDetails-title @extraTitleClass">@title</h3>
         @*<span class="updateddate">last updated: @booking.UpdatedDate.ToLongDateString() at @booking.UpdatedDate.ToLongTimeString()</span>*@
 
-        @RenderPage("$BookingActions.cshtml", new
+        @RenderPage(actionsFileName, new
    {
        MyUserType = myUserType,
        BookingData = booking,

@@ -8,7 +8,10 @@
     var threadId = firstIdStr.AsInt();
     var messageId = UrlData[3].AsInt();
 }
-<h1 class="DashboardSection-page-header">Messages</h1>
+@if (kind == "")
+{
+    <h1 class="DashboardSection-page-header">Messages</h1>
+}
 <div class="DashboardMessages">
 
     @if (kind == "inquiry")
@@ -17,13 +20,13 @@
     }
     else if (kind == "booking")
     {
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingID = firstIdStr });
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingID = firstIdStr, ExtraTitleClass = "DashboardSection-page-header", UseLinkActions = true });
     }
     else if (kind == "bookingrequest")
     {
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingRequestID = firstIdStr });
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingRequestID = firstIdStr, ExtraTitleClass = "DashboardSection-page-header", UseLinkActions = true });
     }
-    else
+    else if (kind == "")
     {
         @RenderPage("Messages/$ThreadList.cshtml")
     }

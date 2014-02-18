@@ -1,0 +1,70 @@
+﻿@*
+    Same as $BookingActions.cshtml, but instead of buttons here we use links.
+*@
+@{
+    var myUserType = PageData["MyUserType"];
+    var booking = PageData["BookingData"];
+    var prefix = PageData["IdPrefix"];
+    var isRequest = PageData["IsRequest"];
+}
+<div class="actions w-BookingDetails-actions">
+    @*  CANCEL ACTIONS *@
+    @if (myUserType == LcData.UserInfo.UserType.Customer)
+    {
+        if (isRequest && booking.BookingRequestStatusID == 1) {
+            @*  If is customer and booking request is incomplete (status:1),
+                allow customer to cancel it (See that $cancelBookingRequest must follow same condition-rule) *@
+            <a class="button item-action booking-request-action button-cancel-booking"
+                href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/cancel/">Cancel</a>
+        } else if (!isRequest && booking.BookingStatusID == 1) {
+            <a class="button item-action booking-action button-cancel-booking"
+                href="@(LcUrl.LangPath)NewDashboard/messages/booking/(booking.BookingID)/cancel/"
+                data-must-confirm="#@(prefix)-confirm-cancellation-policy">Cancel</a>
+            <div class="popups">
+                <div id="@(prefix)-confirm-cancellation-policy" class="popup confirm-popup">
+                    If you wish to cancel this booking, the following cancellation policy will apply:
+
+                    @RenderPage("$CancellationPolicyInfoWidget.cshtml", new { CancellationPolicyID = booking.CancellationPolicyID })
+
+                    <strong>Are you sure you want cancel this booking?</strong>
+                    <div class="actions">
+                        <a href="#confirm-no" class="cancel-action">No</a>
+                        <a href="#confirm-yes" class="main-action">Yes</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    @{
+        // REVIEW ACTIONS
+        // When booking is not cancelled and service date is passed, show Review options:
+        if (!isRequest && booking.BookingStatusID < 6 && DateTime.Now > booking.ConfirmedDateEnd)
+        {
+            if (myUserType == LcData.UserInfo.UserType.Customer)
+            {
+                <a class="button main-action review-booking-action" href="@(LcUrl.LangPath)NewDashboard/messages/booking/@(booking.BookingID)/review/">
+                    @(booking.ReviewedByCustomer == true ? "View my review" : "Review provider")
+                </a>
+                if (booking.ReviewedByProvider == true)
+                {
+                <a class="button item-action review-booking-action" href="@(LcUrl.LangPath)NewDashboard/messages/booking/@(booking.BookingID)/review/?asUserId=@(booking.ProviderUserID)">
+                    View provider review
+                </a>
+                }
+            }
+            else if (myUserType == LcData.UserInfo.UserType.Provider)
+            {
+                <a class="button main-action review-booking-action" href="@(LcUrl.LangPath)NewDashboard/messages/booking/@(booking.BookingID)/review/">
+                    @(booking.ReviewedByProvider == true ? "View my review" : "Review client")
+                </a>
+                if (booking.ReviewedByCustomer == true)
+                {
+                <a class="button item-action review-booking-action" href="@(LcUrl.LangPath)NewDashboard/messages/booking/@(booking.BookingID)/review/?asUserId=@(booking.CustomerUserID)">
+                    View customer review
+                </a>
+                }
+            }
+        }
+    }
+</div>
