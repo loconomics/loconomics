@@ -16,7 +16,7 @@
 
     @if (kind == "inquiry")
     {
-        @RenderPage("$Thread.cshtml", new { ThreadId = threadId, MessageId = messageId });
+        @RenderPage("Messages/$Thread.cshtml", new { ThreadID = threadId, MessageID = messageId });
     }
     else if (kind == "booking")
     {

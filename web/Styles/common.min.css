@@ -651,6 +651,7 @@ form.has-changes .actions .main-action:hover,
     text-transform: lowercase;
     background: #E44600 !important;
     font-size: 1em;
+    line-height: 180%;
 }
 .actions .item-action:hover{
     box-shadow: 0 0 5px 2px #E44600;

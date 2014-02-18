@@ -161,6 +161,7 @@ public class LcMessaging
                 T.UpdatedDate As LastMessageDate,
                 T.Subject,
 
+                T.LastMessageID,
                 M.BodyText As LastMessageBodyText,
                 M.MessageTypeID As LastMessageTypeID,
                 M.AuxID As LastMessageAuxID,
@@ -272,7 +273,7 @@ public class LcMessaging
             var url = baseUrl;
             switch ((string)r.LastMessageAuxT) {
                 default:
-                    url += "Messages/Inquiry/" + r.ThreadID + "/" + r.MessageID + "/";
+                    url += "Messages/Inquiry/" + r.ThreadID + "/" + r.LastMessageID + "/";
                     break;
                 case "Booking":
                     url += "Messages/Booking/" + r.LastMessageAuxID + "/";

@@ -6,6 +6,10 @@
     int userID = WebSecurity.CurrentUserId;
     
     var threadID = Request["MessageThreadID"].AsInt();
+    if (threadID == 0) {
+        threadID = PageData["ThreadID"];
+    }
+    var messageID = PageData["MessageID"] ?? 0;
 
     var sqlGetMessageThread = @"
         SELECT  T.ThreadID,

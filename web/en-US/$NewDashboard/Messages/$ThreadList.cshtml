@@ -89,13 +89,14 @@
                         break;
                 }
             }
+            var summary = new LcMessaging.MessageSummary(item, WebSecurity.CurrentUserId);
         }
-        <button class="item-action @buttonAction" data-message-thread-id="@item.ThreadID" data-message-aux-id="@item.LastMessageAuxID" data-message-aux-t="@item.LastMessageAuxT">@buttonLabel</button>
+        <a class="item-action @buttonAction" href="@(summary.GetMessageUrl())">@buttonLabel</a>
         <div class="date item-extra-info">@item.LastMessageDate</div>
     </div>
   </li>
 }
-<ul class="message-thread-list items-list list-all">
+<ul class="ItemsList">
     @if (messageThreads.Count > 0)
     {
         foreach (var item in messageThreads)

@@ -4243,3 +4243,96 @@ form ul li {
     background-image: url("../img/theme/to-do-dashboard@2x.png");
   }
 }
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+
+/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList > li {
+  border: 1px solid #6c6c6c;
+  background: #fff;
+  padding: 10px;
+  color: #6c6c6c;
+  margin: 10px 0;
+}
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList > li > .mini-user-info,
+.ItemsList > li > .item-summary,
+.ItemsList > li > .actions {
+  display: inline-block !important;
+  vertical-align: top;
+}
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList > li > .item-summary {
+  width: 390px;
+  margin: 0 10px;
+}
+
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList > li > .actions {
+  text-align: center !important;
+  width: 96px;
+}
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList > li > .actions > .item-extra-info {
+  line-height: 1.1em;
+  margin: 6px 0 0;
+}
+
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.responded {
+  background: #f0b600 !important;
+}
+
+/* line 41 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .actions .item-action.responded:hover {
+  -webkit-box-shadow: 0 0 5px 2px #f0b600;
+  box-shadow: 0 0 5px 2px #f0b600;
+  -moz-box-shadow: 0 0 5px 2px #f0b600;
+  -o-box-shadow: 0 0 5px 2px #f0b600;
+  -webkit-box-shadow: 0 0 5px 2px #f0b600;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .items-groups-list > li > h3 {
+  font-size: 1.1em;
+  color: #6c6c6c;
+}
+
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .items-groups-list > li > h3 > .items-count {
+  color: #e44600;
+}
+
+/* line 59 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .item-summary > li {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .item-summary > li.long-details {
+  white-space: normal;
+  height: 40px;
+}
+
+/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
+.ItemsList .item-summary > li > h5 {
+  color: #e44600;
+  display: inline;
+  font-size: 1em;
+  line-height: 1em;
+  margin: 0;
+}
+
+/* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
