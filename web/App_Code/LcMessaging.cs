@@ -149,6 +149,86 @@ public class LcMessaging
     }
     #endregion
 
+    #region Database queries (showing list, details, etc)
+    private static readonly Dictionary<string, string> sqlListMessageThread = new Dictionary<string,string> {
+    { "select", "SELECT " },    
+    { "select-fields", @"
+                T.ThreadID,
+                T.CustomerUserID,
+                T.ProviderUserID,
+                T.PositionID,
+                T.MessageThreadStatusID,
+                T.UpdatedDate As LastMessageDate,
+                T.Subject,
+
+                M.BodyText As LastMessageBodyText,
+                M.MessageTypeID As LastMessageTypeID,
+                M.AuxID As LastMessageAuxID,
+                M.AuxT As LastMessageAuxT,
+                M.SentByUserID As LastMessageSendByUserID,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                Pos.PositionSingular
+    "},
+    { "from", @"
+        FROM    MessagingThreads As T
+                 INNER JOIN
+                Messages As M
+                  ON M.ThreadID = T.ThreadID
+                      AND
+                     M.MessageID = T.LastMessageID
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = T.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = T.ProviderUserID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = T.PositionID
+					AND Pos.CountryID = @2 AND Pos.LanguageID = @1
+    "},
+    { "where", @"
+        WHERE   (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
+    "},
+    { "order-by", @"
+        ORDER BY T.UpdatedDate DESC
+    "},
+    };
+    public static dynamic GetMessageThreadList(int userID)
+    {
+        var sql = String.Join(" ", sqlListMessageThread.Values);
+        using (var db = Database.Open("sqlloco")) {
+            return db.Query(sql, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+    }
+    public static Dictionary<string, dynamic> GetLastNewReadSentMessages(int userID, int maxPerType = 3)
+    {
+        var commonSql = 
+            "SELECT TOP " + maxPerType + " " +
+            sqlListMessageThread["select-fields"] + 
+            sqlListMessageThread["from"] + 
+            sqlListMessageThread["where"];
+        var order = sqlListMessageThread["order-by"];
+        var sqlNew = commonSql + " AND T.MessageThreadStatusID = 1 AND M.SentByUserID <> @0 " + order;
+        var sqlRead = commonSql + " AND T.MessageThreadStatusID = 2 AND M.SentByUserID <> @0 " + order;
+        var sqlSent = commonSql + " AND M.SentByUserID = @0 " + order;
+
+        var ret = new Dictionary<string, dynamic>();
+        using (var db = Database.Open("sqlloco")) {
+            ret["new"] = db.Query(sqlNew, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            ret["read"] = db.Query(sqlRead, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            ret["sent"] = db.Query(sqlSent, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        }
+        return ret;
+    }
+    #endregion
+
     #region Type:Booking and Booking Request
     /// <summary>
     /// A Booking Request is ever sent by a customer

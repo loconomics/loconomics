@@ -4,8 +4,13 @@
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRow();
+    
+    var messages = LcMessaging.GetLastNewReadSentMessages((int)u.UserID, 3);
 
     var newsCount = 2;
+}
+@helper showMessageSummary(dynamic r) {
+    <li>@r.LastMessageBodyText</li>
 }
 <div class="DashboardSection-page-section DashboardMessages">
     <h2 class="DashboardSection-page-section-header">Messages @(newsCount > 0 ? "(" + newsCount.ToString() + " new)" : "")</h2>
@@ -15,16 +20,28 @@
             <h3 class="DashboardSummary-group-listHeader">New</h3>
             <ul class="DashboardSummary-group-list">
                 <li>Booking request from Joshua for Housekeeper services</li>
+                @foreach (var r in messages["new"])
+                {
+                    @showMessageSummary(r)
+                }
             </ul>
             
             <h3 class="DashboardSummary-group-listHeader">Read</h3>
             <ul class="DashboardSummary-group-list">
                 <li>Booking cancellation from Joshua for Housekeeper services</li>
+                @foreach (var r in messages["read"])
+                {
+                    @showMessageSummary(r)
+                }
             </ul>
 
             <h3 class="DashboardSummary-group-listHeader">Sent</h3>
             <ul class="DashboardSummary-group-list">
                 <li>To Joshua about Massage Therapist services</li>
+                @foreach (var r in messages["sent"])
+                {
+                    @showMessageSummary(r)
+                }
             </ul>
         </div>
     </div>
