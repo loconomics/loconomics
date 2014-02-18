@@ -1,0 +1,31 @@
+﻿@* It shows a summary of bookings, last ones, link to the calendar page (Availabilty).
+*@
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+}
+<div class="DashboardSection-page-section DashboardBookings">
+    <h2 class="DashboardSection-page-section-header">Upcoming appointments</h2>
+    <div class="DashboardBookings-summary DashboarSummary-group">
+        @if (@u.IsProvider) {
+            <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)NewDashboard/availability/">Go to availability</a>
+        }
+        <div class="DashboardBookings-summary-list DashboardSummary-group-content">
+            <h3 class="DashboardSummary-group-listHeader">Today</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+            </ul>
+            
+            <h3 class="DashboardSummary-group-listHeader">Tomorrow</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+            </ul>
+
+            <h3 class="DashboardSummary-group-listHeader">Tuesday, December 24th</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+            </ul>
+        </div>
+    </div>
+</div>

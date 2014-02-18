@@ -4213,13 +4213,13 @@ form ul li {
 }
 
 /* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
-.DashboardSummary .DashboardAlerts-summary {
+.DashboardSummary .DashboardTodos-summary {
   background-image: url("../img/theme/to-do-dashboard.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
 /* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
-  .DashboardSummary .DashboardAlerts-summary {
+  .DashboardSummary .DashboardTodos-summary {
     background-image: url("../img/theme/to-do-dashboard@2x.png");
   }
 }

@@ -1,0 +1,33 @@
+﻿@* It shows the full Todos list and other registered 'To-dos' in the Dashboard Summary format.
+*@
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    dynamic todos = new List<dynamic>{"a"};
+}
+@if (todos != null && todos.Count > 0)
+{
+<div class="DashboardSection-page-section DashboardTodos">
+    <h2 class="DashboardSection-page-section-header">To-do</h2>
+    <div class="DashboardTodos-summary DashboarSummary-group">
+        <div class="DashboardTodos-summary-list DashboardSummary-group-content">
+            <h3 class="DashboardSummary-group-listHeader">Enhance your profile(s)</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>Add photos to your Massage Therapist profile</li>
+            </ul>
+            
+            <h3 class="DashboardSummary-group-listHeader">Review past clients</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>Review working with John Davidson</li>
+            </ul>
+
+            <h3 class="DashboardSummary-group-listHeader">Promote your services</h3>
+            <ul class="DashboardSummary-group-list">
+                <li>Share your personal URL</li>
+            </ul>
+        </div>
+    </div>
+</div>
+}
