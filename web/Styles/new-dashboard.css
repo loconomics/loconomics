@@ -378,9 +378,9 @@ form ul li {
 /* line 189 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\new-dashboard.styl */
 /***TEMP RULES: END ***/
 
-/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 291 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 275 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\arrows.styl */
+/* line 291 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\arrows.styl */
 
 /* line 84 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
@@ -562,6 +562,11 @@ form ul li {
 }
 
 /* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+.DashboardSection .DashboardSection-sidebar .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardMessages:before {
+  background-position: 0 -150px;
+}
+
+/* line 119 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardYourWork:before {
   background: none;
   content: '+';
@@ -569,113 +574,123 @@ form ul li {
   font-size: 20px;
 }
 
-/* line 135 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 139 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 137 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 141 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu:hover > h1 {
   color: #e95d0f;
   border-bottom-color: #e95d0f;
 }
 
-/* line 142 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 146 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 143 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover a:hover {
   color: #e95d0f;
 }
 
-/* line 147 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 151 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 148 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboard:before {
   background-position: -50px 0;
 }
 
-/* line 152 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardAvailability:before {
   background-position: -50px -25px;
 }
 
-/* line 156 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 160 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardPromote:before {
   background-position: -50px -50px;
 }
 
-/* line 160 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 164 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardAboutYou:before {
   background-position: -50px -75px;
 }
 
-/* line 164 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 168 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardPayments:before {
   background-position: -50px -100px;
 }
 
-/* line 168 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 172 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardPrivacy:before {
   background-position: -50px -125px;
 }
 
-/* line 172 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 176 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardMessages:before {
+  background-position: -50px -150px;
+}
+
+/* line 180 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li:hover.u-withIcon.go-dashboardYourWork:before {
   color: #e95d0f;
 }
 
-/* line 178 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 186 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu.is-current > h1 {
   color: #00989a;
   border-bottom-color: #00989a;
 }
 
-/* line 183 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 191 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 184 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 192 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current a,
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current a:link,
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current a:visited {
   color: #00989a;
 }
 
-/* line 188 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 196 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 189 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 197 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboard:before {
   background-position: -25px 0;
 }
 
-/* line 193 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 201 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardAvailability:before {
   background-position: -25px -25px;
 }
 
-/* line 197 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardPromote:before {
   background-position: -25px -50px;
 }
 
-/* line 201 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 209 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardAboutYou:before {
   background-position: -25px -75px;
 }
 
-/* line 205 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 213 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardPayments:before {
   background-position: -25px -100px;
 }
 
-/* line 209 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 217 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardPrivacy:before {
   background-position: -25px -125px;
 }
 
-/* line 213 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 221 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+.DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardMessages:before {
+  background-position: -25px -150px;
+}
+
+/* line 225 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-enabled .DashboardSection-sidebar-menu > ul > li.is-current.u-withIcon.go-dashboardYourWork:before {
   color: #00989a;
 }
 
-/* line 220 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 232 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 224 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled:before {
   position: absolute;
   top: 0;
@@ -686,9 +701,9 @@ form ul li {
   z-index: 1000;
 }
 
-/* line 234 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 246 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 236 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 248 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > h1,
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu a,
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu a:link,
@@ -696,44 +711,49 @@ form ul li {
   color: #ccc;
 }
 
-/* line 240 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 252 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > h1 {
   border-bottom-color: #ccc;
 }
 
-/* line 244 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 256 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 
-/* line 245 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 257 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboard:before {
   background-position: -75px 0;
 }
 
-/* line 249 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 261 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardAvailability:before {
   background-position: -75px -25px;
 }
 
-/* line 253 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 265 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardPromote:before {
   background-position: -75px -50px;
 }
 
-/* line 257 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 269 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardAboutYou:before {
   background-position: -75px -75px;
 }
 
-/* line 261 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 273 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardPayments:before {
   background-position: -75px -100px;
 }
 
-/* line 265 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 277 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardPrivacy:before {
   background-position: -75px -125px;
 }
 
-/* line 269 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+/* line 281 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
+.DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardMessages:before {
+  background-position: -75px -150px;
+}
+
+/* line 285 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\sidebar.styl */
 .DashboardSection .DashboardSection-sidebar.is-disabled .DashboardSection-sidebar-menu > ul > li.u-withIcon.go-dashboardYourWork:before {
   color: #ccc;
 }

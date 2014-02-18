@@ -13,6 +13,7 @@
         case "dashboard":
         case "availability":
         case "promote":
+        case "messages":
             selectedGroup = "tools";
             break;
         case "your-work":
@@ -49,6 +50,7 @@
         <h1>Tools</h1>
         <ul>
             <li class="u-withIcon go-dashboard @(menu("dashboard", selectedPage))"><a href="@(baseUrl)">Dashboard</a></li>
+            <li class="u-withIcon go-dashboardMessages @(menu("messages", selectedPage))"><a href="@(baseUrl)messages/">Messages</a></li>
             @if (u.IsProvider)
             {
                 <li class="u-withIcon go-dashboardAvailability @(menu("availability", selectedPage))"><a href="@(baseUrl)availability/">Availability</a></li>

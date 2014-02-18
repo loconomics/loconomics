@@ -1,0 +1,112 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    int userID = WebSecurity.CurrentUserId;
+
+    // All messages threads (as customer and as provider)
+    dynamic messageThreads = LcMessaging.GetMessageThreadList(userID);
+}
+@helper printItem(dynamic item, string senderPrefix = "Sender", string receiverPrefix = "Receiver", string senderUserType = "user") {
+  <li>
+    @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+        {"Data", item},
+        {"DataPrefix", senderPrefix},
+        {"Size", "mini"},
+        {"UserType", senderUserType}
+    })
+    @{
+        var itemType = "";
+        if (item.LastMessageTypeID >= 1 && item.LastMessageTypeID <= 3) {
+            itemType = "inquiry";
+        } else if (item.LastMessageTypeID == 8) {
+            itemType = "marketing";
+        } else if (item.LastMessageTypeID == 9) {
+            itemType = "booking-dispute";
+        } else if (item.LastMessageTypeID == 10) {
+            itemType = "booking-dispute-resolution";
+        } else if (item.LastMessageTypeID >= 17 && item.LastMessageTypeID <= 18) {
+            itemType = "booking-review";
+        } else if (item.LastMessageTypeID >= 4 && item.LastMessageTypeID <= 5) {
+            itemType = "bookingrequest";
+        } else if (item.LastMessageTypeID >= 6 && item.LastMessageTypeID <= 7) {
+            itemType = "bookingrequest-confirmation";
+        } else if (item.LastMessageTypeID >= 13 && item.LastMessageTypeID <= 14) {
+            itemType = "bookingrequest-denegation";
+        } else if (item.LastMessageTypeID >= 15 && item.LastMessageTypeID <= 16 || item.lastMessageTypeID == 19) {
+            itemType = "booking";
+        }
+    }
+    <ul class="item-summary message-thread-summary @itemType">
+        @* Inquiries messages (1 to 3) *@
+        @switch(itemType) {
+            case "inquiry":
+                <li>
+                    <h5>@LcRessources.GetText("messaging-message-type-title-" + itemType):</h5> 
+                    @item.PositionSingular
+                </li>
+                <li>
+                    <h5>Subject:</h5> @item.Subject
+                </li>
+                <li>
+                    <h5>Message:</h5> @item.LastMessageBodyText
+                </li>
+                break;
+            default:
+                <li>
+                    <h5>@LcRessources.GetText("messaging-message-type-title-" + itemType):</h5> 
+                    @item.Subject
+                </li>
+                <li class="long-details">
+                    <h5>Details:</h5> @item.LastMessageBodyText
+                </li>
+                break;
+        }
+    </ul>
+    <div class="actions">
+        @{
+            string buttonAction = "view", buttonLabel = "View";
+            if (senderUserType == "customer") {
+                switch ((int)item.MessageThreadStatusID){
+                    case 1:
+                        buttonAction = "respond";
+                        buttonLabel = "Respond";
+                        break;
+                    case 2:
+                        buttonAction = "responded";
+                        buttonLabel = "Responded";
+                        break;
+                }
+            } else if (senderUserType == "provider") {
+                switch ((int)item.MessageThreadStatusID){
+                    case 1:
+                        buttonAction = "waiting-respond";
+                        buttonLabel = "Waiting";
+                        break;
+                    case 2:
+                        buttonAction = "responded";
+                        buttonLabel = "Responded";
+                        break;
+                }
+            }
+        }
+        <button class="item-action @buttonAction" data-message-thread-id="@item.ThreadID" data-message-aux-id="@item.LastMessageAuxID" data-message-aux-t="@item.LastMessageAuxT">@buttonLabel</button>
+        <div class="date item-extra-info">@item.LastMessageDate</div>
+    </div>
+  </li>
+}
+<ul class="message-thread-list items-list list-all">
+    @if (messageThreads.Count > 0)
+    {
+        foreach (var item in messageThreads)
+        {
+            if (userID == item.ProviderUserID) {
+                @printItem(item, "Customer", "Provider", "customer");
+            } else {
+                @printItem(item, "Provider", "Customer", "provider");
+            }
+        }
+    } else {
+        <li class="empty-list">Your mailbox is empty!</li>
+    }
+</ul>

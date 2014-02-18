@@ -272,13 +272,13 @@ public class LcMessaging
             var url = baseUrl;
             switch ((string)r.LastMessageAuxT) {
                 default:
-                    url += "Messages/" + r.ThreadID + "/" + r.MessageID + "/";
+                    url += "Messages/Inquiry/" + r.ThreadID + "/" + r.MessageID + "/";
                     break;
                 case "Booking":
-                    url += "Bookings/Requests/" + r.LastMessageAuxID + "/";
+                    url += "Messages/Booking/" + r.LastMessageAuxID + "/";
                     break;
                 case "BookingRequest":
-                    url += "Bookings/" + r.LastMessageAuxID + "/";
+                    url += "Messages/BookingRequest/" + r.LastMessageAuxID + "/";
                     break;
             }
             return url;

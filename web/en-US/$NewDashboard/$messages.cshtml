@@ -1,0 +1,31 @@
+﻿@{
+    // Messages: inquiries and bookings
+    LcHelpers.SecurePage();
+    var u = LcData.UserInfo.GetUserRow();
+    
+    var kind = (UrlData[1].IsEmpty() ? "" : UrlData[1]).ToLower();
+    var firstIdStr = UrlData[2];
+    var threadId = firstIdStr.AsInt();
+    var messageId = UrlData[3].AsInt();
+}
+<h1 class="DashboardSection-page-header">Messages</h1>
+<div class="DashboardMessages">
+
+    @if (kind == "inquiry")
+    {
+        @RenderPage("$Thread.cshtml", new { ThreadId = threadId, MessageId = messageId });
+    }
+    else if (kind == "booking")
+    {
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingID = firstIdStr });
+    }
+    else if (kind == "bookingrequest")
+    {
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingRequestID = firstIdStr });
+    }
+    else
+    {
+        @RenderPage("Messages/$ThreadList.cshtml")
+    }
+
+</div>

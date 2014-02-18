@@ -21,8 +21,8 @@
     
     // Setting up data
     {
-        var brID = Request["BookingRequestID"];
-        var bID = Request["BookingID"];
+        var brID = Request["BookingRequestID"] ?? (string)PageData["BookingRequestID"];
+        var bID = Request["BookingID"] ?? (string)PageData["BookingID"];
         
         if (!String.IsNullOrEmpty(bID)) {
             // Confirmed Booking
