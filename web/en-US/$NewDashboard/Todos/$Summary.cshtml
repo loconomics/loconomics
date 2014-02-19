@@ -53,7 +53,7 @@
                     }
                     @* Dismiss feature #243, only for non required alerts *@
                     @if (!alert.Required) {
-                        <a class="DashboardTodos-summary-list-dismiss" href="@(LcUrl.LangPath)NewDashboard/todos/dismiss/@(alert.AlertID)/@(alert.PositionID)/">dismiss</a>
+                        <a title="dismiss this to-do" class="has-tooltip DashboardTodos-summary-list-dismiss" href="@(LcUrl.LangPath)NewDashboard/todos/dismiss/@(alert.AlertID)/@(alert.PositionID)/">X</a>
                     }
                 </li>
             }

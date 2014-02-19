@@ -4425,3 +4425,29 @@ form ul li {
 .DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.is-current .DashboardMessages-thread-block {
   background-color: #b5e1e2;
 }
+
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+
+/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+
+/* line 7 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+
+/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+
+/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\todos.styl */
+.DashboardTodos .DashboardTodos-summary .DashboardTodos-summary-list .DashboardTodos-summary-list-dismiss {
+  float: right;
+  color: White;
+  background: #e95d0f;
+  display: inline-block;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  width: 1.2em;
+  font-size: 1em;
+  line-height: 1.2em;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+}
