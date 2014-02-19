@@ -57,7 +57,7 @@
                 if (Request.IsAjaxRequest()){
                     // Return JSON result:
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                    LcHelpers.ReturnJsonError(0 - result.Error, fullmsg);
                 } else {
                     throw new HttpException(500, fullmsg);
                 }
@@ -76,9 +76,9 @@
                  * - BookingRequestID and UserID (as CustomerUserID) don't match?
                  * - BookingRequest is already cancelled?
                  */
-                LcHelpers.ReturnJsonError(-1, "Impossible to cancel that Booking Request. Is already cancelled?");
+                LcHelpers.ReturnJsonError(-1, fullmsg);
             } else {
-                throw new HttpException(500, "Impossible to cancel that Booking Request. Is already cancelled?");
+                throw new HttpException(500, fullmsg);
             }
         }
     }

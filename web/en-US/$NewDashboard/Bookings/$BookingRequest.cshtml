@@ -36,6 +36,24 @@
             msg = ex.Message;
         }
         break;
+        
+    case "decline":
+        try
+        {
+            LcHelpers.RenderPageReturns = null;
+            @RenderPage(LcUrl.RenderLangPath + "Booking/$DeclineBookingRequest.cshtml", new
+            {
+                BookingRequestID = brID,
+                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
+                UseRenderReturns = true
+            })
+            msg = LcHelpers.RenderPageReturns;
+        }
+        catch (Exception ex)
+        {
+            msg = ex.Message;
+        }
+        break;
 
     case "confirm":
         try

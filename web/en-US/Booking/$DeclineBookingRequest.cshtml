@@ -3,7 +3,8 @@
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRow();
-    var brID = Request["BookingRequestID"].AsInt();
+    int brID = PageData["BookingRequestID"] ?? Request["BookingRequestID"].AsInt();
+    string redirectUrl = PageData["RedirectUrl"];
     
     var sqlCheckBookingRequest = @"
         SELECT  TOP 1 R.BookingRequestID
@@ -26,32 +27,54 @@
                 // Send message
                 LcMessaging.SendBookingRequestDenegation(brID, true);
                 
+                if (redirectUrl == null) {
+                    redirectUrl = LcUrl.LangPath + (
+                        Request.IsAjaxRequest() ?
+                        "Booking/$BookingDetailsWidget/?BookingRequestID={0}" :
+                        "Dashboard/Bookings/$!BookingRequest-{0}");
+                }
+                redirectUrl = String.Format(redirectUrl, brID);
+                
                 if (Request.IsAjaxRequest()){
                     // An ajax redirect is performed to return the updated BookingRequestDetails html to the user
-                    LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
-                        "Booking/$BookingDetailsWidget/?BookingRequestID={0}", brID ));
+                    LcHelpers.ReturnJsonResult(3, redirectUrl);
                 } else {
-                    Response.Redirect(LcUrl.LangPath + String.Format(
-                        "Dashboard/Bookings/$!BookingRequest-{0}", brID));
+                    Response.Redirect(redirectUrl);
                 }
             } else {
+                
+                var fullmsg = "We're having problems completing your request.  Please e-mail support@loconomics.com and reference: " + result.ErrorMessage;
+                
+                if (PageData["UseRenderReturns"]) {
+                    LcHelpers.RenderPageReturns = fullmsg;
+                    return;
+                }
+                
                 if (Request.IsAjaxRequest()){
                     // Return JSON result:
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
-                    LcHelpers.ReturnJsonError(0 - result.Error, result.ErrorMessage);
+                    LcHelpers.ReturnJsonError(0 - result.Error, fullmsg);
                 } else {
-                    throw new HttpException(500, "We're having problems completing your request.  Please e-mail support@loconomics.com and reference: " + result.ErrorMessage);
+                    throw new HttpException(500, fullmsg);
                 }
             }
         } else {
+            
+            var fullmsg = "We're having problems completing your request.  Please e-mail support@loconomics.com.";
+                
+            if (PageData["UseRenderReturns"]) {
+                LcHelpers.RenderPageReturns = fullmsg;
+                return;
+            }
+            
             if (Request.IsAjaxRequest()){
                 /* What? 
                  * - BookingRequestID and UserID (as ProviderUserID) don't match?
                  * - BookingRequest is already confirmed?
                  */
-                LcHelpers.ReturnJsonError(-1, "We're having problems completing your request.  Please e-mail support@loconomics.com.");
+                LcHelpers.ReturnJsonError(-1, fullmsg);
             } else {
-                throw new HttpException(500, "We're having problems completing your request.  Please e-mail support@loconomics.com.");
+                throw new HttpException(500, fullmsg);
             }
         }
     }

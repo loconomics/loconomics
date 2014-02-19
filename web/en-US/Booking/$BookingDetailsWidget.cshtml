@@ -22,8 +22,10 @@
     var extraTitleClass = PageData["ExtraTitleClass"];
     var useLinkActions = (bool)(PageData["UseLinkActions"] ?? false);
     var actionsFileName = "$BookingActions.cshtml";
+    var reqtimesFileName = "$BookingRequestedTimes.cshtml";
     if (useLinkActions) {    
         actionsFileName = "$BookingLinkActions.cshtml";
+        reqtimesFileName = "$BookingLinkRequestedTimes.cshtml";
     }
     
     // Setting up data
@@ -144,7 +146,7 @@ else
         @if (isRequest)
         {
             <h4 class="c-SectionTitle">Time preferences</h4>
-            @RenderPage("$BookingRequestedTimes.cshtml", new
+            @RenderPage(reqtimesFileName, new
             {
                 BookingData = booking,
                 MyUserType = myUserType
