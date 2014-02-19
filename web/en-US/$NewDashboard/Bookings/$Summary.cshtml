@@ -5,12 +5,11 @@
     
     var u = LcData.UserInfo.GetUserRow();
     
-    var bookings = LcData.Booking.GetUpcomingBookings(u.UserID, 10);
-    
-    
+    var bookings = LcData.Booking.GetUpcomingBookings(u.UserID, 5);
+
 }
 @helper printItem(dynamic r) {
-    <li>@(r.StartTime.ToLongTimeString())-@(r.EndTime.ToLongTimeString()) @(r.PositionSingular) booking with @getPairName(r)</li>
+    <li>@(r.StartTime.ToLongTimeString())-@(r.EndTime.ToLongTimeString()) <a href="@getBookingUrl(r)">@(r.PositionSingular) booking</a> with @getPairName(r)</li>
 }
 @functions {
     string getPairName(dynamic r) {
@@ -22,6 +21,9 @@
         return r.CustomerUserID == WebSecurity.CurrentUserId ?
             "Provider" :
             "Customer";
+    }
+    string getBookingUrl(dynamic r) {
+        return LcUrl.LangPath + "NewDashboard/messages/booking/" + r.BookingID + "/";
     }
 }
 <div class="DashboardSection-page-section DashboardBookings">
@@ -53,13 +55,26 @@
             }
             @if (bookings["upcoming"].Count > 0)
             {
-            <h3 class="DashboardSummary-group-listHeader">Upcoming</h3>
-            <ul class="DashboardSummary-group-list">
-                @foreach (var r in bookings["upcoming"])
+                var prevDate = DateTime.MinValue.Date;
+                bool changed = true;
+                foreach (var r in bookings["upcoming"])
                 {
+                    changed = prevDate != r.StartTime.Date;
+                    if (changed)
+                    {
+                        var date = r.StartTime.ToString("dddd, MMMM d") + "th";
+                    
+                        @Html.Raw("<h3 class='DashboardSummary-group-listHeader'>" + date + "</h3>")
+                        @Html.Raw("<ul class='DashboardSummary-group-list'>")
+                    }
+                    
                     @printItem(r)
+
+                    if (changed)
+                    {
+                        @Html.Raw("</ul>")
+                    }
                 }
-            </ul>
             }
         </div>
     </div>
