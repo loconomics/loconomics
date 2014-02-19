@@ -7,7 +7,7 @@
     
     var messages = LcMessaging.GetLastNewReadSentMessages((int)u.UserID, 3);
 
-    var newsCount = 2;
+    var newsCount = messages["new"].Count;
 }
 
 @helper showReceivedMessageSummary(dynamic r) {
