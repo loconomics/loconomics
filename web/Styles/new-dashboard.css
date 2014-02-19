@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-18
+/*! Loconomics.com 2014-02-19
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -4246,7 +4246,7 @@ form ul li {
 
 /* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
 
-/* line 11 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ItemsList.styl */
 
@@ -4336,3 +4336,86 @@ form ul li {
 }
 
 /* line 8 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+
+/* line 13 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+
+/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-block {
+  border: 1px solid #6c6c6c;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background: #fff;
+  padding: 15px;
+}
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages {
+/* Partially refactored */
+  zoom: 1;
+}
+
+/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages:before,
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages:after {
+  content: "";
+  display: table;
+}
+
+/* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\clearfix.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages:after {
+  clear: both;
+}
+
+/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li {
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li > .mini-user-info {
+  width: 60px;
+  font-size: 0.8em;
+}
+
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li > .mini-user-info > div {
+  line-height: 1em;
+}
+
+/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.customer > .mini-user-info {
+  float: left;
+}
+
+/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.provider > .mini-user-info {
+  float: right;
+}
+
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li > .DashboardMessages-thread-block {
+  font-size: 0.9em;
+  margin: 0 12px;
+  width: 518px;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.customer > .DashboardMessages-thread-block {
+  float: left;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.provider > .DashboardMessages-thread-block {
+  float: right;
+}
+
+/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.new-message form > textarea {
+  height: 80px;
+}
+
+/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\messages.styl */
+.DashboardMessages .DashboardMessages-thread .DashboardMessages-thread-messages > li.new-message form > fieldset.actions {
+  margin-bottom: 0 !important;
+}

@@ -22,9 +22,11 @@
 
                 UC.FirstName As CustomerFirstName,
                 UC.LastName As CustomerLastName,
+                UC.CreatedDate As CustomerMemberSinceDate,
 
                 UP.FirstName As ProviderFirstName,
                 UP.LastName As ProviderLastName,
+                UP.CreatedDate As ProviderMemberSinceDate,
 
                 Pos.PositionSingular
         FROM    MessagingThreads As T
@@ -98,12 +100,12 @@
             {"UserType", userType},
             {"ExtraInfo", message.MessageDate.ToShortDateString()}
         })
-        <div class="message-section">@printMessageBodyAsHtml(message.BodyText)</div>
+        <div class="DashboardMessages-thread-block">@printMessageBodyAsHtml(message.BodyText)</div>
     </li>
 }
 @if (thread == null)
 {
-    <div class="empty">That message thread don't exist.</div>
+    <h3 class="empty DashboardSection-page-header">That message thread don't exist.</h3>
 }
 else
 {
@@ -122,73 +124,72 @@ else
     } // we don't check 'else' nelse 'else if (item.CustoerUserID..) because are just the default values
     var itsUserData = LcData.UserInfo.GetUserRowWithContactData(itsUserID);
     
-    <div class="not-faqs-duplication">
-
-    <div class="booking-request ajax-box">
+<div class="DashboardMessages-thread">
+    <div class="ajax-box">
         @*LcHelpers.SetupStarRatingPlugin()*@
         @LcHelpers.GetValidationScripts()
 
-        @if (refreshThreadList) {
-            <script type="text/javascript">
-                // After update conversation, state change, reload thread list to reflect new state
-                $('#inbox').reload();
-            </script>
-        }
-        <h3>Conversation with @LcHelpers.GetUserDisplayName(thread, "Customer")</h3>
-        <span class="updateddate">last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
+        <h3 class="DashboardSection-page-header">Conversation with @LcHelpers.GetUserDisplayName(thread, "Customer")</h3>
+        <span>last updated: @thread.LastMessageDate.ToLongDateString() at @thread.LastMessageDate.ToLongTimeString()</span>
 
-        <h4>@itsUserLabel profile</h4>
-        @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-            {"AddCssClasses", "message-section" },
-            {"Data", itsUserData},
-            {"DataPrefix", ""},
-            {"Size", "medium"},
-            {"UserType", itsUserType}
-        })
+        <div class="DashboardSection-page-section">
+            <h4 class="DashboardSection-page-section-header">@itsUserLabel profile</h4>
+            @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+                {"AddCssClasses", "DashboardMessages-thread-block" },
+                {"Data", itsUserData},
+                {"DataPrefix", ""},
+                {"Size", "medium"},
+                {"UserType", itsUserType}
+            })
+        </div>
 
-        <h4>@(String.IsNullOrWhiteSpace(thread.Subject) ? "Message thread" : "Subject: " + thread.Subject)</h4>
-        <ul class="conversation-messages clearfix">
-        @foreach (var message in messages)
-        {
-            if (message.MessageTypeID == 1)
+        <div class="DashboardSection-page-section">
+            <h4 class="DashboardSection-page-section-header">@(String.IsNullOrWhiteSpace(thread.Subject) ? "Message thread" : "Subject: " + thread.Subject)</h4>
+            <ul class="DashboardMessages-thread-messages">
+            @foreach (var message in messages)
             {
-                @printItem(thread, message, "customer", "Customer")
+                if (message.MessageTypeID == 1)
+                {
+                    @printItem(thread, message, "customer", "Customer")
+                }
+                else if (message.MessageTypeID == 3)
+                {
+                    @printItem(thread, message, "provider", "Provider")
+                }
             }
-            else if (message.MessageTypeID == 3)
-            {
-                @printItem(thread, message, "provider", "Provider")
+            @{
+                <li class="@myUserType new-message">
+                    @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
+                        {"AddCssClasses", "message-conversation" },
+                        {"Data", thread},
+                        {"DataPrefix", myUserPrefix},
+                        {"Size", "mini"},
+                        {"UserType", myUserType},
+                        {"ExtraInfo", DateTime.Now.ToShortDateString()}
+                    })
+                    <div class="DashboardMessages-thread-block">
+                        <form action="@(LcUrl.LangPath)$NewDashboard/messages/$thread/" class="ajax BasicForm">
+                            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+                            <input type="hidden" name="MessageThreadID" value="@threadID" />
+                            <textarea rows="4" name="newmessage" placeholder="Reply"></textarea>
+                            <fieldset class="actions">
+                                <button class="main-action" type="submit">Reply</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </li>
             }
-        }
-        @{
-            <li class="@myUserType new-message">
-                @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
-                    {"AddCssClasses", "message-conversation" },
-                    {"Data", thread},
-                    {"DataPrefix", myUserPrefix},
-                    {"Size", "mini"},
-                    {"UserType", myUserType},
-                    {"ExtraInfo", DateTime.Now.ToShortDateString()}
-                })
-                <div class="message-section">
-                    <form action="@(LcUrl.LangPath)Messaging/$MessageThread/" class="ajax">
-                        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-                        <input type="hidden" name="MessageThreadID" value="@threadID" />
-                        <textarea rows="4" name="newmessage" placeholder="Reply"></textarea>
-                        <fieldset class="actions">
-                            <button class="main-action" type="submit">Reply</button>
-                        </fieldset>
-                    </form>
-                </div>
-            </li>
-        }
-        </ul>
+            </ul>
+        </div>
 
-        <h4>Reminders</h4>
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", new
-           {
-               UserType = myUserType,
-               ItsFirstName = itsUserData.FirstName
-           })
+        <div class="DashboardSection-page-section">
+            <h4 class="DashboardSection-page-section-header">Reminders</h4>
+            @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingRemindersWidget.cshtml", new
+               {
+                   UserType = myUserType,
+                   ItsFirstName = itsUserData.FirstName
+               })
+        </div>
     </div>
-    </div>
+ </div>
 }

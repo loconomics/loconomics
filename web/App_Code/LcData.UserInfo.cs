@@ -152,7 +152,7 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
-                                 INNER JOIN
+                                 LEFT JOIN
                                 Gender As G
                                   ON G.GenderID = A.GenderID
                                   	AND G.LanguageID = A.PreferredLanguageID  
@@ -250,7 +250,7 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
-                                 INNER JOIN
+                                 LEFT JOIN
                                 Gender As G
                                   ON G.GenderID = A.GenderID
                                   	AND G.LanguageID = A.PreferredLanguageID  
