@@ -91,8 +91,8 @@
 @helper printMessageBodyAsHtml(string messageBody){
     @Html.Raw(messageBody.Replace("\n", "<br/>"))
 }
-@helper printItem(dynamic thread, dynamic message, string userType, string userPrefix){
-    <li class="@userType message-@message.MessageID">
+@helper printItem(dynamic thread, dynamic message, string userType, string userPrefix, int selectedMessageID){
+    <li class="@userType @(message.MessageID == selectedMessageID ? "is-current" : "")">
         @RenderPage(LcUrl.RenderLangPath + "Profile/$UserInfoWidget.cshtml", new Dictionary<string, object>{ 
             {"Data", thread},
             {"DataPrefix", userPrefix},
@@ -150,11 +150,11 @@ else
             {
                 if (message.MessageTypeID == 1)
                 {
-                    @printItem(thread, message, "customer", "Customer")
+                    @printItem(thread, message, "customer", "Customer", messageID)
                 }
                 else if (message.MessageTypeID == 3)
                 {
-                    @printItem(thread, message, "provider", "Provider")
+                    @printItem(thread, message, "provider", "Provider", messageID)
                 }
             }
             @{
