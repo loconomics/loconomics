@@ -80,4 +80,60 @@ public static class LcExtensions
             result = result[0].ToString().ToLower() + result.Substring(1);
         return result;
     }
+
+    /// <summary>
+    /// Get the array slice between the two indexes.
+    /// ... Inclusive for start index, exclusive for end index.
+    /// </summary>
+    public static T[] Slice<T>(this T[] source, int start, int end = 0)
+    {
+        // Hanldes 'slice to the end'
+        if (end == 0)
+        {
+            end = source.Length - 1;
+        }
+        // Handles negative ends.
+        else if (end < 0)
+        {
+            end = source.Length + end;
+        }
+        int len = end - start;
+
+        // Return new array.
+        T[] res = new T[len];
+        for (int i = 0; i < len; i++)
+        {
+            res[i] = source[i + start];
+        }
+        return res;
+    }
+    public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int start, int end = 0)
+    {
+        // If ends is negative, we need to know the total count and discount that
+        // amount of last elements
+        // Hanldes 'slice to the end'
+        if (end < 0)
+        {
+            end = source.Count() + end;
+        }
+        int len = end - start;
+
+        // Return new array.
+        var i = 0;
+        foreach (var r in source)
+        {
+            if (i < start)
+            {
+                i++;
+                continue;
+            }
+            else if (end == 0 || i < len)
+            {
+                yield return r;
+                i++;
+            }
+            else
+                yield break;
+        }
+    }
 }

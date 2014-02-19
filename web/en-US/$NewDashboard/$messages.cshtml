@@ -7,6 +7,7 @@
     var firstIdStr = UrlData[2];
     var threadId = firstIdStr.AsInt();
     var messageId = UrlData[3].AsInt();
+    var sectionUrlData = new OptionalItemsList<string>(UrlData.Slice(2));
 }
 @if (kind == "")
 {
@@ -20,11 +21,11 @@
     }
     else if (kind == "booking")
     {
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingID = firstIdStr, ExtraTitleClass = "DashboardSection-page-header", UseLinkActions = true });
+        @RenderPage("Bookings/$Booking.cshtml", new { UrlData = sectionUrlData })
     }
     else if (kind == "bookingrequest")
     {
-        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { BookingRequestID = firstIdStr, ExtraTitleClass = "DashboardSection-page-header", UseLinkActions = true });
+        @RenderPage("Bookings/$BookingRequest.cshtml", new { UrlData = sectionUrlData })
     }
     else if (kind == "")
     {

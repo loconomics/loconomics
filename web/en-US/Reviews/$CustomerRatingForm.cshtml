@@ -6,10 +6,7 @@
     LcHelpers.SecurePage();
     var thisUserID = WebSecurity.CurrentUserId;
     var provider = LcData.UserInfo.GetUserRow();
-    int bookingID = Request["BookingID"].AsInt();
-    if (bookingID == 0) {
-        bookingID = (int)PageData["BookingID"];
-    }
+    int bookingID = PageData["BookingID"] ?? Request["BookingID"].AsInt();
     
     dynamic booking = PageData["booking"] ?? LcData.Booking.GetBookingBasicInfo(bookingID);
     dynamic customer = null;

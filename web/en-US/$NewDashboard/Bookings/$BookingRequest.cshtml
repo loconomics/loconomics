@@ -1,0 +1,64 @@
+﻿@*
+    Controller to route through a booking request view and
+    actions like cancellation and confirmation.
+*@
+@{
+    var pars = (IList<string>)PageData["UrlData"] ?? UrlData;
+    var brID = pars[0];
+    string action = pars[1];
+    string actionMod = pars[2];
+    
+    var msg = "";
+}
+@switch (action) {
+    default:
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new { 
+            BookingRequestID = brID,
+            ExtraTitleClass = "DashboardSection-page-header", 
+            UseLinkActions = true 
+        })
+        break;
+    
+    case "cancel":
+        try
+        {
+            LcHelpers.RenderPageReturns = null;
+            @RenderPage(LcUrl.RenderLangPath + "Booking/$CancelBookingRequest.cshtml", new
+            {
+                BookingRequestID = brID,
+                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
+                UseRenderReturns = true
+            })
+            msg = LcHelpers.RenderPageReturns;
+        }
+        catch (Exception ex)
+        {
+            msg = ex.Message;
+        }
+        break;
+
+    case "confirm":
+        try
+        {
+            LcHelpers.RenderPageReturns = null;
+            @RenderPage(LcUrl.RenderLangPath + "Booking/$ConfirmBookingRequest.cshtml", new { 
+                BookingRequestID = brID,
+                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/Booking/{1}/",
+                ConfirmedDateType = actionMod,
+                UseRenderReturns = true
+            })
+            msg = LcHelpers.RenderPageReturns;
+        }
+        catch (Exception ex)
+        {
+            msg = ex.Message;
+        }
+        break;
+}
+@if (!String.IsNullOrEmpty(msg))
+{
+    <h1 class="DashboardSection-page-header">Booking Request</h1>
+    <p>
+        @msg
+    </p>
+}
