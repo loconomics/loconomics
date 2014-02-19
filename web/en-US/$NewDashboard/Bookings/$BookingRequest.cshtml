@@ -20,57 +20,42 @@
         break;
     
     case "cancel":
-        try
+
+        LcHelpers.RenderPageReturns = null;
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$CancelBookingRequest.cshtml", new
         {
-            LcHelpers.RenderPageReturns = null;
-            @RenderPage(LcUrl.RenderLangPath + "Booking/$CancelBookingRequest.cshtml", new
-            {
-                BookingRequestID = brID,
-                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
-                UseRenderReturns = true
-            })
-            msg = LcHelpers.RenderPageReturns;
-        }
-        catch (Exception ex)
-        {
-            msg = ex.Message;
-        }
+            BookingRequestID = brID.AsInt(),
+            RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
+            UseRenderReturns = true
+        })
+        msg = LcHelpers.RenderPageReturns;
+
         break;
         
     case "decline":
-        try
+
+        LcHelpers.RenderPageReturns = null;
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$DeclineBookingRequest.cshtml", new
         {
-            LcHelpers.RenderPageReturns = null;
-            @RenderPage(LcUrl.RenderLangPath + "Booking/$DeclineBookingRequest.cshtml", new
-            {
-                BookingRequestID = brID,
-                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
-                UseRenderReturns = true
-            })
-            msg = LcHelpers.RenderPageReturns;
-        }
-        catch (Exception ex)
-        {
-            msg = ex.Message;
-        }
+            BookingRequestID = brID.AsInt(),
+            RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/BookingRequest/{0}/",
+            UseRenderReturns = true
+        })
+        msg = LcHelpers.RenderPageReturns;
+
         break;
 
     case "confirm":
-        try
-        {
-            LcHelpers.RenderPageReturns = null;
-            @RenderPage(LcUrl.RenderLangPath + "Booking/$ConfirmBookingRequest.cshtml", new { 
-                BookingRequestID = brID,
-                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/Booking/{1}/",
-                ConfirmedDateType = actionMod,
-                UseRenderReturns = true
-            })
-            msg = LcHelpers.RenderPageReturns;
-        }
-        catch (Exception ex)
-        {
-            msg = ex.Message;
-        }
+
+        LcHelpers.RenderPageReturns = null;
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$ConfirmBookingRequest.cshtml", new { 
+            BookingRequestID = brID.AsInt(),
+            RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/Booking/{1}/",
+            ConfirmedDateType = actionMod,
+            UseRenderReturns = true
+        })
+        msg = LcHelpers.RenderPageReturns;
+
         break;
 }
 @if (!String.IsNullOrEmpty(msg))

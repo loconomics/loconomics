@@ -1,7 +1,7 @@
 ﻿@using WebMatrix.Data;
 @{
     LcHelpers.SecurePage();
-    
+   
     var u = LcData.UserInfo.GetUserRow();
     int brID = PageData["BookingRequestID"] ?? Request["BookingRequestID"].AsInt();
     string redirectUrl = PageData["RedirectUrl"];
@@ -98,7 +98,7 @@
             SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
         END CATCH
     ";
-    
+        
     using (var db = Database.Open("sqlloco")) {
         var dateID = 0;
         var dates = db.QuerySingle(sqlGetBookingDates, u.UserID, brID);
@@ -225,7 +225,7 @@
             msg = "That time conflicts with another appointment you have--please choose another!";
             break; 
     }
-    
+
     if (PageData["UseRenderReturns"]) {
         LcHelpers.RenderPageReturns = msg ?? errorMessage;
         return;

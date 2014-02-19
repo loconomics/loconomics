@@ -30,21 +30,16 @@
         break;
         
     case "cancel":
-        try
+
+        LcHelpers.RenderPageReturns = null;
+        @RenderPage(LcUrl.RenderLangPath + "Booking/$CancelBooking.cshtml", new
         {
-            LcHelpers.RenderPageReturns = null;
-            @RenderPage(LcUrl.RenderLangPath + "Booking/$CancelBooking.cshtml", new
-            {
-                BookingID = bID,
-                RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/Booking/{0}/",
-                UseRenderReturns = true
-            })
-            msg = LcHelpers.RenderPageReturns;
-        }
-        catch (Exception ex)
-        {
-            msg = ex.Message;
-        }
+            BookingID = bID.AsInt(),
+            RedirectUrl = LcUrl.LangPath + "NewDashboard/Messages/Booking/{0}/",
+            UseRenderReturns = true
+        })
+        msg = LcHelpers.RenderPageReturns;
+
         break;
 }
 @if (!String.IsNullOrEmpty(msg))

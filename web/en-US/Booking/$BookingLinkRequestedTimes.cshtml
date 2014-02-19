@@ -8,7 +8,7 @@
         if (booking.PreferredDateStart is DateTime && booking.PreferredDateEnd is DateTime)
         {
             <h5 class="w-BookingRequestedTimes-optionTitle">First choice:</h5>
-            <a class="action booking-request-action" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/preferred/">
+            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/preferred/">
                 Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
             </a>
         }
