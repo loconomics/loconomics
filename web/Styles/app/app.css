@@ -2339,21 +2339,27 @@ html.boxshadow #loginBox .field-validation-error{
     border: 2px solid #E44600;
     padding: 10px;
 }
+.booking-review h4 {
+    font-weight: bold;
+    color: #747474;
+    margin: 6px 0px 0px;
+    font-size: 1.1em;
+}
 .booking-review legend {
-    color: #E44600;
+    color: #E44600 !important;
 }
 .dashboard .booking-review form li label {
     width: auto;
 }
 .booking-review .booking-summary > .item-summary {
     display: inline-block;
+    max-width: 590px;
 }
 .booking-review .booking-summary > .actions {
     text-align: center !important;
     width: 70px;
     display: inline-block !important;
     vertical-align: top;
-    float: none;
 }
 .booking-review form li textarea {
 }
