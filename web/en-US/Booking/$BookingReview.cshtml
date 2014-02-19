@@ -57,6 +57,9 @@ else
 
 <div class="booking-review booking-request booking">
     @if (readView) {
+        <h3 class="@extraTitleClass">Booking review by @thisUserData.FirstName</h3>
+    }
+    else if (myUserType == "provider") {
         <h3 class="@extraTitleClass">@thisUserData.FirstName, please review <span class="user-public-name">@itsUserData.FirstName</span></h3>
     } else {
         <h3 class="@extraTitleClass">Tell us how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
@@ -91,13 +94,13 @@ else
     </div>
     @if (myUserType == "customer") {
         if (booking.ReviewedByCustomer) {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID, BookingID = bID })
         } else {
             @RenderPage(LcUrl.RenderLangPath + "Reviews/$ProviderRatingForm.cshtml", new { BookingID = bID })
         }
     } else if (myUserType == "provider") {
         if (booking.ReviewedByProvider) {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID, BookingID = bID })
         } else {
             @RenderPage(LcUrl.RenderLangPath + "Reviews/$CustomerRatingForm.cshtml", new { BookingID = bID })
         }

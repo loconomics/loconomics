@@ -2348,6 +2348,12 @@ html.boxshadow #loginBox .field-validation-error{
 .booking-review legend {
     color: #E44600 !important;
 }
+.booking-review .message-section {
+    border: 1px solid #6C6C6C;
+    border-radius: 4px;
+    background: none repeat scroll 0% 0% #FFF;
+    padding: 15px;
+}
 .dashboard .booking-review form li label {
     width: auto;
 }
