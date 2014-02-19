@@ -3,9 +3,8 @@
 @{
     LcHelpers.SecurePage();
     
-    var u = LcData.UserInfo.GetUserRow();
-    
-    dynamic todos = new List<dynamic>{"a"};
+    // Load alerts:
+    dynamic todos = LcData.GetActiveUserAlerts(WebSecurity.CurrentUserId);
 }
 @if (todos != null && todos.Count > 0)
 {
@@ -13,20 +12,53 @@
     <h2 class="DashboardSection-page-section-header">To-do</h2>
     <div class="DashboardTodos-summary DashboarSummary-group">
         <div class="DashboardTodos-summary-list DashboardSummary-group-content">
-            <h3 class="DashboardSummary-group-listHeader">Enhance your profile(s)</h3>
-            <ul class="DashboardSummary-group-list">
-                <li>Add photos to your Massage Therapist profile</li>
-            </ul>
-            
-            <h3 class="DashboardSummary-group-listHeader">Review past clients</h3>
-            <ul class="DashboardSummary-group-list">
-                <li>Review working with John Davidson</li>
-            </ul>
+        @{
+            // We need show the results in groups based on AlerType fields
+            // We already get the data sorted by AlertTypeName, we implement
+            // the group-by here in the view generation instead of do a 
+            // database call for groups and other for each group alerts.
+            // Simply remember last AlertTypeName and compare, when changed the new
+            // group header must be showed
+            var lastAlertType = "";
+            foreach (var alert in todos)
+            {
+                // Check AlerType for grouping
+                var changed = lastAlertType != alert.AlertTypeName;
+                if (changed)
+                {
+                    // Close any previous list, except for the first iteration
+                    if (lastAlertType != "" && changed)
+                    {
+                        @Html.Raw("</ul>")
+                    }
+                    <h3 class="DashboardSummary-group-listHeader">@alert.AlertTypeName</h3>
+                    // Open list:
+                    @Html.Raw("<ul class='DashboardSummary-group-list'>")
+                }
+                lastAlertType = alert.AlertTypeName;
 
-            <h3 class="DashboardSummary-group-listHeader">Promote your services</h3>
-            <ul class="DashboardSummary-group-list">
-                <li>Share your personal URL</li>
-            </ul>
+                string completeUrl = LcData.CreateAlertURL(alert);
+                <li class="@(alert.Required ? "is-required" : "")">
+                    @if (completeUrl != null)
+                    {
+                        <a class="alert-info" href="@completeUrl">@alert.AlertHeadlineDisplay</a>
+                    }
+                    else
+                    {
+                        <span>@alert.AlertHeadlineDisplay</span>
+                    }
+                    @if (alert.PositionSpecific)
+                    {
+                        <span class="DashboardTodos-summary-list-position">to your @(alert.PositionSingular) profile</span>
+                    }
+                    @* Dismiss feature #243, only for non required alerts *@
+                    @if (!alert.Required) {
+                        <a class="DashboardTodos-summary-list-dismiss" href="@(LcUrl.LangPath)NewDashboard/todos/dismiss/@(alert.AlertID)/@(alert.PositionID)/">dismiss</a>
+                    }
+                </li>
+            }
+        }
+
         </div>
     </div>
 </div>
