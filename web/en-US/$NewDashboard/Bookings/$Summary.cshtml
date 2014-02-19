@@ -4,6 +4,25 @@
     LcHelpers.SecurePage();
     
     var u = LcData.UserInfo.GetUserRow();
+    
+    var bookings = LcData.Booking.GetUpcomingBookings(u.UserID, 10);
+    
+    
+}
+@helper printItem(dynamic r) {
+    <li>@(r.StartTime.ToLongTimeString())-@(r.EndTime.ToLongTimeString()) @(r.PositionSingular) booking with @getPairName(r)</li>
+}
+@functions {
+    string getPairName(dynamic r) {
+        var t = getPairType(r);
+        return r[t + "FirstName"] + " " + r[t + "LastName"];
+    }
+    string getPairType(dynamic r) {
+        // The other user involved is 'Provider' or 'Customer'? (spelling as of SQL name fields prefix
+        return r.CustomerUserID == WebSecurity.CurrentUserId ?
+            "Provider" :
+            "Customer";
+    }
 }
 <div class="DashboardSection-page-section DashboardBookings">
     <h2 class="DashboardSection-page-section-header">Upcoming appointments</h2>
@@ -12,20 +31,36 @@
             <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)NewDashboard/availability/">Go to availability</a>
         }
         <div class="DashboardBookings-summary-list DashboardSummary-group-content">
+            @if (bookings["today"].Count > 0)
+            {
             <h3 class="DashboardSummary-group-listHeader">Today</h3>
             <ul class="DashboardSummary-group-list">
-                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+                @foreach (var r in bookings["today"])
+                {
+                    @printItem(r)
+                }
             </ul>
-            
+            }
+            @if (bookings["tomorrow"].Count > 0)
+            {
             <h3 class="DashboardSummary-group-listHeader">Tomorrow</h3>
             <ul class="DashboardSummary-group-list">
-                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+                @foreach (var r in bookings["tomorrow"])
+                {
+                    @printItem(r)
+                }
             </ul>
-
-            <h3 class="DashboardSummary-group-listHeader">Tuesday, December 24th</h3>
+            }
+            @if (bookings["upcoming"].Count > 0)
+            {
+            <h3 class="DashboardSummary-group-listHeader">Upcoming</h3>
             <ul class="DashboardSummary-group-list">
-                <li>1:00pm-2:00pm Massage Therapist booking with John Davidson</li>
+                @foreach (var r in bookings["upcoming"])
+                {
+                    @printItem(r)
+                }
             </ul>
+            }
         </div>
     </div>
 </div>

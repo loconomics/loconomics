@@ -4157,7 +4157,7 @@ form ul li {
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 
-/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
+/* line 77 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
@@ -4167,11 +4167,12 @@ form ul li {
 .DashboardSummary .DashboarSummary-group {
   position: relative;
   margin-left: 1em;
+  min-height: 96px;
   background: none no-repeat left center;
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 19 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
   .DashboardSummary .DashboarSummary-group {
     -webkit-background-size: 96px 96px;
     -moz-background-size: 96px 96px;
@@ -4179,7 +4180,7 @@ form ul li {
   }
 }
 
-/* line 23 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboarSummary-group .DashboardSummary-group-iconlink {
   position: absolute;
   top: 0;
@@ -4189,13 +4190,13 @@ form ul li {
   text-indent: -9999px;
 }
 
-/* line 32 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 34 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboarSummary-group .DashboardSummary-group-content {
   margin-left: 96px;
   padding-left: 2em;
 }
 
-/* line 36 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 38 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboarSummary-group .DashboardSummary-group-content .DashboardSummary-group-listHeader {
   font-weight: bold;
   font-size: 1em;
@@ -4203,42 +4204,42 @@ form ul li {
   margin: 0;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboarSummary-group .DashboardSummary-group-content .DashboardSummary-group-list {
   margin-left: 1em;
 }
 
-/* line 54 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboardMessages-summary {
   background-image: url("../img/theme/mailbox-dashboard.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 56 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 58 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
   .DashboardSummary .DashboardMessages-summary {
     background-image: url("../img/theme/mailbox-dashboard@2x.png");
   }
 }
 
-/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboardBookings-summary {
   background-image: url("../img/theme/reminders-dashboard.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
   .DashboardSummary .DashboardBookings-summary {
     background-image: url("../img/theme/reminders-dashboard@2x.png");
   }
 }
 
-/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
 .DashboardSummary .DashboardTodos-summary {
   background-image: url("../img/theme/to-do-dashboard.png");
 }
 @media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\summary.styl */
   .DashboardSummary .DashboardTodos-summary {
     background-image: url("../img/theme/to-do-dashboard@2x.png");
   }
