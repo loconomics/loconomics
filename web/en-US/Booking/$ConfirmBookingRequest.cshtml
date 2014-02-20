@@ -182,7 +182,7 @@
                         redirectUrl = LcUrl.LangPath + (
                             Request.IsAjaxRequest() ?
                             "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}" :
-                            "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}"
+                            "dashboard/messages/booking/{1}/"
                         );
                     }
                     redirectUrl = String.Format(redirectUrl, brID, result.BookingID);
@@ -237,7 +237,7 @@
         if (task != "payment") {
             Response.Redirect(
                 LcUrl.LangPath + 
-                String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID));
+                String.Format("dashboard/messages/bookingrequest/{0}/", brID));
         } else {
             throw new HttpException(500, msg ?? errorMessage);
         }

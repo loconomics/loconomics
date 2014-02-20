@@ -1,0 +1,112 @@
+﻿@using WebMatrix.WebData;
+@{
+    LcHelpers.SecurePage();
+    
+    Page.Title = "Make your life better!";
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/R5Dashboard.css");
+    
+    var u = LcData.UserInfo.GetUserRow();
+    
+    /*
+     * Selecting page to render dynamically
+     */
+    var page = UrlData[0].ToLower();
+    var fileToRender = "";
+    
+    if (String.IsNullOrEmpty(page)) {
+        Response.Redirect(LcUrl.LangPath + "R5Dashboard/Mailbox/");
+    }
+
+    var pages = new List<string> {
+        "account", "calendar", "mailbox", "myclients", "myproviders", "positions", "preferences",
+        "ressources", "tools", "bookings", "admin", "alerts"
+    };
+    if (pages.Contains(page)) {
+        fileToRender = LcUrl.RenderLangPath + "$R5Dashboard/$" + page + ".cshtml";
+        // Set menu option selected
+        PageData["menu-item"] = page;
+    } else {
+        string folder = "$R5Dashboard/";
+        string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
+        if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
+            if (file.StartsWith("$") || file == "ChangePhoto.cshtml" || file == "UploadPhoto.cshtml") {
+                @RenderPage(LcUrl.RenderLangPath + folder + file);
+                return;
+            } else {
+                fileToRender = LcUrl.RenderLangPath + folder + file;
+            }
+        } else {
+            throw new HttpException(404, "Page not found");
+        }
+    }
+    // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
+    Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/R5Dashboard.js");
+}
+@helper menu(string item){
+    @(LcHelpers.CssCurrent(item, PageData["menu-item"]))
+}
+        <!-- Dashboard -->
+        <div class="provider dashboard editable changes-notification-enabled">
+            <div id="container" class="clearfix">
+                
+                <div id="highlights">
+                    <h1>Dashboard</h1>
+                    <div id="dashboard-avatar">
+                        <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
+                        <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
+                        <a id="changephoto" href="#">Edit profile photo</a>
+                    </div>
+                </div><!-- highlights -->
+                
+                <div id="dashboard-help">
+                    <a class="skip" href="#main">Skip the help.</a>
+                    @if (u.IsProvider)
+                    {
+                    <p>It’s all here: everything you need to manage your 
+                        <a href="@(LcUrl.LangPath)R5Dashboard/Positions/">profile</a>, 
+                        <a href="@(LcUrl.LangPath)R5Dashboard/Bookings/">bookings</a>, 
+                        and <a href="@(LcUrl.LangPath)R5Dashboard/Account/">account settings</a>.
+                    </p>
+                    }
+                    else if (u.IsCustomer)
+                    {
+                     <p>It’s all here: everything you need to manage your 
+                     	<a href="@(LcUrl.LangPath)R5Dashboard/Bookings/">bookings</a> 
+                        and <a href="@(LcUrl.LangPath)R5Dashboard/Account/">account settings</a>.
+                    </p>
+                    }
+                    @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$DashboardHelpWidget.cshtml")
+                </div><!-- dashboard-help -->
+
+                <div id="nav">
+                    <ul id="profile-menu" class="autofill-submenu">
+                        @{
+                            var userAlertsCount = LcData.GetActiveRequiredUserAlertsCount(u.UserID);
+                        }
+                        <li class="@menu("alerts")"><a href="@(LcUrl.LangPath)R5Dashboard/Alerts/">Alerts @if (userAlertsCount > 0) { <span id="required-alerts-global-count" class="warning-note">@userAlertsCount</span> }</a></li>
+                        <li class="@menu("mailbox")"><a href="@(LcUrl.LangPath)R5Dashboard/Mailbox/">Inbox</a></li>
+                        <li class="@menu("bookings")"><a href="@(LcUrl.LangPath)R5Dashboard/Bookings/">Bookings</a></li>
+                        @if (u.IsProvider){
+                        <li class="@menu("calendar")"><a href="@(LcUrl.LangPath)R5Dashboard/Calendar/">Calendar</a></li>
+                        <li class="@menu("positions")"><a href="@(LcUrl.LangPath)R5Dashboard/Positions/">My Work</a></li>
+                        <li class="@menu("tools")"><a href="@(LcUrl.LangPath)R5Dashboard/Tools/">Tools</a></li>
+                        <li class="@menu("myclients")"><a href="@(LcUrl.LangPath)R5Dashboard/MyClients/">My Clients</a></li>
+                        }
+                        @if (u.IsCustomer){
+                        <li class="@menu("myproviders")"><a href="@(LcUrl.LangPath)R5Dashboard/MyProviders/">My Providers</a></li>
+                        }
+                        <li class="@menu("preferences")"><a href="@(LcUrl.LangPath)R5Dashboard/Preferences/">Privacy Settings</a></li>
+                        <li class="@menu("account")"><a href="@(LcUrl.LangPath)R5Dashboard/Account/">My Profile</a></li>
+                        @if (u.IsAdmin){
+                        <li class="@menu("admin") admin"><a href="@(LcUrl.LangPath)R5Dashboard/Admin/">Admin</a></li>
+                        }
+                    </ul>
+                </div><!-- nav -->
+            
+                <div id="main" class="tabbed folders">
+                    @RenderPage(fileToRender)        
+                </div><!-- #main -->
+            
+            </div><!-- container -->
+        </div><!-- Dashboard -->

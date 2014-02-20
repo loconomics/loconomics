@@ -1,0 +1,133 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+
+    // Initializing local data:
+    var Bio = Request["publicbio"] ?? u.PublicBio;
+    var ProfileUrl = Request["profile-url"] ?? u.ProviderProfileURL;
+    var WebsiteUrl = Request["website-url"] ?? u.ProviderWebsiteURL;
+
+    // Initializing Validation rules
+    Validation.Add("profile-url", Validator.Regex(@"\w*", "The custom URL you've entered is invalid"));
+    Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
+    
+    if (IsPost && Validation.IsValid()) {
+        
+        // Automatically add http:// if users doesn't put a protocol on its website url. Before validation!
+        if (!String.IsNullOrEmpty(WebsiteUrl)) {
+            if (!WebsiteUrl.StartsWith("http")) {
+                WebsiteUrl = "http://" + WebsiteUrl;
+            }
+            if (!LcValidators.IsUrl(WebsiteUrl)) {
+                ModelState.AddError("website-url", "The website URL you entered is invalid");
+            }
+        }
+        
+        var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+
+        using (var db = Database.Open("sqlloco")){
+            if (ModelState.IsValid) {
+                // Check that profile-url is not in use by other provider, but discarding in the check the own provider
+                if (!String.IsNullOrEmpty(ProfileUrl) && 
+                    db.QueryValue(@"
+                    SELECT  count(*)
+                    FROM    users
+                    WHERE   UserID <> @0
+                            AND ProviderProfileURL like @1
+                ", u.UserID, ProfileUrl) > 0) {
+                    ModelState.AddError("profile-url", "We're sorry, that URL is unavailable, please choose other.");
+                }
+            }
+            if (ModelState.IsValid) {
+                // Check what data changes to revoke verifications and update data:
+                db.Execute(@"
+                    DECLARE 
+                    @UserID int
+                    ,@PublicBio varchar(4000)
+                    ,@ProfileUrl varchar(2078)
+                    ,@WebsiteUrl varchar(2078)
+
+                    SET @UserID = @0
+                    SET @PublicBio = @1
+                    SET @ProfileUrl = @2
+                    SET @WebsiteUrl = @3
+
+                    BEGIN TRAN
+
+                    /* Update User Personal Data */
+                    UPDATE	Users
+                    SET     
+		                    PublicBio = @PublicBio
+
+                            ,ProviderProfileURL = @ProfileUrl
+                            ,ProviderWebsiteURL = @WebsiteUrl
+
+                            ,UpdatedDate = getdate()
+                            ,ModifiedBy = 'sys'
+                    WHERE   UserId = @UserID
+
+                    -- Check Alerts related:
+                    EXEC TestAlertPublicBio @UserID
+
+                    COMMIT TRAN
+                ", u.UserID, Bio,
+                    (u.IsProvider ? ProfileUrl : null),
+                    (u.IsProvider ? WebsiteUrl : null));
+
+                // Show the profile activation popup with 'next-step' buttons and progress information when need,
+                // if not the short message is showed:
+                if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                    u.UserID,
+                    LcRessources.DataSaved,
+                    "Edit profile"))
+                {
+                    LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                }
+            }
+        }
+    }
+}
+<div><form method="post" action="@(LcUrl.LangPath)$R5Dashboard/$AccountProfileProfile/" id="account-profile-profile" class="ajax ajax-box">
+    <fieldset id="personal-fs-publicbio">
+        <legend>Public bio:</legend>
+        <ul>
+            <li><textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community a little something about you, e.g. “I am a San Francisco native,” or “I can whistle through my teeth.” " @Validation.GetHtml("publicbio")>@Bio</textarea>
+                @Html.ValidationMessage("publicbio")
+            </li>
+        </ul>
+    </fieldset>
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+
+    @if (u.IsProvider)
+    {
+        <fieldset class="customurl">
+        	<p>Create your own personal brand by customizing your profile's URL. Be original! You can share it with anyone you want to book your services.</p>
+            <legend>Custom Loconomics URL:</legend>
+            <ul>
+                <li>
+                    <legend>Enter a URL:</legend>https://loconomics.com/<input type="text" name="profile-url" value="@ProfileUrl" @Validation.GetHtml("profile-url") />
+                    @Html.ValidationMessage("profile-url")
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset class="websiteurl">
+        	<p>If you have your own website, let us know the URL.  After you accept a booking, we'll send the link to clients to let them do some more research before their appointment.</p>
+            <legend>Personal website URL:</legend>
+            <ul>
+                <li>
+                    <legend>Enter your website:</legend><input type="text" name="website-url" value="@WebsiteUrl" @Validation.GetHtml("website-url") />
+                    @Html.ValidationMessage("website-url")
+                </li>
+            </ul>
+        </fieldset>
+    }
+
+
+    <fieldset class="actions">
+        <button class="save main-action" type="submit">Save</button>
+    </fieldset>
+</form>
+</div>

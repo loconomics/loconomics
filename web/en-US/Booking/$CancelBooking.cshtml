@@ -35,7 +35,7 @@
                     redirectUrl = LcUrl.LangPath + (
                         Request.IsAjaxRequest() ?
                         "Booking/$BookingDetailsWidget/?BookingID={0}" :
-                        "Dashboard/Bookings/#!Booking-{0}");
+                        "dashboard/messages/booking/{0}/");
                 }
                 redirectUrl = String.Format(redirectUrl, bID);
                 

@@ -1,4 +1,8 @@
-﻿@{
+﻿@*
+    This widget was used as part of the R5Dashboard (dashboard previous Release-6),
+    and may be unused now.
+*@
+@{
     string userType = ""; // Possible values: provider and customer
     var u = LcData.UserInfo.GetUserRow();
     if (u != null) {
@@ -16,11 +20,11 @@
             <article class="quick-links">
                 <h3>Quick links</h3>
                 <ul>
-                    <li><a href="@(LcUrl.LangPath)Dashboard/Calendar/">Update my availability</a></li>
-                    <li><a href="@(LcUrl.LangPath)Dashboard/Positions/#!pricing">Update my pricing</a></li>
-                    <li><a href="@(LcUrl.LangPath)Dashboard/Positions/">Update my profile</a></li>
-                    <li><a href="@(LcUrl.LangPath)Dashboard/Preferences/#privacy-settings">Manage privacy settings</a></li>
-                    <li><a href="@(LcUrl.LangPath)Dashboard/Account/#account-personal">Update contact info</a></li>
+                    <li><a href="@(LcUrl.LangPath)R5Dashboard/Calendar/">Update my availability</a></li>
+                    <li><a href="@(LcUrl.LangPath)R5Dashboard/Positions/#!pricing">Update my pricing</a></li>
+                    <li><a href="@(LcUrl.LangPath)R5Dashboard/Positions/">Update my profile</a></li>
+                    <li><a href="@(LcUrl.LangPath)R5Dashboard/Preferences/#privacy-settings">Manage privacy settings</a></li>
+                    <li><a href="@(LcUrl.LangPath)R5Dashboard/Account/#account-personal">Update contact info</a></li>
                 </ul>
             </article>
             <article class="top-five-faqs">
