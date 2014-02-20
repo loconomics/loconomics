@@ -6,6 +6,8 @@
     // Errors are managed through this page ModelState offered to imported pages as PageState
     
     var u = LcData.UserInfo.GetUserRow();
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 <h1 class="DashboardSection-page-header">About you (outside of work)</h1>
 <p class="DashboardSection-page-introduction">
@@ -18,28 +20,28 @@
     <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$about-you/">
 
         @if (u.IsCustomer && !u.IsProvider) {
-            <div class="DashboardSection-page-section is-required">
+            <div id="DashboardContactInfo" class="DashboardSection-page-section is-required">
                 <h2 class="DashboardSection-page-section-header">Add your contact information</h2>
                 @RenderPage("AboutYou/_$ContactInfo.cshtml", new { PageState = ModelState })
             </div>
         }
 
-        <div class="DashboardSection-page-section is-required">
+        <div id="DashboardPublicBio" class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Fill in your public bio</h2>
             @RenderPage("AboutYou/_$PublicBio.cshtml", new { PageState = ModelState })
         </div>
 
-        <div class="DashboardSection-page-section">
+        <div id="DashboardPersonalWebsite" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add your personal website</h2>
             @RenderPage("AboutYou/_$PersonalWebsite.cshtml", new { PageState = ModelState })
         </div>
 
-        <div class="DashboardSection-page-section">
+        <div id="DashboardEducation" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add any relevant education</h2>
             @RenderPage("AboutYou/_$Education.cshtml", new { PageState = ModelState })
         </div>
 
-        <div class="DashboardSection-page-section">
+        <div id="DashboardVerifications" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add verifications</h2>
             @RenderPage("AboutYou/_$Verifications.cshtml", new { PageState = ModelState })
         </div>

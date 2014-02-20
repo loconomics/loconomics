@@ -3,6 +3,8 @@
     LcHelpers.ProviderPage();
     
     var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 <h1 class="DashboardSection-page-header">Your availability</h1>
 <p class="DashboardSection-page-introduction">
@@ -15,17 +17,17 @@
 <div class="DashboardAvailability">
     <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$availability/">
 
-        <div class="DashboardSection-page-section is-required">
+        <div id="DashboardWeeklySchedule" class="DashboardSection-page-section is-required">
             <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>
             @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
         </div>
 
-        <div class="DashboardSection-page-section">
+        <div id="DashboardAppointments" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Block off other times you're busy</h2>
             @RenderPage("Availability/_$Appointments.cshtml", new { PageState = ModelState })
         </div>
 
-        <div class="DashboardSection-page-section">
+        <div id="DashboardCalendarSync" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Sync your existing calendar(s)</h2>
             @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState })
         </div>

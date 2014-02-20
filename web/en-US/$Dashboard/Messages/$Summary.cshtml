@@ -9,6 +9,8 @@
     var messages = LcMessaging.GetLastNewReadSentMessages((int)u.UserID, 3);
 
     var newsCount = messages["new"].Count;
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 
 @helper showReceivedMessageSummary(dynamic r) {
@@ -21,7 +23,7 @@
     <li>To @s.GetThreadParticipantFirstName() about 
     <a href="@(s.GetMessageUrl())">@s.GetMessageTypeDependantSubject()</a></li>
 }
-<div class="DashboardSection-page-section DashboardMessages">
+<div id="DashboardMessagesSummary" class="DashboardSection-page-section DashboardMessages">
     <h2 class="DashboardSection-page-section-header">Messages @(newsCount > 0 ? "(" + newsCount.ToString() + " new)" : "")</h2>
     <div class="DashboardMessages-summary DashboarSummary-group">
         <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)dashboard/messages/">Go to messages</a>

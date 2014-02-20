@@ -5,10 +5,12 @@
     
     // Load alerts:
     dynamic todos = LcData.GetActiveUserAlerts(WebSecurity.CurrentUserId);
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 @if (todos != null && todos.Count > 0)
 {
-<div class="DashboardSection-page-section DashboardTodos">
+<div id="DashboardTodosSummary" class="DashboardSection-page-section DashboardTodos">
     <h2 class="DashboardSection-page-section-header">To-do</h2>
     <div class="DashboardTodos-summary DashboarSummary-group">
         <div class="DashboardTodos-summary-list DashboardSummary-group-content">

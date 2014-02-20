@@ -6,7 +6,8 @@
     var u = LcData.UserInfo.GetUserRow();
     
     var bookings = LcData.Booking.GetUpcomingBookings(u.UserID, 5);
-
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }
 @helper printItem(dynamic r) {
     <li>@(r.StartTime.ToLongTimeString())-@(r.EndTime.ToLongTimeString()) <a href="@getBookingUrl(r)">@(r.PositionSingular) booking</a> with @getPairName(r)</li>
@@ -26,7 +27,7 @@
         return LcUrl.LangPath + "dashboard/messages/booking/" + r.BookingID + "/";
     }
 }
-<div class="DashboardSection-page-section DashboardBookings">
+<div id="DashboardBookingsSummary" class="DashboardSection-page-section DashboardBookings">
     <h2 class="DashboardSection-page-section-header">Upcoming appointments</h2>
     <div class="DashboardBookings-summary DashboarSummary-group">
         @if (@u.IsProvider) {
