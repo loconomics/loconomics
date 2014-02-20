@@ -1,8 +1,8 @@
 ﻿@{
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
-    
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/Dashboard.js");
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
 }
 <h1>Test Booking Widget</h1>
 <form method="get">
@@ -12,6 +12,14 @@
         <input type="submit" class="main-action" value="Load" />
     </div>
 </form>
-<div class="test-booking-widget" style="margin: 4em 0;background:white;padding:2em">
-    @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml")
+<div class="DashboardSection">
+<div id="main" class="DashboardSection-page">
+<div class="test-booking-widget DashboardMessages" style="margin: 4em 0;background:white;padding:2em">
+    @RenderPage(LcUrl.RenderLangPath + "Booking/$BookingDetailsWidget.cshtml", new
+    {
+        ExtraTitleClass = "DashboardSection-page-header",
+        UseLinkActions = true
+    })
+</div>
+</div>
 </div>
