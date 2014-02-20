@@ -29,7 +29,7 @@ function setupCrudlDelegates($c) {
   $c
   .on('click', '.positionphotos-tools-upload > a', function () {
     var posID = $(this).closest('form').find('input[name=positionID]').val();
-    popup(LcUrl.LangPath + 'NewDashboard/YourWork/UploadPhoto/?PositionID=' + posID, 'small');
+    popup(LcUrl.LangPath + 'dashboard/YourWork/UploadPhoto/?PositionID=' + posID, 'small');
     return false;
   })
   .on('click', '.positionphotos-gallery li a', function () {

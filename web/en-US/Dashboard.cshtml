@@ -25,11 +25,11 @@
 
         isInOnboarding = checkOnboardingPage(u, page);
         
-        fileToRender = LcUrl.RenderLangPath + "$NewDashboard/$" + page + ".cshtml";
+        fileToRender = LcUrl.RenderLangPath + "$dashboard/$" + page + ".cshtml";
         //// Set menu option selected
         //PageData["menu-item"] = page;
     } else {
-        string folder = "$NewDashboard/";
+        string folder = "$dashboard/";
         string file =  LcHelpers.JoinNotEmptyStrings("/", UrlData.ToArray<string>()) + ".cshtml";
         if (File.Exists(Server.MapPath(LcUrl.RenderLangPath + folder + file))) {
             if (Regex.IsMatch(file, @"\/\$") || file.StartsWith("$") || file == "AboutYou/ChangePhoto.cshtml" || file == "YourWork/UploadPhoto.cshtml") {
@@ -45,11 +45,11 @@
     
     // Only apply page layout after analizy url params (to avoid partial pages to use full layout)
     Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-    LcAssets.AddStyle(LcUrl.AppPath + "Styles/new-dashboard", !LcHelpers.InDev);
-    LcAssets.AddScript(LcUrl.AppPath + "Scripts/new-dashboard", !LcHelpers.InDev);
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard", !LcHelpers.InDev);
+    LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard", !LcHelpers.InDev);
    
     // Some layout configurations
-    var baseUrl = LcUrl.LangPath + "NewDashboard/";
+    var baseUrl = LcUrl.LangPath + "dashboard/";
     
     // SelectedPage: use page as value, changing default by dashboard.
     var selectedPage = page == "default" ? "dashboard" : page;
@@ -74,7 +74,7 @@
                 page == "your-work" &&
                 onboardingStep == "welcome")
             ) {
-                Response.Redirect(LcUrl.LangPath + "NewDashboard/" + onboardingStep + "/");
+                Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
             }
         }
         
@@ -84,7 +84,7 @@
 
 <div id="container" class="DashboardSection changes-notification-enabled js-changesNotificationEnabled clearfix">
     
-    @RenderPage("$NewDashboard/_$Sidebar.cshtml", new {
+    @RenderPage("$dashboard/_$Sidebar.cshtml", new {
         BaseUrl = baseUrl,
         ActiveProfile = !isInOnboarding,
         SelectedPage = selectedPage
@@ -92,7 +92,7 @@
 
     @if (isInOnboarding)
     {
-        @RenderPage("$NewDashboard/_$OnboardingSteps.cshtml", new {
+        @RenderPage("$dashboard/_$OnboardingSteps.cshtml", new {
             BaseUrl = baseUrl,
             Step = selectedPage
         })

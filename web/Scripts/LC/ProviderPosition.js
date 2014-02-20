@@ -38,7 +38,7 @@ ProviderPosition.prototype.changeState = function changePositionState(state) {
   var that = this;
   var ctx = { form: $d, box: $d };
   $.ajax({
-    url: LcUrl.LangPath + 'NewDashboard/Position/' + page + '/?PositionID=' + this.positionId,
+    url: LcUrl.LangPath + 'dashboard/position/' + page + '/?PositionID=' + this.positionId,
     context: ctx,
     error: ajaxCallbacks.error,
     success: function (data, text, jx) {

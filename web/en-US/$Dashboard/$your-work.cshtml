@@ -1,0 +1,84 @@
+﻿@{
+    // Your-work(/positionID)
+    LcHelpers.ProviderPage();
+    // Forms send the positionID parameter and Get get it from URL (is not the same
+    // UrlData position on Get and Post.
+    var posID = (Request.Form["positionID"] ?? UrlData[1]).AsInt();
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
+    // User Position record
+    dynamic p = null;
+    
+    // If there is no a positionID (as in Onboarding), get the first on the user list:
+    if (posID == 0) {
+        p = ((IEnumerable<dynamic>)LcData.UserInfo.GetUserPos()).First<dynamic>();
+    }
+    else {
+        p = LcData.UserInfo.GetUserPos(WebSecurity.CurrentUserId, posID);
+    }
+}
+<h1 class="DashboardSection-page-header">About Your Services (@p.PositionSingular)</h1>
+
+<p class="DashboardSection-page-introduction">
+    Your profile is your portal to communicating your services to potential clients in the marketplace.
+    We're here to help you along with anything you need to put your best face forward so please don't hesitate
+    to ask for help or send use feedback.
+</p>
+
+<div class="DashboardYourWork ajax-box">
+    <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$your-work/@(posID)/">
+        <input type="hidden" name="positionID" value="@(posID)" />
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Describe your services</h2>
+            @RenderPage("YourWork/_$Services.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Price your services</h2>
+            @RenderPage("YourWork/_$Pricing.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Set your cancellation policy</h2>
+            @RenderPage("YourWork/_$CancellationPolicy.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Set your service location(s)</h2>
+            @RenderPage("YourWork/_$Locations.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Verify your professional certification(s)</h2>
+            @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Upload up to 10 images of your work</h2>
+            @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+        </div>
+
+        <div class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Ask for reviews from past clients</h2>
+            @RenderPage("YourWork/_$Reviews.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
+        </div>
+
+        <div>
+            @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        </div>
+
+        <div class="actions">
+            <button class="@(isInOnboarding ? "next-action" : "main-action")" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
+        </div>
+    </form>
+</div>
+
+<div class="InlineNotification InlineNotification--hasRequiredSections">
+    Required sections
+</div>
+
+@{
+    LcHelpers.CheckDashboardSuccessPost("your-work");
+}

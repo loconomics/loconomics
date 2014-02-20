@@ -335,7 +335,7 @@
                         nextStep == "" ? null : nextStep
                     );
                     
-                    var url = LcUrl.LangPath + "NewDashboard/" + nextStep;
+                    var url = LcUrl.LangPath + "dashboard/" + nextStep;
                     if (Request.IsAjaxRequest()) {
                         ReturnJsonResult(1, url);
                     } else {

@@ -8,21 +8,21 @@
         if (booking.PreferredDateStart is DateTime && booking.PreferredDateEnd is DateTime)
         {
             <h5 class="w-BookingRequestedTimes-optionTitle">First choice:</h5>
-            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/preferred/">
+            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)dashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/preferred/">
                 Click here to confirm @LcHelpers.DateTimeRangeToString(booking.PreferredDateStart, booking.PreferredDateEnd)
             </a>
         }
         if (booking.AlternativeDate1Start is DateTime && booking.AlternativeDate1End is DateTime)
         {
             <h5 class="w-BookingRequestedTimes-optionTitle">Second choice:</h5>
-            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/alternative1/">
+            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)dashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/alternative1/">
                 Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate1Start, booking.AlternativeDate1End)
             </a>
         }
         if (booking.AlternativeDate2Start is DateTime && booking.AlternativeDate2End is DateTime)
         {
             <h5 class="w-BookingRequestedTimes-optionTitle">Third choice:</h5>
-            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/alternative2/">
+            <a class="action booking-request-action button-confirm-datetime" href="@(LcUrl.LangPath)dashboard/messages/bookingrequest/@(booking.BookingRequestID)/confirm/alternative2/">
                 Click here to confirm @LcHelpers.DateTimeRangeToString(booking.AlternativeDate2Start, booking.AlternativeDate2End)
             </a>
         }
@@ -34,7 +34,7 @@
         </button>*@
         
         <h5 class="w-BookingRequestedTimes-optionTitle">Decline booking request</h5>
-        <a class="action booking-request-action button-decline-booking" href="@(LcUrl.LangPath)NewDashboard/messages/bookingrequest/@(booking.BookingRequestID)/decline/">
+        <a class="action booking-request-action button-decline-booking" href="@(LcUrl.LangPath)dashboard/messages/bookingrequest/@(booking.BookingRequestID)/decline/">
             Decline booking.
         </a>
     }

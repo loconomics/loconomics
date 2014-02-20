@@ -122,8 +122,8 @@ module.exports = function (grunt) {
         }
       },
       'dashboard': {
-        'src': './Scripts/app/new-dashboard.js',
-        'dest': './Scripts/new-dashboard.js',
+        'src': './Scripts/app/dashboard.js',
+        'dest': './Scripts/dashboard.js',
         'options': {
           'debug': true,
           'external': [
@@ -159,7 +159,7 @@ module.exports = function (grunt) {
       },
       'dashboard': {
         'files': {
-          'Scripts/new-dashboard.min.js': ['<%= browserify.dashboard.dest %>']
+          'Scripts/dashboard.min.js': ['<%= browserify.dashboard.dest %>']
         }
       }
     },
@@ -206,7 +206,7 @@ module.exports = function (grunt) {
       dashboard: {
         files: {
           //'Styles/app.css': ['Styles/app/app.styl']
-          'Styles/new-dashboard.css': ['Styles/app/new-dashboard.styl']
+          'Styles/dashboard.css': ['Styles/app/dashboard.styl']
         }
       },
       'app-includes': {
@@ -229,7 +229,7 @@ module.exports = function (grunt) {
       },
       css: {
         files: {
-          'Styles/new-dashboard.min.css': ['Styles/new-dashboard.css']
+          'Styles/dashboard.min.css': ['Styles/dashboard.css']
         }
       },
       'plain-css': {

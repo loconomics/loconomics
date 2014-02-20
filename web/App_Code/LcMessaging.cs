@@ -268,7 +268,7 @@ public class LcMessaging
         public string GetMessageUrl(string baseUrl = null) {
             if (baseUrl == null)
             {
-                baseUrl = LcUrl.LangPath + "NewDashboard/";
+                baseUrl = LcUrl.LangPath + "dashboard/";
             }
             var url = baseUrl;
             switch ((string)r.LastMessageAuxT) {
