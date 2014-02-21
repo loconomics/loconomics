@@ -142,7 +142,7 @@
 
         <input type="hidden" name="gallery-order" value=""/>
         <div id="position[@n]photos-no-photos" class="no-photos">
-            <span class="positionphotos-tools-upload">Start by <a href="#">uploading</a> a photo!</span>
+            <span class="positionphotos-tools-upload">Start by <a href="#upload-photo">uploading</a> a photo!</span>
         </div>
         <div id="position[@n]photos-no-primary-photo" class="no-primary-photo">
             Select a photo from the right as your primary photo.
@@ -162,7 +162,7 @@
                     <label>No<input type="radio" name="is-primary-photo" value="False"/></label>
                 </li>
                 <li class="positionphotos-edit-delete">
-                    <a href="#">Delete this photo</a>
+                    <a href="#delete-photo">Delete this photo</a>
                     <input type="hidden" name="delete-photo" value="False" />
                 </li>
             </ul>
@@ -172,7 +172,7 @@
             <ol>
                 @foreach (var photo in photos)
                 {
-                    <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#"><img alt="@photo.PhotoCaption" src="@(LcUrl.AppPath + photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
+                    <li id="UserPhoto-@photo.ProviderServicePhotoID" class="@(photo.IsPrimaryPhoto ? "selected is-primary-photo" : "")"><a href="#edit-photo"><img alt="@photo.PhotoCaption" src="@(LcUrl.AppPath + photosFolder + photo.PhotoAddress)"/></a><a class="edit" href="#">Edit</a></li>
                 }
             </ol>
         </fieldset>

@@ -115,9 +115,9 @@ function initElements(form) {
     editPanel.find('[name=is-primary-photo][value=' + isPrimaryValue + ']').prop('checked', true);
   } else {
     if (form.find('.positionphotos-gallery > ol > li').length === 0) {
-      smoothBoxBlock.open(form.find('.no-photos'), editPanel);
+      smoothBoxBlock.open(form.find('.no-photos'), editPanel, '', { autofocus: false });
     } else {
-      smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel);
+      smoothBoxBlock.open(form.find('.no-primary-photo'), editPanel, '', { autofocus: false });
     }
     // Reset hidden fields manually to avoid browser memory breaking things
     editPanel.find('[name=PhotoID]').val('');
