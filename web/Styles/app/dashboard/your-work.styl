@@ -111,6 +111,47 @@
             }
         }
     }
+    
+    .DashboardAddPosition {
+        
+        .DashboardAddPosition-positionsList,
+        .DashboardAddPosition-selectPosition {
+            float: left;
+            width: 50%;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        .DashboardAddPosition-selectPosition-description {
+            height: 180px;
+            margin-top: 1em;
+        }
+
+        .DashboardAddPosition-positionsList {
+            padding-left: 30px;
+            
+            li {
+                list-style: disc inside;
+                margin: 3px 0;
+                padding: 0;
+                
+                > a,
+                > a:visited {
+                    color: #00989b;
+                    margin-left: 20px;
+                    text-transform: lowercase;
+                }
+            }
+        }
+
+        h4 {
+            margin-bottom: 15px !important;
+            font-weight: bold;
+            color: #747474;
+            margin: 6px 0px 0px;
+            font-size: 1.1em;
+        }
+    }
 }
 
 /* DashboardPricing on external sheet */

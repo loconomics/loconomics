@@ -82,6 +82,13 @@ $(function () {
     }
   });
 
+  /* Your work / add-position */
+  var addPosition = require('./dashboard/addPosition');
+  addPosition.init('.DashboardAddPosition');
+  $('body').on('ajaxFormReturnedHtml', '.DashboardAddPosition', function () {
+    addPosition.init();
+  });
+
   /* Availabilty */
   require('./dashboard/weeklySchedule').on();
   require('./dashboard/calendarSync').on();

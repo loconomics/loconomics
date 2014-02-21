@@ -6,7 +6,7 @@
 
     if (positionID > 0) {
         
-        var alertsMsg = "You must complete another {0} steps to activate this profile--please visit the <a href='{1}'>Alerts</a> section to complete";
+        var alertsMsg = "You must complete another {0} steps to activate this profile--please visit the <a href='{1}'>To-dos</a> section to complete";
         
         using (var db = Database.Open("sqlloco")) {
             /* PROCESS: */
@@ -39,7 +39,7 @@
                     var alerts = LcData.GetActiveRequiredUserAlertsCount(u.UserID, positionID);
                     LcHelpers.ReturnJsonResult(102, new {
                         AlertsRequired = alerts,
-                        Message = String.Format(alertsMsg, alerts, LcUrl.LangPath + "Dashboard/Alerts/")
+                        Message = String.Format(alertsMsg, alerts, LcUrl.LangPath + "dashboard/#DashboardTodosSummary")
                     });
                 }
             }

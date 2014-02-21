@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-20
+/*! Loconomics.com 2014-02-21
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
@@ -1846,7 +1846,7 @@ form ul li {
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 
-/* line 123 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
+/* line 162 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\BasicForm.styl */
 
 /* line 14 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\nib\lib\nib\index.styl */
 
@@ -2394,6 +2394,54 @@ form ul li {
 /* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
 .DashboardYourWork .DashboardReviews li textarea {
   height: 7em;
+}
+
+/* line 115 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList,
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-selectPosition {
+  float: left;
+  width: 50%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-selectPosition-description {
+  height: 180px;
+  margin-top: 1em;
+}
+
+/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList {
+  padding-left: 30px;
+}
+
+/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li {
+  list-style: disc inside;
+  margin: 3px 0;
+  padding: 0;
+}
+
+/* line 137 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li > a,
+.DashboardYourWork .DashboardAddPosition .DashboardAddPosition-positionsList li > a:visited {
+  color: #00989b;
+  margin-left: 20px;
+  text-transform: lowercase;
+}
+
+/* line 145 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\your-work.styl */
+.DashboardYourWork .DashboardAddPosition h4 {
+  margin-bottom: 15px !important;
+  font-weight: bold;
+  color: #747474;
+  margin: 6px 0px 0px;
+  font-size: 1.1em;
 }
 
 /* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\dashboard\pricing.styl */

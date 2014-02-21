@@ -2457,7 +2457,7 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: 1em;
 }
 
-.lc-ressources, .popups, .template, .templates {
+.lc-ressources, .popups, .template, .templates, .is-template {
     display: none;
 }
 

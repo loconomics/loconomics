@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-20
+/*! Loconomics.com 2014-02-21
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -2459,7 +2459,7 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: 1em;
 }
 
-.lc-ressources, .popups, .template, .templates {
+.lc-ressources, .popups, .template, .templates, .is-template {
     display: none;
 }
 
@@ -3207,7 +3207,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-02-20
+/*! Loconomics.com 2014-02-21
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */

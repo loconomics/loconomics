@@ -34,7 +34,7 @@ ProviderPosition.prototype = {
 **/
 ProviderPosition.prototype.changeState = function changePositionState(state) {
   var page = state == 'on' ? '$Reactivate' : '$Deactivate';
-  var $d = $(document);
+  var $d = $('#main');
   var that = this;
   var ctx = { form: $d, box: $d };
   $.ajax({
@@ -49,7 +49,7 @@ ProviderPosition.prototype.changeState = function changePositionState(state) {
           } else {
             // Show message:
             var msg = $('<div/>').addClass(that.declinedMessageClass).append(data.Result.Message);
-            smoothBoxBlock.open(msg, pos, that.declinedPopupClass, { closable: true, center: false, autofocus: false });
+            smoothBoxBlock.open(msg, $d, that.declinedPopupClass, { closable: true, center: false, autofocus: false });
           }
         }
       });

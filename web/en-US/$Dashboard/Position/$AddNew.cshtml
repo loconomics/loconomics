@@ -1,5 +1,5 @@
 ﻿@*
-    DEPRECATED: its for R5Dashboard, R6Dashboard uses dashboard/positions/$AddNew.cshtml
+    Add a new position (or positions) to the provider profile from the dashboard
 *@
 @using WebMatrix.Data;
 @{
@@ -25,6 +25,8 @@
     
     // If this is a POST request, validate and process data
     if (IsPost && Validation.IsValid()) {
+        var firstPosId = "";
+        
         using (var db = Database.Open("sqlloco")) {
             /** Add selected positions to the provider **/
             if (ModelState.IsValid) {      
@@ -40,6 +42,9 @@
                             ModelState.AddFormError(ex.Message);
                         }
                     }
+                    if (firstPosId == "") {
+                        firstPosId = sPosID;
+                    }
                     if (nadded >= positionsRemaining) {
                         break;
                     }
@@ -47,7 +52,7 @@
             }
         }
         if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "R5Dashboard/Positions/");
+            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "dashboard/your-work/" + firstPosId + "/");
         }
     }
     
@@ -73,52 +78,38 @@
             }
         }
     }
-    
-    if (!Request.IsAjaxRequest()) {
-        LcAssets.AddScript(LcUrl.AppPath + "Scripts/ProviderSignUp.js");
-    }
 }
-    <form method="post" action="@(LcUrl.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
-        <h4>Add a position to your profile</h4>
-        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
-        <fieldset class="positions">
-            <div class="select-position">
-                <div class="position-search">
-                    <label for="providersignup-position-search">I am a...</label>
-                    <input type="text" id="providersignup-position-search" />
-                    <button type="button" class="action button add-action">+</button>
-                </div>
-                <div class="position-description">
-                    <label for="providersignup-position-desc"></label>
-                    <textarea disabled="disabled" rows="4"></textarea>
-                </div>
+<form method="post" action="@(LcUrl.LangPath)$dashboard/position/$AddNew/" class="DashboardAddPosition BasicForm ajax ajax-box">
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    <fieldset class="positions">
+        <div class="DashboardAddPosition-selectPosition">
+            <div class="position-search">
+                <label for="DashboardAddPosition-search">I am a...</label>
+                <input type="text" id="DashboardAddPosition-search" class="DashboardAddPosition-selectPosition-search" />
+                <button type="button" class="action button add-action">+</button>
             </div>
-            <div class="positions-list">
-                <h4>You can add up to @positionsRemaining more positions</h4>
-                <ul>
-                    <li data-position-id="0" class="template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
-                    @if (IsPost && positions != null)
+            <div class="DashboardAddPosition-selectPosition-description">
+                <textarea disabled="disabled" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="DashboardAddPosition-positionsList">
+            <h4>You can add up to @positionsRemaining more positions</h4>
+            <ul>
+                <li data-position-id="0" class="is-template"><span class="name"></span><a href="#remove-position">remove</a><input type="hidden" name="position" /></li>
+                @if (IsPost && positions != null)
+                {
+                    foreach (var pos in positions)
                     {
-                        foreach (var pos in positions)
-                        {
-                            <li data-position-id="@pos.PositionID"><span class="name">@pos.PositionSingular</span><a href="#remove-position">remove</a><input type="hidden" name="position" value="@pos.PositionID" /></li>
-                        }
+                        <li data-position-id="@pos.PositionID"><span class="name">@pos.PositionSingular</span><a href="#remove-position">remove</a><input type="hidden" name="position" value="@pos.PositionID" /></li>
                     }
-                </ul>
-                <div class="lc-ressources">
-                    <span class="positions-required">You must select at least one position</span>
-                </div>
+                }
+            </ul>
+            <div class="lc-ressources">
+                <span class="positions-required">You must select at least one position</span>
             </div>
-        </fieldset>
-        <fieldset class="actions">
-            <button class="main-action">Add position(s)</button>
-        </fieldset>
-        @LcHelpers.GetValidationScripts()
-        @if (IsPost)
-        {
-            <script type="text/javascript">
-                // Reapply initialization
-                ProviderSignUp.init();
-            </script>
-        }
-    </form>
+        </div>
+    </fieldset>
+    <fieldset class="actions">
+        <button class="main-action">Add position(s)</button>
+    </fieldset>
+</form>
