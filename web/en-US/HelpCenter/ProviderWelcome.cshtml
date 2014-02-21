@@ -3,68 +3,44 @@
     Page.Title = "Make your life better!";
     LcAssets.AddStyle(LcUrl.AppPath + "Styles/HelpCenter.css");
     PageData["ShowWelcomePopup"] = false;
+    PageData["ShowWelcomeHeader"] = true;
 }
-<div id="container" class="clearfix provider-welcome-page">
+<div id="container" class="provider-welcome-page ProviderWelcome">
     <div id="main">
-        <header class="introduction-header">
-            <h1 class="withsub"><em>Welcome</em> to a new kind of Marketplace</h1>
-            <p class="subh1">Work for yourself? We're here to help. Loconomics is a marketplace where potential clients find, book, and review your services. We're a triple-bottom-line company that is committed to helping you manage the back-end of running your business by letting you focus on what you do best: providing great services. Below is a summary of the tools we offer. We want this list to grow, with your input. So, welcome! We're glad you're here.</p>
-        </header>
-        <div class="actions">
-            <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "dashboard/" : "ProviderSignUp/")" class="main-action">Finish Setting Up Your Account</a>
+        <div class="ProviderWelcome-presentation">
+            <h1 class="ProviderWelcome-presentation-header">
+                A community marketplace for the self employed:
+            </h1>
+
+            <ul class="ProviderWelcome-presentation-slides">
+                <li class="ProviderWelcome-presentation-slides-first">
+                </li>
+                <li class="ProviderWelcome-presentation-slides-second">
+                </li>
+                <li class="ProviderWelcome-presentation-slides-third">
+                </li>
+                <li class="ProviderWelcome-presentation-slides-fourth">
+                </li>
+            </ul>
+
+            <div class="ProviderWelcome-presentation-actions">
+                <div class="ProviderWelcome-presentation-actions-start">
+                    <button type="button" class="action start-action next-action">learn more</button>
+                </div>
+                <ul class="ProviderWelcome-presentation-actions-slides">
+                    <li>First slide</li>
+                    <li>Second slide</li>
+                    <li>Third slide</li>
+                    <li>Fourth slide</li>
+                </ul>
+            </div>
         </div>
-        <ul class="features-list">
-            <li class="booking">
-                <h3>Clients find & book you</h3>
-                <p>List your services, prices, and availability in a sleek profile. We help you get booked and then manage your clients.</p>
-            </li>
-            <li class="calendar">
-                <h3>Stay organized</h3>
-                <p>Loconomics allows you to sync your iCal calendar (Google, Yahoo!, Outlook) so you’ll never miss an appointment.</p>
-            </li>
-            <li class="reviews">
-                <h3>360º reviews</h3>
-                <p>Clients review your services and are encouraged to refer you to their friends and colleagues. You review the client—it’s only fair.  </p>
-            </li>
-            <li class="community">
-                <h3>Join a community</h3>
-                <p>You'll be part of an exclusive community of solely independent service providers like yourself. Share your story.</p>
-            </li>
-            <li class="payments">
-                <h3>Payment processing</h3>
-                <p>We take client payments and deposit them directly into your bank account, all for a 3% processing fee.</p>
-            </li>
-            <li class="tools">
-                <h3>Tools to help you</h3>
-                <p>We offer marketing, pricing, and business management tools to maximize your success.</p>
-            </li>
-            <li class="trust">
-                <h3>Trust and safety</h3>
-                <p>Our users' safety our top priority.  The marketplace has features to help all users maintain privacy and only deal with those with whom they’re comfortable.</p>
-            </li>
-            <li class="url">
-                <h3>Custom URL</h3>
-                <p>You won’t be stuck with a long, forgettable web address for your profile. We give you a free, customizable URL so that clients can book you easily.</p>
-            </li>
-            <li class="marketing">
-                <h3>Market your personal brand</h3>
-                <p>We provide easy-to-use web and social media tools to help spread the word about your stellar services.</p>
-            </li>
-            <li class="cancellations">
-                <h3>Cancellation policy</h3>
-                <p>You set your own cancellation policy. We enforce it for you by collecting payment upfront.</p>
-            </li>
-            <li class="website">
-                <h3>Already have a website?</h3>
-                <p>Add a “Book Now” button to your website and let us handle the booking.</p>
-            </li>
-            <li class="reminders">
-                <h3>Reminders</h3>
-                <p>We remind you and your clients about upcoming bookings to keep you both on the same page.</p>
-            </li>
-        </ul>
-        <div class="foot-action">
-            <a href="@(LcUrl.LangPath)@(WebSecurity.IsAuthenticated ? "dashboard/" : "ProviderSignUp/")">Finish Setting Up Your Account &gt;&gt;</a>
+
+        <div class="ProviderWelcome-signUp">
+            @RenderPage(LcUrl.RenderLangPath + "Account/$WelcomePopup.cshtml", new
+            {
+                PreselectedType = "provider"
+            })            
         </div>
     </div>
 </div>

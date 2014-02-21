@@ -149,8 +149,8 @@
             {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", Request["profile-type"]) /> Provider</label>
-                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", Request["profile-type"]) /> Customer</label>
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Provider</label>
+                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Customer</label>
             </div>
             }
             <div class="profile-data">

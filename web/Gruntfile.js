@@ -213,6 +213,9 @@ module.exports = function (grunt) {
         files: {
           'Styles/app-includes.css': ['Styles/app/app-includes.styl']
         }
+      },
+      'provider-welcome': {
+        'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
       }
     },
 
@@ -229,7 +232,8 @@ module.exports = function (grunt) {
       },
       css: {
         files: {
-          'Styles/dashboard.min.css': ['Styles/dashboard.css']
+          'Styles/dashboard.min.css': ['Styles/dashboard.css'],
+          'Styles/provider-welcome.min.css': ['Styles/provider-welcome.css']
         }
       },
       'plain-css': {
