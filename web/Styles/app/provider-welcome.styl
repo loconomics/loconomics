@@ -35,8 +35,14 @@
                     }
                     
                     h3 {
-                        font-size: 1.7em;
+                        font-size: 1.6em;
                         font-weight: normal;
+                        margin: 0.6em 0 0;
+                    }
+                    
+                    p {
+                        margin: 0;
+                        font-size: 1.2em;
                     }
             
                     &.ProviderWelcome-firstSlide {
@@ -66,21 +72,39 @@
                                 margin-left: 1%;
                                 display: inline-block;
                                 vertical-align: top;
-                                
-                                &.ProviderWelcome-firstSlide-profile {
-                                    
-                                }
-                                
-                                &.ProviderWelcome-firstSlide-book {
-                                    
-                                }
-                                
-                                &.ProviderWelcome-firstSlide-review {
-                                    
-                                }
                             }
                         }
                     }
+                    
+                    &.ProviderWelcome-secondSlide {
+                        ul li {
+                            padding-left: 48px + 30px;
+                            background: no-repeat left center;
+                            min-height: 48px;
+
+                            secondSlideLi($imgName) {
+                                background-image: url('../img/theme/provider-welcome/' + $imgName + '.png');
+                                hr-image '../img/theme/provider-welcome/' + $imgName + '@2x.png' 48px 48px;
+                            }
+                            
+                            &.ProviderWelcome-secondSlide-clients {
+                                secondSlideLi 'landing-page-url';
+                            }
+                            
+                            &.ProviderWelcome-secondSlide-payment {
+                                secondSlideLi 'landing-page-payments';
+                            }
+                            
+                            &.ProviderWelcome-secondSlide-calendar {
+                                secondSlideLi 'landing-page-calendar';
+                            }
+                            
+                            &.ProviderWelcome-secondSlide-community {
+                                secondSlideLi 'landing-page-community';
+                            }
+                        }
+                    }
+                    
                 }
             }
             
