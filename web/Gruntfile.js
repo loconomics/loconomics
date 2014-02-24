@@ -215,7 +215,9 @@ module.exports = function (grunt) {
         }
       },
       'provider-welcome': {
-        'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
+        files: {
+          'Styles/provider-welcome.css': ['Styles/app/provider-welcome.styl']
+        }
       }
     },
 
@@ -258,7 +260,7 @@ module.exports = function (grunt) {
       },
       'plain-css': {
         files: ['Styles/app/*.css'],
-        tasks: ['concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
+        tasks: ['stylus:app-includes', 'concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
       }
     }
   });

@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-21
+/*! Loconomics.com 2014-02-24
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -512,6 +512,7 @@ div.scripts { display: none; }
     position: absolute;
     top: 0;
     width: 201px;
+    z-index: 1000;
 }
 .es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
@@ -2953,9 +2954,12 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     font-family: Hand Of Sean, Arial, sans-serif;
     margin: 0;
 }
-#welcomepopup h1 {
+#welcomepopup h1.has-icon {
     padding: 0 0 0 110px;
     background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
+}
+#welcomepopup h1 {
+    padding: 0;
     line-height: 39px;
     font-size: 1.3em;
     color: #00989A;
@@ -3207,7 +3211,7 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-02-21
+/*! Loconomics.com 2014-02-24
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
