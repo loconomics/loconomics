@@ -159,7 +159,42 @@
                         Action $colorTeal;
                         Action--rightArrow $colorTeal '-teal';
                         font-weight: bold;
+                    }
+                }
+                
+                .ProviderWelcome-presentation-actions-slides {
+                    
+                    margin: 0 auto;
+                    
+                    li {
+                        text-indent: -9999px;
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin: 0 1em;
+                        cursor: pointer;
+                    
+                        &.ProviderWelcome-presentation-actions-goPrevious {
+                            background: url('../img/theme/provider-welcome/landing-page-left-arrow.png') no-repeat left center;
+                            hr-image 'landing-page-left-arrow@2x.png' 48px 48px
+                            width: 32px;
+                            height: 48px;
+                            margin: 0;
+                        }
                         
+                        &.ProviderWelcome-presentation-actions-goNext {
+                            background: url('../img/theme/provider-welcome/landing-page-right-arrow.png') no-repeat right center;
+                            hr-image 'landing-page-right-arrow@2x.png' 48px 48px
+                            width: 32px;
+                            height: 48px;
+                            margin: 0;
+                        }
+                    
+                        &.ProviderWelcome-presentation-actions-goSlide {
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 100%;
+                            background: none repeat scroll 0% 0% gray;
+                        }
                     }
                 }
             }
