@@ -27,7 +27,8 @@
                 .ProviderWelcome-presentation-slide {
             
                     .ProviderWelcome-presentation-slide-header {
-                        font-size: 2em;
+                        font-size: 1.8em;
+                        font-weight: normal;
                         color: $colorTeal;
                         line-height: normal;
                     }
@@ -69,8 +70,13 @@
                     padding: 5px 25px;
                 }
             
-                footer .login {
-                    display: none;
+                footer div.login {
+                    position: absolute;
+                    top: .5em;
+                    font-size: 0.88em;
+                    right: 2em;
+                    color: $colorMdGray;
+                    z-index: 1000;
                 }
             }
         }
