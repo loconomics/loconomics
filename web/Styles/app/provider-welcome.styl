@@ -105,6 +105,44 @@
                         }
                     }
                     
+                    useCheckmark() {
+                        min-height: 24px;
+                        padding-left: 24px + 8px;
+                        background: url('../img/theme/teal-checkmark.png') no-repeat left top;
+                        hr-image '../img/theme/teal-checkmark@2x.png' 24px 24px;
+                    }
+                    
+                    &.ProviderWelcome-thirdSlide {
+                        ul {
+                            background: url('../img/theme/provider-welcome/landing-page-profile-elizabeth.png') no-repeat left center;
+                            hr-image '../img/theme/provider-welcome/landing-page-profile-elizabeth@2x.png' 218px 235px;
+                            padding-left: 218px + 10px;
+                            min-height: 235px;
+                        
+                            li {
+                                useCheckmark();
+                            }
+                        }
+                    }
+                    
+                    &.ProviderWelcome-fourthSlide {
+                        ul {
+                            background: url('../img/theme/provider-welcome/landing-page-triple-bottom-line.png') no-repeat left center;
+                            hr-image '../img/theme/provider-welcome/landing-page-triple-bottom-line@2x.png' 200px 200px;
+                            padding-left: 200px + 30px;
+                            min-height: 200px;
+                        
+                            li {
+                                useCheckmark();
+                                
+                                strong {
+                                    font-weight: bold;
+                                    font-style: italic;
+                                }
+                            }
+                        }
+                    }
+                    
                 }
             }
             
