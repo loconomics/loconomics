@@ -215,6 +215,8 @@ var homePage = require('./home');
 window.escapeJQuerySelectorValue = require('../LC/jqueryUtils').escapeJQuerySelectorValue;
 //}
 
+var providerWelcome = require('./providerWelcome');
+
 /**
  ** Init code
 ***/
@@ -223,6 +225,9 @@ $(window).load(function () {
     setTimeout(function () { $('html,body').scrollTop(0); }, 1);
 });
 $(function () {
+
+  providerWelcome.show();
+
   // Placeholder polyfill
   LC.placeHolder();
 

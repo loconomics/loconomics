@@ -152,6 +152,10 @@
             }
             
             .ProviderWelcome-presentation-actions {
+                
+                margin: 1em 0 4em;
+                min-height: 60px;
+                
                 .ProviderWelcome-presentation-actions-start {
                     text-align: center;
 
@@ -164,36 +168,58 @@
                 
                 .ProviderWelcome-presentation-actions-slides {
                     
-                    margin: 0 auto;
+                    text-align: center;
                     
                     li {
-                        text-indent: -9999px;
                         display: inline-block;
                         vertical-align: middle;
-                        margin: 0 1em;
-                        cursor: pointer;
-                    
-                        &.ProviderWelcome-presentation-actions-goPrevious {
+                      
+                        a {
+                            display: block;
+                            text-decoration: none;
+                            text-indent: -9999px;
+                            height: 100%;
+                            padding: 1em;
+                        }
+
+                        &.ProviderWelcome-presentation-actions-goPrevious a {
                             background: url('../img/theme/provider-welcome/landing-page-left-arrow.png') no-repeat left center;
                             hr-image 'landing-page-left-arrow@2x.png' 48px 48px
                             width: 32px;
                             height: 48px;
-                            margin: 0;
+                            padding: 0;
                         }
                         
-                        &.ProviderWelcome-presentation-actions-goNext {
+                        &.ProviderWelcome-presentation-actions-goNext a {
                             background: url('../img/theme/provider-welcome/landing-page-right-arrow.png') no-repeat right center;
                             hr-image 'landing-page-right-arrow@2x.png' 48px 48px
                             width: 32px;
                             height: 48px;
-                            margin: 0;
+                            padding: 0;
                         }
                     
-                        &.ProviderWelcome-presentation-actions-goSlide {
-                            width: 8px;
-                            height: 8px;
-                            border-radius: 100%;
-                            background: none repeat scroll 0% 0% gray;
+                        &.ProviderWelcome-presentation-actions-goSlide a {
+                            min-width: 8px;
+                            min-height: 8px;
+                            text-align: center;
+                            position: relative;
+                            
+                            &:before {
+                                border-radius: 100%;
+                                background: $colorMdGray;
+                                position: absolute;
+                                width: 8px;
+                                height: 8px;
+                                content: "";
+                                top: 50%;
+                                left: 50%;
+                                margin-left: -4px;
+                                margin-top: -4px;
+                            }
+                            
+                            &.js-isCurrent:before {
+                                background: $colorTeal;
+                            }
                         }
                     }
                 }

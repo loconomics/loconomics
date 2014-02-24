@@ -88,7 +88,8 @@ module.exports = function (grunt) {
         'src': [
           './Scripts/app/app.js',
           './Scripts/LC/FacebookConnect.js',
-          './Scripts/LC/dateISO8601.js'
+          './Scripts/LC/dateISO8601.js',
+          './Scripts/LC/SimpleSlider.js'
         ],
         'dest': './Scripts/app.js',
         'options': {
@@ -117,7 +118,8 @@ module.exports = function (grunt) {
             './Scripts/LC/moveFocusTo.js:LC/moveFocusTo',
             './Scripts/LC/changesNotification.js:LC/changesNotification',
             './Scripts/LC/dateISO8601.js:LC/dateISO8601',
-            './Scripts/LC/availabilityCalendar.js:LC/availabilityCalendar'
+            './Scripts/LC/availabilityCalendar.js:LC/availabilityCalendar',
+            './Scripts/LC/SimpleSlider.js:LC/SimpleSlider'
           ]
         }
       },
