@@ -89,7 +89,7 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action,
 .next-action,
 .finish-action {
@@ -124,7 +124,7 @@
   background-color: #e95d0f;
 }
 
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:after,
 .next-action:after,
 .finish-action:after {
@@ -141,7 +141,7 @@
   display: inline-block;
 }
 
-/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .Actions {
   zoom: 1;
   display: block;

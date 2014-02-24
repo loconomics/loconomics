@@ -3011,7 +3011,8 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup .terms {
     font-size: .9em;
     line-height: normal;
-    margin-bottom: 1em;
+    margin: 0 1em 1em;
+    text-align: justify;
 }
 #welcomepopup .profile-data {
     margin: 1em 0;

@@ -89,7 +89,7 @@
 
 /* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\ColorsPalette.styl */
 
-/* line 62 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 65 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action,
 .next-action,
 .finish-action {
@@ -124,7 +124,7 @@
   background-color: #e95d0f;
 }
 
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .begin-action:after,
 .next-action:after,
 .finish-action:after {
@@ -141,7 +141,7 @@
   display: inline-block;
 }
 
-/* line 71 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .Actions {
   zoom: 1;
   display: block;
@@ -160,9 +160,11 @@
   clear: both;
 }
 
-/* line 5 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
 
-/* line 9 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 6 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 10 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main {
   float: none;
   width: auto;
@@ -170,14 +172,14 @@
   letter-spacing: -0.3em;
 }
 
-/* line 15 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main > div {
   letter-spacing: 0;
   display: inline-block;
   vertical-align: top;
 }
 
-/* line 21 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-presentation {
   width: 630px;
   -webkit-box-sizing: border-box;
@@ -186,11 +188,11 @@
   border-right: 2px solid #ccc;
 }
 
-/* line 26 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
-
 /* line 27 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 
-/* line 29 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 28 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 30 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide .ProviderWelcome-presentation-slide-header {
   font-size: 1.8em;
   font-weight: normal;
@@ -198,21 +200,141 @@
   line-height: normal;
 }
 
-/* line 40 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 37 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide h3 {
+  font-size: 1.7em;
+  font-weight: normal;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide .ProviderWelcome-firstSlide-subheader {
+  font-size: 1.4em;
+  color: #747474;
+  text-align: center;
+  font-weight: normal;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide h3 {
+  font-size: 1.2em;
+  line-height: normal;
+}
+
+/* line 55 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide ul {
+  letter-spacing: -0.3em;
+  background: url("../img/theme/provider-welcome/how-it-works.png") no-repeat center top;
+  padding-top: 160px;
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+  .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide ul {
+    background-image: url("../img/theme/provider-welcome/how-it-works@2x.png");
+    -webkit-background-size: 660px 160px;
+    -moz-background-size: 660px 160px;
+    background-size: 660px 160px;
+  }
+}
+
+/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-slides .ProviderWelcome-presentation-slide.ProviderWelcome-firstSlide ul li {
+  letter-spacing: 0;
+  width: 32%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 1em;
+  margin-left: 1%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* line 70 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 74 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 78 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+
+/* line 88 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start {
+  text-align: center;
+}
+
+/* line 91 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start .start-action {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: none;
+  color: White;
+  background-color: #00989a;
+  display: inline-block;
+  font-size: 1em;
+  padding: 0.4em 1em;
+  line-height: 1.3em;
+  text-decoration: none;
+  text-transform: lowercase;
+  -webkit-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -moz-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -o-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  -ms-transition: background-color 1s, box-shadow 0.5s, width 2s;
+  transition: background-color 1s, box-shadow 0.5s, width 2s;
+  padding: 0.2em 0.6em;
+  line-height: 27px;
+  font-weight: bold;
+}
+
+/* line 25 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start .start-action:hover {
+  -webkit-box-shadow: 0 0 5px 2px #00989a;
+  box-shadow: 0 0 5px 2px #00989a;
+  background-color: #00989a;
+}
+
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+.ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start .start-action:after {
+  content: " ";
+  background: url("../img/theme/right-arrow-teal.png") no-repeat center;
+  width: 29px;
+  height: 27px;
+  line-height: 27px;
+  margin-left: 0.4em;
+  color: #00989a;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  vertical-align: middle;
+  display: inline-block;
+}
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
+
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+  .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-start .start-action:after {
+    background-image: url("../img/theme/right-arrow-teal@2x.png");
+    -webkit-background-size: 29px 27px;
+    -moz-background-size: 29px 27px;
+    background-size: 29px 27px;
+  }
+}
+
+/* line 101 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp {
   width: 330px;
 }
 
-/* line 43 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 104 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 
-/* line 44 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 105 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register {
   padding-top: 0;
   background: none;
   border: none;
 }
 
-/* line 49 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 110 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .main-action {
   padding: 0.2em 0.6em;
   line-height: 27px;
@@ -225,7 +347,7 @@
   text-transform: lowercase;
 }
 
-/* line 47 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
+/* line 50 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\Actions.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .main-action:after {
   content: " ";
   background: url("../img/theme/right-arrow.png") no-repeat center;
@@ -239,26 +361,36 @@
   vertical-align: middle;
   display: inline-block;
 }
+@media print, (-webkit-min-device-pixel-ratio: 1.25), (-o-min-device-pixel-ratio: 5/4), (min--moz-device-pixel-ratio: 1.2), (min-resolution: 120dpi) {
 
-/* line 57 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
+  .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .main-action:after {
+    background-image: url("../img/theme/right-arrow@2x.png");
+    -webkit-background-size: 29px 27px;
+    -moz-background-size: 29px 27px;
+    background-size: 29px 27px;
+  }
+}
+
+/* line 118 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .main-action:hover {
   -webkit-box-shadow: 0 0 5px 2px #e95d0f;
   box-shadow: 0 0 5px 2px #e95d0f;
   background-color: #e95d0f;
 }
 
-/* line 63 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup .register .profile-data {
   margin: 0;
 }
 
-/* line 68 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 129 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup header,
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup footer {
   padding: 5px 25px;
 }
 
-/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
+/* line 133 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\provider-welcome.styl */
 .ProviderWelcome #main .ProviderWelcome-signUp #welcomepopup footer div.login {
   position: absolute;
   top: 0.5em;

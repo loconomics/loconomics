@@ -40,14 +40,17 @@ Action--important() {
     font-size: 1.2em;
 }
 
-Action--rightArrow($color) {
+Action--rightArrow($color, $imgSufix = '') {
     padding: 0.2em .6em;
     line-height: 27px;
     
+    $imgSrc = '../img/theme/right-arrow' + $imgSufix + '.png'
+    $imgSrc2x = '../img/theme/right-arrow' + $imgSufix + '@2x.png'
+    
     &:after {
         content: " ";
-        background: url('../img/theme/right-arrow.png') no-repeat center;
-        hr-image('../img/theme/right-arrow@2x.png', 29px, 27px);
+        background: url($imgSrc) no-repeat center;
+        hr-image($imgSrc2x, 29px, 27px);
         width: 29px;
         height: 27px;
         line-height: 27px;

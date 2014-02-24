@@ -1,6 +1,7 @@
 @import "nib"
 @import "utils/ColorsPalette"
 @import "utils/Actions"
+@import "utils/mediaQueries"
 
 .ProviderWelcome {
     $fullWidth = 960px;
@@ -10,7 +11,7 @@
 	    float: none;
 	    width: auto;
 	    /* Removing the white-space between inline-block boxes */
-	    letter-spacing: -.3em;
+	    letter-spacing: -0.3em;
 
         > div {
             letter-spacing: 0;
@@ -22,7 +23,7 @@
             width: $fullWidth - $sidebarWidth;
             box-sizing: border-box;
             border-right: 2px solid $colorLtGray;
-        
+
             .ProviderWelcome-presentation-slides {
                 .ProviderWelcome-presentation-slide {
             
@@ -32,7 +33,67 @@
                         color: $colorTeal;
                         line-height: normal;
                     }
+                    
+                    h3 {
+                        font-size: 1.7em;
+                        font-weight: normal;
+                    }
             
+                    &.ProviderWelcome-firstSlide {
+                        .ProviderWelcome-firstSlide-subheader {
+                            font-size: 1.4em;
+                            color: $colorMdGray;
+                            text-align: center;
+                            font-weight: normal;
+                        }
+                        
+                        h3 {
+                            font-size: 1.2em;
+                            line-height: normal;
+                        }
+                        
+                        ul {
+                            letter-spacing: -0.3em;
+                            background: url('../img/theme/provider-welcome/how-it-works.png') no-repeat center top;
+                            hr-image '../img/theme/provider-welcome/how-it-works@2x.png' 660px 160px;
+                            padding-top: 160px;
+                            
+                            li {
+                                letter-spacing: 0;
+                                width: 32%;
+                                box-sizing: border-box;
+                                padding: 0 1em;
+                                margin-left: 1%;
+                                display: inline-block;
+                                vertical-align: top;
+                                
+                                &.ProviderWelcome-firstSlide-profile {
+                                    
+                                }
+                                
+                                &.ProviderWelcome-firstSlide-book {
+                                    
+                                }
+                                
+                                &.ProviderWelcome-firstSlide-review {
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .ProviderWelcome-presentation-actions {
+                .ProviderWelcome-presentation-actions-start {
+                    text-align: center;
+
+                    .start-action {
+                        Action $colorTeal;
+                        Action--rightArrow $colorTeal '-teal';
+                        font-weight: bold;
+                        
+                    }
                 }
             }
         }
