@@ -31,6 +31,8 @@ exports.on = function (containerSelector) {
     //Force execution of the 'has-confirm' script
     $editor.find('fieldset.has-confirm > .confirm input').change();
 
+    setupCopyLocation($editor);
+
     locationMap = setupGeopositioning($editor);
   })
   .on(crudl.settings.events['editor-showed'], function (e, $editor) {
@@ -38,6 +40,18 @@ exports.on = function (containerSelector) {
       mapReady.refreshMap(locationMap);
   });
 };
+
+function setupCopyLocation($editor) {
+  $editor.find('select.copy-location').change(function () {
+    var $t = $(this);
+    $t.closest('.crudl-form').reload(function () {
+      return (
+        $(this).data('ajax-fieldset-action').replace(/LocationID=\d+/gi, 'LocationID=' + $t.val()) +
+        '&' + $t.data('extra-query')
+      );
+    });
+  });
+}
 
 /** Locate user position or translate address text into a geocode using
   browser and Google Maps services.
