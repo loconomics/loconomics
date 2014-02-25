@@ -262,14 +262,14 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: ['<%= jshint.all.files.src %>'],
-        tasks: ['jshint', 'browserify', 'qunit', 'uglify']
+        tasks: ['build-js', 'test']
       },
       css: {
-        files: ['Styles/**/*.styl'],
+        files: ['Styles/**/*.styl', 'Gruntfile.js'],
         tasks: ['build-css']
       },
       'plain-css': {
-        files: ['Styles/app/*.css'],
+        files: ['Styles/app/*.css', 'Gruntfile.js'],
         tasks: ['stylus:app-includes', 'concat:css-common', 'cssmin:plain-css', 'clean:css-app-includes']
       }
     }
