@@ -61,10 +61,50 @@
             
             result["slots"] = slots;
             
+        } else if (type == "monthly") {
+            
+            // Dates are based on the year/month from the given start date
+            startDate = new DateTime(startDate.Year, startDate.Month, 1);
+            endDate = startDate.AddMonths(1).AddDays(-1);
+            
+            var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
+
+            // Create result
+            var slots = new Dictionary<string, string>();
+            // We prepare the slots with every date in the range, no matter
+            // if some dates ends up without data (empty value list) we need to be
+            // explicit about the returned dates.
+            var fordate = startDate;
+            while (fordate <= endDate) {
+                slots.Add(fordate.ToString(dateFormat), "");
+                // Next date
+                fordate = fordate.AddDays(1);
+            }
+        
+            // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
+            // or 'available' (free on database)
+            // ALMOST one slot free sets the date availability as 'available' (because most times there will be
+            // unavailable slots, and that cannot set all the date as unavailable)
+            var curDate = startDate;
+            var curStatus = "unavailable";
+            foreach(var ev in data) {
+                if (curDate != ev.DateSet) {
+                    var strdate = curDate.ToString(dateFormat);
+                    slots[strdate] = curStatus;
+                    curDate = ev.DateSet;
+                    curStatus = "unavailable";
+                }
+                if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
+                    curStatus = "available";
+                }
+            }
+            slots[curDate.ToString(dateFormat)] = curStatus;
+
+            result["slots"] = slots;
+            
         } else {
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
-            //Response.Write(ObjectInfo.Print(data));
-            //Response.End();
+
             // Create result
             var slots = new Dictionary<string, List<string>>();
             // We prepare the slots with every date in the range, no matter
@@ -94,7 +134,7 @@
             }
 
             result["slots"] = slots;
-        }
+       }
         
         //throw new Exception("Inside Test error");
         
