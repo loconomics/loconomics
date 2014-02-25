@@ -221,7 +221,11 @@ var providerWelcome = require('./providerWelcome');
  ** Init code
 ***/
 $(window).load(function () {
-    // Disable browser behavior to auto-scroll to url fragment/hash element position:
+  // Disable browser behavior to auto-scroll to url fragment/hash element position:
+  // EXCEPT in Dashboard:
+  // TODO: Review if this is required only for HowItWorks or something more (tabs, profile)
+  // and remove if possible or only on the concrete cases.
+  if (!/\/dashboard\//i.test(location))
     setTimeout(function () { $('html,body').scrollTop(0); }, 1);
 });
 $(function () {
