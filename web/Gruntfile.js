@@ -33,7 +33,12 @@ module.exports = function (grunt) {
         dest: './Scripts/common.min.js'
       },
       'css-common': {
-        src: ['./Styles/app/app.css', './Styles/app-includes.css', './Styles/app/w-ProviderPackage.css', './Styles/smoothness/jquery-ui-1.8.21.custom.css'],
+        src: [
+          './Styles/app/app.css',
+          './Styles/app-includes.css',
+          './Styles/app/w-ProviderPackage.css',
+          './Styles/smoothness/jquery-ui-1.8.21.custom.css'
+        ],
         dest: './Styles/common.css',
         options: {
           process: fixCssImageRoutes
@@ -51,7 +56,8 @@ module.exports = function (grunt) {
           './Scripts/libs/modernizr.custom.2.6.2.js',
           './Scripts/jquery/jQuery.blockUI.js',
           './Scripts/jquery/jquery.ba-hashchange.min.js',
-          './Scripts/jquery/jquery.formatter.min.js'
+          './Scripts/jquery/jquery.formatter.min.js',
+          './Scripts/libs/bootstrap/js/bootstrap.min.js'
          ],
         'dest': './Scripts/libs.js',
         'options': {
@@ -63,7 +69,8 @@ module.exports = function (grunt) {
             './Scripts/jquery/jquery-ui-1.8.21.custom.min.js:jquery-ui',
             './Scripts/jquery/jQuery.blockUI.js:jquery.blockUI',
             './Scripts/jquery/jquery.ba-hashchange.min.js:jquery.ba-hashchange',
-            './Scripts/jquery/jquery.formatter.min.js:jquery.formatter'
+            './Scripts/jquery/jquery.formatter.min.js:jquery.formatter',
+            './Scripts/libs/bootstrap/js/bootstrap.min.js:bootstrap'
           ],
           'noParse': [
             './Scripts/jquery/*.js',
@@ -102,7 +109,8 @@ module.exports = function (grunt) {
             'modernizr',
             'jquery.blockUI',
             'jquery.ba-hashchange',
-            'jquery.formatter'
+            'jquery.formatter',
+            'bootstrap'
           ],
           alias: [
             './Scripts/LC/StringFormat:StringFormat',

@@ -67,7 +67,7 @@ function con(l) {
         l.outerWidth() >= l[0].scrollWidth) {
         c = null;
     }
-    // If there is not content:
+    // If there is no content:
     if (!c) {
         // Update target removing the class to avoid css marking tooltip when there is not
         l.removeClass('has-tooltip').removeClass('has-popup-tooltip');
@@ -184,12 +184,13 @@ function update(element_selector) {
 **/
 function create_tooltip(element, options) {
     var settings = $.extend({}, {
-        title: ''
-        , description: null
-        , url: null
-        , is_popup: false
-        , persistent: false
+      title: ''
+      , description: null
+      , url: null
+      , is_popup: false
+      , persistent: false
     }, options);
+
     $(element)
     .attr('title', settings.title)
     .data('description', settings.description)

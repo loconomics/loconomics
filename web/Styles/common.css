@@ -1,4 +1,4 @@
-/*! Loconomics.com 2014-02-24
+/*! Loconomics.com 2014-02-25
    Author: Loconomics Inc. */
 @font-face {
     font-family: 'Hand Of Sean';
@@ -2968,6 +2968,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup h2 {
     font-size: 1.05em;
 }
+#welcomepopup h3 { /*.popover-title {*/
+    color: Black;
+    font-weight: bold;
+}
 #welcomepopup.select-position .profile-data h2 {
     color: Black;
     text-align: left;
@@ -3212,12 +3216,12 @@ label.visuallyhidden-with-placeholder{
     left:-999em;
 }
 
-/*! Loconomics.com 2014-02-24
+/*! Loconomics.com 2014-02-25
    Author: Loconomics Inc. */
 
 /* line 1 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
 
-/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
+/* line undefined : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\app-includes.styl */
 /**
   app-includes is just a forward look to generate the app.css file with Stylus,
   this gets compiled and concatenated with app.css (and others) in the generation of common.css.
@@ -3662,6 +3666,167 @@ label.visuallyhidden-with-placeholder{
   font-size: 1.5em;
   color: #00989a;
   margin-left: 1em;
+}
+
+/* line 18 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+
+/* line 22 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1010;
+  display: none;
+  max-width: 276px;
+  padding: 1px;
+  text-align: left;
+  background-color: #fff;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.2);
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  white-space: normal;
+}
+
+/* line 39 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.top {
+  margin-top: -10px;
+}
+
+/* line 42 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.right {
+  margin-left: 10px;
+}
+
+/* line 45 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.bottom {
+  margin-top: 10px;
+}
+
+/* line 48 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.left {
+  margin-left: -10px;
+}
+
+/* line 51 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover-title {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ebebeb;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+
+/* line 61 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover-content {
+  padding: 9px 14px;
+}
+
+/* line 64 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover > .arrow,
+.popover > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+/* line 72 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover > .arrow {
+  border-width: 11px;
+}
+
+/* line 75 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover > .arrow:after {
+  border-width: 10px;
+  content: "";
+}
+
+/* line 79 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.top > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999;
+  border-top-color: rgba(0,0,0,0.25);
+  bottom: -11px;
+}
+
+/* line 87 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.top > .arrow:after {
+  content: " ";
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #fff;
+}
+
+/* line 94 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.right > .arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-left-width: 0;
+  border-right-color: #999;
+  border-right-color: rgba(0,0,0,0.25);
+}
+
+/* line 102 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.right > .arrow:after {
+  content: " ";
+  left: 1px;
+  bottom: -10px;
+  border-left-width: 0;
+  border-right-color: #fff;
+}
+
+/* line 109 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.bottom > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999;
+  border-bottom-color: rgba(0,0,0,0.25);
+  top: -11px;
+}
+
+/* line 117 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.bottom > .arrow:after {
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #fff;
+}
+
+/* line 124 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.left > .arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-right-width: 0;
+  border-left-color: #999;
+  border-left-color: rgba(0,0,0,0.25);
+}
+
+/* line 132 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\vendor\bootstrap.styl */
+.popover.left > .arrow:after {
+  content: " ";
+  right: 1px;
+  border-right-width: 0;
+  border-left-color: #fff;
+  bottom: -10px;
 }
 
 /*= w-ProviderPackage */
