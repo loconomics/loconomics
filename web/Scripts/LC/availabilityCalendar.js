@@ -288,6 +288,62 @@ function formatDate(date, format) {
 }
 
 /**
+  Make unselectable
+**/
+var makeUnselectable = (function(){ 
+  var falsyfn = function(){ return false; };
+  var nodragStyle = {
+    '-webkit-touch-callout': 'none',
+    '-khtml-user-drag': 'none',
+    '-webkit-user-drag': 'none',
+    '-khtml-user-select': 'none',
+    '-webkit-user-select': 'none',
+    '-moz-user-select': 'none',
+    '-ms-user-select': 'none',
+    'user-select': 'none'
+  };
+  var dragdefaultStyle = {
+    '-webkit-touch-callout': 'inherit',
+    '-khtml-user-drag': 'inherit',
+    '-webkit-user-drag': 'inherit',
+    '-khtml-user-select': 'inherit',
+    '-webkit-user-select': 'inherit',
+    '-moz-user-select': 'inherit',
+    '-ms-user-select': 'inherit',
+    'user-select': 'inherit'
+  };
+
+  var on = function(el){
+    el = $(el);
+    el.on('selectstart', falsyfn);
+    //$(document).on('selectstart', falsyfn);
+    el.css(nodragStyle);
+  };
+
+  var off = function(el){
+    el = $(el);
+    el.off('selectstart', falsyfn);
+    //$(document).off('selectstart', falsyfn);
+    el.css(dragdefaultStyle);
+  };
+
+  on.off = off;
+  return on;
+}());
+
+/**
+  Cross browser way to unselect current selection
+**/
+function clearCurrentSelection() {
+  if (typeof (window.getSelection) === 'function')
+  // Standard
+    window.getSelection().removeAllRanges();
+  else if (document.selection && typeof (document.selection.empty) === 'function')
+  // IE
+    document.selection.empty();
+}
+
+/**
   Weekly calendar, inherits from LcWidget
 **/
 var Weekly = LcWidget.extend(
@@ -393,6 +449,7 @@ function setupEditWorkHours() {
   // Set handlers to switch status and update backend data
   // when the user select cells
   var slotsContainer = this.$el.find('.' + this.classes.slots);
+
   function toggleCell(cell) {
     // Find day and time of the cell:
     var slot = findSlotByCell(slotsContainer, cell);
@@ -411,6 +468,7 @@ function setupEditWorkHours() {
     //delete wkslots[islot];
       wkslots.splice(islot, 1);
   }
+
   function toggleCellRange(firstCell, lastCell) {
     var 
       x = firstCell.siblings('td').andSelf().index(firstCell),
@@ -431,12 +489,6 @@ function setupEditWorkHours() {
     }
     toggleCell(lastCell);
   }
-
-  this.$el.find(slotsContainer).on('click', 'td', function () {
-    toggleCell($(this));
-    that.bindData();
-    return false;
-  });
 
   var dragging = {
     first: null,
@@ -479,13 +531,24 @@ function setupEditWorkHours() {
       dragging.first = dragging.last = null;
     }
     dragging.selectionLayer.hide();
+
+    makeUnselectable.off(that.$el);
   }
+
+  this.$el.find(slotsContainer).on('click', 'td', function () {
+    toggleCell($(this));
+    that.bindData();
+    return false;
+  });
 
   this.$el.find(slotsContainer)
   .on('mousedown', 'td', function () {
     dragging.first = $(this);
     dragging.last = null;
     dragging.selectionLayer.show();
+
+    makeUnselectable(that.$el);
+    clearCurrentSelection();
 
     var s = dragging.first.bounds({ includeBorder: true });
     offsetToPosition(dragging.selectionLayer[0], s);
@@ -500,11 +563,13 @@ function setupEditWorkHours() {
   })
   .on('mouseup', finishDrag)
   .find('td')
-  .attr('draggable', true);
+  .attr('draggable', false);
+
   // This will not work with pointer-events:none, but on other
   // cases (recentIE)
   dragging.selectionLayer.on('mouseup', finishDrag)
-  .attr('draggable', true);
+  .attr('draggable', false);
+
 }
 
 /**
