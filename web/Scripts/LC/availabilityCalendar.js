@@ -482,12 +482,10 @@ function setupEditWorkHours() {
       y2 = y0;
     }
 
-    toggleCell(firstCell);
-    for (var y = y1 + 1; y < y2; y++) {
+    for (var y = y1; y <= y2; y++) {
       var cell = firstCell.closest('tbody').children('tr:eq(' + y + ')').children('td:eq(' + x + ')');
       toggleCell(cell);
     }
-    toggleCell(lastCell);
   }
 
   var dragging = {
@@ -533,6 +531,8 @@ function setupEditWorkHours() {
     dragging.selectionLayer.hide();
 
     makeUnselectable.off(that.$el);
+
+    return false;
   }
 
   this.$el.find(slotsContainer).on('click', 'td', function () {
