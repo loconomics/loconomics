@@ -33,11 +33,26 @@ exports.show = function welcomePopup() {
     field
     **/
     tooltip: function (event, ui) {
-      $(this).popover({
+      // It needs to be destroyed (no problem the first time)
+      // to get it updated on succesive attempts
+      var el = $(this);
+      el
+      .popover('destroy')
+      .popover({
         title: 'Does this sound like you?',
         content: ui.item.description,
+        trigger: 'focus',
         placement: 'left'
-      }).popover('show');
+      })
+      .popover('show')
+      // Hide on possible position name change to avoid confusions
+      // (we can't use on-change, need to be keypress; its namespaced
+      // to let off and on every time to avoid multiple handler registrations)
+      .off('keypress.description-tooltip')
+      .on('keypress..description-tooltip', function () {
+        el.popover('hide');
+      });
+
     }
   };
 
