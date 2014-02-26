@@ -491,7 +491,8 @@ function setupEditWorkHours() {
   var dragging = {
     first: null,
     last: null,
-    selectionLayer: $('<div class="SelectionLayer" />').appendTo(this.$el)
+    selectionLayer: $('<div class="SelectionLayer" />').appendTo(this.$el),
+    done: false
   };
   function offsetToPosition(el, offset) {
     var pb = $(el.offsetParent).bounds(),
@@ -521,21 +522,20 @@ function setupEditWorkHours() {
 
   function finishDrag() {
     if (dragging.first && dragging.last) {
-
       toggleCellRange(dragging.first, dragging.last);
-
       that.bindData();
 
-      dragging.first = dragging.last = null;
+      dragging.done = true;
     }
+    dragging.first = dragging.last = null;
     dragging.selectionLayer.hide();
-
     makeUnselectable.off(that.$el);
-
-    return false;
+    return true;
   }
 
   this.$el.find(slotsContainer).on('click', 'td', function () {
+    // Do except after a dragging done complete
+    if (dragging.done) return false;
     toggleCell($(this));
     that.bindData();
     return false;
@@ -543,6 +543,7 @@ function setupEditWorkHours() {
 
   this.$el.find(slotsContainer)
   .on('mousedown', 'td', function () {
+    dragging.done = false;
     dragging.first = $(this);
     dragging.last = null;
     dragging.selectionLayer.show();
