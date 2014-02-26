@@ -4,6 +4,7 @@ var smoothBoxBlock = require('./smoothBoxBlock');
 var changesNotification = require('./changesNotification');
 require('./jquery.xtsh').plugIn($);
 var getText = require('./getText');
+var moveFocusTo = require('./moveFocusTo');
 
 exports.defaultSettings = {
   effects: {
@@ -165,6 +166,8 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               changesNotification.registerSave(dtr.find('form').get(0));
               // Avoid cached content on the Editor
               dtr.children().remove();
+              // Scroll to crudl
+              moveFocusTo(crudl, { marginTop: 50, duration: 200 });
 
               // user callback:
               if (typeof (anotherOnComplete) === 'function')
