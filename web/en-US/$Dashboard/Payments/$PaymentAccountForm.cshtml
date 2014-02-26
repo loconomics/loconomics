@@ -84,80 +84,77 @@
         }
 
         if (PageState.IsValid) {
-            try{
-                // Save peronal data to our database that replaces the need for a separate
-                // form under 'about you'
-                // (Nothing about payment, bank account.. thats only on Braintree)
+            // Save peronal data to our database that replaces the need for a separate
+            // form under 'about you'
+            // (Nothing about payment, bank account.. thats only on Braintree)
                 
-                LcData.UserInfo.UpdatePersonalAndContactData(
+            LcData.UserInfo.UpdatePersonalAndContactData(
+                user.UserID,
+                FirstName,
+                null,
+                LastName,
+                null,
+                MobilePhone,
+                AlternatePhone,
+                AddressLine1,
+                AddressLine2,
+                City,
+                stateId,
+                postalCodeId,
+                LcData.GetCurrentCountryID(),
+                LcData.GetCurrentLanguageID(),
+                null
+            );
+                
+            // Create account at Braintree
+            var success = false;
+                
+            // Emulating, to test on locale
+            if (emulateBraintree) {
+                LcData.SetProviderPaymentAccount(
                     user.UserID,
-                    FirstName,
+                    "FAIK REQUEST ID: " + Guid.NewGuid(),
+                    "pending",
                     null,
-                    LastName,
                     null,
-                    MobilePhone,
-                    AlternatePhone,
-                    AddressLine1,
-                    AddressLine2,
-                    City,
-                    stateId,
-                    postalCodeId,
-                    LcData.GetCurrentCountryID(),
-                    LcData.GetCurrentLanguageID(),
                     null
                 );
+            }
+            else {
+                var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
+                    UserID = user.UserID,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = user.Email,
+                    MobilePhone = MobilePhone
+                }, new LcData.Address {
+                    AddressLine1 = AddressLine1,
+                    AddressLine2 = AddressLine2,
+                    PostalCode = PostalCode,
+                    City = City,
+                    StateProvinceCode = StateCode
+                }, new LcPayment.BankInfo {
+                    Ssn = Ssn,
+                    RoutingNumber = Aba,
+                    AccountNumber = AccountNumber
+                }, BirthDate.Value
+                );
                 
-                // Create account at Braintree
-                var success = false;
-                
-                // Emulating, to test on locale
-                if (emulateBraintree) {
-                    LcData.SetProviderPaymentAccount(
-                        user.UserID,
-                        "FAIK REQUEST ID: " + Guid.NewGuid(),
-                        "pending",
-                        null,
-                        null,
-                        null
-                    );
-                }
-                else {
-                    var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
-                        UserID = user.UserID,
-                        FirstName = FirstName,
-                        LastName = LastName,
-                        Email = user.Email,
-                        MobilePhone = MobilePhone
-                    }, new LcData.Address {
-                        AddressLine1 = AddressLine1,
-                        AddressLine2 = AddressLine2,
-                        PostalCode = PostalCode,
-                        City = City,
-                        StateProvinceCode = StateCode
-                    }, new LcPayment.BankInfo {
-                        Ssn = Ssn,
-                        RoutingNumber = Aba,
-                        AccountNumber = AccountNumber
-                    }, BirthDate.Value
-                    );
-                
-                    if (result.IsSuccess()) {
-                        success = true;
-                    } else {
-                        PageState.AddFormError(result.Message);
-                        foreach (var err in result.Errors.All()) {
-                            PageState.AddFormError(err.Message);
-                        }
+                if (result == null) {
+                    PageState.AddFormError("LJDI: Braintree doesn't allow us to create the account, maybe it exist one already?. Please contact us for support.");
+                } else if (result.IsSuccess()) {
+                    success = true;
+                } else {
+                    PageState.AddFormError(result.Message);
+                    foreach (var err in result.Errors.All()) {
+                        PageState.AddFormError(err.Message);
                     }
                 }
+            }
                 
-                if (success && doReturn) {
-                    //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
-                    LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "dashboard/Payments/");
-                }
-
-            } catch (Exception ex) {
-                PageState.AddFormError(ex.Message);
+            if (success && doReturn) {
+                //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "dashboard/Payments/");
             }
         }
     }
