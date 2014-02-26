@@ -21,8 +21,33 @@ exports.defaultSettings = {
     'create': 'crudl-create',
     'update': 'crudl-update',
     'delete': 'crudl-delete'
+  },
+  data: {
+    'focus-closest': {
+      name: 'crudl-focus-closest',
+      'default': '*'
+    },
+    'focus-margin': {
+      name: 'crudl-focus-margin',
+      'default': 0
+    },
+    'focus-duration': {
+      name: 'crudl-focus-duration',
+      'default': 200
+    }
   }
 };
+
+/**
+  Utility to get a data value or the default based on the instance
+  settings on the given element
+**/
+function getDataForElementSetting(instance, el, settingName) {
+  var
+    setting = instance.settings.data[settingName],
+    val = el.data(setting.name) || setting['default'];
+  return val;
+}
 
 exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
   return {
@@ -35,7 +60,6 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
       // Extending default settings with provided ones,
       // but some can be tweak outside too.
       instance.settings = $.extend(true, exports.defaultSettings, settings);
-
       instance.elements.each(function () {
         var crudl = $(this);
         if (crudl.data('__crudl_initialized__') === true) return;
@@ -166,8 +190,23 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               changesNotification.registerSave(dtr.find('form').get(0));
               // Avoid cached content on the Editor
               dtr.children().remove();
-              // Scroll to crudl
-              moveFocusTo(crudl, { marginTop: 50, duration: 200 });
+
+              // Scroll to preserve correct focus (on large pages with shared content user can get
+              // lost after an edition)
+              // (we queue after vwr.xshow because we need to do it after the xshow finish)
+              vwr.queue(function () {
+                var focusClosest = getDataForElementSetting(instance, crudl, 'focus-closest');
+                var focusElement = crudl.closest(focusClosest);
+                // If no closest, get the crudl
+                if (focusElement.length === 0)
+                  focusElement = crudl;
+                var focusMargin = getDataForElementSetting(instance, crudl, 'focus-margin');
+                var focusDuration = getDataForElementSetting(instance, crudl, 'focus-duration');
+
+                moveFocusTo(focusElement, { marginTop: focusMargin, duration: focusDuration });
+
+                vwr.dequeue();
+              });
 
               // user callback:
               if (typeof (anotherOnComplete) === 'function')
