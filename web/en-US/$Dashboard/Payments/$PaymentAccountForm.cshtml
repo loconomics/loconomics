@@ -141,7 +141,7 @@
                 );
                 
                 if (result == null) {
-                    PageState.AddFormError("LJDI: Braintree doesn't allow us to create the account, maybe it exist one already?. Please contact us for support.");
+                    PageState.AddFormError("It looks like you already have an account set up with Braintree. Please contact us, and we can help.");
                 } else if (result.IsSuccess()) {
                     success = true;
                 } else {
