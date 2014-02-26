@@ -3124,7 +3124,7 @@ ul.attributes-list li {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: 201px 78px;
     }
-    #welcomepopup h1 {
+    #welcomepopup h1.has-icon {
         background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
         background-size: 100px 39px;
     }

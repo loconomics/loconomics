@@ -509,7 +509,7 @@
 
 /* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-slides li.ProviderWelcome-presentation-actions-goPrevious a {
-    background-image: url("landing-page-left-arrow@2x.png");
+    background-image: url("../img/theme/provider-welcome/landing-page-left-arrow@2x.png");
     -webkit-background-size: 48px 48px;
     -moz-background-size: 48px 48px;
     background-size: 48px 48px;
@@ -527,7 +527,7 @@
 
 /* line 16 : C:\Users\Iago\Proxectos\Loconomics.com\source\web\Styles\app\utils\mediaQueries.styl */
   .ProviderWelcome #main .ProviderWelcome-presentation .ProviderWelcome-presentation-actions .ProviderWelcome-presentation-actions-slides li.ProviderWelcome-presentation-actions-goNext a {
-    background-image: url("landing-page-right-arrow@2x.png");
+    background-image: url("../img/theme/provider-welcome/landing-page-right-arrow@2x.png");
     -webkit-background-size: 48px 48px;
     -moz-background-size: 48px 48px;
     background-size: 48px 48px;
