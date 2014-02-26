@@ -99,7 +99,7 @@
                 // then detection and action must be done per element:
                 $(element).each(function () {
                     // Reusing function, with explicit toggle value
-                    LC.toggleElement(this, $(this).is(':visible'), options);
+                    toggleElement(this, !$(this).is(':visible'), options);
                 });
             }
             if (toggle)
@@ -120,7 +120,7 @@
 
             /** showElement as a jQuery method: xhide
             **/
-            jQuery.fn.xshow = function xhide(options) {
+            jQuery.fn.xshow = function xshow(options) {
                 showElement(this, options);
                 return this;
             };

@@ -1,11 +1,12 @@
 ﻿@using WebMatrix.Data;
 @{
     LcHelpers.SecurePage();
-    
+   
     var u = LcData.UserInfo.GetUserRow();
-    var brID = Request["BookingRequestID"].AsInt();
-    var dateType = Request["ConfirmedDateType"];
-    
+    int brID = PageData["BookingRequestID"] ?? Request["BookingRequestID"].AsInt();
+    string redirectUrl = PageData["RedirectUrl"];
+    string dateType = PageData["ConfirmedDateType"] ?? Request["ConfirmedDateType"];
+
     var sqlGetBookingDates = @"
         SELECT  TOP 1
                 R.PreferredDateID,
@@ -97,7 +98,7 @@
             SELECT ERROR_NUMBER() As Error, ERROR_MESSAGE() As ErrorMessage
         END CATCH
     ";
-    
+        
     using (var db = Database.Open("sqlloco")) {
         var dateID = 0;
         var dates = db.QuerySingle(sqlGetBookingDates, u.UserID, brID);
@@ -177,12 +178,19 @@
                     }
                     catch {}
                 
+                    if (redirectUrl == null) {
+                        redirectUrl = LcUrl.LangPath + (
+                            Request.IsAjaxRequest() ?
+                            "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}" :
+                            "dashboard/messages/booking/{1}/"
+                        );
+                    }
+                    redirectUrl = String.Format(redirectUrl, brID, result.BookingID);
+
                     if (Request.IsAjaxRequest()) {
-                        LcHelpers.ReturnJsonResult(3, LcUrl.LangPath + String.Format(
-                            "Booking/$BookingDetailsWidget/?BookingRequestID={0}&BookingID={1}", brID, result.BookingID ));
+                        LcHelpers.ReturnJsonResult(3, redirectUrl);
                     } else {
-                        Response.Redirect(LcUrl.LangPath + String.Format(
-                            "Dashboard/Bookings/#!BookingRequest-{0}_Booking-{1}", brID, result.BookingID ));
+                        Response.Redirect(redirectUrl);
                     }
                 } else {
                     // We need negative numbers to indicate an error (is our convention for json 'Code')
@@ -217,13 +225,19 @@
             msg = "That time conflicts with another appointment you have--please choose another!";
             break; 
     }
+
+    if (PageData["UseRenderReturns"]) {
+        LcHelpers.RenderPageReturns = msg ?? errorMessage;
+        return;
+    }
+    
     if (Request.IsAjaxRequest()) {
         LcHelpers.ReturnJsonError(errorCode, msg ?? errorMessage);
     } else {
         if (task != "payment") {
             Response.Redirect(
                 LcUrl.LangPath + 
-                String.Format("Dashboard/Bookings/#!BookingRequest-{0}", brID));
+                String.Format("dashboard/messages/bookingrequest/{0}/", brID));
         } else {
             throw new HttpException(500, msg ?? errorMessage);
         }

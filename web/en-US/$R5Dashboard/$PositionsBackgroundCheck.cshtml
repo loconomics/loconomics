@@ -1,0 +1,170 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    // Current user data
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    // Current position data record:
+    var p = LcData.UserInfo.GetUserCurrentPos();
+    
+    var idprefix = "position" + p.PositionID.ToString() + "-licenses";
+    dynamic checks = null;
+
+    /*if (Validation.GetHtml("agree") == null) {
+        Validation.RequireField("agree", "You must agree to the terms and conditions");
+    }*/
+    // Manual validation of 'agree' field because Validation.RequireField is failing
+    if (IsPost && Request["agree"].IsEmpty()){
+        ModelState.AddError("agree", "You must agree to the terms and conditions");
+    }
+    
+    if (IsPost && ModelState.IsValid) {
+        
+        using (var db = Database.Open("sqlloco")) {
+            // Save request in database as 'pending'
+            db.Execute(@"
+                INSERT INTO UserBackgroundCheck (
+                    UserID,
+                    BackgroundCheckID,
+                    StatusID,
+                    LastVerifiedDate,
+                    CreatedDate,
+                    ModifiedDate,
+                    ModifiedBy
+                ) VALUES (
+                    @0, @1,
+                    1, --status: pending
+                    getdate(),
+                    getdate(), getdate(), 'sys'
+                )
+
+                -- Check Alert
+                EXEC TestAlertBackgroundCheck @0
+            ", u.UserID, Request["BackgroundCheckID"]);
+            
+            // Send email to loconomics
+            LcMessaging.SendMail("verifications@loconomics.com",
+                "Background check request",
+                LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailBackgroundCheckRequest/",
+                    new Dictionary<string, object> { 
+                        { "ProviderUserID", u.UserID },
+                        { "PositionID", p.PositionID },
+                        { "BackgroundCheckID", Request["BackgroundCheckID"] }
+            }));
+            
+            // Left return HTML, the javascript will show the step-2
+        }
+        
+    }
+    using (var db = Database.Open("sqlloco")) {
+        checks = db.Query(@"
+            SELECT  B.BackgroundCheckID
+                    ,B.BackgroundCheckName
+                    ,B.BackgroundCheckDescription
+                    ,B.BackgroundCheckPrice
+                    ,UB.StatusID
+                    ,UB.Summary
+                    ,UB.LastVerifiedDate
+                    ,S.StatusName
+            FROM    BackgroundCheck As B
+                        INNER JOIN
+                    PositionBackgroundCheck As P
+                        ON B.BackgroundCheckID = P.BackgroundCheckID
+                        AND P.PositionID = @1
+                        AND B.CountryID = P.CountryID
+                        LEFT JOIN
+                    UserBackgroundCheck As UB
+                        ON B.BackgroundCheckID = UB.BackgroundCheckID
+                        AND UB.UserID = @0
+                        LEFT JOIN
+                    Status As S
+                        ON UB.StatusID = S.StatusID
+            WHERE
+                B.Active = 1 AND P.Active = 1
+                    AND B.LanguageID = @2 AND B.CountryID = @3
+                    AND P.StateProvinceID = @4
+        ", u.UserID, p.PositionID, 
+            LcData.GetCurrentLanguageID(),
+            u.CountryID,
+            u.StateProvinceID);
+    }
+}
+@if (IsPost || checks != null && checks.Count > 0)
+{
+    if (!IsPost)
+    {
+        @LcHelpers.GetValidationScripts()
+    }
+   <div class="position-background-check ajax-box">
+    <p class="setting-instructions">
+        We’ve partnered with HireRight, a leading background screening company, to give you the ability to purchase and complete a background check. Background checks can be essential for some clients to feel at ease hiring your services, especially those may include children or the elderly.  Please select one of the options below, and HireRight will contact you directly via e-mail to complete the payment and process.  
+    </p>
+        <ul>
+        @foreach (var check in checks)
+        {
+            <li class="background-check">
+                <h5>@check.BackgroundCheckName</h5>
+                <div class="description">
+                    @LcHelpers.PrintTextAsHtml(check.BackgroundCheckDescription)
+                </div>
+                @if (check.StatusID != null)
+                {
+                    <div class="requested">
+                        Requested, status: 
+                        <span class="status">@check.StatusName</span> @if (check.LastVerifiedDate != null)
+                                                                      { <text>since @check.LastVerifiedDate.ToShortDateString() </text> }
+                        <div class="summary">@check.Summary</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="actions"><a href="#buy-check" data-position-id="@p.PositionID" data-background-check-id="@check.BackgroundCheckID" class="button main-action buy-action">Purchase for @check.BackgroundCheckPrice.ToString("c")</a></div>
+                }
+            </li>
+        }
+        </ul>
+
+        <div class="popups">
+            <div class="popup buy-step-1">
+                <p>Use of background check services is voluntary. If you opt to use or access information provided by a background check service offered through the Marketplace, you agree that Loconomics offers this background check service as a convenience and does not have control over or assume any responsibility for the quality, accuracy, or reliability of the background check service or the information provided by the background check service. </p>
+                <p>If you are a Service Provider and you opt to purchase background check services in connection with your Services: (i) you affirm that all of the information you provide to Loconomics in connection with the background check services is correct, complete, and applicable; (ii) you understand that you will be required to complete and sign a disclosure and consent form, which will have additional terms applicable to the background check services; (iii) you agree that Loconomics may obtain a report from HireRight that may contain information on your criminal history, address history, character, general reputation, personal characteristics, and mode of living; (iv) you agree that Loconomics may release the results of this report in connection with transactions on the Marketplace; (v) you understand that the information in the report may factor into other parties’ decisions to engage your services; (vi) you agree that Loconomics may review the information provided by the background check service and retains the right to terminate your membership based on the information; (vii) if you disagree with the contents of the report, or wish to stop the release of the results of the report, you must delete your profile; and (viii) you agree to indemnify and hold harmless Loconomics from any loss or liability that may result from the creation or release of the report.</p>
+                <form class="ajax" action="@(LcUrl.LangPath)$R5Dashboard/$PositionsBackgroundCheck/" method="post">
+                    <input type="hidden" name="BackgroundCheckID" value="@Request["BackgroundCheckID"]" />
+                    <input type="hidden" name="PositionID" value="@p.PositionID" />
+                    <input type="hidden" class="main-action" name="main-action" value="@(Request["main-action"] ?? "Purchase for $$")" />
+                    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+                    <label class="agree"><input type="checkbox" name="agree" value="true" @Validation.GetHtml("agree") /> I agree to the terms and conditions above</label>
+                    <fieldset class="actions">
+                        <button type="button" class="button cancel-action close-popup-action close-action">Cancel</button>
+                        <input type="submit" class="button main-action" value="@(Request["main-action"] ?? "Purchase for $$")" />
+                    </fieldset>
+                </form>
+            </div>
+            <div class="popup buy-step-2">
+                <h3>Next Steps:</h3>
+                <ol>
+                    <li><span>Check your email</span>
+                        <div class="step-details">
+                            You will receive an e-mail in the next 24-48 hours from HireRight.  This message describes how to access their secure website to provide the information that will expedite your verification. 
+                        </div>
+                    </li>
+                    <li><span>Complete payment and application</span>
+                        <div class="step-details">
+                            We’ve negotiated discounted rates with HireRight to keep the cost of obtaining a background check as low as possible.  
+                            Pay HireRight directly for the background check--Loconomics does not make commission from this transaction.  Please 
+                            carefully follow all instructions and  accurately enter the data as required. Also, please respond quickly to HireRight 
+                            requests for more information.
+                        </div>
+                    </li>
+                    <li><span>You're done</span>
+                        <div class="step-details">
+                            Loconomics will review your background check.  If the results are not 100% clear, we will contact you to ask permission 
+                            to post to your profile.  If you choose not to post the information on your profile, you will be required to remove your profile
+                            permanently.  
+                        </div>
+                    </li>
+                </ol>
+                <div class="actions"><button type="button" class="button main-action close-popup-action close-action">Okay!</button></div>
+            </div>
+        </div>
+   </div>
+}

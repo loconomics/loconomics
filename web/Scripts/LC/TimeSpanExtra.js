@@ -33,7 +33,7 @@ function smartTime(time) {
 /** Rounds a time to the nearest 15 minutes fragment.
 @roundTo specify the LC.roundingTypeEnum about how to round the time (down, nearest or up)
 **/
-function roundTimeToQuarterHour(/* TimeSpan */time, /* LC.roundingTypeEnum */roundTo) {
+function roundTimeToQuarterHour(/* TimeSpan */time, /* mathUtils.roundingTypeEnum */roundTo) {
     var restFromQuarter = time.totalHours() % 0.25;
     var hours = time.totalHours();
     if (restFromQuarter > 0.0) {

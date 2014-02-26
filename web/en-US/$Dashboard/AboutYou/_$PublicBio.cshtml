@@ -1,0 +1,77 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+    
+    var Bio = Request["publicbio"] ?? u.PublicBio;
+    var GenderID = Request["genderid"] ?? u.GenderID;
+    
+    Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
+    
+    if (IsPost && Validation.IsValid()) {
+        using (var db = Database.Open("sqlloco"))
+        {
+            db.Execute(@"
+                DECLARE 
+                @UserID int
+                ,@PublicBio varchar(4000)
+                ,@GenderID int
+
+                SET @UserID = @0
+                SET @PublicBio = @1
+                SET @GenderID = @2
+
+                BEGIN TRAN
+
+                /* Update User Personal Data */
+                UPDATE	Users
+                SET     
+		                PublicBio = @PublicBio
+                        ,GenderID = @GenderID
+
+                        ,UpdatedDate = getdate()
+                        ,ModifiedBy = 'sys'
+                WHERE   UserId = @UserID
+
+                -- Check Alerts related:
+                EXEC TestAlertPublicBio @UserID
+
+                COMMIT TRAN
+            ", u.UserID, Bio, GenderID);
+            
+            if (doReturn) {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+    
+    dynamic genders = null;
+    using (var db = Database.Open("sqlloco")){
+        genders = db.Query(@"
+            SELECT  GenderID, GenderSingular
+            FROM    Gender
+            WHERE   LanguageID=@0 AND CountryID=@1 AND GenderID > 0
+        ", 1, 1);
+    }
+}
+<fieldset class="DashboardPublicBio">
+    <div class="DashboardPublicBio-photo">
+        <img class="avatar image-1dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/")" alt="User Photo" />
+        <img class="avatar image-2dppx" src="@Href(LcUrl.LangPath + "Profile/Photo/" + WebSecurity.CurrentUserId + "/2x/")" alt="User Photo" />
+        <a class="DashboardPublicBio-photo-changeAction" href="#change-profile-photo">Change photo</a>
+    </div>
+    <div class="DashboardPublicBio-bio">
+        <textarea name="publicbio" rows="7" placeholder="Who are you, anyway? Tell the community about yourself." @Validation.GetHtml("publicbio")>@Bio</textarea>
+        @Html.ValidationMessage("publicbio")
+    </div>
+    <div class="DashboardPublicBio-gender">
+        <span class="DashboardPublicBio-gender-label">Gender Identity:</span>
+        @foreach (var gender in genders)
+        {
+            <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
+        }
+        @Html.ValidationMessage("gender")
+    </div>
+</fieldset>

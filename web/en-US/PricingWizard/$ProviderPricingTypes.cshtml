@@ -48,8 +48,8 @@
                 </div>
                 <h3 class="packages-list-title">Your @config.PluralName:</h3>
                 *@
-                <div class="your-packages crudl-list pricing-type-@config.SlugName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingTypePackagesList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
-                    @RenderPage("$PricingTypePackagesList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID })
+                <div class="your-packages crudl-list pricing-type-@config.SlugName" data-source-url="@(LcUrl.LangPath)PricingWizard/$PricingList/?PositionID=@(positionID)&Editable=true&PricingTypeID=@(pricingType.PricingTypeID)">
+                    @RenderPage("$PricingList.cshtml", new { Data = data, Editable = true, PricingTypeID = pricingType.PricingTypeID, ProviderUserID = p.UserID })
                 </div>
             </div>
         }

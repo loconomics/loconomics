@@ -1,0 +1,1733 @@
+@import url('Pricing.css');
+
+/* Extra padding to avoid collision with possible upper message and upper-right utility button */
+.dashboard .folders > .tab-body {
+    padding-top: 35px;
+}
+.dashboard .folders > .tab-body > .tabs {
+    margin-top: 0;
+}
+
+.dashboard #highlights,
+.dashboard #dashboard-help,
+.dashboard #main{
+    margin: 0 0 0 225px;
+}
+.dashboard #main{
+    width: 735px;
+}
+.dashboard #main {
+    margin-top: 10px;
+    margin-left: 25px;
+    /* next padding-bottom can be 'not wanted', but
+       remember us that there is an extra space because
+       the relatives tab-page inside #main and help us
+       when we set space between main and container without
+       overlap the content */
+    padding-bottom: 1px;
+}
+#highlights, #dashboard-help {
+    border: 2px solid #747474;
+    margin-top: 0;
+    margin-bottom: 0;
+    background: white;
+    padding: 6px 20px;
+    width: 691px;
+}
+#highlights {
+    height: 29px;
+    padding-bottom: 1px;
+    border-bottom-width: 0;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+}
+#dashboard-help {
+    padding-top: 1px;
+    border-top-width: 0;
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    height: 150px;
+    -moz-box-shadow: 0 5px 5px -2px #bbb;
+    -o-box-shadow: 0 5px 5px -2px #bbb;
+    -webkit-box-shadow: 0 5px 5px -2px #bbb;
+    box-shadow: 0 5px 5px -2px #bbb;
+}
+.dashboard #highlights h1 {
+    font-size: 2em;
+    color: #00989A;
+    margin: 0;
+}
+.dashboard #dashboard-avatar {
+    border: 1px solid #CCC9C9;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    left: 0;
+    overflow: hidden;
+    padding: 10px;
+    position: absolute;
+    top: 124px;
+    
+    background-color: #f5f5f5;
+    box-shadow: 0 0 4px 2px white inset;
+    -moz-box-shadow: 0 0 4px 2px white inset;
+    -o-box-shadow: 0 0 4px 2px white inset;
+    -webkit-box-shadow: 0 0 4px 2px white inset;
+}
+#dashboard-avatar .avatar {
+    border: 1px solid #CCC9C9;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    height: 184px;
+    width: 176px;
+    display: block;
+}
+.dashboard #changephoto {
+    background-color: rgba(255, 255, 255, 0.65);
+    border-radius: 25px 25px 25px 25px;
+    -moz-border-radius: 25px 25px 25px 25px;
+    -o-border-radius: 25px 25px 25px 25px;
+    -webkit-border-radius: 25px 25px 25px 25px;
+    color: black;
+    display: block;
+    font-size: 0.8em;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    padding: 0 15px;
+    position: absolute;
+    text-decoration: none;
+    text-align: center;
+}
+.dashboard #changephoto:hover {
+    background-color: White;
+}
+.dashboard-help-widget {
+    overflow: hidden;
+    margin-top: 10px;
+}
+.dashboard-help-widget h3 {
+    font-size: 1.2em;
+    margin-bottom: 0;
+    display: inline;
+}
+.dashboard-help-widget a.view-more {
+    float: right;
+    color: #00989A !important;
+    text-decoration: underline !important;
+}
+.dashboard-help-widget article {
+    float: left;
+    margin: 0 1%;
+    width: 31%;
+}
+.dashboard-help-widget article ul {
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px 0 #C9C9C9;
+    margin-bottom: 10px;
+}
+.dashboard-help-widget article ul > li {
+    border-top: 1px solid #c9c9c9;
+}
+.dashboard-help-widget article ul > li:first-child {
+    border-top-width: 0;
+}
+.dashboard-help-widget article ul > li > a {
+    margin: 0 10px;
+}
+.dashboard-help-widget a,
+.dashboard-help-widget a:link,
+.dashboard-help-widget a:visited {
+    color: #EB6E42;
+    display: block;
+    font-size: 0.9em;
+    line-height: normal;
+    text-decoration: none;
+}
+.dashboard-help-widget a:hover {
+    text-decoration: underline;
+}
+#dashboard-help .skip {
+    display: none;
+}
+#dashboard-help p{
+    margin: 0;
+    font-size: .9em;
+}
+.dashboard #nav {
+    float: left;
+    margin-top: 10px;
+    overflow: hidden;
+    width: 200px;
+}
+/*** Profile Menu ***/
+.dashboard #profile-menu li.admin {
+    background: #E44600 !important;
+}
+.dashboard #profile-menu li.admin a {
+    color: white !important;
+}
+.dashboard #profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #e8e8e8;
+}
+.dashboard #profile-menu > li {
+    border: 1px solid #c9c9c9;    
+}
+.dashboard #profile-menu li a{
+    display: block;
+    padding: 8px 15px;
+    font-size: .95em;
+}
+.dashboard #profile-menu li a,
+.dashboard #profile-menu li a:link,
+.dashboard #profile-menu li a:visited{
+    color: #747474;
+    text-decoration: none;
+}
+.dashboard #profile-menu > li.current{
+    background-color: white;
+}
+.dashboard #profile-menu > li.current a{
+    color: #00989a;
+}
+.dashboard #profile-menu > li.current > a{
+    font-weight: bold;
+}
+.dashboard #profile-menu li a:hover{
+    background-color: #ebc0b1;
+}
+.dashboard #profile-menu > li > a > .warning-note {
+    background: #eb6e42;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    color: White;
+    display: inline-block;
+    float: right;
+    font-size: 1em;
+    height: 2em;
+    line-height: 2em;
+    padding: 0;
+    text-align: center;
+    width: 2em;
+}
+/* Sub-menu */
+.dashboard #profile-menu ul{
+    border-top: 1px solid #D4D4D4;
+    list-style: none outside none;
+    margin: 0;
+    padding: 8px 0;
+}
+.dashboard #profile-menu ul li a{
+    border: none;
+    padding: 0 15px 0 30px;
+    margin: 0;
+    height: auto;
+}
+.dashboard #profile-menu ul a.current{
+    font-weight: bold;
+    color: #00989a;
+}
+/** Dashboard tabs **/
+.dashboard .tab-body > p {
+    margin: 0 0 15px 0;
+}
+.dashboard .tabbed.buttons .tab-body > p {
+    margin: 1em 0 15px 0;
+}
+
+/*** dashboard-alerts ***/
+#dashboard-alerts {
+    background-color: White;
+    border: 2px solid #00989a;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    padding: 0;
+}
+#dashboard-alerts > .empty {
+    padding: 20px;
+    text-align: center;
+}
+#dashboard-alerts > ul > li {
+    border-top: 1px solid #dfdfdf;
+    padding: 2px 15px;
+}
+#dashboard-alerts > ul > li:first-child {
+    border-top-width: 0;
+}
+#dashboard-alerts li.group > h2 {
+    margin: 10px 0 4px 0;
+}
+#dashboard-alerts li.item {
+    padding-left: 15px;
+    text-indent: 2em;
+}
+#dashboard-alerts li.item.required {
+    background: url('../img/theme/alert-icon.png') no-repeat 15px center;
+    line-height: 18px;
+}
+#dashboard-alerts li.item > .alert-info {
+    color: #747474;
+    line-height: normal;
+    text-decoration: none;
+    vertical-align: top;
+}
+#dashboard-alerts li.item > a.alert-info:hover {
+    text-decoration: underline;
+}
+#dashboard-alerts li.item > .alert-info > .more {
+    color: #eb6e42;
+    font-weight: bold;
+}
+#dashboard-alerts .dismiss-alert {
+    float: right;
+    color: #eb6e42;
+}
+
+/*** Dashboard forms ***/
+.dashboard form fieldset{
+    margin: 0 0 10px 0;
+    padding: 0;
+}
+.dashboard form legend{
+    font-weight: bold;
+}
+.dashboard form ul{
+    padding: 0;
+    margin: 0;
+}
+.dashboard form li{
+    padding: 0 10px;
+    margin: 6px 0;
+}
+.dashboard form li label{
+    display: inline-block;
+    padding: 0;
+    width: 120px;
+}
+.dashboard form li input[type="text"],
+.dashboard form li input[type="password"],
+.dashboard form li select{
+    width: 120px;
+}
+.dashboard form textarea {
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.dashboard form li select{
+    /*margin: 0 1.4em;*/
+    width: 150px;
+}
+.dashboard form li input[type="radio"],
+.dashboard form li input[type="checkbox"]{
+    margin: 0 6px;
+}
+.dashboard form li > input[type="radio"]:first-child,
+.dashboard form li > input[type="checkbox"]:first-child{
+    margin: 0 6px 0 0;
+}
+.dashboard form a,
+.dashboard form a:link,
+.dashboard form a:visited{
+    color: #3baeb0;
+}
+
+/* Form: Preferences */
+.dashboard .preferences li label {
+    width: auto;
+}
+.dashboard .preferences .personal-data-info ul > li {
+    list-style: disc inside none;
+}
+.dashboard .preferences .personal-data-info .note,
+.dashboard .preferences .my-account a,
+.dashboard .preferences .my-account a:link,
+.dashboard .preferences .my-account a:visited {
+    color: #E44600;
+    margin-left: 10px;
+}
+.dashboard .preferences .personal-data-info .note a,
+.dashboard .preferences .personal-data-info .note a:link,
+.dashboard .preferences .personal-data-info .note a:visited {
+    color: #E44600;
+}
+#preferences-privacy-policy h1,
+#account-terms h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+/** Form: personal **/
+#personal li input[type="text"]{
+    width: 160px;
+}
+#personal #account-personal-fs-publicbio label {
+    display: none;
+}
+#personal li select{
+    width: 187px;
+}
+form#personal li label{
+    min-width: 120px;
+}
+#personal-fs-contactinformation,
+#personal-fs-homeaddress{
+    display: inline-block;
+    vertical-align: top;
+    width: 345px;
+}
+#account-profile-profile .customurl input {
+    width: 140px !important;
+}
+#account-profile-profile .websiteurl input {
+    width: 100% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#personal-fs-publicbio label{
+    display: none;
+}
+/** Section: Positions **/
+.position-quick-tools-bar {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    cursor: pointer;
+    text-align: right;
+}
+.position-quick-tools-bar > .quick-tools-group {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: .6em;
+}
+.smooth-box-block-overlay.position-state-change .smooth-box-block-element {
+    margin-top: 36px;
+}
+.position-quick-tools-bar .quick-tools-link {
+    display: block;
+    text-decoration: underline;
+    color: #AE637B;
+    font-size: 0.835em;
+    line-height: 1.2em;
+}
+.position-quick-tools-bar .view-position-profile,
+.position-quick-tools-bar .view-position-profile:link,
+.position-quick-tools-bar .view-position-profile:visited {
+    color: #00989a;
+}
+.position-quick-tools-bar .delete-position > .quick-tools-link,
+.position-quick-tools-bar .delete-position > .quick-tools-link:link,
+.position-quick-tools-bar .delete-position > .quick-tools-link:visited {
+    color: #EB6E42;
+}
+/* We have delete-position under the on-off button, we need
+   move the top content on the tab to have space for it,
+   replacing the general rule for position tabs only:
+*/
+.dashboard .folders > .tab-body.position-tab {
+    padding-top: 45px;
+}
+
+/** Form: Positions - Services **/
+.dashboard .position-intro textarea {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 6em;
+    width: 100%;
+}
+.dashboard .positionservices div.service-attribute-categories {
+    border-right: 1px solid #DADADA;
+    display: inline-block;
+    width: 66%;
+    vertical-align: top;
+}
+fieldset.positionservices-attributes{
+    border-bottom: 1px solid #DADADA;
+    margin: 10px 0 0 !important;
+    overflow: hidden;
+    padding-right: 10px !important;
+}
+fieldset.positionservices-attributes > ul {
+    clear: both;
+}
+fieldset.positionservices-attributes * {
+    overflow: hidden;
+}
+fieldset.positionservices-attributes li {
+    margin: 0 0 2px;
+    padding: 0;
+    width: 50%;
+    float: left;
+}
+fieldset.required-attribute-category.group-validation-error legend {
+    box-shadow: 0 0 5px 1px #dd3333;
+    padding: 0 10px;
+}
+.required-attribute-category-footnote {
+    color: #dd3333;
+}
+/* Services, request more attributes */
+.dashboard .request-more-attributes{
+    padding: 6px 0;
+}
+.dashboard .request-more-attributes textarea {
+    color: black;
+    font-size: 1.2em;
+    height: 8em;
+    padding: 6px 12px;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/* Add position */
+.add-positions .positions-list, .add-positions .select-position {
+    float: left;
+    width: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.add-positions .positions-list {
+    padding-left: 30px;
+}
+.add-positions h4 {
+    margin-bottom: 15px !important;
+}
+.add-positions .position-description {
+    height: 180px;
+}
+.add-positions .positions-list li {
+    list-style: disc inside;
+    margin: 3px 0;
+    padding: 0;
+}
+.add-positions .positions-list li > a,
+.add-positions .positions-list li > a:visited {
+    color: #00989b;
+    margin-left: 20px;
+    text-transform: lowercase;
+}
+
+/* Fixing the buggy browsers implementation of legend element */
+fieldset.positionservices-attributes > legend {
+    clear: both;
+    float: left;
+    overflow: hidden;
+    width: auto;
+    margin: 0 0 5px;
+}
+form.positionservices label{
+    display: block;
+}
+.dashboard form.positionservices li label{
+    width: auto;
+}
+form.positionservices input{
+    margin-right: .4em;
+}
+.positionservices-sidebar{
+    display: inline-block;
+    width: 33%;
+    vertical-align: top;
+}
+.positionservices-sidebar fieldset{
+    margin: 10px 0 0 !important;
+}
+.positionservices-languagesspoken ul li label{
+    display: inline-block !important;
+    min-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 90px !important;
+}
+.positionservices-languagesspoken ul li select{
+    width: 90px !important;
+}
+.positionservices-languagesspoken ul {
+    max-height: 235px;
+    overflow: auto;
+}
+
+/** Form: Positions - Availability **/
+form.positionavailability {
+    position: relative;
+    font-size: .9em;
+}
+form.positionavailability input{
+    font-size: 1.1em;
+}
+.dashboard form.positionavailability li{
+    padding: 0;
+}
+.dashboard form.positionavailability .positionavailability-days li,
+.dashboard form.positionavailability .positionavailability-hours li {
+    height: 24px;
+}
+.dashboard form.positionavailability li input[type="radio"],
+.dashboard form.positionavailability li input[type="checkbox"]{
+    margin: 0 3px;
+}
+.dashboard form.positionavailability li label{
+    width: auto;
+}
+.positionavailability fieldset{
+    display: inline-block;
+    vertical-align: top;
+}
+.positionavailability .all-days-times {
+    margin: 1em 0;
+    display: block;
+    font-size: 1em;
+    line-height: 1em;
+}
+.positionavailability .validation-summary-errors {
+    width: 400px;
+}
+.positionavailability-hours ul {
+    margin-top: 3em !important;
+}
+.positionavailability-days {
+    width: 200px;
+}
+.positionavailability-days span.day{
+    display: inline-block;
+    width: 100px;
+    height: 23px;
+}
+.positionavailability-days label{
+    width: auto !important;
+    padding: 0 !important;
+}
+.positionavailability-days label input{
+    margin: 0 3px;
+}
+.positionavailability-hours {
+    width: 220px;
+}
+.positionavailability-hours select{
+    width: 80px !important;
+}
+.positionavailability-hours span.day{
+    display: none;
+}
+.positionavailability-program {
+    display: block !important;
+}
+.dashboard .positionavailability-program li label{
+    margin: 0 10px;
+}
+.positionavailability-program-url input,
+form.positionavailability .fs-calendar-private-url input.calendar-private-url {
+    width: 100% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.positionavailability-booking {
+    border-left: 1px solid #DADADA;
+    padding-left: 13px !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 266px;
+}
+.positionavailability-booking label{
+    display: block;
+    margin-bottom: 16px !important;
+    padding: 0;
+    text-decoration: none;
+}
+.positionavailability-booking select{
+    float: right;
+    text-align: right;
+}
+/** Availability calendar **/
+.dashboard #availabilityCalendar .calendar {
+    /* availaibility-calendar is sized full-relative from 1px by default.
+        To change de global size (like a zoom) we apply a different 
+        font-size ONLY in the container .calendar.
+        NOTE: legend is not relative sized. */
+    font-size: 1.8px;
+}
+/** Availability events **/
+#availabilityEventsList {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 15px;
+}
+#availabilityEventsList td,
+#availabilityEventsList th 
+{
+    border: 1px solid #61BDBE;
+    padding: 4px;
+}
+.availability-events-edit ul > li label {
+    width: 120px;
+    text-align: right;
+    margin-right: 5px;
+}
+.availability-events-edit ul > li .time-options label,
+.availability-events-edit ul > li .time-options .repeat-options .repeat-ends ul label {
+    width: auto;
+    vertical-align: middle;
+}
+.availability-events-edit ul > li .time-options .repeat-options .repeat-ends ul li {
+    padding-left: 0;
+    font-weight: normal;
+}
+.availability-events-edit ul > li .time-switchers {
+    margin: 4px 5px 4px 130px;
+}
+.availability-events-edit ul > li .time-options .repeat-options label {
+    width: 110px;
+    font-weight: bold;
+}
+.availability-events-edit ul > li .repeat-options .repeat-ends > * {
+    display: inline-block;
+    vertical-align: top;
+}
+.availability-events-edit .frequency-extra {
+    display: none;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days,
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .monthly-options {
+    display: inline;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days .has-tooltip {
+    text-decoration: none;
+}
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .week-days label,
+.availability-events-edit ul > li .time-options .repeat-options .frequency-extra .monthly-options label {
+    width: auto;
+    
+}
+.availability-events-edit ul > li input[type=text],
+.availability-events-edit ul > li select,
+.availability-events-edit ul > li textarea {
+    width: 400px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.availability-events-edit ul > li.when input[type=text] {
+    width: 80px;
+}
+.availability-events-edit ul > li.when .repeat-every input[type=text] {
+    width: 40px;
+}
+.availability-events-edit ul > li.when .date[type="text"],
+.availability-events-edit ul > li.when .time[type="text"] {
+    width: 6.3em;
+}
+.availability-events-edit ul > li.when select.time {
+    width: 5.7em;
+}
+.availability-events-edit .repeat-frequency-unit {
+    text-transform: lowercase;
+}
+
+/** Form Positions - Photos **/
+.positionphotos fieldset{
+    display: inline-block;
+    vertical-align: top;
+}
+.positionphotos .no-photos,
+.positionphotos .no-primary-photo {
+    display: none;
+}
+.dashboard form.positionphotos fieldset li{
+    margin: 6px 0;
+    padding: 0;
+}
+.positionphotos-edit {
+    width: 390px;
+}
+.positionphotos-gallery {
+    width: 23%;
+}
+.positionphotos-tools{
+    width: 14%;
+}
+.positionphotos-gallery,
+.positionphotos-edit{
+    border-right: 4px solid #DADADA;
+    margin-right: 8px !important;
+    padding-right: 4px !important;
+}
+.positionphotos-edit,
+.positionphotos-gallery,
+.positionsphotos.tools{
+    height: 370px;
+    overflow: hidden;
+}
+.positionphotos-edit-photo {
+    width: 380px;
+    height: 240px;
+    overflow: hidden;
+    text-align: center;
+}
+.positionphotos-edit-photo img{
+    max-height: 240px;
+    max-width: 380px;
+}
+.positionphotos-gallery ol{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* height: 100% works fine in Firefox, but not in Chrome (webkit) and IE, setting to static 349px */
+    height: 349px;
+    overflow: auto;
+}
+.positionphotos-gallery li {
+    width: 134px;
+    overflow: hidden;
+}
+.positionphotos-gallery li a{
+    display: block;
+    width: 128px;
+    height: 80px;
+    margin: 3px auto;
+    overflow: hidden;
+    text-align: center;
+}
+.positionphotos-gallery li a img{
+    max-width: 128px;
+    min-height: 80px;
+}
+.positionphotos-gallery li.selected a{
+    outline: 3px solid #00989a;
+}
+.positionphotos-gallery li.selected a.edit{
+    outline: none;
+}
+.positionphotos-gallery li a.edit{
+    display: block;
+    text-align: right;
+    text-transform: lowercase;
+    width: auto;
+    height: auto;
+}
+.positionphotos-edit-caption label,
+.positionphotos-edit-primary label{
+    padding: 5px 0;
+    width: auto !important;
+    margin-right: 15px;
+}
+.positionphotos-edit-caption input{
+    width: 270px !important;
+}
+.positionphotos-edit-primary h6{
+    font-size: 1em;
+    color: #666666;
+    margin: 0 15px 0 0;
+    font-weight: normal;
+    display: inline-block;
+}
+.positionphotos-edit-primary input {
+    margin: 0 3px;
+    
+}
+.positionphotos-edit-primary label{
+    padding: 0;
+}
+
+/** Form Positions - Locations **/
+.positionlocations{
+    font-size: .9em;
+}
+.positionlocations fieldset{
+    vertical-align: top;
+    margin: 0 0 10px !important;
+}
+.positionlocations-itravel,
+.positionlocations-itravelfrom,
+.positionlocations-itravelusing{
+    width: 344px;
+}
+/*.positionlocations-servicelocations{
+    border-left: 1px solid #DADADA;
+    margin-left: 5px !important;
+    margin-top: 0 !important;
+    padding-left: 10px !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 350px;
+}*/
+.positionlocations-itravel .positionlocations-itravelfrom {
+    margin-top: 10px !important;
+}
+.positionlocations-itravel .addlocation{
+    margin-left: 40px;
+}
+.positionlocations-itravelfrom .address,
+.positionlocations-itravelfrom label{
+    margin: 0 25px 5px;
+    font-weight: bold;
+    padding: 0 !important;
+}
+.positionlocations-servicelocations .address .travel-options {
+    display: none;
+}
+.positionlocations-servicelocations ul{
+    margin: 0 25px 5px !important;
+}
+.positionlocations-servicelocations ul li{
+    margin: 16px 0;
+}
+.positionlocations-servicelocations .actions,
+.positionlocations-itravel .actions {
+    text-align: center !important;
+}
+.positionlocations-servicelocations a.addlocation,
+.positionlocations-itravel a.addlocation{
+    margin: 5px auto 0;
+    padding: 0.1em 1em;
+}
+.positionlocations-itravelusing label{
+    display: block;
+    width: 150px;
+    margin-left: 15px !important;
+}
+.positionlocations-itravelusing input{
+    margin-right: 10px;
+}
+/* semi-generic address class */
+.address{
+    font-weight: bold;
+    position: relative;
+    line-height: 1.3em;
+}
+.address .address-name,
+.address .address-line{
+    display: block;
+}
+.address .address-city:after{
+    content: ', ';
+}
+.address .tools{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: normal;
+}
+.address .travel-transport-label {
+    display: block;
+}
+.address:hover .tools a {
+    color: #00989A;
+}
+/* edit-location */
+.positionlocations .edit-panel {
+    min-height: 150px;
+    display: none; /* at start */
+}
+.edit-location {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61BDBE;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    margin: 0 0 10px;
+    padding: 15px;
+}
+.edit-location ul > li label {
+    width: auto;
+}
+.edit-location .copy-location {
+    margin: 10px 0 30px;
+    font-weight: bold;
+    text-align: center;
+}
+.edit-location .copy-location select {
+    font-weight: normal;
+    text-align: left;
+}
+.edit-location ul.location-data label,
+.edit-location ul.location-map label {
+    display: block;
+    clear: both;
+}
+.edit-location ul.location-map {
+    margin: 0 0 25px 0;
+}
+.edit-location ul.location-map .advice,
+.edit-location ul.location-map .find-address-geocode {
+    display: none;
+}
+.edit-location ul.location-map .map-selector > .google-map {
+    height: 300px;
+    width: 100%;
+}
+.edit-location .location-map .gps-lat,
+.edit-location .location-map .gps-lng {
+    display: none;
+}
+.edit-location ul.location-data input,
+.edit-location ul.location-data select,
+.edit-location ul.location-data textarea,
+.edit-location ul.location-map input {
+    width: 450px !important;
+    float: right;
+}
+.edit-location ul.travel-options label {
+    width: auto !important;
+    float: none;
+}
+.edit-location ul.location-data li.input-option input {
+    width: auto !important;
+    float: none;
+}
+.edit-location .location-travel legend {
+    font-weight: normal;
+}
+
+/* generic class edit-popup (removed from locations, maybe unused) */
+.edit-popup-container {
+    position: relative;
+}
+.edit-popup {
+    display: none;
+    position: absolute;
+    top: 0;
+    box-shadow: 0 0 10px 5px black;
+    width: 100%;
+    padding: 40px 0 !important;
+    background: white;
+    z-index: 2000;
+}
+/**** Form: Positions Licenses ****/
+.positionlicenses .license-request li label{
+    font-weight: bold;
+    min-width: 230px;
+    width: auto;
+}
+.positionlicenses .license-type-selector .license-details,
+.positionlicenses .license-request {
+    display: none;
+}
+.positionlicenses .license-type-selector label {
+    font-weight: bold;
+}
+.user-licenses h4,
+.user-verified-licenses h4 {
+    font-size: 1.1em;
+    margin: 1em 0 0;
+}
+.user-licenses,
+.user-verified-licenses {
+    margin: 0 0 2em;
+}
+/* Widget user-verified-licenses */
+.user-verified-licenses h5 {
+    font-size: 1em;
+    color: #666;
+}
+html.js .user-verified-licenses .verified-license-details {
+    display: none;
+}
+html.js .user-verified-licenses h5 {
+    cursor: hand;
+    cursor: pointer;
+}
+.dashboard .tab-body h4 {
+    font-weight: bold;
+    color: #747474;
+    margin: 6px 0 0;
+    font-size: 1.1em;
+}
+/** Form: Positions Background Checks **/
+.background-check {
+    position: relative;
+}
+.background-check h5 {
+    font-size: 1em;
+    margin-bottom: .5em;
+}
+.background-check .requested {
+    margin: 4px 0;
+    border-left: 5px solid #00989A;
+    padding-left: 10px;
+}
+.background-check .buy-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1em;
+}
+.background-check .smooth-box-block-element {
+    border: 5px solid #B5E1E2;
+}
+.position-background-check .popup.buy-step-2 ol {
+    margin: 0 0 0 35px;
+}
+.position-background-check .popup.buy-step-2 ol li {
+    list-style: decimal outside;
+    color: #B5E1E2;
+    font-size: 1.6em;
+    margin: 10px 0 0;
+}
+.position-background-check .popup.buy-step-2 ol li .step-details {
+    font-size: .6em;
+    color: #666666;
+}
+/** Form: Positions Reviews **/
+.positionreviews .references li label {
+    width: auto;
+    padding: 10px;
+}
+.positionreviews .references li textarea{
+    height: 14em;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.positionreviews .references li {
+    padding: 0;
+}
+.positionreviews .references li textarea[name="clientsemails"]{
+    height: 7em;
+}
+/**** Form: Positions Pricing ****/
+.dashboard .cancellation-policy-form label {
+    width: auto !important;
+}
+.dashboard .cancellation-policy-form .cancellation-policy-info {
+    text-decoration: underline;
+}
+.dashboard form.positionpricing li label {
+    width: auto;
+}
+.dashboard form.positionpricing table.pricing-vars {
+    width: 460px;
+}
+.dashboard form.positionpricing table.pricing-vars label {
+    padding: 0;
+}
+.dashboard form.positionpricing table.pricing-options {
+    width: 100%;
+}
+.dashboard form.positionpricing table td.pricing-item-name {
+    padding-left: 25px;
+}
+.dashboard form.positionpricing .hourly-rate {
+    float: right;
+    border-left: 1px solid #DADADA;
+}
+.hourly-rate label {
+    font-weight: bold;
+}
+.hourly-rate input.money {
+    width: 40px;
+}
+/**** Page/Form: package-pricing-type ****/
+.package-pricing-type .add-package,
+.add-event,
+.crudl-create {
+    float: right;
+}
+.package-pricing-type .add-addon {
+    margin: 1em 0;
+}
+.package-pricing-type label {
+    width: auto !important;
+}
+.add-item > a,
+.package-pricing-type .add-package > a,
+.add-package-action {
+    background: url('../img/theme/add-new-button.png') no-repeat right center;
+    line-height: 28px;
+    padding-right: 34px;
+    display: block;
+    color: Black;
+    text-decoration: none;
+}
+.add-package-action {
+    float: none;
+}
+.provider-package .actions {
+    top: 15px !important;
+}
+.pricing-type-box {
+    border: 1px solid black;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -o-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    padding: 8px 14px;
+    display: inline-block;
+    vertical-align: top;
+
+    width: 314px;
+    margin-right: 25px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.pricing-type-box:nth-child(odd) {
+    float: left;
+    clear: left;
+    margin-right: 0;
+}
+.pricing-type-box:nth-child(even) {
+    float: right;
+    clear: right;
+    margin-right: 0;
+}
+.pricing-type-box h5 {
+    color: Black;
+    font-size: 1.1em;
+    margin: 0;
+}
+.pricing-type-box .pricing-type-description {
+    margin: 0;
+    color: Black;
+}
+.add-item > a:hover,
+.package-pricing-type .add-package > a:hover {
+    text-decoration: underline;
+}
+ /* on pricing.css there are more css specific for general provider-package */
+.view-panel .provider-package .edit-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.view-panel .provider-package .edit-actions a {
+    color: #00989A;
+    text-decoration: none;
+}
+.view-panel .provider-package .edit-actions a:hover {
+    text-decoration: underline;
+}
+.package-pricing-type .edit-panel label {
+    padding: 0;
+}
+.package-pricing-type .edit-panel .label-text {
+    display: none;
+}
+.package-pricing-type .edit-panel .provider-package-services {
+    max-height: 160px;
+    overflow: auto;
+}
+.package-pricing-type .edit-panel .provider-package-services li {
+    float: left;
+    margin: 0;
+}
+.package-pricing-type .edit-panel .provider-package-services li > label {
+    width: 200px !important;
+    text-overflow: ellipsis;
+}
+.package-pricing-type .edit-panel .provider-package-services.services-not-checked {
+    /*display: none;*/
+}
+.package-pricing-type .edit-panel .show-more-attributes {
+    margin: 10px 0 0 13px;
+    color: #747474;
+}
+.package-pricing-type .edit-panel .package-data label {
+    display: block;
+    margin: 2px 0;
+}
+.package-pricing-type .edit-panel .package-data .package-name input {
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.package-pricing-type .edit-panel .package-data .package-sessions,
+.package-pricing-type .edit-panel .package-data .package-price {
+    width: auto;
+    display: inline-block;
+}
+.package-pricing-type .edit-panel .package-data .package-sessions input {
+    width: 2em;
+}
+.package-pricing-type .edit-panel .package-price input {
+    width: 5em;
+}
+.package-pricing-type .edit-panel .package-data .package-duration input {
+    width: 3em;
+}
+.package-pricing-type .edit-panel .package-data .package-description textarea {
+    height: 8em;
+}
+.package-pricing-type .edit-panel {
+    display: none;
+    min-height: 160px;
+}
+.package-pricing-type .edit-panel .learn-more span {
+    text-decoration: underline;
+    color: #00989a;
+}
+.package-pricing-type .edit-panel .fs-price-rate .learn-more {
+    display: inline;
+}
+.package-pricing-type .edit-panel .fs-price-rate label {
+    padding: 0;
+}
+.package-pricing-type .edit-panel .fs-price-rate .price-rate input {
+    width: 3em;
+}
+.package-pricing-type .edit-panel .fs-price-rate .price-rate-unit input {
+    width: 4em;
+}
+.package-pricing-type .edit-panel .fs-price-rate .no-price-rate {
+    margin-top: .5em;
+}
+.package-pricing-type .edit-panel .inperson-phone label {
+    display: inline;
+}
+/* Housekeeper pricing specifics */
+.provider-average-time {
+	position: relative;
+	height: 65px;
+}
+.provider-average-time > label {
+    display: block !important;
+    margin: 0 !important;
+}
+.provider-average-time .average-label {
+	position:absolute;
+	left:36%;
+	right:36%;
+	width: auto;
+	text-align:center
+}
+.provider-average-time .below-average-label {
+    position: absolute;
+    left: 0;
+    right: 64%;
+}
+.provider-average-time .above-average-label {
+	position: absolute;
+	right: 0;
+	left: 64%;
+	text-align: right;
+}
+.housekeeper-pricing {
+    margin: 1em 0;
+}
+.housekeeper-pricing > div {
+    width: 30%;
+    margin-right: 3%;
+    display: inline-block;
+    vertical-align: top;
+}
+.housekeeper-pricing > .preview {
+    margin-right: 0;
+}
+.housekeeperservices .fs-price-rate {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    max-width: 34%;
+}
+.housekeeperservices .package-data > .package-name {
+    width: 70% !important;
+}
+
+/**** Form: Account Education ****/
+#account-profile-education .education-edit input {
+    width: 300px;
+}
+#account-profile-education .education-edit select {
+    width: 60px;
+}
+#account-profile-education .education-item p {
+    margin: 0;    
+}
+#account-profile-education .education-item .years-attended {
+    color: #828282;
+}
+.crudl-list li.crudl-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.crudl-list li.crudl-item .actions {
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+.crudl-list li.crudl-item .actions a {
+    color: #00989A;
+    text-decoration: none;
+}
+.crudl-list li.crudl-item .actions a:hover {
+    text-decoration: underline;
+}
+
+/**** Form: Account Personal ****/
+#account-personal auths > ul > li{
+    color: #6c6c6c;
+    margin-top: 10px;
+}
+#account-personal .auths > ul > li label{
+    width: 295px !important;
+    font-size: .9em;
+    vertical-align: middle;
+}
+form#personal li > label.gender {
+    width: auto;
+    min-width: 0;
+}
+#account-verifications .social-media,
+.email-verification-form {
+    margin-bottom: 1em;
+}
+#account-verifications .social-media li {
+    display: inline-block;
+    margin-right: 1em;
+}
+.user-verifications li{
+    background: no-repeat center left;
+    padding: 0 0 0 30px;
+    margin: 6px 0;
+}
+.user-verifications  li.license{
+    background-image: url('../img/theme/icon-licenses.png');
+}
+.user-verifications  li.verification{
+    background-image: url('../img/theme/icon-verifications.png');
+}
+.user-verifications  li.share{
+    background-image: url('../img/theme/icon-share-medium.png');
+}
+.user-verifications li .status{
+    color: Red;
+}
+.user-verifications li.status-confirmed .status{
+    color: Green;
+}
+/**** From: Account Profider Terms ****/
+#providerterms label {
+    width: auto;
+}
+
+/**** Form: Bank Account ****/
+#account-payments .payment-type label {
+    display: block;
+}
+#account-payments .contact-info label {
+    width: auto !important;
+}
+#account-payments .contact-info input {
+    width: 94% !important;
+}
+
+/**** Form: Payment Account ****/
+#account-paymentaccount-form fieldset input,
+#account-paymentaccount-form fieldset select {
+    width: 70% !important;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+#account-paymentaccount-form .terms-of-service label input {
+    width: auto !important;
+    vertical-align: middle;
+}
+
+/**** Form: Billing Address ****/
+.billing-address-form .location-data label {
+    display: block;
+    width: auto;
+}
+.billing-address-form .location-data input,
+.billing-address-form .location-data select {
+    width: 70% !important;
+    float: right;
+}
+
+/**** Form: Account Taxes ****/
+#account-taxes fieldset span.info{
+    margin-left: 10px;
+    font-size: .9em;
+}
+#account-taxes .tax-entity-type{
+    margin: 15px 0;
+}
+#account-taxes .tax-entity-type span{
+    display: inline-block;
+    vertical-align: middle;
+}
+#account-taxes .tax-entity-type ul{
+    display: inline-block;
+    width: 585px;
+    vertical-align: middle;
+}
+#account-taxes .tax-entity-type ul li,
+#account-taxes .tax-entity-type ul li label,
+#account-taxes .tax-exempt-payee label{
+    display: inline;
+    width: auto !important;
+    white-space: nowrap;
+}
+#account-taxes .tax-clasification label{
+    width: auto !important;
+}
+#account-taxes select[name="tax-classification"]{
+    width: auto;
+}
+#account-taxes #account-taxes-fs-part1 span.info{
+    display: block;
+}
+#account-taxes-fs-part2 div.info p{
+    margin: 0;
+}
+#account-taxes-fs-part2 .signature{
+    margin-top: 10px;
+}
+#account-taxes-fs-part2 .signature label{
+    padding: 0;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/** ======================== 
+  * Generic column classes
+  * for Dahsboard main 
+  * container (width: 716px)
+  * ======================*/
+.dashboard #main .col{
+    float: left;
+    margin-bottom: 10px;
+}
+.dashboard #main .col-2{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 50%;
+}
+.dashboard #main .col-2-1{
+    border-right: 1px solid #DADADA;
+    margin-right: 0;
+    padding-right: 10px;
+}
+.dashboard #main .col-2-2{
+    border-left: 1px solid #DADADA;
+    margin-left: -1px;
+    padding-left: 10px;
+}
+/* forms inside columns specific */
+.dashboard #main .col fieldset{
+    margin: 0 0 20px 0;
+}
+.dashboard #main .col li input[type="text"]{
+    width: 150px;
+}
+.dashboard #main .col li select{
+    width: 175px;
+}
+
+/** Dashboard date picker **/
+.dashboard img.ui-datepicker-trigger{
+}
+
+/*
+ * Classes items-list, items-groups-list, 
+ * items-count, item-summary, item-action
+ */
+/* items-groups-list */
+.items-groups-list > li > h3 {
+    font-size: 1.1em;
+    color: #6c6c6c;
+}
+.items-groups-list > li > h3 > .items-count {
+    color: #E44600;
+}
+/* items-list */
+.items-list > li {
+    border: 1px solid #6c6c6c;
+    background: white;
+    padding: 10px;
+    color: #6c6c6c;
+    margin: 10px 0;
+}
+.items-list > li > .mini-user-info,
+.items-list > li > .item-summary,
+.items-list > li > .actions {
+    display: inline-block !important;
+    vertical-align: top;
+}
+.items-list > li > .item-summary {
+    width: 390px;
+    margin: 0 10px;
+}
+.items-list > li > .actions {
+    text-align: center !important;
+    width: 96px;
+}
+.items-list > li > .actions > .item-extra-info {
+    line-height: 1.1em;
+    margin: 6px 0 0;
+}
+.items-list .actions .item-action.responded {
+    background: #f0b600 !important;
+}
+.items-list .actions .item-action.responded:hover {
+    box-shadow: 0 0 5px 2px #f0b600;
+    -moz-box-shadow: 0 0 5px 2px #f0b600;
+    -o-box-shadow: 0 0 5px 2px #f0b600;
+    -webkit-box-shadow: 0 0 5px 2px #f0b600;
+}
+/* Class item-summary */
+.item-summary > li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.item-summary > li.long-details {
+    white-space: normal;
+    height: 40px;
+}
+.item-summary > li > h5 {
+    color: #E44600;
+    display: inline;
+    font-size: 1em;
+    line-height: 1em;
+    margin: 0;
+}
+
+/* 
+ * The auxiliar class main-side means that
+ * the element share parent with an 'aside' element
+ * or similar (a secondary article, a widget, etc.)
+ * that use a lower important/secondary/lower place in
+ * the vertical, reducing the normal element width to
+ * fit both in the parent
+ */
+.tab-body > .main-side,
+.tab-body > div > .main-side {
+    float: left;
+    width: 500px;
+}
+
+/* Rate user: star-rating editable */
+.user-rating {
+    display: inline-block;
+    overflow: hidden;
+}
+
+/* Class message-section for box sections inside a 'like message'
+ * content, like bookings request, bookings..
+ */
+.message-section {
+    border: 1px solid #6c6c6c;
+    border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    background: white;
+    padding: 15px;
+}
+
+/*
+ * Messaging, conversations
+ */
+.conversation-messages > li {
+    overflow: hidden;
+    margin: 20px 0;
+}
+.conversation-messages > li > .mini-user-info {
+    width: 60px;
+    font-size: .8em;
+}
+.conversation-messages > li > .mini-user-info > div {
+    line-height: 1em;
+}
+.conversation-messages > li.customer > .mini-user-info {
+    float: left;
+}
+.conversation-messages > li.provider > .mini-user-info {
+    float: right;
+}
+.conversation-messages > li > .message-section {
+    font-size: 0.9em;
+    margin: 0 12px;
+    width: 518px;
+}
+.conversation-messages > li.customer > .message-section {
+    float: left;
+}
+.conversation-messages > li.provider > .message-section {
+    float: right;
+}
+.conversation-messages > li.new-message form > textarea {
+    height: 80px;
+}
+.conversation-messages > li.new-message form > fieldset.actions {
+    margin-bottom: 0 !important;
+}
+
+/*=== Admin dashboard
+ */
+#admin-bookings .items-list h5 {
+    font-size: 1em;
+    display: inline;
+}
+#admin-bookings .items-list > li > .item-summary {
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#admin-bookings .items-list > li > .actions {
+    width: 210px;
+}
+#admin-bookings .change-booking-status {
+    display: none;
+    margin: 36px auto;
+}
+#admin-bookings .change-booking-status form {
+    padding: 0 10px;
+}
+#admin-bookings .set-as-performed {
+    margin: 20px 0;
+}
+
+
+/*=== Website Tools
+ */
+.dashboard .website-tools label {
+    width: auto !important;
+}
+.dashboard .website-tools .button-size .size-selection {
+    margin: 6px 0;
+}
+.dashboard .website-tools .button-size p,
+.dashboard .website-tools .button-size .button-preview {
+    margin: 6px;
+}
+.dashboard .website-tools .button-preview {
+    min-height: 60px;
+}
+.dashboard .website-tools .button-code textarea {
+    height: 10em;
+}

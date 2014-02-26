@@ -19,7 +19,91 @@ public static partial class LcData
         /// </summary>
         public const int ConfirmationLimitInHours = 18;
 
-        #region Query bookings
+        #region Query list of bookings
+        #region SQLs
+        private const string sqlGetBookingsByDateRange = @"
+        SELECT  R.BookingRequestID,
+                B.BookingID,
+                R.ProviderUserID,
+                R.CustomerUserID,
+                R.PricingEstimateID,
+                R.BookingRequestStatusID,
+                B.BookingStatusID,
+
+                UC.FirstName As CustomerFirstName,
+                UC.LastName As CustomerLastName,
+
+                UP.FirstName As ProviderFirstName,
+                UP.LastName As ProviderLastName,
+
+                E.StartTime,
+                E.EndTime,
+                E.TimeZone,
+                Pos.PositionSingular,
+                Pr.TotalPrice As CustomerPrice,
+                (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
+        FROM    Booking As B
+                 INNER JOIN
+                BookingRequest As R
+                  ON B.BookingRequestID = R.BookingRequestID
+                 INNER JOIN
+                PricingEstimate As Pr
+                  ON Pr.PricingEstimateID = R.PricingEstimateID
+                 INNER JOIN
+                Users As UC
+                  ON UC.UserID = R.CustomerUserID
+                 INNER JOIN
+                Users As UP
+                  ON UP.UserID = R.ProviderUserID
+                 LEFT JOIN
+                CalendarEvents As E
+                  ON E.Id = B.ConfirmedDateID
+                 INNER JOIN
+                Positions As Pos
+                  ON Pos.PositionID = R.PositionID
+					AND Pos.LanguageID = @3 AND Pos.CountryID = @4
+        WHERE   (
+                 R.CustomerUserID=@0
+                  OR
+                 R.ProviderUserID=@0
+                )
+                 AND
+                (   @1 is null AND E.StartTime is null
+                    OR
+                    Convert(date, E.StartTime) >= @1
+                     AND
+                    Convert(date, E.StartTime) <= @2
+                )
+        ORDER BY E.StartTime DESC, B.UpdatedDate DESC, R.UpdatedDate DESC
+        ";
+        #endregion
+
+        public static Dictionary<string, dynamic> GetUpcomingBookings(int userID, int upcomingLimit = 10) {
+            var ret = new Dictionary<string, dynamic>();
+            
+            // Preparing dates for further filtering
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+            // This week must not include today and tomorrow, to avoid duplicated entries
+            var upcomingFirstDay = tomorrow.AddDays(1);
+            var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
+
+            using (var db = Database.Open("sqlloco"))
+            {
+                var l = LcData.GetCurrentLanguageID();
+                var c = LcData.GetCurrentCountryID();
+                ret["today"] = db.Query(sqlGetBookingsByDateRange, userID, today, today, l, c);
+                ret["tomorrow"] = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, l, c);
+
+                var sqlLimited = sqlGetBookingsByDateRange.Replace("SELECT", "SELECT TOP " + upcomingLimit.ToString());
+                ret["upcoming"] = db.Query(sqlLimited, userID, upcomingFirstDay, upcomingLastDay, l, c);
+            }
+
+            return ret;
+        }
+        #endregion
+
+        #region Query Booking information
         #region SQLs
         public const string sqlGetBookingRequestPricingEstimate = @"
             SELECT  PricingEstimateID

@@ -15,7 +15,7 @@ require('jquery.blockUI');
 exports.on = function (containerSelector) {
   var $c = $(containerSelector);
   $c.on('click', '[href="#change-profile-photo"]', function () {
-    popup(LcUrl.LangPath + 'NewDashboard/AboutYou/ChangePhoto/', { width: 240, height: 240 });
+    popup(LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/', { width: 240, height: 240 });
     return false;
   });
 
@@ -34,7 +34,7 @@ exports.on = function (containerSelector) {
   window.deleteUserPhoto = function deleteUserPhoto() {
     $.blockUI(LC.blockPresets.loading);
     $.ajax({
-      url: LcUrl.LangUrl + "NewDashboard/AboutYou/ChangePhoto/?delete=true",
+      url: LcUrl.LangUrl + "dashboard/AboutYou/ChangePhoto/?delete=true",
       method: "GET",
       cache: false,
       dataType: "json",

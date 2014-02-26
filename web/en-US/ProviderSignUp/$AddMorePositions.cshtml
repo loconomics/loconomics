@@ -1,4 +1,7 @@
-﻿@using WebMatrix.Data;
+﻿@*
+    DEPRECATED: its for R5Dashboard, R6Dashboard uses dashboard/positions/$AddNew.cshtml
+*@
+@using WebMatrix.Data;
 @{
     var u = LcData.UserInfo.GetUserRowWithContactData();
     var userid = u.UserID;
@@ -44,7 +47,7 @@
             }
         }
         if (ModelState.IsValid) {
-            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "Dashboard/Positions/");
+            LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "R5Dashboard/Positions/");
         }
     }
     
@@ -70,9 +73,11 @@
             }
         }
     }
-   
+    
+    if (!Request.IsAjaxRequest()) {
+        LcAssets.AddScript(LcUrl.AppPath + "Scripts/ProviderSignUp.js");
+    }
 }
-
     <form method="post" action="@(LcUrl.LangPath)ProviderSignUp/$AddMorePositions/" class="ajax ajax-box">
         <h4>Add a position to your profile</h4>
         @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)

@@ -1,0 +1,255 @@
+/**
+  AvailabilityCalendar component styles.
+**/
+@import "nib"
+@import "ColorsPalette"
+@import "mediaQueries"
+
+$colorUnavailable = White;
+$colorAvailable = #DDEAB8;
+$colorBounds = #C3C3C3;
+$colorSmoothBounds = #EEE;
+
+disabled($color = White, $opacity = .5) {
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        background: $color;
+        opacity: $opacity;
+    }
+}
+
+.AvailabilityCalendar {
+    position: relative;
+    
+    &.is-disabled {
+        disabled();
+    }
+    
+    &.is-loading {
+        /* Loading spinner */
+        &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            background: url('../img/theme/loading.gif') no-repeat 0 0;
+            width: 48px;
+            height: 48px;
+        }
+        
+        /* Disabling actions to avoid new requests */
+        .AvailabilityCalendar-actions {
+            disabled();
+        }
+    }
+    
+    &.is-currentWeek {
+        /* Button previous gets disabled */
+        .Actions-prev {
+            position: relative;
+            disabled();
+        }
+    }
+    
+    &.is-preloading {
+        /* Button next is on the work to have more data */
+        .Actions-next {
+            border-bottom-color: $colorLtTeal !important;
+        }
+    }
+    
+    .AvailabilityCalendar-legend {
+    
+        margin: 1.5em 8em;
+    
+        ul li {
+            display: inline-block;
+            margin-right: 5em;
+        }
+    
+        .AvailabilityCalendar-legend-example {
+            border: 1px solid $colorBounds;
+            display: inline-block;
+            width: 3em;
+            height: 1em;
+            vertical-align: middle;
+            margin-right: 1em;
+        }
+    
+        .AvailabilityCalendar-legend-available .AvailabilityCalendar-legend-example {
+            background: $colorAvailable;
+        }
+        
+        .AvailabilityCalendar-legend-unavailable .AvailabilityCalendar-legend-example {
+            background: $colorUnavailable;
+        }
+    }
+    
+    .AvailabilityCalendar-actions {
+        position: relative;
+        margin: 1em 74px;
+        letter-spacing: -1em;
+
+        .Actions-move {
+            letter-spacing: normal;
+
+            padding: 1.2em 1.6em;
+            border-radius: 5px;
+            border: 1px solid #D1D1D1;
+            background: #F7F7F7;
+            color: #555;
+            line-height: normal;
+
+            /* Icons */
+            text-indent: -999px;
+            position: relative;
+            overflow: hidden;
+            width: 12px;
+            height: 12px;
+            box-sizing: content-box;
+            &:before {
+                content: '';
+                position: absolute;
+                top: 1.2em;
+                left: 1.6em;
+                background: url('../img/theme/Actions-move.png') no-repeat 0 0;
+                width: 12px;
+                height: 12px;
+                
+                hr-image('../img/theme/Actions-move@2x.png', 26px, 12px);
+            }
+            
+            &:hover {
+                background: White;
+            }
+
+            &.Actions-prev {
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+            
+            &.Actions-next {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                
+                &:before {
+                    background-position: -14px 0;
+                }
+            }
+        }
+    }
+  
+    /* Weekly and Workhours share layout */
+    &.AvailabilityCalendar--weekly,
+    &.AvailabilityCalendar--workHours {
+    
+        .AvailabilityCalendar-actions {
+            
+        }
+  
+        table {
+            width: 100%;
+            min-width: 600px;
+            
+            th {
+                font-weight: normal;
+            }
+            
+            th,
+            td {
+                /* All equally distributed, except the first */
+                width: 14%;
+                    
+                &:first-child {
+                    width: 2%;
+                    white-space: nowrap;
+                }
+            }
+            
+            /* Default cells color: unavailable */
+            td,
+            td.is-unavailable {
+                background-color: $colorUnavailable;
+            }
+
+            td.is-available {
+                background-color: $colorAvailable;
+            }
+
+            .AvailabilityCalendar-days {
+                text-align: center;
+                text-transform: uppercase;
+            }
+        
+            .AvailabilityCalendar-slots {
+                
+                th,
+                td {
+                    border-right: 1px solid $colorSmoothBounds;
+                }
+                
+                td {
+                    height: 4px;
+                }
+            
+                .AvailabilityCalendar-hour {
+                
+                    th {
+                        text-align: right;    
+                        padding: 0 .5em;
+                        min-width: 45px;
+                    }
+            
+                    /* Border on hour cells but not the header: */
+                    td {
+                        border-top: 1px solid $colorSmoothBounds;
+                    }
+                    
+                    &.AvailabilityCalendar-hour--noon td {
+                        border-top-color: $colorBounds;
+                    }
+            
+                }
+                
+                td:last-child {
+                    border-right: 1px solid $colorBounds;
+                }
+                
+                tr:first-child td {
+                    border-top: 1px solid $colorBounds;
+                }
+                
+                tr:last-child td {
+                    border-bottom: 1px solid $colorBounds;
+                }
+            
+            }
+            
+        }
+        
+    }
+    
+    /* Workhours specific stuff */
+    &.AvailabilityCalendar--workHours {
+        
+        padding-top: 2em;
+        
+        .AvailabilityCalendar-slots td {
+            cursor: pointer;
+        }
+    }
+    
+    .SelectionLayer {
+        position: absolute;
+        background: $colorBlue;
+        opacity: .4;
+        pointer-events: none;
+    }
+}

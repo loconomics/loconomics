@@ -25,8 +25,8 @@ function setupValidation(reapplyOnlyTo) {
         // but without validation being already loaded and enabled)
         if ($ && $.validator && $.validator.unobtrusive) {
             // Apply the validation rules to the new elements
-            $(document).removeData('validator');
-            $(document).removeData('unobtrusiveValidation');
+            $(reapplyOnlyTo).removeData('validator');
+            $(reapplyOnlyTo).removeData('unobtrusiveValidation');
             $.validator.unobtrusive.parse(reapplyOnlyTo);
         }
     }
@@ -56,6 +56,11 @@ function setValidationSummaryAsValid(container) {
     LC.setupValidation();
 }
 
+function setValidationSummaryAsError(container) {
+  var v = findValidationSummary(container);
+  v.addClass('validation-summary-errors').removeClass('validation-summary-valid');
+}
+
 function goToSummaryErrors(form) {
     var off = form.find('.validation-summary-errors').offset();
     if (off)
@@ -64,8 +69,15 @@ function goToSummaryErrors(form) {
         if (console && console.error) console.error('goToSummaryErrors: no summary to focus');
 }
 
+function findValidationSummary(container) {
+  container = container || document;
+  return $('[data-valmsg-summary=true]');
+}
+
 module.exports = {
     setup: setupValidation,
     setValidationSummaryAsValid: setValidationSummaryAsValid,
-    goToSummaryErrors: goToSummaryErrors
+    setValidationSummaryAsError: setValidationSummaryAsError,
+    goToSummaryErrors: goToSummaryErrors,
+    findValidationSummary: findValidationSummary
 };

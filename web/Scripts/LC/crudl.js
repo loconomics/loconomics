@@ -4,6 +4,7 @@ var smoothBoxBlock = require('./smoothBoxBlock');
 var changesNotification = require('./changesNotification');
 require('./jquery.xtsh').plugIn($);
 var getText = require('./getText');
+var moveFocusTo = require('./moveFocusTo');
 
 exports.defaultSettings = {
   effects: {
@@ -15,6 +16,8 @@ exports.defaultSettings = {
   events: {
     'edit-ends': 'crudl-edit-ends',
     'edit-starts': 'crudl-edit-starts',
+    'editor-ready': 'crudl-editor-ready',
+    'editor-showed': 'crudl-editor-showed',
     'create': 'crudl-create',
     'update': 'crudl-update',
     'delete': 'crudl-delete'
@@ -42,6 +45,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         var iidpar = crudl.data('crudl-item-id-parameter') || 'ItemID';
         var formpars = { action: 'create' };
         formpars[iidpar] = 0;
+        var editorInitialLoad = true;
 
         function getExtraQuery(el) {
           // Get extra query of the element, if any:
@@ -61,14 +65,24 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = 0;
           formpars.action = 'create';
           var xq = getExtraQuery($(this));
-          dtr.xshow(instance.settings.effects['show-editor']).reload(function (url, defaultUrl) {
-            return defaultUrl + '?' + $.param(formpars) + xq;
+          editorInitialLoad = true;
+          dtr.reload({
+            url: function (url, defaultUrl) {
+              return defaultUrl + '?' + $.param(formpars) + xq;
+            },
+            success: function () {
+              dtr.xshow(instance.settings.effects['show-editor'])
+              .queue(function () {
+                crudl.trigger(instance.settings.events['editor-showed'], [dtr]);
+                dtr.dequeue();
+              });
+            }
           });
           // Hide viewer when in editor:
           vwr.xhide(instance.settings.effects['hide-viewer']);
           // Custom event
           crudl.trigger(instance.settings.events['edit-starts'])
-          .trigger(instance.settings.events['create']);
+          .trigger(instance.settings.events.create);
 
           return false;
         });
@@ -81,14 +95,24 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           formpars[iidpar] = itemid;
           formpars.action = 'update';
           var xq = getExtraQuery($(this));
-          dtr.xshow(instance.settings.effects['show-editor']).reload(function (url, defaultUrl) {
-            return defaultUrl + '?' + $.param(formpars) + xq;
+          editorInitialLoad = true;
+          dtr.reload({
+            url: function (url, defaultUrl) {
+              return defaultUrl + '?' + $.param(formpars) + xq;
+            },
+            success: function () {
+              dtr.xshow(instance.settings.effects['show-editor'])
+              .queue(function () {
+                crudl.trigger(instance.settings.events['editor-showed'], [dtr]);
+                dtr.dequeue();
+              });
+            }
           });
           // Hide viewer when in editor:
           vwr.xhide(instance.settings.effects['hide-viewer']);
           // Custom event
           crudl.trigger(instance.settings.events['edit-starts'])
-          .trigger(instance.settings.events['update']);
+          .trigger(instance.settings.events.update);
 
           return false;
         })
@@ -124,9 +148,9 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               complete: onComplete
             });
           }
-          
+
           // Custom event
-          crudl.trigger(instance.settings.events['delete'])
+          crudl.trigger(instance.settings.events['delete']);
 
           return false;
         });
@@ -142,6 +166,8 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
               changesNotification.registerSave(dtr.find('form').get(0));
               // Avoid cached content on the Editor
               dtr.children().remove();
+              // Scroll to crudl
+              moveFocusTo(crudl, { marginTop: 50, duration: 200 });
 
               // user callback:
               if (typeof (anotherOnComplete) === 'function')
@@ -168,7 +194,7 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         dtr
         .on('click', '.crudl-cancel', finishEdit)
         .on('ajaxSuccessPostMessageClosed', '.ajax-box', finishEdit)
-        .on('ajaxSuccessPost', 'form', function (e, data) {
+        .on('ajaxSuccessPost', 'form, fieldset', function (e, data) {
           if (data.Code === 0 || data.Code == 5 || data.Code == 6) {
             // Show viewer and reload list:
             vwr.xshow(instance.settings.effects['show-viewer'])
@@ -178,6 +204,17 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
           // hide it (because is inside the editor)
           if (data.Code == 5)
             setTimeout(finishEdit, 1500);
+        })
+        .on('ajaxFormReturnedHtml', 'form,fieldset', function (jb, form, jx) {
+          // Emit the 'editor-ready' event on editor Html being replaced
+          // (first load or next loads because of server-side validation errors)
+          // to allow listeners to do any work over its (new) DOM elements.
+          // The second custom parameter passed means is mean to
+          // distinguish the first time content load and successive updates (due to validation errors).
+          crudl.trigger(instance.settings.events['editor-ready'], [dtr, editorInitialLoad]);
+
+          // Next times:
+          editorInitialLoad = false;
         });
 
         crudl.data('__crudl_initialized__', true);

@@ -1,0 +1,103 @@
+﻿@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var poss = LcData.UserInfo.GetUserPos();
+    PageData["menu-item"] = "positions";
+    
+    // Number of maximum positions displayed:
+    var maxPositions = 5;
+}
+
+        @{
+            int n = 0;
+            var pid = 0;
+        }
+		<ul class="tabs autofill-submenu-items">
+            @{
+                foreach(var c in poss){
+                    n++;
+                    if (n > maxPositions) { break; }
+                    var cls = (n==1 ? "current" : "");
+                    <li class="@cls"><a class="@cls" href="@("#position"+c.PositionID)">@c.PositionSingular</a></li>
+                }
+            }
+            @if (n < maxPositions) {
+                <li class="new-tab new-position @(n == 0 ? "current" : "")"><a href="#position-new">Add a new position</a></li>
+            }
+		</ul>
+        
+        @{
+            n = 0;
+            foreach(var position in poss){
+                n++;
+                if (n > maxPositions) { break; }
+                var cls = (n==1 ? "current" : "");
+                // Setting the current pos (returned with GetUserCurrentPos) in PageData:
+                PageData["position"] = position;
+                pid = position.PositionID;
+        <div id="@("position"+pid)" data-position-id="@pid" class="position-tab tab-body fancy tabbed buttons @cls">
+            <ul class="tabs">
+                <li class="current"><a class="button profile fanciful" href="@("#position"+pid)-services">Services</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-pricing">Pricing</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-photos">Photos</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-locations">Locations</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-licenses">Licenses</a></li>
+                <li><a class="button profile fanciful" href="@("#position"+pid)-reviews">Reviews</a></li>
+                <li class="volatile"><a class="button profile fanciful" href="@("#position"+pid)-backgroundcheck">Background Check</a></li>
+            </ul>
+            <div class="position-quick-tools-bar">
+                <div class="quick-tools-group position-state on-off-switch @(position.StatusID == 1 ? "on" : "off")">
+                    <div class="on-text">ON</div>
+                    <div class="off-text">OFF</div>
+                </div>
+                <div class="quick-tools-group">
+                    <div class="delete-position">
+                        <a href="#delete-position" class="quick-tools-link">Delete position</a>
+                        <div class="lc-ressources position-ressources">
+                            <div class="delete-message-confirm">
+                                <p>Are you really sure you want to delete this position?</p>
+                                <form action="@(LcUrl.LangPath)$R5Dashboard/$DeletePosition/" method="post" class="ajax ajax-box confirm actions">
+                                    <input type="hidden" name="PositionID" value="@pid" />
+                                    <button type="button" class="cancel-action">No</button>
+                                    <button type="submit" class="main-action">Yes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@(LcData.UserInfo.GetUserPublicURL(u.UserID, pid))" class="view-position-profile quick-tools-link">View my profile</a>
+                </div>
+            </div>
+
+            <div id="@("position"+pid)-services" class="tab-body current services-tab" data-source-url="@(LcUrl.LangPath)R5Dashboard/$PositionsServices/?PositionID=@(pid)">
+                @RenderPage("$PositionsServices.cshtml")
+            </div><!-- #@("position"+pid)-services -->
+            <div id="@("position"+pid)-pricing" class="tab-body">
+                @*@RenderPage("_PricingWizard.cshtml")*@
+                @RenderPage("$PositionsPricing.cshtml")
+            </div><!-- #@("position"+pid)-pricing -->
+            <div id="@("position"+pid)-photos" class="tab-body">
+                @RenderPage("$PositionsPhotos.cshtml")
+            </div><!-- #@("position"+pid)-photos -->
+            <div id="@("position"+pid)-locations" class="tab-body">
+                @RenderPage("$PositionsLocations.cshtml")
+            </div><!-- #@("position"+pid)-locations -->
+            <div id="@("position"+pid)-licenses" class="tab-body">
+                @RenderPage("$PositionsLicenses.cshtml")
+            </div><!-- #@("position"+pid)-licenses -->
+            <div id="@("position"+pid)-reviews" class="tab-body">
+                @RenderPage("$PositionsReviews.cshtml")
+            </div><!-- #@("position"+pid)-reviews -->
+            <div id="@("position"+pid)-backgroundcheck" class="tab-body position-background-check-tab">
+                @RenderPage("$PositionsBackgroundCheck.cshtml")
+            </div><!-- #@("position"+pid)-backgroundcheck -->
+            
+        </div><!-- #position@pid -->
+            }
+        }
+        @if (n < maxPositions)
+        {
+            <div id="position-new" class="tab-body fancy add-positions positionservices @(n == 0 ? "current" : "")">
+                @RenderPage(LcUrl.RenderLangPath + "ProviderSignUp/$AddMorePositions.cshtml")
+            </div><!-- position-new -->
+        }

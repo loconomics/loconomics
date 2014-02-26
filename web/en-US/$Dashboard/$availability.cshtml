@@ -1,0 +1,50 @@
+﻿@{
+    // Tools/Calendar
+    LcHelpers.ProviderPage();
+    
+    var isInOnboarding = (bool)(PageData["IsInOnboarding"] ?? false);
+    
+    // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
+}
+<h1 class="DashboardSection-page-header">Your availability</h1>
+<p class="DashboardSection-page-introduction">
+    What hours do you keep? We'd like to know when we can generally expect to schedule
+    your appointments. You can add client bookings and other appointments that you have
+    outside of Loconomics by clicking the Appointments tab.
+    Watch <a target="_blank" href="https://loconomics.zendesk.com/entries/24007951-Adding-Updating-your-general-availability">this short video</a> if you need help.
+</p>
+
+<div class="DashboardAvailability">
+    <form class="BasicForm ajax ajax-box" method="post" action="@(LcUrl.LangPath)$dashboard/$availability/">
+
+        <div id="DashboardWeeklySchedule" class="DashboardSection-page-section is-required">
+            <h2 class="DashboardSection-page-section-header">Set your weekly schedule</h2>
+            @RenderPage("Availability/_$WeeklySchedule.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div id="DashboardAppointments" class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Block off other times you're busy</h2>
+            @RenderPage("Availability/_$Appointments.cshtml", new { PageState = ModelState })
+        </div>
+
+        <div id="DashboardCalendarSync" class="DashboardSection-page-section">
+            <h2 class="DashboardSection-page-section-header">Sync your existing calendar(s)</h2>
+            @RenderPage("Availability/$CalendarSync.cshtml", new { PageState = ModelState })
+        </div>
+
+        @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+        
+        <div class="actions">
+            <button class="@(isInOnboarding ? "next-action" : "main-action")" type="submit">@(isInOnboarding ? "Next" : "Save")</button>
+        </div>
+    </form>
+</div>
+
+<div class="InlineNotification InlineNotification--hasRequiredSections">
+    Required sections
+</div>
+
+@{
+    // On Post check validation status, returning a Json response or html
+    LcHelpers.CheckDashboardSuccessPost("availability");
+}

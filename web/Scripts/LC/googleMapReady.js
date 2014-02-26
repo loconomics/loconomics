@@ -4,30 +4,38 @@
 
 var loader = require('./loader');
 
-module.exports = function googleMapReady(ready) {
-    var stack = googleMapReady.stack || [];
-    stack.push(ready);
-    googleMapReady.stack = stack;
+// Private static collection of callbacks registered
+var stack = [];
 
-    if (googleMapReady.isReady)
-        ready();
-    else if (!googleMapReady.isLoading) {
-        googleMapReady.isLoading = true;
-        loader.load({
-            scripts: ["https://www.google.com/jsapi"],
-            completeVerification: function () { return !!window.google; },
-            complete: function () {
-                google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
-                    googleMapReady.isReady = true;
-                    googleMapReady.isLoading = false;
+var googleMapReady = module.exports = function googleMapReady(ready) {
+  stack.push(ready);
 
-                    for (var i = 0; i < stack.length; i++)
-                        try {
-                            stack[i]();
-                        } catch (e) { }
-                }
-                });
-            }
+  if (googleMapReady.isReady)
+    ready();
+  else if (!googleMapReady.isLoading) {
+    googleMapReady.isLoading = true;
+    loader.load({
+      scripts: ["https://www.google.com/jsapi"],
+      completeVerification: function () { return !!window.google; },
+      complete: function () {
+        google.load("maps", "3.10", { other_params: "sensor=false", "callback": function () {
+          googleMapReady.isReady = true;
+          googleMapReady.isLoading = false;
+
+          for (var i = 0; i < stack.length; i++)
+            try {
+              stack[i]();
+            } catch (e) { }
+        }
         });
-    }
+      }
+    });
+  }
+};
+
+// Utility to force the refresh of maps that solve the problem with bad-sized map area
+googleMapReady.refreshMap = function refreshMaps(map) {
+  googleMapReady(function () {
+    google.maps.event.trigger(map, "resize");
+  });
 };

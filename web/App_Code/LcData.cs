@@ -577,8 +577,10 @@ public static partial class LcData
             uncheck the type, don't delete */
         DECLARE @Type varchar(10)
         SET @Type = @3
+        -- Type can be 'work', 'travel' or 'both
 
-        IF EXISTS (SELECT AddressID FROM ServiceAddress
+        IF @Type not like 'both' AND
+            EXISTS (SELECT AddressID FROM ServiceAddress
                     WHERE AddressID = @0 AND UserID = @1 AND PositionID = @2
                             AND ServicesPerformedAtLocation = 1
                             AND TravelFromLocation = 1)
@@ -1363,5 +1365,9 @@ public static partial class LcData
                 );
         }
     }
+    #endregion
+
+    #region Onboarding
+    public static List<string> OnboardingSteps = new List<string> { "welcome", "your-work", "availability", "about-you", "payments" };
     #endregion
 }

@@ -3,13 +3,22 @@
 **/
 @import "nib"
 
+/* Important: BasicForm class is not intended to be assigned only to 'form' elements,
+    it can be attached to any element, most times containers of forms. */
 .BasicForm {
-    legend {
+    legend,
+    .BasicForm-section-header {
         font-weight: bold;
+        display: block;
+        font-size: 1em;
+        color: $colorGray;
+        text-align: left;
+        line-height: normal;
     }
-    
+
     > ul > li,
-    fieldset > ul > li {
+    fieldset > ul > li,
+    .BasicForm-section > ul > li {
         padding: 0px 10px;
         margin: 6px 0px;
         
@@ -28,7 +37,8 @@
         }
     }
     
-    fieldset {
+    fieldset,
+    .BasicForm-section {
         margin: 0px 0px 10px;
         padding: 0px;
     }
@@ -37,8 +47,12 @@
         padding: 0 10px;
     }
     
-    textarea {
+    textarea,
+    .BasicForm-fill {
         width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+        box-sizing: border-box;
     }
     
     textarea,
@@ -46,4 +60,12 @@
     select {
         box-sizing: border-box;
     }
+}
+
+/* Fixing the buggy browsers implementation of legend element */
+normalizeLegend() {
+    clear: both;
+    float: left;
+    overflow: hidden;
+    width: auto;
 }

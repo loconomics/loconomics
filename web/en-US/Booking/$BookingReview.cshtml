@@ -3,13 +3,15 @@
 @{
     LcHelpers.SecurePage();
     
-    int thisUserID = (int)(PageData["AsUserID"] ?? Request["AsUserID"].AsInt());
+    int thisUserID = ((string)PageData["AsUserID"] ?? Request["AsUserID"]).AsInt();
     if (thisUserID == 0) {
         thisUserID = WebSecurity.CurrentUserId;
     }
+    bool useLinkActions = PageData["UseLinkActions"] ?? false;
+    var extraTitleClass = PageData["ExtraTitleClass"] ?? "";
     
     var thisUserData = LcData.UserInfo.GetUserRow(thisUserID);
-    int bID = Request["BookingID"].AsInt();
+    int bID = ((string)PageData["BookingID"] ?? Request["BookingID"]).AsInt();
     
     dynamic booking = PageData["booking"] = LcData.Booking.GetBooking(bID);
 
@@ -55,13 +57,16 @@ else
 
 <div class="booking-review booking-request booking">
     @if (readView) {
-        <h3>@thisUserData.FirstName, please review <span class="user-public-name">@itsUserData.FirstName</span></h3>
+        <h3 class="@extraTitleClass">Booking review by @thisUserData.FirstName</h3>
+    }
+    else if (myUserType == "provider") {
+        <h3 class="@extraTitleClass">@thisUserData.FirstName, please review <span class="user-public-name">@itsUserData.FirstName</span></h3>
     } else {
-        <h3>Tell us how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
+        <h3 class="@extraTitleClass">Tell us how it went with <span class="user-public-name">@itsUserData.FirstName</span></h3>
         <span class="updateddate">This will only take a couple minutes and will be a big help to @itsUserData.FirstName and the community</span>
     }
     <h4>Booking Summary</h4>
-    <div class="booking-summary">
+    <div class="booking-summary ItemsList">
         <ul class="item-summary">
             <li class="time">
                 <h5>Time:</h5> 
@@ -76,21 +81,28 @@ else
             </li>
         </ul>
         <div class="actions">
-            <button class="item-action open-booking-action" data-booking-id="@bID">View</button>
+            @if (useLinkActions)
+            {
+                <a class="item-action" href="@(LcUrl.LangPath)dashboard/messages/booking/@(bID)/">View</a>
+            }
+            else
+            {
+                <button class="item-action open-booking-action" data-booking-id="@bID">View</button>
+            }
             <div class="total-price item-extra-info">$@booking.TotalPrice</div>
         </div>
     </div>
     @if (myUserType == "customer") {
         if (booking.ReviewedByCustomer) {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID, BookingID = bID })
         } else {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$ProviderRatingForm.cshtml")
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$ProviderRatingForm.cshtml", new { BookingID = bID })
         }
     } else if (myUserType == "provider") {
         if (booking.ReviewedByProvider) {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID })
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$BookingRatingDetails.cshtml", new { AsUserID = thisUserID, BookingID = bID })
         } else {
-            @RenderPage(LcUrl.RenderLangPath + "Reviews/$CustomerRatingForm.cshtml")
+            @RenderPage(LcUrl.RenderLangPath + "Reviews/$CustomerRatingForm.cshtml", new { BookingID = bID })
         }
     }
 </div>

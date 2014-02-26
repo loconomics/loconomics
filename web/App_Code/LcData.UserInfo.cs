@@ -127,6 +127,8 @@ public static partial class LcData
                                     ) > 0 THEN Cast(1 As bit)
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
+
+                                ,OnboardingStep
                                 
                                 ,ProviderWebsiteURL
                                 ,ProviderProfileURL
@@ -150,7 +152,7 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
-                                 INNER JOIN
+                                 LEFT JOIN
                                 Gender As G
                                   ON G.GenderID = A.GenderID
                                   	AND G.LanguageID = A.PreferredLanguageID  
@@ -207,6 +209,8 @@ public static partial class LcData
                                     ELSE Cast(0 As bit)
                                 END) As IsActiveProvider
 
+                                ,OnboardingStep
+
                                 ,ProviderWebsiteURL
                                 ,ProviderProfileURL
 
@@ -246,7 +250,7 @@ public static partial class LcData
                                  INNER JOIN
                                 UserProfile As UP
                                   ON UP.UserID = A.UserID
-                                 INNER JOIN
+                                 LEFT JOIN
                                 Gender As G
                                   ON G.GenderID = A.GenderID
                                   	AND G.LanguageID = A.PreferredLanguageID  
@@ -892,6 +896,13 @@ public static partial class LcData
                                 AND V.LanguageID = @1 AND V.CountryID = @2
                     WHERE   UserID = @0
                 ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+
+        public static bool HasEmailVerification(int userID)
+        {
+            using (var db = Database.Open("sqlloco")) {
+                return N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", userID)) == null;
             }
         }
         #endregion

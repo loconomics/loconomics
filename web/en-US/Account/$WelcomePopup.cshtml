@@ -1,8 +1,10 @@
 ﻿@{
     //string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-providers";
-    string PROVIDER_REDIRECT = LcUrl.LangPath + "HelpCenter/ProviderWelcome/";
-    string CUSTOMER_REDIRECT = LcUrl.LangPath + "HelpCenter/HowItWorks/#howitworks-customers";
+    string PROVIDER_REDIRECT = LcUrl.LangPath + "dashboard/"; // "HelpCenter/ProviderWelcome/";
+    string CUSTOMER_REDIRECT = LcUrl.LangPath + "dashboard/"; //"HelpCenter/HowItWorks/#howitworks-customers";
     var redirect = "";
+    bool withLogo = PageData["WithLogo"] ?? true;
+    string title = PageData["Title"] ?? "Welcome to Loconomics";
     
     /* The special case of provider logged but without a position still (it went from facebook redirect)
         doesn't need more of the fields, only JobTitle,
@@ -128,7 +130,7 @@
 }
 <div id="welcomepopup" class="@(providerWithoutPosition ? "select-position" : "")">
     <header>
-        <h1>Welcome to Loconomics</h1>
+        <h1 class="@(withLogo ? "has-icon" : "")">@(title)</h1>
         <div class="presentation">
             Whether you're providing or purchasing local services, we've designed a marketplace with you in mind.
             We're a <a href="#bcorp" class="has-tooltip" title="Benefit Corporations are a new class of corporation that are required to create a material positive impact on society and the environment.">California Benefit Corporation</a>
@@ -149,8 +151,8 @@
             {
             <div class="profile-choice">
                 <h2>Join our San Francisco community as a:</h2>
-                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", Request["profile-type"]) /> Provider</label>
-                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", Request["profile-type"]) /> Customer</label>
+                <label><input type="radio" name="profile-type" value="provider" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("provider", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Provider</label>
+                <label><input type="radio" name="profile-type" value="customer" @Validation.GetHtml("profile-type") @LcHelpers.IsChecked("customer", new string[] { Request["profile-type"], (string)PageData["PreselectedType"] }) /> Customer</label>
             </div>
             }
             <div class="profile-data">

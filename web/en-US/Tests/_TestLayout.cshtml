@@ -11,6 +11,19 @@
     
     // Sniff IE browsers or based on its same engine (Trident).
     var isIE = Request.UserAgent.Contains("MSIE") || Request.UserAgent.Contains("Trident");
+    
+    // Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.InDev) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }
 }
 <!doctype html>
     <!--[if lt IE 8]>    <html class="no-js ie ie7 oldie" lang="@abbrLangCode" data-culture="@culture"> <![endif]-->
@@ -25,10 +38,15 @@
           <meta name="author" content="Loconomics Inc."/>
           @* Mobile viewport optimization is need only if there is a well optimized css counter-part, disabled until that: <meta name="viewport" content="width=device-width,initial-scale=1"/>*@
           <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
-          <link rel="stylesheet" href="@Href(LcUrl.AppPath + "Styles/smoothness/jquery-ui-1.8.21.custom.css")"/>
-           @* Our styles *@
-           @LcAssets.PrintStyleTag(LcUrl.AppPath + "Styles/style.css")
-           @LcAssets.GetStylesTags()
+
+            @* Our styles *@
+            @LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+            @LcAssets.GetStylesTags()
+
+            @foreach (var js in loadScripts)
+            {
+                @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+            }
 
            @* Additional styles for test pages *@
            <style type="text/css">
@@ -63,7 +81,6 @@
                    if (te.length) $(this).toggleClass('closedTree');
                });
             </script>
-            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/script.js")
 
             @if(isIE){
             <!--[if lt IE 9]>

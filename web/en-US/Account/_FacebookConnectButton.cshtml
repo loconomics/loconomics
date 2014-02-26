@@ -52,6 +52,7 @@
                                 } else if (result == "json") {
                                 <text>
                                 popup(url, 'small', null, "Verifing");
+                                $(document).trigger('connectedToFacebook');
                                 </text>
                                 }
                                 /*FB.api('/me', function (response) {

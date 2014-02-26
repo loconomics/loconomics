@@ -2,7 +2,8 @@
 var $ = jQuery || require('jquery'),
     callbacks = require('./ajaxCallbacks'),
     changesNotification = require('./changesNotification'),
-    blockPresets = require('./blockPresets');
+    blockPresets = require('./blockPresets'),
+    validationHelper = require('./validationHelper');
 
 // Global settings, will be updated on init but is accessed
 // through closure from all functions.
@@ -54,40 +55,77 @@ function ajaxFormsSubmitHandler(event) {
     ctx.form = (event.data ? event.data.form : null) || $(this);
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
-    // The multi-form-selector attribute allows set a css-selector to find forms or containers
-    // under the 'box' that will be sent in the POST, and not only the elements inside the 
-    // source 'form' (this last is the default behavior if not selector is specified -- single-form mode).
-    var multiFormSelector = ctx.form.data('multi-form-selector');
-    var data;
-    if (multiFormSelector)
-      data = ctx.box.find(multiFormSelector).find(':input').serialize();
-    else
-      data = ctx.form.find(':input').serialize();
+
+    // Validations
+    var validationPassed = true;
+    // To support sub-forms throuh fieldset.ajax, we must execute validations and verification
+    // in two steps and using the real form to let validation mechanism work
+    var isSubform = ctx.form.is('fieldset.ajax');
+    var actualForm = isSubform ? ctx.form.closest('form') : ctx.form,
+      disabledSummaries = new jQuery();
+
+    // On subform validation, we don't want the form validation-summary controls to be affected
+    // by this validation (to avoid to show errors there that doesn't interest to the rest of the form)
+    // To fullfill this requisit, we need to hide it for the validator for a while and let only affect
+    // any local summary (inside the subform).
+    if (isSubform) {
+      disabledSummaries = actualForm
+      .find('[data-valmsg-summary=true]')
+      .filter(function () {
+        // Only those that are outside the subform
+        return !$.contains(ctx.form.get(0), this);
+      })
+      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+      // (in other words, using 'data' will not work)
+      .attr('data-valmsg-summary', 'false');
+    }
 
     // First at all, if unobtrusive validation is enabled, validate
-    var valobject = ctx.form.data('unobtrusiveValidation');
+    var valobject = actualForm.data('unobtrusiveValidation');
     if (valobject && valobject.validate() === false) {
-        goToSummaryErrors(ctx.form);
-        // Validation is actived, was executed and the result is 'false': bad data, stop Post:
-        return;
+      validationHelper.goToSummaryErrors(ctx.form);
+      validationPassed = false;
     }
 
     // If custom validation is enabled, validate
-    var cusval = ctx.form.data('customValidation');
+    var cusval = actualForm.data('customValidation');
     if (cusval && cusval.validate && cusval.validate() === false) {
-        goToSummaryErrors(ctx.form);
-        // custom validation not passed, out!
-        return false;
+      validationHelper.goToSummaryErrors(ctx.form);
+      validationPassed = false;
+    }
+
+    // To support sub-forms, we must check that validations errors happened inside the
+    // subform and not in other elements, to don't stop submit on not related errors.
+    // Just look for marked elements:
+    if (isSubform && ctx.form.find('.input-validation-error').length)
+      validationPassed = false;
+
+    // Re-enable again that summaries previously disabled
+    if (isSubform) {
+      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+      // (in other words, using 'data' will not work)
+      disabledSummaries.attr('data-valmsg-summary', 'true');
+    }
+
+    // Check validation status
+    if (validationPassed === false) {
+      // Validation failed, submit cannot continue, out!
+      return false;
     }
 
     // Data saved:
     ctx.changedElements = (event.data ? event.data.changedElements : null) || changesNotification.registerSave(ctx.form.get(0));
+
+    // Notification event to allow scripts to hook additional tasks before send data
+    ctx.form.trigger('presubmit', [ctx]);
 
     // Loading, with retard
     ctx.loadingtimer = setTimeout(function () {
         ctx.box.block(blockPresets.loading);
     }, settings.loadingDelay);
     ctx.autoUnblockLoading = true;
+
+    var data = ctx.form.find(':input').serialize();
 
     // Do the Ajax post
     $.ajax({
@@ -113,15 +151,16 @@ function initAjaxForms(options) {
     /* Attach a delegated handler for a special ajax form case: subforms, using fieldsets. */
     $(settings.element).on('click', 'fieldset.ajax .ajax-fieldset-submit',
         function (event) {
-            var form = $(this).closest('fieldset.ajax');
-            event.data = {
-                form: form,
-                box: form.closest('.ajax-box'),
-                action: form.data('ajax-fieldset-action'),
-                // Data saved:
-                changedElements: changesNotification.registerSave(form.get(0), form.find(':input[name]'))
-            };
-            return ajaxFormsSubmitHandler(event);
+          var form = $(this).closest('fieldset.ajax');
+
+          event.data = {
+            form: form,
+            box: form.closest('.ajax-box'),
+            action: form.data('ajax-fieldset-action'),
+            // Data saved:
+            changedElements: changesNotification.registerSave(form.get(0), form.find(':input[name]'))
+          };
+          return ajaxFormsSubmitHandler(event);
         }
     );
 }

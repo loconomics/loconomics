@@ -1,0 +1,79 @@
+﻿@*
+    List user licenses/professional certifications
+ *@
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var positionID = PageData["PositionID"] ?? Request["PositionID"].AsInt();
+
+    dynamic userLicenses = null;
+    var sqlGetUserLicenses = @"
+        SELECT
+            V.LicenseCertificationID,
+            L.LicenseCertificationType,
+            S.StatusName,
+            S.StatusDescription
+            ,SP.StateProvinceName
+            ,C.CountyName
+            ,V.LicenseStatus
+            ,V.ExpirationDate
+            ,V.LastVerifiedDate
+            ,L.LicenseCertificationAuthority
+            ,L.LicenseCertificationTypeDescription
+            ,V.Comments
+        FROM
+            LicenseCertification As L
+             INNER JOIN
+            userlicenseverification As V
+              ON L.LicenseCertificationID = V.LicenseCertificationID
+             INNER JOIN
+            Status As S
+              ON V.StatusID = S.StatusID
+             INNER JOIN
+            StateProvince As SP
+              ON L.StateProvinceID = SP.StateProvinceID
+             INNER JOIN
+            County As C
+              ON C.CountyID = V.CountyID
+        WHERE
+            V.ProviderUserID = @0
+             AND
+            V.PositionID = @1
+             AND
+            L.Active = 1
+    ";
+
+    using (var db = Database.Open("sqlloco")) {
+        userLicenses = db.Query(sqlGetUserLicenses, u.UserID, positionID);
+    }
+}
+@if (userLicenses != null && userLicenses.Count > 0)
+{
+    <ul>
+        @foreach (var license in userLicenses)
+        {
+            <li class="ItemBox crudl-item" data-crudl-item-id="@license.LicenseCertificationID">
+                <h1 class="ItemBox-name">@(license.LicenseCertificationType)</h1>
+                <p class="ItemBox-important">@license.StatusName</p>
+                @if (!String.IsNullOrEmpty(license.StatusDescription))
+                {
+                    <p>@license.StatusDescription</p>
+                }
+                <p><strong>Authority:</strong> @license.LicenseCertificationAuthority</p>
+                <p><strong>State:</strong> @license.StateProvinceName</p>
+                <p><strong>County:</strong> @license.CountyName</p>
+                @if (!String.IsNullOrEmpty(license.LicenseStatus))
+                {
+                    <p><strong>Status:</strong> @license.LicenseStatus</p>
+                }
+                <p><strong>Expiration Date:</strong> @license.ExpirationDate</p>
+                @if (!String.IsNullOrEmpty(license.Comments))
+                {
+                    <p><strong>Comments:</strong> @license.Comments</p>
+                }
+            </li>
+        }
+    </ul>
+}

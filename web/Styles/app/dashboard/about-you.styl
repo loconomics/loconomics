@@ -1,6 +1,9 @@
-/** Promote
+/** About-you
 **/
 @import "../utils/BasicForm"
+@import "../utils/Crudl--basicStyle"
+@import "../utils/ItemBox"
+@import "../utils/ActionBox"
 
 .DashboardAboutYou {
     .DashboardPublicBio {
@@ -51,6 +54,16 @@
             /* Same height than image to be aligned */
             height: $photoHeight + 2px;
         }
+        
+        .DashboardPublicBio-gender {
+            margin: 1em 0;
+            
+            .DashboardPublicBio-gender-label {
+                min-width: $photoWidth;
+                display: inline-block;
+                box-sizing: border-box;
+            }
+        }
     }
     
     .DashboardPersonalWebsite {
@@ -59,6 +72,79 @@
             
             input {
                 width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    }
+    
+    .DashboardEducation {
+        .DashboardEducation-editor {
+            input {
+                width: 300px;
+            }
+            
+            select {
+                width: 60px;
+            }
+            
+            label {
+                width: 150px;
+                display: inline-block;
+            }
+        }
+        
+        DashboardEducation-list {
+            DashboardEducation-list-item {           
+                p {
+                    margin: 0;    
+                }
+
+                .years-attended {
+                    color: #828282;
+                }
+            }
+        }
+    }
+    
+    .DashboardVerifications {      
+        .DashboardVerifications-list {
+            .DashboardVerifications-list-item {
+                .DashboardVerifications-list-item-status {
+                    color: Red;
+                }
+                
+                .DashboardVerifications-list-item-status--confirmed{
+                    color: Green;
+                }
+            }
+
+            .DashboardVerifications-list-icons {
+                li{
+                    background: no-repeat center left;
+                    padding: 0 0 0 30px;
+                    margin: 6px 0;
+
+                    &.license{
+                        background-image: url('../img/theme/icon-licenses.png');
+                    }
+                
+                    &.verification{
+                        background-image: url('../img/theme/icon-verifications.png');
+                    }
+                
+                    &.share{
+                        background-image: url('../img/theme/icon-share-medium.png');
+                    }
+                }
+            }
+        }
+    }
+    
+    .DashboardContactInfo {
+        li {
+            input,
+            select {
+                width: 70% !important;
                 box-sizing: border-box;
             }
         }

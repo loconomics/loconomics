@@ -1,4 +1,5 @@
 @import("../utils/arrows")
+@import("../utils/mediaQueries")
 
 .DashboardSection .DashboardSection-sidebar {
     padding: 0;
@@ -22,7 +23,7 @@
 		a:link,
 		a:visited {
 		    text-transform: lowercase;
-		    color: $colorGray;
+		    color: $colorMdGray;
 		    font-size: 1em;
 		    font-weight: bold;
 		    text-decoration: none;
@@ -30,7 +31,7 @@
 
 		> h1 {
 		    text-indent: 1em;
-		    border-bottom: 1px solid $colorGray;
+		    border-bottom: 1px solid $colorMdGray;
 		    padding: 1em 0 .3em;
 		    margin: 0;
 		}
@@ -86,6 +87,7 @@
                         Four for disabled/onboarding
                     */
 		            background: url('../img/theme/dashboard-icons.png') transparent no-repeat right center;
+                    hr-image('../img/theme/dashboard-icons@2x.png', 99px, 174px);
 		        }
             
                 &.u-withIcon {
@@ -93,7 +95,7 @@
 		                background-position: 0 0;
 		            }
 		        
-		            &.go-dashboardCalendar:before {
+		            &.go-dashboardAvailability:before {
 		                background-position: 0 -25px;
 		            }
 		        
@@ -111,6 +113,10 @@
 		        
 		            &.go-dashboardPrivacy:before {
 		                background-position: 0 -125px;
+		            }
+		            
+		            &.go-dashboardMessages:before {
+		                background-position: 0 -150px;
 		            }
 		        
 		            &.go-dashboardYourWork:before {
@@ -150,7 +156,7 @@
 		            background-position: -50px 0;
 		        }
 		        
-		        &.go-dashboardCalendar:before {
+		        &.go-dashboardAvailability:before {
 		            background-position: -50px -25px;
 		        }
 		        
@@ -168,6 +174,10 @@
 		        
 		        &.go-dashboardPrivacy:before {
 		            background-position: -50px -125px;
+		        }
+		        
+		        &.go-dashboardMessages:before {
+		            background-position: -50px -150px;
 		        }
 		            
 		        &.go-dashboardYourWork:before {
@@ -193,7 +203,7 @@
 		            background-position: -25px 0;
 		        }
 		        
-		        &.go-dashboardCalendar:before {
+		        &.go-dashboardAvailability:before {
 		            background-position: -25px -25px;
 		        }
 		        
@@ -211,6 +221,10 @@
 		        
 		        &.go-dashboardPrivacy:before {
 		            background-position: -25px -125px;
+		        }
+		        
+		        &.go-dashboardMessages:before {
+		            background-position: -25px -150px;
 		        }
 		            
 		        &.go-dashboardYourWork:before {
@@ -252,7 +266,7 @@
 		            background-position: -75px 0;
 		        }
 		        
-		        &.go-dashboardCalendar:before {
+		        &.go-dashboardAvailability:before {
 		            background-position: -75px -25px;
 		        }
 		        
@@ -270,6 +284,10 @@
 		        
 		        &.go-dashboardPrivacy:before {
 		            background-position: -75px -125px;
+		        }
+		        
+		        &.go-dashboardMessages:before {
+		            background-position: -75px -150px;
 		        }
 		        
 		        &.go-dashboardYourWork:before {

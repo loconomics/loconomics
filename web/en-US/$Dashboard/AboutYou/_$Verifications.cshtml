@@ -1,0 +1,43 @@
+﻿@{
+    LcHelpers.SecurePage();
+    
+    var u = LcData.UserInfo.GetUserRow();
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+    
+    var hasEmailVerification = LcData.UserInfo.HasEmailVerification(u.UserID);
+    
+    // Code for tests: testing the confirm-email button independant of the real state
+    if (!LcHelpers.InLive && Request["confirmemail"].AsBool()){
+        hasEmailVerification = false;
+    }
+}
+@* CRUDL: Right now, Crudl is disabled because there is no need for it and no editor pages (there is not edition capability for verifications) *@
+<fieldset class="DashboardVerifications"> @* crudl *@
+    @*<div class="DashboardVerifications-editor crudl-editor BasicForm" data-source-url="@(LcUrl.LangUrl)$dashboard/AboutYou/$VerificationEdit/">
+    </div>
+    *@
+    <div class="DashboardVerifications-actions ActionsBoxList">
+        <div class="ActionBox">
+            <a href="#connect-with-facebook">Connect with Facebook</a>
+            <p>
+                Letting potential clients know you have a trusted online presence
+                helps them know you're real.
+            </p>
+        </div>
+        @if (!hasEmailVerification)
+        {
+            <div class="ActionBox">
+                <a href="#confirm-email">Confirm e-mail address</a>
+                <p>
+                    Please click on "Verify my account" in the e-mail we sent you to verify your address. Click here to resend. 
+                </p>
+            </div>
+        }
+    </div>
+    <div class="DashboardVerifications-list"> @* crudl-viewer *@
+       <div class="crudl-list" data-source-url="@(LcUrl.LangUrl)$dashboard/AboutYou/$VerificationsList/">
+            @RenderPage("$VerificationsList.cshtml", new { NewDesign = true, HasEmailVerification = hasEmailVerification })
+        </div>
+    </div>
+</fieldset>

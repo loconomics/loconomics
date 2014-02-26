@@ -5,7 +5,7 @@
     // By default is true, the standard behavior, but with false the user will be logged automatically
     // on registering, with 'partially confirmed', but an email will sent will the link to confirm its address still.
     bool waitConfirmation = PageData["WaitConfirmation"] ?? Session["RegisterWaitConfirmation"] ?? true;
-    string redirect = N.W(Request.QueryString["Redirect"]) ?? LcUrl.LangPath + "Dashboard/Alerts/";
+    string redirect = N.W(Request.QueryString["Redirect"]) ?? LcUrl.LangPath + "Dashboard/";
     
     // Setup Validation
     // Required first name and last name

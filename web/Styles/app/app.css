@@ -33,6 +33,15 @@
     font-style: normal;
 }
 
+[draggable=true] {
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
 /*
  * HTML5 ✰ Boilerplate
  *
@@ -203,7 +212,7 @@ Yellow 	#F0B600
 */
 
 body {
-    color: #747474;
+    color: #333333;
     font-family: "Alte Haas Grotesk", Helvetica, Arial, sans-serif;
     font-size: .9em;
     line-height: 150%;
@@ -281,7 +290,7 @@ form textarea {
     padding: 0.31em 0.47em;   
     font-size: .9em;
     background-color: #f5f5f5;
-    color: #747474;
+    color: #333333;
     /*box-shadow: 0 0 0.1em 0.18em #FFFFFF inset, 0 0 0 0.1em #C9C9C9 inset;*/
     box-shadow: 0 0 2px 2px #FFFFFF inset;
     -moz-box-shadow: 0 0 2px 2px #FFFFFF inset;
@@ -303,7 +312,7 @@ form textarea{
 form input[type="text"]:focus,
 form input[type="password"]:focus,
 form textarea:focus{
-    border-color: #747474;
+    border-color: #333333;
     outline: none;
 }
 form input[type="text"].error, form input[type="password"].error {
@@ -313,10 +322,10 @@ form input[type="text"].error, form input[type="password"].error {
 form select:focus,
 form input[type="checkbox"]:focus,
 form input[type="radio"]:focus {
-    box-shadow: 0 0 0 1px #747474;
-    -moz-box-shadow: 0 0 0 1px #747474;
-    -o-box-shadow: 0 0 0 1px #747474;
-    -webkit-box-shadow: 0 0 0 1px #747474;
+    box-shadow: 0 0 0 1px #333333;
+    -moz-box-shadow: 0 0 0 1px #333333;
+    -o-box-shadow: 0 0 0 1px #333333;
+    -webkit-box-shadow: 0 0 0 1px #333333;
     outline: none;
 }
 
@@ -497,6 +506,7 @@ div.scripts { display: none; }
     text-align: center;
     top: 17px;
     width: 100%;
+    color: #747474;
 }
 #site-header .wrap { position: relative; width: 960px; margin: 0 auto; }
 #site-header a.button { color: #fff; }
@@ -509,6 +519,7 @@ div.scripts { display: none; }
     position: absolute;
     top: 0;
     width: 201px;
+    z-index: 1000;
 }
 .es #site-header #logo.replace { background-image: url('../img/theme/logo-loconomics-header-ES.png'); }
 #site-header ul, header ul li { list-style-type: none; margin: 0; padding: 0; vertical-align: middle; }
@@ -820,14 +831,14 @@ img.ui-datepicker-trigger{
 }
 /* .actions: container for buttons -actions, tasks, calculations, etc- */
 .actions {
-    text-align: right !important;
-    display: block !important;
+    text-align: right;
+    display: block;
     clear: both;
 }
 td.actions, th.actions {
     display: table-cell !important;
     clear: none;
-    text-align: center !important;
+    text-align: center;
 }
 form fieldset.actions{
     margin: 10px 0 !important;
@@ -890,6 +901,7 @@ form.has-changes .actions .main-action:hover,
     text-transform: lowercase;
     background: #E44600 !important;
     font-size: 1em;
+    line-height: 180%;
 }
 .actions .item-action:hover{
     box-shadow: 0 0 5px 2px #E44600;
@@ -917,7 +929,7 @@ form.has-changes .actions .main-action:hover,
     box-shadow: 0 0 5px 2px #00989a;
 }
 .report-action {
-    color: #747474;
+    color: #333333;
     text-decoration: none;
     margin: 0 5px;
 }
@@ -1990,7 +2002,7 @@ html.boxshadow #loginBox .field-validation-error{
     background: #88cfd0;
 }
 .tabbed.wizard > .tabs > li.current a .label {
-    color: #747474;
+    color: #333333;
 }
 
 /*
@@ -2184,11 +2196,11 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingDetails .w-BookingDetails-title {
     margin: 0 0 .3em;
     font-size: 1.5em;
-    color: #747474;
+    color: #333333;
 }
 .w-BookingDetails .c-SectionTitle {
     font-weight: bold;
-    color: #747474;
+    color: #333333;
     margin: 1em 0 0 !important;
     font-size: 1.1em;
 }
@@ -2205,6 +2217,7 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingDetails .w-BookingDetails-actions {
     float: none !important;
     text-align: left !important;
+    margin-top: .5em;
 }
 .w-BookingDetails .w-BookingDetails-actions .item-action {
     background-color: #E44600 !important;
@@ -2218,6 +2231,7 @@ html.boxshadow #loginBox .field-validation-error{
     position: absolute;
     top: 0;
     right: 0;
+    background-color: White;
 }
 
 /*= w-PricingSummary */
@@ -2260,7 +2274,7 @@ html.boxshadow #loginBox .field-validation-error{
 /*= w-BookingRequestedTimes */
 .w-BookingRequestedTimes .w-BookingRequestedTimes-optionTitle {
     font-size: .9em;
-    color: #747474;
+    color: #333333;
     font-weight: normal;
     margin: 4px 0 0;
     line-height: 1em;
@@ -2268,111 +2282,6 @@ html.boxshadow #loginBox .field-validation-error{
 .w-BookingRequestedTimes .w-BookingRequestedTimes-date {
     font-size: 1.1em;
 }
-
-/*= w-ProviderPackage */
-.w-ProviderPackage {
-    color: #747474;
-
-    background: none repeat scroll 0 0 white;
-    border: 3px solid #61bdbe;
-    border-radius: 15px 15px 15px 15px;
-    padding: 15px;
-    margin: 0 0 10px 0;
-    position: relative;
-    text-align: left;
-}
-.w-ProviderPackage-name {
-    margin: 0 !important;
-    font-size: 1.5em !important;
-    color: #00989A !important;
-    max-width: 500px;
-}
-.w-ProviderPackage-sectionTitle {
-    display: block !important;
-    color: rgb(59, 59, 59);
-    font-size: 1em;
-    margin: 5px 0px;
-}
-.w-ProviderPackage-serviceSummary {
-    color: #00989A;
-    font-size: 1.3em;
-}
-.w-ProviderPackage-serviceAttributes {
-    overflow: hidden;
-}
-.w-ProviderPackage-serviceAttributes > li {
-    width: 200px !important;
-    text-overflow: ellipsis;
-    float: left;
-    list-style: none !important;
-    background: url('../img/theme/bullet.png') no-repeat left center;
-    padding-left: 14px;
-}
-
-/*= w-ProviderPackage inside w-BookingDetails */
-.w-BookingDetails .w-ProviderPackage {
-    border-radius: 0;
-    border: 1px solid #747474;
-    background: #F4F4F4;
-}
-.w-BookingDetails .w-ProviderPackage-name {
-    color: #6c6c6c !important;
-}
-.w-BookingDetails .w-ProviderPackage-serviceSummary {
-    color: #6c6c6c !important;
-}
-
-
-/* obsolete?
-.booking-request {
-    position: relative;
-}
-.booking-request .mini-position-user-info,
-.booking .mini-position-user-info {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-.booking-request h3,
-.booking-request h4 {
-    color: #E44600;
-}
-.booking-request h3 {
-    font-size: 1.4em;
-    margin: 0;
-}
-.booking-request h4 {
-    font-size: 1.2em;
-    margin: 15px 0 0;
-}
-.booking-request h5 {
-    font-size: 1.1em;
-    margin: 8px 0 0;
-    color: #6c6c6c;
-}
-.booking-request p {
-    margin: 0;
-}
-.requested-booking-services .services li {
-    margin-left: 20px;
-    width: 205px;
-    display: inline-block;
-}
-.requested-booking-times .button {
-    border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    color: White;
-    font-size: .9em;
-    line-height: 160%;
-    margin: 3px 0;
-}
-.requested-booking-times strong {
-    font-weight: normal;
-    color: #E44600;
-}
-*/
 
 .button-confirm-datetime {
     background: #99C027 !important;
@@ -2440,21 +2349,33 @@ html.boxshadow #loginBox .field-validation-error{
     border: 2px solid #E44600;
     padding: 10px;
 }
+.booking-review h4 {
+    font-weight: bold;
+    color: #747474;
+    margin: 6px 0px 0px;
+    font-size: 1.1em;
+}
 .booking-review legend {
-    color: #E44600;
+    color: #E44600 !important;
+}
+.booking-review .message-section {
+    border: 1px solid #6C6C6C;
+    border-radius: 4px;
+    background: none repeat scroll 0% 0% #FFF;
+    padding: 15px;
 }
 .dashboard .booking-review form li label {
     width: auto;
 }
 .booking-review .booking-summary > .item-summary {
     display: inline-block;
+    max-width: 590px;
 }
 .booking-review .booking-summary > .actions {
     text-align: center !important;
     width: 70px;
     display: inline-block !important;
     vertical-align: top;
-    float: none;
 }
 .booking-review form li textarea {
 }
@@ -2474,7 +2395,6 @@ html.boxshadow #loginBox .field-validation-error{
     width: auto;
 }
 .helpcenter form.requesthelp .message-body textarea{
-    width: 630px;
     height: 20em;
     border: none;
     background: none;
@@ -2547,7 +2467,7 @@ html.boxshadow #loginBox .field-validation-error{
     margin-top: 1em;
 }
 
-.lc-ressources, .popups, .template, .templates {
+.lc-ressources, .popups, .template, .templates, .is-template {
     display: none;
 }
 
@@ -2621,12 +2541,12 @@ html.boxshadow #loginBox .field-validation-error{
 .search-categories ul > li > .details > .description {
     background: white;
     border-radius: 4px;
-    border: 2px solid #747474;
+    border: 2px solid #333333;
     padding: 10px;
-    box-shadow: 0 5px 7px -3px #747474;
-    -moz-box-shadow: 0 5px 7px -3px #747474;
-    -o-box-shadow: 0 5px 7px -3px #747474;
-    -webkit-box-shadow: 0 5px 7px -3px #747474;
+    box-shadow: 0 5px 7px -3px #333333;
+    -moz-box-shadow: 0 5px 7px -3px #333333;
+    -o-box-shadow: 0 5px 7px -3px #333333;
+    -webkit-box-shadow: 0 5px 7px -3px #333333;
 }
 .search-categories ul > li > .details > .description > h5 {
     margin: 0;
@@ -2662,7 +2582,7 @@ html.boxshadow #loginBox .field-validation-error{
     display: inline-block;
     position: absolute;
 
-    border-bottom-color: #747474;
+    border-bottom-color: #333333;
     left: 33px;
     top: -8px;
 }
@@ -3041,9 +2961,12 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
     font-family: Hand Of Sean, Arial, sans-serif;
     margin: 0;
 }
-#welcomepopup h1 {
+#welcomepopup h1.has-icon {
     padding: 0 0 0 110px;
     background: url("../img/theme/logo-loconomics-header-mini.png") no-repeat left center;
+}
+#welcomepopup h1 {
+    padding: 0;
     line-height: 39px;
     font-size: 1.3em;
     color: #00989A;
@@ -3051,6 +2974,10 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 }
 #welcomepopup h2 {
     font-size: 1.05em;
+}
+#welcomepopup h3 { /*.popover-title {*/
+    color: Black;
+    font-weight: bold;
 }
 #welcomepopup.select-position .profile-data h2 {
     color: Black;
@@ -3095,7 +3022,8 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 #welcomepopup .terms {
     font-size: .9em;
     line-height: normal;
-    margin-bottom: 1em;
+    margin: 0 1em 1em;
+    text-align: justify;
 }
 #welcomepopup .profile-data {
     margin: 1em 0;
@@ -3116,7 +3044,7 @@ html.notify-changes .tabbed.buttons ul.tabs li.has-changes:before,
 }
 #welcomepopup a.login {
     background-color: #f5f5f5;
-    color: #747474 !important;
+    color: #333333 !important;
     border: 1px solid #ababab !important;
     margin: 0 1em;
 }
@@ -3196,7 +3124,7 @@ ul.attributes-list li {
         background-image: url("../img/theme/logo-loconomics-header@2x.png");
         background-size: 201px 78px;
     }
-    #welcomepopup h1 {
+    #welcomepopup h1.has-icon {
         background-image: url("../img/theme/logo-loconomics-header-mini@2x.png");
         background-size: 100px 39px;
     }

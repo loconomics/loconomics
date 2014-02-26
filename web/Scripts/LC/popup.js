@@ -136,11 +136,20 @@ function popup(url, size, complete, loadingText, options) {
         }, complete: options.complete
     });
 
-    $('.blockUI').on('click', '.close-popup', function () { $.unblockUI(); return false; });
     var returnedBlock = $('.blockUI');
+
+    returnedBlock.on('click', '.close-popup', function () {
+      $.unblockUI();
+      returnedBlock.trigger('popup-closed');
+      return false;
+    });
+    
     returnedBlock.closePopup = function () {
-        $.unblockUI();
+      $.unblockUI();
     };
+    returnedBlock.getBlockElement = function getBlockElement() { return returnedBlock.filter('.blockMsg'); };
+    returnedBlock.getContentElement = function getContentElement() { return returnedBlock.find('.content'); };
+    returnedBlock.getOverlayElement = function getOverlayElement() { return returnedBlock.filter('.blockOverlay'); };
     return returnedBlock;
 }
 

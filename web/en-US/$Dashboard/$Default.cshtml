@@ -1,0 +1,15 @@
+﻿@{
+    // Tools/Dashboard
+    LcHelpers.SecurePage();
+}
+<h1 class="DashboardSection-page-header">Dashboard</h1>
+<p class="DashboardSection-page-introduction">
+    It's all here: everything you need to manage your profile, bookings, and account settings.
+</p>
+<div class="DashboardSummary">
+    @RenderPage("Messages/$Summary.cshtml")
+    
+    @RenderPage("Bookings/$Summary.cshtml")
+    
+    @RenderPage("Todos/$Summary.cshtml")
+</div>

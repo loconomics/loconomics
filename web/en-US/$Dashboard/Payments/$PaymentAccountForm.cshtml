@@ -1,0 +1,221 @@
+﻿@using Braintree;
+@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    
+    var emulateBraintree = LcHelpers.Channel == "localdev";
+    
+    var PageState = PageData["PageState"] ?? ModelState;
+    var doReturn = PageState == ModelState;
+
+    var user = LcData.UserInfo.GetUserRowWithContactData();
+    
+    // Data
+    string FirstName, LastName, MobilePhone, AlternatePhone, AddressLine1, AddressLine2, City, PostalCode, Aba, AccountNumber, Ssn, StateCode;
+    DateTime? BirthDate = null;
+
+    if (IsPost) {
+        FirstName = Request["firstname"];
+        LastName = Request["lastname"];
+        MobilePhone = Request["mobilephone"];
+        AlternatePhone = Request["alternatephone"];
+        AddressLine1 = Request["addressline1"];
+        AddressLine2 = Request["addressline2"];
+        City = Request["city"];
+        PostalCode = Request["postalcode"];
+        StateCode = Request["state"];
+
+        BirthDate = Request["birthdate"].IsDateTime() ? (DateTime?)Request["birthdate"].AsDateTime() : null;
+        Aba = Request["aba"];
+        AccountNumber = Request["accountnumber"];
+        Ssn = Request["ssn"];
+    } else {
+        FirstName = user.FirstName;
+        LastName = LcHelpers.JoinNotEmptyStrings(" ", user.LastName, user.SecondLastName);
+        MobilePhone = user.MobilePhone;
+        AlternatePhone = user.AlternatePhone;
+        AddressLine1 = user.AddressLine1;
+        AddressLine2 = user.AddressLine2;
+        City = user.City;
+        PostalCode = user.PostalCode;
+        StateCode = user.StateProvinceCode;
+        
+        Aba = AccountNumber = Ssn = "";
+    }
+    
+    // Initializing Validation rules
+    if (Validation.GetHtml("firstname") == null) {
+        Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+    }
+    if (Validation.GetHtml("lastname") == null) {
+        Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+    }
+    if (Validation.GetHtml("birthdate") == null) {
+        Validation.RequireField("birthdate", LcRessources.RequiredField("Date of Birth"));
+    }
+    if (Validation.GetHtml("addressline1") == null) {
+        Validation.RequireField("addressline1", LcRessources.RequiredField("Address line 1"));
+    }
+    if (Validation.GetHtml("state") == null) {
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
+    if (Validation.GetHtml("postalcode") == null) {
+        Validation.RequireField("postalcode", LcRessources.RequiredField("Zip Code"));
+    }
+    if (Validation.GetHtml("city") == null) {
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
+    }
+    
+    if (IsPost && Validation.IsValid()) {
+
+        if (!BirthDate.HasValue) {
+            PageState.AddError("birhtdate", LcRessources.RequiredField("Date of Birth"));
+        }
+        
+        if (!Request["agree"].AsBool()) {
+            PageState.AddError("agree", "You must agree the terms of service");
+        }
+        
+        // Gathering state and postal IDs and verifying they match
+        var stateId = LcData.GetStateFromZipCode(PostalCode);
+        var postalCodeId = LcData.GetPostalCodeID(PostalCode, stateId);
+        if (LcData.GetStateProvinceCode(stateId) != StateCode) {
+            PageState.AddError("postalcode", "Zip Code is not valid for that state.");
+        }
+
+        if (PageState.IsValid) {
+            // Save peronal data to our database that replaces the need for a separate
+            // form under 'about you'
+            // (Nothing about payment, bank account.. thats only on Braintree)
+                
+            LcData.UserInfo.UpdatePersonalAndContactData(
+                user.UserID,
+                FirstName,
+                null,
+                LastName,
+                null,
+                MobilePhone,
+                AlternatePhone,
+                AddressLine1,
+                AddressLine2,
+                City,
+                stateId,
+                postalCodeId,
+                LcData.GetCurrentCountryID(),
+                LcData.GetCurrentLanguageID(),
+                null
+            );
+                
+            // Create account at Braintree
+            var success = false;
+                
+            // Emulating, to test on locale
+            if (emulateBraintree) {
+                LcData.SetProviderPaymentAccount(
+                    user.UserID,
+                    "FAIK REQUEST ID: " + Guid.NewGuid(),
+                    "pending",
+                    null,
+                    null,
+                    null
+                );
+            }
+            else {
+                var result = LcPayment.CreateProviderPaymentAccount(new LcData.UserInfo {
+                    UserID = user.UserID,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = user.Email,
+                    MobilePhone = MobilePhone
+                }, new LcData.Address {
+                    AddressLine1 = AddressLine1,
+                    AddressLine2 = AddressLine2,
+                    PostalCode = PostalCode,
+                    City = City,
+                    StateProvinceCode = StateCode
+                }, new LcPayment.BankInfo {
+                    Ssn = Ssn,
+                    RoutingNumber = Aba,
+                    AccountNumber = AccountNumber
+                }, BirthDate.Value
+                );
+                
+                if (result == null) {
+                    PageState.AddFormError("It looks like you already have an account set up with Braintree. Please contact us, and we can help.");
+                } else if (result.IsSuccess()) {
+                    success = true;
+                } else {
+                    PageState.AddFormError(result.Message);
+                    foreach (var err in result.Errors.All()) {
+                        PageState.AddFormError(err.Message);
+                    }
+                }
+            }
+                
+            if (success && doReturn) {
+                //LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                LcHelpers.ReturnJsonResult(1, LcUrl.LangPath + "dashboard/Payments/");
+            }
+        }
+    }
+        
+    
+}
+<fieldset class="DashboardSection-page-section is-required">
+    <legend class="DashboardSection-page-section-header">Add your contact information</legend>
+    <ul>
+        <li><input placeholder="First name" type="text" name="firstname" value="@FirstName" @Validation.GetHtml("firstname")/>
+        </li>
+        <li><input placeholder="Last name" type="text" name="lastname" value="@LastName" @Validation.GetHtml("lastname")/>
+        </li>
+        <li><input placeholder="Mobile phone number" type="text" name="mobilephone" value="@MobilePhone" @Validation.GetHtml("mobilephone")/>
+        </li>
+        <li><input placeholder="Alternate phone number" type="text" name="alternatephone" value="@AlternatePhone" @Validation.GetHtml("alternatephone")/>
+        </li>
+        <li><input placeholder="Address line 1" type="text" name="addressline1" value="@AddressLine1" @Validation.GetHtml("addressline1")/>
+        </li>
+        <li><input placeholder="Address line 2" type="text" name="addressline2" value="@AddressLine2" @Validation.GetHtml("addressline2")/>
+        </li>
+        <li><input placeholder="City" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+        </li>
+        <li>
+            <select name="state" @Validation.GetHtml("state")>
+                <option value="">State</option>
+                @LcHelpers.StateProvinceCodeOptions(StateCode)
+            </select>
+        </li>
+        <li><input placeholder="Zip code" type="text" name="postalcode" value="@PostalCode" @Validation.GetHtml("postalcode") data-val-postalcode="Postal Code is not valid"/>
+        </li>
+        <li><input placeholder="Date of birth" type="text" name="birthdate" value="@(BirthDate.HasValue ? BirthDate.Value.ToShortDateString() : "" )" @Validation.GetHtml("birthdate") /></li>
+        <li><input placeholder="SSN" type="text" name="ssn" value="@Ssn" @Validation.GetHtml("ssn") /></li>
+    </ul>
+</fieldset>
+
+<fieldset class="DashboardSection-page-section is-required">
+    <legend class="DashboardSection-page-section-header">Add your bank account information</legend>
+    <p class="DashboardSection-page-section-introduction">
+        If you choose not to enter your bank information,
+        a <a href="https://venmo.com" target="_blank">Venmo</a> account will be created and linked to your email.
+        You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires an extra step.
+    </p>
+    <ul>
+        <li><input placeholder="ABA routing number" type="text" name="aba" value="@Aba" @Validation.GetHtml("aba") /></li>
+        <li><input placeholder="Account number" type="text" name="accountnumber" value="@AccountNumber" @Validation.GetHtml("accountnumber") /></li>
+    </ul>
+</fieldset>
+
+@RenderPage("$PaymentFeesInfo.cshtml")
+
+<fieldset class="DashboardSection-page-section is-required DashboardPaymentAccount-tos">
+    <legend class="DashboardSection-page-section-header">Agree to the terms of service</legend>
+    <p class="DashboardSection-page-section-introduction">
+        Loconomics, Inc. (Loconomics) uses Braintree Payment Solutions LLC (Braintree) for payment processing.
+        In order for you to use Braintree's payment processing services, you must enter into the Merchant Services Agreement (MSA) with Braintree and its sponsoring bank.
+        The MSA is available at <a href="http://www.braintreepayments.com/agreements/merchant/" target="_blank">www.braintreepayments.com/agreements/merchant</a>.
+        By accepting this Agreement, you agree: (a) that you have downloaded or printed the MSA, and (b) that you have reviewed and agree to the MSA.
+        Please note that Loconomics is not a party to the MSA and that you, Braintree and Braintree's sponsoring bank are the three parties 
+        to the MSA and that Loconomics has no obligations or liability to you under the MSA.
+        If you have questions regarding the MSA, please contact Braintree at 877.434.2894.
+    </p>
+    <label><input type="checkbox" name="agree" value="true" @Validation.GetHtml("agree") /> I agree to the above terms of service</label>
+</fieldset>

@@ -1,0 +1,200 @@
+@import "nib"
+@import "utils/ColorsPalette"
+@import "utils/Actions"
+
+.DashboardSection {
+	color: #333;
+	margin-top: 26px;
+		
+	.go-publicProfile {
+	    display: block;
+	    padding: .6em;
+	    font-weight: bold;
+	    text-transform: lowercase;
+	    text-align: center;
+    }
+
+	#main.DashboardSection-page {
+		padding: 20px;
+		/* fullsize - h-padding - border */
+		width: 735px - 40px - 4px;
+		float: left;
+		margin-left: 25px;
+		border: 2px solid $colorTeal;
+		border-radius: 12px;
+		background: White;
+		/* Its a position context */
+		position: relative;
+		
+		.DashboardSection-page-header {
+		    margin: 1em 0 0;
+		    padding: 0 0 4px;
+		    line-height: 1em;
+		    color: $colorTeal;
+		    font-size: 2em;
+		    border-bottom: 4px solid $colorTeal;
+		    display: block;
+	    }
+	    
+        .DashboardSection-page-section {
+            color: $colorGray;
+
+            .DashboardSection-page-section-header {
+                color: $colorTeal;
+                margin: 1em 0 14px;
+                padding: 0 0 4px;
+                line-height: 1em;
+                font-size: 1.6em;
+                font-weight: normal;
+                border-bottom: 3px solid $colorTeal;
+                /* Most times, next 'reset' attributes are not need -default H* elements- but
+                    on cases like fieldset legends or element presets it put everything in place
+                */
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+    
+            .DashboardSection-page-section-introduction {
+                margin-top: 0;
+            }
+            
+            &.is-required {
+                .DashboardSection-page-section-header {
+                    color: $colorOrange;
+                    border-bottom-color: $colorOrange;
+                }
+            }
+        }
+        
+        /* A page can contain the reusable component InlineNotification,
+            that we specifically place on top-right
+        */
+        > .InlineNotification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: .92em;
+            text-transform: lowercase;
+        }
+        
+        > .InlineNotification--hasRequiredSections {
+            color: $colorOrange;
+            font-style: italic;
+        }
+	}
+	
+	.DashboardSection-onboardingSteps {
+	    margin-left: 225px;
+	
+	    .DashboardSection-onboardingSteps-welcome {
+	        font-weight: bold;
+            font-size: 1.06em;
+            margin: 16px 0 25px 25px;
+	    }
+	    
+	    ul {
+	        border-top: 8px solid $colorLtGray;
+	        margin: 10px 0;
+	        border-radius: 20px;
+	        letter-spacing: -4px;
+	        
+	        li {
+	            display: inline-block;
+	            width: 25%;
+                letter-spacing: normal;
+	            
+	            &.is-current {
+	                .DashboardSection-onboardingSteps-title {
+	                    color: $colorTeal;
+	                    font-size: 1.3em;
+	                    font-weight: normal;
+	                }
+	                
+	                .DashboardSection-onboardingSteps-index {
+	                    background-color: $colorTeal;
+	                }
+	            }
+
+	            .DashboardSection-onboardingSteps-title {
+	                font-size: 1em;
+	                color: $colorLtGray;
+	                text-align: center;
+	                display: block;
+	                font-weight: bold;
+	            }
+	            
+	            .DashboardSection-onboardingSteps-index {
+	                display: block;
+	                text-align: center;
+	                margin: -15px auto 0px;
+	                color: White;
+	                background-color: $colorLtTeal;
+	                border-radius: 100%;
+	                width: 1.6em;
+	            }
+	        }
+	    }
+	    
+	    .begin-action {
+	        Action--mainPosition();
+	        margin-top: -0.4em;
+	    }
+	}
+	
+	.DashboardWelcome {
+	    
+	    padding-left: 370px;
+	    background: url('../img/theme/providerwelcome/profile-elizabeth.png') no-repeat left center;
+	    hr-image('../img/theme/providerwelcome/profile-elizabeth@2x.png', 348px, 375px);
+	    min-height: 375px;
+	    
+	    .begin-action {
+	        /* Aligned with stepsIntro texts, bullets on left */
+	        margin-left: 30px;
+	    }
+
+	    .DashboardWelcome-stepsIntro {
+	        
+	        padding-top: 30px;
+	        
+	        li {
+	            background: url('../img/theme/teal-checkmark.png') no-repeat left center;
+	            hr-image('../img/theme/teal-checkmark@2x.png', 24px, 24px);
+	            padding-left: 30px;
+	            margin: 1.2em 0;
+	            
+	            h3 {
+	                color: $colorTeal;
+	                font-size: 1.3em;
+	                font-weight: normal;
+	                line-height: 1em;
+	                margin: 0;
+	            }
+	            
+	            p {
+	                margin: 0;
+	            }
+	        }
+	    }
+	
+	}
+
+}
+
+/***TEMP RULES: avoiding some inherit things for bad common.css rules***/
+form ul li {
+	padding: 0;
+}
+/***TEMP RULES: END ***/
+
+@import("dashboard/sidebar")
+@import("dashboard/promote")
+@import("dashboard/privacy")
+@import("dashboard/payments")
+@import("dashboard/about-you")
+@import("dashboard/your-work")
+@import("dashboard/availability")
+@import("dashboard/summary")
+@import("dashboard/messages")
+@import("dashboard/todos")

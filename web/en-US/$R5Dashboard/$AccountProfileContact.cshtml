@@ -1,0 +1,207 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.SecurePage();
+    
+    var idprefix = "account-personal-contact";
+    
+    var u = LcData.UserInfo.GetUserRowWithContactData();
+    
+    // Data
+    var FirstName = Request["firstname"] ?? u.FirstName;
+    var MiddleInitial = Request["middleinitial"] ?? u.MiddleIn;
+    var LastName = Request["lastname"] ?? u.LastName;
+    var SecondLastName = Request["secondlastname"] ?? u.SecondLastName;
+    string MobilePhone = Request["mobilephone"] ?? u.MobilePhone;
+    string AlternatePhone = Request["alternatephone"] ?? u.AlternatePhone;
+    var Street1 = Request["streetaddress1"] ?? u.AddressLine1;
+    var Street2 = Request["streetaddress2"] ?? u.AddressLine2;
+    var City = Request["city"] ?? u.City;
+    var State = Request["state"].IsInt() ? Request["state"].AsInt() : u.StateProvinceID != null ? (int)u.StateProvinceID : 0;
+    string Zip = Request["zipcode"] ?? u.PostalCode;
+    var GenderID = Request["gender"] ?? u.GenderID ?? "";
+    
+    // Initializing Validation rules
+    Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
+    Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
+    Validation.RequireField("gender", LcRessources.RequiredField("Gender identity"));
+    Validation.RequireField("streetaddress1", LcRessources.RequiredField("Street Address 1"));
+    if (Validation.GetHtml("state") == null) {
+        Validation.RequireField("state", LcRessources.RequiredField("State"));
+    }
+    Validation.RequireField("zipcode", LcRessources.RequiredField("Zip Code"));
+    Validation.Add("firstname", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
+    Validation.Add("lastname", Validator.StringLength(145, 0, "Last name be fewer than 145 characters."));
+    Validation.Add("secondlastname", Validator.StringLength(145, 0, "Second Last name be fewer than 145 characters."));
+    Validation.Add("middleinitial", Validator.StringLength(1, 0, "Middle initial must be a single letter"));
+    Validation.Add("streetaddress1", Validator.StringLength(100, 0, "Street Address 1 must be fewer than 100 characters."));
+    Validation.Add("streetaddress2", Validator.StringLength(100, 0, "Street Address 2 must be fewer than 100 characters."));
+    if (Validation.GetHtml("city") == null) {
+        Validation.RequireField("city", LcRessources.RequiredField("City"));
+        Validation.Add("city", Validator.StringLength(100, 0, "City must be fewer than 100 characters."));
+    }
+    
+    // Processing
+    if (IsPost && Validation.IsValid()) {
+        int zipID = 0;
+        if (!Zip.IsEmpty()) {
+            zipID = LcData.GetPostalCodeID(Zip, State);
+            if (zipID == 0) {
+                ModelState.AddError("zipcode", "Zip code is invalid");
+            }
+        }
+        // MobilePhone and AlternatePhone: At least one phone number is required
+        if (MobilePhone.IsEmpty() && AlternatePhone.IsEmpty()) {
+            ModelState.AddError("mobilephone", "At least one phone number is required");
+        }
+        if (ModelState.IsValid) {
+            
+            var beforePositionStatuses = LcData.UserInfo.GetUserPositionsStatuses((int)u.UserID);
+            
+            LcData.UserInfo.UpdatePersonalAndContactData(
+                u.UserID,
+                FirstName,
+                MiddleInitial,
+                LastName,
+                SecondLastName,
+                MobilePhone,
+                AlternatePhone,
+                Street1,
+                Street2,
+                City,
+                State,
+                zipID,
+                LcData.GetCurrentCountryID(),
+                LcData.GetCurrentLanguageID(),
+                (GenderID == null ? -1 : GenderID)
+            );
+
+            // Show the profile activation popup with 'next-step' buttons and progress information when need,
+            // if not the short message is showed:
+            if (!LcHelpers.UseProfileActivationPopup(beforePositionStatuses,
+                u.UserID,
+                "Personal data updated.",
+                "Edit contact info"))
+            {
+                LcHelpers.ReturnJsonResult(5, LcRessources.ShortDataSaved);
+            }
+        }
+    }
+    
+    // Load Data
+    // Note: Most user account and contact data was loaded already at beggining by the general
+    // method LcData.UserInfo.GetUserRowWithContactData
+    dynamic genders = null;
+    bool hasNameVerifications = false, hasAddressVerifications = false, hasPhoneVerifications = false;
+    var verifications = LcData.UserInfo.GetUserVerifications(u.UserID);
+    // Enabling needed warning messages:
+    foreach (var v in verifications){
+        // Only confirmed
+        if (v.VerificationStatusID == 1) {
+            if (v.VerificationCategoryID == 3 ||
+                v.VerificationID == 1 ||
+                v.VerificationID == 7) {
+                hasNameVerifications = true;
+            } else if (v.VerificationID == 2) {
+                hasAddressVerifications = true;
+            } else if (v.VerificationID == 4) {
+                hasPhoneVerifications = true;
+            }
+        }
+    }
+    using (var db = Database.Open("sqlloco")){
+        genders = db.Query(@"
+            SELECT  GenderID, GenderSingular
+            FROM    Gender
+            WHERE   LanguageID=@0 AND CountryID=@1 AND GenderID > 0
+        ", 1, 1);
+    }
+}
+<p>We'll need to get a hold of you to ensure bookings go smoothly.  We'll only share the information necessary to complete transactions and only with the people with whom you're working.</p>
+<div>
+<form method="post" action="@(LcUrl.LangPath)$R5Dashboard/$AccountProfileContact/" id="personal" class="ajax ajax-box">
+    @LcHelpers.GetValidationScripts()
+    @Html.ValidationSummary(LcRessources.ValidationSummaryTitle)
+    @if (hasNameVerifications || hasAddressVerifications || hasPhoneVerifications) {
+    <div class="warning warning-large">
+        <h6>Friendly reminder:</h6>
+        <ul>
+        @if (hasNameVerifications) {
+        <li>If you change your <strong>name</strong>, any <strong><em>social media accounts and background checks</em></strong> will need to be verified again.</li>
+        }
+        @if (hasAddressVerifications) {
+        <li>If you change your <strong>address</strong>, it will need to be verified again.</li>
+        }
+        @if (hasPhoneVerifications) {
+        <li>If you change your <strong>phone number(s)</strong>, it will need to be verified again.</li>
+        }
+        </ul>
+    </div>
+    }
+    <div class="col col-2 col-2-1">
+    <fieldset>
+        <legend>Contact Information:</legend>
+        <ul>
+            <li><label for="@idprefix-firstname">First Name:</label><input id="@idprefix-firstname" type="text" name="firstname" placeholder="Your name" value="@FirstName" @Validation.GetHtml("firstname")/>
+                @Html.ValidationMessage("firtname")
+            </li>
+            @if (LcData.GetCurrentCountryID() == 1)
+            {
+            <li><label for="@idprefix-middleinitial">Middle Initial:</label><input id="@idprefix-middleinitial" type="text" name="middleinitial" value="@MiddleInitial" @Validation.GetHtml("middleinitial")/>
+                @Html.ValidationMessage("middleinitial")
+            </li>
+            }
+            <li><label for="@idprefix-lastname">Last Name:</label><input id="@idprefix-lastname" type="text" name="lastname" value="@LastName" title="Your last name is only shown to clients after you've accepted their booking." class="secure-data" @Validation.GetHtml("lastname")/>
+                @Html.ValidationMessage("lastname")
+            </li>
+            @if (LcData.GetCurrentCountryID() == 2)
+            {
+            <li><label for="@idprefix-secondlastname">Second Last Name:</label><input id="@idprefix-secondlastname" type="text" name="secondlastname" value="@SecondLastName" @Validation.GetHtml("secondlastname")/>
+                @Html.ValidationMessage("secondlastname")
+            </li>
+            }
+            <li><label for="@idprefix-mobilephone">Mobile Phone:</label><input id="@idprefix-mobilephone" type="text" name="mobilephone" value="@MobilePhone" title="Your phone number will only shown to clients after you've accepted their booking." class="secure-data" @Validation.GetHtml("mobilephone")/>
+                @Html.ValidationMessage("mobilephone")
+            </li>
+            <li><label for="@idprefix-alternatephone">Alternate Phone:</label><input id="@idprefix-alternatephone" type="text" name="alternatephone" value="@AlternatePhone" title="Your phone number will only shown to clients after you've accepted their booking." class="secure-data" @Validation.GetHtml("alternatephone")/>
+                @Html.ValidationMessage("alternatephone")
+            </li>
+
+            <li><label>Gender Identity:</label>
+                @foreach (var gender in genders)
+                {
+                    <label class="gender">@gender.GenderSingular <input @LcHelpers.IsChecked(@GenderID, @gender.GenderID) type="radio" name="gender" value="@gender.GenderID" /></label>
+                }
+                @Html.ValidationMessage("gender")
+            </li>
+        </ul>
+    </fieldset>
+    </div>
+    <div class="col col-2 col-2-2">
+    <fieldset>
+        <legend>Home address:</legend>
+        <ul>
+            <li><label for="@idprefix-streetaddress1">Street Address 1:</label><input id="@idprefix-streetaddress1" type="text" name="streetaddress1" value="@Street1" title="Your address will not be shown to clients unless you've listed it as a location where you perform services." class="secure-data" @Validation.GetHtml("streetaddress1")/>
+                @Html.ValidationMessage("streetaddress1")
+            </li>
+            <li><label for="@idprefix-streetaddress2">Street Address 2:</label><input id="@idprefix-streetaddress2" type="text" name="streetaddress2" value="@Street2" title="Your address will not be shown to clients unless you've listed it as a location where you perform services." class="secure-data" @Validation.GetHtml("streetaddress2")/>
+                @Html.ValidationMessage("streetaddress2")
+            </li>
+            <li><label for="@idprefix-city">City:</label><input id="@idprefix-city" type="text" name="city" value="@City" @Validation.GetHtml("city")/>
+                @Html.ValidationMessage("city")
+            </li>
+            <li><label for="@idprefix-state">State:</label>
+                <select id="@idprefix-state" name="state" @Validation.GetHtml("state")>
+                    @LcHelpers.StateProvinceOptions(State)
+                </select>
+                @Html.ValidationMessage("state")
+            </li>
+            <li><label for="@idprefix-zipcode">Zip Code:</label><input id="@idprefix-zipcode" type="text" name="zipcode" value="@Zip" @Validation.GetHtml("zipcode") data-val-postalcode="Postal Code is not valid"/>
+                @Html.ValidationMessage("zipcode")
+            </li>
+        </ul>
+    </fieldset></div>
+    <fieldset class="actions">
+        <button class="save main-action" type="submit">Save</button>
+    </fieldset>
+</form>
+</div>

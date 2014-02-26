@@ -49,6 +49,8 @@ namespace CalendarDll
 
         /// <summary>
         /// Get Free Events
+        /// 
+        /// It includes both dates, full date times (not limited by the time in startDate and endDate)
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
@@ -166,8 +168,10 @@ namespace CalendarDll
             // for the Date Range
             //----------------------------------------------------------------------
 
-
-            while (refDate < endDateTime)
+            // Iago: Since we get calculated the last day time slice in endDateTime
+            // previously, we need to check lower than or equal to don't lost that last
+            // time slice, as previously happens by checking only 'less than'
+            while (refDate <= endDateTime)
             {
                 DateTime newTimeSliceStart = 
                     refDate.AddMinutes(

@@ -1,0 +1,18 @@
+﻿@using WebMatrix.Data;
+@{
+    LcHelpers.ProviderPage();
+    var u = LcData.UserInfo.GetUserRow();
+    var positionID = Request["PositionID"].AsInt();
+
+    if (positionID > 0) {
+        using (var db = Database.Open("sqlloco")) {
+            // Set StatusID to 0 'deleted by user'
+            db.Execute("UPDATE UserProfilePositions SET StatusID = 0 WHERE UserID = @0 AND PositionID = @1", u.UserID, positionID);
+        }
+    }
+    if (Request.IsAjaxRequest()) {
+        LcHelpers.ReturnJsonResult(0, "Position deleted");
+    } else {
+        Response.Redirect(LcUrl.LangPath + "R5Dashboard/");
+    }
+}

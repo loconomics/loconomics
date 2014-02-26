@@ -139,7 +139,7 @@
             
             /*** All finished, it was ok? ***/
             if (ModelState.IsValid) {
-                var red = LcUrl.LangPath + "Dashboard/Alerts/";
+                var red = LcUrl.LangPath + "dashboard/";
                 if (Request.IsAjaxRequest()) {
                     LcHelpers.ReturnJsonResult(1, red);
                 } else {

@@ -37,10 +37,18 @@ window.ajaxFormsCompleteHandler = ajaxForms.onComplete;
 
 /* Reload */
 require('../LC/jquery.reload');
+// Wrapper function around onSuccess to mark operation as part of a 
+// reload avoiding some bugs (as replace-content on ajax-box, not wanted for
+// reload operations)
+function reloadSuccessWrapper() {
+  var context = $.isPlainObject(this) ? this : { element: this };
+  context.isReload = true;
+  ajaxForms.onSuccess.apply(context, Array.prototype.slice.call(arguments));
+}
 $.fn.reload.defaults = {
-    success: [ajaxForms.onSuccess],
-    error: [ajaxForms.onError],
-    delay: gLoadingRetard
+  success: [reloadSuccessWrapper],
+  error: [ajaxForms.onError],
+  delay: gLoadingRetard
 };
 
 LC.moveFocusTo = require('../LC/moveFocusTo');
@@ -184,7 +192,10 @@ var faqsPopups = require('./faqsPopups');
 var accountPopups = require('./accountPopups');
 var legalPopups = require('./legalPopups');
 
+// Old availablity calendar
 var availabilityCalendarWidget = require('./availabilityCalendarWidget');
+// New availability calendar
+var availabilityCalendar = require('../LC/availabilityCalendar');
 
 var autofillSubmenu = require('../LC/autofillSubmenu');
 
@@ -204,14 +215,23 @@ var homePage = require('./home');
 window.escapeJQuerySelectorValue = require('../LC/jqueryUtils').escapeJQuerySelectorValue;
 //}
 
+var providerWelcome = require('./providerWelcome');
+
 /**
  ** Init code
 ***/
 $(window).load(function () {
-    // Disable browser behavior to auto-scroll to url fragment/hash element position:
+  // Disable browser behavior to auto-scroll to url fragment/hash element position:
+  // EXCEPT in Dashboard:
+  // TODO: Review if this is required only for HowItWorks or something more (tabs, profile)
+  // and remove if possible or only on the concrete cases.
+  if (!/\/dashboard\//i.test(location))
     setTimeout(function () { $('html,body').scrollTop(0); }, 1);
 });
 $(function () {
+
+  providerWelcome.show();
+
   // Placeholder polyfill
   LC.placeHolder();
 
@@ -230,7 +250,10 @@ $(function () {
   accountPopups.enable(LcUrl.LangPath);
   legalPopups.enable(LcUrl.LangPath);
 
+  // Old availability calendar
   availabilityCalendarWidget.init(LcUrl.LangPath);
+  // New availability calendar
+  availabilityCalendar.Weekly.enableAll();
 
   popup.connectAction();
 
@@ -305,7 +328,7 @@ $(function () {
   // almost for most of the case.
   function autoSetupValidation() {
     if ($(document).has('form').length)
-      validationHelper.setup();
+      validationHelper.setup('form');
   }
   autoSetupValidation();
   $(document).ajaxComplete(autoSetupValidation);

@@ -81,19 +81,37 @@ function lcOnSuccess(data, text, jx) {
             }
         }
 
-        // For 'reload' support, check too the context.mode
-        ctx.boxIsContainer = ctx.boxIsContainer || (ctx.options && ctx.options.mode === 'replace-content');
+        // For 'reload' support, check too the context.mode, and both reload or ajaxForms check data attribute too
+        ctx.boxIsContainer = ctx.boxIsContainer;
+        var replaceBoxContent =
+          (ctx.options && ctx.options.mode === 'replace-content') ||
+          ctx.box.data('reload-mode') === 'replace-content';
 
-        // Check if the returned element is the ajax-box, if not, find
-        // the element in the newhtml:
+        // Support for reload, avoiding important bugs with reloading boxes that contains forms:
+        // If operation is a reload, don't check the ajax-box
         var jb = newhtml;
-        if (!ctx.boxIsContainer && !newhtml.is('.ajax-box'))
+        if (!ctx.isReload) {
+          // Check if the returned element is the ajax-box, if not, find
+          // the element in the newhtml:
+          jb = newhtml.filter('.ajax-box');
+          if (jb.length === 0)
+            jb = newhtml;
+          if (!ctx.boxIsContainer && !jb.is('.ajax-box'))
             jb = newhtml.find('.ajax-box:eq(0)');
-        if (!jb || jb.length === 0) {
+          if (!jb || jb.length === 0) {
             // There is no ajax-box, use all element returned:
             jb = newhtml;
+          }
+
+          if (replaceBoxContent)
+            // Replace the box content with the content of the returned box
+            // or all if there is no ajax-box in the result.
+            jb = jb.is('.ajax-box') ? jb.contents() : jb;
         }
-        if (ctx.boxIsContainer) {
+
+        if (replaceBoxContent) {
+          ctx.box.empty().append(jb);
+        } else if (ctx.boxIsContainer) {
             // jb is content of the box container:
             ctx.box.html(jb);
         } else {
@@ -102,10 +120,15 @@ function lcOnSuccess(data, text, jx) {
             // and refresh the reference to box with the new element
             ctx.box = jb;
         }
-        if (ctx.box.is('form'))
-            ctx.form = ctx.box;
-        else
-            ctx.form = ctx.box.find('form:eq(0)');
+
+        // It supports normal ajax forms and subforms through fieldset.ajax
+        if (ctx.box.is('form.ajax') || ctx.box.is('fieldset.ajax'))
+          ctx.form = ctx.box;
+        else {
+          ctx.form = ctx.box.find('form.ajax:eq(0)');
+          if (ctx.form.length === 0)
+            ctx.form = ctx.box.find('fieldset.ajax:eq(0)');
+        }
 
         // Changesnotification after append element to document, if not will not work:
         // Data not saved (if was saved but server decide returns html instead a JSON code, page script must do 'registerSave' to avoid false positive):
@@ -115,8 +138,13 @@ function lcOnSuccess(data, text, jx) {
                 ctx.changedElements
             );
 
-        // Move focus to the errors appeared on the page:
-        moveFocusTo(jb.find('.validation-summary-errors'));
+        // Move focus to the errors appeared on the page (if there are):
+        var validationSummary = jb.find('.validation-summary-errors');
+        if (validationSummary.length)
+          moveFocusTo(validationSummary);
+        // TODO: It seems that it returns a document-fragment instead of a element already in document
+        // for ctx.form (maybe jb too?) when using * ctx.box.data('reload-mode') === 'replace-content' * 
+        // (maybe on other cases too?).
         ctx.form.trigger('ajaxFormReturnedHtml', [jb, ctx.form, jx]);
     }
 }
