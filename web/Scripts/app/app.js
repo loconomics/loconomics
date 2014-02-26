@@ -149,8 +149,12 @@ window.applyDatePicker = LC.applyDatePicker = LC.datePicker.apply;
 
 LC.autoFocus = require('../LC/autoFocus');
 
-// CRUDL
-var crudl = require('../LC/crudl').setup(ajaxForms.onSuccess, ajaxForms.onError, ajaxForms.onComplete);
+// CRUDL: loading module, setting up common default values and callbacks:
+var crudlModule = require('../LC/crudl');
+crudlModule.defaultSettings.data['focus-closest']['default'] = '.DashboardSection-page-section';
+crudlModule.defaultSettings.data['focus-margin']['default'] = 10;
+var crudl = crudlModule.setup(ajaxForms.onSuccess, ajaxForms.onError, ajaxForms.onComplete);
+// Previous used alias (deprecated):
 LC.initCrudl = crudl.on;
 
 // UI Slider Labels
