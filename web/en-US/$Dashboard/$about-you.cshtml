@@ -31,10 +31,12 @@
             @RenderPage("AboutYou/_$PublicBio.cshtml", new { PageState = ModelState })
         </div>
 
-        <div id="DashboardPersonalWebsite" class="DashboardSection-page-section">
-            <h2 class="DashboardSection-page-section-header">Add your personal website</h2>
-            @RenderPage("AboutYou/_$PersonalWebsite.cshtml", new { PageState = ModelState })
-        </div>
+        @if (u.IsProvider) {
+            <div id="DashboardPersonalWebsite" class="DashboardSection-page-section">
+                <h2 class="DashboardSection-page-section-header">Add your personal website</h2>
+                @RenderPage("AboutYou/_$PersonalWebsite.cshtml", new { PageState = ModelState })
+            </div>
+        }
 
         <div id="DashboardEducation" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add any relevant education</h2>
