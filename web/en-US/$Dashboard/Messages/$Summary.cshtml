@@ -28,29 +28,46 @@
     <div class="DashboardMessages-summary DashboarSummary-group">
         <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)dashboard/messages/">Go to messages</a>
         <div class="DashboardMessages-summary-list DashboardSummary-group-content">
-            <h3 class="DashboardSummary-group-listHeader">New</h3>
-            <ul class="DashboardSummary-group-list">
-                @foreach (var r in messages["new"])
-                {
-                    @showReceivedMessageSummary(r)
-                }
-            </ul>
-            
-            <h3 class="DashboardSummary-group-listHeader">Read</h3>
-            <ul class="DashboardSummary-group-list">
-                @foreach (var r in messages["read"])
-                {
-                    @showReceivedMessageSummary(r)
-                }
-            </ul>
 
-            <h3 class="DashboardSummary-group-listHeader">Sent</h3>
-            <ul class="DashboardSummary-group-list">
-                @foreach (var r in messages["sent"])
-                {
-                    @showSentMessageSummary(r)
-                }
-            </ul>
+            @if (messages["new"].Count == 0 &&
+                 messages["read"].Count == 0 &&
+                 messages["sent"].Count == 0)
+            {
+                <div class="DashboardSummary-group-emptyMessage">Your mailbox is empty!</div>
+            }
+
+            @if (messages["new"].Count > 0)
+            {
+                <h3 class="DashboardSummary-group-listHeader">New</h3>
+                <ul class="DashboardSummary-group-list">
+                    @foreach (var r in messages["new"])
+                    {
+                        @showReceivedMessageSummary(r)
+                    }
+                </ul>
+            }
+            
+            @if (messages["read"].Count > 0)
+            {
+                <h3 class="DashboardSummary-group-listHeader">Read</h3>
+                <ul class="DashboardSummary-group-list">
+                    @foreach (var r in messages["read"])
+                    {
+                        @showReceivedMessageSummary(r)
+                    }
+                </ul>
+            }
+
+            @if (messages["sent"].Count > 0)
+            {
+                <h3 class="DashboardSummary-group-listHeader">Sent</h3>
+                <ul class="DashboardSummary-group-list">
+                    @foreach (var r in messages["sent"])
+                    {
+                        @showSentMessageSummary(r)
+                    }
+                </ul>
+            }
         </div>
     </div>
 </div>
