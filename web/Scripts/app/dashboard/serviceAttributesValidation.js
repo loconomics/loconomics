@@ -21,8 +21,8 @@ exports.setup = function setupServiceAttributesValidation(containerSelector, opt
 
   $c.each(function validateServiceAttributes() {
     var f = $(this);
-    if (!f.is('form')) {
-      if (console && console.error) console.error('The element to apply validation must be a form');
+    if (!f.is('form,fieldset')) {
+      if (console && console.error) console.error('The element to apply validation must be a form or fieldset');
       return;
     }
 
