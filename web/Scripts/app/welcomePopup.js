@@ -77,7 +77,7 @@ exports.show = function welcomePopup() {
         return false;
       },
       focus: function (event, ui) {
-        if (!ui || !ui.item || !ui.item.positionSingular);
+        if (!ui || !ui.item || !ui.item.positionSingular) return false;
         // We want the label in textbox, not the value
         $(this).val(ui.item.positionSingular);
         return false;

@@ -139,7 +139,7 @@
                     AccountNumber = AccountNumber
                 }, BirthDate.Value
                 );
-                
+               
                 if (result == null) {
                     PageState.AddFormError("It looks like you already have an account set up with Braintree. Please contact us, and we can help.");
                 } else if (result.IsSuccess()) {

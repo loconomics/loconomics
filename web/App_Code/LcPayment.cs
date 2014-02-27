@@ -400,10 +400,21 @@ public static class LcPayment
     /// it means the details are not complete or malformed.</returns>
     public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, BraintreeGateway gateway = null) {
         gateway = NewBraintreeGateway(gateway);
-        
+
+        // We need to detect what FundingDestination notify depending on the provided
+        // information
+        var routingNumber = String.IsNullOrWhiteSpace(bank.RoutingNumber) ? null : bank.RoutingNumber;
+        var accountNumber = String.IsNullOrWhiteSpace(bank.AccountNumber) ? null : bank.AccountNumber;
+        FundingDestination fundingDest = FundingDestination.EMAIL;
+        if (accountNumber != null && routingNumber != null) {
+            fundingDest = FundingDestination.BANK;
+        } else if (!String.IsNullOrWhiteSpace(user.MobilePhone)) {
+            fundingDest = FundingDestination.MOBILE_PHONE;
+        }
+
         MerchantAccountRequest request = new MerchantAccountRequest
         {
-            ApplicantDetails = new ApplicantDetailsRequest
+            Individual = new IndividualRequest
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -411,6 +422,7 @@ public static class LcPayment
                 Phone = user.MobilePhone,
                 Address = new AddressRequest
                 {
+                    CountryCodeAlpha2 = "US",
                     StreetAddress = address.AddressLine1,
                     ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
@@ -418,13 +430,18 @@ public static class LcPayment
                     Region = address.StateProvinceCode,
                 },
                 DateOfBirth = BirthDate.ToString("yyyy-MM-dd"),
-                Ssn = bank.Ssn,
-                RoutingNumber = bank.RoutingNumber,
-                AccountNumber = bank.AccountNumber
-          },
-          TosAccepted = true,
-          MasterMerchantAccountId = BraintreeMerchantAccountId,
-          Id = LcPayment.GetProviderPaymentAccountId(user.UserID)
+                Ssn = bank.Ssn
+            },
+            Funding = new FundingRequest{
+                Destination = fundingDest,
+                RoutingNumber = routingNumber,
+                AccountNumber = accountNumber,
+                Email = user.Email,
+                MobilePhone = user.MobilePhone
+            },
+            TosAccepted = true,
+            MasterMerchantAccountId = BraintreeMerchantAccountId,
+            Id = LcPayment.GetProviderPaymentAccountId(user.UserID)
         };
 
         try{
