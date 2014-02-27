@@ -236,13 +236,13 @@ exports.setup = function setupCrudl(onSuccess, onError, onComplete) {
         .on('ajaxSuccessPost', 'form, fieldset', function (e, data) {
           if (data.Code === 0 || data.Code == 5 || data.Code == 6) {
             // Show viewer and reload list:
-            vwr.xshow(instance.settings.effects['show-viewer'])
-            .find('.crudl-list').reload({ autofocus: false });
+            vwr.find('.crudl-list').reload({ autofocus: false });
           }
           // A small delay to let user to see the new message on button before
           // hide it (because is inside the editor)
           if (data.Code == 5)
-            setTimeout(finishEdit, 1500);
+            setTimeout(finishEdit, 1000);
+
         })
         .on('ajaxFormReturnedHtml', 'form,fieldset', function (jb, form, jx) {
           // Emit the 'editor-ready' event on editor Html being replaced
