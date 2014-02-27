@@ -34,7 +34,68 @@ function ajaxErrorPopupHandler(jx, message, ex) {
 }
 
 function ajaxFormsSuccessHandler() {
-    callbacks.success.apply(this, arguments);
+  callbacks.success.apply(this, arguments);
+}
+
+/**
+  Performs the validation on the form or subform as determine
+  the values in the context (@ctx), returning true for success
+  and false for some error (elements get marked with the error,
+  just the caller must stop any task on false).
+**/
+function validateForm(ctx) {
+  // Validations
+  var validationPassed = true;
+  // To support sub-forms throuh fieldset.ajax, we must execute validations and verification
+  // in two steps and using the real form to let validation mechanism work
+  var isSubform = ctx.form.is('fieldset.ajax');
+  var actualForm = isSubform ? ctx.form.closest('form') : ctx.form,
+      disabledSummaries = new jQuery();
+
+  // On subform validation, we don't want the form validation-summary controls to be affected
+  // by this validation (to avoid to show errors there that doesn't interest to the rest of the form)
+  // To fullfill this requisit, we need to hide it for the validator for a while and let only affect
+  // any local summary (inside the subform).
+  if (isSubform) {
+    disabledSummaries = actualForm
+      .find('[data-valmsg-summary=true]')
+      .filter(function () {
+        // Only those that are outside the subform
+        return !$.contains(ctx.form.get(0), this);
+      })
+    // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+    // (in other words, using 'data' will not work)
+      .attr('data-valmsg-summary', 'false');
+  }
+
+  // First at all, if unobtrusive validation is enabled, validate
+  var valobject = actualForm.data('unobtrusiveValidation');
+  if (valobject && valobject.validate() === false) {
+    validationHelper.goToSummaryErrors(ctx.form);
+    validationPassed = false;
+  }
+
+  // If custom validation is enabled, validate
+  var cusval = actualForm.data('customValidation');
+  if (cusval && cusval.validate && cusval.validate() === false) {
+    validationHelper.goToSummaryErrors(ctx.form);
+    validationPassed = false;
+  }
+
+  // To support sub-forms, we must check that validations errors happened inside the
+  // subform and not in other elements, to don't stop submit on not related errors.
+  // Just look for marked elements:
+  if (isSubform && ctx.form.find('.input-validation-error').length)
+    validationPassed = false;
+
+  // Re-enable again that summaries previously disabled
+  if (isSubform) {
+    // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
+    // (in other words, using 'data' will not work)
+    disabledSummaries.attr('data-valmsg-summary', 'true');
+  }
+
+  return validationPassed;
 }
 
 /*******************************
@@ -56,59 +117,8 @@ function ajaxFormsSubmitHandler(event) {
     ctx.box = (event.data ? event.data.box : null) || ctx.form.closest(".ajax-box");
     var action = (event.data ? event.data.action : null) || ctx.form.attr('action') || '';
 
-    // Validations
-    var validationPassed = true;
-    // To support sub-forms throuh fieldset.ajax, we must execute validations and verification
-    // in two steps and using the real form to let validation mechanism work
-    var isSubform = ctx.form.is('fieldset.ajax');
-    var actualForm = isSubform ? ctx.form.closest('form') : ctx.form,
-      disabledSummaries = new jQuery();
-
-    // On subform validation, we don't want the form validation-summary controls to be affected
-    // by this validation (to avoid to show errors there that doesn't interest to the rest of the form)
-    // To fullfill this requisit, we need to hide it for the validator for a while and let only affect
-    // any local summary (inside the subform).
-    if (isSubform) {
-      disabledSummaries = actualForm
-      .find('[data-valmsg-summary=true]')
-      .filter(function () {
-        // Only those that are outside the subform
-        return !$.contains(ctx.form.get(0), this);
-      })
-      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
-      // (in other words, using 'data' will not work)
-      .attr('data-valmsg-summary', 'false');
-    }
-
-    // First at all, if unobtrusive validation is enabled, validate
-    var valobject = actualForm.data('unobtrusiveValidation');
-    if (valobject && valobject.validate() === false) {
-      validationHelper.goToSummaryErrors(ctx.form);
-      validationPassed = false;
-    }
-
-    // If custom validation is enabled, validate
-    var cusval = actualForm.data('customValidation');
-    if (cusval && cusval.validate && cusval.validate() === false) {
-      validationHelper.goToSummaryErrors(ctx.form);
-      validationPassed = false;
-    }
-
-    // To support sub-forms, we must check that validations errors happened inside the
-    // subform and not in other elements, to don't stop submit on not related errors.
-    // Just look for marked elements:
-    if (isSubform && ctx.form.find('.input-validation-error').length)
-      validationPassed = false;
-
-    // Re-enable again that summaries previously disabled
-    if (isSubform) {
-      // We must use 'attr' instead of 'data' because is what we and unobtrusiveValidation checks
-      // (in other words, using 'data' will not work)
-      disabledSummaries.attr('data-valmsg-summary', 'true');
-    }
-
-    // Check validation status
-    if (validationPassed === false) {
+    // Check validation
+    if (validateForm(ctx) === false) {
       // Validation failed, submit cannot continue, out!
       return false;
     }
