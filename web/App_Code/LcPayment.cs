@@ -398,7 +398,7 @@ public static class LcPayment
     /// <returns>It returns the result of the Braintree transaction (check for IsSuccess to know the result),
     /// or null when there Braintree doesn't authorize the operation (AuthorizationException catched),
     /// it means the details are not complete or malformed.</returns>
-    public static Result<MerchantAccount> CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, BraintreeGateway gateway = null) {
+    public static dynamic CreateProviderPaymentAccount(dynamic user, LcData.Address address, dynamic bank, DateTime BirthDate, BraintreeGateway gateway = null) {
         gateway = NewBraintreeGateway(gateway);
 
         // We need to detect what FundingDestination notify depending on the provided
@@ -422,15 +422,17 @@ public static class LcPayment
                 Phone = user.MobilePhone,
                 Address = new AddressRequest
                 {
-                    CountryCodeAlpha2 = "US",
-                    StreetAddress = address.AddressLine1,
-                    ExtendedAddress = address.AddressLine2,
+                    // Setting the ExtendedAddres and/or country raises
+                    // an Authorization exception, commented and appended
+                    // the second line to StreetAddress:
+                    StreetAddress = address.AddressLine1 + " " + address.AddressLine2,
+                    //ExtendedAddress = address.AddressLine2,
                     PostalCode = address.PostalCode,
                     Locality = address.City,
                     Region = address.StateProvinceCode,
                 },
                 DateOfBirth = BirthDate.ToString("yyyy-MM-dd"),
-                Ssn = bank.Ssn
+                Ssn = String.IsNullOrWhiteSpace(bank.Ssn) ? null : bank.Ssn
             },
             Funding = new FundingRequest{
                 Destination = fundingDest,
