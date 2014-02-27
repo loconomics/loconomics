@@ -180,7 +180,7 @@
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('change-photo-file-uploader'),
                     // path to server-side upload script
-                    action: LcUrl.LangPath + 'Dashboard/ChangePhoto/',
+                    action: LcUrl.LangPath + 'dashboard/AboutYou/ChangePhoto/',
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
                     onComplete: function (id, fileName, responseJSON) {
                         window.parent.reloadUserPhoto();
