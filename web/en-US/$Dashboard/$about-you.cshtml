@@ -20,13 +20,13 @@
     <form class="BasicForm ajax" method="post" action="@(LcUrl.LangPath)$dashboard/$about-you/">
 
         @if (u.IsCustomer && !u.IsProvider) {
-            <div id="DashboardContactInfo" class="DashboardSection-page-section is-required">
+            <div id="DashboardContactInfo" class="DashboardSection-page-section">
                 <h2 class="DashboardSection-page-section-header">Add your contact information</h2>
                 @RenderPage("AboutYou/_$ContactInfo.cshtml", new { PageState = ModelState })
             </div>
         }
 
-        <div id="DashboardPublicBio" class="DashboardSection-page-section is-required">
+        <div id="DashboardPublicBio" class="DashboardSection-page-section @(u.IsProvider? "is-required" : "")">
             <h2 class="DashboardSection-page-section-header">Fill in your public bio</h2>
             @RenderPage("AboutYou/_$PublicBio.cshtml", new { PageState = ModelState })
         </div>
@@ -36,12 +36,12 @@
                 <h2 class="DashboardSection-page-section-header">Add your personal website</h2>
                 @RenderPage("AboutYou/_$PersonalWebsite.cshtml", new { PageState = ModelState })
             </div>
-        }
 
-        <div id="DashboardEducation" class="DashboardSection-page-section">
-            <h2 class="DashboardSection-page-section-header">Add any relevant education</h2>
-            @RenderPage("AboutYou/_$Education.cshtml", new { PageState = ModelState })
-        </div>
+            <div id="DashboardEducation" class="DashboardSection-page-section">
+                <h2 class="DashboardSection-page-section-header">Add any relevant education</h2>
+                @RenderPage("AboutYou/_$Education.cshtml", new { PageState = ModelState })
+            </div>
+        }
 
         <div id="DashboardVerifications" class="DashboardSection-page-section">
             <h2 class="DashboardSection-page-section-header">Add verifications</h2>
