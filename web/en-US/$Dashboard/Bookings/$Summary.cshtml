@@ -34,6 +34,23 @@
             <a class="DashboardSummary-group-iconlink" href="@(LcUrl.LangPath)dashboard/availability/">Go to availability</a>
         }
         <div class="DashboardBookings-summary-list DashboardSummary-group-content">
+            @if (bookings["today"].Count == 0 &&
+                 bookings["tomorrow"].Count == 0 &&
+                 bookings["upcoming"].Count == 0)
+            {
+                <div class="DashboardSummary-group-emptyMessage">
+                    You don't have any upcoming appointments. 
+                    @if (u.IsProvider)
+                    {
+                        <a href="@(LcUrl.LangPath)dashboard/promote/">Why not promote yourself?</a>
+                    }
+                    else
+                    {
+                        <a href="@(LcUrl.LangPath)">Why not search for one now?</a>
+                    }
+                </div>
+            }
+
             @if (bookings["today"].Count > 0)
             {
             <h3 class="DashboardSummary-group-listHeader">Today</h3>
