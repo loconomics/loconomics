@@ -74,12 +74,12 @@
                 @RenderPage("YourWork/_$Licenses.cshtml", new { PageState = ModelState, Position = p })
             </div>
 
-            <div id="DashboardPhotos" class="DashboardSection-page-section is-required">
+            <div id="DashboardPhotos" class="DashboardSection-page-section">
                 <h2 class="DashboardSection-page-section-header">Upload up to 10 images of your work</h2>
                 @RenderPage("YourWork/$Photos.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
             </div>
 
-            <div id="DashboardReviews" class="DashboardSection-page-section is-required">
+            <div id="DashboardReviews" class="DashboardSection-page-section">
                 <h2 class="DashboardSection-page-section-header">Ask for reviews from past clients</h2>
                 @RenderPage("YourWork/_$Reviews.cshtml", new { PageState = ModelState, PositionID = p.PositionID })
             </div>
