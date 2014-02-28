@@ -1368,6 +1368,60 @@ public static partial class LcData
     #endregion
 
     #region Onboarding
-    public static List<string> OnboardingSteps = new List<string> { "welcome", "your-work", "availability", "about-you", "payments" };
+    public class StepInfo {
+        public string Page;
+        public string Label;
+        public int Index;
+        public bool InMenu;
+    }
+    /// <summary>
+    /// List of Onboarding Steps sorted by the order to be showed and iterated with all the information details.
+    /// </summary>
+    public static Dictionary<string, StepInfo> OnboardingSteps = new Dictionary<string, StepInfo> {
+        {
+            "welcome",
+            new StepInfo {
+                Index = 0,
+                Page = "welcome",
+                InMenu = false
+            }
+        },
+        {
+            "your-work",
+            new StepInfo {
+                Index = 1,
+                Page = "your-work",
+                Label = "Your services",
+                InMenu = true
+            }
+        },
+        {
+            "availability",
+            new StepInfo {
+                Index = 2,
+                Page = "availability",
+                Label = "Your availability",
+                InMenu = true
+            }
+        },
+        {
+            "about-you",
+            new StepInfo {
+                Index = 3,
+                Page = "about-you",
+                Label = "About you",
+                InMenu = true
+            }
+        },
+        {
+            "payments",
+            new StepInfo {
+                Index = 4,
+                Page = "payments",
+                Label = "Getting paid",
+                InMenu = true
+            }
+        }
+    };
     #endregion
 }
