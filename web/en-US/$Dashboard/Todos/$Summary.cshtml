@@ -4,7 +4,7 @@
     LcHelpers.SecurePage();
     
     // Load alerts:
-    dynamic todos = LcData.GetActiveUserAlerts(WebSecurity.CurrentUserId);
+    dynamic todos = PageData["Data"] ?? LcData.GetActiveUserAlerts(WebSecurity.CurrentUserId);
     
     // NOTE: Section IDs just to link from alerts and other places, not for styling/scripting
 }

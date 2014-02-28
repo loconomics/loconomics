@@ -92,11 +92,25 @@ public static partial class LcData
             {
                 var l = LcData.GetCurrentLanguageID();
                 var c = LcData.GetCurrentCountryID();
-                ret["today"] = db.Query(sqlGetBookingsByDateRange, userID, today, today, l, c);
-                ret["tomorrow"] = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, l, c);
+                dynamic d = null;
+
+                d = db.Query(sqlGetBookingsByDateRange, userID, today, today, l, c);
+                if (d != null && d.Count > 0)
+                {
+                    ret["today"] = d;
+                }
+                d = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, l, c);
+                if (d != null && d.Count > 0)
+                {
+                    ret["tomorrow"] = d;
+                }
 
                 var sqlLimited = sqlGetBookingsByDateRange.Replace("SELECT", "SELECT TOP " + upcomingLimit.ToString());
-                ret["upcoming"] = db.Query(sqlLimited, userID, upcomingFirstDay, upcomingLastDay, l, c);
+                d = db.Query(sqlLimited, userID, upcomingFirstDay, upcomingLastDay, l, c);
+                if (d != null && d.Count > 0)
+                {
+                    ret["upcoming"] = d;
+                }
             }
 
             return ret;
