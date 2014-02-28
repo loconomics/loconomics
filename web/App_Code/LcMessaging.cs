@@ -219,12 +219,20 @@ public class LcMessaging
         var sqlNew = commonSql + " AND T.MessageThreadStatusID = 1 AND M.SentByUserID <> @0 " + order;
         var sqlRead = commonSql + " AND T.MessageThreadStatusID = 2 AND M.SentByUserID <> @0 " + order;
         var sqlSent = commonSql + " AND M.SentByUserID = @0 " + order;
+        var sqlList = new Dictionary<string, string> {
+            { "new", sqlNew },
+            { "read", sqlRead },
+            { "sent", sqlSent }
+        };
 
         var ret = new Dictionary<string, dynamic>();
         using (var db = Database.Open("sqlloco")) {
-            ret["new"] = db.Query(sqlNew, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            ret["read"] = db.Query(sqlRead, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            ret["sent"] = db.Query(sqlSent, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            foreach (var sql in sqlList)
+            {
+                dynamic d = db.Query(sql.Value, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                if (d != null && d.Count > 0)
+                    ret[sql.Key] = d;
+            }
         }
         return ret;
     }

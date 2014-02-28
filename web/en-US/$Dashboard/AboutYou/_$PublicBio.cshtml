@@ -6,7 +6,7 @@
     var doReturn = PageState == ModelState;
     
     var Bio = Request["publicbio"] ?? u.PublicBio;
-    var GenderID = Request["genderid"] ?? u.GenderID;
+    var GenderID = Request["gender"] ?? u.GenderID;
     
     Validation.Add("publicbio", Validator.StringLength(4000, 0, "Public bio must be fewer than 4000 characters"));
     

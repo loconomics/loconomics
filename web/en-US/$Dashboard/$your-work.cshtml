@@ -19,6 +19,7 @@
             // and get the option selected in the sidebar menu:
             Response.Redirect(LcUrl.LangPath + "dashboard/your-work/" + (p == null ? 0 : p.PositionID) + "/");
         }
+        posID = p.PositionID;
     }
     else if (posID == 0) {
         // If is 0, shows form to add a position:

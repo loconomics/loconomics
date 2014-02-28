@@ -1,15 +1,60 @@
 ﻿@{
     // Tools/Dashboard
     LcHelpers.SecurePage();
+    
+    // Adding render-pages dynamically to allow choose a different order depending
+    // on the pages with or without content, as requested at #454 by Josh.    
+    var pages = new List<string>();
+    var pagesData = new Dictionary<string, dynamic>();
+    const string todosPage = "Todos/$Summary.cshtml";
+    const string messagesPage = "Messages/$Summary.cshtml";
+    const string bookingsPage = "Bookings/$Summary.cshtml";
+
+    // Retrieving all data in advance:
+    var messages = LcMessaging.GetLastNewReadSentMessages(WebSecurity.CurrentUserId, 3);
+    var bookings = LcData.Booking.GetUpcomingBookings(WebSecurity.CurrentUserId, 5);
+    var todos = LcData.GetActiveUserAlerts(WebSecurity.CurrentUserId);
+    
+    // SORT RULES:
+    // - General: messages, bookings, todos
+    // - No messages: todos before of messages
+    // - No bookings: todos before of bookings
+    // - Since todos is not showed when empty, nothing special for the case
+    //   todos has no data.
+    // We first add everything to the list in the general sort
+    // conditionated to that with data:
+    if (messages !=  null && messages.Count > 0) {
+        pages.Add(messagesPage);
+        pagesData[messagesPage] = messages;
+    }
+    if (bookings !=  null && bookings.Count > 0) {
+        pages.Add(bookingsPage);
+        pagesData[bookingsPage] = bookings;
+    }
+    if (todos !=  null && todos.Count > 0) {
+        pages.Add(todosPage);
+        pagesData[todosPage] = todos;
+    }
+    // Now, we add following the general sort that pages that ever
+    // are showed and were no previously added (they has
+    // logic to manage the 'empty data' case)
+    // Messages and bookings, todos dissappear if empty.
+    if (!pages.Contains(messagesPage)) {
+        pages.Add(messagesPage);
+        pagesData[messagesPage] = messages;
+    }
+    if (!pages.Contains(bookingsPage)) {
+        pages.Add(bookingsPage);
+        pagesData[bookingsPage] = bookings;
+    }
 }
 <h1 class="DashboardSection-page-header">Dashboard</h1>
 <p class="DashboardSection-page-introduction">
     It's all here: everything you need to manage your profile, bookings, and account settings.
 </p>
 <div class="DashboardSummary">
-    @RenderPage("Messages/$Summary.cshtml")
-    
-    @RenderPage("Bookings/$Summary.cshtml")
-    
-    @RenderPage("Todos/$Summary.cshtml")
+    @foreach (var page in pages)
+    {
+        @RenderPage(page, new { Data = pagesData[page]})
+    }
 </div>
