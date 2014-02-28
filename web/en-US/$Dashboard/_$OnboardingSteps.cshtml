@@ -4,10 +4,34 @@
 @{
     var step = (string)PageData["Step"];
     var baseUrl = (string)PageData["BaseUrl"];
+    
+    PageData["CurrentStepIndex"] = LcData.OnboardingSteps.ContainsKey(step) ? LcData.OnboardingSteps[step].Index : 1;
+}
+
+@functions {
+    class StepInfo {
+        public string Page;
+        public string Label;
+        public int Index;
+    }
 }
 
 @helper menu(string a, string b) {
     @(LcHelpers.CssCurrent(a, b, "is-current"))
+}
+
+@helper printStep(int index, string label, string pageUrl) {
+    var currentIndex = (int)PageData["CurrentStepIndex"];
+    var baseUrl = (string)PageData["BaseUrl"];
+    var useLink = index <= currentIndex;
+
+    if (useLink) {
+        @Html.Raw("<a href='" + baseUrl + pageUrl + "'>")
+    }
+    <span class="DashboardSection-onboardingSteps-index">@index</span><span class="DashboardSection-onboardingSteps-title">@label</span>
+    if (useLink) {
+        @Html.Raw("</a>")
+    }
 }
 
 <div class="DashboardSection-onboardingSteps">
@@ -26,18 +50,15 @@
     else
     {
         <ul>
-            <li class="@(menu("your-work", step))">
-                <span class="DashboardSection-onboardingSteps-index">1</span><span class="DashboardSection-onboardingSteps-title">Your services</span>
-            </li>
-            <li class="@(menu("availability", step))">
-                <span class="DashboardSection-onboardingSteps-index">2</span><span class="DashboardSection-onboardingSteps-title">Your availability</span>
-            </li>
-            <li class="@(menu("about-you", step))">
-                <span class="DashboardSection-onboardingSteps-index">3</span><span class="DashboardSection-onboardingSteps-title">About you</span>
-            </li>
-            <li class="@(menu("payments", step))">
-                <span class="DashboardSection-onboardingSteps-index">4</span><span class="DashboardSection-onboardingSteps-title">Getting paid</span>
-            </li>
+            @foreach (var itemStep in LcData.OnboardingSteps)
+            {
+                if (itemStep.Value.InMenu)
+                {
+                    <li class="@(menu(itemStep.Value.Page, step))">
+                        @printStep(itemStep.Value.Index, itemStep.Value.Label, itemStep.Value.Page)
+                    </li>
+                }
+            }
         </ul>
     }
 </div>

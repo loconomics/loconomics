@@ -60,20 +60,17 @@
     bool checkOnboardingPage(dynamic u, string page){
         var onboardingStep = (string)u.OnboardingStep;
 
-        var isInOnboarding = LcData.OnboardingSteps.Contains(onboardingStep);
+        var isInOnboarding = LcData.OnboardingSteps.ContainsKey(onboardingStep ?? "");
         
-        // Redirect to the correct onboarding-step:
-        // - if is in onboarding
-        // - is the current onboarding page
-        // - except when current step is 'welcome' and requested is 'your-work', because
-        // 'welcome' page doesn't update the next step to 'your-work'
+        // If in onboarding, we redirect to the current step (last reached by the user)
+        // if this page requested is not in the onboarding steps or is further in the
+        // list:
         if (isInOnboarding &&
             page != onboardingStep)
         {
-            if (!(
-                page == "your-work" &&
-                onboardingStep == "welcome")
-            ) {
+            var thisPageIndex = LcData.OnboardingSteps.ContainsKey(page) ? LcData.OnboardingSteps[page].Index : 999;
+            var currentIndex = LcData.OnboardingSteps[onboardingStep].Index;
+            if (thisPageIndex > currentIndex) {
                 Response.Redirect(LcUrl.LangPath + "dashboard/" + onboardingStep + "/");
             }
         }

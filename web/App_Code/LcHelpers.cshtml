@@ -324,10 +324,11 @@
                 if (inOnboarding)
                 {
                     // Go next step
-                    var iNextStep = LcData.OnboardingSteps.IndexOf(page) + 1;
+                    var stepsPages = LcData.OnboardingSteps.Keys.ToList();
+                    var iNextStep = stepsPages.IndexOf(page) + 1;
                     var nextStep = "";
-                    if (iNextStep < LcData.OnboardingSteps.Count) {
-                        nextStep = LcData.OnboardingSteps[iNextStep];
+                    if (iNextStep < stepsPages.Count) {
+                        nextStep = stepsPages[iNextStep];
                     }
 
                     db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
