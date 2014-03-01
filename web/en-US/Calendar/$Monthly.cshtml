@@ -17,12 +17,6 @@
         yield return DayOfWeek.Friday;
         yield return DayOfWeek.Saturday;
     }
-    
-    IEnumerable<DateTime> getDayHours(){
-        for(var h = 0; h < 24; h++) {
-            yield return DateTime.Today.AddHours(h);
-        }
-    }
 }
 <div class="AvailabilityCalendar AvailabilityCalendar--monthly" data-calendar-user="@(user)" data-source-url="@(LcUrl.LangPath)calendar/get-availability/">
 
@@ -42,20 +36,14 @@
             </tr>
         </thead>
         <tbody class="AvailabilityCalendar-slots">
-            @foreach (var dh in getDayHours())
-            {    
-                for (var q = 0; q < 4; q++)
-                {
-                    <tr class="@( q == 0 ? "AvailabilityCalendar-hour" : "" ) @( (q == 0 && dh.Hour == 12) ? "AvailabilityCalendar-hour--noon" : "" )">
-                        @if (q == 0)
-                        {
-                            <th rowspan="4">@( (dh.Hour == 0 || dh.Hour == 12) ? dh.ToString("h tt") : dh.ToString("h ") )</th>
-                        }
-                        @foreach (var wk in getWeekDays()) {
-                            <td></td>
-                        }
-                    </tr>
-                }
+            @* Print 6 week rows, the maximum that a month can have *@
+            @for (var w = 0; w < 6; w++)
+            {
+                <tr>
+                    @foreach (var wk in getWeekDays()) {
+                        <td></td>
+                    }
+                </tr>
             }
         </tbody>
     </table>
