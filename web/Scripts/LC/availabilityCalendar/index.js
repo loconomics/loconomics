@@ -3,3 +3,4 @@
 **/
 exports.Weekly = require('./Weekly');
 exports.WorkHours = require('./WorkHours');
+exports.Monthly = require('./Monthly');

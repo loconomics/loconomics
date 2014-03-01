@@ -66,3 +66,78 @@ function eachDateInRange(start, end, fn) {
   }
 }
 exports.eachDateInRange = eachDateInRange;
+
+/** Months **/
+
+function getFirstMonthDate(date) {
+  var d = new Date(date);
+  d.setDate(1);
+  return d;
+}
+exports.getFirstMonthDate = getFirstMonthDate;
+
+function getLastMonthDate(date) {
+  var d = new Date(date);
+  d.setMonth(d.getMonth() + 1, 1);
+  d = addDays(d, -1);
+  return d;
+}
+exports.getLastMonthDate = getLastMonthDate;
+
+/**
+  Get a dates range for the current month
+  (or the given date as base)
+**/
+function currentMonth(baseDate) {
+  baseDate = baseDate || new Date();
+  return {
+    start: getFirstMonthDate(baseDate),
+    end: getLastMonthDate(baseDate)
+  };
+}
+exports.currentMonth = currentMonth;
+
+function nextMonth(fromDate, amountMonths) {
+  amountMonths = amountMonths || 1;
+  var d = new Date(fromDate);
+  return {
+    start: d.setMonth(d.getMonth() + amountMonths, 1),
+    end: getLastMonthDate(d)
+  };
+}
+exports.nextMonth = nextMonth;
+
+function previousMonth(fromDate, amountMonths) {
+  return nextMonth(fromDate, 0 - amountMonths);
+}
+exports.previousMonth = previousMonth;
+
+/**
+  Get a dates range for the complete weeks
+  that are part of the current month
+  (or the given date as base).
+  That means, that start date will be the first
+  week date of the first month week (that can
+  be the day 1 of the month or one of the last
+  dates from the previous months),
+  and similar for the end date being the 
+  last week date of the last month week.
+**/
+function currentMonthWeeks(baseDate) {
+  var r = currentMonth(baseDate);
+  return {
+    start: getFirstWeekDate(r.start),
+    end: getLastWeekDate(r.end)
+  };
+}
+exports.currentMonthWeeks = currentMonthWeeks;
+
+function nextMonthWeeks(fromDate, amountMonths) {
+  return currentMonthWeeks(nextMonth(fromDate, amountMonths));
+}
+exports.nextMonthWeeks = nextMonthWeeks;
+
+function previousMonthWeeks(fromDate, amountMonths) {
+  return currentMonthWeeks(previousMonth(fromDate, amountMonths));
+}
+exports.previousMonthWeeks = previousMonthWeeks;
