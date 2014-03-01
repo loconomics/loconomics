@@ -115,6 +115,14 @@ function weeklyIsDataInCache(weekly, datesRange) {
 }
 exports.weeklyIsDataInCache = weeklyIsDataInCache;
 
+/**
+  For now, given the JSON structure used, the logic
+  of monthlyIsDataInCache is the same as weeklyIsDataInCache:
+**/
+var monthlyIsDataInCache = weeklyIsDataInCache;
+exports.monthlyIsDataInCache = monthlyIsDataInCache;
+
+
 function weeklyCheckAndPrefetch(weekly, currentDatesRange) {
   var nextDatesRange = datesToRange(
     dateUtils.addDays(currentDatesRange.start, 7),

@@ -84,6 +84,11 @@ function getLastMonthDate(date) {
 }
 exports.getLastMonthDate = getLastMonthDate;
 
+function isInCurrentMonth(date) {
+  return dateISO.dateLocal(getFirstMonthDate(date)) == dateISO.dateLocal(getFirstMonthDate(new Date()));
+}
+exports.isInCurrentMonth = isInCurrentMonth;
+
 /**
   Get a dates range for the current month
   (or the given date as base)
